@@ -1,0 +1,14 @@
+{
+  "damages_KEY":[
+    [
+      56
+    ]
+  ],
+  "damages_settings":{
+    "align":"center",
+    "x":-50,
+    "y":-2
+  },
+  "damages_text":"<font color='#FFFF00'>%(damage)d</font>",
+  "enabled": true
+}

@@ -1,0 +1,23 @@
+{
+  "enabled":true,
+  "sys_keys":{
+    "CustomizationForCredits": true,
+    "CustomizationForGold": true,
+    "DismantlingForCredits": true,
+    "DismantlingForCrystal": true,
+    "DismantlingForGold": true,
+    "GameGreeting": true,
+    "Information": true,
+    "MultipleSelling": true,
+    "PowerLevel": true,
+    "PurchaseForCredits": true,
+    "PurchaseForCrystal": true,
+    "PurchaseForGold": true,
+    "Remove": true,
+    "Repair": true,
+    "Restore": true,
+    "Selling": true,
+    "autoMaintenance": true,
+    "customizationChanged": true
+  }
+}

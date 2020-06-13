@@ -1,0 +1,9 @@
+{
+  "alpha":0.6,
+  "blurX":2,
+  "blurY":2,
+  "color":"#000000",
+  "inner":false,
+  "knockout":false,
+  "strength":6
+}

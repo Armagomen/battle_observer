@@ -1,0 +1,12 @@
+{
+  "enabled":true,
+  "settings":{
+    "align":"center",
+    "x":-20,
+    "y":-2
+  },
+  "status":{
+    "donotlight":"<font face='$TitleFont' color='#FF0000' size='24'>*</font>",
+    "lights":"<font face='$TitleFont' color='#00FF00' size='24'>*</font>"
+  }
+}

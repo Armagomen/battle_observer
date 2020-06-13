@@ -1,0 +1,19 @@
+{
+  "enabled":true,
+  "image":{
+    "alpha":1.0,
+    "img":"mods/configs/mod_battle_observer/NooBooL/images/SixthSenseIcon.png",
+    "scale":1.0,
+    "smoothing":true,
+    "x":0,
+    "y":150
+  },
+  "lampShowTime":3,
+  "showTimer":false,
+  "timer":{
+    "TimerTemplate":"<font size='30'>%(timeLeft)d</font>",
+    "alpha":0.75,
+    "x":0,
+    "y":210
+  }
+}

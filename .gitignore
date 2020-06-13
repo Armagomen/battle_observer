@@ -1,0 +1,10 @@
+.idea/
+*.pyc
+*.swf
+*.log
+*.db
+/flash_source/obj/
+/flash_source/swc/
+/flash_source_hangar/obj/
+/flash_source_hangar/swc/
+/mod/res/gui/

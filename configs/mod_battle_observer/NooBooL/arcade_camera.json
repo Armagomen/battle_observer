@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "max": 150.0,
+  "min": 2.0,
+  "postmortemTransition": true,
+  "startDeadDist": 20.0,
+  "transitionDuration": 1.0
+}

@@ -1,0 +1,18 @@
+{
+  "vehicleClassColors":{
+    "AT-SPG":"#3399CC",
+    "SPG":"#FF3300",
+    "heavyTank":"#FE750B",
+    "lightTank":"#66FF00",
+    "mediumTank":"#FDEF48",
+    "unknown":"#FAFAFA"
+  },
+  "vehicleClassIcon":{
+    "AT-SPG":"<font face='BattleObserver' size='18'>J</font>",
+    "SPG":"<font face='BattleObserver' size='18'>S</font>",
+    "heavyTank":"<font face='BattleObserver' size='18'>H</font>",
+    "lightTank":"<font face='BattleObserver' size='18'>L</font>",
+    "mediumTank":"<font face='BattleObserver' size='18'>M</font>",
+    "unknown":"<font face='BattleObserver' size='18'>U</font>"
+  }
+}

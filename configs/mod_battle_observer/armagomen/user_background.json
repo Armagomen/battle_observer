@@ -1,0 +1,18 @@
+{
+  "enabled":false,
+  "user_background":[
+    {
+      "alpha":0.9,
+      "centeredX":false,
+      "centeredY":false,
+      "enabled":true,
+      "height":300,
+      "img":"mods/configs/mod_battle_observer/SixthSenseIcon.png",
+      "smoothing":true,
+      "width":300,
+      "x":0,
+      "y":0,
+      "layer":"debugPanel"
+    }
+  ]
+}

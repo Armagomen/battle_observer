@@ -1,0 +1,27 @@
+{
+  "default_zoom":{
+    "enabled":true,
+    "zoom_default":4.0
+  },
+  "disable_cam_after_shoot":false,
+  "disable_cam_skip_clip":true,
+  "dynamic_zoom":{
+    "enabled":false,
+    "zoomToGunMarker":false,
+    "zoomXMeters":20.0,
+    "zoom_max":30.0,
+    "zoom_min":2.0
+  },
+  "enabled":true,
+  "zoomSteps":{
+    "enabled":true,
+    "steps":[
+      2.0,
+      4.0,
+      8.0,
+      16.0,
+      24.0,
+      32.0
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "colors":{
+    "alpha": 0.46,
+    "bgAlpha": 0.3,
+    "bgColor": "#000000",
+    "green": "#5ACB00",
+    "purple": "#6F6CD3",
+    "red": "#F30900"
+  },
+  "enabled":false,
+  "height":24,
+  "outline":{
+    "color":"#FAFAFA",
+    "enabled":true
+  },
+  "text_settings":{
+    "bold":false,
+    "color":"#FAFAFA",
+    "font":"$TitleFont",
+    "italic":false,
+    "size":16,
+    "underline":false,
+    "y":0
+  },
+  "width":400,
+  "y": 100
+}

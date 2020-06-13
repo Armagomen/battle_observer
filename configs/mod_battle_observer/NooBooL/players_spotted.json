@@ -1,0 +1,12 @@
+﻿{
+	"enabled": true,
+	"settings": {
+		"align": "center",
+		"x": -98,
+		"y": 0
+	},
+	"status": {
+		"donotlight": "<img src='img://../mods/configs/mod_battle_observer/NooBooL/images/lost.png' width='20' height='20'>",
+		"lights": "<img src='img://../mods/configs/mod_battle_observer/NooBooL/images/revealed.png' width='20' height='20'>"
+	}
+}

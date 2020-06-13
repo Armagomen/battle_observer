@@ -1,0 +1,21 @@
+{
+  "avgColor":{
+    "brightness":1.0,
+    "saturation":0.5
+  },
+  "enabled":true,
+  "icons":{
+    "assistIcon":" <img src='img://gui/maps/icons/library/efficiency/48x48/help.png' width='23' height='23' vspace='-16'>По разведданным",
+    "blockedIcon":" <img src='img://gui/maps/icons/library/efficiency/48x48/armor.png' width='23' height='23' vspace='-14'>Заблокировано",
+    "damageIcon":" <img src='img://gui/maps/icons/library/efficiency/48x48/damage.png' width='23' height='23' vspace='-14'>Нанесено урона",
+    "spottedIcon":" <img src='img://gui/maps/icons/library/efficiency/48x48/detection.png' width='23' height='23' vspace='-16'>Обнаружено",
+    "stunIcon":" <img src='img://gui/maps/icons/library/efficiency/48x48/stun.png' width='23' height='23' vspace='-16'>Оглушение"
+  },
+  "settings":{
+    "align":"left",
+    "inCenter":false,
+    "x":170,
+    "y":-4
+  },
+  "templateMainDMG": "<textformat tabstops='[145]' leading='-10'><font color='#e6e6e6' face='$FieldFont' size='14'>%(damageIcon)s<tab><font size='15' color='%(tankDamageAvgColor)s'><b>%(playerDamage)s</b></font><br>%(blockedIcon)s<tab><font size='15'><b>%(blockedDamage)s</b></font><br>%(assistIcon)s<tab><font size='15'><b>%(assistDamage)s</b></font><br>%(spottedIcon)s<tab><font size='15'><b>%(spottedTanks)s</b></font><br>%(stunIcon)s<tab><font size='15'><b>%(stun)s</b></font></textformat>"
+}

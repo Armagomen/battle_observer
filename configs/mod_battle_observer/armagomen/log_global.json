@@ -1,0 +1,29 @@
+{
+  "attackReason":{
+    "artillery_eq":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "artillery_protection":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "artillery_sector":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "bomber_eq":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "bombers":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "death_zone":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "drowning":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "fire":"<img src='img://gui/maps/icons/library/efficiency/48x48/fire.png' width='24' height='24' vspace='-13'>",
+    "gas_attack":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "manual":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "none":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "overturn":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "ramming":"<img src='img://gui/maps/icons/library/efficiency/48x48/ram.png' width='24' height='24' vspace='-13'>",
+    "recovery":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "shot":"<img src='img://gui/maps/icons/library/efficiency/48x48/damage.png' width='24' height='24' vspace='-13'>",
+    "world_collision":"<img src='img://gui/maps/icons/library/efficiency/48x48/ram.png' width='24' height='24' vspace='-13'>"
+  },
+  "logsAltmode_KEY":[
+    [
+      56
+    ]
+  ],
+  "wg_log_hide_assist":false,
+  "wg_log_hide_block":false,
+  "wg_log_hide_crits":false,
+  "wg_log_pos_fix":false
+}

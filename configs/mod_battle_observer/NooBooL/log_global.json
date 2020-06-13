@@ -1,0 +1,28 @@
+{
+  "attackReason":{
+    "artillery_eq":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "artillery_protection":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "artillery_sector":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "bomber_eq":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "bombers":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "death_zone":"автор сказал ХЗ",
+    "drowning":"<img src='img://../mods/configs/mod_battle_observer/NooBooL/images/drowning.png' width='22' height='15' vspace='-6'>",
+    "fire":"<img src='img://gui/maps/icons/tankmen/skills/big/fireFighting.png' width='14' height='14' vspace='-10'>",
+    "gas_attack":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "manual":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "none":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "overturn":"<img src='img://../mods/configs/mod_battle_observer/NooBooL/images/raming_rock.png' width='22' height='20' vspace='-6'>",
+    "ramming":"<img src='img://gui/maps/icons/tankmen/skills/big/driver_rammingMaster.png' width='14' height='14' vspace='-10'>",
+    "recovery":"<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
+    "shot":"<img src='img://gui/maps/icons/tankmen/skills/big/gunner_sniper.png' width='14' height='14' vspace='-10'>",
+    "world_collision":"<img src='img://gui/maps/icons/library/WarningIcon-1.png' width='14' height='14' vspace='-4'>"
+  },
+  "logsAltmode_KEY":[
+    56,
+    184
+  ],
+  "wg_log_hide_assist":false,
+  "wg_log_hide_block":false,
+  "wg_log_hide_crits":false,
+  "wg_log_pos_fix":false
+}

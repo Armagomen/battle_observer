@@ -1,0 +1,48 @@
+{
+  "avgColor":{
+    "brightness":1.0,
+    "saturation":0.5
+  },
+  "enabled":true,
+  "extendedLog":[
+    "<textformat leading='-8' tabstops='[20, 55, 80, 100, 125]'><font face='$TitleFont' size='15'>",
+    "<font size='12'>%(index)02d:</font><tab>",
+    "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
+    "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
+    "%(attackReason)s<tab>",
+    "<font color='%(tankClassColor)s'>%(classIcon)s</font><tab>",
+    "%(tankName)s %(killedIcon)s",
+    "</font></textformat>"
+  ],
+  "extendedLogALTMODE":[
+    "<textformat leading='-8' tabstops='[20, 55, 80, 100, 125]'><font face='$TitleFont' size='15'>",
+    "<font size='12'>%(shots)d:</font><tab>",
+    "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
+    "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
+    "%(attackReason)s<tab>",
+    "<font color='%(tankClassColor)s'>%(classIcon)s</font><tab>",
+    "%(userName).12s %(killedIcon)s",
+    "</font></textformat>"
+  ],
+  "killedIcon":"<img src='img://gui/maps/icons/library/efficiency/48x48/destruction.png' width='24' height='24' vspace='-13'>",
+  "reverse":false,
+  "settings":{
+    "align":"left",
+    "x":0,
+    "y":0
+  },
+  "shellColor":{
+    "gold":"#FFD700",
+    "normal":"#FAFAFA"
+  },
+  "shellTypes":{
+    "ARMOR_PIERCING":"ББ",
+    "ARMOR_PIERCING_CR":"БП",
+    "ARMOR_PIERCING_HE":"ББ",
+    "HIGH_EXPLOSIVE":"ОФ",
+    "HIGH_EXPLOSIVE_PREMIUM":"ОФ-г",
+    "HOLLOW_CHARGE":"КС",
+    "SMOKE":"SM",
+    "UNDEFINED":"--"
+  }
+}

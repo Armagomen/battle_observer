@@ -1,0 +1,13 @@
+{
+  "damages_KEY":[
+    56,
+    184
+  ],
+  "damages_settings":{
+    "align":"left",
+    "x":-60,
+    "y":0
+  },
+  "damages_text":"<font face='$FieldFont' size='12' color='#FFFF00'><b>%(damage)s</b></font>",
+  "enabled":false
+}

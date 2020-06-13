@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "permanentMinimapDeath": true,
+  "showDeathNames": false,
+  "zoom": {
+    "enabled": false,
+    "indent": 180,
+    "zoom_KEY": [
+      [
+        29
+      ]
+    ]
+  }
+}

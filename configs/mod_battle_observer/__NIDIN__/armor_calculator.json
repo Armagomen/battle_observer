@@ -1,0 +1,21 @@
+{
+  "calcPosition":{
+    "x":0,
+    "y":33
+  },
+  "enabled":true,
+  "messages":{
+    "green":"100%",
+    "orange":"50%",
+    "purple":"0%",
+    "red":"0%",
+    "yellow":"50%"
+  },
+  "showCalcPoints":true,
+  "showTextMessage":false,
+  "template":"<font size='18' color='%(color)s'>%(calcedArmor).1f | %(piercingPower)d</font>",
+  "textMessagePosition":{
+    "x":0,
+    "y":150
+  }
+}

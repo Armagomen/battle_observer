@@ -1,0 +1,18 @@
+{
+  "armor_calculator":{
+    "green":"#5ACB00",
+    "orange":"#FF9900",
+    "purple":"#6F6CD3",
+    "red":"#F30900",
+    "yellow":"#FFC900"
+  },
+  "main_gun":{
+    "mainGunColor":"#E0E06D"
+  },
+  "markers":{
+    "ally":"#3caa3c",
+    "deadColor":"#858585",
+    "enemy":"#e34234",
+    "enemyColorBlind":"#6f6cd3"
+  }
+}

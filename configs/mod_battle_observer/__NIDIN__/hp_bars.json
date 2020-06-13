@@ -1,0 +1,19 @@
+{
+  "barsWidth":180,
+  "colors":{
+    "ally":"#5ACB00",
+    "alpha":0.5,
+    "bgAlpha":0.4,
+    "bgColor":"#000000",
+    "enemy":"#F30900",
+    "enemyColorBlind":"#6F6CD3"
+  },
+  "differenceHP":true,
+  "enabled":true,
+  "outline":{
+    "color":"#FAFAFA",
+    "enabled":false
+  },
+  "showAliveCount":false,
+  "style":"legue"
+}

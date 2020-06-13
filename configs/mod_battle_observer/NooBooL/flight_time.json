@@ -1,0 +1,8 @@
+{
+  "enabled":true,
+  "spgOnly":true,
+  "template":"<textformat tabstops='[40]' leading='-24'><img src='img://gui/maps/icons/vehicleStates/rentalIsOver.png' width='32' height='32' vspace='-18'><font color='#CCCCCC' size='12'><tab>Время полёта снаряда<br><tab>%(flightTime).2f сек.</font></textformat>",
+  "wgDistDisable":false,
+  "x":0,
+  "y":-250
+}

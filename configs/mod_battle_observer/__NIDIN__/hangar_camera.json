@@ -1,0 +1,15 @@
+{
+  "enabled":true,
+  "settings":{
+    "cam_dist_constr":[
+      2,
+      40
+    ],
+    "cam_dist_sens":0.0065,
+    "cam_start_angles":[
+      100,
+      -23
+    ],
+    "cam_start_dist":18.0
+  }
+}
