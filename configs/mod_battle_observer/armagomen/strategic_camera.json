@@ -1,5 +1,5 @@
 {
-  "enabled":true,
-  "max":150.0,
-  "min":40.0
+  "enabled": true,
+  "max": 200.0,
+  "min": 40.0
 }

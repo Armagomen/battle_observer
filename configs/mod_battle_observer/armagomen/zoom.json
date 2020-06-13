@@ -1,21 +1,21 @@
 {
-  "default_zoom":{
-    "enabled": true,
+  "default_zoom": {
+    "enabled": false,
     "zoom_default": 4.0
   },
-  "disable_cam_after_shoot":false,
-  "disable_cam_skip_clip":true,
+  "disable_cam_after_shoot": false,
+  "disable_cam_skip_clip": true,
   "dynamic_zoom": {
-    "enabled": false,
+    "enabled": true,
     "zoomToGunMarker": false,
     "zoomXMeters": 26.0,
     "zoom_max": 25.0,
     "zoom_min": 2.0
   },
-  "enabled":true,
-  "zoomSteps":{
-    "enabled":true,
-    "steps":[
+  "enabled": true,
+  "zoomSteps": {
+    "enabled": true,
+    "steps": [
       2.0,
       4.0,
       6.0,

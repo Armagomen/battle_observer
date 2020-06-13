@@ -1,19 +1,20 @@
 {
-  "enabled":true,
-  "image":{
-    "alpha":0.85,
-    "img":"mods/configs/mod_battle_observer/armagomen/SixthSenseIcon.png",
-    "scale":0.65,
-    "smoothing":true,
-    "x":0,
-    "y":100
+  "enabled": true,
+  "image": {
+    "alpha": 0.85,
+    "img": "mods/configs/mod_battle_observer/armagomen/SixthSenseIcon.png",
+    "scale": 0.65,
+    "smoothing": true,
+    "x": 0,
+    "y": 100
   },
-  "lampShowTime":12,
-  "showTimer":true,
-  "timer":{
-    "TimerTemplate":"<font size='40'>%(timeLeft)d</font>",
-    "x":-2,
-    "y":130,
-    "alpha":0.75
+  "lampShowTime": 12,
+  "playTickSound": false,
+  "showTimer": true,
+  "timer": {
+    "TimerTemplate": "<font size='40'>%(timeLeft)d</font>",
+    "alpha": 0.75,
+    "x": -2,
+    "y": 130
   }
 }

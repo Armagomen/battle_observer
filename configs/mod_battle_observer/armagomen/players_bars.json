@@ -2,12 +2,12 @@
   "bar_settings":{
     "bar":{
       "colors":{
-        "ally":"#5ACB00",
-        "alpha":0.4,
-        "bgAlpha":0.3,
-        "bgColor":"#000000",
-        "enemy":"#F30900",
-        "enemyBlind":"#6F6CD3"
+        "ally": "#5ACB00",
+        "alpha": 0.5,
+        "bgAlpha": 0.4,
+        "bgColor": "#000000",
+        "enemy": "#F30900",
+        "enemyBlind": "#6F6CD3"
       },
       "height":22,
       "outline":{
