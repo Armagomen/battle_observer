@@ -614,7 +614,7 @@ class ConfigLoader(object):
     def createFileInDir(path, data):
         """Creates a new file in a folder or replace old."""
         with open(path, 'w') as f:
-            json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, separators=(',', ':'), sort_keys=True)
+            json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
 
     @staticmethod
     def isNotEqualLen(data1, data2):
@@ -654,10 +654,10 @@ class ConfigLoader(object):
         """Read config file from JSON"""
         direct_path = os.path.join(self.path, configName)
         logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
-        filelist = ['{}.json'.format(name) for name in LOAD_LIST]
+        file_list = ['{}.json'.format(name) for name in LOAD_LIST]
         listdir = os.listdir(direct_path)
         for num, module_name in enumerate(LOAD_LIST, GLOBAL.ZERO):
-            file_name = filelist[num]
+            file_name = file_list[num]
             file_path = os.path.join(direct_path, file_name)
             internal_cfg = getattr(cfg, module_name)
             if file_name in listdir:
