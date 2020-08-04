@@ -10,7 +10,7 @@ MOD_PATH = "gui.armagomen_battle_observer.{}"
 MOD_VERSION = "1.29.1"
 API_VERSION = "1.10.2"
 
-HEADERS = {'User-Agent': '{}/{} (wot mod auto updater)'.format(MOD_NAME, MOD_VERSION)}
+HEADERS = [('User-Agent', MOD_NAME)]
 
 
 class SWF:
@@ -71,12 +71,11 @@ class URLS:
     def __init__(self):
         pass
 
-    UPDATE_URL = "aHR0cDovL2FybWFnb21lbi1tb2RzLmF0LnVhL3RlYW1zaHBfdXBkYXRlL0JhdHRsZU9ic2VydmVyX0xhc3RVcGRhdGUuemlw"
-    CHECK_VERSION_URL = "aHR0cDovL2FybWFnb21lbi1tb2RzLmF0LnVhL3RlYW1zaHBfdXBkYXRlL3ZlcnNpb24udHh0"
-    DONATE_UA_URL = "aHR0cHM6Ly9kb25hdHVhLmNvbS90by9hcm1hZ29tZW4="
-    DONATE_RU_URL = "aHR0cHM6Ly9kb25hdGVwYXkucnUvZG9uL2FybWFnb21lbg=="
-    DONATION_ALERTS = "aHR0cHM6Ly93d3cuZG9uYXRpb25hbGVydHMuY29tL3IvYXJtYWdvbWVudHY="
-    SUPPORT_URL = "aHR0cHM6Ly9kaXNjb3JkLmdnL051aHVoVE4="
+    HOST_NAME = "armagomen.bb-t.ru"
+    DONATE_UA_URL = "https://donatua.com/to/armagomen"
+    DONATE_RU_URL = "https://donatepay.ru/don/armagomen"
+    DONATION_ALERTS = "https://www.donationalerts.com/r/armagomentv"
+    SUPPORT_URL = "https://discord.gg/NuhuhTN"
 
 
 class SERVICE_CHANNEL:
@@ -216,7 +215,7 @@ class SNIPER:
     ZOOMS = "zooms"
     ZOOM_EXPOSURE = "zoomExposure"
     INCREASED_ZOOM = "increasedZoom"
-    DEFAULT_STEPS = [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 25.0, 30.0]
+    DEFAULT_STEPS = [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0]
     ONE, EXPOSURE_FACTOR, MAX_CALIBER = (1, 0.1, 40)
     DISABLE_AFTER_SHOOT = "disable_cam_after_shoot"
     SKIP_CLIP = "disable_cam_skip_clip"

@@ -2,13 +2,17 @@ from GUI import screenResolution, WGGunMarkerDataProvider, WGSPGGunMarkerDataPro
 from Math import MatrixAnimation
 
 import aih_constants
+from Avatar import PlayerAvatar
+from AvatarInputHandler import gun_marker_ctrl
 from AvatarInputHandler.gun_marker_ctrl import _MARKER_TYPE, _MARKER_FLAG, \
     _SPGGunMarkerController, _DefaultGunMarkerController, _GunMarkersDecorator, _GunMarkersDPFactory
 from BattleReplay import g_replayCtrl
 from VehicleGunRotator import VehicleGunRotator
 from constants import SERVER_TICK_LENGTH
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
+from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
+from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
 from ..core.battle_cache import cache
 from ..core.bo_constants import GLOBAL, DISPERSION_CIRCLE
@@ -121,49 +125,11 @@ class BOGunMarkersDPFactory(_GunMarkersDPFactory):
 class DispersionCircle(object):
 
     def __init__(self):
-        from Avatar import PlayerAvatar
-        from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
-        from AvatarInputHandler import gun_marker_ctrl
-        from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
         self.enabled = False
         self.hooksEnable = False
         self.replaceOriginalCircle = False
         self.extraServerLap = False
-        base_use_client_gun_marker = gun_marker_ctrl.useClientGunMarker
-        base_use_server_gun_marker = gun_marker_ctrl.useServerGunMarker
-        base_use_default_gun_markers = gun_marker_ctrl.useDefaultGunMarkers
-        base_create_gun_marker = gun_marker_ctrl.createGunMarker
-        gun_marker_ctrl.createGunMarker = lambda isStrategic: self.createGunMarker(base_create_gun_marker, isStrategic)
-        gun_marker_ctrl.useClientGunMarker = lambda: self.hooksEnable or base_use_client_gun_marker()
-        gun_marker_ctrl.useServerGunMarker = lambda: self.hooksEnable or base_use_server_gun_marker()
-        gun_marker_ctrl.useDefaultGunMarkers = lambda: not self.hooksEnable or base_use_default_gun_markers()
         g_events.onSettingsChanged += self.onSettingsChanged
-
-        @overrideMethod(PlayerAvatar, "enableServerAim")
-        def enableServerAim(base, avatar, enable):
-            return base(avatar, self.hooksEnable or enable)
-
-        @overrideMethod(VehicleGunRotator, "applySettings")
-        def applySettings(base, *args, **kwargs):
-            return None if self.hooksEnable else base(*args, **kwargs)
-
-        @overrideMethod(VehicleGunRotator, "setShotPosition")
-        def setShotPosition(base, *args, **kwargs):
-            if self.hooksEnable:
-                return self.setShotPosition(*args, **kwargs)
-            else:
-                return base(*args, **kwargs)
-
-        @overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")
-        def onServerGunMarkerStateChanged(base, *args, **kwargs):
-            if not self.hooksEnable:
-                return base(*args, **kwargs)
-
-        @overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")
-        def setGunMarkerColor(base, cr_panel, markerType, color):
-            if self.hooksEnable and markerType == _MARKER_TYPE.CLIENT:
-                base(cr_panel, _MARKER_TYPE.SERVER, color)
-            return base(cr_panel, markerType, color)
 
     def onSettingsChanged(self, config, blockID):
         if blockID == DISPERSION_CIRCLE.NAME:
@@ -224,3 +190,50 @@ def overrideComponents(base, *args):
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
     else:
         return base(*args)
+
+
+@overrideMethod(gun_marker_ctrl, "createGunMarker")
+def createMarker(base, *args, **kwargs):
+    return dispersion_circle.createGunMarker(base, *args, **kwargs)
+
+
+@overrideMethod(gun_marker_ctrl, "useDefaultGunMarkers")
+def useDefault(base, *args, **kwargs):
+    return not dispersion_circle.hooksEnable or base(*args, **kwargs)
+
+
+@overrideMethod(gun_marker_ctrl, "useClientGunMarker")
+@overrideMethod(gun_marker_ctrl, "useServerGunMarker")
+def useGunMarker(base, *args, **kwargs):
+    return dispersion_circle.hooksEnable or base(*args, **kwargs)
+
+
+@overrideMethod(PlayerAvatar, "enableServerAim")
+def enableServerAim(base, avatar, enable):
+    return base(avatar, dispersion_circle.hooksEnable or enable)
+
+
+@overrideMethod(VehicleGunRotator, "applySettings")
+def applySettings(base, *args, **kwargs):
+    return None if dispersion_circle.hooksEnable else base(*args, **kwargs)
+
+
+@overrideMethod(VehicleGunRotator, "setShotPosition")
+def setShotPosition(base, *args, **kwargs):
+    if dispersion_circle.hooksEnable:
+        return dispersion_circle.setShotPosition(*args, **kwargs)
+    else:
+        return base(*args, **kwargs)
+
+
+@overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")
+def onServerGunMarkerStateChanged(base, *args, **kwargs):
+    if not dispersion_circle.hooksEnable:
+        return base(*args, **kwargs)
+
+
+@overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")
+def setGunMarkerColor(base, cr_panel, markerType, color):
+    if dispersion_circle.hooksEnable and markerType == _MARKER_TYPE.CLIENT:
+        base(cr_panel, _MARKER_TYPE.SERVER, color)
+    return base(cr_panel, markerType, color)

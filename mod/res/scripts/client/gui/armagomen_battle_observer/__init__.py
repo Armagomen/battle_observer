@@ -1,11 +1,8 @@
-from .main import mod_battleObserver
-
-
-def init():
-    if mod_battleObserver.isLoading:
-        mod_battleObserver.start()
-
-
-def fini():
-    if mod_battleObserver.isLoading:
-        mod_battleObserver.fini()
+__author__ = "Armagomen"
+__copyright__ = "Copyright 2014-2020, Armagomen"
+__credits__ = ["Armagomen"]
+__license__ = "CC BY-NC-SA 4.0"
+__maintainer__ = "Armagomen"
+__email__ = "armagomen@gmail.com"
+__status__ = "Production"
+__http__ = "localhost"

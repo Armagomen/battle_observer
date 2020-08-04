@@ -97,30 +97,28 @@ class SafeDict(dict):
         return '%({macro})s'.format(macro=key)
 
 
-def overrideMethod(cls, methodName="__init__"):
+def overrideMethod(wg_class, method_name="__init__"):
     """
-    :type cls: class object
-    :type methodName: unicode
+    :type wg_class: class object
+    :type method_name: unicode default __init__
     """
-    if methodName != "__init__" and methodName.startswith("__") and not methodName.endswith("__"):
-        check_name = methodName[1:]
-        if hasattr(cls, check_name):
-            methodName = check_name
-        else:
-            for name in dir(cls):
-                if methodName in name:
-                    methodName = name
-                    break
+    class_name = wg_class.__name__
+    if method_name.startswith("__") and not method_name.endswith("__"):
+        full_name = "_{0}{1}".format(class_name, method_name)
+        if hasattr(wg_class, full_name):
+            method_name = full_name
+        elif hasattr(wg_class, method_name[1:]):
+            method_name = method_name[1:]
 
     def outer(new_method):
-        old_method = getattr(cls, methodName, None)
+        old_method = getattr(wg_class, method_name, None)
         if old_method is not None and callable(old_method):
             def override(*args, **kwargs):
                 return new_method(old_method, *args, **kwargs)
 
-            setattr(cls, methodName, override)
+            setattr(wg_class, method_name, override)
         else:
-            logError("{0} in {1} is not callable or undefined".format(methodName, cls.__name__))
+            logError("{0} in {1} is not callable or undefined".format(method_name, class_name))
         return new_method
     return outer
 

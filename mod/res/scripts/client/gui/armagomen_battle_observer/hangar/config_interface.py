@@ -1,5 +1,3 @@
-from base64 import b64decode as decode_string
-
 from debug_utils import LOG_CURRENT_EXCEPTION
 from .i18n.localization_getter import localization
 from ..core.battle_cache import cache
@@ -324,7 +322,7 @@ class ConfigInterface(CreateElement):
     def onButtonPress(container, blockID, varName, value):
         if container == MOD_NAME and blockID == ANOTHER.CONFIG_SELECT:
             if varName in CONFIG_INTERFACE.DONATE_BUTTONS:
-                openWebBrowser(decode_string(value))
+                openWebBrowser(value)
 
     def getTemplate(self, blockID):
         """create templates, do not change..."""

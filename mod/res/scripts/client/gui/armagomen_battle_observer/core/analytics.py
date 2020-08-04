@@ -1,84 +1,43 @@
-import sys
-import threading
-import urllib
 import urllib2
 
-from constants import AUTH_REALM
-from debug_utils import LOG_CURRENT_EXCEPTION
+from async import async, await, AsyncReturn
 from gui.shared.personality import ServicesLocator
-from helpers import getClientLanguage
-from .bo_constants import MOD_NAME, MOD_VERSION
+from .bo_constants import URLS, HEADERS
 from .bw_utils import logWarning
-from .config import c_Loader
-
-
-def cleanupNetwork():
-    modules = ['socket', 'httplib', 'urllib2', 'urllib']
-    for module in modules:
-        if module in sys.modules:
-            if module in globals():
-                del sys.modules[module]
-                globals()[module] = __import__(module)
 
 
 class Analytics(object):
-    __slots__ = ('user',)
+    __slots__ = ('user', 'url')
 
     def __init__(self):
         self.user = None
+        self.url = 'http://{}/api/v1/online_counter/?method={}&databaseID={}'
         ServicesLocator.connectionMgr.onLoggedOn += self.start
         ServicesLocator.connectionMgr.onDisconnected += self.end
 
+    @async
     def start(self, data):
         if self.user is None and 'token2' in data:
             self.user = data['token2'].split(':')[0]
-            thread = threading.Thread(target=self.trySendStat('start', 'screenview'))
-            thread.start()
-            thread.join()
+            yield await(self.send_data('login', self.user))
 
+    @async
     def end(self):
         if self.user is not None:
-            thread = threading.Thread(target=self.trySendStat('end', 'event'))
-            thread.start()
-            thread.join()
+            yield await(self.send_data('logout', self.user))
 
-    @staticmethod
-    def send(url, data, headers):
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(), urllib2.HTTPRedirectHandler())
-        opener.addheaders = headers.items()
-        response = opener.open(url, data=data)
-        response.close()
-
-    def trySendStat(self, param, event):
-        lang = getClientLanguage().upper()
-        params = {
-            'sc': param,
-            'v': 1,
-            'tid': 'UA-81349715-2',
-            'cid': self.user,
-            't': event,
-            'an': MOD_NAME,
-            'av': MOD_VERSION,
-            'aid': c_Loader.cName,
-            'cd': 'Cluster: [{}-{}]'.format(AUTH_REALM, lang),
-            'ul': lang
-        }
-        if event == 'event':
-            params.update({'ec': event, 'ea': 'disconnect'})
-        data = urllib.urlencode(params)
-        headers = {'User-Agent': '{}/{}'.format(MOD_NAME, MOD_VERSION)}
+    @async
+    def send_data(self, method, databaseID):
         try:
-            self.send('http://www.google-analytics.com/collect', data, headers)
-        except Exception as err:
-            logWarning("Unable to send data analytics, {}".format(repr(err)))
-            cleanupNetwork()
-            try:
-                self.send('http://www.google-analytics.com/collect', data, headers)
-            except Exception as err:
-                logWarning("Unable to send data analytics, {}".format(repr(err)))
-                LOG_CURRENT_EXCEPTION()
-        if param == 'end':
+            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(), urllib2.HTTPRedirectHandler())
+            opener.addheaders = HEADERS
+            opener.open(self.url.format(URLS.HOST_NAME, method, databaseID))
+            opener.close()
+        except urllib2.URLError:
+            logWarning("Technical problems with the server, please inform the developer.")
+        if method == 'logout':
             self.user = None
+        raise AsyncReturn(True)
 
 
 analytics = Analytics()

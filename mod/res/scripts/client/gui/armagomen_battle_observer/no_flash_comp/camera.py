@@ -39,7 +39,7 @@ class ObserverSniperCamera(object):
                 max(2.0, float(config[SNIPER.DEF_ZOOM][SNIPER.DEF_ZOOM_NUM])),
                 max(2.0, float(config[SNIPER.DYN_ZOOM][SNIPER.MIN_ZOOM_NUM])),
                 min(60.0, float(config[SNIPER.DYN_ZOOM][SNIPER.MAX_ZOOM_NUM])),
-                max(1.0, float(config[SNIPER.DYN_ZOOM][SNIPER.METERS]))
+                max(10.0, float(config[SNIPER.DYN_ZOOM][SNIPER.METERS]))
             )
             self._enableX = config[GLOBAL.ENABLED] and not BattleReplay.g_replayCtrl.isPlaying
             self._zoomToGunMarker = config[SNIPER.DYN_ZOOM][SNIPER.GUN_ZOOM]
@@ -159,7 +159,8 @@ class DisableSniperModeAfterShoot(object):
 
     def onSettingsChanged(self, config, blockID):
         if blockID == SNIPER.NAME:
-            self.enabled = config[SNIPER.DISABLE_AFTER_SHOOT]
+            self.enabled = config[SNIPER.DISABLE_AFTER_SHOOT] and config[GLOBAL.ENABLED] and \
+                           not BattleReplay.g_replayCtrl.isPlaying
             self.skipClip = config[SNIPER.SKIP_CLIP]
 
     def battleLoading(self):

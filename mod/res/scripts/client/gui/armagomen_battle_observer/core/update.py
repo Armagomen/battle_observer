@@ -1,21 +1,26 @@
+import json
 import os
-from base64 import b64decode as decode_string
+import urllib2
+from collections import defaultdict
 from io import BytesIO
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
+from async import async, await, AsyncReturn
+from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.DialogsInterface import showDialog
 from gui.Scaleform.daapi.view.dialogs import SimpleDialogMeta
 from gui.Scaleform.daapi.view.dialogs.SimpleDialog import SimpleDialog
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from web.cache.web_downloader import WebDownloader
-from .bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES
-from .bw_utils import restartGame, logInfo, openWebBrowser, logError
+from .bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
+from .bw_utils import restartGame, logInfo, openWebBrowser, logError, logWarning
 from .core import m_core
 from .dialog_button import DialogButtons
-from .events import g_events
 from ..hangar.i18n.localization_getter import localization
+
+LAST_UPDATE = defaultdict()
 
 
 def fixDialogCloseWindow():
@@ -48,7 +53,7 @@ class DialogWindow(object):
             runDownload = DownloadThread(self.newVer)
             runDownload.start()
         else:
-            openWebBrowser(decode_string(URLS.UPDATE_URL))
+            openWebBrowser(LAST_UPDATE.get('full_file'))
 
     def getDialogUpdateFinished(self):
         message = self.localization['messageOK'].format(self.newVer)
@@ -58,6 +63,7 @@ class DialogWindow(object):
 
     def getDialogNewVersionAvailable(self):
         message = self.localization['messageNEW'].format(self.newVer, m_core.workingDir)
+        message += LAST_UPDATE.get("change_list")
         title = self.localization['titleNEW'].format(self.newVer)
         buttons = DialogButtons(self.localization['buttonAUTO'], self.localization['buttonHANDLE'])
         return SimpleDialogMeta(title, message, buttons=buttons)
@@ -75,10 +81,9 @@ class DownloadThread(object):
         self.downloader = WebDownloader(GLOBAL.ONE)
 
     def start(self):
-        # noinspection PyBroadException
         try:
             logInfo('start downloading update {}'.format(self.newVer))
-            self.downloader.download(decode_string(URLS.UPDATE_URL), self.onDownloaded)
+            self.downloader.download(LAST_UPDATE.get('last_update'), self.onDownloaded)
         except Exception as error:
             self.downloader.close()
             self.downloader = None
@@ -88,7 +93,7 @@ class DownloadThread(object):
         if data is not None:
             old_files = os.listdir(m_core.workingDir)
             if GLOBAL.DEBUG_MODE:
-                with open(os.path.join(m_core.modsDir, "Battle_Observer_Update_temp_debug.zip"), mode="wb") as f:
+                with open(os.path.join(m_core.modsDir, 'update.zip'), mode="wb") as f:
                     f.write(data)
             with BytesIO(data) as zip_file, ZipFile(zip_file) as archive:
                 for newFile in archive.namelist():
@@ -102,65 +107,61 @@ class DownloadThread(object):
         self.downloader = None
 
 
-class CheckUpdate(object):
-
-    def __init__(self):
-        self.newVer = MOD_VERSION
-        self.downloader = WebDownloader(GLOBAL.ONE)
-
-    @staticmethod
-    def tupleVersion(version):
-        return tuple(map(int, version.split(GLOBAL.DOT)))
-
-    def start(self):
-        # noinspection PyBroadException
-        try:
-            self.downloader.download(decode_string(URLS.CHECK_VERSION_URL), self.onDownloaded)
-        except Exception as error:
-            self.downloader.close()
-            self.downloader = None
-            logError("version check failed: {}".format(repr(error)))
-
-    def onDownloaded(self, _url, data):
-        if data is not None:
-            version = data
-            if version is not None:
-                self.newVer = version.strip()
-                local_ver = self.tupleVersion(MOD_VERSION)
-                server_ver = self.tupleVersion(self.newVer)
-                if local_ver < server_ver:
-                    if not GLOBAL.DEBUG_MODE:
-                        g_events.onNewModVersion(self.newVer)
-                    logInfo(MASSAGES.NEW_VERSION.format(self.newVer))
-                else:
-                    logInfo(MASSAGES.UPDATE_CHECKED)
-        self.downloader.close()
-        self.downloader = None
-
-
 class UpdateMain(object):
 
     def __init__(self):
         is_login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         self.screen_to_load = GuiGlobalSpaceID.LOGIN if is_login_server_selection else GuiGlobalSpaceID.LOBBY
+        self.new_version = None
 
+    @async
+    def request_last_version(self, url):
+        def get_update_data():
+            try:
+                opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(), urllib2.HTTPRedirectHandler())
+                opener.addheaders = HEADERS
+                response = opener.open(url)
+                return json.load(response)
+            except urllib2.URLError:
+                logWarning("Technical problems with the server, please inform the developer.")
+        try:
+            params = get_update_data()
+            if params:
+                LAST_UPDATE.update(params)
+                self.new_version = LAST_UPDATE.get('version', MOD_VERSION)
+                local_ver = self.tupleVersion(MOD_VERSION)
+                server_ver = self.tupleVersion(self.new_version)
+                if local_ver < server_ver:
+                    ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+                    logInfo(MASSAGES.NEW_VERSION.format(self.new_version))
+                else:
+                    logInfo(MASSAGES.UPDATE_CHECKED)
+        except Exception:
+            LOG_CURRENT_EXCEPTION()
+        raise AsyncReturn(True)
+
+    @staticmethod
+    def tupleVersion(version):
+        return tuple(map(int, version.split(GLOBAL.DOT)))
+
+    @async
     def subscribe(self):
-        ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-        g_events.onNewModVersion += self.onNewModVersion
+        update_url = 'http://{}/api/v1/update/'.format(URLS.HOST_NAME)
+        yield await(self.request_last_version(update_url))
 
     def onGUISpaceEntered(self, spaceID):
         if self.screen_to_load == spaceID:
-            check = CheckUpdate()
-            check.start()
             if GLOBAL.DEBUG_MODE:
                 self.onNewModVersion(MOD_VERSION)
+            else:
+                self.onNewModVersion(self.new_version)
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
-    def onNewModVersion(self, version):
+    @staticmethod
+    def onNewModVersion(version):
         fixDialogCloseWindow()
         dialog = DialogWindow(version)
         dialog.showNewVersionAvailable()
-        g_events.onNewModVersion -= self.onNewModVersion
 
 
 g_update = UpdateMain()

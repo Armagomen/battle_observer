@@ -16,7 +16,6 @@ class Events(object):
         self.updateHealthPoints = SafeEvent()
         self.onSettingsChanged = SafeEvent()
         self.onUserConfigUpdateComplete = SafeEvent()
-        self.onNewModVersion = SafeEvent()
         self.onPlayerShooting = SafeEvent()
         self.setInAoI = SafeEvent()
         self.onEnterBattlePage = SafeEvent()
