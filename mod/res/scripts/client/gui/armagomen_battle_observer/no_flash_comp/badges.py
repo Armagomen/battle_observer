@@ -43,11 +43,12 @@ def new_VehicleArenaInfoVO(old, vInfoVo, vehicleID, **kwargs):
                 vInfoVo.vehicleType.isPremiumIGR = kwargs[ANOTHER.ACCOUNT_DBID] in friends or isPlayer
 
 
-@overrideMethod(VehicleTypeInfoVO, "__setVehicleData")
-def new_VehicleTypeInfoVO__setVehicleData(old, vTypeVo, vehicleDescr=None):
+@overrideMethod(VehicleTypeInfoVO, "update")
+def new_VehicleTypeInfoVO_update(old, vTypeVo, **kwargs):
     old_isPremiumIGR = False
     if hasattr(vTypeVo, "isPremiumIGR"):
         old_isPremiumIGR = vTypeVo.isPremiumIGR
-    old(vTypeVo, vehicleDescr=vehicleDescr)
-    if vehicleDescr is not None and hasattr(vTypeVo, "isPremiumIGR") and old_isPremiumIGR:
+    result = old(vTypeVo, **kwargs)
+    if kwargs.get('vehicleType') is not None and hasattr(vTypeVo, "isPremiumIGR") and old_isPremiumIGR:
         vTypeVo.isPremiumIGR = old_isPremiumIGR
+    return result

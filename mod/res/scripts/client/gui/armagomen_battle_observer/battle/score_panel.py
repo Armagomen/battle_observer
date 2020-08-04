@@ -74,18 +74,19 @@ class ScorePanel(ScorePanelMeta):
 
     def updateStatus(self, controller, info):
         if SCORE_PANEL.TOTAL_STATS in info:
-            allyFrags = info[SCORE_PANEL.TOTAL_STATS][SCORE_PANEL.LEFT_SCOPE]
-            enemyFrags = info[SCORE_PANEL.TOTAL_STATS][SCORE_PANEL.RIGHT_SCOPE]
+            total_stats = info[SCORE_PANEL.TOTAL_STATS]
             if self.showAliveCount:
-                allyAlive = cache.arenaDP.getAlliesVehiclesNumber() - enemyFrags
-                enemyAlive = cache.arenaDP.getEnemiesVehiclesNumber() - allyFrags
-                allyFrags = allyAlive
-                enemyFrags = enemyAlive
-            self.as_updateScoreS(allyFrags, enemyFrags)
+                ally = cache.arenaDP.getAlliesVehiclesNumber() - total_stats[SCORE_PANEL.RIGHT_SCOPE]
+                enemy = cache.arenaDP.getEnemiesVehiclesNumber() - total_stats[SCORE_PANEL.LEFT_SCOPE]
+            else:
+                ally = total_stats[SCORE_PANEL.LEFT_SCOPE]
+                enemy = total_stats[SCORE_PANEL.RIGHT_SCOPE]
+            self.as_updateScoreS(ally, enemy)
         if self.markersEnable:
-            if SCORE_PANEL.LEFT_CORRELATION_IDS in info or SCORE_PANEL.RIGHT_CORRELATION_IDS in info:
-                self.updateMarkers(info.get(SCORE_PANEL.LEFT_CORRELATION_IDS, SCORE_PANEL.EMPTY_LIST),
-                                   info.get(SCORE_PANEL.RIGHT_CORRELATION_IDS, SCORE_PANEL.EMPTY_LIST))
+            a_list = info.get(SCORE_PANEL.LEFT_CORRELATION_IDS, SCORE_PANEL.EMPTY_LIST)
+            e_list = info.get(SCORE_PANEL.RIGHT_CORRELATION_IDS, SCORE_PANEL.EMPTY_LIST)
+            if a_list or e_list:
+                self.updateMarkers(a_list, e_list)
 
     def keyEvent(self, key, isKeyDown):
         if key == MARKERS.HOT_KEY and isKeyDown:

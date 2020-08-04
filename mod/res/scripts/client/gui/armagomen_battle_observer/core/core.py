@@ -102,14 +102,18 @@ def overrideMethod(cls, methodName="__init__"):
     :type cls: class object
     :type methodName: unicode
     """
-    if methodName != "__init__" and methodName[:2] == "__" and methodName[-2:] != "__":
-        for name in dir(cls):
-            if methodName in name:
-                methodName = name
-                break
+    if methodName != "__init__" and methodName.startswith("__") and not methodName.endswith("__"):
+        check_name = methodName[1:]
+        if hasattr(cls, check_name):
+            methodName = check_name
+        else:
+            for name in dir(cls):
+                if methodName in name:
+                    methodName = name
+                    break
 
     def outer(new_method):
-        old_method = getattr(cls, methodName)
+        old_method = getattr(cls, methodName, None)
         if old_method is not None and callable(old_method):
             def override(*args, **kwargs):
                 return new_method(old_method, *args, **kwargs)
