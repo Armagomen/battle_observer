@@ -5,6 +5,9 @@ from gui.Scaleform.framework import ViewSettings, ViewTypes, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE, events
+from helpers import dependency
+from skeletons.gui.battle_session import IBattleSessionProvider
+from ..core.battle_core import b_core
 from ..core.battle_elements_settings_cache import g_settingsGetter
 from ..core.bo_constants import GLOBAL, SWF
 
@@ -39,11 +42,12 @@ def getContextMenuHandlers():
 class ObserverBusinessHandler(PackageBusinessHandler):
 
     def __init__(self):
+        self.arenaVisitor = dependency.instance(IBattleSessionProvider).arenaVisitor
         listeners = [(events.GameEvent.BATTLE_LOADING, self.listener)]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def listener(self, event):
-        if event.ctx.get('isShown', False):
+        if event.ctx.get('isShown', False) and b_core.checkBattleType(self.arenaVisitor):
             battle_page = self._app.containerManager.getContainer(ViewTypes.DEFAULT).getView()
             if battle_page._isDAAPIInited():
                 flash = battle_page.flashObject

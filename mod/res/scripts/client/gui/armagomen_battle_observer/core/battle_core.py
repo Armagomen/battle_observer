@@ -49,37 +49,43 @@ class _BattleCore(object):
                cfg.players_damages[GLOBAL.ENABLED] or \
                cfg.players_bars[GLOBAL.ENABLED]
 
+    @staticmethod
+    def checkBattleType(arenaVisitor):
+        return not arenaVisitor.gui.isEpicBattle() and not arenaVisitor.gui.isEventBattle()
+
     def onEnterBattlePage(self):
         cache.player = getPlayer()
         g_events.onEnterBattlePage()
         sessionProvider = dependency.instance(IBattleSessionProvider)
         arenaVisitor = sessionProvider.arenaVisitor
-        arena = arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled += self.onVehicleKilled
-        self.load_health_module = self.checkHealthEnable()
-        if self.load_health_module and not arenaVisitor.gui.isEpicBattle():
-            g_events.onHealthChanged += self.healthChanged
-            if cache.player and hasattr(cache.player, "onVehicleEnterWorld"):
-                cache.player.onVehicleEnterWorld += self.onEnterWorld
+        if self.checkBattleType(arenaVisitor):
+            arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
-                arena.onVehicleAdded += self.onVehicleAddUpdate
-                arena.onVehicleUpdated += self.onVehicleAddUpdate
+                arena.onVehicleKilled += self.onVehicleKilled
+            self.load_health_module = self.checkHealthEnable()
+            if self.load_health_module:
+                g_events.onHealthChanged += self.healthChanged
+                if cache.player and hasattr(cache.player, "onVehicleEnterWorld"):
+                    cache.player.onVehicleEnterWorld += self.onEnterWorld
+                if arena is not None:
+                    arena.onVehicleAdded += self.onVehicleAddUpdate
+                    arena.onVehicleUpdated += self.onVehicleAddUpdate
 
     def onExitBattlePage(self):
         g_events.onExitBattlePage()
         sessionProvider = dependency.instance(IBattleSessionProvider)
         arenaVisitor = sessionProvider.arenaVisitor
-        arena = arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled -= self.onVehicleKilled
-        if self.load_health_module and not arenaVisitor.gui.isEpicBattle():
-            g_events.onHealthChanged -= self.healthChanged
-            if cache.player and hasattr(cache.player, "onVehicleEnterWorld"):
-                cache.player.onVehicleEnterWorld -= self.onEnterWorld
+        if self.checkBattleType(arenaVisitor):
+            arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
-                arena.onVehicleAdded -= self.onVehicleAddUpdate
-                arena.onVehicleUpdated -= self.onVehicleAddUpdate
+                arena.onVehicleKilled -= self.onVehicleKilled
+            if self.load_health_module:
+                g_events.onHealthChanged -= self.healthChanged
+                if cache.player and hasattr(cache.player, "onVehicleEnterWorld"):
+                    cache.player.onVehicleEnterWorld -= self.onEnterWorld
+                if arena is not None:
+                    arena.onVehicleAdded -= self.onVehicleAddUpdate
+                    arena.onVehicleUpdated -= self.onVehicleAddUpdate
         self.load_health_module = False
 
     @staticmethod

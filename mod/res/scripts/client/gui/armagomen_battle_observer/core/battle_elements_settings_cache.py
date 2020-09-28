@@ -3,9 +3,12 @@ from collections import defaultdict
 from PlayerEvents import g_playerEvents
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
+from helpers import dependency
+from skeletons.gui.battle_session import IBattleSessionProvider
 from .bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES
 from .config import cfg
 from .core import overrideMethod
+from .battle_core import b_core
 
 
 class ElementsSettingsGetter(object):
@@ -88,7 +91,8 @@ def new_SharedPage_init(base, page, *args, **kwargs):
         g_settingsGetter.getSetting(ALIASES.TEAM_BASES),
         g_settingsGetter.getSetting(ALIASES.DEBUG)
     )
-    if any(enabled):
+    arenaVisitor = dependency.instance(IBattleSessionProvider).arenaVisitor
+    if any(enabled) and b_core.checkBattleType(arenaVisitor):
         config = page._SharedPage__componentsConfig._ComponentsConfig__config
         newConfig = tuple((i, tuple(checkAndReplaceAlias(alias)
                                     for alias in aliases)) for i, aliases in config)
