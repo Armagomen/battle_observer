@@ -50,15 +50,17 @@ class _BattleCore(object):
                cfg.players_bars[GLOBAL.ENABLED]
 
     @staticmethod
-    def checkBattleType(arenaVisitor):
-        return not arenaVisitor.gui.isEpicBattle() and not arenaVisitor.gui.isEventBattle()
+    def notEpicOrEvent(arenaVisitor):
+        not_epic_battle = not arenaVisitor.gui.isEpicBattle()
+        not_event_battle = not arenaVisitor.gui.isEventBattle()
+        return not_epic_battle and not_event_battle
 
     def onEnterBattlePage(self):
         cache.player = getPlayer()
         g_events.onEnterBattlePage()
         sessionProvider = dependency.instance(IBattleSessionProvider)
         arenaVisitor = sessionProvider.arenaVisitor
-        if self.checkBattleType(arenaVisitor):
+        if self.notEpicOrEvent(arenaVisitor):
             arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled += self.onVehicleKilled
@@ -75,7 +77,7 @@ class _BattleCore(object):
         g_events.onExitBattlePage()
         sessionProvider = dependency.instance(IBattleSessionProvider)
         arenaVisitor = sessionProvider.arenaVisitor
-        if self.checkBattleType(arenaVisitor):
+        if self.notEpicOrEvent(arenaVisitor):
             arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled -= self.onVehicleKilled

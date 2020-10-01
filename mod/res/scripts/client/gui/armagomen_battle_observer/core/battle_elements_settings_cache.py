@@ -92,7 +92,7 @@ def new_SharedPage_init(base, page, *args, **kwargs):
         g_settingsGetter.getSetting(ALIASES.DEBUG)
     )
     arenaVisitor = dependency.instance(IBattleSessionProvider).arenaVisitor
-    if any(enabled) and b_core.checkBattleType(arenaVisitor):
+    if any(enabled) and b_core.notEpicOrEvent(arenaVisitor):
         config = page._SharedPage__componentsConfig._ComponentsConfig__config
         newConfig = tuple((i, tuple(checkAndReplaceAlias(alias)
                                     for alias in aliases)) for i, aliases in config)

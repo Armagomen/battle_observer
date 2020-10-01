@@ -76,6 +76,7 @@ class URLS:
     DONATE_RU_URL = "https://donatepay.ru/don/armagomen"
     DONATION_ALERTS = "https://www.donationalerts.com/r/armagomentv"
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
+    UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
 
 
 class SERVICE_CHANNEL:

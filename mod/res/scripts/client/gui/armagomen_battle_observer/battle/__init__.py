@@ -47,7 +47,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def listener(self, event):
-        if event.ctx.get('isShown', False) and b_core.checkBattleType(self.arenaVisitor):
+        if event.ctx.get('isShown', False) and b_core.notEpicOrEvent(self.arenaVisitor):
             battle_page = self._app.containerManager.getContainer(ViewTypes.DEFAULT).getView()
             if battle_page._isDAAPIInited():
                 flash = battle_page.flashObject
