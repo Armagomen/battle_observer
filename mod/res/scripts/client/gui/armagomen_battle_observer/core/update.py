@@ -21,6 +21,7 @@ from .dialog_button import DialogButtons
 from ..hangar.i18n.localization_getter import localization
 
 LAST_UPDATE = defaultdict()
+DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
 
 
 def fixDialogCloseWindow():
@@ -53,7 +54,7 @@ class DialogWindow(object):
             runDownload = DownloadThread(self.newVer)
             runDownload.start()
         else:
-            openWebBrowser(LAST_UPDATE.get('full_file'))
+            openWebBrowser(DOWNLOAD_URLS['full'])
 
     def getDialogUpdateFinished(self):
         message = self.localization['messageOK'].format(self.newVer)
@@ -63,7 +64,7 @@ class DialogWindow(object):
 
     def getDialogNewVersionAvailable(self):
         message = self.localization['messageNEW'].format(self.newVer, m_core.workingDir)
-        message += LAST_UPDATE.get("change_list")
+        message += '<br>' + LAST_UPDATE.get("body")
         title = self.localization['titleNEW'].format(self.newVer)
         buttons = DialogButtons(self.localization['buttonAUTO'], self.localization['buttonHANDLE'])
         return SimpleDialogMeta(title, message, buttons=buttons)
@@ -83,7 +84,7 @@ class DownloadThread(object):
     def start(self):
         try:
             logInfo('start downloading update {}'.format(self.newVer))
-            self.downloader.download(LAST_UPDATE.get('last_update'), self.onDownloaded)
+            self.downloader.download(DOWNLOAD_URLS['last'], self.onDownloaded)
         except Exception as error:
             self.downloader.close()
             self.downloader = None
@@ -128,10 +129,18 @@ class UpdateMain(object):
             params = get_update_data()
             if params:
                 LAST_UPDATE.update(params)
-                self.new_version = LAST_UPDATE.get('version', MOD_VERSION)
+                self.new_version = LAST_UPDATE.get('tag_name', MOD_VERSION)
                 local_ver = self.tupleVersion(MOD_VERSION)
                 server_ver = self.tupleVersion(self.new_version)
                 if local_ver < server_ver:
+                    assets = LAST_UPDATE.get('assets')
+                    for asset in assets:
+                        filename = asset.get('name', '')
+                        download_url = asset.get('browser_download_url')
+                        if filename == 'BattleObserver_LastUpdate.zip':
+                            DOWNLOAD_URLS['last'] = download_url
+                        elif filename.startswith('BO_'):
+                            DOWNLOAD_URLS['full'] = download_url
                     ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
                     logInfo(MASSAGES.NEW_VERSION.format(self.new_version))
                 else:
@@ -146,8 +155,7 @@ class UpdateMain(object):
 
     @async
     def subscribe(self):
-        update_url = 'http://{}/api/v1/update/'.format(URLS.HOST_NAME)
-        yield await(self.request_last_version(update_url))
+        yield await(self.request_last_version(URLS.UPDATE_GITHUB_API_URL))
 
     def onGUISpaceEntered(self, spaceID):
         if self.screen_to_load == spaceID:
