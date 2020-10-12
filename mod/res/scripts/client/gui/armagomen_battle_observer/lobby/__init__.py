@@ -1,7 +1,8 @@
 from importlib import import_module
-
+import BigWorld
+from frameworks.wulf import WindowLayer
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
-from gui.Scaleform.framework import ViewSettings, ViewTypes, ScopeTemplates
+from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
@@ -21,10 +22,7 @@ def getViewSettings():
         try:
             class_name = alias.split("_")[1]
             module_class = getattr(import_module(".date_times", package=__package__), class_name)
-            settings.append(ViewSettings(alias=alias, clazz=module_class, url=None, type=ViewTypes.COMPONENT,
-                                         event=None, scope=ScopeTemplates.DEFAULT_SCOPE,
-                                         cacheable=False, containers=None, canDrag=False,
-                                         canClose=False, isModal=False, isCentered=False))
+            settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
         except Exception as err:
             from ..core.bw_utils import logWarning
             logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
@@ -47,9 +45,13 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def listener(self, event):
-        if event.name == "hangar":
-            lobby_page = self._app.containerManager.getContainer(ViewTypes.DEFAULT).getView()
-            if lobby_page._isDAAPIInited():
+        if event.name == VIEW_ALIAS.LOBBY_HANGAR:
+            lobby_page = self._app.containerManager.getContainer(WindowLayer.VIEW).getView()
+            if lobby_page is None:
+                BigWorld.callback(1.0, lambda: self.listener(event))
+            if not lobby_page._isDAAPIInited():
+                BigWorld.callback(1.0, lambda: self.listener(event))
+            else:
                 flash = lobby_page.flashObject
                 for comp, enabled in getComponents():
                     if enabled and not lobby_page.isFlashComponentRegistered(comp):
