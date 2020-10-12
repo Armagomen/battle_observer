@@ -49,15 +49,16 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             lobby_page = self._app.containerManager.getContainer(WindowLayer.VIEW).getView()
             if lobby_page is None:
                 BigWorld.callback(1.0, lambda: self.listener(event))
-            if not lobby_page._isDAAPIInited():
-                BigWorld.callback(1.0, lambda: self.listener(event))
             else:
-                flash = lobby_page.flashObject
-                for comp, enabled in getComponents():
-                    if enabled and not lobby_page.isFlashComponentRegistered(comp):
-                        if hasattr(flash, SWF.ATTRIBUTE_NAME):
-                            flash.as_createBattleObserverComp(comp)
-                        else:
-                            to_format_str = "{}, {}, has ho attribute {}"
-                            from ..core.bw_utils import logError
-                            logError(to_format_str.format(comp, repr(flash), SWF.ATTRIBUTE_NAME))
+                if not lobby_page._isDAAPIInited():
+                    BigWorld.callback(1.0, lambda: self.listener(event))
+                else:
+                    flash = lobby_page.flashObject
+                    for comp, enabled in getComponents():
+                        if enabled and not lobby_page.isFlashComponentRegistered(comp):
+                            if hasattr(flash, SWF.ATTRIBUTE_NAME):
+                                flash.as_createBattleObserverComp(comp)
+                            else:
+                                to_format_str = "{}, {}, has ho attribute {}"
+                                from ..core.bw_utils import logError
+                                logError(to_format_str.format(comp, repr(flash), SWF.ATTRIBUTE_NAME))

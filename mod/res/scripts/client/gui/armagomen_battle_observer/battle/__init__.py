@@ -54,16 +54,17 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
         if battle_page is None:
             BigWorld.callback(1.0, lambda: self.listener(event))
-        if not battle_page._isDAAPIInited():
-            BigWorld.callback(1.0, lambda: self.listener(event))
-        if b_core.notEpicOrEvent(self.arenaVisitor):
-            if battle_page._isDAAPIInited():
-                flash = battle_page.flashObject
-                for comp in g_settingsGetter.sorted_aliases:
-                    if g_settingsGetter.getSetting(comp):
-                        if hasattr(flash, SWF.ATTRIBUTE_NAME):
-                            flash.as_createBattleObserverComp(comp)
-                        else:
-                            to_format_str = "{}, {}, has ho attribute {}"
-                            from ..core.bw_utils import logError
-                            logError(to_format_str.format(comp, repr(flash), SWF.ATTRIBUTE_NAME))
+        else:
+            if not battle_page._isDAAPIInited():
+                BigWorld.callback(1.0, lambda: self.listener(event))
+            else:
+                if b_core.notEpicOrEvent(self.arenaVisitor):
+                    flash = battle_page.flashObject
+                    for comp in g_settingsGetter.sorted_aliases:
+                        if g_settingsGetter.getSetting(comp):
+                            if hasattr(flash, SWF.ATTRIBUTE_NAME):
+                                flash.as_createBattleObserverComp(comp)
+                            else:
+                                to_format_str = "{}, {}, has ho attribute {}"
+                                from ..core.bw_utils import logError
+                                logError(to_format_str.format(comp, repr(flash), SWF.ATTRIBUTE_NAME))
