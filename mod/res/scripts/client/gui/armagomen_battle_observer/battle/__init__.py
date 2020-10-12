@@ -1,10 +1,13 @@
 from importlib import import_module
 
+import BigWorld
+
+from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI
-from gui.Scaleform.framework import ViewSettings, ViewTypes, ScopeTemplates
+from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
-from gui.shared import EVENT_BUS_SCOPE, events
+from gui.shared import EVENT_BUS_SCOPE
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 from ..core.battle_core import b_core
@@ -20,10 +23,7 @@ def getViewSettings():
                 class_name = alias.split("_")[GLOBAL.ONE]
                 file_name = g_settingsGetter.alias_to_path.get(alias)
                 module_class = getattr(import_module(file_name, package=__package__), class_name)
-                settings.append(ViewSettings(alias=alias, clazz=module_class, url=None, type=ViewTypes.COMPONENT,
-                                             event=None, scope=ScopeTemplates.DEFAULT_SCOPE,
-                                             cacheable=False, containers=None, canDrag=False,
-                                             canClose=False, isModal=False, isCentered=False))
+                settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
                 _GAME_UI.add(alias)
             except Exception as err:
                 from ..core.bw_utils import logWarning
@@ -43,12 +43,20 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def __init__(self):
         self.arenaVisitor = dependency.instance(IBattleSessionProvider).arenaVisitor
-        listeners = [(events.GameEvent.BATTLE_LOADING, self.listener)]
+        listeners = [
+            (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, self.listener),
+            (VIEW_ALIAS.RANKED_BATTLE_PAGE, self.listener),
+            (VIEW_ALIAS.EPIC_BATTLE_PAGE, self.listener)
+        ]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def listener(self, event):
-        if event.ctx.get('isShown', False) and b_core.notEpicOrEvent(self.arenaVisitor):
-            battle_page = self._app.containerManager.getContainer(ViewTypes.DEFAULT).getView()
+        battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
+        if battle_page is None:
+            BigWorld.callback(1.0, lambda: self.listener(event))
+        if not battle_page._isDAAPIInited():
+            BigWorld.callback(1.0, lambda: self.listener(event))
+        if b_core.notEpicOrEvent(self.arenaVisitor):
             if battle_page._isDAAPIInited():
                 flash = battle_page.flashObject
                 for comp in g_settingsGetter.sorted_aliases:
