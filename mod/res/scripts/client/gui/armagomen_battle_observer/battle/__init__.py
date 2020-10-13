@@ -6,11 +6,9 @@ from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
-from helpers import dependency
-from skeletons.gui.battle_session import IBattleSessionProvider
 from ..core.battle_elements_settings_cache import g_settingsGetter
 from ..core.bo_constants import GLOBAL, SWF
-from ..core.bw_utils import logError, logWarning, callback
+from ..core.bw_utils import logError, callback
 
 
 def getViewSettings():
@@ -40,7 +38,6 @@ def getContextMenuHandlers():
 class ObserverBusinessHandler(PackageBusinessHandler):
 
     def __init__(self):
-        self.arenaVisitor = dependency.instance(IBattleSessionProvider).arenaVisitor
         listeners = [
             (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, lambda event: callback(2.0, lambda: self.listener(event))),
             (VIEW_ALIAS.RANKED_BATTLE_PAGE, lambda event: callback(2.0, lambda: self.listener(event))),
