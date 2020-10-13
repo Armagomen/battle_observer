@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
-from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI
+from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -21,6 +21,7 @@ def getViewSettings():
                 module_class = getattr(import_module(file_name, package=__package__), class_name)
                 settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
                 _GAME_UI.add(alias)
+                _SPECTATOR_UI.add(alias)
             except Exception as err:
                 from ..core.bw_utils import logWarning
                 logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
