@@ -1,7 +1,7 @@
 from importlib import import_module
 
-import BigWorld
 
+from ..core.bw_utils import logError, logWarning, callback
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -46,17 +46,19 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         listeners = [
             (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, self.listener),
             (VIEW_ALIAS.RANKED_BATTLE_PAGE, self.listener),
-            (VIEW_ALIAS.EPIC_BATTLE_PAGE, self.listener)
+            (VIEW_ALIAS.EPIC_RANDOM_PAGE, self.listener)
         ]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def listener(self, event):
         battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
         if battle_page is None:
-            BigWorld.callback(1.0, lambda: self.listener(event))
+            callback(1.0, lambda: self.listener(event))
+            logWarning("battle_page is None")
         else:
             if not battle_page._isDAAPIInited():
-                BigWorld.callback(1.0, lambda: self.listener(event))
+                callback(1.0, lambda: self.listener(event))
+                logWarning("battle_page._isDAAPIInited is False")
             else:
                 if b_core.notEpicOrEvent(self.arenaVisitor):
                     flash = battle_page.flashObject
@@ -66,5 +68,4 @@ class ObserverBusinessHandler(PackageBusinessHandler):
                                 flash.as_createBattleObserverComp(comp)
                             else:
                                 to_format_str = "{}, {}, has ho attribute {}"
-                                from ..core.bw_utils import logError
                                 logError(to_format_str.format(comp, repr(flash), SWF.ATTRIBUTE_NAME))

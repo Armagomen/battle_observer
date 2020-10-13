@@ -1,5 +1,4 @@
 from importlib import import_module
-import BigWorld
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -8,6 +7,7 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from ..core.bo_constants import GLOBAL, CLOCK, SWF
 from ..core.config import cfg
+from ..core.bw_utils import logError, callback, logWarning
 
 
 def getComponents():
@@ -48,10 +48,12 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if event.name == VIEW_ALIAS.LOBBY_HANGAR:
             lobby_page = self._app.containerManager.getContainer(WindowLayer.VIEW).getView()
             if lobby_page is None:
-                BigWorld.callback(1.0, lambda: self.listener(event))
+                callback(1.0, lambda: self.listener(event))
+                logWarning("lobby_page is None")
             else:
                 if not lobby_page._isDAAPIInited():
-                    BigWorld.callback(1.0, lambda: self.listener(event))
+                    callback(1.0, lambda: self.listener(event))
+                    logWarning("lobby_page._isDAAPIInited is False")
                 else:
                     flash = lobby_page.flashObject
                     for comp, enabled in getComponents():
@@ -60,5 +62,5 @@ class ObserverBusinessHandler(PackageBusinessHandler):
                                 flash.as_createBattleObserverComp(comp)
                             else:
                                 to_format_str = "{}, {}, has ho attribute {}"
-                                from ..core.bw_utils import logError
+
                                 logError(to_format_str.format(comp, repr(flash), SWF.ATTRIBUTE_NAME))
