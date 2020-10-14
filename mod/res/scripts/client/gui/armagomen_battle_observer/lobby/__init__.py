@@ -42,7 +42,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     __slots__ = ()
 
     def __init__(self):
-        listeners = [(VIEW_ALIAS.LOBBY_HANGAR, lambda event: callback(2.0, lambda: self.listener(event)))]
+        listeners = [(VIEW_ALIAS.LOBBY_HANGAR, lambda event: callback(1.0, lambda: self.listener(event)))]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def listener(self, event):
