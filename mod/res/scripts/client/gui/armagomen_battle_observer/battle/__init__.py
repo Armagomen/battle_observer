@@ -40,20 +40,22 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def __init__(self):
         listeners = [
-            (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, lambda event: callback(2.0, lambda: self.listener(event))),
-            (VIEW_ALIAS.RANKED_BATTLE_PAGE, lambda event: callback(2.0, lambda: self.listener(event))),
-            (VIEW_ALIAS.EPIC_RANDOM_PAGE, lambda event: callback(2.0, lambda: self.listener(event)))
+            (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, self.eventListener),
+            (VIEW_ALIAS.RANKED_BATTLE_PAGE, self.eventListener),
+            (VIEW_ALIAS.EPIC_RANDOM_PAGE, self.eventListener)
         ]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
-    def listener(self, event):
+    def eventListener(self, event):
         battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
         if battle_page is not None and battle_page._isDAAPIInited():
             flash = battle_page.flashObject
-            for comp in g_settingsGetter.sorted_aliases:
-                if g_settingsGetter.getSetting(comp):
-                    if hasattr(flash, SWF.ATTRIBUTE_NAME):
+            if hasattr(flash, SWF.ATTRIBUTE_NAME):
+                for comp in g_settingsGetter.sorted_aliases:
+                    if g_settingsGetter.getSetting(comp):
                         flash.as_createBattleObserverComp(comp)
-                    else:
-                        to_format_str = "{}, {}, has ho attribute {}"
-                        logError(to_format_str.format(comp, repr(flash), SWF.ATTRIBUTE_NAME))
+            else:
+                to_format_str = "battle_page {}, has ho attribute {}"
+                logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
+        else:
+            callback(1.0, lambda: self.eventListener(event))
