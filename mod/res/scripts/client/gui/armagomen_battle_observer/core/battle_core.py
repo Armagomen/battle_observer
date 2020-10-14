@@ -1,5 +1,6 @@
 from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
+from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from gui.shared.personality import ServicesLocator
 from helpers import dependency
@@ -11,6 +12,10 @@ from .bw_utils import getPlayer, setMaxFrameRate
 from .config import cfg
 from .core import overrideMethod
 from .events import g_events
+
+
+def getArenaVisitor():
+    return dependency.instance(IBattleSessionProvider).arenaVisitor
 
 
 class _BattleCore(object):
@@ -50,18 +55,18 @@ class _BattleCore(object):
                cfg.players_bars[GLOBAL.ENABLED]
 
     @staticmethod
-    def notEpicOrEvent(arenaVisitor):
-        not_epic_battle = not arenaVisitor.gui.isEpicBattle()
-        not_event_battle = not arenaVisitor.gui.isEventBattle()
-        return not_epic_battle and not_event_battle
+    def randomOrRanked():
+        arenaVisitor = getArenaVisitor()
+        return arenaVisitor.gui.isRandomBattle() or \
+               arenaVisitor.gui.isTrainingBattle() or \
+               arenaVisitor.gui.isRankedBattle() or \
+               arenaVisitor.getArenaGuiType() == ARENA_GUI_TYPE.UNKNOWN
 
     def onEnterBattlePage(self):
         cache.player = getPlayer()
         g_events.onEnterBattlePage()
-        sessionProvider = dependency.instance(IBattleSessionProvider)
-        arenaVisitor = sessionProvider.arenaVisitor
-        if self.notEpicOrEvent(arenaVisitor):
-            arena = arenaVisitor.getArenaSubscription()
+        if self.randomOrRanked():
+            arena = getArenaVisitor().getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled += self.onVehicleKilled
             self.load_health_module = self.checkHealthEnable()
@@ -75,10 +80,8 @@ class _BattleCore(object):
 
     def onExitBattlePage(self):
         g_events.onExitBattlePage()
-        sessionProvider = dependency.instance(IBattleSessionProvider)
-        arenaVisitor = sessionProvider.arenaVisitor
-        if self.notEpicOrEvent(arenaVisitor):
-            arena = arenaVisitor.getArenaSubscription()
+        if self.randomOrRanked():
+            arena = getArenaVisitor().getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled -= self.onVehicleKilled
             if self.load_health_module:
@@ -116,5 +119,6 @@ class _BattleCore(object):
             if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
                 g_health.addVehicle(vInfoVO)
                 g_events.onVehicleAddUpdate(vehID, vehicleType)
+
 
 b_core = _BattleCore()
