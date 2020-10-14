@@ -42,18 +42,20 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     __slots__ = ()
 
     def __init__(self):
-        listeners = [(VIEW_ALIAS.LOBBY_HANGAR, lambda event: callback(1.0, lambda: self.listener(event)))]
+        listeners = [(VIEW_ALIAS.LOBBY_HANGAR, self.eventListener)]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
-    def listener(self, event):
+    def eventListener(self, event):
         if event.name == VIEW_ALIAS.LOBBY_HANGAR:
             lobby_page = self._app.containerManager.getContainer(WindowLayer.VIEW).getView()
             if lobby_page is not None and lobby_page._isDAAPIInited():
                 flash = lobby_page.flashObject
-                for comp, enabled in getComponents():
-                    if enabled and not lobby_page.isFlashComponentRegistered(comp):
-                        if hasattr(flash, SWF.ATTRIBUTE_NAME):
+                if hasattr(flash, SWF.ATTRIBUTE_NAME):
+                    for comp, enabled in getComponents():
+                        if enabled and not lobby_page.isFlashComponentRegistered(comp):
                             flash.as_createBattleObserverComp(comp)
-                        else:
-                            to_format_str = "{}, {}, has ho attribute {}"
-                            logError(to_format_str.format(comp, repr(flash), SWF.ATTRIBUTE_NAME))
+                else:
+                    to_format_str = "lobby_page {}, has ho attribute {}"
+                    logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
+            else:
+                callback(1.0, lambda: self.eventListener(event))
