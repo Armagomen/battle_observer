@@ -111,7 +111,7 @@ translate = {
         "timerColor": "Цвет макроса %(timerColor)s нормальный"
     },
     "clock": {
-        "header": "Панель Часов в бою\агаре.",
+        "header": "Панель Часов в бою\ангаре.",
         "battle*enabled": "Отображать в бою.",
         "hangar*enabled": "Отображать в ангаре.",
         "battle*format": "Форматирование строки.",
