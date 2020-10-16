@@ -57,16 +57,21 @@ class _BattleCore(object):
     @staticmethod
     def randomOrRanked():
         arenaVisitor = getArenaVisitor()
-        return arenaVisitor.gui.isRandomBattle() or \
-               arenaVisitor.gui.isTrainingBattle() or \
-               arenaVisitor.gui.isRankedBattle() or \
-               arenaVisitor.getArenaGuiType() == ARENA_GUI_TYPE.UNKNOWN
+        if arenaVisitor is not None:
+            enabled = arenaVisitor.gui.isRandomBattle() or \
+                      arenaVisitor.gui.isTrainingBattle() or \
+                      arenaVisitor.gui.isRankedBattle() or \
+                      arenaVisitor.getArenaGuiType() == ARENA_GUI_TYPE.UNKNOWN
+            return enabled, arenaVisitor
+        else:
+            return False, None
 
     def onEnterBattlePage(self):
         cache.player = getPlayer()
         g_events.onEnterBattlePage()
-        if self.randomOrRanked():
-            arena = getArenaVisitor().getArenaSubscription()
+        enabled, arenaVisitor = self.randomOrRanked()
+        if enabled and arenaVisitor is not None:
+            arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled += self.onVehicleKilled
             self.load_health_module = self.checkHealthEnable()
@@ -80,8 +85,9 @@ class _BattleCore(object):
 
     def onExitBattlePage(self):
         g_events.onExitBattlePage()
-        if self.randomOrRanked():
-            arena = getArenaVisitor().getArenaSubscription()
+        enabled, arenaVisitor = self.randomOrRanked()
+        if enabled and arenaVisitor is not None:
+            arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled -= self.onVehicleKilled
             if self.load_health_module:
