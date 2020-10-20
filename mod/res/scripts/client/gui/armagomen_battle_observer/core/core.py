@@ -4,10 +4,7 @@ from string import printable
 
 import ResMgr
 
-from gui.Scaleform.battle_entry import BattleEntry
-from gui.Scaleform.daapi.settings import config
-from gui.Scaleform.lobby_entry import LobbyEntry
-from .bo_constants import FILE_NAME, MASSAGES, MAIN, CACHE_DIRS, GLOBAL, SWF, MOD_VERSION
+from .bo_constants import FILE_NAME, MASSAGES, MAIN, CACHE_DIRS, GLOBAL, MOD_VERSION
 from .bw_utils import getPreferencesFilePath, logInfo, logError
 
 
@@ -18,26 +15,6 @@ class ObserverCore(object):
         self.modsDir, self.gameVersion = self.getCurrentModPath()
         self.workingDir = os.path.join(self.modsDir, self.gameVersion)
         self.fileName = FILE_NAME.format(MOD_VERSION)
-
-    def addLibraries(self):
-        get_librariesBattle = BattleEntry._getRequiredLibraries
-        get_librariesLobby = LobbyEntry._getRequiredLibraries
-        BattleEntry._getRequiredLibraries = lambda b_self: self.add_libs(get_librariesBattle, b_self)
-        LobbyEntry._getRequiredLibraries = lambda b_self: self.add_libs(get_librariesLobby, b_self)
-        config.BATTLE_PACKAGES += ("gui.armagomen_battle_observer.battle",)
-        config.LOBBY_PACKAGES += ("gui.armagomen_battle_observer.lobby",)
-
-    @staticmethod
-    def add_libs(baseMethod, entry):
-        libs = baseMethod(entry)
-        isTuple = isinstance(libs, tuple)
-        if isTuple:
-            libs = list(libs)
-        if isinstance(entry, LobbyEntry) and SWF.LOBBY not in libs:
-            libs.append(SWF.LOBBY)
-        elif isinstance(entry, BattleEntry) and SWF.BATTLE not in libs:
-            libs.append(SWF.BATTLE)
-        return libs if not isTuple else tuple(libs)
 
     @staticmethod
     def checkDecoder(_string):
@@ -120,5 +97,5 @@ def overrideMethod(wg_class, method_name="__init__"):
         else:
             logError("{0} in {1} is not callable or undefined".format(method_name, class_name))
         return new_method
-    return outer
 
+    return outer
