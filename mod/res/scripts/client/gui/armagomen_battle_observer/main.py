@@ -27,7 +27,8 @@ class BattleObserver(object):
 
     @staticmethod
     def enableHooks():
-        m_core.addLibraries()
+        from .core.inject_flash import g_flash
+        g_flash.inject()
 
         from Vehicle import Vehicle
         from Avatar import PlayerAvatar
