@@ -61,7 +61,9 @@ class _BattleCore(object):
             enabled = arenaVisitor.gui.isRandomBattle() or \
                       arenaVisitor.gui.isTrainingBattle() or \
                       arenaVisitor.gui.isRankedBattle() or \
-                      arenaVisitor.getArenaGuiType() == ARENA_GUI_TYPE.UNKNOWN
+                      arenaVisitor.getArenaGuiType() in (ARENA_GUI_TYPE.UNKNOWN,
+                                                         ARENA_GUI_TYPE.FORT_BATTLE_2,
+                                                         ARENA_GUI_TYPE.SORTIE_2)
             return enabled, arenaVisitor
         else:
             return False, None

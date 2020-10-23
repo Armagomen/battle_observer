@@ -10,7 +10,7 @@ class Loader(object):
     def __init__(self):
         self.modules = (
             'core.battle_core',
-            'core.analytics',
+            # 'core.analytics',
             'no_flash_comp.camera',
             'no_flash_comp.badges',
             'no_flash_comp.save_shoot_lite',
