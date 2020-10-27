@@ -9,6 +9,7 @@ from gui.shared import EVENT_BUS_SCOPE
 from ..core.battle_elements_settings_cache import g_settingsGetter
 from ..core.bo_constants import GLOBAL, SWF
 from ..core.bw_utils import logError, callback
+from ..core.battle_core import b_core
 
 
 def getViewSettings():
@@ -40,11 +41,16 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def __init__(self):
         listeners = [
-            (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, self.eventListener),
-            (VIEW_ALIAS.RANKED_BATTLE_PAGE, self.eventListener),
-            (VIEW_ALIAS.EPIC_RANDOM_PAGE, self.eventListener)
+            (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, self.callbackListener),
+            (VIEW_ALIAS.RANKED_BATTLE_PAGE, self.callbackListener),
+            (VIEW_ALIAS.EPIC_RANDOM_PAGE, self.callbackListener)
         ]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
+
+    def callbackListener(self, event):
+        enabled, arenaVisitor = b_core.isAllowedBattleType()
+        if enabled:
+            callback(2.0, lambda: self.eventListener(event))
 
     def eventListener(self, event):
         battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)

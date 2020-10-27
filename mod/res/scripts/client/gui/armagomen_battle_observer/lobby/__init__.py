@@ -42,12 +42,16 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     __slots__ = ()
 
     def __init__(self):
-        listeners = [(VIEW_ALIAS.LOBBY_HANGAR, self.eventListener)]
+        listeners = [(VIEW_ALIAS.LOBBY_HANGAR, self.callbackListener)]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
+
+    def callbackListener(self, event):
+        callback(2.0, lambda: self.eventListener(event))
 
     def eventListener(self, event):
         if event.name == VIEW_ALIAS.LOBBY_HANGAR:
             lobby_page = self._app.containerManager.getContainer(WindowLayer.VIEW).getView()
+            # lobby_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
             if lobby_page is not None and lobby_page._isDAAPIInited():
                 flash = lobby_page.flashObject
                 if hasattr(flash, SWF.ATTRIBUTE_NAME):

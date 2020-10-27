@@ -55,7 +55,7 @@ class _BattleCore(object):
                cfg.players_bars[GLOBAL.ENABLED]
 
     @staticmethod
-    def randomOrRanked():
+    def isAllowedBattleType():
         arenaVisitor = getArenaVisitor()
         if arenaVisitor is not None:
             enabled = arenaVisitor.gui.isRandomBattle() or \
@@ -71,7 +71,7 @@ class _BattleCore(object):
     def onEnterBattlePage(self):
         cache.player = getPlayer()
         g_events.onEnterBattlePage()
-        enabled, arenaVisitor = self.randomOrRanked()
+        enabled, arenaVisitor = self.isAllowedBattleType()
         if enabled and arenaVisitor is not None:
             arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
@@ -87,7 +87,7 @@ class _BattleCore(object):
 
     def onExitBattlePage(self):
         g_events.onExitBattlePage()
-        enabled, arenaVisitor = self.randomOrRanked()
+        enabled, arenaVisitor = self.isAllowedBattleType()
         if enabled and arenaVisitor is not None:
             arena = arenaVisitor.getArenaSubscription()
             if arena is not None:

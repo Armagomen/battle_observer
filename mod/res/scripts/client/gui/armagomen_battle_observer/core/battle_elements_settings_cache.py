@@ -89,7 +89,7 @@ def new_SharedPage_init(base, page, *args, **kwargs):
         g_settingsGetter.getSetting(ALIASES.TEAM_BASES),
         g_settingsGetter.getSetting(ALIASES.DEBUG)
     )
-    if any(enabled) and b_core.randomOrRanked()[0]:
+    if any(enabled) and b_core.isAllowedBattleType()[0]:
         config = page._SharedPage__componentsConfig._ComponentsConfig__config
         newConfig = tuple((i, tuple(checkAndReplaceAlias(alias)
                                     for alias in aliases)) for i, aliases in config)
