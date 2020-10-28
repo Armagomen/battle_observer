@@ -7,7 +7,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 MOD_PATH = "gui.armagomen_battle_observer.{}"
-MOD_VERSION = "1.30.3"
+MOD_VERSION = "1.30.4"
 API_VERSION = "1.10.6"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -251,8 +251,8 @@ class DAMAGE_LOG:
         EV_ID.PLAYER_USED_ARMOR,
         EV_ID.DESTRUCTIBLE_DAMAGED
     }
-    E_ASSIST = {EV_ID.PLAYER_ASSIST_TO_KILL_ENEMY, EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY, EV_ID.PLAYER_USED_ARMOR}
-    E_DAMAGE = {EV_ID.PLAYER_DAMAGED_HP_ENEMY: D_LOG, EV_ID.ENEMY_DAMAGED_HP_PLAYER: IN_LOG}
+    TOP_LOG_ASSIST = {EV_ID.PLAYER_ASSIST_TO_KILL_ENEMY, EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY, EV_ID.PLAYER_USED_ARMOR}
+    EXTENDED_DAMAGE = {EV_ID.PLAYER_DAMAGED_HP_ENEMY: D_LOG, EV_ID.ENEMY_DAMAGED_HP_PLAYER: IN_LOG}
     GLOBAL = "log_global"
     HOT_KEY = "logsAltmode_KEY"
     ICONS = "icons"
@@ -275,7 +275,9 @@ class DAMAGE_LOG:
     NORMAL, GOLD = SHELL
     SHELL_COLOR = "shellColor"
     SHELL_TYPE = "shellType"
+    SHELL_ICON = "shellIcon"
     SHELL_TYPES = "shellTypes"
+    SHELL_ICONS = "shellIcons"
     SHOTS = "shots"
     SPOTTED_TANKS = "spottedTanks"
     STUN_ICON = "stunIcon"
@@ -293,8 +295,6 @@ class DAMAGE_LOG:
     }
     TOP_LOG = "log_total"
     TOTAL_DAMAGE = "totalDamage"
-    HIGH_EXPLOSIVE_PREMIUM = "HIGH_EXPLOSIVE_PREMIUM"
-    UNDEFINED = "UNDEFINED"
     UNKNOWN_TAG = "unknown"
     USER_NAME = "userName"
     VEHICLE_CLASS = "vehicleClass"
@@ -304,6 +304,11 @@ class DAMAGE_LOG:
     WG_BLOCKED = "wg_log_hide_block"
     WG_CRITS = "wg_log_hide_crits"
     WG_POS = "wg_log_pos_fix"
+    ARMOR_PIERCING_CR_PREMIUM = "ARMOR_PIERCING_CR_PREMIUM"
+    ARMOR_PIERCING_PREMIUM = "ARMOR_PIERCING_PREMIUM"
+    HIGH_EXPLOSIVE_PREMIUM = "HIGH_EXPLOSIVE_PREMIUM"
+    HOLLOW_CHARGE_PREMIUM = "HOLLOW_CHARGE_PREMIUM"
+    UNDEFINED = "UNDEFINED"
 
 
 class ARCADE:

@@ -124,7 +124,7 @@ class DamageLog(DamageLogsMeta):
             data = 0
             if e_type == EV_ID.PLAYER_SPOTTED_ENEMY:
                 data += event.getCount()
-            elif e_type in CONSTANTS.E_ASSIST or e_type in CONSTANTS.E_DAMAGE:
+            elif e_type in CONSTANTS.TOP_LOG_ASSIST or e_type in CONSTANTS.EXTENDED_DAMAGE:
                 data += int(extra.getDamage())
             elif e_type == EV_ID.DESTRUCTIBLE_DAMAGED:
                 data += int(extra)
@@ -134,9 +134,9 @@ class DamageLog(DamageLogsMeta):
                     self.topMacro[CONSTANTS.ASSIST_STUN] = 0
                 self.topMacro[CONSTANTS.TOP_MACROS_NAME[e_type]] += data
                 self.updateTopLog()
-            if e_type in CONSTANTS.E_DAMAGE and self.logsEnabledSetting.get(e_type):
+            if e_type in CONSTANTS.EXTENDED_DAMAGE and self.logsEnabledSetting.get(e_type):
                 self.addToExtendedLog(self.eveToLog[e_type], self.eveToLogConfig[e_type],
-                                      CONSTANTS.E_DAMAGE[e_type], event.getTargetID(),
+                                      CONSTANTS.EXTENDED_DAMAGE[e_type], event.getTargetID(),
                                       extra.getAttackReasonID(), data, extra.getShellType(),
                                       extra.isShellGold())
 
@@ -178,10 +178,10 @@ class DamageLog(DamageLogsMeta):
             self.shots[log_name].append(vehicle_id)
         is_dlog = log_name == CONSTANTS.D_LOG
         if shell_type is None:
+            shell_type = CONSTANTS.UNDEFINED
             if is_dlog and attack_reason_id == GLOBAL.ZERO:
                 shell_type = cache.player.getVehicleDescriptor().shot.shell.kind
-            else:
-                shell_type = CONSTANTS.UNDEFINED
+        shell_icon_name = shell_type + "_PREMIUM" if is_dlog else shell_type
         vehicle = log_dict.setdefault(vehicle_id, SafeDict())
         info = cache.arenaDP.getVehicleInfo(vehicle_id)
         if vehicle:
@@ -207,6 +207,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[CONSTANTS.LAST_DAMAGE] = vehicle[CONSTANTS.DAMAGE_LIST][GLOBAL.LAST]
         vehicle[CONSTANTS.ATTACK_REASON] = cfg.log_global[CONSTANTS.ATTACK_REASON][ATTACK_REASONS[attack_reason_id]]
         vehicle[CONSTANTS.SHELL_TYPE] = settings[CONSTANTS.SHELL_TYPES][shell_type]
+        vehicle[CONSTANTS.SHELL_ICON] = settings[CONSTANTS.SHELL_ICONS][shell_icon_name]
         vehicle[CONSTANTS.SHELL_COLOR] = settings[CONSTANTS.SHELL_COLOR][CONSTANTS.SHELL[gold]]
         vehicle[CONSTANTS.TANK_NAME] = CONSTANTS.LIST_SEPARATOR.join(sorted(vehicle[CONSTANTS.TANK_NAMES]))
         vehicle_id = cache.player.playerVehicleID if not is_dlog else vehicle_id

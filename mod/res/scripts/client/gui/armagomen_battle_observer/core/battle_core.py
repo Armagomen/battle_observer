@@ -48,15 +48,17 @@ class _BattleCore(object):
                 cache.tankAvgDamage = float(avg)
 
     @staticmethod
-    def checkHealthEnable():
+    def isTeamHealthEnabled():
         return cfg.hp_bars[GLOBAL.ENABLED] or \
                cfg.main_gun[GLOBAL.ENABLED] and cfg.main_gun[MAIN_GUN.DYNAMIC] or \
                cfg.players_damages[GLOBAL.ENABLED] or \
                cfg.players_bars[GLOBAL.ENABLED]
 
     @staticmethod
-    def isAllowedBattleType():
-        arenaVisitor = getArenaVisitor()
+    def isAllowedBattleType(arenaVisitor=None):
+        enabled = False
+        if arenaVisitor is None:
+            arenaVisitor = getArenaVisitor()
         if arenaVisitor is not None:
             enabled = arenaVisitor.gui.isRandomBattle() or \
                       arenaVisitor.gui.isTrainingBattle() or \
@@ -64,9 +66,7 @@ class _BattleCore(object):
                       arenaVisitor.getArenaGuiType() in (ARENA_GUI_TYPE.UNKNOWN,
                                                          ARENA_GUI_TYPE.FORT_BATTLE_2,
                                                          ARENA_GUI_TYPE.SORTIE_2)
-            return enabled, arenaVisitor
-        else:
-            return False, None
+        return enabled, arenaVisitor
 
     def onEnterBattlePage(self):
         cache.player = getPlayer()
@@ -76,7 +76,7 @@ class _BattleCore(object):
             arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled += self.onVehicleKilled
-            self.load_health_module = self.checkHealthEnable()
+            self.load_health_module = self.isTeamHealthEnabled()
             if self.load_health_module:
                 g_events.onHealthChanged += self.healthChanged
                 if cache.player and hasattr(cache.player, "onVehicleEnterWorld"):

@@ -1,11 +1,11 @@
 from math import degrees
 
-from constants import IS_DEVELOPMENT
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
+from ..core.battle_core import b_core
 from ..core.bo_constants import GLOBAL, MINIMAP
 from ..core.config import cfg
 from ..core.core import overrideMethod
@@ -66,13 +66,11 @@ class VehiclesPlugin(plugins.ArenaVehiclesPlugin):
 
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
-    if cfg.minimap[GLOBAL.ENABLED]:
+    if cfg.minimap[GLOBAL.ENABLED] and b_core.isAllowedBattleType(arenaVisitor)[0]:
         setup = {'equipments': plugins.EquipmentsPlugin,
                  'vehicles': VehiclesPlugin if cfg.minimap[MINIMAP.DEATH_PERMANENT] else plugins.ArenaVehiclesPlugin,
                  'personal': BOPersonalEntriesPlugin,
                  'area': plugins.AreaStaticMarkerPlugin}
-        if IS_DEVELOPMENT:
-            setup['teleport'] = plugins.TeleportPlugin
         return setup
     else:
         return base(plugin, arenaVisitor)

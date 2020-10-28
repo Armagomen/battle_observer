@@ -1,5 +1,5 @@
 @Echo off
-set ModVer=1.30.3
+set ModVer=1.30.4
 
 set WotVer=1.10.1.1
 REM set WotVer="1.10.1.0 Common Test"

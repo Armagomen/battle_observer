@@ -306,14 +306,26 @@ class Config(object):
                 "</font></textformat>"
             ],
             DAMAGE_LOG.SHELL_TYPES: {
-                SHELL_TYPES.ARMOR_PIERCING_CR: "БП",
+                SHELL_TYPES.HOLLOW_CHARGE: "КС",
+                SHELL_TYPES.HIGH_EXPLOSIVE: "ОФ",
                 SHELL_TYPES.ARMOR_PIERCING: "ББ",
                 SHELL_TYPES.ARMOR_PIERCING_HE: "ББ",
-                SHELL_TYPES.HIGH_EXPLOSIVE: "ОФ",
-                SHELL_TYPES.HOLLOW_CHARGE: "КС",
+                SHELL_TYPES.ARMOR_PIERCING_CR: "БП",
                 SHELL_TYPES.SMOKE: "SM",
-                DAMAGE_LOG.HIGH_EXPLOSIVE_PREMIUM: "ОФ-г",
                 DAMAGE_LOG.UNDEFINED: "--"
+            },
+            DAMAGE_LOG.SHELL_ICONS: {
+                SHELL_TYPES.HOLLOW_CHARGE: "",
+                SHELL_TYPES.HIGH_EXPLOSIVE: "",
+                SHELL_TYPES.ARMOR_PIERCING: "",
+                SHELL_TYPES.ARMOR_PIERCING_HE: "",
+                SHELL_TYPES.ARMOR_PIERCING_CR: "",
+                SHELL_TYPES.SMOKE: "",
+                DAMAGE_LOG.HIGH_EXPLOSIVE_PREMIUM: "",
+                DAMAGE_LOG.ARMOR_PIERCING_CR_PREMIUM: "",
+                DAMAGE_LOG.ARMOR_PIERCING_PREMIUM: "",
+                DAMAGE_LOG.HOLLOW_CHARGE_PREMIUM: "",
+                DAMAGE_LOG.UNDEFINED: ""
             },
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
@@ -357,8 +369,20 @@ class Config(object):
                 SHELL_TYPES.HIGH_EXPLOSIVE: "ОФ",
                 SHELL_TYPES.HOLLOW_CHARGE: "КС",
                 SHELL_TYPES.SMOKE: "SM",
-                DAMAGE_LOG.HIGH_EXPLOSIVE_PREMIUM: "ОФ-г",
                 DAMAGE_LOG.UNDEFINED: "--"
+            },
+            DAMAGE_LOG.SHELL_ICONS: {
+                SHELL_TYPES.HOLLOW_CHARGE: "",
+                SHELL_TYPES.HIGH_EXPLOSIVE: "",
+                SHELL_TYPES.ARMOR_PIERCING: "",
+                SHELL_TYPES.ARMOR_PIERCING_HE: "",
+                SHELL_TYPES.ARMOR_PIERCING_CR: "",
+                SHELL_TYPES.SMOKE: "",
+                DAMAGE_LOG.HIGH_EXPLOSIVE_PREMIUM: "",
+                DAMAGE_LOG.ARMOR_PIERCING_CR_PREMIUM: "",
+                DAMAGE_LOG.ARMOR_PIERCING_PREMIUM: "",
+                DAMAGE_LOG.HOLLOW_CHARGE_PREMIUM: "",
+                DAMAGE_LOG.UNDEFINED: ""
             },
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,

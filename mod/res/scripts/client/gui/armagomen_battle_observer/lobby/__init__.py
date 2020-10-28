@@ -51,7 +51,6 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def eventListener(self, event):
         if event.name == VIEW_ALIAS.LOBBY_HANGAR:
             lobby_page = self._app.containerManager.getContainer(WindowLayer.VIEW).getView()
-            # lobby_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
             if lobby_page is not None and lobby_page._isDAAPIInited():
                 flash = lobby_page.flashObject
                 if hasattr(flash, SWF.ATTRIBUTE_NAME):
