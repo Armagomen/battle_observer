@@ -181,7 +181,7 @@ class DamageLog(DamageLogsMeta):
             shell_type = CONSTANTS.UNDEFINED
             if is_dlog and attack_reason_id == GLOBAL.ZERO:
                 shell_type = cache.player.getVehicleDescriptor().shot.shell.kind
-        shell_icon_name = shell_type + "_PREMIUM" if is_dlog else shell_type
+        shell_icon_name = shell_type + "_PREMIUM" if gold else shell_type
         vehicle = log_dict.setdefault(vehicle_id, SafeDict())
         info = cache.arenaDP.getVehicleInfo(vehicle_id)
         if vehicle:
