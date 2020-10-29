@@ -5,7 +5,7 @@ import os
 import time
 
 import Keys
-from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES
+from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from .bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, \
     DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HANGAR_CAMERA, HP_BARS, LOAD_LIST, MAIN, MAIN_GUN, MARKERS, \
@@ -305,34 +305,16 @@ class Config(object):
                 "%(userName).12s %(killedIcon)s",
                 "</font></textformat>"
             ],
-            DAMAGE_LOG.SHELL_TYPES: {
-                SHELL_TYPES.HOLLOW_CHARGE: "КС",
-                SHELL_TYPES.HIGH_EXPLOSIVE: "ОФ",
-                SHELL_TYPES.ARMOR_PIERCING: "ББ",
-                SHELL_TYPES.ARMOR_PIERCING_HE: "ББ",
-                SHELL_TYPES.ARMOR_PIERCING_CR: "БП",
-                SHELL_TYPES.SMOKE: "SM",
-                DAMAGE_LOG.UNDEFINED: "--"
-            },
-            DAMAGE_LOG.SHELL_ICONS: {
-                SHELL_TYPES.HOLLOW_CHARGE: "",
-                SHELL_TYPES.HIGH_EXPLOSIVE: "",
-                SHELL_TYPES.ARMOR_PIERCING: "",
-                SHELL_TYPES.ARMOR_PIERCING_HE: "",
-                SHELL_TYPES.ARMOR_PIERCING_CR: "",
-                SHELL_TYPES.SMOKE: "",
-                DAMAGE_LOG.HIGH_EXPLOSIVE_PREMIUM: "",
-                DAMAGE_LOG.ARMOR_PIERCING_CR_PREMIUM: "",
-                DAMAGE_LOG.ARMOR_PIERCING_PREMIUM: "",
-                DAMAGE_LOG.HOLLOW_CHARGE_PREMIUM: "",
-                DAMAGE_LOG.UNDEFINED: ""
-            },
+            DAMAGE_LOG.SHELL_TYPES: {shell_type: "" for shell_type in SHELL_TYPES_LIST},
+            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in DAMAGE_LOG.SHELL_LIST},
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
+        self.log_damage_extended[DAMAGE_LOG.SHELL_TYPES][DAMAGE_LOG.UNDEFINED] = ""
+        self.log_damage_extended[DAMAGE_LOG.SHELL_ICONS][DAMAGE_LOG.UNDEFINED] = ""
         self.log_input_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
@@ -362,34 +344,16 @@ class Config(object):
                 "%(userName).12s %(killedIcon)s",
                 "</font></textformat>"
             ],
-            DAMAGE_LOG.SHELL_TYPES: {
-                SHELL_TYPES.ARMOR_PIERCING_CR: "БП",
-                SHELL_TYPES.ARMOR_PIERCING: "ББ",
-                SHELL_TYPES.ARMOR_PIERCING_HE: "ББ",
-                SHELL_TYPES.HIGH_EXPLOSIVE: "ОФ",
-                SHELL_TYPES.HOLLOW_CHARGE: "КС",
-                SHELL_TYPES.SMOKE: "SM",
-                DAMAGE_LOG.UNDEFINED: "--"
-            },
-            DAMAGE_LOG.SHELL_ICONS: {
-                SHELL_TYPES.HOLLOW_CHARGE: "",
-                SHELL_TYPES.HIGH_EXPLOSIVE: "",
-                SHELL_TYPES.ARMOR_PIERCING: "",
-                SHELL_TYPES.ARMOR_PIERCING_HE: "",
-                SHELL_TYPES.ARMOR_PIERCING_CR: "",
-                SHELL_TYPES.SMOKE: "",
-                DAMAGE_LOG.HIGH_EXPLOSIVE_PREMIUM: "",
-                DAMAGE_LOG.ARMOR_PIERCING_CR_PREMIUM: "",
-                DAMAGE_LOG.ARMOR_PIERCING_PREMIUM: "",
-                DAMAGE_LOG.HOLLOW_CHARGE_PREMIUM: "",
-                DAMAGE_LOG.UNDEFINED: ""
-            },
+            DAMAGE_LOG.SHELL_TYPES: {shell_type: "" for shell_type in SHELL_TYPES_LIST},
+            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in DAMAGE_LOG.SHELL_LIST},
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
+        self.log_input_extended[DAMAGE_LOG.SHELL_TYPES][DAMAGE_LOG.UNDEFINED] = ""
+        self.log_input_extended[DAMAGE_LOG.SHELL_ICONS][DAMAGE_LOG.UNDEFINED] = ""
         self.hp_bars = {
             GLOBAL.ENABLED: True,
             HP_BARS.STYLE: HP_BARS.LEGUE_STYLE,

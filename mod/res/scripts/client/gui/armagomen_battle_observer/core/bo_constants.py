@@ -1,5 +1,6 @@
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT
+from constants import SHELL_TYPES_LIST
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from vehicle_systems.tankStructure import TankPartIndexes
@@ -304,11 +305,11 @@ class DAMAGE_LOG:
     WG_BLOCKED = "wg_log_hide_block"
     WG_CRITS = "wg_log_hide_crits"
     WG_POS = "wg_log_pos_fix"
-    ARMOR_PIERCING_CR_PREMIUM = "ARMOR_PIERCING_CR_PREMIUM"
-    ARMOR_PIERCING_PREMIUM = "ARMOR_PIERCING_PREMIUM"
-    HIGH_EXPLOSIVE_PREMIUM = "HIGH_EXPLOSIVE_PREMIUM"
-    HOLLOW_CHARGE_PREMIUM = "HOLLOW_CHARGE_PREMIUM"
     UNDEFINED = "UNDEFINED"
+    PREMIUM = "_PREMIUM"
+    PREMIUM_SHELLS = {"ARMOR_PIERCING_CR_PREMIUM", "ARMOR_PIERCING_PREMIUM",
+                      "HIGH_EXPLOSIVE_PREMIUM", "HOLLOW_CHARGE_PREMIUM"}
+    SHELL_LIST = SHELL_TYPES_LIST + tuple(PREMIUM_SHELLS)
 
 
 class ARCADE:

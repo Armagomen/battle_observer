@@ -169,6 +169,20 @@ class DamageLog(DamageLogsMeta):
         self.damage_log[CONSTANTS.KILLS].add(targetID)
         self.updateExtendedLog(self.damage_log, cfg.log_damage_extended, CONSTANTS.D_LOG)
 
+    @staticmethod
+    def checkShell(attack_reason_id, gold, is_dlog, shell_type):
+        if is_dlog and attack_reason_id == GLOBAL.ZERO:
+            v_desc = cache.player.getVehicleDescriptor()
+            shell_type = v_desc.shot.shell.kind
+            shell_icon_name = v_desc.shot.shell.iconName
+            gold = shell_icon_name in CONSTANTS.PREMIUM_SHELLS
+        elif shell_type in CONSTANTS.SHELL_LIST:
+            shell_icon_name = shell_type + CONSTANTS.PREMIUM if gold else shell_type
+        else:
+            shell_type = CONSTANTS.UNDEFINED
+            shell_icon_name = CONSTANTS.UNDEFINED
+        return gold, shell_icon_name, shell_type
+
     def addToExtendedLog(self, *args):
         """add or update log item
         :param args: log_dict, settings, log_name, vehicle_id, attack_reason_id, damage, shell_type, gold
@@ -177,11 +191,7 @@ class DamageLog(DamageLogsMeta):
         if vehicle_id not in self.shots[log_name]:
             self.shots[log_name].append(vehicle_id)
         is_dlog = log_name == CONSTANTS.D_LOG
-        if shell_type is None:
-            shell_type = CONSTANTS.UNDEFINED
-            if is_dlog and attack_reason_id == GLOBAL.ZERO:
-                shell_type = cache.player.getVehicleDescriptor().shot.shell.kind
-        shell_icon_name = shell_type + "_PREMIUM" if gold else shell_type
+        gold, shell_icon_name, shell_type = self.checkShell(attack_reason_id, gold, is_dlog, shell_type)
         vehicle = log_dict.setdefault(vehicle_id, SafeDict())
         info = cache.arenaDP.getVehicleInfo(vehicle_id)
         if vehicle:
