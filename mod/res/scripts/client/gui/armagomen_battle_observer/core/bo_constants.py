@@ -8,7 +8,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 MOD_PATH = "gui.armagomen_battle_observer.{}"
-MOD_VERSION = "1.30.4"
+MOD_VERSION = "1.30.5"
 API_VERSION = "1.10.6"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -75,7 +75,6 @@ class URLS:
     HOST_NAME = "armagomen.bb-t.ru"
     DONATE_UA_URL = "https://donatua.com/to/armagomen"
     DONATE_RU_URL = "https://donatepay.ru/don/armagomen"
-    DONATION_ALERTS = "https://www.donationalerts.com/r/armagomentv"
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
 
