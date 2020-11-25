@@ -57,7 +57,7 @@ translate = {
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Сhange Anonymous Name",
-        "removeHandbrake": "remove Handbrake"
+        "removeHandbrake": "Handbremse für AT-SPG deaktivieren."
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone (65% des Originals).",

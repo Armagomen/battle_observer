@@ -57,7 +57,7 @@ translate = {
         "anonymousEnableShow": "Показывать анонимов.",
         "useKeyPairs": "Использовать парные Alt, Ctrl, Shift",
         "anonymousNameChange": "Изменить имена анонимов.",
-        "removeHandbrake": "Убрать ручной тормоз на ПТ"
+        "removeHandbrake": "Отключение ручного тормоза для ПТ-САУ"
     },
     "dispersion_circle": {
         "header": "Уменьшенное сведение / серверный прицел.",

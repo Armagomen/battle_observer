@@ -57,7 +57,7 @@ translate = {
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Сhange Anonymous Name",
-        "removeHandbrake": "remove Handbrake"
+        "removeHandbrake": "Disabling the hand brake for AT-SPG."
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns",

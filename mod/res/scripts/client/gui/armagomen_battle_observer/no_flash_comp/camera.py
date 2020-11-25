@@ -203,19 +203,9 @@ def enablePostMortem(base_enable, mode, **kwargs):
 
 
 @overrideMethod(SniperAimingSystem, "__isTurretHasStaticYaw")
-def isTurretHasStaticYaw(base, *args, **kwargs):
-    if cfg.main[MAIN.REMOVE_HANDBRAKE]:
-        return True
-    else:
-        return base(*args, **kwargs)
-
-
 @overrideMethod(SniperControlMode, "getPreferredAutorotationMode")
-def getPreferredAutorotationMode(base_get, *args, **kwargs):
-    if cfg.main[MAIN.REMOVE_HANDBRAKE]:
-        return True
-    else:
-        return base_get(*args, **kwargs)
+def removeHandbrake(base, *args, **kwargs):
+    return cfg.main[MAIN.REMOVE_HANDBRAKE] or base(*args, **kwargs)
 
 
 @overrideMethod(SniperAimingSystem, "getPitchLimits")
@@ -223,9 +213,7 @@ def getPitchLimits(base_get, aimingSystem, turretYaw=0.0):
     if cfg.main[MAIN.REMOVE_HANDBRAKE]:
         aimingSystem.enableHorizontalStabilizerRuntime(True)
         aimingSystem.forceFullStabilization(True)
-        return aimingSystem.getDynamicPitchLimits(turretYaw)
-    else:
-        return base_get(aimingSystem, turretYaw)
+    return base_get(aimingSystem, turretYaw)
 
 
 m_sniperCamera = ObserverSniperCamera()
