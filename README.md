@@ -4,7 +4,7 @@
 ### Официальные ресурсы ###
 
 * [Канал на YouTube](https://www.youtube.com/channel/UCIksyJfDn5bOoig4iO7BKEA)
-* [Сайт](http://armagomen.bb-t.tu)
+* [Сайт](http://armagomen.bb-t.ru/load/panel_scheta_team_hp/panel_scheta_ot_armagomen/9-1-0-1)
 
 Дополнительная информация по настройке.
 
