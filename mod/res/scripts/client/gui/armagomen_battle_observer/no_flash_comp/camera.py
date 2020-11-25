@@ -203,28 +203,31 @@ def enablePostMortem(base_enable, mode, **kwargs):
     return base_enable(mode, **kwargs)
 
 
-def onGuiCacheSyncCompleted(*args, **kwargs):
-    SettingsParams().apply({'horStabilizationSnp': True}, True)
+class ObserverNoHandbrake(object):
+
+    def __init__(self):
+        g_playerEvents.onGuiCacheSyncCompleted += self.onGuiCacheSyncCompleted
+
+    def onGuiCacheSyncCompleted(self, *args, **kwargs):
+        SettingsParams().apply({'horStabilizationSnp': True}, True)
+
+    @staticmethod
+    @overrideMethod(SniperAimingSystem, "enable")
+    def sniperAimingEnable(enable, aiming_system, *args, **kwargs):
+        if aiming_system._SniperAimingSystem__yawLimits is not None and cfg.main[MAIN.REMOVE_HANDBRAKE]:
+            aiming_system._SniperAimingSystem__yawLimits = None
+        return enable(aiming_system, *args, **kwargs)
+
+    @staticmethod
+    @overrideMethod(SniperControlMode, "getPreferredAutorotationMode")
+    def getPreferredAutorotationMode(base_get, *args, **kwargs):
+        if cfg.main[MAIN.REMOVE_HANDBRAKE]:
+            return True
+        else:
+            return base_get(*args, **kwargs)
 
 
-g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
-
-
-@overrideMethod(SniperAimingSystem, "enable")
-def getPreferredAutorotationMode(enable, aiming_system, *args, **kwargs):
-    if aiming_system._SniperAimingSystem__yawLimits is not None and cfg.main[MAIN.REMOVE_HANDBRAKE]:
-        aiming_system._SniperAimingSystem__yawLimits = None
-    return enable(aiming_system, *args, **kwargs)
-
-
-@overrideMethod(SniperControlMode, "getPreferredAutorotationMode")
-def getPreferredAutorotationMode(base_get, *args, **kwargs):
-    if cfg.main[MAIN.REMOVE_HANDBRAKE]:
-        return True
-    else:
-        return base_get(*args, **kwargs)
-
-
+m_noHandbrake = ObserverNoHandbrake()
 m_sniperCamera = ObserverSniperCamera()
 m_arcadeCamera = ObserverArcadeCamera()
 m_strategicCamera = ObserverStrategicCamera()
