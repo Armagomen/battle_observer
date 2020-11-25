@@ -9,7 +9,6 @@ from PlayerEvents import g_playerEvents
 from aih_constants import CTRL_MODE_NAME
 from constants import AOI
 from gui import ClientHangarSpace
-from gui.Scaleform.daapi.view.common.settings.SettingsParams import SettingsParams
 from gui.battle_control import avatar_getter
 from ..core.battle_cache import cache
 from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
@@ -203,31 +202,32 @@ def enablePostMortem(base_enable, mode, **kwargs):
     return base_enable(mode, **kwargs)
 
 
-class ObserverNoHandbrake(object):
-
-    def __init__(self):
-        g_playerEvents.onGuiCacheSyncCompleted += self.onGuiCacheSyncCompleted
-
-    def onGuiCacheSyncCompleted(self, *args, **kwargs):
-        SettingsParams().apply({'horStabilizationSnp': True}, True)
-
-    @staticmethod
-    @overrideMethod(SniperAimingSystem, "enable")
-    def sniperAimingEnable(enable, aiming_system, *args, **kwargs):
-        if aiming_system._SniperAimingSystem__yawLimits is not None and cfg.main[MAIN.REMOVE_HANDBRAKE]:
-            aiming_system._SniperAimingSystem__yawLimits = None
-        return enable(aiming_system, *args, **kwargs)
-
-    @staticmethod
-    @overrideMethod(SniperControlMode, "getPreferredAutorotationMode")
-    def getPreferredAutorotationMode(base_get, *args, **kwargs):
-        if cfg.main[MAIN.REMOVE_HANDBRAKE]:
-            return True
-        else:
-            return base_get(*args, **kwargs)
+@overrideMethod(SniperAimingSystem, "__isTurretHasStaticYaw")
+def isTurretHasStaticYaw(base, *args, **kwargs):
+    if cfg.main[MAIN.REMOVE_HANDBRAKE]:
+        return True
+    else:
+        return base(*args, **kwargs)
 
 
-m_noHandbrake = ObserverNoHandbrake()
+@overrideMethod(SniperControlMode, "getPreferredAutorotationMode")
+def getPreferredAutorotationMode(base_get, *args, **kwargs):
+    if cfg.main[MAIN.REMOVE_HANDBRAKE]:
+        return True
+    else:
+        return base_get(*args, **kwargs)
+
+
+@overrideMethod(SniperAimingSystem, "getPitchLimits")
+def getPitchLimits(base_get, aimingSystem, turretYaw=0.0):
+    if cfg.main[MAIN.REMOVE_HANDBRAKE]:
+        aimingSystem.enableHorizontalStabilizerRuntime(True)
+        aimingSystem.forceFullStabilization(True)
+        return aimingSystem.getDynamicPitchLimits(turretYaw)
+    else:
+        return base_get(aimingSystem, turretYaw)
+
+
 m_sniperCamera = ObserverSniperCamera()
 m_arcadeCamera = ObserverArcadeCamera()
 m_strategicCamera = ObserverStrategicCamera()

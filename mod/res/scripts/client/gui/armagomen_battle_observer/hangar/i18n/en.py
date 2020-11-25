@@ -57,8 +57,7 @@ translate = {
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Сhange Anonymous Name",
-        "removeHandbrake": "remove Handbrake",
-        "removeHandbrake_tooltip": "NEED TO RESTART THE GAME AFTER APPLYING THE SETTINGS"
+        "removeHandbrake": "remove Handbrake"
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns",

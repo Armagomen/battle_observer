@@ -57,8 +57,7 @@ translate = {
         "anonymousEnableShow": "Показывать анонимов.",
         "useKeyPairs": "Использовать парные Alt, Ctrl, Shift",
         "anonymousNameChange": "Изменить имена анонимов.",
-        "removeHandbrake": "Убрать ручной тормоз на ПТ",
-        "removeHandbrake_tooltip": "НЕОБХОДИМ ПЕРЕЗАПУСК ИГРЫ ПОСЛЕ ПРИМЕНЕНИЯ НАСТРОЙКИ"
+        "removeHandbrake": "Убрать ручной тормоз на ПТ"
     },
     "dispersion_circle": {
         "header": "Уменьшенное сведение / серверный прицел.",
