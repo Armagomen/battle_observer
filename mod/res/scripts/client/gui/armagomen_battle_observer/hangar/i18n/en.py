@@ -56,7 +56,9 @@ translate = {
         "carouselRows": "number of rows of multi-row tank carousel",
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
-        "anonymousNameChange": "Сhange Anonymous Name"
+        "anonymousNameChange": "Сhange Anonymous Name",
+        "removeHandbrake": "remove Handbrake",
+        "removeHandbrake_tooltip": "NEED TO RESTART THE GAME AFTER APPLYING THE SETTINGS"
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns",

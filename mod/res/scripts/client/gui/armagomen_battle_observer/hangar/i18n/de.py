@@ -56,7 +56,9 @@ translate = {
                                     "<br> incl. Chat-Formular und alles, was damit verbunden ist",
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
-        "anonymousNameChange": "Сhange Anonymous Name"
+        "anonymousNameChange": "Сhange Anonymous Name",
+        "removeHandbrake": "remove Handbrake",
+        "removeHandbrake_tooltip": "NEED TO RESTART THE GAME AFTER APPLYING THE SETTINGS"
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone (65% des Originals).",

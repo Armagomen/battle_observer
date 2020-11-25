@@ -48,6 +48,7 @@ translate = {
         "hideClanAbbrev": "Отключить отображение клана",
         "hideClanAbbrev_tooltip": "в ушах, окне по tab, на экране загрузки.",
         "fps_enableFPSLimiter": "Включить ограничитель FPS",
+        "fps_enableFPSLimiter_tooltip": "НЕОБХОДИМ ПЕРЕЗАПУСК ИГРЫ ПОСЛЕ ПРИМЕНЕНИЯ НАСТРОЙКИ",
         "enableFPSLimiter_tooltip": "Внимание, для полного отключения или включения необходим перезапуск игры.",
         "fps_maxFrameRate": "Максимальный FPS",
         "hideChatInRandom": "Отключить чат в случайных боях",
@@ -55,7 +56,9 @@ translate = {
                                     "что с ней связано.",
         "anonymousEnableShow": "Показывать анонимов.",
         "useKeyPairs": "Использовать парные Alt, Ctrl, Shift",
-        "anonymousNameChange": "Изменить имена анонимов."
+        "anonymousNameChange": "Изменить имена анонимов.",
+        "removeHandbrake": "Убрать ручной тормоз на ПТ",
+        "removeHandbrake_tooltip": "НЕОБХОДИМ ПЕРЕЗАПУСК ИГРЫ ПОСЛЕ ПРИМЕНЕНИЯ НАСТРОЙКИ"
     },
     "dispersion_circle": {
         "header": "Уменьшенное сведение / серверный прицел.",

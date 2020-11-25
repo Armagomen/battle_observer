@@ -1,16 +1,18 @@
 import BattleReplay
-from aih_constants import CTRL_MODE_NAME
-from AvatarInputHandler.control_modes import PostMortemControlMode, SniperControlMode
+from AvatarInputHandler.AimingSystems.SniperAimingSystem import SniperAimingSystem
 from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera, MinMax
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
+from AvatarInputHandler.control_modes import PostMortemControlMode, SniperControlMode
+from PlayerEvents import g_playerEvents
+from aih_constants import CTRL_MODE_NAME
 from constants import AOI
 from gui import ClientHangarSpace
+from gui.Scaleform.daapi.view.common.settings.SettingsParams import SettingsParams
 from gui.battle_control import avatar_getter
-from PlayerEvents import g_playerEvents
 from ..core.battle_cache import cache
-from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC
+from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
 from ..core.bw_utils import callback
 from ..core.config import cfg
 from ..core.core import overrideMethod
@@ -199,6 +201,28 @@ def enablePostMortem(base_enable, mode, **kwargs):
             kwargs[POSTMORTEM.DURATION] = callback_time
             callback(callback_time, lambda: avatar_getter.setForcedGuiControlMode(False))
     return base_enable(mode, **kwargs)
+
+
+def onGuiCacheSyncCompleted(*args, **kwargs):
+    SettingsParams().apply({'horStabilizationSnp': True}, True)
+
+
+g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
+
+
+@overrideMethod(SniperAimingSystem, "enable")
+def getPreferredAutorotationMode(enable, aiming_system, *args, **kwargs):
+    if aiming_system._SniperAimingSystem__yawLimits is not None and cfg.main[MAIN.REMOVE_HANDBRAKE]:
+        aiming_system._SniperAimingSystem__yawLimits = None
+    return enable(aiming_system, *args, **kwargs)
+
+
+@overrideMethod(SniperControlMode, "getPreferredAutorotationMode")
+def getPreferredAutorotationMode(base_get, *args, **kwargs):
+    if cfg.main[MAIN.REMOVE_HANDBRAKE]:
+        return True
+    else:
+        return base_get(*args, **kwargs)
 
 
 m_sniperCamera = ObserverSniperCamera()

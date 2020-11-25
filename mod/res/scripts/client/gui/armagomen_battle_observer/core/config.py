@@ -39,7 +39,8 @@ class Config(object):
             MAIN.ENABLE_FPS_LIMITER: False,
             MAIN.MAX_FRAME_RATE: 200,
             MAIN.AUTO_CLEAR_CACHE: False,
-            MAIN.USE_KEY_PAIRS: False
+            MAIN.USE_KEY_PAIRS: False,
+            MAIN.REMOVE_HANDBRAKE: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
