@@ -64,13 +64,13 @@ s применяется для всех макросов по умолчани�
 "user_background": [
   {
    "smoothing":true, "x":0, "y":0, "alpha":0.9,
-   "img":"../../../mods/configs/mod_battle_observer/любое имя.png",
+   "img":"mods/configs/mod_battle_observer/путь к изображению 1.png",
    "width":300,"height":150,
    "centeredX":false,"centeredY":false,"enabled":false
   },
   {
    "smoothing":true, "x":0, "y":0, "alpha":0.9,
-   "img":"../../../mods/configs/mod_battle_observer/любое имя.png",
+   "img":"mods/configs/mod_battle_observer/путь к изображению 2.png",
    "width":300,"height":150,
    "centeredX":false,"centeredY":false,"enabled":false
   }
