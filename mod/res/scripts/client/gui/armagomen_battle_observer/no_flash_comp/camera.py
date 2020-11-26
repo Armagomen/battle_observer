@@ -208,12 +208,13 @@ def removeHandbrake(base, *args, **kwargs):
     return cfg.main[MAIN.REMOVE_HANDBRAKE] or base(*args, **kwargs)
 
 
-@overrideMethod(SniperAimingSystem, "getPitchLimits")
-def getPitchLimits(base_get, aimingSystem, turretYaw=0.0):
+@overrideMethod(SniperControlMode, "enable")
+def sniperControlMode_enable(base_enable, controlMode, *args, **kwargs):
+    result = base_enable(controlMode, *args, **kwargs)
     if cfg.main[MAIN.REMOVE_HANDBRAKE]:
-        aimingSystem.enableHorizontalStabilizerRuntime(True)
-        aimingSystem.forceFullStabilization(True)
-    return base_get(aimingSystem, turretYaw)
+        controlMode._cam.aimingSystem.enableHorizontalStabilizerRuntime(True)
+        controlMode._cam.aimingSystem.forceFullStabilization(True)
+    return result
 
 
 m_sniperCamera = ObserverSniperCamera()
