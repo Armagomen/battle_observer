@@ -8,7 +8,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 MOD_PATH = "gui.armagomen_battle_observer.{}"
-MOD_VERSION = "1.30.8"
+MOD_VERSION = "1.30.9"
 API_VERSION = "1.10.7"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -27,6 +27,7 @@ class GLOBAL:
     def __init__(self):
         pass
 
+    CONFIG_ERROR = lambda: "Incorrect macros in config file."
     ONE_SECOND = 1.0
     DEBUG_MODE = False
     ALIGN = "align"

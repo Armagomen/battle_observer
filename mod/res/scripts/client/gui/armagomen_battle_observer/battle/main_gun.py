@@ -1,10 +1,10 @@
+from collections import defaultdict
 from math import ceil
 
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from ..core.battle_cache import cache, g_health
 from ..core.bo_constants import MAIN_GUN, GLOBAL
 from ..core.config import cfg
-from ..core.core import SafeDict
 from ..core.events import g_events
 from ..meta.battle.main_gun_meta import MainGunMeta
 
@@ -15,7 +15,7 @@ class MainGun(MainGunMeta):
 
     def __init__(self):
         super(MainGun, self).__init__()
-        self.macros = SafeDict()
+        self.macros = defaultdict(GLOBAL.CONFIG_ERROR)
         self._damage = GLOBAL.ZERO
         self._gunScore = GLOBAL.ZERO
         self.enabled = False

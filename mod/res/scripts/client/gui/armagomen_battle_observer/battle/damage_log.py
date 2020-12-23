@@ -8,7 +8,6 @@ from ..core.battle_cache import cache
 from ..core.bo_constants import DAMAGE_LOG as CONSTANTS, GLOBAL
 from ..core.bw_utils import callback
 from ..core.config import cfg
-from ..core.core import SafeDict
 from ..core.events import g_events
 from ..core.keys_parser import g_keysParser
 from ..meta.battle.damage_logs_meta import DamageLogsMeta
@@ -192,7 +191,7 @@ class DamageLog(DamageLogsMeta):
             self.shots[log_name].append(vehicle_id)
         is_dlog = log_name == CONSTANTS.D_LOG
         gold, shell_icon_name, shell_type = self.checkShell(attack_reason_id, gold, is_dlog, shell_type)
-        vehicle = log_dict.setdefault(vehicle_id, SafeDict())
+        vehicle = log_dict.setdefault(vehicle_id, defaultdict(GLOBAL.CONFIG_ERROR))
         info = cache.arenaDP.getVehicleInfo(vehicle_id)
         if vehicle:
             vehicle[CONSTANTS.DAMAGE_LIST].append(damage)

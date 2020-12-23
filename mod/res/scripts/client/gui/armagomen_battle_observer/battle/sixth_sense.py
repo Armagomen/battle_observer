@@ -1,8 +1,9 @@
+from collections import defaultdict
+
 from gui.Scaleform.daapi.view.battle.shared.indicators import SixthSenseIndicator
 from ..core.bo_constants import GLOBAL, SIXTH_SENSE
 from ..core.bw_utils import callback
 from ..core.config import cfg
-from ..core.core import SafeDict
 from ..core.events import g_events
 from ..core.timers import SixthSenseTimer
 from ..meta.battle.sixth_sense_meta import SixthSenseMeta
@@ -14,7 +15,7 @@ class SixthSense(SixthSenseMeta):
 
     def __init__(self):
         super(SixthSense, self).__init__()
-        self.macro = SafeDict()
+        self.macro = defaultdict(GLOBAL.CONFIG_ERROR)
         self.template = config[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE]
         self.showTimer = config[SIXTH_SENSE.SHOW_TIMER]
         self.macro[SIXTH_SENSE.M_TIME] = config[SIXTH_SENSE.TIME]

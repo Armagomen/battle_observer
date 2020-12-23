@@ -69,11 +69,6 @@ class ObserverCore(object):
 m_core = ObserverCore()
 
 
-class SafeDict(dict):
-    def __missing__(self, key):
-        return '%({macro})s'.format(macro=key)
-
-
 def overrideMethod(wg_class, method_name="__init__"):
     """
     :type wg_class: class object

@@ -1,11 +1,11 @@
+from collections import defaultdict
+
 from aih_constants import SHOT_RESULT
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from vehicle_systems.tankStructure import TankPartIndexes
-
 from ..core.battle_cache import cache as g_cache
 from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE
 from ..core.config import cfg
-from ..core.core import SafeDict
 from ..core.events import g_events
 from ..meta.battle.armor_calc_meta import ArmorCalcMeta
 
@@ -20,7 +20,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self.p100 = GLOBAL.F_ONE
         self.p500 = GLOBAL.F_ONE
         self.calcCache = GLOBAL.ZERO
-        self.calcMacro = SafeDict()
+        self.calcMacro = defaultdict(GLOBAL.CONFIG_ERROR)
         self.messages = ARMOR_CALC.DEFAULT_MESSAGES
         self.messages.update(config[ARMOR_CALC.MESSAGES])
         self.typeColors = cfg.colors[ARMOR_CALC.NAME]
