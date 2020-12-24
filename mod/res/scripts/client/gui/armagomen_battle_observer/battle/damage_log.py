@@ -191,7 +191,7 @@ class DamageLog(DamageLogsMeta):
             self.shots[log_name].append(vehicle_id)
         is_dlog = log_name == CONSTANTS.D_LOG
         gold, shell_icon_name, shell_type = self.checkShell(attack_reason_id, gold, is_dlog, shell_type)
-        vehicle = log_dict.setdefault(vehicle_id, defaultdict(GLOBAL.CONFIG_ERROR))
+        vehicle = log_dict.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         info = cache.arenaDP.getVehicleInfo(vehicle_id)
         if vehicle:
             vehicle[CONSTANTS.DAMAGE_LIST].append(damage)

@@ -23,7 +23,7 @@ class FlightTime(FlyghtTimeMeta):
         self.isSPG = False
         self.arenaVisitor = self.sessionProvider.arenaVisitor
         self.shared = self.sessionProvider.shared
-        self.macrosDict = defaultdict(GLOBAL.CONFIG_ERROR,
+        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
                                       {FLIGHT_TIME.M_FLIGHT_TIME: GLOBAL.ZERO, FLIGHT_TIME.M_DISTANCE: GLOBAL.ZERO})
 
     def _populate(self):

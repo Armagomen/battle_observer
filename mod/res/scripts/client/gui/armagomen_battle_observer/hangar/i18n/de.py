@@ -60,10 +60,15 @@ translate = {
         "removeHandbrake": "Handbremse für AT-SPG deaktivieren."
     },
     "dispersion_circle": {
-        "header": "Kreis für Streuung der Kanone (65% des Originals).",
+        "header": "Kreis für Streuung der Kanone.",
         "asExtraServerLap": "Anzeige des Kreises für die Streuung der Kanone.",
         "replaceOriginalCircle": "Ersetzen des originalen Kreises.",
-        "circle_scale": "Множитель размера круга, 1 - 100 %"
+        "circle_scale": "Множитель размера круга, 1 - 100 %",
+        "timer_enabled": "Включить таймер сведения.",
+        "timer_position_x": "Позиция таймера X",
+        "timer_position_y": "Позиция таймера Y",
+        "timer_color": "Цвет таймера еще не свелся.",
+        "timer_done_color": "Цвет таймера/сообщения (полное сведение).",
     },
     "tank_carousel": {
         "header": "НАСТРОЙКА КАРУСЕЛИ ТАНКОВ",

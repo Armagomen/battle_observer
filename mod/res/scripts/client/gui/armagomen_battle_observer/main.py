@@ -7,7 +7,7 @@ from gui.Scaleform.daapi.view.battle.epic_random.stats_exchange import EpicRando
 from gui.Scaleform.daapi.view.battle.ranked.stats_exchange import RankedStatisticsDataController
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
-from .core.bo_constants import MASSAGES, MOD_NAME
+from .core.bo_constants import MASSAGES, MOD_NAME, GLOBAL
 from .core.core import m_core, overrideMethod
 from .core.events import g_events
 
@@ -63,6 +63,12 @@ class BattleObserver(object):
                 ServicesLocator.appLoader.onGUISpaceEntered -= tryLoadHangarSettings
                 from .hangar import config_interface_loader
                 config_interface_loader.check()
+
+        @overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")
+        def getOwnVehicleShotDispersionAngle(base, *args, **kwargs):
+            dispersion_angle = base(*args, **kwargs)
+            g_events.onDispersionAngleUpdate(dispersion_angle[GLOBAL.FIRST])
+            return dispersion_angle
 
         ServicesLocator.appLoader.onGUISpaceEntered += tryLoadHangarSettings
 

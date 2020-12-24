@@ -15,7 +15,7 @@ class DebugPanel(DebugPanelMeta, IDebugPanel):
         self.template = cfg.debug_panel[DEBUG_PANEL.TEXT][DEBUG_PANEL.TEMPLATE]
         self.colors = (cfg.debug_panel[COLORS.NAME][DEBUG_PANEL.PING_COLOR],
                        cfg.debug_panel[COLORS.NAME][DEBUG_PANEL.LAG_COLOR])
-        self.macroDict = defaultdict(GLOBAL.CONFIG_ERROR)
+        self.macroDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.macroDict[DEBUG_PANEL.FPS_COLOR] = cfg.debug_panel[COLORS.NAME][DEBUG_PANEL.FPS_COLOR]
         self.macroDict[DEBUG_PANEL.LAG] = cfg.debug_panel[COLORS.NAME][DEBUG_PANEL.LAG_COLOR]
         self.macroDict[DEBUG_PANEL.PING] = GLOBAL.ZERO

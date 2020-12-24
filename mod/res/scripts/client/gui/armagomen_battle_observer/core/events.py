@@ -20,6 +20,6 @@ class Events(object):
         self.setInAoI = SafeEvent()
         self.onEnterBattlePage = SafeEvent()
         self.onExitBattlePage = SafeEvent()
-
+        self.onDispersionAngleUpdate = SafeEvent()
 
 g_events = Events()

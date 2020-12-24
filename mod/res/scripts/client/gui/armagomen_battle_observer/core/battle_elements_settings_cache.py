@@ -4,7 +4,7 @@ from PlayerEvents import g_playerEvents
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from .battle_core import b_core
-from .bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES
+from .bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES, DISPERSION_CIRCLE
 from .config import cfg
 from .core import overrideMethod
 
@@ -15,8 +15,8 @@ class ElementsSettingsGetter(object):
         g_playerEvents.onAvatarBecomeNonPlayer += self.clear
         self.sorted_aliases = (
             ALIASES.HP_BARS, ALIASES.SCORE_PANEL, ALIASES.DAMAGE_LOG, ALIASES.MAIN_GUN, ALIASES.DEBUG, ALIASES.TIMER,
-            ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.PANELS,
-            ALIASES.MINIMAP, ALIASES.USER_BACKGROUND, ALIASES.WG_COMP, ALIASES.DATE_TIME
+            ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
+            ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.USER_BACKGROUND, ALIASES.WG_COMP, ALIASES.DATE_TIME
         )
         self.alias_to_path = {
             ALIASES.HP_BARS: ".teams_hp",
@@ -29,6 +29,7 @@ class ElementsSettingsGetter(object):
             ALIASES.TEAM_BASES: ".team_bases",
             ALIASES.ARMOR_CALC: ".armor_calculator",
             ALIASES.FLIGHT_TIME: ".flight_time",
+            ALIASES.DISPERSION_TIMER: ".dispersion_timer",
             ALIASES.PANELS: ".players_panels",
             ALIASES.MINIMAP: ".minimap",
             ALIASES.USER_BACKGROUND: ".user_background",
@@ -48,6 +49,8 @@ class ElementsSettingsGetter(object):
             ALIASES.TEAM_BASES: lambda: cfg.team_bases_panel[GLOBAL.ENABLED],
             ALIASES.ARMOR_CALC: lambda: cfg.armor_calculator[GLOBAL.ENABLED],
             ALIASES.FLIGHT_TIME: lambda: cfg.flight_time[GLOBAL.ENABLED],
+            ALIASES.DISPERSION_TIMER: lambda: cfg.dispersion_circle[GLOBAL.ENABLED] and
+                                              cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED],
             ALIASES.PANELS: lambda: cfg.panels_icon[GLOBAL.ENABLED] or cfg.players_spotted[GLOBAL.ENABLED] or
                                     cfg.players_damages[GLOBAL.ENABLED] or cfg.players_bars[GLOBAL.ENABLED],
             ALIASES.MINIMAP: lambda: cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and cfg.minimap[GLOBAL.ENABLED],

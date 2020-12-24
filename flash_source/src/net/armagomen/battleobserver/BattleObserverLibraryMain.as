@@ -4,26 +4,29 @@ package net.armagomen.battleobserver
 	 * ...
 	 * @author Armagomen
 	 */
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.Font;
-	import flash.utils.*;
-	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
-	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
-	import net.armagomen.battleobserver.battle.components.FlightTimeUI;
-	import net.armagomen.battleobserver.battle.components.ObserverDateTimesUI;
-	import net.armagomen.battleobserver.battle.components.ScorePanelUI;
-	import net.armagomen.battleobserver.battle.components.UserBackGroundUI;
-	import net.armagomen.battleobserver.battle.components.batlletimer.ObserverBattleTimerUI;
-	import net.armagomen.battleobserver.battle.components.debugpanel.ObserverDebugPanelUI;
-	import net.armagomen.battleobserver.battle.components.maingun.MainGunUI;
-	import net.armagomen.battleobserver.battle.components.playerspanels.PlayersPanelsUI;
-	import net.armagomen.battleobserver.battle.components.sixthsense.SixthSenseUI;
-	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
-	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
-	import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
-	import net.armagomen.battleobserver.battle.components.wgcomponents.WGComponentsSetting;
-	import net.armagomen.battleobserver.battle.utils.*;
+
+import flash.display.*;
+import flash.events.*;
+import flash.text.Font;
+import flash.utils.*;
+
+import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
+import net.armagomen.battleobserver.battle.components.DamageLogsUI;
+import net.armagomen.battleobserver.battle.components.FlightTimeUI;
+import net.armagomen.battleobserver.battle.components.ObserverDateTimesUI;
+import net.armagomen.battleobserver.battle.components.ScorePanelUI;
+import net.armagomen.battleobserver.battle.components.UserBackGroundUI;
+import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
+import net.armagomen.battleobserver.battle.components.batlletimer.ObserverBattleTimerUI;
+import net.armagomen.battleobserver.battle.components.debugpanel.ObserverDebugPanelUI;
+import net.armagomen.battleobserver.battle.components.maingun.MainGunUI;
+import net.armagomen.battleobserver.battle.components.playerspanels.PlayersPanelsUI;
+import net.armagomen.battleobserver.battle.components.sixthsense.SixthSenseUI;
+import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
+import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
+import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
+import net.armagomen.battleobserver.battle.components.wgcomponents.WGComponentsSetting;
+import net.armagomen.battleobserver.battle.utils.*;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
@@ -111,26 +114,27 @@ package net.armagomen.battleobserver
 					}
 					break;
 				case "Observer_ArmorCalculator_UI":
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
+					if (!this.isFlashComponentRegisteredS(ui_name)) {
 						this.registerComponent(this.addChildAt(new ArmorCalculatorUI(ui_name), index), ui_name);
 					}
 					break;
-				case "Observer_FlightTime_UI":
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new FlightTimeUI(ui_name), index), ui_name);
-					}
-					break;
-				case "Observer_PlayersPanels_UI":
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new PlayersPanelsUI(ui_name), index), ui_name);
-					}
-					break;
-				case "Observer_Minimap_UI":
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
+					case "Observer_FlightTime_UI":
+						if (!this.isFlashComponentRegisteredS(ui_name)) {
+							this.registerComponent(this.addChildAt(new FlightTimeUI(ui_name), index), ui_name);
+						}
+						break;
+					case "Observer_DispersionTimer_UI":
+						if (!this.isFlashComponentRegisteredS(ui_name)) {
+							this.registerComponent(this.addChildAt(new DispersionTimerUI(ui_name), index), ui_name);
+						}
+						break;
+					case "Observer_PlayersPanels_UI":
+						if (!this.isFlashComponentRegisteredS(ui_name)) {
+							this.registerComponent(this.addChildAt(new PlayersPanelsUI(ui_name), index), ui_name);
+						}
+						break;
+					case "Observer_Minimap_UI":
+						if (!this.isFlashComponentRegisteredS(ui_name)) {
 						this.registerComponent(this.addChild(new MinimapUI(ui_name)), ui_name);
 					}
 					break;

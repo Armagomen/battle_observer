@@ -13,7 +13,7 @@ class BattleTimer(BattleTimerMeta, IAbstractPeriodView):
         super(BattleTimer, self).__init__()
         config = cfg.battle_timer
         default_timer = {BATTLE_TIMER.COLOR: COLORS.NORMAL_TEXT, BATTLE_TIMER.M_TIMER: BATTLE_TIMER.START_STRING}
-        self.timer = defaultdict(GLOBAL.CONFIG_ERROR, default_timer)
+        self.timer = defaultdict(lambda: GLOBAL.CONFIG_ERROR, default_timer)
         self.template = config[BATTLE_TIMER.TEMPLATE]
         self.color = {False: config[BATTLE_TIMER.COLOR], True: config[BATTLE_TIMER.END_COLOR]}
 

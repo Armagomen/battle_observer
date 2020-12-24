@@ -63,7 +63,12 @@ translate = {
         "header": "Real circle scatter guns",
         "asExtraServerLap": "Display server scatter circle.",
         "replaceOriginalCircle": "Replace Original Circle.",
-        "circle_scale": "Множитель размера круга, 1 - 100 %"
+        "circle_scale": "Множитель размера круга, 1 - 100 %",
+        "timer_enabled": "Включить таймер сведения.",
+        "timer_position_x": "Позиция таймера X",
+        "timer_position_y": "Позиция таймера Y",
+        "timer_color": "Цвет таймера еще не свелся.",
+        "timer_done_color": "Цвет таймера/сообщения (полное сведение)."
     },
     "tank_carousel": {
         "header": "TANK CAROUSEL SETUP",

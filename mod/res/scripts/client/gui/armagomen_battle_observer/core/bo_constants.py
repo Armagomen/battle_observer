@@ -27,7 +27,7 @@ class GLOBAL:
     def __init__(self):
         pass
 
-    CONFIG_ERROR = lambda: "Incorrect macros in config file."
+    CONFIG_ERROR = "Incorrect macros in config file."
     ONE_SECOND = 1.0
     DEBUG_MODE = False
     ALIGN = "align"
@@ -41,6 +41,7 @@ class GLOBAL:
     CUSTOM_COLOR = "customColor"
     DOT = "."
     COMMA_SEP = ", "
+    SPACE = " "
     EMPTY_LINE = ""
     ENABLED = "enabled"
     FIRST, LAST = (0, -1)
@@ -74,8 +75,8 @@ class URLS:
         pass
 
     HOST_NAME = "armagomen.bb-t.ru"
-    DONATE_UA_URL = "https://donatua.com/to/armagomen"
-    DONATE_RU_URL = "https://donatepay.ru/don/armagomen"
+    DONATE_UA_URL = "https://donatua.com/@armagomen"
+    DONATE_RU_URL = "https://new.donatepay.ru/@armagomen"
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
 
@@ -485,6 +486,14 @@ class DISPERSION_CIRCLE:
     GUN_MARKER_MIN_SIZE = 16.0
     MINUS_ONE_F = -1.0
 
+    TIMER_ENABLED = "timer_enabled"
+    TIMER_POSITION_X = "timer_position_x"
+    TIMER_POSITION_Y = "timer_position_y"
+    TIMER_COLOR = "timer_color"
+    TIMER_DONE_COLOR = "timer_done_color"
+    TIMER_DONE_TEMPLATE = "timer_done_template"
+    TIMER_REGULAR_TEMPLATE = "timer_regular_template"
+
 
 class DEBUG_PANEL:
     def __init__(self):
@@ -574,6 +583,7 @@ class ALIASES:
     TEAM_BASES = "Observer_TeamBases_UI"
     ARMOR_CALC = "Observer_ArmorCalculator_UI"
     FLIGHT_TIME = "Observer_FlightTime_UI"
+    DISPERSION_TIMER = "Observer_DispersionTimer_UI"
     PANELS = "Observer_PlayersPanels_UI"
     MINIMAP = "Observer_Minimap_UI"
     USER_BACKGROUND = "Observer_UserBackGround_UI"
@@ -757,5 +767,13 @@ class CONFIG_INTERFACE:
         SIXTH_SENSE.NAME: {
             SIXTH_SENSE.SHOW_TIMER: (SIXTH_SENSE.PLAY_TICK_SOUND,)
         },
-        "reversed_values": {'dynamic_zoom*enabled', PANELS.BAR_CLASS_COLOR}
+        "reversed_values": {'dynamic_zoom*enabled', PANELS.BAR_CLASS_COLOR},
+        DISPERSION_CIRCLE.NAME: {
+            DISPERSION_CIRCLE.TIMER_ENABLED: (DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE,
+                                              DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE,
+                                              DISPERSION_CIRCLE.TIMER_DONE_COLOR,
+                                              DISPERSION_CIRCLE.TIMER_COLOR,
+                                              DISPERSION_CIRCLE.TIMER_POSITION_X,
+                                              DISPERSION_CIRCLE.TIMER_POSITION_Y)
+        }
     }

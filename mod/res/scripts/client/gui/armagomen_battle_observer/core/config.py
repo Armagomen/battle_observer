@@ -102,7 +102,15 @@ class Config(object):
             GLOBAL.ENABLED: False,
             DISPERSION_CIRCLE.EXTRA_LAP: False,
             DISPERSION_CIRCLE.REPLACE: False,
-            DISPERSION_CIRCLE.SCALE_CONFIG: DISPERSION_CIRCLE.SCALE
+            DISPERSION_CIRCLE.SCALE_CONFIG: DISPERSION_CIRCLE.SCALE,
+            DISPERSION_CIRCLE.TIMER_ENABLED: False,
+            DISPERSION_CIRCLE.TIMER_POSITION_X: 0,
+            DISPERSION_CIRCLE.TIMER_POSITION_Y: -200,
+            DISPERSION_CIRCLE.TIMER_COLOR: "#FFFF00",
+            DISPERSION_CIRCLE.TIMER_DONE_COLOR: "#FFFF00",
+            DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE: "<font size='20' color='%(color)s'>%(timer).1f</font>",
+            DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE: "<font size='20' color='%(color_done)s'>directed</font>"
+
         }
         self.debug_panel = {
             GLOBAL.ENABLED: False,

@@ -15,7 +15,7 @@ class MainGun(MainGunMeta):
 
     def __init__(self):
         super(MainGun, self).__init__()
-        self.macros = defaultdict(GLOBAL.CONFIG_ERROR)
+        self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self._damage = GLOBAL.ZERO
         self._gunScore = GLOBAL.ZERO
         self.enabled = False

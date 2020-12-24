@@ -20,7 +20,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self.p100 = GLOBAL.F_ONE
         self.p500 = GLOBAL.F_ONE
         self.calcCache = GLOBAL.ZERO
-        self.calcMacro = defaultdict(GLOBAL.CONFIG_ERROR)
+        self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.messages = ARMOR_CALC.DEFAULT_MESSAGES
         self.messages.update(config[ARMOR_CALC.MESSAGES])
         self.typeColors = cfg.colors[ARMOR_CALC.NAME]

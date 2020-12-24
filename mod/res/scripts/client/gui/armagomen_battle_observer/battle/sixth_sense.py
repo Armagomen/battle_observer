@@ -15,7 +15,7 @@ class SixthSense(SixthSenseMeta):
 
     def __init__(self):
         super(SixthSense, self).__init__()
-        self.macro = defaultdict(GLOBAL.CONFIG_ERROR)
+        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.template = config[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE]
         self.showTimer = config[SIXTH_SENSE.SHOW_TIMER]
         self.macro[SIXTH_SENSE.M_TIME] = config[SIXTH_SENSE.TIME]
