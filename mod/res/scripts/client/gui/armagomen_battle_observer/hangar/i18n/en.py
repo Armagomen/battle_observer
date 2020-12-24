@@ -60,7 +60,7 @@ translate = {
         "removeHandbrake": "Disabling the hand brake for AT-SPG."
     },
     "dispersion_circle": {
-        "header": "Real circle scatter guns",
+        "header": "Real circle scatter guns (reduction)",
         "asExtraServerLap": "Display server scatter circle.",
         "replaceOriginalCircle": "Replace Original Circle.",
         "circle_scale": "Множитель размера круга, 1 - 100 %",

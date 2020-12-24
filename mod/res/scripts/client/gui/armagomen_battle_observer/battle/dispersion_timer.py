@@ -19,7 +19,7 @@ class DispersionTimer(DispersionTimerMeta):
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
                                  {"color": cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_COLOR],
                                   "color_done": cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_COLOR],
-                                  "timer": 0.0})
+                                  "timer": 0.0, "percent": 0})
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
@@ -41,6 +41,7 @@ class DispersionTimer(DispersionTimerMeta):
             timing = self.aimingTime * log(qw)
             if self.macro["timer"] != timing:
                 self.macro["timer"] = timing
+                self.macro["percent"] = int(min(1.0, self.shotDispersionAngle / angle) * 100)
             if not timing or timing < 0:
                 self.setDoneMessage()
             else:

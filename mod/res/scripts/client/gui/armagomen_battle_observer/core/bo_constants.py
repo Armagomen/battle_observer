@@ -77,6 +77,7 @@ class URLS:
     HOST_NAME = "armagomen.bb-t.ru"
     DONATE_UA_URL = "https://donatua.com/@armagomen"
     DONATE_RU_URL = "https://new.donatepay.ru/@armagomen"
+    DONATE_EU_URL = "https://donatepay.eu/don/armagomen"
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
 
@@ -710,7 +711,7 @@ class CONFIG_INTERFACE:
     def __init__(self):
         pass
 
-    DONATE_BUTTONS = ('donate_button_ua', 'donate_button_ru', 'support_button', 'donate_button_alerts')
+    DONATE_BUTTONS = ('donate_button_ua', 'donate_button_ru', 'donate_button_eu', 'support_button')
     BLOCK_IDS = (
         ANOTHER.CONFIG_SELECT, MAIN.NAME, DISPERSION_CIRCLE.NAME, CAROUSEL.NAME, POSTMORTEM.NAME, EFFECTS.NAME,
         DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, MARKERS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,

@@ -60,7 +60,7 @@ translate = {
         "removeHandbrake": "Handbremse für AT-SPG deaktivieren."
     },
     "dispersion_circle": {
-        "header": "Kreis für Streuung der Kanone.",
+        "header": "Kreis für Streuung der Kanone. (Mischen)",
         "asExtraServerLap": "Anzeige des Kreises für die Streuung der Kanone.",
         "replaceOriginalCircle": "Ersetzen des originalen Kreises.",
         "circle_scale": "Множитель размера круга, 1 - 100 %",
