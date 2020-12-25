@@ -81,18 +81,18 @@ class URLS:
     DONATE_EU_URL = "https://donatepay.eu/don/armagomen"
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
-    DONATE_RU_MESSAGE = "Поздравляю с Новым Годом и Рождеством. (Armagomen)\n" \
+    DONATE_RU_MESSAGE = "<font color='#b3ff00'>Поздравляю с Новым Годом и Рождеством. (Armagomen)</font>\n\n" \
                         "Для того чтобы поздравить меня, а так же поддержать разработку " \
                         "любимого мода Battle Observer, переходи по одной из ссылок.\n\n" \
-                        "<a href='{}'>donatua.com/@armagomen</a>\n<a href='{}'>new.donatepay.ru/@armagomen</a>\n\n" \
-                        "либо открой меню настроек мода и выбери там нужную ссылку.".format(DONATE_UA_URL,
-                                                                                            DONATE_RU_URL)
-    DONATE_EU_MESSAGE = "Happy New Year and Merry Christmas. (Armagomen)\n" \
+                        "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a>\n\n" \
+                        "Если ссылки не работают: открой меню настроек мода и " \
+                        "выбери там нужную ссылку.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL)
+    DONATE_EU_MESSAGE = "<font color='#b3ff00'>Happy New Year and Merry Christmas. (Armagomen)</font>\n\n" \
                         "In order to congratulate me, as well as to support the development of your favorite " \
                         "Battle Observer mod, follow one of the links.\n\n" \
-                        "<a href='{}'>donatua.com/@armagomen</a>\n<a href='{}'>donatepay.eu/don/armagomen</a>\n\n" \
-                        "or open the mod settings menu and select the desired link there.".format(DONATE_UA_URL,
-                                                                                                  DONATE_EU_URL)
+                        "<a href='event:{ua}'>UAH</a> | <a href='event:{eu}'>USD / EUR</a>\n\n" \
+                        "if links don't work: open the mod settings menu and " \
+                        "select the desired link there.".format(ua=DONATE_UA_URL, eu=DONATE_EU_URL)
 
 
 class SERVICE_CHANNEL:
