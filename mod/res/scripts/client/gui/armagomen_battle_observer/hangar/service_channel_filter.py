@@ -1,8 +1,11 @@
 from chat_shared import SYS_MESSAGE_TYPE
+from gui.SystemMessages import pushMessage, SM_TYPE
+from gui.shared.personality import ServicesLocator
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
-from ..core.bo_constants import SERVICE_CHANNEL, GLOBAL
+from ..core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
 from ..core.core import overrideMethod
 from ..core.events import g_events
+from helpers import getClientLanguage
 
 channel_filter = set()
 
@@ -49,3 +52,12 @@ def onSettingsChanged(config, blockID):
 
 
 g_events.onSettingsChanged += onSettingsChanged
+
+
+def onConnected():
+    if getClientLanguage().lower() in ('ru', 'ua', 'be'):
+        pushMessage(URLS.DONATE_RU_MESSAGE, type=SM_TYPE.Warning)
+    else:
+        pushMessage(URLS.DONATE_EU_MESSAGE, type=SM_TYPE.Warning)
+
+ServicesLocator.connectionMgr.onConnected += onConnected

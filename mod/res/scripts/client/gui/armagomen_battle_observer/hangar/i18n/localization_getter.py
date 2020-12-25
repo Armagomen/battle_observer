@@ -4,7 +4,7 @@ lang = getClientLanguage().lower()
 
 
 def getLocalization():
-    if lang == "ru":
+    if lang in ('ru', 'ua', 'be'):
         from .ru import translate
     elif lang == "de":
         from .de import translate
