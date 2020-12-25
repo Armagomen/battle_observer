@@ -55,7 +55,7 @@ g_events.onSettingsChanged += onSettingsChanged
 
 
 def onConnected():
-    if getClientLanguage().lower() in ('ru', 'ua', 'be'):
+    if getClientLanguage().lower() in ('ru', 'uk', 'be'):
         pushMessage(URLS.DONATE_RU_MESSAGE, type=SM_TYPE.Warning)
     else:
         pushMessage(URLS.DONATE_EU_MESSAGE, type=SM_TYPE.Warning)
