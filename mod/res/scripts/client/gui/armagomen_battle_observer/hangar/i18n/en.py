@@ -56,19 +56,21 @@ translate = {
         "carouselRows": "number of rows of multi-row tank carousel",
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
-        "anonymousNameChange": "Сhange Anonymous Name",
+        "anonymousNameChange": "Change Anonymous Name",
         "removeHandbrake": "Disabling the hand brake for AT-SPG."
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",
         "asExtraServerLap": "Display server scatter circle.",
+        "asExtraServerLap_tooltip": "Adds a second circle of server crosshair.",
         "replaceOriginalCircle": "Replace Original Circle.",
-        "circle_scale": "Множитель размера круга, 1 - 100 %",
-        "timer_enabled": "Включить таймер сведения.",
-        "timer_position_x": "Позиция таймера X",
-        "timer_position_y": "Позиция таймера Y",
-        "timer_color": "Цвет таймера еще не свелся.",
-        "timer_done_color": "Цвет таймера/сообщения (полное сведение)."
+        "circle_scale": "Circle size multiplier, 1 - 100 %",
+        "circle_scale_tooltip": "It is not recommended to set the value below 65.",
+        "timer_enabled": "Turn on the reduction timer.",
+        "timer_position_x": "Timer position X",
+        "timer_position_y": "Timer position Y",
+        "timer_color": "Timer color, not yet converged.",
+        "timer_done_color": "Timer / message color (full reduction)."
     },
     "tank_carousel": {
         "header": "TANK CAROUSEL SETUP",
@@ -158,7 +160,7 @@ translate = {
                             "<br>%(armor)s - armor without inclination."
                             "<br>%(piercingPower)s - penetration of the projectile with distance."
                             "<br>%(caliber)s - is the caliber of the projectile."
-                            "<br>%(color)s | s:d:f | type data - clor (see colors settings)"
+                            "<br>%(color)s | s:d:f | type data - color (see colors settings)"
     },
     "log_global": {
         "header": "GENERAL LOG SETTINGS",
@@ -282,7 +284,7 @@ translate = {
         "bar_settings*text*y": "text Position vertical",
         "bar_settings*text*align": "Alignment text:",
         "hp_text": "Template text box HP tank",
-        "hp_text_tooltip": "macroses: <br> %(health)s | s:d:f | type data <br> %(maxHealth)s | s:d:f | type data "
+        "hp_text_tooltip": "macros: <br> %(health)s | s:d:f | type data <br> %(maxHealth)s | s:d:f | type data "
                            "<br> %(percent)s | s:d:f | type data.",
         "hpbarsShow_KEY": "The bar display button",
         "hpbarsclassColor": "Paint strip HP in the ears by color type of technology.",
@@ -429,7 +431,7 @@ translate = {
         "buttonAUTO": "Automatically",
         "buttonHANDLE": "Manually",
         "messageNEW": "New version is available. v{0}\n\n"
-                      "<b>Сhoose one of the following download options.</b>\n\n"
+                      "<b>Choose one of the following download options.</b>\n\n"
                       "<b>Automatic</b> - will download and unzip the update to your update {1} folder\n\n"
                       "<b>Manually</b> - will open link in the browser to the same archive but you will have "
                       "to extract the package and copy the *.wotmod files manually.\n",

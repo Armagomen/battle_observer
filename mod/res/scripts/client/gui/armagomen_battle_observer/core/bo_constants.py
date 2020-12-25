@@ -83,14 +83,13 @@ class URLS:
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
     DONATE_RU_MESSAGE = "Поздравляю с Новым Годом и Рождеством. (Armagomen)\n" \
                         "Для того чтобы поздравить меня, а так же поддержать разработку " \
-                        "любимого мода переходи по одной из ссылок.\n\n" \
+                        "любимого мода Battle Observer, переходи по одной из ссылок.\n\n" \
                         "<a href='{}'>donatua.com/@armagomen</a>\n<a href='{}'>new.donatepay.ru/@armagomen</a>\n\n" \
                         "либо открой меню настроек мода и выбери там нужную ссылку.".format(DONATE_UA_URL,
                                                                                             DONATE_RU_URL)
-
     DONATE_EU_MESSAGE = "Happy New Year and Merry Christmas. (Armagomen)\n" \
-                        "To congratulate me, as well as support the development of the " \
-                        "favorite fashion of clicks on one of the links.\n\n" \
+                        "In order to congratulate me, as well as to support the development of your favorite " \
+                        "Battle Observer mod, follow one of the links.\n\n" \
                         "<a href='{}'>donatua.com/@armagomen</a>\n<a href='{}'>donatepay.eu/don/armagomen</a>\n\n" \
                         "or open the mod settings menu and select the desired link there.".format(DONATE_UA_URL,
                                                                                                   DONATE_EU_URL)

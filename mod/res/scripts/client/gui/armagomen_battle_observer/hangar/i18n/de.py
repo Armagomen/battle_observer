@@ -62,23 +62,25 @@ translate = {
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
         "asExtraServerLap": "Anzeige des Kreises für die Streuung der Kanone.",
+        "asExtraServerLap_tooltip": "Fügt einen zweiten Kreis der Server-Sichtung hinzu.",
         "replaceOriginalCircle": "Ersetzen des originalen Kreises.",
-        "circle_scale": "Множитель размера круга, 1 - 100 %",
-        "timer_enabled": "Включить таймер сведения.",
-        "timer_position_x": "Позиция таймера X",
-        "timer_position_y": "Позиция таймера Y",
-        "timer_color": "Цвет таймера еще не свелся.",
-        "timer_done_color": "Цвет таймера/сообщения (полное сведение).",
+        "circle_scale": "Kreisgrößenmultiplikator 1 - 100 %",
+        "circle_scale_tooltip": "Es wird nicht empfohlen, den Wert unter 65 einzustellen.",
+        "timer_enabled": "Schalten Sie den Reduktions-Timer ein.",
+        "timer_position_x": "Timer Position X",
+        "timer_position_y": "Timer Position Y",
+        "timer_color": "Timerfarbe, noch nicht konvergiert.",
+        "timer_done_color": "Timer- / Nachrichtenfarbe (volle Reduzierung)."
     },
     "tank_carousel": {
-        "header": "НАСТРОЙКА КАРУСЕЛИ ТАНКОВ",
-        "carouselRows": "Кол-во рядов многорядной карусели танков.",
-        "carouselRows_toltip": "Работает только если в клиенте включена многорядная карусель.",
-        "smallDoubleCarousel": "Принудительно использовать маленькие иконки в каруселе танков."
+        "header": "TANK CAROUSEL SETUP",
+        "carouselRows": "Anzahl der Reihen eines mehrreihigen Tankkarussells.",
+        "carouselRows_toltip": "Funktioniert nur, wenn das mehrzeilige Karussell im Client aktiviert ist.",
+        "smallDoubleCarousel": "Erzwingen Sie die Verwendung kleiner Symbole im Tankkarussell."
     },
     "postmortem_panel": {
-        "header": "Панель после уничтожения.",
-        "hideKillerInfo": "Убрать информацию о уничтожевшем."
+        "header": "Panel nach Zerstörung.",
+        "hideKillerInfo": "Informationen über den Zerstörer entfernen."
     },
     "effects": {
         "header": "Visuelle Kameraeffekte anpassen",

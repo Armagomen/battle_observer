@@ -1,11 +1,15 @@
+import re
+
 from chat_shared import SYS_MESSAGE_TYPE
 from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
+from helpers import getClientLanguage
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
+from notification.NotificationListView import NotificationListView
 from ..core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
+from ..core.bw_utils import openWebBrowser
 from ..core.core import overrideMethod
 from ..core.events import g_events
-from helpers import getClientLanguage
 
 channel_filter = set()
 
@@ -54,10 +58,18 @@ def onSettingsChanged(config, blockID):
 g_events.onSettingsChanged += onSettingsChanged
 
 
+@overrideMethod(NotificationListView, "onClickAction")
+def clickAction(base, view, typeID, entityID, action):
+    if re.match('https?://', action, re.I):
+        openWebBrowser(action)
+    return base(view, typeID, entityID, action)
+
+
 def onConnected():
     if getClientLanguage().lower() in ('ru', 'uk', 'be'):
         pushMessage(URLS.DONATE_RU_MESSAGE, type=SM_TYPE.Warning)
     else:
         pushMessage(URLS.DONATE_EU_MESSAGE, type=SM_TYPE.Warning)
+
 
 ServicesLocator.connectionMgr.onConnected += onConnected
