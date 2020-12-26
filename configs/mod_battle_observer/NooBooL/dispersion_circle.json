@@ -1,6 +1,13 @@
 {
-  "asExtraServerLap": false,
-  "circle_scale": 100,
-  "enabled": true,
-  "replaceOriginalCircle": true
+  "asExtraServerLap":false,
+  "circle_scale":100,
+  "enabled":true,
+  "replaceOriginalCircle":true,
+  "timer_color": "#FAFA00",
+  "timer_done_color": "#00FAFA",
+  "timer_done_template": "<font color='#CCCCCC'><img src='img://gui/maps/icons/library/done.png' width='32' height='32' vspace='-10'> Сведён</font>",
+  "timer_enabled": true,
+  "timer_position_x": 200,
+  "timer_position_y": -420,
+  "timer_regular_template": "<textformat tabstops='[40]' leading='-24'><img src='img://gui/maps/icons/vehicleStates/rentalIsOver.png' width='32' height='32' vspace='-18'><font color='#CCCCCC' size='12'><tab>Время сведения<br><tab>%(timer).1f  сек</font></textformat>"
 }

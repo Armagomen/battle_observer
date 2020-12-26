@@ -17,5 +17,5 @@
     "x":170,
     "y":-4
   },
-  "templateMainDMG": "<textformat tabstops='[145]' leading='-10'><font color='#e6e6e6' face='$FieldFont' size='14'>%(damageIcon)s<tab><font size='15' color='%(tankDamageAvgColor)s'><b>%(playerDamage)s</b></font><br>%(blockedIcon)s<tab><font size='15'><b>%(blockedDamage)s</b></font><br>%(assistIcon)s<tab><font size='15'><b>%(assistDamage)s</b></font><br>%(spottedIcon)s<tab><font size='15'><b>%(spottedTanks)s</b></font><br>%(stunIcon)s<tab><font size='15'><b>%(stun)s</b></font></textformat>"
+  "templateMainDMG":"<textformat tabstops='[145]' leading='-10'><font color='#e6e6e6' face='$FieldFont' size='14'>%(damageIcon)s<tab><font size='15' color='%(tankDamageAvgColor)s'><b>%(playerDamage)s</b></font><br>%(blockedIcon)s<tab><font size='15'><b>%(blockedDamage)s</b></font><br>%(assistIcon)s<tab><font size='15'><b>%(assistDamage)s</b></font><br>%(spottedIcon)s<tab><font size='15'><b>%(spottedTanks)s</b></font><br>%(stunIcon)s<tab><font size='15'><b>%(stun)s</b></font></textformat>"
 }

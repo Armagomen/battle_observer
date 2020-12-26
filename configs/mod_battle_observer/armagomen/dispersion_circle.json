@@ -1,6 +1,13 @@
 {
-  "asExtraServerLap": false,
-  "circle_scale": 70,
-  "enabled": true,
-  "replaceOriginalCircle": true
+  "asExtraServerLap": false, 
+  "circle_scale": 85, 
+  "enabled": true, 
+  "replaceOriginalCircle": true, 
+  "timer_color": "#FAFA00", 
+  "timer_done_color": "#00FAFA", 
+  "timer_done_template": "<font color='%(color_done)s'>reduction - %(percent)d%%</font>", 
+  "timer_enabled": true, 
+  "timer_position_x": 0, 
+  "timer_position_y": -220, 
+  "timer_regular_template": "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>"
 }

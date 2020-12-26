@@ -7,9 +7,9 @@
     ],
     "cam_dist_sens":0.0065,
     "cam_start_angles":[
-      125,
+      -20,
       -10
     ],
-    "cam_start_dist":14.0
+    "cam_start_dist":16.0
   }
 }

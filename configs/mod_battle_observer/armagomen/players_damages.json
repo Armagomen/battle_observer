@@ -10,5 +10,5 @@
     "y":-2
   },
   "damages_text":"<font color='#FFFF00'>%(damage)d</font>",
-  "enabled": true
+  "enabled":true
 }

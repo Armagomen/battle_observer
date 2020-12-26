@@ -8,8 +8,8 @@
   "enabled":true,
   "hangar":{
     "enabled":true,
-    "format":"<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>",
-    "x":-240,
+    "format":"<textformat tabstops='[140]'>%d %b %Y<tab>%X</textformat>",
+    "x":-250,
     "y":54
   }
 }

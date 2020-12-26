@@ -1,57 +1,57 @@
 {
   "avgColor": {
-    "brightness": 1.0,
+    "brightness": 1.0, 
     "saturation": 0.5
-  },
-  "enabled": true,
+  }, 
+  "enabled": true, 
   "extendedLog": [
-    "<textformat leading='-6' tabstops='[15, 77, 111, 200]'><font color='#CCCCCC' size='12'>",
-    "<b><font size='10'>x%(shots)s</font><tab>",
-    "%(shellIcon)s %(shellType)s %(totalDamage)s<tab>",
-    "|<font color='#f2958d' size='14'>%(lastDamage)s</font><tab>",
-    "<font color='#e34234'>%(classIcon)s</font>  %(tankName)s</b><tab>",
-    "<img src='img://gui/maps/icons/vehicle/small/%(iconName)s.png' width='70' height='14' vspace='-7'>%(killedIcon)s",
+    "<textformat leading='-6' tabstops='[15, 77, 111, 200]'><font color='#CCCCCC' size='12'>", 
+    "<b><font size='10'>x%(shots)s</font><tab>", 
+    "%(shellIcon)s  %(totalDamage)s<tab>", 
+    "|<font color='#f2958d' size='14'>%(lastDamage)s</font><tab>", 
+    "<font color='#e34234'>%(classIcon)s</font>  %(tankName)s</b><tab>", 
+    "<img src='img://gui/maps/icons/vehicle/small/%(iconName)s.png' width='70' height='14' vspace='-7'>%(killedIcon)s", 
     "</font></textformat>"
-  ],
+  ], 
   "extendedLogALTMODE": [
-    "<textformat leading='-6' tabstops='[15, 77, 111, 200]'><font color='#CCCCCC' size='12'>",
-    "<b><font size='10'>x%(shots)s</font><tab>",
-    "%(shellIcon)s %(shellType)s <font color='#f2958d' size='14'>WGR</font><tab><tab>",
-    "<font color='%(tankClassColor)s'>%(classIcon)s %(userName)s</font></b><tab>",
-    "<img src='img://gui/maps/icons/vehicle/small/%(iconName)s.png' width='70' height='14' vspace='-7'>%(killedIcon)s",
+    "<textformat leading='-6' tabstops='[15, 77, 111, 200]'><font color='#CCCCCC' size='12'>", 
+    "<b><font size='10'>x%(shots)s</font><tab>", 
+    "%(shellIcon)s  <font color='#f2958d' size='14'>WGR</font><tab><tab>", 
+    "<font color='%(tankClassColor)s'>%(classIcon)s %(userName)s</font></b><tab>", 
+    "<img src='img://gui/maps/icons/vehicle/small/%(iconName)s.png' width='70' height='14' vspace='-7'>%(killedIcon)s", 
     "</font></textformat>"
-  ],
-  "killedIcon": "<img src='img://../mods/configs/mod_battle_observer/NooBooL/images/skull.png' width='16' height='15' vspace='-8'>",
-  "reverse": false,
+  ], 
+  "killedIcon": "<img src='img://../mods/configs/mod_battle_observer/NooBooL/images/skull.png' width='16' height='15' vspace='-8'>", 
+  "reverse": false, 
   "settings": {
-    "align": "left",
-    "x": 10,
+    "align": "left", 
+    "x": 10, 
     "y": 0
-  },
+  }, 
   "shellColor": {
-    "gold": "#FFD700",
+    "gold": "#FFD700", 
     "normal": "#FAFAFA"
-  },
+  }, 
   "shellIcons": {
-    "ARMOR_PIERCING": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING.png' width='18' height='18' vspace='-16'>",
-    "ARMOR_PIERCING_CR": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING_CR.png' width='18' height='18' vspace='-16'>",
-    "ARMOR_PIERCING_CR_PREMIUM": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING_CR_PREMIUM.png' width='18' height='18' vspace='-16'>",
-    "ARMOR_PIERCING_HE": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING.png' width='18' height='18' vspace='-16'>",
-    "ARMOR_PIERCING_PREMIUM": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING_PREMIUM.png' width='18' height='18' vspace='-16'>",
-    "HIGH_EXPLOSIVE": "<img src='img://gui/maps/icons/shell/small/HIGH_EXPLOSIVE.png' width='18' height='18' vspace='-16'>",
-    "HIGH_EXPLOSIVE_PREMIUM": "<img src='img://gui/maps/icons/shell/small/HIGH_EXPLOSIVE_PREMIUM.png' width='18' height='18' vspace='-16'>",
-    "HOLLOW_CHARGE": "<img src='img://gui/maps/icons/shell/small/HOLLOW_CHARGE.png' width='18' height='18' vspace='-16'>",
-    "HOLLOW_CHARGE_PREMIUM": "<img src='img://gui/maps/icons/shell/small/HOLLOW_CHARGE_PREMIUM.png' width='18' height='18' vspace='-16'>",
-    "SMOKE": "<img src='img://gui/maps/icons/epicBattles/skills/43x43/smoke.png' width='18' height='18' vspace='-8'>",
-    "UNDEFINED": "<img src='img://gui/maps/icons/library/alertIcon2.png' width='16' height='16' vspace='-2'>"
-  },
+    "ARMOR_PIERCING": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>ББ</b></font>", 
+    "ARMOR_PIERCING_CR": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING_CR.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>БП</b></font>", 
+    "ARMOR_PIERCING_CR_PREMIUM": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING_CR_PREMIUM.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>БП</b></font>", 
+    "ARMOR_PIERCING_HE": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>ББ</b></font>", 
+    "ARMOR_PIERCING_PREMIUM": "<img src='img://gui/maps/icons/shell/small/ARMOR_PIERCING_PREMIUM.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>ББ</b></font>", 
+    "HIGH_EXPLOSIVE": "<img src='img://gui/maps/icons/shell/small/HIGH_EXPLOSIVE.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>ОФ</b></font>", 
+    "HIGH_EXPLOSIVE_PREMIUM": "<img src='img://gui/maps/icons/shell/small/HIGH_EXPLOSIVE_PREMIUM.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>ОФ</b></font>", 
+    "HOLLOW_CHARGE": "<img src='img://gui/maps/icons/shell/small/HOLLOW_CHARGE.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>КС</b></font>", 
+    "HOLLOW_CHARGE_PREMIUM": "<img src='img://gui/maps/icons/shell/small/HOLLOW_CHARGE_PREMIUM.png' width='18' height='18' vspace='-16'><font color='#CCCCCC' size='9'><b>КС</b></font>", 
+    "SMOKE": "<img src='img://gui/maps/icons/epicBattles/skills/43x43/smoke.png' width='18' height='18' vspace='-8'><font color='#CCCCCC' size='9'><b>Дым</b></font>", 
+    "UNDEFINED": " <img src='img://gui/maps/icons/library/alertIcon2.png' width='16' height='16' vspace='-2'>"
+  }, 
   "shellTypes": {
-    "ARMOR_PIERCING": "<font color='#CCCCCC' size='9'><b>ББ</b></font>",
-    "ARMOR_PIERCING_CR": "<font color='#CCCCCC' size='9'><b>БП</b></font>",
-    "ARMOR_PIERCING_HE": "<font color='#CCCCCC' size='9'><b>ББ</b></font>",
-    "HIGH_EXPLOSIVE": "<font color='#CCCCCC' size='9'><b>ОФ</b></font>",
-    "HOLLOW_CHARGE": "<font color='#CCCCCC' size='9'><b>КС</b></font>",
-    "SMOKE": "<font color='#CCCCCC' size='9'><b>Дым</b></font>",
-    "UNDEFINED": "<font color='#CCCCCC' size='9'><b>--</b></font>"
+    "ARMOR_PIERCING": "<font color='#CCCCCC' size='9'><b>ББ</b></font>", 
+    "ARMOR_PIERCING_CR": "<font color='#CCCCCC' size='9'><b>БП</b></font>", 
+    "ARMOR_PIERCING_HE": "<font color='#CCCCCC' size='9'><b>ББ</b></font>", 
+    "HIGH_EXPLOSIVE": "<font color='#CCCCCC' size='9'><b>ОФ</b></font>", 
+    "HOLLOW_CHARGE": "<font color='#CCCCCC' size='9'><b>КС</b></font>", 
+    "SMOKE": "<font color='#CCCCCC' size='9'><b>Дым</b></font>", 
+    "UNDEFINED": " "
   }
 }
