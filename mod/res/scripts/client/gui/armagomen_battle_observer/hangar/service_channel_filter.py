@@ -6,6 +6,7 @@ from gui.shared.personality import ServicesLocator
 from helpers import getClientLanguage
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 from notification.NotificationListView import NotificationListView
+from notification.NotificationPopUpViewer import NotificationPopUpViewer
 from ..core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
 from ..core.bw_utils import openWebBrowser
 from ..core.core import overrideMethod
@@ -59,6 +60,7 @@ g_events.onSettingsChanged += onSettingsChanged
 
 
 @overrideMethod(NotificationListView, "onClickAction")
+@overrideMethod(NotificationPopUpViewer, "onClickAction")
 def clickAction(base, view, typeID, entityID, action):
     if re.match('https?://', action, re.I):
         openWebBrowser(action)
