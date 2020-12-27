@@ -1,6 +1,8 @@
 from collections import defaultdict
 from math import log
 
+from AvatarInputHandler import AvatarInputHandler
+from gui.battle_control import avatar_getter
 from ..core.battle_cache import cache
 from ..core.bo_constants import DISPERSION_CIRCLE, GLOBAL
 from ..core.config import cfg
@@ -32,6 +34,9 @@ class DispersionTimer(DispersionTimerMeta):
         g_events.onDispersionAngleUpdate -= self.onDispersionAngleUpdate
         super(DispersionTimer, self)._dispose()
 
+    def onCameraChanged(self, ctrlMode, vehicleID=None):
+        self.as_onControlModeChangedS(ctrlMode)
+
     def onDispersionAngleUpdate(self, angle):
         if cache.player is not None and cache.player.isVehicleAlive:
             if self.shotDispersionAngle != 0:
@@ -55,11 +60,21 @@ class DispersionTimer(DispersionTimerMeta):
 
     def onEnterBattlePage(self):
         super(DispersionTimer, self).onEnterBattlePage()
-        if cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED]:
-            if cache.player is not None:
-                desc = cache.player.vehicle.typeDescriptor.gun
-                self.shotDispersionAngle = desc.shotDispersionAngle
-                self.aimingTime = desc.aimingTime
+        if cache.player is not None:
+            desc = cache.player.vehicle.typeDescriptor.gun
+            self.shotDispersionAngle = desc.shotDispersionAngle
+            self.aimingTime = desc.aimingTime
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            if isinstance(handler, AvatarInputHandler):
+                handler.onCameraChanged += self.onCameraChanged
+
+    def onExitBattlePage(self):
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            if isinstance(handler, AvatarInputHandler):
+                handler.onCameraChanged -= self.onCameraChanged
+        super(DispersionTimer, self).onExitBattlePage()
 
     def onPlayerVehicleDeath(self, killerID):
         self.as_updateTimerTextS("")

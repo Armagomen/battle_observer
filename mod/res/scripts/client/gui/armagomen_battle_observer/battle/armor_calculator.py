@@ -1,7 +1,9 @@
 from collections import defaultdict
 
+from AvatarInputHandler import AvatarInputHandler
 from aih_constants import SHOT_RESULT
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
+from gui.battle_control import avatar_getter
 from vehicle_systems.tankStructure import TankPartIndexes
 from ..core.battle_cache import cache as g_cache
 from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE
@@ -35,6 +37,10 @@ class ArmorCalculator(ArmorCalcMeta):
         if ammo is not None:
             ammo.onGunReloadTimeSet += self.onGunReload
         g_events.onPlayerVehicleDeath += self.clearView
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            if isinstance(handler, AvatarInputHandler):
+                handler.onCameraChanged += self.onCameraChanged
         self.updateShootParams()
 
     def onExitBattlePage(self):
@@ -42,6 +48,10 @@ class ArmorCalculator(ArmorCalcMeta):
         if ammo is not None:
             ammo.onGunReloadTimeSet -= self.onGunReload
         g_events.onPlayerVehicleDeath -= self.clearView
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            if isinstance(handler, AvatarInputHandler):
+                handler.onCameraChanged -= self.onCameraChanged
         super(ArmorCalculator, self).onExitBattlePage()
 
     def _populate(self):
@@ -52,6 +62,9 @@ class ArmorCalculator(ArmorCalcMeta):
     def _dispose(self):
         ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor = self.wg_updateColor
         super(ArmorCalculator, self)._dispose()
+
+    def onCameraChanged(self, ctrlMode, vehicleID=None):
+        self.as_onControlModeChangedS(ctrlMode)
 
     def updateShootParams(self):
         shotParams = g_cache.player.getVehicleDescriptor().shot

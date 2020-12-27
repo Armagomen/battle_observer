@@ -7,12 +7,14 @@ package net.armagomen.battleobserver.battle.components
 	
 	import net.armagomen.battleobserver.battle.utils.Filters;
 	import net.armagomen.battleobserver.battle.utils.TextExt;
+	import net.armagomen.battleobserver.battle.data.Constants;
 	import net.wg.gui.battle.components.*;
 	
 	public class DispersionTimerUI extends BattleDisplayable
 	{
 		private var dispersionTime:TextField;
 		public var getShadowSettings:Function;
+		private var currentControlMode:String = "arcade";
 		
 		public function DispersionTimerUI(compName:String)
 		{
@@ -23,9 +25,28 @@ package net.armagomen.battleobserver.battle.components
 		public function as_startUpdate(config:Object):void
 		{
 			this.x = App.appWidth >> 1;
-			this.y = App.appHeight >> 1;
+			if (this.currentControlMode == "arcade")
+			{
+				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			}
+			else
+			{
+				this.y = App.appHeight >> 1;
+			}
 			dispersionTime = new TextExt("dispersionTimer", config.timer_position_x, config.timer_position_y, Filters.middleText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
 			App.utils.data.cleanupDynamicObject(config);
+		}
+		
+		public function as_onControlModeChanged(mode:String):void
+		{
+			if (mode == "arcade")
+			{
+				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			}
+			else
+			{
+				this.y = App.appHeight >> 1;
+			}
 		}
 		
 		public function as_upateTimerText(text:String):void
@@ -64,7 +85,14 @@ package net.armagomen.battleobserver.battle.components
 		private function _onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
-			this.y = App.appHeight >> 1;
+			if (this.currentControlMode == "arcade")
+			{
+				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			}
+			else
+			{
+				this.y = App.appHeight >> 1;
+			}
 		}
 	}
 }

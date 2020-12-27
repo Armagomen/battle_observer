@@ -2,7 +2,9 @@ from collections import defaultdict
 
 import Math
 
+from AvatarInputHandler import AvatarInputHandler
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
+from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from ..core.battle_cache import cache
 from ..core.bo_constants import FLIGHT_TIME, GLOBAL
@@ -46,6 +48,10 @@ class FlightTime(FlyghtTimeMeta):
                 arena.onVehicleKilled += self.__onVehicleKilled
             if self.wgDistDisable:
                 CrosshairPanelContainer.setDistance = lambda *args: None
+            handler = avatar_getter.getInputHandler()
+            if handler is not None:
+                if isinstance(handler, AvatarInputHandler):
+                    handler.onCameraChanged += self.onCameraChanged
 
     def onExitBattlePage(self):
         if self.checkSpgOnlyConfig():
@@ -56,7 +62,14 @@ class FlightTime(FlyghtTimeMeta):
                 arena.onVehicleKilled -= self.__onVehicleKilled
             if self.wgDistDisable:
                 CrosshairPanelContainer.setDistance = self.wg_distance
+            handler = avatar_getter.getInputHandler()
+            if handler is not None:
+                if isinstance(handler, AvatarInputHandler):
+                    handler.onCameraChanged += self.onCameraChanged
         super(FlightTime, self).onExitBattlePage()
+
+    def onCameraChanged(self, ctrlMode, vehicleID=None):
+        self.as_onControlModeChangedS(ctrlMode)
 
     def __onVehicleKilled(self, targetID, attackerID, equipmentID, reason):
         if targetID == cache.player.playerVehicleID:

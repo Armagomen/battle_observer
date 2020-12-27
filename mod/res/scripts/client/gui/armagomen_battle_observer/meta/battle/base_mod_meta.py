@@ -52,3 +52,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def as_colorBlindS(self, enabled):
         return self.flashObject.as_colorBlind(enabled) if self._isDAAPIInited() else None
+
+    def as_onControlModeChangedS(self, mode):
+        return self.flashObject.as_onControlModeChanged(mode) if self._isDAAPIInited() else None
+

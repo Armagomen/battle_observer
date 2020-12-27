@@ -5,12 +5,15 @@ package net.armagomen.battleobserver.battle.components
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.utils.Filters;
 	import net.armagomen.battleobserver.battle.utils.TextExt;
+	import net.armagomen.battleobserver.battle.data.Constants;
 	import net.wg.gui.battle.components.*;
+	
 
 	public class FlightTimeUI extends BattleDisplayable
 	{
 		private var flyTime:TextField;
 		public var getShadowSettings:Function;
+		private var currentControlMode:String = "arcade";
 
 		public function FlightTimeUI(compName:String)
 		{
@@ -21,7 +24,14 @@ package net.armagomen.battleobserver.battle.components
 		public function as_startUpdate(flyght:Object):void
 		{
 			this.x = App.appWidth >> 1;
-			this.y = App.appHeight >> 1;
+			if (this.currentControlMode == "arcade")
+			{
+				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			}
+			else
+			{
+				this.y = App.appHeight >> 1;
+			}
 			if (flyght.enabled)
 			{
 				flyTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
@@ -42,6 +52,19 @@ package net.armagomen.battleobserver.battle.components
 			this.flyTime = null;
 			var page:* = parent;
 			page.unregisterComponent(this.name);
+		}
+		
+		public function as_onControlModeChanged(mode:String):void
+		{
+			this.currentControlMode = mode;
+			if (mode == "arcade")
+			{
+				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			}
+			else
+			{
+				this.y = App.appHeight >> 1;
+			}
 		}
 
 		override protected function configUI():void
@@ -64,7 +87,14 @@ package net.armagomen.battleobserver.battle.components
 		private function _onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
-			this.y = App.appHeight >> 1;
+			if (this.currentControlMode == "arcade")
+			{
+				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			}
+			else
+			{
+				this.y = App.appHeight >> 1;
+			}
 		}
 	}
 }
