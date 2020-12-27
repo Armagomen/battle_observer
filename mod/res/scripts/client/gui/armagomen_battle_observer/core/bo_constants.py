@@ -9,7 +9,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 MOD_PATH = "gui.armagomen_battle_observer.{}"
-MOD_VERSION = "1.30.9"
+MOD_VERSION = "1.31.0"
 API_VERSION = "1.10.7"
 
 HEADERS = [('User-Agent', MOD_NAME)]

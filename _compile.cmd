@@ -1,5 +1,5 @@
 @Echo off
-set ModVer=1.30.9
+set ModVer=1.31.0
 
 set WotVer=1.11.0.0
 REM set WotVer="1.11.0.0 Common Test"
@@ -25,6 +25,6 @@ DEL %lastUpdate%
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py -x!*.cmd %ModFile% .\mod\*
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %ZipArh% %ModsDir%
 
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdate% %ModFile% %API%
-REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdate% %ModFile%
+REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdate% %ModFile% %API%
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdate% %ModFile%
 exit
