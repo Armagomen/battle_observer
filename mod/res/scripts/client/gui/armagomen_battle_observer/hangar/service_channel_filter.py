@@ -68,7 +68,7 @@ def clickAction(base, view, typeID, entityID, action):
 
 
 def onConnected():
-    if getClientLanguage().lower() in ('ru', 'uk', 'be'):
+    if getClientLanguage().lower() in GLOBAL.RU_LOCALIZATION:
         pushMessage(URLS.DONATE_RU_MESSAGE, type=SM_TYPE.Warning)
     else:
         pushMessage(URLS.DONATE_EU_MESSAGE, type=SM_TYPE.Warning)

@@ -34,6 +34,7 @@ class GLOBAL:
     ALIGN = "align"
     ALIGN_LIST = ("left", "center", "right")
     ALIGN_LIST_TEST = ("left", "center")
+    RU_LOCALIZATION = ('ru', 'uk', 'be')
     ALPHA = "alpha"
     BG_ALPHA = "bgAlpha"
     BLUR_X = "blurX"
