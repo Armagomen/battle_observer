@@ -3,11 +3,12 @@
   "circle_scale": 85, 
   "enabled": true, 
   "replaceOriginalCircle": true, 
-  "timer_color": "#FAFA00", 
-  "timer_done_color": "#00FAFA", 
-  "timer_done_template": "<font color='%(color_done)s'>reduction - %(percent)d%%</font>", 
+  "timer_align": "left", 
+  "timer_color": "#f5ff8f", 
+  "timer_done_color": "#a6ffa6", 
+  "timer_done_template": "<font color='%(color_done)s'>reduced - %(percent)d%%</font>", 
   "timer_enabled": true, 
-  "timer_position_x": 0, 
-  "timer_position_y": -220, 
+  "timer_position_x": 110, 
+  "timer_position_y": 0, 
   "timer_regular_template": "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>"
 }

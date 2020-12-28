@@ -1,8 +1,9 @@
 {
-  "enabled":true,
-  "spgOnly":false,
-  "template":"<font size='18' color='#FAFAFA'>%(flightTime).2fs. - %(distance).1fm.</font>",
-  "wgDistDisable":false,
-  "x":0,
-  "y":-250
+  "align": "right", 
+  "enabled": true, 
+  "spgOnly": false, 
+  "template": "<font color='#f5ff8f'>%(flightTime).2fs. - %(distance).1fm.</font>", 
+  "wgDistDisable": false, 
+  "x": -110, 
+  "y": 0
 }
