@@ -110,7 +110,7 @@ class Config(object):
             DISPERSION_CIRCLE.TIMER_COLOR: "#f5ff8f",
             DISPERSION_CIRCLE.TIMER_DONE_COLOR: "#a6ffa6",
             DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
-            DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduction - %(percent)d%%</font>"
+            DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
         }
         self.debug_panel = {
             GLOBAL.ENABLED: False,
