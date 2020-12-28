@@ -70,7 +70,8 @@ translate = {
         "timer_position_x": "Timer position X",
         "timer_position_y": "Timer position Y",
         "timer_color": "Timer color, not yet converged.",
-        "timer_done_color": "Timer / message color (full reduction)."
+        "timer_done_color": "Timer / message color (full reduction).",
+        "timer_align": "Text align."
     },
     "tank_carousel": {
         "header": "TANK CAROUSEL SETUP",
@@ -337,7 +338,8 @@ translate = {
         "y_tooltip": "Position from the center of the screen.",
         "spgOnly": "Display flight time only for artillery.",
         "template": "A string template with values. Macro: %(flightTime).1f , %(distance).1f",
-        "wgDistDisable": "Hide base distance in sight."
+        "wgDistDisable": "Hide base distance in sight.",
+        "align": "Text align."
     },
     "save_shoot": {
         "header": "SAVE SHOOT LITE",

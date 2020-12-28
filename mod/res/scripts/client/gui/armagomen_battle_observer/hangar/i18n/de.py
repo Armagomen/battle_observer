@@ -70,7 +70,8 @@ translate = {
         "timer_position_x": "Timer Position X",
         "timer_position_y": "Timer Position Y",
         "timer_color": "Timerfarbe, noch nicht konvergiert.",
-        "timer_done_color": "Timer- / Nachrichtenfarbe (volle Reduzierung)."
+        "timer_done_color": "Timer- / Nachrichtenfarbe (volle Reduzierung).",
+        "timer_align": "Text align."
     },
     "tank_carousel": {
         "header": "TANK CAROUSEL SETUP",
@@ -346,7 +347,8 @@ translate = {
         "y_tooltip": "Position von der Mitte des Bildschirmes gemessen.",
         "spgOnly": "zeige Text ausschliesslich für Artillerie",
         "template": "Text: verfügbare Makro(s):%(flightTime).1f , %(distance).1f",
-        "wgDistDisable": "Basisentfernung in Sichtweite ausblenden."
+        "wgDistDisable": "Basisentfernung in Sichtweite ausblenden.",
+        "align": "Text align."
     },
     "save_shoot": {
         "header": "Blockiere Teambeschuss (SAVE SHOOT LITE)",

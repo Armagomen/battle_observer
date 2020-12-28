@@ -33,7 +33,7 @@ package net.armagomen.battleobserver.battle.components
 			{
 				this.y = App.appHeight >> 1;
 			}
-			dispersionTime = new TextExt("dispersionTimer", config.timer_position_x, config.timer_position_y, Filters.middleText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
+			dispersionTime = new TextExt("dispersionTimer", config.timer_position_x, config.timer_position_y, Filters.middleText, config.timer_align, getShadowSettings(), this);
 			App.utils.data.cleanupDynamicObject(config);
 		}
 		

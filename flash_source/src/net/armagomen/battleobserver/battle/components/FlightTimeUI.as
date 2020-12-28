@@ -34,12 +34,12 @@ package net.armagomen.battleobserver.battle.components
 			}
 			if (flyght.enabled)
 			{
-				flyTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
+				flyTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
 			}
 			App.utils.data.cleanupDynamicObject(flyght);
 		}
 
-		public function as_flyghtTime(text:String):void
+		public function as_flightTime(text:String):void
 		{
 			flyTime.htmlText = text;
 		}

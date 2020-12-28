@@ -104,10 +104,11 @@ class Config(object):
             DISPERSION_CIRCLE.REPLACE: False,
             DISPERSION_CIRCLE.SCALE_CONFIG: DISPERSION_CIRCLE.SCALE,
             DISPERSION_CIRCLE.TIMER_ENABLED: False,
-            DISPERSION_CIRCLE.TIMER_POSITION_X: 0,
-            DISPERSION_CIRCLE.TIMER_POSITION_Y: 80,
-            DISPERSION_CIRCLE.TIMER_COLOR: "#FFFF00",
-            DISPERSION_CIRCLE.TIMER_DONE_COLOR: "#FFFF00",
+            DISPERSION_CIRCLE.TIMER_POSITION_X: 110,
+            DISPERSION_CIRCLE.TIMER_POSITION_Y: 0,
+            DISPERSION_CIRCLE.TIMER_ALIGN: GLOBAL.LEFT,
+            DISPERSION_CIRCLE.TIMER_COLOR: "#f5ff8f",
+            DISPERSION_CIRCLE.TIMER_DONE_COLOR: "#a6ffa6",
             DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
             DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduction - %(percent)d%%</font>"
         }
@@ -500,10 +501,11 @@ class Config(object):
         self.flight_time = {
             GLOBAL.ENABLED: False,
             FLIGHT_TIME.WG_DIST_DISABLE: False,
-            GLOBAL.X: GLOBAL.ZERO,
-            GLOBAL.Y: -250,
+            GLOBAL.X: -110,
+            GLOBAL.Y: GLOBAL.ZERO,
             FLIGHT_TIME.SPG_ONLY: True,
-            FLIGHT_TIME.TEMPLATE: "<font color='#FFFFFF'>%(flightTime).1f s. - %(distance).1f m.</font>"
+            FLIGHT_TIME.ALIGN: GLOBAL.RIGHT,
+            FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1f s. - %(distance).1f m.</font>"
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,

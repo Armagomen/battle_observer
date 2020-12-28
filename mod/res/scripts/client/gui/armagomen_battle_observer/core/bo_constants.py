@@ -82,14 +82,14 @@ class URLS:
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
     DONATE_RU_MESSAGE = "<font color='#b3ff00'>Поздравляю с Новым Годом и Рождеством. (Armagomen)</font>\n\n" \
-                        "<font color='#fafafa'>Для того чтобы поздравить меня, а так же поддержать разработку " \
+                        "<font color='#ffff73'>Для того чтобы поздравить меня, а так же поддержать разработку " \
                         "мода \"Battle Observer\", переходи по одной из ссылок.</font>\n\n" \
                         "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a>" \
                         " | <a href='event:{eu}'>USD / EUR</a>\n\n" \
                         "Если ссылки не работают: открой меню настроек мода и выбери там нужную " \
                         "ссылку.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
     DONATE_EU_MESSAGE = "<font color='#b3ff00'>Happy New Year and Merry Christmas. (Armagomen)</font>\n\n" \
-                        "<font color='#fafafa'>In order to congratulate me, as well as to support the development " \
+                        "<font color='#ffff73'>In order to congratulate me, as well as to support the development " \
                         "of your favorite \"Battle Observer\" mod, follow one of the links.</font>\n\n" \
                         "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a>" \
                         " | <a href='event:{eu}'>USD / EUR</a>\n\n" \
@@ -457,6 +457,7 @@ class FLIGHT_TIME:
     TEMPLATE = "template"
     M_FLIGHT_TIME = "flightTime"
     M_DISTANCE = "distance"
+    ALIGN = "align"
 
 
 class VEHICLE_TYPES:
@@ -509,6 +510,7 @@ class DISPERSION_CIRCLE:
     TIMER_DONE_COLOR = "timer_done_color"
     TIMER_DONE_TEMPLATE = "timer_done_template"
     TIMER_REGULAR_TEMPLATE = "timer_regular_template"
+    TIMER_ALIGN = "timer_align"
 
 
 class DEBUG_PANEL:

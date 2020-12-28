@@ -9,13 +9,13 @@ from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from ..core.battle_cache import cache
 from ..core.bo_constants import FLIGHT_TIME, GLOBAL
 from ..core.config import cfg
-from ..meta.battle.flight_time_meta import FlyghtTimeMeta
+from ..meta.battle.flight_time_meta import FlightTimeMeta
 
 VECTOR = Math.Vector3(GLOBAL.F_ZERO, GLOBAL.F_ZERO, GLOBAL.F_ZERO)
 config = cfg.flight_time
 
 
-class FlightTime(FlyghtTimeMeta):
+class FlightTime(FlightTimeMeta):
 
     def __init__(self):
         super(FlightTime, self).__init__()
@@ -73,11 +73,11 @@ class FlightTime(FlyghtTimeMeta):
 
     def __onVehicleKilled(self, targetID, attackerID, equipmentID, reason):
         if targetID == cache.player.playerVehicleID:
-            self.as_flyghtTimeS(GLOBAL.EMPTY_LINE)
+            self.as_flightTimeS(GLOBAL.EMPTY_LINE)
 
     def __onGunMarkerStateChanged(self, markerType, position, params, collision):
         shotPos, shotVec = cache.player.gunRotator.getCurShotPosition()
         flatDist = position.flatDistTo(shotPos)
         self.macrosDict[FLIGHT_TIME.M_FLIGHT_TIME] = flatDist / shotVec.flatDistTo(VECTOR)
         self.macrosDict[FLIGHT_TIME.M_DISTANCE] = flatDist
-        self.as_flyghtTimeS(self.template % self.macrosDict)
+        self.as_flightTimeS(self.template % self.macrosDict)

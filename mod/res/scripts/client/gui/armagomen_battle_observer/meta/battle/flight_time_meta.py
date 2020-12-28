@@ -1,10 +1,10 @@
 from .base_mod_meta import BaseModMeta
 
 
-class FlyghtTimeMeta(BaseModMeta):
+class FlightTimeMeta(BaseModMeta):
 
     def __init__(self):
-        super(FlyghtTimeMeta, self).__init__()
+        super(FlightTimeMeta, self).__init__()
 
-    def as_flyghtTimeS(self, text):
-        return self.flashObject.as_flyghtTime(text) if self._isDAAPIInited() else None
+    def as_flightTimeS(self, text):
+        return self.flashObject.as_flightTime(text) if self._isDAAPIInited() else None
