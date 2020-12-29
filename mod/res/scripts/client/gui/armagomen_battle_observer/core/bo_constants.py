@@ -9,7 +9,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 MOD_PATH = "gui.armagomen_battle_observer.{}"
-MOD_VERSION = "1.31.0"
+MOD_VERSION = "1.31.1"
 API_VERSION = "1.10.7"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -492,12 +492,13 @@ class DISPERSION_CIRCLE:
         pass
 
     NAME = "dispersion_circle"
-    EXTRA_LAP = "asExtraServerLap"
-    REPLACE = "replaceOriginalCircle"
+    CIRCLE_EXTRA_LAP = "circle_extraServerLap"
+    CIRCLE_REPLACE = "circle_replaceOriginalCircle"
+    CIRCLE_SCALE_CONFIG = "circle_scale"
+    CIRCLE_SERVER = "useServerAim"
+    CIRCLE_ENABLED = "circle_enabled"
     CIRCLE_SCALE = 0.65
     SCALE = 65
-    SCALE_CONFIG = "circle_scale"
-    SERVER = "useServerAim"
     MAX_TIME = 5.0
     SPG_GM_SCALE = 0.8
     HALF_SIZE = 0.5
@@ -793,6 +794,10 @@ class CONFIG_INTERFACE:
                                               DISPERSION_CIRCLE.TIMER_DONE_COLOR,
                                               DISPERSION_CIRCLE.TIMER_COLOR,
                                               DISPERSION_CIRCLE.TIMER_POSITION_X,
-                                              DISPERSION_CIRCLE.TIMER_POSITION_Y)
+                                              DISPERSION_CIRCLE.TIMER_POSITION_Y,
+                                              DISPERSION_CIRCLE.TIMER_ALIGN),
+            DISPERSION_CIRCLE.CIRCLE_ENABLED: (DISPERSION_CIRCLE.CIRCLE_SCALE_CONFIG,
+                                               DISPERSION_CIRCLE.CIRCLE_EXTRA_LAP,
+                                               DISPERSION_CIRCLE.CIRCLE_REPLACE)
         }
     }

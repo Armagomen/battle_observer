@@ -118,7 +118,7 @@ class CreateElement(object):
         if isinstance(value, (basestring, bool)):
             return self.createControl(blockID, key, value)
         elif val_type is int:
-            if DISPERSION_CIRCLE.SCALE_CONFIG in key:
+            if DISPERSION_CIRCLE.CIRCLE_SCALE_CONFIG in key:
                 return self.createSlider(blockID, key, GLOBAL.ONE, 100, GLOBAL.ONE, value)
             return self.createStepper(blockID, key, -2000, 2000, GLOBAL.ONE, value)
         elif val_type is float:

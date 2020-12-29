@@ -61,9 +61,10 @@ translate = {
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",
-        "asExtraServerLap": "Display server scatter circle.",
-        "asExtraServerLap_tooltip": "Adds a second circle of server crosshair.",
-        "replaceOriginalCircle": "Replace Original Circle.",
+        "circle_enabled": "Улучшенный круг сведения.",
+        "circle_extraServerLap": "Display server scatter circle.",
+        "circle_extraServerLap_tooltip": "Adds a second circle of server crosshair.",
+        "circle_replaceOriginalCircle": "Replace Original Circle.",
         "circle_scale": "Circle size multiplier, 1 - 100 %",
         "circle_scale_tooltip": "It is not recommended to set the value below 65.",
         "timer_enabled": "Turn on the reduction timer.",

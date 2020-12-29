@@ -61,9 +61,10 @@ translate = {
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
-        "asExtraServerLap": "Anzeige des Kreises für die Streuung der Kanone.",
-        "asExtraServerLap_tooltip": "Fügt einen zweiten Kreis der Server-Sichtung hinzu.",
-        "replaceOriginalCircle": "Ersetzen des originalen Kreises.",
+        "circle_enabled": "Улучшенный круг сведения.",
+        "circle_extraServerLap": "Anzeige des Kreises für die Streuung der Kanone.",
+        "circle_extraServerLap_tooltip": "Fügt einen zweiten Kreis der Server-Sichtung hinzu.",
+        "circle_replaceOriginalCircle": "Ersetzen des originalen Kreises.",
         "circle_scale": "Kreisgrößenmultiplikator 1 - 100 %",
         "circle_scale_tooltip": "Es wird nicht empfohlen, den Wert unter 65 einzustellen.",
         "timer_enabled": "Schalten Sie den Reduktions-Timer ein.",

@@ -21,7 +21,6 @@ from ..core.events import g_events
 
 CLIENT = _MARKER_TYPE.CLIENT
 SERVER = _MARKER_TYPE.SERVER
-aih_constants.GUN_MARKER_MIN_SIZE = DISPERSION_CIRCLE.GUN_MARKER_MIN_SIZE
 
 DEV_FACTORIES_COLLECTION = (
     gm_factory._DevControlMarkersFactory,
@@ -133,15 +132,17 @@ class DispersionCircle(object):
 
     def onSettingsChanged(self, config, blockID):
         if blockID == DISPERSION_CIRCLE.NAME:
-            self.replaceOriginalCircle = config[DISPERSION_CIRCLE.REPLACE]
-            self.extraServerLap = config[DISPERSION_CIRCLE.EXTRA_LAP]
-            self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
+            self.replaceOriginalCircle = config[DISPERSION_CIRCLE.CIRCLE_REPLACE]
+            self.extraServerLap = config[DISPERSION_CIRCLE.CIRCLE_EXTRA_LAP]
+            self.enabled = config[DISPERSION_CIRCLE.CIRCLE_ENABLED] and not g_replayCtrl.isPlaying
             self.hooksEnable = self.enabled and (not self.replaceOriginalCircle or self.extraServerLap)
-            DISPERSION_CIRCLE.CIRCLE_SCALE = round(config[DISPERSION_CIRCLE.SCALE_CONFIG] / 100.0, 2)
-            gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
+            DISPERSION_CIRCLE.CIRCLE_SCALE = round(config[DISPERSION_CIRCLE.CIRCLE_SCALE_CONFIG] / 100.0, 2)
+            if config[GLOBAL.ENABLED]:
+                gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
+                aih_constants.GUN_MARKER_MIN_SIZE = DISPERSION_CIRCLE.GUN_MARKER_MIN_SIZE
 
     def enableServerAim(self, server=True):
-        if self.hooksEnable and not bool(ServicesLocator.settingsCore.getSetting(DISPERSION_CIRCLE.SERVER)):
+        if self.hooksEnable and not bool(ServicesLocator.settingsCore.getSetting(DISPERSION_CIRCLE.CIRCLE_SERVER)):
             cache.player.enableServerAim(server)
 
     @staticmethod
