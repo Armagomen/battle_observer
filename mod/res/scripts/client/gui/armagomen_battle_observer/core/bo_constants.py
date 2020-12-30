@@ -66,10 +66,11 @@ class GLOBAL:
     F_ONE = 1.0
     OUTLINE = "outline"
     ICONS_DIR = "img://gui/maps/icons"
-    EFFICIENCY_DIR = "img://gui/maps/icons/library/efficiency/48x48"
-    IMG_PARAMS = "width='24' height='24' vspace='-13'"
     C_INTERFACE_SPLITTER = "*"
     REPLACE = (("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"))
+    IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48",
+                  "size": "width='24' height='24'",
+                  "vspace": "vspace='-13'"}
 
 
 class URLS:

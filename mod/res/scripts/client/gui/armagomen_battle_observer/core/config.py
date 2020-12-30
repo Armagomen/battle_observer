@@ -19,11 +19,6 @@ from .events import g_events
 class Config(object):
 
     def __init__(self):
-        icons_dir = GLOBAL.ICONS_DIR
-        efficiency_dir = GLOBAL.EFFICIENCY_DIR
-        img_params = GLOBAL.IMG_PARAMS
-        img_format = (efficiency_dir, img_params)
-
         self.main = {
             MAIN.HIDE_CHAT: False,
             MAIN.SHOW_FRIENDS: False,
@@ -106,7 +101,7 @@ class Config(object):
             DISPERSION_CIRCLE.CIRCLE_SCALE_CONFIG: DISPERSION_CIRCLE.SCALE,
             DISPERSION_CIRCLE.TIMER_ENABLED: False,
             DISPERSION_CIRCLE.TIMER_POSITION_X: 110,
-            DISPERSION_CIRCLE.TIMER_POSITION_Y: 0,
+            DISPERSION_CIRCLE.TIMER_POSITION_Y: GLOBAL.ZERO,
             DISPERSION_CIRCLE.TIMER_ALIGN: GLOBAL.LEFT,
             DISPERSION_CIRCLE.TIMER_COLOR: "#f5ff8f",
             DISPERSION_CIRCLE.TIMER_DONE_COLOR: "#a6ffa6",
@@ -258,14 +253,14 @@ class Config(object):
             DAMAGE_LOG.WG_ASSIST: False,
             DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
             DAMAGE_LOG.ATTACK_REASON: {
-                ATTACK_REASON.SHOT: "<img src='%s/damage.png' %s>" % img_format,
-                ATTACK_REASON.FIRE: "<img src='%s/fire.png' %s>" % img_format,
-                ATTACK_REASON.RAM: "<img src='%s/ram.png' %s>" % img_format,
-                ATTACK_REASON.WORLD_COLLISION: "<img src='%s/ram.png' %s>" % img_format
+                ATTACK_REASON.SHOT: "<img src='{dir}/damage.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
+                ATTACK_REASON.FIRE: "<img src='{dir}/fire.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
+                ATTACK_REASON.RAM: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
+                ATTACK_REASON.WORLD_COLLISION: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS)
             }
         }
-        additional = {reason: "<img src='%s/module.png' %s>" % img_format for reason in ATTACK_REASONS
-                      if reason not in self.log_global[DAMAGE_LOG.ATTACK_REASON]}
+        additional = {reason: "<img src='{dir}/module.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS) for reason
+                      in ATTACK_REASONS if reason not in self.log_global[DAMAGE_LOG.ATTACK_REASON]}
         self.log_global[DAMAGE_LOG.ATTACK_REASON].update(additional)
         self.log_total = {
             GLOBAL.ENABLED: False,
@@ -280,11 +275,11 @@ class Config(object):
                                            "%(blockedIcon)s%(blockedDamage)s%(assistIcon)s%(assistDamage)s"
                                            "%(spottedIcon)s%(spottedTanks)s%(stunIcon)s%(stun)s</textformat>"),
             DAMAGE_LOG.ICONS: {
-                "assistIcon": "<img src='%s/help.png' %s vspace='-10'>" % (efficiency_dir, img_params[:22]),
-                "blockedIcon": "<img src='%s/armor.png' %s vspace='-9'>" % (efficiency_dir, img_params[:22]),
-                "damageIcon": "<img src='%s/damage.png' %s vspace='-10'>" % (efficiency_dir, img_params[:22]),
-                "spottedIcon": "<img src='%s/detection.png' %s vspace='-10'>" % (efficiency_dir, img_params[:22]),
-                "stunIcon": "<img src='%s/stun.png' %s vspace='-10'>" % (efficiency_dir, img_params[:22])
+                "assistIcon": "<img src='{dir}/help.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS),
+                "blockedIcon": "<img src='{dir}/armor.png' {size} vspace='-9'>".format(**GLOBAL.IMG_PARAMS),
+                "damageIcon": "<img src='{dir}/damage.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS),
+                "spottedIcon": "<img src='{dir}/detection.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS),
+                "stunIcon": "<img src='{dir}/stun.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS)
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
@@ -296,7 +291,7 @@ class Config(object):
                 GLOBAL.Y: GLOBAL.ZERO,
                 GLOBAL.ALIGN: GLOBAL.LEFT
             },
-            DAMAGE_LOG.KILLED_ICON: "<img src='%s/destruction.png' %s>" % img_format,
+            DAMAGE_LOG.KILLED_ICON: "<img src='{dir}/destruction.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
             DAMAGE_LOG.LOG_MODE[GLOBAL.FIRST]: [
                 "<textformat leading='-8' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
                 "<font size='12'>%(index)02d:</font><tab>",
@@ -333,7 +328,7 @@ class Config(object):
                 GLOBAL.Y: -20,
                 GLOBAL.ALIGN: GLOBAL.LEFT
             },
-            DAMAGE_LOG.KILLED_ICON: "<img src='%s/destruction.png' %s>" % img_format,
+            DAMAGE_LOG.KILLED_ICON: "<img src='{dir}/destruction.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
             DAMAGE_LOG.LOG_MODE[GLOBAL.FIRST]: [
                 "<textformat leading='-8' tabstops='[20, 55, 80, 100, 125]'><font face='$TitleFont' size='15'>",
                 "<font size='12'>%(index)02d:</font><tab>",
@@ -428,10 +423,11 @@ class Config(object):
                 GLOBAL.ALIGN: GLOBAL.LEFT
             },
             MAIN_GUN.GUN_ICON: "<img src='{}/achievement/32x32/mainGun.png' width='26' height='25'"
-                               " vspace='-7'>".format(icons_dir),
-            MAIN_GUN.DONE_ICON: "<img src='{}/library/done.png' width='24' height='24' vspace='-8'>".format(icons_dir),
+                               " vspace='-7'>".format(GLOBAL.ICONS_DIR),
+            MAIN_GUN.DONE_ICON: "<img src='{}/library/done.png' width='24' height='24'"
+                                " vspace='-8'>".format(GLOBAL.ICONS_DIR),
             MAIN_GUN.FAILURE_ICON: "<img src='{}/library/icon_alert_32x32.png' width='22' height='22'"
-                                   " vspace='-6'>".format(icons_dir)
+                                   " vspace='-6'>".format(GLOBAL.ICONS_DIR)
         }
         self.vehicle_types = {
             VEHICLE_TYPES.CLASS_COLORS: {
