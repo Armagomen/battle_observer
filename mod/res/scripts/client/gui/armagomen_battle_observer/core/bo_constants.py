@@ -9,7 +9,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 MOD_PATH = "gui.armagomen_battle_observer.{}"
-MOD_VERSION = "1.31.1"
+MOD_VERSION = "1.31.2"
 API_VERSION = "1.10.7"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -83,20 +83,18 @@ class URLS:
     DONATE_EU_URL = "https://donatepay.eu/don/armagomen"
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
-    DONATE_RU_MESSAGE = "<font color='#b3ff00'>Поздравляю с Новым Годом и Рождеством. (Armagomen)</font>\n\n" \
-                        "<font color='#ffff73'>Для того чтобы поздравить меня, а так же поддержать разработку " \
-                        "мода \"Battle Observer\", переходи по одной из ссылок.</font>\n\n" \
-                        "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a>" \
-                        " | <a href='event:{eu}'>USD / EUR</a>\n\n" \
-                        "Если ссылки не работают: открой меню настроек мода и выбери там нужную " \
-                        "ссылку.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
-    DONATE_EU_MESSAGE = "<font color='#b3ff00'>Happy New Year and Merry Christmas. (Armagomen)</font>\n\n" \
-                        "<font color='#ffff73'>In order to congratulate me, as well as to support the development " \
-                        "of your favorite \"Battle Observer\" mod, follow one of the links.</font>\n\n" \
-                        "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a>" \
-                        " | <a href='event:{eu}'>USD / EUR</a>\n\n" \
-                        "if links don't work: open the mod settings menu and select the desired " \
-                        "link there.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
+    DONATE_RU_MESSAGE = "<font color='#ffff73'>" \
+                        "Поддержите разработку мода 'Battle Observer', переходи по одной из ссылок. Без вашей " \
+                        "поддержки разработка и поддержка встанет, вы же не хотите чтобы мод ушел на пенсию." \
+                        "</font>\n\n<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a> | " \
+                        "<a href='event:{eu}'>USD/EUR</a>\n\nЕсли ссылки не работают: откройте меню настроек мода и " \
+                        "выбери там нужную ссылку.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
+    DONATE_EU_MESSAGE = "<font color='#ffff73'>" \
+                        "Support the development of the 'Battle Observer' mod by following one of the links." \
+                        " Without your support, development and support will stop, you do not want the mod to retire." \
+                        "</font>\n\n<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a> | " \
+                        "<a href='event:{eu}'>USD/EUR</a>\n\nif links don't work: open the mod settings menu and " \
+                        "select the desired link there.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
 
 
 class SERVICE_CHANNEL:

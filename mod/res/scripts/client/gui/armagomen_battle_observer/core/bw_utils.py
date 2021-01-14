@@ -44,6 +44,8 @@ def getPreferencesFilePath():
 
 
 def restartGame():
+    BigWorld.savePreferences()
+    BigWorld.worldDrawEnabled(False)
     BigWorld.restartGame()
 
 
