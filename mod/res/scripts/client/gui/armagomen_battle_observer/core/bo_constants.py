@@ -84,16 +84,24 @@ class URLS:
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
     DONATE_RU_MESSAGE = "<font color='#ffff73'>" \
-                        "Поддержите разработку мода 'Battle Observer', переходи по одной из ссылок. Без вашей " \
-                        "поддержки разработка и поддержка встанет, вы же не хотите чтобы мод ушел на пенсию." \
-                        "</font>\n\n<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a> | " \
-                        "<a href='event:{eu}'>USD/EUR</a>\n\nЕсли ссылки не работают: откройте меню настроек мода и " \
+                        "Поддержите разработку мода 'Battle Observer'. В данный момент есть проблемы с тем что моду " \
+                        "нужен сервер для дальнейшего развития, денег на сервер нет, если кто может чем-то помочь " \
+                        "собрать на сервер (по сути мини пк который будет работать как сервер) буду благодарен, " \
+                        "статистику по сбору опубликую отдельно в дискорд канале." \
+                        "</font><br><br>" \
+                        "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a> | " \
+                        "<a href='event:{eu}'>USD/EUR</a>" \
+                        "<br><br>Если ссылки не работают: откройте меню настроек мода и " \
                         "выбери там нужную ссылку.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
     DONATE_EU_MESSAGE = "<font color='#ffff73'>" \
-                        "Support the development of the 'Battle Observer' mod by following one of the links." \
-                        " Without your support, development and support will stop, you do not want the mod to retire." \
-                        "</font>\n\n<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a> | " \
-                        "<a href='event:{eu}'>USD/EUR</a>\n\nif links don't work: open the mod settings menu and " \
+                        "Support the development of the 'Battle Observer' mod. At the moment, there are problems " \
+                        "with the fact that the mod needs a server for further development, there is no money for" \
+                        " the server, if someone can help to collect something on the server (in fact, a mini PC" \
+                        " that will work as a server) I will be grateful, I will publish the collection statistics" \
+                        " separately in discord channel." \
+                        "</font><br><br>" \
+                        "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a> | " \
+                        "<a href='event:{eu}'>USD/EUR</a><br><br>if links don't work: open the mod settings menu and " \
                         "select the desired link there.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
 
 
