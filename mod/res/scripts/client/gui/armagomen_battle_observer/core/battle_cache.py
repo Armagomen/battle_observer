@@ -62,6 +62,10 @@ class BattleCache(object):
             self.__arenaDP = dependency.instance(IBattleSessionProvider).getArenaDP()
         return self.__arenaDP
 
+    @staticmethod
+    def getArenaVisitor():
+        return dependency.instance(IBattleSessionProvider).arenaVisitor
+
 
 cache = BattleCache()
 
@@ -137,9 +141,6 @@ class HealthWorker(object):
         new_health = max(GLOBAL.ZERO, health)
         vehicle = self.cache[vehicle_id]
         if new_health != vehicle[VEHICLE.CUR]:
-            if attackerID and attackerID != vehicle_id:
-                cache.playersDamage[attackerID] += vehicle[VEHICLE.CUR] - new_health
-                g_events.onPlayersDamaged(attackerID)
             vehicle[VEHICLE.CUR] = new_health
             self.setTeamCurrent(team)
             g_events.updateHealthPoints(team, self.getTeamCurrent(team), self.getTeamMaximum(team),

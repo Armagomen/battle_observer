@@ -5,7 +5,6 @@ class Events(object):
 
     def __init__(self):
         self.onHealthChanged = SafeEvent()
-        self.onPlayersDamaged = SafeEvent()
         self.onVehicleAddUpdate = SafeEvent()
         self.onVehicleAddPanels = SafeEvent()
         self.onMainGunHealthChanged = SafeEvent()
@@ -21,5 +20,6 @@ class Events(object):
         self.onEnterBattlePage = SafeEvent()
         self.onExitBattlePage = SafeEvent()
         self.onDispersionAngleUpdate = SafeEvent()
+
 
 g_events = Events()

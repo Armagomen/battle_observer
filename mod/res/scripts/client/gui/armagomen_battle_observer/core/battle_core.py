@@ -3,8 +3,6 @@ from PlayerEvents import g_playerEvents
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from gui.shared.personality import ServicesLocator
-from helpers import dependency
-from skeletons.gui.battle_session import IBattleSessionProvider
 
 from .battle_cache import cache, g_health
 from .bo_constants import VEHICLE, MAIN, GLOBAL, POSTMORTEM, MAIN_GUN
@@ -12,10 +10,6 @@ from .bw_utils import getPlayer, setMaxFrameRate
 from .config import cfg
 from .core import overrideMethod
 from .events import g_events
-
-
-def getArenaVisitor():
-    return dependency.instance(IBattleSessionProvider).arenaVisitor
 
 
 class _BattleCore(object):
@@ -58,7 +52,7 @@ class _BattleCore(object):
     def isAllowedBattleType(arenaVisitor=None):
         enabled = False
         if arenaVisitor is None:
-            arenaVisitor = getArenaVisitor()
+            arenaVisitor = cache.getArenaVisitor()
         if arenaVisitor is not None:
             enabled = arenaVisitor.gui.isRandomBattle() or \
                       arenaVisitor.gui.isTrainingBattle() or \
@@ -102,7 +96,7 @@ class _BattleCore(object):
         self.load_health_module = False
 
     @staticmethod
-    def healthChanged(vehicle, newHealth, attackerID, aRID):
+    def healthChanged(vehicle, newHealth, oldHealth, attackerID, arID):
         team = vehicle.publicInfo.team
         g_health.setNewHealth(team, vehicle.id, newHealth, attackerID=attackerID)
 

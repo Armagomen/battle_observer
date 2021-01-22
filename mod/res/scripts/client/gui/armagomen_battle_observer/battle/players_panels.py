@@ -50,8 +50,10 @@ class PlayersPanels(PlayersPanelsMeta):
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
             g_events.onVehicleAddPanels += self.onVehicleAdd
             if self.damagesEnable:
-                g_events.onPlayersDamaged += self.onPlayersDamaged
-                g_keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, damages[PANELS.DAMAGES_HOT_KEY])
+                arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
+                if arena is not None:
+                    arena.onVehicleHealthChanged += self.onPlayersDamaged
+                    g_keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, damages[PANELS.DAMAGES_HOT_KEY])
             if self.isInAoIEnabled:
                 g_events.setInAoI += self.setInAoI
             g_events.updateStatus += self.updateStatus
@@ -70,7 +72,9 @@ class PlayersPanels(PlayersPanelsMeta):
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
             g_events.onVehicleAddPanels -= self.onVehicleAdd
             if self.damagesEnable:
-                g_events.onPlayersDamaged -= self.onPlayersDamaged
+                arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
+                if arena is not None:
+                    arena.onVehicleHealthChanged -= self.onPlayersDamaged
         self.storage.clear()
         super(PlayersPanels, self).onExitBattlePage()
 
@@ -161,6 +165,7 @@ class PlayersPanels(PlayersPanelsMeta):
         if info[PANELS.STATUS] == PANELS.KILLED_STATUS:
             self.onVehicleKilled(vehicle_id)
 
-    def onPlayersDamaged(self, attackerID):
+    def onPlayersDamaged(self, vehicleID, attackerID, damage):
+        cache.playersDamage[attackerID] += damage
         self.as_updateTextFieldS(attackerID, PANELS.DAMAGES_TF,
                                  self.damagesText % {PANELS.DAMAGE: cache.playersDamage[attackerID]})
