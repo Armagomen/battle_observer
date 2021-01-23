@@ -127,7 +127,6 @@ class ArmorCalculator(ArmorCalcMeta):
                     armorSum = GLOBAL.ZERO
                     fDist = details[GLOBAL.FIRST][GLOBAL.FIRST] + details[GLOBAL.LAST][GLOBAL.FIRST]
                     midDist = fDist * ARMOR_CALC.HALF
-                    # self.checkNode(entity, details[GLOBAL.FIRST][GLOBAL.LAST])
                     for dist, hitAngleCos, matInfo, compIdx in details:
                         if midDist > dist and matInfo:
                             if compIdx not in ARMOR_CALC.SKIP_DETAILS and hitAngleCos > GLOBAL.ZERO:
@@ -145,15 +144,15 @@ class ArmorCalculator(ArmorCalcMeta):
         print node.local
 
     def getShotResult(self, countedArmor, targetPos):
-        p100 = self.p100
-        if p100 != self.p500:
+        power = self.p100
+        if power != self.p500:
             dist = (targetPos - g_cache.player.getOwnVehiclePosition()).length
             if dist > ARMOR_CALC.MIN_DIST:
-                middle = p100 + (self.p500 - p100) * (dist - ARMOR_CALC.MIN_DIST) / ARMOR_CALC.EFFECTIVE_DISTANCE
-                p100 = max(self.p500, middle)
-        if countedArmor < p100 * ARMOR_CALC.GREAT_PIERCED:
+                result = power + (self.p500 - power) * (dist - ARMOR_CALC.MIN_DIST) / ARMOR_CALC.EFFECTIVE_DISTANCE
+                power = max(self.p500, result)
+        if countedArmor < power * ARMOR_CALC.GREAT_PIERCED:
             return SHOT_RESULT.GREAT_PIERCED
-        elif countedArmor > p100 * ARMOR_CALC.NOT_PIERCED:
+        elif countedArmor > power * ARMOR_CALC.NOT_PIERCED:
             return SHOT_RESULT.NOT_PIERCED
         else:
             return SHOT_RESULT.LITTLE_PIERCED

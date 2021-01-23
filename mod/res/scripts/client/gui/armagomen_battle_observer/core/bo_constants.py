@@ -79,30 +79,21 @@ class URLS:
 
     HOST_NAME = "armagomen.bb-t.ru"
     DONATE_UA_URL = "https://donatua.com/@armagomen"
-    DONATE_RU_URL = "https://new.donatepay.ru/@armagomen"
-    DONATE_EU_URL = "https://donatepay.eu/don/armagomen"
+    DONATE_EU_URL = "https://www.donationalerts.com/r/armagomenvs"
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
     DONATE_RU_MESSAGE = "<font color='#ffff73'>" \
-                        "Поддержите разработку мода 'Battle Observer'. В данный момент есть проблемы с тем что моду " \
-                        "нужен сервер для дальнейшего развития, денег на сервер нет, если кто может чем-то помочь " \
-                        "собрать на сервер (по сути мини пк который будет работать как сервер) буду благодарен, " \
-                        "статистику по сбору опубликую отдельно в дискорд канале." \
+                        "Поддержите разработку мода 'Battle Observer'. Спасибо что вы с нами." \
                         "</font><br><br>" \
-                        "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a> | " \
-                        "<a href='event:{eu}'>USD/EUR</a>" \
+                        "<a href='event:{ua}'>UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>" \
                         "<br><br>Если ссылки не работают: откройте меню настроек мода и " \
-                        "выбери там нужную ссылку.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
+                        "выбери там нужную ссылку.".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
     DONATE_EU_MESSAGE = "<font color='#ffff73'>" \
-                        "Support the development of the 'Battle Observer' mod. At the moment, there are problems " \
-                        "with the fact that the mod needs a server for further development, there is no money for" \
-                        " the server, if someone can help to collect something on the server (in fact, a mini PC" \
-                        " that will work as a server) I will be grateful, I will publish the collection statistics" \
-                        " separately in discord channel." \
+                        "Support the development of the 'Battle Observer' mod. Thank you for being with us." \
                         "</font><br><br>" \
-                        "<a href='event:{ua}'>UAH</a> | <a href='event:{ru}'>RUB</a> | " \
-                        "<a href='event:{eu}'>USD/EUR</a><br><br>if links don't work: open the mod settings menu and " \
-                        "select the desired link there.".format(ua=DONATE_UA_URL, ru=DONATE_RU_URL, eu=DONATE_EU_URL)
+                        "<a href='event:{ua}'>UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>" \
+                        "<br><br>if links don't work: open the mod settings menu and " \
+                        "select the desired link there.".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
 
 
 class SERVICE_CHANNEL:
@@ -383,7 +374,7 @@ class ARMOR_CALC:
     EFFECTIVE_DISTANCE = 400.0
     FORWARD_LENGTH = 10.0
     GREAT_PIERCED = 0.75
-    HALF = 0.2
+    HALF = 0.22
     MESSAGES = "messages"
     MIN_DIST = 100.0
     NAME = "armor_calculator"

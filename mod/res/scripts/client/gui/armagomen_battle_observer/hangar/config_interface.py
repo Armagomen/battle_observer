@@ -333,7 +333,6 @@ class ConfigInterface(CreateElement):
             column1 = [self.createRadioButtonGroup(blockID, 'selectedConfig',
                                                    c_Loader.configsList, self.selectedConfig)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
-                       self.createControl(blockID, 'donate_button_ru', URLS.DONATE_RU_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_eu', URLS.DONATE_EU_URL, 'Button'),
                        self.createControl(blockID, 'support_button', URLS.SUPPORT_URL, 'Button')]
         else:

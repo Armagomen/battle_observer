@@ -29,8 +29,7 @@ translate = {
         "header": "ВЫБОР КОНФИГА",
         "selectedConfig": "Config",
         "donate_button_ua": "DONATE UA - Гривна",
-        "donate_button_ru": "DONATE RU - Рубль",
-        "donate_button_eu": "DONATE EU - EUR / USD",
+        "donate_button_eu": "DONATE EUR|USD|RUB",
         "support_button": "Discord support"
     },
     "main": {

@@ -1,7 +1,7 @@
 @Echo off
 set ModVer=1.31.2
 
-REM set WotVer=1.11.0.0
+REM set WotVer=1.11.1.0
 set WotVer="1.11.1.0 Common Test"
 
 REM set ModsDir=E:\Games\World_of_Tanks_RU\mods\
@@ -27,4 +27,6 @@ DEL %lastUpdate%
 
 REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdate% %ModFile% %API%
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdate% %ModFile%
+
+DEL /s /q *.pyc
 exit
