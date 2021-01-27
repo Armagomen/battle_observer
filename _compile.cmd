@@ -29,6 +29,8 @@ REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile%
 
 set lastUpdateOld=..\BattleObserver_LastUpdate.zip
 set ZipArhOld=..\BO_%ModVer%_WOT_%WotVer%.zip
+DEL %lastUpdateOld%
+DEL %ZipArhOld%
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %ZipArhOld% %ModsDir%
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdateOld% %ModFile% %API%
 REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdateOld% %ModFile%

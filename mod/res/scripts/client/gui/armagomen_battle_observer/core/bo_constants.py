@@ -87,13 +87,13 @@ class URLS:
                         "</font><br><br>" \
                         "<a href='event:{ua}'>UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>" \
                         "<br><br>Если ссылки не работают: откройте меню настроек мода и " \
-                        "выбери там нужную ссылку.".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
+                        "выбирайте там нужную ссылку.".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
     DONATE_EU_MESSAGE = "<font color='#ffff73'>" \
                         "Support the development of the 'Battle Observer' mod. Thank you for being with us." \
                         "</font><br><br>" \
                         "<a href='event:{ua}'>UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>" \
-                        "<br><br>if links don't work: open the mod settings menu and " \
-                        "select the desired link there.".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
+                        "<br><br>If the links do not work: open the mod's settings menu and select the desired" \
+                        " link there.".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
 
 
 class SERVICE_CHANNEL:
