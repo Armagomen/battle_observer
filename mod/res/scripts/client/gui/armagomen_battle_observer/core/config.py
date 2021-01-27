@@ -8,7 +8,7 @@ import Keys
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from .bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, \
-    DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HANGAR_CAMERA, HP_BARS, LOAD_LIST, MAIN, MAIN_GUN, MARKERS, \
+    DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, LOAD_LIST, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, POSTMORTEM, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, \
     USER_BACKGROUND, VEHICLE_TYPES
 from .bw_utils import logInfo, logWarning
@@ -208,15 +208,6 @@ class Config(object):
             GLOBAL.ENABLED: False,
             STRATEGIC.MIN: 40.0,
             STRATEGIC.MAX: 150.0
-        }
-        self.hangar_camera = {
-            GLOBAL.ENABLED: False,
-            GLOBAL.SETTINGS: {
-                HANGAR_CAMERA.DIST_CONSTR: [2, 25],
-                HANGAR_CAMERA.START_DIST: 16.0,
-                HANGAR_CAMERA.START_ANGLES: [100, -20],
-                HANGAR_CAMERA.DIST_SENS: 0.0065
-            }
         }
         self.armor_calculator = {
             GLOBAL.ENABLED: False,

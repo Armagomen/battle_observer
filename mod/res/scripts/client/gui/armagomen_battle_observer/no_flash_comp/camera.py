@@ -8,7 +8,6 @@ from AvatarInputHandler.control_modes import PostMortemControlMode, SniperContro
 from PlayerEvents import g_playerEvents
 from aih_constants import CTRL_MODE_NAME
 from constants import AOI
-from gui import ClientHangarSpace
 from gui.battle_control import avatar_getter
 from ..core.battle_cache import cache
 from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
@@ -125,30 +124,6 @@ class ObserverArtyCamera(object):
         ArtyCamera.create = create
 
 
-class ObserverHangarCamera(object):
-
-    def __init__(self):
-        hangarCFG = ClientHangarSpace.hangarCFG
-        customizationHangarCFG = ClientHangarSpace.customizationHangarCFG
-        ClientHangarSpace.hangarCFG = lambda *a, **kw: self.hangarCFG(hangarCFG, *a, **kw)
-        ClientHangarSpace.customizationHangarCFG = \
-            lambda *a, **kw: self.customizationHangarCFG(customizationHangarCFG, *a, **kw)
-
-    @staticmethod
-    def hangarCFG(hangarCFG, *a, **kw):
-        params = hangarCFG(*a, **kw)
-        if cfg.hangar_camera[GLOBAL.ENABLED]:
-            params.update(cfg.hangar_camera[GLOBAL.SETTINGS])
-        return params
-
-    @staticmethod
-    def customizationHangarCFG(customizationHangarCFG, *a, **kw):
-        params = customizationHangarCFG(*a, **kw)
-        if cfg.hangar_camera[GLOBAL.ENABLED]:
-            params.update(cfg.hangar_camera[GLOBAL.SETTINGS])
-        return params
-
-
 class DisableSniperModeAfterShoot(object):
 
     def __init__(self):
@@ -221,5 +196,4 @@ m_sniperCamera = ObserverSniperCamera()
 m_arcadeCamera = ObserverArcadeCamera()
 m_strategicCamera = ObserverStrategicCamera()
 m_artyCamera = ObserverArtyCamera()
-m_hangarCam = ObserverHangarCamera()
 m_disableSniper = DisableSniperModeAfterShoot()

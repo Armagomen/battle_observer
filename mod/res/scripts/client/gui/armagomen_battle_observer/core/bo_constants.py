@@ -9,8 +9,8 @@ from vehicle_systems.tankStructure import TankPartIndexes
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 MOD_PATH = "gui.armagomen_battle_observer.{}"
-MOD_VERSION = "1.31.2"
-API_VERSION = "1.10.7"
+MOD_VERSION = "1.31.3"
+API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
@@ -560,17 +560,6 @@ class EFFECTS:
     SHOW_SHOCK_WAVE = "showShockWave"
 
 
-class HANGAR_CAMERA:
-    def __init__(self):
-        pass
-
-    NAME = "hangar_camera"
-    DIST_CONSTR = "cam_dist_constr"
-    START_DIST = "cam_start_dist"
-    START_ANGLES = "cam_start_angles"
-    DIST_SENS = "cam_dist_sens"
-
-
 class TEAM_BASES:
     def __init__(self):
         pass
@@ -714,7 +703,7 @@ LOAD_LIST = (
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.IN_AOI_NAME, PANELS.DAMAGES_NAME,
     PANELS.PANELS_BARS_NAME, MINIMAP.NAME, EFFECTS.NAME, DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG,
     DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME, PANELS.PANELS_ICON_NAME,
-    HANGAR_CAMERA.NAME, SIXTH_SENSE.NAME, USER_BACKGROUND.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, POSTMORTEM.NAME,
+    SIXTH_SENSE.NAME, USER_BACKGROUND.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, POSTMORTEM.NAME,
     CLOCK.NAME
 )
 
