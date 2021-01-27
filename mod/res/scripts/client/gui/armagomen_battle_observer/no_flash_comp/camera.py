@@ -48,15 +48,15 @@ class ObserverSniperCamera(object):
             self._zoomStepsEnabled = config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]
             self._steps = config[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
 
-    def create(self, create, camera, **kwargs):
+    def create(self, create, *args, **kwargs):
         if self._enableX and self._zoomStepsEnabled:
             if self._steps:
                 exposure_range = xrange(len(self._steps) + SNIPER.ONE, SNIPER.ONE, -SNIPER.ONE)
-                camera._cfg[SNIPER.INCREASED_ZOOM] = True
-                camera._cfg[SNIPER.ZOOMS] = self._steps
-                camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = \
+                args[GLOBAL.ZERO]._cfg[SNIPER.INCREASED_ZOOM] = True
+                args[GLOBAL.ZERO]._cfg[SNIPER.ZOOMS] = self._steps
+                args[GLOBAL.ZERO]._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = \
                     [round(SNIPER.EXPOSURE_FACTOR * step, SNIPER.ONE) for step in exposure_range]
-        return create(camera, **kwargs)
+        return create(*args, **kwargs)
 
     def enable(self, enable, camera, targetPos, saveZoom):
         if self._enableX:
