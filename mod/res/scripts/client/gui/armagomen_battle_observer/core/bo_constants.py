@@ -9,7 +9,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 MOD_PATH = "gui.armagomen_battle_observer.{}"
-MOD_VERSION = "1.31.4"
+MOD_VERSION = "1.31.5"
 API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -500,7 +500,7 @@ class DISPERSION_CIRCLE:
     MAX_TIME = 5.0
     SPG_GM_SCALE = 0.8
     HALF_SIZE = 0.5
-    GUN_MARKER_MIN_SIZE = 16.0
+    GUN_MARKER_MIN_SIZE = 12.0
     MINUS_ONE_F = -1.0
 
     TIMER_ENABLED = "timer_enabled"

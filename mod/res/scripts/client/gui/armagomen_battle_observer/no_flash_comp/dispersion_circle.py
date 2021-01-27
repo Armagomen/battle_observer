@@ -35,11 +35,7 @@ LINKAGES = {
     _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DUAL_GUN_SNIPER_MARKER_LINKAGE
 }
 
-
-@property
-def isReplay():
-    return g_replayCtrl.isPlaying
-
+aih_constants.GUN_MARKER_MIN_SIZE = DISPERSION_CIRCLE.GUN_MARKER_MIN_SIZE
 
 class ObserverGunMarkerController(_DefaultGunMarkerController):
 
@@ -139,12 +135,13 @@ class DispersionCircle(object):
         if blockID == DISPERSION_CIRCLE.NAME:
             self.replaceOriginalCircle = config[DISPERSION_CIRCLE.CIRCLE_REPLACE]
             self.extraServerLap = config[DISPERSION_CIRCLE.CIRCLE_EXTRA_LAP]
-            self.enabled = config[GLOBAL.ENABLED] and config[DISPERSION_CIRCLE.CIRCLE_ENABLED] and not isReplay
+            self.enabled = config[GLOBAL.ENABLED] and config[DISPERSION_CIRCLE.CIRCLE_ENABLED] and not \
+                g_replayCtrl.isPlaying
             self.hooksEnable = self.enabled and (not self.replaceOriginalCircle or self.extraServerLap)
             DISPERSION_CIRCLE.CIRCLE_SCALE = round(config[DISPERSION_CIRCLE.CIRCLE_SCALE_CONFIG] / 100.0, 2)
             if self.enabled:
                 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
-                aih_constants.GUN_MARKER_MIN_SIZE = DISPERSION_CIRCLE.GUN_MARKER_MIN_SIZE
+
 
     def enableServerAim(self, server=True):
         if not bool(ServicesLocator.settingsCore.getSetting(DISPERSION_CIRCLE.CIRCLE_SERVER)):
