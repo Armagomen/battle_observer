@@ -43,7 +43,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         listeners = [
             (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, self.callbackListener),
             (VIEW_ALIAS.RANKED_BATTLE_PAGE, self.callbackListener),
-            (VIEW_ALIAS.EPIC_RANDOM_PAGE, self.callbackListener)
+            (VIEW_ALIAS.EPIC_RANDOM_PAGE, self.callbackListener),
+            (VIEW_ALIAS.BOB_BATTLE_PAGE, self.callbackListener)
         ]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
