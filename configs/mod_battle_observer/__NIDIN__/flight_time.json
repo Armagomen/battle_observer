@@ -1,8 +1,0 @@
-{
-  "enabled":false,
-  "spgOnly":true,
-  "template":"<font size='18' color='#FAFAFA'>%(flightTime).2fs. - %(distance).1fm.</font>",
-  "wgDistDisable":false,
-  "x":0,
-  "y":-250
-}

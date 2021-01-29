@@ -1,6 +1,0 @@
-{
-  "enabled":true,
-  "timerColor":"#3caa3c",
-  "timerColorEndBattle":"#e34234",
-  "timerTemplate":"<img src='img://gui/maps/icons/library/fortification/order_in_progress.png' width='30' height='30' vspace='-10'><font color='%(timerColor)s'>%(timer)s</font>  <img src='img://../mods/configs/mod_battle_observer/NooBooL/images/NooBooL.png' width='40' height='50' vspace='-14'>"
-}

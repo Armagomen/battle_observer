@@ -1,9 +1,9 @@
 {
-  "enabled":true,
-  "markersClassColor":false,
-  "showMarkers_KEY":[
+  "enabled": false, 
+  "markersClassColor": false, 
+  "showMarkers_KEY": [
     82
-  ],
-  "x":5,
-  "y":31
+  ], 
+  "x": 5, 
+  "y": 31
 }

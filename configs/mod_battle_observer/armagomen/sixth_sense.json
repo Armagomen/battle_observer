@@ -13,7 +13,7 @@
   "showTimer":true,
   "timer":{
     "TimerTemplate":"<font size='40'>%(timeLeft)d</font>",
-    "alpha":0.75,
+    "alpha":0.6,
     "x":-2,
     "y":130
   }

@@ -1,6 +1,0 @@
-{
-  "enabled":false,
-  "timerColor":"#B3FE95",
-  "timerColorEndBattle":"#FD9675",
-  "timerTemplate":"<font color='%(timerColor)s'>%(timer)s</font>"
-}

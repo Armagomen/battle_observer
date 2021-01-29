@@ -1,7 +1,7 @@
 @Echo off
 set ModVer=1.31.5
 
-set WotVer=1.11.1.0
+set WotVer=1.11.1.1
 REM set WotVer="1.11.1.0 Common Test"
 
 set ModsDir=D:\Games\World_of_Tanks_RU\mods\
@@ -20,20 +20,12 @@ DEL %ModsDir%%WotVer%\armagomen.battleObserver*
 DEL %ModsDir%%WotVer%\temp*
 DEL %ModsDir%%WotVer%\readme*
 DEL %ZipArh%
-DEL %lastUpdate%
+DEL %AutoUpdate%
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py -x!*.cmd %ModFile% .\mod\*
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %ZipArh% %ModsDir%
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile% %API%
-REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile%
-
-set lastUpdateOld=..\BattleObserver_LastUpdate.zip
-set ZipArhOld=..\BO_%ModVer%_WOT_%WotVer%.zip
-DEL %lastUpdateOld%
-DEL %ZipArhOld%
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %ZipArhOld% %ModsDir%
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdateOld% %ModFile% %API%
-REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %lastUpdateOld% %ModFile%
+REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile% %API%
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile%
 
 DEL /s /q *.pyc
 exit
