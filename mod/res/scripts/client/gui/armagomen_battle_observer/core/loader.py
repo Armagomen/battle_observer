@@ -13,6 +13,7 @@ class Loader(object):
             # 'core.analytics',
             'no_flash_comp.camera',
             'no_flash_comp.badges',
+            'no_flash_comp.friends',
             'no_flash_comp.save_shoot_lite',
             'no_flash_comp.dispersion_circle',
             'no_flash_comp.effects',

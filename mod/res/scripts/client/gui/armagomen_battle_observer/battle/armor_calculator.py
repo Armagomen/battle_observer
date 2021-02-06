@@ -4,7 +4,6 @@ from AvatarInputHandler import AvatarInputHandler
 from aih_constants import SHOT_RESULT
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from gui.battle_control import avatar_getter
-from vehicle_systems.tankStructure import TankPartIndexes
 from ..core.battle_cache import cache as g_cache
 from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE
 from ..core.config import cfg
@@ -63,7 +62,7 @@ class ArmorCalculator(ArmorCalcMeta):
         ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor = self.wg_updateColor
         super(ArmorCalculator, self)._dispose()
 
-    def onCameraChanged(self, ctrlMode, vehicleID=None):
+    def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.as_onControlModeChangedS(ctrlMode)
 
     def updateShootParams(self):
@@ -137,11 +136,6 @@ class ArmorCalculator(ArmorCalcMeta):
                     counted_armor = useCos + notUseCos
                     return armorSum, counted_armor, self.getShotResult(counted_armor, targetPos)
         return ARMOR_CALC.NONEDATA
-
-    @staticmethod
-    def checkNode(entity, nodeID):
-        node = entity.model.node(TankPartIndexes.getName(nodeID))
-        print node.local
 
     def getShotResult(self, countedArmor, targetPos):
         power = self.p100

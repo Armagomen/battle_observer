@@ -30,7 +30,7 @@ def fixDialogCloseWindow():
     def closeWindowFix(dialog):
         if len(dialog._SimpleDialog__buttons) >= 2:
             dialog._SimpleDialog__isProcessed = True
-        old_dispose(dialog)
+        return old_dispose(dialog)
 
     def onWindowClose(dialog):
         dialog.destroy()
@@ -137,9 +137,9 @@ class UpdateMain(object):
                     for asset in assets:
                         filename = asset.get('name', '')
                         download_url = asset.get('browser_download_url')
-                        if filename in ('AutoUpdate.zip', 'BattleObserver_LastUpdate.zip'):
+                        if filename == 'AutoUpdate.zip':
                             DOWNLOAD_URLS['last'] = download_url
-                        elif filename.startswith('BattleObserver_') or filename.startswith('BO_'):
+                        elif filename.startswith('BattleObserver_'):
                             DOWNLOAD_URLS['full'] = download_url
                     ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
                     logInfo(MASSAGES.NEW_VERSION.format(self.new_version))
