@@ -14,7 +14,7 @@ class ElementsSettingsGetter(object):
     def __init__(self):
         g_playerEvents.onAvatarBecomeNonPlayer += self.clear
         self.sorted_aliases = (
-            ALIASES.HP_BARS, ALIASES.SCORE_PANEL, ALIASES.DAMAGE_LOG, ALIASES.MAIN_GUN, ALIASES.DEBUG, ALIASES.TIMER,
+            ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.SCORE_PANEL, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
             ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
             ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.USER_BACKGROUND, ALIASES.WG_COMP, ALIASES.DATE_TIME
         )
@@ -51,7 +51,7 @@ class ElementsSettingsGetter(object):
             ALIASES.FLIGHT_TIME: lambda: cfg.flight_time[GLOBAL.ENABLED],
             ALIASES.DISPERSION_TIMER: lambda: cfg.dispersion_circle[GLOBAL.ENABLED] and
                                               cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED],
-            ALIASES.PANELS: lambda: cfg.panels_icon[GLOBAL.ENABLED] or cfg.players_spotted[GLOBAL.ENABLED] or
+            ALIASES.PANELS: lambda: cfg.panels_icon[GLOBAL.ENABLED] or
                                     cfg.players_damages[GLOBAL.ENABLED] or cfg.players_bars[GLOBAL.ENABLED],
             ALIASES.MINIMAP: lambda: cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and cfg.minimap[GLOBAL.ENABLED],
             ALIASES.USER_BACKGROUND: lambda: cfg.user_background[GLOBAL.ENABLED] or cfg.main[MAIN.BG] and
@@ -74,26 +74,37 @@ class ElementsSettingsGetter(object):
 g_settingsGetter = ElementsSettingsGetter()
 
 
-def checkAndReplaceAlias(alias):
-    if g_settingsGetter.getSetting(ALIASES.TEAM_BASES) and alias == BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL:
-        return ALIASES.TEAM_BASES
-    elif g_settingsGetter.getSetting(ALIASES.TIMER) and alias == BATTLE_VIEW_ALIASES.BATTLE_TIMER:
-        return ALIASES.TIMER
-    elif g_settingsGetter.getSetting(ALIASES.DEBUG) and alias == BATTLE_VIEW_ALIASES.DEBUG_PANEL:
-        return ALIASES.DEBUG
-    return alias
+def checkAndReplaceAlias(aliases):
+    new_aliases = list(aliases)
+    if g_settingsGetter.getSetting(ALIASES.TEAM_BASES) and BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in new_aliases:
+        del new_aliases[new_aliases.index(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)]
+        new_aliases.append(ALIASES.TEAM_BASES)
+    elif g_settingsGetter.getSetting(ALIASES.TIMER) and BATTLE_VIEW_ALIASES.BATTLE_TIMER in new_aliases:
+        new_aliases.append(ALIASES.TIMER)
+    elif g_settingsGetter.getSetting(ALIASES.DEBUG) and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
+        del new_aliases[new_aliases.index(BATTLE_VIEW_ALIASES.DEBUG_PANEL)]
+        new_aliases.append(ALIASES.DEBUG)
+    elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in new_aliases:
+        if g_settingsGetter.getSetting(ALIASES.HP_BARS):
+            new_aliases.append(ALIASES.HP_BARS)
+        if g_settingsGetter.getSetting(ALIASES.PANELS) and cfg.players_bars[GLOBAL.ENABLED]:
+            new_aliases.append(ALIASES.PANELS)
+        if g_settingsGetter.getSetting(ALIASES.MAIN_GUN):
+            new_aliases.append(ALIASES.MAIN_GUN)
+    return tuple(new_aliases)
 
 
 @overrideMethod(SharedPage)
 def new_SharedPage_init(base, page, *args, **kwargs):
     base(page, *args, **kwargs)
-    enabled = (
-        g_settingsGetter.getSetting(ALIASES.TIMER),
-        g_settingsGetter.getSetting(ALIASES.TEAM_BASES),
-        g_settingsGetter.getSetting(ALIASES.DEBUG)
-    )
-    if any(enabled) and b_core.isAllowedBattleType()[0]:
-        config = page._SharedPage__componentsConfig._ComponentsConfig__config
-        newConfig = tuple((i, tuple(checkAndReplaceAlias(alias)
-                                    for alias in aliases)) for i, aliases in config)
-        page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig
+    if b_core.isAllowedBattleType()[0]:
+        enabled = (
+            g_settingsGetter.getSetting(ALIASES.TIMER),
+            g_settingsGetter.getSetting(ALIASES.TEAM_BASES),
+            g_settingsGetter.getSetting(ALIASES.DEBUG),
+            g_settingsGetter.getSetting(ALIASES.HP_BARS)
+        )
+        if any(enabled):
+            config = page._SharedPage__componentsConfig._ComponentsConfig__config
+            newConfig = tuple((i, checkAndReplaceAlias(aliases)) for i, aliases in config)
+            page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig

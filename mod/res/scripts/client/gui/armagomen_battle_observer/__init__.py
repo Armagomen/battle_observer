@@ -40,14 +40,7 @@ class BattleObserver(object):
         from .core.inject_flash import g_flash
         g_flash.inject()
 
-        from Vehicle import Vehicle
         from Avatar import PlayerAvatar
-        from gui.Scaleform.daapi.view.battle.shared.minimap.plugins import ArenaVehiclesPlugin
-
-        @overrideMethod(Vehicle, "onHealthChanged")
-        def healthChanged(base, *args, **kwargs):
-            g_events.onHealthChanged(*args, **kwargs)
-            return base(*args, **kwargs)
 
         @overrideMethod(EpicRandomStatisticsDataController, "as_updateVehicleStatusS")
         @overrideMethod(EpicStatisticsDataController, "as_updateVehicleStatusS")
@@ -62,11 +55,6 @@ class BattleObserver(object):
             if shooterID == avatar.playerVehicleID:
                 g_events.onPlayerShooting(avatar)
             return base(avatar, shooterID, *args)
-
-        @overrideMethod(ArenaVehiclesPlugin, "__setInAoI")
-        def setInAoI(base, *args, **kwargs):
-            g_events.setInAoI(*args)
-            return base(*args, **kwargs)
 
         def tryLoadHangarSettings(spaceID):
             if spaceID == GuiGlobalSpaceID.LOGIN:

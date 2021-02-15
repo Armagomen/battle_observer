@@ -442,14 +442,14 @@ class Config(object):
             GLOBAL.ENABLED: False,
             PANELS.BLACKOUT: -0.8
         }
-        self.players_spotted = {
-            GLOBAL.ENABLED: False,
-            PANELS.STATUS: {
-                PANELS.LIGHTS: "<font face='$TitleFont' color='#00FF00' size='24'>*</font>",
-                PANELS.NOT_LIGHT: "<font face='$TitleFont' color='#FF0000' size='24'>*</font>"
-            },
-            GLOBAL.SETTINGS: {GLOBAL.X: -40, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.CENTER}
-        }
+        # self.players_spotted = {
+        #     GLOBAL.ENABLED: False,
+        #     PANELS.STATUS: {
+        #         PANELS.LIGHTS: "<font face='$TitleFont' color='#00FF00' size='24'>*</font>",
+        #         PANELS.NOT_LIGHT: "<font face='$TitleFont' color='#FF0000' size='24'>*</font>"
+        #     },
+        #     GLOBAL.SETTINGS: {GLOBAL.X: -40, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.CENTER}
+        # }
         self.players_damages = {
             GLOBAL.ENABLED: False,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],

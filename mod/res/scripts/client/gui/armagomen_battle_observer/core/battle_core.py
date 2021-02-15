@@ -3,9 +3,8 @@ from PlayerEvents import g_playerEvents
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from gui.shared.personality import ServicesLocator
-
-from .battle_cache import cache, g_health
-from .bo_constants import VEHICLE, MAIN, GLOBAL, POSTMORTEM, MAIN_GUN
+from .battle_cache import cache
+from .bo_constants import MAIN, GLOBAL, POSTMORTEM
 from .bw_utils import getPlayer, setMaxFrameRate
 from .config import cfg
 from .core import overrideMethod
@@ -42,13 +41,6 @@ class _BattleCore(object):
                 cache.tankAvgDamage = float(avg)
 
     @staticmethod
-    def isTeamHealthEnabled():
-        return cfg.hp_bars[GLOBAL.ENABLED] or \
-               cfg.main_gun[GLOBAL.ENABLED] and cfg.main_gun[MAIN_GUN.DYNAMIC] or \
-               cfg.players_damages[GLOBAL.ENABLED] or \
-               cfg.players_bars[GLOBAL.ENABLED]
-
-    @staticmethod
     def isAllowedBattleType(arenaVisitor=None):
         enabled = False
         if arenaVisitor is None:
@@ -57,7 +49,6 @@ class _BattleCore(object):
             enabled = arenaVisitor.gui.isRandomBattle() or \
                       arenaVisitor.gui.isTrainingBattle() or \
                       arenaVisitor.gui.isRankedBattle() or \
-                      arenaVisitor.gui.isBobBattle() or \
                       arenaVisitor.getArenaGuiType() in (ARENA_GUI_TYPE.UNKNOWN,
                                                          ARENA_GUI_TYPE.FORT_BATTLE_2,
                                                          ARENA_GUI_TYPE.SORTIE_2)
@@ -71,14 +62,8 @@ class _BattleCore(object):
             arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled += self.onVehicleKilled
-            self.load_health_module = self.isTeamHealthEnabled()
-            if self.load_health_module:
-                g_events.onHealthChanged += self.healthChanged
-                if cache.player and hasattr(cache.player, "onVehicleEnterWorld"):
-                    cache.player.onVehicleEnterWorld += self.onEnterWorld
-                if arena is not None:
-                    arena.onVehicleAdded += self.onVehicleAddUpdate
-                    arena.onVehicleUpdated += self.onVehicleAddUpdate
+                arena.onVehicleAdded += self.onVehicleAddUpdate
+                arena.onVehicleUpdated += self.onVehicleAddUpdate
 
     def onExitBattlePage(self):
         g_events.onExitBattlePage()
@@ -87,40 +72,21 @@ class _BattleCore(object):
             arena = arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleKilled -= self.onVehicleKilled
-            if self.load_health_module:
-                g_events.onHealthChanged -= self.healthChanged
-                if cache.player and hasattr(cache.player, "onVehicleEnterWorld"):
-                    cache.player.onVehicleEnterWorld -= self.onEnterWorld
-                if arena is not None:
-                    arena.onVehicleAdded -= self.onVehicleAddUpdate
-                    arena.onVehicleUpdated -= self.onVehicleAddUpdate
-        self.load_health_module = False
-
-    @staticmethod
-    def healthChanged(vehicle, newHealth, oldHealth, attackerID, arID):
-        team = vehicle.publicInfo.team
-        g_health.setNewHealth(team, vehicle.id, newHealth, attackerID=attackerID)
+                arena.onVehicleAdded -= self.onVehicleAddUpdate
+                arena.onVehicleUpdated -= self.onVehicleAddUpdate
 
     def onVehicleKilled(self, targetID, attackerID, *args):
-        if self.load_health_module:
-            team = g_health.getVehicle(targetID)[VEHICLE.TEAM]
-            g_health.setNewHealth(team, targetID, GLOBAL.ZERO, attackerID=attackerID)
         if cache.player.playerVehicleID == targetID:
             g_events.onPlayerVehicleDeath(attackerID)
         elif cache.player.playerVehicleID == attackerID:
             g_events.onPlayerKilledEnemy(targetID)
 
     @staticmethod
-    def onEnterWorld(vehicle):
-        if vehicle.isAlive():
-            g_health.setNewHealth(vehicle.publicInfo.team, vehicle.id, vehicle.health)
-
-    def onVehicleAddUpdate(self, vehID):
+    def onVehicleAddUpdate(vehID):
         vInfoVO = cache.arenaDP.getVehicleInfo(vehID)
         if vInfoVO:
             vehicleType = vInfoVO.vehicleType
             if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
-                g_health.addVehicle(vInfoVO)
                 g_events.onVehicleAddUpdate(vehID, vehicleType)
 
 

@@ -150,10 +150,12 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			}
 		}
 
-		public function as_updateHealth(team:String, current:int, maximum:int):void
+		public function as_updateHealth(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
 		{
-			hpBars.setBarScale(team, maximum > 0 ? current / maximum : 1);
-			(team == "green" ? greenText : redText).text = current.toString();
+			hpBars.setBarScale("green", totalAlliesHP > 0 ? alliesHP / totalAlliesHP : 1);
+			hpBars.setBarScale("red", totalEnemiesHP > 0 ? enemiesHP / totalEnemiesHP : 1);
+			greenText.text = alliesHP.toString();
+			redText.text = enemiesHP.toString();
 		}
 
 		private function _onResizeHandle(event:Event):void
