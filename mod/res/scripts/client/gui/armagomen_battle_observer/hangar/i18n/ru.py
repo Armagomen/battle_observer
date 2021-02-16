@@ -42,7 +42,7 @@ translate = {
         "backgroundTransparency": "Прозрачность заднего фона панели",
         "background": "Задний фон панели в стиле 'normal'",
         "removeShadowInPrebattle": "Убрать затемнение таймера в начале боя",
-        "hideBadges": "Отключить отображение нашивок.",
+        "hideBadges": "Отключить отображение нашивок",
         "hideBadges_tooltip": "в ушах, окне по tab, на экране загрузки.",
         "hideClanAbbrev": "Отключить отображение клана",
         "hideClanAbbrev_tooltip": "в ушах, окне по tab, на экране загрузки.",
@@ -55,8 +55,13 @@ translate = {
                                     "что с ней связано.",
         "anonymousEnableShow": "Показывать анонимов.",
         "useKeyPairs": "Использовать парные Alt, Ctrl, Shift",
-        "anonymousNameChange": "Изменить имена анонимов.",
-        "removeHandbrake": "Отключение ручного тормоза для ПТ-САУ"
+        "anonymousNameChange": "Изменить имена анонимов",
+        "removeHandbrake": "Отключение ручного тормоза для ПТ-САУ",
+        "hide_postmortem_tips": "Скрыть информацию после уничтожения",
+        "hide_postmortem_tips_tooltip": "Скрывает отображение информации в панеле после уничтожения:"
+                                        "<br>- подсказки по навигации"
+                                        "<br>- отображение жетонов"
+                                        "<br>- отображение информации об игроке который вас уничтожил",
     },
     "dispersion_circle": {
         "header": "Улучшенное сведение / серверный прицел.",
@@ -78,10 +83,6 @@ translate = {
         "carouselRows": "Кол-во рядов многорядной карусели танков.",
         "carouselRows_tooltip": "Работает только если в клиенте включена многорядная карусель.",
         "smallDoubleCarousel": "Принудительно использовать маленькие иконки."
-    },
-    "postmortem_panel": {
-        "header": "Панель после уничтожения.",
-        "hideKillerInfo": "Убрать информацию о уничтожившем."
     },
     "effects": {
         "header": "Настройка визуальных эффектов.",
@@ -295,8 +296,6 @@ translate = {
         "disable_SniperCamera_After_Shoot_tooltip": "Автоматически переключает камеру в аркадный режим после выстрела"
                                                     " если калибр орудия больше 40мм.",
         "disable_cam_skip_clip": "Не выходить если магазинная система заряжания",
-        "default_zoom*zoom_default": "Кратность фиксированного Zoom.",
-        "default_zoom*enabled": "Использовать только фиксированный Zoom",
         "dynamic_zoom*enabled": "Автоматический выбор кратности Zoom.",
         "dynamic_zoom*enabled_tooltip": "Если данный параметр включён, <b>фиксированный Zoom</b> работать не будет.",
         "dynamic_zoom*zoom_max": "Максимальная кратность приближения.",

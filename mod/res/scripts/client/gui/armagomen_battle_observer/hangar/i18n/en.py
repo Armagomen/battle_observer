@@ -56,7 +56,12 @@ translate = {
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Change Anonymous Name",
-        "removeHandbrake": "Disabling the hand brake for AT-SPG."
+        "removeHandbrake": "Disabling the hand brake for AT-SPG.",
+        "hide_postmortem_tips": "Hide information after destruction",
+        "hide_postmortem_tips_tooltip": "Hides the display of information in the panel after destruction:"
+                                        "<br> - navigation tips"
+                                        "<br> - display tokens"
+                                        "<br> - displays information about the player who destroyed you",
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",
@@ -78,10 +83,6 @@ translate = {
         "carouselRows": "Number of rows of multi-row tank carousel.",
         "carouselRows_toltip": "It works only if the multi-row carousel is enable in the client.",
         "smallDoubleCarousel": "Forcibly use small icons in tank carousel."
-    },
-    "postmortem_panel": {
-        "header": "POSTMORTEM PANEL",
-        "hideKillerInfo": "Remove information destroyed."
     },
     "effects": {
         "header": "Customize effects",
@@ -281,8 +282,6 @@ translate = {
         "disable_SniperCamera_After_Shoot_tooltip": "Automatically switches the camera to arcade mode after "
                                                     "a shot if the caliber of the gun is more than 40mm.",
         "disable_cam_skip_clip": "Do not exit if magazine loading system.",
-        "default_zoom*zoom_default": "Multiplicity of fixed zoom.",
-        "default_zoom*enabled": "Use only fixed zoom",
         "dynamic_zoom*enabled": "Automatic selection of the zoom ratio when switching to sniper mode.",
         "dynamic_zoom*enabled_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
         "dynamic_zoom*zoom_max": "Maximum zoom ratio for automatic selection",

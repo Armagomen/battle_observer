@@ -35,7 +35,8 @@ class Config(object):
             MAIN.MAX_FRAME_RATE: 200,
             MAIN.AUTO_CLEAR_CACHE: False,
             MAIN.USE_KEY_PAIRS: False,
-            MAIN.REMOVE_HANDBRAKE: False
+            MAIN.REMOVE_HANDBRAKE: False,
+            MAIN.HIDE_POSTMORTEM_TIPS: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
@@ -186,10 +187,6 @@ class Config(object):
                 SNIPER.MAX_ZOOM_NUM: 30.0,
                 SNIPER.MIN_ZOOM_NUM: 2.0,
                 SNIPER.METERS: 20.0
-            },
-            SNIPER.DEF_ZOOM: {
-                GLOBAL.ENABLED: False,
-                SNIPER.DEF_ZOOM_NUM: 4.0
             },
             SNIPER.ZOOM_STEPS: {
                 GLOBAL.ENABLED: False,
@@ -439,17 +436,17 @@ class Config(object):
         }
         self.players_panels = {
             GLOBAL.ENABLED: False,
-            PANELS.ICONS_ENABLED: False,
+            PANELS.ICONS_ENABLED: True,
             PANELS.BLACKOUT: -1.25,
-            PANELS.DAMAGES_ENABLED: False,
+            PANELS.DAMAGES_ENABLED: True,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.DAMAGES_TEMPLATE: "<font color='#FFFF00'>%(damage)s</font>",
             PANELS.DAMAGES_SETTINGS: {GLOBAL.X: -50, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.LEFT},
-            PANELS.BARS_ENABLED: False,
+            PANELS.BARS_ENABLED: True,
             PANELS.BAR_CLASS_COLOR: False,
             PANELS.ON_KEY_DOWN: False,
             PANELS.BAR_HOT_KEY: [[Keys.KEY_LALT]],
-            PANELS.HP_TEMPLATE: "<font face='$TitleFont' color='#FAFAFA' size='15'>%(health)s</font>",
+            PANELS.HP_TEMPLATE: "<font face='$FieldFont' color='#FAFAFA' size='15'>%(health)s</font>",
             PANELS.BAR_SETTINGS: {
                 PANELS.TEXT_SETTINGS: {GLOBAL.X: 35, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.ALIGN: GLOBAL.CENTER},
                 PANELS.BAR: {
@@ -457,8 +454,8 @@ class Config(object):
                     GLOBAL.Y: 2,
                     GLOBAL.WIDTH: 70,
                     GLOBAL.HEIGHT: 22,
-                    GLOBAL.ALPHA: 0.6,
-                    GLOBAL.BG_ALPHA: 0.5,
+                    GLOBAL.ALPHA: 0.5,
+                    GLOBAL.BG_ALPHA: 0.4,
                     COLORS.NAME: {
                         PANELS.ALLY: COLORS.GREEN,
                         PANELS.ENEMY: COLORS.RED,
@@ -469,7 +466,7 @@ class Config(object):
                         GLOBAL.ENABLED: True,
                         GLOBAL.COLOR: COLORS.NORMAL_TEXT,
                         GLOBAL.CUSTOM_COLOR: False,
-                        GLOBAL.ALPHA: 0.7
+                        GLOBAL.ALPHA: 0.5
                     }
                 }
             }
@@ -511,7 +508,6 @@ class Config(object):
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
-        self.postmortem_panel = {GLOBAL.ENABLED: False, POSTMORTEM.HIDE_KILLER: True}
 
 
 cfg = Config()

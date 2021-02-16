@@ -133,6 +133,7 @@ class MAIN:
     CHANGE_ANONYMOUS_NAME = "anonymousNameChange"
     USE_KEY_PAIRS = "useKeyPairs"
     REMOVE_HANDBRAKE = "removeHandbrake"
+    HIDE_POSTMORTEM_TIPS = "hide_postmortem_tips"
 
 
 class COLORS:
@@ -218,10 +219,9 @@ class SNIPER:
     def __init__(self):
         pass
 
-    DEF, MIN, MAX, ZMX = (0, 1, 2, 3)
+    MIN, MAX, ZMX = (0, 1, 2)
     ZOOM = "zoom"
     NAME = ZOOM
-    DEF_ZOOM = "default_zoom"
     DYN_ZOOM = "dynamic_zoom"
     ZOOM_STEPS = "zoomSteps"
     STEPS = "steps"
@@ -229,7 +229,6 @@ class SNIPER:
     METERS = "zoomXMeters"
     MAX_ZOOM_NUM = "zoom_max"
     MIN_ZOOM_NUM = "zoom_min"
-    DEF_ZOOM_NUM = "zoom_default"
     ZOOMS = "zooms"
     ZOOM_EXPOSURE = "zoomExposure"
     INCREASED_ZOOM = "increasedZoom"
@@ -361,7 +360,6 @@ class POSTMORTEM:
     DURATION = "transitionDuration"
     PARAMS = "postmortemParams"
     NAME = "postmortem_panel"
-    HIDE_KILLER = "hideKillerInfo"
 
 
 class ARMOR_CALC:
@@ -695,8 +693,7 @@ LOAD_LIST = (
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
     DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME,
-    SIXTH_SENSE.NAME, USER_BACKGROUND.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, POSTMORTEM.NAME,
-    CLOCK.NAME
+    SIXTH_SENSE.NAME, USER_BACKGROUND.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, CLOCK.NAME
 )
 
 CACHE_DIRS = (
@@ -711,19 +708,17 @@ class CONFIG_INTERFACE:
 
     DONATE_BUTTONS = ('donate_button_ua', 'donate_button_ru', 'donate_button_eu', 'support_button')
     BLOCK_IDS = (
-        ANOTHER.CONFIG_SELECT, MAIN.NAME, DISPERSION_CIRCLE.NAME, CAROUSEL.NAME, POSTMORTEM.NAME, EFFECTS.NAME,
-        DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, MARKERS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
+        ANOTHER.CONFIG_SELECT, MAIN.NAME, DISPERSION_CIRCLE.NAME, CAROUSEL.NAME, EFFECTS.NAME, DEBUG_PANEL.NAME,
+        BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, MARKERS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
         DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, MAIN_GUN.NAME, TEAM_BASES.NAME,
-        VEHICLE_TYPES.NAME, PANELS.PANELS_NAME,
-        SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME, SAVE_SHOOT.NAME, MINIMAP.NAME,
-        ANOTHER.SHADOW_SETTINGS, SIXTH_SENSE.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME
+        VEHICLE_TYPES.NAME, PANELS.PANELS_NAME, SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME,
+        SAVE_SHOOT.NAME, MINIMAP.NAME, ANOTHER.SHADOW_SETTINGS, SIXTH_SENSE.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME
     )
     HANDLER_VALUES = {
         SNIPER.NAME: {
             'dynamic_zoom*enabled': (
-                ('dynamic_zoom*zoom_max', 'dynamic_zoom*zoomToGunMarker', 'dynamic_zoom*zoom_min',
-                 'dynamic_zoom*zoomXMeters'),
-                ('default_zoom*enabled', 'default_zoom*zoom_default')
+                'dynamic_zoom*zoom_max', 'dynamic_zoom*zoomToGunMarker', 'dynamic_zoom*zoom_min',
+                'dynamic_zoom*zoomXMeters'
             ),
             'zoomSteps*enabled': ('zoomSteps*steps',),
             SNIPER.DISABLE_AFTER_SHOOT: (SNIPER.SKIP_CLIP,)

@@ -29,14 +29,12 @@ class ObserverSniperCamera(object):
         self._enableX = False
         self._zoomToGunMarker = False
         self._isDynamicZoomEnabled = False
-        self._isDefaultZoomEnabled = False
         self._zoomStepsEnabled = False
         self._steps = SNIPER.DEFAULT_STEPS
 
     def onSettingsChanged(self, config, blockID):
         if blockID == SNIPER.NAME:
             self._params = (
-                max(2.0, float(config[SNIPER.DEF_ZOOM][SNIPER.DEF_ZOOM_NUM])),
                 max(2.0, float(config[SNIPER.DYN_ZOOM][SNIPER.MIN_ZOOM_NUM])),
                 min(60.0, float(config[SNIPER.DYN_ZOOM][SNIPER.MAX_ZOOM_NUM])),
                 max(10.0, float(config[SNIPER.DYN_ZOOM][SNIPER.METERS]))
@@ -44,7 +42,6 @@ class ObserverSniperCamera(object):
             self._enableX = config[GLOBAL.ENABLED] and not BattleReplay.g_replayCtrl.isPlaying
             self._zoomToGunMarker = config[SNIPER.DYN_ZOOM][SNIPER.GUN_ZOOM]
             self._isDynamicZoomEnabled = config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
-            self._isDefaultZoomEnabled = config[SNIPER.DEF_ZOOM][GLOBAL.ENABLED]
             self._zoomStepsEnabled = config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]
             self._steps = config[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
 
@@ -72,9 +69,7 @@ class ObserverSniperCamera(object):
                         zoom = self._params[SNIPER.MIN]
                     camera._cfg[SNIPER.ZOOM] = zoom
                 else:
-                    camera._cfg[SNIPER.ZOOM] = self._params[SNIPER.DEF]
-            elif self._isDefaultZoomEnabled:
-                camera._cfg[SNIPER.ZOOM] = self._params[SNIPER.DEF]
+                    camera._cfg[SNIPER.ZOOM] = self._params[SNIPER.MIN]
         return enable(camera, targetPos, saveZoom or self._enableX)
 
 

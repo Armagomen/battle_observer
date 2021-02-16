@@ -56,7 +56,12 @@ translate = {
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Сhange Anonymous Name",
-        "removeHandbrake": "Handbremse für AT-SPG deaktivieren."
+        "removeHandbrake": "Handbremse für AT-SPG deaktivieren.",
+        "hide_postmortem_tips": "Informationen nach der Zerstörung ausblenden",
+        "hide_postmortem_tips_tooltip": "Blendet die Anzeige von Informationen im Panel nach der Zerstörung aus:"
+                                        "<br> - Navigationstipps"
+                                        "<br> - Token anzeigen"
+                                        "<br> - zeigt Informationen über den Spieler an, der dich zerstört hat",
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
@@ -78,10 +83,6 @@ translate = {
         "carouselRows": "Anzahl der Reihen eines mehrreihigen Tankkarussells.",
         "carouselRows_toltip": "Funktioniert nur, wenn das mehrzeilige Karussell im Client aktiviert ist.",
         "smallDoubleCarousel": "Erzwingen Sie die Verwendung kleiner Symbole im Tankkarussell."
-    },
-    "postmortem_panel": {
-        "header": "Panel nach Zerstörung.",
-        "hideKillerInfo": "Informationen über den Zerstörer entfernen."
     },
     "effects": {
         "header": "Visuelle Kameraeffekte anpassen",
@@ -280,13 +281,6 @@ translate = {
                                        "Helligkeit. <br> Empfohlene Filterstärke -1",
         "panels_icon_filter_strength": "Filterstärke (Helligkeit)"
     },
-    "panels_icon": {
-        "header": "Farbfilter für die Symbole in der Team-Anzeige (Playerspanel)",
-        "icon_info": "Diese Funktion umkreist jedes Symbol der Technologie in der Team-Anzeige in der Farbe der "
-                     "Technologieklassen.<br>Der folgende Regler beeinflusst die Helligkeit: "
-                     "Die empfohlene Filterstärke ist -1",
-        "blackout": "Filterstärke (Helligkeit)"
-    },
     "zoom": {
         "header": "Zoom für Richtschützenansicht (Sniper Zoom IN)",
         "LENS_EFFECTS_ENABLED": "Grünen Rand im Snipermodus entfernen..",
@@ -295,8 +289,6 @@ translate = {
         "disable_SniperCamera_After_Shoot_tooltip": "Автоматически переключает камеру в аркадный режим "
                                                     "после выстрела если калибр орудия больше 40мм.",
         "disable_cam_skip_clip": "Не выходить если магазинная система заряжания",
-        "default_zoom*zoom_default": "Multiplikator für Festen Zoom",
-        "default_zoom*enabled": "Fester Zoom",
         "dynamic_zoom*enabled": "Automatische Auswahl der Zoomstufen beim wechsel in den Richtschützenmodus",
         "dynamic_zoom*enabled_tooltip": "Wenn diese Option aktiviert ist, wird der <b>Fester Zoom</b> deaktiviert.",
         "dynamic_zoom*zoom_max": "Maximaler Zoom Faktor für automatische Auswahl: bis zu 40.0",

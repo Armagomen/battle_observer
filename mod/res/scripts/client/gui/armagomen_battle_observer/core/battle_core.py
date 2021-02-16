@@ -4,7 +4,7 @@ from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from gui.shared.personality import ServicesLocator
 from .battle_cache import cache
-from .bo_constants import MAIN, GLOBAL, POSTMORTEM
+from .bo_constants import MAIN
 from .bw_utils import getPlayer, setMaxFrameRate
 from .config import cfg
 from .core import overrideMethod
@@ -23,9 +23,10 @@ class _BattleCore(object):
 
     @staticmethod
     @overrideMethod(PostmortemPanel, "getDeathInfo")
-    def getDeathInfo(base, *args, **kwargs):
-        if not (cfg.postmortem_panel[GLOBAL.ENABLED] and cfg.postmortem_panel[POSTMORTEM.HIDE_KILLER]):
-            return base(*args, **kwargs)
+    def getDeathInfo(info, *args, **kwargs):
+        if cfg.main[MAIN.HIDE_POSTMORTEM_TIPS]:
+            return None
+        return info(*args, **kwargs)
 
     @staticmethod
     def onSettingsChanged(config, blockID):
@@ -75,19 +76,19 @@ class _BattleCore(object):
                 arena.onVehicleAdded -= self.onVehicleAddUpdate
                 arena.onVehicleUpdated -= self.onVehicleAddUpdate
 
-    def onVehicleKilled(self, targetID, attackerID, *args):
+    def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
         if cache.player.playerVehicleID == targetID:
             g_events.onPlayerVehicleDeath(attackerID)
         elif cache.player.playerVehicleID == attackerID:
             g_events.onPlayerKilledEnemy(targetID)
 
     @staticmethod
-    def onVehicleAddUpdate(vehID):
-        vInfoVO = cache.arenaDP.getVehicleInfo(vehID)
-        if vInfoVO:
-            vehicleType = vInfoVO.vehicleType
+    def onVehicleAddUpdate(vehicleID, *args, **kwargs):
+        vehicleInfoVO = cache.arenaDP.getVehicleInfo(vehicleID)
+        if vehicleInfoVO:
+            vehicleType = vehicleInfoVO.vehicleType
             if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
-                g_events.onVehicleAddUpdate(vehID, vehicleType)
+                g_events.onVehicleAddUpdate(vehicleID, vehicleType)
 
 
 b_core = _BattleCore()
