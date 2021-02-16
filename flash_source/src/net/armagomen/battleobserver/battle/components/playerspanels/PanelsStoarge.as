@@ -88,23 +88,23 @@ public class PanelsStoarge extends BattleDisplayable {
 
     public function addHpBar(vehID: int, color: String, settings: Object, team: String, startVisible: Boolean): void {
         if (this.stoarge.hasOwnProperty(vehID.toString())) {
-            var barX: Number = settings.bar.x;
-            var barWidth: Number = settings.bar.width;
-            var textX: Number = settings.text.x;
-            var autoSize: String = settings.text.align;
+            var barX: Number = settings.players_bars_bar.x;
+            var barWidth: Number = settings.players_bars_bar.width;
+            var textX: Number = settings.players_bars_text.x;
+            var autoSize: String = settings.players_bars_text.align;
             if (team == "red") {
                 if (autoSize != "center") {
-                    autoSize = settings.text.align == "left" ? "right" : "left";
+                    autoSize = settings.players_bars_text.align == "left" ? "right" : "left";
                 }
                 barWidth = -barWidth;
                 barX = -barX;
                 textX = -textX;
             }
-            var bar: ProgressBar = new ProgressBar(barX, settings.bar.y, barWidth, settings.bar.height, settings.bar.colors.alpha, settings.bar.colors.bgAlpha, null, color, settings.bar.colors.bgColor, vehID.toString());
-            if (settings.bar.outline.enabled) {
-                bar.setOutline(settings.bar.outline.customColor, settings.bar.outline.color, settings.bar.outline.alpha);
+            var bar: ProgressBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, settings.players_bars_bar.alpha, settings.players_bars_bar.bgAlpha, null, color, settings.players_bars_bar.colors.bgColor, vehID.toString());
+            if (settings.players_bars_bar.outline.enabled) {
+                bar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
             }
-            bar.addTextField(textX, settings.text.y, autoSize, Filters.normalText, getShadowSettings());
+            bar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText, getShadowSettings());
             bar.setVisible(startVisible);
             this.stoarge[vehID]["HpBar"] = items[vehID].addChild(bar);
         }

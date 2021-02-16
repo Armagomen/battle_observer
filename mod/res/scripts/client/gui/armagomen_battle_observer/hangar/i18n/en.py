@@ -149,7 +149,7 @@ translate = {
         "x_tooltip": "The position of the markers horizontally from the center of the screen.",
         "y": "Vertical position from the top.",
         "y_tooltip": "The position of the markers vertically from the top of the screen.",
-        "showMarkers_KEY": "Key to enable/disable Markers."
+        "showMarkers_hotkey": "Key to enable/disable Markers."
     },
     "armor_calculator": {
         "header": "CALCULATOR GIVEN ARMOR",
@@ -172,7 +172,7 @@ translate = {
         "attackReason*ramming": "ramming",
         "attackReason*shot": "SHOT",
         "attackReason*world_collision": "FALL",
-        "logsAltmode_KEY": "Key switch logs in the alternate mode",
+        "logsAltmode_hotkey": "Key switch logs in the alternate mode",
         "wg_log_hide_assist": "Hide damage intelligence",
         "wg_log_hide_assist_tooltip": "Removes the damage from intelligence detailed log WG",
         "wg_log_hide_block": "Hide blocked damage",
@@ -247,55 +247,33 @@ translate = {
         "vehicleClassColors*mediumTank": "Medium Tank",
         "vehicleClassColors*unknown": "Unknown (GM)"
     },
-    "players_spotted": {
-        "header": "INDICATORS OF LIGHT IN THE EARS",
-        "settings*align": "Alignment text:",
-        "settings*x": "Position relative to the icon. Horizontal",
-        "settings*y": "Position relative to the icon. Vertical",
-        "status*donotlight": "Lost from sight",
-        "status*lights": "Lights at the moment"
-    },
-    "players_damages": {
-        "header": "DAMAGE ON THE PANELS",
-        "damages_settings*align": "Alignment text:",
-        "damages_KEY": "Key to display the damages.",
-        "damages_settings*x": "text Position horizontally",
-        "damages_settings*y": "text Position vertical",
-        "damages_text": "Text box to format increased damage. the macro %(damage)s | s:d:f | type data"
-    },
-    "players_bars": {
-        "header": "PLAYERS HEALTH IN THE PANEL",
-        "bar_settings*bar*height": "The height of the strips",
-        "bar_settings*bar*width": "The width of the strips",
-        "bar_settings*bar*x": "Horizontal position",
-        "bar_settings*bar*y": "Vertical position",
-        "bar_settings*bar*colors*ally": "HP Strip: Allies",
-        "bar_settings*bar*colors*bgColor": "HP Strip: background color",
-        "bar_settings*bar*colors*enemy": "HP Strip: Enemy",
-        "bar_settings*bar*colors*enemyBlind": "HP Strip: the enemy is color blindness",
-        "bar_settings*bar*colors*alpha": "Transparency of the main bands HP.",
-        "bar_settings*bar*colors*alpha_tooltip": "0 - completely transparent.<br>1 - not transparent.",
-        "bar_settings*bar*colors*bgAlpha": "Background bandwidth HP, transparency",
-        "bar_settings*bar*colors*bgAlpha_tooltip": "0 - completely transparent.<br>1 - not transparent.",
-        "bar_settings*bar*outline*enabled": "Enable border.",
-        "bar_settings*bar*outline*customColor": "Custom border color.",
-        "bar_settings*bar*outline*color": "Custom color.",
-        "bar_settings*bar*outline*alpha": "Transparency of the fringing.",
-        "bar_settings*text*x": "text Position horizontally",
-        "bar_settings*text*y": "text Position vertical",
-        "bar_settings*text*align": "Alignment text:",
-        "hp_text": "Template text box HP tank",
-        "hp_text_tooltip": "macros: <br> %(health)s | s:d:f | type data <br> %(maxHealth)s | s:d:f | type data "
-                           "<br> %(percent)s | s:d:f | type data.",
-        "hpbarsShow_KEY": "The bar display button",
-        "hpbarsclassColor": "Paint strip HP in the ears by color type of technology.",
-        "showHpBarsOnKeyDown": "Show the band only pressed."
-    },
-    "panels_icon": {
-        "header": "COLOR FILTERS FOR THE ICONS IN THE EARS",
-        "icon_info": "This function recolors any icons of technology in the ears in the color classes of technology."
-                     "<br>The slider below affects the brightness.<br>Recommended filter force 1",
-        "blackout": "Filter force (brightness)"
+    "players_panels": {
+        "header": "Panels with a list of players (ears).",
+        "players_damages_enabled": "Damage to players on team rosters.",
+        "players_damages_hotkey": "Key to display damage.",
+        "players_damages_settings*x": "Horizontal text position",
+        "players_damages_settings*y": "Vertical text position",
+        "players_bars_enabled": "HP players in the ears.",
+        "players_bars_settings*players_bars_bar*colors*ally": "Durability points: allies",
+        "players_bars_settings*players_bars_bar*colors*bgColor": "Durability Points: Background Color",
+        "players_bars_settings*players_bars_bar*colors*enemy": "Durability points: enemy",
+        "players_bars_settings*players_bars_bar*colors*enemyBlind": "Durability Points: Opponent - Color Blind",
+        "players_bars_settings*players_bars_bar*alpha": "Transparency of the main HP bands.",
+        "players_bars_settings*players_bars_bar*alpha_tooltip": "0 - completely transparent. <br> 1 - not transparent.",
+        "players_bars_settings*players_bars_bar*bgAlpha": "HP background stripe, transparency",
+        "players_bars_settings*players_bars_bar*bgAlpha_tooltip": "0 - completely transparent. <br> 1 - not transparent.",
+        "players_bars_settings*players_bars_bar*outline*enabled": "Include outline.",
+        "players_bars_settings*players_bars_bar*outline*customColor": "Custom outline color.",
+        "players_bars_settings*players_bars_bar*outline*color": "Custom outline color.",
+        "players_bars_settings*players_bars_bar*outline*alpha": "Outline transparency.",
+        "players_bars_hotkey": "HP display key",
+        "players_bars_classColor": "Color the HP stripes in the ears according to the color of the technique type.",
+        "players_bars_on_key_pressed": "Show stripes only on key press.",
+        "panels_icon_enabled": "Repaint tank icons.",
+        "panels_icon_enabled_tooltip": "This function repaints any vehicle icons in the ears in the color of vehicle "
+                                       "classes. <br> The slider below affects the brightness. <br> Recommended "
+                                       "filter strength -1",
+        "panels_icon_filter_strength": "Filter strength (brightness)"
     },
     "zoom": {
         "header": "SNIPER MODE, ZOOM-X",
@@ -350,7 +328,7 @@ translate = {
     "minimap": {
         "header": "MINIMAP",
         "zoom*enabled": "Enable minimap centered.",
-        "zoom*zoom_KEY": "Centering mini map on",
+        "zoom*zoom_hotkey": "Centering mini map on",
         "zoom*indent": "Indenting from the edges of the screen",
         "zoom*indent_tooltip": "It is necessary to specify an indent only from the top edge, below it will be the same",
         "permanentMinimapDeath": "Always show the destroyed on the map",

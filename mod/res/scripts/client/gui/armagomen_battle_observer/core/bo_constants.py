@@ -167,7 +167,6 @@ class MAIN_GUN:
     COLOR = "mainGunColor"
     TEMPLATE = "template"
     GUN_ICON = "mainGunIcon"
-    DYNAMIC = "mainGunDynamic"
     DONE_ICON, FAILURE_ICON = ("mainGunDoneIcon", "mainGunFailureIcon")
     MIN_GUN_DAMAGE = 1000
     DAMAGE_RATE = 0.2
@@ -178,7 +177,7 @@ class MINIMAP:
         pass
 
     DEATH_PERMANENT = "permanentMinimapDeath"
-    HOT_KEY = "zoom_KEY"
+    HOT_KEY = "zoom_hotkey"
     INDENT = "indent"
     NAME = "minimap"
     SHOW_NAMES = "showDeathNames"
@@ -272,7 +271,7 @@ class DAMAGE_LOG:
     TOP_LOG_ASSIST = {EV_ID.PLAYER_ASSIST_TO_KILL_ENEMY, EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY, EV_ID.PLAYER_USED_ARMOR}
     EXTENDED_DAMAGE = {EV_ID.PLAYER_DAMAGED_HP_ENEMY: D_LOG, EV_ID.ENEMY_DAMAGED_HP_PLAYER: IN_LOG}
     GLOBAL = "log_global"
-    HOT_KEY = "logsAltmode_KEY"
+    HOT_KEY = "logsAltmode_hotkey"
     ICONS = "icons"
     ICON_NAME = "iconName"
     INDEX = "index"
@@ -404,7 +403,7 @@ class MARKERS:
         pass
 
     NAME = "markers"
-    HOT_KEY = "showMarkers_KEY"
+    HOT_KEY = "showMarkers_hotkey"
     CLASS_COLOR = "markersClassColor"
     TYPE_ICON = {
         VEHICLE_CLASS_NAME.HEAVY_TANK: "H",
@@ -602,38 +601,32 @@ class PANELS:
     def __init__(self):
         pass
 
-    KILLED_STATUS = 2
+    PANELS_NAME = "players_panels"
     # icons
-    PANELS_ICON_NAME = "panels_icon"
-    BLACKOUT = "blackout"
+    BLACKOUT = "panels_icon_filter_strength"
+    ICONS_ENABLED = "panels_icon_enabled"
     # hp_bars
-    PANELS_BARS_NAME = "players_bars"
-    BAR_SETTINGS = "bar_settings"
-    TEXT_SETTINGS = "text"
-    BAR = "bar"
-    HP_TEMPLATE = "hp_text"
-    ON_KEY_DOWN = "showHpBarsOnKeyDown"
-    ALLY = "ally"
-    BLIND = "enemyBlind"
-    ENEMY = "enemy"
-    BAR_HOT_KEY = "hpbarsShow_KEY"
-    BAR_CLASS_COLOR = "hpbarsclassColor"
-    # inAoi - spotted
-    IN_AOI_NAME = "players_spotted"
-    IN_AOI = "InAoiTf"
-    STATUS = "status"
-    NOT_LIGHT = "donotlight"
-    LIGHTS = "lights"
+    BARS_ENABLED = "players_bars_enabled"
+    BAR_SETTINGS = "players_bars_settings"
+    TEXT_SETTINGS = "players_bars_text"
+    BAR = "players_bars_bar"
+    HP_TEMPLATE = "players_bars_hp_text"
+    ON_KEY_DOWN = "players_bars_on_key_pressed"
+    BAR_HOT_KEY = "players_bars_hotkey"
+    BAR_CLASS_COLOR = "players_bars_classColor"
     # players_damages
-    DAMAGES_NAME = "players_damages"
-    DAMAGES_TEMPLATE = "damages_text"
-    DAMAGES_SETTINGS = "damages_settings"
-    DAMAGES_HOT_KEY = "damages_KEY"
+    DAMAGES_ENABLED = "players_damages_enabled"
+    DAMAGES_TEMPLATE = "players_damages_text"
+    DAMAGES_SETTINGS = "players_damages_settings"
+    DAMAGES_HOT_KEY = "players_damages_hotkey"
     DAMAGES_TF = "DamageTf"
     # another
     VEHICLE_ID = "vehicleID"
     IS_ENEMY = "isEnemy"
     DAMAGE = "damage"
+    ALLY = "ally"
+    BLIND = "enemyBlind"
+    ENEMY = "enemy"
     TEAM = ("green", "red")
 
 
@@ -660,7 +653,7 @@ class SAVE_SHOOT:
     VEHICLE = "Vehicle"
     REPEAT = "isRepeat"
     TEAM = "team"
-    HOT_KEY = "shoot_KEY"
+    HOT_KEY = "shoot_hotkey"
 
 
 class ANOTHER:
@@ -700,9 +693,8 @@ class MASSAGES:
 LOAD_LIST = (
     HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, MARKERS.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION_CIRCLE.NAME,
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
-    SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.DAMAGES_NAME,
-    PANELS.PANELS_BARS_NAME, MINIMAP.NAME, EFFECTS.NAME, DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG,
-    DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME, PANELS.PANELS_ICON_NAME,
+    SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
+    DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME,
     SIXTH_SENSE.NAME, USER_BACKGROUND.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, POSTMORTEM.NAME,
     CLOCK.NAME
 )
@@ -722,7 +714,7 @@ class CONFIG_INTERFACE:
         ANOTHER.CONFIG_SELECT, MAIN.NAME, DISPERSION_CIRCLE.NAME, CAROUSEL.NAME, POSTMORTEM.NAME, EFFECTS.NAME,
         DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, MARKERS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
         DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, MAIN_GUN.NAME, TEAM_BASES.NAME,
-        VEHICLE_TYPES.NAME, PANELS.DAMAGES_NAME, PANELS.PANELS_BARS_NAME, PANELS.PANELS_ICON_NAME,
+        VEHICLE_TYPES.NAME, PANELS.PANELS_NAME,
         SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME, SAVE_SHOOT.NAME, MINIMAP.NAME,
         ANOTHER.SHADOW_SETTINGS, SIXTH_SENSE.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME
     )
@@ -739,13 +731,39 @@ class CONFIG_INTERFACE:
         TEAM_BASES.NAME: {
             'outline*enabled': ('outline*color',)
         },
-        PANELS.PANELS_BARS_NAME: {
-            'bar_settings*bar*outline*enabled': (
-                'bar_settings*bar*outline*color', 'bar_settings*bar*outline*alpha',
-                'bar_settings*bar*outline*customColor'),
-            'bar_settings*bar*outline*customColor': ('bar_settings*bar*outline*color',),
+        PANELS.PANELS_NAME: {
+            "players_bars_enabled": (
+                "players_bars_settings*players_bars_bar*colors*ally",
+                "players_bars_settings*players_bars_bar*colors*bgColor",
+                "players_bars_settings*players_bars_bar*colors*enemy",
+                "players_bars_settings*players_bars_bar*colors*enemyBlind",
+                "players_bars_settings*players_bars_bar*alpha",
+                "players_bars_settings*players_bars_bar*bgAlpha",
+                "players_bars_settings*players_bars_bar*outline*enabled",
+                "players_bars_settings*players_bars_bar*outline*customColor",
+                "players_bars_settings*players_bars_bar*outline*color",
+                "players_bars_settings*players_bars_bar*outline*alpha",
+                "players_bars_hotkey",
+                "players_bars_classColor",
+                "players_bars_on_key_pressed",
+            ),
+            'players_bars_settings*players_bars_bar*outline*enabled': (
+                'players_bars_settings*players_bars_bar*outline*color',
+                'players_bars_settings*players_bars_bar*outline*alpha',
+                'players_bars_settings*players_bars_bar*outline*customColor'
+            ),
+            'players_bars_settings*players_bars_bar*outline*customColor': (
+                'players_bars_settings*players_bars_bar*outline*color',
+            ),
             PANELS.BAR_CLASS_COLOR: (
-                'bar_settings*bar*colors*ally', 'bar_settings*bar*colors*enemy', 'bar_settings*bar*colors*enemyBlind')
+                'players_bars_settings*players_bars_bar*colors*ally',
+                'players_bars_settings*players_bars_bar*colors*enemy',
+                'players_bars_settings*players_bars_bar*colors*enemyBlind'
+            ),
+            'players_damages_enabled': (
+                'players_damages_hotkey', 'players_damages_settings*x', 'players_damages_settings*y'
+            ),
+            "panels_icon_enabled": ("panels_icon_filter_strength",)
         },
         ARMOR_CALC.NAME: {
             'showCalcPoints': ('calcPosition*x', 'calcPosition*y', 'template')
@@ -759,7 +777,7 @@ class CONFIG_INTERFACE:
             'outline*enabled': ('outline*color',)
         },
         MINIMAP.NAME: {
-            'zoom*enabled': ('zoom*zoom_KEY', 'zoom*indent'),
+            'zoom*enabled': ('zoom*zoom_hotkey', 'zoom*indent'),
             MINIMAP.DEATH_PERMANENT: (MINIMAP.SHOW_NAMES,)
         },
         DEBUG_PANEL.NAME: {

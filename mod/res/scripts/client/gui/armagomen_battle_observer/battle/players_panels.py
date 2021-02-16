@@ -8,9 +8,7 @@ from ..core.events import g_events
 from ..core.keys_parser import g_keysParser
 from ..meta.battle.players_panels_meta import PlayersPanelsMeta
 
-bars = cfg.players_bars
-damages = cfg.players_damages
-icon = cfg.panels_icon
+config = cfg.players_panels
 
 
 class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
@@ -19,16 +17,16 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def __init__(self):
         super(PlayersPanels, self).__init__()
         isColorBlind = self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND)
-        self.barColors = bars[PANELS.BAR_SETTINGS][PANELS.BAR][COLORS.NAME]
+        self.barColors = config[PANELS.BAR_SETTINGS][PANELS.BAR][COLORS.NAME]
         self.COLORS = (self.barColors[PANELS.ALLY],
                        self.barColors[PANELS.BLIND if isColorBlind else PANELS.ENEMY])
-        self.hp_text = bars[PANELS.HP_TEMPLATE]
+        self.hp_text = config[PANELS.HP_TEMPLATE]
         self.vClassColors = cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
-        self.hpBarsEnable = bars[GLOBAL.ENABLED]
-        self.barsOnKey = bars[PANELS.ON_KEY_DOWN]
-        self.damagesEnable = damages[GLOBAL.ENABLED]
-        self.damagesText = damages[PANELS.DAMAGES_TEMPLATE]
-        self.damagesSettings = damages[PANELS.DAMAGES_SETTINGS]
+        self.hpBarsEnable = config[PANELS.BARS_ENABLED]
+        self.barsOnKey = config[PANELS.ON_KEY_DOWN]
+        self.damagesEnable = config[PANELS.DAMAGES_ENABLED]
+        self.damagesText = config[PANELS.DAMAGES_TEMPLATE]
+        self.damagesSettings = config[PANELS.DAMAGES_SETTINGS]
         self.gui = self.sessionProvider.arenaVisitor.gui
         self.battle_ctx = self.sessionProvider.getCtx()
         self.observers = set()
@@ -44,14 +42,14 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 if arena is not None:
                     arena.onVehicleKilled += self.onVehicleKilled
                 if self.barsOnKey:
-                    g_keysParser.registerComponent(PANELS.BAR_HOT_KEY, bars[PANELS.BAR_HOT_KEY])
+                    g_keysParser.registerComponent(PANELS.BAR_HOT_KEY, config[PANELS.BAR_HOT_KEY])
             g_events.onKeyPressed += self.onKeyPressed
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
-            # g_events.onVehicleAddUpdate += self.onVehicleAdd
+            g_events.onVehicleAddUpdate += self.onVehicleAdd
             if self.damagesEnable:
                 if arena is not None:
                     arena.onVehicleHealthChanged += self.onPlayersDamaged
-                    g_keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, damages[PANELS.DAMAGES_HOT_KEY])
+                    g_keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, config[PANELS.DAMAGES_HOT_KEY])
             g_events.updateStatus += self.updateStatus
             self.updateLinks()
 
@@ -66,7 +64,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                     arena.onVehicleKilled -= self.onVehicleKilled
             g_events.onKeyPressed -= self.onKeyPressed
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
-            # g_events.onVehicleAddUpdate -= self.onVehicleAdd
+            g_events.onVehicleAddUpdate -= self.onVehicleAdd
             if self.damagesEnable:
                 if arena is not None:
                     arena.onVehicleHealthChanged -= self.onPlayersDamaged
@@ -81,7 +79,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def onSettingsApplied(self, diff):
         if self.hpBarsEnable:
             if GRAPHICS.COLOR_BLIND in diff:
-                if bars[PANELS.BAR_CLASS_COLOR]:
+                if config[PANELS.BAR_CLASS_COLOR]:
                     return
                 self.COLORS = (self.barColors[PANELS.ALLY],
                                self.barColors[PANELS.BLIND if diff[GRAPHICS.COLOR_BLIND] else PANELS.ENEMY])
@@ -89,11 +87,11 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                     self.as_colorBlindPPbarsS(vehicleID, self.COLORS[self.battle_ctx.isEnemy(vehicleID)])
 
     def onVehicleAdd(self, vehicleID, vehicleType):
-        if vehicleID in self.observers:
+        if vehicleID in self.observers or vehicleID in self._vehicles:
             return
         self.as_AddVehIdToListS(vehicleID)
         is_enemy = self.battle_ctx.isEnemy(vehicleID)
-        if icon[GLOBAL.ENABLED]:
+        if config[PANELS.ICONS_ENABLED]:
             self.replaceIconColor(vehicleID, vehicleType.classTag, is_enemy)
         if self.hpBarsEnable:
             self.createHPBar(vehicleID, vehicleType, is_enemy)
@@ -102,7 +100,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def onVehicleKilled(self, targetID, *args, **kwargs):
         vehicle = self._vehicles.get(targetID)
-        if vehicle:
+        if vehicle is not None:
             vehicle[VEHICLE.CUR] = GLOBAL.ZERO
             self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, vehicle[VEHICLE.MAX], self.hp_text % vehicle)
 
@@ -120,12 +118,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             vehicle[VEHICLE.MAX] = maxHealth
             vehicle[VEHICLE.PERCENT] = 100.0
             vehicle[VEHICLE.CUR] = maxHealth
-        color = self.vClassColors[vehicleType.classTag] if bars[PANELS.BAR_CLASS_COLOR] else self.COLORS[enemy]
-        self.as_AddPPanelBarS(vehicleID, color, bars[PANELS.BAR_SETTINGS], PANELS.TEAM[enemy], not self.barsOnKey)
+        color = self.vClassColors[vehicleType.classTag] if config[PANELS.BAR_CLASS_COLOR] else self.COLORS[enemy]
+        self.as_AddPPanelBarS(vehicleID, color, config[PANELS.BAR_SETTINGS], PANELS.TEAM[enemy], not self.barsOnKey)
         self.as_updatePPanelBarS(vehicleID, maxHealth, maxHealth, self.hp_text % self._vehicles[vehicleID])
 
     def replaceIconColor(self, vehicleID, classTag, enemy):
-        self.as_setVehicleIconColorS(vehicleID, self.vClassColors[classTag], icon[PANELS.BLACKOUT], enemy)
+        self.as_setVehicleIconColorS(vehicleID, self.vClassColors[classTag], config[PANELS.BLACKOUT], enemy)
 
     def updateLinks(self):
         for vInfoVO in cache.arenaDP.getVehiclesInfoIterator():
@@ -139,16 +137,16 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_setHPbarsVisibleS(vehicleID, enable and vehicle[VEHICLE.CUR])
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):
-        vehicle = self._vehicles.setdefault(vehicleID, {})
-        if not vehicle:
-            vehicle[VEHICLE.MAX] = maxHealth
+        vehicle = self._vehicles.get(vehicleID)
+        if vehicle is None:
+            return
         vehicle[VEHICLE.PERCENT] = self.getPercent(newHealth, maxHealth)
         vehicle[VEHICLE.CUR] = newHealth
         self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth, self.hp_text % vehicle)
 
     def updateStatus(self, controller, info):
         vehicleID = info[PANELS.VEHICLE_ID]
-        if icon[GLOBAL.ENABLED]:
+        if config[PANELS.ICONS_ENABLED]:
             if vehicleID in self.observers:
                 return
             class_tag = cache.arenaDP.getVehicleInfo(vehicleID).vehicleType.classTag

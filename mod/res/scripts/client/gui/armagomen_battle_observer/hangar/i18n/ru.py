@@ -156,7 +156,7 @@ translate = {
         "x_tooltip": "Зеркально сдвигает значки от центра на заданное кол-во пикселей.",
         "y": "Позиция по Вертикали от верха.",
         "y_tooltip": "Позиция маркеров по Вертикали от верха экрана.",
-        "showMarkers_KEY": "Клавиша включения/отключения маркеров.",
+        "showMarkers_hotkey": "Клавиша включения/отключения маркеров.",
         "markersClassColor": "Окрасить значки по цвету класса."
     },
     "armor_calculator": {
@@ -179,7 +179,7 @@ translate = {
         "attackReason*ramming": "ТАРАН",
         "attackReason*shot": "ВЫСТРЕЛ",
         "attackReason*world_collision": "ПАДЕНИЕ",
-        "logsAltmode_KEY": "Переключение логов в альтернативный режим",
+        "logsAltmode_hotkey": "Переключение логов в альтернативный режим",
         "wg_log_hide_assist": "Скрыть урон по разведданным",
         "wg_log_hide_assist_tooltip": "Убирает урон по разведданным из детального лога WG",
         "wg_log_hide_block": "Скрыть заблокированный урон",
@@ -262,60 +262,32 @@ translate = {
         "vehicleClassColors*mediumTank": "Средний Танк",
         "vehicleClassColors*unknown": "Неизвестно (ГК)"
     },
-    "players_spotted": {
-        "header": "Индикаторы засвета в списках команд.",
-        "settings*align": "Выравнивание:",
-        "settings*align_tooltip": "Выравнивание:<br>left - влево<br>center - по центру<br>right - вправо",
-        "settings*x": "Положение от иконки. По горизонтали",
-        "settings*y": "Положение от иконки. По вертикали",
-        "status*donotlight": "Не светится",
-        "status*lights": "Светится в данный момент"
-    },
-    "players_damages": {
-        "header": "Урон игроков в списках команд.",
-        "damages_settings*align": "Выравнивание:",
-        "damages_settings*align_tooltip": "Выравнивание:<br>left - влево<br>center - по центру<br>right - вправо",
-        "damages_KEY": "Клавиша для отображения урона.",
-        "damages_settings*x": "Положение текста по горизонтали",
-        "damages_settings*y": "Положение текста по вертикали",
-        "damages_text": "Текстовое поле для форматирования.",
-        "damages_text_tooltip": "Текстовое поле для форматирования показателя нанесённого урона. макрос "
-                                "%(damage)s | s:d:f | type data"
-    },
-    "players_bars": {
-        "header": "Очки прочности танка в списках команд.",
-        "bar_settings*bar*height": "Высота полос",
-        "bar_settings*bar*width": "Ширина полос",
-        "bar_settings*bar*x": "Позиция очков прочности от панелей. По горизонтали",
-        "bar_settings*bar*y": "Позиция очков прочности от панелей. По вертикали",
-        "bar_settings*bar*colors*ally": "Очки прочности: союзники",
-        "bar_settings*bar*colors*bgColor": "Очки прочности: цвет фона",
-        "bar_settings*bar*colors*enemy": "Очки прочности: противник",
-        "bar_settings*bar*colors*enemyBlind": "Очки прочности: противник - цветовая слепота",
-        "bar_settings*bar*colors*alpha": "Прозрачность основных полос ХП.",
-        "bar_settings*bar*colors*alpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
-        "bar_settings*bar*colors*bgAlpha": "Фоновая полоса ХП, прозрачность",
-        "bar_settings*bar*colors*bgAlpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
-        "bar_settings*bar*outline*enabled": "Включить контур.",
-        "bar_settings*bar*outline*customColor": "Пользовательский цвет контура.",
-        "bar_settings*bar*outline*color": "Пользовательский цвет контура.",
-        "bar_settings*bar*outline*alpha": "Прозрачность контура.",
-        "bar_settings*text*x": "Положение текста по горизонтали",
-        "bar_settings*text*y": "Положение текста по вертикали",
-        "bar_settings*text*align": "Выравнивание текста:",
-        "bar_settings*text*align_tooltip": "left - влево<br>center - по центру<br>right - вправо",
-        "hp_text": "Шаблон текстового поля ХП танка.",
-        "hp_text_tooltip": "Макросы %(health)s | s:d:f | type data - %(maxHealth)s | s:d:f | type data - "
-                           "%(percent)s | s:d:f | type data.",
-        "hpbarsShow_KEY": "Клавиша отображения ХП",
-        "hpbarsclassColor": "Окрасить полосы ХП в ушах по цвету типа техники.",
-        "showHpBarsOnKeyDown": "Отображать полосы только по нажатию клавиши."
-    },
-    "panels_icon": {
-        "header": "Цветовой фильтр для иконок танков в списках команд.",
-        "icon_info": "Данная функция перекрашивает любые иконки техники в ушах в цвет классов техники.<br>Ползунок"
-                     " ниже влияет на яркость.<br>Рекомендуемая сила фильтра -1",
-        "blackout": "Сила фильтра (яркость)"
+    "players_panels": {
+        "header": "Панели со списком игроков (уши).",
+        "players_damages_enabled": "Урон игроков в списках команд.",
+        "players_damages_hotkey": "Клавиша для отображения урона.",
+        "players_damages_settings*x": "Положение текста по горизонтали",
+        "players_damages_settings*y": "Положение текста по вертикали",
+        "players_bars_enabled": "Хп игроков в ушах.",
+        "players_bars_settings*players_bars_bar*colors*ally": "Очки прочности: союзники",
+        "players_bars_settings*players_bars_bar*colors*bgColor": "Очки прочности: цвет фона",
+        "players_bars_settings*players_bars_bar*colors*enemy": "Очки прочности: противник",
+        "players_bars_settings*players_bars_bar*colors*enemyBlind": "Очки прочности: противник - цветовая слепота",
+        "players_bars_settings*players_bars_bar*alpha": "Прозрачность основных полос ХП.",
+        "players_bars_settings*players_bars_bar*alpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
+        "players_bars_settings*players_bars_bar*bgAlpha": "Фоновая полоса ХП, прозрачность",
+        "players_bars_settings*players_bars_bar*bgAlpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
+        "players_bars_settings*players_bars_bar*outline*enabled": "Включить контур.",
+        "players_bars_settings*players_bars_bar*outline*customColor": "Пользовательский цвет контура.",
+        "players_bars_settings*players_bars_bar*outline*color": "Пользовательский цвет контура.",
+        "players_bars_settings*players_bars_bar*outline*alpha": "Прозрачность контура.",
+        "players_bars_hotkey": "Клавиша отображения ХП",
+        "players_bars_classColor": "Окрасить полосы ХП в ушах по цвету типа техники.",
+        "players_bars_on_key_pressed": "Отображать полосы только по нажатию клавиши.",
+        "panels_icon_enabled": "Перекрасить иконки танков.",
+        "panels_icon_enabled_tooltip": "Данная функция перекрашивает любые иконки техники в ушах в цвет классов"
+                                       " техники.<br>Сила фильтра влияет на яркость.<br>Рекомендуемая сила фильтра -1",
+        "panels_icon_filter_strength": "Сила фильтра (яркость)"
     },
     "zoom": {
         "header": "Снайперский режим ZOOM-X.",
@@ -375,7 +347,7 @@ translate = {
     "minimap": {
         "header": "Мини-Карта.",
         "zoom*enabled": "Включить увеличение миникарты в центр.",
-        "zoom*zoom_KEY": "Клавиша для увеличения.",
+        "zoom*zoom_hotkey": "Клавиша для увеличения.",
         "zoom*indent": "Отступ от краёв экрана.",
         "zoom*indent_tooltip": "Необходимо указать отступ лишь от верхнего края.",
         "permanentMinimapDeath": "Всегда показывать уничтоженных на карте.",

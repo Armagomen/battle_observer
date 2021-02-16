@@ -405,7 +405,6 @@ class Config(object):
         }
         self.main_gun = {
             GLOBAL.ENABLED: False,
-            MAIN_GUN.DYNAMIC: True,
             MAIN_GUN.TEMPLATE: "%(mainGunIcon)s%(mainGunDoneIcon)s%(mainGunFailureIcon)s"
                                "<font color='%(mainGunColor)s'>%(mainGun)s</font>",
             GLOBAL.SETTINGS: {
@@ -438,26 +437,15 @@ class Config(object):
                 VEHICLE_TYPES.UNKNOWN: VEHICLE_TYPES.TEMPLATE.format("U")
             }
         }
-        self.panels_icon = {
+        self.players_panels = {
             GLOBAL.ENABLED: False,
-            PANELS.BLACKOUT: -0.8
-        }
-        # self.players_spotted = {
-        #     GLOBAL.ENABLED: False,
-        #     PANELS.STATUS: {
-        #         PANELS.LIGHTS: "<font face='$TitleFont' color='#00FF00' size='24'>*</font>",
-        #         PANELS.NOT_LIGHT: "<font face='$TitleFont' color='#FF0000' size='24'>*</font>"
-        #     },
-        #     GLOBAL.SETTINGS: {GLOBAL.X: -40, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.CENTER}
-        # }
-        self.players_damages = {
-            GLOBAL.ENABLED: False,
+            PANELS.ICONS_ENABLED: False,
+            PANELS.BLACKOUT: -1.25,
+            PANELS.DAMAGES_ENABLED: False,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.DAMAGES_TEMPLATE: "<font color='#FFFF00'>%(damage)s</font>",
-            PANELS.DAMAGES_SETTINGS: {GLOBAL.X: -50, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.LEFT}
-        }
-        self.players_bars = {
-            GLOBAL.ENABLED: False,
+            PANELS.DAMAGES_SETTINGS: {GLOBAL.X: -50, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.LEFT},
+            PANELS.BARS_ENABLED: False,
             PANELS.BAR_CLASS_COLOR: False,
             PANELS.ON_KEY_DOWN: False,
             PANELS.BAR_HOT_KEY: [[Keys.KEY_LALT]],
@@ -469,13 +457,13 @@ class Config(object):
                     GLOBAL.Y: 2,
                     GLOBAL.WIDTH: 70,
                     GLOBAL.HEIGHT: 22,
+                    GLOBAL.ALPHA: 0.6,
+                    GLOBAL.BG_ALPHA: 0.5,
                     COLORS.NAME: {
                         PANELS.ALLY: COLORS.GREEN,
                         PANELS.ENEMY: COLORS.RED,
                         PANELS.BLIND: COLORS.BLIND,
                         COLORS.C_BG: COLORS.BLACK,
-                        GLOBAL.ALPHA: 0.6,
-                        GLOBAL.BG_ALPHA: 0.5
                     },
                     GLOBAL.OUTLINE: {
                         GLOBAL.ENABLED: True,

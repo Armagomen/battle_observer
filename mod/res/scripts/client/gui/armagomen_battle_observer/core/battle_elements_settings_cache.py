@@ -51,8 +51,7 @@ class ElementsSettingsGetter(object):
             ALIASES.FLIGHT_TIME: lambda: cfg.flight_time[GLOBAL.ENABLED],
             ALIASES.DISPERSION_TIMER: lambda: cfg.dispersion_circle[GLOBAL.ENABLED] and
                                               cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED],
-            ALIASES.PANELS: lambda: cfg.panels_icon[GLOBAL.ENABLED] or
-                                    cfg.players_damages[GLOBAL.ENABLED] or cfg.players_bars[GLOBAL.ENABLED],
+            ALIASES.PANELS: lambda: cfg.players_panels[GLOBAL.ENABLED],
             ALIASES.MINIMAP: lambda: cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and cfg.minimap[GLOBAL.ENABLED],
             ALIASES.USER_BACKGROUND: lambda: cfg.user_background[GLOBAL.ENABLED] or cfg.main[MAIN.BG] and
                                              cfg.hp_bars[HP_BARS.STYLE] == HP_BARS.NORMAL_STYLE,
@@ -87,7 +86,7 @@ def checkAndReplaceAlias(aliases):
     elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in new_aliases:
         if g_settingsGetter.getSetting(ALIASES.HP_BARS):
             new_aliases.append(ALIASES.HP_BARS)
-        if g_settingsGetter.getSetting(ALIASES.PANELS) and cfg.players_bars[GLOBAL.ENABLED]:
+        if g_settingsGetter.getSetting(ALIASES.PANELS):
             new_aliases.append(ALIASES.PANELS)
         if g_settingsGetter.getSetting(ALIASES.MAIN_GUN):
             new_aliases.append(ALIASES.MAIN_GUN)
@@ -98,13 +97,6 @@ def checkAndReplaceAlias(aliases):
 def new_SharedPage_init(base, page, *args, **kwargs):
     base(page, *args, **kwargs)
     if b_core.isAllowedBattleType()[0]:
-        enabled = (
-            g_settingsGetter.getSetting(ALIASES.TIMER),
-            g_settingsGetter.getSetting(ALIASES.TEAM_BASES),
-            g_settingsGetter.getSetting(ALIASES.DEBUG),
-            g_settingsGetter.getSetting(ALIASES.HP_BARS)
-        )
-        if any(enabled):
-            config = page._SharedPage__componentsConfig._ComponentsConfig__config
-            newConfig = tuple((i, checkAndReplaceAlias(aliases)) for i, aliases in config)
-            page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig
+        config = page._SharedPage__componentsConfig._ComponentsConfig__config
+        newConfig = tuple((i, checkAndReplaceAlias(aliases)) for i, aliases in config)
+        page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig

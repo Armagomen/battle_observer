@@ -148,7 +148,7 @@ translate = {
         "x_tooltip": "Позиция маркеров по Горизонтали от центра экрана.",
         "y": "Позиция по Вертикали от верха.",
         "y_tooltip": "Позиция маркеров по Вертикали от верха экрана.",
-        "showMarkers_KEY": "Taste zum Einschalten/Ausschalten des Panels:"
+        "showMarkers_hotkey": "Taste zum Einschalten/Ausschalten des Panels:"
     },
     "armor_calculator": {
         "header": "Durchschlagsanzeiger (Berechnung der Panzerung)",
@@ -170,7 +170,7 @@ translate = {
         "attackReason*ramming": "Rammen",
         "attackReason*shot": "Schaden durch Treffer",
         "attackReason*world_collision": "Schaden durch Fallen",
-        "logsAltmode_KEY": "Taste zum Umschalten auf Alternativen Modus",
+        "logsAltmode_hotkey": "Taste zum Umschalten auf Alternativen Modus",
         "wg_log_hide_assist": "Verstecke 'Unterstützungs Schaden'",
         "wg_log_hide_assist_tooltip": "Entfernte 'Unterstützungs Schaden' aus dem detaillierten WG Protokoll",
         "wg_log_hide_block": "Verstecke 'geblockten Schaden'",
@@ -250,52 +250,35 @@ translate = {
         "vehicleClassColors*mediumTank": "Mittlere Panzer",
         "vehicleClassColors*unknown": "Unbekannt (CC)"
     },
-    "players_spotted": {
-        "header": "Anzeige für aufgedeckte Gegner in der Team-Anzeige (Playerspanel)",
-        "settings*align": "Ausrichtung text:",
-        "settings*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert<br>right - Rechtsbündig",
-        "settings*x": "Position relativ zum Symbol waagerecht",
-        "settings*y": "Position relativ zum Symbol senkrecht",
-        "status*donotlight": "wenn Gegner nicht mehr aufgedeckt ist",
-        "status*lights": "wenn Gegner aufgedeckt ist"
-    },
-    "players_damages": {
-        "header": "Verursachter Schaden in der Team-Anzeige (Playerspanel)",
-        "damages_settings*align": "Ausrichtung des Textes:",
-        "damages_settings*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - "
-                                          "Zentriert ausgerichtet<br>right - Rechtsbündig",
-        "damages_KEY": "Taste zum Anzeigen des Textes",
-        "damages_settings*x": "Position waagerecht",
-        "damages_settings*y": "Position senkrecht",
-        "damages_text": "Textbox: verfügbare Makro(s): %(damage)s"
-    },
-    "players_bars": {
-        "header": "HP Anzeige in der Team-Anzeige (Playerspanel)",
-        "bar_settings*bar*height": "Höhe des HP-Balkens:",
-        "bar_settings*bar*width": "Breite des HP-Balkens:",
-        "bar_settings*bar*x": "Position des  HP-Balkens waagerecht",
-        "bar_settings*bar*y": "Position des  HP-Balkens senkrecht",
-        "bar_settings*bar*colors*ally": "Verbündete",
-        "bar_settings*bar*colors*bgColor": "Hintergrundfarbe",
-        "bar_settings*bar*colors*enemy": "Gegner",
-        "bar_settings*bar*colors*enemyBlind": "Gegner - Farbenblindheit",
-        "bar_settings*bar*colors*alpha": "Transparenz",
-        "bar_settings*bar*colors*alpha_tooltip": "0 - Transparenz 100%.<br>1 - Transparenz 0%.",
-        "bar_settings*bar*colors*bgAlpha": "Hintergrundstreifen, Transparenz",
-        "bar_settings*bar*colors*bgAlpha_tooltip": "0 - Transparenz 100%.<br>1 - Transparenz 0%.",
-        "bar_settings*bar*outline*enabled": "Rahmen aktivieren.",
-        "bar_settings*bar*outline*customColor": "Benutzerdefinierte Rahmenfarbe.",
-        "bar_settings*bar*outline*color": "Benutzerdefinierte Farbe.",
-        "bar_settings*bar*outline*alpha": "Transparenz der Fransen.",
-        "bar_settings*text*x": "Position waagerecht",
-        "bar_settings*text*y": "Position senkrecht",
-        "bar_settings*text*align": "Ausrichtung text:",
-        "bar_settings*text*align_tooltip": "Ausrichtung:left - Linksbündig, center - "
-                                           "Zentriert ausgerichtet, right - Rechtsbündig",
-        "hp_text": "Textbox: verfügbare Makro(s): %(health)s | %(maxHealth)s | %(percent)s.",
-        "hpbarsShow_KEY": "Taste zum Anzeigen der HP-Anzeige: ",
-        "hpbarsclassColor": "HP-Balken in der Farbe der Panzerklassen anzeigen",
-        "showHpBarsOnKeyDown": "nur zeigen, wenn Taste gedrückt ist"
+    "players_panels": {
+        "header": "Panels mit einer Liste von Spielern (Ohren).",
+        "players_damages_enabled": "Schaden für Spieler auf Mannschaftslisten.",
+        "players_damages_hotkey": "Schlüssel zum Anzeigen von Schäden.",
+        "players_damages_settings*x": "Horizontale Textposition",
+        "players_damages_settings*y": "Vertikale Textposition",
+        "players_bars_enabled": "HP Spieler in den Ohren.",
+        "players_bars_settings*players_bars_bar*colors*ally": "Haltbarkeitspunkte: Verbündete",
+        "players_bars_settings*players_bars_bar*colors*bgColor": "Haltbarkeitspunkte: Hintergrundfarbe",
+        "players_bars_settings*players_bars_bar*colors*enemy": "Haltbarkeitspunkte: Feind",
+        "players_bars_settings*players_bars_bar*colors*enemyBlind": "Haltbarkeitspunkte: Feind - farbenblind",
+        "players_bars_settings*players_bars_bar*alpha": "Transparenz der wichtigsten HP-Bänder.",
+        "players_bars_settings*players_bars_bar*alpha_tooltip": "0 - vollständig transparent. "
+                                                                "<br> 1 - nicht transparent",
+        "players_bars_settings*players_bars_bar*bgAlpha": "HP Hintergrundstreifen, Transparenz",
+        "players_bars_settings*players_bars_bar*bgAlpha_tooltip": "0 - vollständig transparent."
+                                                                  " <br> 1 - nicht transparent",
+        "players_bars_settings*players_bars_bar*outline*enabled": "Gliederung einschließen.",
+        "players_bars_settings*players_bars_bar*outline*customColor": "Benutzerdefinierte Umrissfarbe.",
+        "players_bars_settings*players_bars_bar*outline*color": "Benutzerdefinierte Umrissfarbe.",
+        "players_bars_settings*players_bars_bar*outline*alpha": "Gliederungstransparenz.",
+        "players_bars_hotkey": "HP Display-Taste",
+        "players_bars_classColor": "Färben Sie die HP-Streifen in den Ohren entsprechend der Farbe des Techniktyps.",
+        "players_bars_on_key_pressed": "Streifen nur beim Tastendruck anzeigen.",
+        "panels_icon_enabled": "Tanksymbole neu streichen.",
+        "panels_icon_enabled_tooltip": "Diese Funktion malt alle Fahrzeugsymbole in den Ohren in der Farbe der "
+                                       "Fahrzeugklassen neu. <br> Der Schieberegler unten beeinflusst die "
+                                       "Helligkeit. <br> Empfohlene Filterstärke -1",
+        "panels_icon_filter_strength": "Filterstärke (Helligkeit)"
     },
     "panels_icon": {
         "header": "Farbfilter für die Symbole in der Team-Anzeige (Playerspanel)",
@@ -359,7 +342,7 @@ translate = {
     "minimap": {
         "header": "MINI-KARTE",
         "zoom*enabled": "Zentrierung der Minikarte aktivieren.",
-        "zoom*zoom_KEY": "Minikarte zentrieren auf",
+        "zoom*zoom_hotkey": "Minikarte zentrieren auf",
         "zoom*indent": "Einrücken von den Rändern des Bildschirms",
         "zoom*indent_tooltip": "Es ist notwendig, einen Einzug nur von der oberen Kante aus zu spezifizieren, "
                                "darunter wird es gleich sein.",
