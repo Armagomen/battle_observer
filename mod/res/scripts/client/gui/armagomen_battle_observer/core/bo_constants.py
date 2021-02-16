@@ -578,7 +578,6 @@ class ALIASES:
         pass
 
     HP_BARS = "Observer_TeamsHP_UI"
-    SCORE_PANEL = "Observer_ScorePanel_UI"
     DAMAGE_LOG = "Observer_DamageLog_UI"
     MAIN_GUN = "Observer_MainGun_UI"
     DEBUG = "Observer_DebugPanel_UI"
@@ -801,3 +800,28 @@ class CONFIG_INTERFACE:
                                                DISPERSION_CIRCLE.CIRCLE_REPLACE)
         }
     }
+
+
+ALIAS_TO_PATH = {
+    ALIASES.HP_BARS: ".teams_hp",
+    ALIASES.DAMAGE_LOG: ".damage_log",
+    ALIASES.MAIN_GUN: ".main_gun",
+    ALIASES.DEBUG: ".debug_panel",
+    ALIASES.TIMER: ".battle_timer",
+    ALIASES.SIXTH_SENSE: ".sixth_sense",
+    ALIASES.TEAM_BASES: ".team_bases",
+    ALIASES.ARMOR_CALC: ".armor_calculator",
+    ALIASES.FLIGHT_TIME: ".flight_time",
+    ALIASES.DISPERSION_TIMER: ".dispersion_timer",
+    ALIASES.PANELS: ".players_panels",
+    ALIASES.MINIMAP: ".minimap",
+    ALIASES.USER_BACKGROUND: ".user_background",
+    ALIASES.WG_COMP: ".wg_comp_settings",
+    ALIASES.DATE_TIME: ".date_times"
+}
+
+SORTED_ALIASES = (
+    ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
+    ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
+    ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.USER_BACKGROUND, ALIASES.WG_COMP, ALIASES.DATE_TIME
+)

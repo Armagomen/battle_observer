@@ -7,18 +7,18 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from ..core.battle_elements_settings_cache import g_settingsGetter
-from ..core.bo_constants import GLOBAL, SWF
+from ..core.bo_constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
 from ..core.bw_utils import logError, callback
 from ..core.battle_core import b_core
 
 
 def getViewSettings():
     settings = []
-    for alias in g_settingsGetter.sorted_aliases:
+    for alias in SORTED_ALIASES:
         if g_settingsGetter.getSetting(alias):
             try:
                 class_name = alias.split("_")[GLOBAL.ONE]
-                file_name = g_settingsGetter.alias_to_path.get(alias)
+                file_name = ALIAS_TO_PATH.get(alias)
                 module_class = getattr(import_module(file_name, package=__package__), class_name)
                 settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
                 _GAME_UI.add(alias)
@@ -57,7 +57,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if battle_page is not None and battle_page._isDAAPIInited():
             flash = battle_page.flashObject
             if hasattr(flash, SWF.ATTRIBUTE_NAME):
-                for comp in g_settingsGetter.sorted_aliases:
+                for comp in SORTED_ALIASES:
                     if g_settingsGetter.getSetting(comp):
                         flash.as_createBattleObserverComp(comp)
             else:
