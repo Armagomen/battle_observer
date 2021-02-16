@@ -14,7 +14,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.FlightTimeUI;
 	import net.armagomen.battleobserver.battle.components.ObserverDateTimesUI;
-	import net.armagomen.battleobserver.battle.components.ScorePanelUI;
 	import net.armagomen.battleobserver.battle.components.UserBackGroundUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
 	import net.armagomen.battleobserver.battle.components.batlletimer.ObserverBattleTimerUI;
@@ -62,12 +61,6 @@ package net.armagomen.battleobserver
 					if (!this.isFlashComponentRegisteredS(ui_name))
 					{
 						this.registerComponent(this.addChildAt(new TeamsHealthUI(ui_name), index), ui_name);
-					}
-					break;
-				case "Observer_ScorePanel_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new ScorePanelUI(ui_name), index), ui_name);
 					}
 					break;
 				case "Observer_DamageLog_UI": 

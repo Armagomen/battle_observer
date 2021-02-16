@@ -14,13 +14,12 @@ class ElementsSettingsGetter(object):
     def __init__(self):
         g_playerEvents.onAvatarBecomeNonPlayer += self.clear
         self.sorted_aliases = (
-            ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.SCORE_PANEL, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
+            ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
             ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
             ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.USER_BACKGROUND, ALIASES.WG_COMP, ALIASES.DATE_TIME
         )
         self.alias_to_path = {
             ALIASES.HP_BARS: ".teams_hp",
-            ALIASES.SCORE_PANEL: ".score_panel",
             ALIASES.DAMAGE_LOG: ".damage_log",
             ALIASES.MAIN_GUN: ".main_gun",
             ALIASES.DEBUG: ".debug_panel",
@@ -39,7 +38,6 @@ class ElementsSettingsGetter(object):
         self.__cache = defaultdict(bool)
         self.alias_to_bool = {
             ALIASES.HP_BARS: lambda: cfg.hp_bars[GLOBAL.ENABLED],
-            ALIASES.SCORE_PANEL: lambda: cfg.hp_bars[GLOBAL.ENABLED],
             ALIASES.DAMAGE_LOG: lambda: cfg.log_total[GLOBAL.ENABLED] or cfg.log_damage_extended[GLOBAL.ENABLED] or
                                         cfg.log_input_extended[GLOBAL.ENABLED],
             ALIASES.MAIN_GUN: lambda: cfg.main_gun[GLOBAL.ENABLED],
