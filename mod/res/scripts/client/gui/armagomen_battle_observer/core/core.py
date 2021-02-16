@@ -75,12 +75,13 @@ def overrideMethod(wg_class, method_name="__init__"):
     :type method_name: unicode default __init__
     """
     class_name = wg_class.__name__
-    if method_name.startswith("__") and not method_name.endswith("__"):
-        full_name = "_{0}{1}".format(class_name, method_name)
-        if hasattr(wg_class, full_name):
-            method_name = full_name
-        elif hasattr(wg_class, method_name[1:]):
-            method_name = method_name[1:]
+    if not hasattr(wg_class, method_name):
+        if method_name.startswith("__") and not method_name.endswith("__"):
+            full_name = "_{0}{1}".format(class_name, method_name)
+            if hasattr(wg_class, full_name):
+                method_name = full_name
+            elif hasattr(wg_class, method_name[1:]):
+                method_name = method_name[1:]
 
     def outer(new_method):
         old_method = getattr(wg_class, method_name, None)
