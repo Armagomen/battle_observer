@@ -76,7 +76,7 @@ def overrideMethod(wg_class, method_name="__init__"):
     """
     class_name = wg_class.__name__
     if not hasattr(wg_class, method_name):
-        if method_name.startswith("__"):
+        if method_name.startswith(GLOBAL.DOUBLE_UNDERLINE):
             full_name = "_{0}{1}".format(class_name, method_name)
             if hasattr(wg_class, full_name):
                 method_name = full_name

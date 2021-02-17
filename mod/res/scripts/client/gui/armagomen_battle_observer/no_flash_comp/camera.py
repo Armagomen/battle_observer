@@ -60,6 +60,8 @@ class ObserverSniperCamera(object):
             if self._zoomToGunMarker:
                 targetPos = cache.player.gunRotator.markerInfo[GLOBAL.FIRST]
             if self._isDynamicZoomEnabled:
+                if SniperCamera._SNIPER_ZOOM_LEVEL != -1:
+                    SniperCamera.setSniperZoomSettings(-1)
                 dist = (targetPos - cache.player.getOwnVehiclePosition()).length
                 if dist < AOI.VEHICLE_CIRCULAR_AOI_RADIUS:
                     zoom = round(dist / self._params[SNIPER.ZMX])
@@ -76,47 +78,38 @@ class ObserverSniperCamera(object):
 class ObserverArcadeCamera(object):
 
     def __init__(self):
-        base_create = ArcadeCamera.create
-
-        def create(camera, pivotPos, onChangeControlMode=None, postmortemMode=False):
+        @overrideMethod(ArcadeCamera, "create")
+        def create(base_create, camera, *args, **kwargs):
             if cfg.arcade_camera[GLOBAL.ENABLED]:
                 config = camera._cfg
                 config[ARCADE.DIST_RANGE] = MinMax(cfg.arcade_camera[ARCADE.MIN], cfg.arcade_camera[ARCADE.MAX])
                 config[ARCADE.START_DIST] = cfg.arcade_camera[ARCADE.START_DEAD_DIST]
                 config[ARCADE.START_ANGLE] = ARCADE.ANGLE
-            return base_create(camera, pivotPos, onChangeControlMode=onChangeControlMode, postmortemMode=postmortemMode)
-
-        ArcadeCamera.create = create
+            return base_create(camera, *args, **kwargs)
 
 
 class ObserverStrategicCamera(object):
 
     def __init__(self):
-        base_create = StrategicCamera.create
-
-        def create(camera, onChangeControlMode=None):
+        @overrideMethod(StrategicCamera, "create")
+        def create(base_create, camera, *args, **kwargs):
             if cfg.strategic_camera[GLOBAL.ENABLED]:
                 dist_range = (cfg.strategic_camera[STRATEGIC.MIN], cfg.strategic_camera[STRATEGIC.MAX])
                 camera._userCfg[STRATEGIC.DIST_RANGE] = dist_range
                 camera._cfg[STRATEGIC.DIST_RANGE] = dist_range
-            return base_create(camera, onChangeControlMode=onChangeControlMode)
-
-        StrategicCamera.create = create
+            return base_create(camera, *args, **kwargs)
 
 
 class ObserverArtyCamera(object):
 
     def __init__(self):
-        base_create = ArtyCamera.create
-
-        def create(camera, onChangeControlMode=None):
+        @overrideMethod(ArtyCamera, "create")
+        def create(base_create, camera, *args, **kwargs):
             if cfg.strategic_camera[GLOBAL.ENABLED]:
                 dist_range = (cfg.strategic_camera[STRATEGIC.MIN], cfg.strategic_camera[STRATEGIC.MAX])
                 camera._userCfg[STRATEGIC.DIST_RANGE] = dist_range
                 camera._cfg[STRATEGIC.DIST_RANGE] = dist_range
-            return base_create(camera, onChangeControlMode=onChangeControlMode)
-
-        ArtyCamera.create = create
+            return base_create(camera, *args, **kwargs)
 
 
 class DisableSniperModeAfterShoot(object):
@@ -165,7 +158,7 @@ def enablePostMortem(base_enable, mode, **kwargs):
         kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, cfg.arcade_camera[ARCADE.START_DEAD_DIST])
     if not PostMortemControlMode.getIsPostmortemDelayEnabled():
         if cfg.arcade_camera[POSTMORTEM.TRANSITION] and kwargs.get(POSTMORTEM.DURATION) is None:
-            avatar_getter.setForcedGuiControlMode(True, cursorVisible=False)
+            avatar_getter.setForcedGuiControlMode(True)
             callback_time = max(POSTMORTEM.CALLBACK_TIME_SEC, cfg.arcade_camera[POSTMORTEM.DURATION])
             kwargs[POSTMORTEM.DURATION] = callback_time
             callback(callback_time, lambda: avatar_getter.setForcedGuiControlMode(False))

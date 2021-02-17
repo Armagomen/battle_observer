@@ -14,6 +14,7 @@ class BaseModMeta(BaseDAAPIComponent):
     def __init__(self):
         super(BaseModMeta, self).__init__()
         self._name = "BaseModMeta"
+        self._isReplay = self.sessionProvider.isReplayPlaying
 
     @staticmethod
     def getShadowSettings():

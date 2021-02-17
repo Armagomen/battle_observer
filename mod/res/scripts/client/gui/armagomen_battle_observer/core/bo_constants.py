@@ -44,6 +44,7 @@ class GLOBAL:
     DOT = "."
     COMMA_SEP = ", "
     SPACE = " "
+    DOUBLE_UNDERLINE = "__"
     EMPTY_LINE = ""
     ENABLED = "enabled"
     FIRST, LAST = (0, -1)
@@ -355,7 +356,7 @@ class POSTMORTEM:
     def __init__(self):
         pass
 
-    CALLBACK_TIME_SEC = 2.0
+    CALLBACK_TIME_SEC = 1.0
     TRANSITION = "postmortemTransition"
     DURATION = "transitionDuration"
     PARAMS = "postmortemParams"

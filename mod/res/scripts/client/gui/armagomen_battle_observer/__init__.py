@@ -11,10 +11,6 @@ __all__ = ['init', 'fini']
 from os import listdir
 
 from constants import AUTH_REALM
-from gui.Scaleform.daapi.view.battle.classic.stats_exchange import ClassicStatisticsDataController
-from gui.Scaleform.daapi.view.battle.epic.stats_exchange import EpicStatisticsDataController
-from gui.Scaleform.daapi.view.battle.epic_random.stats_exchange import EpicRandomStatisticsDataController
-from gui.Scaleform.daapi.view.battle.ranked.stats_exchange import RankedStatisticsDataController
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from .core.bo_constants import MASSAGES, MOD_NAME, GLOBAL
@@ -41,6 +37,10 @@ class BattleObserver(object):
         g_flash.inject()
 
         from Avatar import PlayerAvatar
+        from gui.Scaleform.daapi.view.battle.classic.stats_exchange import ClassicStatisticsDataController
+        from gui.Scaleform.daapi.view.battle.epic.stats_exchange import EpicStatisticsDataController
+        from gui.Scaleform.daapi.view.battle.epic_random.stats_exchange import EpicRandomStatisticsDataController
+        from gui.Scaleform.daapi.view.battle.ranked.stats_exchange import RankedStatisticsDataController
 
         @overrideMethod(EpicRandomStatisticsDataController, "as_updateVehicleStatusS")
         @overrideMethod(EpicStatisticsDataController, "as_updateVehicleStatusS")
