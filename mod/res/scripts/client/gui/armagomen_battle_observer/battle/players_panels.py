@@ -3,6 +3,7 @@ from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListene
 from gui.shared.personality import ServicesLocator
 from ..core.battle_cache import cache
 from ..core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
+from ..core.bw_utils import getEntity
 from ..core.config import cfg
 from ..core.events import g_events
 from ..core.keys_parser import g_keysParser
@@ -29,7 +30,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesSettings = config[PANELS.DAMAGES_SETTINGS]
         self.gui = self.sessionProvider.arenaVisitor.gui
         self.battle_ctx = self.sessionProvider.getCtx()
-        self._vehicles = dict()
+        self._vehicles = set()
 
     def onEnterBattlePage(self):
         super(PlayersPanels, self).onEnterBattlePage()
@@ -74,33 +75,29 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 for vehicleID in self._vehicles:
                     self.as_colorBlindPPbarsS(vehicleID, self.COLORS[self.battle_ctx.isEnemy(vehicleID)])
 
-    def addVehicleToStorage(self, vehicleID, killed=False):
+    def addVehicleToStorage(self, vehicleID):
         vInfoVO = cache.arenaDP.getVehicleInfo(vehicleID)
         if vInfoVO.isObserver():
             return
+        self._vehicles.add(vehicleID)
         is_enemy = self.battle_ctx.isEnemy(vehicleID)
         classTag = vInfoVO.vehicleType.classTag
-        vehicle = self.checkAndCreateVehicle(killed, vInfoVO, vehicleID)
         self.as_AddVehIdToListS(vehicleID)
         if config[PANELS.ICONS_ENABLED]:
             self.replaceIconColor(vehicleID, classTag, is_enemy)
-        if self.hpBarsEnable:
+        if self.hpBarsEnable and vInfoVO.isAlive():
+            maxHealth = vInfoVO.vehicleType.maxHealth
+            newHealth = getattr(getEntity(vehicleID), 'health', maxHealth)
             color = self.vClassColors[classTag] if config[PANELS.BAR_CLASS_COLOR] else self.COLORS[is_enemy]
             self.as_AddPPanelBarS(vehicleID, color, config[PANELS.BAR_SETTINGS], PANELS.TEAM[is_enemy],
                                   not self.barsOnKey)
-            self.as_updatePPanelBarS(vehicleID, vehicle[VEHICLE.CUR], vehicle[VEHICLE.MAX], self.hp_text % vehicle)
+            self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth, self.hp_text % {
+                VEHICLE.CUR: newHealth,
+                VEHICLE.MAX: maxHealth,
+                VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
+            })
         if self.damagesEnable:
             self.as_AddTextFieldS(vehicleID, PANELS.DAMAGES_TF, self.damagesSettings, PANELS.TEAM[is_enemy])
-
-    def checkAndCreateVehicle(self, killed, vInfoVO, vehicleID):
-        vehicle = self._vehicles.setdefault(vehicleID, {})
-        if not vehicle:
-            maxHealth = vInfoVO.vehicleType.maxHealth
-            health = maxHealth if not killed else GLOBAL.ZERO
-            vehicle[VEHICLE.CUR] = health
-            vehicle[VEHICLE.MAX] = maxHealth
-            vehicle[VEHICLE.PERCENT] = self.getPercent(health, maxHealth)
-        return vehicle
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies:
@@ -110,22 +107,14 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if vehicleID not in self._vehicles:
                 self.addVehicleToStorage(vehicleID)
         for vehicleID in deadAllies:
-            if vehicleID not in self._vehicles:
-                self.addVehicleToStorage(vehicleID)
-            else:
-                self.onVehicleKilled(vehicleID)
+            self.onVehicleKilled(vehicleID)
         for vehicleID in deadEnemies:
-            if vehicleID not in self._vehicles:
-                self.addVehicleToStorage(vehicleID)
-            else:
-                self.onVehicleKilled(vehicleID)
+            self.onVehicleKilled(vehicleID)
 
     def onVehicleKilled(self, targetID):
-        vehicle = self._vehicles.get(targetID)
-        if vehicle is not None:
-            vehicle[VEHICLE.CUR] = GLOBAL.ZERO
-            vehicle[VEHICLE.PERCENT] = GLOBAL.F_ZERO
-            self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, vehicle[VEHICLE.MAX], self.hp_text % vehicle)
+        if targetID in self._vehicles:
+            self._vehicles.remove(targetID)
+            self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, GLOBAL.ZERO, GLOBAL.EMPTY_LINE)
 
     @staticmethod
     def getPercent(current, maximum):
@@ -138,16 +127,18 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.as_setVehicleIconColorS(vehicleID, self.vClassColors[classTag], config[PANELS.BLACKOUT], enemy)
 
     def healthOnAlt(self, enable):
-        for vehicleID, vehicle in self._vehicles.iteritems():
-            self.as_setHPbarsVisibleS(vehicleID, enable and vehicle[VEHICLE.CUR])
+        for vehicleID, vehicle in self._vehicles:
+            self.as_setHPbarsVisibleS(vehicleID, enable)
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):
-        vehicle = self._vehicles.get(vehicleID)
-        if vehicle is None:
-            return
-        vehicle[VEHICLE.CUR] = newHealth
-        vehicle[VEHICLE.PERCENT] = self.getPercent(newHealth, maxHealth)
-        self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth, self.hp_text % vehicle)
+        if vehicleID not in self._vehicles:
+            self.addVehicleToStorage(vehicleID)
+        else:
+            self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth, self.hp_text % {
+                VEHICLE.CUR: newHealth,
+                VEHICLE.MAX: maxHealth,
+                VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
+            })
 
     def onPlayersDamaged(self, vehicleID, attackerID, damage):
         cache.playersDamage[attackerID] += damage

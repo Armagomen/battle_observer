@@ -116,12 +116,10 @@ public class PanelsStoarge extends BattleDisplayable {
             var hpbar: ProgressBar = this.stoarge[vehID]["HpBar"];
             if (currHP > 0) {
                 hpbar.visible && Params.AnimationEnabled ? hpbar.setBarScale(currHP / maxHP) : hpbar.bar.scaleX = currHP / maxHP;
+				hpbar.uiText.htmlText = text;
             } else {
-                hpbar.bar.scaleX = 0;
-                hpbar.setVisible(false);
                 this.items[vehID].removeChild(hpbar);
             }
-            hpbar.uiText.htmlText = text;
         }
     }
 
