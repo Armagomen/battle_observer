@@ -6,7 +6,7 @@ from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from ..core.battle_cache import cache
 from ..core.bo_constants import DAMAGE_LOG as CONSTANTS, GLOBAL
-from ..core.bw_utils import callback
+from ..core.bw_utils import callback, logWarning
 from ..core.config import cfg
 from ..core.events import g_events
 from ..core.keys_parser import g_keysParser
@@ -17,47 +17,53 @@ class DamageLog(DamageLogsMeta):
 
     def __init__(self):
         super(DamageLog, self).__init__()
-        self.input_log = {CONSTANTS.KILLS: set()}
-        self.damage_log = {CONSTANTS.KILLS: set()}
-        self.shots = defaultdict(list)
-        self.topMacro = defaultdict(int, cfg.log_total[CONSTANTS.ICONS])
-        self.logsEnabledSetting = {
-            EV_ID.PLAYER_DAMAGED_HP_ENEMY: cfg.log_damage_extended[GLOBAL.ENABLED],
-            EV_ID.ENEMY_DAMAGED_HP_PLAYER: cfg.log_input_extended[GLOBAL.ENABLED]
-        }
-        g_keysParser.registerComponent(CONSTANTS.HOT_KEY, cfg.log_global[CONSTANTS.HOT_KEY])
-        self.eveToLog = {
-            EV_ID.PLAYER_DAMAGED_HP_ENEMY: self.damage_log,
-            EV_ID.ENEMY_DAMAGED_HP_PLAYER: self.input_log
-        }
-        self.eveToLogConfig = {
-            EV_ID.PLAYER_DAMAGED_HP_ENEMY: cfg.log_damage_extended,
-            EV_ID.ENEMY_DAMAGED_HP_PLAYER: cfg.log_input_extended
-        }
+        self.input_log = {}
+        self.damage_log = {}
+        self.top_log = defaultdict(int, cfg.log_total[CONSTANTS.ICONS])
         self.isSPG = False
+
+    @staticmethod
+    def isLogEnabled(eventType):
+        if eventType == EV_ID.PLAYER_DAMAGED_HP_ENEMY:
+            return cfg.log_damage_extended[GLOBAL.ENABLED]
+        elif eventType == EV_ID.ENEMY_DAMAGED_HP_PLAYER:
+            return cfg.log_input_extended[GLOBAL.ENABLED]
+        logWarning(CONSTANTS.WARNING_MESSAGE)
+        return False
+
+    def getLogDictAndSettings(self, eventType):
+        if eventType == EV_ID.PLAYER_DAMAGED_HP_ENEMY:
+            return self.damage_log, cfg.log_damage_extended
+        elif eventType == EV_ID.ENEMY_DAMAGED_HP_PLAYER:
+            return self.input_log, cfg.log_input_extended
+        logWarning(CONSTANTS.WARNING_MESSAGE)
+        return None, None
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
         self.subscribe()
         if cache.player is not None and cache.player.vehicle is not None:
+            self.input_log.update({CONSTANTS.KILLS: set(), CONSTANTS.SHOTS: []})
+            self.damage_log.update({CONSTANTS.KILLS: set(), CONSTANTS.SHOTS: []})
             self.isSPG = VEHICLE_CLASS_NAME.SPG in cache.player.vehicleTypeDescriptor.type.tags
-            extended_log = any(self.logsEnabledSetting.itervalues())
+            extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
                 cache.logsEnable = extended_log
                 g_events.onKeyPressed += self.keyEvent
                 g_events.onVehicleAddUpdate += self.onVehicleAddUpdate
+                g_keysParser.registerComponent(CONSTANTS.HOT_KEY, cfg.log_global[CONSTANTS.HOT_KEY])
             if cfg.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
                 if feedback:
                     feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
             if not self.isSPG:
-                self.topMacro.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
+                self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
             self.updateAvgDamage(self.sessionProvider.arenaVisitor.gui.isEpicBattle())
             self.updateTopLog()
 
     def onExitBattlePage(self):
         if cache.player is not None:
-            extended_log = any(self.logsEnabledSetting.itervalues())
+            extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
                 g_events.onKeyPressed -= self.keyEvent
                 g_events.onVehicleAddUpdate -= self.onVehicleAddUpdate
@@ -67,8 +73,7 @@ class DamageLog(DamageLogsMeta):
                     feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
             self.input_log.clear()
             self.damage_log.clear()
-            self.shots.clear()
-            self.topMacro.clear()
+            self.top_log.clear()
         self.unsubscribe()
         super(DamageLog, self).onExitBattlePage()
 
@@ -97,15 +102,15 @@ class DamageLog(DamageLogsMeta):
             cache.tankAvgDamage = max(CONSTANTS.RANDOM_MIN_AVG, float(max_health))
         elif isEpicBattle:
             cache.tankAvgDamage = CONSTANTS.FRONT_LINE_MIN_AVG
-        self.topMacro[CONSTANTS.AVG_DAMAGE] = int(cache.tankAvgDamage)
+        self.top_log[CONSTANTS.AVG_DAMAGE] = int(cache.tankAvgDamage)
 
     def keyEvent(self, key, isKeyDown):
         """hot key event"""
         if key == CONSTANTS.HOT_KEY:
             if cfg.log_damage_extended[GLOBAL.ENABLED]:
-                self.updateExtendedLog(self.damage_log, cfg.log_damage_extended, CONSTANTS.D_LOG, altMode=isKeyDown)
+                self.updateExtendedLog(self.damage_log, cfg.log_damage_extended, altMode=isKeyDown)
             if cfg.log_input_extended[GLOBAL.ENABLED]:
-                self.updateExtendedLog(self.input_log, cfg.log_input_extended, CONSTANTS.IN_LOG, altMode=isKeyDown)
+                self.updateExtendedLog(self.input_log, cfg.log_input_extended, altMode=isKeyDown)
 
     @staticmethod
     def percentToRBG(percent, saturation=0.5, brightness=1.0):
@@ -115,7 +120,7 @@ class DamageLog(DamageLogsMeta):
         r, g, b = (int(i * CONSTANTS.COLOR_MULTIPLIER) for i in tuple_values)
         return CONSTANTS.COLOR_FORMAT.format(r, g, b)
 
-    def __onPlayerFeedbackReceived(self, events, *a, **kw):
+    def __onPlayerFeedbackReceived(self, events, *args, **kwargs):
         """wg Feedback event parser"""
         for event in events:
             e_type = event.getType()
@@ -128,23 +133,24 @@ class DamageLog(DamageLogsMeta):
             elif e_type == EV_ID.DESTRUCTIBLE_DAMAGED:
                 data += int(extra)
             if e_type in CONSTANTS.TOP_MACROS_NAME:
-                if e_type == EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.topMacro[CONSTANTS.STUN_ICON]:
-                    self.topMacro[CONSTANTS.STUN_ICON] = cfg.log_total[CONSTANTS.ICONS][CONSTANTS.STUN_ICON]
-                    self.topMacro[CONSTANTS.ASSIST_STUN] = 0
-                self.topMacro[CONSTANTS.TOP_MACROS_NAME[e_type]] += data
+                if e_type == EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[CONSTANTS.STUN_ICON]:
+                    self.top_log[CONSTANTS.STUN_ICON] = cfg.log_total[CONSTANTS.ICONS][CONSTANTS.STUN_ICON]
+                    self.top_log[CONSTANTS.ASSIST_STUN] = 0
+                self.top_log[CONSTANTS.TOP_MACROS_NAME[e_type]] += data
                 self.updateTopLog()
-            if e_type in CONSTANTS.EXTENDED_DAMAGE and self.logsEnabledSetting.get(e_type):
-                self.addToExtendedLog(self.eveToLog[e_type], self.eveToLogConfig[e_type],
-                                      CONSTANTS.EXTENDED_DAMAGE[e_type], event.getTargetID(),
-                                      extra.getAttackReasonID(), data, extra.getShellType(),
-                                      extra.isShellGold())
+            if e_type in CONSTANTS.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
+                log_dict, settings = self.getLogDictAndSettings(e_type)
+                if log_dict is None:
+                    return
+                self.addToExtendedLog(log_dict, settings, event.getTargetID(),
+                                      extra.getAttackReasonID(), data, extra.getShellType(), extra.isShellGold())
 
     def updateTopLog(self):
         """update global sums in log"""
         if cfg.log_total[GLOBAL.ENABLED]:
-            value = self.topMacro[CONSTANTS.PLAYER_DAMAGE] / cache.tankAvgDamage
-            self.topMacro[CONSTANTS.DAMAGE_AVG_COLOR] = self.percentToRBG(value, **cfg.log_total[CONSTANTS.AVG_COLOR])
-            self.as_updateDamageS(cfg.log_total[CONSTANTS.TEMPLATE_MAIN_DMG] % self.topMacro)
+            value = self.top_log[CONSTANTS.PLAYER_DAMAGE] / cache.tankAvgDamage
+            self.top_log[CONSTANTS.DAMAGE_AVG_COLOR] = self.percentToRBG(value, **cfg.log_total[CONSTANTS.AVG_COLOR])
+            self.as_updateDamageS(cfg.log_total[CONSTANTS.TEMPLATE_MAIN_DMG] % self.top_log)
 
     def onVehicleAddUpdate(self, vehicleID, vehicleType):
         """update log item in GM-mode"""
@@ -159,14 +165,15 @@ class DamageLog(DamageLogsMeta):
             vehicle[CONSTANTS.TANK_LEVEL] = vehicleType.level
             vehicle[CONSTANTS.CLASS_ICON] = vehicle_ci.get(vehicleType.classTag, vehicle_ci[CONSTANTS.UNKNOWN_TAG])
             vehicle[CONSTANTS.CLASS_COLOR] = vehicle_cc.get(vehicleType.classTag, vehicle_cc[CONSTANTS.UNKNOWN_TAG])
-            self.updateExtendedLog(self.input_log, cfg.log_input_extended, CONSTANTS.IN_LOG)
+            self.updateExtendedLog(self.input_log, cfg.log_input_extended)
 
     def onPlayerVehicleDeath(self, killerID):
         self.input_log[CONSTANTS.KILLS].add(killerID)
+        self.updateExtendedLog(self.input_log, cfg.log_input_extended)
 
     def onPlayerKilledEnemy(self, targetID):
         self.damage_log[CONSTANTS.KILLS].add(targetID)
-        self.updateExtendedLog(self.damage_log, cfg.log_damage_extended, CONSTANTS.D_LOG)
+        self.updateExtendedLog(self.damage_log, cfg.log_damage_extended)
 
     @staticmethod
     def checkShell(attack_reason_id, gold, is_dlog, shell_type):
@@ -182,14 +189,11 @@ class DamageLog(DamageLogsMeta):
             shell_icon_name = CONSTANTS.UNDEFINED
         return gold, shell_icon_name, shell_type
 
-    def addToExtendedLog(self, *args):
-        """add or update log item
-        :param args: log_dict, settings, log_name, vehicle_id, attack_reason_id, damage, shell_type, gold
-        """
-        log_dict, settings, log_name, vehicle_id, attack_reason_id, damage, shell_type, gold = args
-        if vehicle_id not in self.shots[log_name]:
-            self.shots[log_name].append(vehicle_id)
-        is_dlog = log_name == CONSTANTS.D_LOG
+    def addToExtendedLog(self, log_dict, settings, vehicle_id, attack_reason_id, damage, shell_type, gold):
+        """add or update log item"""
+        is_dlog = log_dict is self.damage_log
+        if vehicle_id not in log_dict[CONSTANTS.SHOTS]:
+            log_dict[CONSTANTS.SHOTS].append(vehicle_id)
         gold, shell_icon_name, shell_type = self.checkShell(attack_reason_id, gold, is_dlog, shell_type)
         vehicle = log_dict.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         info = cache.arenaDP.getVehicleInfo(vehicle_id)
@@ -200,7 +204,7 @@ class DamageLog(DamageLogsMeta):
             vehicle_ci = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_ICON]
             vehicle_cc = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_COLORS]
             class_tag = info.vehicleType.classTag
-            vehicle[CONSTANTS.INDEX] = len(self.shots[log_name])
+            vehicle[CONSTANTS.INDEX] = len(log_dict[CONSTANTS.SHOTS])
             vehicle[CONSTANTS.DAMAGE_LIST] = [damage]
             vehicle[CONSTANTS.VEHICLE_CLASS] = class_tag
             vehicle[CONSTANTS.TANK_NAMES] = {info.vehicleType.shortName}
@@ -223,16 +227,17 @@ class DamageLog(DamageLogsMeta):
         vehicle_max_health = cache.arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
         percent = float(vehicle[CONSTANTS.TOTAL_DAMAGE]) / vehicle_max_health
         vehicle[CONSTANTS.PERCENT_AVG_COLOR] = self.percentToRBG(percent, **settings[CONSTANTS.AVG_COLOR])
-        callback(0.1, lambda: self.updateExtendedLog(log_dict, settings, log_name))
+        callback(0.1, lambda: self.updateExtendedLog(log_dict, settings))
 
-    def updateExtendedLog(self, log_dict, settings, log_name, altMode=False):
+    def updateExtendedLog(self, log_dict, settings, altMode=False):
         """
         Final log processing and flash output,
         also works when the alt mode is activated by hot key.
         """
         if log_dict:
+            log_name = CONSTANTS.D_LOG if log_dict is self.damage_log else CONSTANTS.IN_LOG
             template = GLOBAL.EMPTY_LINE.join(settings[CONSTANTS.LOG_MODE[int(altMode)]])
-            log = self.shots[log_name]
+            log = log_dict[CONSTANTS.SHOTS]
             if len(log) > CONSTANTS.LOG_MAX_LEN:
                 log = log[-CONSTANTS.LOG_MAX_LEN:]
             data = reversed(log) if settings[CONSTANTS.REVERSE] else log
