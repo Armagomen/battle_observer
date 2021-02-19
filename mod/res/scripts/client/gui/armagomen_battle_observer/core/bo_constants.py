@@ -358,10 +358,8 @@ class POSTMORTEM:
         pass
 
     CALLBACK_TIME_SEC = 1.0
-    TRANSITION = "postmortemTransition"
     DURATION = "transitionDuration"
     PARAMS = "postmortemParams"
-    NAME = "postmortem_panel"
 
 
 class ARMOR_CALC:

@@ -157,11 +157,9 @@ def enablePostMortem(base_enable, mode, **kwargs):
     if POSTMORTEM.PARAMS in kwargs:
         kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, cfg.arcade_camera[ARCADE.START_DEAD_DIST])
     if not PostMortemControlMode.getIsPostmortemDelayEnabled():
-        if cfg.arcade_camera[POSTMORTEM.TRANSITION] and kwargs.get(POSTMORTEM.DURATION) is None:
-            avatar_getter.setForcedGuiControlMode(True)
-            callback_time = max(POSTMORTEM.CALLBACK_TIME_SEC, cfg.arcade_camera[POSTMORTEM.DURATION])
-            kwargs[POSTMORTEM.DURATION] = callback_time
-            callback(callback_time, lambda: avatar_getter.setForcedGuiControlMode(False))
+        avatar_getter.setForcedGuiControlMode(True)
+        kwargs[POSTMORTEM.DURATION] = POSTMORTEM.CALLBACK_TIME_SEC
+        callback(POSTMORTEM.CALLBACK_TIME_SEC, lambda: avatar_getter.setForcedGuiControlMode(False))
     return base_enable(mode, **kwargs)
 
 

@@ -208,7 +208,6 @@ class ConfigInterface(CreateElement):
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         vxSettingsApi.onSettingsChanged += self.onSettingsChanged
         vxSettingsApi.onDataChanged += self.onDataChanged
-        g_events.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
 
     def start(self):
         for blockID in CONFIG_INTERFACE.BLOCK_IDS:

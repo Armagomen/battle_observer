@@ -10,6 +10,8 @@ from ..core.core import overrideMethod
 from ..core.events import g_events
 from ..core.keys_parser import g_keysParser
 
+__all__ = ["save_shoot_lite"]
+
 
 class SaveShootLite(object):
 
@@ -54,12 +56,11 @@ class SaveShootLite(object):
             g_events.onKeyPressed -= self.keyEvent
 
     def is_targetAllyOrDeath(self, target):
-        death = False
-        isAlly = False
         if target is not None and target.__class__.__name__ == SAVE_SHOOT.VEHICLE:
             death = not target.isAlive() and self.aliveOnly
             isAlly = target.publicInfo[SAVE_SHOOT.TEAM] == cache.allyTeam
-        return death or isAlly
+            return death or isAlly
+        return False
 
     def keyEvent(self, keyName, isKeyDown):
         if keyName == SAVE_SHOOT.HOT_KEY:

@@ -10,8 +10,6 @@ from ..core.bo_constants import GLOBAL, MINIMAP
 from ..core.config import cfg
 from ..core.core import overrideMethod
 
-SHOW_NAMES = ('hideVehicleName', 'showVehicleName')
-
 
 class BOPersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
@@ -32,21 +30,21 @@ class VehiclesPlugin(plugins.ArenaVehiclesPlugin):
     def __init__(self, *args, **kwargs):
         super(VehiclesPlugin, self).__init__(*args, **kwargs)
 
-    def _ArenaVehiclesPlugin__showVehicle(self, vehicleID, location):
+    def _showVehicle(self, vehicleID, location):
         entry = self._entries.get(vehicleID, None)
         if entry is not None and entry.isAlive():
             matrix = matrix_factory.makeVehicleMPByLocation(vehicleID, location, self._arenaVisitor.getArenaPositions())
             if matrix is not None:
                 self._ArenaVehiclesPlugin__setLocationAndMatrix(entry, location, matrix)
-                self._ArenaVehiclesPlugin__setInAoI(entry, True)
+                self._setInAoI(entry, True)
                 self._ArenaVehiclesPlugin__setActive(entry, True)
 
-    def _ArenaVehiclesPlugin__hideVehicle(self, entry):
+    def _hideVehicle(self, entry):
         if entry.isAlive() and entry.isActive():
             matrix = entry.getMatrix()
             if matrix is not None:
                 matrix = matrix_factory.convertToLastSpottedVehicleMP(matrix)
-            self._ArenaVehiclesPlugin__setInAoI(entry, False)
+            self._setInAoI(entry, False)
             self._ArenaVehiclesPlugin__setLocationAndMatrix(entry, VEHICLE_LOCATION.UNDEFINED, matrix)
 
     def _ArenaVehiclesPlugin__setDestroyed(self, vehicleID, entry):
@@ -55,13 +53,18 @@ class VehiclesPlugin(plugins.ArenaVehiclesPlugin):
             if not entry.isActive():
                 self._ArenaVehiclesPlugin__setActive(entry, True)
             if entry.isActive() and not entry.isInAoI():
-                self._ArenaVehiclesPlugin__setInAoI(entry, True)
+                self._setInAoI(entry, True)
             self._invoke(entry._entryID, 'setDead', True)
             self._move(entry._entryID, CONTAINER_NAME.DEAD_VEHICLES)
-            self._invoke(entry._entryID,
-                         SHOW_NAMES[int(cfg.minimap[MINIMAP.DEATH_PERMANENT] and cfg.minimap[MINIMAP.SHOW_NAMES])])
+            self._invoke(entry._entryID, self._showNames)
         else:
             self._ArenaVehiclesPlugin__setActive(entry, False)
+
+    @property
+    def _showNames(self):
+        if cfg.minimap[MINIMAP.DEATH_PERMANENT] and cfg.minimap[MINIMAP.SHOW_NAMES]:
+            return 'showVehicleName'
+        return 'hideVehicleName'
 
 
 @overrideMethod(MinimapComponent, "_setupPlugins")

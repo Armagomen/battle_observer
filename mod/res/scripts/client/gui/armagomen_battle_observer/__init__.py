@@ -56,19 +56,11 @@ class BattleObserver(object):
                 g_events.onPlayerShooting(avatar)
             return base(avatar, shooterID, *args)
 
-        def tryLoadHangarSettings(spaceID):
-            if spaceID == GuiGlobalSpaceID.LOGIN:
-                ServicesLocator.appLoader.onGUISpaceEntered -= tryLoadHangarSettings
-                from .hangar import config_interface_loader
-                config_interface_loader.check()
-
         @overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")
         def getOwnVehicleShotDispersionAngle(base, *args, **kwargs):
             dispersion_angle = base(*args, **kwargs)
             g_events.onDispersionAngleUpdate(dispersion_angle[GLOBAL.FIRST])
             return dispersion_angle
-
-        ServicesLocator.appLoader.onGUISpaceEntered += tryLoadHangarSettings
 
     def start(self):
         if self.isLoading:

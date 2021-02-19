@@ -7,6 +7,9 @@ import time
 import Keys
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
+from gui.shared.personality import ServicesLocator
+from skeletons.gui.app_loader import GuiGlobalSpaceID
+from .bo_constants import API_VERSION
 from .bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, \
     DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, LOAD_LIST, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, POSTMORTEM, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, \
@@ -197,9 +200,7 @@ class Config(object):
             GLOBAL.ENABLED: False,
             ARCADE.MIN: 4.0,
             ARCADE.MAX: 80.0,
-            ARCADE.START_DEAD_DIST: 20.0,
-            POSTMORTEM.TRANSITION: True,
-            POSTMORTEM.DURATION: POSTMORTEM.CALLBACK_TIME_SEC
+            ARCADE.START_DEAD_DIST: 20.0
         }
         self.strategic_camera = {
             GLOBAL.ENABLED: False,
@@ -514,12 +515,14 @@ cfg = Config()
 
 
 class ConfigLoader(object):
-    __slots__ = ('cName', 'path', 'configsList')
+    __slots__ = ('cName', 'path', 'configsList', 'configInterface')
 
     def __init__(self):
         self.cName = None
         self.path = os.path.join(m_core.modsDir, "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
+        self.configInterface = None
+        ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
 
     def start(self):
         self.getConfig(self.path)
@@ -642,7 +645,28 @@ class ConfigLoader(object):
                 self.createFileInDir(file_path, internal_cfg)
             g_events.onSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
-        g_events.onUserConfigUpdateComplete()
+        if self.configInterface is not None:
+            self.configInterface.onUserConfigUpdateComplete()
+
+    def loadHangarSettings(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.LOGIN:
+            ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings
+            try:
+                from gui.modsListApi import g_modsListApi
+                from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents, __version__
+            except ImportError as err:
+                msg = "%s: Settings API not loaded" % repr(err)
+                logWarning(msg)
+            else:
+                from distutils.version import LooseVersion
+                if LooseVersion(__version__) >= LooseVersion(API_VERSION):
+                    from ..hangar.hangar_settings import ConfigInterface
+                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents)
+                    self.configInterface.start()
+                else:
+                    msg = "Settings API not loaded, v{} it`s fake or not supported api, current version is {}, " \
+                          "please remove old versions from mods dir.".format(__version__, API_VERSION)
+                    logWarning(msg)
 
 
 c_Loader = ConfigLoader()

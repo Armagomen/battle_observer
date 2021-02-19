@@ -77,11 +77,10 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def updateMainGun(self):
         self.gunLeft = self._gunScore - self._damage
-        gunFailed = self.healthFailed or self.playerDead
-        mainGunAchieved = self.gunLeft <= GLOBAL.ZERO and not gunFailed
+        mainGunAchieved = self.gunLeft <= GLOBAL.ZERO
         self.macros.update(mainGun=GLOBAL.EMPTY_LINE if mainGunAchieved else self.gunLeft,
                            mainGunDoneIcon=self.gunIcons[mainGunAchieved][GLOBAL.FIRST],
-                           mainGunFailureIcon=self.gunIcons[gunFailed][GLOBAL.LAST])
+                           mainGunFailureIcon=self.gunIcons[self.healthFailed or self.playerDead][GLOBAL.LAST])
         self.as_mainGunTextS(config[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onPlayerVehicleDeath(self, killerID):
