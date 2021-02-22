@@ -72,7 +72,7 @@ def checkAndReplaceAlias(aliases):
 @overrideMethod(SharedPage)
 def new_SharedPage_init(base, page, *args, **kwargs):
     base(page, *args, **kwargs)
-    if b_core.isAllowedBattleType()[0]:
+    if b_core.isAllowedBattleType()[GLOBAL.FIRST]:
         config = page._SharedPage__componentsConfig._ComponentsConfig__config
         newConfig = tuple((i, checkAndReplaceAlias(aliases)) for i, aliases in config)
         page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig

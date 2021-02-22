@@ -12,7 +12,7 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 from .bo_constants import API_VERSION
 from .bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, \
     DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, LOAD_LIST, MAIN, MAIN_GUN, MARKERS, \
-    MINIMAP, PANELS, POSTMORTEM, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, \
+    MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, \
     USER_BACKGROUND, VEHICLE_TYPES
 from .bw_utils import logInfo, logWarning
 from .core import m_core
@@ -211,10 +211,7 @@ class Config(object):
             GLOBAL.ENABLED: False,
             ARMOR_CALC.SHOW_POINTS: True,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 100},
-            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(calcedArmor).1f | %(piercingPower)s</font>",
-            ARMOR_CALC.MESSAGES: ARMOR_CALC.DEFAULT_MESSAGES,
-            ARMOR_CALC.SHOW_MESSAGE: False,
-            ARMOR_CALC.TEXT_POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 150}
+            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(calcedArmor).1f | %(piercingPower)s</font>"
         }
         self.colors = {
             MAIN_GUN.NAME: {
@@ -474,7 +471,6 @@ class Config(object):
         }
         self.flight_time = {
             GLOBAL.ENABLED: False,
-            FLIGHT_TIME.WG_DIST_DISABLE: False,
             GLOBAL.X: -110,
             GLOBAL.Y: GLOBAL.ZERO,
             FLIGHT_TIME.SPG_ONLY: True,

@@ -9,7 +9,9 @@ class Loader(object):
 
     def __init__(self):
         self.modules = (
+            'core.inject_flash',
             'core.battle_core',
+            'core.update',
             # 'core.analytics',
             'no_flash_comp.camera',
             'no_flash_comp.badges',
@@ -27,7 +29,8 @@ class Loader(object):
         for modulePath in self.modules:
             self.loadModule(MOD_PATH.format(modulePath))
 
-    def loadModule(self, modulePath):
+    @staticmethod
+    def loadModule(modulePath):
         if modulePath in sys.modules:
             logWarning("{} module already loaded".format(modulePath))
             return

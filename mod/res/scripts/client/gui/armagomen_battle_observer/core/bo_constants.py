@@ -367,21 +367,16 @@ class ARMOR_CALC:
         pass
 
     BACKWARD_LENGTH = 0.1
-    DEFAULT_MESSAGES = {"green": "100%", "orange": "50%", "red": "0%", "yellow": "50%", "purple": "0%"}
     EFFECTIVE_DISTANCE = 400.0
     FORWARD_LENGTH = 10.0
-    GREAT_PIERCED = 0.75
-    HALF = 0.22
-    MESSAGES = "messages"
+    GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
+    HALF = 0.3
     MIN_DIST = 100.0
     NAME = "armor_calculator"
-    NOT_PIERCED = 1.25
     POSITION = "calcPosition"
-    SHOW_MESSAGE = "showTextMessage"
     SHOW_POINTS = "showCalcPoints"
     SKIP_DETAILS = {TankPartIndexes.CHASSIS, TankPartIndexes.GUN}
     TEMPLATE = "template"
-    TEXT_POSITION = "textMessagePosition"
     MACROS_COLOR = "color"
     MACROS_CALCED_ARMOR = "calcedArmor"
     MACROS_ARMOR = "armor"

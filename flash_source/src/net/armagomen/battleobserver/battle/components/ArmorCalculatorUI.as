@@ -11,7 +11,6 @@ package net.armagomen.battleobserver.battle.components
 	public class ArmorCalculatorUI extends BattleDisplayable
 	{
 		private var armorCalc:TextField;
-		private var message:TextField;
 		public var getShadowSettings:Function;
 		private var currentControlMode:String = "arcade";
 
@@ -44,7 +43,6 @@ package net.armagomen.battleobserver.battle.components
 				this.removeChildAt(0);
 			}
 			this.armorCalc = null;
-			this.message = null;
 			var page:* = parent;
 			page.unregisterComponent(this.name);
 		}
@@ -64,10 +62,6 @@ package net.armagomen.battleobserver.battle.components
 			if (calc.enabled && calc.showCalcPoints)
 			{
 				this.armorCalc = new TextExt("armorCalc", calc.calcPosition.x, calc.calcPosition.y, Filters.middleText, TextFieldAutoSize.CENTER, shadowSettings, this);
-			}
-			if (calc.enabled && calc.showTextMessage)
-			{
-				this.message = new TextExt("message", calc.textMessagePosition.x, calc.textMessagePosition.y, Filters.middleText, TextFieldAutoSize.CENTER, shadowSettings, this);
 			}
 			App.utils.data.cleanupDynamicObject(calc);
 		}
@@ -90,15 +84,6 @@ package net.armagomen.battleobserver.battle.components
 			if (armorCalc)
 			{
 				armorCalc.htmlText = text;
-			}
-		}
-
-		public function as_setCalcMessage(enable:Boolean, text:String):void
-		{
-			if (message)
-			{
-				message.visible = enable;
-				message.htmlText = text;
 			}
 		}
 

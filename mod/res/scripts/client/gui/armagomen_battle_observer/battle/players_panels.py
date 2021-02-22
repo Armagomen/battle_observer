@@ -127,7 +127,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.as_setVehicleIconColorS(vehicleID, self.vClassColors[classTag], config[PANELS.BLACKOUT], enemy)
 
     def healthOnAlt(self, enable):
-        for vehicleID, vehicle in self._vehicles:
+        for vehicleID in self._vehicles:
             self.as_setHPbarsVisibleS(vehicleID, enable)
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):

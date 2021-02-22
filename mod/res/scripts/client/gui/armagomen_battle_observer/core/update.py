@@ -173,3 +173,4 @@ class UpdateMain(object):
 
 
 g_update = UpdateMain()
+result = g_update.subscribe()

@@ -8,7 +8,6 @@ class Events(object):
         self.onPlayerVehicleDeath = SafeEvent()
         self.onPlayerKilledEnemy = SafeEvent()
         self.onKeyPressed = SafeEvent()
-        self.updateStatus = SafeEvent()
         self.onSettingsChanged = SafeEvent()
         self.onUserConfigUpdateComplete = SafeEvent()
         self.onPlayerShooting = SafeEvent()

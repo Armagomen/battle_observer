@@ -1,14 +1,16 @@
 from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from gui.battle_control.controllers.debug_ctrl import IDebugPanel
+from gui.battle_control.controllers import debug_ctrl
 from gui.shared.personality import ServicesLocator
 from ..core.bo_constants import DEBUG_PANEL, GLOBAL, COLORS
 from ..core.config import cfg
 from ..meta.battle.debug_panel_meta import DebugPanelMeta
 
+debug_ctrl._UPDATE_INTERVAL = 0.4
 
-class DebugPanel(DebugPanelMeta, IDebugPanel):
+
+class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
 
     def __init__(self):
         super(DebugPanel, self).__init__()

@@ -33,22 +33,7 @@ class BattleObserver(object):
 
     @staticmethod
     def enableHooks():
-        from .core.inject_flash import g_flash
-        g_flash.inject()
-
         from Avatar import PlayerAvatar
-        from gui.Scaleform.daapi.view.battle.classic.stats_exchange import ClassicStatisticsDataController
-        from gui.Scaleform.daapi.view.battle.epic.stats_exchange import EpicStatisticsDataController
-        from gui.Scaleform.daapi.view.battle.epic_random.stats_exchange import EpicRandomStatisticsDataController
-        from gui.Scaleform.daapi.view.battle.ranked.stats_exchange import RankedStatisticsDataController
-
-        @overrideMethod(EpicRandomStatisticsDataController, "as_updateVehicleStatusS")
-        @overrideMethod(EpicStatisticsDataController, "as_updateVehicleStatusS")
-        @overrideMethod(RankedStatisticsDataController, "as_updateVehicleStatusS")
-        @overrideMethod(ClassicStatisticsDataController, "as_updateVehicleStatusS")
-        def updateVehicleStatusS(base, *args, **kwargs):
-            g_events.updateStatus(*args, **kwargs)
-            return base(*args, **kwargs)
 
         @overrideMethod(PlayerAvatar, "showTracer")
         def showTracer(base, avatar, shooterID, *args):
@@ -65,8 +50,6 @@ class BattleObserver(object):
     def start(self):
         if self.isLoading:
             m_core.modMessage(MASSAGES.START)
-            from .core.update import g_update
-            g_update.subscribe()
             from .core.config import c_Loader
             from .core.loader import m_Loader
             m_Loader.start()

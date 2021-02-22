@@ -22,12 +22,9 @@ class ArmorCalculator(ArmorCalcMeta):
         self.p500 = GLOBAL.F_ONE
         self.calcCache = GLOBAL.ZERO
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.messages = ARMOR_CALC.DEFAULT_MESSAGES
-        self.messages.update(config[ARMOR_CALC.MESSAGES])
         self.typeColors = cfg.colors[ARMOR_CALC.NAME]
         self.template = config[ARMOR_CALC.TEMPLATE]
         self.showCalcPoints = config[ARMOR_CALC.SHOW_POINTS]
-        self.showTextMessage = config[ARMOR_CALC.SHOW_MESSAGE]
         self.wg_updateColor = ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor
 
     def onEnterBattlePage(self):
@@ -85,8 +82,6 @@ class ArmorCalculator(ArmorCalcMeta):
             setGunMarkerColor = iPlugin._parentObj.setGunMarkerColor
             if cache[markerType] != result and setGunMarkerColor(markerType, color):
                 cache[markerType] = result
-                if self.showTextMessage:
-                    self.as_setCalcMessageS(bool(result), self.messages.get(color, GLOBAL.EMPTY_LINE))
                 if counted_armor is None:
                     self.clearView()
                     return
@@ -111,8 +106,6 @@ class ArmorCalculator(ArmorCalcMeta):
     def clearView(self, *args):
         if self.showCalcPoints:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
-        if self.showTextMessage:
-            self.as_setCalcMessageS(False, GLOBAL.EMPTY_LINE)
         self.setVisible(False)
 
     def getCountedArmor(self, collision, targetPos, direction):

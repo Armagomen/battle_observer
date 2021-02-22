@@ -1,4 +1,5 @@
 import BigWorld
+import Math
 
 from .bo_constants import MOD_NAME
 
@@ -51,3 +52,7 @@ def restartGame():
 
 def openWebBrowser(url):
     BigWorld.wg_openWebBrowser(url)
+
+
+def vector3(x, y, z):
+    return Math.Vector3(x, y, z)
