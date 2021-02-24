@@ -14,6 +14,14 @@ API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
+SOUND_MODES = {'bb21_eu4_Orzanel', 'bb21_ru3_Lebwa', 'eu1_Mailand', 'uniqueCrewSpecialVoice', 'eu4_AwesomeEpicGuys',
+               'eu3_Dezgamez', 'bb21_na2_Tragicloss', 'ru1_Lebwa', 'ru3_Amway921', 'bb21_na1_Cabbagemechanic',
+               'offspring', 'bb21_ru2_Amway921', 'bb21_ru4_Evilgranny', 'ru4_KorbenDallas', 'bb21_ru2_Korbendailas',
+               'bb21_ru1_Yusha', 'celebrity2021_ru', 'buffon', 'bb21_na3_Cmdraf', 'valkyrie1', 'valkyrie2',
+               'bb21_eu2_Dakillzor', 'sabaton', 'bb21_ru1_Vspishka', 'bb21_eu3_Newmulti2k', 'racer_ru', 'racer_en',
+               'ru2_Yusha', 'bb21_ru4_Nearyou', 'eu2_Skill4ltu', 'bb21_asia2_Summertiger', 'bb21_eu1_Circon',
+               'bb21_asia3_Maharlika', 'bb21_ru3_Inspirer', 'bb21_asia1_Mastertortoise', 'celebrity2021_en'}
+
 
 class SWF:
     def __init__(self):
@@ -135,6 +143,7 @@ class MAIN:
     USE_KEY_PAIRS = "useKeyPairs"
     REMOVE_HANDBRAKE = "removeHandbrake"
     HIDE_POSTMORTEM_TIPS = "hide_postmortem_tips"
+    IGNORE_COMMANDERS = "ignore_commanders_voice"
 
 
 class COLORS:

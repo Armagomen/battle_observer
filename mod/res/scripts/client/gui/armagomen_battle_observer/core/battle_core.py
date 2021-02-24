@@ -1,10 +1,11 @@
 from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
+from SoundGroups import SoundModes
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from gui.shared.personality import ServicesLocator
 from .battle_cache import cache
-from .bo_constants import MAIN
+from .bo_constants import MAIN, SOUND_MODES
 from .bw_utils import getPlayer, setMaxFrameRate
 from .config import cfg
 from .core import overrideMethod
@@ -54,6 +55,14 @@ class _BattleCore(object):
                                                          ARENA_GUI_TYPE.FORT_BATTLE_2,
                                                          ARENA_GUI_TYPE.SORTIE_2)
         return enabled, arenaVisitor
+
+    @staticmethod
+    @overrideMethod(SoundModes, 'setMode')
+    def setSoundMode(base, mode, modeName):
+        if cfg.main[MAIN.IGNORE_COMMANDERS]:
+            if modeName in SOUND_MODES:
+                modeName = SoundModes.DEFAULT_MODE_NAME
+        return base(mode, modeName)
 
     def onEnterBattlePage(self):
         cache.player = getPlayer()

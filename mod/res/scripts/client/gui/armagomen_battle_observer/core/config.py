@@ -39,7 +39,8 @@ class Config(object):
             MAIN.AUTO_CLEAR_CACHE: False,
             MAIN.USE_KEY_PAIRS: False,
             MAIN.REMOVE_HANDBRAKE: False,
-            MAIN.HIDE_POSTMORTEM_TIPS: False
+            MAIN.HIDE_POSTMORTEM_TIPS: False,
+            MAIN.IGNORE_COMMANDERS: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,

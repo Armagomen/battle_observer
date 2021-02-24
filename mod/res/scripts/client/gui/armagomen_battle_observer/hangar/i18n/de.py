@@ -62,6 +62,10 @@ translate = {
                                         "<br> - Navigationstipps"
                                         "<br> - Token anzeigen"
                                         "<br> - zeigt Informationen über den Spieler an, der dich zerstört hat",
+        "ignore_commanders_voice": "Ignore commander voiceover.",
+        "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
+                                           "The parameter will replace all voiceovers of bloggers, "
+                                           "Chuck Norris and so on with the standard / from the voiceover mod. "
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
