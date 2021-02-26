@@ -2,7 +2,6 @@ from account_helpers.settings_core.settings_constants import GAME, GRAPHICS
 from gui.battle_control.arena_info.vos_collections import FragCorrelationSortKey
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.shared.personality import ServicesLocator
-from ..core.battle_cache import cache
 from ..core.bo_constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
 from ..core.config import cfg
 from ..core.events import g_events
@@ -14,19 +13,21 @@ settingsCore = ServicesLocator.settingsCore
 
 class CorrelationMarkers(object):
 
-    def __init__(self):
+    def __init__(self, arenaDP):
+        self._arenaDP = arenaDP
+        self.__allyTeam = self._arenaDP.getNumberOfTeam()
+        self.__enemyTeam = self._arenaDP.getNumberOfTeam(enemy=True)
         self.mcColor = cfg.markers[MARKERS.CLASS_COLOR]
         self.vcColor = cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         self.color = self.updateMarkersColorDict()
         self.enabled = settingsCore.getSetting(GAME.SHOW_VEHICLES_COUNTER)
 
-    @staticmethod
-    def updateMarkersColorDict():
+    def updateMarkersColorDict(self):
         dead_color = cfg.colors[MARKERS.NAME][MARKERS.DEAD_COLOR]
         blind = MARKERS.ENEMY_COLOR_BLIND if settingsCore.getSetting(GRAPHICS.COLOR_BLIND) else MARKERS.ENEMY
         return {
-            cache.allyTeam: {MARKERS.NOT_ALIVE: dead_color, MARKERS.ALIVE: cfg.colors[MARKERS.NAME][MARKERS.ALLY]},
-            cache.enemyTeam: {MARKERS.NOT_ALIVE: dead_color, MARKERS.ALIVE: cfg.colors[MARKERS.NAME][blind]}
+            self.__allyTeam: {MARKERS.NOT_ALIVE: dead_color, MARKERS.ALIVE: cfg.colors[MARKERS.NAME][MARKERS.ALLY]},
+            self.__enemyTeam: {MARKERS.NOT_ALIVE: dead_color, MARKERS.ALIVE: cfg.colors[MARKERS.NAME][blind]}
         }
 
     def getIcon(self, vInfoVO):
@@ -39,9 +40,8 @@ class CorrelationMarkers(object):
 
     def getMarkers(self):
         left, right = [], []
-        allyTeam = cache.allyTeam
-        for vInfoVO in sorted(cache.arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
-            if vInfoVO.team == allyTeam:
+        for vInfoVO in sorted(self._arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
+            if vInfoVO.team == self.__allyTeam:
                 left.append(self.getIcon(vInfoVO))
             else:
                 right.append(self.getIcon(vInfoVO))
@@ -52,9 +52,9 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def __init__(self):
         super(TeamsHP, self).__init__()
-        self.gui = self.sessionProvider.arenaVisitor.gui
-        self.showAliveCount = cfg.hp_bars[HP_BARS.ALIVE] and self.isRandomOrRanked()
-        self.markers = CorrelationMarkers() if cfg.markers[GLOBAL.ENABLED] and self.isRandomOrRanked() else None
+        self.gui = self._arenaVisitor.gui
+        self.showAliveCount = cfg.hp_bars[HP_BARS.ALIVE] and self.isNormalMode
+        self.markers = CorrelationMarkers(self._arenaDP) if cfg.markers[GLOBAL.ENABLED] and self.isNormalMode else None
 
     def _populate(self):
         super(TeamsHP, self)._populate()
@@ -84,7 +84,8 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         if self.markers is not None and self.markers.enabled:
             self.as_markersS(*self.markers.getMarkers())
 
-    def isRandomOrRanked(self):
+    @property
+    def isNormalMode(self):
         return self.gui.isRandomBattle() or self.gui.isRankedBattle() or self.gui.isTrainingBattle()
 
     @staticmethod

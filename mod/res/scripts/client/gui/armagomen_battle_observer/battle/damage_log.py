@@ -196,7 +196,7 @@ class DamageLog(DamageLogsMeta):
             log_dict[CONSTANTS.SHOTS].append(vehicle_id)
         gold, shell_icon_name, shell_type = self.checkShell(attack_reason_id, gold, is_dlog, shell_type)
         vehicle = log_dict.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
-        info = cache.arenaDP.getVehicleInfo(vehicle_id)
+        info = self._arenaDP.getVehicleInfo(vehicle_id)
         if vehicle:
             vehicle[CONSTANTS.DAMAGE_LIST].append(damage)
             vehicle[CONSTANTS.TANK_NAMES].add(info.vehicleType.shortName)
@@ -214,6 +214,8 @@ class DamageLog(DamageLogsMeta):
             vehicle[CONSTANTS.KILLED_ICON] = GLOBAL.EMPTY_LINE
             vehicle[CONSTANTS.CLASS_ICON] = vehicle_ci.get(class_tag, vehicle_ci[CONSTANTS.UNKNOWN_TAG])
             vehicle[CONSTANTS.CLASS_COLOR] = vehicle_cc.get(class_tag, vehicle_cc[CONSTANTS.UNKNOWN_TAG])
+            vehicle_id = cache.player.playerVehicleID if not is_dlog else vehicle_id
+            vehicle[CONSTANTS.MAX_HEALTH] = self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
         vehicle[CONSTANTS.SHOTS] = len(vehicle[CONSTANTS.DAMAGE_LIST])
         vehicle[CONSTANTS.TOTAL_DAMAGE] = sum(vehicle[CONSTANTS.DAMAGE_LIST])
         vehicle[CONSTANTS.ALL_DAMAGES] = CONSTANTS.COMMA.join(str(x) for x in vehicle[CONSTANTS.DAMAGE_LIST])
@@ -223,9 +225,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[CONSTANTS.SHELL_ICON] = settings[CONSTANTS.SHELL_ICONS][shell_icon_name]
         vehicle[CONSTANTS.SHELL_COLOR] = settings[CONSTANTS.SHELL_COLOR][CONSTANTS.SHELL[gold]]
         vehicle[CONSTANTS.TANK_NAME] = CONSTANTS.LIST_SEPARATOR.join(sorted(vehicle[CONSTANTS.TANK_NAMES]))
-        vehicle_id = cache.player.playerVehicleID if not is_dlog else vehicle_id
-        vehicle_max_health = cache.arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
-        percent = float(vehicle[CONSTANTS.TOTAL_DAMAGE]) / vehicle_max_health
+        percent = float(vehicle[CONSTANTS.TOTAL_DAMAGE]) / vehicle[CONSTANTS.MAX_HEALTH]
         vehicle[CONSTANTS.PERCENT_AVG_COLOR] = self.percentToRBG(percent, **settings[CONSTANTS.AVG_COLOR])
         callback(0.1, lambda: self.updateExtendedLog(log_dict, settings))
 
@@ -245,3 +245,4 @@ class DamageLog(DamageLogsMeta):
                 if vehicleID in log_dict[CONSTANTS.KILLS] and not log_dict[vehicleID][CONSTANTS.KILLED_ICON]:
                     log_dict[vehicleID][CONSTANTS.KILLED_ICON] = settings[CONSTANTS.KILLED_ICON]
             self.as_updateLogS(log_name, CONSTANTS.NEW_LINE.join(template % log_dict[key] for key in data))
+

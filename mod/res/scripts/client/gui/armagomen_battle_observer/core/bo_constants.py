@@ -261,6 +261,7 @@ class DAMAGE_LOG:
     AVG_DAMAGE = "tankAvgDamage"
     BLOCKED_DAMAGE = "blockedDamage"
     CLASS_COLOR = "tankClassColor"
+    MAX_HEALTH = "max_health"
     CLASS_ICON = "classIcon"
     COLOR_MAX_PURPLE, COLOR_MAX_GREEN, COLOR_MULTIPLIER = (0.8333, 0.3333, 255)
     COLOR_FORMAT = "#{:02X}{:02X}{:02X}"

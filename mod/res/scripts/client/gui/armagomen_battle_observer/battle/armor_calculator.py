@@ -26,6 +26,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self.template = config[ARMOR_CALC.TEMPLATE]
         self.showCalcPoints = config[ARMOR_CALC.SHOW_POINTS]
         self.wg_updateColor = ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor
+        self.__allyTeam = self._arenaDP.getNumberOfTeam()
 
     def onEnterBattlePage(self):
         super(ArmorCalculator, self).onEnterBattlePage()
@@ -111,7 +112,7 @@ class ArmorCalculator(ArmorCalcMeta):
     def getCountedArmor(self, collision, targetPos, direction):
         if collision and collision.isVehicle:
             entity = collision.entity
-            if entity.publicInfo[VEHICLE.TEAM] != g_cache.allyTeam and entity.isAlive():
+            if entity.publicInfo[VEHICLE.TEAM] != self.__allyTeam and entity.isAlive():
                 details = self.getAllCollisionDetails(targetPos, direction, entity)
                 if details is not None:
                     notUseCos = GLOBAL.ZERO

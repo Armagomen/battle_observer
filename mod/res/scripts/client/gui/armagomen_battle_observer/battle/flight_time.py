@@ -19,7 +19,6 @@ class FlightTime(FlightTimeMeta):
         super(FlightTime, self).__init__()
         self.template = config[FLIGHT_TIME.TEMPLATE]
         self.isSPG = False
-        self.arenaVisitor = self.sessionProvider.arenaVisitor
         self.shared = self.sessionProvider.shared
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
                                       {FLIGHT_TIME.M_FLIGHT_TIME: GLOBAL.ZERO, FLIGHT_TIME.M_DISTANCE: GLOBAL.ZERO})
@@ -39,7 +38,7 @@ class FlightTime(FlightTimeMeta):
         if self.checkSpgOnlyConfig():
             if self.shared.crosshair:
                 self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
-            arena = self.arenaVisitor.getArenaSubscription()
+            arena = self._arenaVisitor.getArenaSubscription()
             if arena:
                 arena.onVehicleKilled += self.__onVehicleKilled
             handler = avatar_getter.getInputHandler()
@@ -51,7 +50,7 @@ class FlightTime(FlightTimeMeta):
         if self.checkSpgOnlyConfig():
             if self.shared.crosshair:
                 self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
-            arena = self.arenaVisitor.getArenaSubscription()
+            arena = self._arenaVisitor.getArenaSubscription()
             if arena:
                 arena.onVehicleKilled -= self.__onVehicleKilled
             handler = avatar_getter.getInputHandler()

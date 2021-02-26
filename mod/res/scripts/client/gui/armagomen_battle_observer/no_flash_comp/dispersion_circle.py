@@ -142,7 +142,6 @@ class DispersionCircle(object):
             if self.enabled:
                 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
-
     def enableServerAim(self, server=True):
         if not bool(ServicesLocator.settingsCore.getSetting(DISPERSION_CIRCLE.CIRCLE_SERVER)):
             cache.player.enableServerAim(server)

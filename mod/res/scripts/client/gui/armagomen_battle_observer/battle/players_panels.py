@@ -28,7 +28,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesEnable = config[PANELS.DAMAGES_ENABLED]
         self.damagesText = config[PANELS.DAMAGES_TEMPLATE]
         self.damagesSettings = config[PANELS.DAMAGES_SETTINGS]
-        self.gui = self.sessionProvider.arenaVisitor.gui
+        self.gui = self._arenaVisitor.gui
         self.battle_ctx = self.sessionProvider.getCtx()
         self._vehicles = set()
 
@@ -76,7 +76,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                     self.as_colorBlindPPbarsS(vehicleID, self.COLORS[self.battle_ctx.isEnemy(vehicleID)])
 
     def addVehicleToStorage(self, vehicleID):
-        vInfoVO = cache.arenaDP.getVehicleInfo(vehicleID)
+        vInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
         if vInfoVO.isObserver():
             return
         self._vehicles.add(vehicleID)
