@@ -1,11 +1,8 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.shared.personality import ServicesLocator
-from ..core.battle import cache
 from ..core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
-from ..core.config import cfg
-from ..core.events import g_events
-from ..core.utils import keysParser
+from ..core import cfg, cache, keysParser
 from ..core.utils.bw_utils import getEntity
 from ..meta.battle.players_panels_meta import PlayersPanelsMeta
 
@@ -39,7 +36,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if not isInEpicRange and not isEpicRandomBattle:
             if self.hpBarsEnable and self.barsOnKey:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, config[PANELS.BAR_HOT_KEY])
-            g_events.onKeyPressed += self.onKeyPressed
+            keysParser.onKeyPressed += self.onKeyPressed
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.damagesEnable:
                 arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
@@ -51,7 +48,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         isInEpicRange = self.gui.isInEpicRange()
         isEpicRandomBattle = self.gui.isEpicRandomBattle()
         if not isInEpicRange and not isEpicRandomBattle:
-            g_events.onKeyPressed -= self.onKeyPressed
+            keysParser.onKeyPressed -= self.onKeyPressed
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
             if self.damagesEnable:
                 arena = self.sessionProvider.arenaVisitor.getArenaSubscription()

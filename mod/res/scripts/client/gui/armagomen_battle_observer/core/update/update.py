@@ -17,7 +17,6 @@ from web.cache.web_downloader import WebDownloader
 from ..bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
 from ..update.dialog_button import DialogButtons
 from ..utils.bw_utils import restartGame, logInfo, openWebBrowser, logError, logWarning
-from ... import m_core
 from ...hangar.i18n import localization
 
 LAST_UPDATE = defaultdict()
@@ -40,9 +39,10 @@ def fixDialogCloseWindow():
 
 
 class DialogWindow(object):
-    def __init__(self, ver):
+    def __init__(self, ver, m_core):
         self.localization = localization['updateDialog']
         self.newVer = ver
+        self.m_core = m_core
 
     @staticmethod
     def onPressButtonFinished(proceed):
@@ -51,7 +51,7 @@ class DialogWindow(object):
 
     def onPressButtonAvailable(self, proceed):
         if proceed:
-            runDownload = DownloadThread(self.newVer)
+            runDownload = DownloadThread(self.newVer, self.m_core)
             runDownload.start()
         else:
             openWebBrowser(DOWNLOAD_URLS['full'])
@@ -63,7 +63,7 @@ class DialogWindow(object):
         return SimpleDialogMeta(title, message, buttons=button)
 
     def getDialogNewVersionAvailable(self):
-        message = self.localization['messageNEW'].format(self.newVer, m_core.workingDir)
+        message = self.localization['messageNEW'].format(self.newVer, self.m_core.workingDir)
         message += '<br>' + LAST_UPDATE.get("body")
         title = self.localization['titleNEW'].format(self.newVer)
         buttons = DialogButtons(self.localization['buttonAUTO'], self.localization['buttonHANDLE'])
@@ -77,8 +77,9 @@ class DialogWindow(object):
 
 
 class DownloadThread(object):
-    def __init__(self, ver):
+    def __init__(self, ver, m_core):
         self.newVer = ver
+        self.m_core = m_core
         self.downloader = WebDownloader(GLOBAL.ONE)
 
     def start(self):
@@ -92,16 +93,16 @@ class DownloadThread(object):
 
     def onDownloaded(self, _url, data):
         if data is not None:
-            old_files = os.listdir(m_core.workingDir)
+            old_files = os.listdir(self.m_core.workingDir)
             if GLOBAL.DEBUG_MODE:
-                with open(os.path.join(m_core.modsDir, 'update.zip'), mode="wb") as f:
+                with open(os.path.join(self.m_core.modsDir, 'update.zip'), mode="wb") as f:
                     f.write(data)
             with BytesIO(data) as zip_file, ZipFile(zip_file) as archive:
                 for newFile in archive.namelist():
                     if newFile not in old_files:
                         logInfo('update, add new file {}'.format(newFile))
-                        archive.extract(newFile, m_core.workingDir)
-            dialog = DialogWindow(self.newVer)
+                        archive.extract(newFile, self.m_core.workingDir)
+            dialog = DialogWindow(self.newVer, self.m_core)
             dialog.showUpdateFinished()
             logInfo('update downloading finished {}'.format(self.newVer))
         self.downloader.close()
@@ -110,10 +111,12 @@ class DownloadThread(object):
 
 class UpdateMain(object):
 
-    def __init__(self):
+    def __init__(self, m_core):
         is_login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         self.screen_to_load = GuiGlobalSpaceID.LOGIN if is_login_server_selection else GuiGlobalSpaceID.LOBBY
         self.new_version = None
+        self.m_core = m_core
+        self.subscribe()
 
     @async
     def request_last_version(self, url):
@@ -166,8 +169,7 @@ class UpdateMain(object):
                 self.onNewModVersion(self.new_version)
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
-    @staticmethod
-    def onNewModVersion(version):
+    def onNewModVersion(self, version):
         fixDialogCloseWindow()
-        dialog = DialogWindow(version)
+        dialog = DialogWindow(version, self.m_core)
         dialog.showNewVersionAvailable()

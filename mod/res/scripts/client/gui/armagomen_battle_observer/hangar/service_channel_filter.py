@@ -7,8 +7,8 @@ from helpers import getClientLanguage
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
+from ..core import cache
 from ..core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
-from ..core.events import g_events
 from ..core.utils import overrideMethod
 from ..core.utils.bw_utils import openWebBrowser
 
@@ -43,7 +43,7 @@ def onReceivePersonalSysMessage(base, manager, chatAction):
     return base(manager, chatAction)
 
 
-def onSettingsChanged(config, blockID):
+def onModSettingsChanged(config, blockID):
     if blockID == SERVICE_CHANNEL.NAME:
         channel_filter.clear()
         if config[GLOBAL.ENABLED]:
@@ -56,7 +56,7 @@ def onSettingsChanged(config, blockID):
                         channel_filter.add(name)
 
 
-g_events.onSettingsChanged += onSettingsChanged
+cache.onModSettingsChanged += onModSettingsChanged
 
 
 @overrideMethod(NotificationListView, "onClickAction")

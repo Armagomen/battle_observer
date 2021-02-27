@@ -4,13 +4,12 @@ from PlayerEvents import g_playerEvents
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from ..bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES, DISPERSION_CIRCLE
-from ..config import cfg
 from ..utils import overrideMethod
 
 
 class ViewSettings(object):
 
-    def __init__(self, b_core):
+    def __init__(self, cfg, b_core):
         g_playerEvents.onAvatarBecomeNonPlayer += self.clear
         self._b_core = b_core
         self.__cache = defaultdict(bool)

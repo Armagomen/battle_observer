@@ -1,9 +1,8 @@
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE as _ETYPE
-from ..core.utils import overrideMethod
-from ..core.battle import cache
-from ..core.events import g_events
+from ..core import cache
 from ..core.bo_constants import DAMAGE_LOG
+from ..core.utils import overrideMethod
 
 
 class WGLogsFixes(object):
@@ -13,7 +12,7 @@ class WGLogsFixes(object):
 
     def __init__(self):
         self.validated = {}
-        g_events.onSettingsChanged += self.onSettingsChanged
+        cache.onModSettingsChanged += self.onModSettingsChanged
 
         @overrideMethod(DamageLogPanel, "_setSettings")
         def setSettings(base, panel, vis, cb):
@@ -23,7 +22,7 @@ class WGLogsFixes(object):
         def addToLog(base, component, event):
             return base(component, [e for e in event if not self.validated.get(e.getType(), False)])
 
-    def onSettingsChanged(self, config, blockID):
+    def onModSettingsChanged(self, config, blockID):
         if blockID == DAMAGE_LOG.GLOBAL:
             self.validated = self.validateSettings(config)
             DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog, \

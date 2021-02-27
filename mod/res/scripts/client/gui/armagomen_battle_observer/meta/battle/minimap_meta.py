@@ -1,5 +1,6 @@
 from .base_mod_meta import BaseModMeta
 
+
 class MinimapMeta(BaseModMeta):
 
     def __init__(self):

@@ -4,8 +4,7 @@ from math import ceil
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from ..core.bo_constants import MAIN_GUN, GLOBAL
-from ..core.config import cfg
-from ..core.events import g_events
+from ..core import cfg, cache
 from ..meta.battle.main_gun_meta import MainGunMeta
 
 config = cfg.main_gun
@@ -35,14 +34,18 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             feedback = self.sessionProvider.shared.feedback
             if feedback:
                 feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
-            g_events.onPlayerVehicleDeath += self.onPlayerVehicleDeath
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None:
+                arena.onVehicleKilled += self.onVehicleKilled
 
     def onExitBattlePage(self):
         if self.enabled:
             feedback = self.sessionProvider.shared.feedback
             if feedback:
                 feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
-            g_events.onPlayerVehicleDeath -= self.onPlayerVehicleDeath
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None:
+                arena.onVehicleKilled -= self.onVehicleKilled
         self.macros.clear()
         self._damage = GLOBAL.ZERO
         self.enabled = False
@@ -83,7 +86,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
                            mainGunFailureIcon=self.gunIcons[self.healthFailed or self.playerDead][GLOBAL.LAST])
         self.as_mainGunTextS(config[MAIN_GUN.TEMPLATE] % self.macros)
 
-    def onPlayerVehicleDeath(self, killerID):
-        if self.gunLeft > GLOBAL.ZERO:
-            self.playerDead = True
-            self.updateMainGun()
+    def onVehicleKilled(self, targetID, *args, **kwargs):
+        if cache.player.playerVehicleID == targetID:
+            if self.gunLeft > GLOBAL.ZERO:
+                self.playerDead = True
+                self.updateMainGun()

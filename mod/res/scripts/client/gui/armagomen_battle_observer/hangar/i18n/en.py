@@ -288,8 +288,6 @@ translate = {
         "disable_cam_skip_clip": "Do not exit if magazine loading system.",
         "dynamic_zoom*enabled": "Automatic selection of the zoom ratio when switching to sniper mode.",
         "dynamic_zoom*enabled_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
-        "dynamic_zoom*zoom_max": "Maximum zoom ratio for automatic selection",
-        "dynamic_zoom*zoom_min": "Minimum zoom ratio for automatic selection",
         "dynamic_zoom*zoomToGunMarker": "Enable the approximation of the camera to the Central marker information",
         "dynamic_zoom*zoomXMeters": "Sensitivity of approach in meters.",
         "dynamic_zoom*zoomXMeters_tooltip": "(dynamic_zoom = distance / Sensitivity of approach)<br>"

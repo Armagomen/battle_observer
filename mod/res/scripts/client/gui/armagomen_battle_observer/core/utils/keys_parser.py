@@ -1,18 +1,19 @@
+from Event import SafeEvent
 from PlayerEvents import g_playerEvents
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT
 from gui import InputHandler
 from gui.battle_control import avatar_getter
 from ..bo_constants import MAIN
-from ..config import cfg
-from ..events import g_events
 
 
 class HotKeysParser(object):
 
-    def __init__(self):
+    def __init__(self, config):
+        self.config = config
         self.keysMap = dict()
         self.pressedKeys = set()
         self.usableKeys = set()
+        self.onKeyPressed = SafeEvent()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
 
@@ -41,7 +42,7 @@ class HotKeysParser(object):
             if not avatar_getter.isForcedGuiControlMode() or key in self.pressedKeys:
                 isKeyDown = event.isKeyDown()
                 if isKeyDown:
-                    if cfg.main[MAIN.USE_KEY_PAIRS]:
+                    if self.config.main[MAIN.USE_KEY_PAIRS]:
                         if key in KEY_ALIAS_CONTROL:
                             self.pressedKeys.update(KEY_ALIAS_CONTROL)
                         elif key in KEY_ALIAS_ALT:
@@ -51,12 +52,12 @@ class HotKeysParser(object):
                     self.pressedKeys.add(key)
                     for keyName, keys in self.keysMap.iteritems():
                         if self.pressedKeys.issuperset(keys):
-                            g_events.onKeyPressed(keyName, isKeyDown)
+                            self.onKeyPressed(keyName, isKeyDown)
                 else:
                     for keyName, keys in self.keysMap.iteritems():
                         if self.pressedKeys.issuperset(keys):
-                            g_events.onKeyPressed(keyName, isKeyDown)
-                    if cfg.main[MAIN.USE_KEY_PAIRS]:
+                            self.onKeyPressed(keyName, isKeyDown)
+                    if self.config.main[MAIN.USE_KEY_PAIRS]:
                         if key in KEY_ALIAS_CONTROL:
                             self.pressedKeys.difference_update(KEY_ALIAS_CONTROL)
                         elif key in KEY_ALIAS_ALT:

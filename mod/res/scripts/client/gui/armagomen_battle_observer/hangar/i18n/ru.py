@@ -302,8 +302,6 @@ translate = {
         "disable_cam_skip_clip": "Не выходить если магазинная система заряжания",
         "dynamic_zoom*enabled": "Автоматический выбор кратности Zoom.",
         "dynamic_zoom*enabled_tooltip": "Если данный параметр включён, <b>фиксированный Zoom</b> работать не будет.",
-        "dynamic_zoom*zoom_max": "Максимальная кратность приближения.",
-        "dynamic_zoom*zoom_min": "Минимальная кратность приближения.",
         "dynamic_zoom*zoomToGunMarker": "Включить приближение камеры к маркеру орудия",
         "dynamic_zoom*zoomToGunMarker_tooltip": "ВКЛЮЧЕНО: приближение к маркеру орудия.<br>ВЫКЛЮЧЕНО: без изменений."
                                                 "<br><br>Простыми словами: куда дуло направлено туда и zoom / иначе "

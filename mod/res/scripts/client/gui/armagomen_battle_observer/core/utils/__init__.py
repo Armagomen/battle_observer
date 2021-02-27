@@ -1,11 +1,6 @@
 from .keys_parser import HotKeysParser
 from .loader import Loader
 
-__all__ = ["keysParser", "m_Loader", "overrideMethod"]
-
-keysParser = HotKeysParser()
-m_Loader = Loader()
-
 
 def overrideMethod(wg_class, method_name="__init__"):
     """

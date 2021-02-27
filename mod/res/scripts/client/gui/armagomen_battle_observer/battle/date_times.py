@@ -2,7 +2,7 @@ from time import strftime
 
 from .. import m_core
 from ..core.bo_constants import CLOCK
-from ..core.config import cfg
+from ..core import cfg
 from ..core.utils.timers import CyclicTimerEvent
 from ..meta.battle.date_times_meta import DateTimesMeta
 

@@ -2,7 +2,7 @@ from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSetting
 from gui.battle_control.controllers import team_bases_ctrl
 from helpers import time_utils
 from ..core.bo_constants import TEAM_BASES
-from ..core.config import cfg
+from ..core import cfg
 from ..core.utils.bw_utils import callback
 from ..meta.battle.team_bases_meta import TeamBasesMeta
 

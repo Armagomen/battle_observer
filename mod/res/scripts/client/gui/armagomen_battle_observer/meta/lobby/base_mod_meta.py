@@ -1,6 +1,6 @@
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from ...core.bo_constants import GLOBAL
-from ...core.config import cfg
+from ...core import cfg
 from ...core.utils.bw_utils import logInfo
 
 

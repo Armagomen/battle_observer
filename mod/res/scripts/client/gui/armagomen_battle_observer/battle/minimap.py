@@ -1,8 +1,6 @@
 from gui.battle_control import avatar_getter
 from ..core.bo_constants import MINIMAP
-from ..core.config import cfg
-from ..core.events import g_events
-from ..core.utils import keysParser
+from ..core import cfg, keysParser
 from ..meta.battle.minimap_meta import MinimapMeta
 
 
@@ -14,11 +12,11 @@ class Minimap(MinimapMeta):
 
     def onEnterBattlePage(self):
         super(Minimap, self).onEnterBattlePage()
-        g_events.onKeyPressed += self.keyEvent
+        keysParser.onKeyPressed += self.keyEvent
         self.as_startUpdateS(cfg.minimap[MINIMAP.ZOOM][MINIMAP.INDENT])
 
     def onExitBattlePage(self):
-        g_events.onKeyPressed -= self.keyEvent
+        keysParser.onKeyPressed -= self.keyEvent
         super(Minimap, self).onExitBattlePage()
 
     def keyEvent(self, key, isKeyDown):

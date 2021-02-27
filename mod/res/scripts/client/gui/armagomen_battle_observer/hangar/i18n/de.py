@@ -287,16 +287,12 @@ translate = {
     },
     "zoom": {
         "header": "Zoom für Richtschützenansicht (Sniper Zoom IN)",
-        "LENS_EFFECTS_ENABLED": "Grünen Rand im Snipermodus entfernen..",
-        "LENS_EFFECTS_ENABLED_tooltip": "ERFORDERLICHER NEUSTART DES SPIELS",
-        "disable_cam_after_shoot": "Отключать снайперский режим после выстрела.",
-        "disable_SniperCamera_After_Shoot_tooltip": "Автоматически переключает камеру в аркадный режим "
-                                                    "после выстрела если калибр орудия больше 40мм.",
+        "disable_cam_after_shoot": "Disable sniper mode after the shot.",
+        "disable_SniperCamera_After_Shoot_tooltip": "Automatically switches the camera to arcade mode after "
+                                                    "a shot if the caliber of the gun is more than 40mm.",
         "disable_cam_skip_clip": "Не выходить если магазинная система заряжания",
         "dynamic_zoom*enabled": "Automatische Auswahl der Zoomstufen beim wechsel in den Richtschützenmodus",
         "dynamic_zoom*enabled_tooltip": "Wenn diese Option aktiviert ist, wird der <b>Fester Zoom</b> deaktiviert.",
-        "dynamic_zoom*zoom_max": "Maximaler Zoom Faktor für automatische Auswahl: bis zu 40.0",
-        "dynamic_zoom*zoom_min": "Minimaler Zoom Faktor für automatische Auswahl: beginnend von 2.0",
         "dynamic_zoom*zoomToGunMarker": "Aktivieren der Annäherung der Kamera an die Zentralmarkierung",
         "dynamic_zoom*zoomXMeters": "Empfindlichkeit bei Annäherung: in Metern",
         "dynamic_zoom*zoomXMeters_tooltip": "(Dynamischer Zoom = Enfernung / Empfindlichkeit bei Annäherung)"

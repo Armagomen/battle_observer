@@ -1,9 +1,7 @@
 from debug_utils import LOG_CURRENT_EXCEPTION
 from .i18n import localization
-from ..core.battle import cache
 from ..core.bo_constants import *
-from ..core.config import cfg, c_Loader
-from ..core.events import g_events
+from ..core import cfg, c_Loader, cache
 from ..core.utils.bw_utils import logWarning, openWebBrowser
 
 settingsVersion = 32
@@ -286,7 +284,7 @@ class ConfigInterface(CreateElement):
                     updatedConfigLink[paramName] = param
             c_Loader.updateConfigFile(blockID, config)
             if not self.configSelect:
-                g_events.onSettingsChanged(config, blockID)
+                cache.onModSettingsChanged(config, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""

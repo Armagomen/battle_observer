@@ -3,11 +3,9 @@ from BattleReplay import g_replayCtrl
 from PlayerEvents import g_playerEvents
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from messenger.MessengerEntry import g_instance
-from ..core.battle import cache
-from ..core.events import g_events
 from ..core.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
-from ..core.config import cfg
-from ..core.utils import keysParser, overrideMethod
+from ..core import cfg, cache, keysParser
+from ..core.utils import overrideMethod
 
 __all__ = ["save_shoot_lite"]
 
@@ -15,7 +13,7 @@ __all__ = ["save_shoot_lite"]
 class SaveShootLite(object):
 
     def __init__(self):
-        g_events.onSettingsChanged += self.onSettingsChanged
+        cache.onModSettingsChanged += self.onModSettingsChanged
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         self.enabled = False
@@ -31,7 +29,7 @@ class SaveShootLite(object):
                 return
             return base(avatar, isRepeat=isRepeat)
 
-    def onSettingsChanged(self, config, blockID):
+    def onModSettingsChanged(self, config, blockID):
         if blockID == SAVE_SHOOT.NAME:
             self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
             self.aliveOnly = config[SAVE_SHOOT.ALIVE_ONLY]
@@ -47,12 +45,12 @@ class SaveShootLite(object):
     def onEnterBattlePage(self):
         keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey())
         if self.enabled:
-            g_events.onKeyPressed += self.keyEvent
+            keysParser.onKeyPressed += self.keyEvent
 
     def onExitBattlePage(self):
         self.unlockShoot = False
         if self.enabled:
-            g_events.onKeyPressed -= self.keyEvent
+            keysParser.onKeyPressed -= self.keyEvent
 
     def is_targetAllyOrDeath(self, target):
         if target is not None and target.__class__.__name__ == SAVE_SHOOT.VEHICLE:

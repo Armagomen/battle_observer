@@ -1,5 +1,5 @@
-from ...core.bo_constants import GLOBAL
 from helpers import getClientLanguage
+from ...core.bo_constants import GLOBAL
 
 lang = getClientLanguage().lower()
 

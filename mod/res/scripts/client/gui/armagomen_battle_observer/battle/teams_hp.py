@@ -3,9 +3,7 @@ from gui.battle_control.arena_info.vos_collections import FragCorrelationSortKey
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.shared.personality import ServicesLocator
 from ..core.bo_constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
-from ..core.config import cfg
-from ..core.events import g_events
-from ..core.utils import keysParser
+from ..core import cfg, keysParser
 from ..meta.battle.team_health_meta import TeamHealthMeta
 
 settingsCore = ServicesLocator.settingsCore
@@ -62,12 +60,12 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         self.as_startUpdateS(cfg.hp_bars, isColorBlindEnabled, cfg.markers)
         if self.markers is not None:
             keysParser.registerComponent(MARKERS.HOT_KEY, cfg.markers[MARKERS.HOT_KEY])
-            g_events.onKeyPressed += self.keyEvent
+            keysParser.onKeyPressed += self.keyEvent
             settingsCore.onSettingsApplied += self.onSettingsApplied
 
     def _dispose(self):
         if self.markers is not None:
-            g_events.onKeyPressed -= self.keyEvent
+            keysParser.onKeyPressed -= self.keyEvent
             settingsCore.onSettingsApplied -= self.onSettingsApplied
         super(TeamsHP, self)._dispose()
 

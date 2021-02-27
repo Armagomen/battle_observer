@@ -177,8 +177,6 @@ class Config(object):
             SNIPER.DYN_ZOOM: {
                 GLOBAL.ENABLED: False,
                 SNIPER.GUN_ZOOM: False,
-                SNIPER.MAX_ZOOM_NUM: 30.0,
-                SNIPER.MIN_ZOOM_NUM: 2.0,
                 SNIPER.METERS: 20.0
             },
             SNIPER.ZOOM_STEPS: {
@@ -495,5 +493,3 @@ class Config(object):
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
-
-

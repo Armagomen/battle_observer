@@ -45,8 +45,8 @@ class ObserverCore(object):
 
     def onExit(self):
         if self.isLoading:
-            from .config import cfg
-            from .battle import cache
+            from . import cfg
+            from . import cache
             if cfg.main[MAIN.AUTO_CLEAR_CACHE]:
                 self.clearClientCache()
             if cache.errorKeysSet and GLOBAL.DEBUG_MODE:
@@ -60,9 +60,9 @@ class ObserverCore(object):
     def start(self):
         if self.isLoading:
             logInfo('MOD {}: {}'.format(MASSAGES.START, self.mod_version))
-            from .config import c_Loader
+            from . import c_Loader
             c_Loader.start()
-            from .utils import m_Loader
+            from . import m_Loader
             m_Loader.start()
         else:
             from .utils.bw_utils import logWarning

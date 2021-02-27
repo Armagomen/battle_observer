@@ -1,4 +1,3 @@
-from Avatar import PlayerAvatar
 from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
@@ -6,46 +5,35 @@ from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from gui.shared.personality import ServicesLocator
 from ..bo_constants import MAIN, SOUND_MODES
-from ..config import cfg
-from ..events import g_events
 from ..utils import overrideMethod
 from ..utils.bw_utils import setMaxFrameRate
 
 
-class _BattleCore(object):
+class BattleCore(object):
 
-    def __init__(self, cache):
+    def __init__(self, config, cache):
         self.load_health_module = False
         self.callbackTime = 0.01
         self.cache = cache
         g_playerEvents.onArenaCreated += self.onArenaCreated
-        g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
-        g_events.onSettingsChanged += self.onSettingsChanged
+        cache.onModSettingsChanged += self.onModSettingsChanged
+
+        @overrideMethod(PostmortemPanel, "getDeathInfo")
+        def getDeathInfo(info, *args, **kwargs):
+            if config.main[MAIN.HIDE_POSTMORTEM_TIPS]:
+                return None
+            return info(*args, **kwargs)
+
+        @overrideMethod(SoundModes, 'setMode')
+        def setSoundMode(base, mode, modeName):
+            if config.main[MAIN.IGNORE_COMMANDERS]:
+                if modeName in SOUND_MODES:
+                    modeName = SoundModes.DEFAULT_MODE_NAME
+            return base(mode, modeName)
 
     @staticmethod
-    @overrideMethod(PlayerAvatar, "showTracer")
-    def showTracer(base, avatar, shooterID, *args):
-        if shooterID == avatar.playerVehicleID:
-            g_events.onPlayerShooting(avatar)
-        return base(avatar, shooterID, *args)
-
-    @staticmethod
-    @overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")
-    def getOwnVehicleShotDispersionAngle(base, *args, **kwargs):
-        dispersion_angle = base(*args, **kwargs)
-        g_events.onDispersionAngleUpdate(dispersion_angle[0])
-        return dispersion_angle
-
-    @staticmethod
-    @overrideMethod(PostmortemPanel, "getDeathInfo")
-    def getDeathInfo(info, *args, **kwargs):
-        if cfg.main[MAIN.HIDE_POSTMORTEM_TIPS]:
-            return None
-        return info(*args, **kwargs)
-
-    @staticmethod
-    def onSettingsChanged(config, blockID):
+    def onModSettingsChanged(config, blockID):
         if blockID == MAIN.NAME and config[MAIN.ENABLE_FPS_LIMITER]:
             setMaxFrameRate(config[MAIN.MAX_FRAME_RATE])
 
@@ -69,41 +57,5 @@ class _BattleCore(object):
                                                          ARENA_GUI_TYPE.SORTIE_2)
         return enabled, arenaVisitor
 
-    @staticmethod
-    @overrideMethod(SoundModes, 'setMode')
-    def setSoundMode(base, mode, modeName):
-        if cfg.main[MAIN.IGNORE_COMMANDERS]:
-            if modeName in SOUND_MODES:
-                modeName = SoundModes.DEFAULT_MODE_NAME
-        return base(mode, modeName)
-
-    def onEnterBattlePage(self):
-        enabled, arenaVisitor = self.isAllowedBattleType()
-        if enabled and arenaVisitor is not None:
-            arena = arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleKilled += self.onVehicleKilled
-                arena.onVehicleAdded += self.onVehicleAddUpdate
-                arena.onVehicleUpdated += self.onVehicleAddUpdate
-
     def onExitBattlePage(self):
-        enabled, arenaVisitor = self.isAllowedBattleType()
-        if enabled and arenaVisitor is not None:
-            arena = arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleKilled -= self.onVehicleKilled
-                arena.onVehicleAdded -= self.onVehicleAddUpdate
-                arena.onVehicleUpdated -= self.onVehicleAddUpdate
-
-    def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
-        if self.cache.player.playerVehicleID == targetID:
-            g_events.onPlayerVehicleDeath(attackerID)
-        elif self.cache.player.playerVehicleID == attackerID:
-            g_events.onPlayerKilledEnemy(targetID)
-
-    def onVehicleAddUpdate(self, vehicleID, *args, **kwargs):
-        vehicleInfoVO = self.cache.arenaDP.getVehicleInfo(vehicleID)
-        if vehicleInfoVO:
-            vehicleType = vehicleInfoVO.vehicleType
-            if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
-                g_events.onVehicleAddUpdate(vehicleID, vehicleType)
+        self.cache.clear()

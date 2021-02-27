@@ -1,5 +1,5 @@
 from ..core.bo_constants import MAIN, HP_BARS
-from ..core.config import cfg
+from ..core import cfg
 from ..meta.battle.base_mod_meta import BaseModMeta
 
 

@@ -1,9 +1,8 @@
 from collections import defaultdict
 
 from gui.Scaleform.daapi.view.battle.shared.indicators import SixthSenseIndicator
-from ..core.battle import g_events
 from ..core.bo_constants import GLOBAL, SIXTH_SENSE
-from ..core.config import cfg
+from ..core import cfg, cache
 from ..core.utils.bw_utils import callback
 from ..core.utils.timers import SixthSenseTimer
 from ..meta.battle.sixth_sense_meta import SixthSenseMeta
@@ -25,7 +24,9 @@ class SixthSense(SixthSenseMeta):
 
     def onEnterBattlePage(self):
         super(SixthSense, self).onEnterBattlePage()
-        g_events.onPlayerVehicleDeath += self.hide
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled += self.onVehicleKilled
         if self.wg_as_show is None:
             self.wg_as_show = SixthSenseIndicator.as_showS
             SixthSenseIndicator.as_showS = lambda ssi: self.show()
@@ -36,7 +37,9 @@ class SixthSense(SixthSenseMeta):
 
     def onExitBattlePage(self):
         self._timer.stop()
-        g_events.onPlayerVehicleDeath -= self.hide
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled -= self.onVehicleKilled
         if self.wg_as_show is not None:
             SixthSenseIndicator.as_showS = self.wg_as_show
             self.wg_as_show = None
@@ -52,13 +55,18 @@ class SixthSense(SixthSenseMeta):
     def show(self):
         if self.showTimer:
             self._timer.setSeconds(config[SIXTH_SENSE.TIME])
-            if self._timer.callback is None:
+            if not self._timer.inProcess:
                 self._timer.start()
         else:
             self.as_sixthSenseS(True, GLOBAL.EMPTY_LINE)
             callback(float(config[SIXTH_SENSE.TIME]), self.hide)
 
-    def hide(self, *args):
-        if args:
-            self._timer.stop()
+    def hide(self):
         self.as_sixthSenseS(False, GLOBAL.EMPTY_LINE)
+
+    def onVehicleKilled(self, targetID, *args, **kwargs):
+        if cache.player.playerVehicleID == targetID:
+            if self.showTimer and self._timer.inProcess:
+                self._timer.stop()
+            else:
+                self.hide()

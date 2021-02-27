@@ -5,15 +5,15 @@ import time
 
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
-from ..events import g_events
 from ..bo_constants import LOAD_LIST, API_VERSION, GLOBAL
 from ..utils.bw_utils import logWarning, logInfo, getCurrentModPath
 
 
 class ConfigLoader(object):
-    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'cfg')
+    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'cfg', 'cache')
 
-    def __init__(self, config):
+    def __init__(self, config, cache):
+        self.cache = cache
         self.cfg = config
         self.cName = None
         self.path = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
@@ -140,7 +140,7 @@ class ConfigLoader(object):
                     continue
             else:
                 self.createFileInDir(file_path, internal_cfg)
-            g_events.onSettingsChanged(internal_cfg, module_name)
+            self.cache.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
         if self.configInterface is not None:
             self.configInterface.onUserConfigUpdateComplete()

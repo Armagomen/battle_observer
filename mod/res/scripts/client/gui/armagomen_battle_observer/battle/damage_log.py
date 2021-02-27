@@ -4,11 +4,8 @@ from colorsys import hsv_to_rgb
 from constants import ATTACK_REASONS
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from ..core.battle import cache
 from ..core.bo_constants import DAMAGE_LOG as CONSTANTS, GLOBAL
-from ..core.config import cfg
-from ..core.events import g_events
-from ..core.utils import keysParser
+from ..core import cfg, cache, keysParser
 from ..core.utils.bw_utils import callback, logWarning
 from ..meta.battle.damage_logs_meta import DamageLogsMeta
 
@@ -21,6 +18,15 @@ class DamageLog(DamageLogsMeta):
         self.damage_log = {}
         self.top_log = defaultdict(int, cfg.log_total[CONSTANTS.ICONS])
         self.isSPG = False
+
+    def _populate(self):
+        super(DamageLog, self)._populate()
+        self.as_startUpdateS({CONSTANTS.D_LOG: cfg.log_damage_extended[GLOBAL.SETTINGS],
+                              CONSTANTS.IN_LOG: cfg.log_input_extended[GLOBAL.SETTINGS],
+                              CONSTANTS.MAIN_LOG: cfg.log_total[GLOBAL.SETTINGS]},
+                             {CONSTANTS.D_LOG: cfg.log_damage_extended[GLOBAL.ENABLED],
+                              CONSTANTS.IN_LOG: cfg.log_input_extended[GLOBAL.ENABLED],
+                              CONSTANTS.MAIN_LOG: cfg.log_total[GLOBAL.ENABLED]})
 
     @staticmethod
     def isLogEnabled(eventType):
@@ -41,7 +47,6 @@ class DamageLog(DamageLogsMeta):
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
-        self.subscribe()
         if cache.player is not None and cache.player.vehicle is not None:
             self.input_log.update({CONSTANTS.KILLS: set(), CONSTANTS.SHOTS: []})
             self.damage_log.update({CONSTANTS.KILLS: set(), CONSTANTS.SHOTS: []})
@@ -49,8 +54,12 @@ class DamageLog(DamageLogsMeta):
             extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
                 cache.logsEnable = extended_log
-                g_events.onKeyPressed += self.keyEvent
-                g_events.onVehicleAddUpdate += self.onVehicleAddUpdate
+                keysParser.onKeyPressed += self.keyEvent
+                arena = self._arenaVisitor.getArenaSubscription()
+                if arena is not None:
+                    arena.onVehicleAdded += self.onVehicleAddUpdate
+                    arena.onVehicleUpdated += self.onVehicleAddUpdate
+                    arena.onVehicleKilled += self.onVehicleKilled
                 keysParser.registerComponent(CONSTANTS.HOT_KEY, cfg.log_global[CONSTANTS.HOT_KEY])
             if cfg.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
@@ -65,8 +74,12 @@ class DamageLog(DamageLogsMeta):
         if cache.player is not None:
             extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
-                g_events.onKeyPressed -= self.keyEvent
-                g_events.onVehicleAddUpdate -= self.onVehicleAddUpdate
+                keysParser.onKeyPressed -= self.keyEvent
+                arena = self._arenaVisitor.getArenaSubscription()
+                if arena is not None:
+                    arena.onVehicleAdded -= self.onVehicleAddUpdate
+                    arena.onVehicleUpdated -= self.onVehicleAddUpdate
+                    arena.onVehicleKilled -= self.onVehicleKilled
             if cfg.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
                 if feedback:
@@ -74,26 +87,7 @@ class DamageLog(DamageLogsMeta):
             self.input_log.clear()
             self.damage_log.clear()
             self.top_log.clear()
-        self.unsubscribe()
         super(DamageLog, self).onExitBattlePage()
-
-    def subscribe(self):
-        self.as_startUpdateS({CONSTANTS.D_LOG: cfg.log_damage_extended[GLOBAL.SETTINGS],
-                              CONSTANTS.IN_LOG: cfg.log_input_extended[GLOBAL.SETTINGS],
-                              CONSTANTS.MAIN_LOG: cfg.log_total[GLOBAL.SETTINGS]},
-                             {CONSTANTS.D_LOG: cfg.log_damage_extended[GLOBAL.ENABLED],
-                              CONSTANTS.IN_LOG: cfg.log_input_extended[GLOBAL.ENABLED],
-                              CONSTANTS.MAIN_LOG: cfg.log_total[GLOBAL.ENABLED]})
-        if cfg.log_input_extended[GLOBAL.ENABLED]:
-            g_events.onPlayerVehicleDeath += self.onPlayerVehicleDeath
-        if cfg.log_damage_extended[GLOBAL.ENABLED]:
-            g_events.onPlayerKilledEnemy += self.onPlayerKilledEnemy
-
-    def unsubscribe(self):
-        if cfg.log_input_extended[GLOBAL.ENABLED]:
-            g_events.onPlayerVehicleDeath -= self.onPlayerVehicleDeath
-        if cfg.log_damage_extended[GLOBAL.ENABLED]:
-            g_events.onPlayerKilledEnemy -= self.onPlayerKilledEnemy
 
     def updateAvgDamage(self, isEpicBattle):
         """sets the average damage of the selected tank"""
@@ -152,28 +146,34 @@ class DamageLog(DamageLogsMeta):
             self.top_log[CONSTANTS.DAMAGE_AVG_COLOR] = self.percentToRBG(value, **cfg.log_total[CONSTANTS.AVG_COLOR])
             self.as_updateDamageS(cfg.log_total[CONSTANTS.TEMPLATE_MAIN_DMG] % self.top_log)
 
-    def onVehicleAddUpdate(self, vehicleID, vehicleType):
+    def onVehicleAddUpdate(self, vehicleID, *args, **kwargs):
         """update log item in GM-mode"""
-        vehicle = self.input_log.get(vehicleID, {})
-        if vehicle and vehicle.get(CONSTANTS.VEHICLE_CLASS) is None:
-            vehicle_ci = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_ICON]
-            vehicle_cc = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_COLORS]
-            vehicle[CONSTANTS.VEHICLE_CLASS] = vehicleType.classTag
-            vehicle[CONSTANTS.TANK_NAMES] = {vehicleType.shortName}
-            vehicle[CONSTANTS.TANK_NAME] = vehicleType.shortName
-            vehicle[CONSTANTS.ICON_NAME] = vehicleType.iconName
-            vehicle[CONSTANTS.TANK_LEVEL] = vehicleType.level
-            vehicle[CONSTANTS.CLASS_ICON] = vehicle_ci.get(vehicleType.classTag, vehicle_ci[CONSTANTS.UNKNOWN_TAG])
-            vehicle[CONSTANTS.CLASS_COLOR] = vehicle_cc.get(vehicleType.classTag, vehicle_cc[CONSTANTS.UNKNOWN_TAG])
+        vehicleInfoVO = cache.arenaDP.getVehicleInfo(vehicleID)
+        if vehicleInfoVO:
+            vehicleType = vehicleInfoVO.vehicleType
+            if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
+                vehicle = self.input_log.get(vehicleID, {})
+                if vehicle and vehicle.get(CONSTANTS.VEHICLE_CLASS) is None:
+                    vehicle_ci = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_ICON]
+                    vehicle_cc = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_COLORS]
+                    vehicle[CONSTANTS.VEHICLE_CLASS] = vehicleType.classTag
+                    vehicle[CONSTANTS.TANK_NAMES] = {vehicleType.shortName}
+                    vehicle[CONSTANTS.TANK_NAME] = vehicleType.shortName
+                    vehicle[CONSTANTS.ICON_NAME] = vehicleType.iconName
+                    vehicle[CONSTANTS.TANK_LEVEL] = vehicleType.level
+                    vehicle[CONSTANTS.CLASS_ICON] = vehicle_ci.get(vehicleType.classTag,
+                                                                   vehicle_ci[CONSTANTS.UNKNOWN_TAG])
+                    vehicle[CONSTANTS.CLASS_COLOR] = vehicle_cc.get(vehicleType.classTag,
+                                                                    vehicle_cc[CONSTANTS.UNKNOWN_TAG])
+                    self.updateExtendedLog(self.input_log, cfg.log_input_extended)
+
+    def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
+        if cache.player.playerVehicleID == targetID:
+            self.input_log[CONSTANTS.KILLS].add(attackerID)
             self.updateExtendedLog(self.input_log, cfg.log_input_extended)
-
-    def onPlayerVehicleDeath(self, killerID):
-        self.input_log[CONSTANTS.KILLS].add(killerID)
-        self.updateExtendedLog(self.input_log, cfg.log_input_extended)
-
-    def onPlayerKilledEnemy(self, targetID):
-        self.damage_log[CONSTANTS.KILLS].add(targetID)
-        self.updateExtendedLog(self.damage_log, cfg.log_damage_extended)
+        elif cache.player.playerVehicleID == attackerID:
+            self.damage_log[CONSTANTS.KILLS].add(targetID)
+            self.updateExtendedLog(self.damage_log, cfg.log_damage_extended)
 
     @staticmethod
     def checkShell(attack_reason_id, gold, is_dlog, shell_type):

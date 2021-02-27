@@ -5,10 +5,9 @@ from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComp
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
-from ..core.utils import overrideMethod
-from ..core.battle import b_core
 from ..core.bo_constants import GLOBAL, MINIMAP
-from ..core.config import cfg
+from ..core import cfg, b_core
+from ..core.utils import overrideMethod
 
 
 class BOPersonalEntriesPlugin(plugins.PersonalEntriesPlugin):

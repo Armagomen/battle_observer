@@ -11,8 +11,6 @@ class Loader(object):
     def __init__(self):
         self.modules = (
             'core.inject_flash',
-            'core.battle',
-            'core.update',
             # 'core.analytics',
             'no_flash_comp.camera',
             'no_flash_comp.badges',

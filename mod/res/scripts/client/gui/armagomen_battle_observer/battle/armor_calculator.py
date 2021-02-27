@@ -4,10 +4,8 @@ from AvatarInputHandler import AvatarInputHandler
 from aih_constants import SHOT_RESULT
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from gui.battle_control import avatar_getter
-from ..core.battle import cache
-from ..core.events import g_events
 from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE
-from ..core.config import cfg
+from ..core import cfg, cache
 from ..meta.battle.armor_calc_meta import ArmorCalcMeta
 
 
@@ -31,7 +29,9 @@ class ArmorCalculator(ArmorCalcMeta):
         ammo = self.sessionProvider.shared.ammo
         if ammo is not None:
             ammo.onGunReloadTimeSet += self.onGunReload
-        g_events.onPlayerVehicleDeath += self.clearView
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled += self.onVehicleKilled
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             if isinstance(handler, AvatarInputHandler):
@@ -42,7 +42,9 @@ class ArmorCalculator(ArmorCalcMeta):
         ammo = self.sessionProvider.shared.ammo
         if ammo is not None:
             ammo.onGunReloadTimeSet -= self.onGunReload
-        g_events.onPlayerVehicleDeath -= self.clearView
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled -= self.onVehicleKilled
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             if isinstance(handler, AvatarInputHandler):
@@ -96,16 +98,14 @@ class ArmorCalculator(ArmorCalcMeta):
                 self.calcMacro[ARMOR_CALC.MACROS_ARMOR] = armorSum
                 self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = self.p100 - countedArmor
                 self.as_armorCalcS(self.template % self.calcMacro)
-                self.setVisible(True)
 
-    def setVisible(self, value):
-        if not self._visible or self._visible != value:
-            self._visible = value
+    def onVehicleKilled(self, targetID, *args, **kwargs):
+        if cache.player.playerVehicleID == targetID:
+            self.clearView()
 
-    def clearView(self, *args):
+    def clearView(self):
         if self.showCalcPoints:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
-        self.setVisible(False)
 
     def getCountedArmor(self, collision, targetPos, direction):
         if collision and collision.isVehicle:

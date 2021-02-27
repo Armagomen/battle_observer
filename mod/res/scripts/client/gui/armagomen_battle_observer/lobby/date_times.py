@@ -2,8 +2,7 @@ from time import strftime
 
 from .. import m_core
 from ..core.bo_constants import CLOCK
-from ..core.config import cfg
-from ..core.events import g_events
+from ..core import cfg, cache
 from ..core.utils.timers import CyclicTimerEvent
 from ..meta.lobby.date_times_meta import DateTimesMeta
 
@@ -19,14 +18,14 @@ class DateTimes(DateTimesMeta):
     def _populate(self):
         super(DateTimes, self)._populate()
         self.updateDecoder()
-        g_events.onSettingsChanged += self.onSettingsChanged
+        cache.onModSettingsChanged += self.onModSettingsChanged
         self.as_startUpdateS(self.config)
         self.timerEvent.start()
 
     def updateDecoder(self):
         self.coding = m_core.checkDecoder(strftime(self.config[CLOCK.FORMAT]))
 
-    def onSettingsChanged(self, config, blockID):
+    def onModSettingsChanged(self, config, blockID):
         if blockID == CLOCK.NAME:
             self.config = config[CLOCK.IN_LOBBY]
             self.updateDecoder()
@@ -34,7 +33,7 @@ class DateTimes(DateTimesMeta):
     def _dispose(self):
         """stop and join time thread on destroy flash object"""
         self.timerEvent.stop()
-        g_events.onSettingsChanged -= self.onSettingsChanged
+        cache.onModSettingsChanged -= self.onModSettingsChanged
         super(DateTimes, self)._dispose()
 
     def updateTimeData(self):

@@ -1,12 +1,11 @@
 from collections import defaultdict
 from math import log
 
+from Avatar import PlayerAvatar
 from AvatarInputHandler import AvatarInputHandler
 from gui.battle_control import avatar_getter
-from ..core.battle import cache
 from ..core.bo_constants import DISPERSION_CIRCLE, GLOBAL
-from ..core.config import cfg
-from ..core.events import g_events
+from ..core import cfg, cache
 from ..meta.battle.dispersion_timer_meta import DispersionTimerMeta
 
 
@@ -21,36 +20,45 @@ class DispersionTimer(DispersionTimerMeta):
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
                                  {"color": cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_COLOR],
                                   "color_done": cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_COLOR],
-                                  "timer": 0.0, "percent": 0})
+                                  "timer": GLOBAL.F_ZERO, "percent": GLOBAL.ZERO})
+        self.base_getAngle = None
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
         self.as_startUpdateS(cfg.dispersion_circle)
-        g_events.onPlayerVehicleDeath += self.onPlayerVehicleDeath
-        g_events.onDispersionAngleUpdate += self.onDispersionAngleUpdate
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled += self.onVehicleKilled
+
+        self.base_getAngle = PlayerAvatar.getOwnVehicleShotDispersionAngle
+        PlayerAvatar.getOwnVehicleShotDispersionAngle = lambda *args, **kwargs: self.updateDispersion(*args, **kwargs)
 
     def _dispose(self):
-        g_events.onPlayerVehicleDeath -= self.onPlayerVehicleDeath
-        g_events.onDispersionAngleUpdate -= self.onDispersionAngleUpdate
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled -= self.onVehicleKilled
+        PlayerAvatar.getOwnVehicleShotDispersionAngle = self.base_getAngle
         super(DispersionTimer, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.as_onControlModeChangedS(ctrlMode)
 
-    def onDispersionAngleUpdate(self, angle):
+    def updateDispersion(self, *args, **kwargs):
+        result = self.base_getAngle(*args, **kwargs)
         if cache.player is not None and cache.player.isVehicleAlive:
-            if self.shotDispersionAngle != 0:
-                qw = angle / self.shotDispersionAngle
+            if self.shotDispersionAngle != GLOBAL.ZERO:
+                qw = result[GLOBAL.FIRST] / self.shotDispersionAngle
             else:
                 qw = 1.0
             timing = self.aimingTime * log(qw)
             if self.macro["timer"] != timing:
                 self.macro["timer"] = timing
-                self.macro["percent"] = int(min(1.0, self.shotDispersionAngle / angle) * 100)
-            if not timing or timing < 0:
+                self.macro["percent"] = int(min(GLOBAL.F_ONE, self.shotDispersionAngle / result[GLOBAL.FIRST]) * 100)
+            if not timing or timing < GLOBAL.ZERO:
                 self.setDoneMessage()
             else:
                 self.setRegularMessage()
+        return result
 
     def setRegularMessage(self):
         self.as_updateTimerTextS(self.timer_regular % self.macro)
@@ -76,5 +84,6 @@ class DispersionTimer(DispersionTimerMeta):
                 handler.onCameraChanged -= self.onCameraChanged
         super(DispersionTimer, self).onExitBattlePage()
 
-    def onPlayerVehicleDeath(self, killerID):
-        self.as_updateTimerTextS("")
+    def onVehicleKilled(self, targetID, *args, **kwargs):
+        if cache.player.playerVehicleID == targetID:
+            self.as_updateTimerTextS("")

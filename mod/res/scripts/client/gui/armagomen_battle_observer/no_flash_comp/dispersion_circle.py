@@ -14,10 +14,9 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.container import Crosshair
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
-from ..core.utils import overrideMethod
-from ..core.battle import cache
-from ..core.events import g_events
+from ..core import cache
 from ..core.bo_constants import GLOBAL, DISPERSION_CIRCLE
+from ..core.utils import overrideMethod
 
 CLIENT = _MARKER_TYPE.CLIENT
 SERVER = _MARKER_TYPE.SERVER
@@ -130,9 +129,9 @@ class DispersionCircle(object):
         self.hooksEnable = False
         self.replaceOriginalCircle = False
         self.extraServerLap = False
-        g_events.onSettingsChanged += self.onSettingsChanged
+        cache.onModSettingsChanged += self.onModSettingsChanged
 
-    def onSettingsChanged(self, config, blockID):
+    def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION_CIRCLE.NAME:
             self.replaceOriginalCircle = config[DISPERSION_CIRCLE.CIRCLE_REPLACE]
             self.extraServerLap = config[DISPERSION_CIRCLE.CIRCLE_EXTRA_LAP]
