@@ -1,9 +1,10 @@
+from PlayerEvents import g_playerEvents
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT
 from gui import InputHandler
 from gui.battle_control import avatar_getter
-from .bo_constants import MAIN
-from .config import cfg
-from .events import g_events
+from ..bo_constants import MAIN
+from ..config import cfg
+from ..events import g_events
 
 
 class HotKeysParser(object):
@@ -12,8 +13,8 @@ class HotKeysParser(object):
         self.keysMap = dict()
         self.pressedKeys = set()
         self.usableKeys = set()
-        g_events.onEnterBattlePage += self.onEnterBattlePage
-        g_events.onExitBattlePage += self.onExitBattlePage
+        g_playerEvents.onAvatarReady += self.onEnterBattlePage
+        g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
 
     def registerComponent(self, keyName, keyList):
         normalizedKey = self.normalizeKey(keyList)
@@ -73,6 +74,3 @@ class HotKeysParser(object):
             else:
                 keys.add(key)
         return keys
-
-
-g_keysParser = HotKeysParser()

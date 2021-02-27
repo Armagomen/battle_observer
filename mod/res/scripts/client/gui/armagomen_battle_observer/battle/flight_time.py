@@ -3,10 +3,10 @@ from collections import defaultdict
 from AvatarInputHandler import AvatarInputHandler
 from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from ..core.battle_cache import cache
+from ..core.battle import cache
 from ..core.bo_constants import FLIGHT_TIME, GLOBAL
-from ..core.bw_utils import vector3
 from ..core.config import cfg
+from ..core.utils.bw_utils import vector3
 from ..meta.battle.flight_time_meta import FlightTimeMeta
 
 VECTOR = vector3(GLOBAL.F_ZERO, GLOBAL.F_ZERO, GLOBAL.F_ZERO)

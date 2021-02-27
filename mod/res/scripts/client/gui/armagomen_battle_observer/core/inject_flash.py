@@ -1,8 +1,8 @@
 from gui.Scaleform.battle_entry import BattleEntry
 from gui.Scaleform.daapi.settings import config
 from gui.Scaleform.lobby_entry import LobbyEntry
+from .utils import overrideMethod
 from .bo_constants import SWF
-from .core import overrideMethod
 
 config.BATTLE_PACKAGES += ("gui.armagomen_battle_observer.battle",)
 config.LOBBY_PACKAGES += ("gui.armagomen_battle_observer.lobby",)

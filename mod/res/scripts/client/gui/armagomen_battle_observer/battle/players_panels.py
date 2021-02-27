@@ -1,12 +1,12 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.shared.personality import ServicesLocator
-from ..core.battle_cache import cache
+from ..core.battle import cache
 from ..core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
-from ..core.bw_utils import getEntity
 from ..core.config import cfg
 from ..core.events import g_events
-from ..core.keys_parser import g_keysParser
+from ..core.utils import keysParser
+from ..core.utils.bw_utils import getEntity
 from ..meta.battle.players_panels_meta import PlayersPanelsMeta
 
 config = cfg.players_panels
@@ -38,14 +38,14 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         isEpicRandomBattle = self.gui.isEpicRandomBattle()
         if not isInEpicRange and not isEpicRandomBattle:
             if self.hpBarsEnable and self.barsOnKey:
-                g_keysParser.registerComponent(PANELS.BAR_HOT_KEY, config[PANELS.BAR_HOT_KEY])
+                keysParser.registerComponent(PANELS.BAR_HOT_KEY, config[PANELS.BAR_HOT_KEY])
             g_events.onKeyPressed += self.onKeyPressed
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.damagesEnable:
                 arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
                 if arena is not None:
                     arena.onVehicleHealthChanged += self.onPlayersDamaged
-                    g_keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, config[PANELS.DAMAGES_HOT_KEY])
+                    keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, config[PANELS.DAMAGES_HOT_KEY])
 
     def onExitBattlePage(self):
         isInEpicRange = self.gui.isInEpicRange()

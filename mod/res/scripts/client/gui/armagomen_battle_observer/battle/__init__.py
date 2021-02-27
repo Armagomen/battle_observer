@@ -6,16 +6,15 @@ from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
-from ..core.battle_elements_settings_cache import g_settingsGetter
+from ..core.battle import b_core, v_settings
 from ..core.bo_constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
-from ..core.bw_utils import logError, callback
-from ..core.battle_core import b_core
+from ..core.utils.bw_utils import logError, callback, logWarning
 
 
 def getViewSettings():
     settings = []
     for alias in SORTED_ALIASES:
-        if g_settingsGetter.getSetting(alias):
+        if v_settings.getSetting(alias):
             try:
                 class_name = alias.split("_")[GLOBAL.ONE]
                 file_name = ALIAS_TO_PATH.get(alias)
@@ -24,7 +23,6 @@ def getViewSettings():
                 _GAME_UI.add(alias)
                 _SPECTATOR_UI.add(alias)
             except Exception as err:
-                from ..core.bw_utils import logWarning
                 logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
     return settings
 
@@ -58,7 +56,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             flash = battle_page.flashObject
             if hasattr(flash, SWF.ATTRIBUTE_NAME):
                 for comp in SORTED_ALIASES:
-                    if g_settingsGetter.getSetting(comp):
+                    if v_settings.getSetting(comp):
                         flash.as_createBattleObserverComp(comp)
             else:
                 to_format_str = "battle_page {}, has ho attribute {}"

@@ -1,14 +1,13 @@
 from Avatar import PlayerAvatar
 from BattleReplay import g_replayCtrl
+from PlayerEvents import g_playerEvents
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from messenger.MessengerEntry import g_instance
-
-from ..core.battle_cache import cache
+from ..core.battle import cache
+from ..core.events import g_events
 from ..core.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
 from ..core.config import cfg
-from ..core.core import overrideMethod
-from ..core.events import g_events
-from ..core.keys_parser import g_keysParser
+from ..core.utils import keysParser, overrideMethod
 
 __all__ = ["save_shoot_lite"]
 
@@ -17,8 +16,8 @@ class SaveShootLite(object):
 
     def __init__(self):
         g_events.onSettingsChanged += self.onSettingsChanged
-        g_events.onEnterBattlePage += self.onEnterBattlePage
-        g_events.onExitBattlePage += self.onExitBattlePage
+        g_playerEvents.onAvatarReady += self.onEnterBattlePage
+        g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         self.enabled = False
         self.unlockShoot = False
         self.aliveOnly = False
@@ -46,7 +45,7 @@ class SaveShootLite(object):
             return KEY_ALIAS_ALT[GLOBAL.FIRST],
 
     def onEnterBattlePage(self):
-        g_keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey())
+        keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey())
         if self.enabled:
             g_events.onKeyPressed += self.keyEvent
 

@@ -7,7 +7,7 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from ..core.bo_constants import GLOBAL, CLOCK, SWF
-from ..core.bw_utils import logError, callback
+from ..core.utils.bw_utils import logError, callback, logWarning
 from ..core.config import cfg
 
 
@@ -25,7 +25,6 @@ def getViewSettings():
             module_class = getattr(import_module(".date_times", package=__package__), class_name)
             settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
         except Exception as err:
-            from ..core.bw_utils import logWarning
             logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
     return settings
 

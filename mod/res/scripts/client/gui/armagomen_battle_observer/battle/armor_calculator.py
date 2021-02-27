@@ -4,13 +4,11 @@ from AvatarInputHandler import AvatarInputHandler
 from aih_constants import SHOT_RESULT
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from gui.battle_control import avatar_getter
-from ..core.battle_cache import cache as g_cache
+from ..core.battle import cache
+from ..core.events import g_events
 from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE
 from ..core.config import cfg
-from ..core.events import g_events
 from ..meta.battle.armor_calc_meta import ArmorCalcMeta
-
-config = cfg.armor_calculator
 
 
 class ArmorCalculator(ArmorCalcMeta):
@@ -23,8 +21,8 @@ class ArmorCalculator(ArmorCalcMeta):
         self.calcCache = GLOBAL.ZERO
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = cfg.colors[ARMOR_CALC.NAME]
-        self.template = config[ARMOR_CALC.TEMPLATE]
-        self.showCalcPoints = config[ARMOR_CALC.SHOW_POINTS]
+        self.template = cfg.armor_calculator[ARMOR_CALC.TEMPLATE]
+        self.showCalcPoints = cfg.armor_calculator[ARMOR_CALC.SHOW_POINTS]
         self.wg_updateColor = ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor
         self.__allyTeam = self._arenaDP.getNumberOfTeam()
 
@@ -53,7 +51,7 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
-        self.as_startUpdateS(config)
+        self.as_startUpdateS(cfg.armor_calculator)
         ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor = lambda *args: self.updateColor(*args)
 
     def _dispose(self):
@@ -64,7 +62,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self.as_onControlModeChangedS(ctrlMode)
 
     def updateShootParams(self):
-        shotParams = g_cache.player.getVehicleDescriptor().shot
+        shotParams = cache.player.getVehicleDescriptor().shot
         self.p100, self.p500 = shotParams.piercingPower
         self.calcMacro.update(piercingPower=self.p100, caliber=shotParams.shell.caliber)
 
@@ -79,10 +77,10 @@ class ArmorCalculator(ArmorCalcMeta):
         armor_sum, counted_armor, result = self.getCountedArmor(collision, targetPos, direction)
         if result in colors:
             color = colors[result]
-            cache = iPlugin._ShotResultIndicatorPlugin__cache
+            plugin_cache = iPlugin._ShotResultIndicatorPlugin__cache
             setGunMarkerColor = iPlugin._parentObj.setGunMarkerColor
-            if cache[markerType] != result and setGunMarkerColor(markerType, color):
-                cache[markerType] = result
+            if plugin_cache[markerType] != result and setGunMarkerColor(markerType, color):
+                plugin_cache[markerType] = result
                 if counted_armor is None:
                     self.clearView()
                     return
@@ -134,7 +132,7 @@ class ArmorCalculator(ArmorCalcMeta):
     def getShotResult(self, countedArmor, targetPos):
         power = self.p100
         if power != self.p500:
-            dist = (targetPos - g_cache.player.getOwnVehiclePosition()).length
+            dist = (targetPos - cache.player.getOwnVehiclePosition()).length
             if dist > ARMOR_CALC.MIN_DIST:
                 result = power + (self.p500 - power) * (dist - ARMOR_CALC.MIN_DIST) / ARMOR_CALC.EFFECTIVE_DISTANCE
                 power = max(self.p500, result)

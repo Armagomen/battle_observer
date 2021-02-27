@@ -2,9 +2,9 @@ from PlayerEvents import g_playerEvents
 from gui.battle_control.arena_info.arena_vos import VehicleTypeInfoVO
 from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategories
 from messenger.storage import storage_getter
+from ..core.utils import overrideMethod
 from ..core.bo_constants import MAIN, ANOTHER, GLOBAL
 from ..core.config import cfg
-from ..core.core import overrideMethod
 
 _cache = {ANOTHER.FRIEND_LIST: set(), ANOTHER.ACCOUNT_DBID: GLOBAL.ZERO}
 

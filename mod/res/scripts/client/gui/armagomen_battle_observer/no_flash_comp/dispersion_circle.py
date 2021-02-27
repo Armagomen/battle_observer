@@ -14,10 +14,10 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.container import Crosshair
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
-from ..core.battle_cache import cache
-from ..core.bo_constants import GLOBAL, DISPERSION_CIRCLE
-from ..core.core import overrideMethod
+from ..core.utils import overrideMethod
+from ..core.battle import cache
 from ..core.events import g_events
+from ..core.bo_constants import GLOBAL, DISPERSION_CIRCLE
 
 CLIENT = _MARKER_TYPE.CLIENT
 SERVER = _MARKER_TYPE.SERVER
@@ -36,6 +36,7 @@ LINKAGES = {
 }
 
 aih_constants.GUN_MARKER_MIN_SIZE = DISPERSION_CIRCLE.GUN_MARKER_MIN_SIZE
+
 
 class ObserverGunMarkerController(_DefaultGunMarkerController):
 
@@ -142,7 +143,8 @@ class DispersionCircle(object):
             if self.enabled:
                 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
-    def enableServerAim(self, server=True):
+    @staticmethod
+    def enableServerAim(server=True):
         if not bool(ServicesLocator.settingsCore.getSetting(DISPERSION_CIRCLE.CIRCLE_SERVER)):
             cache.player.enableServerAim(server)
 

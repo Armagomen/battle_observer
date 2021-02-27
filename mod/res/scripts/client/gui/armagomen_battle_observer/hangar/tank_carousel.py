@@ -1,10 +1,9 @@
 from account_helpers.settings_core.options import CarouselTypeSetting, DoubleCarouselTypeSetting
 from gui.shared.personality import ServicesLocator
-
 from ..core.bo_constants import GLOBAL, CAROUSEL
 from ..core.config import cfg
-from ..core.core import overrideMethod
 from ..core.events import g_events
+from ..core.utils import overrideMethod
 
 
 @overrideMethod(CarouselTypeSetting, "getRowCount")

@@ -1,11 +1,11 @@
 from collections import defaultdict
 
 from gui.Scaleform.daapi.view.battle.shared.indicators import SixthSenseIndicator
+from ..core.battle import g_events
 from ..core.bo_constants import GLOBAL, SIXTH_SENSE
-from ..core.bw_utils import callback
 from ..core.config import cfg
-from ..core.events import g_events
-from ..core.timers import SixthSenseTimer
+from ..core.utils.bw_utils import callback
+from ..core.utils.timers import SixthSenseTimer
 from ..meta.battle.sixth_sense_meta import SixthSenseMeta
 
 config = cfg.sixth_sense

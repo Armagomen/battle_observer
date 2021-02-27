@@ -9,12 +9,12 @@ from PlayerEvents import g_playerEvents
 from aih_constants import CTRL_MODE_NAME
 from constants import AOI
 from gui.battle_control import avatar_getter
-from ..core.battle_cache import cache
-from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
-from ..core.bw_utils import callback
-from ..core.config import cfg
-from ..core.core import overrideMethod
+from ..core.battle import cache
 from ..core.events import g_events
+from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
+from ..core.config import cfg
+from ..core.utils.bw_utils import callback
+from ..core.utils import overrideMethod
 
 
 class ObserverSniperCamera(object):

@@ -5,7 +5,7 @@ from gui.shared.personality import ServicesLocator
 from ..core.bo_constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
 from ..core.config import cfg
 from ..core.events import g_events
-from ..core.keys_parser import g_keysParser
+from ..core.utils import keysParser
 from ..meta.battle.team_health_meta import TeamHealthMeta
 
 settingsCore = ServicesLocator.settingsCore
@@ -61,7 +61,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         isColorBlindEnabled = settingsCore.getSetting(GRAPHICS.COLOR_BLIND)
         self.as_startUpdateS(cfg.hp_bars, isColorBlindEnabled, cfg.markers)
         if self.markers is not None:
-            g_keysParser.registerComponent(MARKERS.HOT_KEY, cfg.markers[MARKERS.HOT_KEY])
+            keysParser.registerComponent(MARKERS.HOT_KEY, cfg.markers[MARKERS.HOT_KEY])
             g_events.onKeyPressed += self.keyEvent
             settingsCore.onSettingsApplied += self.onSettingsApplied
 

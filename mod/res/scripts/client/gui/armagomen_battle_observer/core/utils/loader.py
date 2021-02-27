@@ -1,8 +1,9 @@
 import sys
 
 from debug_utils import LOG_CURRENT_EXCEPTION
-from .bo_constants import MOD_PATH
 from .bw_utils import logWarning
+
+MOD_PATH = "gui.armagomen_battle_observer.{}"
 
 
 class Loader(object):
@@ -10,7 +11,7 @@ class Loader(object):
     def __init__(self):
         self.modules = (
             'core.inject_flash',
-            'core.battle_core',
+            'core.battle',
             'core.update',
             # 'core.analytics',
             'no_flash_comp.camera',
@@ -38,6 +39,3 @@ class Loader(object):
             __import__(modulePath)
         except ImportError:
             LOG_CURRENT_EXCEPTION()
-
-
-m_Loader = Loader()

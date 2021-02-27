@@ -1,8 +1,8 @@
 from gui.battle_control.arena_info import settings
 from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO
+from ..core.utils import overrideMethod
 from ..core.bo_constants import MAIN, ANOTHER, GLOBAL
 from ..core.config import cfg
-from ..core.core import overrideMethod
 
 _PLAYER_STATUS = settings.PLAYER_STATUS
 

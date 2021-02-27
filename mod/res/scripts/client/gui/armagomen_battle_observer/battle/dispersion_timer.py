@@ -3,7 +3,7 @@ from math import log
 
 from AvatarInputHandler import AvatarInputHandler
 from gui.battle_control import avatar_getter
-from ..core.battle_cache import cache
+from ..core.battle import cache
 from ..core.bo_constants import DISPERSION_CIRCLE, GLOBAL
 from ..core.config import cfg
 from ..core.events import g_events

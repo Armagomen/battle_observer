@@ -3,7 +3,7 @@ import urllib2
 from async import async, await, AsyncReturn
 from gui.shared.personality import ServicesLocator
 from .bo_constants import URLS, HEADERS
-from .bw_utils import logWarning
+from .utils.bw_utils import logWarning
 
 
 class Analytics(object):

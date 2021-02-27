@@ -8,9 +8,9 @@ from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
 from ..core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
-from ..core.bw_utils import openWebBrowser
-from ..core.core import overrideMethod
 from ..core.events import g_events
+from ..core.utils import overrideMethod
+from ..core.utils.bw_utils import openWebBrowser
 
 channel_filter = set()
 

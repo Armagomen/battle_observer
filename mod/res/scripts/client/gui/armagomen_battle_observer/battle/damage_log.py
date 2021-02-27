@@ -4,12 +4,12 @@ from colorsys import hsv_to_rgb
 from constants import ATTACK_REASONS
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from ..core.battle_cache import cache
+from ..core.battle import cache
 from ..core.bo_constants import DAMAGE_LOG as CONSTANTS, GLOBAL
-from ..core.bw_utils import callback, logWarning
 from ..core.config import cfg
 from ..core.events import g_events
-from ..core.keys_parser import g_keysParser
+from ..core.utils import keysParser
+from ..core.utils.bw_utils import callback, logWarning
 from ..meta.battle.damage_logs_meta import DamageLogsMeta
 
 
@@ -51,7 +51,7 @@ class DamageLog(DamageLogsMeta):
                 cache.logsEnable = extended_log
                 g_events.onKeyPressed += self.keyEvent
                 g_events.onVehicleAddUpdate += self.onVehicleAddUpdate
-                g_keysParser.registerComponent(CONSTANTS.HOT_KEY, cfg.log_global[CONSTANTS.HOT_KEY])
+                keysParser.registerComponent(CONSTANTS.HOT_KEY, cfg.log_global[CONSTANTS.HOT_KEY])
             if cfg.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
                 if feedback:
@@ -245,4 +245,3 @@ class DamageLog(DamageLogsMeta):
                 if vehicleID in log_dict[CONSTANTS.KILLS] and not log_dict[vehicleID][CONSTANTS.KILLED_ICON]:
                     log_dict[vehicleID][CONSTANTS.KILLED_ICON] = settings[CONSTANTS.KILLED_ICON]
             self.as_updateLogS(log_name, CONSTANTS.NEW_LINE.join(template % log_dict[key] for key in data))
-

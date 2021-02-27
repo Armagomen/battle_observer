@@ -3,16 +3,16 @@ from collections import defaultdict
 from PlayerEvents import g_playerEvents
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
-from .battle_core import b_core
-from .bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES, DISPERSION_CIRCLE
-from .config import cfg
-from .core import overrideMethod
+from ..bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES, DISPERSION_CIRCLE
+from ..config import cfg
+from ..utils import overrideMethod
 
 
-class ElementsSettingsGetter(object):
+class ViewSettings(object):
 
-    def __init__(self):
+    def __init__(self, b_core):
         g_playerEvents.onAvatarBecomeNonPlayer += self.clear
+        self._b_core = b_core
         self.__cache = defaultdict(bool)
         self.__alias_to_bool = {
             ALIASES.HP_BARS: lambda: cfg.hp_bars[GLOBAL.ENABLED],
@@ -35,6 +35,14 @@ class ElementsSettingsGetter(object):
             ALIASES.DATE_TIME: lambda: cfg.clock[GLOBAL.ENABLED] and cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         }
 
+        @overrideMethod(SharedPage)
+        def new_SharedPage_init(base, page, *args, **kwargs):
+            base(page, *args, **kwargs)
+            if self._b_core.isAllowedBattleType()[GLOBAL.FIRST]:
+                config = page._SharedPage__componentsConfig._ComponentsConfig__config
+                newConfig = tuple((i, self.checkAndReplaceAlias(aliases)) for i, aliases in config)
+                page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig
+
     def getSetting(self, alias):
         if alias not in self.__cache:
             check = self.__alias_to_bool.get(alias)
@@ -45,34 +53,21 @@ class ElementsSettingsGetter(object):
     def clear(self):
         self.__cache.clear()
 
-
-g_settingsGetter = ElementsSettingsGetter()
-
-
-def checkAndReplaceAlias(aliases):
-    new_aliases = list(aliases)
-    if g_settingsGetter.getSetting(ALIASES.TEAM_BASES) and BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in new_aliases:
-        del new_aliases[new_aliases.index(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)]
-        new_aliases.append(ALIASES.TEAM_BASES)
-    elif g_settingsGetter.getSetting(ALIASES.TIMER) and BATTLE_VIEW_ALIASES.BATTLE_TIMER in new_aliases:
-        new_aliases.append(ALIASES.TIMER)
-    elif g_settingsGetter.getSetting(ALIASES.DEBUG) and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
-        del new_aliases[new_aliases.index(BATTLE_VIEW_ALIASES.DEBUG_PANEL)]
-        new_aliases.append(ALIASES.DEBUG)
-    elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in new_aliases:
-        if g_settingsGetter.getSetting(ALIASES.HP_BARS):
-            new_aliases.append(ALIASES.HP_BARS)
-        if g_settingsGetter.getSetting(ALIASES.PANELS):
-            new_aliases.append(ALIASES.PANELS)
-        if g_settingsGetter.getSetting(ALIASES.MAIN_GUN):
-            new_aliases.append(ALIASES.MAIN_GUN)
-    return tuple(new_aliases)
-
-
-@overrideMethod(SharedPage)
-def new_SharedPage_init(base, page, *args, **kwargs):
-    base(page, *args, **kwargs)
-    if b_core.isAllowedBattleType()[GLOBAL.FIRST]:
-        config = page._SharedPage__componentsConfig._ComponentsConfig__config
-        newConfig = tuple((i, checkAndReplaceAlias(aliases)) for i, aliases in config)
-        page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig
+    def checkAndReplaceAlias(self, aliases):
+        new_aliases = list(aliases)
+        if self.getSetting(ALIASES.TEAM_BASES) and BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in new_aliases:
+            del new_aliases[new_aliases.index(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)]
+            new_aliases.append(ALIASES.TEAM_BASES)
+        elif self.getSetting(ALIASES.TIMER) and BATTLE_VIEW_ALIASES.BATTLE_TIMER in new_aliases:
+            new_aliases.append(ALIASES.TIMER)
+        elif self.getSetting(ALIASES.DEBUG) and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
+            del new_aliases[new_aliases.index(BATTLE_VIEW_ALIASES.DEBUG_PANEL)]
+            new_aliases.append(ALIASES.DEBUG)
+        elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in new_aliases:
+            if self.getSetting(ALIASES.HP_BARS):
+                new_aliases.append(ALIASES.HP_BARS)
+            if self.getSetting(ALIASES.PANELS):
+                new_aliases.append(ALIASES.PANELS)
+            if self.getSetting(ALIASES.MAIN_GUN):
+                new_aliases.append(ALIASES.MAIN_GUN)
+        return tuple(new_aliases)

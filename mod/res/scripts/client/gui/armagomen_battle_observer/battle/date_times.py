@@ -1,9 +1,9 @@
 from time import strftime
 
+from .. import m_core
 from ..core.bo_constants import CLOCK
 from ..core.config import cfg
-from ..core.core import m_core
-from ..core.timers import CyclicTimerEvent
+from ..core.utils.timers import CyclicTimerEvent
 from ..meta.battle.date_times_meta import DateTimesMeta
 
 config = cfg.clock[CLOCK.IN_BATTLE]

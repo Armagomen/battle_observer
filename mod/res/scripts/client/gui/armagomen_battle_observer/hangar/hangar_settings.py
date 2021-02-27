@@ -1,10 +1,10 @@
 from debug_utils import LOG_CURRENT_EXCEPTION
-from .i18n.localization_getter import localization
-from ..core.battle_cache import cache
+from .i18n import localization
+from ..core.battle import cache
 from ..core.bo_constants import *
-from ..core.bw_utils import logWarning, openWebBrowser
-from ..core.config import c_Loader, cfg
+from ..core.config import cfg, c_Loader
 from ..core.events import g_events
+from ..core.utils.bw_utils import logWarning, openWebBrowser
 
 settingsVersion = 32
 KEY_CONTROL = [[29]]

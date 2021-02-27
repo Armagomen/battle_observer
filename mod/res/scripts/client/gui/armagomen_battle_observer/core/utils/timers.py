@@ -1,7 +1,7 @@
 import SoundGroups
 from gui.Scaleform.daapi.view.battle.shared.battle_timers import _WWISE_EVENTS
-from .bo_constants import GLOBAL
 from .bw_utils import callback, cancelCallback
+from ..bo_constants import GLOBAL
 
 
 class Timer(object):

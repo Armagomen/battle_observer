@@ -11,8 +11,6 @@ class Events(object):
         self.onSettingsChanged = SafeEvent()
         self.onUserConfigUpdateComplete = SafeEvent()
         self.onPlayerShooting = SafeEvent()
-        self.onEnterBattlePage = SafeEvent()
-        self.onExitBattlePage = SafeEvent()
         self.onDispersionAngleUpdate = SafeEvent()
 
 

@@ -1,10 +1,10 @@
 from time import strftime
 
+from .. import m_core
 from ..core.bo_constants import CLOCK
 from ..core.config import cfg
-from ..core.core import m_core
 from ..core.events import g_events
-from ..core.timers import CyclicTimerEvent
+from ..core.utils.timers import CyclicTimerEvent
 from ..meta.lobby.date_times_meta import DateTimesMeta
 
 

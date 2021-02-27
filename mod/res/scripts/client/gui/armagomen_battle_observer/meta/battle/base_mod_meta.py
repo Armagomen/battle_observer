@@ -1,11 +1,10 @@
+from PlayerEvents import g_playerEvents
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
-
 from ...core.bo_constants import GLOBAL
-from ...core.bw_utils import logInfo
 from ...core.config import cfg
-from ...core.events import g_events
+from ...core.utils.bw_utils import logInfo
 
 
 class BaseModMeta(BaseDAAPIComponent):
@@ -27,8 +26,8 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        g_events.onEnterBattlePage += self.onEnterBattlePage
-        g_events.onExitBattlePage += self.onExitBattlePage
+        g_playerEvents.onAvatarReady += self.onEnterBattlePage
+        g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         if self._isDAAPIInited():
             self.flashObject.setCompVisible(False)
             self._name = self.flashObject.name.split("_")[GLOBAL.ONE]
@@ -36,8 +35,8 @@ class BaseModMeta(BaseDAAPIComponent):
                 logInfo("battle module '%s' loaded" % self._name)
 
     def _dispose(self):
-        g_events.onEnterBattlePage -= self.onEnterBattlePage
-        g_events.onExitBattlePage -= self.onExitBattlePage
+        g_playerEvents.onAvatarReady -= self.onEnterBattlePage
+        g_playerEvents.onAvatarBecomeNonPlayer -= self.onExitBattlePage
         super(BaseModMeta, self)._dispose()
         if GLOBAL.DEBUG_MODE:
             logInfo("battle module '%s' destroyed" % self._name)
@@ -58,4 +57,3 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def as_onControlModeChangedS(self, mode):
         return self.flashObject.as_onControlModeChanged(mode) if self._isDAAPIInited() else None
-

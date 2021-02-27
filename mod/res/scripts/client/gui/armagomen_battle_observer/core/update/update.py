@@ -14,11 +14,11 @@ from gui.Scaleform.daapi.view.dialogs.SimpleDialog import SimpleDialog
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from web.cache.web_downloader import WebDownloader
-from .bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
-from .bw_utils import restartGame, logInfo, openWebBrowser, logError, logWarning
-from .core import m_core
-from .dialog_button import DialogButtons
-from ..hangar.i18n.localization_getter import localization
+from ..bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
+from ..update.dialog_button import DialogButtons
+from ..utils.bw_utils import restartGame, logInfo, openWebBrowser, logError, logWarning
+from ... import m_core
+from ...hangar.i18n import localization
 
 LAST_UPDATE = defaultdict()
 DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
@@ -125,6 +125,7 @@ class UpdateMain(object):
                 return json.load(response)
             except urllib2.URLError:
                 logWarning("Technical problems with the server, please inform the developer.")
+
         try:
             params = get_update_data()
             if params:
@@ -170,7 +171,3 @@ class UpdateMain(object):
         fixDialogCloseWindow()
         dialog = DialogWindow(version)
         dialog.showNewVersionAvailable()
-
-
-g_update = UpdateMain()
-result = g_update.subscribe()

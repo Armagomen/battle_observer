@@ -1,7 +1,10 @@
+import os
+
 import BigWorld
 import Math
+import ResMgr
 
-from .bo_constants import MOD_NAME
+MOD_NAME = "BATTLE_OBSERVER"
 
 
 def getPlayer():
@@ -56,3 +59,13 @@ def openWebBrowser(url):
 
 def vector3(x, y, z):
     return Math.Vector3(x, y, z)
+
+
+def getCurrentModPath():
+    p = os.path
+    cwd = os.getcwdu() if p.supports_unicode_filenames else os.getcwd()
+    if any(x in cwd for x in ("win32", "win64")):
+        cwd = p.split(cwd)[0]
+    for sec in ResMgr.openSection(p.join(cwd, 'paths.xml'))['Paths'].values():
+        if './mods/' in sec.asString:
+            return p.split(p.realpath(p.join(cwd, p.normpath(sec.asString))))

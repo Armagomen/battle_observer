@@ -1,17 +1,16 @@
 from AvatarInputHandler.control_modes import SniperControlMode
+from PlayerEvents import g_playerEvents
 from helpers.EffectsList import EffectsListPlayer, _PixieEffectDesc
-
-from ..core.battle_cache import cache
+from ..core.utils import overrideMethod
+from ..core.battle import cache
 from ..core.bo_constants import EFFECTS
 from ..core.config import cfg
-from ..core.core import overrideMethod
-from ..core.events import g_events
 
 
 class Effects(object):
 
     def __init__(self):
-        g_events.onEnterBattlePage += self.onEnterBattlePage
+        g_playerEvents.onAvatarReady += self.onEnterBattlePage
 
         @overrideMethod(SniperControlMode, "__setupBinoculars")
         def setupBinoculars(base, mode, isCoatedOptics):
