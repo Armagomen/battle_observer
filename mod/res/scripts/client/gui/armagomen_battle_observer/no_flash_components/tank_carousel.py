@@ -2,7 +2,7 @@ from account_helpers.settings_core.options import CarouselTypeSetting, DoubleCar
 from gui.shared.personality import ServicesLocator
 from ..core import cfg, cache
 from ..core.bo_constants import GLOBAL, CAROUSEL
-from ..core.utils import overrideMethod
+from ..core.utils.common import overrideMethod
 
 
 @overrideMethod(CarouselTypeSetting, "getRowCount")

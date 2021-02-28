@@ -1,9 +1,9 @@
 from time import strftime
 
-from .. import m_core
 from ..core import cfg
 from ..core.bo_constants import CLOCK
-from ..core.utils.timers import CyclicTimerEvent
+from ..core.utils import CyclicTimerEvent
+from ..core.utils.common import checkDecoder
 from ..meta.battle.date_times_meta import DateTimesMeta
 
 config = cfg.clock[CLOCK.IN_BATTLE]
@@ -14,7 +14,7 @@ class DateTimes(DateTimesMeta):
     def __init__(self):
         super(DateTimes, self).__init__()
         self.format = config[CLOCK.FORMAT]
-        self.coding = m_core.checkDecoder(strftime(self.format))
+        self.coding = checkDecoder(strftime(self.format))
         self.timerEvent = CyclicTimerEvent(CLOCK.UPDATE_INTERVAL, self.updateTimeData)
 
     def _populate(self):

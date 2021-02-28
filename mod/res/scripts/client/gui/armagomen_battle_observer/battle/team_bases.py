@@ -3,7 +3,7 @@ from gui.battle_control.controllers import team_bases_ctrl
 from helpers import time_utils
 from ..core import cfg
 from ..core.bo_constants import TEAM_BASES
-from ..core.utils.bw_utils import callback
+from ..core.utils.common import callback
 from ..meta.battle.team_bases_meta import TeamBasesMeta
 
 

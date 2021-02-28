@@ -4,7 +4,7 @@ from Event import SafeEvent
 from PlayerEvents import g_playerEvents
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
-from ..utils.bw_utils import getPlayer
+from ..utils.common import getPlayer
 
 
 class BattleCache(object):

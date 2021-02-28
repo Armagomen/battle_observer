@@ -5,7 +5,7 @@ from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from messenger.MessengerEntry import g_instance
 from ..core import cfg, cache, keysParser
 from ..core.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
-from ..core.utils import overrideMethod
+from ..core.utils.common import overrideMethod
 
 __all__ = ["save_shoot_lite"]
 

@@ -3,7 +3,7 @@ from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListene
 from gui.shared.personality import ServicesLocator
 from ..core import cfg, cache, keysParser
 from ..core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
-from ..core.utils.bw_utils import getEntity
+from ..core.utils.common import getEntity
 from ..meta.battle.players_panels_meta import PlayersPanelsMeta
 
 config = cfg.players_panels

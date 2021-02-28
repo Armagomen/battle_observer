@@ -2,7 +2,7 @@ from gui.Scaleform.battle_entry import BattleEntry
 from gui.Scaleform.daapi.settings import config
 from gui.Scaleform.lobby_entry import LobbyEntry
 from .bo_constants import SWF
-from .utils import overrideMethod
+from .utils.common import overrideMethod
 
 
 class InjectFlash(object):

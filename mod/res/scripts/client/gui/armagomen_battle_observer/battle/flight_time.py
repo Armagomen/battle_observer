@@ -5,7 +5,7 @@ from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from ..core import cfg, cache
 from ..core.bo_constants import FLIGHT_TIME, GLOBAL
-from ..core.utils.bw_utils import vector3
+from ..core.utils.common import vector3
 from ..meta.battle.flight_time_meta import FlightTimeMeta
 
 VECTOR = vector3(GLOBAL.F_ZERO, GLOBAL.F_ZERO, GLOBAL.F_ZERO)

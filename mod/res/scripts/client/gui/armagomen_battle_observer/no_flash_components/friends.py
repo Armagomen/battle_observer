@@ -4,7 +4,7 @@ from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategor
 from messenger.storage import storage_getter
 from ..core import cfg
 from ..core.bo_constants import MAIN, ANOTHER, GLOBAL
-from ..core.utils import overrideMethod
+from ..core.utils.common import overrideMethod
 
 _cache = {ANOTHER.FRIEND_LIST: set(), ANOTHER.ACCOUNT_DBID: GLOBAL.ZERO}
 

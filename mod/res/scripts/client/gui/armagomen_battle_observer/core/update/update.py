@@ -17,7 +17,7 @@ from web.cache.web_downloader import WebDownloader
 from ..bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
 from ..config.hangar.i18n import localization
 from ..update.dialog_button import DialogButtons
-from ..utils.bw_utils import restartGame, logInfo, openWebBrowser, logError, logWarning
+from ..utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning
 
 LAST_UPDATE = defaultdict()
 DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}

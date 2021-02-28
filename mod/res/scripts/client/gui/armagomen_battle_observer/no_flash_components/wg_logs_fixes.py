@@ -2,7 +2,7 @@ from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComp
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE as _ETYPE
 from ..core import cache
 from ..core.bo_constants import DAMAGE_LOG
-from ..core.utils import overrideMethod
+from ..core.utils.common import overrideMethod
 
 
 class WGLogsFixes(object):

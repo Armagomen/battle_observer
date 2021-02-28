@@ -16,7 +16,7 @@ from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
 from ..core import cache
 from ..core.bo_constants import GLOBAL, DISPERSION_CIRCLE
-from ..core.utils import overrideMethod
+from ..core.utils.common import overrideMethod
 
 CLIENT = _MARKER_TYPE.CLIENT
 SERVER = _MARKER_TYPE.SERVER

@@ -5,8 +5,7 @@ from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from gui.shared.personality import ServicesLocator
 from ..bo_constants import MAIN, SOUND_MODES
-from ..utils import overrideMethod
-from ..utils.bw_utils import setMaxFrameRate
+from ..utils.common import setMaxFrameRate, overrideMethod
 
 
 class BattleCore(object):

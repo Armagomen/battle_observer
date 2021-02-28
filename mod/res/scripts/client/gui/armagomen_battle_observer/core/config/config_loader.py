@@ -6,7 +6,7 @@ import time
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from ..bo_constants import LOAD_LIST, API_VERSION, GLOBAL
-from ..utils.bw_utils import logWarning, logInfo, getCurrentModPath
+from ..utils.common import logWarning, logInfo, getCurrentModPath
 
 
 class ConfigLoader(object):

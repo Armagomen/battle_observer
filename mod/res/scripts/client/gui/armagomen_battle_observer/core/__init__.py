@@ -3,7 +3,8 @@ from .config import Config, ConfigLoader
 from .inject_flash import InjectFlash
 from .observer_core import ObserverCore
 from .update import UpdateMain
-from .utils import HotKeysParser, Loader
+from .utils import HotKeysParser
+from ..no_flash_components import Loader
 
 cfg = Config()
 cache = BattleCache()

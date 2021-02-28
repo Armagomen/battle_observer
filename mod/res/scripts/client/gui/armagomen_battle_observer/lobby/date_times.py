@@ -1,9 +1,9 @@
 from time import strftime
 
-from .. import m_core
 from ..core import cfg, cache
 from ..core.bo_constants import CLOCK
-from ..core.utils.timers import CyclicTimerEvent
+from ..core.utils import CyclicTimerEvent
+from ..core.utils.common import checkDecoder
 from ..meta.lobby.date_times_meta import DateTimesMeta
 
 
@@ -23,7 +23,7 @@ class DateTimes(DateTimesMeta):
         self.timerEvent.start()
 
     def updateDecoder(self):
-        self.coding = m_core.checkDecoder(strftime(self.config[CLOCK.FORMAT]))
+        self.coding = checkDecoder(strftime(self.config[CLOCK.FORMAT]))
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == CLOCK.NAME:

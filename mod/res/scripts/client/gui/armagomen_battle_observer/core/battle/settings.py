@@ -4,7 +4,7 @@ from PlayerEvents import g_playerEvents
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from ..bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES, DISPERSION_CIRCLE
-from ..utils import overrideMethod
+from ..utils.common import overrideMethod
 
 
 class ViewSettings(object):

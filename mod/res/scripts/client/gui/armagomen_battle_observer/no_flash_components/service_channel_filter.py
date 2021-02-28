@@ -9,8 +9,7 @@ from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
 from ..core import cache
 from ..core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
-from ..core.utils import overrideMethod
-from ..core.utils.bw_utils import openWebBrowser
+from ..core.utils.common import openWebBrowser, overrideMethod
 
 channel_filter = set()
 

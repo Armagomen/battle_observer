@@ -2,7 +2,7 @@ from debug_utils import LOG_CURRENT_EXCEPTION
 from .i18n import localization
 from ...bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION_CIRCLE, PANELS, SNIPER, MINIMAP, MOD_NAME, \
     MAIN, ANOTHER, URLS
-from ...utils.bw_utils import logWarning, openWebBrowser
+from ...utils.common import logWarning, openWebBrowser
 
 settingsVersion = 32
 KEY_CONTROL = [[29]]

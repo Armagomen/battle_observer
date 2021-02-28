@@ -7,7 +7,7 @@ from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
 from ..core import cfg, b_core
 from ..core.bo_constants import GLOBAL, MINIMAP
-from ..core.utils import overrideMethod
+from ..core.utils.common import overrideMethod
 
 
 class BOPersonalEntriesPlugin(plugins.PersonalEntriesPlugin):

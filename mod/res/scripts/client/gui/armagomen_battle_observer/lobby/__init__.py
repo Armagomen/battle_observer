@@ -8,7 +8,7 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from ..core import cfg
 from ..core.bo_constants import GLOBAL, CLOCK, SWF
-from ..core.utils.bw_utils import logError, callback, logWarning
+from ..core.utils.common import logError, callback, logWarning
 
 
 def getComponents():

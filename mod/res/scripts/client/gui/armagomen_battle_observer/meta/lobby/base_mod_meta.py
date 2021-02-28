@@ -1,7 +1,7 @@
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from ...core import cfg
 from ...core.bo_constants import GLOBAL
-from ...core.utils.bw_utils import logInfo
+from ...core.utils.common import logInfo
 
 
 class BaseModMeta(BaseDAAPIComponent):

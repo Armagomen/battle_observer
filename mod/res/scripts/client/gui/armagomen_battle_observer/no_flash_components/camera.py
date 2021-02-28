@@ -13,8 +13,7 @@ if not BattleReplay.g_replayCtrl.isPlaying:
     from gui.battle_control import avatar_getter
     from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
     from ..core import cfg, cache
-    from ..core.utils import overrideMethod
-    from ..core.utils.bw_utils import callback
+    from ..core.utils.common import callback, overrideMethod
 
 
     @overrideMethod(SniperCamera, "create")

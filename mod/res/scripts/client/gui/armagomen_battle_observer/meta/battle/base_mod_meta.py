@@ -4,7 +4,7 @@ from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 from ...core import cfg
 from ...core.bo_constants import GLOBAL
-from ...core.utils.bw_utils import logInfo
+from ...core.utils.common import logInfo
 
 
 class BaseModMeta(BaseDAAPIComponent):

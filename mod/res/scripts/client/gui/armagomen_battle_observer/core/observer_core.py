@@ -1,11 +1,10 @@
 import os
 from shutil import rmtree
-from string import printable
 
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from .bo_constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, MOD_NAME
-from .utils.bw_utils import logInfo, logError, getPreferencesFilePath, getCurrentModPath
+from .utils.common import logInfo, logError, getPreferencesFilePath, getCurrentModPath
 
 
 class ObserverCore(object):
@@ -20,14 +19,6 @@ class ObserverCore(object):
         self.fileName = FILE_NAME.format(MOD_VERSION)
         self.isFileValid = self.isModValidFileName()
         self.mod_version = 'v{0} - {1}'.format(MOD_VERSION, self.gameVersion)
-
-    @staticmethod
-    def checkDecoder(_string):
-        for char in _string:
-            if char not in printable:
-                import locale
-                return locale.getpreferredencoding()
-        return None
 
     def clearClientCache(self, category=None):
         path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
@@ -62,7 +53,7 @@ class ObserverCore(object):
             self.configLoader.start()
             self.moduleLoader.start()
         else:
-            from .utils.bw_utils import logWarning
+            from .utils.common import logWarning
             from gui.Scaleform.daapi.view import dialogs
             from gui import DialogsInterface
             from .update.dialog_button import DialogButtons
