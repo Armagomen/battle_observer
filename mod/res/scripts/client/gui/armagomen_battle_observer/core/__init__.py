@@ -7,11 +7,11 @@ from .utils import HotKeysParser, Loader
 
 cfg = Config()
 cache = BattleCache()
-m_core = ObserverCore()
 c_Loader = ConfigLoader(cfg, cache)
+m_Loader = Loader()
+m_core = ObserverCore(cfg, cache, c_Loader, m_Loader)
 b_core = BattleCore(cfg, cache)
 v_settings = ViewSettings(cfg, b_core)
 keysParser = HotKeysParser(cfg)
-m_Loader = Loader()
 g_update = UpdateMain(m_core)
 flash = InjectFlash()

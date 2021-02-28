@@ -4,8 +4,8 @@ from math import log
 from Avatar import PlayerAvatar
 from AvatarInputHandler import AvatarInputHandler
 from gui.battle_control import avatar_getter
-from ..core.bo_constants import DISPERSION_CIRCLE, GLOBAL
 from ..core import cfg, cache
+from ..core.bo_constants import DISPERSION_CIRCLE, GLOBAL
 from ..meta.battle.dispersion_timer_meta import DispersionTimerMeta
 
 

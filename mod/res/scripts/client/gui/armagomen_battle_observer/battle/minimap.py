@@ -1,6 +1,6 @@
 from gui.battle_control import avatar_getter
-from ..core.bo_constants import MINIMAP
 from ..core import cfg, keysParser
+from ..core.bo_constants import MINIMAP
 from ..meta.battle.minimap_meta import MinimapMeta
 
 

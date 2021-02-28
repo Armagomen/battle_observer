@@ -18,7 +18,7 @@ if not BattleReplay.g_replayCtrl.isPlaying:
 
 
     @overrideMethod(SniperCamera, "create")
-    def create(create, *args, **kwargs):
+    def create(base, *args, **kwargs):
         if cfg.zoom[GLOBAL.ENABLED] and cfg.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
             if cfg.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]:
                 steps = cfg.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
@@ -27,11 +27,11 @@ if not BattleReplay.g_replayCtrl.isPlaying:
                 args[GLOBAL.ZERO]._cfg[SNIPER.ZOOMS] = steps
                 args[GLOBAL.ZERO]._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = \
                     [round(SNIPER.EXPOSURE_FACTOR * step, SNIPER.ONE) for step in exposure_range]
-        return create(*args, **kwargs)
+        return base(*args, **kwargs)
 
 
     @overrideMethod(SniperCamera, "enable")
-    def enable(enable, camera, targetPos, saveZoom):
+    def enable(base, camera, targetPos, saveZoom):
         if cfg.zoom[GLOBAL.ENABLED]:
             saveZoom = saveZoom or cfg.zoom[GLOBAL.ENABLED]
             if cfg.zoom[SNIPER.DYN_ZOOM][SNIPER.GUN_ZOOM]:
@@ -51,11 +51,10 @@ if not BattleReplay.g_replayCtrl.isPlaying:
                     camera._cfg[SNIPER.ZOOM] = zoom
                 else:
                     camera._cfg[SNIPER.ZOOM] = minZoom
-        return enable(camera, targetPos, saveZoom)
+        return base(camera, targetPos, saveZoom)
 
 
-    @overrideMethod(PlayerAvatar, "showTracer")
-    def showTracer(base, avatar, shooterID, *args):
+    def changeControlMode(avatar, shooterID):
         if cfg.zoom[SNIPER.DISABLE_AFTER_SHOOT] and cfg.zoom[GLOBAL.ENABLED] and \
                 not BattleReplay.g_replayCtrl.isPlaying and shooterID == avatar.playerVehicleID:
             input_handler = avatar.inputHandler
@@ -72,38 +71,43 @@ if not BattleReplay.g_replayCtrl.isPlaying:
                                                    gunPitch=aiming_system.gunPitch,
                                                    aimingMode=input_handler.ctrl._aimingMode,
                                                    closesDist=False)
+
+
+    @overrideMethod(PlayerAvatar, "showTracer")
+    def showTracer(base, avatar, shooterID, *args):
+        changeControlMode(avatar, shooterID)
         return base(avatar, shooterID, *args)
 
 
     @overrideMethod(ArcadeCamera, "create")
-    def create(base_create, camera, *args, **kwargs):
+    def create(base, camera, *args, **kwargs):
         if cfg.arcade_camera[GLOBAL.ENABLED]:
             config = camera._cfg
             config[ARCADE.DIST_RANGE] = MinMax(cfg.arcade_camera[ARCADE.MIN], cfg.arcade_camera[ARCADE.MAX])
             config[ARCADE.START_DIST] = cfg.arcade_camera[ARCADE.START_DEAD_DIST]
             config[ARCADE.START_ANGLE] = ARCADE.ANGLE
-        return base_create(camera, *args, **kwargs)
+        return base(camera, *args, **kwargs)
 
 
     @overrideMethod(StrategicCamera, "create")
     @overrideMethod(ArtyCamera, "create")
-    def create(base_create, camera, *args, **kwargs):
+    def create(base, camera, *args, **kwargs):
         if cfg.strategic_camera[GLOBAL.ENABLED]:
             dist_range = (cfg.strategic_camera[STRATEGIC.MIN], cfg.strategic_camera[STRATEGIC.MAX])
             camera._userCfg[STRATEGIC.DIST_RANGE] = dist_range
             camera._cfg[STRATEGIC.DIST_RANGE] = dist_range
-        return base_create(camera, *args, **kwargs)
+        return base(camera, *args, **kwargs)
 
 
     @overrideMethod(PostMortemControlMode, "enable")
-    def enablePostMortem(base_enable, mode, **kwargs):
+    def enablePostMortem(base, mode, **kwargs):
         if POSTMORTEM.PARAMS in kwargs:
             kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, cfg.arcade_camera[ARCADE.START_DEAD_DIST])
         if not PostMortemControlMode.getIsPostmortemDelayEnabled():
             avatar_getter.setForcedGuiControlMode(True)
             kwargs[POSTMORTEM.DURATION] = POSTMORTEM.CALLBACK_TIME_SEC
             callback(POSTMORTEM.CALLBACK_TIME_SEC, lambda: avatar_getter.setForcedGuiControlMode(False))
-        return base_enable(mode, **kwargs)
+        return base(mode, **kwargs)
 
 
     @overrideMethod(SniperAimingSystem, "__isTurretHasStaticYaw")
@@ -113,8 +117,8 @@ if not BattleReplay.g_replayCtrl.isPlaying:
 
 
     @overrideMethod(SniperControlMode, "enable")
-    def sniperControlMode_enable(base_enable, controlMode, *args, **kwargs):
-        result = base_enable(controlMode, *args, **kwargs)
+    def sniperControlMode_enable(base, controlMode, *args, **kwargs):
+        result = base(controlMode, *args, **kwargs)
         if cfg.main[MAIN.REMOVE_HANDBRAKE]:
             controlMode._cam.aimingSystem.enableHorizontalStabilizerRuntime(True)
             controlMode._cam.aimingSystem.forceFullStabilization(True)

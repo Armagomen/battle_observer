@@ -1,8 +1,8 @@
 from AvatarInputHandler.control_modes import SniperControlMode
 from PlayerEvents import g_playerEvents
 from helpers.EffectsList import EffectsListPlayer, _PixieEffectDesc
-from ..core.bo_constants import EFFECTS
 from ..core import cfg, cache
+from ..core.bo_constants import EFFECTS
 from ..core.utils import overrideMethod
 
 

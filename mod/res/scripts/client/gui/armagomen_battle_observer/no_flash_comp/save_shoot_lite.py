@@ -3,8 +3,8 @@ from BattleReplay import g_replayCtrl
 from PlayerEvents import g_playerEvents
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from messenger.MessengerEntry import g_instance
-from ..core.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
 from ..core import cfg, cache, keysParser
+from ..core.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
 from ..core.utils import overrideMethod
 
 __all__ = ["save_shoot_lite"]

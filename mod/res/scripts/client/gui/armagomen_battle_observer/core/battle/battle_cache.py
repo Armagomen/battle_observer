@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from Event import SafeEvent
+from PlayerEvents import g_playerEvents
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 from ..utils.bw_utils import getPlayer
@@ -9,6 +10,7 @@ from ..utils.bw_utils import getPlayer
 class BattleCache(object):
 
     def __init__(self):
+        g_playerEvents.onAvatarBecomeNonPlayer += self.clear
         self.onModSettingsChanged = SafeEvent()
         self.playersDamage = defaultdict(int)
         self.errorKeysSet = set()

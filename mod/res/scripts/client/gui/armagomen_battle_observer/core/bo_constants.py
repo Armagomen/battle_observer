@@ -682,9 +682,6 @@ class MASSAGES:
     NA = "NA"
     START = "START LOADING"
     FINISH = "SHUTTING DOWN"
-    LOCKED = ("Sorry, your region is locked."
-              " If you want to use the mod, you need to contact me personally"
-              " armagomen.bb-t.ru and purchase a presonal license.")
     LOCKED_BY_FILE_NAME = "ERROR: file {} is not valid, mod locked, please install mod from official site"
     UPDATE_CHECKED = "The update check is completed, you have the current version."
     NEW_VERSION = "An update {} is detected, the client will be restarted at the end of the download."

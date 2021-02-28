@@ -1,5 +1,5 @@
-from ..core.bo_constants import GLOBAL, MAIN
 from ..core import cfg
+from ..core.bo_constants import GLOBAL, MAIN
 from ..meta.battle.wg_comp_meta import WgCompMeta
 
 

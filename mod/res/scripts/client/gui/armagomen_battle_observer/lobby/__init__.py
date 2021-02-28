@@ -6,8 +6,8 @@ from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
-from ..core.bo_constants import GLOBAL, CLOCK, SWF
 from ..core import cfg
+from ..core.bo_constants import GLOBAL, CLOCK, SWF
 from ..core.utils.bw_utils import logError, callback, logWarning
 
 

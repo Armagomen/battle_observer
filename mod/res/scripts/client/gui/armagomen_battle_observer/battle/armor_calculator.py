@@ -4,8 +4,8 @@ from AvatarInputHandler import AvatarInputHandler
 from aih_constants import SHOT_RESULT
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from gui.battle_control import avatar_getter
-from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE
 from ..core import cfg, cache
+from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE
 from ..meta.battle.armor_calc_meta import ArmorCalcMeta
 
 

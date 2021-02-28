@@ -4,8 +4,8 @@ from colorsys import hsv_to_rgb
 from constants import ATTACK_REASONS
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from ..core.bo_constants import DAMAGE_LOG as CONSTANTS, GLOBAL
 from ..core import cfg, cache, keysParser
+from ..core.bo_constants import DAMAGE_LOG as CONSTANTS, GLOBAL
 from ..core.utils.bw_utils import callback, logWarning
 from ..meta.battle.damage_logs_meta import DamageLogsMeta
 

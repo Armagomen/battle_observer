@@ -2,7 +2,6 @@ import os
 from shutil import rmtree
 from string import printable
 
-from constants import AUTH_REALM
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from .bo_constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, MOD_NAME
@@ -10,14 +9,16 @@ from .utils.bw_utils import logInfo, logError, getPreferencesFilePath, getCurren
 
 
 class ObserverCore(object):
-    __slots__ = ("modsDir", "gameVersion", "workingDir", "fileName", "isFileValid", "isLoading", "mod_version")
+    __slots__ = ("modsDir", "gameVersion", "workingDir", "fileName", "isFileValid", "mod_version",
+                 "config", "cache", "configLoader", "moduleLoader")
 
-    def __init__(self):
+    def __init__(self, config, cache, configLoader, moduleLoader):
+        self.config, self.cache = config, cache
+        self.configLoader, self.moduleLoader = configLoader, moduleLoader
         self.modsDir, self.gameVersion = getCurrentModPath()
         self.workingDir = os.path.join(self.modsDir, self.gameVersion)
         self.fileName = FILE_NAME.format(MOD_VERSION)
         self.isFileValid = self.isModValidFileName()
-        self.isLoading = AUTH_REALM != MASSAGES.NA and self.isFileValid
         self.mod_version = 'v{0} - {1}'.format(MOD_VERSION, self.gameVersion)
 
     @staticmethod
@@ -44,13 +45,11 @@ class ObserverCore(object):
             logInfo('CLEANING CACHE: {0}'.format(dirName))
 
     def onExit(self):
-        if self.isLoading:
-            from . import cfg
-            from . import cache
-            if cfg.main[MAIN.AUTO_CLEAR_CACHE]:
+        if self.isFileValid:
+            if self.config.main[MAIN.AUTO_CLEAR_CACHE]:
                 self.clearClientCache()
-            if cache.errorKeysSet and GLOBAL.DEBUG_MODE:
-                for key in sorted(cache.errorKeysSet):
+            if self.cache.errorKeysSet and GLOBAL.DEBUG_MODE:
+                for key in sorted(self.cache.errorKeysSet):
                     logError(key)
             logInfo('MOD {}: {}'.format(MASSAGES.FINISH, self.mod_version))
 
@@ -58,18 +57,16 @@ class ObserverCore(object):
         return self.fileName in os.listdir(self.workingDir)
 
     def start(self):
-        if self.isLoading:
+        if self.isFileValid:
             logInfo('MOD {}: {}'.format(MASSAGES.START, self.mod_version))
-            from . import c_Loader
-            c_Loader.start()
-            from . import m_Loader
-            m_Loader.start()
+            self.configLoader.start()
+            self.moduleLoader.start()
         else:
             from .utils.bw_utils import logWarning
             from gui.Scaleform.daapi.view import dialogs
             from gui import DialogsInterface
             from .update.dialog_button import DialogButtons
-            locked = MASSAGES.LOCKED if self.isFileValid else MASSAGES.LOCKED_BY_FILE_NAME.format(self.fileName)
+            locked = MASSAGES.LOCKED_BY_FILE_NAME.format(self.fileName)
             logWarning(locked)
 
             def loadBlocked(spaceID):

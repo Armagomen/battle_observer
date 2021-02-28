@@ -3,8 +3,8 @@ from math import ceil
 
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
-from ..core.bo_constants import MAIN_GUN, GLOBAL
 from ..core import cfg, cache
+from ..core.bo_constants import MAIN_GUN, GLOBAL
 from ..meta.battle.main_gun_meta import MainGunMeta
 
 config = cfg.main_gun

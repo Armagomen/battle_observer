@@ -2,8 +2,8 @@ from collections import defaultdict
 
 from gui.battle_control.controllers.period_ctrl import IAbstractPeriodView
 from helpers.time_utils import ONE_MINUTE
-from ..core.bo_constants import BATTLE_TIMER, COLORS, GLOBAL
 from ..core import cfg
+from ..core.bo_constants import BATTLE_TIMER, COLORS, GLOBAL
 from ..meta.battle.battle_timer_meta import BattleTimerMeta
 
 

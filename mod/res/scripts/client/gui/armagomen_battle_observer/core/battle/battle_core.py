@@ -16,7 +16,6 @@ class BattleCore(object):
         self.callbackTime = 0.01
         self.cache = cache
         g_playerEvents.onArenaCreated += self.onArenaCreated
-        g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         cache.onModSettingsChanged += self.onModSettingsChanged
 
         @overrideMethod(PostmortemPanel, "getDeathInfo")
@@ -56,6 +55,3 @@ class BattleCore(object):
                                                          ARENA_GUI_TYPE.FORT_BATTLE_2,
                                                          ARENA_GUI_TYPE.SORTIE_2)
         return enabled, arenaVisitor
-
-    def onExitBattlePage(self):
-        self.cache.clear()

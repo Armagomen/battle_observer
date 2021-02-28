@@ -1,8 +1,8 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.shared.personality import ServicesLocator
-from ..core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from ..core import cfg, cache, keysParser
+from ..core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from ..core.utils.bw_utils import getEntity
 from ..meta.battle.players_panels_meta import PlayersPanelsMeta
 

@@ -1,7 +1,7 @@
 from debug_utils import LOG_CURRENT_EXCEPTION
 from .i18n import localization
-from ..core.bo_constants import *
 from ..core import cfg, c_Loader, cache
+from ..core.bo_constants import *
 from ..core.utils.bw_utils import logWarning, openWebBrowser
 
 settingsVersion = 32

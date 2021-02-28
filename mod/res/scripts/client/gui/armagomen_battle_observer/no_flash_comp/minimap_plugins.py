@@ -5,8 +5,8 @@ from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComp
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
-from ..core.bo_constants import GLOBAL, MINIMAP
 from ..core import cfg, b_core
+from ..core.bo_constants import GLOBAL, MINIMAP
 from ..core.utils import overrideMethod
 
 

@@ -2,8 +2,8 @@ from PlayerEvents import g_playerEvents
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
-from ...core.bo_constants import GLOBAL
 from ...core import cfg
+from ...core.bo_constants import GLOBAL
 from ...core.utils.bw_utils import logInfo
 
 
