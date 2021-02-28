@@ -19,8 +19,8 @@ class Loader(object):
             'no_flash_comp.effects',
             'no_flash_comp.minimap_plugins',
             'no_flash_comp.wg_logs_fixes',
-            'hangar.service_channel_filter',
-            'hangar.tank_carousel'
+            'no_flash_comp.service_channel_filter',
+            'no_flash_comp.tank_carousel'
         )
 
     def start(self):

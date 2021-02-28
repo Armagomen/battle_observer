@@ -1,5 +1,5 @@
 # coding=utf-8
-from ...core.bo_constants import MOD_VERSION
+from ....bo_constants import MOD_VERSION
 
 timeFormat_tooltip = """Формат - Значение
 %a - Сокращенное название дня недели

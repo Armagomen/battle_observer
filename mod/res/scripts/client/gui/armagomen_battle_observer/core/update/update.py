@@ -15,9 +15,9 @@ from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from web.cache.web_downloader import WebDownloader
 from ..bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
+from ..config.hangar.i18n import localization
 from ..update.dialog_button import DialogButtons
 from ..utils.bw_utils import restartGame, logInfo, openWebBrowser, logError, logWarning
-from ...hangar.i18n import localization
 
 LAST_UPDATE = defaultdict()
 DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}

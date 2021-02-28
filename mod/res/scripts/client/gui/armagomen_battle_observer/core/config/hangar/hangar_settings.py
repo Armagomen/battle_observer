@@ -1,8 +1,8 @@
 from debug_utils import LOG_CURRENT_EXCEPTION
 from .i18n import localization
-from ..core import cfg, c_Loader, cache
-from ..core.bo_constants import *
-from ..core.utils.bw_utils import logWarning, openWebBrowser
+from ...bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION_CIRCLE, PANELS, SNIPER, MINIMAP, MOD_NAME, \
+    MAIN, ANOTHER, URLS
+from ...utils.bw_utils import logWarning, openWebBrowser
 
 settingsVersion = 32
 KEY_CONTROL = [[29]]
@@ -12,6 +12,7 @@ KEY_ALT = [[56]]
 class CreateElement(object):
 
     def __init__(self):
+        self.cache = None
         self.getter = None
 
     def createLabel(self, blockID, varName):
@@ -87,10 +88,9 @@ class CreateElement(object):
             result.update({'snapInterval': step, 'format': '{{value}}'})
         return result
 
-    @staticmethod
-    def addToErrorsKey(blockID, varName):
+    def addToErrorsKey(self, blockID, varName):
         var = '%s - %s' % (blockID, varName)
-        cache.errorKeysSet.add(var)
+        self.cache.errorKeysSet.add(var)
 
     def createBlock(self, blockID, config, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
@@ -192,17 +192,20 @@ class Getter(object):
 
 class ConfigInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents):
+    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, config, configLoader, cache):
         super(ConfigInterface, self).__init__()
+        self.cache = cache
+        self.configLoader = configLoader
+        self.config = config
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
         self.vxSettingsApiEvents = vxSettingsApiEvents
-        self.selectedConfig = c_Loader.configsList.index(c_Loader.cName)
+        self.selectedConfig = self.configLoader.configsList.index(self.configLoader.cName)
         self.configSelect = False
         self.getter = Getter()
         ModsListRegister(modsListApi, self.load_window)
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                   useKeyPairs=cfg.main[MAIN.USE_KEY_PAIRS])
+                                   useKeyPairs=self.config.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         vxSettingsApi.onSettingsChanged += self.onSettingsChanged
         vxSettingsApi.onDataChanged += self.onDataChanged
@@ -238,9 +241,9 @@ class ConfigInterface(CreateElement):
         if event == self.vxSettingsApiEvents.WINDOW_CLOSED:
             if self.configSelect:
                 import os
-                c_Loader.createFileInDir(os.path.join(c_Loader.path, 'load.json'),
-                                         {'loadConfig': c_Loader.configsList[self.selectedConfig]})
-                c_Loader.readConfig(c_Loader.configsList[self.selectedConfig])
+                self.configLoader.createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
+                                                  {'loadConfig': self.configLoader.configsList[self.selectedConfig]})
+                self.configLoader.readConfig(self.configLoader.configsList[self.selectedConfig])
 
     def updateMod(self, blockID):
         if blockID not in self.inited:
@@ -259,7 +262,7 @@ class ConfigInterface(CreateElement):
             self.inited.clear()
             self.vxSettingsApi.processEvent(MOD_NAME, self.vxSettingsApiEvents.CALLBACKS.CLOSE_WINDOW)
         else:
-            config = getattr(cfg, blockID)
+            config = getattr(self.config, blockID)
             for setting in settings:
                 isString = isinstance(settings[setting], basestring)
                 if isString:
@@ -282,9 +285,9 @@ class ConfigInterface(CreateElement):
                         elif oldParamType is int and newParamType is float:
                             param = int(round(param))
                     updatedConfigLink[paramName] = param
-            c_Loader.updateConfigFile(blockID, config)
+            self.configLoader.updateConfigFile(blockID, config)
             if not self.configSelect:
-                cache.onModSettingsChanged(config, blockID)
+                self.cache.onModSettingsChanged(config, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -323,12 +326,12 @@ class ConfigInterface(CreateElement):
 
     def getTemplate(self, blockID):
         """create templates, do not change..."""
-        config = getattr(cfg, blockID, {})
+        config = getattr(self.config, blockID, {})
         column1 = []
         column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selectedConfig',
-                                                   c_Loader.configsList, self.selectedConfig)]
+                                                   self.configLoader.configsList, self.selectedConfig)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_eu', URLS.DONATE_EU_URL, 'Button'),
                        self.createControl(blockID, 'support_button', URLS.SUPPORT_URL, 'Button')]
