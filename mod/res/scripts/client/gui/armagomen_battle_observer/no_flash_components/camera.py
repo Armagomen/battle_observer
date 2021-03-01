@@ -54,8 +54,7 @@ if not BattleReplay.g_replayCtrl.isPlaying:
 
 
     def changeControlMode(avatar, shooterID):
-        if cfg.zoom[SNIPER.DISABLE_AFTER_SHOOT] and cfg.zoom[GLOBAL.ENABLED] and \
-                not BattleReplay.g_replayCtrl.isPlaying and shooterID == avatar.playerVehicleID:
+        if cfg.zoom[SNIPER.DISABLE_AFTER_SHOOT] and cfg.zoom[GLOBAL.ENABLED] and shooterID == avatar.playerVehicleID:
             input_handler = avatar.inputHandler
             if input_handler is not None and isinstance(input_handler.ctrl, SniperControlMode):
                 if cfg.zoom[SNIPER.SKIP_CLIP]:

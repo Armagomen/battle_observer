@@ -6,6 +6,10 @@ import BigWorld
 import Math
 import ResMgr
 
+from constants import ARENA_GUI_TYPE
+from helpers import dependency
+from skeletons.gui.battle_session import IBattleSessionProvider
+
 MOD_NAME = "BATTLE_OBSERVER"
 
 
@@ -106,3 +110,17 @@ def checkDecoder(_string):
         if char not in printable:
             return locale.getpreferredencoding()
     return None
+
+
+def isAllowedBattleType(arenaVisitor=None):
+    enabled = False
+    if arenaVisitor is None:
+        arenaVisitor = dependency.instance(IBattleSessionProvider).arenaVisitor
+    if arenaVisitor is not None:
+        enabled = arenaVisitor.gui.isRandomBattle() or \
+                  arenaVisitor.gui.isTrainingBattle() or \
+                  arenaVisitor.gui.isRankedBattle() or \
+                  arenaVisitor.getArenaGuiType() in (ARENA_GUI_TYPE.UNKNOWN,
+                                                     ARENA_GUI_TYPE.FORT_BATTLE_2,
+                                                     ARENA_GUI_TYPE.SORTIE_2)
+    return enabled

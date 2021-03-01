@@ -6,9 +6,9 @@ from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
-from ..core import b_core, v_settings
+from ..core import v_settings
 from ..core.bo_constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
-from ..core.utils.common import logError, callback, logWarning
+from ..core.utils.common import logError, callback, logWarning, isAllowedBattleType
 
 
 def getViewSettings():
@@ -46,8 +46,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def callbackListener(self, event):
-        enabled, arenaVisitor = b_core.isAllowedBattleType()
-        if enabled:
+        if isAllowedBattleType():
             callback(2.0, lambda: self.eventListener(event))
 
     def eventListener(self, event):

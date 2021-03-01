@@ -148,7 +148,7 @@ class DamageLog(DamageLogsMeta):
 
     def onVehicleAddUpdate(self, vehicleID, *args, **kwargs):
         """update log item in GM-mode"""
-        vehicleInfoVO = cache.arenaDP.getVehicleInfo(vehicleID)
+        vehicleInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
         if vehicleInfoVO:
             vehicleType = vehicleInfoVO.vehicleType
             if vehicleType and vehicleType.maxHealth and vehicleType.classTag:

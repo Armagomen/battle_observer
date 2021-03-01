@@ -2,8 +2,6 @@ from collections import defaultdict
 
 from Event import SafeEvent
 from PlayerEvents import g_playerEvents
-from helpers import dependency
-from skeletons.gui.battle_session import IBattleSessionProvider
 from ..utils.common import getPlayer
 
 
@@ -29,11 +27,3 @@ class BattleCache(object):
         if self._player is None:
             self._player = getPlayer()
         return self._player
-
-    @property
-    def arenaDP(self):
-        return dependency.instance(IBattleSessionProvider).getArenaDP()
-
-    @staticmethod
-    def getArenaVisitor():
-        return dependency.instance(IBattleSessionProvider).arenaVisitor

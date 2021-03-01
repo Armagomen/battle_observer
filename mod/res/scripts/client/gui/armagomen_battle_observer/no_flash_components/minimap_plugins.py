@@ -5,9 +5,9 @@ from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComp
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
-from ..core import cfg, b_core
+from ..core import cfg
 from ..core.bo_constants import GLOBAL, MINIMAP
-from ..core.utils.common import overrideMethod
+from ..core.utils.common import overrideMethod, isAllowedBattleType
 
 
 class BOPersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
@@ -68,7 +68,7 @@ class VehiclesPlugin(plugins.ArenaVehiclesPlugin):
 
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
-    if cfg.minimap[GLOBAL.ENABLED] and b_core.isAllowedBattleType(arenaVisitor)[0]:
+    if cfg.minimap[GLOBAL.ENABLED] and isAllowedBattleType(arenaVisitor):
         setup = {'equipments': plugins.EquipmentsPlugin,
                  'vehicles': VehiclesPlugin if cfg.minimap[MINIMAP.DEATH_PERMANENT] else plugins.ArenaVehiclesPlugin,
                  'personal': BOPersonalEntriesPlugin,

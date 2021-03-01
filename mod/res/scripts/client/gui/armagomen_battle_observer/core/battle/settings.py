@@ -4,14 +4,13 @@ from PlayerEvents import g_playerEvents
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from ..bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES, DISPERSION_CIRCLE
-from ..utils.common import overrideMethod
+from ..utils.common import overrideMethod, isAllowedBattleType
 
 
 class ViewSettings(object):
 
-    def __init__(self, cfg, b_core):
+    def __init__(self, cfg):
         g_playerEvents.onAvatarBecomeNonPlayer += self.clear
-        self._b_core = b_core
         self.__cache = defaultdict(bool)
         self.__alias_to_bool = {
             ALIASES.HP_BARS: lambda: cfg.hp_bars[GLOBAL.ENABLED],
@@ -37,7 +36,7 @@ class ViewSettings(object):
         @overrideMethod(SharedPage)
         def new_SharedPage_init(base, page, *args, **kwargs):
             base(page, *args, **kwargs)
-            if self._b_core.isAllowedBattleType()[GLOBAL.FIRST]:
+            if isAllowedBattleType():
                 config = page._SharedPage__componentsConfig._ComponentsConfig__config
                 newConfig = tuple((i, self.checkAndReplaceAlias(aliases)) for i, aliases in config)
                 page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig
