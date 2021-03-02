@@ -1,6 +1,6 @@
 # coding=utf-8
 from account_helpers.settings_core.settings_constants import GAME
-from aih_constants import SHOT_RESULT
+from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
 from constants import SHELL_TYPES_LIST
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -219,7 +219,7 @@ class CLOCK:
     IN_BATTLE = "battle"
     IN_LOBBY = "hangar"
     FORMAT = "format"
-    UPDATE_INTERVAL = 0.5
+    UPDATE_INTERVAL = 1.0
     DEFAULT_FORMAT_BATTLE = "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>"
     DEFAULT_FORMAT_HANGAR = "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>"
 
@@ -369,6 +369,7 @@ class POSTMORTEM:
     CALLBACK_TIME_SEC = 1.0
     DURATION = "transitionDuration"
     PARAMS = "postmortemParams"
+    MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM}
 
 
 class ARMOR_CALC:

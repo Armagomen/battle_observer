@@ -43,8 +43,8 @@ class SaveShootLite(object):
             return KEY_ALIAS_ALT[GLOBAL.FIRST],
 
     def onEnterBattlePage(self):
-        keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey())
         if self.enabled:
+            keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey())
             keysParser.onKeyPressed += self.keyEvent
 
     def onExitBattlePage(self):

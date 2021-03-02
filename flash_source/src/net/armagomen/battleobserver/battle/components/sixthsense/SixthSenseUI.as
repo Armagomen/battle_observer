@@ -82,36 +82,36 @@
 			page.unregisterComponent(this.name);
 		}
 
-		public function as_sixthSense(show:Boolean, str:String):void
+		public function as_show():void
 		{
-			if (params.enabled)
+			if (!this.image)
 			{
-				if (!this.image)
-				{
-					[Embed(source = "SixthSenseIcon.png")]
-					var Icon:Class;
-					this.image = new Icon();
-					this.image.smoothing = params.image.smoothing;
-					this.image.alpha = params.image.alpha;
-					this.image.scaleX = this.image.scaleY = params.image.scale;
-					this.image.x = params.image.x - image.width >> 1;
-					this.image.y = params.image.y;
-					this._container.addChild(this.image);
-					if (params.showTimer)
-					{
-						timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-						timer.alpha = params.timer.alpha;
-					}
-				}
+				[Embed(source = "SixthSenseIcon.png")]
+				var Icon:Class;
+				this.image = new Icon();
+				this.image.smoothing = params.image.smoothing;
+				this.image.alpha = params.image.alpha;
+				this.image.scaleX = this.image.scaleY = params.image.scale;
+				this.image.x = params.image.x - image.width >> 1;
+				this.image.y = params.image.y;
+				this._container.addChild(this.image);
 				if (params.showTimer)
 				{
-					timer.htmlText = str;
-				}
-				if (this._container.visible != show)
-				{
-					this._container.visible = show;
+					timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+					timer.alpha = params.timer.alpha;
 				}
 			}
+			this._container.visible = true;
+		}
+		
+		public function as_hide():void
+		{
+			this._container.visible = false;
+		}
+		
+		public function as_updateTimer(str:String):void
+		{
+			timer.htmlText = str;
 		}
 
 		private function imageLoaded(evt:Event):void
@@ -137,12 +137,9 @@
 
 		private function setImage():void
 		{
-			if (params.enabled)
-			{
-				var loader:Loader = new Loader();
-				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
-				loader.load(new URLRequest('../../../'+params.image.img));
-			}
+			var loader:Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
+			loader.load(new URLRequest('../../../'+params.image.img));
 		}
 
 		private function _onResizeHandle(event:Event):void

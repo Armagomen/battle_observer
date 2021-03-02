@@ -2,10 +2,9 @@ from collections import defaultdict
 from math import log
 
 from Avatar import PlayerAvatar
-from AvatarInputHandler import AvatarInputHandler
 from gui.battle_control import avatar_getter
 from ..core import cfg, cache
-from ..core.bo_constants import DISPERSION_CIRCLE, GLOBAL
+from ..core.bo_constants import DISPERSION_CIRCLE, GLOBAL, POSTMORTEM
 from ..meta.battle.dispersion_timer_meta import DispersionTimerMeta
 
 
@@ -26,22 +25,11 @@ class DispersionTimer(DispersionTimerMeta):
     def _populate(self):
         super(DispersionTimer, self)._populate()
         self.as_startUpdateS(cfg.dispersion_circle)
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled += self.onVehicleKilled
-
-        self.base_getAngle = PlayerAvatar.getOwnVehicleShotDispersionAngle
-        PlayerAvatar.getOwnVehicleShotDispersionAngle = lambda *args, **kwargs: self.updateDispersion(*args, **kwargs)
-
-    def _dispose(self):
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled -= self.onVehicleKilled
-        PlayerAvatar.getOwnVehicleShotDispersionAngle = self.base_getAngle
-        super(DispersionTimer, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.as_onControlModeChangedS(ctrlMode)
+        if ctrlMode in POSTMORTEM.MODES:
+            self.as_updateTimerTextS("")
 
     def updateDispersion(self, *args, **kwargs):
         result = self.base_getAngle(*args, **kwargs)
@@ -74,16 +62,13 @@ class DispersionTimer(DispersionTimerMeta):
             self.aimingTime = desc.aimingTime
         handler = avatar_getter.getInputHandler()
         if handler is not None:
-            if isinstance(handler, AvatarInputHandler):
-                handler.onCameraChanged += self.onCameraChanged
+            handler.onCameraChanged += self.onCameraChanged
+        self.base_getAngle = PlayerAvatar.getOwnVehicleShotDispersionAngle
+        PlayerAvatar.getOwnVehicleShotDispersionAngle = lambda *args, **kwargs: self.updateDispersion(*args, **kwargs)
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
-            if isinstance(handler, AvatarInputHandler):
-                handler.onCameraChanged -= self.onCameraChanged
+            handler.onCameraChanged -= self.onCameraChanged
+        PlayerAvatar.getOwnVehicleShotDispersionAngle = self.base_getAngle
         super(DispersionTimer, self).onExitBattlePage()
-
-    def onVehicleKilled(self, targetID, *args, **kwargs):
-        if cache.player.playerVehicleID == targetID:
-            self.as_updateTimerTextS("")

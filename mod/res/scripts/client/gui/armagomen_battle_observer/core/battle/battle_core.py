@@ -3,7 +3,7 @@ from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from gui.shared.personality import ServicesLocator
-from ..bo_constants import MAIN, SOUND_MODES
+from ..bo_constants import MAIN, SOUND_MODES, GLOBAL
 from ..utils.common import setMaxFrameRate, overrideMethod
 
 
@@ -13,6 +13,7 @@ class BattleCore(object):
         self.load_health_module = False
         self.callbackTime = 0.01
         self.cache = cache
+        self.config = config
         g_playerEvents.onArenaCreated += self.onArenaCreated
         cache.onModSettingsChanged += self.onModSettingsChanged
 
@@ -35,8 +36,9 @@ class BattleCore(object):
             setMaxFrameRate(config[MAIN.MAX_FRAME_RATE])
 
     def onArenaCreated(self):
-        intCD = getattr(g_currentVehicle.item, "intCD", None)
-        if intCD:
-            avg = ServicesLocator.itemsCache.items.getVehicleDossier(intCD).getRandomStats().getAvgDamage()
-            if avg is not None:
-                self.cache.tankAvgDamage = float(avg)
+        if self.config.log_total[GLOBAL.ENABLED]:
+            intCD = getattr(g_currentVehicle.item, "intCD", None)
+            if intCD:
+                avg = ServicesLocator.itemsCache.items.getVehicleDossier(intCD).getRandomStats().getAvgDamage()
+                if avg is not None:
+                    self.cache.tankAvgDamage = float(avg)

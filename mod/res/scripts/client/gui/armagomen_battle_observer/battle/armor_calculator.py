@@ -1,11 +1,10 @@
 from collections import defaultdict
 
-from AvatarInputHandler import AvatarInputHandler
 from aih_constants import SHOT_RESULT
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from gui.battle_control import avatar_getter
 from ..core import cfg, cache
-from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE
+from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE, POSTMORTEM
 from ..meta.battle.armor_calc_meta import ArmorCalcMeta
 
 
@@ -29,26 +28,18 @@ class ArmorCalculator(ArmorCalcMeta):
         ammo = self.sessionProvider.shared.ammo
         if ammo is not None:
             ammo.onGunReloadTimeSet += self.onGunReload
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled += self.onVehicleKilled
         handler = avatar_getter.getInputHandler()
         if handler is not None:
-            if isinstance(handler, AvatarInputHandler):
-                handler.onCameraChanged += self.onCameraChanged
+            handler.onCameraChanged += self.onCameraChanged
         self.updateShootParams()
 
     def onExitBattlePage(self):
         ammo = self.sessionProvider.shared.ammo
         if ammo is not None:
             ammo.onGunReloadTimeSet -= self.onGunReload
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled -= self.onVehicleKilled
         handler = avatar_getter.getInputHandler()
         if handler is not None:
-            if isinstance(handler, AvatarInputHandler):
-                handler.onCameraChanged -= self.onCameraChanged
+            handler.onCameraChanged -= self.onCameraChanged
         super(ArmorCalculator, self).onExitBattlePage()
 
     def _populate(self):
@@ -62,6 +53,8 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.as_onControlModeChangedS(ctrlMode)
+        if ctrlMode in POSTMORTEM.MODES:
+            self.clearView()
 
     def updateShootParams(self):
         shotParams = cache.player.getVehicleDescriptor().shot
@@ -98,10 +91,6 @@ class ArmorCalculator(ArmorCalcMeta):
                 self.calcMacro[ARMOR_CALC.MACROS_ARMOR] = armorSum
                 self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = self.p100 - countedArmor
                 self.as_armorCalcS(self.template % self.calcMacro)
-
-    def onVehicleKilled(self, targetID, *args, **kwargs):
-        if cache.player.playerVehicleID == targetID:
-            self.clearView()
 
     def clearView(self):
         if self.showCalcPoints:

@@ -1,7 +1,7 @@
 from math import degrees
 
-from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
+from gui.Scaleform.daapi.view.battle.shared.minimap.plugins import PersonalEntriesPlugin, ArenaVehiclesPlugin
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
@@ -10,7 +10,7 @@ from ..core.bo_constants import GLOBAL, MINIMAP
 from ..core.utils.common import overrideMethod, isAllowedBattleType
 
 
-class BOPersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
+class BOPersonalEntriesPlugin(PersonalEntriesPlugin):
 
     def __init__(self, *args, **kwargs):
         super(BOPersonalEntriesPlugin, self).__init__(*args, **kwargs)
@@ -24,7 +24,7 @@ class BOPersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
                 self._PersonalEntriesPlugin__yawLimits = (degrees(yawLimits[0]), degrees(yawLimits[1]))
 
 
-class VehiclesPlugin(plugins.ArenaVehiclesPlugin):
+class VehiclesPlugin(ArenaVehiclesPlugin):
 
     def __init__(self, *args, **kwargs):
         super(VehiclesPlugin, self).__init__(*args, **kwargs)
@@ -68,11 +68,9 @@ class VehiclesPlugin(plugins.ArenaVehiclesPlugin):
 
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
-    if cfg.minimap[GLOBAL.ENABLED] and isAllowedBattleType(arenaVisitor):
-        setup = {'equipments': plugins.EquipmentsPlugin,
-                 'vehicles': VehiclesPlugin if cfg.minimap[MINIMAP.DEATH_PERMANENT] else plugins.ArenaVehiclesPlugin,
-                 'personal': BOPersonalEntriesPlugin,
-                 'area': plugins.AreaStaticMarkerPlugin}
-        return setup
-    else:
-        return base(plugin, arenaVisitor)
+    plugins = base(plugin, arenaVisitor)
+    if cfg.minimap[GLOBAL.ENABLED] and isAllowedBattleType(arenaVisitor=arenaVisitor):
+        if cfg.minimap[MINIMAP.DEATH_PERMANENT]:
+            plugins['vehicles'] = VehiclesPlugin
+        plugins['personal'] = BOPersonalEntriesPlugin
+    return plugins

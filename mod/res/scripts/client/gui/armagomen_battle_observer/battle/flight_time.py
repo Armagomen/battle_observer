@@ -1,10 +1,9 @@
 from collections import defaultdict
 
-from AvatarInputHandler import AvatarInputHandler
 from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from ..core import cfg, cache
-from ..core.bo_constants import FLIGHT_TIME, GLOBAL
+from ..core.bo_constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
 from ..core.utils.common import vector3
 from ..meta.battle.flight_time_meta import FlightTimeMeta
 
@@ -37,32 +36,22 @@ class FlightTime(FlightTimeMeta):
         if self.checkSpgOnlyConfig():
             if self.shared.crosshair:
                 self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena:
-                arena.onVehicleKilled += self.__onVehicleKilled
             handler = avatar_getter.getInputHandler()
             if handler is not None:
-                if isinstance(handler, AvatarInputHandler):
-                    handler.onCameraChanged += self.onCameraChanged
+                handler.onCameraChanged += self.onCameraChanged
 
     def onExitBattlePage(self):
         if self.checkSpgOnlyConfig():
             if self.shared.crosshair:
                 self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena:
-                arena.onVehicleKilled -= self.__onVehicleKilled
             handler = avatar_getter.getInputHandler()
             if handler is not None:
-                if isinstance(handler, AvatarInputHandler):
-                    handler.onCameraChanged += self.onCameraChanged
+                handler.onCameraChanged += self.onCameraChanged
         super(FlightTime, self).onExitBattlePage()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.as_onControlModeChangedS(ctrlMode)
-
-    def __onVehicleKilled(self, targetID, *args, **kwargs):
-        if targetID == cache.player.playerVehicleID:
+        if ctrlMode in POSTMORTEM.MODES:
             self.as_flightTimeS(GLOBAL.EMPTY_LINE)
 
     def __onGunMarkerStateChanged(self, markerType, position, *args, **kwargs):

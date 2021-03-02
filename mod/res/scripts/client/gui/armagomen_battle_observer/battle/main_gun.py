@@ -63,7 +63,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
 
     def mainGunSettingsUpdate(self):
-        isRandomBattle = self.sessionProvider.arenaVisitor.gui.isRandomBattle()
+        isRandomBattle = self._arenaVisitor.gui.isRandomBattle()
         if isRandomBattle:
             self._gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(ceil(self.totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
             self.macros.update(mainGunIcon=config[MAIN_GUN.GUN_ICON],
