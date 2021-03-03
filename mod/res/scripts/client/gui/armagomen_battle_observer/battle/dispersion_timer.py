@@ -3,7 +3,7 @@ from math import log
 
 from Avatar import PlayerAvatar
 from gui.battle_control import avatar_getter
-from ..core import cfg, cache
+from ..core import cfg
 from ..core.bo_constants import DISPERSION_CIRCLE, GLOBAL, POSTMORTEM
 from ..meta.battle.dispersion_timer_meta import DispersionTimerMeta
 
@@ -12,8 +12,6 @@ class DispersionTimer(DispersionTimerMeta):
 
     def __init__(self):
         super(DispersionTimer, self).__init__()
-        self.shotDispersionAngle = 0.0
-        self.aimingTime = 0.0
         self.timer_regular = cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE]
         self.timer_done = cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE]
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
@@ -21,6 +19,8 @@ class DispersionTimer(DispersionTimerMeta):
                                   "color_done": cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_COLOR],
                                   "timer": GLOBAL.F_ZERO, "percent": GLOBAL.ZERO})
         self.base_getAngle = None
+        self.max_angle = 0.0
+        self.aiming_time = 0.0
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
@@ -31,18 +31,17 @@ class DispersionTimer(DispersionTimerMeta):
         if ctrlMode in POSTMORTEM.MODES:
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
-    def updateDispersion(self, *args, **kwargs):
-        result = self.base_getAngle(*args, **kwargs)
-        if cache.player is not None and cache.player.isVehicleAlive:
-            if self.shotDispersionAngle != GLOBAL.ZERO:
-                qw = result[GLOBAL.FIRST] / self.shotDispersionAngle
-            else:
-                qw = 1.0
-            timing = self.aimingTime * log(qw)
-            if self.macro["timer"] != timing:
-                self.macro["timer"] = timing
-                self.macro["percent"] = int(min(GLOBAL.F_ONE, self.shotDispersionAngle / result[GLOBAL.FIRST]) * 100)
-            if not timing or timing < GLOBAL.ZERO:
+    def updateDispersion(self, avatar, *args, **kwargs):
+        result = self.base_getAngle(avatar, *args, **kwargs)
+        if avatar.isVehicleAlive:
+            angle = round(result[GLOBAL.FIRST] * 100, 2)
+            if self.max_angle == GLOBAL.F_ZERO:
+                self.max_angle = angle
+                self.aiming_time = round(avatar.vehicleTypeDescriptor.gun.aimingTime, 1)
+            timing = self.aiming_time * log(angle / self.max_angle)
+            self.macro["timer"] = timing
+            self.macro["percent"] = int(self.max_angle / angle * 100)
+            if timing <= GLOBAL.ZERO:
                 self.setDoneMessage()
             else:
                 self.setRegularMessage()
@@ -56,10 +55,6 @@ class DispersionTimer(DispersionTimerMeta):
 
     def onEnterBattlePage(self):
         super(DispersionTimer, self).onEnterBattlePage()
-        if cache.player is not None:
-            desc = cache.player.vehicle.typeDescriptor.gun
-            self.shotDispersionAngle = desc.shotDispersionAngle
-            self.aimingTime = desc.aimingTime
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged

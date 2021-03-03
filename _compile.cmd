@@ -1,11 +1,11 @@
 @Echo off
 set ModVer=1.32.0
 
-set WotVer=1.12.0.0
-REM set WotVer="1.12.0.0 Common Test"
+REM set WotVer=1.12.0.0
+REM set ModsDir=D:\Games\World_of_Tanks_RU\mods\
 
-set ModsDir=D:\Games\World_of_Tanks_RU\mods\
-REM set ModsDir=E:\Games\World_of_Tanks_CT\mods\
+set WotVer="1.12.0.0 Common Test"
+set ModsDir=E:\Games\World_of_Tanks_CT\mods\
 
 "python.exe" newCompileall.py -f -q -d scripts mod\res\scripts
 
