@@ -23,7 +23,7 @@ class SaveShootLite(object):
 
         @overrideMethod(PlayerAvatar, "shoot")
         def shoot(base, avatar, isRepeat=False):
-            if self.enabled and not self.unlockShoot and self.is_targetAllyOrDeath(avatar.target):
+            if self.enabled and not self.unlockShoot and self.is_targetAllyOrDeath(avatar):
                 if not isRepeat and self.msg:
                     g_instance.gui.addClientMessage(self.msg)
                 return
@@ -52,10 +52,10 @@ class SaveShootLite(object):
         if self.enabled:
             keysParser.onKeyPressed -= self.keyEvent
 
-    def is_targetAllyOrDeath(self, target):
-        if target is not None and target.__class__.__name__ == SAVE_SHOOT.VEHICLE:
-            death = not target.isAlive() and self.aliveOnly
-            isAlly = target.publicInfo[SAVE_SHOOT.TEAM] == cache.allyTeam
+    def is_targetAllyOrDeath(self, avatar):
+        if avatar.target is not None and avatar.target.__class__.__name__ == SAVE_SHOOT.VEHICLE:
+            death = not avatar.target.isAlive() and self.aliveOnly
+            isAlly = avatar.target.publicInfo[SAVE_SHOOT.TEAM] == avatar.team
             return death or isAlly
         return False
 

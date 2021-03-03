@@ -50,8 +50,8 @@ class ObserverCore(object):
     def start(self):
         if self.isFileValid:
             logInfo('MOD {}: {}'.format(MASSAGES.START, self.mod_version))
-            self.configLoader.start()
             self.moduleLoader.start()
+            self.configLoader.start()
         else:
             from .utils.common import logWarning
             from gui.Scaleform.daapi.view import dialogs

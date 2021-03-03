@@ -29,7 +29,7 @@ class DispersionTimer(DispersionTimerMeta):
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.as_onControlModeChangedS(ctrlMode)
         if ctrlMode in POSTMORTEM.MODES:
-            self.as_updateTimerTextS("")
+            self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
     def updateDispersion(self, *args, **kwargs):
         result = self.base_getAngle(*args, **kwargs)

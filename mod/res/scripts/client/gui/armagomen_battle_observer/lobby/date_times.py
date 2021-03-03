@@ -31,7 +31,6 @@ class DateTimes(DateTimesMeta):
             self.updateDecoder()
 
     def _dispose(self):
-        """stop and join time thread on destroy flash object"""
         self.timerEvent.stop()
         cache.onModSettingsChanged -= self.onModSettingsChanged
         super(DateTimes, self)._dispose()

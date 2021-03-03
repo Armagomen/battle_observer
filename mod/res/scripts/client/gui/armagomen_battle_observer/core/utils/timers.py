@@ -42,29 +42,28 @@ class SixthSenseTimer(Timer):
 
     def stop(self):
         super(SixthSenseTimer, self).stop()
-        for sound in self.__sounds.values():
-            sound.stop()
-        self.__sounds.clear()
+        if self._play_sound and self._isTicking:
+            for sound in self.__sounds.itervalues():
+                sound.stop()
+            self.__sounds.clear()
+            self._isTicking = False
 
-    def start(self, seconds):
-        if seconds > 0:
+    def timeTicking(self, seconds):
+        if seconds > GLOBAL.ZERO:
             if self._callback is not None:
                 cancelCallback(self._callback)
                 self._callback = None
             self._func_update(seconds)
             seconds -= GLOBAL.ONE
-            self._callback = callback(GLOBAL.ONE_SECOND, lambda: self.start(seconds))
-            if self._play_sound and not self._isTicking:
-                self.callWWISE(_WWISE_EVENTS.COUNTDOWN_TICKING)
-                self._isTicking = True
+            self._callback = callback(GLOBAL.ONE_SECOND, lambda: self.timeTicking(seconds))
         else:
-            if self._play_sound and self._isTicking:
-                self._isTicking = False
             self.stop()
 
-    @property
-    def callback(self):
-        return self._callback
+    def start(self, seconds):
+        self.timeTicking(seconds)
+        if self._play_sound and not self._isTicking:
+            self.callWWISE(_WWISE_EVENTS.COUNTDOWN_TICKING)
+            self._isTicking = True
 
 
 class CyclicTimerEvent(Timer):

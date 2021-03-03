@@ -23,7 +23,6 @@ class DateTimes(DateTimesMeta):
         self.timerEvent.start()
 
     def _dispose(self):
-        """stop and join time thread on destroy flash object"""
         self.timerEvent.stop()
         super(DateTimes, self)._dispose()
 
