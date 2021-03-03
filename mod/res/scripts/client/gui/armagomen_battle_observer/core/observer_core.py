@@ -4,12 +4,13 @@ from shutil import rmtree
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from .bo_constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, MOD_NAME
+from .update import UpdateMain
 from .utils.common import logInfo, logError, getPreferencesFilePath, getCurrentModPath
 
 
 class ObserverCore(object):
     __slots__ = ("modsDir", "gameVersion", "workingDir", "fileName", "isFileValid", "mod_version",
-                 "config", "cache", "configLoader", "moduleLoader")
+                 "config", "cache", "configLoader", "moduleLoader", "update")
 
     def __init__(self, config, cache, configLoader, moduleLoader):
         self.config, self.cache = config, cache
@@ -19,6 +20,8 @@ class ObserverCore(object):
         self.fileName = FILE_NAME.format(MOD_VERSION)
         self.isFileValid = self.isModValidFileName()
         self.mod_version = 'v{0} - {1}'.format(MOD_VERSION, self.gameVersion)
+        self.update = UpdateMain()
+        self.update.subscribe()
 
     def clearClientCache(self, category=None):
         path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
