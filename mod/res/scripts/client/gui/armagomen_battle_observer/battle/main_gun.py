@@ -3,7 +3,7 @@ from math import ceil
 
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
-from ..core import cfg, cache
+from ..core import cfg
 from ..core.bo_constants import MAIN_GUN, GLOBAL
 from ..meta.battle.main_gun_meta import MainGunMeta
 
@@ -87,7 +87,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.as_mainGunTextS(config[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onVehicleKilled(self, targetID, *args, **kwargs):
-        if cache.player.playerVehicleID == targetID:
+        if self._player.playerVehicleID == targetID:
             if self.gunLeft > GLOBAL.ZERO:
                 self.playerDead = True
                 self.updateMainGun()

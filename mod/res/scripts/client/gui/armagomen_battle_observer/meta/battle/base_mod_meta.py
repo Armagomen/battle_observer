@@ -4,7 +4,7 @@ from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 from ...core import cfg
 from ...core.bo_constants import GLOBAL
-from ...core.utils.common import logInfo
+from ...core.utils.common import logInfo, getPlayer
 
 
 class BaseModMeta(BaseDAAPIComponent):
@@ -16,6 +16,7 @@ class BaseModMeta(BaseDAAPIComponent):
         self._isReplay = self.sessionProvider.isReplayPlaying
         self._arenaDP = self.sessionProvider.getArenaDP()
         self._arenaVisitor = self.sessionProvider.arenaVisitor
+        self._player = getPlayer()
 
     @staticmethod
     def getShadowSettings():
@@ -42,6 +43,7 @@ class BaseModMeta(BaseDAAPIComponent):
             logInfo("battle module '%s' destroyed" % self._name)
 
     def onEnterBattlePage(self):
+        self._player = getPlayer()
         if self._isDAAPIInited():
             self.flashObject.setCompVisible(True)
 
