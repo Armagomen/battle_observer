@@ -1,9 +1,9 @@
 from AvatarInputHandler.control_modes import SniperControlMode
 from PlayerEvents import g_playerEvents
 from helpers.EffectsList import EffectsListPlayer, _PixieEffectDesc
-from ..core import cfg, cache
+from ..core import cfg
 from ..core.bo_constants import EFFECTS
-from ..core.utils.common import overrideMethod
+from ..core.utils.common import overrideMethod, getPlayer
 
 
 class Effects(object):
@@ -30,7 +30,7 @@ class Effects(object):
     @staticmethod
     def onEnterBattlePage():
         if cfg.effects[EFFECTS.NO_LIGHT_EFFECT]:
-            gunEffects = cache.player.vehicle.typeDescriptor.gun.effects
+            gunEffects = getPlayer().vehicle.typeDescriptor.gun.effects
             eList = getattr(gunEffects, "effectsList", None)
             if eList is not None and hasattr(eList, "_EffectsList__effectDescList"):
                 effectDescList = eList._EffectsList__effectDescList

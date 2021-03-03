@@ -47,10 +47,10 @@ class DamageLog(DamageLogsMeta):
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
-        if cache.player is not None and cache.player.vehicle is not None:
+        if self._player is not None and self._player.vehicle is not None:
             self.input_log.update({CONSTANTS.KILLS: set(), CONSTANTS.SHOTS: []})
             self.damage_log.update({CONSTANTS.KILLS: set(), CONSTANTS.SHOTS: []})
-            self.isSPG = VEHICLE_CLASS_NAME.SPG in cache.player.vehicleTypeDescriptor.type.tags
+            self.isSPG = VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
             extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
                 cache.logsEnable = extended_log
@@ -71,7 +71,7 @@ class DamageLog(DamageLogsMeta):
             self.updateTopLog()
 
     def onExitBattlePage(self):
-        if cache.player is not None:
+        if self._player is not None:
             extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
                 keysParser.onKeyPressed -= self.keyEvent
@@ -91,8 +91,8 @@ class DamageLog(DamageLogsMeta):
 
     def updateAvgDamage(self, isEpicBattle):
         """sets the average damage of the selected tank"""
-        if not cache.tankAvgDamage and not isEpicBattle:
-            max_health = cache.player.vehicle.typeDescriptor.maxHealth
+        if self._player is not None and not cache.tankAvgDamage and not isEpicBattle:
+            max_health = self._player.vehicle.typeDescriptor.maxHealth
             cache.tankAvgDamage = max(CONSTANTS.RANDOM_MIN_AVG, float(max_health))
         elif isEpicBattle:
             cache.tankAvgDamage = CONSTANTS.FRONT_LINE_MIN_AVG
@@ -168,20 +168,24 @@ class DamageLog(DamageLogsMeta):
                     self.updateExtendedLog(self.input_log, cfg.log_input_extended)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
-        if cache.player.playerVehicleID == targetID:
-            self.input_log[CONSTANTS.KILLS].add(attackerID)
-            self.updateExtendedLog(self.input_log, cfg.log_input_extended)
-        elif cache.player.playerVehicleID == attackerID:
-            self.damage_log[CONSTANTS.KILLS].add(targetID)
-            self.updateExtendedLog(self.damage_log, cfg.log_damage_extended)
+        if self._player is not None:
+            if self._player.playerVehicleID == targetID:
+                self.input_log[CONSTANTS.KILLS].add(attackerID)
+                self.updateExtendedLog(self.input_log, cfg.log_input_extended)
+            elif self._player.playerVehicleID == attackerID:
+                self.damage_log[CONSTANTS.KILLS].add(targetID)
+                self.updateExtendedLog(self.damage_log, cfg.log_damage_extended)
 
-    @staticmethod
-    def checkShell(attack_reason_id, gold, is_dlog, shell_type):
+    def checkShell(self, attack_reason_id, gold, is_dlog, shell_type):
         if is_dlog and attack_reason_id == GLOBAL.ZERO:
-            v_desc = cache.player.getVehicleDescriptor()
-            shell_type = v_desc.shot.shell.kind
-            shell_icon_name = v_desc.shot.shell.iconName
-            gold = shell_icon_name in CONSTANTS.PREMIUM_SHELLS
+            if self._player is not None:
+                v_desc = self._player.getVehicleDescriptor()
+                shell_type = v_desc.shot.shell.kind
+                shell_icon_name = v_desc.shot.shell.iconName
+                gold = shell_icon_name in CONSTANTS.PREMIUM_SHELLS
+            else:
+                shell_type = CONSTANTS.UNDEFINED
+                shell_icon_name = CONSTANTS.UNDEFINED
         elif shell_type in CONSTANTS.SHELL_LIST:
             shell_icon_name = shell_type + CONSTANTS.PREMIUM if gold else shell_type
         else:
@@ -214,7 +218,7 @@ class DamageLog(DamageLogsMeta):
             vehicle[CONSTANTS.KILLED_ICON] = GLOBAL.EMPTY_LINE
             vehicle[CONSTANTS.CLASS_ICON] = vehicle_ci.get(class_tag, vehicle_ci[CONSTANTS.UNKNOWN_TAG])
             vehicle[CONSTANTS.CLASS_COLOR] = vehicle_cc.get(class_tag, vehicle_cc[CONSTANTS.UNKNOWN_TAG])
-            vehicle_id = cache.player.playerVehicleID if not is_dlog else vehicle_id
+            vehicle_id = self._player.playerVehicleID if not is_dlog else vehicle_id
             vehicle[CONSTANTS.MAX_HEALTH] = self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
         vehicle[CONSTANTS.SHOTS] = len(vehicle[CONSTANTS.DAMAGE_LIST])
         vehicle[CONSTANTS.TOTAL_DAMAGE] = sum(vehicle[CONSTANTS.DAMAGE_LIST])

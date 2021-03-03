@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
-from ..core import cfg, cache
+from ..core import cfg
 from ..core.bo_constants import GLOBAL, SIXTH_SENSE
 from ..core.utils import SixthSenseTimer
 from ..core.utils.common import callback
@@ -65,5 +65,5 @@ class SixthSense(SixthSenseMeta):
             self.as_hideS()
 
     def onVehicleKilled(self, targetID, *args, **kwargs):
-        if cache.player.playerVehicleID == targetID:
+        if self._player.playerVehicleID == targetID:
             self.stop()

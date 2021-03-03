@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from ..core import cfg, cache
+from ..core import cfg
 from ..core.bo_constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
 from ..core.utils.common import vector3
 from ..meta.battle.flight_time_meta import FlightTimeMeta
@@ -32,7 +32,7 @@ class FlightTime(FlightTimeMeta):
 
     def onEnterBattlePage(self):
         super(FlightTime, self).onEnterBattlePage()
-        self.isSPG = VEHICLE_CLASS_NAME.SPG in cache.player.vehicleTypeDescriptor.type.tags
+        self.isSPG = VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
         if self.checkSpgOnlyConfig():
             if self.shared.crosshair:
                 self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
@@ -55,7 +55,7 @@ class FlightTime(FlightTimeMeta):
             self.as_flightTimeS(GLOBAL.EMPTY_LINE)
 
     def __onGunMarkerStateChanged(self, markerType, position, *args, **kwargs):
-        shotPos, shotVec = cache.player.gunRotator.getCurShotPosition()
+        shotPos, shotVec = self._player.gunRotator.getCurShotPosition()
         flatDist = position.flatDistTo(shotPos)
         self.macrosDict[FLIGHT_TIME.M_FLIGHT_TIME] = flatDist / shotVec.flatDistTo(VECTOR)
         self.macrosDict[FLIGHT_TIME.M_DISTANCE] = flatDist

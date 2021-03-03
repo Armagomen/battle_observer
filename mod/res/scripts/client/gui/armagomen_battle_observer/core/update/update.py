@@ -17,10 +17,13 @@ from web.cache.web_downloader import WebDownloader
 from ..bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
 from ..config.hangar.i18n import localization
 from ..update.dialog_button import DialogButtons
-from ..utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning
+from ..utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, getCurrentModPath
 
 LAST_UPDATE = defaultdict()
 DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
+
+modsDir, gameVersion = getCurrentModPath()
+workingDir = os.path.join(modsDir, gameVersion)
 
 
 def fixDialogCloseWindow():
@@ -32,17 +35,17 @@ def fixDialogCloseWindow():
         return old_dispose(dialog)
 
     def onWindowClose(dialog):
-        dialog.destroy()
+        return dialog.destroy()
 
     SimpleDialog._dispose = closeWindowFix
     SimpleDialog.onWindowClose = onWindowClose
 
 
 class DialogWindow(object):
-    def __init__(self, ver, m_core):
+    __slots__ = ("localization",)
+
+    def __init__(self):
         self.localization = localization['updateDialog']
-        self.newVer = ver
-        self.m_core = m_core
 
     @staticmethod
     def onPressButtonFinished(proceed):
@@ -51,21 +54,21 @@ class DialogWindow(object):
 
     def onPressButtonAvailable(self, proceed):
         if proceed:
-            runDownload = DownloadThread(self.newVer, self.m_core)
+            runDownload = DownloadThread()
             runDownload.start()
         else:
             openWebBrowser(DOWNLOAD_URLS['full'])
 
     def getDialogUpdateFinished(self):
-        message = self.localization['messageOK'].format(self.newVer)
+        message = self.localization['messageOK'].format(LAST_UPDATE.get('tag_name', MOD_VERSION))
         title = self.localization['titleOK']
         button = DialogButtons(self.localization['buttonOK'])
         return SimpleDialogMeta(title, message, buttons=button)
 
     def getDialogNewVersionAvailable(self):
-        message = self.localization['messageNEW'].format(self.newVer, self.m_core.workingDir)
+        message = self.localization['messageNEW'].format(LAST_UPDATE.get('tag_name', MOD_VERSION), workingDir)
         message += '<br>' + LAST_UPDATE.get("body")
-        title = self.localization['titleNEW'].format(self.newVer)
+        title = self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', MOD_VERSION))
         buttons = DialogButtons(self.localization['buttonAUTO'], self.localization['buttonHANDLE'])
         return SimpleDialogMeta(title, message, buttons=buttons)
 
@@ -77,46 +80,44 @@ class DialogWindow(object):
 
 
 class DownloadThread(object):
-    def __init__(self, ver, m_core):
-        self.newVer = ver
-        self.m_core = m_core
+    __slots__ = ("downloader",)
+
+    def __init__(self):
         self.downloader = WebDownloader(GLOBAL.ONE)
 
     def start(self):
         try:
-            logInfo('start downloading update {}'.format(self.newVer))
+            logInfo('start downloading update {}'.format(LAST_UPDATE.get('tag_name', MOD_VERSION)))
             self.downloader.download(DOWNLOAD_URLS['last'], self.onDownloaded)
         except Exception as error:
             self.downloader.close()
             self.downloader = None
-            logError('update {} - download failed: {}'.format(self.newVer, repr(error)))
+            logError('update {} - download failed: {}'.format(LAST_UPDATE.get('tag_name', MOD_VERSION), repr(error)))
 
     def onDownloaded(self, _url, data):
         if data is not None:
-            old_files = os.listdir(self.m_core.workingDir)
+            old_files = os.listdir(workingDir)
             if GLOBAL.DEBUG_MODE:
-                with open(os.path.join(self.m_core.modsDir, 'update.zip'), mode="wb") as f:
+                with open(os.path.join(modsDir, 'update.zip'), mode="wb") as f:
                     f.write(data)
             with BytesIO(data) as zip_file, ZipFile(zip_file) as archive:
                 for newFile in archive.namelist():
                     if newFile not in old_files:
                         logInfo('update, add new file {}'.format(newFile))
-                        archive.extract(newFile, self.m_core.workingDir)
-            dialog = DialogWindow(self.newVer, self.m_core)
+                        archive.extract(newFile, workingDir)
+            dialog = DialogWindow()
             dialog.showUpdateFinished()
-            logInfo('update downloading finished {}'.format(self.newVer))
+            logInfo('update downloading finished {}'.format(LAST_UPDATE.get('tag_name', MOD_VERSION)))
         self.downloader.close()
         self.downloader = None
 
 
 class UpdateMain(object):
+    __slots__ = ("screen_to_load",)
 
-    def __init__(self, m_core):
+    def __init__(self):
         is_login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         self.screen_to_load = GuiGlobalSpaceID.LOGIN if is_login_server_selection else GuiGlobalSpaceID.LOBBY
-        self.new_version = None
-        self.m_core = m_core
-        self.subscribe()
 
     @async
     def request_last_version(self, url):
@@ -133,9 +134,9 @@ class UpdateMain(object):
             params = get_update_data()
             if params:
                 LAST_UPDATE.update(params)
-                self.new_version = LAST_UPDATE.get('tag_name', MOD_VERSION)
+                new_version = LAST_UPDATE.get('tag_name', MOD_VERSION)
                 local_ver = self.tupleVersion(MOD_VERSION)
-                server_ver = self.tupleVersion(self.new_version)
+                server_ver = self.tupleVersion(new_version)
                 if local_ver < server_ver:
                     assets = LAST_UPDATE.get('assets')
                     for asset in assets:
@@ -146,7 +147,7 @@ class UpdateMain(object):
                         elif filename.startswith('BattleObserver_'):
                             DOWNLOAD_URLS['full'] = download_url
                     ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-                    logInfo(MASSAGES.NEW_VERSION.format(self.new_version))
+                    logInfo(MASSAGES.NEW_VERSION.format(new_version))
                 else:
                     logInfo(MASSAGES.UPDATE_CHECKED)
         except Exception:
@@ -163,13 +164,11 @@ class UpdateMain(object):
 
     def onGUISpaceEntered(self, spaceID):
         if self.screen_to_load == spaceID:
-            if GLOBAL.DEBUG_MODE:
-                self.onNewModVersion(MOD_VERSION)
-            else:
-                self.onNewModVersion(self.new_version)
+            self.onNewModVersion()
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
-    def onNewModVersion(self, version):
+    @staticmethod
+    def onNewModVersion():
         fixDialogCloseWindow()
-        dialog = DialogWindow(version, self.m_core)
+        dialog = DialogWindow()
         dialog.showNewVersionAvailable()

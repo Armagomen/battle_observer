@@ -3,7 +3,7 @@ from collections import defaultdict
 from aih_constants import SHOT_RESULT
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from gui.battle_control import avatar_getter
-from ..core import cfg, cache
+from ..core import cfg
 from ..core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE, POSTMORTEM
 from ..meta.battle.armor_calc_meta import ArmorCalcMeta
 
@@ -57,7 +57,7 @@ class ArmorCalculator(ArmorCalcMeta):
             self.clearView()
 
     def updateShootParams(self):
-        shotParams = cache.player.getVehicleDescriptor().shot
+        shotParams = self._player.getVehicleDescriptor().shot
         self.p100, self.p500 = shotParams.piercingPower
         self.calcMacro.update(piercingPower=self.p100, caliber=shotParams.shell.caliber)
 
@@ -121,7 +121,7 @@ class ArmorCalculator(ArmorCalcMeta):
     def getShotResult(self, countedArmor, targetPos):
         power = self.p100
         if power != self.p500:
-            dist = (targetPos - cache.player.getOwnVehiclePosition()).length
+            dist = (targetPos - self._player.getOwnVehiclePosition()).length
             if dist > ARMOR_CALC.MIN_DIST:
                 result = power + (self.p500 - power) * (dist - ARMOR_CALC.MIN_DIST) / ARMOR_CALC.EFFECTIVE_DISTANCE
                 power = max(self.p500, result)

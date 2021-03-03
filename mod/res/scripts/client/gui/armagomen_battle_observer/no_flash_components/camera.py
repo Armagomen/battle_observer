@@ -12,8 +12,8 @@ if not BattleReplay.g_replayCtrl.isPlaying:
     from constants import AOI
     from gui.battle_control import avatar_getter
     from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
-    from ..core import cfg, cache
-    from ..core.utils.common import callback, overrideMethod
+    from ..core import cfg
+    from ..core.utils.common import callback, overrideMethod, getPlayer
 
 
     @overrideMethod(SniperCamera, "create")
@@ -34,13 +34,13 @@ if not BattleReplay.g_replayCtrl.isPlaying:
         if cfg.zoom[GLOBAL.ENABLED]:
             saveZoom = saveZoom or cfg.zoom[GLOBAL.ENABLED]
             if cfg.zoom[SNIPER.DYN_ZOOM][SNIPER.GUN_ZOOM]:
-                targetPos = cache.player.gunRotator.markerInfo[GLOBAL.FIRST]
+                targetPos = getPlayer().gunRotator.markerInfo[GLOBAL.FIRST]
             if cfg.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]:
                 maxZoom = max(camera._cfg[SNIPER.ZOOMS])
                 minZoom = min(camera._cfg[SNIPER.ZOOMS])
                 if SniperCamera._SNIPER_ZOOM_LEVEL != -1:
                     SniperCamera.setSniperZoomSettings(-1)
-                dist = (targetPos - cache.player.getOwnVehiclePosition()).length
+                dist = (targetPos - getPlayer().getOwnVehiclePosition()).length
                 if dist < AOI.VEHICLE_CIRCULAR_AOI_RADIUS:
                     zoom = round(dist / cfg.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS])
                     if zoom > maxZoom:

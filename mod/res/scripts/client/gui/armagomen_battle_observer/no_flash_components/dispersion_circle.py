@@ -16,7 +16,7 @@ from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
 from ..core import cache
 from ..core.bo_constants import GLOBAL, DISPERSION_CIRCLE
-from ..core.utils.common import overrideMethod
+from ..core.utils.common import overrideMethod, getPlayer
 
 CLIENT = _MARKER_TYPE.CLIENT
 SERVER = _MARKER_TYPE.SERVER
@@ -145,7 +145,7 @@ class DispersionCircle(object):
     @staticmethod
     def enableServerAim(server=True):
         if not bool(ServicesLocator.settingsCore.getSetting(DISPERSION_CIRCLE.CIRCLE_SERVER)):
-            cache.player.enableServerAim(server)
+            getPlayer().enableServerAim(server)
 
     @staticmethod
     def setShotPosition(gun, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
