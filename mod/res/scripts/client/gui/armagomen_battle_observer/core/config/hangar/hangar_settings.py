@@ -1,10 +1,12 @@
+from gui.vxSettingsApi import vxSettingsApiEvents
+
 from debug_utils import LOG_CURRENT_EXCEPTION
 from .i18n import localization
 from ...bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION_CIRCLE, PANELS, SNIPER, MINIMAP, MOD_NAME, \
     MAIN, ANOTHER, URLS
 from ...utils.common import logWarning, openWebBrowser
 
-settingsVersion = 32
+settingsVersion = 33
 KEY_CONTROL = [[29]]
 KEY_ALT = [[56]]
 
@@ -133,23 +135,6 @@ class CreateElement(object):
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 
 
-class ModsListRegister(object):
-    __slots__ = ()
-
-    def __init__(self, api, callbackMethod):
-        """register config window in modsListApi"""
-        kwargs = {
-            'id': MOD_NAME, 'name': localization['service']['name'],
-            'description': localization['service']['description'],
-            'icon': 'scripts/client/gui/armagomen_battle_observer/hangar_settings_image.png',
-            GLOBAL.ENABLED: True, 'login': True, 'lobby': True, 'callback': callbackMethod
-        }
-        try:
-            api.addModification(**kwargs)
-        except AttributeError:
-            api.addMod(**kwargs)
-
-
 class Getter(object):
     __slots__ = ()
 
@@ -192,25 +177,35 @@ class Getter(object):
 
 class ConfigInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, config, configLoader, cache):
+    def __init__(self, modsListApi, vxSettingsApi, config, configLoader, cache):
         super(ConfigInterface, self).__init__()
         self.cache = cache
         self.configLoader = configLoader
+        self.modsListApi = modsListApi
         self.config = config
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.vxSettingsApiEvents = vxSettingsApiEvents
         self.selectedConfig = self.configLoader.configsList.index(self.configLoader.cName)
         self.configSelect = False
         self.getter = Getter()
-        ModsListRegister(modsListApi, self.load_window)
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
                                    useKeyPairs=self.config.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         vxSettingsApi.onSettingsChanged += self.onSettingsChanged
         vxSettingsApi.onDataChanged += self.onDataChanged
 
+    def addModificationToModList(self):
+        """register config window in modsListApi"""
+        kwargs = {
+            'id': MOD_NAME, 'name': localization['service']['name'],
+            'description': localization['service']['description'],
+            'icon': 'scripts/client/gui/armagomen_battle_observer/hangar_settings_image.png',
+            GLOBAL.ENABLED: True, 'login': True, 'lobby': True, 'callback': self.load_window
+        }
+        self.modsListApi.addModification(**kwargs)
+
     def start(self):
+        self.addModificationToModList()
         for blockID in CONFIG_INTERFACE.BLOCK_IDS:
             if blockID in self.inited:
                 continue
@@ -238,7 +233,7 @@ class ConfigInterface(CreateElement):
         """Feedback EVENT"""
         if container != MOD_NAME:
             return
-        if event == self.vxSettingsApiEvents.WINDOW_CLOSED:
+        if event == vxSettingsApiEvents.WINDOW_CLOSED:
             if self.configSelect:
                 import os
                 self.configLoader.createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
@@ -260,7 +255,7 @@ class ConfigInterface(CreateElement):
             self.selectedConfig = settings['selectedConfig']
             self.configSelect = True
             self.inited.clear()
-            self.vxSettingsApi.processEvent(MOD_NAME, self.vxSettingsApiEvents.CALLBACKS.CLOSE_WINDOW)
+            self.vxSettingsApi.processEvent(MOD_NAME, vxSettingsApiEvents.CALLBACKS.CLOSE_WINDOW)
         else:
             config = getattr(self.config, blockID)
             for setting in settings:
