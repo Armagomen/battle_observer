@@ -21,8 +21,6 @@ class CreateElement(object):
         block = localization.get(blockID, {})
         text = block.get(varName, varName)
         if text == varName:
-            if GLOBAL.DEBUG_MODE:
-                self.addToErrorsKey(blockID, varName)
             return None
         tooltip = block.get('{}_tooltip'.format(varName), GLOBAL.EMPTY_LINE)
         if tooltip:
@@ -90,14 +88,8 @@ class CreateElement(object):
             result.update({'snapInterval': step, 'format': '{{value}}'})
         return result
 
-    def addToErrorsKey(self, blockID, varName):
-        var = '%s - %s' % (blockID, varName)
-        self.cache.errorKeysSet.add(var)
-
     def createBlock(self, blockID, config, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
-        if name == blockID:
-            self.addToErrorsKey(blockID, "header")
         result = {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
             'settingsVersion': settingsVersion, GLOBAL.ENABLED: config.get(GLOBAL.ENABLED, True),
@@ -177,9 +169,8 @@ class Getter(object):
 
 class ConfigInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, config, configLoader, cache):
+    def __init__(self, modsListApi, vxSettingsApi, config, configLoader):
         super(ConfigInterface, self).__init__()
-        self.cache = cache
         self.configLoader = configLoader
         self.modsListApi = modsListApi
         self.config = config
@@ -282,7 +273,7 @@ class ConfigInterface(CreateElement):
                     updatedConfigLink[paramName] = param
             self.configLoader.updateConfigFile(blockID, config)
             if not self.configSelect:
-                self.cache.onModSettingsChanged(config, blockID)
+                self.config.onModSettingsChanged(config, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""

@@ -15,6 +15,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self._visible = False
         self.p100 = GLOBAL.F_ONE
         self.p500 = GLOBAL.F_ONE
+        self.messages = cfg.armor_calculator[ARMOR_CALC.MESSAGES]
         self.calcCache = GLOBAL.ZERO
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = cfg.colors[ARMOR_CALC.NAME]
@@ -76,6 +77,7 @@ class ArmorCalculator(ArmorCalcMeta):
             setGunMarkerColor = iPlugin._parentObj.setGunMarkerColor
             if plugin_cache[markerType] != result and setGunMarkerColor(markerType, color):
                 plugin_cache[markerType] = result
+                self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
                 if counted_armor is None:
                     self.clearView()
                     return

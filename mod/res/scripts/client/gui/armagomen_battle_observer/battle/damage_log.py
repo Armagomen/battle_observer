@@ -4,7 +4,7 @@ from colorsys import hsv_to_rgb
 from constants import ATTACK_REASONS
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from ..core import cfg, cache, keysParser
+from ..core import cfg, keysParser
 from ..core.bo_constants import DAMAGE_LOG as CONSTANTS, GLOBAL
 from ..core.utils.common import callback, logWarning
 from ..meta.battle.damage_logs_meta import DamageLogsMeta
@@ -27,6 +27,10 @@ class DamageLog(DamageLogsMeta):
                              {CONSTANTS.D_LOG: cfg.log_damage_extended[GLOBAL.ENABLED],
                               CONSTANTS.IN_LOG: cfg.log_input_extended[GLOBAL.ENABLED],
                               CONSTANTS.MAIN_LOG: cfg.log_total[GLOBAL.ENABLED]})
+
+    def _dispose(self):
+        CONSTANTS.AVG_DAMAGE_DATA = 0.0
+        super(DamageLog, self)._dispose()
 
     @staticmethod
     def isLogEnabled(eventType):
@@ -53,7 +57,6 @@ class DamageLog(DamageLogsMeta):
             self.isSPG = VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
             extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
-                cache.logsEnable = extended_log
                 keysParser.onKeyPressed += self.keyEvent
                 arena = self._arenaVisitor.getArenaSubscription()
                 if arena is not None:
@@ -91,12 +94,12 @@ class DamageLog(DamageLogsMeta):
 
     def updateAvgDamage(self, isEpicBattle):
         """sets the average damage of the selected tank"""
-        if self._player is not None and not cache.tankAvgDamage and not isEpicBattle:
+        if self._player is not None and not CONSTANTS.AVG_DAMAGE_DATA and not isEpicBattle:
             max_health = self._player.vehicle.typeDescriptor.maxHealth
-            cache.tankAvgDamage = max(CONSTANTS.RANDOM_MIN_AVG, float(max_health))
+            CONSTANTS.AVG_DAMAGE_DATA = max(CONSTANTS.RANDOM_MIN_AVG, float(max_health))
         elif isEpicBattle:
-            cache.tankAvgDamage = CONSTANTS.FRONT_LINE_MIN_AVG
-        self.top_log[CONSTANTS.AVG_DAMAGE] = int(cache.tankAvgDamage)
+            CONSTANTS.AVG_DAMAGE_DATA = CONSTANTS.FRONT_LINE_MIN_AVG
+        self.top_log[CONSTANTS.AVG_DAMAGE] = int(CONSTANTS.AVG_DAMAGE_DATA)
 
     def keyEvent(self, key, isKeyDown):
         """hot key event"""
@@ -142,7 +145,7 @@ class DamageLog(DamageLogsMeta):
     def updateTopLog(self):
         """update global sums in log"""
         if cfg.log_total[GLOBAL.ENABLED]:
-            value = self.top_log[CONSTANTS.PLAYER_DAMAGE] / cache.tankAvgDamage
+            value = self.top_log[CONSTANTS.PLAYER_DAMAGE] / CONSTANTS.AVG_DAMAGE_DATA
             self.top_log[CONSTANTS.DAMAGE_AVG_COLOR] = self.percentToRBG(value, **cfg.log_total[CONSTANTS.AVG_COLOR])
             self.as_updateDamageS(cfg.log_total[CONSTANTS.TEMPLATE_MAIN_DMG] % self.top_log)
 

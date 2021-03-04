@@ -10,10 +10,9 @@ from ..utils.common import logWarning, logInfo, getCurrentModPath
 
 
 class ConfigLoader(object):
-    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'cfg', 'cache')
+    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'cfg')
 
-    def __init__(self, config, cache):
-        self.cache = cache
+    def __init__(self, config):
         self.cfg = config
         self.cName = None
         self.path = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
@@ -140,7 +139,7 @@ class ConfigLoader(object):
                     continue
             else:
                 self.createFileInDir(file_path, internal_cfg)
-            self.cache.onModSettingsChanged(internal_cfg, module_name)
+            self.cfg.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
         if self.configInterface is not None:
             self.configInterface.onUserConfigUpdateComplete()
@@ -158,7 +157,7 @@ class ConfigLoader(object):
                 from distutils.version import LooseVersion
                 if LooseVersion(__version__) >= LooseVersion(API_VERSION):
                     from .hangar import ConfigInterface
-                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, self.cfg, self, self.cache)
+                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, self.cfg, self)
                     self.configInterface.start()
                 else:
                     msg = "Settings API not loaded, v{} it`s fake or not supported api, current version is {}, " \

@@ -170,13 +170,6 @@ translate = {
     },
     "log_global": {
         "header": "GENERAL LOG SETTINGS",
-        "attackReas": "configure macro %(attackReason)s",
-        "attackReason*drowning": "drowning",
-        "attackReason*fire": "FIRE",
-        "attackReason*overturn": "overturn",
-        "attackReason*ramming": "ramming",
-        "attackReason*shot": "SHOT",
-        "attackReason*world_collision": "FALL",
         "logsAltmode_hotkey": "Key switch logs in the alternate mode",
         "wg_log_hide_assist": "Hide damage intelligence",
         "wg_log_hide_assist_tooltip": "Removes the damage from intelligence detailed log WG",

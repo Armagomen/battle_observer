@@ -7,7 +7,7 @@ from helpers import getClientLanguage
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
-from ..core import cache
+from ..core import cfg
 from ..core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
 from ..core.utils.common import openWebBrowser, overrideMethod
 
@@ -55,7 +55,7 @@ def onModSettingsChanged(config, blockID):
                         channel_filter.add(name)
 
 
-cache.onModSettingsChanged += onModSettingsChanged
+cfg.onModSettingsChanged += onModSettingsChanged
 
 
 @overrideMethod(NotificationListView, "onClickAction")

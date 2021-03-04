@@ -1,6 +1,6 @@
 from time import strftime
 
-from ..core import cfg, cache
+from ..core import cfg
 from ..core.bo_constants import CLOCK
 from ..core.utils import CyclicTimerEvent
 from ..core.utils.common import checkDecoder
@@ -18,7 +18,7 @@ class DateTimes(DateTimesMeta):
     def _populate(self):
         super(DateTimes, self)._populate()
         self.updateDecoder()
-        cache.onModSettingsChanged += self.onModSettingsChanged
+        cfg.onModSettingsChanged += self.onModSettingsChanged
         self.as_startUpdateS(self.config)
         self.timerEvent.start()
 
@@ -32,7 +32,7 @@ class DateTimes(DateTimesMeta):
 
     def _dispose(self):
         self.timerEvent.stop()
-        cache.onModSettingsChanged -= self.onModSettingsChanged
+        cfg.onModSettingsChanged -= self.onModSettingsChanged
         super(DateTimes, self)._dispose()
 
     def updateTimeData(self):

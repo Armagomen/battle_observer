@@ -1,4 +1,4 @@
-from .battle import BattleCache, BattleCore, ViewSettings
+from .battle import BattleCore, ViewSettings
 from .config import Config, ConfigLoader
 from .inject_flash import InjectFlash
 from .observer_core import ObserverCore
@@ -7,11 +7,10 @@ from .utils import HotKeysParser
 from ..no_flash_components import Loader
 
 cfg = Config()
-cache = BattleCache()
-c_Loader = ConfigLoader(cfg, cache)
+c_Loader = ConfigLoader(cfg)
 m_Loader = Loader()
-m_core = ObserverCore(cfg, cache, c_Loader, m_Loader)
-b_core = BattleCore(cfg, cache)
+m_core = ObserverCore(c_Loader, m_Loader)
+b_core = BattleCore(cfg)
 v_settings = ViewSettings(cfg)
 keysParser = HotKeysParser(cfg)
 flash = InjectFlash()

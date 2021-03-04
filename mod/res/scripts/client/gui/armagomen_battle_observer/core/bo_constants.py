@@ -258,6 +258,7 @@ class DAMAGE_LOG:
     ATTACK_REASON = "attackReason"
     AVG_COLOR = "avgColor"
     AVG_DAMAGE = "tankAvgDamage"
+    AVG_DAMAGE_DATA = 0.0
     BLOCKED_DAMAGE = "blockedDamage"
     CLASS_COLOR = "tankClassColor"
     MAX_HEALTH = "max_health"
@@ -384,6 +385,7 @@ class ARMOR_CALC:
     MIN_DIST = 100.0
     NAME = "armor_calculator"
     POSITION = "calcPosition"
+    MESSAGES = "messages"
     SHOW_POINTS = "showCalcPoints"
     SKIP_DETAILS = {TankPartIndexes.CHASSIS, TankPartIndexes.GUN}
     TEMPLATE = "template"
@@ -391,6 +393,7 @@ class ARMOR_CALC:
     MACROS_CALCED_ARMOR = "calcedArmor"
     MACROS_ARMOR = "armor"
     MACROS_PIERCING_RESERVE = "piercingReserve"
+    MACROS_MESSAGE = "message"
     NONEDATA = (None, None, SHOT_RESULT.UNDEFINED)
 
 

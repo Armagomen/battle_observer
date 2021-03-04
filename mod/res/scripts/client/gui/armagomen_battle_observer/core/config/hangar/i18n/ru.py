@@ -178,12 +178,6 @@ translate = {
     },
     "log_global": {
         "header": "Общие настройки логов.",
-        "attackReason*drowning": "ЗАТОПЛЕНИЕ",
-        "attackReason*fire": "ПОЖАР",
-        "attackReason*overturn": "ПЕРЕВОРОТ",
-        "attackReason*ramming": "ТАРАН",
-        "attackReason*shot": "ВЫСТРЕЛ",
-        "attackReason*world_collision": "ПАДЕНИЕ",
         "logsAltmode_hotkey": "Переключение логов в альтернативный режим",
         "wg_log_hide_assist": "Скрыть урон по разведданным",
         "wg_log_hide_assist_tooltip": "Убирает урон по разведданным из детального лога WG",

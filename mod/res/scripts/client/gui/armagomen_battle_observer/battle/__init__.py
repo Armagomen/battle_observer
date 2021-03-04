@@ -47,7 +47,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def callbackListener(self, event):
         if isAllowedBattleType():
-            callback(2.0, lambda: self.eventListener(event))
+            callback(1.5, lambda: self.eventListener(event))
 
     def eventListener(self, event):
         battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)

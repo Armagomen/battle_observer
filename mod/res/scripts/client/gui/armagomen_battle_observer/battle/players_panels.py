@@ -1,7 +1,9 @@
+from collections import defaultdict
+
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.shared.personality import ServicesLocator
-from ..core import cfg, cache, keysParser
+from ..core import cfg, keysParser
 from ..core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from ..core.utils.common import getEntity
 from ..meta.battle.players_panels_meta import PlayersPanelsMeta
@@ -28,6 +30,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.gui = self._arenaVisitor.gui
         self.battle_ctx = self.sessionProvider.getCtx()
         self._vehicles = set()
+        self.playersDamage = defaultdict(int)
 
     def onEnterBattlePage(self):
         super(PlayersPanels, self).onEnterBattlePage()
@@ -53,6 +56,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if self.hpBarsEnable:
                 self.settingsCore.onSettingsApplied -= self.onSettingsApplied
             if self.damagesEnable:
+                self.playersDamage.clear()
                 arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
                 if arena is not None:
                     arena.onVehicleHealthChanged -= self.onPlayersDamaged
@@ -142,6 +146,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 })
 
     def onPlayersDamaged(self, vehicleID, attackerID, damage):
-        cache.playersDamage[attackerID] += damage
+        self.playersDamage[attackerID] += damage
         self.as_updateTextFieldS(attackerID, PANELS.DAMAGES_TF,
-                                 self.damagesText % {PANELS.DAMAGE: cache.playersDamage[attackerID]})
+                                 self.damagesText % {PANELS.DAMAGE: self.playersDamage[attackerID]})

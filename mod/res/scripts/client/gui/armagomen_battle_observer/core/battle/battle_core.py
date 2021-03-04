@@ -2,20 +2,16 @@ from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
-from gui.shared.personality import ServicesLocator
-from ..bo_constants import MAIN, SOUND_MODES, GLOBAL
+from ..bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
 from ..utils.common import setMaxFrameRate, overrideMethod
 
 
 class BattleCore(object):
 
-    def __init__(self, config, cache):
-        self.load_health_module = False
-        self.callbackTime = 0.01
-        self.cache = cache
+    def __init__(self, config):
         self.config = config
         g_playerEvents.onArenaCreated += self.onArenaCreated
-        cache.onModSettingsChanged += self.onModSettingsChanged
+        config.onModSettingsChanged += self.onModSettingsChanged
 
         @overrideMethod(PostmortemPanel, "getDeathInfo")
         def getDeathInfo(info, *args, **kwargs):
@@ -37,8 +33,8 @@ class BattleCore(object):
 
     def onArenaCreated(self):
         if self.config.log_total[GLOBAL.ENABLED]:
-            intCD = getattr(g_currentVehicle.item, "intCD", None)
-            if intCD:
-                avg = ServicesLocator.itemsCache.items.getVehicleDossier(intCD).getRandomStats().getAvgDamage()
+            dossier = g_currentVehicle.getDossier()
+            if dossier:
+                avg = dossier.getRandomStats().getAvgDamage()
                 if avg is not None:
-                    self.cache.tankAvgDamage = float(avg)
+                    DAMAGE_LOG.AVG_DAMAGE_DATA = float(avg)

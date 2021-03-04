@@ -168,13 +168,6 @@ translate = {
     },
     "log_global": {
         "header": "Allgemeine Einstellungen für Schadensprotokoll",
-        "attackReas": "Einstellung für Makro %(attackReason)s - Art des Schadens",
-        "attackReason*drowning": "Ertrinken",
-        "attackReason*fire": "Feuer",
-        "attackReason*overturn": "Umgekippt",
-        "attackReason*ramming": "Rammen",
-        "attackReason*shot": "Schaden durch Treffer",
-        "attackReason*world_collision": "Schaden durch Fallen",
         "logsAltmode_hotkey": "Taste zum Umschalten auf Alternativen Modus",
         "wg_log_hide_assist": "Verstecke 'Unterstützungs Schaden'",
         "wg_log_hide_assist_tooltip": "Entfernte 'Unterstützungs Schaden' aus dem detaillierten WG Protokoll",
