@@ -32,6 +32,7 @@ class SixthSense(SixthSenseMeta):
 
     def onExitBattlePage(self):
         self.stop()
+        self._timer.destroy()
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleKilled -= self.onVehicleKilled

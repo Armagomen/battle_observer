@@ -1,7 +1,16 @@
-import SoundGroups
-from gui.Scaleform.daapi.view.battle.shared.battle_timers import _WWISE_EVENTS
+from SoundGroups import g_instance
 from .common import callback, cancelCallback
-from ..bo_constants import GLOBAL
+
+
+class CONSTANTS:
+    def __init__(self):
+        pass
+
+    COUNTDOWN_TICKING = 'time_countdown'
+    STOP_TICKING = 'time_countdown_stop'
+    ONE_SECOND = 1.0
+    ZERO = 0
+    ONE = 1
 
 
 class Timer(object):
@@ -32,38 +41,37 @@ class SixthSenseTimer(Timer):
         self.__sounds = dict()
 
     def callWWISE(self, wwiseEventName):
-        sound = SoundGroups.g_instance.getSound2D(wwiseEventName)
+        sound = g_instance.getSound2D(wwiseEventName)
         if sound is not None:
-            if sound.isPlaying:
-                sound.restart()
-            else:
-                sound.play()
+            sound.play()
             self.__sounds[wwiseEventName] = sound
 
     def stop(self):
         super(SixthSenseTimer, self).stop()
         if self._play_sound and self._isTicking:
-            for sound in self.__sounds.itervalues():
-                sound.stop()
-            self.__sounds.clear()
+            self.callWWISE(CONSTANTS.STOP_TICKING)
             self._isTicking = False
 
     def timeTicking(self, seconds):
-        if seconds > GLOBAL.ZERO:
+        if seconds > CONSTANTS.ZERO:
             if self._callback is not None:
                 cancelCallback(self._callback)
                 self._callback = None
             self._func_update(seconds)
-            seconds -= GLOBAL.ONE
-            self._callback = callback(GLOBAL.ONE_SECOND, lambda: self.timeTicking(seconds))
+            self._callback = callback(CONSTANTS.ONE_SECOND, lambda: self.timeTicking(seconds - CONSTANTS.ONE))
         else:
             self.stop()
 
     def start(self, seconds):
         self.timeTicking(seconds)
         if self._play_sound and not self._isTicking:
-            self.callWWISE(_WWISE_EVENTS.COUNTDOWN_TICKING)
+            self.callWWISE(CONSTANTS.COUNTDOWN_TICKING)
             self._isTicking = True
+
+    def destroy(self):
+        for sound in self.__sounds.values():
+            sound.stop()
+        self.__sounds.clear()
 
 
 class CyclicTimerEvent(Timer):
