@@ -3,7 +3,7 @@ from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 from ..bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
-from ..utils.common import setMaxFrameRate, overrideMethod
+from ..utils.common import setMaxFrameRate, overrideMethod, logInfo
 
 
 class BattleCore(object):
@@ -37,4 +37,6 @@ class BattleCore(object):
             if dossier:
                 avg = dossier.getRandomStats().getAvgDamage()
                 if avg is not None:
-                    DAMAGE_LOG.AVG_DAMAGE_DATA = float(avg)
+                    avg = round(avg)
+                    DAMAGE_LOG.AVG_DAMAGE_DATA = avg
+                    logInfo("set vehicle avgDamage: {}".format(avg))
