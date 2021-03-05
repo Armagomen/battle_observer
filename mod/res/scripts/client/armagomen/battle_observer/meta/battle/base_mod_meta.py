@@ -4,8 +4,8 @@ from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import GLOBAL
-from armagomen.battle_observer.core.utils.common import logInfo, getPlayer
+from armagomen.battle_observer.core.constants import GLOBAL
+from armagomen.utils.common import logInfo, getPlayer
 
 
 class BaseModMeta(BaseDAAPIComponent):

@@ -3,8 +3,8 @@ from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
 from gui.Scaleform.daapi.view.battle.shared.postmortem_panel import PostmortemPanel
 
-from armagomen.battle_observer.core.bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
-from armagomen.battle_observer.core.utils.common import setMaxFrameRate, overrideMethod, logInfo
+from armagomen.battle_observer.core.constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
+from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo
 
 
 class BattleCore(object):

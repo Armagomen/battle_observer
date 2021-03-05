@@ -5,7 +5,7 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultI
 from gui.battle_control import avatar_getter
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE, POSTMORTEM
+from armagomen.battle_observer.core.constants import ARMOR_CALC, GLOBAL, VEHICLE, POSTMORTEM
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 
 

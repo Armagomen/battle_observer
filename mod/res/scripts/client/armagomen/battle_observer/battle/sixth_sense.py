@@ -3,9 +3,9 @@ from collections import defaultdict
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import GLOBAL, SIXTH_SENSE
-from armagomen.battle_observer.core.utils import SixthSenseTimer
-from armagomen.battle_observer.core.utils.common import callback
+from armagomen.battle_observer.core.constants import GLOBAL, SIXTH_SENSE
+from armagomen.utils.timers import SixthSenseTimer
+from armagomen.utils.common import callback
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
 
 config = cfg.sixth_sense

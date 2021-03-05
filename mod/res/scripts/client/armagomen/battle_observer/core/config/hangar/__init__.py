@@ -1,1 +1,1 @@
-from armagomen.battle_observer.core.config.hangar.hangar_settings import ConfigInterface
+pass

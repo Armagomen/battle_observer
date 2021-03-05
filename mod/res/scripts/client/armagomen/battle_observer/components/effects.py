@@ -3,8 +3,8 @@ from PlayerEvents import g_playerEvents
 from helpers.EffectsList import EffectsListPlayer, _PixieEffectDesc
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import EFFECTS
-from armagomen.battle_observer.core.utils.common import overrideMethod, getPlayer
+from armagomen.battle_observer.core.constants import EFFECTS
+from armagomen.utils.common import overrideMethod, getPlayer
 
 
 class Effects(object):

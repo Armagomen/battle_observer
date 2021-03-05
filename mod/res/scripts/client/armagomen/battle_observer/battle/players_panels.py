@@ -5,8 +5,8 @@ from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListene
 from gui.shared.personality import ServicesLocator
 
 from armagomen.battle_observer.core import cfg, keysParser
-from armagomen.battle_observer.core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
-from armagomen.battle_observer.core.utils.common import getEntity
+from armagomen.battle_observer.core.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
+from armagomen.utils.common import getEntity
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 
 config = cfg.players_panels

@@ -1,8 +1,9 @@
 from armagomen.battle_observer.core.battle import BattleCore, ViewSettings
-from armagomen.battle_observer.core.config import Config, ConfigLoader
+from armagomen.battle_observer.core.config.config import Config
+from armagomen.battle_observer.core.config.config_loader import ConfigLoader
 from armagomen.battle_observer.core.inject_flash import InjectFlash
 from armagomen.battle_observer.core.observer_core import ObserverCore
-from armagomen.battle_observer.core.utils import HotKeysParser
+from armagomen.utils.keys_parser import HotKeysParser
 
 cfg = Config()
 c_Loader = ConfigLoader(cfg)

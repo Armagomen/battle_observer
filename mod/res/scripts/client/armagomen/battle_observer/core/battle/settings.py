@@ -4,9 +4,9 @@ from PlayerEvents import g_playerEvents
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 
-from armagomen.battle_observer.core.bo_constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES, \
+from armagomen.battle_observer.core.constants import GLOBAL, MAIN, MINIMAP, HP_BARS, CLOCK, ALIASES, \
     DISPERSION_CIRCLE
-from armagomen.battle_observer.core.utils.common import overrideMethod, isAllowedBattleType
+from armagomen.utils.common import overrideMethod, isAllowedBattleType
 
 
 class ViewSettings(object):

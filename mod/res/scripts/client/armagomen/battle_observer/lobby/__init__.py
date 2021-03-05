@@ -8,8 +8,8 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import GLOBAL, CLOCK, SWF
-from armagomen.battle_observer.core.utils.common import logError, callback, logWarning
+from armagomen.battle_observer.core.constants import GLOBAL, CLOCK, SWF
+from armagomen.utils.common import logError, callback, logWarning
 
 
 def getComponents():

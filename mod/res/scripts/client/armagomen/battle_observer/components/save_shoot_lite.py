@@ -5,8 +5,8 @@ from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from messenger.MessengerEntry import g_instance
 
 from armagomen.battle_observer.core import cfg, keysParser
-from armagomen.battle_observer.core.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
-from armagomen.battle_observer.core.utils.common import overrideMethod
+from armagomen.battle_observer.core.constants import GLOBAL, SAVE_SHOOT, MAIN
+from armagomen.utils.common import overrideMethod
 
 __all__ = ["save_shoot_lite"]
 

@@ -1,5 +1,5 @@
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import GLOBAL, MAIN
+from armagomen.battle_observer.core.constants import GLOBAL, MAIN
 from armagomen.battle_observer.meta.battle.wg_comp_meta import WgCompMeta
 
 

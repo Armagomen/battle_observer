@@ -2,8 +2,8 @@ from gui.battle_control.arena_info import settings
 from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import MAIN, ANOTHER, GLOBAL
-from armagomen.battle_observer.core.utils.common import overrideMethod
+from armagomen.battle_observer.core.constants import MAIN, ANOTHER, GLOBAL
+from armagomen.utils.common import overrideMethod
 
 _PLAYER_STATUS = settings.PLAYER_STATUS
 

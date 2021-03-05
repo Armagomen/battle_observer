@@ -15,8 +15,8 @@ from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import GLOBAL, DISPERSION_CIRCLE
-from armagomen.battle_observer.core.utils.common import overrideMethod, getPlayer
+from armagomen.battle_observer.core.constants import GLOBAL, DISPERSION_CIRCLE
+from armagomen.utils.common import overrideMethod, getPlayer
 
 CLIENT = _MARKER_TYPE.CLIENT
 SERVER = _MARKER_TYPE.SERVER

@@ -5,7 +5,7 @@ from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import MAIN_GUN, GLOBAL
+from armagomen.battle_observer.core.constants import MAIN_GUN, GLOBAL
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 
 config = cfg.main_gun

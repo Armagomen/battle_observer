@@ -1,8 +1,8 @@
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import GLOBAL
-from armagomen.battle_observer.core.utils.common import logInfo
+from armagomen.battle_observer.core.constants import GLOBAL
+from armagomen.utils.common import logInfo
 
 
 class BaseModMeta(BaseDAAPIComponent):

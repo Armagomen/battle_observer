@@ -1,6 +1,6 @@
 from SoundGroups import g_instance
 
-from .common import callback, cancelCallback
+from armagomen.utils.common import callback, cancelCallback
 
 
 class CONSTANTS:

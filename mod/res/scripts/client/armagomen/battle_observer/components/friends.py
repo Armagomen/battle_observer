@@ -4,8 +4,8 @@ from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategor
 from messenger.storage import storage_getter
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import MAIN, ANOTHER, GLOBAL
-from armagomen.battle_observer.core.utils.common import overrideMethod
+from armagomen.battle_observer.core.constants import MAIN, ANOTHER, GLOBAL
+from armagomen.utils.common import overrideMethod
 
 _cache = {ANOTHER.FRIEND_LIST: set(), ANOTHER.ACCOUNT_DBID: GLOBAL.ZERO}
 

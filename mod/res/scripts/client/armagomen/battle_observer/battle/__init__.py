@@ -8,8 +8,8 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
 from armagomen.battle_observer.core import v_settings
-from armagomen.battle_observer.core.bo_constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
-from armagomen.battle_observer.core.utils.common import logError, callback, logWarning, isAllowedBattleType
+from armagomen.battle_observer.core.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
+from armagomen.utils.common import logError, callback, logWarning, isAllowedBattleType
 
 
 def getViewSettings():

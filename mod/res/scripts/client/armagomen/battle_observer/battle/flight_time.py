@@ -4,8 +4,8 @@ from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
-from armagomen.battle_observer.core.utils.common import vector3
+from armagomen.battle_observer.core.constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
+from armagomen.utils.common import vector3
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 
 VECTOR = vector3(GLOBAL.F_ZERO, GLOBAL.F_ZERO, GLOBAL.F_ZERO)

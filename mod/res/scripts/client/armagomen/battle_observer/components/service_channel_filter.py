@@ -7,8 +7,8 @@ from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
-from armagomen.battle_observer.core.utils.common import openWebBrowser, overrideMethod
+from armagomen.battle_observer.core.constants import SERVICE_CHANNEL, GLOBAL, URLS
+from armagomen.utils.common import openWebBrowser, overrideMethod
 
 channel_filter = set()
 

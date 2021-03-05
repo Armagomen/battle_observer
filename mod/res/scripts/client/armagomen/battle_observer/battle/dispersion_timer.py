@@ -5,7 +5,7 @@ from Avatar import PlayerAvatar
 from gui.battle_control import avatar_getter
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import DISPERSION_CIRCLE, GLOBAL, POSTMORTEM
+from armagomen.battle_observer.core.constants import DISPERSION_CIRCLE, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 
 

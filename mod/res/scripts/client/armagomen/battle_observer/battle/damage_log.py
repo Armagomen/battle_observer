@@ -6,8 +6,8 @@ from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 from armagomen.battle_observer.core import cfg, keysParser
-from armagomen.battle_observer.core.bo_constants import DAMAGE_LOG as CONSTANTS, GLOBAL
-from armagomen.battle_observer.core.utils.common import callback, logWarning
+from armagomen.battle_observer.core.constants import DAMAGE_LOG as CONSTANTS, GLOBAL
+from armagomen.utils.common import callback, logWarning
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 
 

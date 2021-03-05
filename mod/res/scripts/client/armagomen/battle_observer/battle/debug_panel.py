@@ -5,7 +5,7 @@ from gui.battle_control.controllers import debug_ctrl
 from gui.shared.personality import ServicesLocator
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import DEBUG_PANEL, GLOBAL, COLORS
+from armagomen.battle_observer.core.constants import DEBUG_PANEL, GLOBAL, COLORS
 from armagomen.battle_observer.meta.battle.debug_panel_meta import DebugPanelMeta
 
 debug_ctrl._UPDATE_INTERVAL = 0.4

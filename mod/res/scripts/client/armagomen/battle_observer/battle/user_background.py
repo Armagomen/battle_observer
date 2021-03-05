@@ -1,5 +1,5 @@
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import MAIN, HP_BARS
+from armagomen.battle_observer.core.constants import MAIN, HP_BARS
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 
 

@@ -6,8 +6,8 @@ import time
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-from armagomen.battle_observer.core.bo_constants import LOAD_LIST, API_VERSION, GLOBAL
-from armagomen.battle_observer.core.utils.common import logWarning, logInfo, getCurrentModPath
+from armagomen.battle_observer.core.constants import LOAD_LIST, API_VERSION, GLOBAL
+from armagomen.utils.common import logWarning, logInfo, getCurrentModPath
 
 
 class ConfigLoader(object):
@@ -157,7 +157,7 @@ class ConfigLoader(object):
             else:
                 from distutils.version import LooseVersion
                 if LooseVersion(__version__) >= LooseVersion(API_VERSION):
-                    from .hangar import ConfigInterface
+                    from armagomen.battle_observer.core.config.hangar.hangar_settings import ConfigInterface
                     self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, self.cfg, self)
                     self.configInterface.start()
                 else:

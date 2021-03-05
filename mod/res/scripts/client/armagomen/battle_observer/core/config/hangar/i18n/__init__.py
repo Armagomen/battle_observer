@@ -1,6 +1,6 @@
 from helpers import getClientLanguage
 
-from armagomen.battle_observer.core.bo_constants import GLOBAL
+from armagomen.battle_observer.core.constants import GLOBAL
 
 lang = getClientLanguage().lower()
 

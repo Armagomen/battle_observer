@@ -3,8 +3,8 @@ from gui.battle_control.controllers import team_bases_ctrl
 from helpers import time_utils
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import TEAM_BASES
-from armagomen.battle_observer.core.utils.common import callback
+from armagomen.battle_observer.core.constants import TEAM_BASES
+from armagomen.utils.common import callback
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
 
 

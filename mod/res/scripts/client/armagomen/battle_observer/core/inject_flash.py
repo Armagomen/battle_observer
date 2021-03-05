@@ -2,8 +2,8 @@ from gui.Scaleform.battle_entry import BattleEntry
 from gui.Scaleform.daapi.settings import config
 from gui.Scaleform.lobby_entry import LobbyEntry
 
-from armagomen.battle_observer.core.bo_constants import SWF
-from armagomen.battle_observer.core.utils.common import overrideMethod
+from armagomen.battle_observer.core.constants import SWF
+from armagomen.utils.common import overrideMethod
 
 
 class InjectFlash(object):

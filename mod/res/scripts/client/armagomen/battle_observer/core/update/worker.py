@@ -15,10 +15,10 @@ from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from web.cache.web_downloader import WebDownloader
 
-from armagomen.battle_observer.core.bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
+from armagomen.battle_observer.core.constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
 from armagomen.battle_observer.core.config.hangar.i18n import localization
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
-from armagomen.battle_observer.core.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
+from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
     getCurrentModPath
 
 LAST_UPDATE = defaultdict()

@@ -4,7 +4,7 @@ from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListene
 from gui.shared.personality import ServicesLocator
 
 from armagomen.battle_observer.core import cfg, keysParser
-from armagomen.battle_observer.core.bo_constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
+from armagomen.battle_observer.core.constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 
 settingsCore = ServicesLocator.settingsCore

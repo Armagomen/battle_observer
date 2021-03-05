@@ -7,8 +7,8 @@ from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
 
 from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP
-from armagomen.battle_observer.core.utils.common import overrideMethod, isAllowedBattleType
+from armagomen.battle_observer.core.constants import GLOBAL, MINIMAP
+from armagomen.utils.common import overrideMethod, isAllowedBattleType
 
 
 class BOPersonalEntriesPlugin(PersonalEntriesPlugin):

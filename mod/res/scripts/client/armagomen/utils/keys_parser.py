@@ -4,7 +4,7 @@ from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, K
 from gui import InputHandler
 from gui.battle_control import avatar_getter
 
-from armagomen.battle_observer.core.bo_constants import MAIN
+USE_KEY_PAIRS = "useKeyPairs"
 
 
 class HotKeysParser(object):
@@ -43,7 +43,7 @@ class HotKeysParser(object):
             if not avatar_getter.isForcedGuiControlMode() or key in self.pressedKeys:
                 isKeyDown = event.isKeyDown()
                 if isKeyDown:
-                    if self.config.main[MAIN.USE_KEY_PAIRS]:
+                    if self.config.main[USE_KEY_PAIRS]:
                         if key in KEY_ALIAS_CONTROL:
                             self.pressedKeys.update(KEY_ALIAS_CONTROL)
                         elif key in KEY_ALIAS_ALT:
@@ -58,7 +58,7 @@ class HotKeysParser(object):
                     for keyName, keys in self.keysMap.iteritems():
                         if self.pressedKeys.issuperset(keys):
                             self.onKeyPressed(keyName, isKeyDown)
-                    if self.config.main[MAIN.USE_KEY_PAIRS]:
+                    if self.config.main[USE_KEY_PAIRS]:
                         if key in KEY_ALIAS_CONTROL:
                             self.pressedKeys.difference_update(KEY_ALIAS_CONTROL)
                         elif key in KEY_ALIAS_ALT:
