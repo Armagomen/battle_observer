@@ -9,7 +9,6 @@ if not BattleReplay.g_replayCtrl.isPlaying:
     from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
     from AvatarInputHandler.control_modes import PostMortemControlMode, SniperControlMode
     from aih_constants import CTRL_MODE_NAME
-    from constants import AOI
     from gui.battle_control import avatar_getter
     from ..core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
     from ..core import cfg
@@ -21,6 +20,7 @@ if not BattleReplay.g_replayCtrl.isPlaying:
         if cfg.zoom[GLOBAL.ENABLED] and cfg.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
             if cfg.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]:
                 steps = cfg.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
+                steps.sort()
                 exposure_range = xrange(len(steps) + SNIPER.ONE, SNIPER.ONE, -SNIPER.ONE)
                 args[GLOBAL.ZERO]._cfg[SNIPER.INCREASED_ZOOM] = True
                 args[GLOBAL.ZERO]._cfg[SNIPER.ZOOMS] = steps
@@ -32,25 +32,20 @@ if not BattleReplay.g_replayCtrl.isPlaying:
     @overrideMethod(SniperCamera, "enable")
     def enable(base, camera, targetPos, saveZoom):
         if cfg.zoom[GLOBAL.ENABLED]:
-            saveZoom = saveZoom or cfg.zoom[GLOBAL.ENABLED]
             if cfg.zoom[SNIPER.DYN_ZOOM][SNIPER.GUN_ZOOM]:
                 targetPos = getPlayer().gunRotator.markerInfo[GLOBAL.FIRST]
             if cfg.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]:
-                maxZoom = max(camera._cfg[SNIPER.ZOOMS])
-                minZoom = min(camera._cfg[SNIPER.ZOOMS])
+                minZoom, maxZoom = camera._cfg[SNIPER.ZOOMS][GLOBAL.FIRST], camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST]
                 if SniperCamera._SNIPER_ZOOM_LEVEL != -1:
                     SniperCamera.setSniperZoomSettings(-1)
                 dist = (targetPos - getPlayer().getOwnVehiclePosition()).length
-                if dist < AOI.VEHICLE_CIRCULAR_AOI_RADIUS:
-                    zoom = round(dist / cfg.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS])
-                    if zoom > maxZoom:
-                        zoom = maxZoom
-                    elif zoom < minZoom:
-                        zoom = minZoom
-                    camera._cfg[SNIPER.ZOOM] = zoom
-                else:
-                    camera._cfg[SNIPER.ZOOM] = minZoom
-        return base(camera, targetPos, saveZoom)
+                zoom = round(dist / cfg.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS])
+                if zoom > maxZoom:
+                    zoom = maxZoom
+                elif zoom < minZoom:
+                    zoom = minZoom
+                camera._cfg[SNIPER.ZOOM] = zoom
+        return base(camera, targetPos, saveZoom or cfg.zoom[GLOBAL.ENABLED])
 
 
     def changeControlMode(avatar, shooterID):

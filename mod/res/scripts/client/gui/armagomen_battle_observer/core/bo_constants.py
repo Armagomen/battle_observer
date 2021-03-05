@@ -88,6 +88,7 @@ class URLS:
     HOST_NAME = "armagomen.bb-t.ru"
     DONATE_UA_URL = "https://donatua.com/@armagomen"
     DONATE_EU_URL = "https://www.donationalerts.com/r/armagomenvs"
+    DONATE = {DONATE_UA_URL, DONATE_EU_URL}
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
     DONATE_RU_MESSAGE = "<font color='#ffff73'>" \

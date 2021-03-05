@@ -61,8 +61,8 @@ cfg.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(NotificationListView, "onClickAction")
 @overrideMethod(NotificationPopUpViewer, "onClickAction")
 def clickAction(base, view, typeID, entityID, action):
-    if re.match('https?://', action, re.I):
-        openWebBrowser(action)
+    if action in URLS.DONATE:
+        return openWebBrowser(action)
     return base(view, typeID, entityID, action)
 
 
