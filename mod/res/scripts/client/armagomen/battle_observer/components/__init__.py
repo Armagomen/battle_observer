@@ -1,0 +1,28 @@
+import sys
+
+from debug_utils import LOG_CURRENT_EXCEPTION
+from armagomen.battle_observer.core.utils.common import logWarning, logInfo
+
+
+class ComponentsLoader(object):
+
+    def __init__(self):
+        self.modules = (
+            'camera', 'badges', 'friends', 'save_shoot_lite', 'dispersion_circle', 'effects', 'minimap_plugins',
+            'wg_logs_fixes', 'service_channel_filter', 'tank_carousel'
+        )
+
+    def start(self):
+        for modulePath in self.modules:
+            self.loadModule("{}.{}".format(__package__, modulePath))
+
+    @staticmethod
+    def loadModule(modulePath):
+        if modulePath in sys.modules:
+            logWarning("{} module already loaded".format(modulePath))
+            return
+        try:
+            __import__(modulePath)
+            logInfo(modulePath + " LOADED")
+        except ImportError:
+            LOG_CURRENT_EXCEPTION()

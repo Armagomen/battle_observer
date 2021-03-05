@@ -1,5 +1,6 @@
-import logging
+from armagomen.battle_observer import init, fini
 
-from gui.armagomen_battle_observer import *
+if callable(init) and callable(fini):
+    import logging
 
-logging.disable(logging.WARNING)
+    logging.disable(logging.WARNING)
