@@ -1,6 +1,7 @@
 import sys
 
 from debug_utils import LOG_CURRENT_EXCEPTION
+
 from armagomen.battle_observer.core.utils.common import logWarning, logInfo
 
 

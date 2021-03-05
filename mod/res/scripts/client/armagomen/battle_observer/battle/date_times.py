@@ -3,8 +3,8 @@ from time import strftime
 from armagomen.battle_observer.core import cfg
 from armagomen.battle_observer.core.bo_constants import CLOCK
 from armagomen.battle_observer.core.utils import CyclicTimerEvent
-from armagomen.battle_observer.meta.battle.date_times_meta import DateTimesMeta
 from armagomen.battle_observer.core.utils.common import checkDecoder
+from armagomen.battle_observer.meta.battle.date_times_meta import DateTimesMeta
 
 config = cfg.clock[CLOCK.IN_BATTLE]
 
