@@ -39,10 +39,11 @@ class CorrelationMarkers(object):
     def getMarkers(self):
         left, right = [], []
         for vInfoVO in sorted(self._arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
-            if vInfoVO.team == self.__allyTeam:
-                left.append(self.getIcon(vInfoVO))
-            else:
-                right.append(self.getIcon(vInfoVO))
+            if not vInfoVO.isObserver():
+                if vInfoVO.team == self.__allyTeam:
+                    left.append(self.getIcon(vInfoVO))
+                else:
+                    right.append(self.getIcon(vInfoVO))
         return GLOBAL.EMPTY_LINE.join(reversed(left)), GLOBAL.EMPTY_LINE.join(right)
 
 
@@ -52,6 +53,10 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         super(TeamsHP, self).__init__()
         self.showAliveCount = config.hp_bars[HP_BARS.ALIVE] and self.isNormalMode
         self.markers = CorrelationMarkers(self._arenaDP) if config.markers[GLOBAL.ENABLED] and self.isNormalMode else None
+        self.observers = set()
+        for vinfoVo in self._arenaDP.getVehiclesInfoIterator():
+            if vinfoVo.isObserver():
+                self.observers.add(vinfoVo.vehicleID)
 
     def _populate(self):
         super(TeamsHP, self)._populate()
@@ -77,7 +82,8 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         if self.showAliveCount:
             self.as_updateScoreS(len(aliveAllies), len(aliveEnemies))
         else:
-            self.as_updateScoreS(len(deadEnemies), len(deadAllies))
+            self.as_updateScoreS(len(deadEnemies.difference(self.observers)),
+                                 len(deadAllies.difference(self.observers)))
         if self.markers is not None and self.markers.enabled:
             self.as_markersS(*self.markers.getMarkers())
 
