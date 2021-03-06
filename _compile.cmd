@@ -1,5 +1,5 @@
 @Echo off
-set ModVer=1.32.1
+set ModVer=1.32.2
 
 set WotVer=1.12.0.0
 set ModsDir=D:\Games\World_of_Tanks_RU\mods\
@@ -13,7 +13,7 @@ set ModFile=%ModsDir%%WotVer%\armagomen.battleObserver_%ModVer%.wotmod
 set API=%ModsDir%%WotVer%\polarfox.vxSettingsApi*
 set API2=%ModsDir%%WotVer%\poliroid.modslistapi*
 set ZipArh=..\BattleObserver_%ModVer%_WOT_%WotVer%.zip
-set ToExclude=-x!*.db -x!*.log -x!vxSettingsApi -x!res_mods -x!logs -x!*ShuraBB* -x!*gun_reloaded* -x!*voiceover*
+set ToExclude=-x!*.db -x!*.log -x!res_mods -x!logs -x!*andre_v*
 set AutoUpdate=..\AutoUpdate.zip
 
 DEL %ModsDir%%WotVer%\armagomen.battleObserver*
