@@ -1,14 +1,13 @@
 from math import degrees
 
+from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core.constants import GLOBAL, MINIMAP
+from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
 from gui.Scaleform.daapi.view.battle.shared.minimap.plugins import PersonalEntriesPlugin, ArenaVehiclesPlugin
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
-
-from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.constants import GLOBAL, MINIMAP
-from armagomen.utils.common import overrideMethod, isAllowedBattleType
 
 
 class BOPersonalEntriesPlugin(PersonalEntriesPlugin):
@@ -62,7 +61,7 @@ class VehiclesPlugin(ArenaVehiclesPlugin):
 
     @property
     def _showNames(self):
-        if cfg.minimap[MINIMAP.DEATH_PERMANENT] and cfg.minimap[MINIMAP.SHOW_NAMES]:
+        if config.minimap[MINIMAP.DEATH_PERMANENT] and config.minimap[MINIMAP.SHOW_NAMES]:
             return 'showVehicleName'
         return 'hideVehicleName'
 
@@ -70,8 +69,8 @@ class VehiclesPlugin(ArenaVehiclesPlugin):
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
     plugins = base(plugin, arenaVisitor)
-    if cfg.minimap[GLOBAL.ENABLED] and isAllowedBattleType(arenaVisitor=arenaVisitor):
-        if cfg.minimap[MINIMAP.DEATH_PERMANENT]:
+    if config.minimap[GLOBAL.ENABLED]:
+        if config.minimap[MINIMAP.DEATH_PERMANENT]:
             plugins['vehicles'] = VehiclesPlugin
         plugins['personal'] = BOPersonalEntriesPlugin
     return plugins

@@ -1,11 +1,10 @@
 from PlayerEvents import g_playerEvents
+from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core.constants import GLOBAL
+from armagomen.utils.common import logInfo, getPlayer
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
-
-from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.constants import GLOBAL
-from armagomen.utils.common import logInfo, getPlayer
 
 
 class BaseModMeta(BaseDAAPIComponent):
@@ -21,7 +20,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @staticmethod
     def getShadowSettings():
-        return cfg.shadow_settings
+        return config.shadow_settings
 
     def getConfig(self):
         pass

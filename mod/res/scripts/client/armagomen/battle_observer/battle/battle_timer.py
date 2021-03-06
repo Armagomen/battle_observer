@@ -1,22 +1,20 @@
 from collections import defaultdict
 
-from gui.battle_control.controllers.period_ctrl import IAbstractPeriodView
-from helpers.time_utils import ONE_MINUTE
-
-from armagomen.battle_observer.core import cfg
+from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.constants import BATTLE_TIMER, COLORS, GLOBAL
 from armagomen.battle_observer.meta.battle.battle_timer_meta import BattleTimerMeta
+from gui.battle_control.controllers.period_ctrl import IAbstractPeriodView
+from helpers.time_utils import ONE_MINUTE
 
 
 class BattleTimer(BattleTimerMeta, IAbstractPeriodView):
 
     def __init__(self):
         super(BattleTimer, self).__init__()
-        config = cfg.battle_timer
-        default_timer = {BATTLE_TIMER.COLOR: COLORS.NORMAL_TEXT, BATTLE_TIMER.M_TIMER: BATTLE_TIMER.START_STRING}
-        self.timer = defaultdict(lambda: GLOBAL.CONFIG_ERROR, default_timer)
-        self.template = config[BATTLE_TIMER.TEMPLATE]
-        self.color = {False: config[BATTLE_TIMER.COLOR], True: config[BATTLE_TIMER.END_COLOR]}
+        self.timer = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timerColor=COLORS.NORMAL_TEXT,
+                                 timer=BATTLE_TIMER.START_STRING)
+        self.template = config.battle_timer[BATTLE_TIMER.TEMPLATE]
+        self.color = (config.battle_timer[BATTLE_TIMER.COLOR], config.battle_timer[BATTLE_TIMER.END_COLOR])
 
     def _populate(self):
         super(BattleTimer, self)._populate()

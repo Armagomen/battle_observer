@@ -1,14 +1,13 @@
 from collections import defaultdict
 from colorsys import hsv_to_rgb
 
-from constants import ATTACK_REASONS
+from armagomen.battle_observer.core import config, keysParser
+from armagomen.battle_observer.core.constants import DAMAGE_LOG, GLOBAL
+from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
+from armagomen.utils.common import callback, logWarning
+from constants import ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-
-from armagomen.battle_observer.core import cfg, keysParser
-from armagomen.battle_observer.core.constants import DAMAGE_LOG as CONSTANTS, GLOBAL
-from armagomen.utils.common import callback, logWarning
-from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 
 
 class DamageLog(DamageLogsMeta):
@@ -17,46 +16,46 @@ class DamageLog(DamageLogsMeta):
         super(DamageLog, self).__init__()
         self.input_log = {}
         self.damage_log = {}
-        self.top_log = defaultdict(int, cfg.log_total[CONSTANTS.ICONS])
+        self.top_log = defaultdict(int, **config.log_total[DAMAGE_LOG.ICONS])
         self.isSPG = False
 
     def _populate(self):
         super(DamageLog, self)._populate()
-        self.as_startUpdateS({CONSTANTS.D_LOG: cfg.log_damage_extended[GLOBAL.SETTINGS],
-                              CONSTANTS.IN_LOG: cfg.log_input_extended[GLOBAL.SETTINGS],
-                              CONSTANTS.MAIN_LOG: cfg.log_total[GLOBAL.SETTINGS]},
-                             {CONSTANTS.D_LOG: cfg.log_damage_extended[GLOBAL.ENABLED],
-                              CONSTANTS.IN_LOG: cfg.log_input_extended[GLOBAL.ENABLED],
-                              CONSTANTS.MAIN_LOG: cfg.log_total[GLOBAL.ENABLED]})
+        self.as_startUpdateS({DAMAGE_LOG.D_LOG: config.log_damage_extended[GLOBAL.SETTINGS],
+                              DAMAGE_LOG.IN_LOG: config.log_input_extended[GLOBAL.SETTINGS],
+                              DAMAGE_LOG.MAIN_LOG: config.log_total[GLOBAL.SETTINGS]},
+                             {DAMAGE_LOG.D_LOG: config.log_damage_extended[GLOBAL.ENABLED],
+                              DAMAGE_LOG.IN_LOG: config.log_input_extended[GLOBAL.ENABLED],
+                              DAMAGE_LOG.MAIN_LOG: config.log_total[GLOBAL.ENABLED]})
 
     def _dispose(self):
-        CONSTANTS.AVG_DAMAGE_DATA = 0.0
+        DAMAGE_LOG.AVG_DAMAGE_DATA = 0.0
         super(DamageLog, self)._dispose()
 
     @staticmethod
     def isLogEnabled(eventType):
         if eventType == EV_ID.PLAYER_DAMAGED_HP_ENEMY:
-            return cfg.log_damage_extended[GLOBAL.ENABLED]
+            return config.log_damage_extended[GLOBAL.ENABLED]
         elif eventType == EV_ID.ENEMY_DAMAGED_HP_PLAYER:
-            return cfg.log_input_extended[GLOBAL.ENABLED]
-        logWarning(CONSTANTS.WARNING_MESSAGE)
+            return config.log_input_extended[GLOBAL.ENABLED]
+        logWarning(DAMAGE_LOG.WARNING_MESSAGE)
         return False
 
     def getLogDictAndSettings(self, eventType):
         if eventType == EV_ID.PLAYER_DAMAGED_HP_ENEMY:
-            return self.damage_log, cfg.log_damage_extended
+            return self.damage_log, config.log_damage_extended
         elif eventType == EV_ID.ENEMY_DAMAGED_HP_PLAYER:
-            return self.input_log, cfg.log_input_extended
-        logWarning(CONSTANTS.WARNING_MESSAGE)
+            return self.input_log, config.log_input_extended
+        logWarning(DAMAGE_LOG.WARNING_MESSAGE)
         return None, None
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
         if self._player is not None and self._player.vehicle is not None:
-            self.input_log.update({CONSTANTS.KILLS: set(), CONSTANTS.SHOTS: []})
-            self.damage_log.update({CONSTANTS.KILLS: set(), CONSTANTS.SHOTS: []})
+            self.input_log.update(kills=set(), shots=list())
+            self.damage_log.update(kills=set(), shots=list())
             self.isSPG = VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
-            extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
+            extended_log = config.log_damage_extended[GLOBAL.ENABLED] or config.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
                 keysParser.onKeyPressed += self.keyEvent
                 arena = self._arenaVisitor.getArenaSubscription()
@@ -64,8 +63,8 @@ class DamageLog(DamageLogsMeta):
                     arena.onVehicleAdded += self.onVehicleAddUpdate
                     arena.onVehicleUpdated += self.onVehicleAddUpdate
                     arena.onVehicleKilled += self.onVehicleKilled
-                keysParser.registerComponent(CONSTANTS.HOT_KEY, cfg.log_global[CONSTANTS.HOT_KEY])
-            if cfg.log_total[GLOBAL.ENABLED] or extended_log:
+                keysParser.registerComponent(DAMAGE_LOG.HOT_KEY, config.log_global[DAMAGE_LOG.HOT_KEY])
+            if config.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
                 if feedback:
                     feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
@@ -76,7 +75,7 @@ class DamageLog(DamageLogsMeta):
 
     def onExitBattlePage(self):
         if self._player is not None:
-            extended_log = cfg.log_damage_extended[GLOBAL.ENABLED] or cfg.log_input_extended[GLOBAL.ENABLED]
+            extended_log = config.log_damage_extended[GLOBAL.ENABLED] or config.log_input_extended[GLOBAL.ENABLED]
             if extended_log:
                 keysParser.onKeyPressed -= self.keyEvent
                 arena = self._arenaVisitor.getArenaSubscription()
@@ -84,7 +83,7 @@ class DamageLog(DamageLogsMeta):
                     arena.onVehicleAdded -= self.onVehicleAddUpdate
                     arena.onVehicleUpdated -= self.onVehicleAddUpdate
                     arena.onVehicleKilled -= self.onVehicleKilled
-            if cfg.log_total[GLOBAL.ENABLED] or extended_log:
+            if config.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
                 if feedback:
                     feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
@@ -95,28 +94,28 @@ class DamageLog(DamageLogsMeta):
 
     def updateAvgDamage(self, isEpicBattle):
         """sets the average damage of the selected tank"""
-        if self._player is not None and not CONSTANTS.AVG_DAMAGE_DATA and not isEpicBattle:
+        if self._player is not None and not DAMAGE_LOG.AVG_DAMAGE_DATA and not isEpicBattle:
             max_health = self._player.vehicle.typeDescriptor.maxHealth
-            CONSTANTS.AVG_DAMAGE_DATA = max(CONSTANTS.RANDOM_MIN_AVG, float(max_health))
+            DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, float(max_health))
         elif isEpicBattle:
-            CONSTANTS.AVG_DAMAGE_DATA = CONSTANTS.FRONT_LINE_MIN_AVG
-        self.top_log[CONSTANTS.AVG_DAMAGE] = int(CONSTANTS.AVG_DAMAGE_DATA)
+            DAMAGE_LOG.AVG_DAMAGE_DATA = DAMAGE_LOG.FRONT_LINE_MIN_AVG
+        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = int(DAMAGE_LOG.AVG_DAMAGE_DATA)
 
     def keyEvent(self, key, isKeyDown):
         """hot key event"""
-        if key == CONSTANTS.HOT_KEY:
-            if cfg.log_damage_extended[GLOBAL.ENABLED]:
-                self.updateExtendedLog(self.damage_log, cfg.log_damage_extended, altMode=isKeyDown)
-            if cfg.log_input_extended[GLOBAL.ENABLED]:
-                self.updateExtendedLog(self.input_log, cfg.log_input_extended, altMode=isKeyDown)
+        if key == DAMAGE_LOG.HOT_KEY:
+            if config.log_damage_extended[GLOBAL.ENABLED]:
+                self.updateExtendedLog(self.damage_log, config.log_damage_extended, altMode=isKeyDown)
+            if config.log_input_extended[GLOBAL.ENABLED]:
+                self.updateExtendedLog(self.input_log, config.log_input_extended, altMode=isKeyDown)
 
     @staticmethod
     def percentToRBG(percent, saturation=0.5, brightness=1.0):
         """percent is float number in range 0 - 2.4"""
-        normalized_percent = min(CONSTANTS.COLOR_MAX_PURPLE, percent * CONSTANTS.COLOR_MAX_GREEN)
+        normalized_percent = min(DAMAGE_LOG.COLOR_MAX_PURPLE, percent * DAMAGE_LOG.COLOR_MAX_GREEN)
         tuple_values = hsv_to_rgb(normalized_percent, saturation, brightness)
-        r, g, b = (int(i * CONSTANTS.COLOR_MULTIPLIER) for i in tuple_values)
-        return CONSTANTS.COLOR_FORMAT.format(r, g, b)
+        r, g, b = (int(i * DAMAGE_LOG.COLOR_MULTIPLIER) for i in tuple_values)
+        return DAMAGE_LOG.COLOR_FORMAT.format(r, g, b)
 
     def __onPlayerFeedbackReceived(self, events, *args, **kwargs):
         """wg Feedback event parser"""
@@ -126,17 +125,17 @@ class DamageLog(DamageLogsMeta):
             data = 0
             if e_type == EV_ID.PLAYER_SPOTTED_ENEMY:
                 data += event.getCount()
-            elif e_type in CONSTANTS.TOP_LOG_ASSIST or e_type in CONSTANTS.EXTENDED_DAMAGE:
+            elif e_type in DAMAGE_LOG.TOP_LOG_ASSIST or e_type in DAMAGE_LOG.EXTENDED_DAMAGE:
                 data += int(extra.getDamage())
             elif e_type == EV_ID.DESTRUCTIBLE_DAMAGED:
                 data += int(extra)
-            if e_type in CONSTANTS.TOP_MACROS_NAME:
-                if e_type == EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[CONSTANTS.STUN_ICON]:
-                    self.top_log[CONSTANTS.STUN_ICON] = cfg.log_total[CONSTANTS.ICONS][CONSTANTS.STUN_ICON]
-                    self.top_log[CONSTANTS.ASSIST_STUN] = 0
-                self.top_log[CONSTANTS.TOP_MACROS_NAME[e_type]] += data
+            if e_type in DAMAGE_LOG.TOP_MACROS_NAME:
+                if e_type == EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
+                    self.top_log[DAMAGE_LOG.STUN_ICON] = config.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
+                    self.top_log[DAMAGE_LOG.ASSIST_STUN] = 0
+                self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += data
                 self.updateTopLog()
-            if e_type in CONSTANTS.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
+            if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
                 log_dict, settings = self.getLogDictAndSettings(e_type)
                 if log_dict is None:
                     return
@@ -145,10 +144,10 @@ class DamageLog(DamageLogsMeta):
 
     def updateTopLog(self):
         """update global sums in log"""
-        if cfg.log_total[GLOBAL.ENABLED]:
-            value = self.top_log[CONSTANTS.PLAYER_DAMAGE] / CONSTANTS.AVG_DAMAGE_DATA
-            self.top_log[CONSTANTS.DAMAGE_AVG_COLOR] = self.percentToRBG(value, **cfg.log_total[CONSTANTS.AVG_COLOR])
-            self.as_updateDamageS(cfg.log_total[CONSTANTS.TEMPLATE_MAIN_DMG] % self.top_log)
+        if config.log_total[GLOBAL.ENABLED]:
+            value = self.top_log[DAMAGE_LOG.PLAYER_DAMAGE] / DAMAGE_LOG.AVG_DAMAGE_DATA
+            self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.percentToRBG(value, **config.log_total[DAMAGE_LOG.AVG_COLOR])
+            self.as_updateDamageS(config.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     def onVehicleAddUpdate(self, vehicleID, *args, **kwargs):
         """update log item in GM-mode"""
@@ -157,28 +156,28 @@ class DamageLog(DamageLogsMeta):
             vehicleType = vehicleInfoVO.vehicleType
             if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
                 vehicle = self.input_log.get(vehicleID, {})
-                if vehicle and vehicle.get(CONSTANTS.VEHICLE_CLASS) is None:
-                    vehicle_ci = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_ICON]
-                    vehicle_cc = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_COLORS]
-                    vehicle[CONSTANTS.VEHICLE_CLASS] = vehicleType.classTag
-                    vehicle[CONSTANTS.TANK_NAMES] = {vehicleType.shortName}
-                    vehicle[CONSTANTS.TANK_NAME] = vehicleType.shortName
-                    vehicle[CONSTANTS.ICON_NAME] = vehicleType.iconName
-                    vehicle[CONSTANTS.TANK_LEVEL] = vehicleType.level
-                    vehicle[CONSTANTS.CLASS_ICON] = vehicle_ci.get(vehicleType.classTag,
-                                                                   vehicle_ci[CONSTANTS.UNKNOWN_TAG])
-                    vehicle[CONSTANTS.CLASS_COLOR] = vehicle_cc.get(vehicleType.classTag,
-                                                                    vehicle_cc[CONSTANTS.UNKNOWN_TAG])
-                    self.updateExtendedLog(self.input_log, cfg.log_input_extended)
+                if vehicle and vehicle.get(DAMAGE_LOG.VEHICLE_CLASS) is None:
+                    vehicle_ci = config.vehicle_types[DAMAGE_LOG.VEHICLE_CLASS_ICON]
+                    vehicle_cc = config.vehicle_types[DAMAGE_LOG.VEHICLE_CLASS_COLORS]
+                    vehicle[DAMAGE_LOG.VEHICLE_CLASS] = vehicleType.classTag
+                    vehicle[DAMAGE_LOG.TANK_NAMES] = {vehicleType.shortName}
+                    vehicle[DAMAGE_LOG.TANK_NAME] = vehicleType.shortName
+                    vehicle[DAMAGE_LOG.ICON_NAME] = vehicleType.iconName
+                    vehicle[DAMAGE_LOG.TANK_LEVEL] = vehicleType.level
+                    vehicle[DAMAGE_LOG.CLASS_ICON] = vehicle_ci.get(vehicleType.classTag,
+                                                                    vehicle_ci[DAMAGE_LOG.UNKNOWN_TAG])
+                    vehicle[DAMAGE_LOG.CLASS_COLOR] = vehicle_cc.get(vehicleType.classTag,
+                                                                     vehicle_cc[DAMAGE_LOG.UNKNOWN_TAG])
+                    self.updateExtendedLog(self.input_log, config.log_input_extended)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
         if self._player is not None:
             if self._player.playerVehicleID == targetID:
-                self.input_log[CONSTANTS.KILLS].add(attackerID)
-                self.updateExtendedLog(self.input_log, cfg.log_input_extended)
+                self.input_log[DAMAGE_LOG.KILLS].add(attackerID)
+                self.updateExtendedLog(self.input_log, config.log_input_extended)
             elif self._player.playerVehicleID == attackerID:
-                self.damage_log[CONSTANTS.KILLS].add(targetID)
-                self.updateExtendedLog(self.damage_log, cfg.log_damage_extended)
+                self.damage_log[DAMAGE_LOG.KILLS].add(targetID)
+                self.updateExtendedLog(self.damage_log, config.log_damage_extended)
 
     def checkShell(self, attack_reason_id, gold, is_dlog, shell_type):
         if is_dlog and attack_reason_id == GLOBAL.ZERO:
@@ -186,55 +185,55 @@ class DamageLog(DamageLogsMeta):
                 v_desc = self._player.getVehicleDescriptor()
                 shell_type = v_desc.shot.shell.kind
                 shell_icon_name = v_desc.shot.shell.iconName
-                gold = shell_icon_name in CONSTANTS.PREMIUM_SHELLS
+                gold = shell_icon_name in DAMAGE_LOG.PREMIUM_SHELLS
             else:
-                shell_type = CONSTANTS.UNDEFINED
-                shell_icon_name = CONSTANTS.UNDEFINED
-        elif shell_type in CONSTANTS.SHELL_LIST:
-            shell_icon_name = shell_type + CONSTANTS.PREMIUM if gold else shell_type
+                shell_type = DAMAGE_LOG.UNDEFINED
+                shell_icon_name = DAMAGE_LOG.UNDEFINED
+        elif shell_type in DAMAGE_LOG.PREMIUM_SHELLS or shell_type in SHELL_TYPES_LIST:
+            shell_icon_name = shell_type + DAMAGE_LOG.PREMIUM if gold else shell_type
         else:
-            shell_type = CONSTANTS.UNDEFINED
-            shell_icon_name = CONSTANTS.UNDEFINED
+            shell_type = DAMAGE_LOG.UNDEFINED
+            shell_icon_name = DAMAGE_LOG.UNDEFINED
         return gold, shell_icon_name, shell_type
 
     def addToExtendedLog(self, log_dict, settings, vehicle_id, attack_reason_id, damage, shell_type, gold):
         """add or update log item"""
         is_dlog = log_dict is self.damage_log
-        if vehicle_id not in log_dict[CONSTANTS.SHOTS]:
-            log_dict[CONSTANTS.SHOTS].append(vehicle_id)
+        if vehicle_id not in log_dict[DAMAGE_LOG.SHOTS]:
+            log_dict[DAMAGE_LOG.SHOTS].append(vehicle_id)
         gold, shell_icon_name, shell_type = self.checkShell(attack_reason_id, gold, is_dlog, shell_type)
         vehicle = log_dict.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         info = self._arenaDP.getVehicleInfo(vehicle_id)
         if vehicle:
-            vehicle[CONSTANTS.DAMAGE_LIST].append(damage)
-            vehicle[CONSTANTS.TANK_NAMES].add(info.vehicleType.shortName)
+            vehicle[DAMAGE_LOG.DAMAGE_LIST].append(damage)
+            vehicle[DAMAGE_LOG.TANK_NAMES].add(info.vehicleType.shortName)
         else:
-            vehicle_ci = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_ICON]
-            vehicle_cc = cfg.vehicle_types[CONSTANTS.VEHICLE_CLASS_COLORS]
+            vehicle_ci = config.vehicle_types[DAMAGE_LOG.VEHICLE_CLASS_ICON]
+            vehicle_cc = config.vehicle_types[DAMAGE_LOG.VEHICLE_CLASS_COLORS]
             class_tag = info.vehicleType.classTag
-            vehicle[CONSTANTS.INDEX] = len(log_dict[CONSTANTS.SHOTS])
-            vehicle[CONSTANTS.DAMAGE_LIST] = [damage]
-            vehicle[CONSTANTS.VEHICLE_CLASS] = class_tag
-            vehicle[CONSTANTS.TANK_NAMES] = {info.vehicleType.shortName}
-            vehicle[CONSTANTS.ICON_NAME] = info.vehicleType.iconName
-            vehicle[CONSTANTS.USER_NAME] = info.player.name
-            vehicle[CONSTANTS.TANK_LEVEL] = info.vehicleType.level
-            vehicle[CONSTANTS.KILLED_ICON] = GLOBAL.EMPTY_LINE
-            vehicle[CONSTANTS.CLASS_ICON] = vehicle_ci.get(class_tag, vehicle_ci[CONSTANTS.UNKNOWN_TAG])
-            vehicle[CONSTANTS.CLASS_COLOR] = vehicle_cc.get(class_tag, vehicle_cc[CONSTANTS.UNKNOWN_TAG])
+            vehicle[DAMAGE_LOG.INDEX] = len(log_dict[DAMAGE_LOG.SHOTS])
+            vehicle[DAMAGE_LOG.DAMAGE_LIST] = [damage]
+            vehicle[DAMAGE_LOG.VEHICLE_CLASS] = class_tag
+            vehicle[DAMAGE_LOG.TANK_NAMES] = {info.vehicleType.shortName}
+            vehicle[DAMAGE_LOG.ICON_NAME] = info.vehicleType.iconName
+            vehicle[DAMAGE_LOG.USER_NAME] = info.player.name
+            vehicle[DAMAGE_LOG.TANK_LEVEL] = info.vehicleType.level
+            vehicle[DAMAGE_LOG.KILLED_ICON] = GLOBAL.EMPTY_LINE
+            vehicle[DAMAGE_LOG.CLASS_ICON] = vehicle_ci.get(class_tag, vehicle_ci[DAMAGE_LOG.UNKNOWN_TAG])
+            vehicle[DAMAGE_LOG.CLASS_COLOR] = vehicle_cc.get(class_tag, vehicle_cc[DAMAGE_LOG.UNKNOWN_TAG])
             vehicle_id = self._player.playerVehicleID if not is_dlog else vehicle_id
-            vehicle[CONSTANTS.MAX_HEALTH] = self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
-        vehicle[CONSTANTS.SHOTS] = len(vehicle[CONSTANTS.DAMAGE_LIST])
-        vehicle[CONSTANTS.TOTAL_DAMAGE] = sum(vehicle[CONSTANTS.DAMAGE_LIST])
-        vehicle[CONSTANTS.ALL_DAMAGES] = CONSTANTS.COMMA.join(str(x) for x in vehicle[CONSTANTS.DAMAGE_LIST])
-        vehicle[CONSTANTS.LAST_DAMAGE] = vehicle[CONSTANTS.DAMAGE_LIST][GLOBAL.LAST]
-        vehicle[CONSTANTS.ATTACK_REASON] = cfg.log_global[CONSTANTS.ATTACK_REASON][ATTACK_REASONS[attack_reason_id]]
-        vehicle[CONSTANTS.SHELL_TYPE] = settings[CONSTANTS.SHELL_TYPES][shell_type]
-        vehicle[CONSTANTS.SHELL_ICON] = settings[CONSTANTS.SHELL_ICONS][shell_icon_name]
-        vehicle[CONSTANTS.SHELL_COLOR] = settings[CONSTANTS.SHELL_COLOR][CONSTANTS.SHELL[gold]]
-        vehicle[CONSTANTS.TANK_NAME] = CONSTANTS.LIST_SEPARATOR.join(sorted(vehicle[CONSTANTS.TANK_NAMES]))
-        percent = float(vehicle[CONSTANTS.TOTAL_DAMAGE]) / vehicle[CONSTANTS.MAX_HEALTH]
-        vehicle[CONSTANTS.PERCENT_AVG_COLOR] = self.percentToRBG(percent, **settings[CONSTANTS.AVG_COLOR])
+            vehicle[DAMAGE_LOG.MAX_HEALTH] = self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
+        vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
+        vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
+        vehicle[DAMAGE_LOG.ALL_DAMAGES] = DAMAGE_LOG.COMMA.join(str(x) for x in vehicle[DAMAGE_LOG.DAMAGE_LIST])
+        vehicle[DAMAGE_LOG.LAST_DAMAGE] = vehicle[DAMAGE_LOG.DAMAGE_LIST][GLOBAL.LAST]
+        vehicle[DAMAGE_LOG.ATTACK_REASON] = config.log_global[DAMAGE_LOG.ATTACK_REASON][ATTACK_REASONS[attack_reason_id]]
+        vehicle[DAMAGE_LOG.SHELL_TYPE] = settings[DAMAGE_LOG.SHELL_TYPES][shell_type]
+        vehicle[DAMAGE_LOG.SHELL_ICON] = settings[DAMAGE_LOG.SHELL_ICONS][shell_icon_name]
+        vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
+        vehicle[DAMAGE_LOG.TANK_NAME] = DAMAGE_LOG.LIST_SEPARATOR.join(sorted(vehicle[DAMAGE_LOG.TANK_NAMES]))
+        percent = float(vehicle[DAMAGE_LOG.TOTAL_DAMAGE]) / vehicle[DAMAGE_LOG.MAX_HEALTH]
+        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.percentToRBG(percent, **settings[DAMAGE_LOG.AVG_COLOR])
         callback(0.1, lambda: self.updateExtendedLog(log_dict, settings))
 
     def updateExtendedLog(self, log_dict, settings, altMode=False):
@@ -243,13 +242,13 @@ class DamageLog(DamageLogsMeta):
         also works when the alt mode is activated by hot key.
         """
         if log_dict:
-            log_name = CONSTANTS.D_LOG if log_dict is self.damage_log else CONSTANTS.IN_LOG
-            template = GLOBAL.EMPTY_LINE.join(settings[CONSTANTS.LOG_MODE[int(altMode)]])
-            log = log_dict[CONSTANTS.SHOTS]
-            if len(log) > CONSTANTS.LOG_MAX_LEN:
-                log = log[-CONSTANTS.LOG_MAX_LEN:]
-            data = reversed(log) if settings[CONSTANTS.REVERSE] else log
+            log_name = DAMAGE_LOG.D_LOG if log_dict is self.damage_log else DAMAGE_LOG.IN_LOG
+            template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[int(altMode)]])
+            log = log_dict[DAMAGE_LOG.SHOTS]
+            if len(log) > DAMAGE_LOG.LOG_MAX_LEN:
+                log = log[-DAMAGE_LOG.LOG_MAX_LEN:]
+            data = reversed(log) if settings[DAMAGE_LOG.REVERSE] else log
             for vehicleID in log:
-                if vehicleID in log_dict[CONSTANTS.KILLS] and not log_dict[vehicleID][CONSTANTS.KILLED_ICON]:
-                    log_dict[vehicleID][CONSTANTS.KILLED_ICON] = settings[CONSTANTS.KILLED_ICON]
-            self.as_updateLogS(log_name, CONSTANTS.NEW_LINE.join(template % log_dict[key] for key in data))
+                if vehicleID in log_dict[DAMAGE_LOG.KILLS] and not log_dict[vehicleID][DAMAGE_LOG.KILLED_ICON]:
+                    log_dict[vehicleID][DAMAGE_LOG.KILLED_ICON] = settings[DAMAGE_LOG.KILLED_ICON]
+            self.as_updateLogS(log_name, DAMAGE_LOG.NEW_LINE.join(template % log_dict[key] for key in data))

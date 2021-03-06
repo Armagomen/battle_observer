@@ -1,12 +1,11 @@
 from collections import defaultdict
 
 from aih_constants import SHOT_RESULT
-from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
-from gui.battle_control import avatar_getter
-
-from armagomen.battle_observer.core import cfg
+from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.constants import ARMOR_CALC, GLOBAL, VEHICLE, POSTMORTEM
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
+from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
+from gui.battle_control import avatar_getter
 
 
 class ArmorCalculator(ArmorCalcMeta):
@@ -16,12 +15,12 @@ class ArmorCalculator(ArmorCalcMeta):
         self._visible = False
         self.p100 = GLOBAL.F_ONE
         self.p500 = GLOBAL.F_ONE
-        self.messages = cfg.armor_calculator[ARMOR_CALC.MESSAGES]
+        self.messages = config.armor_calculator[ARMOR_CALC.MESSAGES]
         self.calcCache = GLOBAL.ZERO
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.typeColors = cfg.colors[ARMOR_CALC.NAME]
-        self.template = cfg.armor_calculator[ARMOR_CALC.TEMPLATE]
-        self.showCalcPoints = cfg.armor_calculator[ARMOR_CALC.SHOW_POINTS]
+        self.typeColors = config.colors[ARMOR_CALC.NAME]
+        self.template = config.armor_calculator[ARMOR_CALC.TEMPLATE]
+        self.showCalcPoints = config.armor_calculator[ARMOR_CALC.SHOW_POINTS]
         self.wg_updateColor = ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor
         self.__allyTeam = self._arenaDP.getNumberOfTeam()
 
@@ -46,7 +45,7 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
-        self.as_startUpdateS(cfg.armor_calculator)
+        self.as_startUpdateS(config.armor_calculator)
         ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor = lambda *args: self.updateColor(*args)
 
     def _dispose(self):

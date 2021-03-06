@@ -6,6 +6,11 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
+from armagomen.battle_observer.core.config.hangar.i18n import localization
+from armagomen.battle_observer.core.constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
+from armagomen.battle_observer.core.update.dialog_button import DialogButtons
+from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
+    getCurrentModPath
 from async import async, await, AsyncReturn
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.DialogsInterface import showDialog
@@ -14,12 +19,6 @@ from gui.Scaleform.daapi.view.dialogs.SimpleDialog import SimpleDialog
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from web.cache.web_downloader import WebDownloader
-
-from armagomen.battle_observer.core.constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
-from armagomen.battle_observer.core.config.hangar.i18n import localization
-from armagomen.battle_observer.core.update.dialog_button import DialogButtons
-from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
-    getCurrentModPath
 
 LAST_UPDATE = defaultdict()
 DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}

@@ -1,14 +1,13 @@
 # coding=utf-8
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
-from constants import SHELL_TYPES_LIST
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from vehicle_systems.tankStructure import TankPartIndexes
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.32.1"
+MOD_VERSION = "1.32.2"
 API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -336,7 +335,6 @@ class DAMAGE_LOG:
     PREMIUM = "_PREMIUM"
     PREMIUM_SHELLS = {"ARMOR_PIERCING_CR_PREMIUM", "ARMOR_PIERCING_PREMIUM",
                       "HIGH_EXPLOSIVE_PREMIUM", "HOLLOW_CHARGE_PREMIUM"}
-    SHELL_LIST = SHELL_TYPES_LIST + tuple(PREMIUM_SHELLS)
     WARNING_MESSAGE = "incorrect event parameter for the damage log"
 
 
@@ -609,7 +607,7 @@ class PANELS:
 
     PANELS_NAME = "players_panels"
     # icons
-    BLACKOUT = "panels_icon_filter_strength"
+    ICONS_BLACKOUT = "panels_icon_filter_strength"
     ICONS_ENABLED = "panels_icon_enabled"
     # hp_bars
     BARS_ENABLED = "players_bars_enabled"

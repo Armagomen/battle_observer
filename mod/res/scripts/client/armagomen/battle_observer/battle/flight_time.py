@@ -1,15 +1,14 @@
 from collections import defaultdict
 
+from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core.constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
+from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
+from armagomen.utils.common import vector3
 from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
-from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
-from armagomen.utils.common import vector3
-from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
-
 VECTOR = vector3(GLOBAL.F_ZERO, GLOBAL.F_ZERO, GLOBAL.F_ZERO)
-config = cfg.flight_time
+config = config.flight_time
 
 
 class FlightTime(FlightTimeMeta):
@@ -19,8 +18,7 @@ class FlightTime(FlightTimeMeta):
         self.template = config[FLIGHT_TIME.TEMPLATE]
         self.isSPG = False
         self.shared = self.sessionProvider.shared
-        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
-                                      {FLIGHT_TIME.M_FLIGHT_TIME: GLOBAL.ZERO, FLIGHT_TIME.M_DISTANCE: GLOBAL.ZERO})
+        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, flightTime=GLOBAL.ZERO, distance=GLOBAL.ZERO)
 
     def _populate(self):
         super(FlightTime, self)._populate()

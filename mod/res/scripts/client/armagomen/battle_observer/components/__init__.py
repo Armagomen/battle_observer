@@ -1,8 +1,7 @@
 import sys
 
-from debug_utils import LOG_CURRENT_EXCEPTION
-
 from armagomen.utils.common import logWarning, logInfo
+from debug_utils import LOG_CURRENT_EXCEPTION
 
 
 class ComponentsLoader(object):

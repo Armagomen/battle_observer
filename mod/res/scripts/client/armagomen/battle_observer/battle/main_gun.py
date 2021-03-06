@@ -1,28 +1,25 @@
 from collections import defaultdict
 from math import ceil
 
+from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core.constants import MAIN_GUN, GLOBAL, POSTMORTEM
+from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
+from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
-
-from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.constants import MAIN_GUN, GLOBAL
-from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
-
-config = cfg.main_gun
 
 
 class MainGun(MainGunMeta, IBattleFieldListener):
 
     def __init__(self):
         super(MainGun, self).__init__()
-        self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self._damage = GLOBAL.ZERO
+        self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR, mainGunIcon=config.main_gun[MAIN_GUN.GUN_ICON],
+                                  mainGunColor=config.colors[MAIN_GUN.NAME][MAIN_GUN.COLOR],
+                                  mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
         self._gunScore = GLOBAL.ZERO
-        self.enabled = False
-        self.gunLeft = 0
-        self.totalEnemiesHP = 0
+        self.gunLeft = GLOBAL.ZERO
         self.gunIcons = {
-            True: [config[MAIN_GUN.DONE_ICON], config[MAIN_GUN.FAILURE_ICON]],
+            True: [config.main_gun[MAIN_GUN.DONE_ICON], config.main_gun[MAIN_GUN.FAILURE_ICON]],
             False: [GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE]
         }
         self.healthFailed = False
@@ -30,65 +27,49 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def onEnterBattlePage(self):
         super(MainGun, self).onEnterBattlePage()
-        self.enabled = self.mainGunSettingsUpdate()
-        if self.enabled:
-            feedback = self.sessionProvider.shared.feedback
-            if feedback:
-                feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleKilled += self.onVehicleKilled
+        self.updateMainGun()
+        feedback = self.sessionProvider.shared.feedback
+        if feedback:
+            feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            handler.onCameraChanged += self.onCameraChanged
 
     def onExitBattlePage(self):
-        if self.enabled:
-            feedback = self.sessionProvider.shared.feedback
-            if feedback:
-                feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleKilled -= self.onVehicleKilled
-        self.macros.clear()
-        self._damage = GLOBAL.ZERO
-        self.enabled = False
+        feedback = self.sessionProvider.shared.feedback
+        if feedback:
+            feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            handler.onCameraChanged += self.onCameraChanged
         super(MainGun, self).onExitBattlePage()
 
     def _populate(self):
         super(MainGun, self)._populate()
-        self.as_startUpdateS(config[GLOBAL.SETTINGS])
+        self.as_startUpdateS(config.main_gun[GLOBAL.SETTINGS])
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
-        if self.totalEnemiesHP != totalEnemiesHP:
-            self.totalEnemiesHP = totalEnemiesHP
+        if not self._gunScore:
+            self._gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(ceil(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
+            self.gunLeft = self._gunScore
         if not self.playerDead:
             self.healthFailed = enemiesHP < self.gunLeft
             self.updateMainGun()
 
-    def mainGunSettingsUpdate(self):
-        isRandomBattle = self._arenaVisitor.gui.isRandomBattle()
-        if isRandomBattle:
-            self._gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(ceil(self.totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
-            self.macros.update(mainGunIcon=config[MAIN_GUN.GUN_ICON],
-                               mainGunColor=cfg.colors[MAIN_GUN.NAME][MAIN_GUN.COLOR],
-                               mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
-            self.updateMainGun()
-        return isRandomBattle
-
     def __onPlayerFeedbackReceived(self, events, *a, **kw):
         for event in events:
             if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-                self._damage += int(event.getExtra().getDamage())
-                self.updateMainGun()
+                self.updateMainGun(damage=int(event.getExtra().getDamage()))
 
-    def updateMainGun(self):
-        self.gunLeft = self._gunScore - self._damage
-        mainGunAchieved = self.gunLeft <= GLOBAL.ZERO
-        self.macros.update(mainGun=GLOBAL.EMPTY_LINE if mainGunAchieved else self.gunLeft,
-                           mainGunDoneIcon=self.gunIcons[mainGunAchieved][GLOBAL.FIRST],
-                           mainGunFailureIcon=self.gunIcons[self.healthFailed or self.playerDead][GLOBAL.LAST])
-        self.as_mainGunTextS(config[MAIN_GUN.TEMPLATE] % self.macros)
+    def updateMainGun(self, damage=0):
+        self.gunLeft -= damage
+        achieved = self.gunLeft <= GLOBAL.ZERO
+        self.macros["mainGun"] = GLOBAL.EMPTY_LINE if achieved else self.gunLeft
+        self.macros["mainGunDoneIcon"] = self.gunIcons[achieved][GLOBAL.FIRST]
+        self.macros["mainGunFailureIcon"] = self.gunIcons[self.healthFailed or self.playerDead][GLOBAL.LAST]
+        self.as_mainGunTextS(config.main_gun[MAIN_GUN.TEMPLATE] % self.macros)
 
-    def onVehicleKilled(self, targetID, *args, **kwargs):
-        if self._player.playerVehicleID == targetID:
-            if self.gunLeft > GLOBAL.ZERO:
-                self.playerDead = True
-                self.updateMainGun()
+    def onCameraChanged(self, ctrlMode, vehicleID=None):
+        if ctrlMode in POSTMORTEM.MODES and self.gunLeft > GLOBAL.ZERO:
+            self.playerDead = True
+            self.updateMainGun()

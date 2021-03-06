@@ -1,12 +1,11 @@
 from Avatar import PlayerAvatar
 from BattleReplay import g_replayCtrl
 from PlayerEvents import g_playerEvents
-from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
-from messenger.MessengerEntry import g_instance
-
-from armagomen.battle_observer.core import cfg, keysParser
+from armagomen.battle_observer.core import config, keysParser
 from armagomen.battle_observer.core.constants import GLOBAL, SAVE_SHOOT, MAIN
 from armagomen.utils.common import overrideMethod
+from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
+from messenger.MessengerEntry import g_instance
 
 __all__ = ["save_shoot_lite"]
 
@@ -14,7 +13,7 @@ __all__ = ["save_shoot_lite"]
 class SaveShootLite(object):
 
     def __init__(self):
-        cfg.onModSettingsChanged += self.onModSettingsChanged
+        config.onModSettingsChanged += self.onModSettingsChanged
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         self.enabled = False
@@ -38,7 +37,7 @@ class SaveShootLite(object):
 
     @staticmethod
     def getHotKey():
-        if cfg.main[MAIN.USE_KEY_PAIRS]:
+        if config.main[MAIN.USE_KEY_PAIRS]:
             return KEY_ALIAS_ALT
         else:
             return KEY_ALIAS_ALT[GLOBAL.FIRST],

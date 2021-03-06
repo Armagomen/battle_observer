@@ -1,11 +1,10 @@
+from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core.constants import TEAM_BASES
+from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
+from armagomen.utils.common import callback
 from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
 from gui.battle_control.controllers import team_bases_ctrl
 from helpers import time_utils
-
-from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.constants import TEAM_BASES
-from armagomen.utils.common import callback
-from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
 
 
 class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
@@ -16,7 +15,7 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
 
     def _populate(self):
         super(TeamBases, self)._populate()
-        self.as_startUpdateS(cfg.team_bases_panel)
+        self.as_startUpdateS(config.team_bases_panel)
 
     def onExitBattlePage(self):
         self.removeTeamsBases()

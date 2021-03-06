@@ -1,8 +1,7 @@
-from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
-
-from armagomen.battle_observer.core import cfg
+from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.constants import GLOBAL
 from armagomen.utils.common import logInfo
+from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 
 
 class BaseModMeta(BaseDAAPIComponent):
@@ -12,7 +11,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @staticmethod
     def getShdowSettings():
-        return cfg.shadow_settings
+        return config.shadow_settings
 
     def _populate(self):
         super(BaseModMeta, self)._populate()

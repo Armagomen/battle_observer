@@ -5,10 +5,10 @@ from armagomen.battle_observer.core.inject_flash import InjectFlash
 from armagomen.battle_observer.core.observer_core import ObserverCore
 from armagomen.utils.keys_parser import HotKeysParser
 
-cfg = Config()
-c_Loader = ConfigLoader(cfg)
+config = Config()
+c_Loader = ConfigLoader(config)
 m_core = ObserverCore(c_Loader)
-b_core = BattleCore(cfg)
-v_settings = ViewSettings(cfg)
-keysParser = HotKeysParser(cfg)
+b_core = BattleCore(config)
+v_settings = ViewSettings(config)
+keysParser = HotKeysParser(config)
 flash = InjectFlash()

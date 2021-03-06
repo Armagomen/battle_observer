@@ -1,10 +1,10 @@
-from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.vxSettingsApi import vxSettingsApiEvents
 
+from armagomen.battle_observer.core.config.hangar.i18n import localization
 from armagomen.battle_observer.core.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION_CIRCLE, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
-from armagomen.battle_observer.core.config.hangar.i18n import localization
 from armagomen.utils.common import logWarning, openWebBrowser
+from debug_utils import LOG_CURRENT_EXCEPTION
 
 settingsVersion = 33
 KEY_CONTROL = [[29]]
@@ -114,7 +114,7 @@ class CreateElement(object):
                 return self.createSlider(blockID, key, GLOBAL.ONE, 100, GLOBAL.ONE, value)
             return self.createStepper(blockID, key, -2000, 2000, GLOBAL.ONE, value)
         elif val_type is float:
-            if PANELS.BLACKOUT in key:
+            if PANELS.ICONS_BLACKOUT in key:
                 return self.createStepper(blockID, key, -2.0, 2.0, 0.01, value)
             if GLOBAL.ZERO <= value <= GLOBAL.F_ONE:
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 2.0, 0.01, value)

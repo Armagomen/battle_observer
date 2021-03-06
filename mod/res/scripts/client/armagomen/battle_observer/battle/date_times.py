@@ -1,12 +1,12 @@
 from time import strftime
 
-from armagomen.battle_observer.core import cfg
+from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.constants import CLOCK
-from armagomen.utils.timers import CyclicTimerEvent
-from armagomen.utils.common import checkDecoder
 from armagomen.battle_observer.meta.battle.date_times_meta import DateTimesMeta
+from armagomen.utils.common import checkDecoder
+from armagomen.utils.timers import CyclicTimerEvent
 
-config = cfg.clock[CLOCK.IN_BATTLE]
+config = config.clock[CLOCK.IN_BATTLE]
 
 
 class DateTimes(DateTimesMeta):

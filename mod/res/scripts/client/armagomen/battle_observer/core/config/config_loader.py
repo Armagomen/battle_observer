@@ -3,18 +3,17 @@ import json
 import os
 import time
 
+from armagomen.battle_observer.core.constants import LOAD_LIST, API_VERSION, GLOBAL
+from armagomen.utils.common import logWarning, logInfo, getCurrentModPath
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-from armagomen.battle_observer.core.constants import LOAD_LIST, API_VERSION, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath
-
 
 class ConfigLoader(object):
-    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'cfg')
+    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'config')
 
     def __init__(self, config):
-        self.cfg = config
+        self.config = config
         self.cName = None
         self.path = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
@@ -129,7 +128,7 @@ class ConfigLoader(object):
         for num, module_name in enumerate(LOAD_LIST, GLOBAL.ZERO):
             file_name = file_list[num]
             file_path = os.path.join(direct_path, file_name)
-            internal_cfg = getattr(self.cfg, module_name)
+            internal_cfg = getattr(self.config, module_name)
             if file_name in listdir:
                 try:
                     if self.updateData(self.getFileData(file_path), internal_cfg):
@@ -140,7 +139,7 @@ class ConfigLoader(object):
                     continue
             else:
                 self.createFileInDir(file_path, internal_cfg)
-            self.cfg.onModSettingsChanged(internal_cfg, module_name)
+            self.config.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
         if self.configInterface is not None:
             self.configInterface.onUserConfigUpdateComplete()
@@ -158,7 +157,7 @@ class ConfigLoader(object):
                 from distutils.version import LooseVersion
                 if LooseVersion(__version__) >= LooseVersion(API_VERSION):
                     from armagomen.battle_observer.core.config.hangar.hangar_settings import ConfigInterface
-                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, self.cfg, self)
+                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, self.config, self)
                     self.configInterface.start()
                 else:
                     msg = "Settings API not loaded, v{} it`s fake or not supported api, current version is {}, " \

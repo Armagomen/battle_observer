@@ -1,22 +1,22 @@
+from GUI import screenResolution, WGGunMarkerDataProvider, WGSPGGunMarkerDataProvider
+from Math import MatrixAnimation
+
 import aih_constants
 from Avatar import PlayerAvatar
 from AvatarInputHandler import gun_marker_ctrl
 from AvatarInputHandler.gun_marker_ctrl import _MARKER_TYPE, _MARKER_FLAG, \
     _SPGGunMarkerController, _DefaultGunMarkerController, _GunMarkersDecorator, _GunMarkersDPFactory
 from BattleReplay import g_replayCtrl
-from GUI import screenResolution, WGGunMarkerDataProvider, WGSPGGunMarkerDataProvider
-from Math import MatrixAnimation
 from VehicleGunRotator import VehicleGunRotator
+from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core.constants import GLOBAL, DISPERSION_CIRCLE
+from armagomen.utils.common import overrideMethod, getPlayer
 from constants import SERVER_TICK_LENGTH
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
-
-from armagomen.battle_observer.core import cfg
-from armagomen.battle_observer.core.constants import GLOBAL, DISPERSION_CIRCLE
-from armagomen.utils.common import overrideMethod, getPlayer
 
 CLIENT = _MARKER_TYPE.CLIENT
 SERVER = _MARKER_TYPE.SERVER
@@ -129,7 +129,7 @@ class DispersionCircle(object):
         self.hooksEnable = False
         self.replaceOriginalCircle = False
         self.extraServerLap = False
-        cfg.onModSettingsChanged += self.onModSettingsChanged
+        config.onModSettingsChanged += self.onModSettingsChanged
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION_CIRCLE.NAME:

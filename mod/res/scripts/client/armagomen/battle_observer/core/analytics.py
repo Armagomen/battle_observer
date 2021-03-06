@@ -1,10 +1,9 @@
 import urllib2
 
-from async import async, await, AsyncReturn
-from gui.shared.personality import ServicesLocator
-
 from armagomen.battle_observer.core.constants import URLS, HEADERS
 from armagomen.utils.common import logWarning
+from async import async, await, AsyncReturn
+from gui.shared.personality import ServicesLocator
 
 
 class Analytics(object):

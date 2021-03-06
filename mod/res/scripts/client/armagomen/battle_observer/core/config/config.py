@@ -2,13 +2,12 @@
 
 import Keys
 from Event import SafeEvent
-from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
-from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-
 from armagomen.battle_observer.core.constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
     DAMAGE_LOG, DEBUG_PANEL, DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, USER_BACKGROUND, \
     VEHICLE_TYPES
+from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
+from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 
 class Config(object):
@@ -297,7 +296,7 @@ class Config(object):
                 "</font></textformat>"
             ],
             DAMAGE_LOG.SHELL_TYPES: {shell_type: "" for shell_type in SHELL_TYPES_LIST},
-            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in DAMAGE_LOG.SHELL_LIST},
+            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST},
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
@@ -336,7 +335,7 @@ class Config(object):
                 "</font></textformat>"
             ],
             DAMAGE_LOG.SHELL_TYPES: {shell_type: "" for shell_type in SHELL_TYPES_LIST},
-            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in DAMAGE_LOG.SHELL_LIST},
+            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST},
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
@@ -435,7 +434,7 @@ class Config(object):
         self.players_panels = {
             GLOBAL.ENABLED: False,
             PANELS.ICONS_ENABLED: True,
-            PANELS.BLACKOUT: -1.25,
+            PANELS.ICONS_BLACKOUT: -1.25,
             PANELS.DAMAGES_ENABLED: True,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.DAMAGES_TEMPLATE: "<font color='#FFFF00'>%(damage)s</font>",
