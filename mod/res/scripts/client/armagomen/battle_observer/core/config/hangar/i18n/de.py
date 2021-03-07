@@ -57,11 +57,7 @@ translate = {
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Сhange Anonymous Name",
         "removeHandbrake": "Handbremse für AT-SPG deaktivieren.",
-        "hide_postmortem_tips": "Informationen nach der Zerstörung ausblenden",
-        "hide_postmortem_tips_tooltip": "Blendet die Anzeige von Informationen im Panel nach der Zerstörung aus:"
-                                        "<br> - Navigationstipps"
-                                        "<br> - Token anzeigen"
-                                        "<br> - zeigt Informationen über den Spieler an, der dich zerstört hat",
+        "hide_dog_tags": "Deaktivieren Sie die Anzeige von Token.",
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceovers of bloggers, "

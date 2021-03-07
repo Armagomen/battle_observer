@@ -7,7 +7,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.32.3"
+MOD_VERSION = "1.32.4"
 API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -132,6 +132,7 @@ class MAIN:
     HIDE_BADGES = "hideBadges"
     HIDE_CHAT = "hideChatInRandom"
     HIDE_CLAN_ABBREV = "hideClanAbbrev"
+    HIDE_DOG_TAGS = "hide_dog_tags"
     MAX_FRAME_RATE = "fps_maxFrameRate"
     NAME = "main"
     REMOVE_SHADOW_IN_PREBATTLE = "removeShadowInPrebattle"
@@ -141,7 +142,6 @@ class MAIN:
     CHANGE_ANONYMOUS_NAME = "anonymousNameChange"
     USE_KEY_PAIRS = "useKeyPairs"
     REMOVE_HANDBRAKE = "removeHandbrake"
-    HIDE_POSTMORTEM_TIPS = "hide_postmortem_tips"
     IGNORE_COMMANDERS = "ignore_commanders_voice"
 
 
@@ -366,9 +366,10 @@ class POSTMORTEM:
     def __init__(self):
         pass
 
-    CALLBACK_TIME_SEC = 1.0
+    CALLBACK_TIME_SEC = 1.5
     DURATION = "transitionDuration"
     PARAMS = "postmortemParams"
+    CAM_MATRIX = "camMatrix"
     MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM}
 
 

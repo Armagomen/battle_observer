@@ -20,3 +20,4 @@ class WGCompSettings(WgCompMeta):
             self.as_hideMessengerS()
         if not config.team_bases_panel[GLOBAL.ENABLED] and move:
             self.as_moveTeamBasesPanelS()
+

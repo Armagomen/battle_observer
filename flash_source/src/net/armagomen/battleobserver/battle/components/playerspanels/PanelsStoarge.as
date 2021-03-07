@@ -176,8 +176,8 @@ public class PanelsStoarge extends BattleDisplayable {
 		var listitem: * = this.getHolder(vehID, true);
 		if (listitem) {
 			var spottedIndicator:SpottedIndicator = listitem.spottedIndicator;
-			spottedIndicator.scaleX = spottedIndicator.scaleY = 1.7;
-			spottedIndicator.y = -8;
+			spottedIndicator.scaleX = spottedIndicator.scaleY = 1.5;
+			spottedIndicator.y = -6;
 			spottedIndicator.x = -345;
         } else {
             DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setSpottedPosition - listitem is Null !!!");

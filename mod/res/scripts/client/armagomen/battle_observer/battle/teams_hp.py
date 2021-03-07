@@ -36,7 +36,8 @@ class CorrelationMarkers(object):
             color = self.color[vInfoVO.team][isAlive]
         return MARKERS.ICON.format(color, MARKERS.TYPE_ICON[vInfoVO.vehicleType.classTag])
 
-    def getMarkers(self):
+    @property
+    def update(self):
         left, right = [], []
         for vInfoVO in sorted(self._arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
             if not vInfoVO.isObserver():
@@ -52,7 +53,10 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def __init__(self):
         super(TeamsHP, self).__init__()
         self.showAliveCount = config.hp_bars[HP_BARS.ALIVE] and self.isNormalMode
-        self.markers = CorrelationMarkers(self._arenaDP) if config.markers[GLOBAL.ENABLED] and self.isNormalMode else None
+        if config.markers[GLOBAL.ENABLED] and self.isNormalMode:
+            self.markers = CorrelationMarkers(self._arenaDP)
+        else:
+            self.markers = None
         self.observers = set()
         for vinfoVo in self._arenaDP.getVehiclesInfoIterator():
             if vinfoVo.isObserver():
@@ -80,12 +84,13 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         if self.showAliveCount:
-            self.as_updateScoreS(len(aliveAllies), len(aliveEnemies))
+            self.as_updateScoreS(len(aliveAllies.difference(self.observers)),
+                                 len(aliveEnemies.difference(self.observers)))
         else:
             self.as_updateScoreS(len(deadEnemies.difference(self.observers)),
                                  len(deadAllies.difference(self.observers)))
         if self.markers is not None and self.markers.enabled:
-            self.as_markersS(*self.markers.getMarkers())
+            self.as_markersS(*self.markers.update)
 
     @property
     def isNormalMode(self):
@@ -107,10 +112,10 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
             if name == GRAPHICS.COLOR_BLIND:
                 self.markers.color = self.markers.updateMarkersColorDict()
                 if self.markers.enabled:
-                    self.as_markersS(*self.markers.getMarkers())
+                    self.as_markersS(*self.markers.update)
             elif name == GAME.SHOW_VEHICLES_COUNTER:
                 self.markers.enabled = bool(setting)
                 if self.markers.enabled:
-                    self.as_markersS(*self.markers.getMarkers())
+                    self.as_markersS(*self.markers.update)
                 else:
                     self.as_clearMarkersS()

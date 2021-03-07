@@ -20,3 +20,9 @@ class WgCompMeta(BaseModMeta):
 
     def as_moveTeamBasesPanelS(self):
         return self.flashObject.as_moveTeamBasesPanel() if self._isDAAPIInited() else None
+
+    def as_hideDogTagsS(self):
+        return self.flashObject.as_hideDogTags() if self._isDAAPIInited() else None
+
+    def as_hideDeadTipsS(self):
+        return self.flashObject.as_hideDeadTips() if self._isDAAPIInited() else None

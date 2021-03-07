@@ -110,5 +110,15 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 				this.teamBases.addChild(teamBasesPanel);
 			}
 		}
+
+		//public function as_hideDeadTips():void
+		//{
+			//var battlePage:* = parent;
+			//var postmotremPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.POSTMORTEM_PANEL);
+			//if (postmotremPanel)
+			//{
+				//postmotremPanel.removeChild(postmotremPanel.vehiclePanel);
+			//}
+		//}
 	}
 }
