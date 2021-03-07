@@ -30,6 +30,10 @@ public class PlayersPanelsUI extends PanelsStoarge {
 	public function as_updateTextField(vehID: int, name: String, text: String): void {
 		this.updateTextField(vehID, name, text);
 	}
+	
+	public function as_setSpottedPosition(vehID: int):void {
+		this.setSpottedPosition(vehID);
+	}
 
 	public function as_setVehicleIconColor(vehID: int, color: String, multipler: Number, enemy: Boolean): void {
 		this.setVehicleIconColor(vehID, color, multipler, enemy);

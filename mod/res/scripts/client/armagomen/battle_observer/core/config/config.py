@@ -435,6 +435,7 @@ class Config(object):
             GLOBAL.ENABLED: False,
             PANELS.ICONS_ENABLED: True,
             PANELS.ICONS_BLACKOUT: -1.25,
+            PANELS.SPOTTED_FIX: True,
             PANELS.DAMAGES_ENABLED: True,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.DAMAGES_TEMPLATE: "<font color='#FFFF00'>%(damage)s</font>",

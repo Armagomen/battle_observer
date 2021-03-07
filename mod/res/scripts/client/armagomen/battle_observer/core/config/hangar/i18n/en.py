@@ -270,8 +270,9 @@ translate = {
         "panels_icon_enabled": "Repaint tank icons.",
         "panels_icon_enabled_tooltip": "This function repaints any vehicle icons in the ears in the color of vehicle "
                                        "classes. <br> The slider below affects the brightness. <br> Recommended "
-                                       "filter strength -1",
-        "panels_icon_filter_strength": "Filter strength (brightness)"
+                                       "filter strength -1.25",
+        "panels_icon_filter_strength": "Filter strength (brightness)",
+        "panels_spotted_fix": "Correct size and position of detection status."
     },
     "zoom": {
         "header": "SNIPER MODE, ZOOM-X",

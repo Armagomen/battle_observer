@@ -275,8 +275,9 @@ translate = {
         "panels_icon_enabled": "Tanksymbole neu streichen.",
         "panels_icon_enabled_tooltip": "Diese Funktion malt alle Fahrzeugsymbole in den Ohren in der Farbe der "
                                        "Fahrzeugklassen neu. <br> Der Schieberegler unten beeinflusst die "
-                                       "Helligkeit. <br> Empfohlene Filterstärke -1",
-        "panels_icon_filter_strength": "Filterstärke (Helligkeit)"
+                                       "Helligkeit. <br> Empfohlene Filterstärke -1.25",
+        "panels_icon_filter_strength": "Filterstärke (Helligkeit)",
+        "panels_spotted_fix": "Richtige Größe und Position des Erkennungsstatus."
     },
     "zoom": {
         "header": "Zoom für Richtschützenansicht (Sniper Zoom IN)",

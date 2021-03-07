@@ -12,6 +12,7 @@ import net.armagomen.battleobserver.battle.utils.Utils;
 import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 import net.wg.gui.battle.components.BattleAtlasSprite;
 import net.wg.gui.battle.components.BattleDisplayable;
+import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
 
 public class PanelsStoarge extends BattleDisplayable {
     private var items: Object = {};
@@ -170,6 +171,18 @@ public class PanelsStoarge extends BattleDisplayable {
             return null;
         }
     }
+	
+	public function setSpottedPosition(vehID: int):void{
+		var listitem: * = this.getHolder(vehID, true);
+		if (listitem) {
+			var spottedIndicator:SpottedIndicator = listitem.spottedIndicator;
+			spottedIndicator.scaleX = spottedIndicator.scaleY = 1.7;
+			spottedIndicator.y = -8;
+			spottedIndicator.x = -345;
+        } else {
+            DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setSpottedPosition - listitem is Null !!!");
+        }
+	}
 
     public function setVehicleIconColor(vehID: int, color: String, multipler: Number, enemy: Boolean): void {
         var listitem: * = this.getHolder(vehID, enemy);

@@ -625,6 +625,7 @@ class PANELS:
     DAMAGES_HOT_KEY = "players_damages_hotkey"
     DAMAGES_TF = "DamageTf"
     # another
+    SPOTTED_FIX = "panels_spotted_fix"
     VEHICLE_ID = "vehicleID"
     IS_ENEMY = "isEnemy"
     DAMAGE = "damage"

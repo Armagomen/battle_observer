@@ -97,6 +97,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 VEHICLE.MAX: maxHealth,
                 VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
             })
+        if is_enemy and config.players_panels[PANELS.SPOTTED_FIX]:
+            self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
             self.as_AddTextFieldS(vehicleID, PANELS.DAMAGES_TF, self.damagesSettings, PANELS.TEAM[is_enemy])
 

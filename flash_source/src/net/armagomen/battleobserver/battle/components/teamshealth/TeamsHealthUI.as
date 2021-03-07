@@ -139,8 +139,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			{
 			case battlePage._componentsStorage.hasOwnProperty(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR):
 				return battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-			case battlePage._componentsStorage.hasOwnProperty(BATTLE_VIEW_ALIASES.EPIC_RANDOM_SCORE_PANEL):
-				return battlePage.getComponent(BATTLE_VIEW_ALIASES.EPIC_RANDOM_SCORE_PANEL);
 			default:
 				return null;
 			}
