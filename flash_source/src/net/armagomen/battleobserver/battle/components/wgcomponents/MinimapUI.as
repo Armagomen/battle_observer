@@ -36,14 +36,6 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			sizeBefore = 2.0;
-			newScale = 1.0;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
 		private function getMinimap():*
 		{
 			var battlePage:* = parent;

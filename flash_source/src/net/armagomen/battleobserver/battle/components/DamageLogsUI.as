@@ -45,30 +45,6 @@ package net.armagomen.battleobserver.battle.components
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			var page:* = this.parent;
-			var battleDamageLogPanel:* = page.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
-			if (battleDamageLogPanel){
-				if (this.d_log){
-					battleDamageLogPanel._detailsTopContainer.removeChild(this.d_log);
-					this.d_log = null;
-				}
-				if (this.in_log){
-					battleDamageLogPanel._detailsBottomContainer.removeChild(this.in_log);
-					this.in_log = null;
-				}
-			}
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.top_Log = null;
-			App.utils.data.cleanupDynamicObject(this.enableds);
-			this.enableds = null;
-			page.unregisterComponent(this.name);
-
-		}
-
 		public function as_startUpdate(data:Object, turned:Object):void
 		{
 			this.enableds = turned;

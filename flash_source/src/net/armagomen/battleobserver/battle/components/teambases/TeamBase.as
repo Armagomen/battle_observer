@@ -3,11 +3,11 @@
 	import flash.display.*;
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.data.Constants;
-	import net.armagomen.battleobserver.battle.utils.Animation;
 	import net.armagomen.battleobserver.battle.utils.Params;
 	import net.armagomen.battleobserver.battle.utils.TextExt;
 	import net.armagomen.battleobserver.battle.utils.Utils;
-
+	import fl.transitions.Tween;
+	
 	/**
 	 * ...
 	 * @author Armagomen
@@ -19,7 +19,7 @@
 		public var BaseTimer:TextField;
 		public var BaseVehicles:TextField;
 		private var basesFormat:TextFormat = new TextFormat("$TitleFont", 16, 0xFAFAFA);
-		private var animation:Animation = null;
+		private var animation:Tween = null;
 		[Embed(source = "players.png")]
 		private var Players:Class;
 		[Embed(source = "timer.png")]
@@ -32,17 +32,11 @@
 			this.name = team;
 		}
 
-		public function setBarScale(newScale:Number, rate:Number, invadersCnt:Number):void
+		public function setBarScale(newScale:Number):void
 		{
-			this.animation.setNewSpeed(Constants.ANIMATE_SPEED_TEAMBASE * rate * invadersCnt);
-			this.animation.runAnimation(newScale);
+			this.animation.continueTo(newScale, 1);			
 		}
-
-		public function stopAnimation():void
-		{
-			this.animation.stopAnimation();
-		}
-
+	
 		public function create(bases:Object, shadowSettings:Object):void
 		{
 			basesFormat = new TextFormat(bases.text_settings.font, bases.text_settings.size, Utils.colorConvert(bases.text_settings.color), bases.text_settings.bold, bases.text_settings.italic, bases.text_settings.underline);
@@ -107,7 +101,15 @@
 			this.x = App.appWidth / 2 - baseMain.width / 2;
 			this.y = settings.y;
 
-			this.animation = new Animation(this.progressBar, Constants.ANIMATE_SPEED_TEAMBASE, true);
+			this.animation = new Tween(this.progressBar, "scaleX", null, this.progressBar.scaleX, 0, 1, true);
+			this.animation.FPS = 30;
+		}
+		
+		public function stopAndClearAnimate():void{
+			if (this.animation != null && this.animation.isPlaying){
+				this.animation.stop();
+				this.animation = null;
+			}
 		}
 	}
 }

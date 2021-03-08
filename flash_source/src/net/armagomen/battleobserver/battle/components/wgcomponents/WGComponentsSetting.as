@@ -26,32 +26,6 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			this.buttonMode = false;
 		}
 
-		public function as_clearScene():void
-		{
-			var battlePage:* = parent;
-			if (this.questview){
-				var questTopView:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
-				if (questTopView)
-				{
-					battlePage.addChild(questTopView);
-					this.questview.removeChildren();
-				}
-			}
-			if (this.teamBases){
-				var teamBasesPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
-				if (teamBasesPanel)
-				{
-					battlePage.addChild(teamBasesPanel);
-					this.teamBases.removeChildren();
-				}
-			}
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.questview = null;
-			this.teamBases = null;
-			battlePage.unregisterComponent(this.name);
-		}
 
 		public function as_moveQuests(move:Boolean):void
 		{
@@ -111,14 +85,14 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			}
 		}
 
-		//public function as_hideDeadTips():void
-		//{
-			//var battlePage:* = parent;
-			//var postmotremPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.POSTMORTEM_PANEL);
-			//if (postmotremPanel)
-			//{
-				//postmotremPanel.removeChild(postmotremPanel.vehiclePanel);
-			//}
-		//}
+		public function as_hideDeadTips():void
+		{
+			var battlePage:* = parent;
+			var postmotremPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.POSTMORTEM_PANEL);
+			if (postmotremPanel)
+			{
+				postmotremPanel.removeChild(postmotremPanel.vehiclePanel);
+			}
+		}
 	}
 }

@@ -37,16 +37,6 @@ package net.armagomen.battleobserver.battle.components
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.armorCalc = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
 		public function as_startUpdate(calc:Object):void
 		{
 			var shadowSettings:Object = getShadowSettings();

@@ -43,16 +43,6 @@ package net.armagomen.battleobserver.battle.components
 		{
 			flyTime.htmlText = text;
 		}
-
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.flyTime = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
 		
 		public function as_onControlModeChanged(mode:String):void
 		{

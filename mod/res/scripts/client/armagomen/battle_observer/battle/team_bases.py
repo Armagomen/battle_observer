@@ -45,7 +45,7 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
     def updateTeamBasePoints(self, clientID, points, rate, timeLeft, invadersCnt):
         item = self.basesDict.get(clientID, None)
         if item:
-            self.as_updateBaseS(item.getColor(), points, rate, self.getInvadersCountStr(invadersCnt),
+            self.as_updateBaseS(item.getColor(), points, self.getInvadersCountStr(invadersCnt),
                                 time_utils.getTimeLeftFormat(timeLeft), item.getCapturingString(points))
 
     def blockTeamBaseCapturing(self, clientID, points):

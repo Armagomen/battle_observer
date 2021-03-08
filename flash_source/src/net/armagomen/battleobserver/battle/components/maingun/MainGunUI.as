@@ -36,16 +36,6 @@ package net.armagomen.battleobserver.battle.components.maingun
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.mainGun = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
 		public function as_startUpdate(data:Object):void
 		{
 			this.x = (App.appWidth >> 1) + data.x;

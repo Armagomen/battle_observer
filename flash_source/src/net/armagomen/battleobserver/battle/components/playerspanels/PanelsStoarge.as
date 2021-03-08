@@ -42,6 +42,16 @@ public class PanelsStoarge extends BattleDisplayable {
             battlePage.setChildIndex(playersPanel, timerIndex - 1);
         }
     }
+	
+	override protected function onDispose():void 
+	{
+        if (this.stoarge) {
+            for each (var field: Object in this.stoarge) {
+                field.HpBar.stopAndClearAnimate();
+            }
+        }
+		super.onDispose();
+	}
 
     private function getPlayersPanel(): * {
         var battlePage: * = parent;
@@ -50,17 +60,6 @@ public class PanelsStoarge extends BattleDisplayable {
         }
         battlePage.unregisterComponent(this.name);
         return null;
-    }
-
-    public function as_clearScene(): void {
-        if (this.stoarge) {
-            App.utils.data.cleanupDynamicObject(this.stoarge);
-        }
-        if (this.items) {
-            App.utils.data.cleanupDynamicObject(this.items);
-        }
-        var page: * = parent;
-        page.unregisterComponent(this.name);
     }
 
     public function addVehicle(vehicle_id: int): void {
@@ -101,7 +100,8 @@ public class PanelsStoarge extends BattleDisplayable {
                 barX = -barX;
                 textX = -textX;
             }
-            var bar: ProgressBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, settings.players_bars_bar.alpha, settings.players_bars_bar.bgAlpha, null, color, settings.players_bars_bar.colors.bgColor, vehID.toString());
+            var bar: ProgressBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, settings.players_bars_bar.alpha, 
+													settings.players_bars_bar.bgAlpha, null, color, settings.players_bars_bar.colors.bgColor, vehID.toString());
             if (settings.players_bars_bar.outline.enabled) {
                 bar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
             }
@@ -115,8 +115,9 @@ public class PanelsStoarge extends BattleDisplayable {
     public function updateHPBar(vehID: int, currHP: Number, maxHP: Number, text: String): void {
         if (this.stoarge.hasOwnProperty(vehID.toString())) {
             var hpbar: ProgressBar = this.stoarge[vehID]["HpBar"];
-            if (currHP > 0) {
-                hpbar.visible && Params.AnimationEnabled ? hpbar.setBarScale(currHP / maxHP) : hpbar.bar.scaleX = currHP / maxHP;
+            
+			if (currHP > 0) {
+                hpbar.visible && Params.AnimationEnabled ? hpbar.animateBar(currHP / maxHP) : hpbar.bar.scaleX = currHP / maxHP;
 				hpbar.uiText.htmlText = text;
             } else {
                 this.items[vehID].removeChild(hpbar);

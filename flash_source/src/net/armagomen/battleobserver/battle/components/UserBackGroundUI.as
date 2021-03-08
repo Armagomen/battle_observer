@@ -46,16 +46,6 @@
 			this.buttonMode = false;
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.groupMap = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
 		private function setUserBackgounds():void
 		{
 			for each (var item:Object in this.groupMap)

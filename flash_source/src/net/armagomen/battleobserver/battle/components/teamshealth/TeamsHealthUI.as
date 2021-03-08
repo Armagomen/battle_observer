@@ -49,7 +49,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.colors = settings.colors;
 			Params.setIslegue(settings["style"] == 'legue');
 			Params.setcBlind(colorBlind);
-			Params.setAllyColor(Utils.colorConvert(colors.ally));
+			Params.setAllyColor(Utils.colorConvert(this.colors.ally));
 			Params.setEnemyColor(Utils.colorConvert(Params.cBlind ? colors.enemyColorBlind : colors.enemy));
 			Params.setHpBarsEnabled(settings.enabled);
 			var shadowSettings:Object = getShadowSettings();
@@ -59,13 +59,13 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 				this.x = App.appWidth >> 1;
 				var barWidth:Number = Math.max(settings.barsWidth, 150.0);
 				var textXpos:Number = !Params.isLegue ? 50 + (barWidth / 2) : 30 + barWidth;
-				hpBars = this.createHpbars(settings, barWidth);
+				this.hpBars = this.createHpbars(settings, barWidth);
 
 				
-				greenText = new TextExt("greenText", -textXpos, 2, Filters.middleText, !Params.isLegue ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
-				redText = new TextExt("redText", textXpos, 2, Filters.middleText, !Params.isLegue ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
-				greenDiff = new TextExt("greenDiff", -55, 2, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
-				redDiff = new TextExt("redDiff", 55, 2, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
+				this.greenText = new TextExt("greenText", -textXpos, 2, Filters.middleText, !Params.isLegue ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
+				this.redText = new TextExt("redText", textXpos, 2, Filters.middleText, !Params.isLegue ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
+				this.greenDiff = new TextExt("greenDiff", -55, 2, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
+				this.redDiff = new TextExt("redDiff", 55, 2, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
 
 				var wgPanel:DisplayObject = this.getWGpanel();
 				if (wgPanel != null)
@@ -170,33 +170,11 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 
 		override protected function onDispose():void
 		{
+			this.hpBars.stopAndClearAnimate();
 			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.greenText = null;
-			this.redText = null;
-			this.greenDiff = null;
-			this.redDiff = null;
-			App.utils.data.cleanupDynamicObject(this.colors);
-			this.colors = null;
-			this.hpBars = null;
-			
-			this.arrowDots = null;
-			this.arrowGreen = null;
-			this.arrowRed = null;
-			this.greenScore = null;
-			this.redScore = null;
-			this.allyM = null;
-			this.enemyM = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
 
 		public function as_colorBlind(enabled:Boolean):void
 		{
@@ -205,34 +183,34 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			Params.setEnemyColor(newColor);
 			var barColor:ColorTransform = hpBars.enemyHpBar.transform.colorTransform;
 			barColor.color = newColor;
-			hpBars.enemyHpBar.transform.colorTransform = barColor;
+			this.hpBars.enemyHpBar.transform.colorTransform = barColor;
 		}
 
 		public function as_difference(param:int):void
 		{
 			if (param < 0)
 			{
-				redDiff.text = "+".concat((-param).toString());
-				greenDiff.text = "";
+				this.redDiff.text = "+".concat((-param).toString());
+				this.greenDiff.text = "";
 			}
 			else if (param > 0)
 			{
-				greenDiff.text = "+".concat(param.toString());
-				redDiff.text = "";
+				this.greenDiff.text = "+".concat(param.toString());
+				this.redDiff.text = "";
 			}
 			else
 			{
-				greenDiff.text = "";
-				redDiff.text = "";
+				this.greenDiff.text = "";
+				this.redDiff.text = "";
 			}
 		}
 
 		public function as_updateHealth(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
 		{
-			hpBars.setBarScale("green", totalAlliesHP > 0 ? alliesHP / totalAlliesHP : 1);
-			hpBars.setBarScale("red", totalEnemiesHP > 0 ? enemiesHP / totalEnemiesHP : 1);
-			greenText.text = alliesHP.toString();
-			redText.text = enemiesHP.toString();
+			this.hpBars.setBarScale("green", totalAlliesHP > 0 ? alliesHP / totalAlliesHP : 1);
+			this.hpBars.setBarScale("red", totalEnemiesHP > 0 ? enemiesHP / totalEnemiesHP : 1);
+			this.greenText.text = alliesHP.toString();
+			this.redText.text = enemiesHP.toString();
 		}
 		
 		public function as_updateScore(ally:int, enemy:int):void

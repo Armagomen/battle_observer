@@ -36,16 +36,6 @@
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.dateTime = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
 		public function as_startUpdate(settings:Object):void
 		{
 			this.config = settings;

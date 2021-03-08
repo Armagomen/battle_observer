@@ -4,7 +4,8 @@
 	import flash.display.*;
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.data.Constants;
-	import net.armagomen.battleobserver.battle.utils.Animation;
+	import fl.transitions.Tween;
+	
 	/**
 	 * ...
 	 * @author Armagomen
@@ -12,13 +13,14 @@
 	public class ProgressBar extends Sprite
 	{
 		public var bar:Shape = new Shape();
-		public var uiText:TextField = new TextField();
-		private var animation:Animation = null;
+		public var uiText:TextExt = null;
+		private var animation:Tween = null;
 		private var WIDTH:Number = 0;
 		private var HEIGHT:Number = 0;
 		private var COLOR:uint = 0;
 
-		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String="#000000", barName:String="bar")
+		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, 
+									color:String, bgColor:String="#000000", barName:String="bar")
 		{
 			super();
 			var backGround:Shape = new Shape();
@@ -41,12 +43,21 @@
 			}
 			this.addChild(backGround);
 			this.addChild(bar);
-			this.animation = new Animation(bar, Constants.ANIMATE_SPEED_PPBAR);
+			this.animation = new Tween(this.bar, "scaleX", null, this.bar.scaleX, 1.0, 1, true);
+			this.animation.FPS = 30;
+
 		}
 
-		public function setBarScale(newScale:Number):void
+		public function animateBar(newScale:Number):void
 		{
-			this.animation.runAnimation(newScale);
+			this.animation.continueTo(newScale, 1);
+		}
+		
+		public function stopAndClearAnimate():void{
+			if (this.animation.isPlaying){
+				this.animation.stop();
+				this.animation = null;
+			}
 		}
 
 		public function addTextField(x:Number, y:Number, align:String, format:TextFormat, shdowSettings:Object):void

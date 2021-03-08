@@ -5,6 +5,7 @@ from armagomen.battle_observer.core.constants import MAIN, SOUND_MODES, GLOBAL, 
 from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 
+
 class BattleCore(object):
 
     def __init__(self, config):

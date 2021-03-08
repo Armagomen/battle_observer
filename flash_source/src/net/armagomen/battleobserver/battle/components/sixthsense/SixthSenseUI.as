@@ -65,23 +65,6 @@
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			if (this.params)
-			{
-				App.utils.data.cleanupDynamicObject(this.params);
-				this.params = null;
-			}
-			this.timer = null;
-			this.image = null;
-			this._container = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
 		public function as_show():void
 		{
 			if (!this.image)

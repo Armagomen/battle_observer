@@ -36,19 +36,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			this.buttonMode = false;
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0)
-			{
-				this.removeChildAt(0);
-			}
-			this.debugText = null;
-			this.fpsBar = null;
-			this.pingBar = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
 		public function as_startUpdate(data:Object, vSync:Boolean, limit:int):void
 		{
 			this.graphEnabled = Boolean(data.debugGraphics.enabled);

@@ -54,17 +54,6 @@ package net.armagomen.battleobserver.battle.components
 			dispersionTime.htmlText = text;
 		}
 		
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0)
-			{
-				this.removeChildAt(0);
-			}
-			this.dispersionTime = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-		
 		override protected function configUI():void
 		{
 			super.configUI();

@@ -33,20 +33,6 @@ package net.armagomen.battleobserver.battle.components.teambases
 			this.buttonMode = false;
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			App.utils.data.cleanupDynamicObject(this.bases);
-			App.utils.data.cleanupDynamicObject(this.settings);
-			App.utils.data.cleanupDynamicObject(this.shadowSettings);
-			this.bases = null;
-			this.settings = null;
-			this.shadowSettings = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
 
 		public function as_startUpdate(bases:Object):void
 		{
@@ -59,7 +45,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			if (this.bases[team])
 			{
-				this.as_updateBase(team, points, 10.0, invadersCnt, time, text);
+				this.as_updateBase(team, points, invadersCnt, time, text);
 			}
 			else
 			{
@@ -78,7 +64,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			}
 		}
 
-		public function as_updateBase(team:String, points:Number, rate:Number, invadersCnt:String, time:String, text:String):void
+		public function as_updateBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
 		{
 			if (this.bases[team])
 			{
@@ -88,7 +74,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 				base.BaseVehicles.text = invadersCnt;
 				if (Params.AnimationEnabled)
 				{
-					base.setBarScale(points / 100.0, rate, Number(invadersCnt));
+					base.setBarScale(points / 100.0);
 				}
 				else
 				{
@@ -112,7 +98,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			{
 				if (Params.AnimationEnabled)
 				{
-					this.bases[team].stopAnimation();
+					this.bases[team].stopAndClearAnimate();
 				}
 				this.removeChild(this.bases[team] as TeamBase);
 				this.bases[team] = null;
