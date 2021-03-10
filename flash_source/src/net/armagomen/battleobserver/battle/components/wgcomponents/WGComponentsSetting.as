@@ -4,18 +4,18 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
-
+	
 	public class WGComponentsSetting extends BattleDisplayable
 	{
 		private var questview:Sprite = null;
 		private var teamBases:Sprite = null;
-
+		
 		public function WGComponentsSetting(compName:String)
 		{
 			super();
 			this.name = compName;
 		}
-
+		
 		override protected function configUI():void
 		{
 			super.configUI();
@@ -25,18 +25,17 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			this.mouseChildren = false;
 			this.buttonMode = false;
 		}
-
-
+		
 		public function as_moveQuests(move:Boolean):void
 		{
-			var battlePage:* = parent;
+			var battlePage:*   = parent;
 			var questTopView:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
 			if (questTopView)
 			{
 				if (move)
 				{
 					this.questview = new Sprite();
-					this.questview.y = 30;
+					this.questview.y = 10;
 					this.questview.addChild(questTopView);
 					battlePage.addChildAt(this.questview, 0);
 				}
@@ -46,27 +45,27 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 				}
 			}
 		}
-
+		
 		public function as_hideShadowInPreBattle():void
 		{
-			var battlePage:* = parent;
+			var battlePage:*     = parent;
 			var prebattleTimer:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
 			if (prebattleTimer)
 			{
 				prebattleTimer.background.removeChild(prebattleTimer.background.shadow);
 			}
 		}
-
+		
 		public function as_hideMessenger():void
 		{
-			var battlePage:* = parent;
+			var battlePage:*      = parent;
 			var battleMessenger:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_MESSENGER);
 			if (battleMessenger)
 			{
 				battlePage.removeChild(battleMessenger);
 			}
 		}
-
+		
 		public function as_enableAnimation(enable:Boolean):void
 		{
 			Params.AnimationEnabled = enable;
@@ -74,20 +73,20 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		
 		public function as_moveTeamBasesPanel():void
 		{
-			var battlePage:* = parent;
+			var battlePage:*     = parent;
 			var teamBasesPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
 			if (teamBasesPanel)
 			{
 				this.teamBases = new Sprite();
 				battlePage.addChild(this.teamBases);
-				this.teamBases.y = 30;
+				this.teamBases.y = 25;
 				this.teamBases.addChild(teamBasesPanel);
 			}
 		}
-
+		
 		public function as_hideDeadTips():void
 		{
-			var battlePage:* = parent;
+			var battlePage:*      = parent;
 			var postmotremPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.POSTMORTEM_PANEL);
 			if (postmotremPanel)
 			{

@@ -12,6 +12,7 @@
 		private var dateTime:TextField;
 		private var config:Object;
 		public var getShadowSettings:Function;
+		private var loaded:Boolean = false;
 
 		public function ObserverDateTimesUI(compName:String)
 		{
@@ -38,6 +39,7 @@
 
 		public function as_startUpdate(settings:Object):void
 		{
+			if (!this.loaded){
 			this.config = settings;
 			var x:int = settings.x;
 			if (x < 0){
@@ -48,6 +50,8 @@
 				y = App.appHeight + y;
 			}
 			dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+			this.loaded = true;
+			}
 		}
 
 		public function as_setDateTime(text:String):void

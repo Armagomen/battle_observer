@@ -2,6 +2,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels {
 
 public class PlayersPanelsUI extends PanelsStoarge {
 
+
 	public function PlayersPanelsUI(compName: String) {
 		super();
 		this.name = compName;

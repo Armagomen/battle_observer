@@ -28,4 +28,4 @@ REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile% %API%
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile%
 
 DEL /s /q *.pyc
-exit
+REM exit

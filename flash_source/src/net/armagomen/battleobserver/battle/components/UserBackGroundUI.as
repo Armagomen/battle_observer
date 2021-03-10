@@ -10,6 +10,7 @@
 	public class UserBackGroundUI extends BattleDisplayable
 	{
 		private var groupMap:Array;
+		private var loaded:Boolean = false;
 
 		public function UserBackGroundUI(compName:String)
 		{
@@ -19,20 +20,24 @@
 
 		public function as_startUpdate(data:Object):void
 		{
-			if (data.bg_vis && !Params.isLegue)
+			if (!this.loaded)
 			{
-				this.alpha = data.bg_alpha;
-				this.graphics.beginFill(0, data.bg_alpha);
-				this.graphics.drawRect(0, 0, App.appWidth, 31);
-				this.graphics.endFill();
-			}
-			if (data.uBG.enabled)
-			{
-				this.groupMap = data.uBG.user_background as Array;
-				if (this.groupMap.length > 0)
+				if (data.bg_vis && !Params.isLegue)
 				{
-					setUserBackgounds();
+					this.alpha = data.bg_alpha;
+					this.graphics.beginFill(0, data.bg_alpha);
+					this.graphics.drawRect(0, 0, App.appWidth, 31);
+					this.graphics.endFill();
 				}
+				if (data.uBG.enabled)
+				{
+					this.groupMap = data.uBG.user_background as Array;
+					if (this.groupMap.length > 0)
+					{
+						setUserBackgounds();
+					}
+				}
+				this.loaded = true;
 			}
 		}
 

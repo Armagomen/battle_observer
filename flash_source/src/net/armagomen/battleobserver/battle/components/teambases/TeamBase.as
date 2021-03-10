@@ -1,12 +1,11 @@
 ﻿package net.armagomen.battleobserver.battle.components.teambases
 {
+	import fl.transitions.Tween;
 	import flash.display.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.data.Constants;
 	import net.armagomen.battleobserver.utils.Params;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
-	import fl.transitions.Tween;
 	
 	/**
 	 * ...
@@ -14,35 +13,34 @@
 	 */
 	public dynamic class TeamBase extends Sprite
 	{
-		public var progressBar:Shape = new Shape();
-		public var BaseText:TextField;
-		public var BaseTimer:TextField;
-		public var BaseVehicles:TextField;
+		public var progressBar:Shape       = new Shape();
+		public var BaseText:TextExt;
+		public var BaseTimer:TextExt;
+		public var BaseVehicles:TextExt;
 		private var basesFormat:TextFormat = new TextFormat("$TitleFont", 16, 0xFAFAFA);
-		private var animation:Tween = null;
+		private var animation:Tween        = null;
 		[Embed(source = "players.png")]
 		private var Players:Class;
 		[Embed(source = "timer.png")]
 		private var Time:Class;
-
-
+		
 		public function TeamBase(team:String)
 		{
 			super();
 			this.name = team;
 		}
-
+		
 		public function setBarScale(newScale:Number):void
 		{
-			this.animation.continueTo(newScale, 1);			
+			this.animation.continueTo(newScale, 1);
 		}
-	
+		
 		public function create(bases:Object, shadowSettings:Object):void
 		{
 			basesFormat = new TextFormat(bases.text_settings.font, bases.text_settings.size, Utils.colorConvert(bases.text_settings.color), bases.text_settings.bold, bases.text_settings.italic, bases.text_settings.underline);
 			createBase(bases, shadowSettings);
 		}
-
+		
 		private function PlayersIcon(width:Number):Bitmap
 		{
 			var icon:Bitmap = new Players();
@@ -52,7 +50,7 @@
 			icon.alpha = 0.9;
 			return icon;
 		}
-
+		
 		private function TimeIcon(width:Number, panelWidth:Number):Bitmap
 		{
 			var icon:Bitmap = new Time();
@@ -63,26 +61,26 @@
 			icon.alpha = 0.9;
 			return icon;
 		}
-
+		
 		private function createBase(settings:Object, shadowSettings:Object):void
 		{
 			var progressBarColor:uint = Utils.colorConvert(!Params.cBlind ? settings.colors[this.name] : this.name != "green" ? settings.colors.purple : settings.colors[this.name]);
-
-			var baseMain:Sprite = new Sprite()
+			
+			var baseMain:Sprite       = new Sprite()
 			this.addChild(baseMain)
 			var iconWidth:Number = settings.height + 2;
-
+			
 			baseMain.y = 1;
 			baseMain.graphics.beginFill(Utils.colorConvert(settings.colors.bgColor), Math.max(0.05, settings.colors.bgAlpha));
 			baseMain.graphics.drawRect(0, 0, settings.width, settings.height);
 			baseMain.graphics.endFill();
-
+			
 			if (settings.outline.enabled)
 			{
 				baseMain.graphics.lineStyle(1, Utils.colorConvert(settings.outline.color), Math.max(0.05, settings.colors.bgAlpha), true, LineScaleMode.NONE);
 				baseMain.graphics.drawRect(-1, -1, settings.width + 1, settings.height + 1);
 			}
-
+			
 			progressBar.name = this.name;
 			progressBar.graphics.beginFill(progressBarColor, Math.max(0.05, settings.colors.alpha));
 			progressBar.graphics.drawRect(0, 0, settings.width, settings.height);
@@ -91,22 +89,23 @@
 			baseMain.addChild(progressBar);
 			baseMain.addChild(PlayersIcon(iconWidth));
 			baseMain.addChild(TimeIcon(iconWidth, settings.width));
-
-
+			
 			BaseText = new TextExt("BaseText", settings.width >> 1, settings.text_settings.y, basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
 			BaseTimer = new TextExt("BaseTimer", settings.width - iconWidth, settings.text_settings.y, basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
 			BaseVehicles = new TextExt("BaseVehicles", iconWidth, settings.text_settings.y, basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
-
+			
 			baseMain.scaleX = baseMain.scaleY = settings.scale;
 			this.x = App.appWidth / 2 - baseMain.width / 2;
 			this.y = settings.y;
-
+			
 			this.animation = new Tween(this.progressBar, "scaleX", null, this.progressBar.scaleX, 0, 1, true);
 			this.animation.FPS = 30;
 		}
 		
-		public function stopAndClearAnimate():void{
-			if (this.animation != null && this.animation.isPlaying){
+		public function stopAndClearAnimate():void
+		{
+			if (this.animation != null && this.animation.isPlaying)
+			{
 				this.animation.stop();
 				this.animation = null;
 			}

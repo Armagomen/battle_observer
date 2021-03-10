@@ -21,4 +21,3 @@ class WGCompSettings(WgCompMeta):
         if not config.team_bases_panel[GLOBAL.ENABLED] and move:
             self.as_moveTeamBasesPanelS()
         # self.as_hideDeadTipsS()
-

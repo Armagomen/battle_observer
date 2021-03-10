@@ -14,6 +14,7 @@ package net.armagomen.battleobserver.battle.components
 		private var flyTime:TextField;
 		public var getShadowSettings:Function;
 		private var currentControlMode:String = "arcade";
+		private var loaded:Boolean = false;
 
 		public function FlightTimeUI(compName:String)
 		{
@@ -23,20 +24,23 @@ package net.armagomen.battleobserver.battle.components
 
 		public function as_startUpdate(flyght:Object):void
 		{
-			this.x = App.appWidth >> 1;
-			if (this.currentControlMode == "arcade")
-			{
-				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			if (!this.loaded){
+				this.x = App.appWidth >> 1;
+				if (this.currentControlMode == "arcade")
+				{
+					this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+				}
+				else
+				{
+					this.y = App.appHeight >> 1;
+				}
+				if (flyght.enabled)
+				{
+					flyTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
+				}
+				App.utils.data.cleanupDynamicObject(flyght);
+				this.loaded = true;
 			}
-			else
-			{
-				this.y = App.appHeight >> 1;
-			}
-			if (flyght.enabled)
-			{
-				flyTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
-			}
-			App.utils.data.cleanupDynamicObject(flyght);
 		}
 
 		public function as_flightTime(text:String):void

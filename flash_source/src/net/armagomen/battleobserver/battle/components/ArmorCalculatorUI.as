@@ -13,6 +13,7 @@ package net.armagomen.battleobserver.battle.components
 		private var armorCalc:TextField;
 		public var getShadowSettings:Function;
 		private var currentControlMode:String = "arcade";
+		private var loaded:Boolean = false;
 
 		public function ArmorCalculatorUI(compName:String)
 		{
@@ -39,21 +40,24 @@ package net.armagomen.battleobserver.battle.components
 
 		public function as_startUpdate(calc:Object):void
 		{
-			var shadowSettings:Object = getShadowSettings();
-			this.x = App.appWidth >> 1;
-			if (this.currentControlMode == "arcade")
-			{
-				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			if (!this.loaded){
+				var shadowSettings:Object = getShadowSettings();
+				this.x = App.appWidth >> 1;
+				if (this.currentControlMode == "arcade")
+				{
+					this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+				}
+				else
+				{
+					this.y = App.appHeight >> 1;
+				}
+				if (calc.enabled && calc.showCalcPoints)
+				{
+					this.armorCalc = new TextExt("armorCalc", calc.calcPosition.x, calc.calcPosition.y, Filters.middleText, TextFieldAutoSize.CENTER, shadowSettings, this);
+				}
+				App.utils.data.cleanupDynamicObject(calc);
+				this.loaded = true;
 			}
-			else
-			{
-				this.y = App.appHeight >> 1;
-			}
-			if (calc.enabled && calc.showCalcPoints)
-			{
-				this.armorCalc = new TextExt("armorCalc", calc.calcPosition.x, calc.calcPosition.y, Filters.middleText, TextFieldAutoSize.CENTER, shadowSettings, this);
-			}
-			App.utils.data.cleanupDynamicObject(calc);
 		}
 
 		public function as_onControlModeChanged(mode:String):void

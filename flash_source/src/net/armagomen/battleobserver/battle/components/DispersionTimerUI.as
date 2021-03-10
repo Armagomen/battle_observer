@@ -15,6 +15,7 @@ package net.armagomen.battleobserver.battle.components
 		private var dispersionTime:TextField;
 		public var getShadowSettings:Function;
 		private var currentControlMode:String = "arcade";
+		private var loaded:Boolean = false;
 		
 		public function DispersionTimerUI(compName:String)
 		{
@@ -24,17 +25,21 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_startUpdate(config:Object):void
 		{
-			this.x = App.appWidth >> 1;
-			if (this.currentControlMode == "arcade")
+			if (!this.loaded)
 			{
-				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+				this.x = App.appWidth >> 1;
+				if (this.currentControlMode == "arcade")
+				{
+					this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+				}
+				else
+				{
+					this.y = App.appHeight >> 1;
+				}
+				dispersionTime = new TextExt("dispersionTimer", config.timer_position_x, config.timer_position_y, Filters.middleText, config.timer_align, getShadowSettings(), this);
+				App.utils.data.cleanupDynamicObject(config);
+				this.loaded = true;
 			}
-			else
-			{
-				this.y = App.appHeight >> 1;
-			}
-			dispersionTime = new TextExt("dispersionTimer", config.timer_position_x, config.timer_position_y, Filters.middleText, config.timer_align, getShadowSettings(), this);
-			App.utils.data.cleanupDynamicObject(config);
 		}
 		
 		public function as_onControlModeChanged(mode:String):void

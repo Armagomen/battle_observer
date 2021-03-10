@@ -25,13 +25,13 @@
 			var barsWidth:Number = 50 + barWidth;
 			var barHeight:Number = 31;
 			this.hpBars_bg.graphics.beginFill(Utils.colorConvert(colors.bgColor), Math.max(0.05, colors.bgAlpha));
-			this.hpBars_bg.graphics.drawPath(defCommads, new <Number>[-barsWidth, 0, barsWidth, 0, barsWidth - 15, barHeight, -barsWidth + 15, barHeight, -barsWidth, 0]);
+			this.hpBars_bg.graphics.drawPath(defCommads, new <Number>[-barsWidth, 0, barsWidth, 0, barsWidth - 20, barHeight, -barsWidth + 20, barHeight, -barsWidth, 0]);
 			this.hpBars_bg.graphics.endFill();
 			this.allyHpBar.graphics.beginFill(Utils.colorConvert(colors.ally), Math.max(0.05, colors.alpha));
-			this.allyHpBar.graphics.drawPath(defCommads, new <Number>[0, 0, -barsWidth, 0, -barsWidth + 15, barHeight, 0, barHeight, 0, 0]);
+			this.allyHpBar.graphics.drawPath(defCommads, new <Number>[0, 0, -barsWidth, 0, -barsWidth + 20, barHeight, 0, barHeight, 0, 0]);
 			this.allyHpBar.graphics.endFill();
 			this.enemyHpBar.graphics.beginFill(Utils.colorConvert(Params.cBlind ? colors.enemyColorBlind : colors.enemy), Math.max(0.05, colors.alpha));
-			this.enemyHpBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 15, barHeight, 0, barHeight, 0, 0]);
+			this.enemyHpBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
 			this.enemyHpBar.graphics.endFill();
 			this.allyAnimation = new Tween(this.allyHpBar, "scaleX", null, this.allyHpBar.scaleX, 1.0, 1, true);
 			this.allyAnimation.FPS = 30;
