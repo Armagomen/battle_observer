@@ -1,4 +1,4 @@
-package net.armagomen.battleobserver.battle.utils
+package net.armagomen.battleobserver.utils
 {
 	public class Utils
 	{

@@ -1,9 +1,9 @@
 ﻿package net.armagomen.battleobserver.battle.components.teamshealth
 {
 	import flash.display.*;
-	import net.armagomen.battleobserver.battle.data.Constants;
-	import net.armagomen.battleobserver.battle.utils.Params;
-	import net.armagomen.battleobserver.battle.utils.Utils;
+	import net.armagomen.battleobserver.data.Constants;
+	import net.armagomen.battleobserver.utils.Params;
+	import net.armagomen.battleobserver.utils.Utils;
 	import fl.transitions.Tween;
 
 	public class Legue extends Sprite
@@ -42,23 +42,22 @@
 		public function stopAndClearAnimate():void{
 			if (this.allyAnimation != null && this.allyAnimation.isPlaying){
 				this.allyAnimation.stop();
-				this.allyAnimation = null;
 			}
 			if (this.enemyAnimation != null && this.enemyAnimation.isPlaying){
 				this.enemyAnimation.stop();
-				this.enemyAnimation = null;
 			}
+			this.allyAnimation = null;
+			this.enemyAnimation = null;
+			this.allyHpBar = null;
+			this.enemyHpBar = null;
+			this.hpBars_bg = null;
 		}
 
 		public function setBarScale(team:String, newScale:Number):void
 		{
 			if (Params.AnimationEnabled)
 			{
-				if (newScale == 0){
-					(team == "green" ? this.allyAnimation : this.enemyAnimation).fforward();
-				} else {
-					(team == "green" ? this.allyAnimation : this.enemyAnimation).continueTo(newScale, 1);
-				}
+				(team == "green" ? this.allyAnimation : this.enemyAnimation).continueTo(newScale, 1);
 			}
 			else
 			{

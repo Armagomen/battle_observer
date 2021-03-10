@@ -1,7 +1,7 @@
 package net.armagomen.battleobserver.battle.components.wgcomponents
 {
 	import flash.display.Sprite;
-	import net.armagomen.battleobserver.battle.utils.Params;
+	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
 

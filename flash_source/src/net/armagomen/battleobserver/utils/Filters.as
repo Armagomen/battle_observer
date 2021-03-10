@@ -1,6 +1,6 @@
-package net.armagomen.battleobserver.battle.utils
+package net.armagomen.battleobserver.utils
 {
-	import net.armagomen.battleobserver.battle.utils.Utils;
+	import net.armagomen.battleobserver.utils.Utils;
 	import flash.filters.*;
 	import flash.text.TextFormat;
 

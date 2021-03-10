@@ -3,8 +3,8 @@ package net.armagomen.battleobserver.battle.components.maingun
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.battle.utils.Filters;
-	import net.armagomen.battleobserver.battle.utils.TextExt;
+	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.gui.battle.components.*;
 
 	public class MainGunUI extends BattleDisplayable

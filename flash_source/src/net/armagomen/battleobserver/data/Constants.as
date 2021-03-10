@@ -1,4 +1,4 @@
-﻿package net.armagomen.battleobserver.battle.data
+﻿package net.armagomen.battleobserver.data
 {
 	/**
 	 * ...

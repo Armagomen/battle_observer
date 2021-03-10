@@ -7,10 +7,10 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Legue;
-	import net.armagomen.battleobserver.battle.utils.Filters;
-	import net.armagomen.battleobserver.battle.utils.Params;
-	import net.armagomen.battleobserver.battle.utils.TextExt;
-	import net.armagomen.battleobserver.battle.utils.Utils;
+	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Params;
+	import net.armagomen.battleobserver.utils.TextExt;
+	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
 
@@ -171,10 +171,10 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		override protected function onDispose():void
 		{
 			this.hpBars.stopAndClearAnimate();
+			this.hpBars = this.arrowDots = this.arrowGreen = this.arrowRed = null,
 			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
 			super.onDispose();
 		}
-
 
 		public function as_colorBlind(enabled:Boolean):void
 		{

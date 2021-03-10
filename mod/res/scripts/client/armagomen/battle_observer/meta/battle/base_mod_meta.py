@@ -48,7 +48,8 @@ class BaseModMeta(BaseDAAPIComponent):
             self.flashObject.setCompVisible(True)
 
     def onExitBattlePage(self):
-        pass
+        if self._isDAAPIInited():
+            self.flashObject.setCompVisible(False)
 
     def as_startUpdateS(self, *args):
         return self.flashObject.as_startUpdate(*args) if self._isDAAPIInited() else None

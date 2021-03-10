@@ -4,7 +4,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 	import flash.events.*;
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBase;
-	import net.armagomen.battleobserver.battle.utils.Params;
+	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.random.views.teamBasesPanel.TeamBasesPanel;
 	import net.wg.gui.battle.components.*;

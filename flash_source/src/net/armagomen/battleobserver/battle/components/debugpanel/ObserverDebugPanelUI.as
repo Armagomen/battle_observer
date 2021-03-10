@@ -3,15 +3,15 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.battle.utils.Filters;
-	import net.armagomen.battleobserver.battle.utils.ProgressBar;
-	import net.armagomen.battleobserver.battle.utils.TextExt;
+	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.ProgressBar;
+	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
 
 	public class ObserverDebugPanelUI extends BattleDisplayable
 	{
-		private var debugText:TextField;
+		private var debugText:TextField = null;
 		private var fpsBar:ProgressBar = null;
 		private var pingBar:ProgressBar = null;
 		private var graphEnabled:Boolean = false;
@@ -24,6 +24,13 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		{
 			super();
 			this.name = compName;
+		}
+		
+		override protected function onDispose():void 
+		{
+			this.fpsBar = null;
+			this.pingBar = null;
+			super.onDispose();
 		}
 
 		override protected function configUI():void
@@ -81,11 +88,11 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				{
 					if (this.fpsBarEnabled)
 					{
-						fpsBar.bar.scaleX = Math.min(1.0, fps / this.maxFps);
+						fpsBar.setNewScale(Math.min(1.0, fps / this.maxFps));
 					}
 					if (this.pingBarEnabled)
 					{
-						pingBar.bar.scaleX = Math.max(0.0, 1.0 - ping / 200);
+						pingBar.setNewScale(Math.max(0.0, 1.0 - ping / 200));
 					}
 				}
 			}

@@ -2,10 +2,10 @@
 {
 	import flash.display.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.battle.data.Constants;
-	import net.armagomen.battleobserver.battle.utils.Params;
-	import net.armagomen.battleobserver.battle.utils.TextExt;
-	import net.armagomen.battleobserver.battle.utils.Utils;
+	import net.armagomen.battleobserver.data.Constants;
+	import net.armagomen.battleobserver.utils.Params;
+	import net.armagomen.battleobserver.utils.TextExt;
+	import net.armagomen.battleobserver.utils.Utils;
 	import fl.transitions.Tween;
 	
 	/**

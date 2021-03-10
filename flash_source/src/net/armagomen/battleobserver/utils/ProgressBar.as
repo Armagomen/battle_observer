@@ -1,9 +1,10 @@
-﻿package net.armagomen.battleobserver.battle.utils
+﻿package net.armagomen.battleobserver.utils
 {
 
 	import flash.display.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.battle.data.Constants;
+	import flash.geom.ColorTransform;
+	import net.armagomen.battleobserver.data.Constants;
 	import fl.transitions.Tween;
 	
 	/**
@@ -12,8 +13,8 @@
 	 */
 	public class ProgressBar extends Sprite
 	{
-		public var bar:Shape = new Shape();
-		public var uiText:TextExt = null;
+		private var bar:Shape = new Shape();
+		private var uiText:TextExt = null;
 		private var animation:Tween = null;
 		private var WIDTH:Number = 0;
 		private var HEIGHT:Number = 0;
@@ -43,26 +44,36 @@
 			}
 			this.addChild(backGround);
 			this.addChild(bar);
-			this.animation = new Tween(this.bar, "scaleX", null, this.bar.scaleX, 1.0, 1, true);
-			this.animation.FPS = 30;
-
+			if (Params.AnimationEnabled){
+				this.animation = new Tween(this.bar, "scaleX", null, this.bar.scaleX, 1.0, 1, true);
+				this.animation.FPS = 30;
+			}
 		}
 
-		public function animateBar(newScale:Number):void
+		public function setNewScale(newScale:Number):void
 		{
-			this.animation.continueTo(newScale, 1);
+			if (this.visible && Params.AnimationEnabled){
+				this.animation.continueTo(newScale, 1);
+			} else {
+				this.bar.scaleX = newScale;
+			}
+		}
+		
+		public function setText(text:String):void
+		{
+			this.uiText.htmlText = text;			
 		}
 		
 		public function stopAndClearAnimate():void{
-			if (this.animation.isPlaying){
+			if (this.animation != null && this.animation.isPlaying){
 				this.animation.stop();
-				this.animation = null;
 			}
+			this.animation = null;
 		}
 
 		public function addTextField(x:Number, y:Number, align:String, format:TextFormat, shdowSettings:Object):void
 		{
-			uiText = new TextExt("text", x, y, format, align, shdowSettings, this);
+			this.uiText = new TextExt("text", x, y, format, align, shdowSettings, this);
 		}
 
 		public function setOutline(customColor:Boolean=false, color:String="#000000", alpha:Number=1.0):void
@@ -79,6 +90,13 @@
 			{
 				this.visible = vis;
 			}
+		}
+		
+		public function updateColor(hpColor: String): void 
+		{
+            var colorInfo: ColorTransform = this.bar.transform.colorTransform;
+            colorInfo.color = Utils.colorConvert(hpColor);
+            this.bar.transform.colorTransform = colorInfo;
 		}
 	}
 }

@@ -4,11 +4,11 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.ColorTransform;
 
-import net.armagomen.battleobserver.battle.utils.Filters;
-import net.armagomen.battleobserver.battle.utils.Params;
-import net.armagomen.battleobserver.battle.utils.ProgressBar;
-import net.armagomen.battleobserver.battle.utils.TextExt;
-import net.armagomen.battleobserver.battle.utils.Utils;
+import net.armagomen.battleobserver.utils.Filters;
+import net.armagomen.battleobserver.utils.Params;
+import net.armagomen.battleobserver.utils.ProgressBar;
+import net.armagomen.battleobserver.utils.TextExt;
+import net.armagomen.battleobserver.utils.Utils;
 import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 import net.wg.gui.battle.components.BattleAtlasSprite;
 import net.wg.gui.battle.components.BattleDisplayable;
@@ -107,7 +107,7 @@ public class PanelsStoarge extends BattleDisplayable {
             }
             bar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText, getShadowSettings());
             bar.setVisible(startVisible);
-            this.stoarge[vehID]["HpBar"] = items[vehID].addChild(bar);
+            this.stoarge[vehID]["HpBar"] = this.items[vehID].addChild(bar);
         }
         App.utils.data.cleanupDynamicObject(settings);
     }
@@ -115,11 +115,11 @@ public class PanelsStoarge extends BattleDisplayable {
     public function updateHPBar(vehID: int, currHP: Number, maxHP: Number, text: String): void {
         if (this.stoarge.hasOwnProperty(vehID.toString())) {
             var hpbar: ProgressBar = this.stoarge[vehID]["HpBar"];
-            
 			if (currHP > 0) {
-                hpbar.visible && Params.AnimationEnabled ? hpbar.animateBar(currHP / maxHP) : hpbar.bar.scaleX = currHP / maxHP;
-				hpbar.uiText.htmlText = text;
+				hpbar.setNewScale(currHP / maxHP);
+				hpbar.setText(text);
             } else {
+				hpbar.stopAndClearAnimate();
                 this.items[vehID].removeChild(hpbar);
             }
         }
@@ -128,7 +128,7 @@ public class PanelsStoarge extends BattleDisplayable {
     public function setHPbarVisible(vehID: int, vis: Boolean): void {
         if (this.stoarge.hasOwnProperty(vehID.toString())) {
             var hpbar: ProgressBar = this.stoarge[vehID]["HpBar"];
-            hpbar.setVisible(vis && hpbar.bar.scaleX > 0);
+            hpbar.setVisible(vis);
         }
     }
 
@@ -201,9 +201,7 @@ public class PanelsStoarge extends BattleDisplayable {
     public function colorBlindPPbars(vehID: int, hpColor: String): void {
         if (this.stoarge.hasOwnProperty(vehID.toString())) {
             var hpbar: ProgressBar = this.stoarge[vehID]["HpBar"];
-            var colorInfo: ColorTransform = hpbar.bar.transform.colorTransform;
-            colorInfo.color = Utils.colorConvert(hpColor);
-            hpbar.bar.transform.colorTransform = colorInfo;
+            hpbar.updateColor(hpColor);
         }
     }
 

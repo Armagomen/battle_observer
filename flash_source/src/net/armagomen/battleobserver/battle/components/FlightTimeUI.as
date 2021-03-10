@@ -3,9 +3,9 @@ package net.armagomen.battleobserver.battle.components
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.battle.utils.Filters;
-	import net.armagomen.battleobserver.battle.utils.TextExt;
-	import net.armagomen.battleobserver.battle.data.Constants;
+	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.TextExt;
+	import net.armagomen.battleobserver.data.Constants;
 	import net.wg.gui.battle.components.*;
 	
 
