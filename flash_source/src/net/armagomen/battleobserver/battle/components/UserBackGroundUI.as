@@ -22,16 +22,9 @@
 		{
 			if (!this.loaded)
 			{
-				if (data.bg_vis && !data.isLeague)
+				if (data.enabled)
 				{
-					this.alpha = data.bg_alpha;
-					this.graphics.beginFill(0, data.bg_alpha);
-					this.graphics.drawRect(0, 0, App.appWidth, 31);
-					this.graphics.endFill();
-				}
-				if (data.uBG.enabled)
-				{
-					this.groupMap = data.uBG.user_background as Array;
+					this.groupMap = data.user_background as Array;
 					if (this.groupMap.length > 0)
 					{
 						setUserBackgounds();

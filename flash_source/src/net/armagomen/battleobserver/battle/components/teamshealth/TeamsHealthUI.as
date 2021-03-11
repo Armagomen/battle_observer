@@ -60,7 +60,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					this.greenDiff = new TextExt("greenDiff", -55, 2, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
 					this.redDiff = new TextExt("redDiff", 55, 2, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
 					
-					this.score = new Score(shadowSettings, colorBlind, this.colors);
+					this.score = new Score(shadowSettings, colorBlind, this.colors, settings.style);
 					this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
 					
 					this.addChild(this.score);
@@ -85,7 +85,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		private function createHpbars(settings:Object, barWidth:Number):DisplayObject
 		{
-			switch (settings["style"])
+			switch (settings.style)
 			{
 			case "league": 
 				return new League(settings, barWidth, this.isColorBlind, this.colors);

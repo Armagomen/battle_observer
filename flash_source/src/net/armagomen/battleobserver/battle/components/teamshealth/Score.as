@@ -27,13 +27,13 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		private var ememyColor:String;
 		private var enemyColorBlind:String;
 		
-		public function Score(shadowSettings:Object, colorBlind:Boolean, colors:Object) 
+		public function Score(shadowSettings:Object, colorBlind:Boolean, colors:Object, style:String) 
 		{
 			super();
 			
-			this.allyColor = colors.ally;
-			this.ememyColor = colors.enemy;
-			this.enemyColorBlind = colors.enemyColorBlind;
+			this.allyColor = style == "normal" ? colors.ally : "#FAFAFA";
+			this.ememyColor = style == "normal" ? colors.enemy : "#FAFAFA";
+			this.enemyColorBlind = style == "normal" ? colors.enemyColorBlind : "#FAFAFA";
 			
 			this.arrowDots = new Shape();
 			this.arrowGreen = new Shape();

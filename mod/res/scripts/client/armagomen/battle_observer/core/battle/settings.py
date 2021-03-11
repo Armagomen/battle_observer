@@ -10,6 +10,16 @@ from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
+BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
+                 ARENA_GUI_TYPE.UNKNOWN,
+                 ARENA_GUI_TYPE.TRAINING,
+                 ARENA_GUI_TYPE.RANKED,
+                 ARENA_GUI_TYPE.EPIC_RANDOM,
+                 ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
+                 ARENA_GUI_TYPE.SORTIE_2,
+                 ARENA_GUI_TYPE.FORT_BATTLE_2,
+                 ARENA_GUI_TYPE.TUTORIAL}
+
 
 class ViewSettings(object):
     @property
@@ -23,17 +33,12 @@ class ViewSettings(object):
         return self.sessionProvider.arenaVisitor.gui.isRandomBattle()
 
     @property
-    def isAllowed(self):
+    def isAllowedBattle(self):
         if self.__isAllowed is None:
-            enabled = False
+            self.__isAllowed = False
             arenaVisitor = self.sessionProvider.arenaVisitor
             if arenaVisitor is not None:
-                enabled = self.isRandomBattle or arenaVisitor.gui.isTrainingBattle() or \
-                          arenaVisitor.gui.isRankedBattle() or \
-                          arenaVisitor.getArenaGuiType() in (ARENA_GUI_TYPE.UNKNOWN,
-                                                             ARENA_GUI_TYPE.FORT_BATTLE_2,
-                                                             ARENA_GUI_TYPE.SORTIE_2)
-            self.__isAllowed = enabled
+                self.__isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
         return self.__isAllowed
 
     def __init__(self, cfg):
@@ -42,7 +47,7 @@ class ViewSettings(object):
         self.__isAllowed = None
         self.__cache = defaultdict(bool)
         self.__alias_to_bool = {
-            ALIASES.HP_BARS: lambda: cfg.hp_bars[GLOBAL.ENABLED] and self.isAllowed,
+            ALIASES.HP_BARS: lambda: cfg.hp_bars[GLOBAL.ENABLED],
             ALIASES.DAMAGE_LOG: lambda: (cfg.log_total[GLOBAL.ENABLED] or cfg.log_damage_extended[GLOBAL.ENABLED] or
                                          cfg.log_input_extended[GLOBAL.ENABLED]),
             ALIASES.MAIN_GUN: lambda: cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle,
@@ -54,10 +59,9 @@ class ViewSettings(object):
             ALIASES.FLIGHT_TIME: lambda: cfg.flight_time[GLOBAL.ENABLED],
             ALIASES.DISPERSION_TIMER: lambda: (cfg.dispersion_circle[GLOBAL.ENABLED] and
                                                cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED]),
-            ALIASES.PANELS: lambda: cfg.players_panels[GLOBAL.ENABLED] and self.isAllowed,
+            ALIASES.PANELS: lambda: cfg.players_panels[GLOBAL.ENABLED],
             ALIASES.MINIMAP: lambda: cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and cfg.minimap[GLOBAL.ENABLED],
-            ALIASES.USER_BACKGROUND: lambda: (cfg.user_background[GLOBAL.ENABLED] or cfg.main[MAIN.BG] and
-                                              cfg.hp_bars[HP_BARS.STYLE] == HP_BARS.NORMAL_STYLE) and self.isAllowed,
+            ALIASES.USER_BACKGROUND: lambda: cfg.user_background[GLOBAL.ENABLED],
             ALIASES.WG_COMP: lambda: True,
             ALIASES.DATE_TIME: lambda: cfg.clock[GLOBAL.ENABLED] and cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         }
@@ -74,7 +78,7 @@ class ViewSettings(object):
             check = self.__alias_to_bool.get(alias)
             if check is not None and callable(check):
                 self.__cache[alias] = check()
-        return self.__cache[alias]
+        return self.__cache[alias] and self.isAllowedBattle
 
     def clear(self):
         self.__cache.clear()

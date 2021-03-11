@@ -86,11 +86,12 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         if self.showAliveCount:
-            self.as_updateScoreS(len(aliveAllies.difference(self.observers)),
-                                 len(aliveEnemies.difference(self.observers)))
+            self.as_updateScoreS(len(aliveAllies.difference(deadAllies)), len(aliveEnemies.difference(deadEnemies)))
         else:
-            self.as_updateScoreS(len(deadEnemies.difference(self.observers)),
-                                 len(deadAllies.difference(self.observers)))
+            if self.observers:
+                deadEnemies = deadEnemies.difference(self.observers)
+                deadAllies = deadAllies.difference(self.observers)
+            self.as_updateScoreS(len(deadEnemies), len(deadAllies))
         if self.markers is not None:
             self.as_markersS(*self.markers.update)
 

@@ -125,8 +125,6 @@ class MAIN:
         pass
 
     AUTO_CLEAR_CACHE = "autoClearCache"
-    BG = "background"
-    BG_TRANSPARENCY = "backgroundTransparency"
     ENABLE_BARS_ANIMATION = "enableBarsAnimation"
     ENABLE_FPS_LIMITER = "fps_enableFPSLimiter"
     HIDE_BADGES = "hideBadges"

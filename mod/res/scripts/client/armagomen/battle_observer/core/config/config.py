@@ -21,8 +21,6 @@ class Config(object):
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.CHANGE_ANONYMOUS_NAME: False,
             MAIN.ANONYMOUS_STRING: "Anonymous",
-            MAIN.BG: False,
-            MAIN.BG_TRANSPARENCY: 0.25,
             MAIN.REMOVE_SHADOW_IN_PREBATTLE: False,
             MAIN.HIDE_BADGES: False,
             MAIN.HIDE_CLAN_ABBREV: False,

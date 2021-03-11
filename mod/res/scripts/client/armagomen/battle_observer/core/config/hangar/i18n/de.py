@@ -40,8 +40,6 @@ translate = {
         "autoClearCache_tooltip": "Bereinigen der temporären Dateien des Spiels im Ordner "
                                   "AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "<br> Dort geänderte Ordner sind nicht betroffen.",
-        "backgroundTransparency": "Transparenz für den Hintergrund",
-        "background": "Hintergrund im Style 'normal'",
         "removeShadowInPrebattle": "Entferne den Blackout-Timer zu Beginn des Kampfes",
         "smallDoubleCarousel": "Verwenden Sie kleine Symbole im Karussell.",
         "carouselRows": "Reihenanzahl des mehrreihigen Panzerkarussells.",

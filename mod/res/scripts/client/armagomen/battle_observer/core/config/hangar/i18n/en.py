@@ -45,8 +45,6 @@ translate = {
         "autoClearCache_tooltip": "Cleaning the temporary files of the game in the folder "
                                   "AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "<br>Folders that are modified there are not affected.",
-        "backgroundTransparency": "the Transparency of the background panel",
-        "background": "the background panel in the style of 'normal'",
         "fps_enableFPSLimiter": "Enable FPS Limiter",
         "enableFPSLimiter_tooltip": "Attention, to completely turn off or on, you must restart the game.",
         "fps_maxFrameRate": "Maximum Frame Rate",

@@ -31,10 +31,13 @@ class BattleCore(object):
 
     def onArenaCreated(self):
         if self.config.log_total[GLOBAL.ENABLED]:
-            dossier = g_currentVehicle.getDossier()
-            if dossier:
-                avg = dossier.getRandomStats().getAvgDamage()
-                if avg is not None:
-                    avg = round(avg)
-                    DAMAGE_LOG.AVG_DAMAGE_DATA = avg
-                    logInfo("set vehicle avgDamage: {}".format(avg))
+            try:
+                dossier = g_currentVehicle.getDossier()
+                if dossier:
+                    avg = dossier.getRandomStats().getAvgDamage()
+                    if avg is not None:
+                        avg = round(avg)
+                        DAMAGE_LOG.AVG_DAMAGE_DATA = avg
+                        logInfo("set vehicle avgDamage: {}".format(avg))
+            except AttributeError:
+                DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO
