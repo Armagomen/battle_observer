@@ -167,6 +167,11 @@ class COLORS:
     C_YELLOW = "yellow"
     C_PURPLE = "purple"
     C_BG = "bgColor"
+    GLOBAL = "global"
+    ALLY_MAME = "ally"
+    ENEMY_MAME = "enemy"
+    ENEMY_BLIND_MAME = "enemyColorBlind"
+    DEAD_COLOR = "deadColor"
 
 
 class MAIN_GUN:
@@ -201,14 +206,11 @@ class HP_BARS:
     NAME = "hp_bars"
     STYLE = "style"
     NORMAL_STYLE = "normal"
-    LEGUE_STYLE = "legue"
+    LEAGUE_STYLE = "league"
     WIDTH = "barsWidth"
     DIFF = "differenceHP"
     ALIVE = "showAliveCount"
-    C_ALLY = "ally"
-    C_ENEMY = "enemy"
-    C_BLIND = "enemyColorBlind"
-    STYLE_SELECT = (NORMAL_STYLE, LEGUE_STYLE)
+    STYLE_SELECT = (NORMAL_STYLE, LEAGUE_STYLE)
 
 
 class CLOCK:
@@ -422,10 +424,6 @@ class MARKERS:
     ICON = "<font color='{0}'>{1}</font>"
     LIST_SIZE = 15
 
-    DEAD_COLOR = "deadColor"
-    ALLY = "ally"
-    ENEMY = "enemy"
-    ENEMY_COLOR_BLIND = "enemyColorBlind"
     ALIVE = True
     NOT_ALIVE = False
 
@@ -630,9 +628,6 @@ class PANELS:
     VEHICLE_ID = "vehicleID"
     IS_ENEMY = "isEnemy"
     DAMAGE = "damage"
-    ALLY = "ally"
-    BLIND = "enemyBlind"
-    ENEMY = "enemy"
     TEAM = ("green", "red")
 
 
@@ -694,7 +689,7 @@ class MASSAGES:
 
 
 LOAD_LIST = (
-    HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, MARKERS.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION_CIRCLE.NAME,
+    HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION_CIRCLE.NAME,
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
     DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME,
@@ -714,7 +709,7 @@ class CONFIG_INTERFACE:
     DONATE_BUTTONS = ('donate_button_ua', 'donate_button_ru', 'donate_button_eu', 'support_button')
     BLOCK_IDS = (
         ANOTHER.CONFIG_SELECT, MAIN.NAME, DISPERSION_CIRCLE.NAME, CAROUSEL.NAME, EFFECTS.NAME, DEBUG_PANEL.NAME,
-        BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, MARKERS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
+        BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
         DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, MAIN_GUN.NAME, TEAM_BASES.NAME,
         VEHICLE_TYPES.NAME, PANELS.PANELS_NAME, SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME,
         SAVE_SHOOT.NAME, MINIMAP.NAME, ANOTHER.SHADOW_SETTINGS, SIXTH_SENSE.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME
@@ -733,12 +728,6 @@ class CONFIG_INTERFACE:
         },
         PANELS.PANELS_NAME: {
             "players_bars_enabled": (
-                "players_bars_settings*players_bars_bar*colors*ally",
-                "players_bars_settings*players_bars_bar*colors*bgColor",
-                "players_bars_settings*players_bars_bar*colors*enemy",
-                "players_bars_settings*players_bars_bar*colors*enemyBlind",
-                "players_bars_settings*players_bars_bar*alpha",
-                "players_bars_settings*players_bars_bar*bgAlpha",
                 "players_bars_settings*players_bars_bar*outline*enabled",
                 "players_bars_settings*players_bars_bar*outline*customColor",
                 "players_bars_settings*players_bars_bar*outline*color",
@@ -774,7 +763,8 @@ class CONFIG_INTERFACE:
             MAIN.SHOW_ANONYMOUS: (MAIN.CHANGE_ANONYMOUS_NAME,)
         },
         HP_BARS.NAME: {
-            'outline*enabled': ('outline*color',)
+            'outline*enabled': ('outline*color',),
+            'markers*enabled': ("markers*x", "markers*y", "markers*showMarkers_hotkey", "markers*markersClassColor")
         },
         MINIMAP.NAME: {
             'zoom*enabled': ('zoom*zoom_hotkey', 'zoom*indent'),

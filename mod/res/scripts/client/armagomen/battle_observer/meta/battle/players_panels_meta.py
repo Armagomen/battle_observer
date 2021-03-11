@@ -9,8 +9,8 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_AddVehIdToListS(self, vehID):
         return self.flashObject.as_AddVehIdToList(vehID) if self._isDAAPIInited() else None
 
-    def as_AddPPanelBarS(self, vehID, color, settings, teamName, startVisible):
-        return self.flashObject.as_AddPPanelBar(vehID, color, settings, teamName,
+    def as_AddPPanelBarS(self, vehID, color, bgColor, settings, teamName, startVisible):
+        return self.flashObject.as_AddPPanelBar(vehID, color, bgColor, settings, teamName,
                                                 startVisible) if self._isDAAPIInited() else None
 
     def as_AddTextFieldS(self, vehID, name, params, teamName):

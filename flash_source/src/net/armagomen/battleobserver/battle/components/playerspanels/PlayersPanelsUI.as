@@ -20,8 +20,8 @@ public class PlayersPanelsUI extends PanelsStoarge {
 		this.setHPbarVisible(vehID, vis);
 	}
 
-	public function as_AddPPanelBar(vehID: int, color: String, settings: Object, team: String, startVisible: Boolean): void {
-		this.addHpBar(vehID, color, settings, team, startVisible);
+	public function as_AddPPanelBar(vehID: int, color: String, colors:Object, settings: Object, team: String, startVisible: Boolean): void {
+		this.addHpBar(vehID, color, colors, settings, team, startVisible);
 	}
 
 	public function as_AddTextField(vehID: int, name: String, params: Object, team: String): void {

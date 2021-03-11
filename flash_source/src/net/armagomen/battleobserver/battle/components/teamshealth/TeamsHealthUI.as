@@ -3,12 +3,10 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import flash.display.*;
 	import flash.events.*;
 	import flash.filters.*;
-	import flash.geom.ColorTransform;
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
-	import net.armagomen.battleobserver.battle.components.teamshealth.Legue;
+	import net.armagomen.battleobserver.battle.components.teamshealth.League;
 	import net.armagomen.battleobserver.utils.Filters;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
@@ -20,20 +18,13 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		private var redText:TextExt;
 		private var greenDiff:TextExt;
 		private var redDiff:TextExt;
-		private var colors:Object                    = null;
-		private var hpBars:*                         = null;
-		private var loaded:Boolean                   = false;
+		private var colors:Object        = null;
+		private var hpBars:*             = null;
+		private var score:Score;
+		private var markers:Markers;
+		private var loaded:Boolean       = false;
+		private var isColorBlind:Boolean = false;
 		
-		private var allyArrowVector:Vector.<Number>  = new <Number>[-5, 7, 0, 7, 5, 15, 0, 23, -5, 23, 0, 15, -5, 7];
-		private var enemyArrowVector:Vector.<Number> = new <Number>[5, 7, 0, 7, -5, 15, 0, 23, 5, 23, 0, 15, 5, 7];
-		private var arrowCommands:Vector.<int>       = new <int>[1, 2, 2, 2, 2, 2, 2];
-		private var arrowDots:Shape;
-		private var arrowGreen:Shape;
-		private var arrowRed:Shape;
-		private var greenScore:TextExt;
-		private var redScore:TextExt;
-		private var allyM:TextExt;
-		private var enemyM:TextExt;
 		public var getShadowSettings:Function;
 		public var getAlpha:Function;
 		
@@ -43,92 +34,40 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.name = compName;
 		}
 		
-		public function as_startUpdate(settings:Object, colorBlind:Boolean, markers:Object):void
+		public function as_startUpdate(settings:Object, colors:Object, colorBlind:Boolean):void
 		{
 			if (!this.loaded)
 			{
-				this.colors = settings.colors;
-				Params.setIslegue(settings["style"] == 'legue');
-				Params.setcBlind(colorBlind);
-				Params.setAllyColor(Utils.colorConvert(this.colors.ally));
-				Params.setEnemyColor(Utils.colorConvert(Params.cBlind ? colors.enemyColorBlind : colors.enemy));
-				Params.setHpBarsEnabled(settings.enabled);
-				var shadowSettings:Object = getShadowSettings();
-				
-				if (settings.enabled)
+				var wgPanel:DisplayObject = this.getWGpanel();
+				if (wgPanel != null)
 				{
+					parent.removeChild(wgPanel);
 					this.x = App.appWidth >> 1;
-					var barWidth:Number = Math.max(settings.barsWidth, 150.0);
-					var textXpos:Number = !Params.isLegue ? 50 + (barWidth / 2) : 30 + barWidth;
-					this.hpBars = this.createHpbars(settings, barWidth);
 					
-					this.greenText = new TextExt("greenText", -textXpos, 2, Filters.middleText, !Params.isLegue ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
-					this.redText = new TextExt("redText", textXpos, 2, Filters.middleText, !Params.isLegue ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
+					this.colors = colors;
+					var isLeague:Boolean = settings["style"] == 'league';
+					this.isColorBlind = colorBlind;
+					
+					var shadowSettings:Object = getShadowSettings();
+					var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
+					var textXpos:Number       = !isLeague ? 50 + (barWidth / 2) : 30 + barWidth;
+					
+					this.hpBars = this.createHpbars(settings, barWidth);
+					this.addChild(this.hpBars);
+					
+					this.greenText = new TextExt("greenText", -textXpos, 2, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
+					this.redText = new TextExt("redText", textXpos, 2, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
 					this.greenDiff = new TextExt("greenDiff", -55, 2, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
 					this.redDiff = new TextExt("redDiff", 55, 2, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
 					
-					var wgPanel:DisplayObject = this.getWGpanel();
-					if (wgPanel != null)
-					{
-						parent.removeChild(wgPanel);
-					}
-				}
-				App.utils.data.cleanupDynamicObject(settings);
-				
-				this.arrowDots = new Shape();
-				this.arrowGreen = new Shape();
-				this.arrowRed = new Shape();
-				this.addChild(this.arrowDots);
-				this.addChild(this.arrowGreen);
-				this.addChild(this.arrowRed);
-				
-				this.x = App.appWidth >> 1;
-				Filters.markersFormat.letterSpacing = 0.9;
-				
-				this.arrowDots.name = "arrowDots";
-				this.arrowDots.filters = [Filters.glowScore];
-				this.arrowDots.graphics.beginFill(0xFAFAFA, 1);
-				this.arrowDots.graphics.drawCircle(0, 10, 3);
-				this.arrowDots.graphics.drawCircle(0, 21, 3);
-				this.arrowDots.graphics.endFill();
-				this.arrowDots.visible = false;
-				
-				this.arrowGreen.name = "arrowGreen";
-				this.arrowGreen.filters = [Filters.glowScore];
-				this.arrowGreen.graphics.beginFill(0xFAFAFA, 1);
-				this.arrowGreen.graphics.drawPath(this.arrowCommands, this.allyArrowVector);
-				this.arrowGreen.graphics.endFill();
-				this.arrowGreen.visible = false;
-				
-				this.arrowRed.name = "arrowRed";
-				this.arrowRed.filters = [Filters.glowScore];
-				this.arrowRed.graphics.beginFill(0xFAFAFA, 1);
-				this.arrowRed.graphics.drawPath(this.arrowCommands, this.enemyArrowVector);
-				this.arrowRed.graphics.endFill();
-				this.arrowRed.visible = false;
-				
-				this.greenScore = new TextExt("greenScore", -25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, shadowSettings, this);
-				this.greenScore.antiAliasType = AntiAliasType.NORMAL;
-				this.redScore = new TextExt("redScore", 25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, shadowSettings, this);
-				this.redScore.antiAliasType = AntiAliasType.NORMAL;
-				
-				if (markers.enabled)
-				{
-					var alpha:Number   = this.getAlpha();
-					var allySpr:Sprite = new Sprite();
-					allySpr.alpha = alpha;
-					this.addChild(allySpr);
-					this.allyM = new TextExt("allyM", -markers.x, markers.y, Filters.markersFormat, TextFieldAutoSize.RIGHT, shadowSettings, allySpr);
-					this.allyM.embedFonts = true;
+					this.score = new Score(shadowSettings, colorBlind, this.colors);
+					this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
 					
-					var enemySpr:Sprite = new Sprite();
-					enemySpr.alpha = alpha;
-					this.addChild(enemySpr);
-					this.enemyM = new TextExt("enemyM", markers.x, markers.y, Filters.markersFormat, TextFieldAutoSize.LEFT, shadowSettings, enemySpr);
-					this.enemyM.embedFonts = true;
+					this.addChild(this.score);
+					this.addChild(this.markers);
+				
+					this.loaded = true;
 				}
-				App.utils.data.cleanupDynamicObject(markers);
-				this.loaded = true;
 			}
 		}
 		
@@ -148,12 +87,12 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		{
 			switch (settings["style"])
 			{
-			case "legue": 
-				return this.addChild(new Legue(settings, barWidth));
+			case "league": 
+				return new League(settings, barWidth, this.isColorBlind, this.colors);
 			case "normal": 
-				return this.addChild(new Default(settings, barWidth));
+				return new Default(settings, barWidth, this.isColorBlind, this.colors);
 			default: 
-				return this.addChild(new Legue(settings, barWidth));
+				return new League(settings, barWidth, this.isColorBlind, this.colors);
 			}
 		}
 		
@@ -170,19 +109,22 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		override protected function onDispose():void
 		{
-			this.hpBars.stopAndClearAnimate();
-			this.hpBars = this.arrowDots = this.arrowGreen = this.arrowRed = null, this.removeEventListener(Event.RESIZE, this._onResizeHandle);
+			this.hpBars = null;
+			this.score = null;
+			this.markers = null;
+			App.utils.data.cleanupDynamicObject(this.colors);
+			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
 			super.onDispose();
 		}
 		
 		public function as_colorBlind(enabled:Boolean):void
 		{
-			Params.setcBlind(enabled);
-			var newColor:uint = Utils.colorConvert(enabled ? this.colors.enemyColorBlind : this.colors.enemy);
-			Params.setEnemyColor(newColor);
-			var barColor:ColorTransform = hpBars.enemyHpBar.transform.colorTransform;
-			barColor.color = newColor;
-			this.hpBars.enemyHpBar.transform.colorTransform = barColor;
+			if (this.isColorBlind != enabled)
+			{
+				this.isColorBlind = enabled;
+				this.hpBars.setColorBlind(enabled);
+				this.score.setColorBlind(enabled);
+			}
 		}
 		
 		public function as_difference(param:int):void
@@ -214,29 +156,12 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		public function as_updateScore(ally:int, enemy:int):void
 		{
-			this.arrowDots.visible = ally == enemy;
-			this.arrowGreen.visible = ally > enemy;
-			this.arrowRed.visible = ally < enemy;
-			this.greenScore.text = ally.toString();
-			this.redScore.text = enemy.toString();
+			this.score.updateScore(ally, enemy);
 		}
 		
 		public function as_markers(correlationItemsLeft:String, correlationItemsRight:String):void
 		{
-			if (correlationItemsRight)
-			{
-				this.enemyM.htmlText = correlationItemsRight;
-			}
-			if (correlationItemsLeft)
-			{
-				this.allyM.htmlText = correlationItemsLeft;
-			}
-		}
-		
-		public function as_clearMarkers():void
-		{
-			this.enemyM.htmlText = "";
-			this.allyM.htmlText = "";
+			this.markers.update_markers(correlationItemsLeft, correlationItemsRight);
 		}
 		
 		private function _onResizeHandle(event:Event):void

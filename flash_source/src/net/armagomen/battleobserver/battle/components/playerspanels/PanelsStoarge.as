@@ -63,13 +63,8 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		override protected function onDispose():void
 		{
-			if (this.stoarge)
-			{
-				for each (var field:Object in this.stoarge)
-				{
-					field.HpBar.stopAndClearAnimate();
-				}
-			}
+			App.utils.data.cleanupDynamicObject(stoarge);
+			App.utils.data.cleanupDynamicObject(items);
 			super.onDispose();
 		}
 		
@@ -119,7 +114,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		public function addHpBar(vehID:int, color:String, settings:Object, team:String, startVisible:Boolean):void
+		public function addHpBar(vehID:int, color:String, colors:Object, settings:Object, team:String, startVisible:Boolean):void
 		{
 			if (this.stoarge.hasOwnProperty(vehID.toString()))
 			{
@@ -137,7 +132,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					barX = -barX;
 					textX = -textX;
 				}
-				var bar:ProgressBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, settings.players_bars_bar.alpha, settings.players_bars_bar.bgAlpha, null, color, settings.players_bars_bar.colors.bgColor, vehID.toString());
+				var bar:ProgressBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, vehID.toString());
 				if (settings.players_bars_bar.outline.enabled)
 				{
 					bar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
@@ -161,7 +156,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				}
 				else
 				{
-					hpbar.stopAndClearAnimate();
 					this.items[vehID].removeChild(hpbar);
 				}
 			}

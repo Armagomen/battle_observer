@@ -13,6 +13,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		private var settings:Object;
 		private var shadowSettings:Object;
 		public var getShadowSettings:Function;
+		public var isColorBlind:Function;
 		
 		public function TeamBasesUI(compName:String)
 		{
@@ -45,7 +46,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			}
 			else
 			{
-				var base:TeamBase = new TeamBase(team);
+				var base:TeamBase = new TeamBase(team, this.isColorBlind());
 				base.create(this.settings, this.shadowSettings);
 				base.BaseText.htmlText = text;
 				base.BaseTimer.text = time;
@@ -91,10 +92,6 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			if (this.bases[team])
 			{
-				if (Params.AnimationEnabled)
-				{
-					this.bases[team].stopAndClearAnimate();
-				}
 				this.removeChild(this.bases[team] as TeamBase);
 				this.bases[team] = null;
 			}
@@ -108,5 +105,6 @@ package net.armagomen.battleobserver.battle.components.teambases
 				this.bases["red"].y = this.settings.y;
 			}
 		}
+		
 	}
 }

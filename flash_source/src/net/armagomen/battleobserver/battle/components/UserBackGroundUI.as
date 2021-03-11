@@ -22,7 +22,7 @@
 		{
 			if (!this.loaded)
 			{
-				if (data.bg_vis && !Params.isLegue)
+				if (data.bg_vis && !data.isLeague)
 				{
 					this.alpha = data.bg_alpha;
 					this.graphics.beginFill(0, data.bg_alpha);

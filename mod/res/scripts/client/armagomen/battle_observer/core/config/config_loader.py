@@ -9,6 +9,15 @@ from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 
+def removeOldFiles(configPath):
+    files = ("markers.json", "panels_icon.json", "players_bars.json", "players_damages.json",
+             "players_spotted.json", "postmortem_panel.json")
+    for _file in files:
+        path = os.path.join(configPath, _file)
+        if os.path.exists(path):
+            os.remove(path)
+
+
 class ConfigLoader(object):
     __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'config')
 
@@ -68,6 +77,7 @@ class ConfigLoader(object):
                 self.cName = self.createLoadJSON(load_json)
             self.makeDirs(os.path.join(path, self.cName))
         self.readConfig(self.cName)
+        removeOldFiles(os.path.join(path, self.cName))
 
     def createLoadJSON(self, path):
         cName = 'default'

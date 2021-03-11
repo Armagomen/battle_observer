@@ -43,8 +43,8 @@ class ViewSettings(object):
         self.__cache = defaultdict(bool)
         self.__alias_to_bool = {
             ALIASES.HP_BARS: lambda: cfg.hp_bars[GLOBAL.ENABLED] and self.isAllowed,
-            ALIASES.DAMAGE_LOG: lambda: cfg.log_total[GLOBAL.ENABLED] or cfg.log_damage_extended[GLOBAL.ENABLED] or
-                                        cfg.log_input_extended[GLOBAL.ENABLED],
+            ALIASES.DAMAGE_LOG: lambda: (cfg.log_total[GLOBAL.ENABLED] or cfg.log_damage_extended[GLOBAL.ENABLED] or
+                                         cfg.log_input_extended[GLOBAL.ENABLED]),
             ALIASES.MAIN_GUN: lambda: cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle,
             ALIASES.DEBUG: lambda: cfg.debug_panel[GLOBAL.ENABLED],
             ALIASES.TIMER: lambda: cfg.battle_timer[GLOBAL.ENABLED],
@@ -52,12 +52,12 @@ class ViewSettings(object):
             ALIASES.TEAM_BASES: lambda: cfg.team_bases_panel[GLOBAL.ENABLED],
             ALIASES.ARMOR_CALC: lambda: cfg.armor_calculator[GLOBAL.ENABLED],
             ALIASES.FLIGHT_TIME: lambda: cfg.flight_time[GLOBAL.ENABLED],
-            ALIASES.DISPERSION_TIMER: lambda: cfg.dispersion_circle[GLOBAL.ENABLED] and
-                                              cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED],
+            ALIASES.DISPERSION_TIMER: lambda: (cfg.dispersion_circle[GLOBAL.ENABLED] and
+                                               cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED]),
             ALIASES.PANELS: lambda: cfg.players_panels[GLOBAL.ENABLED] and self.isAllowed,
             ALIASES.MINIMAP: lambda: cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and cfg.minimap[GLOBAL.ENABLED],
-            ALIASES.USER_BACKGROUND: lambda: cfg.user_background[GLOBAL.ENABLED] or cfg.main[MAIN.BG] and
-                                             cfg.hp_bars[HP_BARS.STYLE] == HP_BARS.NORMAL_STYLE,
+            ALIASES.USER_BACKGROUND: lambda: (cfg.user_background[GLOBAL.ENABLED] or cfg.main[MAIN.BG] and
+                                              cfg.hp_bars[HP_BARS.STYLE] == HP_BARS.NORMAL_STYLE) and self.isAllowed,
             ALIASES.WG_COMP: lambda: True,
             ALIASES.DATE_TIME: lambda: cfg.clock[GLOBAL.ENABLED] and cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         }

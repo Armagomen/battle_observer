@@ -15,17 +15,17 @@ class CorrelationMarkers(object):
         self._arenaDP = arenaDP
         self.__allyTeam = self._arenaDP.getNumberOfTeam()
         self.__enemyTeam = self._arenaDP.getNumberOfTeam(enemy=True)
-        self.mcColor = config.markers[MARKERS.CLASS_COLOR]
+        self.mcColor = config.hp_bars[MARKERS.NAME][MARKERS.CLASS_COLOR]
         self.vcColor = config.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         self.color = self.updateMarkersColorDict()
         self.enabled = settingsCore.getSetting(GAME.SHOW_VEHICLES_COUNTER)
 
     def updateMarkersColorDict(self):
-        dead_color = config.colors[MARKERS.NAME][MARKERS.DEAD_COLOR]
-        blind = MARKERS.ENEMY_COLOR_BLIND if settingsCore.getSetting(GRAPHICS.COLOR_BLIND) else MARKERS.ENEMY
+        dead_color = config.colors[COLORS.GLOBAL][COLORS.DEAD_COLOR]
+        blind = COLORS.ENEMY_BLIND_MAME if settingsCore.getSetting(GRAPHICS.COLOR_BLIND) else COLORS.ENEMY_MAME
         return {
-            self.__allyTeam: {MARKERS.NOT_ALIVE: dead_color, MARKERS.ALIVE: config.colors[MARKERS.NAME][MARKERS.ALLY]},
-            self.__enemyTeam: {MARKERS.NOT_ALIVE: dead_color, MARKERS.ALIVE: config.colors[MARKERS.NAME][blind]}
+            self.__allyTeam: {False: dead_color, True: config.colors[COLORS.GLOBAL][COLORS.ALLY_MAME]},
+            self.__enemyTeam: {False: dead_color, True: config.colors[COLORS.GLOBAL][blind]}
         }
 
     def getIcon(self, vInfoVO):
@@ -38,6 +38,8 @@ class CorrelationMarkers(object):
 
     @property
     def update(self):
+        if not self.enabled:
+            return GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE
         left, right = [], []
         for vInfoVO in sorted(self._arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
             if not vInfoVO.isObserver():
@@ -53,7 +55,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def __init__(self):
         super(TeamsHP, self).__init__()
         self.showAliveCount = config.hp_bars[HP_BARS.ALIVE] and self.isNormalMode
-        if config.markers[GLOBAL.ENABLED] and self.isNormalMode:
+        if config.hp_bars[MARKERS.NAME][GLOBAL.ENABLED] and self.isNormalMode:
             self.markers = CorrelationMarkers(self._arenaDP)
         else:
             self.markers = None
@@ -64,17 +66,17 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def _populate(self):
         super(TeamsHP, self)._populate()
-        isColorBlindEnabled = settingsCore.getSetting(GRAPHICS.COLOR_BLIND)
-        self.as_startUpdateS(config.hp_bars, isColorBlindEnabled, config.markers)
+        is_color_blind_enabled = settingsCore.getSetting(GRAPHICS.COLOR_BLIND)
+        self.as_startUpdateS(config.hp_bars, config.colors[COLORS.GLOBAL], is_color_blind_enabled)
+        settingsCore.onSettingsApplied += self.onSettingsApplied
         if self.markers is not None:
-            keysParser.registerComponent(MARKERS.HOT_KEY, config.markers[MARKERS.HOT_KEY])
+            keysParser.registerComponent(MARKERS.HOT_KEY, config.hp_bars[MARKERS.NAME][MARKERS.HOT_KEY])
             keysParser.onKeyPressed += self.keyEvent
-            settingsCore.onSettingsApplied += self.onSettingsApplied
 
     def _dispose(self):
+        settingsCore.onSettingsApplied -= self.onSettingsApplied
         if self.markers is not None:
             keysParser.onKeyPressed -= self.keyEvent
-            settingsCore.onSettingsApplied -= self.onSettingsApplied
         super(TeamsHP, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
@@ -89,7 +91,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         else:
             self.as_updateScoreS(len(deadEnemies.difference(self.observers)),
                                  len(deadAllies.difference(self.observers)))
-        if self.markers is not None and self.markers.enabled:
+        if self.markers is not None:
             self.as_markersS(*self.markers.update)
 
     @property
@@ -101,7 +103,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     @staticmethod
     def getAlpha():
-        return round(min(1.0, config.hp_bars[COLORS.NAME][GLOBAL.ALPHA] * 1.4), 2)
+        return round(min(1.0, config.colors[COLORS.GLOBAL][GLOBAL.ALPHA] * 1.4), 2)
 
     def keyEvent(self, key, isKeyDown):
         if key == MARKERS.HOT_KEY and isKeyDown:
@@ -110,12 +112,11 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def onSettingsApplied(self, diff):
         for name, setting in diff.iteritems():
             if name == GRAPHICS.COLOR_BLIND:
-                self.markers.color = self.markers.updateMarkersColorDict()
-                if self.markers.enabled:
+                if self.markers is not None:
+                    self.markers.color = self.markers.updateMarkersColorDict()
                     self.as_markersS(*self.markers.update)
+                self.as_colorBlindS(bool(setting))
             elif name == GAME.SHOW_VEHICLES_COUNTER:
-                self.markers.enabled = bool(setting)
-                if self.markers.enabled:
+                if self.markers is not None:
+                    self.markers.enabled = bool(setting)
                     self.as_markersS(*self.markers.update)
-                else:
-                    self.as_clearMarkersS()

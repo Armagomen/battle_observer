@@ -130,26 +130,15 @@ translate = {
         "differenceHP": "Anzeige der Differenz zwischen den Teams",
         "showAliveCount": "Zeige die Anzahl lebendigen Panzer im Panel, statt der zerstörten",
         "style": "Stil des HP Panels",
-        "bars_colors": "Farbeinstellung HP Panel",
-        "colors*ally": "HP Balken und Differenz: Team",
-        "colors*bgColor": "HP Balken Hintergrundfarbe",
-        "colors*enemyColorBlind": "HP Balken und Differenz: Gegner (Modus für Farbenblinde)",
-        "colors*enemy": "HP Balken und Differenz: Gegner",
-        "colors*alpha": "Tranzparenz des HP Balkens",
-        "colors*alpha_tooltip": "0 - Komplett Transparent<br>1 - nicht Transparent",
-        "colors*bgAlpha": "Hintergrund Transparenz HP Balken",
-        "colors*bgAlpha_tooltip": "0 - Komplett Transparent.<br>1 - Nicht Transparent.",
         "outline*enabled": "Kantenbänder im Stil normal",
-        "outline*color": "Benutzerdefinierte Farbe."
-    },
-    "markers": {
-        "header": "Panzerklassen Panel (unter HP Panel)",
-        "markersClassColor": "Fahrzeugklassen farbig anzeigen (siehe ' FARBEINSTELLUNGEN')",
-        "x": "Позиция по Горизонтали от центра.",
-        "x_tooltip": "Позиция маркеров по Горизонтали от центра экрана.",
-        "y": "Позиция по Вертикали от верха.",
-        "y_tooltip": "Позиция маркеров по Вертикали от верха экрана.",
-        "showMarkers_hotkey": "Taste zum Einschalten/Ausschalten des Panels:"
+        "outline*color": "Benutzerdefinierte Farbe.",
+        "markers*enabled": "Panzerklassen Panel (unter HP Panel)",
+        "markers*markersClassColor": "Fahrzeugklassen farbig anzeigen (siehe ' FARBEINSTELLUNGEN')",
+        "markers*x": "Позиция по Горизонтали от центра.",
+        "markers*x_tooltip": "Позиция маркеров по Горизонтали от центра экрана.",
+        "markers*y": "Позиция по Вертикали от верха.",
+        "markers*y_tooltip": "Позиция маркеров по Вертикали от верха экрана.",
+        "markers*showMarkers_hotkey": "Taste zum Einschalten/Ausschalten des Panels:"
     },
     "armor_calculator": {
         "header": "Durchschlagsanzeiger (Berechnung der Panzerung)",
@@ -251,16 +240,6 @@ translate = {
         "players_damages_settings*x": "Horizontale Textposition",
         "players_damages_settings*y": "Vertikale Textposition",
         "players_bars_enabled": "HP Spieler in den Ohren.",
-        "players_bars_settings*players_bars_bar*colors*ally": "Haltbarkeitspunkte: Verbündete",
-        "players_bars_settings*players_bars_bar*colors*bgColor": "Haltbarkeitspunkte: Hintergrundfarbe",
-        "players_bars_settings*players_bars_bar*colors*enemy": "Haltbarkeitspunkte: Feind",
-        "players_bars_settings*players_bars_bar*colors*enemyBlind": "Haltbarkeitspunkte: Feind - farbenblind",
-        "players_bars_settings*players_bars_bar*alpha": "Transparenz der wichtigsten HP-Bänder.",
-        "players_bars_settings*players_bars_bar*alpha_tooltip": "0 - vollständig transparent. "
-                                                                "<br> 1 - nicht transparent",
-        "players_bars_settings*players_bars_bar*bgAlpha": "HP Hintergrundstreifen, Transparenz",
-        "players_bars_settings*players_bars_bar*bgAlpha_tooltip": "0 - vollständig transparent."
-                                                                  " <br> 1 - nicht transparent",
         "players_bars_settings*players_bars_bar*outline*enabled": "Gliederung einschließen.",
         "players_bars_settings*players_bars_bar*outline*customColor": "Benutzerdefinierte Umrissfarbe.",
         "players_bars_settings*players_bars_bar*outline*color": "Benutzerdefinierte Umrissfarbe.",
@@ -352,22 +331,26 @@ translate = {
                             "the contrast between the glow and the background. "
                             "Valid values are from 0 to 255. The default is 2."
     },
+
     "colors": {
-        "header": "Farbeinstellungen",
-        "armor_calculator*green": "Durchschlag 100%",
-        "armor_calculator*orange": "Durchschlag von 50%",
-        "armor_calculator*red": "Durchschlag von 0%",
-        "armor_calculator*yellow": "Durchschlag von 50% (Modus für Farbenblinde)",
-        "armor_calculator*purple": "Durchschlag von 0% (Modus für Farbenblinde)",
-        "calculator_colors": "Farbeinstellung für den 'Durchschlagsanzeiger'",
-        "colorAvg_colors": "Farbgrenzen für Makro: %(tankDamageAvgColor)s",
-        "main_gun*mainGunColor": "Farbe Makro %(mainGunColor)s",
-        "mark_colors": "Farbe der Fahrzeugklassen (Standard)",
-        "markers*ally": "Verbündete",
-        "markers*deadColor": "Zerstört",
-        "markers*enemyColorBlind": "Gegner (Modus für Farbenblinde)",
-        "markers*enemy": "Gegner"
+        "header": "Globale Farbeinstellungen.",
+        "armor_calculator*green": "Reduzierte Rüstung: 100% Durchdringung",
+        "armor_calculator*orange": "Reduzierte Rüstung: 50% Penetration",
+        "armor_calculator*red": "Reduzierte Rüstung: 0% Penetration",
+        "armor_calculator*yellow": "Reduzierte Rüstung: 50% Durchdringung (farbenblinder Modus)",
+        "armor_calculator*purple": "Reduzierte Rüstung: 0% Penetration (Farbenblindmodus)",
+        "main_gun*mainGunColor": "Hauptkaliber: Makrofarbe% (mainGunColor) s",
+        "global*ally": "Globale Farbe: Verbündete",
+        "global*bgColor": "Hintergrundfarbe des Bedienfelds",
+        "global*enemyColorBlind": "Globale Farbe: Feind ist farbenblind",
+        "global*enemy": "Globale Farbe: Feind",
+        "global*alpha": "Transparenz der Panels",
+        "global*alpha_tooltip": "0 - vollständig transparent. <br> 1 - nicht transparent.",
+        "global*bgAlpha": "Hintergrundtransparenz von Panels",
+        "global*bgAlpha_tooltip": "0 - vollständig transparent. <br> 1 - nicht transparent.",
+        "global*deadColor": "Zerstört",
     },
+
     "service_channel_filter": {
         "header": "Filter für Meldungen im Mitteilungscenter - (Blendet die Nachrichten für die "
                   "ausgewählten Kategorien aus.)",

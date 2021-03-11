@@ -24,10 +24,13 @@
 		[Embed(source = "timer.png")]
 		private var Time:Class;
 		
-		public function TeamBase(team:String)
+		private var colorBlind:Boolean = false;
+		
+		public function TeamBase(team:String, colorBlind:Boolean)
 		{
 			super();
 			this.name = team;
+			this.colorBlind = colorBlind;
 		}
 		
 		public function setBarScale(newScale:Number):void
@@ -64,7 +67,7 @@
 		
 		private function createBase(settings:Object, shadowSettings:Object):void
 		{
-			var progressBarColor:uint = Utils.colorConvert(!Params.cBlind ? settings.colors[this.name] : this.name != "green" ? settings.colors.purple : settings.colors[this.name]);
+			var progressBarColor:uint = Utils.colorConvert(!this.colorBlind ? settings.colors[this.name] : this.name != "green" ? settings.colors.purple : settings.colors[this.name]);
 			
 			var baseMain:Sprite       = new Sprite()
 			this.addChild(baseMain)
@@ -102,13 +105,5 @@
 			this.animation.FPS = 30;
 		}
 		
-		public function stopAndClearAnimate():void
-		{
-			if (this.animation != null && this.animation.isPlaying)
-			{
-				this.animation.stop();
-				this.animation = null;
-			}
-		}
 	}
 }
