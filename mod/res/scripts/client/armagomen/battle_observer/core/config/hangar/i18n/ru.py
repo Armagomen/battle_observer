@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.battle_observer.core.constants import MOD_VERSION
+from armagomen.battle_observer.core.bo_constants import MOD_VERSION
 
 timeFormat_tooltip = """Формат - Значение
 %a - Сокращенное название дня недели
@@ -224,14 +224,6 @@ translate = {
         "y": "Позиция полосы захвата по вертикали",
         "scale": "Масштабирование полос захвата.",
         "boBases": "Включить полосы захвата из мода.",
-        "colors*green": "союзники",
-        "colors*bgColor": "цвет фона",
-        "colors*red": "противник",
-        "colors*purple": "противник ц/с",
-        "colors*alpha": "Прозрачность основных полос захвата.",
-        "colors*alpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
-        "colors*bgAlpha": "Фоновая полоса, прозрачность",
-        "colors*bgAlpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
         "outline*enabled": "Включить контур.",
         "outline*color": "Цвет контура."
     },

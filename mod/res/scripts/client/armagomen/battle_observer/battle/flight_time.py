@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
+from armagomen.battle_observer.core.bo_constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 from armagomen.utils.common import vector3
 from gui.battle_control import avatar_getter

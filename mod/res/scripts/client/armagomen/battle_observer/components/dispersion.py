@@ -9,7 +9,7 @@ from AvatarInputHandler.gun_marker_ctrl import _MARKER_TYPE, _MARKER_FLAG, \
 from BattleReplay import g_replayCtrl
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import GLOBAL, DISPERSION_CIRCLE
+from armagomen.battle_observer.core.bo_constants import GLOBAL, DISPERSION_CIRCLE
 from armagomen.utils.common import overrideMethod, getPlayer
 from constants import SERVER_TICK_LENGTH
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
@@ -130,6 +130,7 @@ class DispersionCircle(object):
         self.replaceOriginalCircle = False
         self.extraServerLap = False
         config.onModSettingsChanged += self.onModSettingsChanged
+        overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION_CIRCLE.NAME:
@@ -151,8 +152,8 @@ class DispersionCircle(object):
     def setShotPosition(gun, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
         mPos, mDir, mSize, imSize, collData = \
             gun._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, gun._VehicleGunRotator__dispersionAngles)
-        gun._avatar.inputHandler.updateGunMarker2(mPos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
         gun._VehicleGunRotator__lastShotPoint = mPos
+        gun._avatar.inputHandler.updateGunMarker2(mPos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if self.enabled:
@@ -178,26 +179,14 @@ dispersion_circle = DispersionCircle()
 
 
 @overrideMethod(gm_factory, "createComponents")
-def createComponents(base, *args):
-    if dispersion_circle.hooksEnable:
-        dispersion_circle.enableServerAim()
-        return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
-    else:
-        return base(*args)
-
-
 @overrideMethod(gm_factory, "overrideComponents")
-def overrideComponents(base, *args):
-    if dispersion_circle.hooksEnable:
-        dispersion_circle.enableServerAim()
-        return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
-    else:
+def createOverrideComponents(base, *args):
+    if not dispersion_circle.hooksEnable:
         return base(*args)
-
-
-@overrideMethod(gun_marker_ctrl, "createGunMarker")
-def createMarker(base, *args, **kwargs):
-    return dispersion_circle.createGunMarker(base, *args, **kwargs)
+    dispersion_circle.enableServerAim()
+    if base.__name__ == "createComponents":
+        return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
+    return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
 
 
 @overrideMethod(gun_marker_ctrl, "useDefaultGunMarkers")

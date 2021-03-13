@@ -4,11 +4,11 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
+	import net.wg.gui.battle.random.views.teamBasesPanel.TeamBasesPanel;
+	
 	
 	public class WGComponentsSetting extends BattleDisplayable
 	{
-		private var questview:Sprite = null;
-		private var teamBases:Sprite = null;
 		
 		public function WGComponentsSetting(compName:String)
 		{
@@ -25,27 +25,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			this.mouseChildren = false;
 			this.buttonMode = false;
 		}
-		
-		public function as_moveQuests(move:Boolean):void
-		{
-			var battlePage:*   = parent;
-			var questTopView:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
-			if (questTopView)
-			{
-				if (move)
-				{
-					this.questview = new Sprite();
-					this.questview.y = 10;
-					this.questview.addChild(questTopView);
-					battlePage.addChildAt(this.questview, 0);
-				}
-				else
-				{
-					battlePage.setChildIndex(questTopView, 0);
-				}
-			}
-		}
-		
+			
 		public function as_hideShadowInPreBattle():void
 		{
 			var battlePage:*     = parent;
@@ -74,24 +54,12 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		public function as_moveTeamBasesPanel():void
 		{
 			var battlePage:*     = parent;
-			var teamBasesPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
+			var teamBasesPanel:TeamBasesPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
 			if (teamBasesPanel)
 			{
-				this.teamBases = new Sprite();
-				battlePage.addChild(this.teamBases);
-				this.teamBases.y = 25;
-				this.teamBases.addChild(teamBasesPanel);
+				teamBasesPanel.y += 20;
 			}
 		}
 		
-		public function as_hideDeadTips():void
-		{
-			var battlePage:*      = parent;
-			var postmotremPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.POSTMORTEM_PANEL);
-			if (postmotremPanel)
-			{
-				postmotremPanel.removeChild(postmotremPanel.vehiclePanel);
-			}
-		}
 	}
 }

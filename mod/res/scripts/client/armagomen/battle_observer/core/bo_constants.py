@@ -150,7 +150,6 @@ class COLORS:
     NAME = "colors"
     BLACK = "#000000"
     BLIND = "#6F6CD3"
-    PURPLE = "#6A0DAD"
     B_SILVER = "#858585"
     GOLD = "#FFD700"
     GREEN = "#5ACB00"
@@ -734,18 +733,13 @@ class CONFIG_INTERFACE:
                 "players_bars_classColor",
                 "players_bars_on_key_pressed",
             ),
+            'players_bars_settings*players_bars_bar*outline*customColor': (
+                'players_bars_settings*players_bars_bar*outline*color',
+            ),
             'players_bars_settings*players_bars_bar*outline*enabled': (
                 'players_bars_settings*players_bars_bar*outline*color',
                 'players_bars_settings*players_bars_bar*outline*alpha',
                 'players_bars_settings*players_bars_bar*outline*customColor'
-            ),
-            'players_bars_settings*players_bars_bar*outline*customColor': (
-                'players_bars_settings*players_bars_bar*outline*color',
-            ),
-            PANELS.BAR_CLASS_COLOR: (
-                'players_bars_settings*players_bars_bar*colors*ally',
-                'players_bars_settings*players_bars_bar*colors*enemy',
-                'players_bars_settings*players_bars_bar*colors*enemyBlind'
             ),
             'players_damages_enabled': (
                 'players_damages_hotkey', 'players_damages_settings*x', 'players_damages_settings*y'
@@ -756,7 +750,6 @@ class CONFIG_INTERFACE:
             'showCalcPoints': ('calcPosition*x', 'calcPosition*y', 'template')
         },
         MAIN.NAME: {
-            MAIN.BG: (MAIN.BG_TRANSPARENCY,),
             MAIN.ENABLE_FPS_LIMITER: (MAIN.MAX_FRAME_RATE,),
             MAIN.SHOW_ANONYMOUS: (MAIN.CHANGE_ANONYMOUS_NAME,)
         },

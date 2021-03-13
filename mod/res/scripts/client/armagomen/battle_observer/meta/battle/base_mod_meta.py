@@ -1,6 +1,6 @@
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import GLOBAL
+from armagomen.battle_observer.core.bo_constants import GLOBAL
 from armagomen.utils.common import logInfo, getPlayer
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency

@@ -7,7 +7,7 @@ from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer.core.config.hangar.i18n import localization
-from armagomen.battle_observer.core.constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
+from armagomen.battle_observer.core.bo_constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
     getCurrentModPath

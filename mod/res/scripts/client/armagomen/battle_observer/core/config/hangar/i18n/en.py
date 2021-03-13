@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.battle_observer.core.constants import MOD_VERSION
+from armagomen.battle_observer.core.bo_constants import MOD_VERSION
 
 timeFormat_tooltip = """Directive Meaning
 %a  Locale’s abbreviated weekday name.
@@ -208,14 +208,6 @@ translate = {
         "y": "The vertical position of the capture",
         "scale": "Scaling capture bars.",
         "boBases": "Enable the capture bars from the mod.",
-        "colors*green": "Allies",
-        "colors*bgColor": "background color",
-        "colors*red": "Enemy",
-        "colors*purple": "Enemy c/b",
-        "colors*alpha": "Primary band, transparency.",
-        "colors*alpha_tooltip": "0 - completely transparent.<br>1 - not transparent.",
-        "colors*bgAlpha": "Background band, transparency",
-        "colors*bgAlpha_tooltip": "0 - completely transparent.<br>1 - not transparent.",
         "outline*enabled": "Enable border.",
         "outline*color": "Border color."
     },

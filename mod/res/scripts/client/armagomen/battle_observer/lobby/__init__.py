@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import GLOBAL, CLOCK, SWF
+from armagomen.battle_observer.core.bo_constants import GLOBAL, CLOCK, SWF
 from armagomen.utils.common import logError, callback, logWarning
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -45,6 +45,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def callbackListener(self, event):
+        self._app.as_loadLibrariesS([SWF.LOBBY])
         callback(2.0, lambda: self.eventListener(event))
 
     def eventListener(self, event):
@@ -60,4 +61,4 @@ class ObserverBusinessHandler(PackageBusinessHandler):
                     to_format_str = "lobby_page {}, has ho attribute {}"
                     logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
             else:
-                callback(1.0, lambda: self.eventListener(event))
+                callback(0.2, lambda: self.eventListener(event))

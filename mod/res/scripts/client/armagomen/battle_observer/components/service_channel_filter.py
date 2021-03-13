@@ -1,5 +1,5 @@
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import SERVICE_CHANNEL, GLOBAL, URLS
+from armagomen.battle_observer.core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
 from gui.SystemMessages import pushMessage, SM_TYPE

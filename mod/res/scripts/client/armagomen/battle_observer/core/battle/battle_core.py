@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
-from armagomen.battle_observer.core.constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
+from armagomen.battle_observer.core.bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 

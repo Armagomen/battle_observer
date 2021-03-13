@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from aih_constants import SHOT_RESULT
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import ARMOR_CALC, GLOBAL, VEHICLE, POSTMORTEM
+from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE, POSTMORTEM
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from gui.battle_control import avatar_getter
@@ -58,9 +58,9 @@ class ArmorCalculator(ArmorCalcMeta):
             self.clearView()
 
     def updateShootParams(self):
-        shotParams = self._player.getVehicleDescriptor().shot
-        self.p100, self.p500 = shotParams.piercingPower
-        self.calcMacro.update(piercingPower=self.p100, caliber=shotParams.shell.caliber)
+        shot_params = self._player.getVehicleDescriptor().shot
+        self.p100, self.p500 = shot_params.piercingPower
+        self.calcMacro.update(piercingPower=self.p100, caliber=shot_params.shell.caliber)
 
     def onGunReload(self, shellID, state):
         if state.isReloadingFinished():
@@ -71,6 +71,7 @@ class ArmorCalculator(ArmorCalcMeta):
     def updateColor(self, iPlugin, markerType, targetPos, collision, direction):
         colors = iPlugin._ShotResultIndicatorPlugin__colors
         armor_sum, counted_armor, result = self.getCountedArmor(collision, targetPos, direction)
+        self._visible = counted_armor is not None
         if result in colors:
             color = colors[result]
             plugin_cache = iPlugin._ShotResultIndicatorPlugin__cache

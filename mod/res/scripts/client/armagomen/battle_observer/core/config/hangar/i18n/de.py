@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.battle_observer.core.constants import MOD_VERSION
+from armagomen.battle_observer.core.bo_constants import MOD_VERSION
 
 timeFormat_tooltip = """Directive Meaning
 %a  Locale’s abbreviated weekday name.
@@ -211,14 +211,6 @@ translate = {
         "y": "Position der Eroberungsleiste senkrecht",
         "scale": "Skalierung Eroberungsleiste",
         "boBases": "Panel für Basiseroberung vom Mod einschalten.",
-        "colors*green": "Panel Basiseroberung: Verbündete",
-        "colors*bgColor": "Panel Basiseroberung: Hintergrundfarbe",
-        "colors*red": "Panel Basiseroberung: Gegner",
-        "colors*purple": "Panel Basiseroberung: Gegner (Farbenblindmodus)",
-        "colors*alpha": "Transparenz der Farbe",
-        "colors*alpha_tooltip": "0 - Transparenz 100%.<br>1 - Transparenz 0%.",
-        "colors*bgAlpha": "Hintergrundstreifen, Transparenz",
-        "colors*bgAlpha_tooltip": "0 - Transparenz 100%.<br>1 - Transparenz 0%.",
         "outline*enabled": "Rahmen aktivieren.",
         "outline*color": "Benutzerdefinierte Farbe."
     },

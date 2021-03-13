@@ -1,7 +1,7 @@
 import os
 from shutil import rmtree
 from armagomen.battle_observer.components import ComponentsLoader
-from armagomen.battle_observer.core.constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
+from armagomen.battle_observer.core.bo_constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
     MOD_NAME
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain

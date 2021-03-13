@@ -38,10 +38,10 @@
 			this.animation.continueTo(newScale, 1);
 		}
 		
-		public function create(bases:Object, shadowSettings:Object):void
+		public function create(bases:Object, shadowSettings:Object, colors:Object):void
 		{
-			basesFormat = new TextFormat(bases.text_settings.font, bases.text_settings.size, Utils.colorConvert(bases.text_settings.color), bases.text_settings.bold, bases.text_settings.italic, bases.text_settings.underline);
-			createBase(bases, shadowSettings);
+			this.basesFormat = new TextFormat(bases.text_settings.font, bases.text_settings.size, Utils.colorConvert(bases.text_settings.color), bases.text_settings.bold, bases.text_settings.italic, bases.text_settings.underline);
+			createBase(bases, shadowSettings, colors);
 		}
 		
 		private function PlayersIcon(width:Number):Bitmap
@@ -65,37 +65,37 @@
 			return icon;
 		}
 		
-		private function createBase(settings:Object, shadowSettings:Object):void
+		private function createBase(settings:Object, shadowSettings:Object, colors:Object):void
 		{
-			var progressBarColor:uint = Utils.colorConvert(!this.colorBlind ? settings.colors[this.name] : this.name != "green" ? settings.colors.purple : settings.colors[this.name]);
+			var progressBarColor:uint = Utils.colorConvert(this.name == "green" ? colors.ally : this.colorBlind ? colors.enemyColorBlind : colors.enemy);
 			
 			var baseMain:Sprite       = new Sprite()
 			this.addChild(baseMain)
 			var iconWidth:Number = settings.height + 2;
 			
 			baseMain.y = 1;
-			baseMain.graphics.beginFill(Utils.colorConvert(settings.colors.bgColor), Math.max(0.05, settings.colors.bgAlpha));
+			baseMain.graphics.beginFill(Utils.colorConvert(colors.bgColor), Math.max(0.05, colors.bgAlpha));
 			baseMain.graphics.drawRect(0, 0, settings.width, settings.height);
 			baseMain.graphics.endFill();
 			
 			if (settings.outline.enabled)
 			{
-				baseMain.graphics.lineStyle(1, Utils.colorConvert(settings.outline.color), Math.max(0.05, settings.colors.bgAlpha), true, LineScaleMode.NONE);
+				baseMain.graphics.lineStyle(1, Utils.colorConvert(settings.outline.color), Math.max(0.05, colors.bgAlpha), true, LineScaleMode.NONE);
 				baseMain.graphics.drawRect(-1, -1, settings.width + 1, settings.height + 1);
 			}
 			
-			progressBar.name = this.name;
-			progressBar.graphics.beginFill(progressBarColor, Math.max(0.05, settings.colors.alpha));
-			progressBar.graphics.drawRect(0, 0, settings.width, settings.height);
-			progressBar.graphics.endFill();
-			progressBar.scaleX = 0.01;
-			baseMain.addChild(progressBar);
+			this.progressBar.name = this.name;
+			this.progressBar.graphics.beginFill(progressBarColor, Math.max(0.05, colors.alpha));
+			this.progressBar.graphics.drawRect(0, 0, settings.width, settings.height);
+			this.progressBar.graphics.endFill();
+			this.progressBar.scaleX = 0.01;
+			baseMain.addChild(this.progressBar);
 			baseMain.addChild(PlayersIcon(iconWidth));
 			baseMain.addChild(TimeIcon(iconWidth, settings.width));
 			
-			BaseText = new TextExt("BaseText", settings.width >> 1, settings.text_settings.y, basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
-			BaseTimer = new TextExt("BaseTimer", settings.width - iconWidth, settings.text_settings.y, basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
-			BaseVehicles = new TextExt("BaseVehicles", iconWidth, settings.text_settings.y, basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
+			this.BaseText = new TextExt("BaseText", settings.width >> 1, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
+			this.BaseTimer = new TextExt("BaseTimer", settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
+			this.BaseVehicles = new TextExt("BaseVehicles", iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
 			
 			baseMain.scaleX = baseMain.scaleY = settings.scale;
 			this.x = App.appWidth / 2 - baseMain.width / 2;

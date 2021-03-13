@@ -11,6 +11,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 	{
 		private var bases:Object = {"green": null, "red": null};
 		private var settings:Object;
+		private var colors:Object;
 		private var shadowSettings:Object;
 		public var getShadowSettings:Function;
 		public var isColorBlind:Function;
@@ -31,11 +32,11 @@ package net.armagomen.battleobserver.battle.components.teambases
 			this.buttonMode = false;
 		}
 		
-		public function as_startUpdate(bases:Object):void
+		public function as_startUpdate(basesSettings:Object, colors:Object):void
 		{
-			this.settings = App.utils.data.cloneObject(bases);
+			this.settings = basesSettings;
+			this.colors = colors;
 			this.shadowSettings = getShadowSettings();
-			App.utils.data.cleanupDynamicObject(bases);
 		}
 		
 		public function as_addTeamBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
@@ -47,7 +48,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			else
 			{
 				var base:TeamBase = new TeamBase(team, this.isColorBlind());
-				base.create(this.settings, this.shadowSettings);
+				base.create(this.settings, this.shadowSettings, this.colors);
 				base.BaseText.htmlText = text;
 				base.BaseTimer.text = time;
 				base.BaseVehicles.text = invadersCnt;

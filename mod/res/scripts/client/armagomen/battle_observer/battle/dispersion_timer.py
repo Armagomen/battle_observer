@@ -3,7 +3,7 @@ from math import log
 
 from Avatar import PlayerAvatar
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import DISPERSION_CIRCLE, GLOBAL, POSTMORTEM
+from armagomen.battle_observer.core.bo_constants import DISPERSION_CIRCLE, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from gui.battle_control import avatar_getter
 

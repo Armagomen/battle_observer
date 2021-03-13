@@ -8,7 +8,7 @@ class ComponentsLoader(object):
 
     def __init__(self):
         self.modules = (
-            'camera', 'badges', 'friends', 'save_shoot_lite', 'dispersion_circle', 'effects', 'minimap_plugins',
+            'camera', 'badges', 'friends', 'save_shoot_lite', 'dispersion', 'effects', 'minimap_plugins',
             'wg_logs_fixes', 'service_channel_filter', 'tank_carousel'
         )
 

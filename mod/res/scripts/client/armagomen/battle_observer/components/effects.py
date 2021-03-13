@@ -1,7 +1,7 @@
 from AvatarInputHandler.control_modes import SniperControlMode
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import EFFECTS
+from armagomen.battle_observer.core.bo_constants import EFFECTS
 from armagomen.utils.common import overrideMethod, getPlayer
 from helpers.EffectsList import EffectsListPlayer, _PixieEffectDesc
 
@@ -23,6 +23,7 @@ def effectsListPlayer(base, *args, **kwargs):
             kwargs[EFFECTS.SHOW_SHOCK_WAVE] = False
     base(*args, **kwargs)
 
+
 def onEnterBattlePage():
     if config.effects[EFFECTS.NO_LIGHT_EFFECT]:
         gunEffects = getPlayer().vehicle.typeDescriptor.gun.effects
@@ -31,5 +32,6 @@ def onEnterBattlePage():
             effectDescList = eList._EffectsList__effectDescList
             eList._EffectsList__effectDescList = \
                 [e for e in effectDescList if not isinstance(e, _PixieEffectDesc)]
+
 
 g_playerEvents.onAvatarReady += onEnterBattlePage

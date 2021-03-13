@@ -2,7 +2,7 @@
 set ModVer=1.32.4
 
 set WotVer=1.12.0.0
-set ModsDir=D:\Games\World_of_Tanks_RU\mods\
+set ModsDir=C:\Games\World_of_Tanks_RU\mods\
 
 REM set WotVer="1.12.0.0 Common Test"
 REM set ModsDir=E:\Games\World_of_Tanks_CT\mods\

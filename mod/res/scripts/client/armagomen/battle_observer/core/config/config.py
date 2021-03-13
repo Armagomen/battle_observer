@@ -2,7 +2,7 @@
 
 import Keys
 from Event import SafeEvent
-from armagomen.battle_observer.core.constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
+from armagomen.battle_observer.core.bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
     DAMAGE_LOG, DEBUG_PANEL, DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, USER_BACKGROUND, \
     VEHICLE_TYPES
@@ -371,14 +371,6 @@ class Config(object):
             GLOBAL.OUTLINE: {
                 GLOBAL.ENABLED: True,
                 GLOBAL.COLOR: COLORS.NORMAL_TEXT
-            },
-            COLORS.NAME: {
-                COLORS.C_GREEN: COLORS.GREEN,
-                COLORS.C_RED: COLORS.RED,
-                COLORS.C_PURPLE: COLORS.PURPLE,
-                COLORS.C_BG: COLORS.BLACK,
-                GLOBAL.ALPHA: 0.6,
-                GLOBAL.BG_ALPHA: 0.5
             },
             TEAM_BASES.TEXT_SETTINGS: {
                 TEAM_BASES.FONT: TEAM_BASES.BASE_FONT,
