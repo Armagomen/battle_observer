@@ -1,11 +1,13 @@
 import os
 from shutil import rmtree
+
 from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.core.bo_constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
     MOD_NAME
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.utils.common import logInfo, getPreferencesFilePath, getCurrentModPath, logWarning
+from gui.Scaleform.daapi.settings import config as packages
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
@@ -54,6 +56,8 @@ class ObserverCore(object):
             logInfo('MOD {}: {}'.format(MASSAGES.START, self.mod_version))
             ComponentsLoader().start()
             self.configLoader.start()
+            packages.BATTLE_PACKAGES += ("armagomen.battle_observer.battle",)
+            packages.LOBBY_PACKAGES += ("armagomen.battle_observer.lobby",)
         else:
             from gui.Scaleform.daapi.view import dialogs
             from gui import DialogsInterface
