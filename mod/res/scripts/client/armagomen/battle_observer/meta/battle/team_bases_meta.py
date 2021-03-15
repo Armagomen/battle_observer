@@ -9,8 +9,8 @@ class TeamBasesMeta(BaseModMeta):
     def as_addTeamBaseS(self, team, points, invadersCnt, time, text):
         return self.flashObject.as_addTeamBase(team, points, invadersCnt, time, text) if self._isDAAPIInited() else None
 
-    def as_updateBaseS(self, team, points, rate, invadersCnt, time, text):
-        return self.flashObject.as_updateBase(team, points, rate, invadersCnt, time,
+    def as_updateBaseS(self, team, points, invadersCnt, time, text):
+        return self.flashObject.as_updateBase(team, points, invadersCnt, time,
                                               text) if self._isDAAPIInited() else None
 
     def as_updateCaptureTextS(self, team, text):

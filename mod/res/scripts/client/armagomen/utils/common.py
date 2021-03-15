@@ -106,5 +106,3 @@ def checkDecoder(_string):
         if char not in printable:
             return locale.getpreferredencoding()
     return None
-
-

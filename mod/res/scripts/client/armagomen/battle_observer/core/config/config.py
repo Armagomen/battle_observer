@@ -2,7 +2,7 @@
 
 import Keys
 from Event import SafeEvent
-from armagomen.battle_observer.core.constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
+from armagomen.battle_observer.core.bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
     DAMAGE_LOG, DEBUG_PANEL, DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, USER_BACKGROUND, \
     VEHICLE_TYPES
@@ -21,8 +21,6 @@ class Config(object):
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.CHANGE_ANONYMOUS_NAME: False,
             MAIN.ANONYMOUS_STRING: "Anonymous",
-            MAIN.BG: False,
-            MAIN.BG_TRANSPARENCY: 0.25,
             MAIN.REMOVE_SHADOW_IN_PREBATTLE: False,
             MAIN.HIDE_BADGES: False,
             MAIN.HIDE_CLAN_ABBREV: False,
@@ -32,8 +30,8 @@ class Config(object):
             MAIN.AUTO_CLEAR_CACHE: False,
             MAIN.USE_KEY_PAIRS: False,
             MAIN.REMOVE_HANDBRAKE: False,
-            MAIN.HIDE_POSTMORTEM_TIPS: False,
-            MAIN.IGNORE_COMMANDERS: False
+            MAIN.IGNORE_COMMANDERS: False,
+            MAIN.HIDE_DOG_TAGS: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
@@ -216,11 +214,14 @@ class Config(object):
             MAIN_GUN.NAME: {
                 MAIN_GUN.COLOR: COLORS.S_YELLOW
             },
-            MARKERS.NAME: {
-                MARKERS.ALLY: COLORS.GREEN,
-                MARKERS.ENEMY: COLORS.RED,
-                MARKERS.ENEMY_COLOR_BLIND: COLORS.BLIND,
-                MARKERS.DEAD_COLOR: COLORS.B_SILVER
+            COLORS.GLOBAL: {
+                COLORS.ALLY_MAME: COLORS.GREEN,
+                COLORS.ENEMY_MAME: COLORS.RED,
+                COLORS.ENEMY_BLIND_MAME: COLORS.BLIND,
+                COLORS.C_BG: COLORS.BLACK,
+                COLORS.DEAD_COLOR: COLORS.B_SILVER,
+                GLOBAL.ALPHA: 0.4,
+                GLOBAL.BG_ALPHA: 0.4
             },
             ARMOR_CALC.NAME: {
                 COLORS.C_GREEN: COLORS.GREEN,
@@ -346,21 +347,20 @@ class Config(object):
         self.log_input_extended[DAMAGE_LOG.SHELL_ICONS][DAMAGE_LOG.UNDEFINED] = ""
         self.hp_bars = {
             GLOBAL.ENABLED: True,
-            HP_BARS.STYLE: HP_BARS.LEGUE_STYLE,
+            HP_BARS.STYLE: HP_BARS.LEAGUE_STYLE,
             HP_BARS.WIDTH: 200,
             HP_BARS.DIFF: True,
             HP_BARS.ALIVE: False,
-            COLORS.NAME: {
-                HP_BARS.C_ALLY: COLORS.GREEN,
-                HP_BARS.C_ENEMY: COLORS.RED,
-                HP_BARS.C_BLIND: COLORS.BLIND,
-                COLORS.C_BG: COLORS.BLACK,
-                GLOBAL.ALPHA: 0.6,
-                GLOBAL.BG_ALPHA: 0.5
-            },
             GLOBAL.OUTLINE: {
                 GLOBAL.ENABLED: True,
                 GLOBAL.COLOR: COLORS.NORMAL_TEXT
+            },
+            MARKERS.NAME: {
+                GLOBAL.ENABLED: False,
+                MARKERS.HOT_KEY: [Keys.KEY_NUMPAD0],
+                MARKERS.CLASS_COLOR: False,
+                GLOBAL.X: 5,
+                GLOBAL.Y: 31
             }
         }
         self.team_bases_panel = {
@@ -372,14 +372,6 @@ class Config(object):
                 GLOBAL.ENABLED: True,
                 GLOBAL.COLOR: COLORS.NORMAL_TEXT
             },
-            COLORS.NAME: {
-                COLORS.C_GREEN: COLORS.GREEN,
-                COLORS.C_RED: COLORS.RED,
-                COLORS.C_PURPLE: COLORS.PURPLE,
-                COLORS.C_BG: COLORS.BLACK,
-                GLOBAL.ALPHA: 0.6,
-                GLOBAL.BG_ALPHA: 0.5
-            },
             TEAM_BASES.TEXT_SETTINGS: {
                 TEAM_BASES.FONT: TEAM_BASES.BASE_FONT,
                 TEAM_BASES.SIZE: TEAM_BASES.FONT_SIZE,
@@ -389,13 +381,6 @@ class Config(object):
                 TEAM_BASES.UNDERLINE: False,
                 GLOBAL.Y: GLOBAL.ZERO
             }
-        }
-        self.markers = {
-            GLOBAL.ENABLED: True,
-            MARKERS.HOT_KEY: [Keys.KEY_NUMPAD0],
-            MARKERS.CLASS_COLOR: False,
-            GLOBAL.X: 5,
-            GLOBAL.Y: 31
         }
         self.main_gun = {
             GLOBAL.ENABLED: False,
@@ -435,6 +420,7 @@ class Config(object):
             GLOBAL.ENABLED: False,
             PANELS.ICONS_ENABLED: True,
             PANELS.ICONS_BLACKOUT: -1.25,
+            PANELS.SPOTTED_FIX: True,
             PANELS.DAMAGES_ENABLED: True,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.DAMAGES_TEMPLATE: "<font color='#FFFF00'>%(damage)s</font>",
@@ -451,14 +437,6 @@ class Config(object):
                     GLOBAL.Y: 2,
                     GLOBAL.WIDTH: 70,
                     GLOBAL.HEIGHT: 22,
-                    GLOBAL.ALPHA: 0.5,
-                    GLOBAL.BG_ALPHA: 0.4,
-                    COLORS.NAME: {
-                        PANELS.ALLY: COLORS.GREEN,
-                        PANELS.ENEMY: COLORS.RED,
-                        PANELS.BLIND: COLORS.BLIND,
-                        COLORS.C_BG: COLORS.BLACK,
-                    },
                     GLOBAL.OUTLINE: {
                         GLOBAL.ENABLED: True,
                         GLOBAL.COLOR: COLORS.NORMAL_TEXT,

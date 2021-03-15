@@ -3,8 +3,8 @@ package net.armagomen.battleobserver.battle.components
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.battle.utils.Filters;
-	import net.armagomen.battleobserver.battle.utils.TextExt;
+	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
 	import DebugUtils;
@@ -18,6 +18,7 @@ package net.armagomen.battleobserver.battle.components
 		private var in_log:TextField = null;
 		private var mainlog:TextField = null;
 		public var getShadowSettings:Function;
+		private var loaded:Boolean = false;
 		
 		private const IN_LOG:String = "in_log";
 		private const D_LOG:String = "d_log";
@@ -45,57 +46,36 @@ package net.armagomen.battleobserver.battle.components
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			var page:* = this.parent;
-			var battleDamageLogPanel:* = page.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
-			if (battleDamageLogPanel){
-				if (this.d_log){
-					battleDamageLogPanel._detailsTopContainer.removeChild(this.d_log);
-					this.d_log = null;
-				}
-				if (this.in_log){
-					battleDamageLogPanel._detailsBottomContainer.removeChild(this.in_log);
-					this.in_log = null;
-				}
-			}
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.top_Log = null;
-			App.utils.data.cleanupDynamicObject(this.enableds);
-			this.enableds = null;
-			page.unregisterComponent(this.name);
-
-		}
-
 		public function as_startUpdate(data:Object, turned:Object):void
 		{
-			this.enableds = turned;
-			var shadowSettings:Object = getShadowSettings();
-			if (this.enableds.main){
-				this.top_log_inCenter = data.main.inCenter;
-				this.top_Log = new Sprite();
-				this.top_Log.x = !this.top_log_inCenter ? 0 : Math.ceil((App.appWidth >> 1));
-				this.mainlog = new TextExt("damage", data.main.x, data.main.y, Filters.largeText, data.main.align, shadowSettings, this.top_Log);
-				this.addChild(this.top_Log);
-			}
-			if (this.enableds[D_LOG] || this.enableds[IN_LOG]){
-				var page:* = this.parent;
-				var battleDamageLogPanel:* = page.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
-				if (battleDamageLogPanel){
-					if (this.enableds[D_LOG]){
-						var topContainer:* = battleDamageLogPanel._detailsTopContainer;
-						this.d_log = new TextExt(D_LOG, data.d_log.x + 25, data.d_log.y, Filters.normalText, data.d_log.align, shadowSettings, topContainer);
-					}
-					if (this.enableds[IN_LOG]){
-						var bottomContainer:* = battleDamageLogPanel._detailsBottomContainer;
-						this.in_log = new TextExt(IN_LOG, data.in_log.x + 10, -25 + data.in_log.y, Filters.normalText, data.in_log.align, shadowSettings, bottomContainer);
-					}
-					battleDamageLogPanel.updateContainersPosition();
+			if (!this.loaded){
+				this.enableds = turned;
+				var shadowSettings:Object = getShadowSettings();
+				if (this.enableds.main){
+					this.top_log_inCenter = data.main.inCenter;
+					this.top_Log = new Sprite();
+					this.top_Log.x = !this.top_log_inCenter ? 0 : Math.ceil((App.appWidth >> 1));
+					this.mainlog = new TextExt("damage", data.main.x, data.main.y, Filters.largeText, data.main.align, shadowSettings, this.top_Log);
+					this.addChild(this.top_Log);
 				}
+				if (this.enableds[D_LOG] || this.enableds[IN_LOG]){
+					var page:* = this.parent;
+					var battleDamageLogPanel:* = page.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
+					if (battleDamageLogPanel){
+						if (this.enableds[D_LOG]){
+							var topContainer:* = battleDamageLogPanel._detailsTopContainer;
+							this.d_log = new TextExt(D_LOG, data.d_log.x + 25, data.d_log.y, Filters.normalText, data.d_log.align, shadowSettings, topContainer);
+						}
+						if (this.enableds[IN_LOG]){
+							var bottomContainer:* = battleDamageLogPanel._detailsBottomContainer;
+							this.in_log = new TextExt(IN_LOG, data.in_log.x + 10, -25 + data.in_log.y, Filters.normalText, data.in_log.align, shadowSettings, bottomContainer);
+						}
+						battleDamageLogPanel.updateContainersPosition();
+					}
+				}
+				App.utils.data.cleanupDynamicObject(data);
+				this.loaded = true;
 			}
-			App.utils.data.cleanupDynamicObject(data);
 		}
 
 		public function as_updateDamage(text:String):void

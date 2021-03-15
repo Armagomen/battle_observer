@@ -1,7 +1,7 @@
 from math import degrees
 
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import GLOBAL, MINIMAP
+from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
 from gui.Scaleform.daapi.view.battle.shared.minimap.plugins import PersonalEntriesPlugin, ArenaVehiclesPlugin

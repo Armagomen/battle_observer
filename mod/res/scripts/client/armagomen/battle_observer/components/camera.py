@@ -10,7 +10,7 @@ if not BattleReplay.g_replayCtrl.isPlaying:
     from AvatarInputHandler.control_modes import PostMortemControlMode, SniperControlMode
     from aih_constants import CTRL_MODE_NAME
     from gui.battle_control import avatar_getter
-    from armagomen.battle_observer.core.constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
+    from armagomen.battle_observer.core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
     from armagomen.battle_observer.core import config
     from armagomen.utils.common import callback, overrideMethod, getPlayer
 
@@ -97,8 +97,9 @@ if not BattleReplay.g_replayCtrl.isPlaying:
         if POSTMORTEM.PARAMS in kwargs:
             kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, config.arcade_camera[ARCADE.START_DEAD_DIST])
         if not PostMortemControlMode.getIsPostmortemDelayEnabled():
+            kwargs[POSTMORTEM.CAM_MATRIX] = mode.camera.camera.matrix
+            kwargs[POSTMORTEM.DURATION] = GLOBAL.ONE_SECOND
             avatar_getter.setForcedGuiControlMode(True)
-            kwargs[POSTMORTEM.DURATION] = POSTMORTEM.CALLBACK_TIME_SEC
             callback(POSTMORTEM.CALLBACK_TIME_SEC, lambda: avatar_getter.setForcedGuiControlMode(False))
         return base(mode, **kwargs)
 

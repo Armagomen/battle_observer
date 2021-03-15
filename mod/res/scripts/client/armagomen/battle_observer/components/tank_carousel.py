@@ -1,6 +1,6 @@
 from account_helpers.settings_core.options import CarouselTypeSetting, DoubleCarouselTypeSetting
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import GLOBAL, CAROUSEL
+from armagomen.battle_observer.core.bo_constants import GLOBAL, CAROUSEL
 from armagomen.utils.common import overrideMethod
 from gui.shared.personality import ServicesLocator
 

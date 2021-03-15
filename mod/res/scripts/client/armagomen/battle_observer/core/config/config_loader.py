@@ -3,10 +3,19 @@ import json
 import os
 import time
 
-from armagomen.battle_observer.core.constants import LOAD_LIST, API_VERSION, GLOBAL
+from armagomen.battle_observer.core.bo_constants import LOAD_LIST, API_VERSION, GLOBAL
 from armagomen.utils.common import logWarning, logInfo, getCurrentModPath
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
+
+
+def removeOldFiles(configPath):
+    files = ("markers.json", "panels_icon.json", "players_bars.json", "players_damages.json",
+             "players_spotted.json", "postmortem_panel.json")
+    for _file in files:
+        path = os.path.join(configPath, _file)
+        if os.path.exists(path):
+            os.remove(path)
 
 
 class ConfigLoader(object):
@@ -68,6 +77,7 @@ class ConfigLoader(object):
                 self.cName = self.createLoadJSON(load_json)
             self.makeDirs(os.path.join(path, self.cName))
         self.readConfig(self.cName)
+        removeOldFiles(os.path.join(path, self.cName))
 
     def createLoadJSON(self, path):
         cName = 'default'

@@ -1,6 +1,6 @@
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import GLOBAL
+from armagomen.battle_observer.core.bo_constants import GLOBAL
 from armagomen.utils.common import logInfo, getPlayer
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
@@ -49,7 +49,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def onExitBattlePage(self):
         if self._isDAAPIInited():
-            self.flashObject.as_clearScene()
+            self.flashObject.setCompVisible(False)
 
     def as_startUpdateS(self, *args):
         return self.flashObject.as_startUpdate(*args) if self._isDAAPIInited() else None

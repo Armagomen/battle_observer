@@ -4,25 +4,24 @@ package net.armagomen.battleobserver.battle.components.teambases
 	import flash.events.*;
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBase;
-	import net.armagomen.battleobserver.battle.utils.Params;
-	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.random.views.teamBasesPanel.TeamBasesPanel;
+	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.gui.battle.components.*;
-
-
+	
 	public class TeamBasesUI extends BattleDisplayable
 	{
 		private var bases:Object = {"green": null, "red": null};
 		private var settings:Object;
+		private var colors:Object;
 		private var shadowSettings:Object;
 		public var getShadowSettings:Function;
-
+		public var isColorBlind:Function;
+		
 		public function TeamBasesUI(compName:String)
 		{
 			super();
 			this.name = compName;
 		}
-
+		
 		override protected function configUI():void
 		{
 			super.configUI();
@@ -32,39 +31,24 @@ package net.armagomen.battleobserver.battle.components.teambases
 			this.mouseChildren = false;
 			this.buttonMode = false;
 		}
-
-		public function as_clearScene():void
+		
+		public function as_startUpdate(basesSettings:Object, colors:Object):void
 		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			App.utils.data.cleanupDynamicObject(this.bases);
-			App.utils.data.cleanupDynamicObject(this.settings);
-			App.utils.data.cleanupDynamicObject(this.shadowSettings);
-			this.bases = null;
-			this.settings = null;
-			this.shadowSettings = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
-		public function as_startUpdate(bases:Object):void
-		{
-			this.settings = App.utils.data.cloneObject(bases);
+			this.settings = basesSettings;
+			this.colors = colors;
 			this.shadowSettings = getShadowSettings();
-			App.utils.data.cleanupDynamicObject(bases);
 		}
-
+		
 		public function as_addTeamBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
 		{
 			if (this.bases[team])
 			{
-				this.as_updateBase(team, points, 10.0, invadersCnt, time, text);
+				this.as_updateBase(team, points, invadersCnt, time, text);
 			}
 			else
 			{
-				var base:TeamBase = new TeamBase(team);
-				base.create(this.settings, this.shadowSettings);
+				var base:TeamBase = new TeamBase(team, this.isColorBlind());
+				base.create(this.settings, this.shadowSettings, this.colors);
 				base.BaseText.htmlText = text;
 				base.BaseTimer.text = time;
 				base.BaseVehicles.text = invadersCnt;
@@ -77,8 +61,8 @@ package net.armagomen.battleobserver.battle.components.teambases
 				base.progressBar.scaleX = points / 100.0;
 			}
 		}
-
-		public function as_updateBase(team:String, points:Number, rate:Number, invadersCnt:String, time:String, text:String):void
+		
+		public function as_updateBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
 		{
 			if (this.bases[team])
 			{
@@ -88,7 +72,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 				base.BaseVehicles.text = invadersCnt;
 				if (Params.AnimationEnabled)
 				{
-					base.setBarScale(points / 100.0, rate, Number(invadersCnt));
+					base.setBarScale(points / 100.0);
 				}
 				else
 				{
@@ -96,7 +80,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 				}
 			}
 		}
-
+		
 		public function as_updateCaptureText(team:String, captureText:String):void
 		{
 			if (this.bases[team])
@@ -104,20 +88,15 @@ package net.armagomen.battleobserver.battle.components.teambases
 				this.bases[team].BaseText.htmlText = captureText;
 			}
 		}
-
-
+		
 		public function as_removeTeamBase(team:String):void
 		{
 			if (this.bases[team])
 			{
-				if (Params.AnimationEnabled)
-				{
-					this.bases[team].stopAnimation();
-				}
 				this.removeChild(this.bases[team] as TeamBase);
 				this.bases[team] = null;
 			}
-
+			
 			if (this.bases["green"] && this.bases["green"].y != this.settings.y)
 			{
 				this.bases["green"].y = this.settings.y;
@@ -127,5 +106,6 @@ package net.armagomen.battleobserver.battle.components.teambases
 				this.bases["red"].y = this.settings.y;
 			}
 		}
+		
 	}
 }

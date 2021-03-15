@@ -1,7 +1,7 @@
 from gui.vxSettingsApi import vxSettingsApiEvents
 
 from armagomen.battle_observer.core.config.hangar.i18n import localization
-from armagomen.battle_observer.core.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION_CIRCLE, PANELS, \
+from armagomen.battle_observer.core.bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION_CIRCLE, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
 from armagomen.utils.common import logWarning, openWebBrowser
 from debug_utils import LOG_CURRENT_EXCEPTION

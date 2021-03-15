@@ -1,5 +1,5 @@
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import MAIN, ANOTHER, GLOBAL
+from armagomen.battle_observer.core.bo_constants import MAIN, ANOTHER, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.arena_info import settings
 from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO

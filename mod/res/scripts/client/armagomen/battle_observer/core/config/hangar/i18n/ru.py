@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.battle_observer.core.constants import MOD_VERSION
+from armagomen.battle_observer.core.bo_constants import MOD_VERSION
 
 timeFormat_tooltip = """Формат - Значение
 %a - Сокращенное название дня недели
@@ -39,8 +39,6 @@ translate = {
         "autoClearCache": "Очищать кэш игры после выхода.",
         "autoClearCache_tooltip": "Очистка временных файлов игры в папке AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "<br>Папки модификацый и настройки которые сохраняются там же, не затрагиваются.",
-        "backgroundTransparency": "Прозрачность заднего фона панели",
-        "background": "Задний фон панели в стиле 'normal'",
         "removeShadowInPrebattle": "Убрать затемнение таймера в начале боя",
         "hideBadges": "Отключить отображение нашивок",
         "hideBadges_tooltip": "в ушах, окне по tab, на экране загрузки.",
@@ -57,11 +55,7 @@ translate = {
         "useKeyPairs": "Использовать парные Alt, Ctrl, Shift",
         "anonymousNameChange": "Изменить имена анонимов",
         "removeHandbrake": "Отключение ручного тормоза для ПТ-САУ",
-        "hide_postmortem_tips": "Скрыть информацию после уничтожения",
-        "hide_postmortem_tips_tooltip": "Скрывает отображение информации в панеле после уничтожения:"
-                                        "<br>- подсказки по навигации"
-                                        "<br>- отображение жетонов"
-                                        "<br>- отображение информации об игроке который вас уничтожил",
+        "hide_dog_tags": "Отключить отображение жетонов.",
         "ignore_commanders_voice": "Игнорировать озвучку командиров.",
         "ignore_commanders_voice_tooltip": "После включения будет принудительно использоваться стандартная озвучка"
                                            " экипажа. Параметр заменит все озвучки блогеров, Чака Норриса и так далее "
@@ -92,9 +86,9 @@ translate = {
         "header": "Настройка визуальных эффектов.",
         "noShockWave": "Убрать тряску камеры при попадании по танку.",
         "noFlashBang": "Убрать красную вспышку при получении урона.",
-        "noLightEffect": "Убрать вспышку от выстрела в снайперском режиме.",
-        "noLightEffect_tooltip": "Для повторного включения после того как эффект был отключен и проведен хотя-бы 1 бой,"
-                                 " <b>необходим перезапуск игры</b>.",
+        "noLightEffect": "Убрать эффекты от выстрела у танка игрока.",
+        "noLightEffect_tooltip": "Убирает вспышку, дым, и пламя. Для повторного включения после того как эффект был"
+                                 " отключен и проведен хотя-бы 1 бой, <b>необходим перезапуск игры</b>.",
         "noBinoculars": "Убрать затемнение в снайперском режиме"
     },
     "debug_panel": {
@@ -143,26 +137,15 @@ translate = {
         "differenceHP": "Показывать разницу между общим здоровьем команд",
         "showAliveCount": "Показывать на панели счета живых",
         "style": "Стиль панели",
-        "bars_colors": "Настройка цветов основной панели",
-        "colors*ally": "Полоса ХП и разница: союзники",
-        "colors*bgColor": "Полоса ХП цвет фона",
-        "colors*enemyColorBlind": "Полоса ХП и разница: противник - цветовая слепота",
-        "colors*enemy": "Полоса ХП и разница: противник",
-        "colors*alpha": "Прозрачность основных полос ХП.",
-        "colors*alpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
-        "colors*bgAlpha": "Фоновая полоса ХП, прозрачность",
-        "colors*bgAlpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
         "outline*enabled": "Включить контур в стиле normal",
-        "outline*color": "Цвет контура."
-    },
-    "markers": {
-        "header": "Карусель маркеров техники.",
-        "x": "Расстояние по Горизонтали от центра.",
-        "x_tooltip": "Зеркально сдвигает значки от центра на заданное кол-во пикселей.",
-        "y": "Позиция по Вертикали от верха.",
-        "y_tooltip": "Позиция маркеров по Вертикали от верха экрана.",
-        "showMarkers_hotkey": "Клавиша включения/отключения маркеров.",
-        "markersClassColor": "Окрасить значки по цвету класса."
+        "outline*color": "Цвет контура.",
+        "markers*enabled": "Карусель маркеров техники.",
+        "markers*x": "Расстояние по Горизонтали от центра.",
+        "markers*x_tooltip": "Зеркально сдвигает значки от центра на заданное кол-во пикселей.",
+        "markers*y": "Позиция по Вертикали от верха.",
+        "markers*y_tooltip": "Позиция маркеров по Вертикали от верха экрана.",
+        "markers*showMarkers_hotkey": "Клавиша включения/отключения маркеров.",
+        "markers*markersClassColor": "Окрасить значки по цвету класса."
     },
     "armor_calculator": {
         "header": "Калькулятор приведенной брони.",
@@ -241,14 +224,6 @@ translate = {
         "y": "Позиция полосы захвата по вертикали",
         "scale": "Масштабирование полос захвата.",
         "boBases": "Включить полосы захвата из мода.",
-        "colors*green": "союзники",
-        "colors*bgColor": "цвет фона",
-        "colors*red": "противник",
-        "colors*purple": "противник ц/с",
-        "colors*alpha": "Прозрачность основных полос захвата.",
-        "colors*alpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
-        "colors*bgAlpha": "Фоновая полоса, прозрачность",
-        "colors*bgAlpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
         "outline*enabled": "Включить контур.",
         "outline*color": "Цвет контура."
     },
@@ -268,14 +243,6 @@ translate = {
         "players_damages_settings*x": "Положение текста по горизонтали",
         "players_damages_settings*y": "Положение текста по вертикали",
         "players_bars_enabled": "Хп игроков в ушах.",
-        "players_bars_settings*players_bars_bar*colors*ally": "Очки прочности: союзники",
-        "players_bars_settings*players_bars_bar*colors*bgColor": "Очки прочности: цвет фона",
-        "players_bars_settings*players_bars_bar*colors*enemy": "Очки прочности: противник",
-        "players_bars_settings*players_bars_bar*colors*enemyBlind": "Очки прочности: противник - цветовая слепота",
-        "players_bars_settings*players_bars_bar*alpha": "Прозрачность основных полос ХП.",
-        "players_bars_settings*players_bars_bar*alpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
-        "players_bars_settings*players_bars_bar*bgAlpha": "Фоновая полоса ХП, прозрачность",
-        "players_bars_settings*players_bars_bar*bgAlpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
         "players_bars_settings*players_bars_bar*outline*enabled": "Включить контур.",
         "players_bars_settings*players_bars_bar*outline*customColor": "Пользовательский цвет контура.",
         "players_bars_settings*players_bars_bar*outline*color": "Пользовательский цвет контура.",
@@ -285,8 +252,10 @@ translate = {
         "players_bars_on_key_pressed": "Отображать полосы только по нажатию клавиши.",
         "panels_icon_enabled": "Перекрасить иконки танков.",
         "panels_icon_enabled_tooltip": "Данная функция перекрашивает любые иконки техники в ушах в цвет классов"
-                                       " техники.<br>Сила фильтра влияет на яркость.<br>Рекомендуемая сила фильтра -1",
-        "panels_icon_filter_strength": "Сила фильтра (яркость)"
+                                       " техники.<br>Сила фильтра влияет на яркость."
+                                       "<br>Рекомендуемая сила фильтра -1.25",
+        "panels_icon_filter_strength": "Сила фильтра (яркость)",
+        "panels_spotted_fix": "Исправить размер и позицию лампочек засвета."
     },
     "zoom": {
         "header": "Снайперский режим ZOOM-X.",
@@ -370,19 +339,21 @@ translate = {
     },
     "colors": {
         "header": "Глобальные настройки цветов.",
-        "armor_calculator*green": "Пробитие 100%",
-        "armor_calculator*orange": "Пробитие 50%",
-        "armor_calculator*red": "Пробитие 0%",
-        "armor_calculator*yellow": "Пробитие 50% (Режим цветовой слепоты)",
-        "armor_calculator*purple": "Пробитие 0% (Режим цветовой слепоты)",
-        "calculator_colors": "Цвет данных калькулятора приведённой брони",
-        "colorAvg_colors": "Границы цветов для макроса %(tankDamageAvgColor)s",
-        "main_gun*mainGunColor": "Цвет макроса %(mainGunColor)s",
-        "mark_colors": "Цвета иконок под панелью",
-        "markers*ally": "Союзник",
-        "markers*deadColor": "Уничтоженный.",
-        "markers*enemyColorBlind": "Противник, цветовая слепота",
-        "markers*enemy": "Противник"
+        "armor_calculator*green": "Приведенная броня: Пробитие 100%",
+        "armor_calculator*orange": "Приведенная броня: Пробитие 50%",
+        "armor_calculator*red": "Приведенная броня: Пробитие 0%",
+        "armor_calculator*yellow": "Приведенная броня: Пробитие 50% (Режим цветовой слепоты)",
+        "armor_calculator*purple": "Приведенная броня: Пробитие 0% (Режим цветовой слепоты)",
+        "main_gun*mainGunColor": "Основной калибр: Цвет макроса %(mainGunColor)s",
+        "global*ally": "Голобальный цвет: союзники",
+        "global*bgColor": "Цвет фона панелей",
+        "global*enemyColorBlind": "Голобальный цвет: противник - цветовая слепота",
+        "global*enemy": "Голобальный цвет: противник",
+        "global*alpha": "Прозрачность панелей",
+        "global*alpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
+        "global*bgAlpha": "Прозрачность фона панелей",
+        "global*bgAlpha_tooltip": "0 - прозрачно полностью.<br>1 - не прозрачно.",
+        "global*deadColor": "Голобальный цвет: уничтоженный",
     },
     "service_channel_filter": {
         "header": "Фильтр сообщений в системном канале - (скрывает сообщения выбранных категорий).",

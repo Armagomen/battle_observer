@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from armagomen.battle_observer.core import v_settings
-from armagomen.battle_observer.core.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
+from armagomen.battle_observer.core.bo_constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
 from armagomen.utils.common import logError, callback, logWarning
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
@@ -46,7 +46,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def callbackListener(self, event):
-        callback(1.5, lambda: self.eventListener(event))
+        self._app.as_loadLibrariesS([SWF.BATTLE])
+        callback(2.0, lambda: self.eventListener(event))
 
     def eventListener(self, event):
         battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
@@ -60,4 +61,4 @@ class ObserverBusinessHandler(PackageBusinessHandler):
                 to_format_str = "battle_page {}, has ho attribute {}"
                 logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
         else:
-            callback(1.0, lambda: self.eventListener(event))
+            callback(0.2, lambda: self.eventListener(event))

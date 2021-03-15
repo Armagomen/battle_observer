@@ -1,6 +1,6 @@
 import urllib2
 
-from armagomen.battle_observer.core.constants import URLS, HEADERS
+from armagomen.battle_observer.core.bo_constants import URLS, HEADERS
 from armagomen.utils.common import logWarning
 from async import async, await, AsyncReturn
 from gui.shared.personality import ServicesLocator

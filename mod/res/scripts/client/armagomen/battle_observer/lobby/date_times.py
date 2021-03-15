@@ -1,7 +1,7 @@
 from time import strftime
 
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import CLOCK
+from armagomen.battle_observer.core.bo_constants import CLOCK
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
 from armagomen.utils.common import checkDecoder
 from armagomen.utils.timers import CyclicTimerEvent

@@ -1,10 +1,14 @@
+from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.constants import TEAM_BASES
+from armagomen.battle_observer.core.bo_constants import TEAM_BASES, COLORS
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
 from armagomen.utils.common import callback
 from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
 from gui.battle_control.controllers import team_bases_ctrl
+from gui.shared.personality import ServicesLocator
 from helpers import time_utils
+
+settingsCore = ServicesLocator.settingsCore
 
 
 class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
@@ -13,9 +17,13 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
         super(TeamBases, self).__init__()
         self.basesDict = {}
 
+    @staticmethod
+    def isColorBlind():
+        return bool(settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
+
     def _populate(self):
         super(TeamBases, self)._populate()
-        self.as_startUpdateS(config.team_bases_panel)
+        self.as_startUpdateS(config.team_bases_panel, config.colors[COLORS.GLOBAL])
 
     def onExitBattlePage(self):
         self.removeTeamsBases()
@@ -45,7 +53,7 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
     def updateTeamBasePoints(self, clientID, points, rate, timeLeft, invadersCnt):
         item = self.basesDict.get(clientID, None)
         if item:
-            self.as_updateBaseS(item.getColor(), points, rate, self.getInvadersCountStr(invadersCnt),
+            self.as_updateBaseS(item.getColor(), points, self.getInvadersCountStr(invadersCnt),
                                 time_utils.getTimeLeftFormat(timeLeft), item.getCapturingString(points))
 
     def blockTeamBaseCapturing(self, clientID, points):

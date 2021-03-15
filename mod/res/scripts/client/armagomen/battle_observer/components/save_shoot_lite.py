@@ -2,7 +2,7 @@ from Avatar import PlayerAvatar
 from BattleReplay import g_replayCtrl
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import config, keysParser
-from armagomen.battle_observer.core.constants import GLOBAL, SAVE_SHOOT, MAIN
+from armagomen.battle_observer.core.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
 from armagomen.utils.common import overrideMethod
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from messenger.MessengerEntry import g_instance
@@ -20,14 +20,14 @@ class SaveShootLite(object):
         self.unlockShoot = False
         self.aliveOnly = False
         self.msg = None
+        overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
-        @overrideMethod(PlayerAvatar, "shoot")
-        def shoot(base, avatar, isRepeat=False):
-            if self.enabled and not self.unlockShoot and self.is_targetAllyOrDeath(avatar):
-                if not isRepeat and self.msg:
-                    g_instance.gui.addClientMessage(self.msg)
-                return
-            return base(avatar, isRepeat=isRepeat)
+    def shoot(self, base, avatar, isRepeat=False):
+        if self.enabled and not self.unlockShoot and self.is_targetAllyOrDeath(avatar):
+            if not isRepeat and self.msg:
+                g_instance.gui.addClientMessage(self.msg)
+            return
+        return base(avatar, isRepeat=isRepeat)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == SAVE_SHOOT.NAME:

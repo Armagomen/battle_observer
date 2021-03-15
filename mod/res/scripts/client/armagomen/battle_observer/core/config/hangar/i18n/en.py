@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.battle_observer.core.constants import MOD_VERSION
+from armagomen.battle_observer.core.bo_constants import MOD_VERSION
 
 timeFormat_tooltip = """Directive Meaning
 %a  Locale’s abbreviated weekday name.
@@ -45,8 +45,6 @@ translate = {
         "autoClearCache_tooltip": "Cleaning the temporary files of the game in the folder "
                                   "AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "<br>Folders that are modified there are not affected.",
-        "backgroundTransparency": "the Transparency of the background panel",
-        "background": "the background panel in the style of 'normal'",
         "fps_enableFPSLimiter": "Enable FPS Limiter",
         "enableFPSLimiter_tooltip": "Attention, to completely turn off or on, you must restart the game.",
         "fps_maxFrameRate": "Maximum Frame Rate",
@@ -57,11 +55,7 @@ translate = {
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Change Anonymous Name",
         "removeHandbrake": "Disabling the hand brake for AT-SPG.",
-        "hide_postmortem_tips": "Hide information after destruction",
-        "hide_postmortem_tips_tooltip": "Hides the display of information in the panel after destruction:"
-                                        "<br> - navigation tips"
-                                        "<br> - display tokens"
-                                        "<br> - displays information about the player who destroyed you",
+        "hide_dog_tags": "Disable display of tokens.",
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceovers of bloggers, "
@@ -135,26 +129,15 @@ translate = {
         "differenceHP": "Show the difference between the overall health of teams",
         "showAliveCount": "Show survivors on the panel",
         "style": "Style panel HP",
-        "bars_colors": "color settings main panel",
-        "colors*ally": "Stripe HP and difference: allies",
-        "colors*bgColor": "Stripe HP background color",
-        "colors*enemyColorBlind": "Stripe HP and difference: the opponent - color blindness",
-        "colors*enemy": "Stripe HP and difference: the enemy",
-        "colors*alpha": "Transparency of the main HP strips.",
-        "colors*alpha_tooltip": "0 - fully transparent.<br>1 - not transparent.",
-        "colors*bgAlpha": "Background HP-Bars transparency",
-        "colors*bgAlpha_tooltip": "0 - fully transparent.<br>1 - not transparent.",
         "outline*enabled": "enabled outline in normal style",
-        "outline*color": "outline color."
-    },
-    "markers": {
-        "header": "MARKERS UNDER PANEL",
-        "markersClassColor": "Paint icons by color of the class.",
-        "x": "Horizontal position from the center.",
-        "x_tooltip": "The position of the markers horizontally from the center of the screen.",
-        "y": "Vertical position from the top.",
-        "y_tooltip": "The position of the markers vertically from the top of the screen.",
-        "showMarkers_hotkey": "Key to enable/disable Markers."
+        "outline*color": "outline color.",
+        "markers*enabled": "MARKERS UNDER PANEL",
+        "markers*markersClassColor": "Paint icons by color of the class.",
+        "markers*x": "Horizontal position from the center.",
+        "markers*x_tooltip": "The position of the markers horizontally from the center of the screen.",
+        "markers*y": "Vertical position from the top.",
+        "markers*y_tooltip": "The position of the markers vertically from the top of the screen.",
+        "markers*showMarkers_hotkey": "Key to enable/disable Markers."
     },
     "armor_calculator": {
         "header": "CALCULATOR GIVEN ARMOR",
@@ -225,14 +208,6 @@ translate = {
         "y": "The vertical position of the capture",
         "scale": "Scaling capture bars.",
         "boBases": "Enable the capture bars from the mod.",
-        "colors*green": "Allies",
-        "colors*bgColor": "background color",
-        "colors*red": "Enemy",
-        "colors*purple": "Enemy c/b",
-        "colors*alpha": "Primary band, transparency.",
-        "colors*alpha_tooltip": "0 - completely transparent.<br>1 - not transparent.",
-        "colors*bgAlpha": "Background band, transparency",
-        "colors*bgAlpha_tooltip": "0 - completely transparent.<br>1 - not transparent.",
         "outline*enabled": "Enable border.",
         "outline*color": "Border color."
     },
@@ -252,14 +227,6 @@ translate = {
         "players_damages_settings*x": "Horizontal text position",
         "players_damages_settings*y": "Vertical text position",
         "players_bars_enabled": "HP players in the ears.",
-        "players_bars_settings*players_bars_bar*colors*ally": "Durability points: allies",
-        "players_bars_settings*players_bars_bar*colors*bgColor": "Durability Points: Background Color",
-        "players_bars_settings*players_bars_bar*colors*enemy": "Durability points: enemy",
-        "players_bars_settings*players_bars_bar*colors*enemyBlind": "Durability Points: Opponent - Color Blind",
-        "players_bars_settings*players_bars_bar*alpha": "Transparency of the main HP bands.",
-        "players_bars_settings*players_bars_bar*alpha_tooltip": "0 - completely transparent. <br> 1 - not transparent.",
-        "players_bars_settings*players_bars_bar*bgAlpha": "HP background stripe, transparency",
-        "players_bars_settings*players_bars_bar*bgAlpha_tooltip": "0 - completely transparent. <br> 1 - not transparent.",
         "players_bars_settings*players_bars_bar*outline*enabled": "Include outline.",
         "players_bars_settings*players_bars_bar*outline*customColor": "Custom outline color.",
         "players_bars_settings*players_bars_bar*outline*color": "Custom outline color.",
@@ -270,8 +237,9 @@ translate = {
         "panels_icon_enabled": "Repaint tank icons.",
         "panels_icon_enabled_tooltip": "This function repaints any vehicle icons in the ears in the color of vehicle "
                                        "classes. <br> The slider below affects the brightness. <br> Recommended "
-                                       "filter strength -1",
-        "panels_icon_filter_strength": "Filter strength (brightness)"
+                                       "filter strength -1.25",
+        "panels_icon_filter_strength": "Filter strength (brightness)",
+        "panels_spotted_fix": "Correct size and position of detection status."
     },
     "zoom": {
         "header": "SNIPER MODE, ZOOM-X",
@@ -350,20 +318,22 @@ translate = {
                             "Valid values are from 0 to 255. The default is 2."
     },
     "colors": {
-        "header": "COLOR SETTINGS",
-        "armor_calculator*green": "Penetration 100%",
-        "armor_calculator*orange": "breaking the 50%",
-        "armor_calculator*red": "the Break of 0%",
-        "armor_calculator*yellow": "breaking the 50% (color blindness)",
-        "armor_calculator*purple": "the Break of 0% (color blindness)",
-        "calculator_colors": "Color of the counter of data reduced armor",
-        "colorAvg_colors": "Color boundaries for the %(tankDamageAvgColor)s",
-        "main_gun*mainGunColor": "Color macro %(mainGunColor)s",
-        "mark_colors": "Color icons under the panel",
-        "markers*ally": "Ally",
-        "markers*deadColor": "Destroyed.",
-        "markers*enemyColorBlind": "Enemy, color blindness",
-        "markers*enemy": "Enemy"
+        "header": "Global color settings.",
+        "armor_calculator*green": "Reduced Armor: 100% Penetration",
+        "armor_calculator*orange": "Reduced Armor: 50% Penetration",
+        "armor_calculator*red": "Reduced Armor: 0% Penetration",
+        "armor_calculator*yellow": "Reduced Armor: 50% Penetration (Colorblind Mode)",
+        "armor_calculator*purple": "Reduced Armor: 0% Penetration (Colorblind Mode)",
+        "main_gun*mainGunColor": "Main caliber: Macro color% (mainGunColor) s",
+        "global*ally": "Global color: allies",
+        "global*bgColor": "Panel background color",
+        "global*enemyColorBlind": "Global color: enemy is color blind",
+        "global*enemy": "Global color: enemy",
+        "global*alpha": "Panels transparency",
+        "global*alpha_tooltip": "0 - completely transparent. <br> 1 - not transparent.",
+        "global*bgAlpha": "Background transparency of panels",
+        "global*bgAlpha_tooltip": "0 - completely transparent. <br> 1 - not transparent.",
+        "global*deadColor": "Destroyed",
     },
     "service_channel_filter": {
         "header": "MESSAGE FILTER IN THE SYSTEM CHANNEL - (hides messages of selected categories)",

@@ -3,8 +3,8 @@
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.battle.utils.Filters;
-	import net.armagomen.battleobserver.battle.utils.TextExt;
+	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.gui.battle.components.*;
 
 	public class ObserverDateTimesUI extends BattleDisplayable
@@ -12,6 +12,7 @@
 		private var dateTime:TextField;
 		private var config:Object;
 		public var getShadowSettings:Function;
+		private var loaded:Boolean = false;
 
 		public function ObserverDateTimesUI(compName:String)
 		{
@@ -36,18 +37,9 @@
 			super.onDispose();
 		}
 
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.dateTime = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
-		}
-
 		public function as_startUpdate(settings:Object):void
 		{
+			if (!this.loaded){
 			this.config = settings;
 			var x:int = settings.x;
 			if (x < 0){
@@ -58,6 +50,8 @@
 				y = App.appHeight + y;
 			}
 			dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+			this.loaded = true;
+			}
 		}
 
 		public function as_setDateTime(text:String):void

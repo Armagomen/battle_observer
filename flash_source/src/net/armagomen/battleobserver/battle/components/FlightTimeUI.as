@@ -3,9 +3,9 @@ package net.armagomen.battleobserver.battle.components
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.battle.utils.Filters;
-	import net.armagomen.battleobserver.battle.utils.TextExt;
-	import net.armagomen.battleobserver.battle.data.Constants;
+	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.TextExt;
+	import net.armagomen.battleobserver.data.Constants;
 	import net.wg.gui.battle.components.*;
 	
 
@@ -14,6 +14,7 @@ package net.armagomen.battleobserver.battle.components
 		private var flyTime:TextField;
 		public var getShadowSettings:Function;
 		private var currentControlMode:String = "arcade";
+		private var loaded:Boolean = false;
 
 		public function FlightTimeUI(compName:String)
 		{
@@ -23,35 +24,28 @@ package net.armagomen.battleobserver.battle.components
 
 		public function as_startUpdate(flyght:Object):void
 		{
-			this.x = App.appWidth >> 1;
-			if (this.currentControlMode == "arcade")
-			{
-				this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+			if (!this.loaded){
+				this.x = App.appWidth >> 1;
+				if (this.currentControlMode == "arcade")
+				{
+					this.y = (App.appHeight >> 1) - Constants.CONTROL_MODE_OFFSET;
+				}
+				else
+				{
+					this.y = App.appHeight >> 1;
+				}
+				if (flyght.enabled)
+				{
+					flyTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
+				}
+				App.utils.data.cleanupDynamicObject(flyght);
+				this.loaded = true;
 			}
-			else
-			{
-				this.y = App.appHeight >> 1;
-			}
-			if (flyght.enabled)
-			{
-				flyTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
-			}
-			App.utils.data.cleanupDynamicObject(flyght);
 		}
 
 		public function as_flightTime(text:String):void
 		{
 			flyTime.htmlText = text;
-		}
-
-		public function as_clearScene():void
-		{
-			while (this.numChildren > 0){
-				this.removeChildAt(0);
-			}
-			this.flyTime = null;
-			var page:* = parent;
-			page.unregisterComponent(this.name);
 		}
 		
 		public function as_onControlModeChanged(mode:String):void

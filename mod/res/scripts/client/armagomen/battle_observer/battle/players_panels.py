@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import config, keysParser
-from armagomen.battle_observer.core.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
+from armagomen.battle_observer.core.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.utils.common import getEntity
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -16,9 +16,9 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def __init__(self):
         super(PlayersPanels, self).__init__()
         isColorBlind = self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND)
-        self.barColors = config.players_panels[PANELS.BAR_SETTINGS][PANELS.BAR][COLORS.NAME]
-        self.COLORS = (self.barColors[PANELS.ALLY],
-                       self.barColors[PANELS.BLIND if isColorBlind else PANELS.ENEMY])
+        self.barColors = config.colors[COLORS.GLOBAL]
+        self.COLORS = (self.barColors[COLORS.ALLY_MAME],
+                       self.barColors[COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME])
         self.vClassColors = config.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         self.hpBarsEnable = config.players_panels[PANELS.BARS_ENABLED]
         self.damagesEnable = config.players_panels[PANELS.DAMAGES_ENABLED]
@@ -68,8 +68,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if GRAPHICS.COLOR_BLIND in diff:
             if config.players_panels[PANELS.BAR_CLASS_COLOR]:
                 return
-            self.COLORS = (self.barColors[PANELS.ALLY],
-                           self.barColors[PANELS.BLIND if diff[GRAPHICS.COLOR_BLIND] else PANELS.ENEMY])
+            self.COLORS = (self.barColors[COLORS.ALLY_MAME],
+                           self.barColors[COLORS.ENEMY_BLIND_MAME if diff[GRAPHICS.COLOR_BLIND] else COLORS.ENEMY_MAME])
             for vehicleID in self._vehicles:
                 self.as_colorBlindPPbarsS(vehicleID, self.COLORS[self.battle_ctx.isEnemy(vehicleID)])
 
@@ -90,13 +90,16 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 color = self.vClassColors[classTag]
             else:
                 color = self.COLORS[is_enemy]
-            self.as_AddPPanelBarS(vehicleID, color, config.players_panels[PANELS.BAR_SETTINGS], PANELS.TEAM[is_enemy],
+            self.as_AddPPanelBarS(vehicleID, color, config.colors[COLORS.GLOBAL],
+                                  config.players_panels[PANELS.BAR_SETTINGS], PANELS.TEAM[is_enemy],
                                   not config.players_panels[PANELS.ON_KEY_DOWN])
             self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth, config.players_panels[PANELS.HP_TEMPLATE] % {
                 VEHICLE.CUR: newHealth,
                 VEHICLE.MAX: maxHealth,
                 VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
             })
+        if is_enemy and config.players_panels[PANELS.SPOTTED_FIX]:
+            self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
             self.as_AddTextFieldS(vehicleID, PANELS.DAMAGES_TF, self.damagesSettings, PANELS.TEAM[is_enemy])
 

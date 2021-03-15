@@ -25,7 +25,7 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
 	import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
 	import net.armagomen.battleobserver.battle.components.wgcomponents.WGComponentsSetting;
-	import net.armagomen.battleobserver.battle.utils.*;
+	import net.armagomen.battleobserver.utils.*;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
