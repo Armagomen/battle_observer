@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import urllib2
 from collections import defaultdict
 from io import BytesIO
@@ -68,7 +69,8 @@ class DialogWindow(object):
 
     def getDialogNewVersionAvailable(self):
         message = self.localization['messageNEW'].format(LAST_UPDATE.get('tag_name', MOD_VERSION), workingDir)
-        message += '<br>' + LAST_UPDATE.get("body")
+        gitMessage = LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE)
+        message += '<br>{0}'.format(re.sub('^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
         title = self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', MOD_VERSION))
         buttons = DialogButtons(self.localization['buttonAUTO'], self.localization['buttonHANDLE'])
         return SimpleDialogMeta(title, message, buttons=buttons)

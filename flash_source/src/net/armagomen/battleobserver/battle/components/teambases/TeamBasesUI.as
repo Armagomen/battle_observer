@@ -43,22 +43,19 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			if (this.bases[team])
 			{
-				this.as_updateBase(team, points, invadersCnt, time, text);
+				this.bases[team].updateBase(points / 100.0, invadersCnt, time, text);
 			}
 			else
 			{
 				var base:TeamBase = new TeamBase(team, this.isColorBlind());
 				base.create(this.settings, this.shadowSettings, this.colors);
-				base.BaseText.htmlText = text;
-				base.BaseTimer.text = time;
-				base.BaseVehicles.text = invadersCnt;
+				base.updateBase(points / 100.0, invadersCnt, time, text);
 				if (this.bases["green"] || this.bases["red"])
 				{
 					base.y += this.settings.height + 4;
 				}
 				this.addChild(base);
 				this.bases[team] = base;
-				base.progressBar.scaleX = points / 100.0;
 			}
 		}
 		
@@ -66,18 +63,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			if (this.bases[team])
 			{
-				var base:TeamBase = this.bases[team] as TeamBase;
-				base.BaseText.htmlText = text;
-				base.BaseTimer.text = time;
-				base.BaseVehicles.text = invadersCnt;
-				if (Params.AnimationEnabled)
-				{
-					base.setBarScale(points / 100.0);
-				}
-				else
-				{
-					base.progressBar.scaleX = points / 100.0;
-				}
+				this.bases[team].updateBase(points / 100.0, invadersCnt, time, text);
 			}
 		}
 		
@@ -85,7 +71,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			if (this.bases[team])
 			{
-				this.bases[team].BaseText.htmlText = captureText;
+				this.bases[team].updateCaptureText(captureText);
 			}
 		}
 		
@@ -93,7 +79,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			if (this.bases[team])
 			{
-				this.removeChild(this.bases[team] as TeamBase);
+				this.removeChild(this.bases[team]);
 				this.bases[team] = null;
 			}
 			

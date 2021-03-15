@@ -86,7 +86,7 @@ translate = {
         "header": "Customize effects",
         "noShockWave": "Remove camera shaking when hit by tank.",
         "noFlashBang": "Remove red flash when taking damage.",
-        "noLightEffect": "Remove the flash from a shot in sniper mode.",
+        "noLightEffect": "Remove flash and flame after firing.",
         "noBinoculars": "Remove the blackout in sniper mode."
     },
     "debug_panel": {

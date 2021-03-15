@@ -3,8 +3,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 	import flash.events.*;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
-	import net.wg.gui.battle.views.minimap.*;
-	import net.wg.infrastructure.interfaces.*;
+	import net.wg.gui.battle.views.minimap.Minimap;
 	
 	public class MinimapUI extends BattleDisplayable
 	{
@@ -48,10 +47,10 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		
 		public function as_startUpdate(num:Number):void
 		{
-			var minimap:* = this.getMinimap();
+			var minimap:Minimap = this.getMinimap();
 			if (minimap)
 			{
-				App.graphicsOptimizationMgr.unregister(minimap as IGraphicsOptimizationComponent);
+				App.graphicsOptimizationMgr.unregister(minimap);
 			}
 			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_startUpdate - minimap is Null !!!");
 			vpos = num * 2;
@@ -60,7 +59,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		
 		public function as_MinimapCentered(enabled:Boolean):void
 		{
-			var minimap:* = this.getMinimap();
+			var minimap:Minimap = this.getMinimap();
 			if (minimap)
 			{
 				if (!this.indexChanged)

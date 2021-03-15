@@ -43,16 +43,16 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 				{
 					parent.removeChild(wgPanel);
 					this.x = App.appWidth >> 1;
-					
 					this.colors = colors;
-					var isLeague:Boolean = settings["style"] == 'league';
 					this.isColorBlind = colorBlind;
 					
 					var shadowSettings:Object = getShadowSettings();
 					var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
-					var textXpos:Number       = !isLeague ? 50 + (barWidth / 2) : 30 + barWidth;
-					
 					this.hpBars = this.createHpbars(settings, barWidth);
+					var isLeague:Boolean = this.hpBars as League;
+					var textXpos:Number  = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
+					var textStyle:* = !isLeague ? Filters.normalText : Filters.middleText;
+					
 					this.addChild(this.hpBars);
 					
 					this.greenText = new TextExt("greenText", -textXpos, 2, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
@@ -65,7 +65,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					
 					this.addChild(this.score);
 					this.addChild(this.markers);
-				
+					
 					this.loaded = true;
 				}
 			}
@@ -83,7 +83,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			}
 		}
 		
-		private function createHpbars(settings:Object, barWidth:Number):DisplayObject
+		private function createHpbars(settings:Object, barWidth:Number):*
 		{
 			switch (settings.style)
 			{

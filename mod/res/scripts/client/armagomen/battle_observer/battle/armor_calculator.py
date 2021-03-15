@@ -119,7 +119,7 @@ class ArmorCalculator(ArmorCalcMeta):
                             armorSum += matInfo.armor
                     counted_armor = useCos + notUseCos
                     return armorSum, counted_armor, self.getShotResult(counted_armor, targetPos)
-        return ARMOR_CALC.NONEDATA
+        return ARMOR_CALC.NONE_DATA
 
     def getShotResult(self, countedArmor, targetPos):
         power = self.p100

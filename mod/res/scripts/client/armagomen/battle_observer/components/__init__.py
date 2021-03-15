@@ -1,6 +1,6 @@
 import sys
 
-from armagomen.utils.common import logWarning, logInfo
+from armagomen.utils.common import logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 
 
@@ -8,8 +8,17 @@ class ComponentsLoader(object):
 
     def __init__(self):
         self.modules = (
-            'camera', 'badges', 'friends', 'save_shoot_lite', 'dispersion', 'effects', 'minimap_plugins',
-            'wg_logs_fixes', 'service_channel_filter', 'tank_carousel'
+            'camera',
+            'postmortem',
+            'badges',
+            'friends',
+            'save_shoot_lite',
+            'dispersion',
+            'effects',
+            'minimap_plugins',
+            'wg_logs_fixes',
+            'service_channel_filter',
+            'tank_carousel'
         )
 
     def start(self):
@@ -23,6 +32,5 @@ class ComponentsLoader(object):
             return
         try:
             __import__(modulePath)
-            logInfo(modulePath + " LOADED")
         except ImportError:
             LOG_CURRENT_EXCEPTION()

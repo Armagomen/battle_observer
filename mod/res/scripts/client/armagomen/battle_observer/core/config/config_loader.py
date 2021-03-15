@@ -27,7 +27,6 @@ class ConfigLoader(object):
         self.path = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
         self.configInterface = None
-        ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
 
     def start(self):
         self.getConfig(self.path)

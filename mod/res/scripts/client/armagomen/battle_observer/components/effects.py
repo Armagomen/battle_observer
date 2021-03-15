@@ -1,9 +1,8 @@
 from AvatarInputHandler.control_modes import SniperControlMode
-from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.bo_constants import EFFECTS
-from armagomen.utils.common import overrideMethod, getPlayer
-from helpers.EffectsList import EffectsListPlayer, _PixieEffectDesc
+from armagomen.utils.common import overrideMethod
+from helpers.EffectsList import EffectsListPlayer
 
 
 @overrideMethod(SniperControlMode, "__setupBinoculars")
@@ -15,23 +14,15 @@ def setupBinoculars(base, mode, isCoatedOptics):
 
 
 @overrideMethod(EffectsListPlayer)
-def effectsListPlayer(base, *args, **kwargs):
-    if kwargs.get(EFFECTS.IS_PLAYER_VEHICLE, False):
-        if config.effects[EFFECTS.NO_FLASH_BANG] and kwargs.get(EFFECTS.SHOW_FLASH_BANG, False):
+def effectsListPlayer(base, eff, effectsList, keyPoints, **kwargs):
+    if EFFECTS.IS_PLAYER_VEHICLE in kwargs:
+        if config.effects[EFFECTS.NO_FLASH_BANG] and EFFECTS.SHOW_FLASH_BANG in kwargs:
             kwargs[EFFECTS.SHOW_FLASH_BANG] = False
-        if config.effects[EFFECTS.NO_SHOCK_WAVE] and kwargs.get(EFFECTS.SHOW_SHOCK_WAVE, False):
+        if config.effects[EFFECTS.NO_SHOCK_WAVE] and EFFECTS.SHOW_SHOCK_WAVE in kwargs:
             kwargs[EFFECTS.SHOW_SHOCK_WAVE] = False
-    base(*args, **kwargs)
-
-
-def onEnterBattlePage():
-    if config.effects[EFFECTS.NO_LIGHT_EFFECT]:
-        gunEffects = getPlayer().vehicle.typeDescriptor.gun.effects
-        eList = getattr(gunEffects, "effectsList", None)
-        if eList is not None and hasattr(eList, "_EffectsList__effectDescList"):
-            effectDescList = eList._EffectsList__effectDescList
-            eList._EffectsList__effectDescList = \
-                [e for e in effectDescList if not isinstance(e, _PixieEffectDesc)]
-
-
-g_playerEvents.onAvatarReady += onEnterBattlePage
+    # if config.effects[EFFECTS.NO_LIGHT_EFFECT] and 'entity' in kwargs and kwargs['entity'].isPlayerVehicle:
+    #     if hasattr(effectsList, '_EffectsList__effectDescList'):
+    #         print effectsList, keyPoints
+    #         effectsList._EffectsList__effectDescList = \
+    #             [e for e in effectsList._EffectsList__effectDescList if e.TYPE != "_PixieEffectDesc"]
+    return base(eff, effectsList, keyPoints, **kwargs)

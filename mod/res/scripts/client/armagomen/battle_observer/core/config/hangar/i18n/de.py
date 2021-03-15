@@ -86,7 +86,7 @@ translate = {
         "header": "Visuelle Kameraeffekte anpassen",
         "noShockWave": "Keine Kameraerschütterung, wenn Panzer getroffen wurde",
         "noFlashBang": "Roten Blitz ausschalten, wenn eigener Panzer getroffen wurde",
-        "noLightEffect": "Blitz beim Schuss entfernen.",
+        "noLightEffect": "Blitz und Flamme nach dem Brennen entfernen.",
         "noBinoculars": "Schwarzen Schatten im Zielfernrohr entfernen"
     },
     "debug_panel": {

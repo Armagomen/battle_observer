@@ -53,6 +53,7 @@ class ObserverCore(object):
 
     def start(self):
         if self.isFileValid:
+            ServicesLocator.appLoader.onGUISpaceEntered += self.configLoader.loadHangarSettings
             logInfo('MOD {}: {}'.format(MASSAGES.START, self.mod_version))
             ComponentsLoader().start()
             self.configLoader.start()
