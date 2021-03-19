@@ -52,11 +52,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					var timerIndex:int = battlePage.getChildIndex(prebattleTimer);
 					battlePage.setChildIndex(playersPanel, timerIndex - 1);
 				}
-				else
-				{
-					App.utils.data.cleanupDynamicObject(items);
-					App.utils.data.cleanupDynamicObject(stoarge);
-				}
+			}
+			else
+			{
+				App.utils.data.cleanupDynamicObject(items);
+				App.utils.data.cleanupDynamicObject(stoarge);
 			}
 		
 		}

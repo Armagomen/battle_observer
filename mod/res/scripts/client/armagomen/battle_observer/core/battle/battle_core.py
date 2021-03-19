@@ -12,17 +12,17 @@ class BattleCore(object):
         self.config = config
         g_playerEvents.onArenaCreated += self.onArenaCreated
         config.onModSettingsChanged += self.onModSettingsChanged
+        overrideMethod(SoundModes, 'setMode')(self.setSoundMode)
+        overrideMethod(_ClientArenaVisitor, "hasDogTag")(self.hasDogTag)
 
-        @overrideMethod(SoundModes, 'setMode')
-        def setSoundMode(base, mode, modeName):
-            if config.main[MAIN.IGNORE_COMMANDERS]:
-                if modeName in SOUND_MODES:
-                    modeName = SoundModes.DEFAULT_MODE_NAME
-            return base(mode, modeName)
+    def setSoundMode(self, base, mode, modeName):
+        if self.config.main[MAIN.IGNORE_COMMANDERS]:
+            if modeName in SOUND_MODES:
+                modeName = SoundModes.DEFAULT_MODE_NAME
+        return base(mode, modeName)
 
-        @overrideMethod(_ClientArenaVisitor, "hasDogTag")
-        def hasDogTag(base, *args, **kwargs):
-            return False if config.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
+    def hasDogTag(self, base, *args, **kwargs):
+        return False if self.config.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
 
     @staticmethod
     def onModSettingsChanged(config, blockID):

@@ -7,7 +7,7 @@ from vehicle_systems.tankStructure import TankPartIndexes
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.32.4"
+MOD_VERSION = "1.32.5"
 API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -49,8 +49,6 @@ class GLOBAL:
     CUSTOM_COLOR = "customColor"
     DOT = "."
     COMMA_SEP = ", "
-    SPACE = " "
-    DOUBLE_UNDERLINE = "__"
     EMPTY_LINE = ""
     ENABLED = "enabled"
     FIRST, LAST = (0, -1)
@@ -74,7 +72,7 @@ class GLOBAL:
     OUTLINE = "outline"
     ICONS_DIR = "img://gui/maps/icons"
     C_INTERFACE_SPLITTER = "*"
-    REPLACE = (("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"))
+    REPLACE = (("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"), ("legue", "league"))
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48",
                   "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
@@ -227,7 +225,6 @@ class SNIPER:
     def __init__(self):
         pass
 
-    MIN, MAX, ZMX = (0, 1, 2)
     ZOOM = "zoom"
     NAME = ZOOM
     DYN_ZOOM = "dynamic_zoom"
@@ -235,14 +232,12 @@ class SNIPER:
     STEPS = "steps"
     GUN_ZOOM = "zoomToGunMarker"
     METERS = "zoomXMeters"
-    MAX_ZOOM_NUM = "zoom_max"
-    MIN_ZOOM_NUM = "zoom_min"
     ZOOMS = "zooms"
     ZOOM_EXPOSURE = "zoomExposure"
     INCREASED_ZOOM = "increasedZoom"
     DEFAULT_STEPS = [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0]
     ONE, EXPOSURE_FACTOR, MAX_CALIBER = (1, 0.1, 40)
-    DISABLE_AFTER_SHOOT = "disable_cam_after_shoot"
+    DISABLE_SNIPER = "disable_cam_after_shoot"
     SKIP_CLIP = "disable_cam_skip_clip"
     CLIP = "clip"
 
@@ -269,14 +264,6 @@ class DAMAGE_LOG:
     DONE_EXTENDED = "log_damage_extended"
     D_LOG = "d_log"
     IN_LOG = "in_log"
-    E_TYPES = {
-        EV_ID.PLAYER_SPOTTED_ENEMY,
-        EV_ID.PLAYER_DAMAGED_HP_ENEMY,
-        EV_ID.PLAYER_ASSIST_TO_KILL_ENEMY,
-        EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY,
-        EV_ID.PLAYER_USED_ARMOR,
-        EV_ID.DESTRUCTIBLE_DAMAGED
-    }
     TOP_LOG_ASSIST = {EV_ID.PLAYER_ASSIST_TO_KILL_ENEMY, EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY, EV_ID.PLAYER_USED_ARMOR}
     EXTENDED_DAMAGE = {EV_ID.PLAYER_DAMAGED_HP_ENEMY, EV_ID.ENEMY_DAMAGED_HP_PLAYER}
     GLOBAL = "log_global"
@@ -365,7 +352,6 @@ class POSTMORTEM:
     def __init__(self):
         pass
 
-    CALLBACK_TIME_SEC = 1.5
     DURATION = "transitionDuration"
     PARAMS = "postmortemParams"
     CAM_MATRIX = "camMatrix"
@@ -393,7 +379,7 @@ class ARMOR_CALC:
     MACROS_ARMOR = "armor"
     MACROS_PIERCING_RESERVE = "piercingReserve"
     MACROS_MESSAGE = "message"
-    NONEDATA = (None, None, SHOT_RESULT.UNDEFINED)
+    NONE_DATA = (None, None, SHOT_RESULT.UNDEFINED)
 
 
 class VEHICLE:
@@ -419,10 +405,6 @@ class MARKERS:
         "unknown": "U"
     }
     ICON = "<font color='{0}'>{1}</font>"
-    LIST_SIZE = 15
-
-    ALIVE = True
-    NOT_ALIVE = False
 
 
 class CAROUSEL:
@@ -451,7 +433,6 @@ class FLIGHT_TIME:
         pass
 
     NAME = "flight_time"
-    WG_DIST_DISABLE = "wgDistDisable"
     SPG_ONLY = "spgOnly"
     TEMPLATE = "template"
     M_FLIGHT_TIME = "flightTime"
@@ -495,12 +476,11 @@ class DISPERSION_CIRCLE:
     CIRCLE_SCALE_CONFIG = "circle_scale"
     CIRCLE_SERVER = "useServerAim"
     CIRCLE_ENABLED = "circle_enabled"
-    CIRCLE_SCALE = 0.65
-    SCALE = 65
+    CIRCLE_SCALE = 0.75
+    SCALE = 75
     MAX_TIME = 5.0
     SPG_GM_SCALE = 0.8
-    HALF_SIZE = 0.5
-    GUN_MARKER_MIN_SIZE = 12.0
+    GUN_MARKER_MIN_SIZE = 16.0
     MINUS_ONE_F = -1.0
 
     TIMER_ENABLED = "timer_enabled"
@@ -552,9 +532,9 @@ class EFFECTS:
     NAME = "effects"
     NO_FLASH_BANG = "noFlashBang"
     NO_SHOCK_WAVE = "noShockWave"
-    NO_LIGHT_EFFECT = "noLightEffect"
+    # NO_LIGHT_EFFECT = "noLightEffect"
     NO_BINOCULARS = "noBinoculars"
-    ENTITY = "entity"
+    # ENTITY = "entity"
     IS_PLAYER_VEHICLE = "isPlayerVehicle"
     SHOW_FLASH_BANG = "showFlashBang"
     SHOW_SHOCK_WAVE = "showShockWave"
@@ -622,22 +602,8 @@ class PANELS:
     DAMAGES_TF = "DamageTf"
     # another
     SPOTTED_FIX = "panels_spotted_fix"
-    VEHICLE_ID = "vehicleID"
-    IS_ENEMY = "isEnemy"
     DAMAGE = "damage"
     TEAM = ("green", "red")
-
-
-class SCORE_PANEL:
-    def __init__(self):
-        pass
-
-    TOTAL_STATS = "totalStats"
-    RIGHT_SCOPE = "rightScope"
-    LEFT_SCOPE = "leftScope"
-    RIGHT_CORRELATION_IDS = "rightCorrelationIDs"
-    LEFT_CORRELATION_IDS = "leftCorrelationIDs"
-    EMPTY_LIST = []
 
 
 class SAVE_SHOOT:
@@ -649,7 +615,6 @@ class SAVE_SHOOT:
     TEMPLATE = "Shot blocked."
     ALIVE_ONLY = "aliveOnly"
     VEHICLE = "Vehicle"
-    REPEAT = "isRepeat"
     TEAM = "team"
     HOT_KEY = "shoot_hotkey"
 
@@ -667,7 +632,6 @@ class ANOTHER:
     BADGES = "badges"
     IS_TEAM_KILLER = "isTeamKiller"
     NAME = "name"
-    VEHICLE_TYPE = "vehicleType"
     CLAN_DBID = "clanDBID"
     CLAN_ABBR = "clanAbbrev"
 
@@ -676,13 +640,11 @@ class MASSAGES:
     def __init__(self):
         pass
 
-    NA = "NA"
     START = "START LOADING"
     FINISH = "SHUTTING DOWN"
     LOCKED_BY_FILE_NAME = "ERROR: file {} is not valid, mod locked, please install mod from official site"
     UPDATE_CHECKED = "The update check is completed, you have the current version."
     NEW_VERSION = "An update {} is detected, the client will be restarted at the end of the download."
-    UPDATE_ERROR = "Error checking update. CheckUpdate.run, {}"
 
 
 LOAD_LIST = (
@@ -718,7 +680,7 @@ class CONFIG_INTERFACE:
                 'dynamic_zoom*zoomXMeters'
             ),
             'zoomSteps*enabled': ('zoomSteps*steps',),
-            SNIPER.DISABLE_AFTER_SHOOT: (SNIPER.SKIP_CLIP,)
+            SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP,)
         },
         TEAM_BASES.NAME: {
             'outline*enabled': ('outline*color',)

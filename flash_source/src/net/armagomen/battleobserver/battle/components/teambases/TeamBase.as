@@ -13,10 +13,10 @@
 	 */
 	public dynamic class TeamBase extends Sprite
 	{
-		public var progressBar:Shape       = new Shape();
-		public var BaseText:TextExt;
-		public var BaseTimer:TextExt;
-		public var BaseVehicles:TextExt;
+		private var progressBar:Shape      = new Shape();
+		private var status:TextExt;
+		private var timer:TextExt;
+		private var invaders:TextExt;
 		private var basesFormat:TextFormat = new TextFormat("$TitleFont", 16, 0xFAFAFA);
 		private var animation:Tween        = null;
 		[Embed(source = "players.png")]
@@ -24,7 +24,7 @@
 		[Embed(source = "timer.png")]
 		private var Time:Class;
 		
-		private var colorBlind:Boolean = false;
+		private var colorBlind:Boolean     = false;
 		
 		public function TeamBase(team:String, colorBlind:Boolean)
 		{
@@ -33,9 +33,24 @@
 			this.colorBlind = colorBlind;
 		}
 		
-		public function setBarScale(newScale:Number):void
+		public function updateBase(newScale:Number, invadersCnt:String, time:String, text:String):void
 		{
-			this.animation.continueTo(newScale, 1);
+			if (Params.AnimationEnabled)
+			{
+				this.animation.continueTo(newScale, 1);
+			}
+			else
+			{
+				this.progressBar.scaleX = newScale;
+			}
+			this.status.htmlText = text;
+			this.timer.text = time;
+			this.invaders.text = invadersCnt;
+		}
+		
+		public function updateCaptureText(captureText:String):void
+		{
+			this.status.htmlText = captureText;
 		}
 		
 		public function create(bases:Object, shadowSettings:Object, colors:Object):void
@@ -93,17 +108,20 @@
 			baseMain.addChild(PlayersIcon(iconWidth));
 			baseMain.addChild(TimeIcon(iconWidth, settings.width));
 			
-			this.BaseText = new TextExt("BaseText", settings.width >> 1, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
-			this.BaseTimer = new TextExt("BaseTimer", settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
-			this.BaseVehicles = new TextExt("BaseVehicles", iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
+			this.status = new TextExt("status", settings.width >> 1, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
+			this.timer = new TextExt("timer", settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
+			this.invaders = new TextExt("invaders", iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
 			
 			baseMain.scaleX = baseMain.scaleY = settings.scale;
 			this.x = App.appWidth / 2 - baseMain.width / 2;
 			this.y = settings.y;
 			
-			this.animation = new Tween(this.progressBar, "scaleX", null, this.progressBar.scaleX, 0, 1, true);
-			this.animation.FPS = 30;
+			if (Params.AnimationEnabled)
+			{
+				this.animation = new Tween(this.progressBar, "scaleX", null, this.progressBar.scaleX, 0, 1, true);
+				this.animation.FPS = 30;
+			}
 		}
-		
+	
 	}
 }

@@ -7,12 +7,11 @@ if not BattleReplay.g_replayCtrl.isPlaying:
     from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
     from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
     from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
-    from AvatarInputHandler.control_modes import PostMortemControlMode, SniperControlMode
+    from AvatarInputHandler.control_modes import SniperControlMode
     from aih_constants import CTRL_MODE_NAME
-    from gui.battle_control import avatar_getter
-    from armagomen.battle_observer.core.bo_constants import ARCADE, GLOBAL, POSTMORTEM, SNIPER, STRATEGIC, MAIN
+    from armagomen.battle_observer.core.bo_constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, MAIN
     from armagomen.battle_observer.core import config
-    from armagomen.utils.common import callback, overrideMethod, getPlayer
+    from armagomen.utils.common import overrideMethod, getPlayer
 
 
     @overrideMethod(SniperCamera, "create")
@@ -49,7 +48,7 @@ if not BattleReplay.g_replayCtrl.isPlaying:
 
 
     def changeControlMode(avatar, shooterID):
-        if config.zoom[SNIPER.DISABLE_AFTER_SHOOT] and config.zoom[GLOBAL.ENABLED] and shooterID == avatar.playerVehicleID:
+        if config.zoom[SNIPER.DISABLE_SNIPER] and config.zoom[GLOBAL.ENABLED] and shooterID == avatar.playerVehicleID:
             input_handler = avatar.inputHandler
             if input_handler is not None and isinstance(input_handler.ctrl, SniperControlMode):
                 if config.zoom[SNIPER.SKIP_CLIP]:
@@ -90,18 +89,6 @@ if not BattleReplay.g_replayCtrl.isPlaying:
             camera._userCfg[STRATEGIC.DIST_RANGE] = dist_range
             camera._cfg[STRATEGIC.DIST_RANGE] = dist_range
         return base(camera, *args, **kwargs)
-
-
-    @overrideMethod(PostMortemControlMode, "enable")
-    def enablePostMortem(base, mode, **kwargs):
-        if POSTMORTEM.PARAMS in kwargs:
-            kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, config.arcade_camera[ARCADE.START_DEAD_DIST])
-        if not PostMortemControlMode.getIsPostmortemDelayEnabled():
-            kwargs[POSTMORTEM.CAM_MATRIX] = mode.camera.camera.matrix
-            kwargs[POSTMORTEM.DURATION] = GLOBAL.ONE_SECOND
-            avatar_getter.setForcedGuiControlMode(True)
-            callback(POSTMORTEM.CALLBACK_TIME_SEC, lambda: avatar_getter.setForcedGuiControlMode(False))
-        return base(mode, **kwargs)
 
 
     @overrideMethod(SniperAimingSystem, "__isTurretHasStaticYaw")
