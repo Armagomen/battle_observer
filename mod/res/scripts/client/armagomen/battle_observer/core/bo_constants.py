@@ -1,6 +1,7 @@
 # coding=utf-8
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
+from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from vehicle_systems.tankStructure import TankPartIndexes
@@ -139,6 +140,7 @@ class MAIN:
     USE_KEY_PAIRS = "useKeyPairs"
     REMOVE_HANDBRAKE = "removeHandbrake"
     IGNORE_COMMANDERS = "ignore_commanders_voice"
+    DISABLE_SCORE_SOUND = "disable_score_sound"
 
 
 class COLORS:
@@ -368,6 +370,8 @@ class ARMOR_CALC:
     GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
     HALF = 0.3
     MIN_DIST = 100.0
+    PIERCING_POWER = "piercingPower"
+    NORMAL = SHOT_RESULT_TO_DEFAULT_COLOR[SHOT_RESULT.UNDEFINED]
     NAME = "armor_calculator"
     POSITION = "calcPosition"
     MESSAGES = "messages"

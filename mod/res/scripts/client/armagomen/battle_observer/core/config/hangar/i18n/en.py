@@ -59,7 +59,8 @@ translate = {
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceovers of bloggers, "
-                                           "Chuck Norris and so on with the standard / from the voiceover mod. "
+                                           "Chuck Norris and so on with the standard / from the voiceover mod. ",
+        "disable_score_sound": "Disable score change sound"
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",

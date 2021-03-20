@@ -31,7 +31,8 @@ class Config(object):
             MAIN.USE_KEY_PAIRS: False,
             MAIN.REMOVE_HANDBRAKE: False,
             MAIN.IGNORE_COMMANDERS: False,
-            MAIN.HIDE_DOG_TAGS: False
+            MAIN.HIDE_DOG_TAGS: False,
+            MAIN.DISABLE_SCORE_SOUND: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,

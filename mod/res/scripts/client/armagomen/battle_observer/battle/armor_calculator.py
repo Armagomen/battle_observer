@@ -1,11 +1,12 @@
 from collections import defaultdict
 
-from aih_constants import SHOT_RESULT
-from armagomen.battle_observer.core import config
-from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, GLOBAL, VEHICLE, POSTMORTEM
+from armagomen.battle_observer.core import config, b_core
+from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
-from gui.Scaleform.daapi.view.battle.shared.crosshair.plugins import ShotResultIndicatorPlugin
 from gui.battle_control import avatar_getter
+from gui.shared.personality import ServicesLocator
+
+settingsCore = ServicesLocator.settingsCore
 
 
 class ArmorCalculator(ArmorCalcMeta):
@@ -13,16 +14,13 @@ class ArmorCalculator(ArmorCalcMeta):
     def __init__(self):
         super(ArmorCalculator, self).__init__()
         self._visible = False
-        self.p100 = GLOBAL.F_ONE
-        self.p500 = GLOBAL.F_ONE
         self.messages = config.armor_calculator[ARMOR_CALC.MESSAGES]
         self.calcCache = GLOBAL.ZERO
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = config.colors[ARMOR_CALC.NAME]
         self.template = config.armor_calculator[ARMOR_CALC.TEMPLATE]
         self.showCalcPoints = config.armor_calculator[ARMOR_CALC.SHOW_POINTS]
-        self.wg_updateColor = ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor
-        self.__allyTeam = self._arenaDP.getNumberOfTeam()
+        self.currentShellID = None
 
     def onEnterBattlePage(self):
         super(ArmorCalculator, self).onEnterBattlePage()
@@ -32,6 +30,8 @@ class ArmorCalculator(ArmorCalcMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
+        b_core.onArmorChanged += self.onArmorChanged
+        b_core.onMarkerColorChanged += self.onMarkerColorChanged
         self.updateShootParams()
 
     def onExitBattlePage(self):
@@ -41,16 +41,19 @@ class ArmorCalculator(ArmorCalcMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
+        b_core.onArmorChanged -= self.onArmorChanged
+        b_core.onMarkerColorChanged += self.onMarkerColorChanged
         super(ArmorCalculator, self).onExitBattlePage()
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
         self.as_startUpdateS(config.armor_calculator)
-        ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor = lambda *args: self.updateColor(*args)
 
-    def _dispose(self):
-        ShotResultIndicatorPlugin._ShotResultIndicatorPlugin__updateColor = self.wg_updateColor
-        super(ArmorCalculator, self)._dispose()
+    def onMarkerColorChanged(self, color):
+        if color == ARMOR_CALC.NORMAL:
+            self.clearView()
+        else:
+            self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.as_onControlModeChangedS(ctrlMode)
@@ -59,84 +62,28 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def updateShootParams(self):
         shot_params = self._player.getVehicleDescriptor().shot
-        self.p100, self.p500 = shot_params.piercingPower
-        self.calcMacro.update(piercingPower=self.p100, caliber=shot_params.shell.caliber)
+        p100 = shot_params.piercingPower[GLOBAL.FIRST]
+        self.calcMacro.update(piercingPower=p100, caliber=shot_params.shell.caliber)
 
     def onGunReload(self, shellID, state):
-        if state.isReloadingFinished():
+        if shellID != self.currentShellID:
+            self.currentShellID = shellID
             self.updateShootParams()
             if self._visible:
                 self.as_armorCalcS(self.template % self.calcMacro)
 
-    def updateColor(self, iPlugin, markerType, targetPos, collision, direction):
-        colors = iPlugin._ShotResultIndicatorPlugin__colors
-        armor_sum, counted_armor, result = self.getCountedArmor(collision, targetPos, direction)
-        self._visible = counted_armor is not None
-        if result in colors:
-            color = colors[result]
-            plugin_cache = iPlugin._ShotResultIndicatorPlugin__cache
-            setGunMarkerColor = iPlugin._parentObj.setGunMarkerColor
-            if plugin_cache[markerType] != result and setGunMarkerColor(markerType, color):
-                plugin_cache[markerType] = result
-                self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
-                if counted_armor is None:
-                    self.clearView()
-                    return
-            if self.showCalcPoints and result != SHOT_RESULT.UNDEFINED:
-                self.pushCountedResultToFlash(armor_sum, color, counted_armor)
-
-    def pushCountedResultToFlash(self, armorSum, color, countedArmor):
+    def onArmorChanged(self, armorSum, color, countedArmor):
         if self.calcCache != countedArmor:
+            self._visible = armorSum is not None
             self.calcCache = countedArmor
             if countedArmor:
                 self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.typeColors[color]
                 self.calcMacro[ARMOR_CALC.MACROS_CALCED_ARMOR] = countedArmor
                 self.calcMacro[ARMOR_CALC.MACROS_ARMOR] = armorSum
-                self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = self.p100 - countedArmor
+                self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = \
+                    self.calcMacro[ARMOR_CALC.PIERCING_POWER] - countedArmor
                 self.as_armorCalcS(self.template % self.calcMacro)
 
     def clearView(self):
         if self.showCalcPoints:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
-
-    def getCountedArmor(self, collision, targetPos, direction):
-        if collision and collision.isVehicle:
-            entity = collision.entity
-            if entity.publicInfo[VEHICLE.TEAM] != self.__allyTeam and entity.isAlive():
-                details = self.getAllCollisionDetails(targetPos, direction, entity)
-                if details is not None:
-                    notUseCos = GLOBAL.ZERO
-                    useCos = GLOBAL.ZERO
-                    armorSum = GLOBAL.ZERO
-                    fDist = details[GLOBAL.FIRST][GLOBAL.FIRST] + details[GLOBAL.LAST][GLOBAL.FIRST]
-                    midDist = fDist * ARMOR_CALC.HALF
-                    for dist, hitAngleCos, matInfo, compIdx in details:
-                        if midDist > dist and matInfo:
-                            if compIdx not in ARMOR_CALC.SKIP_DETAILS and hitAngleCos > GLOBAL.ZERO:
-                                useCos += matInfo.armor / hitAngleCos
-                            else:
-                                notUseCos += matInfo.armor
-                            armorSum += matInfo.armor
-                    counted_armor = useCos + notUseCos
-                    return armorSum, counted_armor, self.getShotResult(counted_armor, targetPos)
-        return ARMOR_CALC.NONE_DATA
-
-    def getShotResult(self, countedArmor, targetPos):
-        power = self.p100
-        if power != self.p500:
-            dist = (targetPos - self._player.getOwnVehiclePosition()).length
-            if dist > ARMOR_CALC.MIN_DIST:
-                result = power + (self.p500 - power) * (dist - ARMOR_CALC.MIN_DIST) / ARMOR_CALC.EFFECTIVE_DISTANCE
-                power = max(self.p500, result)
-        if countedArmor < power * ARMOR_CALC.GREAT_PIERCED:
-            return SHOT_RESULT.GREAT_PIERCED
-        elif countedArmor > power * ARMOR_CALC.NOT_PIERCED:
-            return SHOT_RESULT.NOT_PIERCED
-        else:
-            return SHOT_RESULT.LITTLE_PIERCED
-
-    @staticmethod
-    def getAllCollisionDetails(targetPos, direction, entity):
-        startPoint = targetPos - direction * ARMOR_CALC.BACKWARD_LENGTH
-        endPoint = targetPos + direction * ARMOR_CALC.FORWARD_LENGTH
-        return entity.collideSegmentExt(startPoint, endPoint)

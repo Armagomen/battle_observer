@@ -54,9 +54,10 @@ class SaveShootLite(object):
 
     def is_targetAllyOrDeath(self, avatar):
         if avatar.target is not None and avatar.target.__class__.__name__ == SAVE_SHOOT.VEHICLE:
-            death = not avatar.target.isAlive() and self.aliveOnly
-            isAlly = avatar.target.publicInfo[SAVE_SHOOT.TEAM] == avatar.team
-            return death or isAlly
+            if avatar.target.isAlive():
+                return avatar.target.publicInfo[SAVE_SHOOT.TEAM] == avatar.team
+            else:
+                return self.aliveOnly
         return False
 
     def keyEvent(self, keyName, isKeyDown):

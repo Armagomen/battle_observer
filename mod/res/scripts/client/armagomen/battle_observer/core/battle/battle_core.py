@@ -1,15 +1,22 @@
 from CurrentVehicle import g_currentVehicle
+from Event import Event
 from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
 from armagomen.battle_observer.core.bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
+from gui.battle_control.controllers import msgs_ctrl
+
+BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND)
 
 
 class BattleCore(object):
 
-    def __init__(self, config):
+    def __init__(self, config, v_settings):
+        self.onArmorChanged = Event()
+        self.onMarkerColorChanged = Event()
         self.config = config
+        self.v_settings = v_settings
         g_playerEvents.onArenaCreated += self.onArenaCreated
         config.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(SoundModes, 'setMode')(self.setSoundMode)
@@ -26,8 +33,17 @@ class BattleCore(object):
 
     @staticmethod
     def onModSettingsChanged(config, blockID):
-        if blockID == MAIN.NAME and config[MAIN.ENABLE_FPS_LIMITER]:
-            setMaxFrameRate(config[MAIN.MAX_FRAME_RATE])
+        if blockID == MAIN.NAME:
+            if config[MAIN.ENABLE_FPS_LIMITER]:
+                setMaxFrameRate(config[MAIN.MAX_FRAME_RATE])
+            if config[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
+                msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
+            elif not config[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
+                msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
+
+    @property
+    def armorCalcEnabled(self):
+        return self.config.armor_calculator[GLOBAL.ENABLED] and self.v_settings.isAllowedBattle
 
     def onArenaCreated(self):
         if self.config.log_total[GLOBAL.ENABLED]:

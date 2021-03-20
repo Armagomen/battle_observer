@@ -59,7 +59,8 @@ translate = {
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceovers of bloggers, "
-                                           "Chuck Norris and so on with the standard / from the voiceover mod. "
+                                           "Chuck Norris and so on with the standard / from the voiceover mod. ",
+        "disable_score_sound": "Deaktivieren Sie den Sound zur Änderung der Partitur"
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
