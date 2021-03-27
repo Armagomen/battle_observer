@@ -287,7 +287,7 @@ translate = {
     },
     "save_shoot": {
         "header": "Blockiere Teambeschuss (SAVE SHOOT LITE)",
-        "aliveOnly": "Blockiere den Schuss auf den Zerstörten.",
+        "block_on_destroyed": "Blockiere den Schuss auf den Zerstörten.",
         "msg": "Eine Nachricht über eine erfolgreiche Sperre ist nur für Sie sichtbar.",
         "msg_tooltip": "Diese Nachricht wird nur angezeigt, wenn der Schuss von einem Verbündeten geblockt wird."
     },

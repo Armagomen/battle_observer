@@ -73,7 +73,7 @@ class GLOBAL:
     OUTLINE = "outline"
     ICONS_DIR = "img://gui/maps/icons"
     C_INTERFACE_SPLITTER = "*"
-    REPLACE = (("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"), ("legue", "league"))
+    REPLACE = (("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"), ("legue", "league"), ("calcedArmor", "countedArmor"))
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48",
                   "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
@@ -617,7 +617,7 @@ class SAVE_SHOOT:
     NAME = "save_shoot"
     MSG = "msg"
     TEMPLATE = "Shot blocked."
-    ALIVE_ONLY = "aliveOnly"
+    DESTROYED_BLOCK = "block_on_destroyed"
     VEHICLE = "Vehicle"
     TEAM = "team"
     HOT_KEY = "shoot_hotkey"

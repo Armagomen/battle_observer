@@ -457,7 +457,7 @@ class Config(object):
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,
-            SAVE_SHOOT.ALIVE_ONLY: True,
+            SAVE_SHOOT.DESTROYED_BLOCK: True,
             SAVE_SHOOT.MSG: SAVE_SHOOT.TEMPLATE
         }
         self.minimap = {

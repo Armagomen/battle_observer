@@ -70,7 +70,7 @@ class DialogWindow(object):
     def getDialogNewVersionAvailable(self):
         message = self.localization['messageNEW'].format(LAST_UPDATE.get('tag_name', MOD_VERSION), workingDir)
         gitMessage = LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE)
-        message += '<br>{0}'.format(re.sub('^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
+        message += '<br>{0}'.format(re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
         title = self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', MOD_VERSION))
         buttons = DialogButtons(self.localization['buttonAUTO'], self.localization['buttonHANDLE'])
         return SimpleDialogMeta(title, message, buttons=buttons)

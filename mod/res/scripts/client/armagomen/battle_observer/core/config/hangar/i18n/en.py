@@ -284,7 +284,7 @@ translate = {
     },
     "save_shoot": {
         "header": "SAVE SHOOT LITE",
-        "aliveOnly": "Block the shot on the destroyed.",
+        "block_on_destroyed": "Block the shot on the destroyed.",
         "msg": "A message about a successful lock is visible only to you.",
         "msg_tooltip": "This message is displayed only if the shot is blocked by an ally."
     },
