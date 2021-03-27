@@ -1,21 +1,16 @@
 {
-  "calcPosition":{
-    "x":0,
-    "y":100
-  },
-  "enabled":true,
-  "messages":{
-    "green":"100%",
-    "orange":"50%",
-    "purple":"0%",
-    "red":"0%",
-    "yellow":"50%"
-  },
-  "showCalcPoints":true,
-  "showTextMessage":false,
-  "template":"<font size='18' color='%(color)s'>%(calcedArmor).1f | %(piercingPower)d</font>",
-  "textMessagePosition":{
-    "x":0,
-    "y":150
-  }
+  "calcPosition": {
+    "x": 0, 
+    "y": 100
+  }, 
+  "enabled": true, 
+  "messages": {
+    "green": "<font size='20' color='#66FF33'>Да пребудет с тобой сила.</font>", 
+    "orange": "<font size='20' color='#FF9900'>Переходи на темную сторону силы.</font>", 
+    "purple": "<font size='20' color='#6F6CD3'>Фугас, настало твое время.</font>", 
+    "red": "<font size='20' color='#FF0000'>Фугас, настало твое время.</font>", 
+    "yellow": "<font size='20' color='#FAF829'>Переходи на темную сторону силы.</font>"
+  }, 
+  "showCalcPoints": true, 
+  "template": "<font size='18' color='%(color)s'>%(countedArmor).1f | %(piercingPower)d</font>"
 }

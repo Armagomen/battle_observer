@@ -1,6 +1,5 @@
 {
-  "noBinoculars":true,
-  "noFlashBang":true,
-  "noLightEffect":true,
-  "noShockWave":true
+  "noBinoculars": false, 
+  "noFlashBang": true, 
+  "noShockWave": true
 }

@@ -1,18 +1,21 @@
 {
-  "armor_calculator":{
-    "green":"#5ACB00",
-    "orange":"#FF9900",
-    "purple":"#6F6CD3",
-    "red":"#F30900",
-    "yellow":"#FFC900"
-  },
-  "main_gun":{
-    "mainGunColor":"#E0E06D"
-  },
-  "markers":{
-    "ally":"#5ACB00",
-    "deadColor":"#858585",
-    "enemy":"#CB0D01",
-    "enemyColorBlind":"#6F6CD3"
+  "armor_calculator": {
+    "green": "#5ACB00", 
+    "orange": "#FF9900", 
+    "purple": "#6F6CD3", 
+    "red": "#F30900", 
+    "yellow": "#FFC900"
+  }, 
+  "global": {
+    "ally": "#5ACB00", 
+    "alpha": 0.4, 
+    "bgAlpha": 0.4, 
+    "bgColor": "#000000", 
+    "deadColor": "#858585", 
+    "enemy": "#F30900", 
+    "enemyColorBlind": "#6F6CD3"
+  }, 
+  "main_gun": {
+    "mainGunColor": "#E0E06D"
   }
 }
