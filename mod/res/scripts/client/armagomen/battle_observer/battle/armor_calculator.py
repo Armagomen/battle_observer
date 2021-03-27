@@ -52,8 +52,10 @@ class ArmorCalculator(ArmorCalcMeta):
     def onMarkerColorChanged(self, color):
         if color == ARMOR_CALC.NORMAL:
             self.clearView()
+            self._visible = False
         else:
             self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
+            self._visible = True
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.as_onControlModeChangedS(ctrlMode)
@@ -74,7 +76,6 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def onArmorChanged(self, armorSum, color, countedArmor):
         if self.calcCache != countedArmor:
-            self._visible = armorSum is not None
             self.calcCache = countedArmor
             if countedArmor:
                 self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.typeColors[color]

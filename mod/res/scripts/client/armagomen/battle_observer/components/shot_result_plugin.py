@@ -9,8 +9,8 @@ from armagomen.utils.common import getPlayer, overrideMethod
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
     SHOT_RESULT_TO_DEFAULT_COLOR
+from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _VIEW_CONSTANTS
-from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from soft_exception import SoftException
 
 
@@ -48,7 +48,6 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
         self.__setEnabled(self._parentObj.getViewID())
         self.settingsCore.onSettingsChanged += self.__onSettingsChanged
         self._player = getPlayer()
-        self._isSPG = VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
 
     def stop(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -75,9 +74,7 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
                 value = settings['gunTagType'] in _VIEW_CONSTANTS.GUN_TAG_SHOT_RESULT_TYPES
                 self.__mapping[plugins._SETTINGS_KEY_TO_VIEW_ID[key]] = value
 
-    def __onGunMarkerStateChanged(self, markerType, position, collision, direction):
-        if not self.__isEnabled:
-            return
+    def __updateColor(self, markerType, position, collision, direction):
         armor_sum, counted_armor, result = self.__getCountedArmor(collision, position, direction)
         if result in self.__colors:
             color = self.__colors[result]
@@ -88,12 +85,17 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
                 b_core.onArmorChanged(armor_sum, color, counted_armor)
 
     def __setEnabled(self, viewID):
-        self.__isEnabled = self.__mapping[viewID] or self._isSPG
-        if self.__isEnabled:
+        self.__isEnabled = self.__mapping[viewID]
+        self._isSPG = viewID == CROSSHAIR_VIEW_ID.STRATEGIC
+        if self.__isEnabled or self._isSPG:
             for markerType, shotResult in self.__cache.iteritems():
                 self._parentObj.setGunMarkerColor(markerType, self.__colors[shotResult])
         else:
             self.__cache.clear()
+
+    def __onGunMarkerStateChanged(self, markerType, position, direction, collision):
+        if self.__isEnabled or self._isSPG:
+            self.__updateColor(markerType, position, collision, direction)
 
     def __onCrosshairViewChanged(self, viewID):
         self.__setEnabled(viewID)
@@ -114,7 +116,7 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
         self.__playerTeam = teamID
 
     def __getCountedArmor(self, collision, targetPos, direction):
-        if collision is not None and collision.isVehicle:
+        if collision is not None and getattr(collision, 'isVehicle', False):
             entity = collision.entity
             if entity.publicInfo[VEHICLE.TEAM] != self.__playerTeam and entity.isAlive():
                 details = getAllCollisionDetails(targetPos, direction, entity)
