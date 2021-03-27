@@ -379,11 +379,11 @@ class ARMOR_CALC:
     SKIP_DETAILS = {TankPartIndexes.CHASSIS, TankPartIndexes.GUN}
     TEMPLATE = "template"
     MACROS_COLOR = "color"
-    MACROS_CALCED_ARMOR = "calcedArmor"
+    MACROS_COUNTED_ARMOR = "countedArmor"
     MACROS_ARMOR = "armor"
     MACROS_PIERCING_RESERVE = "piercingReserve"
     MACROS_MESSAGE = "message"
-    NONE_DATA = (None, None, SHOT_RESULT.UNDEFINED)
+    NONE_DATA = (None, None, SHOT_RESULT.UNDEFINED, None)
 
 
 class VEHICLE:

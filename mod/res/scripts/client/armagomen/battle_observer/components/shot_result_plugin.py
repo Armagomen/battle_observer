@@ -73,14 +73,14 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
                 self.__mapping[plugins._SETTINGS_KEY_TO_VIEW_ID[key]] = value
 
     def __updateColor(self, markerType, position, collision, direction):
-        armor_sum, counted_armor, result = self.__getCountedArmor(collision, position, direction)
+        armor_sum, counted_armor, result, penetration = self.__getCountedArmor(collision, position, direction)
         if result in self.__colors:
             color = self.__colors[result]
             if self.__cache[markerType] != result and self._parentObj.setGunMarkerColor(markerType, color):
                 self.__cache[markerType] = result
                 calc_event.onMarkerColorChanged(color)
             if result != SHOT_RESULT.UNDEFINED:
-                calc_event.onArmorChanged(armor_sum, color, counted_armor)
+                calc_event.onArmorChanged(armor_sum, color, counted_armor, penetration)
 
     def __setEnabled(self, viewID):
         self.__isEnabled = self.__mapping[viewID]
@@ -132,23 +132,24 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
                                 notUseCos += matInfo.armor
                             armorSum += matInfo.armor
                     counted_armor = useCos + notUseCos
-                    return armorSum, counted_armor, self.__getShotResult(counted_armor, targetPos)
+                    result, penetration = self.__getShotResult(counted_armor, targetPos)
+                    return armorSum, counted_armor, result, penetration
         return ARMOR_CALC.NONE_DATA
 
     def __getShotResult(self, countedArmor, targetPos):
         p100, p500 = self._player.getVehicleDescriptor().shot.piercingPower
-        power = p100
+        penetration = p100
+        result = SHOT_RESULT.LITTLE_PIERCED
         if p100 != p500:
             dist = (targetPos - self._player.getOwnVehiclePosition()).length
             if dist > ARMOR_CALC.MIN_DIST:
-                result = power + (p500 - power) * (dist - ARMOR_CALC.MIN_DIST) / ARMOR_CALC.EFFECTIVE_DISTANCE
-                power = max(p500, result)
-        if countedArmor < power * ARMOR_CALC.GREAT_PIERCED:
-            return SHOT_RESULT.GREAT_PIERCED
-        elif countedArmor > power * ARMOR_CALC.NOT_PIERCED:
-            return SHOT_RESULT.NOT_PIERCED
-        else:
-            return SHOT_RESULT.LITTLE_PIERCED
+                jet = penetration + (p500 - penetration) * (dist - ARMOR_CALC.MIN_DIST) / ARMOR_CALC.EFFECTIVE_DISTANCE
+                penetration = max(p500, jet)
+        if countedArmor < penetration * ARMOR_CALC.GREAT_PIERCED:
+            result = SHOT_RESULT.GREAT_PIERCED
+        elif countedArmor > penetration * ARMOR_CALC.NOT_PIERCED:
+            result = SHOT_RESULT.NOT_PIERCED
+        return result, penetration
 
 
 @overrideMethod(plugins, 'createPlugins')

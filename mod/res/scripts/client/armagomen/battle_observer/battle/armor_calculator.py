@@ -33,7 +33,6 @@ class ArmorCalculator(ArmorCalcMeta):
             handler.onCameraChanged += self.onCameraChanged
         calc_event.onArmorChanged += self.onArmorChanged
         calc_event.onMarkerColorChanged += self.onMarkerColorChanged
-        self.updateShootParams()
 
     def onExitBattlePage(self):
         ammo = self.sessionProvider.shared.ammo
@@ -63,27 +62,23 @@ class ArmorCalculator(ArmorCalcMeta):
         if ctrlMode in POSTMORTEM.MODES:
             self.clearView()
 
-    def updateShootParams(self):
-        shot_params = self._player.getVehicleDescriptor().shot
-        p100 = shot_params.piercingPower[GLOBAL.FIRST]
-        self.calcMacro.update(piercingPower=p100, caliber=shot_params.shell.caliber)
-
     def onGunReload(self, shellID, state):
         if shellID != self.currentShellID:
             self.currentShellID = shellID
-            self.updateShootParams()
+            shot_params = self._player.getVehicleDescriptor().shot
+            self.calcMacro.update(caliber=shot_params.shell.caliber)
             if self._visible:
                 self.as_armorCalcS(self.template % self.calcMacro)
 
-    def onArmorChanged(self, armorSum, color, countedArmor):
+    def onArmorChanged(self, armorSum, color, countedArmor, penetration):
         if self.calcCache != countedArmor:
             self.calcCache = countedArmor
             if countedArmor:
                 self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.typeColors[color]
-                self.calcMacro[ARMOR_CALC.MACROS_CALCED_ARMOR] = countedArmor
+                self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = countedArmor
                 self.calcMacro[ARMOR_CALC.MACROS_ARMOR] = armorSum
-                self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = \
-                    self.calcMacro[ARMOR_CALC.PIERCING_POWER] - countedArmor
+                self.calcMacro[ARMOR_CALC.PIERCING_POWER] = penetration
+                self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = penetration - countedArmor
                 self.as_armorCalcS(self.template % self.calcMacro)
 
     def clearView(self):
