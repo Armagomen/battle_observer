@@ -6,6 +6,8 @@ import BigWorld
 import Math
 import ResMgr
 
+from Event import Event
+
 MOD_NAME = "BATTLE_OBSERVER"
 
 
@@ -106,3 +108,13 @@ def checkDecoder(_string):
         if char not in printable:
             return locale.getpreferredencoding()
     return None
+
+
+class ArmorCalculatorEvents(object):
+
+    def __init__(self):
+        self.onArmorChanged = Event()
+        self.onMarkerColorChanged = Event()
+
+
+calc_event = ArmorCalculatorEvents()

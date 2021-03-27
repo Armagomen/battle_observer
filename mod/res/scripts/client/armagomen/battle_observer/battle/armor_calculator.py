@@ -1,8 +1,9 @@
 from collections import defaultdict
 
-from armagomen.battle_observer.core import config, b_core
+from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
+from armagomen.utils.common import calc_event
 from gui.battle_control import avatar_getter
 from gui.shared.personality import ServicesLocator
 
@@ -30,8 +31,8 @@ class ArmorCalculator(ArmorCalcMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
-        b_core.onArmorChanged += self.onArmorChanged
-        b_core.onMarkerColorChanged += self.onMarkerColorChanged
+        calc_event.onArmorChanged += self.onArmorChanged
+        calc_event.onMarkerColorChanged += self.onMarkerColorChanged
         self.updateShootParams()
 
     def onExitBattlePage(self):
@@ -41,8 +42,8 @@ class ArmorCalculator(ArmorCalcMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
-        b_core.onArmorChanged -= self.onArmorChanged
-        b_core.onMarkerColorChanged += self.onMarkerColorChanged
+        calc_event.onArmorChanged -= self.onArmorChanged
+        calc_event.onMarkerColorChanged -= self.onMarkerColorChanged
         super(ArmorCalculator, self).onExitBattlePage()
 
     def _populate(self):

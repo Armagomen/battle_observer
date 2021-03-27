@@ -3,9 +3,9 @@ from collections import defaultdict
 from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from aih_constants import SHOT_RESULT
-from armagomen.battle_observer.core import b_core
-from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, VEHICLE, GLOBAL
-from armagomen.utils.common import getPlayer, overrideMethod
+from armagomen.battle_observer.core import v_settings
+from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
+from armagomen.utils.common import getPlayer, overrideMethod, calc_event
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
     SHOT_RESULT_TO_DEFAULT_COLOR
@@ -21,8 +21,7 @@ def getAllCollisionDetails(targetPos, direction, entity):
 
 
 class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
-    __slots__ = ('__isEnabled', '__playerTeam', '__cache', '__colors', '__mapping',
-                 '__piercingMultiplier', '_player', '_isSPG')
+    __slots__ = ('__isEnabled', '__playerTeam', '__cache', '__colors', '__mapping', '_player', '_isSPG')
 
     def __init__(self, parentObj):
         super(ObserverShotResultIndicatorPlugin, self).__init__(parentObj)
@@ -31,7 +30,6 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
         self.__playerTeam = 0
         self.__cache = defaultdict(str)
         self.__colors = None
-        self.__piercingMultiplier = 1
         self._player = None
         self._isSPG = False
 
@@ -80,9 +78,9 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
             color = self.__colors[result]
             if self.__cache[markerType] != result and self._parentObj.setGunMarkerColor(markerType, color):
                 self.__cache[markerType] = result
-                b_core.onMarkerColorChanged(color)
+                calc_event.onMarkerColorChanged(color)
             if result != SHOT_RESULT.UNDEFINED:
-                b_core.onArmorChanged(armor_sum, color, counted_armor)
+                calc_event.onArmorChanged(armor_sum, color, counted_armor)
 
     def __setEnabled(self, viewID):
         self.__isEnabled = self.__mapping[viewID]
@@ -156,6 +154,6 @@ class ObserverShotResultIndicatorPlugin(plugins.CrosshairPlugin):
 @overrideMethod(plugins, 'createPlugins')
 def createPlugins(base, *args):
     _plugins = base(*args)
-    if b_core.armorCalcEnabled:
+    if v_settings.getSetting(ALIASES.ARMOR_CALC):
         _plugins['shotResultIndicator'] = ObserverShotResultIndicatorPlugin
     return _plugins

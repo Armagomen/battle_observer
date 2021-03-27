@@ -1,5 +1,4 @@
 from CurrentVehicle import g_currentVehicle
-from Event import Event
 from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
 from armagomen.battle_observer.core.bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
@@ -13,8 +12,6 @@ BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUN
 class BattleCore(object):
 
     def __init__(self, config, v_settings):
-        self.onArmorChanged = Event()
-        self.onMarkerColorChanged = Event()
         self.config = config
         self.v_settings = v_settings
         g_playerEvents.onArenaCreated += self.onArenaCreated
@@ -40,10 +37,6 @@ class BattleCore(object):
                 msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
             elif not config[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
                 msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
-
-    @property
-    def armorCalcEnabled(self):
-        return self.config.armor_calculator[GLOBAL.ENABLED] and self.v_settings.isAllowedBattle
 
     def onArenaCreated(self):
         if self.config.log_total[GLOBAL.ENABLED]:
