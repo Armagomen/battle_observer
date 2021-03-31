@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP, CLOCK, ALIASES, \
-    DISPERSION_CIRCLE
+    DISPERSION_CIRCLE, ARMOR_CALC
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage

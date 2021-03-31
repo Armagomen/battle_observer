@@ -150,7 +150,6 @@ translate = {
         "header": "Калькулятор приведенной брони.",
         "calcPosition*x": "Позиция текста по Горизонтали",
         "calcPosition*y": "Позиция текста по Вертикали",
-        "showCalcPoints": "Показывать текст со значениями.",
         "template": "Шаблон строки со значениями.",
         "template_tooltip": "HTML - ДА<br>Макросы<br>%(calcedArmor)s | s:d:f | type data - приведённая броня."
                             "<br>%(armor)s | s:d:f | type data - броня без учёта наклона."

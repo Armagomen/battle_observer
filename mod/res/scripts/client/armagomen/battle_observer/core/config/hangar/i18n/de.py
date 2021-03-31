@@ -143,7 +143,6 @@ translate = {
         "header": "Durchschlagsanzeiger (Berechnung der Panzerung)",
         "calcPosition*x": "Position des Haupt Textfeldes waagerecht",
         "calcPosition*y": "Position des Haupt Textfeldes senkrecht",
-        "showCalcPoints": "Zeige Haupt Textfeld",
         "template": "Formatierung des Haupt-Textfeldes",
         "template_tooltip": "HTML Formatierung möglich<br>Macros:<br>%(calcedArmor)s - verminderte Panzerung"
                             "<br>%(armor)s - Panzerung ohne Neigung. "

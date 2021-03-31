@@ -144,7 +144,6 @@ translate = {
         "header": "CALCULATOR GIVEN ARMOR",
         "calcPosition*x": "Position the main text box of the calculator Horizontally",
         "calcPosition*y": "Position the main text box of the calculator Vertically",
-        "showCalcPoints": "Show text field of the calculator.",
         "template": "Template Main text field",
         "template_tooltip": "HTML - YES<br>Macros <br>%(calcedArmor)s - reduced armor."
                             "<br>%(armor)s - armor without inclination."

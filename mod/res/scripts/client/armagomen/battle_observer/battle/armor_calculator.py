@@ -14,20 +14,14 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def __init__(self):
         super(ArmorCalculator, self).__init__()
-        self._visible = False
         self.messages = config.armor_calculator[ARMOR_CALC.MESSAGES]
-        self.calcCache = GLOBAL.ZERO
+        self._cache = GLOBAL.ZERO
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = config.colors[ARMOR_CALC.NAME]
         self.template = config.armor_calculator[ARMOR_CALC.TEMPLATE]
-        self.showCalcPoints = config.armor_calculator[ARMOR_CALC.SHOW_POINTS]
-        self.currentShellID = None
 
     def onEnterBattlePage(self):
         super(ArmorCalculator, self).onEnterBattlePage()
-        ammo = self.sessionProvider.shared.ammo
-        if ammo is not None:
-            ammo.onGunReloadTimeSet += self.onGunReload
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
@@ -35,9 +29,6 @@ class ArmorCalculator(ArmorCalcMeta):
         calc_event.onMarkerColorChanged += self.onMarkerColorChanged
 
     def onExitBattlePage(self):
-        ammo = self.sessionProvider.shared.ammo
-        if ammo is not None:
-            ammo.onGunReloadTimeSet -= self.onGunReload
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
@@ -50,37 +41,23 @@ class ArmorCalculator(ArmorCalcMeta):
         self.as_startUpdateS(config.armor_calculator)
 
     def onMarkerColorChanged(self, color):
-        if color == ARMOR_CALC.NORMAL:
-            self.clearView()
-            self._visible = False
-        else:
-            self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
-            self._visible = True
+        self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.as_onControlModeChangedS(ctrlMode)
         if ctrlMode in POSTMORTEM.MODES:
-            self.clearView()
+            self.as_armorCalcS(GLOBAL.EMPTY_LINE)
 
-    def onGunReload(self, shellID, state):
-        if shellID != self.currentShellID:
-            self.currentShellID = shellID
-            shot_params = self._player.getVehicleDescriptor().shot
-            self.calcMacro.update(caliber=shot_params.shell.caliber)
-            if self._visible:
-                self.as_armorCalcS(self.template % self.calcMacro)
-
-    def onArmorChanged(self, armorSum, color, countedArmor, penetration):
-        if self.calcCache != countedArmor:
-            self.calcCache = countedArmor
-            if countedArmor:
+    def onArmorChanged(self, countedArmor, penetration, caliber, color, ricochet):
+        if self._cache != countedArmor:
+            self._cache = countedArmor
+            if countedArmor is not None:
+                self.calcMacro[ARMOR_CALC.MACROS_RICOCHET] = "ricochet" if ricochet else GLOBAL.EMPTY_LINE
                 self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.typeColors[color]
                 self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = countedArmor
-                self.calcMacro[ARMOR_CALC.MACROS_ARMOR] = armorSum
                 self.calcMacro[ARMOR_CALC.PIERCING_POWER] = penetration
                 self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = penetration - countedArmor
+                self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = caliber
                 self.as_armorCalcS(self.template % self.calcMacro)
-
-    def clearView(self):
-        if self.showCalcPoints:
-            self.as_armorCalcS(GLOBAL.EMPTY_LINE)
+            else:
+                self.as_armorCalcS(GLOBAL.EMPTY_LINE)

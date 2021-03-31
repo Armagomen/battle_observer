@@ -6,6 +6,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
 	import net.armagomen.battleobserver.battle.components.teamshealth.League;
+	import net.armagomen.battleobserver.battle.components.teamshealth.classic.Classic;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
@@ -91,6 +92,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 				return new League(settings, barWidth, this.isColorBlind, this.colors);
 			case "normal": 
 				return new Default(settings, barWidth, this.isColorBlind, this.colors);
+			//case "classic":
+				//return new Classic(settings.style, this.isColorBlind, this.colors);
 			default: 
 				return new League(settings, barWidth, this.isColorBlind, this.colors);
 			}
