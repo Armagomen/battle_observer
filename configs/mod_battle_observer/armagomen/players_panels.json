@@ -2,28 +2,21 @@
   "enabled": true, 
   "panels_icon_enabled": true, 
   "panels_icon_filter_strength": -1.25, 
-  "players_bars_KEY": [
+  "panels_spotted_fix": true, 
+  "players_bars_classColor": false, 
+  "players_bars_enabled": true, 
+  "players_bars_hotkey": [
     [
       56
     ]
   ], 
-  "players_bars_classColor": false, 
-  "players_bars_enabled": true, 
-  "players_bars_hp_text": "<font face='$TitleFont' color='#FAFAFA' size='15'>%(health)s</font>", 
+  "players_bars_hp_text": "<font face='$FieldFont' color='#FAFAFA' size='15'>%(health)s</font>", 
   "players_bars_on_key_pressed": false, 
   "players_bars_settings": {
     "players_bars_bar": {
-      "alpha": 0.6, 
-      "bgAlpha": 0.5, 
-      "colors": {
-        "ally": "#5ACB00", 
-        "bgColor": "#000000", 
-        "enemy": "#F30900", 
-        "enemyBlind": "#6F6CD3"
-      }, 
       "height": 22, 
       "outline": {
-        "alpha": 0.7, 
+        "alpha": 0.4, 
         "color": "#FAFAFA", 
         "customColor": false, 
         "enabled": true
@@ -38,14 +31,14 @@
       "y": 0
     }
   }, 
-  "players_damages_KEY": [
+  "players_damages_enabled": true, 
+  "players_damages_hotkey": [
     [
       56
     ]
   ], 
-  "players_damages_enabled": true, 
   "players_damages_settings": {
-    "align": "left", 
+    "align": "center", 
     "x": -50, 
     "y": -2
   }, 

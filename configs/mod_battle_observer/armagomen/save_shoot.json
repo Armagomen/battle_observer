@@ -1,5 +1,5 @@
 {
-  "aliveOnly":true,
-  "enabled":true,
-  "msg":"Выстрел заблокирован."
+  "aliveOnly": false, 
+  "enabled": true, 
+  "msg": "Выстрел заблокирован."
 }

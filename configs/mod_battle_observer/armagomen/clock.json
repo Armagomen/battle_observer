@@ -1,15 +1,15 @@
 {
-  "battle":{
-    "enabled":true,
-    "format":"<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>",
-    "x":-270,
-    "y":0
-  },
-  "enabled":true,
-  "hangar":{
-    "enabled":true,
-    "format":"<textformat tabstops='[140]'>%d %b %Y<tab>%X</textformat>",
-    "x":-250,
-    "y":54
+  "battle": {
+    "enabled": true, 
+    "format": "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>", 
+    "x": -270, 
+    "y": 0
+  }, 
+  "enabled": true, 
+  "hangar": {
+    "enabled": true, 
+    "format": "<textformat tabstops='[145]'>%d %b %Y<tab>%X</textformat>", 
+    "x": -255, 
+    "y": 54
   }
 }

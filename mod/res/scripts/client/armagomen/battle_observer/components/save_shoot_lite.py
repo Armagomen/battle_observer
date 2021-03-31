@@ -18,7 +18,7 @@ class SaveShootLite(object):
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         self.enabled = False
         self.unlockShoot = False
-        self.aliveOnly = False
+        self.destroyedBlock = False
         self.msg = None
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
@@ -32,7 +32,7 @@ class SaveShootLite(object):
     def onModSettingsChanged(self, config, blockID):
         if blockID == SAVE_SHOOT.NAME:
             self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
-            self.aliveOnly = config[SAVE_SHOOT.ALIVE_ONLY]
+            self.destroyedBlock = config[SAVE_SHOOT.DESTROYED_BLOCK]
             self.msg = config[SAVE_SHOOT.MSG]
 
     @staticmethod
@@ -54,9 +54,10 @@ class SaveShootLite(object):
 
     def is_targetAllyOrDeath(self, avatar):
         if avatar.target is not None and avatar.target.__class__.__name__ == SAVE_SHOOT.VEHICLE:
-            death = not avatar.target.isAlive() and self.aliveOnly
-            isAlly = avatar.target.publicInfo[SAVE_SHOOT.TEAM] == avatar.team
-            return death or isAlly
+            if avatar.target.isAlive():
+                return avatar.target.publicInfo[SAVE_SHOOT.TEAM] == avatar.team
+            else:
+                return self.destroyedBlock
         return False
 
     def keyEvent(self, keyName, isKeyDown):

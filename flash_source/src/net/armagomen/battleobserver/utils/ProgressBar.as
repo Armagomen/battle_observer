@@ -33,9 +33,12 @@
 			this.WIDTH = width;
 			this.HEIGHT = height;
 			this.COLOR = Utils.colorConvert(color);
-			this.backGround.graphics.beginFill(Utils.colorConvert(bgColor), bgAlpha);
-			this.backGround.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
-			this.backGround.graphics.endFill();
+			if (bgAlpha > 0){
+				this.backGround.graphics.beginFill(Utils.colorConvert(bgColor), bgAlpha);
+				this.backGround.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
+				this.backGround.graphics.endFill();
+				this.addChild(backGround);
+			}
 			this.bar.name = barName;
 			this.bar.graphics.beginFill(this.COLOR, alpha);
 			this.bar.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
@@ -44,7 +47,7 @@
 			{
 				bar.filters = filters;
 			}
-			this.addChild(backGround);
+			
 			this.addChild(bar);
 			if (Params.AnimationEnabled)
 			{

@@ -18,7 +18,8 @@ class ComponentsLoader(object):
             'minimap_plugins',
             'wg_logs_fixes',
             'service_channel_filter',
-            'tank_carousel'
+            'tank_carousel',
+            'shot_result_plugin'
         )
 
     def start(self):

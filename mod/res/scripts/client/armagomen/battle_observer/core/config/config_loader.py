@@ -110,17 +110,22 @@ class ConfigLoader(object):
         file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
         for key in internal_cfg:
             old_param_type = type(internal_cfg[key])
-            if old_param_type is dict:
+            if old_param_type == dict:
                 file_update |= self.updateData(external_cfg.get(key, {}), internal_cfg[key], file_update)
             else:
                 new_param = external_cfg.get(key)
                 if new_param is not None:
                     new_param_type = type(new_param)
+                    if new_param_type == str:
+                        for before, after in GLOBAL.REPLACE:
+                            if before in new_param:
+                                file_update = True
+                                new_param = new_param.replace(before, after)
                     if new_param_type != old_param_type:
                         file_update = True
-                        if old_param_type is int and new_param_type is float:
+                        if old_param_type == int and new_param_type == float:
                             internal_cfg[key] = int(round(new_param))
-                        elif old_param_type is float and new_param_type is int:
+                        elif old_param_type == float and new_param_type == int:
                             internal_cfg[key] = float(new_param)
                     else:
                         internal_cfg[key] = new_param

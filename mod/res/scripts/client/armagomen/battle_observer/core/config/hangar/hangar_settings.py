@@ -249,28 +249,23 @@ class ConfigInterface(CreateElement):
             self.vxSettingsApi.processEvent(MOD_NAME, vxSettingsApiEvents.CALLBACKS.CLOSE_WINDOW)
         else:
             config = getattr(self.config, blockID)
-            for setting in settings:
-                isString = isinstance(settings[setting], basestring)
-                if isString:
-                    for pair in GLOBAL.REPLACE:
-                        settings[setting] = settings[setting].replace(*pair)
-                updatedConfigLink, paramName = self.getter.getLinkToParam(config, setting)
+            for key, value in settings.iteritems():
+                updatedConfigLink, paramName = self.getter.getLinkToParam(config, key)
                 if paramName in updatedConfigLink:
-                    param = settings[setting]
-                    if GLOBAL.ALIGN in setting:
-                        param = GLOBAL.ALIGN_LIST[param]
-                    elif setting == HP_BARS.STYLE and not isString:
-                        param = HP_BARS.STYLE_SELECT[param]
-                    elif SNIPER.STEPS in setting:
-                        param = [round(float(x.strip()), GLOBAL.ONE) for x in param.split(',')]
-                    newParamType = type(param)
+                    if GLOBAL.ALIGN in key:
+                        value = GLOBAL.ALIGN_LIST[value]
+                    elif key == HP_BARS.STYLE and not isinstance(value, basestring):
+                        value = HP_BARS.STYLE_SELECT[value]
+                    elif SNIPER.STEPS in key:
+                        value = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
+                    newParamType = type(value)
                     oldParamType = type(updatedConfigLink[paramName])
                     if oldParamType != newParamType:
-                        if oldParamType is float and newParamType is int:
-                            param = float(param)
-                        elif oldParamType is int and newParamType is float:
-                            param = int(round(param))
-                    updatedConfigLink[paramName] = param
+                        if oldParamType == float and newParamType == int:
+                            value = float(value)
+                        elif oldParamType == int and newParamType == float:
+                            value = int(round(value))
+                    updatedConfigLink[paramName] = value
             self.configLoader.updateConfigFile(blockID, config)
             if not self.configSelect:
                 self.config.onModSettingsChanged(config, blockID)

@@ -59,7 +59,8 @@ translate = {
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceovers of bloggers, "
-                                           "Chuck Norris and so on with the standard / from the voiceover mod. "
+                                           "Chuck Norris and so on with the standard / from the voiceover mod. ",
+        "disable_score_sound": "Disable score change sound"
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",
@@ -143,7 +144,6 @@ translate = {
         "header": "CALCULATOR GIVEN ARMOR",
         "calcPosition*x": "Position the main text box of the calculator Horizontally",
         "calcPosition*y": "Position the main text box of the calculator Vertically",
-        "showCalcPoints": "Show text field of the calculator.",
         "template": "Template Main text field",
         "template_tooltip": "HTML - YES<br>Macros <br>%(calcedArmor)s - reduced armor."
                             "<br>%(armor)s - armor without inclination."
@@ -283,7 +283,7 @@ translate = {
     },
     "save_shoot": {
         "header": "SAVE SHOOT LITE",
-        "aliveOnly": "Block the shot on the destroyed.",
+        "block_on_destroyed": "Block the shot on the destroyed.",
         "msg": "A message about a successful lock is visible only to you.",
         "msg_tooltip": "This message is displayed only if the shot is blocked by an ally."
     },

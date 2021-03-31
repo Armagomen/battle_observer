@@ -2,7 +2,7 @@
   "circle_enabled": true, 
   "circle_extraServerLap": false, 
   "circle_replaceOriginalCircle": true, 
-  "circle_scale": 85, 
+  "circle_scale": 80, 
   "enabled": true, 
   "timer_align": "left", 
   "timer_color": "#f5ff8f", 

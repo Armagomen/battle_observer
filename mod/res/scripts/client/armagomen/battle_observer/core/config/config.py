@@ -31,7 +31,8 @@ class Config(object):
             MAIN.USE_KEY_PAIRS: False,
             MAIN.REMOVE_HANDBRAKE: False,
             MAIN.IGNORE_COMMANDERS: False,
-            MAIN.HIDE_DOG_TAGS: False
+            MAIN.HIDE_DOG_TAGS: False,
+            MAIN.DISABLE_SCORE_SOUND: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
@@ -199,7 +200,6 @@ class Config(object):
         }
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
-            ARMOR_CALC.SHOW_POINTS: True,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 100},
             ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(calcedArmor).1f | %(piercingPower)s</font>",
             ARMOR_CALC.MESSAGES: {
@@ -208,7 +208,7 @@ class Config(object):
                 "purple": "<font size='20' color='#6F6CD3'>Фугас, настало твое время.</font>",
                 "red": "<font size='20' color='#FF0000'>Фугас, настало твое время.</font>",
                 "yellow": "<font size='20' color='#FAF829'>Переходи на темную сторону силы.</font>"
-            },
+            }
         }
         self.colors = {
             MAIN_GUN.NAME: {
@@ -456,7 +456,7 @@ class Config(object):
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,
-            SAVE_SHOOT.ALIVE_ONLY: True,
+            SAVE_SHOOT.DESTROYED_BLOCK: True,
             SAVE_SHOOT.MSG: SAVE_SHOOT.TEMPLATE
         }
         self.minimap = {

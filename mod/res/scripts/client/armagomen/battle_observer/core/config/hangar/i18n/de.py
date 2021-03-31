@@ -59,7 +59,8 @@ translate = {
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceovers of bloggers, "
-                                           "Chuck Norris and so on with the standard / from the voiceover mod. "
+                                           "Chuck Norris and so on with the standard / from the voiceover mod. ",
+        "disable_score_sound": "Deaktivieren Sie den Sound zur Änderung der Partitur"
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
@@ -142,7 +143,6 @@ translate = {
         "header": "Durchschlagsanzeiger (Berechnung der Panzerung)",
         "calcPosition*x": "Position des Haupt Textfeldes waagerecht",
         "calcPosition*y": "Position des Haupt Textfeldes senkrecht",
-        "showCalcPoints": "Zeige Haupt Textfeld",
         "template": "Formatierung des Haupt-Textfeldes",
         "template_tooltip": "HTML Formatierung möglich<br>Macros:<br>%(calcedArmor)s - verminderte Panzerung"
                             "<br>%(armor)s - Panzerung ohne Neigung. "
@@ -286,7 +286,7 @@ translate = {
     },
     "save_shoot": {
         "header": "Blockiere Teambeschuss (SAVE SHOOT LITE)",
-        "aliveOnly": "Blockiere den Schuss auf den Zerstörten.",
+        "block_on_destroyed": "Blockiere den Schuss auf den Zerstörten.",
         "msg": "Eine Nachricht über eine erfolgreiche Sperre ist nur für Sie sichtbar.",
         "msg_tooltip": "Diese Nachricht wird nur angezeigt, wenn der Schuss von einem Verbündeten geblockt wird."
     },

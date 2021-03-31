@@ -1,13 +1,17 @@
 # coding=utf-8
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
+from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from vehicle_systems.tankStructure import TankPartIndexes
 
+import datetime
+today = datetime.date.today()
+
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.32.5"
+MOD_VERSION = "1.32.6"
 API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -72,7 +76,7 @@ class GLOBAL:
     OUTLINE = "outline"
     ICONS_DIR = "img://gui/maps/icons"
     C_INTERFACE_SPLITTER = "*"
-    REPLACE = (("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"), ("legue", "league"))
+    REPLACE = (("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"), ("legue", "league"), ("calcedArmor", "countedArmor"))
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48",
                   "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
@@ -88,18 +92,34 @@ class URLS:
     DONATE = {DONATE_UA_URL, DONATE_EU_URL}
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
-    DONATE_RU_MESSAGE = "<font color='#ffff73'>" \
-                        "Поддержите разработку мода 'Battle Observer'. Спасибо что вы с нами." \
-                        "</font><br><br>" \
-                        "<a href='event:{ua}'>UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>" \
-                        "<br><br>Если ссылки не работают: откройте меню настроек мода и " \
-                        "выбирайте там нужную ссылку.".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
-    DONATE_EU_MESSAGE = "<font color='#ffff73'>" \
-                        "Support the development of the 'Battle Observer' mod. Thank you for being with us." \
-                        "</font><br><br>" \
-                        "<a href='event:{ua}'>UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>" \
-                        "<br><br>If the links do not work: open the mod's settings menu and select the desired" \
-                        " link there.".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
+    if (today.day, today.month) != (1, 4):
+        DONATE_RU_MESSAGE = "<b><font color='#ffff73'>" \
+                            "Поддержите разработку мода 'Battle Observer'. Спасибо что вы с нами." \
+                            "</font><br><br>" \
+                            "<a href='event:{ua}'>UAH</a> | " \
+                            "<a href='event:{all}'>USD/EUR/RUB</a></b>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
+        DONATE_EU_MESSAGE = "<b><font color='#ffff73'>" \
+                            "Support the development of the 'Battle Observer' mod. Thank you for being with us." \
+                            "</font><br><br>" \
+                            "<a href='event:{ua}'>UAH</a> | " \
+                            "<a href='event:{all}'>USD/EUR/RUB</a></b>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
+    else:
+        DONATE_RU_MESSAGE = "<b><font color='#ffff73'>" \
+                            "Я знаю что ты хочешь статистику в 'Battle Observer'" \
+                            "</font><br>Ходят слухи, что если задонатить 100 разработчику, то она появится." \
+                            "<br>Возможно это просто слухи но следует проверить." \
+                            "<br>Начинаем собирать деньги на сервер для статки. " \
+                            "Там всего то собрать нужно каких-то жалких 75 000 рублей." \
+                            "<br><a href='event:{ua}'>UAH</a> | " \
+                            "<a href='event:{all}'>USD/EUR/RUB</a></b>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
+        DONATE_EU_MESSAGE = "<b><font color='#ffff73'>" \
+                            "I know you want statistics in the 'Battle Observer'" \
+                            "</font><br>There are rumors that if you donate a hundred to a developer, it will appear." \
+                            "<br> This is probably just a rumor but should be checked." \
+                            "<br> We are starting to collect money for a server for statics. " \
+                            "There you just need to collect some measly 1,000 usd." \
+                            "<br><a href='event:{ua}'>UAH</a> | " \
+                            "<a href='event:{all}'>USD/EUR/RUB</a></b>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
 
 
 class SERVICE_CHANNEL:
@@ -139,6 +159,7 @@ class MAIN:
     USE_KEY_PAIRS = "useKeyPairs"
     REMOVE_HANDBRAKE = "removeHandbrake"
     IGNORE_COMMANDERS = "ignore_commanders_voice"
+    DISABLE_SCORE_SOUND = "disable_score_sound"
 
 
 class COLORS:
@@ -366,8 +387,10 @@ class ARMOR_CALC:
     EFFECTIVE_DISTANCE = 400.0
     FORWARD_LENGTH = 10.0
     GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
-    HALF = 0.3
+    HALF = 0.5
     MIN_DIST = 100.0
+    PIERCING_POWER = "piercingPower"
+    NORMAL = SHOT_RESULT_TO_DEFAULT_COLOR[SHOT_RESULT.UNDEFINED]
     NAME = "armor_calculator"
     POSITION = "calcPosition"
     MESSAGES = "messages"
@@ -375,11 +398,13 @@ class ARMOR_CALC:
     SKIP_DETAILS = {TankPartIndexes.CHASSIS, TankPartIndexes.GUN}
     TEMPLATE = "template"
     MACROS_COLOR = "color"
-    MACROS_CALCED_ARMOR = "calcedArmor"
+    MACROS_COUNTED_ARMOR = "countedArmor"
     MACROS_ARMOR = "armor"
     MACROS_PIERCING_RESERVE = "piercingReserve"
     MACROS_MESSAGE = "message"
-    NONE_DATA = (None, None, SHOT_RESULT.UNDEFINED)
+    MACROS_CALIBER = "caliber"
+    MACROS_RICOCHET = "ricochet"
+    NONE_DATA = (SHOT_RESULT.UNDEFINED, None, None, None, None)
 
 
 class VEHICLE:
@@ -613,7 +638,7 @@ class SAVE_SHOOT:
     NAME = "save_shoot"
     MSG = "msg"
     TEMPLATE = "Shot blocked."
-    ALIVE_ONLY = "aliveOnly"
+    DESTROYED_BLOCK = "block_on_destroyed"
     VEHICLE = "Vehicle"
     TEAM = "team"
     HOT_KEY = "shoot_hotkey"

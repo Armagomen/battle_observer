@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP, CLOCK, ALIASES, \
-    DISPERSION_CIRCLE
+    DISPERSION_CIRCLE, ARMOR_CALC
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
@@ -22,11 +22,7 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
 
 
 class ViewSettings(object):
-    @property
-    def sessionProvider(self):
-        if self.__sessionProvider is None:
-            self.__sessionProvider = dependency.instance(IBattleSessionProvider)
-        return self.__sessionProvider
+    sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     @property
     def isRandomBattle(self):
@@ -45,9 +41,8 @@ class ViewSettings(object):
         g_playerEvents.onAvatarBecomeNonPlayer += self.clear
         overrideMethod(SharedPage)(self.new_SharedPage_init)
         self.cfg = cfg
-        self.__sessionProvider = None
         self.__isAllowed = None
-        self.__cache = defaultdict(bool)
+        self.__cache = defaultdict(lambda: False)
 
     @property
     def cache(self):
@@ -86,7 +81,6 @@ class ViewSettings(object):
     def clear(self):
         self.__cache.clear()
         self.__isAllowed = None
-        self.__sessionProvider = None
 
     def checkAndReplaceAlias(self, aliases):
         new_aliases = list(aliases)

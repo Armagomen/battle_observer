@@ -7,6 +7,6 @@ from armagomen.utils.keys_parser import HotKeysParser
 config = Config()
 c_Loader = ConfigLoader(config)
 m_core = ObserverCore(c_Loader)
-b_core = BattleCore(config)
 v_settings = ViewSettings(config)
+b_core = BattleCore(config, v_settings)
 keysParser = HotKeysParser(config)
