@@ -1,4 +1,4 @@
-from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
@@ -53,7 +53,7 @@ def onModSettingsChanged(config, blockID):
                         channel_filter.add(name)
 
 
-config.onModSettingsChanged += onModSettingsChanged
+settings.onModSettingsChanged += onModSettingsChanged
 
 
 @overrideMethod(NotificationListView, "onClickAction")

@@ -19,10 +19,10 @@ def removeOldFiles(configPath):
 
 
 class ConfigLoader(object):
-    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'config')
+    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'settings')
 
-    def __init__(self, config):
-        self.config = config
+    def __init__(self, settings):
+        self.settings = settings
         self.cName = None
         self.path = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
@@ -63,7 +63,7 @@ class ConfigLoader(object):
         return False
 
     def getConfig(self, path):
-        """Loading the main config file with the parameters which config to load next"""
+        """Loading the main settings file with the parameters which settings to load next"""
         load_json = os.path.join(path, 'load.json')
         if self.makeDirs(path):
             self.loadError(path, 'CONFIGURATION FILES IS NOT FOUND')
@@ -79,14 +79,14 @@ class ConfigLoader(object):
         removeOldFiles(os.path.join(path, self.cName))
 
     def createLoadJSON(self, path):
-        cName = 'default'
+        cName = 'armagomen'
         self.createFileInDir(path, {'loadConfig': cName})
         self.loadError(path, 'NEW CONFIGURATION FILE load.json IS CREATED')
         return cName
 
-    def updateConfigFile(self, fileName, config):
+    def updateConfigFile(self, fileName, settings):
         path = os.path.join(self.path, self.cName, '{}.json'.format(fileName))
-        self.createFileInDir(path, config)
+        self.createFileInDir(path, settings)
 
     @staticmethod
     def createFileInDir(path, data):
@@ -99,14 +99,14 @@ class ConfigLoader(object):
         """
         Returns True if the length of 2 dictionaries is not identical,
         or an error occurs when comparing lengths.
-        And the config file needs to be rewritten
+        And the settings file needs to be rewritten
         """
         if isinstance(data1, dict) and isinstance(data2, dict):
             return len(data1) != len(data2)
         return type(data1) != type(data2)
 
     def updateData(self, external_cfg, internal_cfg, file_update=False):
-        """recursively updates words from config files"""
+        """recursively updates words from settings files"""
         file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
         for key in internal_cfg:
             old_param_type = type(internal_cfg[key])
@@ -134,7 +134,7 @@ class ConfigLoader(object):
         return file_update
 
     def readConfig(self, configName):
-        """Read config file from JSON"""
+        """Read settings file from JSON"""
         direct_path = os.path.join(self.path, configName)
         logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
         file_list = ['{}.json'.format(name) for name in LOAD_LIST]
@@ -142,7 +142,7 @@ class ConfigLoader(object):
         for num, module_name in enumerate(LOAD_LIST, GLOBAL.ZERO):
             file_name = file_list[num]
             file_path = os.path.join(direct_path, file_name)
-            internal_cfg = getattr(self.config, module_name)
+            internal_cfg = getattr(self.settings, module_name)
             if file_name in listdir:
                 try:
                     if self.updateData(self.getFileData(file_path), internal_cfg):
@@ -153,7 +153,7 @@ class ConfigLoader(object):
                     continue
             else:
                 self.createFileInDir(file_path, internal_cfg)
-            self.config.onModSettingsChanged(internal_cfg, module_name)
+            self.settings.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
         if self.configInterface is not None:
             self.configInterface.onUserConfigUpdateComplete()
@@ -170,8 +170,8 @@ class ConfigLoader(object):
             else:
                 from distutils.version import LooseVersion
                 if LooseVersion(__version__) >= LooseVersion(API_VERSION):
-                    from armagomen.battle_observer.core.config.hangar.hangar_settings import ConfigInterface
-                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, self.config, self)
+                    from armagomen.battle_observer.core.settings.hangar.hangar_settings import ConfigInterface
+                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, self.settings, self)
                     self.configInterface.start()
                 else:
                     msg = "Settings API not loaded, v{} it`s fake or not supported api, current version is {}, " \

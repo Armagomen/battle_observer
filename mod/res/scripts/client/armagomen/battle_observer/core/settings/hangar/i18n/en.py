@@ -60,7 +60,9 @@ translate = {
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceovers of bloggers, "
                                            "Chuck Norris and so on with the standard / from the voiceover mod. ",
-        "disable_score_sound": "Disable score change sound"
+        "disable_score_sound": "Disable score change sound",
+        "hide_server_in_hangar": "Disable the display of the server in the hangar.",
+        "hide_server_in_hangar_tooltip": "The parameter will work after restarting the hangar or restarting the game.",
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",
@@ -248,8 +250,9 @@ translate = {
                                                     "a shot if the caliber of the gun is more than 40mm.",
         "disable_cam_skip_clip": "Do not exit if magazine loading system.",
         "dynamic_zoom*enabled": "Automatic selection of the zoom ratio when switching to sniper mode.",
+        "dynamic_zoom*steps_only": "Move only in fixed steps.",
         "dynamic_zoom*enabled_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
-        "dynamic_zoom*zoomToGunMarker": "Enable the approximation of the camera to the Central marker information",
+        "zoomToGunMarker": "Enable the approximation of the camera to the Central marker information",
         "dynamic_zoom*zoomXMeters": "Sensitivity of approach in meters.",
         "dynamic_zoom*zoomXMeters_tooltip": "(dynamic_zoom = distance / Sensitivity of approach)<br>"
                                             "The default is every 17 meters + 1 (the smaller the number, the more zoom",

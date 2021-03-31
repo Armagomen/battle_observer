@@ -1,8 +1,8 @@
 from gui.vxSettingsApi import vxSettingsApiEvents
 
-from armagomen.battle_observer.core.config.hangar.i18n import localization
 from armagomen.battle_observer.core.bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION_CIRCLE, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
+from armagomen.battle_observer.core.settings.hangar.i18n import localization
 from armagomen.utils.common import logWarning, openWebBrowser
 from debug_utils import LOG_CURRENT_EXCEPTION
 
@@ -88,12 +88,12 @@ class CreateElement(object):
             result.update({'snapInterval': step, 'format': '{{value}}'})
         return result
 
-    def createBlock(self, blockID, config, column1, column2):
+    def createBlock(self, blockID, settings, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
         result = {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
-            'settingsVersion': settingsVersion, GLOBAL.ENABLED: config.get(GLOBAL.ENABLED, True),
-            'showToggleButton': GLOBAL.ENABLED in config, 'inBattle': False,
+            'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True),
+            'showToggleButton': GLOBAL.ENABLED in settings, 'inBattle': False,
             'position': CONFIG_INTERFACE.BLOCK_IDS.index(blockID), 'column1': column1, 'column2': column2
         }
         return result
@@ -131,12 +131,12 @@ class Getter(object):
     __slots__ = ()
 
     @staticmethod
-    def getLinkToParam(config, setting):
+    def getLinkToParam(settings, setting):
         params = setting.split(GLOBAL.C_INTERFACE_SPLITTER)
         for key in params:
-            if key in config and isinstance(config[key], dict):
-                config = config[key]
-        return config, params[GLOBAL.LAST]
+            if key in settings and isinstance(settings[key], dict):
+                settings = settings[key]
+        return settings, params[GLOBAL.LAST]
 
     @staticmethod
     def getCollectionIndex(value, collection):
@@ -145,8 +145,8 @@ class Getter(object):
             index = collection.index(value)
         return collection, index
 
-    def getKeyPath(self, config, path=()):
-        for key, value in config.iteritems():
+    def getKeyPath(self, settings, path=()):
+        for key, value in settings.iteritems():
             key_path = path + (key,)
             if isinstance(value, dict):
                 for _path in self.getKeyPath(value, key_path):
@@ -154,13 +154,13 @@ class Getter(object):
             else:
                 yield key_path
 
-    def keyValueGetter(self, config):
+    def keyValueGetter(self, settings):
         key_val = []
         try:
-            for key in sorted(self.getKeyPath(config)):
+            for key in sorted(self.getKeyPath(settings)):
                 key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
                 if GLOBAL.ENABLED != key:
-                    dic, param = self.getLinkToParam(config, key)
+                    dic, param = self.getLinkToParam(settings, key)
                     key_val.append((key, dic[param]))
         except:
             LOG_CURRENT_EXCEPTION()
@@ -169,24 +169,24 @@ class Getter(object):
 
 class ConfigInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, config, configLoader):
+    def __init__(self, modsListApi, vxSettingsApi, settings, configLoader):
         super(ConfigInterface, self).__init__()
         self.configLoader = configLoader
         self.modsListApi = modsListApi
-        self.config = config
+        self.settings = settings
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
         self.selectedConfig = self.configLoader.configsList.index(self.configLoader.cName)
         self.configSelect = False
         self.getter = Getter()
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                   useKeyPairs=self.config.main[MAIN.USE_KEY_PAIRS])
+                                   useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         vxSettingsApi.onSettingsChanged += self.onSettingsChanged
         vxSettingsApi.onDataChanged += self.onDataChanged
 
     def addModificationToModList(self):
-        """register config window in modsListApi"""
+        """register settings window in modsListApi"""
         kwargs = {
             'id': MOD_NAME, 'name': localization['service']['name'],
             'description': localization['service']['description'],
@@ -210,7 +210,7 @@ class ConfigInterface(CreateElement):
                 self.inited.add(blockID)
 
     def load_window(self):
-        """Loading config window"""
+        """Loading settings window"""
         self.vxSettingsApi.loadWindow(MOD_NAME)
 
     def onUserConfigUpdateComplete(self):
@@ -239,7 +239,7 @@ class ConfigInterface(CreateElement):
                 LOG_CURRENT_EXCEPTION()
 
     def onSettingsChanged(self, modID, blockID, settings):
-        """Saves made by the user settings in the config file."""
+        """Saves made by the user settings in the settings file."""
         if MOD_NAME != modID:
             return
         if blockID == ANOTHER.CONFIG_SELECT and self.selectedConfig != settings['selectedConfig']:
@@ -248,15 +248,15 @@ class ConfigInterface(CreateElement):
             self.inited.clear()
             self.vxSettingsApi.processEvent(MOD_NAME, vxSettingsApiEvents.CALLBACKS.CLOSE_WINDOW)
         else:
-            config = getattr(self.config, blockID)
+            settings = getattr(self.settings, blockID)
             for key, value in settings.iteritems():
-                updatedConfigLink, paramName = self.getter.getLinkToParam(config, key)
+                updatedConfigLink, paramName = self.getter.getLinkToParam(settings, key)
                 if paramName in updatedConfigLink:
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
                     elif key == HP_BARS.STYLE and not isinstance(value, basestring):
                         value = HP_BARS.STYLE_SELECT[value]
-                    elif SNIPER.STEPS in key:
+                    elif key == "zoomSteps*steps":
                         value = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
                     newParamType = type(value)
                     oldParamType = type(updatedConfigLink[paramName])
@@ -266,9 +266,9 @@ class ConfigInterface(CreateElement):
                         elif oldParamType == int and newParamType == float:
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
-            self.configLoader.updateConfigFile(blockID, config)
+            self.configLoader.updateConfigFile(blockID, settings)
             if not self.configSelect:
-                self.config.onModSettingsChanged(config, blockID)
+                self.settings.onModSettingsChanged(settings, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -307,7 +307,7 @@ class ConfigInterface(CreateElement):
 
     def getTemplate(self, blockID):
         """create templates, do not change..."""
-        config = getattr(self.config, blockID, {})
+        settings = getattr(self.settings, blockID, {})
         column1 = []
         column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
@@ -318,7 +318,7 @@ class ConfigInterface(CreateElement):
                        self.createControl(blockID, 'support_button', URLS.SUPPORT_URL, 'Button')]
         else:
             items = []
-            for key, value in self.getter.keyValueGetter(config):
+            for key, value in self.getter.keyValueGetter(settings):
                 item = self.createItem(blockID, key, value)
                 if item is not None:
                     items.append(item)
@@ -328,4 +328,4 @@ class ConfigInterface(CreateElement):
                 column = column1 if _iter < middleLen else column2
                 column.append(item)
                 _iter += GLOBAL.ONE
-        return self.createBlock(blockID, config, column1, column2)
+        return self.createBlock(blockID, settings, column1, column2)

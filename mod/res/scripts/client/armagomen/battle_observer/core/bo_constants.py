@@ -1,4 +1,6 @@
 # coding=utf-8
+import datetime
+
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR
@@ -6,7 +8,6 @@ from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from vehicle_systems.tankStructure import TankPartIndexes
 
-import datetime
 today = datetime.date.today()
 
 MOD_NAME = "BATTLE_OBSERVER"
@@ -40,7 +41,6 @@ class GLOBAL:
 
     CONFIG_ERROR = "Incorrect macros in config file."
     ONE_SECOND = 1.0
-    DEBUG_MODE = False
     ALIGN = "align"
     ALIGN_LIST = ("left", "center", "right")
     ALIGN_LIST_TEST = ("left", "center")
@@ -160,6 +160,8 @@ class MAIN:
     REMOVE_HANDBRAKE = "removeHandbrake"
     IGNORE_COMMANDERS = "ignore_commanders_voice"
     DISABLE_SCORE_SOUND = "disable_score_sound"
+    HIDE_SERVER_IN_HANGAR = "hide_server_in_hangar"
+    DEBUG = "DEBUG_MODE"
 
 
 class COLORS:
@@ -249,6 +251,7 @@ class SNIPER:
     ZOOM = "zoom"
     NAME = ZOOM
     DYN_ZOOM = "dynamic_zoom"
+    STEPS_ONLY = "steps_only"
     ZOOM_STEPS = "zoomSteps"
     STEPS = "steps"
     GUN_ZOOM = "zoomToGunMarker"
@@ -256,11 +259,12 @@ class SNIPER:
     ZOOMS = "zooms"
     ZOOM_EXPOSURE = "zoomExposure"
     INCREASED_ZOOM = "increasedZoom"
-    DEFAULT_STEPS = [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0]
-    ONE, EXPOSURE_FACTOR, MAX_CALIBER = (1, 0.1, 40)
+    DEFAULT_STEPS = [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0]
+    EXPOSURE_FACTOR, MAX_CALIBER = (0.1, 40)
     DISABLE_SNIPER = "disable_cam_after_shoot"
     SKIP_CLIP = "disable_cam_skip_clip"
     CLIP = "clip"
+    MAX_DIST = 600
 
 
 class DAMAGE_LOG:
@@ -357,6 +361,8 @@ class ARCADE:
     START_ANGLE = "startAngle"
     START_DEAD_DIST = "startDeadDist"
     START_DIST = "startDist"
+    SCROLL_MULTIPLE = "scrollMultiple"
+    SCROLL_SENSITIVITY = "scrollSensitivity"
 
 
 class STRATEGIC:
@@ -701,7 +707,7 @@ class CONFIG_INTERFACE:
     HANDLER_VALUES = {
         SNIPER.NAME: {
             'dynamic_zoom*enabled': (
-                'dynamic_zoom*zoom_max', 'dynamic_zoom*zoomToGunMarker', 'dynamic_zoom*zoom_min',
+                'dynamic_zoom*steps_only',
                 'dynamic_zoom*zoomXMeters'
             ),
             'zoomSteps*enabled': ('zoomSteps*steps',),
@@ -760,7 +766,7 @@ class CONFIG_INTERFACE:
         SIXTH_SENSE.NAME: {
             SIXTH_SENSE.SHOW_TIMER: (SIXTH_SENSE.PLAY_TICK_SOUND,)
         },
-        "reversed_values": {'dynamic_zoom*enabled', PANELS.BAR_CLASS_COLOR},
+        "reversed_values": {PANELS.BAR_CLASS_COLOR},
         DISPERSION_CIRCLE.NAME: {
             DISPERSION_CIRCLE.TIMER_ENABLED: (DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE,
                                               DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE,
@@ -779,6 +785,24 @@ class CONFIG_INTERFACE:
 ALIAS_TO_PATH = {
     ALIASES.HP_BARS: ".teams_hp",
     ALIASES.DAMAGE_LOG: ".damage_log",
+    ALIASES.MAIN_GUN: ".main_gun",
+    ALIASES.DEBUG: ".debug_panel",
+    ALIASES.TIMER: ".battle_timer",
+    ALIASES.SIXTH_SENSE: ".sixth_sense",
+    ALIASES.TEAM_BASES: ".team_bases",
+    ALIASES.ARMOR_CALC: ".armor_calculator",
+    ALIASES.FLIGHT_TIME: ".flight_time",
+    ALIASES.DISPERSION_TIMER: ".dispersion_timer",
+    ALIASES.PANELS: ".players_panels",
+    ALIASES.MINIMAP: ".minimap",
+    ALIASES.USER_BACKGROUND: ".user_background",
+    ALIASES.WG_COMP: ".wg_comp_settings",
+    ALIASES.DATE_TIME: ".date_times"
+}
+
+ALIAS_TO_CONFIG_NAME = {
+    ALIASES.HP_BARS: HP_BARS.NAME,
+    ALIASES.DAMAGE_LOG: DAMAGE_LOG.MAIN_LOG,
     ALIASES.MAIN_GUN: ".main_gun",
     ALIASES.DEBUG: ".debug_panel",
     ALIASES.TIMER: ".battle_timer",

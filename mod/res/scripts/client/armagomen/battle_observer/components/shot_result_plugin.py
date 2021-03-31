@@ -4,7 +4,7 @@ from AvatarInputHandler.gun_marker_ctrl import _computePiercingPowerAtDistImpl, 
 from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from aih_constants import SHOT_RESULT
-from armagomen.battle_observer.core import v_settings
+from armagomen.battle_observer.core import view_settings
 from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
 from armagomen.utils.common import getPlayer, overrideMethod, calc_event
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
@@ -175,6 +175,6 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
 @overrideMethod(plugins, 'createPlugins')
 def createPlugins(base, *args):
     _plugins = base(*args)
-    if v_settings.getSetting(ALIASES.ARMOR_CALC):
+    if view_settings.getSetting(ALIASES.ARMOR_CALC):
         _plugins['shotResultIndicator'] = ShotResultPlugin
     return _plugins

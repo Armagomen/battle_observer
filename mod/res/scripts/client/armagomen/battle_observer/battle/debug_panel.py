@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.bo_constants import DEBUG_PANEL, GLOBAL, COLORS
 from armagomen.battle_observer.meta.battle.debug_panel_meta import DebugPanelMeta
 from gui.battle_control.controllers import debug_ctrl
@@ -14,17 +13,17 @@ class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
 
     def __init__(self):
         super(DebugPanel, self).__init__()
-        self.template = config.debug_panel[DEBUG_PANEL.TEXT][DEBUG_PANEL.TEMPLATE]
-        self.colors = (config.debug_panel[COLORS.NAME][DEBUG_PANEL.PING_COLOR],
-                       config.debug_panel[COLORS.NAME][DEBUG_PANEL.LAG_COLOR])
+        self.template = self.settings.debug_panel[DEBUG_PANEL.TEXT][DEBUG_PANEL.TEMPLATE]
+        self.colors = (self.settings.debug_panel[COLORS.NAME][DEBUG_PANEL.PING_COLOR],
+                       self.settings.debug_panel[COLORS.NAME][DEBUG_PANEL.LAG_COLOR])
         self.macroDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
-                                     fpsColor=config.debug_panel[COLORS.NAME][DEBUG_PANEL.FPS_COLOR],
-                                     PingLagColor=config.debug_panel[COLORS.NAME][DEBUG_PANEL.LAG_COLOR],
+                                     fpsColor=self.settings.debug_panel[COLORS.NAME][DEBUG_PANEL.FPS_COLOR],
+                                     PingLagColor=self.settings.debug_panel[COLORS.NAME][DEBUG_PANEL.LAG_COLOR],
                                      PING=GLOBAL.ZERO, FPS=GLOBAL.ZERO)
 
     def _populate(self):
         super(DebugPanel, self)._populate()
-        self.as_startUpdateS(config.debug_panel,
+        self.as_startUpdateS(self.settings.debug_panel,
                              ServicesLocator.settingsCore.getSetting(GRAPHICS.VERTICAL_SYNC),
                              ServicesLocator.settingsCore.getSetting(GRAPHICS.REFRESH_RATE))
 

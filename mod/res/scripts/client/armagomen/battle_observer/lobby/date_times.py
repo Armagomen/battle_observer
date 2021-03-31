@@ -1,6 +1,6 @@
 from time import strftime
 
-from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import CLOCK
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
 from armagomen.utils.common import checkDecoder
@@ -11,14 +11,14 @@ class DateTimes(DateTimesMeta):
 
     def __init__(self):
         super(DateTimes, self).__init__()
-        self.config = config.clock[CLOCK.IN_LOBBY]
+        self.config = settings.clock[CLOCK.IN_LOBBY]
         self.coding = None
         self.timerEvent = CyclicTimerEvent(CLOCK.UPDATE_INTERVAL, self.updateTimeData)
 
     def _populate(self):
         super(DateTimes, self)._populate()
         self.updateDecoder()
-        config.onModSettingsChanged += self.onModSettingsChanged
+        settings.onModSettingsChanged += self.onModSettingsChanged
         self.as_startUpdateS(self.config)
         self.timerEvent.start()
 
@@ -32,7 +32,7 @@ class DateTimes(DateTimesMeta):
 
     def _dispose(self):
         self.timerEvent.stop()
-        config.onModSettingsChanged -= self.onModSettingsChanged
+        settings.onModSettingsChanged -= self.onModSettingsChanged
         super(DateTimes, self)._dispose()
 
     def updateTimeData(self):

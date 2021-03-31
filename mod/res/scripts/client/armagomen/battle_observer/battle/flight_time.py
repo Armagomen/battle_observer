@@ -1,6 +1,5 @@
 from collections import defaultdict
 
-from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.bo_constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 from armagomen.utils.common import vector3
@@ -8,24 +7,23 @@ from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 VECTOR = vector3(GLOBAL.F_ZERO, GLOBAL.F_ZERO, GLOBAL.F_ZERO)
-config = config.flight_time
 
 
 class FlightTime(FlightTimeMeta):
 
     def __init__(self):
         super(FlightTime, self).__init__()
-        self.template = config[FLIGHT_TIME.TEMPLATE]
+        self.template = self.settings.flight_time[FLIGHT_TIME.TEMPLATE]
         self.isSPG = False
         self.shared = self.sessionProvider.shared
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, flightTime=GLOBAL.ZERO, distance=GLOBAL.ZERO)
 
     def _populate(self):
         super(FlightTime, self)._populate()
-        self.as_startUpdateS(config)
+        self.as_startUpdateS(self.settings.flight_time)
 
     def checkSpgOnlyConfig(self):
-        if config[FLIGHT_TIME.SPG_ONLY]:
+        if self.settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
             return self.isSPG
         return True
 

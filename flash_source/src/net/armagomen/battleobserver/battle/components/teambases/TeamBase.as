@@ -37,7 +37,12 @@
 		{
 			if (Params.AnimationEnabled)
 			{
-				this.animation.continueTo(newScale, 1);
+				if (newScale > this.progressBar.scaleX) {
+					this.animation.continueTo(newScale, 1);
+				} else if (this.animation.isPlaying) {
+					this.animation.stop();
+					this.progressBar.scaleX = newScale;
+				}
 			}
 			else
 			{

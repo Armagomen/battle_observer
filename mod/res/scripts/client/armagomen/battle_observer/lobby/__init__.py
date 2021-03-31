@@ -1,6 +1,6 @@
 from importlib import import_module
 
-from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import GLOBAL, CLOCK, SWF
 from armagomen.utils.common import logError, callback, logWarning
 from frameworks.wulf import WindowLayer
@@ -13,7 +13,8 @@ from gui.shared import EVENT_BUS_SCOPE
 
 def getComponents():
     return (
-        ('Observer_DateTimes_UI', config.clock[GLOBAL.ENABLED] and config.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]),
+        ('Observer_DateTimes_UI',
+         settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]),
     )
 
 

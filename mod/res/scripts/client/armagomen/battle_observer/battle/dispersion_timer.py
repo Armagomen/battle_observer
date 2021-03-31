@@ -2,7 +2,6 @@ from collections import defaultdict
 from math import log
 
 from Avatar import PlayerAvatar
-from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.bo_constants import DISPERSION_CIRCLE, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from gui.battle_control import avatar_getter
@@ -12,11 +11,11 @@ class DispersionTimer(DispersionTimerMeta):
 
     def __init__(self):
         super(DispersionTimer, self).__init__()
-        self.timer_regular = config.dispersion_circle[DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE]
-        self.timer_done = config.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE]
+        self.timer_regular = self.settings.dispersion_circle[DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE]
+        self.timer_done = self.settings.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE]
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
-                                 color=config.dispersion_circle[DISPERSION_CIRCLE.TIMER_COLOR],
-                                 color_done=config.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_COLOR],
+                                 color=self.settings.dispersion_circle[DISPERSION_CIRCLE.TIMER_COLOR],
+                                 color_done=self.settings.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_COLOR],
                                  timer=GLOBAL.F_ZERO, percent=GLOBAL.ZERO)
         self.base_getAngle = None
         self.max_angle = 0.0
@@ -24,7 +23,7 @@ class DispersionTimer(DispersionTimerMeta):
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
-        self.as_startUpdateS(config.dispersion_circle)
+        self.as_startUpdateS(self.settings.dispersion_circle)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.as_onControlModeChangedS(ctrlMode)

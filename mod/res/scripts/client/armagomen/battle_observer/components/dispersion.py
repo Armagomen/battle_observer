@@ -7,7 +7,7 @@ from AvatarInputHandler.gun_marker_ctrl import _MARKER_TYPE, _MARKER_FLAG, \
     _SPGGunMarkerController, _DefaultGunMarkerController, _GunMarkersDecorator, _GunMarkersDPFactory
 from BattleReplay import g_replayCtrl
 from VehicleGunRotator import VehicleGunRotator
-from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import GLOBAL, DISPERSION_CIRCLE
 from armagomen.utils.common import overrideMethod, getPlayer
 from constants import SERVER_TICK_LENGTH
@@ -129,7 +129,7 @@ class DispersionCircle(object):
         self.replaceOriginalCircle = False
         self.extraServerLap = False
         self.player = None
-        config.onModSettingsChanged += self.onModSettingsChanged
+        settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
         overrideMethod(gm_factory, "createComponents")(self.createOverrideComponents)
         overrideMethod(gm_factory, "overrideComponents")(self.createOverrideComponents)

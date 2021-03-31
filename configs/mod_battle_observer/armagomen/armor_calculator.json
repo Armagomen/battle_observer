@@ -11,6 +11,5 @@
     "red": "<font size='20' color='#FF0000'>Фугас, настало твое время.</font>", 
     "yellow": "<font size='20' color='#FAF829'>Переходи на темную сторону силы.</font>"
   }, 
-  "showCalcPoints": true, 
   "template": "<font size='18' color='%(color)s'>%(countedArmor).1f | %(piercingPower)d</font>"
 }

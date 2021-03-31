@@ -10,7 +10,7 @@ from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 
-class Config(object):
+class DefaultSettings(object):
 
     def __init__(self):
         self.onModSettingsChanged = SafeEvent()
@@ -32,7 +32,9 @@ class Config(object):
             MAIN.REMOVE_HANDBRAKE: False,
             MAIN.IGNORE_COMMANDERS: False,
             MAIN.HIDE_DOG_TAGS: False,
-            MAIN.DISABLE_SCORE_SOUND: False
+            MAIN.DISABLE_SCORE_SOUND: False,
+            MAIN.HIDE_SERVER_IN_HANGAR: False,
+            MAIN.DEBUG: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
@@ -76,18 +78,18 @@ class Config(object):
             SIXTH_SENSE.PLAY_TICK_SOUND: False,
             SIXTH_SENSE.TIME: 12,
             SIXTH_SENSE.TIMER: {
-                GLOBAL.X: -2,
-                GLOBAL.Y: 130,
-                SIXTH_SENSE.TEMPLATE: "<font size='40'>%(timeLeft)d</font>",
-                GLOBAL.ALPHA: 0.75
+                GLOBAL.X: -1,
+                GLOBAL.Y: 125,
+                SIXTH_SENSE.TEMPLATE: "<font size='34' color='#fafafa'><b>%(timeLeft)d</b></font>",
+                GLOBAL.ALPHA: 0.9
             },
             SIXTH_SENSE.IMAGE: {
                 GLOBAL.SMOOTHING: True,
                 GLOBAL.X: GLOBAL.ZERO,
                 GLOBAL.Y: 100,
                 GLOBAL.ALPHA: 0.85,
-                GLOBAL.SCALE: 0.65,
-                GLOBAL.IMG: "mods/configs/mod_battle_observer/SixthSenseIcon.png"
+                GLOBAL.SCALE: 0.6,
+                GLOBAL.IMG: "mods/configs/mod_battle_observer/armagomen/SixthSenseIcon.png"
             }
         }
         self.dispersion_circle = {
@@ -177,9 +179,10 @@ class Config(object):
             GLOBAL.ENABLED: False,
             SNIPER.DISABLE_SNIPER: False,
             SNIPER.SKIP_CLIP: True,
+            SNIPER.GUN_ZOOM: False,
             SNIPER.DYN_ZOOM: {
                 GLOBAL.ENABLED: False,
-                SNIPER.GUN_ZOOM: False,
+                SNIPER.STEPS_ONLY: True,
                 SNIPER.METERS: 20.0
             },
             SNIPER.ZOOM_STEPS: {
@@ -190,13 +193,15 @@ class Config(object):
         self.arcade_camera = {
             GLOBAL.ENABLED: False,
             ARCADE.MIN: 4.0,
-            ARCADE.MAX: 80.0,
-            ARCADE.START_DEAD_DIST: 20.0
+            ARCADE.MAX: 150.0,
+            ARCADE.START_DEAD_DIST: 20.0,
+            ARCADE.SCROLL_MULTIPLE: 1,
         }
         self.strategic_camera = {
             GLOBAL.ENABLED: False,
             STRATEGIC.MIN: 40.0,
-            STRATEGIC.MAX: 150.0
+            STRATEGIC.MAX: 150.0,
+            ARCADE.SCROLL_MULTIPLE: 2,
         }
         self.armor_calculator = {
             GLOBAL.ENABLED: False,

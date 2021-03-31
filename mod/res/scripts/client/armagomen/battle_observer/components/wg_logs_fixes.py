@@ -1,4 +1,4 @@
-from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import DAMAGE_LOG, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
@@ -12,7 +12,8 @@ validated = {}
 
 @overrideMethod(DamageLogPanel, "_setSettings")
 def setSettings(base, panel, vis, cb):
-    return base(panel, vis or config.log_damage_extended[GLOBAL.ENABLED] or config.log_input_extended[GLOBAL.ENABLED], cb)
+    return base(panel, vis or settings.log_damage_extended[GLOBAL.ENABLED] or settings.log_input_extended[
+        GLOBAL.ENABLED], cb)
 
 
 @overrideMethod(_LogViewComponent, "addToLog")
@@ -35,4 +36,4 @@ def validateSettings(config):
             _ETYPE.STUN: config[DAMAGE_LOG.WG_ASSIST]}
 
 
-config.onModSettingsChanged += onModSettingsChanged
+settings.onModSettingsChanged += onModSettingsChanged
