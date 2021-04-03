@@ -1,13 +1,16 @@
 # coding=utf-8
+from collections import defaultdict, namedtuple
 
 import Keys
 from Event import SafeEvent
 from armagomen.battle_observer.core.bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
-    DAMAGE_LOG, DEBUG_PANEL, DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
+    DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, USER_BACKGROUND, \
     VEHICLE_TYPES
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
+
+DamageLogs = namedtuple('DamageLogs', ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
 
 
 class DefaultSettings(object):
@@ -61,6 +64,7 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             CLOCK.IN_LOBBY: {
                 GLOBAL.ENABLED: False,
+                CLOCK.PREMIUM_TIME: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
                 GLOBAL.X: -240,
                 GLOBAL.Y: 54
@@ -94,18 +98,18 @@ class DefaultSettings(object):
         }
         self.dispersion_circle = {
             GLOBAL.ENABLED: False,
-            DISPERSION_CIRCLE.CIRCLE_ENABLED: False,
-            DISPERSION_CIRCLE.CIRCLE_EXTRA_LAP: False,
-            DISPERSION_CIRCLE.CIRCLE_REPLACE: False,
-            DISPERSION_CIRCLE.CIRCLE_SCALE_CONFIG: DISPERSION_CIRCLE.SCALE,
-            DISPERSION_CIRCLE.TIMER_ENABLED: False,
-            DISPERSION_CIRCLE.TIMER_POSITION_X: 110,
-            DISPERSION_CIRCLE.TIMER_POSITION_Y: GLOBAL.ZERO,
-            DISPERSION_CIRCLE.TIMER_ALIGN: GLOBAL.LEFT,
-            DISPERSION_CIRCLE.TIMER_COLOR: "#f5ff8f",
-            DISPERSION_CIRCLE.TIMER_DONE_COLOR: "#a6ffa6",
-            DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
-            DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
+            DISPERSION.ENABLED: False,
+            DISPERSION.CIRCLE_EXTRA_LAP: False,
+            DISPERSION.CIRCLE_REPLACE: False,
+            DISPERSION.CIRCLE_SCALE_CONFIG: DISPERSION.SCALE,
+            DISPERSION.TIMER_ENABLED: False,
+            DISPERSION.TIMER_POSITION_X: 110,
+            DISPERSION.TIMER_POSITION_Y: GLOBAL.ZERO,
+            DISPERSION.TIMER_ALIGN: GLOBAL.LEFT,
+            DISPERSION.TIMER_COLOR: "#f5ff8f",
+            DISPERSION.TIMER_DONE_COLOR: "#a6ffa6",
+            DISPERSION.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
+            DISPERSION.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
         }
         self.debug_panel = {
             GLOBAL.ENABLED: False,
@@ -243,16 +247,17 @@ class DefaultSettings(object):
             DAMAGE_LOG.WG_BLOCKED: False,
             DAMAGE_LOG.WG_ASSIST: False,
             DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
-            DAMAGE_LOG.ATTACK_REASON: {
+            DAMAGE_LOG.ATTACK_REASON: defaultdict(lambda: "", {
                 ATTACK_REASON.SHOT: "<img src='{dir}/damage.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.FIRE: "<img src='{dir}/fire.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.RAM: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.WORLD_COLLISION: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS)
-            }
+            })
         }
         additional = {reason: "<img src='{dir}/module.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS) for reason
                       in ATTACK_REASONS if reason not in self.log_global[DAMAGE_LOG.ATTACK_REASON]}
         self.log_global[DAMAGE_LOG.ATTACK_REASON].update(additional)
+
         self.log_total = {
             GLOBAL.ENABLED: False,
             GLOBAL.SETTINGS: {
@@ -274,6 +279,7 @@ class DefaultSettings(object):
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
+
         self.log_damage_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
@@ -301,16 +307,15 @@ class DefaultSettings(object):
                 "%(userName).12s %(killedIcon)s",
                 "</font></textformat>"
             ],
-            DAMAGE_LOG.SHELL_TYPES: {shell_type: "" for shell_type in SHELL_TYPES_LIST},
-            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST},
+            DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
+            DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
+                                                               tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST}),
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-        self.log_damage_extended[DAMAGE_LOG.SHELL_TYPES][DAMAGE_LOG.UNDEFINED] = ""
-        self.log_damage_extended[DAMAGE_LOG.SHELL_ICONS][DAMAGE_LOG.UNDEFINED] = ""
         self.log_input_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
@@ -340,16 +345,16 @@ class DefaultSettings(object):
                 "%(userName).12s %(killedIcon)s",
                 "</font></textformat>"
             ],
-            DAMAGE_LOG.SHELL_TYPES: {shell_type: "" for shell_type in SHELL_TYPES_LIST},
-            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST},
+            DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
+            DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
+                                                               tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST}),
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-        self.log_input_extended[DAMAGE_LOG.SHELL_TYPES][DAMAGE_LOG.UNDEFINED] = ""
-        self.log_input_extended[DAMAGE_LOG.SHELL_ICONS][DAMAGE_LOG.UNDEFINED] = ""
+
         self.hp_bars = {
             GLOBAL.ENABLED: True,
             HP_BARS.STYLE: HP_BARS.LEAGUE_STYLE,
@@ -487,3 +492,7 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
+
+    @property
+    def damage_log(self):
+        return DamageLogs(self.log_total, self.log_damage_extended, self.log_input_extended, self.log_global)

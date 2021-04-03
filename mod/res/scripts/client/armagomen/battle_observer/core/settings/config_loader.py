@@ -33,9 +33,9 @@ class ConfigLoader(object):
 
     def encodeData(self, data):
         """encode dict keys/values to utf-8."""
-        if type(data) is dict:
+        if isinstance(data, dict):
             return {self.encodeData(key): self.encodeData(value) for key, value in data.iteritems()}
-        elif type(data) is list:
+        elif isinstance(data, list):
             return [self.encodeData(element) for element in data]
         elif isinstance(data, basestring):
             return data.encode('utf-8')
@@ -109,10 +109,10 @@ class ConfigLoader(object):
         """recursively updates words from settings files"""
         file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
         for key in internal_cfg:
-            old_param_type = type(internal_cfg[key])
-            if old_param_type == dict:
+            if isinstance(internal_cfg[key], dict):
                 file_update |= self.updateData(external_cfg.get(key, {}), internal_cfg[key], file_update)
             else:
+                old_param_type = type(internal_cfg[key])
                 new_param = external_cfg.get(key)
                 if new_param is not None:
                     new_param_type = type(new_param)

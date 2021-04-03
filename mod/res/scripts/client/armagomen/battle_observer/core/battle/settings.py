@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
-from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION_CIRCLE
+from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
@@ -59,7 +59,7 @@ class ViewSettings(object):
                 ALIASES.ARMOR_CALC: self.cfg.armor_calculator[GLOBAL.ENABLED],
                 ALIASES.FLIGHT_TIME: self.cfg.flight_time[GLOBAL.ENABLED],
                 ALIASES.DISPERSION_TIMER: (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
-                                           self.cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED]),
+                                           self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED]),
                 ALIASES.PANELS: self.cfg.players_panels[GLOBAL.ENABLED],
                 ALIASES.MINIMAP: self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED],
                 ALIASES.USER_BACKGROUND: self.cfg.user_background[GLOBAL.ENABLED],

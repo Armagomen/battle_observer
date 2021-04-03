@@ -110,11 +110,12 @@ def checkDecoder(_string):
     return None
 
 
-class ArmorCalculatorEvents(object):
+class Events(object):
 
     def __init__(self):
         self.onArmorChanged = Event()
         self.onMarkerColorChanged = Event()
+        self.onDispersionAngleChanged = Event()
 
 
-calc_event = ArmorCalculatorEvents()
+events = Events()

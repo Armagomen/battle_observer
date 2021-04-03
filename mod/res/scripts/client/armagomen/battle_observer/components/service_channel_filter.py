@@ -4,7 +4,6 @@ from armagomen.utils.common import openWebBrowser, overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
 from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
-from helpers import getClientLanguage
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
@@ -65,10 +64,7 @@ def clickAction(base, view, typeID, entityID, action):
 
 
 def onConnected():
-    if getClientLanguage().lower() in GLOBAL.RU_LOCALIZATION:
-        pushMessage(URLS.DONATE_RU_MESSAGE, type=SM_TYPE.Warning)
-    else:
-        pushMessage(URLS.DONATE_EU_MESSAGE, type=SM_TYPE.Warning)
+    pushMessage(URLS.DONATE_MESSAGE, type=SM_TYPE.Warning)
 
 
 ServicesLocator.connectionMgr.onConnected += onConnected

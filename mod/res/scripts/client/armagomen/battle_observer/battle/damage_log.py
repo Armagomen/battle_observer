@@ -2,7 +2,7 @@ from collections import defaultdict
 from colorsys import hsv_to_rgb
 
 from armagomen.battle_observer.core import keysParser
-from armagomen.battle_observer.core.bo_constants import DAMAGE_LOG, GLOBAL
+from armagomen.battle_observer.core.bo_constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.utils.common import callback, logWarning
 from constants import ATTACK_REASONS, SHELL_TYPES_LIST
@@ -18,6 +18,10 @@ class DamageLog(DamageLogsMeta):
         self.damage_log = {}
         self.top_log = None
         self.isSPG = False
+        self.vehicle_colors = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][VEHICLE_TYPES.UNKNOWN],
+                                          **self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS])
+        self.vehicle_icons = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_ICON][VEHICLE_TYPES.UNKNOWN],
+                                         **self.vehicle_types[VEHICLE_TYPES.CLASS_ICON])
 
     def _populate(self):
         super(DamageLog, self)._populate()
@@ -47,7 +51,7 @@ class DamageLog(DamageLogsMeta):
         elif eventType == EV_ID.ENEMY_DAMAGED_HP_PLAYER:
             return self.input_log, self.settings.log_input_extended
         logWarning(DAMAGE_LOG.WARNING_MESSAGE)
-        return None, None
+        raise ValueError("eventType %s NOT FOUND")
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
@@ -158,29 +162,30 @@ class DamageLog(DamageLogsMeta):
         if vehicleInfoVO:
             vehicleType = vehicleInfoVO.vehicleType
             if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
-                vehicle = self.input_log.get(vehicleID, {})
+                log_dict, settings = self.getLogDictAndSettings(EV_ID.ENEMY_DAMAGED_HP_PLAYER)
+                vehicle = log_dict.get(vehicleID, {})
                 if vehicle and vehicle.get(DAMAGE_LOG.VEHICLE_CLASS) is None:
-                    vehicle_ci = self.settings.vehicle_types[DAMAGE_LOG.VEHICLE_CLASS_ICON]
-                    vehicle_cc = self.settings.vehicle_types[DAMAGE_LOG.VEHICLE_CLASS_COLORS]
                     vehicle[DAMAGE_LOG.VEHICLE_CLASS] = vehicleType.classTag
                     vehicle[DAMAGE_LOG.TANK_NAMES] = {vehicleType.shortName}
                     vehicle[DAMAGE_LOG.TANK_NAME] = vehicleType.shortName
                     vehicle[DAMAGE_LOG.ICON_NAME] = vehicleType.iconName
                     vehicle[DAMAGE_LOG.TANK_LEVEL] = vehicleType.level
-                    vehicle[DAMAGE_LOG.CLASS_ICON] = vehicle_ci.get(vehicleType.classTag,
-                                                                    vehicle_ci[DAMAGE_LOG.UNKNOWN_TAG])
-                    vehicle[DAMAGE_LOG.CLASS_COLOR] = vehicle_cc.get(vehicleType.classTag,
-                                                                     vehicle_cc[DAMAGE_LOG.UNKNOWN_TAG])
-                    self.updateExtendedLog(self.input_log, self.settings.log_input_extended)
+                    vehicle[DAMAGE_LOG.CLASS_ICON] = self.vehicle_icons[vehicleType.classTag]
+                    vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[vehicleType.classTag]
+                    self.updateExtendedLog(log_dict, settings)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
         if self._player is not None:
-            if self._player.playerVehicleID == targetID:
-                self.input_log[DAMAGE_LOG.KILLS].add(attackerID)
-                self.updateExtendedLog(self.input_log, self.settings.log_input_extended)
-            elif self._player.playerVehicleID == attackerID:
-                self.damage_log[DAMAGE_LOG.KILLS].add(targetID)
-                self.updateExtendedLog(self.damage_log, self.settings.log_damage_extended)
+            if self._player.playerVehicleID in (targetID, attackerID):
+                if self._player.playerVehicleID == targetID:
+                    eventID = EV_ID.ENEMY_DAMAGED_HP_PLAYER
+                    target = attackerID
+                else:
+                    eventID = EV_ID.PLAYER_DAMAGED_HP_ENEMY
+                    target = targetID
+                log_dict, settings = self.getLogDictAndSettings(eventID)
+                log_dict[DAMAGE_LOG.KILLS].add(target)
+                self.updateExtendedLog(log_dict, settings)
 
     def checkShell(self, attack_reason_id, gold, is_dlog, shell_type):
         if is_dlog and attack_reason_id == GLOBAL.ZERO:
@@ -211,19 +216,16 @@ class DamageLog(DamageLogsMeta):
             vehicle[DAMAGE_LOG.DAMAGE_LIST].append(damage)
             vehicle[DAMAGE_LOG.TANK_NAMES].add(info.vehicleType.shortName)
         else:
-            vehicle_ci = self.settings.vehicle_types[DAMAGE_LOG.VEHICLE_CLASS_ICON]
-            vehicle_cc = self.settings.vehicle_types[DAMAGE_LOG.VEHICLE_CLASS_COLORS]
-            class_tag = info.vehicleType.classTag
             vehicle[DAMAGE_LOG.INDEX] = len(log_dict[DAMAGE_LOG.SHOTS])
             vehicle[DAMAGE_LOG.DAMAGE_LIST] = [damage]
-            vehicle[DAMAGE_LOG.VEHICLE_CLASS] = class_tag
+            vehicle[DAMAGE_LOG.VEHICLE_CLASS] = info.vehicleType.classTag
             vehicle[DAMAGE_LOG.TANK_NAMES] = {info.vehicleType.shortName}
             vehicle[DAMAGE_LOG.ICON_NAME] = info.vehicleType.iconName
             vehicle[DAMAGE_LOG.USER_NAME] = info.player.name
             vehicle[DAMAGE_LOG.TANK_LEVEL] = info.vehicleType.level
             vehicle[DAMAGE_LOG.KILLED_ICON] = GLOBAL.EMPTY_LINE
-            vehicle[DAMAGE_LOG.CLASS_ICON] = vehicle_ci.get(class_tag, vehicle_ci[DAMAGE_LOG.UNKNOWN_TAG])
-            vehicle[DAMAGE_LOG.CLASS_COLOR] = vehicle_cc.get(class_tag, vehicle_cc[DAMAGE_LOG.UNKNOWN_TAG])
+            vehicle[DAMAGE_LOG.CLASS_ICON] = self.vehicle_icons[info.vehicleType.classTag]
+            vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[info.vehicleType.classTag]
             vehicle_id = self._player.playerVehicleID if not is_dlog else vehicle_id
             vehicle[DAMAGE_LOG.MAX_HEALTH] = self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])

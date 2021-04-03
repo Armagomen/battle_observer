@@ -3,15 +3,15 @@ from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import ALIAS_TO_CONFIG_NAME, MAIN
 from armagomen.utils.common import logInfo, getPlayer
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
+from gui.shared.personality import ServicesLocator
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
-from gui.shared.personality import ServicesLocator
 
 
 class BaseModMeta(BaseDAAPIComponent):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsCore = ServicesLocator.settingsCore
-    isDebug = settings.main[MAIN.DEBUG]
+    isDebug = property(lambda self: settings.main[MAIN.DEBUG])
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
@@ -26,10 +26,11 @@ class BaseModMeta(BaseDAAPIComponent):
     def getSettings(self):
         settings_name = ALIAS_TO_CONFIG_NAME.get(self.getAlias())
         if settings_name is not None:
-            data = getattr(settings, settings_name, settings)
+            data = getattr(settings, settings_name, None)
             if self.isDebug:
                 logInfo("Settings Name: %s - Settings Data: %s" % (settings_name, str(data)))
-            return data
+            if data is not None:
+                return data
         return settings
 
     @staticmethod

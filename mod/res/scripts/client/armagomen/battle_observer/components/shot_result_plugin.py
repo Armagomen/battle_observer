@@ -6,7 +6,7 @@ from account_helpers.settings_core.settings_constants import GRAPHICS
 from aih_constants import SHOT_RESULT
 from armagomen.battle_observer.core import view_settings
 from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
-from armagomen.utils.common import getPlayer, overrideMethod, calc_event
+from armagomen.utils.common import getPlayer, overrideMethod, events
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
     SHOT_RESULT_TO_DEFAULT_COLOR
@@ -31,6 +31,7 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
         self._isSPG = False
         self.__piercingMultiplier = 1
         self._resolver = _CrosshairShotResults
+        self._resolver._VEHICLE_TRACE_FORWARD_LENGTH = 10.0
 
     def start(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -84,8 +85,8 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
             color = self.__colors[result]
             if self.__cache[markerType] != result and self._parentObj.setGunMarkerColor(markerType, color):
                 self.__cache[markerType] = result
-                calc_event.onMarkerColorChanged(color)
-            calc_event.onArmorChanged(counted, penetration, caliber, color, ricochet)
+                events.onMarkerColorChanged(color)
+            events.onArmorChanged(counted, penetration, caliber, color, ricochet)
 
     def __setEnabled(self, viewID):
         self.__isEnabled = self.__mapping[viewID]

@@ -1,9 +1,9 @@
 from collections import defaultdict
 from math import log
 
-from Avatar import PlayerAvatar
-from armagomen.battle_observer.core.bo_constants import DISPERSION_CIRCLE, GLOBAL, POSTMORTEM
+from armagomen.battle_observer.core.bo_constants import DISPERSION, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
+from armagomen.utils.common import events
 from gui.battle_control import avatar_getter
 
 
@@ -20,11 +20,11 @@ class DispersionTimer(DispersionTimerMeta):
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
-        self.timer_regular = self.settings[DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE]
-        self.timer_done = self.settings[DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE]
+        self.timer_regular = self.settings[DISPERSION.TIMER_REGULAR_TEMPLATE]
+        self.timer_done = self.settings[DISPERSION.TIMER_DONE_TEMPLATE]
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
-                                 color=self.settings[DISPERSION_CIRCLE.TIMER_COLOR],
-                                 color_done=self.settings[DISPERSION_CIRCLE.TIMER_DONE_COLOR],
+                                 color=self.settings[DISPERSION.TIMER_COLOR],
+                                 color_done=self.settings[DISPERSION.TIMER_DONE_COLOR],
                                  timer=GLOBAL.F_ZERO, percent=GLOBAL.ZERO)
         self.as_startUpdateS(self.settings)
 
@@ -33,10 +33,9 @@ class DispersionTimer(DispersionTimerMeta):
         if ctrlMode in POSTMORTEM.MODES:
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
-    def updateDispersion(self, avatar, *args, **kwargs):
-        result = self.base_getAngle(avatar, *args, **kwargs)
+    def updateDispersion(self, avatar, angle):
         if avatar.isVehicleAlive:
-            angle = round(result[GLOBAL.FIRST] * 100, 2)
+            angle = round(angle * 100, 2)
             if self.max_angle == GLOBAL.F_ZERO:
                 self.max_angle = angle
                 self.aiming_time = round(avatar.vehicleTypeDescriptor.gun.aimingTime, 1)
@@ -47,7 +46,6 @@ class DispersionTimer(DispersionTimerMeta):
                 self.setDoneMessage()
             else:
                 self.setRegularMessage()
-        return result
 
     def setRegularMessage(self):
         self.as_updateTimerTextS(self.timer_regular % self.macro)
@@ -60,12 +58,11 @@ class DispersionTimer(DispersionTimerMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
-        self.base_getAngle = PlayerAvatar.getOwnVehicleShotDispersionAngle
-        PlayerAvatar.getOwnVehicleShotDispersionAngle = lambda *args, **kwargs: self.updateDispersion(*args, **kwargs)
+        events.onDispersionAngleChanged += self.updateDispersion
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
-        PlayerAvatar.getOwnVehicleShotDispersionAngle = self.base_getAngle
+        events.onDispersionAngleChanged -= self.updateDispersion
         super(DispersionTimer, self).onExitBattlePage()

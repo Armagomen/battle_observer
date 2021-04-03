@@ -66,9 +66,9 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         if self.settings[MARKERS.NAME][GLOBAL.ENABLED] and self.isNormalMode:
             self.markers = CorrelationMarkers(self._arenaDP, self.settingsCore, self.settings[MARKERS.NAME],
                                               self.vehicle_types, self.colors)
-        is_color_blind_enabled = self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND)
+            self.as_moveTeamBasesPanel()
         self.as_startUpdateS(self.settings, self.colors[COLORS.GLOBAL],
-                             is_color_blind_enabled, self.markers is not None)
+                             self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
         if self.markers is not None:
             keysParser.registerComponent(MARKERS.HOT_KEY, self.settings[MARKERS.NAME][MARKERS.HOT_KEY])

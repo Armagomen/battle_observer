@@ -36,7 +36,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.name = compName;
 		}
 		
-		public function as_startUpdate(settings:Object, colors:Object, colorBlind:Boolean, moveTeamBase:Boolean):void
+		public function as_startUpdate(settings:Object, colors:Object, colorBlind:Boolean):void
 		{
 			if (!this.loaded)
 			{
@@ -69,17 +69,17 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					this.addChild(this.markers);
 					
 					this.loaded = true;
-					
-					if (moveTeamBase)
-					{
-						var battlePage:*                  = parent;
-						var teamBasesPanel:TeamBasesPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
-						if (teamBasesPanel)
-						{
-							teamBasesPanel.y += 20;
-						}
-					}
 				}
+			}
+		}
+		
+		public function moveTeamBasesPanel():void
+		{
+			var battlePage:*                  = parent;
+			var teamBasesPanel:TeamBasesPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
+			if (teamBasesPanel)
+			{
+				teamBasesPanel.y += 10;
 			}
 		}
 		

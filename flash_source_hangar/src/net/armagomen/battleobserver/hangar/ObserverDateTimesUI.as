@@ -9,7 +9,8 @@
 
 	public class ObserverDateTimesUI extends BaseDAAPIComponent
 	{
-		private var dateTime:TextField;
+		private var dateTime:TextExt;
+		private var premium:TextExt;
 		private var config:Object;
 		public var getShdowSettings:Function;
 
@@ -57,6 +58,7 @@
 				y = App.appHeight + y;
 			}
 			dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShdowSettings(), this);
+			premium = new TextExt("premium", 284, 50, Filters.mediumText, TextFieldAutoSize.CENTER, getShdowSettings(), this);
 		}
 
 		public function as_setDateTime(text:String):void
@@ -66,6 +68,16 @@
 				dateTime.htmlText = text;
 			}
 		}
+		
+		public function as_setPremiumLeft(text:String):void
+		{
+			if (premium)
+			{
+				premium.htmlText = text;
+			}
+		}
+		
+		
 
 		public function _onResizeHandle(event:Event):void
 		{

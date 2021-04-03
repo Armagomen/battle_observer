@@ -27,12 +27,18 @@ class ObserverCore(object):
         self.mod_version = 'v{0} - {1}'.format(MOD_VERSION, self.gameVersion)
         self.update = UpdateMain()
         self.update.subscribe()
-        overrideMethod(LobbyHeader, "as_updateOnlineCounterS")(self.hideServerStats)
+        overrideMethod(LobbyHeader, "as_updateOnlineCounterS")(self.as_updateOnlineCounterS)
+        overrideMethod(LobbyHeader, "as_setServerS")(self.as_setServerS)
 
-    def hideServerStats(self, base, *args):
+    def as_setServerS(self, base, header, serverShortName, const, type):
         if self.settings.main[MAIN.HIDE_SERVER_IN_HANGAR]:
-            return None
-        return base(*args)
+            return base(header, GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE, type)
+        return base(header, serverShortName, const, type)
+
+    def as_updateOnlineCounterS(self, base, header, clusterStats, regionStats, tooltip, isAvailable):
+        if self.settings.main[MAIN.HIDE_SERVER_IN_HANGAR]:
+            return base(header, "ONLINE", regionStats, GLOBAL.EMPTY_LINE, isAvailable)
+        return base(header, clusterStats, regionStats, tooltip, isAvailable)
 
     def clearClientCache(self, category=None):
         path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))

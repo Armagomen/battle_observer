@@ -1,8 +1,9 @@
+from Avatar import PlayerAvatar
 from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
 from armagomen.battle_observer.core.bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
-from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo
+from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, events
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
 
@@ -17,6 +18,7 @@ class BattleCore(object):
         settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(SoundModes, 'setMode')(self.setSoundMode)
         overrideMethod(_ClientArenaVisitor, "hasDogTag")(self.hasDogTag)
+        overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")(self.getDispersionAngle)
 
     def setSoundMode(self, base, mode, modeName):
         if self.settings.main[MAIN.IGNORE_COMMANDERS]:
@@ -36,6 +38,13 @@ class BattleCore(object):
                 msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
             elif not settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
                 msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
+
+    @staticmethod
+    @overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")
+    def getDispersionAngle(base, avatar, *args, **kwargs):
+        result = base(avatar, *args, **kwargs)
+        events.onDispersionAngleChanged(avatar, result[GLOBAL.FIRST])
+        return result
 
     def onArenaCreated(self):
         if self.settings.log_total[GLOBAL.ENABLED]:

@@ -1,3 +1,5 @@
+import math
+
 from Avatar import PlayerAvatar
 from AvatarInputHandler.AimingSystems.SniperAimingSystem import SniperAimingSystem
 from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera, MinMax
@@ -20,7 +22,7 @@ g_playerEvents.onArenaCreated += SENSITIVITY.clear
 def sniper_create(base, camera, onChangeControlMode=None):
     if settings.zoom[GLOBAL.ENABLED]:
         if settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
-            if settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]:
+            if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > GLOBAL.TWO:
                 steps = settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
                 steps.sort()
                 exposure_range = xrange(len(steps) + GLOBAL.ONE, GLOBAL.ONE, -GLOBAL.ONE)
@@ -29,10 +31,7 @@ def sniper_create(base, camera, onChangeControlMode=None):
                 camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = \
                     [round(SNIPER.EXPOSURE_FACTOR * step, GLOBAL.ONE) for step in exposure_range]
         if settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]:
-            steps_len = len(camera._cfg[SNIPER.ZOOMS])
-            dist_for_step = round(SNIPER.MAX_DIST / steps_len)
-            setattr(camera, "dist_for_step", dist_for_step)
-            setattr(camera, "steps_max_index", steps_len - GLOBAL.ONE)
+            setattr(camera, "dist_for_step", math.ceil(SNIPER.MAX_DIST / len(camera._cfg[SNIPER.ZOOMS])))
     return base(camera, onChangeControlMode=onChangeControlMode)
 
 
@@ -48,17 +47,17 @@ def enable(base, camera, targetPos, saveZoom):
         if settings.zoom[SNIPER.GUN_ZOOM]:
             targetPos = player.gunRotator.markerInfo[GLOBAL.FIRST]
         if settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]:
-            dist = (player.getOwnVehiclePosition() - vector3(*targetPos)).length
+            dist = int((player.getOwnVehiclePosition() - vector3(*targetPos)).length)
             if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
-                index = int(dist // camera.dist_for_step)
-                camera._cfg[SNIPER.ZOOM] = camera._cfg[SNIPER.ZOOMS][min(index, camera.steps_max_index)]
+                index = int(math.ceil(dist / camera.dist_for_step) - GLOBAL.ONE)
+                camera._cfg[SNIPER.ZOOM] = camera._cfg[SNIPER.ZOOMS][index]
             else:
                 maxZoom = camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST]
                 zoom = round(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS])
                 if zoom > maxZoom:
                     zoom = maxZoom
                 camera._cfg[SNIPER.ZOOM] = zoom
-    return base(camera, targetPos, saveZoom or settings.zoom[GLOBAL.ENABLED])
+    return base(camera, targetPos, saveZoom or settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED])
 
 
 def changeControlMode(avatar, shooterID):
