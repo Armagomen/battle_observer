@@ -1,5 +1,3 @@
-from gui.vxSettingsApi import vxSettingsApiEvents
-
 from armagomen.battle_observer.core.bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION_CIRCLE, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
 from armagomen.battle_observer.core.settings.hangar.i18n import localization
@@ -131,12 +129,12 @@ class Getter(object):
     __slots__ = ()
 
     @staticmethod
-    def getLinkToParam(settings, setting):
-        params = setting.split(GLOBAL.C_INTERFACE_SPLITTER)
-        for key in params:
-            if key in settings and isinstance(settings[key], dict):
-                settings = settings[key]
-        return settings, params[GLOBAL.LAST]
+    def getLinkToParam(data, settingPath):
+        path = settingPath.split(GLOBAL.C_INTERFACE_SPLITTER)
+        for fragment in path:
+            if fragment in data and isinstance(data[fragment], dict):
+                data = data[fragment]
+        return data, path[GLOBAL.LAST]
 
     @staticmethod
     def getCollectionIndex(value, collection):
@@ -169,14 +167,15 @@ class Getter(object):
 
 class ConfigInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, settings, configLoader):
+    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, configLoader):
         super(ConfigInterface, self).__init__()
         self.configLoader = configLoader
         self.modsListApi = modsListApi
         self.settings = settings
+        self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.selectedConfig = self.configLoader.configsList.index(self.configLoader.cName)
+        self.selected = self.configLoader.configsList.index(self.configLoader.cName)
         self.configSelect = False
         self.getter = Getter()
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
@@ -224,12 +223,12 @@ class ConfigInterface(CreateElement):
         """Feedback EVENT"""
         if container != MOD_NAME:
             return
-        if event == vxSettingsApiEvents.WINDOW_CLOSED:
+        if event == self.apiEvents.WINDOW_CLOSED:
             if self.configSelect:
                 import os
                 self.configLoader.createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
-                                                  {'loadConfig': self.configLoader.configsList[self.selectedConfig]})
-                self.configLoader.readConfig(self.configLoader.configsList[self.selectedConfig])
+                                                  {'loadConfig': self.configLoader.configsList[self.selected]})
+                self.configLoader.readConfig(self.configLoader.configsList[self.selected])
 
     def updateMod(self, blockID):
         if blockID not in self.inited:
@@ -238,18 +237,18 @@ class ConfigInterface(CreateElement):
             except Exception:
                 LOG_CURRENT_EXCEPTION()
 
-    def onSettingsChanged(self, modID, blockID, settings):
+    def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings in the settings file."""
         if MOD_NAME != modID:
             return
-        if blockID == ANOTHER.CONFIG_SELECT and self.selectedConfig != settings['selectedConfig']:
-            self.selectedConfig = settings['selectedConfig']
+        if blockID == ANOTHER.CONFIG_SELECT and self.selected != data['selectedConfig']:
+            self.selected = data['selectedConfig']
             self.configSelect = True
             self.inited.clear()
-            self.vxSettingsApi.processEvent(MOD_NAME, vxSettingsApiEvents.CALLBACKS.CLOSE_WINDOW)
+            self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
         else:
             settings = getattr(self.settings, blockID)
-            for key, value in settings.iteritems():
+            for key, value in data.iteritems():
                 updatedConfigLink, paramName = self.getter.getLinkToParam(settings, key)
                 if paramName in updatedConfigLink:
                     if GLOBAL.ALIGN in key:
@@ -312,7 +311,7 @@ class ConfigInterface(CreateElement):
         column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selectedConfig',
-                                                   self.configLoader.configsList, self.selectedConfig)]
+                                                   self.configLoader.configsList, self.selected)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_eu', URLS.DONATE_EU_URL, 'Button'),
                        self.createControl(blockID, 'support_button', URLS.SUPPORT_URL, 'Button')]

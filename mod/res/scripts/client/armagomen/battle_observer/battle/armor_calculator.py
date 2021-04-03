@@ -10,11 +10,11 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def __init__(self):
         super(ArmorCalculator, self).__init__()
-        self.messages = self.settings.armor_calculator[ARMOR_CALC.MESSAGES]
+        self.messages = None
         self._cache = GLOBAL.ZERO
-        self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.typeColors = self.settings.colors[ARMOR_CALC.NAME]
-        self.template = self.settings.armor_calculator[ARMOR_CALC.TEMPLATE]
+        self.calcMacro = None
+        self.typeColors = None
+        self.template = None
 
     def onEnterBattlePage(self):
         super(ArmorCalculator, self).onEnterBattlePage()
@@ -34,7 +34,11 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
-        self.as_startUpdateS(self.settings.armor_calculator)
+        self.messages = self.settings[ARMOR_CALC.MESSAGES]
+        self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
+        self.typeColors = self.colors[ARMOR_CALC.NAME]
+        self.template = self.settings[ARMOR_CALC.TEMPLATE]
+        self.as_startUpdateS(self.settings)
 
     def onMarkerColorChanged(self, color):
         self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)

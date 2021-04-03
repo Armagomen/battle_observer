@@ -11,19 +11,22 @@ class DispersionTimer(DispersionTimerMeta):
 
     def __init__(self):
         super(DispersionTimer, self).__init__()
-        self.timer_regular = self.settings.dispersion_circle[DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE]
-        self.timer_done = self.settings.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE]
-        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
-                                 color=self.settings.dispersion_circle[DISPERSION_CIRCLE.TIMER_COLOR],
-                                 color_done=self.settings.dispersion_circle[DISPERSION_CIRCLE.TIMER_DONE_COLOR],
-                                 timer=GLOBAL.F_ZERO, percent=GLOBAL.ZERO)
+        self.timer_regular = None
+        self.timer_done = None
+        self.macro = None
         self.base_getAngle = None
         self.max_angle = 0.0
         self.aiming_time = 0.0
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
-        self.as_startUpdateS(self.settings.dispersion_circle)
+        self.timer_regular = self.settings[DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE]
+        self.timer_done = self.settings[DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE]
+        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
+                                 color=self.settings[DISPERSION_CIRCLE.TIMER_COLOR],
+                                 color_done=self.settings[DISPERSION_CIRCLE.TIMER_DONE_COLOR],
+                                 timer=GLOBAL.F_ZERO, percent=GLOBAL.ZERO)
+        self.as_startUpdateS(self.settings)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.as_onControlModeChangedS(ctrlMode)

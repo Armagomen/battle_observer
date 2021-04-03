@@ -171,7 +171,8 @@ class ConfigLoader(object):
                 from distutils.version import LooseVersion
                 if LooseVersion(__version__) >= LooseVersion(API_VERSION):
                     from armagomen.battle_observer.core.settings.hangar.hangar_settings import ConfigInterface
-                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, self.settings, self)
+                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
+                                                           self.settings, self)
                     self.configInterface.start()
                 else:
                     msg = "Settings API not loaded, v{} it`s fake or not supported api, current version is {}, " \

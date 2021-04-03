@@ -50,16 +50,5 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		{
 			Params.AnimationEnabled = enable;
 		}
-		
-		public function as_moveTeamBasesPanel():void
-		{
-			var battlePage:*     = parent;
-			var teamBasesPanel:TeamBasesPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
-			if (teamBasesPanel)
-			{
-				teamBasesPanel.y += 20;
-			}
-		}
-		
 	}
 }

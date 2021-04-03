@@ -10,13 +10,15 @@ class DateTimes(DateTimesMeta):
 
     def __init__(self):
         super(DateTimes, self).__init__()
-        self.format = self.settings.clock[CLOCK.IN_BATTLE][CLOCK.FORMAT]
-        self.coding = checkDecoder(strftime(self.format))
+        self.format = None
+        self.coding = None
         self.timerEvent = CyclicTimerEvent(CLOCK.UPDATE_INTERVAL, self.updateTimeData)
 
     def _populate(self):
         super(DateTimes, self)._populate()
-        self.as_startUpdateS(self.settings.clock[CLOCK.IN_BATTLE])
+        self.format = self.settings[CLOCK.IN_BATTLE][CLOCK.FORMAT]
+        self.coding = checkDecoder(strftime(self.format))
+        self.as_startUpdateS(self.settings[CLOCK.IN_BATTLE])
         self.timerEvent.start()
 
     def _dispose(self):

@@ -17,10 +17,17 @@ class SixthSense(SixthSenseMeta):
     def __init__(self):
         super(SixthSense, self).__init__()
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.template = self.settings.sixth_sense[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE]
-        self.showTimer = self.settings.sixth_sense[SIXTH_SENSE.SHOW_TIMER]
-        self.macro[SIXTH_SENSE.M_TIME] = self.settings.sixth_sense[SIXTH_SENSE.TIME]
-        self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS, self.settings.sixth_sense[SIXTH_SENSE.PLAY_TICK_SOUND])
+        self.template = None
+        self.showTimer = None
+        self.macro[SIXTH_SENSE.M_TIME] = None
+        self._timer = None
+
+    def _populate(self):
+        super(SixthSense, self)._populate()
+        self.template = self.settings[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE]
+        self.showTimer = self.settings[SIXTH_SENSE.SHOW_TIMER]
+        self.macro[SIXTH_SENSE.M_TIME] = self.settings[SIXTH_SENSE.TIME]
+        self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS, self.settings[SIXTH_SENSE.PLAY_TICK_SOUND])
 
     def onEnterBattlePage(self):
         super(SixthSense, self).onEnterBattlePage()
@@ -28,7 +35,7 @@ class SixthSense(SixthSenseMeta):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
-        self.as_startUpdateS(self.settings.sixth_sense)
+        self.as_startUpdateS(self.settings)
 
     def onExitBattlePage(self):
         self.stop()
@@ -56,9 +63,9 @@ class SixthSense(SixthSenseMeta):
     def show(self):
         self.as_showS()
         if self.showTimer:
-            self._timer.start(self.settings.sixth_sense[SIXTH_SENSE.TIME])
+            self._timer.start(self.settings[SIXTH_SENSE.TIME])
         else:
-            callback(float(self.settings.sixth_sense[SIXTH_SENSE.TIME]), self.as_hideS)
+            callback(float(self.settings[SIXTH_SENSE.TIME]), self.as_hideS)
 
     def stop(self):
         if self.showTimer:

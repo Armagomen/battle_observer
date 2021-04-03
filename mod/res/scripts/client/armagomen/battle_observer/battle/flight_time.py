@@ -13,17 +13,18 @@ class FlightTime(FlightTimeMeta):
 
     def __init__(self):
         super(FlightTime, self).__init__()
-        self.template = self.settings.flight_time[FLIGHT_TIME.TEMPLATE]
+        self.template = None
         self.isSPG = False
         self.shared = self.sessionProvider.shared
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, flightTime=GLOBAL.ZERO, distance=GLOBAL.ZERO)
 
     def _populate(self):
         super(FlightTime, self)._populate()
-        self.as_startUpdateS(self.settings.flight_time)
+        self.template = self.settings[FLIGHT_TIME.TEMPLATE]
+        self.as_startUpdateS(self.settings)
 
     def checkSpgOnlyConfig(self):
-        if self.settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
+        if self.settings[FLIGHT_TIME.SPG_ONLY]:
             return self.isSPG
         return True
 

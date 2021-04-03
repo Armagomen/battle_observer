@@ -5,4 +5,4 @@ class UserBackGround(BaseModMeta):
 
     def onEnterBattlePage(self):
         super(UserBackGround, self).onEnterBattlePage()
-        self.as_startUpdateS(self.settings.user_background)
+        self.as_startUpdateS(self.settings)

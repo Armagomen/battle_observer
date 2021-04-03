@@ -12,6 +12,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
+	import net.wg.gui.battle.random.views.teamBasesPanel.TeamBasesPanel;
 	
 	public class TeamsHealthUI extends BattleDisplayable
 	{
@@ -35,7 +36,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.name = compName;
 		}
 		
-		public function as_startUpdate(settings:Object, colors:Object, colorBlind:Boolean):void
+		public function as_startUpdate(settings:Object, colors:Object, colorBlind:Boolean, moveTeamBase:Boolean):void
 		{
 			if (!this.loaded)
 			{
@@ -52,7 +53,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					this.hpBars = this.createHpbars(settings, barWidth);
 					var isLeague:Boolean = this.hpBars as League;
 					var textXpos:Number  = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
-					var textStyle:* = !isLeague ? Filters.normalText : Filters.middleText;
+					var textStyle:*      = !isLeague ? Filters.normalText : Filters.middleText;
 					
 					this.addChild(this.hpBars);
 					
@@ -68,6 +69,16 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					this.addChild(this.markers);
 					
 					this.loaded = true;
+					
+					if (moveTeamBase)
+					{
+						var battlePage:*                  = parent;
+						var teamBasesPanel:TeamBasesPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
+						if (teamBasesPanel)
+						{
+							teamBasesPanel.y += 20;
+						}
+					}
 				}
 			}
 		}
@@ -93,7 +104,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			case "normal": 
 				return new Default(settings, barWidth, this.isColorBlind, this.colors);
 			//case "classic":
-				//return new Classic(settings.style, this.isColorBlind, this.colors);
+			//return new Classic(settings.style, this.isColorBlind, this.colors);
 			default: 
 				return new League(settings, barWidth, this.isColorBlind, this.colors);
 			}

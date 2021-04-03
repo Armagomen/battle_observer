@@ -11,7 +11,7 @@ from gui.shared.personality import ServicesLocator
 class BaseModMeta(BaseDAAPIComponent):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsCore = ServicesLocator.settingsCore
-    settings = settings
+    isDebug = settings.main[MAIN.DEBUG]
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
@@ -19,36 +19,45 @@ class BaseModMeta(BaseDAAPIComponent):
         self._arenaDP = self.sessionProvider.getArenaDP()
         self._arenaVisitor = self.sessionProvider.arenaVisitor
         self._player = getPlayer()
+        self.settings = None
+        self.colors = settings.colors
+        self.vehicle_types = settings.vehicle_types
+
+    def getSettings(self):
+        settings_name = ALIAS_TO_CONFIG_NAME.get(self.getAlias())
+        if settings_name is not None:
+            data = getattr(settings, settings_name, settings)
+            if self.isDebug:
+                logInfo("Settings Name: %s - Settings Data: %s" % (settings_name, str(data)))
+            return data
+        return settings
 
     @staticmethod
     def getShadowSettings():
         return settings.shadow_settings
 
-    @staticmethod
-    def getConfig():
-        return settings
+    def getConfig(self):
+        return self.settings
 
     def onDragFinished(self, x, y):
-        config_name = ALIAS_TO_CONFIG_NAME[self.getAlias()]
-        data = getattr(settings, config_name, None)
-        data["x"] = x
-        data["y"] = y
+        self.settings["x"] = x
+        self.settings["y"] = y
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
+        self.settings = self.getSettings()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         if self._isDAAPIInited():
             self.flashObject.setCompVisible(False)
-            self._name = self.getAlias()
-            if settings.main[MAIN.DEBUG]:
+            if self.isDebug:
                 logInfo("battle module '%s' loaded" % self.getAlias())
 
     def _dispose(self):
         g_playerEvents.onAvatarReady -= self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer -= self.onExitBattlePage
         super(BaseModMeta, self)._dispose()
-        if settings.main[MAIN.DEBUG]:
+        if self.isDebug:
             logInfo("battle module '%s' destroyed" % self.getAlias())
 
     def onEnterBattlePage(self):

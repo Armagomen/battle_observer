@@ -13,22 +13,25 @@ class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
 
     def __init__(self):
         super(DebugPanel, self).__init__()
-        self.template = self.settings.debug_panel[DEBUG_PANEL.TEXT][DEBUG_PANEL.TEMPLATE]
-        self.colors = (self.settings.debug_panel[COLORS.NAME][DEBUG_PANEL.PING_COLOR],
-                       self.settings.debug_panel[COLORS.NAME][DEBUG_PANEL.LAG_COLOR])
-        self.macroDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
-                                     fpsColor=self.settings.debug_panel[COLORS.NAME][DEBUG_PANEL.FPS_COLOR],
-                                     PingLagColor=self.settings.debug_panel[COLORS.NAME][DEBUG_PANEL.LAG_COLOR],
-                                     PING=GLOBAL.ZERO, FPS=GLOBAL.ZERO)
+        self.template = None
+        self.__colors = None
+        self.macroDict = None
 
     def _populate(self):
         super(DebugPanel, self)._populate()
-        self.as_startUpdateS(self.settings.debug_panel,
+        self.template = self.settings[DEBUG_PANEL.TEXT][DEBUG_PANEL.TEMPLATE]
+        self.__colors = (self.settings[COLORS.NAME][DEBUG_PANEL.PING_COLOR],
+                         self.settings[COLORS.NAME][DEBUG_PANEL.LAG_COLOR])
+        self.macroDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
+                                     fpsColor=self.settings[COLORS.NAME][DEBUG_PANEL.FPS_COLOR],
+                                     PingLagColor=self.settings[COLORS.NAME][DEBUG_PANEL.LAG_COLOR],
+                                     PING=GLOBAL.ZERO, FPS=GLOBAL.ZERO)
+        self.as_startUpdateS(self.settings,
                              ServicesLocator.settingsCore.getSetting(GRAPHICS.VERTICAL_SYNC),
                              ServicesLocator.settingsCore.getSetting(GRAPHICS.REFRESH_RATE))
 
     def updateDebugInfo(self, ping, fps, isLaggingNow, fpsReplay=-1):
-        self.macroDict[DEBUG_PANEL.LAG] = self.colors[isLaggingNow]
+        self.macroDict[DEBUG_PANEL.LAG] = self.__colors[isLaggingNow]
         self.macroDict[DEBUG_PANEL.PING] = ping
         self.macroDict[DEBUG_PANEL.FPS] = fps
         self.as_fpsPingS(self.template % self.macroDict, fps, ping)

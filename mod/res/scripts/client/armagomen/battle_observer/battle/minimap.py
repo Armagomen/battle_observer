@@ -6,14 +6,14 @@ from gui.battle_control import avatar_getter
 
 class Minimap(MinimapMeta):
 
-    def __init__(self):
+    def _populate(self):
         super(Minimap, self).__init__()
-        keysParser.registerComponent(MINIMAP.HOT_KEY, self.settings.minimap[MINIMAP.ZOOM][MINIMAP.HOT_KEY])
+        keysParser.registerComponent(MINIMAP.HOT_KEY, self.settings[MINIMAP.ZOOM][MINIMAP.HOT_KEY])
 
     def onEnterBattlePage(self):
         super(Minimap, self).onEnterBattlePage()
         keysParser.onKeyPressed += self.keyEvent
-        self.as_startUpdateS(self.settings.minimap[MINIMAP.ZOOM][MINIMAP.INDENT])
+        self.as_startUpdateS(self.settings[MINIMAP.ZOOM][MINIMAP.INDENT])
 
     def onExitBattlePage(self):
         keysParser.onKeyPressed -= self.keyEvent

@@ -16,11 +16,12 @@ class DamageLog(DamageLogsMeta):
         super(DamageLog, self).__init__()
         self.input_log = {}
         self.damage_log = {}
-        self.top_log = defaultdict(int, **self.settings.log_total[DAMAGE_LOG.ICONS])
+        self.top_log = None
         self.isSPG = False
 
     def _populate(self):
         super(DamageLog, self)._populate()
+        self.top_log = defaultdict(int, **self.settings.log_total[DAMAGE_LOG.ICONS])
         self.as_startUpdateS({DAMAGE_LOG.D_LOG: self.settings.log_damage_extended[GLOBAL.SETTINGS],
                               DAMAGE_LOG.IN_LOG: self.settings.log_input_extended[GLOBAL.SETTINGS],
                               DAMAGE_LOG.MAIN_LOG: self.settings.log_total[GLOBAL.SETTINGS]},
