@@ -6,13 +6,11 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
 	import net.armagomen.battleobserver.battle.components.teamshealth.League;
-	import net.armagomen.battleobserver.battle.components.teamshealth.classic.Classic;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
-	import net.wg.gui.battle.random.views.teamBasesPanel.TeamBasesPanel;
+	//import net.armagomen.battleobserver.battle.components.teamshealth.classic.Classic;
 	
 	public class TeamsHealthUI extends BattleDisplayable
 	{
@@ -26,7 +24,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		private var markers:Markers;
 		private var loaded:Boolean       = false;
 		private var isColorBlind:Boolean = false;
-		
+		public var animationEnabled:Function;
 		public var getShadowSettings:Function;
 		public var getAlpha:Function;
 		
@@ -63,23 +61,15 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					this.redDiff = new TextExt("redDiff", 55, 2, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
 					
 					this.score = new Score(shadowSettings, colorBlind, this.colors, settings.style);
-					this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
-					
 					this.addChild(this.score);
-					this.addChild(this.markers);
+					
+					if (settings.markers.enabled){
+						this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
+						this.addChild(this.markers);
+					}
 					
 					this.loaded = true;
 				}
-			}
-		}
-		
-		public function moveTeamBasesPanel():void
-		{
-			var battlePage:*                  = parent;
-			var teamBasesPanel:TeamBasesPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
-			if (teamBasesPanel)
-			{
-				teamBasesPanel.y += 10;
 			}
 		}
 		
@@ -100,13 +90,13 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			switch (settings.style)
 			{
 			case "league": 
-				return new League(settings, barWidth, this.isColorBlind, this.colors);
+				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
 			case "normal": 
-				return new Default(settings, barWidth, this.isColorBlind, this.colors);
+				return new Default(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
 			//case "classic":
 			//return new Classic(settings.style, this.isColorBlind, this.colors);
 			default: 
-				return new League(settings, barWidth, this.isColorBlind, this.colors);
+				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
 			}
 		}
 		

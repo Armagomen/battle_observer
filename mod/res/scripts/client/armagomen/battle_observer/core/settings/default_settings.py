@@ -10,7 +10,8 @@ from armagomen.battle_observer.core.bo_constants import ARCADE, ARMOR_CALC, BATT
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
-DamageLogs = namedtuple('DamageLogs', ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
+DamageLogsSettings = namedtuple('DamageLogsSettings',
+                                ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
 
 
 class DefaultSettings(object):
@@ -210,14 +211,8 @@ class DefaultSettings(object):
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 100},
-            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(calcedArmor).1f | %(piercingPower)s</font>",
-            ARMOR_CALC.MESSAGES: {
-                "green": "<font size='20' color='#66FF33'>Да пребудет с тобой сила.</font>",
-                "orange": "<font size='20' color='#FF9900'>Переходи на темную сторону силы.</font>",
-                "purple": "<font size='20' color='#6F6CD3'>Фугас, настало твое время.</font>",
-                "red": "<font size='20' color='#FF0000'>Фугас, настало твое время.</font>",
-                "yellow": "<font size='20' color='#FAF829'>Переходи на темную сторону силы.</font>"
-            }
+            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font>",
+            ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE
         }
         self.colors = {
             MAIN_GUN.NAME: {
@@ -495,4 +490,4 @@ class DefaultSettings(object):
 
     @property
     def damage_log(self):
-        return DamageLogs(self.log_total, self.log_damage_extended, self.log_input_extended, self.log_global)
+        return DamageLogsSettings(self.log_total, self.log_damage_extended, self.log_input_extended, self.log_global)

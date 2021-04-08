@@ -7,7 +7,7 @@ from gui.battle_control import avatar_getter
 class Minimap(MinimapMeta):
 
     def _populate(self):
-        super(Minimap, self).__init__()
+        super(Minimap, self)._populate()
         keysParser.registerComponent(MINIMAP.HOT_KEY, self.settings[MINIMAP.ZOOM][MINIMAP.HOT_KEY])
 
     def onEnterBattlePage(self):

@@ -18,6 +18,3 @@ class TeamHealthMeta(BaseModMeta):
 
     def as_markersS(self, left, right):
         return self.flashObject.as_markers(left, right) if self._isDAAPIInited() else None
-
-    def as_moveTeamBasesPanel(self):
-        return self.flashObject.moveTeamBasesPanel() if self._isDAAPIInited() else None

@@ -4,7 +4,8 @@ import random
 
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
-from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR
+from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
+    SHOT_RESULT_TO_ALT_COLOR
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from helpers import getClientLanguage
@@ -95,18 +96,20 @@ class URLS:
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
     if getClientLanguage().lower() in GLOBAL.RU_LOCALIZATION:
-        MESSAGES = ("Поддержите разработку мода 'Battle Observer'. Спасибо что вы с нами.",
+        MESSAGES = ("Поддержите разработку мода. Спасибо что вы с нами.",
                     "Нравится мод ?, не дай автору помереть с голоду.",
                     "Для добавления статистики в мод необходимо собрать деньги на сервер.",
-                    "А ты уже поддержал разработку ?")
+                    "А ты уже поддержал разработку ?",
+                    "Мод существует только благодаря вашей поддержке, нет поддержки нет желания что-либо делать.")
     else:
         MESSAGES = ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
                     "If you like mod, don't let the author starve to death.",
                     "To add statistics to the mod, you need to rent or buy a server.",
                     "Have you already supported the development?")
 
-    DONATE_MESSAGE = "<font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>UAH</a> | <a href='event:{all}'>" \
-                     "USD/EUR/RUB</a>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL, msg=random.choice(MESSAGES))
+    DONATE_MESSAGE = "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
+                     "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL,
+                                                                              msg=random.choice(MESSAGES))
 
 
 class SERVICE_CHANNEL:
@@ -253,7 +256,7 @@ class SNIPER:
     DISABLE_SNIPER = "disable_cam_after_shoot"
     SKIP_CLIP = "disable_cam_skip_clip"
     CLIP = "clip"
-    MAX_DIST = 720.0
+    MAX_DIST = 730.0
 
 
 class DAMAGE_LOG:
@@ -396,6 +399,9 @@ class ARMOR_CALC:
     MACROS_CALIBER = "caliber"
     MACROS_RICOCHET = "ricochet"
     NONE_DATA = (SHOT_RESULT.UNDEFINED, None, None, None, None)
+    MESSAGE_COLORS = set(SHOT_RESULT_TO_ALT_COLOR.itervalues())
+    MESSAGE_COLORS.update(SHOT_RESULT_TO_DEFAULT_COLOR.itervalues())
+    MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in MESSAGE_COLORS}
 
 
 class VEHICLE:
@@ -492,8 +498,8 @@ class DISPERSION:
     CIRCLE_SCALE_CONFIG = "circle_scale"
     CIRCLE_SERVER = "useServerAim"
     ENABLED = "circle_enabled"
-    CIRCLE_SCALE = 0.75
-    SCALE = 75
+    CIRCLE_SCALE = 0.80
+    SCALE = 80
     MAX_TIME = 5.0
     SPG_GM_SCALE = 0.8
     GUN_MARKER_MIN_SIZE = 16.0
@@ -799,7 +805,8 @@ ALIAS_TO_CONFIG_NAME = {
     ALIASES.PANELS: PANELS.PANELS_NAME,
     ALIASES.MINIMAP: MINIMAP.NAME,
     ALIASES.USER_BACKGROUND: USER_BACKGROUND.NAME,
-    ALIASES.DATE_TIME: CLOCK.NAME
+    ALIASES.DATE_TIME: CLOCK.NAME,
+    ALIASES.WG_COMP: MAIN.NAME
 }
 
 SORTED_ALIASES = (

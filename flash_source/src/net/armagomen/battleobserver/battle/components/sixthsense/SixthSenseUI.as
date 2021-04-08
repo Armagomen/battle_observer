@@ -9,7 +9,6 @@
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
 	import fl.transitions.Tween;
-	import net.armagomen.battleobserver.utils.Params;
 	
 	
 	public class SixthSenseUI extends BattleDisplayable
@@ -19,6 +18,8 @@
 		private var image:Bitmap      = null;
 		private var _container:Sprite = null;
 		public var getShadowSettings:Function;
+		public var animationEnabled:Function;
+		private var animate:Boolean = false;
 		private var loaded:Boolean    = false;
 		private var animation:Tween   = null;
 		
@@ -42,6 +43,7 @@
 						battlePage.removeChild(sixthSense);
 					}
 				}
+				this.animate = this.animationEnabled();
 				params = App.utils.data.cloneObject(settings);
 				this.setImage();
 				App.utils.data.cleanupDynamicObject(settings);
@@ -92,7 +94,7 @@
 				if (params.showTimer)
 				{
 					timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-					if (Params.AnimationEnabled)
+					if (this.animate)
 					{
 						this.animation = new Tween(this.timer, "alpha", null, 1.0, 0, 1, true);
 						this.animation.FPS = 30;
@@ -113,7 +115,7 @@
 		
 		public function as_updateTimer(str:String):void
 		{
-			if (Params.AnimationEnabled)
+			if (this.animate)
 			{
 				this.animation.start();
 			}
@@ -137,7 +139,7 @@
 			if (params.showTimer)
 			{
 				timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-				if (Params.AnimationEnabled)
+				if (this.animate)
 				{
 					this.animation = new Tween(this.timer, "alpha", null, 1, 0, 0.98, true);
 					this.animation.FPS = 30;

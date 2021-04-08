@@ -4,7 +4,6 @@
 	import flash.events.Event;
 	import flash.net.URLRequest;
 	import flash.text.*;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.gui.battle.components.*;
 
 	public class UserBackGroundUI extends BattleDisplayable

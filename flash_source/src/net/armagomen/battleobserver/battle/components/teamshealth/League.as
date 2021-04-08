@@ -2,8 +2,6 @@
 {
 	import fl.transitions.Tween;
 	import flash.display.*;
-	import flash.geom.ColorTransform;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.armagomen.battleobserver.utils.Utils;
 	
 	public class League extends Sprite
@@ -15,10 +13,12 @@
 		private var enemyAnimation:Tween    = null;
 		private var defCommads:Vector.<int> = new <int>[1, 2, 2, 2, 2];
 		private var colors:Object;
+		private var animationEnabled:Boolean = false
 		
-		public function League(settings:Object, barWidth:Number, colorBlind:Boolean, colors:Object)
+		public function League(animation:Boolean, settings:Object, barWidth:Number, colorBlind:Boolean, colors:Object)
 		{
 			super();
+			this.animationEnabled = animation;
 			this.addChild(hpBars_bg);
 			this.addChild(allyHpBar);
 			this.addChild(enemyHpBar);
@@ -34,7 +34,7 @@
 			this.enemyHpBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Math.max(0.1, colors.alpha));
 			this.enemyHpBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
 			this.enemyHpBar.graphics.endFill();
-			if (Params.AnimationEnabled)
+			if (this.animationEnabled)
 			{
 				this.allyAnimation = new Tween(this.allyHpBar, "scaleX", null, this.allyHpBar.scaleX, 1.0, 1, true);
 				this.allyAnimation.FPS = 30;
@@ -54,7 +54,7 @@
 			var bar:Shape = team == "green" ? this.allyHpBar : this.enemyHpBar
 			if (bar.scaleX != newScale)
 			{
-				if (Params.AnimationEnabled)
+				if (this.animationEnabled)
 				{
 					(team == "green" ? this.allyAnimation : this.enemyAnimation).continueTo(newScale, 1);
 				}

@@ -1,10 +1,7 @@
 package net.armagomen.battleobserver.battle.components.wgcomponents
 {
-	import flash.display.Sprite;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
-	import net.wg.gui.battle.random.views.teamBasesPanel.TeamBasesPanel;
 	
 	
 	public class WGComponentsSetting extends BattleDisplayable
@@ -44,11 +41,6 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			{
 				battlePage.removeChild(battleMessenger);
 			}
-		}
-		
-		public function as_enableAnimation(enable:Boolean):void
-		{
-			Params.AnimationEnabled = enable;
 		}
 	}
 }

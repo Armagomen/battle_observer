@@ -147,7 +147,7 @@ translate = {
         "calcPosition*x": "Position des Haupt Textfeldes waagerecht",
         "calcPosition*y": "Position des Haupt Textfeldes senkrecht",
         "template": "Formatierung des Haupt-Textfeldes",
-        "template_tooltip": "HTML Formatierung möglich<br>Macros:<br>%(calcedArmor)s - verminderte Panzerung"
+        "template_tooltip": "HTML Formatierung möglich<br>Macros:<br>%(countedArmor)s - verminderte Panzerung"
                             "<br>%(armor)s - Panzerung ohne Neigung. "
                             "<br>%(piercingPower)s - Durchschlag der Granate mit Berechnung der Enfernung"
                             "<br>%(caliber)s - Kaliber der Granate<br>%(color)s - Farbe (siehe Farbeinstellungen)"
@@ -169,7 +169,6 @@ translate = {
     "log_total": {
         "header": "Gesamtprotokoll der Effizienz des Spielers",
         "settings*inCenter": "Zeigen Sie das Protokoll in der Mitte des Bildschirms an",
-        "settings*background": "Aktivieren Sie Hintergrundsubstrat log (nur, wenn es in der Mitte)",
         "settings*x": "Position waagerecht:",
         "settings*y": "Position senkrecht:",
         "settings*align": "Ausrichtung text:",

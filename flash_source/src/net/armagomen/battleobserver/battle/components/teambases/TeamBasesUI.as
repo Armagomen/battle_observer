@@ -4,7 +4,6 @@ package net.armagomen.battleobserver.battle.components.teambases
 	import flash.events.*;
 	import flash.text.*;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBase;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.gui.battle.components.*;
 	
 	public class TeamBasesUI extends BattleDisplayable
@@ -15,6 +14,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		private var shadowSettings:Object;
 		public var getShadowSettings:Function;
 		public var isColorBlind:Function;
+		public var animationEnabled:Function;
 		
 		public function TeamBasesUI(compName:String)
 		{
@@ -47,7 +47,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			}
 			else
 			{
-				var base:TeamBase = new TeamBase(team, this.isColorBlind());
+				var base:TeamBase = new TeamBase(this.animationEnabled(), team, this.isColorBlind());
 				base.create(this.settings, this.shadowSettings, this.colors);
 				base.updateBase(points / 100.0, invadersCnt, time, text);
 				if (this.bases["green"] || this.bases["red"])

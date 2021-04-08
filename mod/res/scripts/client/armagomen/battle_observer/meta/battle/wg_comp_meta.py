@@ -11,6 +11,3 @@ class WgCompMeta(BaseModMeta):
 
     def as_hideMessengerS(self):
         return self.flashObject.as_hideMessenger() if self._isDAAPIInited() else None
-
-    def as_enableAnimationS(self, param):
-        return self.flashObject.as_enableAnimation(param) if self._isDAAPIInited() else None

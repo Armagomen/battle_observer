@@ -1,6 +1,6 @@
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import settings
-from armagomen.battle_observer.core.bo_constants import ALIAS_TO_CONFIG_NAME, MAIN
+from armagomen.battle_observer.core.bo_constants import ALIAS_TO_CONFIG_NAME, MAIN, COLORS, GLOBAL
 from armagomen.utils.common import logInfo, getPlayer
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from gui.shared.personality import ServicesLocator
@@ -34,11 +34,18 @@ class BaseModMeta(BaseDAAPIComponent):
         return settings
 
     @staticmethod
+    def animationEnabled():
+        return settings.main[MAIN.ENABLE_BARS_ANIMATION]
+
+    @staticmethod
     def getShadowSettings():
         return settings.shadow_settings
 
     def getConfig(self):
         return self.settings
+
+    def getAlpha(self):
+        return round(min(1.0, self.colors[COLORS.GLOBAL][GLOBAL.ALPHA] * 1.4), 2)
 
     def onDragFinished(self, x, y):
         self.settings["x"] = x

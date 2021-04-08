@@ -6,8 +6,7 @@ class WGCompSettings(WgCompMeta):
 
     def onEnterBattlePage(self):
         super(WGCompSettings, self).onEnterBattlePage()
-        self.as_enableAnimationS(self.settings.main[MAIN.ENABLE_BARS_ANIMATION])
-        if self.settings.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE]:
+        if self.settings[MAIN.REMOVE_SHADOW_IN_PREBATTLE]:
             self.as_hideShadowInPreBattleS()
-        if self.settings.main[MAIN.HIDE_CHAT] and self.sessionProvider.arenaVisitor.gui.isRandomBattle():
+        if self.settings[MAIN.HIDE_CHAT] and self.sessionProvider.arenaVisitor.gui.isRandomBattle():
             self.as_hideMessengerS()

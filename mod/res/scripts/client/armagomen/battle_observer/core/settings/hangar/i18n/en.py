@@ -147,7 +147,7 @@ translate = {
         "calcPosition*x": "Position the main text box of the calculator Horizontally",
         "calcPosition*y": "Position the main text box of the calculator Vertically",
         "template": "Template Main text field",
-        "template_tooltip": "HTML - YES<br>Macros <br>%(calcedArmor)s - reduced armor."
+        "template_tooltip": "HTML - YES<br>Macros <br>%(countedArmor)s - reduced armor."
                             "<br>%(armor)s - armor without inclination."
                             "<br>%(piercingPower)s - penetration of the projectile with distance."
                             "<br>%(caliber)s - is the caliber of the projectile."
@@ -169,7 +169,6 @@ translate = {
     "log_total": {
         "header": "TOTAL LOG OF THE EFFECTIVENESS OF THE PLAYER",
         "settings*inCenter": "Display the log in the middle of the screen",
-        "settings*background": "Enable background substrate log (only when it is in the center)",
         "settings*x": "the Position of the main log Horizontal",
         "settings*y": "the Position of the main log Vertical",
         "settings*align": "Alignment text:",

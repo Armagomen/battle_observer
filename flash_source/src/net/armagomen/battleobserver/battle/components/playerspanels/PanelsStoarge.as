@@ -4,9 +4,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	
 	import net.armagomen.battleobserver.utils.Filters;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
@@ -15,12 +13,15 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	import net.wg.gui.battle.components.BattleDisplayable;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
 	
+	
 	public class PanelsStoarge extends BattleDisplayable
 	{
 		private var items:Object   = {};
 		private var stoarge:Object = {};
 		public var getShadowSettings:Function;
+		public var animationEnabled:Function;
 		private var loaded:Boolean = false;
+		private var animate:Boolean = false;
 		
 		public function PanelsStoarge()
 		{
@@ -52,6 +53,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					var timerIndex:int = battlePage.getChildIndex(prebattleTimer);
 					battlePage.setChildIndex(playersPanel, timerIndex - 1);
 				}
+				this.animate = this.animationEnabled();
 			}
 			else
 			{
@@ -132,7 +134,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					barX = -barX;
 					textX = -textX;
 				}
-				var bar:ProgressBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, vehID.toString());
+				var bar:ProgressBar = new ProgressBar(this.animate, barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, vehID.toString());
 				if (settings.players_bars_bar.outline.enabled)
 				{
 					bar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);

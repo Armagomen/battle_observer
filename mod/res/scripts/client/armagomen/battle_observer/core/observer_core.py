@@ -6,9 +6,8 @@ from armagomen.battle_observer.core.bo_constants import FILE_NAME, MOD_VERSION, 
     MOD_NAME
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
-from armagomen.utils.common import logInfo, getPreferencesFilePath, getCurrentModPath, logWarning, overrideMethod
+from armagomen.utils.common import logInfo, getPreferencesFilePath, getCurrentModPath, logWarning
 from gui.Scaleform.daapi.settings import config as packages
-from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
@@ -27,18 +26,6 @@ class ObserverCore(object):
         self.mod_version = 'v{0} - {1}'.format(MOD_VERSION, self.gameVersion)
         self.update = UpdateMain()
         self.update.subscribe()
-        overrideMethod(LobbyHeader, "as_updateOnlineCounterS")(self.as_updateOnlineCounterS)
-        overrideMethod(LobbyHeader, "as_setServerS")(self.as_setServerS)
-
-    def as_setServerS(self, base, header, serverShortName, const, type):
-        if self.settings.main[MAIN.HIDE_SERVER_IN_HANGAR]:
-            return base(header, GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE, type)
-        return base(header, serverShortName, const, type)
-
-    def as_updateOnlineCounterS(self, base, header, clusterStats, regionStats, tooltip, isAvailable):
-        if self.settings.main[MAIN.HIDE_SERVER_IN_HANGAR]:
-            return base(header, "ONLINE", regionStats, GLOBAL.EMPTY_LINE, isAvailable)
-        return base(header, clusterStats, regionStats, tooltip, isAvailable)
 
     def clearClientCache(self, category=None):
         path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))

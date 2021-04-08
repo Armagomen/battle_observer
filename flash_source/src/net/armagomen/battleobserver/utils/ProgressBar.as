@@ -22,11 +22,12 @@
 		private var HEIGHT:Number       = 0;
 		private var COLOR:uint          = 0;
 		private var costumColor:Boolean = false;
+		private var animationEnabled:Boolean = false;
 		
-		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", barName:String = "bar")
+		public function ProgressBar(animationEnabled:Boolean, x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", barName:String = "bar")
 		{
 			super();
-			
+			this.animationEnabled = animationEnabled;
 			this.x = x;
 			this.y = y;
 			this.name = barName;
@@ -49,7 +50,7 @@
 			}
 			
 			this.addChild(bar);
-			if (Params.AnimationEnabled)
+			if (this.animationEnabled)
 			{
 				this.animation = new Tween(this.bar, "scaleX", null, this.bar.scaleX, 1.0, 1, true);
 				this.animation.FPS = 30;
@@ -60,7 +61,7 @@
 		{
 			if (this.bar.scaleX != newScale)
 			{
-				if (this.visible && Params.AnimationEnabled)
+				if (this.visible && this.animationEnabled)
 				{
 					this.animation.continueTo(newScale, 1);
 				}
