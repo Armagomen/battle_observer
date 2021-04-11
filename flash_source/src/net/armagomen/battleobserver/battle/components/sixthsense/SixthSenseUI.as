@@ -23,10 +23,9 @@
 		private var loaded:Boolean    = false;
 		private var animation:Tween   = null;
 		
-		public function SixthSenseUI(compName:String)
+		public function SixthSenseUI()
 		{
 			super();
-			this.name = compName;
 			this.x = App.appWidth >> 1;
 		}
 		

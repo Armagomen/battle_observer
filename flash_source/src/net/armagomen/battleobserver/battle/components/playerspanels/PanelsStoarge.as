@@ -42,25 +42,21 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			if (!this.loaded)
-			{
-				this.loaded = true;
-				var battlePage:* = parent;
-				var playersPanel:* = this.getPlayersPanel();
-				var prebattleTimer:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
-				if (playersPanel && prebattleTimer)
-				{
-					var timerIndex:int = battlePage.getChildIndex(prebattleTimer);
-					battlePage.setChildIndex(playersPanel, timerIndex - 1);
-				}
-				this.animate = this.animationEnabled();
-			}
-			else
+			if (this.loaded)
 			{
 				App.utils.data.cleanupDynamicObject(items);
 				App.utils.data.cleanupDynamicObject(stoarge);
 			}
-		
+			this.loaded = true;
+			this.animate = this.animationEnabled();
+			var battlePage:*     = parent;
+			var prebattleTimer:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
+			var playersPanel:*   = this.getPlayersPanel();
+			if (playersPanel && prebattleTimer)
+			{
+				var timerIndex:int = battlePage.getChildIndex(prebattleTimer);
+				battlePage.setChildIndex(playersPanel, timerIndex - 1);
+			}
 		}
 		
 		override protected function onDispose():void
@@ -81,9 +77,9 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			return null;
 		}
 		
-		public function addVehicle(vehicle_id:int):void
+		public function addVehicle(vehID:int):void
 		{
-			if (this.stoarge.hasOwnProperty(vehicle_id))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_AddVehIdToList - vehicle_id in stoarge !!!");
 			}
@@ -95,18 +91,18 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					var obse:Sprite = new Sprite();
 					obse.name = "battleОbserver";
 					obse.x = 380;
-					var holder:* = playersPanel.listLeft.getHolderByVehicleID(vehicle_id);
+					var holder:* = playersPanel.listLeft.getHolderByVehicleID(vehID);
 					if (!holder)
 					{
 						obse.x = -obse.x;
-						holder = playersPanel.listRight.getHolderByVehicleID(vehicle_id);
+						holder = playersPanel.listRight.getHolderByVehicleID(vehID);
 					}
 					if (holder)
 					{
 						if (holder._listItem)
 						{
-							this.items[vehicle_id] = holder._listItem.addChild(obse);
-							this.stoarge[vehicle_id] = {};
+							this.items[vehID] = holder._listItem.addChild(obse);
+							this.stoarge[vehID] = {};
 						}
 						else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_AddVehIdToList - holder._listItem is Null !!!");
 					}
@@ -118,7 +114,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function addHpBar(vehID:int, color:String, colors:Object, settings:Object, team:String, startVisible:Boolean):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var barX:Number     = settings.players_bars_bar.x;
 				var barWidth:Number = settings.players_bars_bar.width;
@@ -148,7 +144,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function updateHPBar(vehID:int, currHP:Number, maxHP:Number, text:String):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var hpbar:ProgressBar = this.stoarge[vehID]["HpBar"];
 				if (currHP > 0)
@@ -165,7 +161,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function setHPbarVisible(vehID:int, vis:Boolean):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var hpbar:ProgressBar = this.stoarge[vehID]["HpBar"];
 				hpbar.setVisible(vis);
@@ -174,7 +170,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function createTextField(vehID:int, name:String, params:Object, team:String):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var autoSize:String = params.align;
 				if (team == "red" && autoSize != "center")
@@ -189,7 +185,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function updateTextField(vehID:int, name:String, text:String):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				this.stoarge[vehID][name].htmlText = text;
 			}
@@ -263,7 +259,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function colorBlindPPbars(vehID:int, hpColor:String):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var hpbar:ProgressBar = this.stoarge[vehID]["HpBar"];
 				hpbar.updateColor(hpColor);

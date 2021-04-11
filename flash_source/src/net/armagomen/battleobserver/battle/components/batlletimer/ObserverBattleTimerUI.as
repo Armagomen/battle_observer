@@ -14,10 +14,9 @@
 		public var getShadowSettings:Function;
 		private var loaded:Boolean = false;
 		
-		public function ObserverBattleTimerUI(compName:String)
+		public function ObserverBattleTimerUI()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		override protected function configUI():void

@@ -16,10 +16,9 @@ package net.armagomen.battleobserver.battle.components.teambases
 		public var isColorBlind:Function;
 		public var animationEnabled:Function;
 		
-		public function TeamBasesUI(compName:String)
+		public function TeamBasesUI()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		override protected function configUI():void

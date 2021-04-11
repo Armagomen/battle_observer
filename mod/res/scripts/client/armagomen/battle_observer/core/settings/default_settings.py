@@ -67,6 +67,7 @@ class DefaultSettings(object):
                 GLOBAL.ENABLED: False,
                 CLOCK.PREMIUM_TIME: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
+                CLOCK.PREMIUM_FORMAT: CLOCK.DEFAULT_FORMAT_PREMIUM,
                 GLOBAL.X: -240,
                 GLOBAL.Y: 54
             },

@@ -47,7 +47,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def callbackListener(self, event):
         self._app.as_loadLibrariesS([SWF.BATTLE])
-        callback(2.0, lambda: self.eventListener(event))
+        callback(1.0, lambda: self.eventListener(event))
 
     def eventListener(self, event):
         battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
@@ -55,7 +55,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             flash = battle_page.flashObject
             if hasattr(flash, SWF.ATTRIBUTE_NAME):
                 for comp in SORTED_ALIASES:
-                    if view_settings.getSetting(comp):
+                    if view_settings.getSetting(comp) and not battle_page.isFlashComponentRegistered(comp):
                         flash.as_createBattleObserverComp(comp)
             else:
                 to_format_str = "battle_page {}, has ho attribute {}"

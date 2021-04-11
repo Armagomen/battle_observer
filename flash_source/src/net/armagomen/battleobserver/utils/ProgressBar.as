@@ -23,11 +23,21 @@
 		private var COLOR:uint          = 0;
 		private var costumColor:Boolean = false;
 		private var animationEnabled:Boolean = false;
+		private var animationTime:Number = 1.0;
 		
-		public function ProgressBar(animationEnabled:Boolean, x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", barName:String = "bar")
+		public function ProgressBar(animate:Boolean, x:Number, y:Number, width:Number, height:Number, alpha:Number,
+									bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", barName:String = "bar", time:Number = 1.0)
 		{
 			super();
-			this.animationEnabled = animationEnabled;
+			if (bgColor == null){
+				bgColor = "#000000";
+			}
+			if (barName == null){
+				barName = "bar";
+			}
+			
+			this.animationEnabled = animate;
+			this.animationTime = time;
 			this.x = x;
 			this.y = y;
 			this.name = barName;
@@ -52,7 +62,7 @@
 			this.addChild(bar);
 			if (this.animationEnabled)
 			{
-				this.animation = new Tween(this.bar, "scaleX", null, this.bar.scaleX, 1.0, 1, true);
+				this.animation = new Tween(this.bar, "scaleX", null, this.bar.scaleX, 1.0, animationTime, true);
 				this.animation.FPS = 30;
 			}
 		}
@@ -63,7 +73,7 @@
 			{
 				if (this.visible && this.animationEnabled)
 				{
-					this.animation.continueTo(newScale, 1);
+					this.animation.continueTo(newScale, animationTime);
 				}
 				else
 				{

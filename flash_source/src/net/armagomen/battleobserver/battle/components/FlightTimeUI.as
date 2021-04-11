@@ -16,10 +16,9 @@ package net.armagomen.battleobserver.battle.components
 		private var currentControlMode:String = "arcade";
 		private var loaded:Boolean = false;
 
-		public function FlightTimeUI(compName:String)
+		public function FlightTimeUI()
 		{
 			super();
-			this.name = compName;
 		}
 
 		public function as_startUpdate(flyght:Object):void

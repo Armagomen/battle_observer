@@ -23,10 +23,9 @@ package net.armagomen.battleobserver.battle.components
 		private const IN_LOG:String = "in_log";
 		private const D_LOG:String = "d_log";
 
-		public function DamageLogsUI(compName:String)
+		public function DamageLogsUI()
 		{
 			super();
-			this.name = compName;
 		}
 
 		override protected function configUI():void

@@ -7,10 +7,9 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 	public class WGComponentsSetting extends BattleDisplayable
 	{
 		
-		public function WGComponentsSetting(compName:String)
+		public function WGComponentsSetting()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		override protected function configUI():void
@@ -22,7 +21,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			this.mouseChildren = false;
 			this.buttonMode = false;
 		}
-			
+	
 		public function as_hideShadowInPreBattle():void
 		{
 			var battlePage:*     = parent;

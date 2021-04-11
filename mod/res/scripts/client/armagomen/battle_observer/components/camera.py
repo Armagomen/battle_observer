@@ -12,15 +12,19 @@ from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, MAIN
-from armagomen.utils.common import overrideMethod, getPlayer, logError, vector3
+from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay
 
 SENSITIVITY = set()
 g_playerEvents.onArenaCreated += SENSITIVITY.clear
 
 
+def dynamicZoom():
+    return settings.zoom[GLOBAL.ENABLED] and not isReplay() and settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
+
+
 @overrideMethod(SniperCamera, "create")
 def sniper_create(base, camera, onChangeControlMode=None):
-    if settings.zoom[GLOBAL.ENABLED]:
+    if settings.zoom[GLOBAL.ENABLED] and not isReplay():
         if settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
             if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > GLOBAL.TWO:
                 steps = settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
@@ -37,27 +41,25 @@ def sniper_create(base, camera, onChangeControlMode=None):
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
 def setSystemValue(base, zoomSettings, value):
-    return base(zoomSettings, GLOBAL.ZERO if settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED] else value)
+    return base(zoomSettings, GLOBAL.ZERO if dynamicZoom() else value)
 
 
 @overrideMethod(SniperCamera, "enable")
 def enable(base, camera, targetPos, saveZoom):
-    if settings.zoom[GLOBAL.ENABLED]:
+    if dynamicZoom():
         player = getPlayer()
+        saveZoom = True
         if settings.zoom[SNIPER.GUN_ZOOM]:
             targetPos = player.gunRotator.markerInfo[GLOBAL.FIRST]
-        if settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]:
-            dist = int((player.getOwnVehiclePosition() - vector3(*targetPos)).length)
-            if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
-                index = int(math.ceil(dist / camera.dist_for_step) - GLOBAL.ONE)
-                camera._cfg[SNIPER.ZOOM] = camera._cfg[SNIPER.ZOOMS][index]
-            else:
-                maxZoom = camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST]
-                zoom = round(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS])
-                if zoom > maxZoom:
-                    zoom = maxZoom
-                camera._cfg[SNIPER.ZOOM] = zoom
-    return base(camera, targetPos, saveZoom or settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED])
+        dist = targetPos.distTo(player.position)
+        if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
+            index = int(math.ceil(dist / camera.dist_for_step) - GLOBAL.ONE)
+            zoom = camera._cfg[SNIPER.ZOOMS][index]
+        else:
+            zoom = min(round(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
+                       camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
+        camera._cfg[SNIPER.ZOOM] = zoom
+    return base(camera, targetPos, saveZoom)
 
 
 def changeControlMode(avatar, shooterID):
@@ -81,7 +83,7 @@ def changeControlMode(avatar, shooterID):
 @overrideMethod(PlayerAvatar, "showTracer")
 def showTracer(base, avatar, shooterID, *args):
     try:
-        if settings.zoom[SNIPER.DISABLE_SNIPER] and settings.zoom[GLOBAL.ENABLED]:
+        if settings.zoom[SNIPER.DISABLE_SNIPER] and settings.zoom[GLOBAL.ENABLED] and not isReplay():
             changeControlMode(avatar, shooterID)
     except Exception as err:
         logError("I can't get out of sniper mode. Error {0}.changeControlMode, {1}".format(__package__, err))

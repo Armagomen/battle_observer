@@ -48,14 +48,18 @@ class SixthSenseTimer(Timer):
     def callWWISE(self, wwiseEventName):
         sound = g_instance.getSound2D(wwiseEventName)
         if sound is not None:
-            sound.play()
+            if not sound.isPlaying:
+                sound.play()
+                if wwiseEventName == CONSTANTS.COUNTDOWN_TICKING:
+                    self._isTicking = True
+                else:
+                    self._isTicking = False
             self.__sounds[wwiseEventName] = sound
 
     def stop(self):
         super(SixthSenseTimer, self).stop()
         if self._play_sound and self._isTicking:
             self.callWWISE(CONSTANTS.STOP_TICKING)
-            self._isTicking = False
 
     def timeTicking(self, seconds):
         if seconds > CONSTANTS.ZERO:
@@ -69,7 +73,6 @@ class SixthSenseTimer(Timer):
         self.timeTicking(seconds)
         if self._play_sound and not self._isTicking:
             self.callWWISE(CONSTANTS.COUNTDOWN_TICKING)
-            self._isTicking = True
 
     def destroy(self):
         for sound in self.__sounds.values():

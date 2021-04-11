@@ -6,9 +6,14 @@ import BigWorld
 import Math
 import ResMgr
 
+from BattleReplay import isPlaying, isLoading
 from Event import Event
 
 MOD_NAME = "BATTLE_OBSERVER"
+
+
+def isReplay():
+    return isPlaying() or isLoading()
 
 
 def getPlayer():

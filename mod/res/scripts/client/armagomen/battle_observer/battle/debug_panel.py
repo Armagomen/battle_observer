@@ -6,7 +6,7 @@ from armagomen.battle_observer.meta.battle.debug_panel_meta import DebugPanelMet
 from gui.battle_control.controllers import debug_ctrl
 from gui.shared.personality import ServicesLocator
 
-debug_ctrl._UPDATE_INTERVAL = 0.4
+debug_ctrl._UPDATE_INTERVAL = 0.5
 
 
 class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
@@ -31,7 +31,11 @@ class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
                              ServicesLocator.settingsCore.getSetting(GRAPHICS.REFRESH_RATE))
 
     def updateDebugInfo(self, ping, fps, isLaggingNow, fpsReplay=-1):
-        self.macroDict[DEBUG_PANEL.LAG] = self.__colors[isLaggingNow]
-        self.macroDict[DEBUG_PANEL.PING] = ping
-        self.macroDict[DEBUG_PANEL.FPS] = fps
-        self.as_fpsPingS(self.template % self.macroDict, fps, ping)
+        lagColor = self.__colors[isLaggingNow]
+        update = (self.macroDict[DEBUG_PANEL.FPS] != fps or self.macroDict[DEBUG_PANEL.PING] != ping or
+                  self.macroDict[DEBUG_PANEL.LAG] != lagColor)
+        if update:
+            self.macroDict[DEBUG_PANEL.LAG] = lagColor
+            self.macroDict[DEBUG_PANEL.PING] = ping
+            self.macroDict[DEBUG_PANEL.FPS] = fps
+            self.as_fpsPingS(self.template % self.macroDict, fps, ping)

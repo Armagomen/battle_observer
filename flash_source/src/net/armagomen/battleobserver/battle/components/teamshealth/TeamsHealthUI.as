@@ -28,10 +28,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		public var getShadowSettings:Function;
 		public var getAlpha:Function;
 		
-		public function TeamsHealthUI(compName:String)
+		public function TeamsHealthUI()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		public function as_startUpdate(settings:Object, colors:Object, colorBlind:Boolean):void

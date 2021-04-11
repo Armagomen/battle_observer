@@ -47,7 +47,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def callbackListener(self, event):
         self._app.as_loadLibrariesS([SWF.LOBBY])
-        callback(2.0, lambda: self.eventListener(event))
+        callback(1.0, lambda: self.eventListener(event))
 
     def eventListener(self, event):
         if event.name == VIEW_ALIAS.LOBBY_HANGAR:

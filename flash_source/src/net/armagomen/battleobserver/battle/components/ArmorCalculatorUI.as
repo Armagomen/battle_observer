@@ -15,10 +15,9 @@ package net.armagomen.battleobserver.battle.components
 		private var currentControlMode:String = "arcade";
 		private var loaded:Boolean = false;
 
-		public function ArmorCalculatorUI(compName:String)
+		public function ArmorCalculatorUI()
 		{
 			super();
-			this.name = compName;
 		}
 
 		override protected function configUI():void

@@ -11,10 +11,9 @@
 		private var groupMap:Array;
 		private var loaded:Boolean = false;
 
-		public function UserBackGroundUI(compName:String)
+		public function UserBackGroundUI()
 		{
 			super();
-			this.name = compName;
 		}
 
 		public function as_startUpdate(data:Object):void
@@ -79,7 +78,8 @@
 			image.height = settings.height;
 			if (settings.hasOwnProperty("layer") && settings.layer == "debugPanel")
 			{
-				var debug:* = parent.getChildByName("Observer_DebugPanel_UI");
+				var battlePage:* = parent;
+				var debug:* = battlePage.getComponent("Observer_DebugPanel_UI");
 				if (debug){
 					debug.addChild(image);
 				}

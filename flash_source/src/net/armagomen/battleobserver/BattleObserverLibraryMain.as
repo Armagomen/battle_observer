@@ -32,112 +32,63 @@ package net.armagomen.battleobserver
 	import net.wg.gui.battle.views.BaseBattlePage;
 	import net.wg.infrastructure.base.*;
 	
-	
 	public class BattleObserverLibraryMain extends MovieClip
 	{
-		private var _idx:int = 0; 
+		private var _idx:int = 0;
+		
 		public function BattleObserverLibraryMain()
 		{
 			super();
 			Font.registerFont(BattleObserver.fontClass);
 			BaseBattlePage.prototype['as_createBattleObserverComp'] = function(ui_name:String):void
 			{
-				var child:*   = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
-				if (child){
-					_idx = this.getChildIndex(child) - 1;
-				}
 				
 				switch (ui_name)
 				{
 				case "Observer_UserBackGround_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new UserBackGroundUI(ui_name), 0), ui_name);
-					}
+					this.registerComponent(this.addChildAt(new UserBackGroundUI, _idx), ui_name);
 					break;
 				case "Observer_TeamsHP_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new TeamsHealthUI(ui_name), _idx), ui_name);
-					}
+					this.registerComponent(this.addChildAt(new TeamsHealthUI, _idx), ui_name);
 					break;
 				case "Observer_DamageLog_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new DamageLogsUI(ui_name), _idx), ui_name);
-					}
+					this.registerComponent(this.addChildAt(new DamageLogsUI, _idx), ui_name);
 					break;
-				case "Observer_MainGun_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new MainGunUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_MainGun_UI":
+					this.registerComponent(this.addChildAt(new MainGunUI, _idx), ui_name);
 					break;
-				case "Observer_DebugPanel_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new ObserverDebugPanelUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_DebugPanel_UI":
+					this.registerComponent(this.addChildAt(new ObserverDebugPanelUI, _idx), ui_name);
 					break;
-				case "Observer_DateTimes_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new ObserverDateTimesUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_DateTimes_UI":
+					this.registerComponent(this.addChildAt(new ObserverDateTimesUI, _idx), ui_name);
 					break;
-				case "Observer_BattleTimer_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new ObserverBattleTimerUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_BattleTimer_UI":
+					this.registerComponent(this.addChildAt(new ObserverBattleTimerUI, _idx), ui_name);
 					break;
-				case "Observer_SixthSense_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new SixthSenseUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_SixthSense_UI":
+					this.registerComponent(this.addChildAt(new SixthSenseUI, _idx), ui_name);
 					break;
-				case "Observer_TeamBases_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new TeamBasesUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_TeamBases_UI":
+					this.registerComponent(this.addChildAt(new TeamBasesUI, _idx), ui_name);
 					break;
-				case "Observer_ArmorCalculator_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new ArmorCalculatorUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_ArmorCalculator_UI":
+					this.registerComponent(this.addChildAt(new ArmorCalculatorUI, _idx), ui_name);
 					break;
-				case "Observer_FlightTime_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new FlightTimeUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_FlightTime_UI":
+					this.registerComponent(this.addChildAt(new FlightTimeUI, _idx), ui_name);
 					break;
-				case "Observer_DispersionTimer_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new DispersionTimerUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_DispersionTimer_UI":
+					this.registerComponent(this.addChildAt(new DispersionTimerUI, _idx), ui_name);
 					break;
-				case "Observer_PlayersPanels_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChildAt(new PlayersPanelsUI(ui_name), _idx), ui_name);
-					}
+				case "Observer_PlayersPanels_UI":
+					this.registerComponent(this.addChildAt(new PlayersPanelsUI, _idx), ui_name);
 					break;
-				case "Observer_Minimap_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChild(new MinimapUI(ui_name)), ui_name);
-					}
+				case "Observer_Minimap_UI":
+					this.registerComponent(this.addChildAt(new MinimapUI, _idx), ui_name);
 					break;
-				case "Observer_WGCompSettings_UI": 
-					if (!this.isFlashComponentRegisteredS(ui_name))
-					{
-						this.registerComponent(this.addChild(new WGComponentsSetting(ui_name)), ui_name);
-					}
+				case "Observer_WGCompSettings_UI":
+					this.registerComponent(this.addChildAt(new WGComponentsSetting, _idx), ui_name);
 					break;
 				default: 
 					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO]: No view component named - " + ui_name);

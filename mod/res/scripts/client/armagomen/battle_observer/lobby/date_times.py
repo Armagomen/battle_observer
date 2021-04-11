@@ -58,11 +58,11 @@ class DateTimes(DateTimesMeta):
         if ServicesLocator.itemsCache.items.stats.isPremium:
             premiumExpiryTime = ServicesLocator.itemsCache.items.stats.activePremiumExpiryTime
             deltaInSeconds = float(getTimeDeltaFromNow(makeLocalServerTime(premiumExpiryTime)))
-            days, hours = divmod(deltaInSeconds, ONE_DAY)
-            hours, minutes = divmod(hours, ONE_HOUR)
-            minutes, seconds = divmod(minutes, ONE_MINUTE)
+            days, delta = divmod(deltaInSeconds, ONE_DAY)
+            hours, delta = divmod(delta, ONE_HOUR)
+            minutes, seconds = divmod(delta, ONE_MINUTE)
             timedelta = {"days": days, "hours": hours, "minutes": minutes, "seconds": seconds}
-            timeLeft = CLOCK.DEFAULT_FORMAT_PREMIUM % timedelta
+            timeLeft = self.config[CLOCK.PREMIUM_FORMAT] % timedelta
             self.as_setPremiumLeftS(timeLeft)
         else:
             self.as_setPremiumLeftS()
