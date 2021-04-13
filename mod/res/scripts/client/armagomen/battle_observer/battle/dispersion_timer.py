@@ -16,7 +16,6 @@ class DispersionTimer(DispersionTimerMeta):
         self.macro = None
         self.base_getAngle = None
         self.max_angle = 0.0
-        self.aiming_time = 0.0
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
@@ -38,20 +37,15 @@ class DispersionTimer(DispersionTimerMeta):
             angle = round(angle * 100, 2)
             if self.max_angle == GLOBAL.F_ZERO:
                 self.max_angle = angle
-                self.aiming_time = round(avatar.vehicleTypeDescriptor.gun.aimingTime, 1)
-            timing = self.aiming_time * log(angle / self.max_angle)
+            if not avatar.isOnArena:
+                return
+            timing = round(avatar.vehicleTypeDescriptor.gun.aimingTime, 1) * log(angle / self.max_angle)
             self.macro["timer"] = timing
             self.macro["percent"] = int(self.max_angle / angle * 100)
             if timing <= GLOBAL.ZERO:
-                self.setDoneMessage()
+                self.as_updateTimerTextS(self.timer_done % self.macro)
             else:
-                self.setRegularMessage()
-
-    def setRegularMessage(self):
-        self.as_updateTimerTextS(self.timer_regular % self.macro)
-
-    def setDoneMessage(self):
-        self.as_updateTimerTextS(self.timer_done % self.macro)
+                self.as_updateTimerTextS(self.timer_regular % self.macro)
 
     def onEnterBattlePage(self):
         super(DispersionTimer, self).onEnterBattlePage()

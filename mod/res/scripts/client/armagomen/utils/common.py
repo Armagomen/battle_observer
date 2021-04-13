@@ -7,7 +7,7 @@ import Math
 import ResMgr
 
 from BattleReplay import isPlaying, isLoading
-from Event import Event
+from Event import SafeEvent
 
 MOD_NAME = "BATTLE_OBSERVER"
 
@@ -118,9 +118,9 @@ def checkDecoder(_string):
 class Events(object):
 
     def __init__(self):
-        self.onArmorChanged = Event()
-        self.onMarkerColorChanged = Event()
-        self.onDispersionAngleChanged = Event()
+        self.onArmorChanged = SafeEvent()
+        self.onMarkerColorChanged = SafeEvent()
+        self.onDispersionAngleChanged = SafeEvent()
 
 
 events = Events()

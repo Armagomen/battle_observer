@@ -9,9 +9,9 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			super();
 		}
 		
-		public function as_AddVehIdToList(vehicle_id:int):void
+		public function as_AddVehIdToList(vehicle_id:int, enemy:Boolean):void
 		{
-			this.addVehicle(vehicle_id);
+			this.addVehicle(vehicle_id, enemy);
 		}
 		
 		public function as_updatePPanelBar(vehID:int, currHP:Number, maxHP:Number, text:String):void

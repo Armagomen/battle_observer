@@ -18,7 +18,6 @@ class BattleCore(object):
         settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(SoundModes, 'setMode')(self.setSoundMode)
         overrideMethod(_ClientArenaVisitor, "hasDogTag")(self.hasDogTag)
-        overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")(self.getDispersionAngle)
 
     def setSoundMode(self, base, mode, modeName):
         if self.settings.main[MAIN.IGNORE_COMMANDERS]:

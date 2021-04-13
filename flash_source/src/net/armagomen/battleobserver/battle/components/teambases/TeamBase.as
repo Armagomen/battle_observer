@@ -124,7 +124,7 @@
 			
 			baseMain.scaleX = baseMain.scaleY = settings.scale;
 			this.x = App.appWidth / 2 - baseMain.width / 2;
-			this.y = settings.y;
+			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;
 			
 			if (this.animate)
 			{

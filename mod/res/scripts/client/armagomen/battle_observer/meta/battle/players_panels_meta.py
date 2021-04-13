@@ -6,8 +6,11 @@ class PlayersPanelsMeta(BaseModMeta):
     def __init__(self):
         super(PlayersPanelsMeta, self).__init__()
 
-    def as_AddVehIdToListS(self, vehID):
-        return self.flashObject.as_AddVehIdToList(vehID) if self._isDAAPIInited() else None
+    def onAddedToStorage(self, vehicleID, isEnemy):
+        pass
+
+    def as_AddVehIdToListS(self, vehID, isEnemy):
+        return self.flashObject.as_AddVehIdToList(vehID, isEnemy) if self._isDAAPIInited() else None
 
     def as_AddPPanelBarS(self, vehID, color, bgColor, settings, teamName, startVisible):
         return self.flashObject.as_AddPPanelBar(vehID, color, bgColor, settings, teamName,
@@ -23,8 +26,8 @@ class PlayersPanelsMeta(BaseModMeta):
         return self.flashObject.as_updatePPanelBar(vehicleID, currHP, maxHP,
                                                    textField) if self._isDAAPIInited() else None
 
-    def as_setVehicleIconColorS(self, vehID, color, multipler, enemy):
-        return self.flashObject.as_setVehicleIconColor(vehID, color, multipler,
+    def as_setVehicleIconColorS(self, vehID, color, multiplier, enemy):
+        return self.flashObject.as_setVehicleIconColor(vehID, color, multiplier,
                                                        enemy) if self._isDAAPIInited() else None
 
     def as_setHPbarsVisibleS(self, vehID, visible):

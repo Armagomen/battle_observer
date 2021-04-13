@@ -71,7 +71,7 @@
 		{
 			if (this.bar.scaleX != newScale)
 			{
-				if (this.visible && this.animationEnabled)
+				if (this.visible && this.animationEnabled && newScale > 0)
 				{
 					this.animation.continueTo(newScale, animationTime);
 				}
@@ -102,9 +102,10 @@
 		
 		public function setVisible(vis:Boolean):void
 		{
-			if (this.visible != vis)
+			var active:Boolean = vis && this.bar.scaleX > 0;
+			if (this.visible != active)
 			{
-				this.visible = vis;
+				this.visible = active;
 			}
 		}
 		

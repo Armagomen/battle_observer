@@ -57,6 +57,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
                 for comp in SORTED_ALIASES:
                     if view_settings.getSetting(comp) and not battle_page.isFlashComponentRegistered(comp):
                         flash.as_createBattleObserverComp(comp)
+                flash.as_updateBattleObserverChildIndexes()
             else:
                 to_format_str = "battle_page {}, has ho attribute {}"
                 logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))

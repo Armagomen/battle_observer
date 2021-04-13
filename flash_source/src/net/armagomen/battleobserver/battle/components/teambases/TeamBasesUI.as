@@ -12,6 +12,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		private var settings:Object;
 		private var colors:Object;
 		private var shadowSettings:Object;
+		private var yPos:Number = 100;
 		public var getShadowSettings:Function;
 		public var isColorBlind:Function;
 		public var animationEnabled:Function;
@@ -36,6 +37,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			this.settings = basesSettings;
 			this.colors = colors;
 			this.shadowSettings = getShadowSettings();
+			this.yPos = basesSettings.y >= 0 ? basesSettings.y : App.appHeight + basesSettings.y;
 		}
 		
 		public function as_addTeamBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
@@ -51,7 +53,8 @@ package net.armagomen.battleobserver.battle.components.teambases
 				base.updateBase(points / 100.0, invadersCnt, time, text);
 				if (this.bases["green"] || this.bases["red"])
 				{
-					base.y += this.settings.height + 4;
+					var offset:Number = this.settings.y >= 0 ? this.settings.height + 4 : -(this.settings.height + 4);
+					base.y += offset;
 				}
 				this.addChild(base);
 				this.bases[team] = base;
@@ -82,15 +85,15 @@ package net.armagomen.battleobserver.battle.components.teambases
 				this.bases[team] = null;
 			}
 			
-			if (this.bases["green"] && this.bases["green"].y != this.settings.y)
+			if (this.bases["green"] && this.bases["green"].y != this.yPos)
 			{
-				this.bases["green"].y = this.settings.y;
+				this.bases["green"].y = this.yPos;
 			}
-			if (this.bases["red"] && this.bases["red"].y != this.settings.y)
+			if (this.bases["red"] && this.bases["red"].y != this.yPos)
 			{
-				this.bases["red"].y = this.settings.y;
+				this.bases["red"].y = this.yPos;
 			}
 		}
-		
+	
 	}
 }
