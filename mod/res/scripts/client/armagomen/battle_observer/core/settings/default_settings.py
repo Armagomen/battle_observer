@@ -33,7 +33,6 @@ class DefaultSettings(object):
             MAIN.MAX_FRAME_RATE: 200,
             MAIN.AUTO_CLEAR_CACHE: False,
             MAIN.USE_KEY_PAIRS: False,
-            MAIN.REMOVE_HANDBRAKE: False,
             MAIN.IGNORE_COMMANDERS: False,
             MAIN.HIDE_DOG_TAGS: False,
             MAIN.DISABLE_SCORE_SOUND: False,

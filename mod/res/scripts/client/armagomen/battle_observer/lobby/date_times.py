@@ -17,7 +17,6 @@ class DateTimes(DateTimesMeta):
         self.config = settings.clock[CLOCK.IN_LOBBY]
         self.coding = None
         self.timerEvent = CyclicTimerEvent(CLOCK.UPDATE_INTERVAL, self.updateTimeData)
-        self.premiumEvent = CyclicTimerEvent(CLOCK.UPDATE_INTERVAL, self.setPremiumTimeLeft)
 
     def _populate(self):
         super(DateTimes, self)._populate()
@@ -25,26 +24,16 @@ class DateTimes(DateTimesMeta):
         settings.onModSettingsChanged += self.onModSettingsChanged
         self.as_startUpdateS(self.config)
         self.timerEvent.start()
-        if self.config[CLOCK.PREMIUM_TIME]:
-            self.premiumEvent.start()
 
     def updateDecoder(self):
         self.coding = checkDecoder(strftime(self.config[CLOCK.FORMAT]))
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == CLOCK.NAME:
-            self.config = config[CLOCK.IN_LOBBY]
             self.updateDecoder()
-            if self.config[CLOCK.PREMIUM_TIME]:
-                self.premiumEvent.start()
-            else:
-                self.premiumEvent.stop()
-                self.as_setPremiumLeftS()
 
     def _dispose(self):
         self.timerEvent.stop()
-        if self.config[CLOCK.PREMIUM_TIME]:
-            self.premiumEvent.stop()
         settings.onModSettingsChanged -= self.onModSettingsChanged
         super(DateTimes, self)._dispose()
 
@@ -53,9 +42,10 @@ class DateTimes(DateTimesMeta):
         if self.coding is not None:
             _time = _time.decode(self.coding)
         self.as_setDateTimeS(_time)
+        self.setPremiumTimeLeft(self.config[CLOCK.PREMIUM_TIME])
 
-    def setPremiumTimeLeft(self):
-        if ServicesLocator.itemsCache.items.stats.isPremium:
+    def setPremiumTimeLeft(self, enable):
+        if enable and ServicesLocator.itemsCache.items.stats.isPremium:
             premiumExpiryTime = ServicesLocator.itemsCache.items.stats.activePremiumExpiryTime
             deltaInSeconds = float(getTimeDeltaFromNow(makeLocalServerTime(premiumExpiryTime)))
             days, delta = divmod(deltaInSeconds, ONE_DAY)

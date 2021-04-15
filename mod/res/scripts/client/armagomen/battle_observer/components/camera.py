@@ -1,7 +1,6 @@
 import math
 
 from Avatar import PlayerAvatar
-from AvatarInputHandler.AimingSystems.SniperAimingSystem import SniperAimingSystem
 from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera, MinMax
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
@@ -11,7 +10,7 @@ from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.core import settings
-from armagomen.battle_observer.core.bo_constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, MAIN
+from armagomen.battle_observer.core.bo_constants import ARCADE, GLOBAL, SNIPER, STRATEGIC
 from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay
 
 SENSITIVITY = set()
@@ -117,18 +116,3 @@ def arty_create(base, camera, *args, **kwargs):
             camera._userCfg[ARCADE.SCROLL_SENSITIVITY] *= settings.strategic_camera[ARCADE.SCROLL_MULTIPLE]
             SENSITIVITY.add(STRATEGIC.NAME)
     return base(camera, *args, **kwargs)
-
-
-@overrideMethod(SniperAimingSystem, "__isTurretHasStaticYaw")
-@overrideMethod(SniperControlMode, "getPreferredAutorotationMode")
-def removeHandbrake(base, *args, **kwargs):
-    return settings.main[MAIN.REMOVE_HANDBRAKE] or base(*args, **kwargs)
-
-
-@overrideMethod(SniperControlMode, "enable")
-def sniperControlMode_enable(base, controlMode, *args, **kwargs):
-    result = base(controlMode, *args, **kwargs)
-    if settings.main[MAIN.REMOVE_HANDBRAKE]:
-        controlMode._cam.aimingSystem.enableHorizontalStabilizerRuntime(True)
-        controlMode._cam.aimingSystem.forceFullStabilization(True)
-    return result

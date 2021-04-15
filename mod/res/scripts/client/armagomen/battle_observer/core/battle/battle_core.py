@@ -1,9 +1,10 @@
-from Avatar import PlayerAvatar
 from CurrentVehicle import g_currentVehicle
+from DogTagComponent import DogTagComponent
 from PlayerEvents import g_playerEvents
 from SoundGroups import SoundModes
+from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core.bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
-from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, events
+from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, events, getPlayer
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
 
@@ -18,6 +19,7 @@ class BattleCore(object):
         settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(SoundModes, 'setMode')(self.setSoundMode)
         overrideMethod(_ClientArenaVisitor, "hasDogTag")(self.hasDogTag)
+        overrideMethod(DogTagComponent, "_isObserving")(self._isObservingDogTagFix)
 
     def setSoundMode(self, base, mode, modeName):
         if self.settings.main[MAIN.IGNORE_COMMANDERS]:
@@ -27,6 +29,15 @@ class BattleCore(object):
 
     def hasDogTag(self, base, *args, **kwargs):
         return False if self.settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
+
+    def _isObservingDogTagFix(self, *args):
+        player = getPlayer()
+        if player is None:
+            return True
+        elif player.vehicle is None:
+            return True
+        else:
+            return not player.vehicle.isPlayerVehicle
 
     @staticmethod
     def onModSettingsChanged(settings, blockID):
@@ -39,11 +50,10 @@ class BattleCore(object):
                 msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
 
     @staticmethod
-    @overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")
-    def getDispersionAngle(base, avatar, *args, **kwargs):
-        result = base(avatar, *args, **kwargs)
-        events.onDispersionAngleChanged(avatar, result[GLOBAL.FIRST])
-        return result
+    @overrideMethod(VehicleGunRotator, "updateRotationAndGunMarker")
+    def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
+        base(rotator, *args, **kwargs)
+        events.onDispersionAngleChanged(rotator._avatar, rotator.dispersionAngle)
 
     def onArenaCreated(self):
         if self.settings.log_total[GLOBAL.ENABLED]:

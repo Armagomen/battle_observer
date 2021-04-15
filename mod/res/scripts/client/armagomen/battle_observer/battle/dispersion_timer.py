@@ -3,7 +3,7 @@ from math import log
 
 from armagomen.battle_observer.core.bo_constants import DISPERSION, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
-from armagomen.utils.common import events
+from armagomen.utils.common import events, logInfo
 from gui.battle_control import avatar_getter
 
 
@@ -14,7 +14,6 @@ class DispersionTimer(DispersionTimerMeta):
         self.timer_regular = None
         self.timer_done = None
         self.macro = None
-        self.base_getAngle = None
         self.max_angle = 0.0
 
     def _populate(self):
@@ -32,16 +31,21 @@ class DispersionTimer(DispersionTimerMeta):
         if ctrlMode in POSTMORTEM.MODES:
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
-    def updateDispersion(self, avatar, angle):
+    def updateDispersion(self, avatar, dispersionAngle):
         if avatar.isVehicleAlive:
-            angle = round(angle * 100, 2)
+            dispersionAngle = round(dispersionAngle * 100, 2)
             if self.max_angle == GLOBAL.F_ZERO:
-                self.max_angle = angle
-            if not avatar.isOnArena:
-                return
-            timing = round(avatar.vehicleTypeDescriptor.gun.aimingTime, 1) * log(angle / self.max_angle)
+                descr = avatar.getVehicleDescriptor()
+                self.max_angle = round(descr.gun.shotDispersionAngle * 100, 2)
+                if self.isDebug:
+                    logInfo("DispersionTimer - set max dispersion angle %s" % self.max_angle)
+            if self.max_angle > dispersionAngle:
+                self.max_angle = dispersionAngle
+                if self.isDebug:
+                    logInfo("DispersionTimer - renew max dispersion angle %s" % self.max_angle)
+            timing = round(avatar.vehicleTypeDescriptor.gun.aimingTime, 1) * log(dispersionAngle / self.max_angle)
             self.macro["timer"] = timing
-            self.macro["percent"] = int(self.max_angle / angle * 100)
+            self.macro["percent"] = int(self.max_angle / dispersionAngle * 100)
             if timing <= GLOBAL.ZERO:
                 self.as_updateTimerTextS(self.timer_done % self.macro)
             else:

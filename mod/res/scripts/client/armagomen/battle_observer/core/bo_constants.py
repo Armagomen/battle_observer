@@ -14,7 +14,7 @@ today = datetime.date.today()
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.32.6"
+MOD_VERSION = "1.32.7"
 API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -147,7 +147,6 @@ class MAIN:
     ANONYMOUS_STRING = "anonymousString"
     CHANGE_ANONYMOUS_NAME = "anonymousNameChange"
     USE_KEY_PAIRS = "useKeyPairs"
-    REMOVE_HANDBRAKE = "removeHandbrake"
     IGNORE_COMMANDERS = "ignore_commanders_voice"
     DISABLE_SCORE_SOUND = "disable_score_sound"
     HIDE_SERVER_IN_HANGAR = "hide_server_in_hangar"

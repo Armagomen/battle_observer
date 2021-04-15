@@ -54,7 +54,6 @@ translate = {
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Сhange Anonymous Name",
-        "removeHandbrake": "Handbremse für AT-SPG deaktivieren.",
         "hide_dog_tags": "Deaktivieren Sie die Anzeige von Token.",
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "

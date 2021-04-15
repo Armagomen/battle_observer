@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from AvatarInputHandler.gun_marker_ctrl import _computePiercingPowerAtDistImpl, _CrosshairShotResults
+from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, _MIN_PIERCING_DIST, _LERP_RANGE_PIERCING_DIST
 from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from aih_constants import SHOT_RESULT
@@ -14,6 +14,16 @@ from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _VIEW_CONSTANTS
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from soft_exception import SoftException
+
+
+def _computePiercingPowerAtDistImpl(dist, maxDist, p100, p500):
+    if dist <= _MIN_PIERCING_DIST:
+        return p100
+    elif dist < maxDist:
+        power = p100 + (p500 - p100) * (dist - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
+        if power > GLOBAL.F_ZERO:
+            return power
+    return p500
 
 
 class ShotResultPlugin(plugins.CrosshairPlugin):

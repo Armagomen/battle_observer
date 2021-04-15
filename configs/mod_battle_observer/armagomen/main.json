@@ -13,8 +13,7 @@
   "hideClanAbbrev": false, 
   "hide_dog_tags": true, 
   "hide_server_in_hangar": false, 
-  "ignore_commanders_voice": true, 
-  "removeHandbrake": true, 
+  "ignore_commanders_voice": true,
   "removeShadowInPrebattle": false, 
   "showFriendsAndClanInEars": true, 
   "useKeyPairs": false

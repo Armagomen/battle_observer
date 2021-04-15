@@ -45,8 +45,7 @@
 				}
 				else if (this.animation.isPlaying)
 				{
-					this.animation.stop();
-					this.progressBar.scaleX = newScale;
+					this.animation.rewind(newScale);
 				}
 			}
 			else
