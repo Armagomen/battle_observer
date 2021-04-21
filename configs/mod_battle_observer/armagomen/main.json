@@ -1,4 +1,5 @@
 {
+  "DEBUG_MODE": false, 
   "anonymousEnableShow": true, 
   "anonymousNameChange": false, 
   "anonymousString": "Anonymous", 
@@ -8,11 +9,11 @@
   "fps_enableFPSLimiter": false, 
   "fps_maxFrameRate": 200, 
   "hideBadges": true, 
-  "hideChatInRandom": false, 
+  "hideChatInRandom": true, 
   "hideClanAbbrev": false, 
   "hide_dog_tags": true, 
-  "ignore_commanders_voice": true, 
-  "removeHandbrake": true, 
+  "hide_server_in_hangar": false, 
+  "ignore_commanders_voice": true,
   "removeShadowInPrebattle": false, 
   "showFriendsAndClanInEars": true, 
   "useKeyPairs": false

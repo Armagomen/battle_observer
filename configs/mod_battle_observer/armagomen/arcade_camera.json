@@ -1,6 +1,7 @@
 {
   "enabled": true, 
-  "max": 200.0, 
+  "max": 160.0, 
   "min": 4.0, 
-  "startDeadDist": 20.0
+  "scrollMultiple": 1, 
+  "startDeadDist": 18.0
 }

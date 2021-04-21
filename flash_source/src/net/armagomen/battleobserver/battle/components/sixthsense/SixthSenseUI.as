@@ -8,6 +8,8 @@
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
+	import fl.transitions.Tween;
+	
 	
 	public class SixthSenseUI extends BattleDisplayable
 	{
@@ -16,12 +18,14 @@
 		private var image:Bitmap      = null;
 		private var _container:Sprite = null;
 		public var getShadowSettings:Function;
+		public var animationEnabled:Function;
+		private var animate:Boolean = false;
 		private var loaded:Boolean    = false;
+		private var animation:Tween   = null;
 		
-		public function SixthSenseUI(compName:String)
+		public function SixthSenseUI()
 		{
 			super();
-			this.name = compName;
 			this.x = App.appWidth >> 1;
 		}
 		
@@ -38,6 +42,7 @@
 						battlePage.removeChild(sixthSense);
 					}
 				}
+				this.animate = this.animationEnabled();
 				params = App.utils.data.cloneObject(settings);
 				this.setImage();
 				App.utils.data.cleanupDynamicObject(settings);
@@ -88,7 +93,15 @@
 				if (params.showTimer)
 				{
 					timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-					timer.alpha = params.timer.alpha;
+					if (this.animate)
+					{
+						this.animation = new Tween(this.timer, "alpha", null, 1.0, 0, 1, true);
+						this.animation.FPS = 30;
+					}
+					else
+					{
+						timer.alpha = params.timer.alpha;
+					}
 				}
 			}
 			this._container.visible = true;
@@ -101,6 +114,10 @@
 		
 		public function as_updateTimer(str:String):void
 		{
+			if (this.animate)
+			{
+				this.animation.start();
+			}
 			timer.htmlText = str;
 		}
 		
@@ -121,7 +138,15 @@
 			if (params.showTimer)
 			{
 				timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-				timer.alpha = params.timer.alpha;
+				if (this.animate)
+				{
+					this.animation = new Tween(this.timer, "alpha", null, 1, 0, 0.98, true);
+					this.animation.FPS = 30;
+				}
+				else
+				{
+					timer.alpha = params.timer.alpha;
+				}
 			}
 		}
 		

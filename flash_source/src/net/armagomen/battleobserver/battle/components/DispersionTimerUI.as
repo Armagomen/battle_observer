@@ -17,10 +17,9 @@ package net.armagomen.battleobserver.battle.components
 		private var currentControlMode:String = "arcade";
 		private var loaded:Boolean = false;
 		
-		public function DispersionTimerUI(compName:String)
+		public function DispersionTimerUI()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		public function as_startUpdate(config:Object):void

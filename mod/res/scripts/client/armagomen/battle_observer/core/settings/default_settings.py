@@ -1,16 +1,20 @@
 # coding=utf-8
+from collections import defaultdict, namedtuple
 
 import Keys
 from Event import SafeEvent
 from armagomen.battle_observer.core.bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
-    DAMAGE_LOG, DEBUG_PANEL, DISPERSION_CIRCLE, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
+    DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, USER_BACKGROUND, \
     VEHICLE_TYPES
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
+DamageLogsSettings = namedtuple('DamageLogsSettings',
+                                ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
 
-class Config(object):
+
+class DefaultSettings(object):
 
     def __init__(self):
         self.onModSettingsChanged = SafeEvent()
@@ -29,10 +33,11 @@ class Config(object):
             MAIN.MAX_FRAME_RATE: 200,
             MAIN.AUTO_CLEAR_CACHE: False,
             MAIN.USE_KEY_PAIRS: False,
-            MAIN.REMOVE_HANDBRAKE: False,
             MAIN.IGNORE_COMMANDERS: False,
             MAIN.HIDE_DOG_TAGS: False,
-            MAIN.DISABLE_SCORE_SOUND: False
+            MAIN.DISABLE_SCORE_SOUND: False,
+            MAIN.HIDE_SERVER_IN_HANGAR: False,
+            MAIN.DEBUG: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
@@ -59,7 +64,9 @@ class Config(object):
             GLOBAL.ENABLED: False,
             CLOCK.IN_LOBBY: {
                 GLOBAL.ENABLED: False,
+                CLOCK.PREMIUM_TIME: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
+                CLOCK.PREMIUM_FORMAT: CLOCK.DEFAULT_FORMAT_PREMIUM,
                 GLOBAL.X: -240,
                 GLOBAL.Y: 54
             },
@@ -76,34 +83,34 @@ class Config(object):
             SIXTH_SENSE.PLAY_TICK_SOUND: False,
             SIXTH_SENSE.TIME: 12,
             SIXTH_SENSE.TIMER: {
-                GLOBAL.X: -2,
-                GLOBAL.Y: 130,
-                SIXTH_SENSE.TEMPLATE: "<font size='40'>%(timeLeft)d</font>",
-                GLOBAL.ALPHA: 0.75
+                GLOBAL.X: -1,
+                GLOBAL.Y: 125,
+                SIXTH_SENSE.TEMPLATE: "<font size='34' color='#fafafa'><b>%(timeLeft)d</b></font>",
+                GLOBAL.ALPHA: 0.9
             },
             SIXTH_SENSE.IMAGE: {
                 GLOBAL.SMOOTHING: True,
                 GLOBAL.X: GLOBAL.ZERO,
                 GLOBAL.Y: 100,
                 GLOBAL.ALPHA: 0.85,
-                GLOBAL.SCALE: 0.65,
-                GLOBAL.IMG: "mods/configs/mod_battle_observer/SixthSenseIcon.png"
+                GLOBAL.SCALE: 0.6,
+                GLOBAL.IMG: "mods/configs/mod_battle_observer/armagomen/SixthSenseIcon.png"
             }
         }
         self.dispersion_circle = {
             GLOBAL.ENABLED: False,
-            DISPERSION_CIRCLE.CIRCLE_ENABLED: False,
-            DISPERSION_CIRCLE.CIRCLE_EXTRA_LAP: False,
-            DISPERSION_CIRCLE.CIRCLE_REPLACE: False,
-            DISPERSION_CIRCLE.CIRCLE_SCALE_CONFIG: DISPERSION_CIRCLE.SCALE,
-            DISPERSION_CIRCLE.TIMER_ENABLED: False,
-            DISPERSION_CIRCLE.TIMER_POSITION_X: 110,
-            DISPERSION_CIRCLE.TIMER_POSITION_Y: GLOBAL.ZERO,
-            DISPERSION_CIRCLE.TIMER_ALIGN: GLOBAL.LEFT,
-            DISPERSION_CIRCLE.TIMER_COLOR: "#f5ff8f",
-            DISPERSION_CIRCLE.TIMER_DONE_COLOR: "#a6ffa6",
-            DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
-            DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
+            DISPERSION.ENABLED: False,
+            DISPERSION.CIRCLE_EXTRA_LAP: False,
+            DISPERSION.CIRCLE_REPLACE: False,
+            DISPERSION.CIRCLE_SCALE_CONFIG: DISPERSION.SCALE,
+            DISPERSION.TIMER_ENABLED: False,
+            DISPERSION.TIMER_POSITION_X: 110,
+            DISPERSION.TIMER_POSITION_Y: GLOBAL.ZERO,
+            DISPERSION.TIMER_ALIGN: GLOBAL.LEFT,
+            DISPERSION.TIMER_COLOR: "#f5ff8f",
+            DISPERSION.TIMER_DONE_COLOR: "#a6ffa6",
+            DISPERSION.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
+            DISPERSION.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
         }
         self.debug_panel = {
             GLOBAL.ENABLED: False,
@@ -177,9 +184,10 @@ class Config(object):
             GLOBAL.ENABLED: False,
             SNIPER.DISABLE_SNIPER: False,
             SNIPER.SKIP_CLIP: True,
+            SNIPER.GUN_ZOOM: False,
             SNIPER.DYN_ZOOM: {
                 GLOBAL.ENABLED: False,
-                SNIPER.GUN_ZOOM: False,
+                SNIPER.STEPS_ONLY: True,
                 SNIPER.METERS: 20.0
             },
             SNIPER.ZOOM_STEPS: {
@@ -190,25 +198,21 @@ class Config(object):
         self.arcade_camera = {
             GLOBAL.ENABLED: False,
             ARCADE.MIN: 4.0,
-            ARCADE.MAX: 80.0,
-            ARCADE.START_DEAD_DIST: 20.0
+            ARCADE.MAX: 150.0,
+            ARCADE.START_DEAD_DIST: 20.0,
+            ARCADE.SCROLL_MULTIPLE: 1,
         }
         self.strategic_camera = {
             GLOBAL.ENABLED: False,
             STRATEGIC.MIN: 40.0,
-            STRATEGIC.MAX: 150.0
+            STRATEGIC.MAX: 150.0,
+            ARCADE.SCROLL_MULTIPLE: 2,
         }
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 100},
-            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(calcedArmor).1f | %(piercingPower)s</font>",
-            ARMOR_CALC.MESSAGES: {
-                "green": "<font size='20' color='#66FF33'>Да пребудет с тобой сила.</font>",
-                "orange": "<font size='20' color='#FF9900'>Переходи на темную сторону силы.</font>",
-                "purple": "<font size='20' color='#6F6CD3'>Фугас, настало твое время.</font>",
-                "red": "<font size='20' color='#FF0000'>Фугас, настало твое время.</font>",
-                "yellow": "<font size='20' color='#FAF829'>Переходи на темную сторону силы.</font>"
-            }
+            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font>",
+            ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE
         }
         self.colors = {
             MAIN_GUN.NAME: {
@@ -238,16 +242,17 @@ class Config(object):
             DAMAGE_LOG.WG_BLOCKED: False,
             DAMAGE_LOG.WG_ASSIST: False,
             DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
-            DAMAGE_LOG.ATTACK_REASON: {
+            DAMAGE_LOG.ATTACK_REASON: defaultdict(lambda: "", {
                 ATTACK_REASON.SHOT: "<img src='{dir}/damage.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.FIRE: "<img src='{dir}/fire.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.RAM: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.WORLD_COLLISION: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS)
-            }
+            })
         }
         additional = {reason: "<img src='{dir}/module.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS) for reason
                       in ATTACK_REASONS if reason not in self.log_global[DAMAGE_LOG.ATTACK_REASON]}
         self.log_global[DAMAGE_LOG.ATTACK_REASON].update(additional)
+
         self.log_total = {
             GLOBAL.ENABLED: False,
             GLOBAL.SETTINGS: {
@@ -269,6 +274,7 @@ class Config(object):
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
+
         self.log_damage_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
@@ -296,16 +302,15 @@ class Config(object):
                 "%(userName).12s %(killedIcon)s",
                 "</font></textformat>"
             ],
-            DAMAGE_LOG.SHELL_TYPES: {shell_type: "" for shell_type in SHELL_TYPES_LIST},
-            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST},
+            DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
+            DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
+                                                               tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST}),
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-        self.log_damage_extended[DAMAGE_LOG.SHELL_TYPES][DAMAGE_LOG.UNDEFINED] = ""
-        self.log_damage_extended[DAMAGE_LOG.SHELL_ICONS][DAMAGE_LOG.UNDEFINED] = ""
         self.log_input_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
@@ -335,16 +340,16 @@ class Config(object):
                 "%(userName).12s %(killedIcon)s",
                 "</font></textformat>"
             ],
-            DAMAGE_LOG.SHELL_TYPES: {shell_type: "" for shell_type in SHELL_TYPES_LIST},
-            DAMAGE_LOG.SHELL_ICONS: {shell: "" for shell in tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST},
+            DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
+            DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
+                                                               tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST}),
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-        self.log_input_extended[DAMAGE_LOG.SHELL_TYPES][DAMAGE_LOG.UNDEFINED] = ""
-        self.log_input_extended[DAMAGE_LOG.SHELL_ICONS][DAMAGE_LOG.UNDEFINED] = ""
+
         self.hp_bars = {
             GLOBAL.ENABLED: True,
             HP_BARS.STYLE: HP_BARS.LEAGUE_STYLE,
@@ -482,3 +487,7 @@ class Config(object):
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
+
+    @property
+    def damage_log(self):
+        return DamageLogsSettings(self.log_total, self.log_damage_extended, self.log_input_extended, self.log_global)

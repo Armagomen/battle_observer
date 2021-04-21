@@ -1,17 +1,20 @@
 # coding=utf-8
+import datetime
+import random
+
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
-from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR
-from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
+from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
+    SHOT_RESULT_TO_ALT_COLOR
+from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from vehicle_systems.tankStructure import TankPartIndexes
+from helpers import getClientLanguage
 
-import datetime
 today = datetime.date.today()
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.32.6"
+MOD_VERSION = "1.32.7"
 API_VERSION = "1.10.8"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -40,7 +43,6 @@ class GLOBAL:
 
     CONFIG_ERROR = "Incorrect macros in config file."
     ONE_SECOND = 1.0
-    DEBUG_MODE = False
     ALIGN = "align"
     ALIGN_LIST = ("left", "center", "right")
     ALIGN_LIST_TEST = ("left", "center")
@@ -72,6 +74,7 @@ class GLOBAL:
     ZERO = FIRST
     F_ZERO = float(FIRST)
     ONE = 1
+    TWO = 2
     F_ONE = 1.0
     OUTLINE = "outline"
     ICONS_DIR = "img://gui/maps/icons"
@@ -92,34 +95,21 @@ class URLS:
     DONATE = {DONATE_UA_URL, DONATE_EU_URL}
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
-    if (today.day, today.month) != (1, 4):
-        DONATE_RU_MESSAGE = "<b><font color='#ffff73'>" \
-                            "Поддержите разработку мода 'Battle Observer'. Спасибо что вы с нами." \
-                            "</font><br><br>" \
-                            "<a href='event:{ua}'>UAH</a> | " \
-                            "<a href='event:{all}'>USD/EUR/RUB</a></b>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
-        DONATE_EU_MESSAGE = "<b><font color='#ffff73'>" \
-                            "Support the development of the 'Battle Observer' mod. Thank you for being with us." \
-                            "</font><br><br>" \
-                            "<a href='event:{ua}'>UAH</a> | " \
-                            "<a href='event:{all}'>USD/EUR/RUB</a></b>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
+    if getClientLanguage().lower() in GLOBAL.RU_LOCALIZATION:
+        MESSAGES = ("Поддержите разработку мода. Спасибо что вы с нами.",
+                    "Нравится мод ?, не дай автору помереть с голоду.",
+                    "Для добавления статистики в мод необходимо собрать деньги на сервер.",
+                    "А ты уже поддержал разработку ?",
+                    "Мод существует только благодаря вашей поддержке, нет поддержки нет желания что-либо делать.")
     else:
-        DONATE_RU_MESSAGE = "<b><font color='#ffff73'>" \
-                            "Я знаю что ты хочешь статистику в 'Battle Observer'" \
-                            "</font><br>Ходят слухи, что если задонатить 100 разработчику, то она появится." \
-                            "<br>Возможно это просто слухи но следует проверить." \
-                            "<br>Начинаем собирать деньги на сервер для статки. " \
-                            "Там всего то собрать нужно каких-то жалких 75 000 рублей." \
-                            "<br><a href='event:{ua}'>UAH</a> | " \
-                            "<a href='event:{all}'>USD/EUR/RUB</a></b>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
-        DONATE_EU_MESSAGE = "<b><font color='#ffff73'>" \
-                            "I know you want statistics in the 'Battle Observer'" \
-                            "</font><br>There are rumors that if you donate a hundred to a developer, it will appear." \
-                            "<br> This is probably just a rumor but should be checked." \
-                            "<br> We are starting to collect money for a server for statics. " \
-                            "There you just need to collect some measly 1,000 usd." \
-                            "<br><a href='event:{ua}'>UAH</a> | " \
-                            "<a href='event:{all}'>USD/EUR/RUB</a></b>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL)
+        MESSAGES = ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
+                    "If you like mod, don't let the author starve to death.",
+                    "To add statistics to the mod, you need to rent or buy a server.",
+                    "Have you already supported the development?")
+
+    DONATE_MESSAGE = "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
+                     "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL,
+                                                                              msg=random.choice(MESSAGES))
 
 
 class SERVICE_CHANNEL:
@@ -157,9 +147,10 @@ class MAIN:
     ANONYMOUS_STRING = "anonymousString"
     CHANGE_ANONYMOUS_NAME = "anonymousNameChange"
     USE_KEY_PAIRS = "useKeyPairs"
-    REMOVE_HANDBRAKE = "removeHandbrake"
     IGNORE_COMMANDERS = "ignore_commanders_voice"
     DISABLE_SCORE_SOUND = "disable_score_sound"
+    HIDE_SERVER_IN_HANGAR = "hide_server_in_hangar"
+    DEBUG = "DEBUG_MODE"
 
 
 class COLORS:
@@ -237,9 +228,12 @@ class CLOCK:
     IN_BATTLE = "battle"
     IN_LOBBY = "hangar"
     FORMAT = "format"
+    PREMIUM_TIME = "premium_time"
+    PREMIUM_FORMAT = "premium_format"
     UPDATE_INTERVAL = 1.0
     DEFAULT_FORMAT_BATTLE = "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>"
     DEFAULT_FORMAT_HANGAR = "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>"
+    DEFAULT_FORMAT_PREMIUM = "%(days)d Дн. %(hours)02d:%(minutes)02d:%(seconds)02d"
 
 
 class SNIPER:
@@ -249,6 +243,7 @@ class SNIPER:
     ZOOM = "zoom"
     NAME = ZOOM
     DYN_ZOOM = "dynamic_zoom"
+    STEPS_ONLY = "steps_only"
     ZOOM_STEPS = "zoomSteps"
     STEPS = "steps"
     GUN_ZOOM = "zoomToGunMarker"
@@ -256,17 +251,19 @@ class SNIPER:
     ZOOMS = "zooms"
     ZOOM_EXPOSURE = "zoomExposure"
     INCREASED_ZOOM = "increasedZoom"
-    DEFAULT_STEPS = [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0]
-    ONE, EXPOSURE_FACTOR, MAX_CALIBER = (1, 0.1, 40)
+    DEFAULT_STEPS = [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0]
+    EXPOSURE_FACTOR, MAX_CALIBER = (0.1, 40)
     DISABLE_SNIPER = "disable_cam_after_shoot"
     SKIP_CLIP = "disable_cam_skip_clip"
     CLIP = "clip"
+    MAX_DIST = 730.0
 
 
 class DAMAGE_LOG:
     def __init__(self):
         pass
 
+    NAME = "damage_log"
     ALL_DAMAGES = "allDamages"
     ASSIST_DAMAGE = "assistDamage"
     ASSIST_STUN = "stun"
@@ -285,8 +282,9 @@ class DAMAGE_LOG:
     DONE_EXTENDED = "log_damage_extended"
     D_LOG = "d_log"
     IN_LOG = "in_log"
-    TOP_LOG_ASSIST = {EV_ID.PLAYER_ASSIST_TO_KILL_ENEMY, EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY, EV_ID.PLAYER_USED_ARMOR}
-    EXTENDED_DAMAGE = {EV_ID.PLAYER_DAMAGED_HP_ENEMY, EV_ID.ENEMY_DAMAGED_HP_PLAYER}
+    TOP_LOG_ASSIST = {FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY, FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY,
+                      FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR}
+    EXTENDED_DAMAGE = {FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER}
     GLOBAL = "log_global"
     HOT_KEY = "logsAltmode_hotkey"
     ICONS = "icons"
@@ -302,7 +300,7 @@ class DAMAGE_LOG:
     NEW_LINE, COMMA, LIST_SEPARATOR = ("<br>", ", ", " <font color='#FFFF00'>|</font> ")
     PERCENT_AVG_COLOR = "percentDamageAvgColor"
     PLAYER_DAMAGE = "playerDamage"
-    RANDOM_MIN_AVG, FRONT_LINE_MIN_AVG = (1000.0, 4000.0)
+    RANDOM_MIN_AVG, FRONT_LINE_MIN_AVG = (1200.0, 4000.0)
     RECEIVED_EXTENDED = "log_input_extended"
     REVERSE = "reverse"
     SHELL = ("normal", "gold")
@@ -320,12 +318,12 @@ class DAMAGE_LOG:
     TANK_NAMES = "tankNames"
     TEMPLATE_MAIN_DMG = "templateMainDMG"
     TOP_MACROS_NAME = {
-        EV_ID.PLAYER_DAMAGED_HP_ENEMY: PLAYER_DAMAGE,
-        EV_ID.PLAYER_USED_ARMOR: BLOCKED_DAMAGE,
-        EV_ID.PLAYER_ASSIST_TO_KILL_ENEMY: ASSIST_DAMAGE,
-        EV_ID.PLAYER_SPOTTED_ENEMY: SPOTTED_TANKS,
-        EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ASSIST_STUN,
-        EV_ID.DESTRUCTIBLE_DAMAGED: PLAYER_DAMAGE
+        FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: PLAYER_DAMAGE,
+        FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR: BLOCKED_DAMAGE,
+        FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: ASSIST_DAMAGE,
+        FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY: SPOTTED_TANKS,
+        FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ASSIST_STUN,
+        FEEDBACK_EVENT_ID.DESTRUCTIBLE_DAMAGED: PLAYER_DAMAGE
     }
     TOP_LOG = "log_total"
     TOTAL_DAMAGE = "totalDamage"
@@ -357,6 +355,8 @@ class ARCADE:
     START_ANGLE = "startAngle"
     START_DEAD_DIST = "startDeadDist"
     START_DIST = "startDist"
+    SCROLL_MULTIPLE = "scrollMultiple"
+    SCROLL_SENSITIVITY = "scrollSensitivity"
 
 
 class STRATEGIC:
@@ -383,19 +383,13 @@ class ARMOR_CALC:
     def __init__(self):
         pass
 
-    BACKWARD_LENGTH = 0.1
-    EFFECTIVE_DISTANCE = 400.0
-    FORWARD_LENGTH = 10.0
     GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
-    HALF = 0.5
-    MIN_DIST = 100.0
+    HALF = 0.35
     PIERCING_POWER = "piercingPower"
     NORMAL = SHOT_RESULT_TO_DEFAULT_COLOR[SHOT_RESULT.UNDEFINED]
     NAME = "armor_calculator"
     POSITION = "calcPosition"
     MESSAGES = "messages"
-    SHOW_POINTS = "showCalcPoints"
-    SKIP_DETAILS = {TankPartIndexes.CHASSIS, TankPartIndexes.GUN}
     TEMPLATE = "template"
     MACROS_COLOR = "color"
     MACROS_COUNTED_ARMOR = "countedArmor"
@@ -405,6 +399,9 @@ class ARMOR_CALC:
     MACROS_CALIBER = "caliber"
     MACROS_RICOCHET = "ricochet"
     NONE_DATA = (SHOT_RESULT.UNDEFINED, None, None, None, None)
+    MESSAGE_COLORS = set(SHOT_RESULT_TO_ALT_COLOR.itervalues())
+    MESSAGE_COLORS.update(SHOT_RESULT_TO_DEFAULT_COLOR.itervalues())
+    MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in MESSAGE_COLORS}
 
 
 class VEHICLE:
@@ -491,7 +488,7 @@ class SIXTH_SENSE:
     M_TIME_LEFT = "timeLeft"
 
 
-class DISPERSION_CIRCLE:
+class DISPERSION:
     def __init__(self):
         pass
 
@@ -500,9 +497,9 @@ class DISPERSION_CIRCLE:
     CIRCLE_REPLACE = "circle_replaceOriginalCircle"
     CIRCLE_SCALE_CONFIG = "circle_scale"
     CIRCLE_SERVER = "useServerAim"
-    CIRCLE_ENABLED = "circle_enabled"
-    CIRCLE_SCALE = 0.75
-    SCALE = 75
+    ENABLED = "circle_enabled"
+    CIRCLE_SCALE = 0.80
+    SCALE = 80
     MAX_TIME = 5.0
     SPG_GM_SCALE = 0.8
     GUN_MARKER_MIN_SIZE = 16.0
@@ -673,7 +670,7 @@ class MASSAGES:
 
 
 LOAD_LIST = (
-    HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION_CIRCLE.NAME,
+    HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
     DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME,
@@ -692,7 +689,7 @@ class CONFIG_INTERFACE:
 
     DONATE_BUTTONS = ('donate_button_ua', 'donate_button_ru', 'donate_button_eu', 'support_button')
     BLOCK_IDS = (
-        ANOTHER.CONFIG_SELECT, MAIN.NAME, DISPERSION_CIRCLE.NAME, CAROUSEL.NAME, EFFECTS.NAME, DEBUG_PANEL.NAME,
+        ANOTHER.CONFIG_SELECT, MAIN.NAME, DISPERSION.NAME, CAROUSEL.NAME, EFFECTS.NAME, DEBUG_PANEL.NAME,
         BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
         DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, MAIN_GUN.NAME, TEAM_BASES.NAME,
         VEHICLE_TYPES.NAME, PANELS.PANELS_NAME, SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME,
@@ -701,7 +698,7 @@ class CONFIG_INTERFACE:
     HANDLER_VALUES = {
         SNIPER.NAME: {
             'dynamic_zoom*enabled': (
-                'dynamic_zoom*zoom_max', 'dynamic_zoom*zoomToGunMarker', 'dynamic_zoom*zoom_min',
+                'dynamic_zoom*steps_only',
                 'dynamic_zoom*zoomXMeters'
             ),
             'zoomSteps*enabled': ('zoomSteps*steps',),
@@ -760,18 +757,18 @@ class CONFIG_INTERFACE:
         SIXTH_SENSE.NAME: {
             SIXTH_SENSE.SHOW_TIMER: (SIXTH_SENSE.PLAY_TICK_SOUND,)
         },
-        "reversed_values": {'dynamic_zoom*enabled', PANELS.BAR_CLASS_COLOR},
-        DISPERSION_CIRCLE.NAME: {
-            DISPERSION_CIRCLE.TIMER_ENABLED: (DISPERSION_CIRCLE.TIMER_REGULAR_TEMPLATE,
-                                              DISPERSION_CIRCLE.TIMER_DONE_TEMPLATE,
-                                              DISPERSION_CIRCLE.TIMER_DONE_COLOR,
-                                              DISPERSION_CIRCLE.TIMER_COLOR,
-                                              DISPERSION_CIRCLE.TIMER_POSITION_X,
-                                              DISPERSION_CIRCLE.TIMER_POSITION_Y,
-                                              DISPERSION_CIRCLE.TIMER_ALIGN),
-            DISPERSION_CIRCLE.CIRCLE_ENABLED: (DISPERSION_CIRCLE.CIRCLE_SCALE_CONFIG,
-                                               DISPERSION_CIRCLE.CIRCLE_EXTRA_LAP,
-                                               DISPERSION_CIRCLE.CIRCLE_REPLACE)
+        "reversed_values": {PANELS.BAR_CLASS_COLOR},
+        DISPERSION.NAME: {
+            DISPERSION.TIMER_ENABLED: (DISPERSION.TIMER_REGULAR_TEMPLATE,
+                                       DISPERSION.TIMER_DONE_TEMPLATE,
+                                       DISPERSION.TIMER_DONE_COLOR,
+                                       DISPERSION.TIMER_COLOR,
+                                       DISPERSION.TIMER_POSITION_X,
+                                       DISPERSION.TIMER_POSITION_Y,
+                                       DISPERSION.TIMER_ALIGN),
+            DISPERSION.ENABLED: (DISPERSION.CIRCLE_SCALE_CONFIG,
+                                 DISPERSION.CIRCLE_EXTRA_LAP,
+                                 DISPERSION.CIRCLE_REPLACE)
         }
     }
 
@@ -794,8 +791,26 @@ ALIAS_TO_PATH = {
     ALIASES.DATE_TIME: ".date_times"
 }
 
+ALIAS_TO_CONFIG_NAME = {
+    ALIASES.HP_BARS: HP_BARS.NAME,
+    ALIASES.DAMAGE_LOG: DAMAGE_LOG.NAME,
+    ALIASES.MAIN_GUN: MAIN_GUN.NAME,
+    ALIASES.DEBUG: DEBUG_PANEL.NAME,
+    ALIASES.TIMER: BATTLE_TIMER.NAME,
+    ALIASES.SIXTH_SENSE: SIXTH_SENSE.NAME,
+    ALIASES.TEAM_BASES: TEAM_BASES.NAME,
+    ALIASES.ARMOR_CALC: ARMOR_CALC.NAME,
+    ALIASES.FLIGHT_TIME: FLIGHT_TIME.NAME,
+    ALIASES.DISPERSION_TIMER: DISPERSION.NAME,
+    ALIASES.PANELS: PANELS.PANELS_NAME,
+    ALIASES.MINIMAP: MINIMAP.NAME,
+    ALIASES.USER_BACKGROUND: USER_BACKGROUND.NAME,
+    ALIASES.DATE_TIME: CLOCK.NAME,
+    ALIASES.WG_COMP: MAIN.NAME
+}
+
 SORTED_ALIASES = (
     ALIASES.WG_COMP, ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
     ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
-    ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.USER_BACKGROUND, ALIASES.DATE_TIME
+    ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.DATE_TIME, ALIASES.USER_BACKGROUND
 )

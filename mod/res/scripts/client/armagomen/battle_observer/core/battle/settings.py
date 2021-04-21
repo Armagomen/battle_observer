@@ -1,8 +1,7 @@
 from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
-from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP, CLOCK, ALIASES, \
-    DISPERSION_CIRCLE, ARMOR_CALC
+from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAIN
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
@@ -60,11 +59,12 @@ class ViewSettings(object):
                 ALIASES.ARMOR_CALC: self.cfg.armor_calculator[GLOBAL.ENABLED],
                 ALIASES.FLIGHT_TIME: self.cfg.flight_time[GLOBAL.ENABLED],
                 ALIASES.DISPERSION_TIMER: (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
-                                           self.cfg.dispersion_circle[DISPERSION_CIRCLE.TIMER_ENABLED]),
+                                           self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED]),
                 ALIASES.PANELS: self.cfg.players_panels[GLOBAL.ENABLED],
                 ALIASES.MINIMAP: self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED],
                 ALIASES.USER_BACKGROUND: self.cfg.user_background[GLOBAL.ENABLED],
-                ALIASES.WG_COMP: True,
+                ALIASES.WG_COMP: (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
+                                  self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle),
                 ALIASES.DATE_TIME: self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
             })
         return self.__cache

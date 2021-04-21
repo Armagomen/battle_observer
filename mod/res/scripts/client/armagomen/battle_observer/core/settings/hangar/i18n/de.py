@@ -54,13 +54,15 @@ translate = {
         "anonymousEnableShow": "Show Anonymous.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "anonymousNameChange": "Сhange Anonymous Name",
-        "removeHandbrake": "Handbremse für AT-SPG deaktivieren.",
         "hide_dog_tags": "Deaktivieren Sie die Anzeige von Token.",
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceovers of bloggers, "
                                            "Chuck Norris and so on with the standard / from the voiceover mod. ",
-        "disable_score_sound": "Deaktivieren Sie den Sound zur Änderung der Partitur"
+        "disable_score_sound": "Deaktivieren Sie den Sound zur Änderung der Partitur",
+        "hide_server_in_hangar": "Deaktiviere die Anzeige des Servers im Hangar.",
+        "hide_server_in_hangar_tooltip": "Der Parameter funktioniert nach dem Neustart des "
+                                         "Hangars oder dem Neustart des Spiels.",
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
@@ -144,7 +146,7 @@ translate = {
         "calcPosition*x": "Position des Haupt Textfeldes waagerecht",
         "calcPosition*y": "Position des Haupt Textfeldes senkrecht",
         "template": "Formatierung des Haupt-Textfeldes",
-        "template_tooltip": "HTML Formatierung möglich<br>Macros:<br>%(calcedArmor)s - verminderte Panzerung"
+        "template_tooltip": "HTML Formatierung möglich<br>Macros:<br>%(countedArmor)s - verminderte Panzerung"
                             "<br>%(armor)s - Panzerung ohne Neigung. "
                             "<br>%(piercingPower)s - Durchschlag der Granate mit Berechnung der Enfernung"
                             "<br>%(caliber)s - Kaliber der Granate<br>%(color)s - Farbe (siehe Farbeinstellungen)"
@@ -166,7 +168,6 @@ translate = {
     "log_total": {
         "header": "Gesamtprotokoll der Effizienz des Spielers",
         "settings*inCenter": "Zeigen Sie das Protokoll in der Mitte des Bildschirms an",
-        "settings*background": "Aktivieren Sie Hintergrundsubstrat log (nur, wenn es in der Mitte)",
         "settings*x": "Position waagerecht:",
         "settings*y": "Position senkrecht:",
         "settings*align": "Ausrichtung text:",
@@ -251,14 +252,16 @@ translate = {
                                                     "a shot if the caliber of the gun is more than 40mm.",
         "disable_cam_skip_clip": "Не выходить если магазинная система заряжания",
         "dynamic_zoom*enabled": "Automatische Auswahl der Zoomstufen beim wechsel in den Richtschützenmodus",
+        "dynamic_zoom*steps_only": "Bewegen Sie sich nur in festen Schritten.",
         "dynamic_zoom*enabled_tooltip": "Wenn diese Option aktiviert ist, wird der <b>Fester Zoom</b> deaktiviert.",
-        "dynamic_zoom*zoomToGunMarker": "Aktivieren der Annäherung der Kamera an die Zentralmarkierung",
+        "zoomToGunMarker": "Aktivieren der Annäherung der Kamera an die Zentralmarkierung",
         "dynamic_zoom*zoomXMeters": "Empfindlichkeit bei Annäherung: in Metern",
         "dynamic_zoom*zoomXMeters_tooltip": "(Dynamischer Zoom = Enfernung / Empfindlichkeit bei Annäherung)"
                                             "<br>Standard: alle 17 Meter + 1 (je kleiner die Zahl, desto mehr Zoom",
         "zoomSteps*enabled": "Zoom Stufen.",
         "zoomSteps*steps": "Zooms Stufen. (Trennung durch Komma)",
-        "zoomSteps*steps_tooltip": "Sie können beliebig viele Werte (getrennt durch Komma und Leerzeichren) schreiben."
+        "zoomSteps*steps_tooltip": "Sie können beliebig viele Werte (getrennt durch Komma und Leerzeichren)"
+                                   " schreiben."
     },
     "arcade_camera": {
         "header": "Zoom für Arcade Ansicht (Arcade Zoom Out)",

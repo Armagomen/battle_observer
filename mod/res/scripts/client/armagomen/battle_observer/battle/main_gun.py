@@ -1,7 +1,6 @@
 from collections import defaultdict
 from math import ceil
 
-from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.bo_constants import MAIN_GUN, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from gui.battle_control import avatar_getter
@@ -13,15 +12,10 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def __init__(self):
         super(MainGun, self).__init__()
-        self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR, mainGunIcon=config.main_gun[MAIN_GUN.GUN_ICON],
-                                  mainGunColor=config.colors[MAIN_GUN.NAME][MAIN_GUN.COLOR],
-                                  mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
+        self.macros = None
         self._gunScore = GLOBAL.ZERO
         self.gunLeft = GLOBAL.ZERO
-        self.gunIcons = {
-            True: [config.main_gun[MAIN_GUN.DONE_ICON], config.main_gun[MAIN_GUN.FAILURE_ICON]],
-            False: [GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE]
-        }
+        self.gunIcons = None
         self.healthFailed = False
         self.playerDead = False
 
@@ -46,7 +40,14 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def _populate(self):
         super(MainGun, self)._populate()
-        self.as_startUpdateS(config.main_gun[GLOBAL.SETTINGS])
+        self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR, mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
+                                  mainGunColor=self.colors[MAIN_GUN.NAME][MAIN_GUN.COLOR],
+                                  mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
+        self.gunIcons = {
+            True: [self.settings[MAIN_GUN.DONE_ICON], self.settings[MAIN_GUN.FAILURE_ICON]],
+            False: [GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE]
+        }
+        self.as_startUpdateS(self.settings[GLOBAL.SETTINGS])
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
         if not self._gunScore:
@@ -67,7 +68,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.macros["mainGun"] = GLOBAL.EMPTY_LINE if achieved else self.gunLeft
         self.macros["mainGunDoneIcon"] = self.gunIcons[achieved][GLOBAL.FIRST]
         self.macros["mainGunFailureIcon"] = self.gunIcons[self.healthFailed or self.playerDead][GLOBAL.LAST]
-        self.as_mainGunTextS(config.main_gun[MAIN_GUN.TEMPLATE] % self.macros)
+        self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         if ctrlMode in POSTMORTEM.MODES and self.gunLeft > GLOBAL.ZERO:

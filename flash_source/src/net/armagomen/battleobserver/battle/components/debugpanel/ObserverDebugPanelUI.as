@@ -6,6 +6,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
+	import net.wg.data.constants.Time;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
 	
@@ -19,12 +20,12 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var pingBarEnabled:Boolean = false;
 		private var maxFps:int             = 200;
 		public var getShadowSettings:Function;
+		public var animationEnabled:Function;
 		private var loaded:Boolean         = false;
 		
-		public function ObserverDebugPanelUI(compName:String)
+		public function ObserverDebugPanelUI()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		override protected function onDispose():void
@@ -62,7 +63,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 						}
 						var fps:Object       = data.debugGraphics.fpsBar;
 						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
-						fpsBar = this.addChild(new ProgressBar(fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color)) as ProgressBar;
+						fpsBar = this.addChild(new ProgressBar(animationEnabled(), fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, null, 0.4)) as ProgressBar;
 						App.utils.data.cleanupDynamicObject(fps);
 					}
 					
@@ -70,7 +71,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 					{
 						var ping:Object       = data.debugGraphics.pingBar;
 						var pingfilters:Array = [Filters.handleGlowFilter(ping.glowFilter)];
-						pingBar = this.addChild(new ProgressBar(ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color)) as ProgressBar;
+						pingBar = this.addChild(new ProgressBar(animationEnabled(), ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, null, 0.4)) as ProgressBar;
 						App.utils.data.cleanupDynamicObject(ping);
 					}
 				}

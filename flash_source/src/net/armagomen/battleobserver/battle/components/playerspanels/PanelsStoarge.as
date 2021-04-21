@@ -4,9 +4,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	
 	import net.armagomen.battleobserver.utils.Filters;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
@@ -17,10 +15,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	
 	public class PanelsStoarge extends BattleDisplayable
 	{
-		private var items:Object   = {};
-		private var stoarge:Object = {};
+		private var items:Object    = {};
+		private var stoarge:Object  = {};
 		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
+		public var animationEnabled:Function;
+		public var onAddedToStorage:Function;
+		private var animate:Boolean = false;
 		
 		public function PanelsStoarge()
 		{
@@ -41,82 +41,53 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			if (!this.loaded)
-			{
-				this.loaded = true;
-				var battlePage:* = parent;
-				var playersPanel:* = this.getPlayersPanel();
-				var prebattleTimer:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
-				if (playersPanel && prebattleTimer)
-				{
-					var timerIndex:int = battlePage.getChildIndex(prebattleTimer);
-					battlePage.setChildIndex(playersPanel, timerIndex - 1);
-				}
-			}
-			else
-			{
-				App.utils.data.cleanupDynamicObject(items);
-				App.utils.data.cleanupDynamicObject(stoarge);
-			}
+			this.animate = this.animationEnabled();
+			//var battlePage:*     = parent;
+			//var prebattleTimer:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
+			//var playersPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
+			//if (playersPanel && prebattleTimer)
+			//{
+				//var timerIndex:int = battlePage.getChildIndex(prebattleTimer);
+				//battlePage.setChildIndex(playersPanel, timerIndex - 1);
+			//}
+		}
 		
+		public function as_clearStorage():void
+		{
+			App.utils.data.cleanupDynamicObject(stoarge);
+			App.utils.data.cleanupDynamicObject(items);
 		}
 		
 		override protected function onDispose():void
 		{
-			App.utils.data.cleanupDynamicObject(stoarge);
-			App.utils.data.cleanupDynamicObject(items);
+			this.as_clearStorage();
 			super.onDispose();
 		}
 		
-		private function getPlayersPanel():*
+		public function addVehicle(vehID:int, enemy:Boolean):void
 		{
-			var battlePage:*   = parent;
-			var playersPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-			if (playersPanel)
-			{
-				return playersPanel;
-			}
-			return null;
-		}
-		
-		public function addVehicle(vehicle_id:int):void
-		{
-			if (this.stoarge.hasOwnProperty(vehicle_id))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_AddVehIdToList - vehicle_id in stoarge !!!");
 			}
 			else
 			{
-				var playersPanel:* = this.getPlayersPanel();
-				if (playersPanel)
+				var listitem:* = this.getListitem(vehID, enemy);
+				if (listitem)
 				{
 					var obse:Sprite = new Sprite();
 					obse.name = "battleОbserver";
-					obse.x = 380;
-					var holder:* = playersPanel.listLeft.getHolderByVehicleID(vehicle_id);
-					if (!holder)
-					{
-						obse.x = -obse.x;
-						holder = playersPanel.listRight.getHolderByVehicleID(vehicle_id);
-					}
-					if (holder)
-					{
-						if (holder._listItem)
-						{
-							this.items[vehicle_id] = holder._listItem.addChild(obse);
-							this.stoarge[vehicle_id] = {};
-						}
-						else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_AddVehIdToList - holder._listItem is Null !!!");
-					}
-					else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_AddVehIdToList - holder is Null !!!");
+					obse.x = enemy ? -380 : 380;
+					this.items[vehID] = listitem.addChild(obse);
+					this.stoarge[vehID] = {};
+					this.onAddedToStorage(vehID, enemy);
 				}
-				else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_AddVehIdToList - playersPanel is Null !!!");
 			}
 		}
 		
 		public function addHpBar(vehID:int, color:String, colors:Object, settings:Object, team:String, startVisible:Boolean):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var barX:Number     = settings.players_bars_bar.x;
 				var barWidth:Number = settings.players_bars_bar.width;
@@ -132,7 +103,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					barX = -barX;
 					textX = -textX;
 				}
-				var bar:ProgressBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, vehID.toString());
+				var bar:ProgressBar = new ProgressBar(this.animate, barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, vehID.toString());
 				if (settings.players_bars_bar.outline.enabled)
 				{
 					bar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
@@ -146,7 +117,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function updateHPBar(vehID:int, currHP:Number, maxHP:Number, text:String):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var hpbar:ProgressBar = this.stoarge[vehID]["HpBar"];
 				if (currHP > 0)
@@ -156,14 +127,14 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				}
 				else
 				{
-					this.items[vehID].removeChild(hpbar);
+					hpbar.setVisible(false);
 				}
 			}
 		}
 		
 		public function setHPbarVisible(vehID:int, vis:Boolean):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var hpbar:ProgressBar = this.stoarge[vehID]["HpBar"];
 				hpbar.setVisible(vis);
@@ -172,7 +143,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function createTextField(vehID:int, name:String, params:Object, team:String):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var autoSize:String = params.align;
 				if (team == "red" && autoSize != "center")
@@ -187,7 +158,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function updateTextField(vehID:int, name:String, text:String):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				this.stoarge[vehID][name].htmlText = text;
 			}
@@ -202,22 +173,23 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			icon.transform.colorTransform = tColor;
 		}
 		
-		private function getHolder(vehID:int, enemy:Boolean):*
+		private function getListitem(vehID:int, enemy:Boolean):*
 		{
 			try
 			{
-				var playersPanel:* = this.getPlayersPanel();
+				var battlePage:*   = parent;
+				var playersPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 				if (playersPanel)
 				{
-					if (enemy)
+					var list:*   = enemy ? playersPanel.listRight : playersPanel.listLeft;
+					var holder:* = list.getHolderByVehicleID(vehID);
+					if (holder && holder._listItem)
 					{
-						return playersPanel.listRight.getHolderByVehicleID(vehID)._listItem;
+						return holder._listItem;
 					}
-					else
-					{
-						return playersPanel.listLeft.getHolderByVehicleID(vehID)._listItem;
-					}
+					else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] getListitem - holder is Null !!!");
 				}
+				else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] getListitem - playersPanel is Null !!!");
 			}
 			catch (err:Error)
 			{
@@ -227,7 +199,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function setSpottedPosition(vehID:int):void
 		{
-			var listitem:* = this.getHolder(vehID, true);
+			var listitem:* = this.getListitem(vehID, true);
 			if (listitem)
 			{
 				var spottedIndicator:SpottedIndicator = listitem.spottedIndicator;
@@ -235,15 +207,13 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				spottedIndicator.y = -6;
 				spottedIndicator.x = -335;
 			}
-			else
-			{
-				DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setSpottedPosition - listitem is Null !!!");
-			}
+			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setSpottedPosition - listitem is Null !!!");
+
 		}
 		
 		public function setVehicleIconColor(vehID:int, color:String, multipler:Number, enemy:Boolean):void
 		{
-			var listitem:* = this.getHolder(vehID, enemy);
+			var listitem:* = this.getListitem(vehID, enemy);
 			if (listitem)
 			{
 				var icon:BattleAtlasSprite = listitem.vehicleIcon;
@@ -253,15 +223,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
 				}
 			}
-			else
-			{
-				DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setVehicleIconColor - listitem is Null !!!");
-			}
+			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setVehicleIconColor - listitem is Null !!!");
 		}
 		
 		public function colorBlindPPbars(vehID:int, hpColor:String):void
 		{
-			if (this.stoarge.hasOwnProperty(vehID.toString()))
+			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var hpbar:ProgressBar = this.stoarge[vehID]["HpBar"];
 				hpbar.updateColor(hpColor);
@@ -279,5 +246,4 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 	}
-
 }

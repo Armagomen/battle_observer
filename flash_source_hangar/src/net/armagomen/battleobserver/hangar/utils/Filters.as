@@ -7,6 +7,7 @@ package net.armagomen.battleobserver.hangar.utils
 	public class Filters
 	{
 		public static const largeText:TextFormat = new TextFormat("$TitleFont", 24, 0xFAFAFA);
+		public static const mediumText:TextFormat = new TextFormat("$TitleFont", 18, 0xFAFAFA);
 		public function Filters()
 		{
 			super();

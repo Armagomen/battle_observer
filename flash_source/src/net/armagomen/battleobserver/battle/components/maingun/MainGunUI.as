@@ -14,10 +14,9 @@ package net.armagomen.battleobserver.battle.components.maingun
 		public var getShadowSettings:Function;
 		private var loaded:Boolean  = false;
 		
-		public function MainGunUI(compName:String)
+		public function MainGunUI()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		override protected function configUI():void

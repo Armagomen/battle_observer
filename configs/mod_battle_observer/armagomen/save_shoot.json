@@ -1,5 +1,5 @@
 {
-  "aliveOnly": false, 
+  "block_on_destroyed": true, 
   "enabled": true, 
   "msg": "Выстрел заблокирован."
 }

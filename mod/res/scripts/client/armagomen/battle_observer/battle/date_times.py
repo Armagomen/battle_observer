@@ -1,25 +1,24 @@
 from time import strftime
 
-from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.bo_constants import CLOCK
 from armagomen.battle_observer.meta.battle.date_times_meta import DateTimesMeta
 from armagomen.utils.common import checkDecoder
 from armagomen.utils.timers import CyclicTimerEvent
-
-config = config.clock[CLOCK.IN_BATTLE]
 
 
 class DateTimes(DateTimesMeta):
 
     def __init__(self):
         super(DateTimes, self).__init__()
-        self.format = config[CLOCK.FORMAT]
-        self.coding = checkDecoder(strftime(self.format))
+        self.format = None
+        self.coding = None
         self.timerEvent = CyclicTimerEvent(CLOCK.UPDATE_INTERVAL, self.updateTimeData)
 
     def _populate(self):
         super(DateTimes, self)._populate()
-        self.as_startUpdateS(config)
+        self.format = self.settings[CLOCK.IN_BATTLE][CLOCK.FORMAT]
+        self.coding = checkDecoder(strftime(self.format))
+        self.as_startUpdateS(self.settings[CLOCK.IN_BATTLE])
         self.timerEvent.start()
 
     def _dispose(self):

@@ -1,44 +1,44 @@
 from collections import defaultdict
 
-from armagomen.battle_observer.core import config
 from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
-from armagomen.utils.common import calc_event
+from armagomen.utils.common import events
 from gui.battle_control import avatar_getter
-from gui.shared.personality import ServicesLocator
-
-settingsCore = ServicesLocator.settingsCore
 
 
 class ArmorCalculator(ArmorCalcMeta):
 
     def __init__(self):
         super(ArmorCalculator, self).__init__()
-        self.messages = config.armor_calculator[ARMOR_CALC.MESSAGES]
+        self.messages = None
         self._cache = GLOBAL.ZERO
-        self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.typeColors = config.colors[ARMOR_CALC.NAME]
-        self.template = config.armor_calculator[ARMOR_CALC.TEMPLATE]
+        self.calcMacro = None
+        self.typeColors = None
+        self.template = None
 
     def onEnterBattlePage(self):
         super(ArmorCalculator, self).onEnterBattlePage()
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
-        calc_event.onArmorChanged += self.onArmorChanged
-        calc_event.onMarkerColorChanged += self.onMarkerColorChanged
+        events.onArmorChanged += self.onArmorChanged
+        events.onMarkerColorChanged += self.onMarkerColorChanged
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
-        calc_event.onArmorChanged -= self.onArmorChanged
-        calc_event.onMarkerColorChanged -= self.onMarkerColorChanged
+        events.onArmorChanged -= self.onArmorChanged
+        events.onMarkerColorChanged -= self.onMarkerColorChanged
         super(ArmorCalculator, self).onExitBattlePage()
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
-        self.as_startUpdateS(config.armor_calculator)
+        self.messages = self.settings[ARMOR_CALC.MESSAGES]
+        self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
+        self.typeColors = self.colors[ARMOR_CALC.NAME]
+        self.template = self.settings[ARMOR_CALC.TEMPLATE]
+        self.as_startUpdateS(self.settings)
 
     def onMarkerColorChanged(self, color):
         self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)

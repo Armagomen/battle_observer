@@ -3,7 +3,6 @@
 	import fl.transitions.Tween;
 	import flash.display.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
 	
@@ -25,19 +24,29 @@
 		private var Time:Class;
 		
 		private var colorBlind:Boolean     = false;
+		private var animate:Boolean        = false;
 		
-		public function TeamBase(team:String, colorBlind:Boolean)
+		public function TeamBase(animationEnabled:Boolean, team:String, colorBlind:Boolean)
 		{
 			super();
 			this.name = team;
 			this.colorBlind = colorBlind;
+			this.animate = animationEnabled;
 		}
 		
 		public function updateBase(newScale:Number, invadersCnt:String, time:String, text:String):void
 		{
-			if (Params.AnimationEnabled)
+			
+			if (this.animate)
 			{
-				this.animation.continueTo(newScale, 1);
+				if (newScale > this.progressBar.scaleX)
+				{
+					this.animation.continueTo(newScale, 1);
+				}
+				else if (this.animation.isPlaying)
+				{
+					this.animation.rewind(newScale);
+				}
 			}
 			else
 			{
@@ -114,9 +123,9 @@
 			
 			baseMain.scaleX = baseMain.scaleY = settings.scale;
 			this.x = App.appWidth / 2 - baseMain.width / 2;
-			this.y = settings.y;
+			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;
 			
-			if (Params.AnimationEnabled)
+			if (this.animate)
 			{
 				this.animation = new Tween(this.progressBar, "scaleX", null, this.progressBar.scaleX, 0, 1, true);
 				this.animation.FPS = 30;

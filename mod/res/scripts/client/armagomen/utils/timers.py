@@ -29,6 +29,10 @@ class Timer(object):
             if self._func_hide is not None:
                 self._func_hide()
 
+    def start(self, *args):
+        if self._callback is not None:
+            self.stop()
+
 
 class SixthSenseTimer(Timer):
     __slots__ = ("_callback", "_func_hide", "_func_update", "_isTicking", "_play_sound", "__sounds")
@@ -42,32 +46,34 @@ class SixthSenseTimer(Timer):
         self.__sounds = dict()
 
     def callWWISE(self, wwiseEventName):
-        sound = g_instance.getSound2D(wwiseEventName)
-        if sound is not None:
-            sound.play()
+        if wwiseEventName in self.__sounds:
+            sound = self.__sounds[wwiseEventName]
+        else:
+            sound = g_instance.getSound2D(wwiseEventName)
             self.__sounds[wwiseEventName] = sound
+        if sound is not None:
+            if sound.isPlaying:
+                sound.stop()
+            sound.play()
+            self._isTicking = wwiseEventName == CONSTANTS.COUNTDOWN_TICKING
 
     def stop(self):
         super(SixthSenseTimer, self).stop()
         if self._play_sound and self._isTicking:
             self.callWWISE(CONSTANTS.STOP_TICKING)
-            self._isTicking = False
 
     def timeTicking(self, seconds):
         if seconds > CONSTANTS.ZERO:
-            if self._callback is not None:
-                cancelCallback(self._callback)
-                self._callback = None
-            self._func_update(seconds)
             self._callback = callback(CONSTANTS.ONE_SECOND, lambda: self.timeTicking(seconds - CONSTANTS.ONE))
+            self._func_update(seconds)
         else:
             self.stop()
 
     def start(self, seconds):
+        super(SixthSenseTimer, self).start()
         self.timeTicking(seconds)
         if self._play_sound and not self._isTicking:
             self.callWWISE(CONSTANTS.COUNTDOWN_TICKING)
-            self._isTicking = True
 
     def destroy(self):
         for sound in self.__sounds.values():
@@ -83,6 +89,10 @@ class CyclicTimerEvent(Timer):
         self._interval = float(updateInterval)
         self._function = function
 
-    def start(self):
+    def update(self):
+        self._callback = callback(self._interval, self.update)
         self._function()
-        self._callback = callback(self._interval, self.start)
+
+    def start(self):
+        super(CyclicTimerEvent, self).start()
+        self.update()

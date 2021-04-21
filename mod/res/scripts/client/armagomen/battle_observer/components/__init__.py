@@ -19,7 +19,8 @@ class ComponentsLoader(object):
             'wg_logs_fixes',
             'service_channel_filter',
             'tank_carousel',
-            'shot_result_plugin'
+            'shot_result_plugin',
+            'hide_server'
         )
 
     def start(self):

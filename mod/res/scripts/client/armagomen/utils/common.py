@@ -6,9 +6,14 @@ import BigWorld
 import Math
 import ResMgr
 
-from Event import Event
+from BattleReplay import isPlaying, isLoading
+from Event import SafeEvent
 
 MOD_NAME = "BATTLE_OBSERVER"
+
+
+def isReplay():
+    return isPlaying() or isLoading()
 
 
 def getPlayer():
@@ -110,11 +115,12 @@ def checkDecoder(_string):
     return None
 
 
-class ArmorCalculatorEvents(object):
+class Events(object):
 
     def __init__(self):
-        self.onArmorChanged = Event()
-        self.onMarkerColorChanged = Event()
+        self.onArmorChanged = SafeEvent()
+        self.onMarkerColorChanged = SafeEvent()
+        self.onDispersionAngleChanged = SafeEvent()
 
 
-calc_event = ArmorCalculatorEvents()
+events = Events()

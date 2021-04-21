@@ -1,12 +1,12 @@
 from collections import defaultdict
 
-from AvatarInputHandler.gun_marker_ctrl import _computePiercingPowerAtDistImpl, _CrosshairShotResults
+from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, _MIN_PIERCING_DIST, _LERP_RANGE_PIERCING_DIST
 from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from aih_constants import SHOT_RESULT
-from armagomen.battle_observer.core import v_settings
+from armagomen.battle_observer.core import view_settings
 from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
-from armagomen.utils.common import getPlayer, overrideMethod, calc_event
+from armagomen.utils.common import getPlayer, overrideMethod, events
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
     SHOT_RESULT_TO_DEFAULT_COLOR
@@ -14,6 +14,16 @@ from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _VIEW_CONSTANTS
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from soft_exception import SoftException
+
+
+def _computePiercingPowerAtDistImpl(dist, maxDist, p100, p500):
+    if dist <= _MIN_PIERCING_DIST:
+        return p100
+    elif dist < maxDist:
+        power = p100 + (p500 - p100) * (dist - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
+        if power > GLOBAL.F_ZERO:
+            return power
+    return p500
 
 
 class ShotResultPlugin(plugins.CrosshairPlugin):
@@ -31,6 +41,7 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
         self._isSPG = False
         self.__piercingMultiplier = 1
         self._resolver = _CrosshairShotResults
+        self._resolver._VEHICLE_TRACE_FORWARD_LENGTH = 10.0
 
     def start(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -84,8 +95,8 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
             color = self.__colors[result]
             if self.__cache[markerType] != result and self._parentObj.setGunMarkerColor(markerType, color):
                 self.__cache[markerType] = result
-                calc_event.onMarkerColorChanged(color)
-            calc_event.onArmorChanged(counted, penetration, caliber, color, ricochet)
+                events.onMarkerColorChanged(color)
+            events.onArmorChanged(counted, penetration, caliber, color, ricochet)
 
     def __setEnabled(self, viewID):
         self.__isEnabled = self.__mapping[viewID]
@@ -175,6 +186,6 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
 @overrideMethod(plugins, 'createPlugins')
 def createPlugins(base, *args):
     _plugins = base(*args)
-    if v_settings.getSetting(ALIASES.ARMOR_CALC):
+    if view_settings.getSetting(ALIASES.ARMOR_CALC):
         _plugins['shotResultIndicator'] = ShotResultPlugin
     return _plugins

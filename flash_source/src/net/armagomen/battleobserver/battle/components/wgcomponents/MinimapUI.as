@@ -12,10 +12,9 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		private var sizeBefore:Number    = 2.0;
 		private var indexChanged:Boolean = false;
 		
-		public function MinimapUI(compName:String)
+		public function MinimapUI()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		override protected function configUI():void

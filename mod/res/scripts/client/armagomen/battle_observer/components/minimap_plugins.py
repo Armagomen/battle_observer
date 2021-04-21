@@ -1,6 +1,6 @@
 from math import degrees
 
-from armagomen.battle_observer.core import config
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
@@ -61,7 +61,7 @@ class VehiclesPlugin(ArenaVehiclesPlugin):
 
     @property
     def _showNames(self):
-        if config.minimap[MINIMAP.DEATH_PERMANENT] and config.minimap[MINIMAP.SHOW_NAMES]:
+        if settings.minimap[MINIMAP.DEATH_PERMANENT] and settings.minimap[MINIMAP.SHOW_NAMES]:
             return 'showVehicleName'
         return 'hideVehicleName'
 
@@ -69,8 +69,8 @@ class VehiclesPlugin(ArenaVehiclesPlugin):
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
     plugins = base(plugin, arenaVisitor)
-    if config.minimap[GLOBAL.ENABLED]:
-        if config.minimap[MINIMAP.DEATH_PERMANENT]:
+    if settings.minimap[GLOBAL.ENABLED]:
+        if settings.minimap[MINIMAP.DEATH_PERMANENT]:
             plugins['vehicles'] = VehiclesPlugin
         plugins['personal'] = BOPersonalEntriesPlugin
     return plugins

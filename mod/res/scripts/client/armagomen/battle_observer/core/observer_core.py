@@ -14,10 +14,10 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 class ObserverCore(object):
     __slots__ = ("modsDir", "gameVersion", "workingDir", "fileName", "isFileValid", "mod_version",
-                 "config", "configLoader", "moduleLoader", "update")
+                 "settings", "configLoader", "moduleLoader", "update")
 
     def __init__(self, configLoader):
-        self.config = configLoader.config
+        self.settings = configLoader.settings
         self.configLoader = configLoader
         self.modsDir, self.gameVersion = getCurrentModPath()
         self.workingDir = os.path.join(self.modsDir, self.gameVersion)
@@ -44,7 +44,7 @@ class ObserverCore(object):
 
     def onExit(self):
         if self.isFileValid:
-            if self.config.main[MAIN.AUTO_CLEAR_CACHE]:
+            if self.settings.main[MAIN.AUTO_CLEAR_CACHE]:
                 self.clearClientCache()
             logInfo('MOD {}: {}'.format(MASSAGES.FINISH, self.mod_version))
 

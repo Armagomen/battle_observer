@@ -1,19 +1,15 @@
 package net.armagomen.battleobserver.battle.components.wgcomponents
 {
-	import flash.display.Sprite;
-	import net.armagomen.battleobserver.utils.Params;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
-	import net.wg.gui.battle.random.views.teamBasesPanel.TeamBasesPanel;
 	
 	
 	public class WGComponentsSetting extends BattleDisplayable
 	{
 		
-		public function WGComponentsSetting(compName:String)
+		public function WGComponentsSetting()
 		{
 			super();
-			this.name = compName;
 		}
 		
 		override protected function configUI():void
@@ -25,7 +21,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			this.mouseChildren = false;
 			this.buttonMode = false;
 		}
-			
+	
 		public function as_hideShadowInPreBattle():void
 		{
 			var battlePage:*     = parent;
@@ -45,21 +41,5 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 				battlePage.removeChild(battleMessenger);
 			}
 		}
-		
-		public function as_enableAnimation(enable:Boolean):void
-		{
-			Params.AnimationEnabled = enable;
-		}
-		
-		public function as_moveTeamBasesPanel():void
-		{
-			var battlePage:*     = parent;
-			var teamBasesPanel:TeamBasesPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
-			if (teamBasesPanel)
-			{
-				teamBasesPanel.y += 20;
-			}
-		}
-		
 	}
 }
