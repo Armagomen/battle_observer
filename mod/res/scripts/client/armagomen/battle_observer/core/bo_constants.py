@@ -14,8 +14,8 @@ today = datetime.date.today()
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.32.7"
-API_VERSION = "1.10.8"
+MOD_VERSION = "1.32.8"
+API_VERSION = "1.10.10"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
@@ -498,7 +498,7 @@ class DISPERSION:
     CIRCLE_SCALE_CONFIG = "circle_scale"
     CIRCLE_SERVER = "useServerAim"
     ENABLED = "circle_enabled"
-    CIRCLE_SCALE = 0.80
+    CIRCLE_SCALE = 0.8
     SCALE = 80
     MAX_TIME = 5.0
     SPG_GM_SCALE = 0.8

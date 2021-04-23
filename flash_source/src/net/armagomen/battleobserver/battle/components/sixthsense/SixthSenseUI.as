@@ -8,7 +8,7 @@
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.*;
-	import fl.transitions.Tween;
+	import net.armagomen.battleobserver.utils.tween.Tween;
 	
 	
 	public class SixthSenseUI extends BattleDisplayable
@@ -95,8 +95,8 @@
 					timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
 					if (this.animate)
 					{
-						this.animation = new Tween(this.timer, "alpha", null, 1.0, 0, 1, true);
-						this.animation.FPS = 30;
+						this.animation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);
+						//this.animation.FPS = 30;
 					}
 					else
 					{
@@ -140,8 +140,8 @@
 				timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
 				if (this.animate)
 				{
-					this.animation = new Tween(this.timer, "alpha", null, 1, 0, 0.98, true);
-					this.animation.FPS = 30;
+					this.animation = new Tween(this.timer, "alpha", 1, 0, 0.98, true);
+					//this.animation.FPS = 30;
 				}
 				else
 				{

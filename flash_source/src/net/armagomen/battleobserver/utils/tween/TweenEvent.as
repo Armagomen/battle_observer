@@ -1,4 +1,4 @@
-package fl.transitions
+package net.armagomen.battleobserver.utils.tween
 {
    import flash.events.Event;
    

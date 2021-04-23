@@ -48,8 +48,8 @@ package net.armagomen.battleobserver.battle.components.teambases
 			}
 			else
 			{
-				var base:TeamBase = new TeamBase(this.animationEnabled(), team, this.isColorBlind());
-				base.create(this.settings, this.shadowSettings, this.colors);
+				var base:TeamBase = new TeamBase(this.animationEnabled(), this.isColorBlind());
+				base.create(this.settings, this.shadowSettings, this.colors, team);
 				base.updateBase(points / 100.0, invadersCnt, time, text);
 				if (this.bases["green"] || this.bases["red"])
 				{

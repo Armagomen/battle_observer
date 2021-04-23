@@ -29,7 +29,7 @@ def getEntity(entity_id):
 
 
 def setMaxFrameRate(fps):
-    BigWorld.wg_setMaxFrameRate(fps)
+    BigWorld.wg_setMaxFrameRate(fps + 1)
 
 
 def callback(*args, **kwargs):

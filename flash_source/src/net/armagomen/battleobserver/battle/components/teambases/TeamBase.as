@@ -1,6 +1,6 @@
 ﻿package net.armagomen.battleobserver.battle.components.teambases
 {
-	import fl.transitions.Tween;
+	import net.armagomen.battleobserver.utils.tween.Tween;
 	import flash.display.*;
 	import flash.text.*;
 	import net.armagomen.battleobserver.utils.TextExt;
@@ -26,10 +26,9 @@
 		private var colorBlind:Boolean     = false;
 		private var animate:Boolean        = false;
 		
-		public function TeamBase(animationEnabled:Boolean, team:String, colorBlind:Boolean)
+		public function TeamBase(animationEnabled:Boolean, colorBlind:Boolean)
 		{
 			super();
-			this.name = team;
 			this.colorBlind = colorBlind;
 			this.animate = animationEnabled;
 		}
@@ -39,14 +38,7 @@
 			
 			if (this.animate)
 			{
-				if (newScale > this.progressBar.scaleX)
-				{
-					this.animation.continueTo(newScale, 1);
-				}
-				else if (this.animation.isPlaying)
-				{
-					this.animation.rewind(newScale);
-				}
+				this.animation.continueTo(newScale, newScale > this.progressBar.scaleX ? 1.0 : 0.1);
 			}
 			else
 			{
@@ -62,10 +54,10 @@
 			this.status.htmlText = captureText;
 		}
 		
-		public function create(bases:Object, shadowSettings:Object, colors:Object):void
+		public function create(bases:Object, shadowSettings:Object, colors:Object, team:String):void
 		{
 			this.basesFormat = new TextFormat(bases.text_settings.font, bases.text_settings.size, Utils.colorConvert(bases.text_settings.color), bases.text_settings.bold, bases.text_settings.italic, bases.text_settings.underline);
-			createBase(bases, shadowSettings, colors);
+			this.createBase(bases, shadowSettings, colors, team);
 		}
 		
 		private function PlayersIcon(width:Number):Bitmap
@@ -89,9 +81,9 @@
 			return icon;
 		}
 		
-		private function createBase(settings:Object, shadowSettings:Object, colors:Object):void
+		private function createBase(settings:Object, shadowSettings:Object, colors:Object, team:String):void
 		{
-			var progressBarColor:uint = Utils.colorConvert(this.name == "green" ? colors.ally : this.colorBlind ? colors.enemyColorBlind : colors.enemy);
+			var progressBarColor:uint = Utils.colorConvert(team == "green" ? colors.ally : this.colorBlind ? colors.enemyColorBlind : colors.enemy);
 			
 			var baseMain:Sprite       = new Sprite()
 			this.addChild(baseMain)
@@ -112,7 +104,7 @@
 			this.progressBar.graphics.beginFill(progressBarColor, Math.max(0.05, colors.alpha));
 			this.progressBar.graphics.drawRect(0, 0, settings.width, settings.height);
 			this.progressBar.graphics.endFill();
-			this.progressBar.scaleX = 0.01;
+			this.progressBar.scaleX = 0;
 			baseMain.addChild(this.progressBar);
 			baseMain.addChild(PlayersIcon(iconWidth));
 			baseMain.addChild(TimeIcon(iconWidth, settings.width));
@@ -121,14 +113,12 @@
 			this.timer = new TextExt("timer", settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
 			this.invaders = new TextExt("invaders", iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
 			
-			baseMain.scaleX = baseMain.scaleY = settings.scale;
 			this.x = App.appWidth / 2 - baseMain.width / 2;
 			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;
 			
 			if (this.animate)
 			{
-				this.animation = new Tween(this.progressBar, "scaleX", null, this.progressBar.scaleX, 0, 1, true);
-				this.animation.FPS = 30;
+				this.animation = new Tween(this.progressBar, "scaleX", this.progressBar.scaleX, 1.0, 1.0, true);
 			}
 		}
 	

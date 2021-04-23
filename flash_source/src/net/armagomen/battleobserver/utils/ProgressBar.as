@@ -5,7 +5,7 @@
 	import flash.text.*;
 	import flash.geom.ColorTransform;
 	import net.armagomen.battleobserver.data.Constants;
-	import fl.transitions.Tween;
+	import net.armagomen.battleobserver.utils.tween.Tween;
 	
 	/**
 	 * ...
@@ -13,44 +13,40 @@
 	 */
 	public class ProgressBar extends Sprite
 	{
-		private var bar:Shape           = new Shape();
-		private var backGround:Shape    = new Shape();
-		private var outline:Shape       = new Shape();
-		private var uiText:TextExt      = null;
-		private var animation:Tween     = null;
-		private var WIDTH:Number        = 0;
-		private var HEIGHT:Number       = 0;
-		private var COLOR:uint          = 0;
-		private var costumColor:Boolean = false;
+		private var bar:Shape                = new Shape();
+		private var backGround:Shape         = new Shape();
+		private var outline:Shape            = new Shape();
+		private var uiText:TextExt           = null;
+		private var animation:Tween          = null;
+		private var WIDTH:Number             = 0;
+		private var HEIGHT:Number            = 0;
+		private var COLOR:uint               = 0;
+		private var costumColor:Boolean      = false;
 		private var animationEnabled:Boolean = false;
-		private var animationTime:Number = 1.0;
+		private var animationTime:Number     = 1.0;
 		
-		public function ProgressBar(animate:Boolean, x:Number, y:Number, width:Number, height:Number, alpha:Number,
-									bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", barName:String = "bar", time:Number = 1.0)
+		public function ProgressBar(animate:Boolean, x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", time:Number = 1.0)
 		{
 			super();
-			if (bgColor == null){
+			if (bgColor == null)
+			{
 				bgColor = "#000000";
-			}
-			if (barName == null){
-				barName = "bar";
 			}
 			
 			this.animationEnabled = animate;
 			this.animationTime = time;
 			this.x = x;
 			this.y = y;
-			this.name = barName;
 			this.WIDTH = width;
 			this.HEIGHT = height;
 			this.COLOR = Utils.colorConvert(color);
-			if (bgAlpha > 0){
+			if (bgAlpha > 0)
+			{
 				this.backGround.graphics.beginFill(Utils.colorConvert(bgColor), bgAlpha);
 				this.backGround.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
 				this.backGround.graphics.endFill();
 				this.addChild(backGround);
 			}
-			this.bar.name = barName;
 			this.bar.graphics.beginFill(this.COLOR, alpha);
 			this.bar.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
 			this.bar.graphics.endFill();
@@ -62,8 +58,7 @@
 			this.addChild(bar);
 			if (this.animationEnabled)
 			{
-				this.animation = new Tween(this.bar, "scaleX", null, this.bar.scaleX, 1.0, animationTime, true);
-				this.animation.FPS = 30;
+				this.animation = new Tween(this.bar, "scaleX", this.bar.scaleX, 1.0, this.animationTime, true);
 			}
 		}
 		
@@ -71,9 +66,9 @@
 		{
 			if (this.bar.scaleX != newScale)
 			{
-				if (this.visible && this.animationEnabled && newScale > 0)
+				if (this.animationEnabled)
 				{
-					this.animation.continueTo(newScale, animationTime);
+					this.animation.continueTo(newScale, this.visible ? this.animationTime: 0.02);
 				}
 				else
 				{

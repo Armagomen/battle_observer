@@ -8,7 +8,7 @@ import net.armagomen.battleobserver.utils.Params;
 import net.armagomen.battleobserver.utils.Utils;
 import net.armagomen.battleobserver.utils.ProgressBar;
 
-import fl.transitions.Tween;
+import net.armagomen.battleobserver.utils.tween.Tween;
 
 /**
  * ...
