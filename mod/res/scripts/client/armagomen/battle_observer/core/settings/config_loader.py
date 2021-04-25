@@ -3,7 +3,7 @@ import json
 import os
 import time
 
-from armagomen.battle_observer.core.bo_constants import LOAD_LIST, API_VERSION, GLOBAL
+from armagomen.battle_observer.core.bo_constants import LOAD_LIST, GLOBAL
 from armagomen.utils.common import logWarning, logInfo, getCurrentModPath
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
@@ -27,6 +27,7 @@ class ConfigLoader(object):
         self.path = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
         self.configInterface = None
+        ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
 
     def start(self):
         self.getConfig(self.path)
@@ -163,18 +164,11 @@ class ConfigLoader(object):
             ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings
             try:
                 from gui.modsListApi import g_modsListApi
-                from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents, __version__
+                from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
             except ImportError as err:
-                msg = "%s: Settings API not loaded" % repr(err)
-                logWarning(msg)
+                logWarning("%s: Settings API not loaded" % repr(err))
             else:
-                from distutils.version import LooseVersion
-                if LooseVersion(__version__) >= LooseVersion(API_VERSION):
-                    from armagomen.battle_observer.core.settings.hangar.hangar_settings import ConfigInterface
-                    self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
-                                                           self.settings, self)
-                    self.configInterface.start()
-                else:
-                    msg = "Settings API not loaded, v{} it`s fake or not supported api, current version is {}, " \
-                          "please remove old versions from mods dir.".format(__version__, API_VERSION)
-                    logWarning(msg)
+                from armagomen.battle_observer.core.settings.hangar.hangar_settings import ConfigInterface
+                self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
+                                                       self.settings, self)
+                self.configInterface.start()
