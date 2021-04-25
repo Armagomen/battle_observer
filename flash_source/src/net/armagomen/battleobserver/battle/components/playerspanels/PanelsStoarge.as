@@ -42,14 +42,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		{
 			super.onPopulate();
 			this.animate = this.animationEnabled();
-			//var battlePage:*     = parent;
-			//var prebattleTimer:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
-			//var playersPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-			//if (playersPanel && prebattleTimer)
-			//{
-				//var timerIndex:int = battlePage.getChildIndex(prebattleTimer);
-				//battlePage.setChildIndex(playersPanel, timerIndex - 1);
-			//}
 		}
 		
 		public function as_clearStorage():void
@@ -103,7 +95,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					barX = -barX;
 					textX = -textX;
 				}
-				var bar:ProgressBar = new ProgressBar(this.animate, barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, vehID.toString());
+				var bar:ProgressBar = new ProgressBar(this.animate, barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, 0.6);
 				if (settings.players_bars_bar.outline.enabled)
 				{
 					bar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
@@ -120,12 +112,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var hpbar:ProgressBar = this.stoarge[vehID]["HpBar"];
-				if (currHP > 0)
-				{
-					hpbar.setNewScale(currHP / maxHP);
-					hpbar.setText(text);
-				}
-				else
+				var scale:Number = maxHP > 0 ? currHP / maxHP : 0;
+				hpbar.setNewScale(scale);
+				hpbar.setText(text);
+				if (scale == 0)
 				{
 					hpbar.setVisible(false);
 				}

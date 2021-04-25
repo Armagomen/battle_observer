@@ -11,7 +11,7 @@ from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.core.bo_constants import ARCADE, GLOBAL, SNIPER, STRATEGIC
-from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay
+from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay, callback
 
 SENSITIVITY = set()
 g_playerEvents.onArenaCreated += SENSITIVITY.clear
@@ -61,29 +61,29 @@ def enable(base, camera, targetPos, saveZoom):
     return base(camera, targetPos, saveZoom)
 
 
-def changeControlMode(avatar, shooterID):
-    if shooterID == avatar.playerVehicleID:
-        input_handler = avatar.inputHandler
-        if input_handler is not None and isinstance(input_handler.ctrl, SniperControlMode):
-            if settings.zoom[SNIPER.SKIP_CLIP]:
-                v_desc = avatar.getVehicleDescriptor()
-                if v_desc.shot.shell.caliber < SNIPER.MAX_CALIBER or SNIPER.CLIP in v_desc.gun.tags:
-                    return
-            aiming_system = input_handler.ctrl.camera.aimingSystem
-            input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
-                                               prevModeName=input_handler.ctrlModeName,
-                                               preferredPos=aiming_system.getDesiredShotPoint(),
-                                               turretYaw=aiming_system.turretYaw,
-                                               gunPitch=aiming_system.gunPitch,
-                                               aimingMode=input_handler.ctrl._aimingMode,
-                                               closesDist=False)
+def changeControlMode(avatar):
+    input_handler = avatar.inputHandler
+    if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
+        if settings.zoom[SNIPER.SKIP_CLIP]:
+            v_desc = avatar.getVehicleDescriptor()
+            if v_desc.shot.shell.caliber < SNIPER.MAX_CALIBER or SNIPER.CLIP in v_desc.gun.tags:
+                return
+        aiming_system = input_handler.ctrl.camera.aimingSystem
+        input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
+                                           prevModeName=input_handler.ctrlModeName,
+                                           preferredPos=aiming_system.getDesiredShotPoint(),
+                                           turretYaw=aiming_system.turretYaw,
+                                           gunPitch=aiming_system.gunPitch,
+                                           aimingMode=input_handler.ctrl._aimingMode,
+                                           closesDist=False)
 
 
 @overrideMethod(PlayerAvatar, "showTracer")
 def showTracer(base, avatar, shooterID, *args):
     try:
         if settings.zoom[SNIPER.DISABLE_SNIPER] and settings.zoom[GLOBAL.ENABLED] and not isReplay():
-            changeControlMode(avatar, shooterID)
+            if shooterID == avatar.playerVehicleID:
+                callback(0.5, lambda: changeControlMode(avatar))
     except Exception as err:
         logError("I can't get out of sniper mode. Error {0}.changeControlMode, {1}".format(__package__, err))
     finally:

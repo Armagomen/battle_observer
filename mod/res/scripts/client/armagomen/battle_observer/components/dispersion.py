@@ -188,7 +188,7 @@ class DispersionCircle(object):
             self.enabled = config[GLOBAL.ENABLED] and config[DISPERSION.ENABLED] and not \
                 g_replayCtrl.isPlaying
             self.hooksEnable = self.enabled and (not self.replaceOriginalCircle or self.extraServerLap)
-            DISPERSION.CIRCLE_SCALE = round(config[DISPERSION.CIRCLE_SCALE_CONFIG] / 100.0, 2)
+            DISPERSION.CIRCLE_SCALE = config[DISPERSION.CIRCLE_SCALE_CONFIG] * 0.01
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if self.enabled:

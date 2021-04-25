@@ -1,6 +1,6 @@
 ﻿package net.armagomen.battleobserver.battle.components.teamshealth
 {
-	import fl.transitions.Tween;
+	import net.armagomen.battleobserver.utils.tween.Tween;
 	import flash.display.*;
 	import net.armagomen.battleobserver.utils.Utils;
 	
@@ -36,10 +36,8 @@
 			this.enemyHpBar.graphics.endFill();
 			if (this.animationEnabled)
 			{
-				this.allyAnimation = new Tween(this.allyHpBar, "scaleX", null, this.allyHpBar.scaleX, 1.0, 1, true);
-				this.allyAnimation.FPS = 30;
-				this.enemyAnimation = new Tween(this.enemyHpBar, "scaleX", null, this.enemyHpBar.scaleX, 1.0, 1, true);
-				this.enemyAnimation.FPS = 30;
+				this.allyAnimation = new Tween(this.allyHpBar, "scaleX", this.allyHpBar.scaleX, 1.0, 1, true);
+				this.enemyAnimation = new Tween(this.enemyHpBar, "scaleX", this.enemyHpBar.scaleX, 1.0, 1, true);
 			}
 		
 		}
