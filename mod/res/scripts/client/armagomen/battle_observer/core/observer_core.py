@@ -14,7 +14,7 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 class ObserverCore(object):
     __slots__ = ("modsDir", "gameVersion", "workingDir", "fileName", "isFileValid", "mod_version",
-                 "settings", "configLoader", "moduleLoader", "update")
+                 "settings", "configLoader", "moduleLoader", "update", "componentsLoader")
 
     def __init__(self, configLoader):
         self.settings = configLoader.settings
@@ -26,6 +26,7 @@ class ObserverCore(object):
         self.mod_version = 'v{0} - {1}'.format(MOD_VERSION, self.gameVersion)
         self.update = UpdateMain()
         self.update.subscribe()
+        self.componentsLoader = ComponentsLoader()
 
     def clearClientCache(self, category=None):
         path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
@@ -37,10 +38,10 @@ class ObserverCore(object):
             self.removeDirs(os.path.join(path, category), category)
 
     @staticmethod
-    def removeDirs(normpath, dirName):
+    def removeDirs(normpath, dir_name):
         if os.path.exists(normpath):
             rmtree(normpath, ignore_errors=True, onerror=None)
-            logInfo('CLEANING CACHE: {0}'.format(dirName))
+            logInfo('CLEANING CACHE: {0}'.format(dir_name))
 
     def onExit(self):
         if self.isFileValid:
@@ -53,9 +54,8 @@ class ObserverCore(object):
 
     def start(self):
         if self.isFileValid:
-            ServicesLocator.appLoader.onGUISpaceEntered += self.configLoader.loadHangarSettings
             logInfo('MOD {}: {}'.format(MASSAGES.START, self.mod_version))
-            ComponentsLoader().start()
+            self.componentsLoader.start()
             self.configLoader.start()
             packages.BATTLE_PACKAGES += ("armagomen.battle_observer.battle",)
             packages.LOBBY_PACKAGES += ("armagomen.battle_observer.lobby",)
