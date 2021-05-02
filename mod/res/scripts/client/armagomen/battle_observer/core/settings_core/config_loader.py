@@ -64,7 +64,7 @@ class ConfigLoader(object):
         return False
 
     def getConfig(self, path):
-        """Loading the main settings file with the parameters which settings to load next"""
+        """Loading the main settings_core file with the parameters which settings_core to load next"""
         load_json = os.path.join(path, 'load.json')
         if self.makeDirs(path):
             self.loadError(path, 'CONFIGURATION FILES IS NOT FOUND')
@@ -100,14 +100,14 @@ class ConfigLoader(object):
         """
         Returns True if the length of 2 dictionaries is not identical,
         or an error occurs when comparing lengths.
-        And the settings file needs to be rewritten
+        And the settings_core file needs to be rewritten
         """
         if isinstance(data1, dict) and isinstance(data2, dict):
             return len(data1) != len(data2)
         return type(data1) != type(data2)
 
     def updateData(self, external_cfg, internal_cfg, file_update=False):
-        """recursively updates words from settings files"""
+        """recursively updates words from settings_core files"""
         file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
         for key in internal_cfg:
             if isinstance(internal_cfg[key], dict):
@@ -135,7 +135,7 @@ class ConfigLoader(object):
         return file_update
 
     def readConfig(self, configName):
-        """Read settings file from JSON"""
+        """Read settings_core file from JSON"""
         direct_path = os.path.join(self.path, configName)
         logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
         file_list = ['{}.json'.format(name) for name in LOAD_LIST]
@@ -168,7 +168,7 @@ class ConfigLoader(object):
             except ImportError as err:
                 logWarning("%s: Settings API not loaded" % repr(err))
             else:
-                from armagomen.battle_observer.core.settings.hangar.hangar_settings import ConfigInterface
+                from armagomen.battle_observer.core.settings_core.hangar.hangar_settings import ConfigInterface
                 self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
                                                        self.settings, self)
                 self.configInterface.start()

@@ -96,7 +96,7 @@ translate = {
         "debugText*text": "text box to format the PING / FPS",
         "debugText*text_tooltip": "HTML - YES<br>macros debug panel<br>%(PING)s<tab>-Ping"
                                   "<br>%(FPS)s<tab>is the current fps"
-                                  "<br>%(PingLagColor)s<tab>-color of ping/lag is configured in the color settings.",
+                                  "<br>%(PingLagColor)s<tab>-color of ping/lag is configured in the color settings_core.",
         "debugText*x": "window Position on the X-axis",
         "debugText*y": "window Position on the Y-axis",
         "debugText*scale": "Scale debug panel",
@@ -150,7 +150,7 @@ translate = {
                             "<br>%(armor)s - armor without inclination."
                             "<br>%(piercingPower)s - penetration of the projectile with distance."
                             "<br>%(caliber)s - is the caliber of the projectile."
-                            "<br>%(color)s | s:d:f | type data - color (see colors settings)"
+                            "<br>%(color)s | s:d:f | type data - color (see colors settings_core)"
     },
     "log_global": {
         "header": "GENERAL LOG SETTINGS",
@@ -167,29 +167,29 @@ translate = {
     },
     "log_total": {
         "header": "TOTAL LOG OF THE EFFECTIVENESS OF THE PLAYER",
-        "settings*inCenter": "Display the log in the middle of the screen",
-        "settings*x": "the Position of the main log Horizontal",
-        "settings*y": "the Position of the main log Vertical",
-        "settings*align": "Alignment text:",
+        "settings_core*inCenter": "Display the log in the middle of the screen",
+        "settings_core*x": "the Position of the main log Horizontal",
+        "settings_core*y": "the Position of the main log Vertical",
+        "settings_core*align": "Alignment text:",
         "mainLogScale": "Scaling functions."
     },
     "log_damage_extended": {
         "header": "A DETAILED LOG OF THE DAMAGE",
-        "settings*x": "Position detailed log Horizontal",
-        "settings*x_tooltip": "Relative to the players list.",
-        "settings*y": "Position detailed log Vertical",
-        "settings*y_tooltip": "Relative to the players list.",
-        "settings*align": "Alignment text:",
+        "settings_core*x": "Position detailed log Horizontal",
+        "settings_core*x_tooltip": "Relative to the players list.",
+        "settings_core*y": "Position detailed log Vertical",
+        "settings_core*y_tooltip": "Relative to the players list.",
+        "settings_core*align": "Alignment text:",
         "reverse": "Expand log"
     },
     "log_input_extended": {
         "header": "DETAILED LOG OF THE DAMAGE RECEIVED",
         "log_input_extended_shellColor*normal": "configure macro %(shellColor)s - Silver",
-        "settings*x": "Position detailed log Horizontal",
-        "settings*x_tooltip": "Relatively damage panel.",
-        "settings*y": "Position detailed log Vertical",
-        "settings*y_tooltip": "Relatively damage panel.",
-        "settings*align": "Alignment text:",
+        "settings_core*x": "Position detailed log Horizontal",
+        "settings_core*x_tooltip": "Relatively damage panel.",
+        "settings_core*y": "Position detailed log Vertical",
+        "settings_core*y_tooltip": "Relatively damage panel.",
+        "settings_core*align": "Alignment text:",
         "reverse": "Expand log",
         "shellColor*gold": "configure macro %(shellColor)s - gold"
     },
@@ -199,9 +199,9 @@ translate = {
         "mainGunDynamic": "Dynamic calc. of the damage up to receive the medal 'Main Gun'",
         "mainGunFailureIcon": "configure macro %(mainGunFailureIcon)s",
         "mainGunIcon": "configure macro %(mainGunIcon)s",
-        "settings*x": "the horizontal Position of (center of screen)",
-        "settings*y": "the vertical Position (upper edge)",
-        "settings*align": "Alignment text:"
+        "settings_core*x": "the horizontal Position of (center of screen)",
+        "settings_core*y": "the vertical Position (upper edge)",
+        "settings_core*align": "Alignment text:"
     },
     "team_bases_panel": {
         "header": "TEAM BASES PANEL",
@@ -319,7 +319,7 @@ translate = {
                             "Valid values are from 0 to 255. The default is 2."
     },
     "colors": {
-        "header": "Global color settings.",
+        "header": "Global color settings_core.",
         "armor_calculator*green": "Reduced Armor: 100% Penetration",
         "armor_calculator*orange": "Reduced Armor: 50% Penetration",
         "armor_calculator*red": "Reduced Armor: 0% Penetration",
@@ -359,8 +359,8 @@ translate = {
     },
     "service": {
         "name": "Battle Observer - v{0}".format(MOD_VERSION),
-        "description": "Battle Observer settings",
-        "windowTitle": "Battle Observer settings - v{0}".format(MOD_VERSION),
+        "description": "Battle Observer settings_core",
+        "windowTitle": "Battle Observer settings_core - v{0}".format(MOD_VERSION),
         "buttonOK": "OK",
         "buttonCancel": "Cancel",
         "buttonApply": "Apply",

@@ -4,6 +4,7 @@ from shutil import rmtree
 from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.core.bo_constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
     MOD_NAME
+from armagomen.battle_observer.core.settings_core.default_settings import settings
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.utils.common import logInfo, getPreferencesFilePath, getCurrentModPath, logWarning
@@ -14,10 +15,9 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 class ObserverCore(object):
     __slots__ = ("modsDir", "gameVersion", "workingDir", "fileName", "isFileValid", "mod_version",
-                 "settings", "configLoader", "moduleLoader", "update", "componentsLoader")
+                 "configLoader", "moduleLoader", "update", "componentsLoader")
 
     def __init__(self, configLoader):
-        self.settings = configLoader.settings
         self.configLoader = configLoader
         self.modsDir, self.gameVersion = getCurrentModPath()
         self.workingDir = os.path.join(self.modsDir, self.gameVersion)
@@ -45,7 +45,7 @@ class ObserverCore(object):
 
     def onExit(self):
         if self.isFileValid:
-            if self.settings.main[MAIN.AUTO_CLEAR_CACHE]:
+            if settings.main[MAIN.AUTO_CLEAR_CACHE]:
                 self.clearClientCache()
             logInfo('MOD {}: {}'.format(MASSAGES.FINISH, self.mod_version))
 

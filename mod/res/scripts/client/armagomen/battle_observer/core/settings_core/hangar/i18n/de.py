@@ -167,30 +167,30 @@ translate = {
     },
     "log_total": {
         "header": "Gesamtprotokoll der Effizienz des Spielers",
-        "settings*inCenter": "Zeigen Sie das Protokoll in der Mitte des Bildschirms an",
-        "settings*x": "Position waagerecht:",
-        "settings*y": "Position senkrecht:",
-        "settings*align": "Ausrichtung text:",
+        "settings_core*inCenter": "Zeigen Sie das Protokoll in der Mitte des Bildschirms an",
+        "settings_core*x": "Position waagerecht:",
+        "settings_core*y": "Position senkrecht:",
+        "settings_core*align": "Ausrichtung text:",
         "mainLogScale": "Skalierung:"
     },
     "log_damage_extended": {
         "header": "Erweitertes Protokoll für verursachten Schaden",
-        "settings*x": "Position detailliertes Protokoll waagerecht",
-        "settings*x_tooltip": "Bezogen auf die Liste Spieler.",
-        "settings*y": "Position detailliertes Protokoll senkrecht",
-        "settings*y_tooltip": "Bezogen auf die Liste Spieler.",
-        "settings*align": "Ausrichtung text:",
+        "settings_core*x": "Position detailliertes Protokoll waagerecht",
+        "settings_core*x_tooltip": "Bezogen auf die Liste Spieler.",
+        "settings_core*y": "Position detailliertes Protokoll senkrecht",
+        "settings_core*y_tooltip": "Bezogen auf die Liste Spieler.",
+        "settings_core*align": "Ausrichtung text:",
         "reverse": "zeige detailiertes Protokoll für einzelne Treffer"
     },
     "log_input_extended": {
         "header": "Erweitertes Protokoll für erhaltenen Schaden",
-        "settings*x": "Position des detailierten Protokolls waagerecht",
-        "settings*x_tooltip": "In Bezug auf die Schadensanzeige.",
-        "settings*y": "Position des detailierten Protokolls senkrecht",
-        "settings*align": "Ausrichtung text:",
-        "settings*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
-                                  "<br>right - Rechtsbündig",
-        "settings*y_tooltip": "In Bezug auf die Schadensanzeige.",
+        "settings_core*x": "Position des detailierten Protokolls waagerecht",
+        "settings_core*x_tooltip": "In Bezug auf die Schadensanzeige.",
+        "settings_core*y": "Position des detailierten Protokolls senkrecht",
+        "settings_core*align": "Ausrichtung text:",
+        "settings_core*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
+                                       "<br>right - Rechtsbündig",
+        "settings_core*y_tooltip": "In Bezug auf die Schadensanzeige.",
         "reverse": "zeige detailiertes Protokoll für einzelne Treffer",
         "shellColor*gold": "Einstellung für Makro: %(shellColor)s - Premium Munition",
         "shellColor*normal": "Einstellung für Makro: %(shellColor)s - Standard Munition"
@@ -201,11 +201,11 @@ translate = {
         "mainGunDynamic": "Dynamische Berechnung für verbl. Schaden bis zum 'Grosskaliber'",
         "mainGunFailureIcon": "Einstellung für Makro: %(mainGunFailureIcon)s",
         "mainGunIcon": "Einstellung für Makro: %(mainGunIcon)s",
-        "settings*x": "Position waagerecht von der Mitte gemessen",
-        "settings*y": "Position senkrecht vom oberen Rand gemessen",
-        "settings*align": "Ausrichtung des Textes:",
-        "settings*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
-                                  "<br>right - Rechtsbündig"
+        "settings_core*x": "Position waagerecht von der Mitte gemessen",
+        "settings_core*y": "Position senkrecht vom oberen Rand gemessen",
+        "settings_core*align": "Ausrichtung des Textes:",
+        "settings_core*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
+                                       "<br>right - Rechtsbündig"
     },
     "team_bases_panel": {
         "header": "TEAM BASES PANEL (Leiste zur Anzeige der Basiseroberung)",
