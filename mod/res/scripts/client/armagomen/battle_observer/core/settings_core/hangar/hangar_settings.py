@@ -1,6 +1,6 @@
 from armagomen.battle_observer.core.bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
-from armagomen.battle_observer.core.settings.hangar.i18n import localization
+from armagomen.battle_observer.core.settings_core.hangar.i18n import localization
 from armagomen.utils.common import logWarning, openWebBrowser
 from debug_utils import LOG_CURRENT_EXCEPTION
 
@@ -185,7 +185,7 @@ class ConfigInterface(CreateElement):
         vxSettingsApi.onDataChanged += self.onDataChanged
 
     def addModificationToModList(self):
-        """register settings window in modsListApi"""
+        """register settings_core window in modsListApi"""
         kwargs = {
             'id': MOD_NAME, 'name': localization['service']['name'],
             'description': localization['service']['description'],
@@ -209,7 +209,7 @@ class ConfigInterface(CreateElement):
                 self.inited.add(blockID)
 
     def load_window(self):
-        """Loading settings window"""
+        """Loading settings_core window"""
         self.vxSettingsApi.loadWindow(MOD_NAME)
 
     def onUserConfigUpdateComplete(self):
@@ -238,7 +238,7 @@ class ConfigInterface(CreateElement):
                 LOG_CURRENT_EXCEPTION()
 
     def onSettingsChanged(self, modID, blockID, data):
-        """Saves made by the user settings in the settings file."""
+        """Saves made by the user settings_core in the settings_core file."""
         if MOD_NAME != modID:
             return
         if blockID == ANOTHER.CONFIG_SELECT and self.selected != data['selectedConfig']:
