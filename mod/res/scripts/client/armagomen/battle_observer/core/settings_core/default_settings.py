@@ -491,3 +491,6 @@ class DefaultSettings(object):
     @property
     def damage_log(self):
         return DamageLogsSettings(self.log_total, self.log_damage_extended, self.log_input_extended, self.log_global)
+
+
+settings = DefaultSettings()

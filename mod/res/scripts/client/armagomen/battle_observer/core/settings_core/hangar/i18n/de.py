@@ -189,7 +189,7 @@ translate = {
         "settings_core*y": "Position des detailierten Protokolls senkrecht",
         "settings_core*align": "Ausrichtung text:",
         "settings_core*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
-                                  "<br>right - Rechtsbündig",
+                                       "<br>right - Rechtsbündig",
         "settings_core*y_tooltip": "In Bezug auf die Schadensanzeige.",
         "reverse": "zeige detailiertes Protokoll für einzelne Treffer",
         "shellColor*gold": "Einstellung für Makro: %(shellColor)s - Premium Munition",
@@ -205,7 +205,7 @@ translate = {
         "settings_core*y": "Position senkrecht vom oberen Rand gemessen",
         "settings_core*align": "Ausrichtung des Textes:",
         "settings_core*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
-                                  "<br>right - Rechtsbündig"
+                                       "<br>right - Rechtsbündig"
     },
     "team_bases_panel": {
         "header": "TEAM BASES PANEL (Leiste zur Anzeige der Basiseroberung)",
