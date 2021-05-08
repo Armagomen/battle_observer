@@ -32,8 +32,6 @@ def sniper_create(base, camera, onChangeControlMode=None):
                 camera._cfg[SNIPER.ZOOMS] = steps
                 camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = \
                     [round(SNIPER.EXPOSURE_FACTOR * step, GLOBAL.ONE) for step in exposure_range]
-        if settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]:
-            setattr(camera, "dist_for_step", math.ceil(SNIPER.MAX_DIST / len(camera._cfg[SNIPER.ZOOMS])))
     return base(camera, onChangeControlMode=onChangeControlMode)
 
 
@@ -51,7 +49,8 @@ def enable(base, camera, targetPos, saveZoom):
             targetPos = player.gunRotator.markerInfo[GLOBAL.FIRST]
         dist = targetPos.distTo(player.position)
         if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
-            index = int(math.ceil(dist / camera.dist_for_step) - GLOBAL.ONE)
+            dist_for_step = math.ceil(SNIPER.MAX_DIST / len(camera._cfg[SNIPER.ZOOMS]))
+            index = int(math.ceil(dist / dist_for_step) - GLOBAL.ONE)
             zoom = camera._cfg[SNIPER.ZOOMS][index]
         else:
             zoom = min(round(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
