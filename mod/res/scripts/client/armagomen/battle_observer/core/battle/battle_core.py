@@ -2,7 +2,7 @@ from CurrentVehicle import g_currentVehicle
 from DogTagComponent import DogTagComponent
 from PlayerEvents import g_playerEvents
 from VehicleGunRotator import VehicleGunRotator
-from armagomen.battle_observer.core.bo_constants import MAIN, GLOBAL, DAMAGE_LOG
+from armagomen.bo_constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, events, getPlayer
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl

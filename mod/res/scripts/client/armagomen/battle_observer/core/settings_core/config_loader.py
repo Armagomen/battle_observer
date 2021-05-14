@@ -3,7 +3,7 @@ import json
 import os
 import time
 
-from armagomen.battle_observer.core.bo_constants import LOAD_LIST, GLOBAL
+from armagomen.bo_constants import LOAD_LIST, GLOBAL
 from armagomen.utils.common import logWarning, logInfo, getCurrentModPath
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID

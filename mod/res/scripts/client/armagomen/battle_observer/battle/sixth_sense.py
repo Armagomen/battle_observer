@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
-from armagomen.battle_observer.core.bo_constants import GLOBAL, SIXTH_SENSE
+from armagomen.bo_constants import GLOBAL, SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
 from armagomen.utils.common import callback
 from armagomen.utils.timers import SixthSenseTimer

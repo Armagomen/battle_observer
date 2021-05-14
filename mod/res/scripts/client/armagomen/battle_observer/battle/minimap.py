@@ -1,5 +1,5 @@
 from armagomen.battle_observer.core import keysParser
-from armagomen.battle_observer.core.bo_constants import MINIMAP
+from armagomen.bo_constants import MINIMAP
 from armagomen.battle_observer.meta.battle.minimap_meta import MinimapMeta
 from gui.battle_control import avatar_getter
 

@@ -1,4 +1,4 @@
-from armagomen.battle_observer.core.bo_constants import MAIN
+from armagomen.bo_constants import MAIN
 from armagomen.battle_observer.meta.battle.wg_comp_meta import WgCompMeta
 
 

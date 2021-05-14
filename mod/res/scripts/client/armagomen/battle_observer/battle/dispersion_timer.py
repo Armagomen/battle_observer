@@ -1,7 +1,7 @@
 from collections import defaultdict
 from math import log
 
-from armagomen.battle_observer.core.bo_constants import DISPERSION, GLOBAL, POSTMORTEM
+from armagomen.bo_constants import DISPERSION, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.utils.common import events, logInfo
 from gui.battle_control import avatar_getter

@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
-from armagomen.battle_observer.core.bo_constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
+from armagomen.bo_constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
 from armagomen.utils.common import logError, callback, logWarning
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI

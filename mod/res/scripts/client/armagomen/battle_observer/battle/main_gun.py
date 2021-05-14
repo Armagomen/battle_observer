@@ -1,7 +1,7 @@
 from collections import defaultdict
 from math import ceil
 
-from armagomen.battle_observer.core.bo_constants import MAIN_GUN, GLOBAL, POSTMORTEM
+from armagomen.bo_constants import MAIN_GUN, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID

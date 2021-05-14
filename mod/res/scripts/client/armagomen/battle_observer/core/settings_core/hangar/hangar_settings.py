@@ -1,4 +1,4 @@
-from armagomen.battle_observer.core.bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
+from armagomen.bo_constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
 from armagomen.battle_observer.core.settings_core.hangar.i18n import localization
 from armagomen.utils.common import logWarning, openWebBrowser

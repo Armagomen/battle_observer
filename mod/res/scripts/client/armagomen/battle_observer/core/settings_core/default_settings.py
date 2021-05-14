@@ -3,7 +3,7 @@ from collections import defaultdict, namedtuple
 
 import Keys
 from Event import SafeEvent
-from armagomen.battle_observer.core.bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
+from armagomen.bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
     DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, USER_BACKGROUND, \
     VEHICLE_TYPES

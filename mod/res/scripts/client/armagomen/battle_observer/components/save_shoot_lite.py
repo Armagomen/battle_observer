@@ -1,7 +1,7 @@
 from Avatar import PlayerAvatar
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import settings, keysParser
-from armagomen.battle_observer.core.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
+from armagomen.bo_constants import GLOBAL, SAVE_SHOOT, MAIN
 from armagomen.utils.common import overrideMethod, isReplay
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from messenger.MessengerEntry import g_instance

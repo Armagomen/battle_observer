@@ -8,8 +8,7 @@ import ResMgr
 
 from BattleReplay import isPlaying, isLoading
 from Event import SafeEvent
-
-MOD_NAME = "BATTLE_OBSERVER"
+from armagomen.bo_constants import MOD_NAME
 
 
 def isReplay():

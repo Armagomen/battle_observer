@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, GLOBAL, POSTMORTEM
+from armagomen.bo_constants import ARMOR_CALC, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.common import events
 from gui.battle_control import avatar_getter

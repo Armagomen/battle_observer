@@ -1,6 +1,6 @@
 import constants
 from armagomen.battle_observer.core import settings
-from armagomen.battle_observer.core.bo_constants import GLOBAL, MAIN
+from armagomen.bo_constants import GLOBAL, MAIN
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 

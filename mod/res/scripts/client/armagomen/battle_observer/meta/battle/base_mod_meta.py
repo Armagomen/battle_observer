@@ -1,6 +1,6 @@
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import settings
-from armagomen.battle_observer.core.bo_constants import ALIAS_TO_CONFIG_NAME, MAIN, COLORS, GLOBAL
+from armagomen.bo_constants import ALIAS_TO_CONFIG_NAME, MAIN, COLORS, GLOBAL
 from armagomen.utils.common import logInfo, getPlayer
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from gui.shared.personality import ServicesLocator

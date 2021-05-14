@@ -5,7 +5,7 @@ from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from aih_constants import SHOT_RESULT
 from armagomen.battle_observer.core import view_settings
-from armagomen.battle_observer.core.bo_constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
+from armagomen.bo_constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
 from armagomen.utils.common import getPlayer, overrideMethod, events
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \

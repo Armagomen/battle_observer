@@ -1,6 +1,6 @@
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import settings
-from armagomen.battle_observer.core.bo_constants import MAIN, ANOTHER, GLOBAL
+from armagomen.bo_constants import MAIN, ANOTHER, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.arena_info.arena_vos import VehicleTypeInfoVO
 from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategories
