@@ -1,12 +1,12 @@
 from CurrentVehicle import g_currentVehicle
 from DogTagComponent import DogTagComponent
 from PlayerEvents import g_playerEvents
-from SoundGroups import SoundModes
 from VehicleGunRotator import VehicleGunRotator
-from armagomen.battle_observer.core.bo_constants import MAIN, SOUND_MODES, GLOBAL, DAMAGE_LOG
+from armagomen.battle_observer.core.bo_constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, events, getPlayer
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
+from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 
 BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND)
 
@@ -17,15 +17,15 @@ class BattleCore(object):
         self.settings = settings
         g_playerEvents.onArenaCreated += self.onArenaCreated
         settings.onModSettingsChanged += self.onModSettingsChanged
-        overrideMethod(SoundModes, 'setMode')(self.setSoundMode)
         overrideMethod(_ClientArenaVisitor, "hasDogTag")(self.hasDogTag)
         overrideMethod(DogTagComponent, "_isObserving")(self._isObservingDogTagFix)
+        overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByTankmen")(self.setSoundMode)
+        overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByCommanderSkinID")(self.setSoundMode)
 
-    def setSoundMode(self, base, mode, modeName):
+    def setSoundMode(self, base, *args, **kwargs):
         if self.settings.main[MAIN.IGNORE_COMMANDERS]:
-            if modeName in SOUND_MODES:
-                modeName = SoundModes.DEFAULT_MODE_NAME
-        return base(mode, modeName)
+            return False
+        return base(*args, **kwargs)
 
     def hasDogTag(self, base, *args, **kwargs):
         return False if self.settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
