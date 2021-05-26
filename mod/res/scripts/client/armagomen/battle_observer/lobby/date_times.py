@@ -2,12 +2,10 @@
 from time import strftime
 
 from armagomen.battle_observer.core import settings
-from armagomen.bo_constants import CLOCK
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
+from armagomen.bo_constants import CLOCK
 from armagomen.utils.common import checkDecoder
 from armagomen.utils.timers import CyclicTimerEvent
-from gui.shared.personality import ServicesLocator
-from helpers.time_utils import getTimeDeltaFromNow, makeLocalServerTime, ONE_DAY, ONE_HOUR, ONE_MINUTE
 
 
 class DateTimes(DateTimesMeta):
@@ -42,17 +40,3 @@ class DateTimes(DateTimesMeta):
         if self.coding is not None:
             _time = _time.decode(self.coding)
         self.as_setDateTimeS(_time)
-        self.setPremiumTimeLeft(self.config[CLOCK.PREMIUM_TIME])
-
-    def setPremiumTimeLeft(self, enable):
-        if enable and ServicesLocator.itemsCache.items.stats.isPremium:
-            premiumExpiryTime = ServicesLocator.itemsCache.items.stats.activePremiumExpiryTime
-            deltaInSeconds = float(getTimeDeltaFromNow(makeLocalServerTime(premiumExpiryTime)))
-            days, delta = divmod(deltaInSeconds, ONE_DAY)
-            hours, delta = divmod(delta, ONE_HOUR)
-            minutes, seconds = divmod(delta, ONE_MINUTE)
-            timedelta = {"days": days, "hours": hours, "minutes": minutes, "seconds": seconds}
-            timeLeft = self.config[CLOCK.PREMIUM_FORMAT] % timedelta
-            self.as_setPremiumLeftS(timeLeft)
-        else:
-            self.as_setPremiumLeftS()

@@ -18,6 +18,7 @@ MOD_VERSION = "1.33.0"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
+
 class SWF:
     def __init__(self):
         pass
@@ -223,7 +224,8 @@ class CLOCK:
     UPDATE_INTERVAL = 1.0
     DEFAULT_FORMAT_BATTLE = "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>"
     DEFAULT_FORMAT_HANGAR = "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>"
-    DEFAULT_FORMAT_PREMIUM = "%(days)d Дн. %(hours)02d:%(minutes)02d:%(seconds)02d"
+    DEFAULT_FORMAT_PREMIUM = "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d Дн. " \
+                             "%(hours)02d:%(minutes)02d:%(seconds)02d</font>"
 
 
 class SNIPER:
@@ -244,6 +246,7 @@ class SNIPER:
     DEFAULT_STEPS = [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0]
     EXPOSURE_FACTOR, MAX_CALIBER = (0.1, 40)
     DISABLE_SNIPER = "disable_cam_after_shoot"
+    DISABLE_LATENCY = "disable_cam_after_shoot_latency"
     SKIP_CLIP = "disable_cam_skip_clip"
     CLIP = "clip"
     MAX_DIST = 730.0

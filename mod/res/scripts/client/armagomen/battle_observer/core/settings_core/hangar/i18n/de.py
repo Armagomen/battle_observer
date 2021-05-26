@@ -63,6 +63,7 @@ translate = {
         "hide_server_in_hangar": "Deaktiviere die Anzeige des Servers im Hangar.",
         "hide_server_in_hangar_tooltip": "Der Parameter funktioniert nach dem Neustart des "
                                          "Hangars oder dem Neustart des Spiels.",
+        "premium_time": "Display exact premium time."
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",

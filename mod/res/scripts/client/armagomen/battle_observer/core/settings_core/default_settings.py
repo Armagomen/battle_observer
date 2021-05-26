@@ -37,7 +37,9 @@ class DefaultSettings(object):
             MAIN.HIDE_DOG_TAGS: False,
             MAIN.DISABLE_SCORE_SOUND: False,
             MAIN.HIDE_SERVER_IN_HANGAR: False,
-            MAIN.DEBUG: False
+            MAIN.DEBUG: False,
+            CLOCK.PREMIUM_TIME: True,
+            CLOCK.PREMIUM_FORMAT: CLOCK.DEFAULT_FORMAT_PREMIUM,
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
@@ -64,9 +66,7 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             CLOCK.IN_LOBBY: {
                 GLOBAL.ENABLED: False,
-                CLOCK.PREMIUM_TIME: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
-                CLOCK.PREMIUM_FORMAT: CLOCK.DEFAULT_FORMAT_PREMIUM,
                 GLOBAL.X: -240,
                 GLOBAL.Y: 54
             },
@@ -183,6 +183,7 @@ class DefaultSettings(object):
         self.zoom = {
             GLOBAL.ENABLED: False,
             SNIPER.DISABLE_SNIPER: False,
+            SNIPER.DISABLE_LATENCY: 0.5,
             SNIPER.SKIP_CLIP: True,
             SNIPER.GUN_ZOOM: False,
             SNIPER.DYN_ZOOM: {

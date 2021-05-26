@@ -62,6 +62,7 @@ translate = {
         "disable_score_sound": "Disable score change sound",
         "hide_server_in_hangar": "Disable the display of the server in the hangar.",
         "hide_server_in_hangar_tooltip": "The parameter will work after restarting the hangar or restarting the game.",
+        "premium_time": "Display exact premium time."
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",

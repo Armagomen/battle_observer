@@ -20,13 +20,14 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesText = None
         self.damagesSettings = None
         self.battle_ctx = self.sessionProvider.getCtx()
+        self.isEpicRandomBattle = self._arenaVisitor.gui.isEpicRandomBattle()
         self._vehicles = set()
         self.playersDamage = defaultdict(int)
 
     def _populate(self):
         super(PlayersPanels, self)._populate()
         isColorBlind = self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND)
-        self.hpBarsEnable = self.settings[PANELS.BARS_ENABLED]
+        self.hpBarsEnable = self.settings[PANELS.BARS_ENABLED] and not self.isEpicRandomBattle
         self.damagesEnable = self.settings[PANELS.DAMAGES_ENABLED]
         self.damagesText = self.settings[PANELS.DAMAGES_TEMPLATE]
         self.damagesSettings = self.settings[PANELS.DAMAGES_SETTINGS]
@@ -35,8 +36,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                        self.barColors[COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME])
         self.vehicleColor = self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         isInEpicRange = self._arenaVisitor.gui.isInEpicRange()
-        isEpicRandomBattle = self._arenaVisitor.gui.isEpicRandomBattle()
-        if not isInEpicRange and not isEpicRandomBattle:
+        if not isInEpicRange and not self.isEpicRandomBattle:
             keysParser.onKeyPressed += self.onKeyPressed
             if self.hpBarsEnable:
                 self.settingsCore.onSettingsApplied += self.onSettingsApplied
@@ -53,8 +53,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self._vehicles.clear()
         self.flashObject.as_clearStorage()
         isInEpicRange = self._arenaVisitor.gui.isInEpicRange()
-        isEpicRandomBattle = self._arenaVisitor.gui.isEpicRandomBattle()
-        if not isInEpicRange and not isEpicRandomBattle:
+        if not isInEpicRange and not self.isEpicRandomBattle:
             keysParser.onKeyPressed -= self.onKeyPressed
             if self.hpBarsEnable:
                 self.settingsCore.onSettingsApplied -= self.onSettingsApplied
@@ -122,7 +121,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def onVehicleKilled(self, targetID):
         if targetID in self._vehicles:
-            # self._vehicles.remove(targetID)
             self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, GLOBAL.ZERO, GLOBAL.EMPTY_LINE)
 
     @staticmethod

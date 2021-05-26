@@ -14,7 +14,6 @@ class FlightTime(FlightTimeMeta):
     def __init__(self):
         super(FlightTime, self).__init__()
         self.template = None
-        self.isSPG = False
         self.shared = self.sessionProvider.shared
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, flightTime=GLOBAL.ZERO, distance=GLOBAL.ZERO)
 
@@ -23,15 +22,14 @@ class FlightTime(FlightTimeMeta):
         self.template = self.settings[FLIGHT_TIME.TEMPLATE]
         self.as_startUpdateS(self.settings)
 
-    def checkSpgOnlyConfig(self):
+    def spgOnlyProcess(self):
         if self.settings[FLIGHT_TIME.SPG_ONLY]:
-            return self.isSPG
+            return VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
         return True
 
     def onEnterBattlePage(self):
         super(FlightTime, self).onEnterBattlePage()
-        self.isSPG = VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
-        if self.checkSpgOnlyConfig():
+        if self.spgOnlyProcess():
             if self.shared.crosshair:
                 self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
             handler = avatar_getter.getInputHandler()
@@ -39,7 +37,7 @@ class FlightTime(FlightTimeMeta):
                 handler.onCameraChanged += self.onCameraChanged
 
     def onExitBattlePage(self):
-        if self.checkSpgOnlyConfig():
+        if self.spgOnlyProcess():
             if self.shared.crosshair:
                 self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
             handler = avatar_getter.getInputHandler()

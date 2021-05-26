@@ -7,6 +7,8 @@
 	import net.armagomen.battleobserver.hangar.utils.TextExt;
 	import net.wg.infrastructure.base.BaseDAAPIComponent;
 
+	import net.wg.gui.lobby.header.LobbyHeader;
+	
 	public class ObserverDateTimesUI extends BaseDAAPIComponent
 	{
 		private var dateTime:TextExt;

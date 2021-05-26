@@ -20,7 +20,8 @@ class ComponentsLoader(object):
             'service_channel_filter': None,
             'tank_carousel': None,
             'shot_result_plugin': None,
-            'hide_server': None
+            'hide_server': None,
+            'premium_time': None
         }
 
     def start(self):
