@@ -14,7 +14,7 @@ today = datetime.date.today()
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.33.0"
+MOD_VERSION = "1.33.1"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 

@@ -28,7 +28,7 @@ class PremiumTime(object):
         if settings.main[CLOCK.PREMIUM_TIME] and header.itemsCache.items.stats.isPremium:
             self.callback = callback(1.0, lambda: self.startCallback(base, header, data))
             data["doLabel"] = self._getPremiumLabelText(header.itemsCache.items.stats.activePremiumExpiryTime)
-        return base(header, data)
+        base(header, data)
 
     def stopCallback(self):
         if self.callback is not None:
@@ -40,4 +40,4 @@ class PremiumTime(object):
         return base(header)
 
 
-handler = PremiumTime()
+p_time = PremiumTime()
