@@ -1,6 +1,5 @@
 # coding=utf-8
-import datetime
-import random
+
 
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
@@ -9,8 +8,6 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from helpers import getClientLanguage
-
-today = datetime.date.today()
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
@@ -37,7 +34,7 @@ class GLOBAL:
     ALIGN = "align"
     ALIGN_LIST = ("left", "center", "right")
     ALIGN_LIST_TEST = ("left", "center")
-    RU_LOCALIZATION = ('ru', 'uk', 'be')
+    RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
     ALPHA = "alpha"
     BG_ALPHA = "bgAlpha"
     BLUR_X = "blurX"
@@ -86,21 +83,6 @@ class URLS:
     DONATE = {DONATE_UA_URL, DONATE_EU_URL}
     SUPPORT_URL = "https://discord.gg/NuhuhTN"
     UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
-    if getClientLanguage().lower() in GLOBAL.RU_LOCALIZATION:
-        MESSAGES = ("Поддержите разработку мода. Спасибо что вы с нами.",
-                    "Нравится мод ?, не дай автору помереть с голоду.",
-                    "Для добавления статистики в мод необходимо собрать деньги на сервер.",
-                    "А ты уже поддержал разработку ?",
-                    "Мод существует только благодаря вашей поддержке, нет поддержки нет желания что-либо делать.")
-    else:
-        MESSAGES = ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
-                    "If you like mod, don't let the author starve to death.",
-                    "To add statistics to the mod, you need to rent or buy a server.",
-                    "Have you already supported the development?")
-
-    DONATE_MESSAGE = "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
-                     "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>".format(ua=DONATE_UA_URL, all=DONATE_EU_URL,
-                                                                              msg=random.choice(MESSAGES))
 
 
 class SERVICE_CHANNEL:

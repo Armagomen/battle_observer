@@ -1,5 +1,6 @@
 from armagomen.battle_observer.core import settings
 from armagomen.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
+from armagomen.utils.donate_messages import getDonateMessage
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
 from gui.SystemMessages import pushMessage, SM_TYPE
@@ -64,7 +65,7 @@ def clickAction(base, view, typeID, entityID, action):
 
 
 def onConnected():
-    pushMessage(URLS.DONATE_MESSAGE, type=SM_TYPE.Warning)
+    pushMessage(getDonateMessage(GLOBAL.RU_LOCALIZATION, URLS), type=SM_TYPE.Warning)
 
 
 ServicesLocator.connectionMgr.onConnected += onConnected
