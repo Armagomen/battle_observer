@@ -1,8 +1,8 @@
 from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
-from armagomen.bo_constants import GLOBAL, SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
+from armagomen.bo_constants import GLOBAL, SIXTH_SENSE
 from armagomen.utils.common import callback
 from armagomen.utils.timers import SixthSenseTimer
 from constants import ARENA_PERIOD
@@ -21,13 +21,15 @@ class SixthSense(SixthSenseMeta):
         self.showTimer = None
         self.macro[SIXTH_SENSE.M_TIME] = None
         self._timer = None
+        self.__soundID = self._arenaVisitor.type.getCountdownTimerSound()
 
     def _populate(self):
         super(SixthSense, self)._populate()
         self.template = self.settings[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE]
         self.showTimer = self.settings[SIXTH_SENSE.SHOW_TIMER]
         self.macro[SIXTH_SENSE.M_TIME] = self.settings[SIXTH_SENSE.TIME]
-        self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS, self.settings[SIXTH_SENSE.PLAY_TICK_SOUND])
+        self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS, self.settings[SIXTH_SENSE.PLAY_TICK_SOUND],
+                                      self.__soundID)
 
     def onEnterBattlePage(self):
         super(SixthSense, self).onEnterBattlePage()

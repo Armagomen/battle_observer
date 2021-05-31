@@ -7,8 +7,6 @@ class CONSTANTS:
     def __init__(self):
         pass
 
-    COUNTDOWN_TICKING = 'time_countdown'
-    STOP_TICKING = 'time_countdown_stop'
     ONE_SECOND = 1.0
     ZERO = 0
     ONE = 1
@@ -35,15 +33,15 @@ class Timer(object):
 
 
 class SixthSenseTimer(Timer):
-    __slots__ = ("_callback", "_func_hide", "_func_update", "_isTicking", "_play_sound", "__sounds")
+    __slots__ = ("_callback", "_func_hide", "_func_update", "_play_sound", "__sounds", "__soundID")
 
-    def __init__(self, update, hide, play_sound):
+    def __init__(self, update, hide, play_sound, soundID):
         super(SixthSenseTimer, self).__init__()
         self._func_update = update
         self._play_sound = play_sound
         self._func_hide = hide
-        self._isTicking = False
         self.__sounds = dict()
+        self.__soundID = soundID
 
     def callWWISE(self, wwiseEventName):
         if wwiseEventName in self.__sounds:
@@ -55,25 +53,19 @@ class SixthSenseTimer(Timer):
             if sound.isPlaying:
                 sound.stop()
             sound.play()
-            self._isTicking = wwiseEventName == CONSTANTS.COUNTDOWN_TICKING
-
-    def stop(self):
-        super(SixthSenseTimer, self).stop()
-        if self._play_sound and self._isTicking:
-            self.callWWISE(CONSTANTS.STOP_TICKING)
 
     def timeTicking(self, seconds):
         if seconds > CONSTANTS.ZERO:
             self._callback = callback(CONSTANTS.ONE_SECOND, lambda: self.timeTicking(seconds - CONSTANTS.ONE))
             self._func_update(seconds)
+            if self._play_sound:
+                self.callWWISE(self.__soundID)
         else:
             self.stop()
 
     def start(self, seconds):
         super(SixthSenseTimer, self).start()
         self.timeTicking(seconds)
-        if self._play_sound and not self._isTicking:
-            self.callWWISE(CONSTANTS.COUNTDOWN_TICKING)
 
     def destroy(self):
         for sound in self.__sounds.values():
