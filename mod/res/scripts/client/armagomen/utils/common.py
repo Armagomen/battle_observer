@@ -10,6 +10,7 @@ from BattleReplay import isPlaying, isLoading
 from Event import SafeEvent
 from armagomen.bo_constants import MOD_NAME
 
+# print [x for x in dir(BigWorld) if "WW_" in x]
 
 def isReplay():
     return isPlaying() or isLoading()
