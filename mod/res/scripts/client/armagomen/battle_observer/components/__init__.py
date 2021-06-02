@@ -8,20 +8,22 @@ class ComponentsLoader(object):
 
     def __init__(self):
         self.modules = {
-            'camera': None,
-            'postmortem': None,
             'badges': None,
-            'friends': None,
-            'save_shoot_lite': None,
+            'camera': None,
             'dispersion': None,
+            'donate_messages': None,
             'effects': None,
-            'minimap_plugins': None,
-            'wg_logs_fixes': None,
-            'service_channel_filter': None,
-            'tank_carousel': None,
-            'shot_result_plugin': None,
+            'friends': None,
             'hide_server': None,
-            'premium_time': None
+            'minimap_plugins': None,
+            'postmortem': None,
+            'premium_time': None,
+            'played_together': None,
+            'save_shoot_lite': None,
+            'service_channel_filter': None,
+            'shot_result_plugin': None,
+            'tank_carousel': None,
+            'wg_logs_fixes': None
         }
 
     def start(self):

@@ -1,10 +1,7 @@
 from armagomen.battle_observer.core import settings
 from armagomen.bo_constants import SERVICE_CHANNEL, GLOBAL, URLS
-from armagomen.utils.donate_messages import getDonateMessage
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
-from gui.SystemMessages import pushMessage, SM_TYPE
-from gui.shared.personality import ServicesLocator
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
@@ -62,10 +59,3 @@ def clickAction(base, view, typeID, entityID, action):
     if action in URLS.DONATE:
         return openWebBrowser(action)
     return base(view, typeID, entityID, action)
-
-
-def onConnected():
-    pushMessage(getDonateMessage(GLOBAL.RU_LOCALIZATION, URLS), type=SM_TYPE.Warning)
-
-
-ServicesLocator.connectionMgr.onConnected += onConnected
