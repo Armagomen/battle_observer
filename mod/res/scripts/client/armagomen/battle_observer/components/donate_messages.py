@@ -33,7 +33,7 @@ MESSAGES = {
             "Motherland calls to support!",
             "Some stories live no longer than the paper they are written on. Our story begins on Armagomen's" +
             " birthday and doesn't end there. August 11 and 17 are the birthdays of Battle Observer and Armagomen." +
-            " Without him, there would be no Battle Observer."
+            " Without him, there would be no Battle Observer.",
             "We are not afraid of penalties for speeding work. Speed up the mod with support!"
             )
 }
@@ -62,10 +62,10 @@ class Donate(object):
     def getRandomMessage(self):
         message = random.choice(MESSAGES[GLOBAL.RU_LOCALIZATION])
         if message == self.lastMessage:
-            return self.getRandomMessage()
+            message = self.getRandomMessage()
         else:
             self.lastMessage = message
-            return message
+        return message
 
     def getDonateMessage(self):
         # type: () -> str
