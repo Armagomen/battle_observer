@@ -17,7 +17,7 @@ MESSAGES = {
            "Мы измеряем сотые доли секунды, которые отделяют победителя от участника.",
            "У нас есть даже то, чего ещё нет.",
            "Мы не боимся штрафов за превышение скорости работы. Ускоряй мод поддержкой.!",
-           "Из скромного – только разиер поддержки!",
+           "Из скромного – только размер поддержки!",
            "Родина-мать зовёт поддержать!",
            "Вместе возможно всё. Даже собрать на сервер.",
            "Некоторые истории живут не дольше, чем бумага, на которой они написаны. Наша история начинается в день " +
@@ -27,29 +27,30 @@ MESSAGES = {
            ),
     False: ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
             "If you like mod, don't let the author starve to death.",
-            "To add statistics to the mod, you need to rent or buy a server.",
             "Have you already supported the development?",
             "How about sharing with those in need?",
-            "Everything is possible together. Even put together on the server.",
+            "Everything is possible together. Even collect some founds for the server.",
+            "We measure the milliseconds that separate the winner from the competitor.",
             "Motherland calls to support!",
+            "We've got stuff that don't exist yet",
             "Some stories live no longer than the paper they are written on. Our story begins on Armagomen's" +
-            " birthday and doesn't end there. August 11 and 17 are the birthdays of Battle Observer and Armagomen." +
+            " birthday and doesn't end up there. August 11 and 17 are the birthdays of Battle Observer and Armagomen." +
             " Without him, there would be no Battle Observer.",
-            "We are not afraid of penalties for speeding work. Speed up the mod with support!"
+            "We are not afraid of penalties for fast work. Speed up the mod with support!"
             )
 }
 
 SPECIAL_MESSAGES = {
     True: {
-        11: "С ДНЕМ РОЖДЕНИЯ BATTLE OBSERVER, {years} лет в строю.",
+        11: "С ДНЕМ РОЖДЕНИЯ BATTLE OBSERVER, {years:d} лет в строю.",
         16: "Завтра у автора мода день рождения, не забудь поздравить.",
         17: "Поздравить автора мода с днем рождения.",
         18: "Вчера был день рождения у автора мода, ты поздравил?"},
     False: {
-        11: "HAPPY BIRTHDAY BATTLE OBSERVER, {years} years in the ranks.",
-        16: "Tomorrow is the author's birthday, do not forget to congratulate.",
+        11: "HAPPY BIRTHDAY to BATTLE OBSERVER, {years:d} years in the ranks.",
+        16: "Tomorrow is the author's birthday, do not forget to congratulate him.",
         17: "Congratulate the author on his birthday.",
-        18: "Yesterday was the author's birthday, did you congratulate?"}
+        18: "Yesterday was the author's birthday, did you congratulate him?"}
 }
 
 

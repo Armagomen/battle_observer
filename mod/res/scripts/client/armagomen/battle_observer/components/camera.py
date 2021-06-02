@@ -62,10 +62,10 @@ def enable(base, camera, targetPos, saveZoom):
 def changeControlMode(avatar):
     input_handler = avatar.inputHandler
     if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
-        if settings.zoom[SNIPER.SKIP_CLIP]:
-            v_desc = avatar.getVehicleDescriptor()
-            if v_desc.shot.shell.caliber < SNIPER.MAX_CALIBER or SNIPER.CLIP in v_desc.gun.tags:
-                return
+        v_desc = avatar.getVehicleDescriptor()
+        caliberSkip = v_desc.shot.shell.caliber < SNIPER.MAX_CALIBER
+        if caliberSkip or settings.zoom[SNIPER.SKIP_CLIP] and SNIPER.CLIP in v_desc.gun.tags:
+            return
         aiming_system = input_handler.ctrl.camera.aimingSystem
         input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
                                            prevModeName=input_handler.ctrlModeName,
