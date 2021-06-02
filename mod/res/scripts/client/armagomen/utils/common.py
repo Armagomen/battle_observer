@@ -10,7 +10,6 @@ from BattleReplay import isPlaying, isLoading
 from Event import SafeEvent
 from armagomen.bo_constants import MOD_NAME
 
-# print [x for x in dir(BigWorld) if "WW_" in x]
 
 def isReplay():
     return isPlaying() or isLoading()
@@ -40,16 +39,16 @@ def cancelCallback(*args, **kwargs):
     return BigWorld.cancelCallback(*args, **kwargs)
 
 
-def logError(msg):
-    BigWorld.logError(MOD_NAME, msg, None)
+def logError(message):
+    BigWorld.logError(MOD_NAME, str(message), None)
 
 
-def logInfo(msg):
-    BigWorld.logInfo(MOD_NAME, msg, None)
+def logInfo(message):
+    BigWorld.logInfo(MOD_NAME, str(message), None)
 
 
-def logWarning(msg):
-    BigWorld.logWarning(MOD_NAME, msg, None)
+def logWarning(message):
+    BigWorld.logWarning(MOD_NAME, str(message), None)
 
 
 def getPreferencesFilePath():

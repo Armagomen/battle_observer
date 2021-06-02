@@ -8,6 +8,7 @@ from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
+
 MESSAGES = {
     True: ("Поддержите разработку мода. Спасибо что вы с нами.",
            "Нравится мод? Не дай автору помереть с голоду.",
@@ -40,12 +41,12 @@ MESSAGES = {
 
 SPECIAL_MESSAGES = {
     True: {
-        11: "С ДНЕМ РОЖДЕНИЯ BATTLE OBSERVER, 7 лет в строю.",
+        11: "С ДНЕМ РОЖДЕНИЯ BATTLE OBSERVER, {years} лет в строю.",
         16: "Завтра у автора мода день рождения, не забудь поздравить.",
         17: "Поздравить автора мода с днем рождения.",
         18: "Вчера был день рождения у автора мода, ты поздравил?"},
     False: {
-        11: "HAPPY BIRTHDAY BATTLE OBSERVER, 7 years in the ranks.",
+        11: "HAPPY BIRTHDAY BATTLE OBSERVER, {years} years in the ranks.",
         16: "Tomorrow is the author's birthday, do not forget to congratulate.",
         17: "Congratulate the author on his birthday.",
         18: "Yesterday was the author's birthday, did you congratulate?"}
@@ -71,7 +72,8 @@ class Donate(object):
         # type: () -> str
         today = datetime.date.today()
         if today.month == 8 and today.day in (11, 16, 17, 18):
-            message = SPECIAL_MESSAGES[GLOBAL.RU_LOCALIZATION][today.day]
+            years = today.year - 2014 - int((today.month, today.day) < (8, 11))
+            message = SPECIAL_MESSAGES[GLOBAL.RU_LOCALIZATION][today.day].format(years=years)
         else:
             message = self.getRandomMessage()
 
