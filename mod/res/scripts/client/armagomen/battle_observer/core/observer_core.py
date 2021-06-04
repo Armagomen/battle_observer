@@ -47,14 +47,14 @@ class ObserverCore(object):
         if self.isFileValid:
             if settings.main[MAIN.AUTO_CLEAR_CACHE]:
                 self.clearClientCache()
-            logInfo('MOD {}: {}'.format(MASSAGES.FINISH, self.mod_version))
+            logInfo('MOD {0}: {1}'.format(MASSAGES.FINISH, self.mod_version))
 
     def isModValidFileName(self):
         return self.fileName in os.listdir(self.workingDir)
 
     def start(self):
         if self.isFileValid:
-            logInfo('MOD {}: {}'.format(MASSAGES.START, self.mod_version))
+            logInfo('MOD {0}: {1}'.format(MASSAGES.START, self.mod_version))
             self.componentsLoader.start()
             self.configLoader.start()
             packages.BATTLE_PACKAGES += ("armagomen.battle_observer.battle",)
@@ -67,7 +67,7 @@ class ObserverCore(object):
 
             def loadBlocked(spaceID):
                 if spaceID in (GuiGlobalSpaceID.LOGIN, GuiGlobalSpaceID.LOBBY):
-                    title = '{} is locked'.format(MOD_NAME)
+                    title = '{0} is locked'.format(MOD_NAME)
                     btn = DialogButtons('Close')
                     DialogsInterface.showDialog(dialogs.SimpleDialogMeta(title, locked, btn), lambda proceed: None)
                     ServicesLocator.appLoader.onGUISpaceEntered -= loadBlocked
