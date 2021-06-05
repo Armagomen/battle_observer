@@ -8,7 +8,6 @@ from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-
 MESSAGES = {
     True: ("Поддержите разработку мода. Спасибо что вы с нами.",
            "Нравится мод? Не дай автору помереть с голоду.",
@@ -77,7 +76,6 @@ class Donate(object):
             message = SPECIAL_MESSAGES[GLOBAL.RU_LOCALIZATION][today.day].format(years=years)
         else:
             message = self.getRandomMessage()
-
         return "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
                "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
                                                                         msg=message)
@@ -86,9 +84,9 @@ class Donate(object):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=15)
+                self.timeDelta = currentTime + datetime.timedelta(minutes=25)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
-                logInfo("A donation message has been sent to the user. Repeated in 15 minutes.")
+                logInfo("A donation message has been sent to the user. Repeated in 25 minutes.")
 
 
 donateMessage = Donate()

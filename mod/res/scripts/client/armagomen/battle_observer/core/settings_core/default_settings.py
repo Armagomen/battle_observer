@@ -1,4 +1,3 @@
-# coding=utf-8
 from collections import defaultdict, namedtuple
 
 import Keys
@@ -6,7 +5,7 @@ from Event import SafeEvent
 from armagomen.bo_constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
     DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, USER_BACKGROUND, \
-    VEHICLE_TYPES
+    VEHICLE_TYPES, PREMIUM
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -38,8 +37,8 @@ class DefaultSettings(object):
             MAIN.DISABLE_SCORE_SOUND: False,
             MAIN.HIDE_SERVER_IN_HANGAR: False,
             MAIN.DEBUG: False,
-            CLOCK.PREMIUM_TIME: True,
-            CLOCK.PREMIUM_FORMAT: CLOCK.DEFAULT_FORMAT_PREMIUM,
+            PREMIUM.PREMIUM_TIME: True,
+            PREMIUM.PREMIUM_FORMAT: PREMIUM.DEFAULT_FORMAT_PREMIUM,
         }
         self.user_background = {
             GLOBAL.ENABLED: False,

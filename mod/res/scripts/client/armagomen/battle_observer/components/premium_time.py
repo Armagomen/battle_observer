@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from armagomen.battle_observer.core import settings
-from armagomen.bo_constants import CLOCK
+from armagomen.bo_constants import PREMIUM
 from armagomen.utils.common import overrideMethod, callback, cancelCallback
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from helpers.time_utils import getTimeDeltaFromNow, makeLocalServerTime, ONE_DAY, ONE_HOUR, ONE_MINUTE
@@ -16,16 +16,16 @@ class PremiumTime(object):
         overrideMethod(LobbyHeader, "_removeListeners")(self._removeListeners)
 
     def _getPremiumLabelText(self, timeDelta):
-        if settings.main[CLOCK.PREMIUM_TIME]:
+        if settings.main[PREMIUM.PREMIUM_TIME]:
             delta = float(getTimeDeltaFromNow(makeLocalServerTime(timeDelta)))
             self.macros["days"], delta = divmod(delta, ONE_DAY)
             self.macros["hours"], delta = divmod(delta, ONE_HOUR)
             self.macros["minutes"], self.macros["seconds"] = divmod(delta, ONE_MINUTE)
-            return settings.main[CLOCK.PREMIUM_FORMAT] % self.macros
+            return settings.main[PREMIUM.PREMIUM_FORMAT] % self.macros
 
     def startCallback(self, base, header, data):
         self.stopCallback()
-        if settings.main[CLOCK.PREMIUM_TIME] and header.itemsCache.items.stats.isPremium:
+        if settings.main[PREMIUM.PREMIUM_TIME] and header.itemsCache.items.stats.isPremium:
             self.callback = callback(1.0, lambda: self.startCallback(base, header, data))
             data["doLabel"] = self._getPremiumLabelText(header.itemsCache.items.stats.activePremiumExpiryTime)
         base(header, data)

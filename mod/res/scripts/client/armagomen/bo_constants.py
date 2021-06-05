@@ -1,6 +1,3 @@
-# coding=utf-8
-
-
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
@@ -11,7 +8,7 @@ from helpers import getClientLanguage
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.33.1"
+MOD_VERSION = "1.33.2"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
@@ -201,12 +198,18 @@ class CLOCK:
     IN_BATTLE = "battle"
     IN_LOBBY = "hangar"
     FORMAT = "format"
-    PREMIUM_TIME = "premium_time"
-    PREMIUM_FORMAT = "premium_format"
     UPDATE_INTERVAL = 1.0
     DEFAULT_FORMAT_BATTLE = "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>"
     DEFAULT_FORMAT_HANGAR = "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>"
-    DEFAULT_FORMAT_PREMIUM = "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d Дн. " \
+
+
+class PREMIUM:
+    def __init__(self):
+        pass
+
+    PREMIUM_TIME = "premium_time"
+    PREMIUM_FORMAT = "premium_format"
+    DEFAULT_FORMAT_PREMIUM = "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d Days. " \
                              "%(hours)02d:%(minutes)02d:%(seconds)02d</font>"
 
 
