@@ -8,7 +8,7 @@ import ResMgr
 
 from BattleReplay import isPlaying, isLoading
 from Event import SafeEvent
-from armagomen.bo_constants import MOD_NAME
+from armagomen.constants import MOD_NAME
 
 
 def isReplay():

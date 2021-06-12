@@ -2,7 +2,7 @@
 import datetime
 import random
 
-from armagomen.bo_constants import URLS, GLOBAL
+from armagomen.constants import URLS, GLOBAL
 from armagomen.utils.common import logInfo
 from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
@@ -84,9 +84,9 @@ class Donate(object):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=25)
+                self.timeDelta = currentTime + datetime.timedelta(minutes=40)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
-                logInfo("A donation message has been sent to the user. Repeated in 25 minutes.")
+                logInfo("A donation message has been sent to the user. Repeated in 40 minutes.")
 
 
 donateMessage = Donate()

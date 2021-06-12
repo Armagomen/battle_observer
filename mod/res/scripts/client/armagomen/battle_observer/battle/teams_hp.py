@@ -1,6 +1,6 @@
 from account_helpers.settings_core.settings_constants import GAME, GRAPHICS
 from armagomen.battle_observer.core import keysParser
-from armagomen.bo_constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
+from armagomen.constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 from gui.battle_control.arena_info.vos_collections import FragCorrelationSortKey
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener

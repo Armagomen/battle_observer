@@ -3,7 +3,7 @@ import json
 import os
 import time
 
-from armagomen.bo_constants import LOAD_LIST, GLOBAL
+from armagomen.constants import LOAD_LIST, GLOBAL
 from armagomen.utils.common import logWarning, logInfo, getCurrentModPath
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
@@ -168,7 +168,7 @@ class ConfigLoader(object):
             except ImportError as err:
                 logWarning("%s: Settings API not loaded" % repr(err))
             else:
-                from armagomen.battle_observer.core.settings_core.hangar.hangar_settings import ConfigInterface
+                from armagomen.battle_observer.core.settings.hangar.hangar_settings import ConfigInterface
                 self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
                                                        self.settings, self)
                 self.configInterface.start()

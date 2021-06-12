@@ -1,6 +1,6 @@
 from AvatarInputHandler.control_modes import SniperControlMode
 from armagomen.battle_observer.core import settings
-from armagomen.bo_constants import EFFECTS
+from armagomen.constants import EFFECTS
 from armagomen.utils.common import overrideMethod
 from helpers.bound_effects import ModelBoundEffects
 

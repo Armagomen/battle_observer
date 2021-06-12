@@ -1,5 +1,5 @@
 from armagomen.battle_observer.core import settings
-from armagomen.bo_constants import MAIN
+from armagomen.constants import MAIN
 from armagomen.utils.common import logInfo
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 

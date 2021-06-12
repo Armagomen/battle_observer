@@ -2,7 +2,7 @@ from collections import defaultdict
 from colorsys import hsv_to_rgb
 
 from armagomen.battle_observer.core import keysParser
-from armagomen.bo_constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
+from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.utils.common import callback, logWarning
 from constants import ATTACK_REASONS, SHELL_TYPES_LIST

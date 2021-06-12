@@ -3,7 +3,7 @@ from time import strftime
 
 from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
-from armagomen.bo_constants import CLOCK
+from armagomen.constants import CLOCK
 from armagomen.utils.common import checkDecoder
 from armagomen.utils.timers import CyclicTimerEvent
 

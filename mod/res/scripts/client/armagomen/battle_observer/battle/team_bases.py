@@ -1,5 +1,5 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen.bo_constants import TEAM_BASES, COLORS
+from armagomen.constants import TEAM_BASES, COLORS
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
 from armagomen.utils.common import callback
 from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem

@@ -1,4 +1,4 @@
-from armagomen.bo_constants import GLOBAL
+from armagomen.constants import GLOBAL
 from armagomen.battle_observer.meta.lobby.base_mod_meta import BaseModMeta
 
 

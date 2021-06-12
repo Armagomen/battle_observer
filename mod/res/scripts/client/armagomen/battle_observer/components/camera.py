@@ -9,7 +9,7 @@ from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.core import settings
-from armagomen.bo_constants import ARCADE, GLOBAL, SNIPER, STRATEGIC
+from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC
 from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay, callback
 
 SENSITIVITY = set()

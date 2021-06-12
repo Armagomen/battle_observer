@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.bo_constants import MOD_VERSION
+from armagomen.constants import MOD_VERSION
 
 timeFormat_tooltip = """Directive Meaning
 %a  Locale’s abbreviated weekday name.

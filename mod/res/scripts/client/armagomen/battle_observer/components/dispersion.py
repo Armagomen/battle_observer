@@ -8,7 +8,7 @@ from AvatarInputHandler.gun_marker_ctrl import _MARKER_TYPE, _MARKER_FLAG, \
 from BattleReplay import g_replayCtrl
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import settings
-from armagomen.bo_constants import GLOBAL, DISPERSION
+from armagomen.constants import GLOBAL, DISPERSION
 from armagomen.utils.common import overrideMethod, getPlayer
 from constants import SERVER_TICK_LENGTH
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory

@@ -1,6 +1,6 @@
 import urllib2
 
-from armagomen.bo_constants import URLS, HEADERS
+from armagomen.constants import URLS, HEADERS
 from armagomen.utils.common import logWarning
 from async import async, await, AsyncReturn
 from gui.shared.personality import ServicesLocator

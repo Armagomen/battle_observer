@@ -64,7 +64,9 @@ class GLOBAL:
     OUTLINE = "outline"
     ICONS_DIR = "img://gui/maps/icons"
     C_INTERFACE_SPLITTER = "*"
-    REPLACE = (("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"), ("legue", "league"), ("calcedArmor", "countedArmor"))
+    REPLACE = (
+        ("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"), ("calcedArmor", "countedArmor")
+    )
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48",
                   "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}

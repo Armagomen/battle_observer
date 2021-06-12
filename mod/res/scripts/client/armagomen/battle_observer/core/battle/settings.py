@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
-from armagomen.bo_constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAIN
+from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAIN
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage

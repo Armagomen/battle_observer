@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import keysParser
-from armagomen.bo_constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
+from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.utils.common import getEntity
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener

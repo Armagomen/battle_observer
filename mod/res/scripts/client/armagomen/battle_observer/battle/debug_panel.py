@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen.bo_constants import DEBUG_PANEL, GLOBAL, COLORS
+from armagomen.constants import DEBUG_PANEL, GLOBAL, COLORS
 from armagomen.battle_observer.meta.battle.debug_panel_meta import DebugPanelMeta
 from gui.battle_control.controllers import debug_ctrl
 from gui.shared.personality import ServicesLocator

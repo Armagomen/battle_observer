@@ -2,10 +2,10 @@ import os
 from shutil import rmtree
 
 from armagomen.battle_observer.components import ComponentsLoader
-from armagomen.battle_observer.core.settings_core.default_settings import settings
+from armagomen.battle_observer.core.settings.default_settings import settings
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
-from armagomen.bo_constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
+from armagomen.constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
     MOD_NAME
 from armagomen.utils.common import logInfo, getPreferencesFilePath, getCurrentModPath, logWarning
 from gui.Scaleform.daapi.settings import config as packages

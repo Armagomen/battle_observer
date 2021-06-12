@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from armagomen.battle_observer.core import settings
-from armagomen.bo_constants import PREMIUM
+from armagomen.constants import PREMIUM
 from armagomen.utils.common import overrideMethod, callback, cancelCallback
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from helpers.time_utils import getTimeDeltaFromNow, makeLocalServerTime, ONE_DAY, ONE_HOUR, ONE_MINUTE
