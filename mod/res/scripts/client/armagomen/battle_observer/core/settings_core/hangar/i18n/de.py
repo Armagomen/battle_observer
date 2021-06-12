@@ -249,8 +249,9 @@ translate = {
     "zoom": {
         "header": "Zoom für Richtschützenansicht (Sniper Zoom IN)",
         "disable_cam_after_shoot": "Disable sniper mode after the shot.",
-        "disable_SniperCamera_After_Shoot_tooltip": "Automatically switches the camera to arcade mode after "
-                                                    "a shot if the caliber of the gun is more than 40mm.",
+        "disable_cam_after_shoot_tooltip": "Automatically switches the camera to arcade mode after "
+                                           "a shot if the caliber of the gun is more than 40mm.",
+        "disable_cam_after_shoot_latency": "Delay automatic shutdown of the camera.",
         "disable_cam_skip_clip": "Не выходить если магазинная система заряжания",
         "dynamic_zoom*enabled": "Automatische Auswahl der Zoomstufen beim wechsel in den Richtschützenmodus",
         "dynamic_zoom*steps_only": "Bewegen Sie sich nur in festen Schritten.",

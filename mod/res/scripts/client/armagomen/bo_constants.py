@@ -680,7 +680,7 @@ class CONFIG_INTERFACE:
                 'dynamic_zoom*zoomXMeters'
             ),
             'zoomSteps*enabled': ('zoomSteps*steps',),
-            SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP,)
+            SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY)
         },
         TEAM_BASES.NAME: {
             'outline*enabled': ('outline*color',)

@@ -245,8 +245,9 @@ translate = {
     "zoom": {
         "header": "SNIPER MODE, ZOOM-X",
         "disable_cam_after_shoot": "Disable sniper mode after the shot.",
-        "disable_SniperCamera_After_Shoot_tooltip": "Automatically switches the camera to arcade mode after "
-                                                    "a shot if the caliber of the gun is more than 40mm.",
+        "disable_cam_after_shoot_tooltip": "Automatically switches the camera to arcade mode after "
+                                           "a shot if the caliber of the gun is more than 40mm.",
+        "disable_cam_after_shoot_latency": "Delay automatic shutdown of the camera.",
         "disable_cam_skip_clip": "Do not exit if magazine loading system.",
         "dynamic_zoom*enabled": "Automatic selection of the zoom ratio when switching to sniper mode.",
         "dynamic_zoom*steps_only": "Move only in fixed steps.",
