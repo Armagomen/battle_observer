@@ -5,7 +5,7 @@
     "heavyTank":"#F9B200",
     "lightTank":"#37BC00",
     "mediumTank":"#FDEF6C",
-    "unknown":"#FFFFFF"
+    "unknown":"#FAFAFA"
   },
   "vehicleClassIcon":{
     "AT-SPG":"<font face='BattleObserver' size='20'>J</font>",

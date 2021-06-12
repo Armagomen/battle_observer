@@ -1,5 +1,6 @@
 {
   "disable_cam_after_shoot": false, 
+  "disable_cam_after_shoot_latency": 0.5, 
   "disable_cam_skip_clip": true, 
   "dynamic_zoom": {
     "enabled": true, 

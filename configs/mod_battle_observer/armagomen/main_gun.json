@@ -5,7 +5,7 @@
   "mainGunIcon": "<img src='img://gui/maps/icons/achievement/32x32/mainGun.png' width='26' height='25' vspace='-8'>", 
   "settings": {
     "align": "left", 
-    "x": 240, 
+    "x": 255, 
     "y": 0
   }, 
   "template": "%(mainGunIcon)s%(mainGunDoneIcon)s%(mainGunFailureIcon)s<font color='%(mainGunColor)s'>%(mainGun)s</font>"

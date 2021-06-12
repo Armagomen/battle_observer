@@ -26,7 +26,7 @@
   "reverse": false, 
   "settings": {
     "align": "left", 
-    "x": 0, 
+    "x": 10, 
     "y": 0
   }, 
   "shellColor": {
@@ -43,8 +43,7 @@
     "HIGH_EXPLOSIVE_PREMIUM": "", 
     "HOLLOW_CHARGE": "", 
     "HOLLOW_CHARGE_PREMIUM": "", 
-    "SMOKE": "", 
-    "UNDEFINED": ""
+    "SMOKE": ""
   }, 
   "shellTypes": {
     "ARMOR_PIERCING": "ББ", 
@@ -52,7 +51,6 @@
     "ARMOR_PIERCING_HE": "ББ", 
     "HIGH_EXPLOSIVE": "ОФ", 
     "HOLLOW_CHARGE": "КС", 
-    "SMOKE": "SM", 
-    "UNDEFINED": "--"
+    "SMOKE": "SM"
   }
 }

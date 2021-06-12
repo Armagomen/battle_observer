@@ -3,7 +3,7 @@
   "permanentMinimapDeath": true, 
   "showDeathNames": false, 
   "zoom": {
-    "enabled": false, 
+    "enabled": true, 
     "indent": 180, 
     "zoom_hotkey": [
       [

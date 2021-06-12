@@ -50,7 +50,7 @@ class GLOBAL:
     KNOCKOUT = "knockout"
     LEFT, CENTER, RIGHT = ALIGN_LIST
     SCALE = "scale"
-    SETTINGS = "settings_core"
+    SETTINGS = "settings"
     SMOOTHING = "smoothing"
     STRENGTH = "strength"
     WIDTH = "width"
