@@ -1,6 +1,6 @@
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
-from armagomen.battle_observer.core.settings.hangar.i18n import localization
+from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.utils.common import logWarning, openWebBrowser
 from debug_utils import LOG_CURRENT_EXCEPTION
 
@@ -160,8 +160,8 @@ class Getter(object):
                 if GLOBAL.ENABLED != key:
                     dic, param = self.getLinkToParam(settings, key)
                     key_val.append((key, dic[param]))
-        except:
-            LOG_CURRENT_EXCEPTION()
+        except Exception:
+            LOG_CURRENT_EXCEPTION(tags=["%s" % MOD_NAME])
         return key_val
 
 
@@ -204,7 +204,7 @@ class ConfigInterface(CreateElement):
                                           dict(), lambda *args: None, button_handler=self.onButtonPress)
             except Exception as err:
                 logWarning('ConfigInterface startLoad {}'.format(repr(err)))
-                LOG_CURRENT_EXCEPTION()
+                LOG_CURRENT_EXCEPTION(tags=["%s" % MOD_NAME])
             else:
                 self.inited.add(blockID)
 
@@ -235,7 +235,7 @@ class ConfigInterface(CreateElement):
             try:
                 self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID))
             except Exception:
-                LOG_CURRENT_EXCEPTION()
+                LOG_CURRENT_EXCEPTION(tags=["%s" % MOD_NAME])
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings_core in the settings_core file."""

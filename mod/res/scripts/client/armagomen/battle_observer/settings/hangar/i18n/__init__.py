@@ -6,11 +6,11 @@ lang = getClientLanguage().lower()
 
 def getLocalization():
     if GLOBAL.RU_LOCALIZATION:
-        from armagomen.battle_observer.core.settings.hangar.i18n.ru import translate
+        from armagomen.battle_observer.settings.hangar.i18n.ru import translate
     elif lang == "de":
-        from armagomen.battle_observer.core.settings.hangar.i18n.de import translate
+        from armagomen.battle_observer.settings.hangar.i18n.de import translate
     else:
-        from armagomen.battle_observer.core.settings.hangar.i18n.en import translate
+        from armagomen.battle_observer.settings.hangar.i18n.en import translate
     return translate
 
 

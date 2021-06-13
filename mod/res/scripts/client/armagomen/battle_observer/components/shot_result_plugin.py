@@ -7,6 +7,7 @@ from aih_constants import SHOT_RESULT
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
 from armagomen.utils.common import getPlayer, overrideMethod, events
+from constants import SHELL_TYPES
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
     SHOT_RESULT_TO_DEFAULT_COLOR
@@ -14,21 +15,41 @@ from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _VIEW_CONSTANTS
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from soft_exception import SoftException
+from vehicle_systems.tankStructure import TankPartIndexes
+
+try:
+    from constants import SHELL_MECHANICS_TYPE
+    from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+
+    COMPATIBILITY_MODE = False
+except ImportError:
+    COMPATIBILITY_MODE = True
 
 
-def _computePiercingPowerAtDistImpl(dist, maxDist, p100, p500):
-    if dist <= _MIN_PIERCING_DIST:
+def computePP(distance, shot, multiplier):
+    """
+    compute Piercing Power at distance.
+    :param distance: distance to target
+    :param shot: shell shot params piercingPower, maxDistance in shot object
+    :param multiplier: x
+    :return Piercing Power: float number
+    """
+
+    p100, p500 = (pp * multiplier for pp in shot.piercingPower)
+    if p100 == p500:
         return p100
-    elif dist < maxDist:
-        power = p100 + (p500 - p100) * (dist - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
-        if power > GLOBAL.F_ZERO:
-            return power
-    return p500
+    if distance <= _MIN_PIERCING_DIST:
+        return p100
+    elif distance < shot.maxDistance:
+        power = p100 + (p500 - p100) * (distance - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
+        if power < p500:
+            return p500
+        return power
 
 
 class ShotResultPlugin(plugins.CrosshairPlugin):
-    __slots__ = ('__isEnabled', '__playerTeam', '__cache', '__colors', '__mapping', '_player', '_isSPG',
-                 '_resolver', '__piercingMultiplier')
+    __slots__ = ('__isEnabled', '__playerTeam', '__cache', '__colors', '__mapping', '_player', 'isStrategic',
+                 'resolver', 'multiplier')
 
     def __init__(self, parentObj):
         super(ShotResultPlugin, self).__init__(parentObj)
@@ -38,10 +59,10 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
         self.__cache = defaultdict(str)
         self.__colors = None
         self._player = None
-        self._isSPG = False
-        self.__piercingMultiplier = 1
-        self._resolver = _CrosshairShotResults
-        self._resolver._VEHICLE_TRACE_FORWARD_LENGTH = 10.0
+        self.isStrategic = False
+        self.multiplier = 1
+        self.resolver = _CrosshairShotResults
+        self.resolver._VEHICLE_TRACE_FORWARD_LENGTH = 10.0
 
     def start(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -73,7 +94,7 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
         self.settingsCore.onSettingsChanged -= self.__onSettingsChanged
         self.__colors = None
         self._player = None
-        self._isSPG = False
+        self.isStrategic = False
 
     def __setColors(self, isColorBlind):
         if isColorBlind:
@@ -100,15 +121,15 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
 
     def __setEnabled(self, viewID):
         self.__isEnabled = self.__mapping[viewID]
-        self._isSPG = viewID == CROSSHAIR_VIEW_ID.STRATEGIC
-        if self.__isEnabled or self._isSPG:
+        self.isStrategic = viewID == CROSSHAIR_VIEW_ID.STRATEGIC
+        if self.__isEnabled or self.isStrategic:
             for markerType, shotResult in self.__cache.iteritems():
                 self._parentObj.setGunMarkerColor(markerType, self.__colors[shotResult])
         else:
             self.__cache.clear()
 
     def __onGunMarkerStateChanged(self, markerType, position, direction, collision):
-        if self.__isEnabled or self._isSPG:
+        if self.__isEnabled or self.isStrategic:
             self.__updateColor(markerType, position, collision, direction)
 
     def __onCrosshairViewChanged(self, viewID):
@@ -137,50 +158,59 @@ class ShotResultPlugin(plugins.CrosshairPlugin):
             return ARMOR_CALC.NONE_DATA
         if entity.publicInfo[VEHICLE.TEAM] == self.__playerTeam:
             return ARMOR_CALC.NONE_DATA
-        cDetails = self._resolver._getAllCollisionDetails(targetPos, direction, entity)
+        cDetails = self.resolver._getAllCollisionDetails(targetPos, direction, entity)
         if cDetails is None:
             return ARMOR_CALC.NONE_DATA
         vehicleDescriptor = self._player.getVehicleDescriptor()
-        shell = vehicleDescriptor.shot.shell
-        caliber = shell.caliber
-        shellKind = shell.kind
+        shot = vehicleDescriptor.shot
+        shell = shot.shell
+        dist = (targetPos - self._player.getOwnVehiclePosition()).length
+        if COMPATIBILITY_MODE:
+            isHE = False
+        else:
+            isHE = shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
+        armor, ricochet, penetration = self.computeArmor(cDetails, shell, computePP(dist, shot, self.multiplier), isHE)
+        return self.shotResult(armor, penetration), armor, penetration, shell.caliber, ricochet
+
+    def computeArmor(self, cDetails, shell, penetration, isHE):
         counted_armor = GLOBAL.ZERO
-        computeArmor = self._resolver._computePenetrationArmor
-        mid_dist = (cDetails[GLOBAL.FIRST][GLOBAL.FIRST] + cDetails[GLOBAL.LAST][GLOBAL.FIRST]) * ARMOR_CALC.HALF
+        mid_dist = (cDetails[GLOBAL.FIRST].dist + cDetails[GLOBAL.LAST].dist) * ARMOR_CALC.HALF
         ricochet = False
         isFirst = True
+        chassis_calculated = False
         for detail in cDetails:
             if detail.dist > mid_dist:
                 break
             matInfo = detail.matInfo
             if matInfo is None:
                 continue
-            counted_armor += computeArmor(shellKind, detail.hitAngleCos, matInfo, caliber)
+            hitAngleCos = detail.hitAngleCos if matInfo.useHitAngle else 1.0
+            armor = self.resolver._computePenetrationArmor(shell.kind, hitAngleCos, matInfo, shell.caliber)
             if isFirst:
-                ricochet = self._resolver._shouldRicochet(shellKind, detail.hitAngleCos, matInfo, caliber)
+                if TankPartIndexes.CHASSIS != detail.compName:
+                    ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
                 isFirst = False
-        result, penetration = self.__getShotResult(counted_armor, targetPos, vehicleDescriptor)
-        return result, counted_armor, penetration, caliber, ricochet
+            if isHE and shell.type.shieldPenetration and TankPartIndexes.CHASSIS == detail.compName:
+                if not chassis_calculated:
+                    penetration -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                    chassis_calculated = True
+                if penetration < GLOBAL.F_ZERO:
+                    penetration = GLOBAL.F_ZERO
+            counted_armor += armor
+        return counted_armor, ricochet, penetration
 
-    def __getShotResult(self, countedArmor, targetPos, vehicleDescriptor):
-        p100, p500 = vehicleDescriptor.shot.piercingPower
-        penetration = p100
-        if p100 != p500:
-            dist = (targetPos - self._player.getOwnVehiclePosition()).length
-            penetration = _computePiercingPowerAtDistImpl(dist, vehicleDescriptor.shot.maxDistance,
-                                                          p100 * self.__piercingMultiplier,
-                                                          p500 * self.__piercingMultiplier)
-        if countedArmor < penetration * ARMOR_CALC.GREAT_PIERCED:
-            result = SHOT_RESULT.GREAT_PIERCED
-        elif countedArmor > penetration * ARMOR_CALC.NOT_PIERCED:
-            result = SHOT_RESULT.NOT_PIERCED
+    @staticmethod
+    def shotResult(counted_armor, penetration):
+        if counted_armor < penetration * ARMOR_CALC.GREAT_PIERCED:
+            return SHOT_RESULT.GREAT_PIERCED
+        elif counted_armor > penetration * ARMOR_CALC.NOT_PIERCED:
+            return SHOT_RESULT.NOT_PIERCED
         else:
-            result = SHOT_RESULT.LITTLE_PIERCED
-        return result, penetration
+            return SHOT_RESULT.LITTLE_PIERCED
 
     def __onVehicleFeedbackReceived(self, eventID, _, value):
         if eventID == FEEDBACK_EVENT_ID.VEHICLE_ATTRS_CHANGED:
-            self.__piercingMultiplier = value.get('gunPiercing', 1)
+            self.multiplier = value.get('gunPiercing', 1)
 
 
 @overrideMethod(plugins, 'createPlugins')

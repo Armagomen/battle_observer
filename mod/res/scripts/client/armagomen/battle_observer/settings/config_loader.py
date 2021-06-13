@@ -168,7 +168,7 @@ class ConfigLoader(object):
             except ImportError as err:
                 logWarning("%s: Settings API not loaded" % repr(err))
             else:
-                from armagomen.battle_observer.core.settings.hangar.hangar_settings import ConfigInterface
+                from armagomen.battle_observer.settings.hangar.hangar_settings import ConfigInterface
                 self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
                                                        self.settings, self)
                 self.configInterface.start()
