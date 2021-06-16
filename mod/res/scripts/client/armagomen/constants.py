@@ -363,7 +363,7 @@ class ARMOR_CALC:
         pass
 
     GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
-    HALF = 0.35
+    HALF = 0.4
     PIERCING_POWER = "piercingPower"
     NORMAL = SHOT_RESULT_TO_DEFAULT_COLOR[SHOT_RESULT.UNDEFINED]
     NAME = "armor_calculator"

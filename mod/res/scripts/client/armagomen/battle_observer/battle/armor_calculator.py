@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen.constants import ARMOR_CALC, GLOBAL, POSTMORTEM
+from armagomen.constants import ARMOR_CALC, GLOBAL, POSTMORTEM, COLORS
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.common import events
 from gui.battle_control import avatar_getter
@@ -41,6 +41,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self.as_startUpdateS(self.settings)
 
     def onMarkerColorChanged(self, color):
+        self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.typeColors.get(color, COLORS.C_RED)
         self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
@@ -48,12 +49,11 @@ class ArmorCalculator(ArmorCalcMeta):
         if ctrlMode in POSTMORTEM.MODES:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
 
-    def onArmorChanged(self, countedArmor, penetration, caliber, color, ricochet):
+    def onArmorChanged(self, countedArmor, penetration, caliber, ricochet):
         if self._cache != countedArmor:
             self._cache = countedArmor
             if countedArmor is not None:
                 self.calcMacro[ARMOR_CALC.MACROS_RICOCHET] = "ricochet" if ricochet else GLOBAL.EMPTY_LINE
-                self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.typeColors[color]
                 self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = countedArmor
                 self.calcMacro[ARMOR_CALC.PIERCING_POWER] = penetration
                 self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = penetration - countedArmor
