@@ -111,9 +111,6 @@ class ShotResultPlugin(plugins.ShotResultIndicatorPlugin):
         super(ShotResultPlugin, self).__init__(parentObj)
         self.resolver = ShotResultResolver()
 
-    def stop(self):
-        super(ShotResultPlugin, self).stop()
-
     def _ShotResultIndicatorPlugin__updateColor(self, markerType, position, collision, direction):
         multiplier = self._ShotResultIndicatorPlugin__piercingMultiplier
         result, counted, penetration, caliber, ricochet = self.resolver.getShotResult(collision, position, direction,

@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.constants import MOD_VERSION
+from armagomen.battle_observer import __version__
 
 timeFormat_tooltip = """Формат - Значение
 %a - Сокращенное название дня недели
@@ -384,9 +384,9 @@ translate = {
         "sys_keys*customizationChanged": "Смена кастомизации"
     },
     "service": {
-        "name": "Battle Observer - v{0}".format(MOD_VERSION),
+        "name": "Battle Observer - v{0}".format(__version__),
         "description": "Открыть настройки мода Battle Observer",
-        "windowTitle": "Настройки мода Battle Observer - v{0}".format(MOD_VERSION),
+        "windowTitle": "Настройки мода Battle Observer - v{0}".format(__version__),
         "buttonOK": "OK",
         "buttonCancel": "Отмена",
         "buttonApply": "Применить",

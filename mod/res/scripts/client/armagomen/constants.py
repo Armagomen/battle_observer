@@ -8,7 +8,6 @@ from helpers import getClientLanguage
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-MOD_VERSION = "1.33.2"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 

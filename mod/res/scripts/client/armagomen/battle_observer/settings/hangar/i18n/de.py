@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.constants import MOD_VERSION
+from armagomen.battle_observer import __version__
 
 timeFormat_tooltip = """Directive Meaning
 %a  Locale’s abbreviated weekday name.
@@ -369,9 +369,9 @@ translate = {
         "sys_keys*customizationChanged": "Änderung der Anpassung"
     },
     "service": {
-        "name": "Battle Observer - v{0}".format(MOD_VERSION),
+        "name": "Battle Observer - v{0}".format(__version__),
         "description": "Battle Observer Einstellungen",
-        "windowTitle": "Battle Observer Einstellungen - v{0}".format(MOD_VERSION),
+        "windowTitle": "Battle Observer Einstellungen - v{0}".format(__version__),
         "buttonOK": "OK",
         "buttonCancel": "Abbrechen",
         "buttonApply": "Speichern",

@@ -7,9 +7,10 @@ from io import BytesIO
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen.constants import MOD_VERSION, GLOBAL, URLS, MASSAGES, HEADERS
-from armagomen.battle_observer.settings.hangar.i18n import localization
+from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
+from armagomen.battle_observer.settings.hangar.i18n import localization
+from armagomen.constants import GLOBAL, URLS, MASSAGES, HEADERS
 from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
     getCurrentModPath
 from async import async, await, AsyncReturn
@@ -62,16 +63,16 @@ class DialogWindow(object):
             openWebBrowser(DOWNLOAD_URLS['full'])
 
     def getDialogUpdateFinished(self):
-        message = self.localization['messageOK'].format(LAST_UPDATE.get('tag_name', MOD_VERSION))
+        message = self.localization['messageOK'].format(LAST_UPDATE.get('tag_name', __version__))
         title = self.localization['titleOK']
         button = DialogButtons(self.localization['buttonOK'])
         return SimpleDialogMeta(title, message, buttons=button)
 
     def getDialogNewVersionAvailable(self):
-        message = self.localization['messageNEW'].format(LAST_UPDATE.get('tag_name', MOD_VERSION), workingDir)
+        message = self.localization['messageNEW'].format(LAST_UPDATE.get('tag_name', __version__), workingDir)
         gitMessage = LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE)
         message += '<br>{0}'.format(re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
-        title = self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', MOD_VERSION))
+        title = self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', __version__))
         buttons = DialogButtons(self.localization['buttonAUTO'], self.localization['buttonHANDLE'])
         return SimpleDialogMeta(title, message, buttons=buttons)
 
@@ -90,12 +91,12 @@ class DownloadThread(object):
 
     def start(self):
         try:
-            logInfo('start downloading update {}'.format(LAST_UPDATE.get('tag_name', MOD_VERSION)))
+            logInfo('start downloading update {}'.format(LAST_UPDATE.get('tag_name', __version__)))
             self.downloader.download(DOWNLOAD_URLS['last'], self.onDownloaded)
         except Exception as error:
             self.downloader.close()
             self.downloader = None
-            logError('update {} - download failed: {}'.format(LAST_UPDATE.get('tag_name', MOD_VERSION), repr(error)))
+            logError('update {} - download failed: {}'.format(LAST_UPDATE.get('tag_name', __version__), repr(error)))
 
     def onDownloaded(self, _url, data):
         if data is not None:
@@ -107,7 +108,7 @@ class DownloadThread(object):
                         archive.extract(newFile, workingDir)
             dialog = DialogWindow()
             dialog.showUpdateFinished()
-            logInfo('update downloading finished {}'.format(LAST_UPDATE.get('tag_name', MOD_VERSION)))
+            logInfo('update downloading finished {}'.format(LAST_UPDATE.get('tag_name', __version__)))
         self.downloader.close()
         self.downloader = None
 
@@ -134,8 +135,8 @@ class UpdateMain(object):
             params = get_update_data()
             if params:
                 LAST_UPDATE.update(params)
-                new_version = LAST_UPDATE.get('tag_name', MOD_VERSION)
-                local_ver = self.tupleVersion(MOD_VERSION)
+                new_version = LAST_UPDATE.get('tag_name', __version__)
+                local_ver = self.tupleVersion(__version__)
                 server_ver = self.tupleVersion(new_version)
                 if local_ver < server_ver:
                     assets = LAST_UPDATE.get('assets')

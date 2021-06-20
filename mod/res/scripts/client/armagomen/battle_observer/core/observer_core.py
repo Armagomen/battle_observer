@@ -5,8 +5,9 @@ from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
-from armagomen.constants import FILE_NAME, MOD_VERSION, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
+from armagomen.constants import FILE_NAME, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
     MOD_NAME
+from armagomen.battle_observer import __version__
 from armagomen.utils.common import logInfo, getPreferencesFilePath, getCurrentModPath, logWarning
 from gui.Scaleform.daapi.settings import config as packages
 from gui.shared.personality import ServicesLocator
@@ -21,9 +22,9 @@ class ObserverCore(object):
         self.configLoader = configLoader
         self.modsDir, self.gameVersion = getCurrentModPath()
         self.workingDir = os.path.join(self.modsDir, self.gameVersion)
-        self.fileName = FILE_NAME.format(MOD_VERSION)
+        self.fileName = FILE_NAME.format(__version__)
         self.isFileValid = self.isModValidFileName()
-        self.mod_version = 'v{0} - {1}'.format(MOD_VERSION, self.gameVersion)
+        self.mod_version = 'v{0} - {1}'.format(__version__, self.gameVersion)
         self.update = UpdateMain()
         self.update.subscribe()
         self.componentsLoader = ComponentsLoader()
