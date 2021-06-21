@@ -1,12 +1,12 @@
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, _MIN_PIERCING_DIST, _LERP_RANGE_PIERCING_DIST
 from aih_constants import SHOT_RESULT
-from armagomen.battle_observer.core import view_settings
-from armagomen.constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
-from armagomen.utils.common import getPlayer, overrideMethod, events
 from constants import SHELL_TYPES
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
-from vehicle_systems.tankStructure import TankPartIndexes
+
+from armagomen.battle_observer.core import view_settings
+from armagomen.constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
+from armagomen.utils.common import getPlayer, overrideMethod, events
 
 try:
     from constants import SHELL_MECHANICS_TYPE
@@ -22,7 +22,6 @@ class ShotResultResolver(object):
 
     def __init__(self):
         self.resolver = _CrosshairShotResults
-        self.resolver._VEHICLE_TRACE_FORWARD_LENGTH = 10.0
         self._player = getPlayer()
 
     def getShotResult(self, collision, hitPoint, direction, multiplier):
@@ -48,32 +47,26 @@ class ShotResultResolver(object):
         return self.shotResult(armor, penetration), armor, penetration, shell.caliber, ricochet
 
     def computeArmor(self, cDetails, shell, penetration, isHE):
-        counted_armor = GLOBAL.ZERO
-        ignoredMaterials = set()
+        computed_armor = GLOBAL.ZERO
         ricochet = False
         isFirst = True
         for detail in cDetails:
             matInfo = detail.matInfo
             if matInfo is None:
                 continue
-            if (detail.compName, matInfo.kind) in ignoredMaterials:
-                continue
             hitAngleCos = detail.hitAngleCos if matInfo.useHitAngle else 1.0
             armor = self.resolver._computePenetrationArmor(shell.kind, hitAngleCos, matInfo, shell.caliber)
             if isFirst:
-                if TankPartIndexes.CHASSIS != detail.compName:
-                    ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
+                ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
                 isFirst = False
             if isHE and not matInfo.vehicleDamageFactor and shell.type.shieldPenetration:
                 penetration -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
                 if penetration < GLOBAL.F_ZERO:
                     penetration = GLOBAL.F_ZERO
-            counted_armor += armor
-            if matInfo.collideOnceOnly:
-                ignoredMaterials.add((detail.compName, matInfo.kind))
+            computed_armor += armor
             if matInfo.vehicleDamageFactor:
                 break
-        return counted_armor, ricochet, penetration
+        return computed_armor, ricochet, penetration
 
     @staticmethod
     def shotResult(counted_armor, penetration):

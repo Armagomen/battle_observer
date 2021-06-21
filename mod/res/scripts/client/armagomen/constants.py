@@ -230,10 +230,10 @@ class SNIPER:
     ZOOM_EXPOSURE = "zoomExposure"
     INCREASED_ZOOM = "increasedZoom"
     DEFAULT_STEPS = [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0]
-    EXPOSURE_FACTOR, MAX_CALIBER, MAX_DIST = (0.1, 41, 730.0)
-    DISABLE_SNIPER = "disable_cam_after_shoot"
-    DISABLE_LATENCY = "disable_cam_after_shoot_latency"
-    SKIP_CLIP = "disable_cam_skip_clip"
+    EXPOSURE_FACTOR, MAX_CALIBER, MAX_DIST = (0.1, 60, 730.0)
+    DISABLE_SNIPER = "disable_cam_after_shot"
+    DISABLE_LATENCY = "disable_cam_after_shot_latency"
+    SKIP_CLIP = "disable_cam_after_shot_skip_clip"
     CLIP = "clip"
 
 

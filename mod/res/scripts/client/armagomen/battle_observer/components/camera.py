@@ -63,7 +63,7 @@ def changeControlMode(avatar):
     input_handler = avatar.inputHandler
     if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
         v_desc = avatar.getVehicleDescriptor()
-        caliberSkip = v_desc.shot.shell.caliber < SNIPER.MAX_CALIBER
+        caliberSkip = v_desc.shot.shell.caliber <= SNIPER.MAX_CALIBER
         if caliberSkip or settings.zoom[SNIPER.SKIP_CLIP] and SNIPER.CLIP in v_desc.gun.tags:
             return
         aiming_system = input_handler.ctrl.camera.aimingSystem
@@ -92,8 +92,7 @@ def showTracer(base, avatar, shooterID, *args):
 def arcade_create(base, camera, *args, **kwargs):
     if settings.arcade_camera[GLOBAL.ENABLED]:
         cfg = camera._cfg
-        cfg[ARCADE.DIST_RANGE] = MinMax(settings.arcade_camera[ARCADE.MIN],
-                                        settings.arcade_camera[ARCADE.MAX])
+        cfg[ARCADE.DIST_RANGE] = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
         cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
         cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
         if ARCADE.NAME not in SENSITIVITY:

@@ -1,7 +1,7 @@
 @Echo off
-set ModVer=1.33.2
+set ModVer=1.33.3
 
-set WotVer=1.12.1.2
+set WotVer=1.13.0.0
 set ModsDir=C:\Games\World_of_Tanks_RU\mods\
 
 REM set WotVer="1.13.0.0 Common Test"
@@ -24,7 +24,7 @@ DEL %AutoUpdate%
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py -x!*.cmd %ModFile% .\mod\*
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %ZipArh% %ModsDir%
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile% %API%
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile% %API% %API2%
 REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile%
 
 DEL /s /q *.pyc

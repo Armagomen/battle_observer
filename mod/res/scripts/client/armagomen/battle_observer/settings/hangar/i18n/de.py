@@ -26,7 +26,7 @@ timeFormat_tooltip = """Directive Meaning
 %%  A literal '%' character."""
 translate = {
     "configSelect": {
-        "header": "Wähle Konfiguration (Verzeichnis: mods\configs\mod_battle_observer)",
+        "header": "Wähle Konfiguration (Verzeichnis: mods/configs/mod_battle_observer)",
         "selectedConfig": "Config",
         "donate_button_ua": "DONATE UA - Гривна",
         "donate_button_eu": "DONATE EUR|USD|RUB",
@@ -190,7 +190,7 @@ translate = {
         "settings*y": "Position des detailierten Protokolls senkrecht",
         "settings*align": "Ausrichtung text:",
         "settings*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
-                                       "<br>right - Rechtsbündig",
+                                  "<br>right - Rechtsbündig",
         "settings*y_tooltip": "In Bezug auf die Schadensanzeige.",
         "reverse": "zeige detailiertes Protokoll für einzelne Treffer",
         "shellColor*gold": "Einstellung für Makro: %(shellColor)s - Premium Munition",
@@ -206,7 +206,7 @@ translate = {
         "settings*y": "Position senkrecht vom oberen Rand gemessen",
         "settings*align": "Ausrichtung des Textes:",
         "settings*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
-                                       "<br>right - Rechtsbündig"
+                                  "<br>right - Rechtsbündig"
     },
     "team_bases_panel": {
         "header": "TEAM BASES PANEL (Leiste zur Anzeige der Basiseroberung)",
@@ -248,11 +248,11 @@ translate = {
     },
     "zoom": {
         "header": "Zoom für Richtschützenansicht (Sniper Zoom IN)",
-        "disable_cam_after_shoot": "Disable sniper mode after the shot.",
-        "disable_cam_after_shoot_tooltip": "Automatically switches the camera to arcade mode after "
-                                           "a shot if the caliber of the gun is more than 40mm.",
-        "disable_cam_after_shoot_latency": "Delay automatic shutdown of the camera.",
-        "disable_cam_skip_clip": "Не выходить если магазинная система заряжания",
+        "disable_cam_after_shot": "Disable sniper mode after the shot.",
+        "disable_cam_after_shot_tooltip": "Automatically switches the camera to arcade mode after "
+                                          "a shot if the caliber of the gun is more than 60mm.",
+        "disable_cam_after_shot_latency": "Delay automatic shutdown of the camera.",
+        "disable_cam_after_shot_skip_clip": "Не выходить если магазинная система заряжания",
         "dynamic_zoom*enabled": "Automatische Auswahl der Zoomstufen beim wechsel in den Richtschützenmodus",
         "dynamic_zoom*steps_only": "Bewegen Sie sich nur in festen Schritten.",
         "dynamic_zoom*enabled_tooltip": "Wenn diese Option aktiviert ist, wird der <b>Fester Zoom</b> deaktiviert.",
