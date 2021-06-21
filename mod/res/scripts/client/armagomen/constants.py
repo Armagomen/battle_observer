@@ -379,6 +379,7 @@ class ARMOR_CALC:
     MESSAGE_COLORS = set(SHOT_RESULT_TO_ALT_COLOR.itervalues())
     MESSAGE_COLORS.update(SHOT_RESULT_TO_DEFAULT_COLOR.itervalues())
     MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in MESSAGE_COLORS}
+    RICOCHET_MESSAGE = "Ricochet"
 
 
 class VEHICLE:

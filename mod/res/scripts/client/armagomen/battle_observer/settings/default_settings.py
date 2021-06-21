@@ -212,7 +212,8 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 100},
             ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font>",
-            ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE
+            ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE,
+            ARMOR_CALC.MACROS_RICOCHET: ARMOR_CALC.RICOCHET_MESSAGE
         }
         self.colors = {
             MAIN_GUN.NAME: {

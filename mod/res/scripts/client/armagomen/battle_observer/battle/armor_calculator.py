@@ -1,7 +1,7 @@
 from collections import defaultdict
 
-from armagomen.constants import ARMOR_CALC, GLOBAL, POSTMORTEM, COLORS
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
+from armagomen.constants import ARMOR_CALC, GLOBAL, POSTMORTEM, COLORS
 from armagomen.utils.common import events
 from gui.battle_control import avatar_getter
 
@@ -53,7 +53,8 @@ class ArmorCalculator(ArmorCalcMeta):
         if self._cache != countedArmor:
             self._cache = countedArmor
             if countedArmor is not None:
-                self.calcMacro[ARMOR_CALC.MACROS_RICOCHET] = "ricochet" if ricochet else GLOBAL.EMPTY_LINE
+                self.calcMacro[ARMOR_CALC.MACROS_RICOCHET] = self.settings[ARMOR_CALC.MACROS_RICOCHET] if ricochet \
+                    else GLOBAL.EMPTY_LINE
                 self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = countedArmor
                 self.calcMacro[ARMOR_CALC.PIERCING_POWER] = penetration
                 self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = penetration - countedArmor

@@ -25,7 +25,7 @@ class ShotResultResolver(object):
         self.resolver._VEHICLE_TRACE_FORWARD_LENGTH = 10.0
         self._player = getPlayer()
 
-    def getShotResult(self, collision, targetPos, direction, multiplier):
+    def getShotResult(self, collision, hitPoint, direction, multiplier):
         if collision is None:
             return ARMOR_CALC.NONE_DATA
         entity = collision.entity
@@ -33,13 +33,13 @@ class ShotResultResolver(object):
             return ARMOR_CALC.NONE_DATA
         if entity.publicInfo[VEHICLE.TEAM] == self._player.team:
             return ARMOR_CALC.NONE_DATA
-        cDetails = self.resolver._getAllCollisionDetails(targetPos, direction, entity)
+        cDetails = self.resolver._getAllCollisionDetails(hitPoint, direction, entity)
         if cDetails is None:
             return ARMOR_CALC.NONE_DATA
         vehicleDescriptor = self._player.getVehicleDescriptor()
         shot = vehicleDescriptor.shot
         shell = shot.shell
-        dist = targetPos.flatDistTo(self._player.gunRotator.getCurShotPosition()[GLOBAL.FIRST])
+        dist = hitPoint.flatDistTo(self._player.getOwnVehiclePosition())
         if COMPATIBILITY_MODE:
             isHE = False
         else:
@@ -112,10 +112,9 @@ class ShotResultPlugin(plugins.ShotResultIndicatorPlugin):
         super(ShotResultPlugin, self).__init__(parentObj)
         self.resolver = ShotResultResolver()
 
-    def _ShotResultIndicatorPlugin__updateColor(self, markerType, position, collision, direction):
-        multiplier = self._ShotResultIndicatorPlugin__piercingMultiplier
-        result, counted, penetration, caliber, ricochet = self.resolver.getShotResult(collision, position, direction,
-                                                                                      multiplier)
+    def _ShotResultIndicatorPlugin__updateColor(self, markerType, hitPoint, collide, _dir):
+        multiple = self._ShotResultIndicatorPlugin__piercingMultiplier
+        result, counted, penetration, caliber, ricochet = self.resolver.getShotResult(collide, hitPoint, _dir, multiple)
         if result in self._ShotResultIndicatorPlugin__colors:
             color = self._ShotResultIndicatorPlugin__colors[result]
             cache = self._ShotResultIndicatorPlugin__cache
