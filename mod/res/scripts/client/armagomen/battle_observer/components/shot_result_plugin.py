@@ -49,15 +49,14 @@ class ShotResultResolver(object):
 
     def computeArmor(self, cDetails, shell, penetration, isHE):
         counted_armor = GLOBAL.ZERO
-        mid_dist = (cDetails[GLOBAL.FIRST].dist + cDetails[GLOBAL.LAST].dist) * ARMOR_CALC.HALF
+        ignoredMaterials = set()
         ricochet = False
         isFirst = True
-        chassis_calculated = False
         for detail in cDetails:
-            if detail.dist > mid_dist:
-                break
             matInfo = detail.matInfo
             if matInfo is None:
+                continue
+            if (detail.compName, matInfo.kind) in ignoredMaterials:
                 continue
             hitAngleCos = detail.hitAngleCos if matInfo.useHitAngle else 1.0
             armor = self.resolver._computePenetrationArmor(shell.kind, hitAngleCos, matInfo, shell.caliber)
@@ -65,13 +64,15 @@ class ShotResultResolver(object):
                 if TankPartIndexes.CHASSIS != detail.compName:
                     ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
                 isFirst = False
-            if isHE and shell.type.shieldPenetration and TankPartIndexes.CHASSIS == detail.compName:
-                if not chassis_calculated:
-                    penetration -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-                    chassis_calculated = True
+            if isHE and not matInfo.vehicleDamageFactor and shell.type.shieldPenetration:
+                penetration -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
                 if penetration < GLOBAL.F_ZERO:
                     penetration = GLOBAL.F_ZERO
             counted_armor += armor
+            if matInfo.collideOnceOnly:
+                ignoredMaterials.add((detail.compName, matInfo.kind))
+            if matInfo.vehicleDamageFactor:
+                break
         return counted_armor, ricochet, penetration
 
     @staticmethod
