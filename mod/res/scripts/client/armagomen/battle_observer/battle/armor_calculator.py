@@ -49,11 +49,13 @@ class ArmorCalculator(ArmorCalcMeta):
         if ctrlMode in POSTMORTEM.MODES:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
 
-    def onArmorChanged(self, countedArmor, penetration, caliber, ricochet):
+    def onArmorChanged(self, countedArmor, penetration, caliber, ricochet, noDamage):
         if self._cache != countedArmor:
             self._cache = countedArmor
             if countedArmor is not None:
                 self.calcMacro[ARMOR_CALC.MACROS_RICOCHET] = self.settings[ARMOR_CALC.MACROS_RICOCHET] if ricochet \
+                    else GLOBAL.EMPTY_LINE
+                self.calcMacro[ARMOR_CALC.MACROS_NO_DAMAGE] = self.settings[ARMOR_CALC.MACROS_NO_DAMAGE] if noDamage \
                     else GLOBAL.EMPTY_LINE
                 self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = countedArmor
                 self.calcMacro[ARMOR_CALC.PIERCING_POWER] = penetration

@@ -5,34 +5,32 @@ from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera, MinMax
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
-from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.core import settings
 from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC
 from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay, callback
 
-SENSITIVITY = set()
-g_playerEvents.onArenaCreated += SENSITIVITY.clear
-
 
 def dynamicZoom():
     return settings.zoom[GLOBAL.ENABLED] and not isReplay() and settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
 
 
-@overrideMethod(SniperCamera, "create")
-def sniper_create(base, camera, onChangeControlMode=None):
+@overrideMethod(SniperCamera, "_readConfigs")
+def sniper_create(base, camera, data):
+    base(camera, data)
     if settings.zoom[GLOBAL.ENABLED] and not isReplay():
         if settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
             if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > GLOBAL.TWO:
                 steps = settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
                 steps.sort()
                 exposure_range = xrange(len(steps) + GLOBAL.ONE, GLOBAL.ONE, -GLOBAL.ONE)
-                camera._cfg[SNIPER.INCREASED_ZOOM] = True
-                camera._cfg[SNIPER.ZOOMS] = steps
+                configs = (camera._cfg, camera._userCfg, camera._baseCfg)
+                for cfg in configs:
+                    cfg[SNIPER.INCREASED_ZOOM] = True
+                    cfg[SNIPER.ZOOMS] = steps
                 camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = \
                     [round(SNIPER.EXPOSURE_FACTOR * step, GLOBAL.ONE) for step in exposure_range]
-    return base(camera, onChangeControlMode=onChangeControlMode)
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
@@ -88,28 +86,29 @@ def showTracer(base, avatar, shooterID, *args):
         return base(avatar, shooterID, *args)
 
 
-@overrideMethod(ArcadeCamera, "create")
-def arcade_create(base, camera, *args, **kwargs):
+@overrideMethod(ArcadeCamera, "_readConfigs")
+def arcade_readConfigs(base, camera, data):
+    base(camera, data)
     if settings.arcade_camera[GLOBAL.ENABLED]:
-        cfg = camera._cfg
-        cfg[ARCADE.DIST_RANGE] = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
-        cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
-        cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
-        if ARCADE.NAME not in SENSITIVITY:
-            cfg[ARCADE.SCROLL_SENSITIVITY] *= settings.arcade_camera[ARCADE.SCROLL_MULTIPLE]
-            SENSITIVITY.add(ARCADE.NAME)
-    return base(camera, *args, **kwargs)
+        configs = (camera._cfg, camera._userCfg, camera._baseCfg)
+        for cfg in configs:
+            if ARCADE.DIST_RANGE in cfg:
+                cfg[ARCADE.DIST_RANGE] = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
+            if ARCADE.START_DIST in cfg:
+                cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
+            if ARCADE.START_ANGLE in cfg:
+                cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
+        camera._cfg[ARCADE.SCROLL_SENSITIVITY] *= settings.arcade_camera[ARCADE.SCROLL_MULTIPLE]
 
 
-@overrideMethod(StrategicCamera, "create")
-@overrideMethod(ArtyCamera, "create")
-def arty_create(base, camera, *args, **kwargs):
+@overrideMethod(StrategicCamera, "_readConfigs")
+@overrideMethod(ArtyCamera, "_readConfigs")
+def arty_readConfigs(base, camera, data):
+    base(camera, data)
     if settings.strategic_camera[GLOBAL.ENABLED]:
-        dist_range = (settings.strategic_camera[STRATEGIC.MIN], settings.strategic_camera[STRATEGIC.MAX])
-        camera._userCfg[STRATEGIC.DIST_RANGE] = dist_range
-        camera._cfg[STRATEGIC.DIST_RANGE] = dist_range
-        if STRATEGIC.NAME not in SENSITIVITY:
-            camera._cfg[ARCADE.SCROLL_SENSITIVITY] *= settings.strategic_camera[ARCADE.SCROLL_MULTIPLE]
-            camera._userCfg[ARCADE.SCROLL_SENSITIVITY] *= settings.strategic_camera[ARCADE.SCROLL_MULTIPLE]
-            SENSITIVITY.add(STRATEGIC.NAME)
-    return base(camera, *args, **kwargs)
+        configs = (camera._cfg, camera._userCfg, camera._baseCfg)
+        for cfg in configs:
+            if STRATEGIC.DIST_RANGE in cfg:
+                dist_range = (settings.strategic_camera[STRATEGIC.MIN], settings.strategic_camera[STRATEGIC.MAX])
+                cfg[STRATEGIC.DIST_RANGE] = dist_range
+        camera._cfg[ARCADE.SCROLL_SENSITIVITY] *= settings.strategic_camera[ARCADE.SCROLL_MULTIPLE]

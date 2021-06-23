@@ -375,11 +375,13 @@ class ARMOR_CALC:
     MACROS_MESSAGE = "message"
     MACROS_CALIBER = "caliber"
     MACROS_RICOCHET = "ricochet"
-    NONE_DATA = (SHOT_RESULT.UNDEFINED, None, None, None, None)
+    MACROS_NO_DAMAGE = "noDamage"
+    NONE_DATA = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
     MESSAGE_COLORS = set(SHOT_RESULT_TO_ALT_COLOR.itervalues())
     MESSAGE_COLORS.update(SHOT_RESULT_TO_DEFAULT_COLOR.itervalues())
     MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in MESSAGE_COLORS}
     RICOCHET_MESSAGE = "Ricochet"
+    NO_DAMAGE_MESSAGE = "critical shot, no damage"
 
 
 class VEHICLE:

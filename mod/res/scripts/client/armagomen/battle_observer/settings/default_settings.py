@@ -200,20 +200,22 @@ class DefaultSettings(object):
             ARCADE.MIN: 4.0,
             ARCADE.MAX: 150.0,
             ARCADE.START_DEAD_DIST: 20.0,
-            ARCADE.SCROLL_MULTIPLE: 1,
+            ARCADE.SCROLL_MULTIPLE: 1.0,
         }
         self.strategic_camera = {
             GLOBAL.ENABLED: False,
             STRATEGIC.MIN: 40.0,
             STRATEGIC.MAX: 150.0,
-            ARCADE.SCROLL_MULTIPLE: 2,
+            ARCADE.SCROLL_MULTIPLE: 2.0,
         }
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 100},
-            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font>",
+            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(countedArmor)d | "
+                                 "%(piercingPower)d<br>%(ricochet)s%(noDamage)s</font>",
             ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE,
-            ARMOR_CALC.MACROS_RICOCHET: ARMOR_CALC.RICOCHET_MESSAGE
+            ARMOR_CALC.MACROS_RICOCHET: ARMOR_CALC.RICOCHET_MESSAGE,
+            ARMOR_CALC.MACROS_NO_DAMAGE: ARMOR_CALC.NO_DAMAGE_MESSAGE
         }
         self.colors = {
             MAIN_GUN.NAME: {

@@ -1,20 +1,16 @@
+from collections import namedtuple
+
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, _MIN_PIERCING_DIST, _LERP_RANGE_PIERCING_DIST
 from aih_constants import SHOT_RESULT
-from constants import SHELL_TYPES
-from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
-from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
-
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
 from armagomen.utils.common import getPlayer, overrideMethod, events
+from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES
+from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
+from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
+from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 
-try:
-    from constants import SHELL_MECHANICS_TYPE
-    from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-
-    COMPATIBILITY_MODE = False
-except ImportError:
-    COMPATIBILITY_MODE = True
+MinMaxCurrent = namedtuple("piercingPower", ("min", "max", "current"))
 
 
 class ShotResultResolver(object):
@@ -39,16 +35,17 @@ class ShotResultResolver(object):
         shot = vehicleDescriptor.shot
         shell = shot.shell
         dist = hitPoint.flatDistTo(self._player.getOwnVehiclePosition())
-        if COMPATIBILITY_MODE:
-            isHE = False
-        else:
-            isHE = shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
-        armor, ricochet, penetration = self.computeArmor(cDetails, shell, self.computePP(dist, shot, multiplier), isHE)
-        return self.shotResult(armor, penetration), armor, penetration, shell.caliber, ricochet
+        isHE = shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
+        piercingPower = self.computePiercingPower(dist, shot, multiplier)
+        armor, ricochet, penetration, noDamage = self.computeArmor(cDetails, shell, piercingPower, isHE)
+        shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower)
+        return shotResult, armor, penetration, shell.caliber, ricochet, noDamage
 
-    def computeArmor(self, cDetails, shell, penetration, isHE):
+    def computeArmor(self, cDetails, shell, piercingPower, isHE):
         computed_armor = GLOBAL.ZERO
+        penetration = piercingPower.current
         ricochet = False
+        noDamage = True
         isFirst = True
         for detail in cDetails:
             matInfo = detail.matInfo
@@ -65,38 +62,37 @@ class ShotResultResolver(object):
                     penetration = GLOBAL.F_ZERO
             computed_armor += armor
             if matInfo.vehicleDamageFactor:
+                noDamage = False
                 break
-        return computed_armor, ricochet, penetration
+        return computed_armor, ricochet, penetration, noDamage
 
     @staticmethod
-    def shotResult(counted_armor, penetration):
-        if counted_armor < penetration * ARMOR_CALC.GREAT_PIERCED:
+    def shotResult(armor, piercingPower):
+        if armor < piercingPower.min:
             return SHOT_RESULT.GREAT_PIERCED
-        elif counted_armor > penetration * ARMOR_CALC.NOT_PIERCED:
+        elif armor > piercingPower.max:
             return SHOT_RESULT.NOT_PIERCED
         else:
             return SHOT_RESULT.LITTLE_PIERCED
 
     @staticmethod
-    def computePP(distance, shot, multiplier):
+    def computePiercingPower(distance, shot, multiplier):
         """
         compute Piercing Power at distance.
         :param distance: distance to target
         :param shot: shell shot params piercingPower, maxDistance in shot object
         :param multiplier: x
-        :return Piercing Power: float number
+        :return Piercing Power: namedtuple("piercingPower", ("min", "max", "current"))
         """
 
         p100, p500 = (pp * multiplier for pp in shot.piercingPower)
-        if p100 == p500:
-            return p100
-        if distance <= _MIN_PIERCING_DIST:
-            return p100
+        if p100 == p500 or distance <= _MIN_PIERCING_DIST:
+            return MinMaxCurrent(p100 * ARMOR_CALC.GREAT_PIERCED, p100 * ARMOR_CALC.NOT_PIERCED, p100)
         elif distance < shot.maxDistance:
             power = p100 + (p500 - p100) * (distance - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
             if power < p500:
-                return p500
-            return power
+                return MinMaxCurrent(p500 * ARMOR_CALC.GREAT_PIERCED, p500 * ARMOR_CALC.NOT_PIERCED, p500)
+            return MinMaxCurrent(power * ARMOR_CALC.GREAT_PIERCED, power * ARMOR_CALC.NOT_PIERCED, power)
 
 
 class ShotResultPlugin(plugins.ShotResultIndicatorPlugin):
@@ -107,14 +103,15 @@ class ShotResultPlugin(plugins.ShotResultIndicatorPlugin):
 
     def _ShotResultIndicatorPlugin__updateColor(self, markerType, hitPoint, collide, _dir):
         multiple = self._ShotResultIndicatorPlugin__piercingMultiplier
-        result, counted, penetration, caliber, ricochet = self.resolver.getShotResult(collide, hitPoint, _dir, multiple)
+        result, counted, penetration, caliber, ricochet, noDamage = \
+            self.resolver.getShotResult(collide, hitPoint, _dir, multiple)
         if result in self._ShotResultIndicatorPlugin__colors:
             color = self._ShotResultIndicatorPlugin__colors[result]
             cache = self._ShotResultIndicatorPlugin__cache
             if cache[markerType] != result and self._parentObj.setGunMarkerColor(markerType, color):
                 cache[markerType] = result
                 events.onMarkerColorChanged(color)
-            events.onArmorChanged(counted, penetration, caliber, ricochet)
+            events.onArmorChanged(counted, penetration, caliber, ricochet, noDamage)
 
     def _ShotResultIndicatorPlugin__setEnabled(self, viewID):
         self._ShotResultIndicatorPlugin__isEnabled = self._ShotResultIndicatorPlugin__mapping[viewID] or \
