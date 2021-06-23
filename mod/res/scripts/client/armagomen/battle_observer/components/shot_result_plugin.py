@@ -12,7 +12,9 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 
-MinMaxCurrent = namedtuple("piercingPower", ("min", "max", "current"))
+PiercingPower = namedtuple("PiercingPower", ("min", "max", "current"))
+ShotResult = namedtuple("ShotResult", ("result", "armor", "piercingPower", "caliber", "ricochet", "noDamage"))
+UndefinedShotResult = ShotResult(SHOT_RESULT.UNDEFINED, None, None, None, False, False)
 
 
 class ShotResultResolver(object):
@@ -25,22 +27,22 @@ class ShotResultResolver(object):
     def isAlly(self, entity):
         return entity.publicInfo[VEHICLE.TEAM] == self._player.team
 
-    def getShotResult(self, collision, hitPoint, direction, multiplier):
+    def getShotResult(self, collision, hitPoint, direction, piercingMultiplier):
         if collision is None:
-            return ARMOR_CALC.NONE_DATA
+            return UndefinedShotResult
         entity = collision.entity
         if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive() or self.isAlly(entity):
-            return ARMOR_CALC.NONE_DATA
+            return UndefinedShotResult
         cDetails = self.resolver._getAllCollisionDetails(hitPoint, direction, entity)
         if cDetails is None:
-            return ARMOR_CALC.NONE_DATA
+            return UndefinedShotResult
         vehicleDescriptor = self._player.getVehicleDescriptor()
         shot = vehicleDescriptor.shot
         isHE = shot.shell.kind == SHELLS.HIGH_EXPLOSIVE and shot.shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
-        fullPiercingPower = self.computePiercingPower(hitPoint, shot, multiplier)
-        armor, ricochet, piercingPower, noDamage = self.computeArmor(cDetails, shot, fullPiercingPower, isHE)
+        fullPiercingPower = self.computePiercingPower(hitPoint, shot, piercingMultiplier)
+        armor, piercingPower, ricochet, noDamage = self.computeArmor(cDetails, shot, fullPiercingPower, isHE)
         shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower)
-        return shotResult, armor, piercingPower.current, shot.shell.caliber, ricochet, noDamage
+        return ShotResult(shotResult, armor, piercingPower.current, shot.shell.caliber, ricochet, noDamage)
 
     def computeArmor(self, cDetails, shot, fullPiercingPower, isHE):
         computed_armor = GLOBAL.ZERO
@@ -65,8 +67,8 @@ class ShotResultResolver(object):
             if matInfo.vehicleDamageFactor:
                 noDamage = False
                 break
-        piercingPower = MinMaxCurrent(pPower * ARMOR_CALC.GREAT_PIERCED, pPower * ARMOR_CALC.NOT_PIERCED, pPower)
-        return computed_armor, ricochet, piercingPower, noDamage
+        piercingPower = PiercingPower(pPower * ARMOR_CALC.GREAT_PIERCED, pPower * ARMOR_CALC.NOT_PIERCED, pPower)
+        return computed_armor, piercingPower, ricochet, noDamage
 
     @staticmethod
     def shotResult(armor, piercingPower):
@@ -91,6 +93,7 @@ class ShotResultResolver(object):
             return p100
         elif distance < shot.maxDistance:
             return max(p500, p100 + (p500 - p100) * (distance - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST)
+        return p500
 
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
@@ -100,15 +103,13 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         self.__resolver = ShotResultResolver()
 
     def __updateColor(self, markerType, hitPoint, collide, _dir):
-        multiple = self.__piercingMultiplier
-        result, counted, piercingPower, caliber, ricochet, noDamage = \
-            self.__resolver.getShotResult(collide, hitPoint, _dir, multiple)
-        if result in self.__colors:
-            color = self.__colors[result]
-            if self.__cache[markerType] != result and self._parentObj.setGunMarkerColor(markerType, color):
-                self.__cache[markerType] = result
+        shotResult = self.__resolver.getShotResult(collide, hitPoint, _dir, self.__piercingMultiplier)
+        if shotResult.result in self.__colors:
+            color = self.__colors[shotResult.result]
+            if self.__cache[markerType] != shotResult.result and self._parentObj.setGunMarkerColor(markerType, color):
+                self.__cache[markerType] = shotResult.result
                 events.onMarkerColorChanged(color)
-            events.onArmorChanged(counted, piercingPower, caliber, ricochet, noDamage)
+            events.onArmorChanged(shotResult)
 
     def __setEnabled(self, viewID):
         self.__isEnabled = self.__mapping[viewID] or viewID == CROSSHAIR_VIEW_ID.STRATEGIC

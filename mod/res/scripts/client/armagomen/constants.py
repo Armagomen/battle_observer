@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
@@ -374,9 +376,8 @@ class ARMOR_CALC:
     MACROS_PIERCING_RESERVE = "piercingReserve"
     MACROS_MESSAGE = "message"
     MACROS_CALIBER = "caliber"
-    MACROS_RICOCHET = "ricochet"
-    MACROS_NO_DAMAGE = "noDamage"
-    NONE_DATA = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
+    RICOCHET = "ricochet"
+    NO_DAMAGE = "noDamage"
     MESSAGE_COLORS = set(SHOT_RESULT_TO_ALT_COLOR.itervalues())
     MESSAGE_COLORS.update(SHOT_RESULT_TO_DEFAULT_COLOR.itervalues())
     MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in MESSAGE_COLORS}

@@ -15,6 +15,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self.calcMacro = None
         self.typeColors = None
         self.template = None
+        self.otherMessages = None
 
     def onEnterBattlePage(self):
         super(ArmorCalculator, self).onEnterBattlePage()
@@ -35,6 +36,10 @@ class ArmorCalculator(ArmorCalcMeta):
     def _populate(self):
         super(ArmorCalculator, self)._populate()
         self.messages = self.settings[ARMOR_CALC.MESSAGES]
+        self.otherMessages = {
+            ARMOR_CALC.RICOCHET: (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.RICOCHET]),
+            ARMOR_CALC.NO_DAMAGE: (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.NO_DAMAGE])
+        }
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = self.colors[ARMOR_CALC.NAME]
         self.template = self.settings[ARMOR_CALC.TEMPLATE]
@@ -49,18 +54,17 @@ class ArmorCalculator(ArmorCalcMeta):
         if ctrlMode in POSTMORTEM.MODES:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
 
-    def onArmorChanged(self, countedArmor, penetration, caliber, ricochet, noDamage):
-        if self._cache != countedArmor:
-            self._cache = countedArmor
-            if countedArmor is not None:
-                self.calcMacro[ARMOR_CALC.MACROS_RICOCHET] = self.settings[ARMOR_CALC.MACROS_RICOCHET] if ricochet \
-                    else GLOBAL.EMPTY_LINE
-                self.calcMacro[ARMOR_CALC.MACROS_NO_DAMAGE] = self.settings[ARMOR_CALC.MACROS_NO_DAMAGE] if noDamage \
-                    else GLOBAL.EMPTY_LINE
-                self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = countedArmor
-                self.calcMacro[ARMOR_CALC.PIERCING_POWER] = penetration
-                self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = penetration - countedArmor
-                self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = caliber
-                self.as_armorCalcS(self.template % self.calcMacro)
-            else:
-                self.as_armorCalcS(GLOBAL.EMPTY_LINE)
+    def onArmorChanged(self, shotResult):
+        if self._cache == shotResult.armor:
+            return
+        self._cache = shotResult.armor
+        if shotResult.armor is not None:
+            self.calcMacro[ARMOR_CALC.RICOCHET] = self.otherMessages[ARMOR_CALC.RICOCHET][shotResult.ricochet]
+            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.otherMessages[ARMOR_CALC.NO_DAMAGE][shotResult.noDamage]
+            self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = shotResult.armor
+            self.calcMacro[ARMOR_CALC.PIERCING_POWER] = shotResult.piercingPower
+            self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = shotResult.piercingPower - shotResult.armor
+            self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = shotResult.caliber
+            self.as_armorCalcS(self.template % self.calcMacro)
+        else:
+            self.as_armorCalcS(GLOBAL.EMPTY_LINE)
