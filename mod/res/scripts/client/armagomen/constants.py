@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 from account_helpers.settings_core.settings_constants import GAME
-from aih_constants import SHOT_RESULT, CTRL_MODE_NAME
+from aih_constants import CTRL_MODE_NAME
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
     SHOT_RESULT_TO_ALT_COLOR
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
@@ -79,31 +79,16 @@ SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA",
         "autoMaintenance", "customizationChanged", "PurchaseForCrystal",
         "PurchaseForGold", "GameGreeting"))
 
-
-class MAIN:
-    def __init__(self):
-        pass
-
-    AUTO_CLEAR_CACHE = "autoClearCache"
-    ENABLE_BARS_ANIMATION = "enableBarsAnimation"
-    ENABLE_FPS_LIMITER = "fps_enableFPSLimiter"
-    HIDE_BADGES = "hideBadges"
-    HIDE_CHAT = "hideChatInRandom"
-    HIDE_CLAN_ABBREV = "hideClanAbbrev"
-    HIDE_DOG_TAGS = "hide_dog_tags"
-    MAX_FRAME_RATE = "fps_maxFrameRate"
-    NAME = "main"
-    REMOVE_SHADOW_IN_PREBATTLE = "removeShadowInPrebattle"
-    SHOW_FRIENDS = "showFriendsAndClanInEars"
-    SHOW_ANONYMOUS = "anonymousEnableShow"
-    ANONYMOUS_STRING = "anonymousString"
-    CHANGE_ANONYMOUS_NAME = "anonymousNameChange"
-    USE_KEY_PAIRS = "useKeyPairs"
-    IGNORE_COMMANDERS = "ignore_commanders_voice"
-    DISABLE_SCORE_SOUND = "disable_score_sound"
-    HIDE_SERVER_IN_HANGAR = "hide_server_in_hangar"
-    DEBUG = "DEBUG_MODE"
-
+_Main = namedtuple("MAIN", (
+    "AUTO_CLEAR_CACHE", "ENABLE_BARS_ANIMATION", "ENABLE_FPS_LIMITER", "HIDE_BADGES", "HIDE_CHAT", "HIDE_CLAN_ABBREV",
+    "HIDE_DOG_TAGS", "MAX_FRAME_RATE", "NAME", "REMOVE_SHADOW_IN_PREBATTLE", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
+    "ANONYMOUS_STRING", "CHANGE_ANONYMOUS_NAME", "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND",
+    "HIDE_SERVER_IN_HANGAR", "DEBUG"))
+MAIN = _Main(
+    "autoClearCache", "enableBarsAnimation", "fps_enableFPSLimiter", "hideBadges", "hideChatInRandom", "hideClanAbbrev",
+    "hide_dog_tags", "fps_maxFrameRate", "main", "removeShadowInPrebattle", "showFriendsAndClanInEars",
+    "anonymousEnableShow", "anonymousString", "anonymousNameChange", "useKeyPairs", "ignore_commanders_voice",
+    "disable_score_sound", "hide_server_in_hangar", "DEBUG_MODE")
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "B_SILVER", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
@@ -133,28 +118,14 @@ PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME", "PREMIUM_FORMAT", "DEFAULT_FORM
     "premium_time", "premium_format", "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d "
                                       "Days. %(hours)02d:%(minutes)02d:%(seconds)02d</font>")
 
-
-class SNIPER:
-    def __init__(self):
-        pass
-
-    ZOOM = "zoom"
-    NAME = ZOOM
-    DYN_ZOOM = "dynamic_zoom"
-    STEPS_ONLY = "steps_only"
-    ZOOM_STEPS = "zoomSteps"
-    STEPS = "steps"
-    GUN_ZOOM = "zoomToGunMarker"
-    METERS = "zoomXMeters"
-    ZOOMS = "zooms"
-    ZOOM_EXPOSURE = "zoomExposure"
-    INCREASED_ZOOM = "increasedZoom"
-    DEFAULT_STEPS = [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0]
-    EXPOSURE_FACTOR, MAX_CALIBER, MAX_DIST = (0.1, 60, 730.0)
-    DISABLE_SNIPER = "disable_cam_after_shot"
-    DISABLE_LATENCY = "disable_cam_after_shot_latency"
-    SKIP_CLIP = "disable_cam_after_shot_skip_clip"
-    CLIP = "clip"
+_Sniper = namedtuple("SNIPER", (
+    "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "GUN_ZOOM", "METERS", "ZOOMS", "ZOOM_EXPOSURE",
+    "INCREASED_ZOOM", "DEFAULT_STEPS", "EXPOSURE_FACTOR", "MAX_CALIBER", "MAX_DIST", "DISABLE_SNIPER",
+    "DISABLE_LATENCY", "SKIP_CLIP", "CLIP"))
+SNIPER = _Sniper(
+    "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zoomToGunMarker", "zoomXMeters", "zooms",
+    "zoomExposure", "increasedZoom", [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0], 0.1, 60, 730.0,
+    "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip")
 
 
 class DAMAGE_LOG:
@@ -251,52 +222,21 @@ STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE"))("strat
 POSTMORTEM = namedtuple("POSTMORTEM", ("DURATION", "PARAMS", "CAM_MATRIX", "MODES"))(
     "transitionDuration", "postmortemParams", "camMatrix", {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM})
 
+ARMOR_CALC = namedtuple("ARMOR_CALC", (
+    "PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "MACROS_COUNTED_ARMOR",
+    "MACROS_PIERCING_RESERVE", "MACROS_MESSAGE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE",
+    "MESSAGES_TEMPLATE", "RICOCHET_MESSAGE", "NO_DAMAGE_MESSAGE", "DEFAULT_TEMPLATE"))(
+    "piercingPower", "armor_calculator", "calcPosition", "messages", "template", "color", "countedArmor",
+    "piercingReserve", "message", "caliber", "ricochet", "noDamage",
+    {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in
+     set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}, "Ricochet",
+    "critical shot, no damage", "<p align='center'>%(ricochet)s%(noDamage)s<br>"
+                                "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>")
 
-class ARMOR_CALC:
-    def __init__(self):
-        pass
-
-    GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
-    PIERCING_POWER = "piercingPower"
-    NORMAL = SHOT_RESULT_TO_DEFAULT_COLOR[SHOT_RESULT.UNDEFINED]
-    NAME = "armor_calculator"
-    POSITION = "calcPosition"
-    MESSAGES = "messages"
-    TEMPLATE = "template"
-    MACROS_COLOR = "color"
-    MACROS_COUNTED_ARMOR = "countedArmor"
-    MACROS_ARMOR = "armor"
-    MACROS_PIERCING_RESERVE = "piercingReserve"
-    MACROS_MESSAGE = "message"
-    MACROS_CALIBER = "caliber"
-    RICOCHET = "ricochet"
-    NO_DAMAGE = "noDamage"
-    MESSAGE_COLORS = set(SHOT_RESULT_TO_ALT_COLOR.itervalues())
-    MESSAGE_COLORS.update(SHOT_RESULT_TO_DEFAULT_COLOR.itervalues())
-    MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in MESSAGE_COLORS}
-    RICOCHET_MESSAGE = "Ricochet"
-    NO_DAMAGE_MESSAGE = "critical shot, no damage"
-    DEFAULT_TEMPLATE = "<p align='center'>%(ricochet)s%(noDamage)s<br>" \
-                       "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>"
-
-
-class MARKERS:
-    def __init__(self):
-        pass
-
-    NAME = "markers"
-    HOT_KEY = "showMarkers_hotkey"
-    CLASS_COLOR = "markersClassColor"
-    TYPE_ICON = {
-        VEHICLE_CLASS_NAME.HEAVY_TANK: "H",
-        VEHICLE_CLASS_NAME.MEDIUM_TANK: "M",
-        VEHICLE_CLASS_NAME.AT_SPG: "J",
-        VEHICLE_CLASS_NAME.SPG: "S",
-        VEHICLE_CLASS_NAME.LIGHT_TANK: "L",
-        "unknown": "U"
-    }
-    ICON = "<font color='{0}'>{1}</font>"
-
+MARKERS = namedtuple("MARKERS", ("NAME", "HOT_KEY", "CLASS_COLOR", "TYPE_ICON", "ICON"))(
+    "markers", "showMarkers_hotkey", "markersClassColor", {
+        VEHICLE_CLASS_NAME.HEAVY_TANK: "H", VEHICLE_CLASS_NAME.MEDIUM_TANK: "M", VEHICLE_CLASS_NAME.AT_SPG: "J",
+        VEHICLE_CLASS_NAME.SPG: "S", VEHICLE_CLASS_NAME.LIGHT_TANK: "L", "unknown": "U"}, "<font color='{}'>{}</font>")
 
 CAROUSEL = namedtuple("CAROUSEL", ("NAME", "SMALL", "ROWS", "SETTINGS"))(
     "tank_carousel", "smallDoubleCarousel", "carouselRows", {GAME.CAROUSEL_TYPE: None, GAME.DOUBLE_CAROUSEL_TYPE: None})
@@ -316,33 +256,15 @@ SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
     "sixth_sense", "showTimer", "playTickSound", "lampShowTime", "timer", "TimerTemplate", "image", "lampTime",
     "timeLeft")
 
-
-class DISPERSION:
-    def __init__(self):
-        pass
-
-    NAME = "dispersion_circle"
-    CIRCLE_EXTRA_LAP = "circle_extraServerLap"
-    CIRCLE_REPLACE = "circle_replaceOriginalCircle"
-    CIRCLE_SCALE_CONFIG = "circle_scale"
-    CIRCLE_SERVER = "useServerAim"
-    ENABLED = "circle_enabled"
-    CIRCLE_SCALE = 0.8
-    SCALE = 80
-    MAX_TIME = 5.0
-    SPG_GM_SCALE = 0.8
-    GUN_MARKER_MIN_SIZE = 16.0
-    MINUS_ONE_F = -1.0
-
-    TIMER_ENABLED = "timer_enabled"
-    TIMER_POSITION_X = "timer_position_x"
-    TIMER_POSITION_Y = "timer_position_y"
-    TIMER_COLOR = "timer_color"
-    TIMER_DONE_COLOR = "timer_done_color"
-    TIMER_DONE_TEMPLATE = "timer_done_template"
-    TIMER_REGULAR_TEMPLATE = "timer_regular_template"
-    TIMER_ALIGN = "timer_align"
-
+_Dispersion = namedtuple("DISPERSION", (
+    "NAME", "CIRCLE_EXTRA_LAP", "CIRCLE_REPLACE", "CIRCLE_SCALE_CONFIG", "CIRCLE_SERVER", "ENABLED",
+    "SCALE", "MAX_TIME", "SPG_GM_SCALE", "GUN_MARKER_MIN_SIZE", "MINUS_ONE_F", "TIMER_ENABLED", 'TIMER_ENABLED',
+    "TIMER_POSITION_X", "TIMER_POSITION_Y", "TIMER_COLOR", "TIMER_DONE_COLOR", "TIMER_DONE_TEMPLATE",
+    "TIMER_REGULAR_TEMPLATE", "TIMER_ALIGN"))
+DISPERSION = _Dispersion(
+    "dispersion_circle", "circle_extraServerLap", "circle_replaceOriginalCircle", "circle_scale", "useServerAim",
+    "circle_enabled", 80, 5.0, 0.8, 16.0, -1.0, "timer_enabled", "timer_position_x", "timer_position_y",
+    "timer_color", "timer_done_color", "timer_done_template", "timer_regular_template", "timer_align")
 
 DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
     "NAME", "TEXT", "TEMPLATE", "GRAPHICS", "PING_BAR", "FPS_BAR", "FPS_COLOR", "PING_COLOR", "LAG_COLOR", "PING",
@@ -362,9 +284,10 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
     "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE", "BASE_FONT", "FONT_SIZE", "HUNDRED"))(
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
-ALIASES = namedtuple("ALIASES", (
+_Aliases = namedtuple("ALIASES", (
     "HP_BARS", "DAMAGE_LOG", "MAIN_GUN", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME",
-    "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "WG_COMP", "DATE_TIME"))(
+    "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "WG_COMP", "DATE_TIME"))
+ALIASES = _Aliases(
     "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_MainGun_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI",

@@ -9,9 +9,6 @@ from armagomen.constants import (ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLO
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
-DamageLogsSettings = namedtuple('DamageLogsSettings',
-                                ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
-
 
 class DefaultSettings(object):
 
@@ -490,6 +487,8 @@ class DefaultSettings(object):
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
 
+        DamageLogsSettings = namedtuple('DamageLogsSettings',
+                                        ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
         self.damage_log = DamageLogsSettings(self.log_total, self.log_damage_extended, self.log_input_extended,
                                              self.log_global)
 

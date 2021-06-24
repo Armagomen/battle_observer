@@ -15,6 +15,7 @@ from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCT
 PiercingPower = namedtuple("PiercingPower", ("min", "max", "current"))
 ShotResult = namedtuple("ShotResult", ("result", "armor", "piercingPower", "caliber", "ricochet", "noDamage"))
 UndefinedShotResult = ShotResult(SHOT_RESULT.UNDEFINED, None, None, None, False, False)
+GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
 
 
 class ShotResultResolver(object):
@@ -67,7 +68,7 @@ class ShotResultResolver(object):
             if matInfo.vehicleDamageFactor:
                 noDamage = False
                 break
-        piercingPower = PiercingPower(pPower * ARMOR_CALC.GREAT_PIERCED, pPower * ARMOR_CALC.NOT_PIERCED, pPower)
+        piercingPower = PiercingPower(pPower * GREAT_PIERCED, pPower * NOT_PIERCED, pPower)
         return computed_armor, piercingPower, ricochet, noDamage
 
     @staticmethod
