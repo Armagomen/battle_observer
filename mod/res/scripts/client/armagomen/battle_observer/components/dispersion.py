@@ -4,7 +4,7 @@ from Math import MatrixAnimation
 import aih_constants
 from AvatarInputHandler import gun_marker_ctrl
 from AvatarInputHandler.gun_marker_ctrl import _MARKER_TYPE, _MARKER_FLAG, \
-    _SPGGunMarkerController, _DefaultGunMarkerController, _GunMarkersDecorator, _GunMarkersDPFactory
+    _SPGGunMarkerController, _GunMarkersDPFactory
 from BattleReplay import g_replayCtrl
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import settings
@@ -39,20 +39,13 @@ gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 aih_constants.GUN_MARKER_MIN_SIZE = DISPERSION.GUN_MARKER_MIN_SIZE
 
 
-class ObserverGunMarkerController(_DefaultGunMarkerController):
+class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
 
-    def __init__(self, *args, **kwargs):
-        super(ObserverGunMarkerController, self).__init__(*args, **kwargs)
-
-    def _DefaultGunMarkerController__updateScreenRatio(self):
-        super(ObserverGunMarkerController, self)._DefaultGunMarkerController__updateScreenRatio()
-        self._DefaultGunMarkerController__screenRatio *= DISPERSION.CIRCLE_SCALE
+    def __updateScreenRatio(self):
+        self.__screenRatio = screenResolution()[0] * 0.5 * DISPERSION.CIRCLE_SCALE
 
 
 class ObserverSPGGunMarkerController(_SPGGunMarkerController):
-
-    def __init__(self, *args, **kwargs):
-        super(ObserverSPGGunMarkerController, self).__init__(*args, **kwargs)
 
     def _updateDispersionData(self):
         self._size *= DISPERSION.CIRCLE_SCALE
@@ -67,16 +60,16 @@ class ObserverSPGGunMarkerController(_SPGGunMarkerController):
         self._dataProvider.setupConicDispersion(dispersionAngle)
 
 
-class _DispersionDecorator(_GunMarkersDecorator):
+class _GunMarkersDecorator(gun_marker_ctrl._GunMarkersDecorator):
 
     def __init__(self, clientMarker, serverMarker, replaceOriginalCircle, extraServerLap):
-        super(_DispersionDecorator, self).__init__(clientMarker, serverMarker)
+        super(_GunMarkersDecorator, self).__init__(clientMarker, serverMarker)
         self.__extraServerLap = extraServerLap
         self.__replaceOriginalCircle = replaceOriginalCircle
 
     def update(self, markerType, position, direction, size, relaxTime, collData):
         if self.__replaceOriginalCircle:
-            super(_DispersionDecorator, self).update(markerType, position, direction, size, relaxTime, collData)
+            super(_GunMarkersDecorator, self).update(markerType, position, direction, size, relaxTime, collData)
         else:
             if markerType == CLIENT:
                 self.__updateClient(position, direction, size, relaxTime, collData)
@@ -86,20 +79,17 @@ class _DispersionDecorator(_GunMarkersDecorator):
                 self.__updateServer(position, direction, size, relaxTime, collData)
 
     def __updateClient(self, position, direction, size, relaxTime, collData):
-        self._GunMarkersDecorator__clientState = (position, direction, collData)
-        if self._GunMarkersDecorator__gunMarkersFlags & _MARKER_FLAG.CLIENT_MODE_ENABLED:
-            self._GunMarkersDecorator__clientMarker.update(CLIENT, position, direction, size, relaxTime, collData)
+        self.__clientState = (position, direction, collData)
+        if self.__gunMarkersFlags & _MARKER_FLAG.CLIENT_MODE_ENABLED:
+            self.__clientMarker.update(CLIENT, position, direction, size, relaxTime, collData)
 
     def __updateServer(self, position, direction, size, relaxTime, collData):
-        self._GunMarkersDecorator__serverState = (position, direction, collData)
-        if self._GunMarkersDecorator__gunMarkersFlags & _MARKER_FLAG.SERVER_MODE_ENABLED:
-            self._GunMarkersDecorator__serverMarker.update(SERVER, position, direction, size, relaxTime, collData)
+        self.__serverState = (position, direction, collData)
+        if self.__gunMarkersFlags & _MARKER_FLAG.SERVER_MODE_ENABLED:
+            self.__serverMarker.update(SERVER, position, direction, size, relaxTime, collData)
 
 
 class BOGunMarkersDPFactory(_GunMarkersDPFactory):
-
-    def __init__(self, *args, **kwargs):
-        super(BOGunMarkersDPFactory, self).__init__(*args, **kwargs)
 
     @staticmethod
     def _makeDefaultProvider():
@@ -202,11 +192,12 @@ class DispersionCircle(object):
                 server = ObserverSPGGunMarkerController(SERVER, bo_factory.getServerSPGProvider())
             else:
                 if self.replaceOriginalCircle:
-                    client = ObserverGunMarkerController(CLIENT, bo_factory.getClientProvider())
+                    client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
                 else:
-                    client = _DefaultGunMarkerController(CLIENT, _GunMarkersDPFactory().getClientProvider())
-                server = ObserverGunMarkerController(SERVER, bo_factory.getServerProvider())
-            return _DispersionDecorator(client, server, self.replaceOriginalCircle, self.extraServerLap)
+                    client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT,
+                                                                         _GunMarkersDPFactory().getClientProvider())
+                server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
+            return _GunMarkersDecorator(client, server, self.replaceOriginalCircle, self.extraServerLap)
         else:
             return baseCreateGunMarker(isStrategic)
 
