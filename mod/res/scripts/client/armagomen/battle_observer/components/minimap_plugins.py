@@ -3,40 +3,34 @@ from math import degrees
 from armagomen.battle_observer.core import settings
 from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod
+from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
-from gui.Scaleform.daapi.view.battle.shared.minimap.plugins import PersonalEntriesPlugin, ArenaVehiclesPlugin
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from gui.battle_control import matrix_factory
 from gui.battle_control.battle_constants import VEHICLE_LOCATION
 
 
-class BOPersonalEntriesPlugin(PersonalEntriesPlugin):
-
-    def __init__(self, *args, **kwargs):
-        super(BOPersonalEntriesPlugin, self).__init__(*args, **kwargs)
+class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
     def start(self):
-        super(BOPersonalEntriesPlugin, self).start()
-        if self._PersonalEntriesPlugin__yawLimits is None:
+        super(PersonalEntriesPlugin, self).start()
+        if self.__yawLimits is None:
             vInfo = self._arenaDP.getVehicleInfo()
             yawLimits = vInfo.vehicleType.turretYawLimits
             if yawLimits is not None:
-                self._PersonalEntriesPlugin__yawLimits = (degrees(yawLimits[0]), degrees(yawLimits[1]))
+                self.__yawLimits = (degrees(yawLimits[0]), degrees(yawLimits[1]))
 
 
-class VehiclesPlugin(ArenaVehiclesPlugin):
-
-    def __init__(self, *args, **kwargs):
-        super(VehiclesPlugin, self).__init__(*args, **kwargs)
+class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 
     def _showVehicle(self, vehicleID, location):
         entry = self._entries.get(vehicleID, None)
         if entry is not None and entry.isAlive():
             matrix = matrix_factory.makeVehicleMPByLocation(vehicleID, location, self._arenaVisitor.getArenaPositions())
             if matrix is not None:
-                self._ArenaVehiclesPlugin__setLocationAndMatrix(entry, location, matrix)
+                self.__setLocationAndMatrix(entry, location, matrix)
                 self._setInAoI(entry, True)
-                self._ArenaVehiclesPlugin__setActive(entry, True)
+                self.__setActive(entry, True)
 
     def _hideVehicle(self, entry):
         if entry.isAlive() and entry.isActive():
@@ -44,20 +38,20 @@ class VehiclesPlugin(ArenaVehiclesPlugin):
             if matrix is not None:
                 matrix = matrix_factory.convertToLastSpottedVehicleMP(matrix)
             self._setInAoI(entry, False)
-            self._ArenaVehiclesPlugin__setLocationAndMatrix(entry, VEHICLE_LOCATION.UNDEFINED, matrix)
+            self.__setLocationAndMatrix(entry, VEHICLE_LOCATION.UNDEFINED, matrix)
 
-    def _ArenaVehiclesPlugin__setDestroyed(self, vehicleID, entry):
-        self._ArenaVehiclesPlugin__clearAoIToFarCallback(vehicleID)
+    def __setDestroyed(self, vehicleID, entry):
+        self.__clearAoIToFarCallback(vehicleID)
         if not entry.wasSpotted() and entry.setAlive(False) and entry.getMatrix() is not None:
             if not entry.isActive():
-                self._ArenaVehiclesPlugin__setActive(entry, True)
+                self.__setActive(entry, True)
             if entry.isActive() and not entry.isInAoI():
                 self._setInAoI(entry, True)
             self._invoke(entry._entryID, 'setDead', True)
             self._move(entry._entryID, CONTAINER_NAME.DEAD_VEHICLES)
             self._invoke(entry._entryID, self._showNames)
         else:
-            self._ArenaVehiclesPlugin__setActive(entry, False)
+            self.__setActive(entry, False)
 
     @property
     def _showNames(self):
@@ -68,9 +62,9 @@ class VehiclesPlugin(ArenaVehiclesPlugin):
 
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
-    plugins = base(plugin, arenaVisitor)
+    _plugins = base(plugin, arenaVisitor)
     if settings.minimap[GLOBAL.ENABLED]:
         if settings.minimap[MINIMAP.DEATH_PERMANENT]:
-            plugins['vehicles'] = VehiclesPlugin
-        plugins['personal'] = BOPersonalEntriesPlugin
-    return plugins
+            _plugins['vehicles'] = ArenaVehiclesPlugin
+        _plugins['personal'] = PersonalEntriesPlugin
+    return _plugins
