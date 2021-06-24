@@ -383,6 +383,8 @@ class ARMOR_CALC:
     MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in MESSAGE_COLORS}
     RICOCHET_MESSAGE = "Ricochet"
     NO_DAMAGE_MESSAGE = "critical shot, no damage"
+    DEFAULT_TEMPLATE = "<p align='center'>%(ricochet)s%(noDamage)s</p>" \
+                       "<p align='center'><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>"
 
 
 class VEHICLE:

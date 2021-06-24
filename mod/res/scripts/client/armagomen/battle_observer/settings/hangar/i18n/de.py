@@ -147,10 +147,19 @@ translate = {
         "calcPosition*x": "Position des Haupt Textfeldes waagerecht",
         "calcPosition*y": "Position des Haupt Textfeldes senkrecht",
         "template": "Formatierung des Haupt-Textfeldes",
-        "template_tooltip": "HTML Formatierung möglich<br>Macros:<br>%(countedArmor)s - verminderte Panzerung"
-                            "<br>%(armor)s - Panzerung ohne Neigung. "
-                            "<br>%(piercingPower)s - Durchschlag der Granate mit Berechnung der Enfernung"
-                            "<br>%(caliber)s - Kaliber der Granate<br>%(color)s - Farbe (siehe Farbeinstellungen)"
+
+        "template_tooltip": "Makroformat:% (Name) Datentyp s:d:f.<br>"
+                            "s-string, d-dezimal, f-gleitkomma <br><br>"
+                            "Liste der verfügbaren Makros:<br>"
+                            "<li>%(countedArmor)d - Gezählte Rüstung.</li>"
+                            "<li>%(piercingPower)d - Entfernungsbasierte Projektildurchdringung.</li>"
+                            "<li>%(piercingReserve)d - Penetrationsreserve nach dem Durchbohren der Rüstung.</li>"
+                            "<li>%(caliber)d - Geschosskaliber.</li>"
+                            "<li>%(message)s - Nachricht aus dem Nachrichtenabschnitt in der Konfigurationsdatei.</li>"
+                            "<li>%(ricochet)s - Potenzielle Abprallerwarnung.</li>"
+                            "<li>%(noDamage)s - Benachrichtigung, dass kein Schaden entsteht. Das Projektil trifft "
+                            "das Modul unter Umgehung Hauptpanzerung. Raupe ohne Schaden, Rad ohne Schaden usw.</li>"
+                            "<li>%(color)s - Farbe (siehe Farbeinstellung).</li>"
     },
     "log_global": {
         "header": "Allgemeine Einstellungen für Schadensprotokoll",

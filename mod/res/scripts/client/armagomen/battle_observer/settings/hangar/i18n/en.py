@@ -147,11 +147,18 @@ translate = {
         "calcPosition*x": "Position the main text box of the calculator Horizontally",
         "calcPosition*y": "Position the main text box of the calculator Vertically",
         "template": "Template Main text field",
-        "template_tooltip": "HTML - YES<br>Macros <br>%(countedArmor)s - reduced armor."
-                            "<br>%(armor)s - armor without inclination."
-                            "<br>%(piercingPower)s - penetration of the projectile with distance."
-                            "<br>%(caliber)s - is the caliber of the projectile."
-                            "<br>%(color)s | s:d:f | type data - color (see colors settings)"
+        "template_tooltip": "Macro format:% (name) data type s:d:f.<br>"
+                            "s-string, d-decimal, f-floating point<br><br>"
+                            "List of available macros:<br>"
+                            "<li>%(countedArmor)d - Counted armor.</li>"
+                            "<li>%(piercingPower)d - Distance-based projectile penetration.</li>"
+                            "<li>%(piercingReserve)d - Penetration reserve after piercing armor.</li>"
+                            "<li>%(caliber)d - Projectile caliber. </li>"
+                            "<li>%(message)s - Message from the messages section in the config file.</li>"
+                            "<li>%(ricochet)s - Potential ricochet alert.</li>"
+                            "<li>%(noDamage)s - Notification that there will be no damage. The projectile will hit the "
+                            "module bypassing main armor. Caterpillar no damage, wheel no damage, and so on.</li>"
+                            "<li>%(color)s - color (see color setting).</li>"
     },
     "log_global": {
         "header": "GENERAL LOG SETTINGS",

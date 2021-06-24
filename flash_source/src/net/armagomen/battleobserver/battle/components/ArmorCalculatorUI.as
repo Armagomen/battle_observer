@@ -50,7 +50,7 @@ package net.armagomen.battleobserver.battle.components
 				{
 					this.y = App.appHeight >> 1;
 				}
-				this.armorCalc = new TextExt("armorCalc", calc.calcPosition.x, calc.calcPosition.y, Filters.middleText, TextFieldAutoSize.CENTER, shadowSettings, this);
+				this.armorCalc = new TextExt("armorCalc", calc.calcPosition.x, calc.calcPosition.y, Filters.armorText, TextFieldAutoSize.CENTER, shadowSettings, this);
 				App.utils.data.cleanupDynamicObject(calc);
 				this.loaded = true;
 			}

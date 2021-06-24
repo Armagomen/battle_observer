@@ -2,10 +2,10 @@ from collections import defaultdict, namedtuple
 
 import Keys
 from Event import SafeEvent
-from armagomen.constants import ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, \
-    DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, \
-    MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC, TEAM_BASES, USER_BACKGROUND, \
-    VEHICLE_TYPES, PREMIUM
+from armagomen.constants import (ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL,
+                                 DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS,
+                                 MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
+                                 TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM)
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -211,8 +211,7 @@ class DefaultSettings(object):
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 100},
-            ARMOR_CALC.TEMPLATE: "<font color='%(color)s'>%(countedArmor)d | "
-                                 "%(piercingPower)d<br>%(ricochet)s%(noDamage)s</font>",
+            ARMOR_CALC.TEMPLATE: ARMOR_CALC.DEFAULT_TEMPLATE,
             ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE,
             ARMOR_CALC.RICOCHET: ARMOR_CALC.RICOCHET_MESSAGE,
             ARMOR_CALC.NO_DAMAGE: ARMOR_CALC.NO_DAMAGE_MESSAGE
@@ -491,9 +490,8 @@ class DefaultSettings(object):
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
 
-    @property
-    def damage_log(self):
-        return DamageLogsSettings(self.log_total, self.log_damage_extended, self.log_input_extended, self.log_global)
+        self.damage_log = DamageLogsSettings(self.log_total, self.log_damage_extended, self.log_input_extended,
+                                             self.log_global)
 
 
 settings = DefaultSettings()
