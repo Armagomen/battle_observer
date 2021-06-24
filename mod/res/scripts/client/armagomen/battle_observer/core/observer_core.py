@@ -5,7 +5,7 @@ from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
-from armagomen.constants import FILE_NAME, MASSAGES, GLOBAL, CACHE_DIRS, MAIN, \
+from armagomen.constants import FILE_NAME, MESSAGES, GLOBAL, CACHE_DIRS, MAIN, \
     MOD_NAME
 from armagomen.battle_observer import __version__
 from armagomen.utils.common import logInfo, getPreferencesFilePath, getCurrentModPath, logWarning
@@ -48,14 +48,14 @@ class ObserverCore(object):
         if self.isFileValid:
             if settings.main[MAIN.AUTO_CLEAR_CACHE]:
                 self.clearClientCache()
-            logInfo('MOD {0}: {1}'.format(MASSAGES.FINISH, self.mod_version))
+            logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, self.mod_version))
 
     def isModValidFileName(self):
         return self.fileName in os.listdir(self.workingDir)
 
     def start(self):
         if self.isFileValid:
-            logInfo('MOD {0}: {1}'.format(MASSAGES.START, self.mod_version))
+            logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
             self.componentsLoader.start()
             self.configLoader.start()
             packages.BATTLE_PACKAGES += ("armagomen.battle_observer.battle",)
@@ -63,7 +63,7 @@ class ObserverCore(object):
         else:
             from gui.Scaleform.daapi.view import dialogs
             from gui import DialogsInterface
-            locked = MASSAGES.LOCKED_BY_FILE_NAME.format(self.fileName)
+            locked = MESSAGES.LOCKED_BY_FILE_NAME.format(self.fileName)
             logWarning(locked)
 
             def loadBlocked(spaceID):

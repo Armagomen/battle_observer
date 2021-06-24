@@ -104,7 +104,7 @@ class CreateElement(object):
                                                    *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
             if blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
                 return self.createRadioButtonGroup(blockID, key,
-                                                   *self.getter.getCollectionIndex(value, HP_BARS.STYLE_SELECT))
+                                                   *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
         if isinstance(value, (basestring, bool)):
             return self.createControl(blockID, key, value)
         elif val_type is int:
@@ -254,7 +254,7 @@ class ConfigInterface(CreateElement):
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
                     elif key == HP_BARS.STYLE and not isinstance(value, basestring):
-                        value = HP_BARS.STYLE_SELECT[value]
+                        value = HP_BARS.STYLES[value]
                     elif key == "zoomSteps*steps":
                         value = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
                     newParamType = type(value)

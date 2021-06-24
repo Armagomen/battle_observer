@@ -1,5 +1,6 @@
 import locale
 import os
+from collections import namedtuple
 from string import printable
 
 import BigWorld
@@ -113,6 +114,14 @@ def checkDecoder(_string):
         if char not in printable:
             return locale.getpreferredencoding()
     return None
+
+
+def convertDictToNamedtuple(dictionary):
+    """
+    :rtype: namedtuple
+    :type dictionary: dict
+    """
+    return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
 
 class Events(object):

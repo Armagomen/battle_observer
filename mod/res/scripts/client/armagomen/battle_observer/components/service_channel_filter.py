@@ -56,6 +56,6 @@ settings.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(NotificationListView, "onClickAction")
 @overrideMethod(NotificationPopUpViewer, "onClickAction")
 def clickAction(base, view, typeID, entityID, action):
-    if action in URLS.DONATE:
+    if action in URLS:
         return openWebBrowser(action)
     return base(view, typeID, entityID, action)

@@ -10,7 +10,7 @@ from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import GLOBAL, URLS, MASSAGES, HEADERS
+from armagomen.constants import GLOBAL, URLS, MESSAGES, HEADERS
 from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
     getCurrentModPath
 from async import async, await, AsyncReturn
@@ -148,9 +148,9 @@ class UpdateMain(object):
                         elif filename.startswith('BattleObserver_'):
                             DOWNLOAD_URLS['full'] = download_url
                     ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-                    logInfo(MASSAGES.NEW_VERSION.format(new_version))
+                    logInfo(MESSAGES.NEW_VERSION.format(new_version))
                 else:
-                    logInfo(MASSAGES.UPDATE_CHECKED)
+                    logInfo(MESSAGES.UPDATE_CHECKED)
         except Exception:
             LOG_CURRENT_EXCEPTION()
         raise AsyncReturn(True)

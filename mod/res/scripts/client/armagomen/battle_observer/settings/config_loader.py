@@ -117,11 +117,11 @@ class ConfigLoader(object):
                 new_param = external_cfg.get(key)
                 if new_param is not None:
                     new_param_type = type(new_param)
-                    if new_param_type == str:
-                        for before, after in GLOBAL.REPLACE:
-                            if before in new_param:
-                                file_update = True
-                                new_param = new_param.replace(before, after)
+                    # if new_param_type == str:
+                    #     for before, after in GLOBAL.REPLACE:
+                    #         if before in new_param:
+                    #             file_update = True
+                    #             new_param = new_param.replace(before, after)
                     if new_param_type != old_param_type:
                         file_update = True
                         if old_param_type == int and new_param_type == float:

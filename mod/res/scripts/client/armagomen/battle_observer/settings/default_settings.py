@@ -42,7 +42,7 @@ class DefaultSettings(object):
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
-            USER_BACKGROUND.LABELS: [{
+            USER_BACKGROUND.NAME: [{
                 GLOBAL.SMOOTHING: True,
                 GLOBAL.X: GLOBAL.ZERO,
                 GLOBAL.Y: GLOBAL.ZERO,
@@ -105,7 +105,7 @@ class DefaultSettings(object):
             DISPERSION.TIMER_ENABLED: False,
             DISPERSION.TIMER_POSITION_X: 110,
             DISPERSION.TIMER_POSITION_Y: GLOBAL.ZERO,
-            DISPERSION.TIMER_ALIGN: GLOBAL.LEFT,
+            DISPERSION.TIMER_ALIGN: GLOBAL.ALIGN_LIST.left,
             DISPERSION.TIMER_COLOR: "#f5ff8f",
             DISPERSION.TIMER_DONE_COLOR: "#a6ffa6",
             DISPERSION.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
@@ -260,7 +260,7 @@ class DefaultSettings(object):
             GLOBAL.SETTINGS: {
                 GLOBAL.X: -255,
                 GLOBAL.Y: GLOBAL.ZERO,
-                GLOBAL.ALIGN: GLOBAL.RIGHT,
+                GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.right,
                 DAMAGE_LOG.IN_CENTER: True
             },
             DAMAGE_LOG.TEMPLATE_MAIN_DMG: ("<textformat leading='-3'>%(damageIcon)s"
@@ -283,7 +283,7 @@ class DefaultSettings(object):
             GLOBAL.SETTINGS: {
                 GLOBAL.X: 10,
                 GLOBAL.Y: GLOBAL.ZERO,
-                GLOBAL.ALIGN: GLOBAL.LEFT
+                GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
             },
             DAMAGE_LOG.KILLED_ICON: "<img src='{dir}/destruction.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
             DAMAGE_LOG.LOG_MODE[GLOBAL.FIRST]: [
@@ -319,7 +319,7 @@ class DefaultSettings(object):
             GLOBAL.SETTINGS: {
                 GLOBAL.X: 10,
                 GLOBAL.Y: -20,
-                GLOBAL.ALIGN: GLOBAL.LEFT
+                GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
             },
             DAMAGE_LOG.KILLED_ICON: "<img src='{dir}/destruction.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
             DAMAGE_LOG.LOG_MODE[GLOBAL.FIRST]: [
@@ -354,7 +354,7 @@ class DefaultSettings(object):
 
         self.hp_bars = {
             GLOBAL.ENABLED: True,
-            HP_BARS.STYLE: HP_BARS.LEAGUE_STYLE,
+            HP_BARS.STYLE: HP_BARS.STYLES.league,
             HP_BARS.WIDTH: 200,
             HP_BARS.DIFF: True,
             HP_BARS.ALIVE: False,
@@ -396,7 +396,7 @@ class DefaultSettings(object):
             GLOBAL.SETTINGS: {
                 GLOBAL.X: 255,
                 GLOBAL.Y: GLOBAL.ZERO,
-                GLOBAL.ALIGN: GLOBAL.LEFT
+                GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
             },
             MAIN_GUN.GUN_ICON: "<img src='{}/achievement/32x32/mainGun.png' width='26' height='25'"
                                " vspace='-7'>".format(GLOBAL.ICONS_DIR),
@@ -431,14 +431,14 @@ class DefaultSettings(object):
             PANELS.DAMAGES_ENABLED: True,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.DAMAGES_TEMPLATE: "<font color='#FFFF00'>%(damage)s</font>",
-            PANELS.DAMAGES_SETTINGS: {GLOBAL.X: -50, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.LEFT},
+            PANELS.DAMAGES_SETTINGS: {GLOBAL.X: -50, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left},
             PANELS.BARS_ENABLED: True,
             PANELS.BAR_CLASS_COLOR: False,
             PANELS.ON_KEY_DOWN: False,
             PANELS.BAR_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.HP_TEMPLATE: "<font face='$FieldFont' color='#FAFAFA' size='15'>%(health)s</font>",
             PANELS.BAR_SETTINGS: {
-                PANELS.TEXT_SETTINGS: {GLOBAL.X: 35, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.ALIGN: GLOBAL.CENTER},
+                PANELS.TEXT_SETTINGS: {GLOBAL.X: 35, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center},
                 PANELS.BAR: {
                     GLOBAL.X: GLOBAL.ZERO,
                     GLOBAL.Y: 2,
@@ -458,7 +458,7 @@ class DefaultSettings(object):
             GLOBAL.X: -110,
             GLOBAL.Y: GLOBAL.ZERO,
             FLIGHT_TIME.SPG_ONLY: True,
-            FLIGHT_TIME.ALIGN: GLOBAL.RIGHT,
+            FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
             FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1f s. - %(distance).1f m.</font>"
         }
         self.save_shoot = {

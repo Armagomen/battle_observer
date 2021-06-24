@@ -13,14 +13,14 @@ FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
+SWF = namedtuple("SWF", ("BATTLE", "LOBBY", "ATTRIBUTE_NAME"))(
+    'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_createBattleObserverComp')
 
-class SWF:
-    def __init__(self):
-        pass
+URLS = namedtuple("URLS", ("HOST_NAME", "DONATE_UA_URL", "DONATE_EU_URL", "SUPPORT_URL", "UPDATE_GITHUB_API_URL"))(
+    "armagomen.bb-t.ru", "https://donatua.com/@armagomen", "https://www.donationalerts.com/r/armagomenvs",
+    "https://discord.gg/NuhuhTN", "https://api.github.com/repos/Armagomen/battle_observer/releases/latest")
 
-    BATTLE = 'modBattleObserver.swf'
-    LOBBY = 'modBattleObserverHangar.swf'
-    ATTRIBUTE_NAME = 'as_createBattleObserverComp'
+VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
 
 
 class GLOBAL:
@@ -30,8 +30,7 @@ class GLOBAL:
     CONFIG_ERROR = "Incorrect macros in config file."
     ONE_SECOND = 1.0
     ALIGN = "align"
-    ALIGN_LIST = ("left", "center", "right")
-    ALIGN_LIST_TEST = ("left", "center")
+    ALIGN_LIST = namedtuple("ALIGN_LIST", ("left", "center", "right"))("left", "center", "right")
     RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
     ALPHA = "alpha"
     BG_ALPHA = "bgAlpha"
@@ -49,7 +48,6 @@ class GLOBAL:
     IMG = "img"
     INNER = "inner"
     KNOCKOUT = "knockout"
-    LEFT, CENTER, RIGHT = ALIGN_LIST
     SCALE = "scale"
     SETTINGS = "settings"
     SMOOTHING = "smoothing"
@@ -65,40 +63,21 @@ class GLOBAL:
     OUTLINE = "outline"
     ICONS_DIR = "img://gui/maps/icons"
     C_INTERFACE_SPLITTER = "*"
-    REPLACE = (
-        ("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>"), ("calcedArmor", "countedArmor")
-    )
+    # REPLACE = (
+    #     ("\\t", "<tab>"), ("\\n", "<br>"), ("\\r", "<br>")
+    # )
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48",
                   "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
 
 
-class URLS:
-    def __init__(self):
-        pass
-
-    HOST_NAME = "armagomen.bb-t.ru"
-    DONATE_UA_URL = "https://donatua.com/@armagomen"
-    DONATE_EU_URL = "https://www.donationalerts.com/r/armagomenvs"
-    DONATE = {DONATE_UA_URL, DONATE_EU_URL}
-    SUPPORT_URL = "https://discord.gg/NuhuhTN"
-    UPDATE_GITHUB_API_URL = "https://api.github.com/repos/Armagomen/battle_observer/releases/latest"
-
-
-class SERVICE_CHANNEL:
-    def __init__(self):
-        pass
-
-    NAME = "service_channel_filter"
-    KEYS = "sys_keys"
-    TYPE = "type"
-    DATA = "data"
-    AUX_DATA = "auxData"
-    SYSTEM_CHANNEL_KEYS = {"CustomizationForCredits", "CustomizationForGold", "DismantlingForCredits",
-                           "DismantlingForCrystal", "DismantlingForGold", "Information", "MultipleSelling",
-                           "PowerLevel", "PurchaseForCredits", "Remove", "Repair", "Restore", "Selling",
-                           "autoMaintenance", "customizationChanged", "PurchaseForCrystal",
-                           "PurchaseForGold", "GameGreeting"}
+SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
+    "service_channel_filter", "sys_keys", "type", "data", "auxData", (
+        "CustomizationForCredits", "CustomizationForGold", "DismantlingForCredits",
+        "DismantlingForCrystal", "DismantlingForGold", "Information", "MultipleSelling",
+        "PowerLevel", "PurchaseForCredits", "Remove", "Repair", "Restore", "Selling",
+        "autoMaintenance", "customizationChanged", "PurchaseForCrystal",
+        "PurchaseForGold", "GameGreeting"))
 
 
 class MAIN:
@@ -126,94 +105,33 @@ class MAIN:
     DEBUG = "DEBUG_MODE"
 
 
-class COLORS:
-    def __init__(self):
-        pass
+COLORS = namedtuple("COLORS", (
+    "NAME", "BLACK", "BLIND", "B_SILVER", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
+    "C_GREEN", "C_ORANGE", "C_RED", "C_YELLOW", "C_PURPLE", "C_BG", "GLOBAL", "ALLY_MAME", "ENEMY_MAME",
+    "ENEMY_BLIND_MAME", "DEAD_COLOR"))(
+    "colors", "#000000", "#6F6CD3", "#858585", "#FFD700", "#5ACB00", "#FAFAFA", "#FF9900", "#F30900", "#E0E06D",
+    "#FFC900", "green", "orange", "red", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind",
+    "deadColor")
 
-    NAME = "colors"
-    BLACK = "#000000"
-    BLIND = "#6F6CD3"
-    B_SILVER = "#858585"
-    GOLD = "#FFD700"
-    GREEN = "#5ACB00"
-    NORMAL_TEXT = "#FAFAFA"
-    ORANGE = "#FF9900"
-    RED = "#F30900"
-    S_YELLOW = "#E0E06D"
-    YELLOW = "#FFC900"
-    C_GREEN = "green"
-    C_ORANGE = "orange"
-    C_RED = "red"
-    C_YELLOW = "yellow"
-    C_PURPLE = "purple"
-    C_BG = "bgColor"
-    GLOBAL = "global"
-    ALLY_MAME = "ally"
-    ENEMY_MAME = "enemy"
-    ENEMY_BLIND_MAME = "enemyColorBlind"
-    DEAD_COLOR = "deadColor"
+MAIN_GUN = namedtuple("MAIN_GUN", (
+    "NAME", "COLOR", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))(
+    "main_gun", "mainGunColor", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2)
 
+MINIMAP = namedtuple("MINIMAP", ("NAME", "DEATH_PERMANENT", "HOT_KEY", "INDENT", "SHOW_NAMES", "ZOOM"))(
+    "minimap", "permanentMinimapDeath", "zoom_hotkey", "indent", "showDeathNames", "zoom")
 
-class MAIN_GUN:
-    def __init__(self):
-        pass
+HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "WIDTH", "DIFF", "ALIVE", "STYLES"))(
+    "hp_bars", "style", "barsWidth", "differenceHP", "showAliveCount",
+    namedtuple("HpStyles", ("normal", "league"))("normal", "league"))
 
-    NAME = "main_gun"
-    COLOR = "mainGunColor"
-    TEMPLATE = "template"
-    GUN_ICON = "mainGunIcon"
-    DONE_ICON, FAILURE_ICON = ("mainGunDoneIcon", "mainGunFailureIcon")
-    MIN_GUN_DAMAGE = 1000
-    DAMAGE_RATE = 0.2
+CLOCK = namedtuple("CLOCK", (
+    "NAME", "IN_BATTLE", "IN_LOBBY", "FORMAT", "UPDATE_INTERVAL", "DEFAULT_FORMAT_BATTLE", "DEFAULT_FORMAT_HANGAR"))(
+    "clock", "battle", "hangar", "format", 1.0, "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>",
+    "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>")
 
-
-class MINIMAP:
-    def __init__(self):
-        pass
-
-    DEATH_PERMANENT = "permanentMinimapDeath"
-    HOT_KEY = "zoom_hotkey"
-    INDENT = "indent"
-    NAME = "minimap"
-    SHOW_NAMES = "showDeathNames"
-    ZOOM = "zoom"
-
-
-class HP_BARS:
-    def __init__(self):
-        pass
-
-    NAME = "hp_bars"
-    STYLE = "style"
-    NORMAL_STYLE = "normal"
-    LEAGUE_STYLE = "league"
-    WIDTH = "barsWidth"
-    DIFF = "differenceHP"
-    ALIVE = "showAliveCount"
-    STYLE_SELECT = (NORMAL_STYLE, LEAGUE_STYLE)
-
-
-class CLOCK:
-    def __init__(self):
-        pass
-
-    NAME = "clock"
-    IN_BATTLE = "battle"
-    IN_LOBBY = "hangar"
-    FORMAT = "format"
-    UPDATE_INTERVAL = 1.0
-    DEFAULT_FORMAT_BATTLE = "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>"
-    DEFAULT_FORMAT_HANGAR = "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>"
-
-
-class PREMIUM:
-    def __init__(self):
-        pass
-
-    PREMIUM_TIME = "premium_time"
-    PREMIUM_FORMAT = "premium_format"
-    DEFAULT_FORMAT_PREMIUM = "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d Days. " \
-                             "%(hours)02d:%(minutes)02d:%(seconds)02d</font>"
+PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME", "PREMIUM_FORMAT", "DEFAULT_FORMAT_PREMIUM"))(
+    "premium_time", "premium_format", "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d "
+                                      "Days. %(hours)02d:%(minutes)02d:%(seconds)02d</font>")
 
 
 class SNIPER:
@@ -323,40 +241,15 @@ class DAMAGE_LOG:
     WARNING_MESSAGE = "incorrect event parameter for the damage log"
 
 
-class ARCADE:
-    def __init__(self):
-        pass
+ARCADE = namedtuple("ARCADE", (
+    "NAME", "ANGLE", "DIST_RANGE", "MAX", "MIN", "START_ANGLE", "START_DEAD_DIST", "START_DIST", "SCROLL_MULTIPLE",
+    "SCROLL_SENSITIVITY"))(
+    "arcade_camera", -0.22, "distRange", "max", "min", "startAngle", "startDeadDist", "startDist", "scrollMultiple",
+    "scrollSensitivity")
 
-    ANGLE = -0.22
-    DIST_RANGE = "distRange"
-    MAX = "max"
-    MIN = "min"
-    NAME = "arcade_camera"
-    START_ANGLE = "startAngle"
-    START_DEAD_DIST = "startDeadDist"
-    START_DIST = "startDist"
-    SCROLL_MULTIPLE = "scrollMultiple"
-    SCROLL_SENSITIVITY = "scrollSensitivity"
-
-
-class STRATEGIC:
-    def __init__(self):
-        pass
-
-    NAME = "strategic_camera"
-    MIN = "min"
-    MAX = "max"
-    DIST_RANGE = "distRange"
-
-
-class POSTMORTEM:
-    def __init__(self):
-        pass
-
-    DURATION = "transitionDuration"
-    PARAMS = "postmortemParams"
-    CAM_MATRIX = "camMatrix"
-    MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM}
+STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE"))("strategic_camera", "min", "max", "distRange")
+POSTMORTEM = namedtuple("POSTMORTEM", ("DURATION", "PARAMS", "CAM_MATRIX", "MODES"))(
+    "transitionDuration", "postmortemParams", "camMatrix", {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM})
 
 
 class ARMOR_CALC:
@@ -383,15 +276,8 @@ class ARMOR_CALC:
     MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in MESSAGE_COLORS}
     RICOCHET_MESSAGE = "Ricochet"
     NO_DAMAGE_MESSAGE = "critical shot, no damage"
-    DEFAULT_TEMPLATE = "<p align='center'>%(ricochet)s%(noDamage)s</p>" \
-                       "<p align='center'><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>"
-
-
-class VEHICLE:
-    def __init__(self):
-        pass
-
-    CUR, MAX, TEAM, PERCENT = ("health", "maxHealth", "team", "percent")
+    DEFAULT_TEMPLATE = "<p align='center'>%(ricochet)s%(noDamage)s<br>" \
+                       "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>"
 
 
 class MARKERS:
@@ -412,63 +298,23 @@ class MARKERS:
     ICON = "<font color='{0}'>{1}</font>"
 
 
-class CAROUSEL:
-    def __init__(self):
-        pass
+CAROUSEL = namedtuple("CAROUSEL", ("NAME", "SMALL", "ROWS", "SETTINGS"))(
+    "tank_carousel", "smallDoubleCarousel", "carouselRows", {GAME.CAROUSEL_TYPE: None, GAME.DOUBLE_CAROUSEL_TYPE: None})
 
-    NAME = "tank_carousel"
-    SMALL = "smallDoubleCarousel"
-    ROWS = "carouselRows"
-    SETTINGS = {GAME.CAROUSEL_TYPE: None, GAME.DOUBLE_CAROUSEL_TYPE: None}
+USER_BACKGROUND = namedtuple("USER_BACKGROUND", ("NAME", "CENTERED_X", "CENTERED_Y", "LAYER"))(
+    "user_background", "centeredX", "centeredY", "layer")
 
+FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TEMPLATE", "M_FLIGHT_TIME", "M_DISTANCE", "ALIGN"))(
+    "flight_time", "spgOnly", "template", "flightTime", "distance", "align")
 
-class USER_BACKGROUND:
-    def __init__(self):
-        pass
+VEHICLE_TYPES = namedtuple("VEHICLE_TYPES", ("NAME", "CLASS_COLORS", "CLASS_ICON", "UNKNOWN", "TEMPLATE"))(
+    "vehicle_types", "vehicleClassColors", "vehicleClassIcon", "unknown",
+    "<font face='BattleObserver' size='20'>{}</font>")
 
-    NAME = "user_background"
-    LABELS = NAME
-    CENTERED_X = "centeredX"
-    CENTERED_Y = "centeredY"
-    LAYER = "layer"
-
-
-class FLIGHT_TIME:
-    def __init__(self):
-        pass
-
-    NAME = "flight_time"
-    SPG_ONLY = "spgOnly"
-    TEMPLATE = "template"
-    M_FLIGHT_TIME = "flightTime"
-    M_DISTANCE = "distance"
-    ALIGN = "align"
-
-
-class VEHICLE_TYPES:
-    def __init__(self):
-        pass
-
-    NAME = "vehicle_types"
-    CLASS_COLORS = "vehicleClassColors"
-    CLASS_ICON = "vehicleClassIcon"
-    UNKNOWN = "unknown"
-    TEMPLATE = "<font face='BattleObserver' size='20'>{}</font>"
-
-
-class SIXTH_SENSE:
-    def __init__(self):
-        pass
-
-    NAME = "sixth_sense"
-    SHOW_TIMER = "showTimer"
-    PLAY_TICK_SOUND = "playTickSound"
-    TIME = "lampShowTime"
-    TIMER = "timer"
-    TEMPLATE = "TimerTemplate"
-    IMAGE = "image"
-    M_TIME = "lampTime"
-    M_TIME_LEFT = "timeLeft"
+SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
+    "NAME", "SHOW_TIMER", "PLAY_TICK_SOUND", "TIME", "TIMER", "TEMPLATE", "IMAGE", "M_TIME", "M_TIME_LEFT"))(
+    "sixth_sense", "showTimer", "playTickSound", "lampShowTime", "timer", "TimerTemplate", "image", "lampTime",
+    "timeLeft")
 
 
 class DISPERSION:
@@ -498,88 +344,31 @@ class DISPERSION:
     TIMER_ALIGN = "timer_align"
 
 
-class DEBUG_PANEL:
-    def __init__(self):
-        pass
+DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
+    "NAME", "TEXT", "TEMPLATE", "GRAPHICS", "PING_BAR", "FPS_BAR", "FPS_COLOR", "PING_COLOR", "LAG_COLOR", "PING",
+    "FPS", "LAG"))("debug_panel", "debugText", "text", "debugGraphics", "pingBar", "fpsBar", "fpsColor", "pingColor",
+                   "pingLagColor", "PING", "FPS", "PingLagColor")
 
-    NAME = "debug_panel"
-    TEXT = "debugText"
-    TEMPLATE = "text"
-    GRAPHICS = "debugGraphics"
-    PING_BAR = "pingBar"
-    FPS_BAR = "fpsBar"
-    FPS_COLOR = "fpsColor"
-    PING_COLOR = "pingColor"
-    LAG_COLOR = "pingLagColor"
-    PING = "PING"
-    FPS = "FPS"
-    LAG = "PingLagColor"
+BATTLE_TIMER = namedtuple("BATTLE_TIMER", (
+    "NAME", "TEMPLATE", "COLOR", "END_COLOR", "M_TIMER", "TIME_FORMAT", "START_STRING", "END_BATTLE_SEC"))(
+    "battle_timer", "timerTemplate", "timerColor", "timerColorEndBattle", "timer", "%02d:%02d", "00:00", 120)
 
+EFFECTS = namedtuple("EFFECTS", (
+    "NAME", "NO_FLASH_BANG", "NO_SHOCK_WAVE", "NO_BINOCULARS", "IS_PLAYER_VEHICLE", "SHOW_FLASH_BANG",
+    "SHOW_SHOCK_WAVE"))(
+    "effects", "noFlashBang", "noShockWave", "noBinoculars", "isPlayerVehicle", "showFlashBang", "showShockWave")
 
-class BATTLE_TIMER:
-    def __init__(self):
-        pass
+TEAM_BASES = namedtuple("TEAM_BASES", (
+    "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE", "BASE_FONT", "FONT_SIZE", "HUNDRED"))(
+    "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
-    NAME = "battle_timer"
-    TEMPLATE = "timerTemplate"
-    COLOR = "timerColor"
-    END_COLOR = "timerColorEndBattle"
-    M_TIMER = "timer"
-    TIME_FORMAT = "%02d:%02d"
-    START_STRING = "00:00"
-    END_BATTLE_SEC = 120
-
-
-class EFFECTS:
-    def __init__(self):
-        pass
-
-    NAME = "effects"
-    NO_FLASH_BANG = "noFlashBang"
-    NO_SHOCK_WAVE = "noShockWave"
-    # NO_LIGHT_EFFECT = "noLightEffect"
-    NO_BINOCULARS = "noBinoculars"
-    # ENTITY = "entity"
-    IS_PLAYER_VEHICLE = "isPlayerVehicle"
-    SHOW_FLASH_BANG = "showFlashBang"
-    SHOW_SHOCK_WAVE = "showShockWave"
-
-
-class TEAM_BASES:
-    def __init__(self):
-        pass
-
-    NAME = "team_bases_panel"
-    TEXT_SETTINGS = "text_settings"
-    FONT = "font"
-    SIZE = "size"
-    BOLD = "bold"
-    ITALIC = "italic"
-    UNDERLINE = "underline"
-    BASE_FONT = "$TitleFont"
-    FONT_SIZE = 16
-    HUNDRED = 100.0
-
-
-class ALIASES:
-    def __init__(self):
-        pass
-
-    HP_BARS = "Observer_TeamsHP_UI"
-    DAMAGE_LOG = "Observer_DamageLog_UI"
-    MAIN_GUN = "Observer_MainGun_UI"
-    DEBUG = "Observer_DebugPanel_UI"
-    TIMER = "Observer_BattleTimer_UI"
-    SIXTH_SENSE = "Observer_SixthSense_UI"
-    TEAM_BASES = "Observer_TeamBases_UI"
-    ARMOR_CALC = "Observer_ArmorCalculator_UI"
-    FLIGHT_TIME = "Observer_FlightTime_UI"
-    DISPERSION_TIMER = "Observer_DispersionTimer_UI"
-    PANELS = "Observer_PlayersPanels_UI"
-    MINIMAP = "Observer_Minimap_UI"
-    USER_BACKGROUND = "Observer_UserBackGround_UI"
-    WG_COMP = "Observer_WGCompSettings_UI"
-    DATE_TIME = "Observer_DateTimes_UI"
+ALIASES = namedtuple("ALIASES", (
+    "HP_BARS", "DAMAGE_LOG", "MAIN_GUN", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME",
+    "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "WG_COMP", "DATE_TIME"))(
+    "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_MainGun_UI", "Observer_DebugPanel_UI",
+    "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
+    "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI",
+    "Observer_UserBackGround_UI", "Observer_WGCompSettings_UI", "Observer_DateTimes_UI")
 
 
 class PANELS:
@@ -611,46 +400,19 @@ class PANELS:
     TEAM = ("green", "red")
 
 
-class SAVE_SHOOT:
-    def __init__(self):
-        pass
+SAVE_SHOOT = namedtuple("SAVE_SHOOT", ("NAME", "MSG", "TEMPLATE", "DESTROYED_BLOCK", "VEHICLE", "TEAM", "HOT_KEY"))(
+    "save_shoot", "msg", "Shot blocked.", "block_on_destroyed", "Vehicle", "team", "shoot_hotkey")
 
-    NAME = "save_shoot"
-    MSG = "msg"
-    TEMPLATE = "Shot blocked."
-    DESTROYED_BLOCK = "block_on_destroyed"
-    VEHICLE = "Vehicle"
-    TEAM = "team"
-    HOT_KEY = "shoot_hotkey"
+ANOTHER = namedtuple("ANOTHER", (
+    "CONFIG_SELECT", "SHADOW_SETTINGS", "FRIEND_LIST", "ACCOUNT_DBID", "USERS", "DBID", "BADGES", "IS_TEAM_KILLER",
+    "NAME", "CLAN_DBID", "CLAN_ABBR"))(
+    "configSelect", "shadow_settings", "friendList", "accountDBID", "users", "databaseID", "badges", "isTeamKiller",
+    "name", "clanDBID", "clanAbbrev")
 
-
-class ANOTHER:
-    def __init__(self):
-        pass
-
-    CONFIG_SELECT = "configSelect"
-    SHADOW_SETTINGS = "shadow_settings"
-    FRIEND_LIST = "friendList"
-    ACCOUNT_DBID = "accountDBID"
-    USERS = "users"
-    DBID = "databaseID"
-    BADGES = "badges"
-    IS_TEAM_KILLER = "isTeamKiller"
-    NAME = "name"
-    CLAN_DBID = "clanDBID"
-    CLAN_ABBR = "clanAbbrev"
-
-
-class MASSAGES:
-    def __init__(self):
-        pass
-
-    START = "START LOADING"
-    FINISH = "SHUTTING DOWN"
-    LOCKED_BY_FILE_NAME = "ERROR: file {} is not valid, mod locked, please install mod from official site"
-    UPDATE_CHECKED = "The update check is completed, you have the current version."
-    NEW_VERSION = "An update {} is detected, the client will be restarted at the end of the download."
-
+MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "LOCKED_BY_FILE_NAME", "UPDATE_CHECKED", "NEW_VERSION"))(
+    "START LOADING", "SHUTTING DOWN", "ERROR: file {} is not valid, mod locked, please install mod from official site",
+    "The update check is completed, you have the current version.",
+    "An update {} is detected, the client will be restarted at the end of the download.")
 
 LOAD_LIST = (
     HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
