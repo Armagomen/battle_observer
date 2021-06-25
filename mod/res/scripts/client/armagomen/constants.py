@@ -213,10 +213,8 @@ class DAMAGE_LOG:
 
 
 ARCADE = namedtuple("ARCADE", (
-    "NAME", "ANGLE", "DIST_RANGE", "MAX", "MIN", "START_ANGLE", "START_DEAD_DIST", "START_DIST", "SCROLL_MULTIPLE",
-    "SCROLL_SENSITIVITY"))(
-    "arcade_camera", -0.22, "distRange", "max", "min", "startAngle", "startDeadDist", "startDist", "scrollMultiple",
-    "scrollSensitivity")
+    "NAME", "ANGLE", "DIST_RANGE", "MAX", "MIN", "START_ANGLE", "START_DEAD_DIST", "START_DIST", "SCROLL_SENSITIVITY"))(
+    "arcade_camera", -0.22, "distRange", "max", "min", "startAngle", "startDeadDist", "startDist", "scrollSensitivity")
 
 STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE"))("strategic_camera", "min", "max", "distRange")
 POSTMORTEM = namedtuple("POSTMORTEM", ("DURATION", "PARAMS", "CAM_MATRIX", "MODES"))(
@@ -258,7 +256,7 @@ SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
 
 _Dispersion = namedtuple("DISPERSION", (
     "NAME", "CIRCLE_EXTRA_LAP", "CIRCLE_REPLACE", "CIRCLE_SCALE_CONFIG", "CIRCLE_SERVER", "ENABLED",
-    "SCALE", "MAX_TIME", "SPG_GM_SCALE", "GUN_MARKER_MIN_SIZE", "MINUS_ONE_F", "TIMER_ENABLED", 'TIMER_ENABLED',
+    "SCALE", "MAX_TIME", "SPG_GM_SCALE", "GUN_MARKER_MIN_SIZE", "MINUS_ONE_F", "TIMER_ENABLED",
     "TIMER_POSITION_X", "TIMER_POSITION_Y", "TIMER_COLOR", "TIMER_DONE_COLOR", "TIMER_DONE_TEMPLATE",
     "TIMER_REGULAR_TEMPLATE", "TIMER_ALIGN"))
 DISPERSION = _Dispersion(

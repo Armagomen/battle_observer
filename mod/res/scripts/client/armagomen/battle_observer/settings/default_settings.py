@@ -197,13 +197,13 @@ class DefaultSettings(object):
             ARCADE.MIN: 4.0,
             ARCADE.MAX: 150.0,
             ARCADE.START_DEAD_DIST: 20.0,
-            ARCADE.SCROLL_MULTIPLE: 1.0,
+            ARCADE.SCROLL_SENSITIVITY: 2.0,
         }
         self.strategic_camera = {
             GLOBAL.ENABLED: False,
             STRATEGIC.MIN: 40.0,
             STRATEGIC.MAX: 150.0,
-            ARCADE.SCROLL_MULTIPLE: 2.0,
+            ARCADE.SCROLL_SENSITIVITY: 10.0,
         }
         self.armor_calculator = {
             GLOBAL.ENABLED: False,

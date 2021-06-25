@@ -86,29 +86,43 @@ def showTracer(base, avatar, shooterID, *args):
         return base(avatar, shooterID, *args)
 
 
-@overrideMethod(ArcadeCamera, "_readConfigs")
-def arcade_readConfigs(base, camera, data):
-    base(camera, data)
+arcade_baseCfg = {}
+arcade_userCfg = {}
+
+
+@overrideMethod(ArcadeCamera, "_readBaseCfg")
+@overrideMethod(ArcadeCamera, "_readUserCfg")
+def arcade_readConfigs(base, camera, *args, **kwargs):
+    base(camera, *args, **kwargs)
     if settings.arcade_camera[GLOBAL.ENABLED]:
-        configs = (camera._cfg, camera._userCfg, camera._baseCfg)
-        for cfg in configs:
-            if ARCADE.DIST_RANGE in cfg:
-                cfg[ARCADE.DIST_RANGE] = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
-            if ARCADE.START_DIST in cfg:
-                cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
-            if ARCADE.START_ANGLE in cfg:
-                cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
-        camera._cfg[ARCADE.SCROLL_SENSITIVITY] *= settings.arcade_camera[ARCADE.SCROLL_MULTIPLE]
+        baseName = base.__name__
+        if baseName == "_readBaseCfg":
+            cfg = camera._baseCfg
+            if not arcade_baseCfg:
+                arcade_baseCfg[ARCADE.DIST_RANGE] = cfg[ARCADE.DIST_RANGE]
+                arcade_baseCfg[ARCADE.SCROLL_SENSITIVITY] = cfg[ARCADE.SCROLL_SENSITIVITY]
+            cfg[ARCADE.DIST_RANGE] = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
+            cfg[ARCADE.SCROLL_SENSITIVITY] = settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
+        elif baseName == "_readUserCfg":
+            cfg = camera._userCfg
+            if not arcade_userCfg:
+                arcade_userCfg[ARCADE.START_DIST] = cfg[ARCADE.START_DIST]
+                arcade_userCfg[ARCADE.START_ANGLE] = cfg[ARCADE.START_ANGLE]
+            cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
+            cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
+    elif arcade_baseCfg:
+        camera._baseCfg.update(arcade_baseCfg)
+        arcade_baseCfg.clear()
+    elif arcade_userCfg:
+        camera._userCfg.update(arcade_userCfg)
+        arcade_userCfg.clear()
 
 
-@overrideMethod(StrategicCamera, "_readConfigs")
-@overrideMethod(ArtyCamera, "_readConfigs")
-def arty_readConfigs(base, camera, data):
-    base(camera, data)
+@overrideMethod(StrategicCamera, "_readBaseCfg")
+@overrideMethod(ArtyCamera, "_readBaseCfg")
+def arty_readConfigs(base, camera, *args, **kwargs):
+    base(camera, *args, **kwargs)
     if settings.strategic_camera[GLOBAL.ENABLED]:
-        configs = (camera._cfg, camera._userCfg, camera._baseCfg)
-        for cfg in configs:
-            if STRATEGIC.DIST_RANGE in cfg:
-                dist_range = (settings.strategic_camera[STRATEGIC.MIN], settings.strategic_camera[STRATEGIC.MAX])
-                cfg[STRATEGIC.DIST_RANGE] = dist_range
-        camera._cfg[ARCADE.SCROLL_SENSITIVITY] *= settings.strategic_camera[ARCADE.SCROLL_MULTIPLE]
+        cfg = camera._baseCfg
+        cfg[STRATEGIC.DIST_RANGE] = (settings.strategic_camera[STRATEGIC.MIN], settings.strategic_camera[STRATEGIC.MAX])
+        cfg[STRATEGIC.SCROLL_SENSITIVITY] = settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
