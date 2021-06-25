@@ -86,8 +86,28 @@ def showTracer(base, avatar, shooterID, *args):
         return base(avatar, shooterID, *args)
 
 
-arcade_baseCfg = {}
-arcade_userCfg = {}
+settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": False}
+
+
+def onModSettingsChanged(config, blockID):
+    if blockID == ARCADE.NAME:
+        settingsCache["needReloadArcadeConfig"] = True
+    elif blockID == STRATEGIC.NAME:
+        settingsCache["needReloadStrategicConfig"] = True
+
+
+settings.onModSettingsChanged += onModSettingsChanged
+
+
+@overrideMethod(ArcadeCamera, "_readConfigs")
+@overrideMethod(StrategicCamera, "_readConfigs")
+@overrideMethod(ArtyCamera, "_readConfigs")
+def reload_configs(base, camera, dataSection):
+    if any(settingsCache.itervalues()):
+        camera._baseCfg.clear()
+        camera._userCfg.clear()
+        camera._cfg.clear()
+    base(camera, dataSection)
 
 
 @overrideMethod(ArcadeCamera, "_readBaseCfg")
@@ -98,24 +118,13 @@ def arcade_readConfigs(base, camera, *args, **kwargs):
         baseName = base.__name__
         if baseName == "_readBaseCfg":
             cfg = camera._baseCfg
-            if not arcade_baseCfg:
-                arcade_baseCfg[ARCADE.DIST_RANGE] = cfg[ARCADE.DIST_RANGE]
-                arcade_baseCfg[ARCADE.SCROLL_SENSITIVITY] = cfg[ARCADE.SCROLL_SENSITIVITY]
             cfg[ARCADE.DIST_RANGE] = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
             cfg[ARCADE.SCROLL_SENSITIVITY] = settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
         elif baseName == "_readUserCfg":
             cfg = camera._userCfg
-            if not arcade_userCfg:
-                arcade_userCfg[ARCADE.START_DIST] = cfg[ARCADE.START_DIST]
-                arcade_userCfg[ARCADE.START_ANGLE] = cfg[ARCADE.START_ANGLE]
             cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
             cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
-    elif arcade_baseCfg:
-        camera._baseCfg.update(arcade_baseCfg)
-        arcade_baseCfg.clear()
-    elif arcade_userCfg:
-        camera._userCfg.update(arcade_userCfg)
-        arcade_userCfg.clear()
+    settingsCache["needReloadArcadeConfig"] = False
 
 
 @overrideMethod(StrategicCamera, "_readBaseCfg")
@@ -126,3 +135,4 @@ def arty_readConfigs(base, camera, *args, **kwargs):
         cfg = camera._baseCfg
         cfg[STRATEGIC.DIST_RANGE] = (settings.strategic_camera[STRATEGIC.MIN], settings.strategic_camera[STRATEGIC.MAX])
         cfg[STRATEGIC.SCROLL_SENSITIVITY] = settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
+    settingsCache["needReloadStrategicConfig"] = False

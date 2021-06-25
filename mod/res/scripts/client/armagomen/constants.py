@@ -216,7 +216,8 @@ ARCADE = namedtuple("ARCADE", (
     "NAME", "ANGLE", "DIST_RANGE", "MAX", "MIN", "START_ANGLE", "START_DEAD_DIST", "START_DIST", "SCROLL_SENSITIVITY"))(
     "arcade_camera", -0.22, "distRange", "max", "min", "startAngle", "startDeadDist", "startDist", "scrollSensitivity")
 
-STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE"))("strategic_camera", "min", "max", "distRange")
+STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
+    "strategic_camera", "min", "max", "distRange", "scrollSensitivity")
 POSTMORTEM = namedtuple("POSTMORTEM", ("DURATION", "PARAMS", "CAM_MATRIX", "MODES"))(
     "transitionDuration", "postmortemParams", "camMatrix", {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM})
 
