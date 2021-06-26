@@ -280,12 +280,14 @@ translate = {
         "min": "Minimaler Abstand vom Panzer. Standard: 2.0",
         "startDeadDist": "Abstand bei Start / bei zerstört",
         "startDeadDist_tooltip": "Der Abstand vom Panzer beim Start des Gefechtes / "
-                                 "b.z.w. der Abstand wenn der Panzer zerstört wurde. Standard ist: 15"
+                                 "b.z.w. der Abstand wenn der Panzer zerstört wurde. Standard ist: 15",
+        "scrollSensitivity": "Scroll-Empfindlichkeit, Standard 4"
     },
     "strategic_camera": {
         "header": "Zoom für Artillerieansicht (Strategic Zoom Out)",
         "max": "Maximale Enfernung der Kamera vom Panzer. Standard: 100.0",
-        "min": "Minimaler Abstand der Kamera vom Panzer. Standard: 40.0"
+        "min": "Minimaler Abstand der Kamera vom Panzer. Standard: 40.0",
+        "scrollSensitivity": "Scroll-Empfindlichkeit, Standard 10"
     },
     "flight_time": {
         "header": "Granaten Flugzeit Anzeige",

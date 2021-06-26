@@ -273,12 +273,14 @@ translate = {
         "min": "Maximum approximation of the camera to the tank: the default 2.0",
         "startDeadDist": "The start / dead distance",
         "startDeadDist_tooltip": "The distance of the camera from the Tank at the start of the battle / "
-                                 "after the destruction of the Tank: the default is 15"
+                                 "after the destruction of the Tank: the default is 15",
+        "scrollSensitivity": "Scroll sensitivity, default 4"
     },
     "strategic_camera": {
         "header": "STRATEGIC CAMERA (FAR CAMERA)",
         "max": "Maximum Camera Distance: Default is 100.0",
-        "min": "Maximum approximation of the camera: Default is 40.0"
+        "min": "Maximum approximation of the camera: Default is 40.0",
+        "scrollSensitivity": "Scroll sensitivity, default 10"
     },
     "flight_time": {
         "header": "SHELLS FLIGHT TIME",
