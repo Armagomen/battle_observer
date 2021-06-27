@@ -4,6 +4,8 @@ from armagomen.battle_observer.core import settings, keysParser
 from armagomen.constants import GLOBAL, SAVE_SHOOT, MAIN
 from armagomen.utils.common import overrideMethod, isReplay
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
+from frameworks.wulf import WindowLayer
+from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from messenger.MessengerEntry import g_instance
 
 __all__ = ["save_shoot_lite"]
@@ -22,11 +24,13 @@ class SaveShootLite(object):
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
     def shoot(self, base, avatar, isRepeat=False):
-        if self.enabled and not self.unlockShoot and self.is_targetAllyOrDeath(avatar):
-            if not isRepeat and self.msg:
-                g_instance.gui.addClientMessage(self.msg)
-            return
-        return base(avatar, isRepeat=isRepeat)
+        if not self.enabled or self.unlockShoot or not self.is_targetAllyOrDeath(avatar):
+            return base(avatar, isRepeat=isRepeat)
+        if not isRepeat and self.msg:
+            g_instance.gui.addClientMessage(self.msg)
+            page = avatar.appLoader.getApp().containerManager.getContainer(WindowLayer.VIEW).getView()
+            if page is not None:
+                page.components[BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES].as_showGoldMessageS(None, self.msg)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == SAVE_SHOOT.NAME:
