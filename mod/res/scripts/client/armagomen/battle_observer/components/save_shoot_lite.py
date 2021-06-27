@@ -30,7 +30,7 @@ class SaveShootLite(object):
             g_instance.gui.addClientMessage(self.msg)
             page = avatar.appLoader.getApp().containerManager.getContainer(WindowLayer.VIEW).getView()
             if page is not None:
-                page.components[BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES].as_showGoldMessageS(None, self.msg)
+                page.components[BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES].as_showYellowMessageS(None, self.msg)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == SAVE_SHOOT.NAME:
