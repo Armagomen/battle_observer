@@ -54,17 +54,17 @@ class ArmorCalculator(ArmorCalcMeta):
         if ctrlMode in POSTMORTEM.MODES:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
 
-    def onArmorChanged(self, shotResult):
-        if self._cache == shotResult.armor:
+    def onArmorChanged(self, armor, piercingPower, caliber, ricochet, noDamage):
+        if self._cache == armor:
             return
-        self._cache = shotResult.armor
-        if shotResult.armor is not None:
-            self.calcMacro[ARMOR_CALC.RICOCHET] = self.otherMessages[ARMOR_CALC.RICOCHET][shotResult.ricochet]
-            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.otherMessages[ARMOR_CALC.NO_DAMAGE][shotResult.noDamage]
-            self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = shotResult.armor
-            self.calcMacro[ARMOR_CALC.PIERCING_POWER] = shotResult.piercingPower
-            self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = shotResult.piercingPower - shotResult.armor
-            self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = shotResult.caliber
+        self._cache = armor
+        if armor is not None:
+            self.calcMacro[ARMOR_CALC.RICOCHET] = self.otherMessages[ARMOR_CALC.RICOCHET][ricochet]
+            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.otherMessages[ARMOR_CALC.NO_DAMAGE][noDamage]
+            self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = armor
+            self.calcMacro[ARMOR_CALC.PIERCING_POWER] = piercingPower
+            self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = piercingPower - armor
+            self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = caliber
             self.as_armorCalcS(self.template % self.calcMacro)
         else:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)

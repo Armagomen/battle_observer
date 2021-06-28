@@ -1,20 +1,16 @@
-from collections import namedtuple
-
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, _MIN_PIERCING_DIST, _LERP_RANGE_PIERCING_DIST
 from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle
 from aih_constants import SHOT_RESULT
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import ARMOR_CALC, VEHICLE, GLOBAL, ALIASES
+from armagomen.constants import VEHICLE, GLOBAL, ALIASES
 from armagomen.utils.common import getPlayer, overrideMethod, events
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES as SHELLS
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 
-PiercingPower = namedtuple("PiercingPower", ("min", "max", "current"))
-ShotResult = namedtuple("ShotResult", ("result", "armor", "piercingPower", "caliber", "ricochet", "noDamage"))
-UndefinedShotResult = ShotResult(SHOT_RESULT.UNDEFINED, None, None, None, False, False)
+UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
 GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
 
 
@@ -30,24 +26,24 @@ class ShotResultResolver(object):
 
     def getShotResult(self, collision, hitPoint, direction, piercingMultiplier):
         if collision is None:
-            return UndefinedShotResult
+            return UNDEFINED_RESULT
         entity = collision.entity
         if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive() or self.isAlly(entity):
-            return UndefinedShotResult
+            return UNDEFINED_RESULT
         cDetails = self.resolver._getAllCollisionDetails(hitPoint, direction, entity)
         if cDetails is None:
-            return UndefinedShotResult
+            return UNDEFINED_RESULT
         vehicleDescriptor = self._player.getVehicleDescriptor()
         shot = vehicleDescriptor.shot
         isHE = shot.shell.kind == SHELLS.HIGH_EXPLOSIVE and shot.shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
         fullPiercingPower = self.computePiercingPower(hitPoint, shot, piercingMultiplier)
         armor, piercingPower, ricochet, noDamage = self.computeArmor(cDetails, shot, fullPiercingPower, isHE)
         shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower)
-        return ShotResult(shotResult, armor, piercingPower.current, shot.shell.caliber, ricochet, noDamage)
+        return shotResult, armor, piercingPower, shot.shell.caliber, ricochet, noDamage
 
     def computeArmor(self, cDetails, shot, fullPiercingPower, isHE):
         computed_armor = GLOBAL.ZERO
-        pPower = fullPiercingPower
+        piercingPower = fullPiercingPower
         ricochet = False
         noDamage = True
         isFirst = True
@@ -61,21 +57,20 @@ class ShotResultResolver(object):
                 ricochet = self.resolver._shouldRicochet(shot.shell.kind, hitAngleCos, matInfo, shot.shell.caliber)
                 isFirst = False
             if isHE and not matInfo.vehicleDamageFactor and shot.shell.type.shieldPenetration:
-                pPower -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-                if pPower < GLOBAL.F_ZERO:
-                    pPower = GLOBAL.F_ZERO
+                piercingPower -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                if piercingPower < GLOBAL.F_ZERO:
+                    piercingPower = GLOBAL.F_ZERO
             computed_armor += armor
             if matInfo.vehicleDamageFactor:
                 noDamage = False
                 break
-        piercingPower = PiercingPower(pPower * GREAT_PIERCED, pPower * NOT_PIERCED, pPower)
         return computed_armor, piercingPower, ricochet, noDamage
 
     @staticmethod
     def shotResult(armor, piercingPower):
-        if armor < piercingPower.min:
+        if armor < piercingPower * GREAT_PIERCED:
             return SHOT_RESULT.GREAT_PIERCED
-        elif armor > piercingPower.max:
+        elif armor > piercingPower * NOT_PIERCED:
             return SHOT_RESULT.NOT_PIERCED
         else:
             return SHOT_RESULT.LITTLE_PIERCED
@@ -88,7 +83,8 @@ class ShotResultResolver(object):
         :param multiplier: x
         :return Piercing Power: at distance
         """
-        distance = hitPoint.flatDistTo(self._player.getOwnVehiclePosition())
+        # distance = hitPoint.flatDistTo(self._player.getOwnVehiclePosition())
+        distance = hitPoint.distTo(self._player.position)
         p100, p500 = (pp * multiplier for pp in shot.piercingPower)
         if p100 == p500 or distance <= _MIN_PIERCING_DIST:
             return p100
@@ -104,13 +100,14 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         self.__resolver = ShotResultResolver()
 
     def __updateColor(self, markerType, hitPoint, collide, _dir):
-        shotResult = self.__resolver.getShotResult(collide, hitPoint, _dir, self.__piercingMultiplier)
-        if shotResult.result in self.__colors:
-            color = self.__colors[shotResult.result]
-            if self.__cache[markerType] != shotResult.result and self._parentObj.setGunMarkerColor(markerType, color):
-                self.__cache[markerType] = shotResult.result
+        shotResult, armor, piercingPower, caliber, ricochet, noDamage = \
+            self.__resolver.getShotResult(collide, hitPoint, _dir, self.__piercingMultiplier)
+        if shotResult in self.__colors:
+            color = self.__colors[shotResult]
+            if self.__cache[markerType] != shotResult and self._parentObj.setGunMarkerColor(markerType, color):
+                self.__cache[markerType] = shotResult
                 events.onMarkerColorChanged(color)
-            events.onArmorChanged(shotResult)
+            events.onArmorChanged(armor, piercingPower, caliber, ricochet, noDamage)
 
     def __setEnabled(self, viewID):
         self.__isEnabled = self.__mapping[viewID] or viewID == CROSSHAIR_VIEW_ID.STRATEGIC

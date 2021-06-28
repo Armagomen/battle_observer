@@ -23,14 +23,21 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
 class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 
+    def __init__(self, *args, **kwargs):
+        super(ArenaVehiclesPlugin, self).__init__(*args, **kwargs)
+        self.__showDestroyEntries = settings.minimap[MINIMAP.DEATH_PERMANENT]
+        self.__isDestroyImmediately = settings.minimap[MINIMAP.DEATH_PERMANENT]
+
     def _showVehicle(self, vehicleID, location):
         entry = self._entries.get(vehicleID, None)
-        if entry is not None and entry.isAlive():
-            matrix = matrix_factory.makeVehicleMPByLocation(vehicleID, location, self._arenaVisitor.getArenaPositions())
-            if matrix is not None:
-                self.__setLocationAndMatrix(entry, location, matrix)
-                self._setInAoI(entry, True)
-                self.__setActive(entry, True)
+        if entry is None or not entry.isAlive():
+            return
+        matrix = matrix_factory.makeVehicleMPByLocation(vehicleID, location, self._arenaVisitor.getArenaPositions())
+        if matrix is not None:
+            self.__setLocationAndMatrix(entry, location, matrix)
+            self._setInAoI(entry, True)
+            self.__setActive(entry, True)
+            self.__showVehicleHp(vehicleID, entry.getID())
 
     def _hideVehicle(self, entry):
         if entry.isAlive() and entry.isActive():
