@@ -11,36 +11,35 @@ from armagomen.battle_observer.core import settings
 from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC
 from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay, callback
 
-
-def dynamicZoom():
-    return settings.zoom[GLOBAL.ENABLED] and not isReplay() and settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
+settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": False, SNIPER.DYN_ZOOM: False}
 
 
 @overrideMethod(SniperCamera, "_readConfigs")
 def sniper_create(base, camera, data):
     base(camera, data)
-    if settings.zoom[GLOBAL.ENABLED] and not isReplay():
-        if settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
-            if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > GLOBAL.TWO:
-                steps = settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
-                steps.sort()
-                exposure_range = xrange(len(steps) + GLOBAL.ONE, GLOBAL.ONE, -GLOBAL.ONE)
-                configs = (camera._cfg, camera._userCfg, camera._baseCfg)
-                for cfg in configs:
-                    cfg[SNIPER.INCREASED_ZOOM] = True
-                    cfg[SNIPER.ZOOMS] = steps
-                camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = \
-                    [round(SNIPER.EXPOSURE_FACTOR * step, GLOBAL.ONE) for step in exposure_range]
+    if not settings.zoom[GLOBAL.ENABLED] or isReplay() or not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
+        return
+    if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > GLOBAL.TWO:
+        steps = settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
+        steps.sort()
+        exposure_range = xrange(len(steps) + GLOBAL.ONE, GLOBAL.ONE, -GLOBAL.ONE)
+        configs = (camera._cfg, camera._userCfg, camera._baseCfg)
+        for cfg in configs:
+            cfg[SNIPER.INCREASED_ZOOM] = True
+            cfg[SNIPER.ZOOMS] = steps
+        camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = [
+            round(SNIPER.EXPOSURE_FACTOR * step, GLOBAL.ONE) for step in exposure_range
+        ]
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
 def setSystemValue(base, zoomSettings, value):
-    return base(zoomSettings, GLOBAL.ZERO if dynamicZoom() else value)
+    return base(zoomSettings, GLOBAL.ZERO if settingsCache[SNIPER.DYN_ZOOM] else value)
 
 
 @overrideMethod(SniperCamera, "enable")
 def enable(base, camera, targetPos, saveZoom):
-    if dynamicZoom():
+    if settingsCache[SNIPER.DYN_ZOOM]:
         player = getPlayer()
         saveZoom = True
         if settings.zoom[SNIPER.GUN_ZOOM]:
@@ -86,14 +85,14 @@ def showTracer(base, avatar, shooterID, *args):
         return base(avatar, shooterID, *args)
 
 
-settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": False}
-
-
 def onModSettingsChanged(config, blockID):
     if blockID == ARCADE.NAME:
         settingsCache["needReloadArcadeConfig"] = True
     elif blockID == STRATEGIC.NAME:
         settingsCache["needReloadStrategicConfig"] = True
+    elif blockID == SNIPER.NAME:
+        settingsCache[SNIPER.DYN_ZOOM] = config[GLOBAL.ENABLED] and not isReplay() and \
+                                         config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
 
 
 settings.onModSettingsChanged += onModSettingsChanged
