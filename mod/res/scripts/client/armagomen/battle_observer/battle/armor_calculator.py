@@ -1,9 +1,11 @@
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.constants import ARMOR_CALC, GLOBAL, POSTMORTEM, COLORS
 from armagomen.utils.common import events
 from gui.battle_control import avatar_getter
+
+OtherMessages = namedtuple("OtherMessages", ("ricochet", "noDamage"))
 
 
 class ArmorCalculator(ArmorCalcMeta):
@@ -36,10 +38,10 @@ class ArmorCalculator(ArmorCalcMeta):
     def _populate(self):
         super(ArmorCalculator, self)._populate()
         self.messages = self.settings[ARMOR_CALC.MESSAGES]
-        self.otherMessages = {
-            ARMOR_CALC.RICOCHET: (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.RICOCHET]),
-            ARMOR_CALC.NO_DAMAGE: (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.NO_DAMAGE])
-        }
+        self.otherMessages = OtherMessages(
+            (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.RICOCHET]),
+            (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.NO_DAMAGE])
+        )
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = self.colors[ARMOR_CALC.NAME]
         self.template = self.settings[ARMOR_CALC.TEMPLATE]
@@ -59,8 +61,8 @@ class ArmorCalculator(ArmorCalcMeta):
             return
         self._cache = armor
         if armor is not None:
-            self.calcMacro[ARMOR_CALC.RICOCHET] = self.otherMessages[ARMOR_CALC.RICOCHET][ricochet]
-            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.otherMessages[ARMOR_CALC.NO_DAMAGE][noDamage]
+            self.calcMacro[ARMOR_CALC.RICOCHET] = self.otherMessages.ricochet[ricochet]
+            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.otherMessages.noDamage[noDamage]
             self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = armor
             self.calcMacro[ARMOR_CALC.PIERCING_POWER] = piercingPower
             self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = piercingPower - armor

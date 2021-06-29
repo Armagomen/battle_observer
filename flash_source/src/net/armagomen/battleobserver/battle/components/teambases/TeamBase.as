@@ -5,6 +5,7 @@
 	import flash.text.*;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
+	import Math;
 	
 	/**
 	 * ...
@@ -35,9 +36,9 @@
 		
 		public function updateBase(newScale:Number, invadersCnt:String, time:String, text:String):void
 		{
-			
 			if (this.animate)
 			{
+				newScale = Math.min(1.0, newScale + 0.01)
 				this.animation.continueTo(newScale, newScale > this.progressBar.scaleX ? 1.0 : 0.1);
 			}
 			else

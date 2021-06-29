@@ -143,7 +143,7 @@ translate = {
         "markers*showMarkers_hotkey": "Key to enable/disable Markers."
     },
     "armor_calculator": {
-        "header": "CALCULATOR GIVEN ARMOR",
+        "header": "Penetration indicator - CALCULATOR GIVEN ARMOR",
         "calcPosition*x": "Position the main text box of the calculator Horizontally",
         "calcPosition*y": "Position the main text box of the calculator Vertically",
         "template": "Template Main text field",
