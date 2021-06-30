@@ -2,10 +2,11 @@ from Avatar import PlayerAvatar
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import settings, keysParser
 from armagomen.constants import GLOBAL, SAVE_SHOOT, MAIN
-from armagomen.utils.common import overrideMethod, isReplay
+from armagomen.utils.common import overrideMethod, isReplay, getPlayer
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
+from gui.shared.personality import ServicesLocator
 from messenger.MessengerEntry import g_instance
 
 __all__ = ["save_shoot_lite"]
@@ -21,16 +22,17 @@ class SaveShootLite(object):
         self.unlockShoot = False
         self.destroyedBlock = False
         self.msg = None
+        self.vehicleErrorComponent = None
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
     def shoot(self, base, avatar, isRepeat=False):
         if not self.enabled or self.unlockShoot or not self.is_targetAllyOrDeath(avatar):
             return base(avatar, isRepeat=isRepeat)
-        if not isRepeat and self.msg:
-            g_instance.gui.addClientMessage(self.msg)
-            page = avatar.appLoader.getApp().containerManager.getContainer(WindowLayer.VIEW).getView()
-            if page is not None:
-                page.components[BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES].as_showYellowMessageS(None, self.msg)
+        if isRepeat or not self.msg:
+            return
+        g_instance.gui.addClientMessage(self.msg)
+        if self.vehicleErrorComponent is not None:
+            self.vehicleErrorComponent.as_showYellowMessageS(None, self.msg)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == SAVE_SHOOT.NAME:
@@ -49,11 +51,19 @@ class SaveShootLite(object):
         if self.enabled:
             keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey())
             keysParser.onKeyPressed += self.keyEvent
+            app = ServicesLocator.appLoader.getApp()
+            if app is None:
+                return
+            battlePage = app.containerManager.getContainer(WindowLayer.VIEW).getView()
+            if battlePage is None:
+                return
+            self.vehicleErrorComponent = battlePage.components.get(BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES)
 
     def onExitBattlePage(self):
         self.unlockShoot = False
         if self.enabled:
             keysParser.onKeyPressed -= self.keyEvent
+            self.vehicleErrorComponent = None
 
     def is_targetAllyOrDeath(self, avatar):
         if avatar.target is not None and avatar.target.__class__.__name__ == SAVE_SHOOT.VEHICLE:
