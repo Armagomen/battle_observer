@@ -51,9 +51,9 @@ translate = {
         "hideChatInRandom": "Отключить чат в случайных боях",
         "hideChatInRandom_tooltip": "Полностью отключает чат в случайных боях.<br>Убирает форму чата и все "
                                     "что с ней связано.",
-        "anonymousEnableShow": "Показывать анонимов.",
+        "anonymousEnableShow": "Отмечать берюзовым цветом игроков с анонимайзером.",
         "useKeyPairs": "Использовать парные Alt, Ctrl, Shift",
-        "anonymousNameChange": "Изменить имена анонимов",
+        "anonymousNameChange": "Изменить имена игнроков с анонимайзером.",
         "hide_dog_tags": "Отключить отображение жетонов.",
         "ignore_commanders_voice": "Игнорировать озвучку командиров.",
         "ignore_commanders_voice_tooltip": "После включения будет принудительно использоваться стандартная озвучка"

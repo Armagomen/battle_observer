@@ -2,7 +2,7 @@ from Avatar import PlayerAvatar
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import settings, keysParser
 from armagomen.constants import GLOBAL, SAVE_SHOOT, MAIN
-from armagomen.utils.common import overrideMethod, isReplay, getPlayer
+from armagomen.utils.common import overrideMethod, isReplay
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES

@@ -17,7 +17,8 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
                  ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
                  ARENA_GUI_TYPE.SORTIE_2,
                  ARENA_GUI_TYPE.FORT_BATTLE_2,
-                 ARENA_GUI_TYPE.TUTORIAL}
+                 ARENA_GUI_TYPE.TUTORIAL,
+                 ARENA_GUI_TYPE.MAPBOX}
 
 
 class ViewSettings(object):
@@ -25,7 +26,8 @@ class ViewSettings(object):
 
     @property
     def isRandomBattle(self):
-        return self.sessionProvider.arenaVisitor.gui.isRandomBattle()
+        return (self.sessionProvider.arenaVisitor.gui.isRandomBattle() or
+                self.sessionProvider.arenaVisitor.gui.isMapbox())
 
     @property
     def isAllowedBattle(self):

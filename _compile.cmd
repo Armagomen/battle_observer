@@ -1,5 +1,5 @@
 @Echo off
-set ModVer=1.33.6
+set ModVer=1.33.7
 
 set WotVer=1.13.0.0
 set ModsDir=C:\Games\World_of_Tanks_RU\mods\
