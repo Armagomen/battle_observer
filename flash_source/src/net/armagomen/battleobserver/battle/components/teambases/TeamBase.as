@@ -38,7 +38,7 @@
 		{
 			if (this.animate)
 			{
-				newScale = Math.min(1.0, newScale + 0.01)
+				newScale = Math.min(1.0, newScale + 0.01 * int(invadersCnt))
 				this.animation.continueTo(newScale, newScale > this.progressBar.scaleX ? 1.0 : 0.1);
 			}
 			else

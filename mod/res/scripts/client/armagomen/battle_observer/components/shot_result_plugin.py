@@ -1,4 +1,4 @@
-from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, _MIN_PIERCING_DIST, _LERP_RANGE_PIERCING_DIST
+from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
 from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle
 from aih_constants import SHOT_RESULT
@@ -12,6 +12,9 @@ from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCT
 
 UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
 GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
+_MIN_PIERCING_DIST = 100.0
+_MAX_PIERCING_DIST = 500.0
+_LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
 
 
 class ShotResultResolver(object):
@@ -35,15 +38,21 @@ class ShotResultResolver(object):
             return UNDEFINED_RESULT
         vehicleDescriptor = self._player.getVehicleDescriptor()
         shot = vehicleDescriptor.shot
-        isHE = shot.shell.kind == SHELLS.HIGH_EXPLOSIVE and shot.shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
-        fullPiercingPower = self.computePiercingPower(hitPoint, shot, piercingMultiplier)
+        isHE = shot.shell.kind == SHELLS.HIGH_EXPLOSIVE
+        if isHE:
+            fullPiercingPower = shot.piercingPower[GLOBAL.FIRST] * piercingMultiplier
+        else:
+            fullPiercingPower = self.computePiercingPower(hitPoint, shot, piercingMultiplier)
         armor, piercingPower, ricochet, noDamage = self.computeArmor(cDetails, shot, fullPiercingPower, isHE)
         shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower)
         return shotResult, armor, piercingPower, shot.shell.caliber, ricochet, noDamage
 
+    @staticmethod
+    def isModernMechanics(shot):
+        return shot.shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and shot.shell.type.shieldPenetration
+
     def computeArmor(self, cDetails, shot, fullPiercingPower, isHE):
-        computed_armor = GLOBAL.ZERO
-        piercingPower = fullPiercingPower
+        computedArmor = GLOBAL.ZERO
         ricochet = False
         noDamage = True
         isFirst = True
@@ -51,20 +60,20 @@ class ShotResultResolver(object):
             matInfo = detail.matInfo
             if matInfo is None:
                 continue
-            hitAngleCos = detail.hitAngleCos if matInfo.useHitAngle else 1.0
+            hitAngleCos = detail.hitAngleCos if matInfo.useHitAngle else GLOBAL.F_ONE
             armor = self.resolver._computePenetrationArmor(shot.shell.kind, hitAngleCos, matInfo, shot.shell.caliber)
             if isFirst:
                 ricochet = self.resolver._shouldRicochet(shot.shell.kind, hitAngleCos, matInfo, shot.shell.caliber)
                 isFirst = False
-            if isHE and not matInfo.vehicleDamageFactor and shot.shell.type.shieldPenetration:
-                piercingPower -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-                if piercingPower < GLOBAL.F_ZERO:
-                    piercingPower = GLOBAL.F_ZERO
-            computed_armor += armor
+            if isHE and not matInfo.vehicleDamageFactor and self.isModernMechanics(shot):
+                fullPiercingPower -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                if fullPiercingPower < GLOBAL.F_ZERO:
+                    fullPiercingPower = GLOBAL.F_ZERO
+            computedArmor += armor
             if matInfo.vehicleDamageFactor:
                 noDamage = False
                 break
-        return computed_armor, piercingPower, ricochet, noDamage
+        return computedArmor, fullPiercingPower, ricochet, noDamage
 
     @staticmethod
     def shotResult(armor, piercingPower):
@@ -83,13 +92,12 @@ class ShotResultResolver(object):
         :param multiplier: x
         :return Piercing Power: at distance
         """
-        # distance = hitPoint.flatDistTo(self._player.getOwnVehiclePosition())
         distance = hitPoint.distTo(self._player.position)
         p100, p500 = (pp * multiplier for pp in shot.piercingPower)
-        if p100 == p500 or distance <= _MIN_PIERCING_DIST:
+        if distance <= _MIN_PIERCING_DIST:
             return p100
-        elif distance < shot.maxDistance:
-            return max(p500, p100 + (p500 - p100) * (distance - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST)
+        elif distance < _MAX_PIERCING_DIST:
+            return p100 + (p500 - p100) * (distance - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
         return p500
 
 
