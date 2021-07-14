@@ -337,7 +337,6 @@ translate = {
                             "the contrast between the glow and the background. "
                             "Valid values are from 0 to 255. The default is 2."
     },
-
     "colors": {
         "header": "Globale Farbeinstellungen.",
         "armor_calculator*green": "Reduzierte Rüstung: 100% Durchdringung",
@@ -356,7 +355,6 @@ translate = {
         "global*bgAlpha_tooltip": "0 - vollständig transparent. <br> 1 - nicht transparent.",
         "global*deadColor": "Zerstört",
     },
-
     "service_channel_filter": {
         "header": "Filter für Meldungen im Mitteilungscenter - (Blendet die Nachrichten für die "
                   "ausgewählten Kategorien aus.)",

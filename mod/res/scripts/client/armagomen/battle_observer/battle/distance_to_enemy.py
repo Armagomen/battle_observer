@@ -36,12 +36,13 @@ class Distance(DistanceMeta, IBattleFieldListener):
             entity = getEntity(vehID)
             if entity is not None and entity.isAlive():
                 self.positionsCache[vehID] = entity.position
-            if vehID in self.positionsCache:
-                dist = int((self.positionsCache[vehID] - self._player.position).length)
-                if not self.macrosDict[DISTANCE.DIST] or dist < self.macrosDict[DISTANCE.DIST]:
-                    if dist != self.macrosDict[DISTANCE.DIST]:
-                        self.macrosDict[DISTANCE.DIST] = dist
-                        self.macrosDict[DISTANCE.TANK_NAME] = self._arenaDP.getVehicleInfo(vehID).vehicleType.shortName
+            if vehID not in self.positionsCache:
+                continue
+            dist = int((self.positionsCache[vehID] - self._player.position).length)
+            if self.macrosDict[DISTANCE.DIST] and dist >= self.macrosDict[DISTANCE.DIST]:
+                continue
+            self.macrosDict[DISTANCE.DIST] = dist
+            self.macrosDict[DISTANCE.TANK_NAME] = self._arenaDP.getVehicleInfo(vehID).vehicleType.shortName
 
         if self.macrosDict[DISTANCE.DIST]:
             self.as_setDistanceS(self.template % self.macrosDict)

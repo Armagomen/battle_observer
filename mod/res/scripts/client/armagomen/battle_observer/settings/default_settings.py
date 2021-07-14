@@ -458,15 +458,13 @@ class DefaultSettings(object):
             FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
             FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1f s. - %(distance).1f m.</font>"
         }
-
         self.distance_to_enemy = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: GLOBAL.ZERO,
-            GLOBAL.Y: -150,
+            GLOBAL.Y: -170,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
-            DISTANCE.TEMPLATE: "<font color='#f5ff8f'>Minimum %(distance)s meters to %(name)s.</font>"
+            DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance)s meters to %(name)s.</font>"
         }
-
         self.save_shoot = {
             GLOBAL.ENABLED: False,
             SAVE_SHOOT.DESTROYED_BLOCK: True,
