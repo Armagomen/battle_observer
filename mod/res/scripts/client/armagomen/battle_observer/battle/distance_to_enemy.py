@@ -15,7 +15,7 @@ class Distance(DistanceMeta, IBattleFieldListener):
         self.template = None
         self.enemies = set()
         self.shared = self.sessionProvider.shared
-        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO)
+        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
         self.timeEvent = CyclicTimerEvent(0.2, self.updateDistance)
         self.positionsCache = {}
 
