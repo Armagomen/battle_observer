@@ -18,6 +18,7 @@ class Distance(DistanceMeta, IBattleFieldListener):
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
         self.timeEvent = CyclicTimerEvent(0.2, self.updateDistance)
         self.positionsCache = {}
+        self.isPostmortem = False
 
     def _populate(self):
         super(Distance, self)._populate()
@@ -25,11 +26,14 @@ class Distance(DistanceMeta, IBattleFieldListener):
         self.as_startUpdateS(self.settings)
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
-        self.enemies = aliveEnemies.difference(deadEnemies)
-        for vehicleID in deadEnemies:
-            if vehicleID in self.positionsCache:
-                del self.positionsCache[vehicleID]
-        self.updateDistance()
+        if self.isPostmortem:
+            self.enemies.clear()
+        else:
+            self.enemies = aliveEnemies.difference(deadEnemies)
+            for vehicleID in deadEnemies:
+                if vehicleID in self.positionsCache:
+                    del self.positionsCache[vehicleID]
+            self.updateDistance()
 
     def updateDistance(self):
         for vehID in self.enemies:
@@ -67,7 +71,8 @@ class Distance(DistanceMeta, IBattleFieldListener):
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.as_onControlModeChangedS(ctrlMode)
-        if ctrlMode in POSTMORTEM.MODES:
+        self.isPostmortem = ctrlMode in POSTMORTEM.MODES
+        if self.isPostmortem:
             self.timeEvent.stop()
             self.positionsCache.clear()
             self.as_setDistanceS(GLOBAL.EMPTY_LINE)
