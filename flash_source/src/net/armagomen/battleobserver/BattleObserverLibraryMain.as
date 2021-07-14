@@ -13,6 +13,7 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
 	import net.armagomen.battleobserver.battle.components.FlightTimeUI;
+	import net.armagomen.battleobserver.battle.components.DistanceUI;
 	import net.armagomen.battleobserver.battle.components.ObserverDateTimesUI;
 	import net.armagomen.battleobserver.battle.components.UserBackGroundUI;
 	import net.armagomen.battleobserver.battle.components.batlletimer.ObserverBattleTimerUI;
@@ -79,6 +80,9 @@ package net.armagomen.battleobserver
 					break;
 				case "Observer_DispersionTimer_UI":
 					this.registerComponent(this.addChild(new DispersionTimerUI), ui_name);
+					break;
+				case "Observer_Distance_UI":
+					this.registerComponent(this.addChild(new DistanceUI), ui_name);
 					break;
 				case "Observer_PlayersPanels_UI":
 					this.registerComponent(this.addChild(new PlayersPanelsUI), ui_name);

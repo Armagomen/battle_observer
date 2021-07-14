@@ -67,7 +67,8 @@ class ViewSettings(object):
                 ALIASES.USER_BACKGROUND: self.cfg.user_background[GLOBAL.ENABLED],
                 ALIASES.WG_COMP: (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
                                   self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle),
-                ALIASES.DATE_TIME: self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
+                ALIASES.DATE_TIME: self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED],
+                ALIASES.DISTANCE: self.cfg.distance_to_enemy[GLOBAL.ENABLED]
             })
         return self.__cache
 
@@ -101,4 +102,6 @@ class ViewSettings(object):
                 new_aliases.append(ALIASES.PANELS)
             if self.getSetting(ALIASES.MAIN_GUN):
                 new_aliases.append(ALIASES.MAIN_GUN)
+            if self.getSetting(ALIASES.DISTANCE):
+                new_aliases.append(ALIASES.DISTANCE)
         return tuple(new_aliases)

@@ -409,5 +409,14 @@ translate = {
         "showTimer": "Show timer.",
         "lampShowTime": "Timer sec.",
         "playTickSound": "Play tick sound."
+    },
+    "distance_to_enemy": {
+        "header": "Entfernung zum nächsten Feind.",
+        "x": "Position des Textes waagerecht",
+        "x_tooltip": "Position von der Mitte des Bildschirmes gemessen. Textausrichtung ---|Zentriert|---",
+        "y": "Position des Textes senkrechtrecht",
+        "y_tooltip": "Position von der Mitte des Bildschirmes gemessen.",
+        "template": "Шаблон строки. Макросы: %(distance)s, %(name)s",
+        "align": "Text align."
     }
 }

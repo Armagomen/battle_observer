@@ -5,7 +5,7 @@ from Event import SafeEvent
 from armagomen.constants import (ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL,
                                  DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS,
                                  MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
-                                 TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM)
+                                 TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM, DISTANCE)
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -458,6 +458,15 @@ class DefaultSettings(object):
             FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
             FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1f s. - %(distance).1f m.</font>"
         }
+
+        self.distance_to_enemy = {
+            GLOBAL.ENABLED: False,
+            GLOBAL.X: GLOBAL.ZERO,
+            GLOBAL.Y: -150,
+            GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
+            DISTANCE.TEMPLATE: "<font color='#f5ff8f'>Minimum %(distance)s meters to %(name)s.</font>"
+        }
+
         self.save_shoot = {
             GLOBAL.ENABLED: False,
             SAVE_SHOOT.DESTROYED_BLOCK: True,
