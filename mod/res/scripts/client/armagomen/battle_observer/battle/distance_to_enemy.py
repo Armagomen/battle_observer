@@ -40,7 +40,7 @@ class Distance(DistanceMeta, IBattleFieldListener):
             entity = getEntity(vehID)
             if entity is not None and entity.isAlive():
                 self.positionsCache[vehID] = entity.position
-            if vehID not in self.positionsCache:
+            elif vehID not in self.positionsCache:
                 continue
             dist = int((self.positionsCache[vehID] - self._player.position).length)
             if self.macrosDict[DISTANCE.DIST] and dist >= self.macrosDict[DISTANCE.DIST]:

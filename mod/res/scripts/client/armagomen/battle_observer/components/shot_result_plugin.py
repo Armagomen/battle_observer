@@ -55,7 +55,9 @@ class ShotResultResolver(object):
         computedArmor = GLOBAL.ZERO
         ricochet = False
         noDamage = True
+        noPenetration = False
         isFirst = True
+        isHC = shot.shell.kind == SHELLS.HOLLOW_CHARGE
         for detail in cDetails:
             matInfo = detail.matInfo
             if matInfo is None:
@@ -65,13 +67,17 @@ class ShotResultResolver(object):
             if isFirst:
                 ricochet = self.resolver._shouldRicochet(shot.shell.kind, hitAngleCos, matInfo, shot.shell.caliber)
                 isFirst = False
-            if isHE and not matInfo.vehicleDamageFactor and self.isModernMechanics(shot):
-                fullPiercingPower -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-                if fullPiercingPower < GLOBAL.F_ZERO:
-                    fullPiercingPower = GLOBAL.F_ZERO
+            if not matInfo.vehicleDamageFactor:
+                if isHE and self.isModernMechanics(shot):
+                    fullPiercingPower -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                    if fullPiercingPower < GLOBAL.F_ZERO:
+                        fullPiercingPower = GLOBAL.F_ZERO
+                elif isHC:
+                    noPenetration = True
             computedArmor += armor
             if matInfo.vehicleDamageFactor:
-                noDamage = False
+                if not noPenetration:
+                    noDamage = False
                 break
         return computedArmor, fullPiercingPower, ricochet, noDamage
 

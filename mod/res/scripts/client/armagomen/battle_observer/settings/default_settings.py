@@ -461,7 +461,7 @@ class DefaultSettings(object):
         self.distance_to_enemy = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: GLOBAL.ZERO,
-            GLOBAL.Y: -170,
+            GLOBAL.Y: -190,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance)s meters to %(name)s.</font>"
         }
