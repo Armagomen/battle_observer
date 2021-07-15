@@ -60,9 +60,10 @@ class Distance(DistanceMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
-        ctrl = self.sessionProvider.shared.feedback
-        ctrl.onMinimapVehicleAdded += self.__onVehicleEnterWorld
-        ctrl.onMinimapVehicleRemoved += self.__onVehicleLeaveWorld
+        feedback = self.sessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onMinimapVehicleAdded += self.__onVehicleEnterWorld
+            feedback.onMinimapVehicleRemoved += self.__onVehicleLeaveWorld
         self.timeEvent.start()
 
     def onExitBattlePage(self):
@@ -70,9 +71,10 @@ class Distance(DistanceMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
-        ctrl = self.sessionProvider.shared.feedback
-        ctrl.onMinimapVehicleAdded -= self.__onVehicleEnterWorld
-        ctrl.onMinimapVehicleRemoved -= self.__onVehicleLeaveWorld
+        feedback = self.sessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onMinimapVehicleAdded -= self.__onVehicleEnterWorld
+            feedback.onMinimapVehicleRemoved -= self.__onVehicleLeaveWorld
         super(Distance, self).onExitBattlePage()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
