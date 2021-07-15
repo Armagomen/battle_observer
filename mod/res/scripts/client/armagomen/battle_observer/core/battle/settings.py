@@ -102,6 +102,4 @@ class ViewSettings(object):
                 new_aliases.append(ALIASES.PANELS)
             if self.getSetting(ALIASES.MAIN_GUN):
                 new_aliases.append(ALIASES.MAIN_GUN)
-            if self.getSetting(ALIASES.DISTANCE):
-                new_aliases.append(ALIASES.DISTANCE)
         return tuple(new_aliases)

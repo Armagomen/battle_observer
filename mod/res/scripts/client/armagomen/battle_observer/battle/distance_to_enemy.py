@@ -2,49 +2,48 @@ from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
 from armagomen.constants import GLOBAL, DISTANCE, POSTMORTEM
-from armagomen.utils.common import getEntity
 from armagomen.utils.timers import CyclicTimerEvent
 from gui.battle_control import avatar_getter
-from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
 
-class Distance(DistanceMeta, IBattleFieldListener):
+class Distance(DistanceMeta):
 
     def __init__(self):
         super(Distance, self).__init__()
         self.template = None
-        self.enemies = set()
         self.shared = self.sessionProvider.shared
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
         self.timeEvent = CyclicTimerEvent(0.2, self.updateDistance)
         self.positionsCache = {}
         self.isPostmortem = False
+        self.vehicles = {}
 
     def _populate(self):
         super(Distance, self)._populate()
         self.template = self.settings[DISTANCE.TEMPLATE]
         self.as_startUpdateS(self.settings)
 
-    def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
+    def __onVehicleEnterWorld(self, vProxy, vInfo, _):
         if self.isPostmortem:
-            self.enemies.clear()
-        else:
-            self.enemies = aliveEnemies.difference(deadEnemies)
-            for vehicleID in deadEnemies:
-                if vehicleID in self.positionsCache:
-                    del self.positionsCache[vehicleID]
-            self.updateDistance()
+            return
+        if self._player.team != vInfo.team and vProxy.isAlive():
+            self.vehicles[vProxy.id] = vProxy
+            self.positionsCache[vProxy.id] = vProxy.position
+
+    def __onVehicleLeaveWorld(self, vId):
+        if self.isPostmortem:
+            return
+        if vId in self.vehicles and not self.vehicles[vId].isAlive():
+            del self.vehicles[vId]
+            del self.positionsCache[vId]
 
     def updateDistance(self):
         distance = GLOBAL.ZERO
         vehicleID = GLOBAL.ZERO
-        for vehID in self.enemies:
-            entity = getEntity(vehID)
-            if entity is not None and entity.isAlive():
+        for vehID, entity in self.vehicles.iteritems():
+            if not entity.isDestroyed and entity.position != self.positionsCache[vehID]:
                 self.positionsCache[vehID] = entity.position
-            elif vehID not in self.positionsCache:
-                continue
-            dist = int((self.positionsCache[vehID] - self._player.position).length)
+            dist = int(self._player.vehicle.position.distTo(self.positionsCache[vehID]))
             if distance and dist >= distance:
                 continue
             distance = dist
@@ -61,6 +60,9 @@ class Distance(DistanceMeta, IBattleFieldListener):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
+        ctrl = self.sessionProvider.shared.feedback
+        ctrl.onMinimapVehicleAdded += self.__onVehicleEnterWorld
+        ctrl.onMinimapVehicleRemoved += self.__onVehicleLeaveWorld
         self.timeEvent.start()
 
     def onExitBattlePage(self):
@@ -68,6 +70,9 @@ class Distance(DistanceMeta, IBattleFieldListener):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
+        ctrl = self.sessionProvider.shared.feedback
+        ctrl.onMinimapVehicleAdded -= self.__onVehicleEnterWorld
+        ctrl.onMinimapVehicleRemoved -= self.__onVehicleLeaveWorld
         super(Distance, self).onExitBattlePage()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
@@ -76,4 +81,5 @@ class Distance(DistanceMeta, IBattleFieldListener):
         if self.isPostmortem:
             self.timeEvent.stop()
             self.positionsCache.clear()
+            self.vehicles.clear()
             self.as_setDistanceS(GLOBAL.EMPTY_LINE)
