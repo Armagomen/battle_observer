@@ -36,6 +36,8 @@ class Distance(DistanceMeta, IBattleFieldListener):
             self.updateDistance()
 
     def updateDistance(self):
+        distance = GLOBAL.ZERO
+        vehicleID = GLOBAL.ZERO
         for vehID in self.enemies:
             entity = getEntity(vehID)
             if entity is not None and entity.isAlive():
@@ -43,15 +45,14 @@ class Distance(DistanceMeta, IBattleFieldListener):
             elif vehID not in self.positionsCache:
                 continue
             dist = int((self.positionsCache[vehID] - self._player.position).length)
-            if self.macrosDict[DISTANCE.DIST] and dist >= self.macrosDict[DISTANCE.DIST]:
+            if distance and dist >= distance:
                 continue
-            self.macrosDict[DISTANCE.DIST] = dist
-            self.macrosDict[DISTANCE.TANK_NAME] = self._arenaDP.getVehicleInfo(vehID).vehicleType.shortName
-
-        if self.macrosDict[DISTANCE.DIST]:
+            distance = dist
+            vehicleID = vehID
+        if distance:
+            self.macrosDict[DISTANCE.TANK_NAME] = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
+            self.macrosDict[DISTANCE.DIST] = distance
             self.as_setDistanceS(self.template % self.macrosDict)
-            self.macrosDict[DISTANCE.DIST] = GLOBAL.ZERO
-            self.macrosDict[DISTANCE.TANK_NAME] = GLOBAL.EMPTY_LINE
         else:
             self.as_setDistanceS(GLOBAL.EMPTY_LINE)
 
