@@ -39,8 +39,7 @@ class ShotResultResolver(object):
         vehicleDescriptor = self._player.getVehicleDescriptor()
         shot = vehicleDescriptor.shot
         isHE = shot.shell.kind == SHELLS.HIGH_EXPLOSIVE
-        isHC = shot.shell.kind == SHELLS.HOLLOW_CHARGE
-        if isHE or isHC:
+        if isHE or shot.shell.kind == SHELLS.HOLLOW_CHARGE:
             fullPiercingPower = shot.piercingPower[GLOBAL.FIRST] * piercingMultiplier
         else:
             fullPiercingPower = self.computePiercingPower(hitPoint, shot, piercingMultiplier)
@@ -52,7 +51,7 @@ class ShotResultResolver(object):
     def isModernMechanics(shell):
         return shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and shell.type.shieldPenetration
 
-    def computeArmor(self, cDetails, shot, fullPiercingPower, isHE, isHC):
+    def computeArmor(self, cDetails, shot, fullPiercingPower, isHE):
         computedArmor = GLOBAL.ZERO
         power = fullPiercingPower
         ricochet = False
@@ -61,23 +60,23 @@ class ShotResultResolver(object):
         jetStartDist = GLOBAL.F_ZERO
         shell = shot.shell
         for detail in cDetails:
-            if isJet:
-                jetDist = detail.dist - jetStartDist
-                if jetDist > GLOBAL.F_ZERO:
-                    fullPiercingPower = power - jetDist * self.resolver._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
             matInfo = detail.matInfo
             if matInfo is None:
                 continue
             hitAngleCos = detail.hitAngleCos if matInfo.useHitAngle else GLOBAL.F_ONE
             computedArmor += self.resolver._computePenetrationArmor(shell.kind, hitAngleCos, matInfo, shell.caliber)
-            if not isJet:
+            if isJet:
+                jetDist = detail.dist - jetStartDist
+                if jetDist > GLOBAL.F_ZERO:
+                    fullPiercingPower = power - jetDist * self.resolver._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
+            else:
                 ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
             if matInfo.vehicleDamageFactor:
                 noDamage = False
                 break
             elif isHE and self.isModernMechanics(shell):
                 fullPiercingPower -= computedArmor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-            elif isHC:
+            elif self.resolver._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist > GLOBAL.F_ZERO:
                 isJet = True
                 jetStartDist += detail.dist + matInfo.armor * 0.001
         return computedArmor, max(fullPiercingPower, GLOBAL.F_ZERO), ricochet, noDamage
