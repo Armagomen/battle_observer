@@ -20,14 +20,14 @@ class Distance(DistanceMeta):
         super(Distance, self)._populate()
         self.as_startUpdateS(self.settings)
 
-    def __onVehicleEnterWorld(self, vProxy, vInfo, _):
+    def onMinimapVehicleAdded(self, vProxy, vInfo, _):
         if self.isPostmortem:
             return
         if self._player.team != vInfo.team and vProxy.isAlive():
             self.vehicles[vProxy.id] = vProxy
             self.positionsCache[vProxy.id] = vProxy.position
 
-    def __onVehicleLeaveWorld(self, vId):
+    def onMinimapVehicleRemoved(self, vId):
         if self.isPostmortem:
             return
         if vId in self.vehicles and (not self.vehicles[vId].isAlive() or self.settings[DISTANCE.SPOTTED]):
@@ -61,8 +61,8 @@ class Distance(DistanceMeta):
             handler.onCameraChanged += self.onCameraChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
-            feedback.onMinimapVehicleAdded += self.__onVehicleEnterWorld
-            feedback.onMinimapVehicleRemoved += self.__onVehicleLeaveWorld
+            feedback.onMinimapVehicleAdded += self.onMinimapVehicleAdded
+            feedback.onMinimapVehicleRemoved += self.onMinimapVehicleRemoved
         self.timeEvent.start()
 
     def onExitBattlePage(self):
@@ -72,8 +72,8 @@ class Distance(DistanceMeta):
             handler.onCameraChanged -= self.onCameraChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
-            feedback.onMinimapVehicleAdded -= self.__onVehicleEnterWorld
-            feedback.onMinimapVehicleRemoved -= self.__onVehicleLeaveWorld
+            feedback.onMinimapVehicleAdded -= self.onMinimapVehicleAdded
+            feedback.onMinimapVehicleRemoved -= self.onMinimapVehicleRemoved
         super(Distance, self).onExitBattlePage()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
