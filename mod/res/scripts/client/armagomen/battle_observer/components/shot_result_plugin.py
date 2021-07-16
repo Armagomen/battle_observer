@@ -71,7 +71,10 @@ class ShotResultResolver(object):
             computedArmor += self.resolver._computePenetrationArmor(shell.kind, hitAngleCos, matInfo, shell.caliber)
             if not isJet:
                 ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
-            if not matInfo.vehicleDamageFactor:
+            if matInfo.vehicleDamageFactor:
+                noDamage = False
+                break
+            else:
                 if isHE and self.isModernMechanics(shell):
                     fullPiercingPower -= computedArmor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
                     if fullPiercingPower < GLOBAL.F_ZERO:
@@ -79,9 +82,6 @@ class ShotResultResolver(object):
                 elif isHC:
                     isJet = True
                     jetStartDist = detail.dist + matInfo.armor * 0.001
-            if matInfo.vehicleDamageFactor:
-                noDamage = False
-                break
 
         return computedArmor, fullPiercingPower, ricochet, noDamage
 
