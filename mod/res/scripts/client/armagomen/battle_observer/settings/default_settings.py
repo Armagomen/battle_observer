@@ -463,6 +463,7 @@ class DefaultSettings(object):
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: -190,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
+            DISTANCE.SPOTTED: False,
             DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance)s meters to %(name)s.</font>"
         }
         self.save_shoot = {

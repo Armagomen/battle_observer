@@ -44,7 +44,7 @@ def enable(base, camera, targetPos, saveZoom):
         saveZoom = True
         if settings.zoom[SNIPER.GUN_ZOOM]:
             targetPos = player.gunRotator.markerInfo[GLOBAL.FIRST]
-        dist = targetPos.distTo(player.position)
+        dist = player.vehicle.position.distTo(targetPos)
         if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
             dist_for_step = math.ceil(SNIPER.MAX_DIST / len(camera._cfg[SNIPER.ZOOMS]))
             index = int(math.ceil(dist / dist_for_step) - GLOBAL.ONE)

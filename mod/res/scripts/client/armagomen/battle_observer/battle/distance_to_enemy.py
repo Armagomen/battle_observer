@@ -10,8 +10,6 @@ class Distance(DistanceMeta):
 
     def __init__(self):
         super(Distance, self).__init__()
-        self.template = None
-        self.shared = self.sessionProvider.shared
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
         self.timeEvent = CyclicTimerEvent(0.2, self.updateDistance)
         self.positionsCache = {}
@@ -20,7 +18,6 @@ class Distance(DistanceMeta):
 
     def _populate(self):
         super(Distance, self)._populate()
-        self.template = self.settings[DISTANCE.TEMPLATE]
         self.as_startUpdateS(self.settings)
 
     def __onVehicleEnterWorld(self, vProxy, vInfo, _):
@@ -33,7 +30,7 @@ class Distance(DistanceMeta):
     def __onVehicleLeaveWorld(self, vId):
         if self.isPostmortem:
             return
-        if vId in self.vehicles and not self.vehicles[vId].isAlive():
+        if vId in self.vehicles and (not self.vehicles[vId].isAlive() or self.settings[DISTANCE.SPOTTED]):
             del self.vehicles[vId]
             del self.positionsCache[vId]
 
@@ -49,9 +46,12 @@ class Distance(DistanceMeta):
             distance = dist
             vehicleID = vehID
         if distance:
-            self.macrosDict[DISTANCE.TANK_NAME] = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
+            vehicleName = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
+            if self.macrosDict[DISTANCE.TANK_NAME] == vehicleName and self.macrosDict[DISTANCE.DIST] == distance:
+                return
+            self.macrosDict[DISTANCE.TANK_NAME] = vehicleName
             self.macrosDict[DISTANCE.DIST] = distance
-            self.as_setDistanceS(self.template % self.macrosDict)
+            self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
         else:
             self.as_setDistanceS(GLOBAL.EMPTY_LINE)
 

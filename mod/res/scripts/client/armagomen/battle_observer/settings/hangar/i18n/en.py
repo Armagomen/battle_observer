@@ -405,7 +405,8 @@ translate = {
         "x_tooltip": "Position from the center of the screen. Align text ---|center|---",
         "y": "Vertical text position",
         "y_tooltip": "Position from the center of the screen.",
-        "template": "Шаблон строки. Макросы: %(distance)s, %(name)s",
-        "align": "Text align."
+        "template": "String pattern. Macros: %(distance)s, %(name)s",
+        "align": "Text align.",
+        "spottedOnly": "Information only on detected enemies."
     }
 }

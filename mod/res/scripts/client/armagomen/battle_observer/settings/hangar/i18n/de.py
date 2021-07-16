@@ -414,7 +414,8 @@ translate = {
         "x_tooltip": "Position von der Mitte des Bildschirmes gemessen. Textausrichtung ---|Zentriert|---",
         "y": "Position des Textes senkrechtrecht",
         "y_tooltip": "Position von der Mitte des Bildschirmes gemessen.",
-        "template": "Шаблон строки. Макросы: %(distance)s, %(name)s",
-        "align": "Text align."
+        "template": "String-Muster. Makros: %(distance)s, %(name)s",
+        "align": "Text align.",
+        "spottedOnly": "Informationen nur über erkannte Feinde."
     }
 }

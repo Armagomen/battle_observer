@@ -289,8 +289,8 @@ ALIASES = _Aliases(
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI",
     "Observer_UserBackGround_UI", "Observer_WGCompSettings_UI", "Observer_DateTimes_UI", "Observer_Distance_UI")
 
-DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
-    "distance_to_enemy", "template", "align", "distance", "name")
+DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME", "SPOTTED"))(
+    "distance_to_enemy", "template", "align", "distance", "name", "spottedOnly")
 
 
 class PANELS:

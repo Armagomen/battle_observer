@@ -98,7 +98,7 @@ class ShotResultResolver(object):
         :param multiplier: x
         :return Piercing Power: at distance
         """
-        distance = hitPoint.distTo(self._player.position)
+        distance = hitPoint.distTo(self._player.vehicle.position)
         p100, p500 = (pp * multiplier for pp in shot.piercingPower)
         if distance <= _MIN_PIERCING_DIST:
             return p100
