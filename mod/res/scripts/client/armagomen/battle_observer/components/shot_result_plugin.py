@@ -48,37 +48,39 @@ class ShotResultResolver(object):
         return shotResult, armor, piercingPower, shot.shell.caliber, ricochet, noDamage
 
     @staticmethod
-    def isModernMechanics(shot):
-        return shot.shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and shot.shell.type.shieldPenetration
+    def isModernMechanics(shell):
+        return shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and shell.type.shieldPenetration
 
     def computeArmor(self, cDetails, shot, fullPiercingPower, isHE):
         computedArmor = GLOBAL.ZERO
         ricochet = False
         noDamage = True
-        noPenetration = False
-        isFirst = True
-        isHC = shot.shell.kind == SHELLS.HOLLOW_CHARGE
+        isJet = False
+        jetStartDist = None
+        shell = shot.shell
         for detail in cDetails:
+            if isJet:
+                jetDist = detail.dist - jetStartDist
+                if jetDist > GLOBAL.F_ZERO:
+                    fullPiercingPower -= jetDist * self.resolver._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
             matInfo = detail.matInfo
             if matInfo is None:
                 continue
             hitAngleCos = detail.hitAngleCos if matInfo.useHitAngle else GLOBAL.F_ONE
-            armor = self.resolver._computePenetrationArmor(shot.shell.kind, hitAngleCos, matInfo, shot.shell.caliber)
-            if isFirst:
-                ricochet = self.resolver._shouldRicochet(shot.shell.kind, hitAngleCos, matInfo, shot.shell.caliber)
-                isFirst = False
-            if not matInfo.vehicleDamageFactor:
-                if isHE and self.isModernMechanics(shot):
-                    fullPiercingPower -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-                    if fullPiercingPower < GLOBAL.F_ZERO:
-                        fullPiercingPower = GLOBAL.F_ZERO
-                elif isHC:
-                    noPenetration = True
+            armor = self.resolver._computePenetrationArmor(shell.kind, hitAngleCos, matInfo, shell.caliber)
+            if not isJet:
+                ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
+            if not matInfo.vehicleDamageFactor and isHE and self.isModernMechanics(shell):
+                fullPiercingPower -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                if fullPiercingPower < GLOBAL.F_ZERO:
+                    fullPiercingPower = GLOBAL.F_ZERO
             computedArmor += armor
             if matInfo.vehicleDamageFactor:
-                if not noPenetration:
-                    noDamage = False
+                noDamage = False
                 break
+            if self.resolver._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist > GLOBAL.F_ZERO:
+                isJet = True
+                jetStartDist = detail.dist + matInfo.armor * 0.001
         return computedArmor, fullPiercingPower, ricochet, noDamage
 
     @staticmethod
