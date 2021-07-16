@@ -27,10 +27,12 @@ MESSAGES = {
     False: ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
             "If you like mod, don't let the author starve to death.",
             "Have you already supported the development?",
+            "Mod exists only from your support, no support. no desire to do anything.",
+            "Only modest thing we've got is your support."
             "How about sharing with those in need?",
             "Everything is possible together. Even collect some founds for the server.",
             "We measure the milliseconds that separate the winner from the competitor.",
-            "Motherland calls to support!",
+            "Motherland urges to support!",
             "We've got stuff that don't exist yet",
             "Some stories live no longer than the paper they are written on. Our story begins on Armagomen's" +
             " birthday and doesn't end up there. August 11 and 17 are the birthdays of Battle Observer and Armagomen." +
