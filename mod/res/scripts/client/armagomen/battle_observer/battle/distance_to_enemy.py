@@ -45,15 +45,14 @@ class Distance(DistanceMeta):
                 continue
             distance = dist
             vehicleID = vehID
-        if distance:
-            vehicleName = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
-            if self.macrosDict[DISTANCE.TANK_NAME] == vehicleName and self.macrosDict[DISTANCE.DIST] == distance:
-                return
-            self.macrosDict[DISTANCE.TANK_NAME] = vehicleName
-            self.macrosDict[DISTANCE.DIST] = distance
-            self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
-        else:
-            self.as_setDistanceS(GLOBAL.EMPTY_LINE)
+        if not distance:
+            return self.as_setDistanceS(GLOBAL.EMPTY_LINE)
+        vehicleName = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
+        if self.macrosDict[DISTANCE.TANK_NAME] == vehicleName and self.macrosDict[DISTANCE.DIST] == distance:
+            return
+        self.macrosDict[DISTANCE.TANK_NAME] = vehicleName
+        self.macrosDict[DISTANCE.DIST] = distance
+        self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
 
     def onEnterBattlePage(self):
         super(Distance, self).onEnterBattlePage()

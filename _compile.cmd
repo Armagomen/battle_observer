@@ -13,7 +13,7 @@ set ModFile=%ModsDir%%WotVer%\armagomen.battleObserver_%ModVer%.wotmod
 set API=%ModsDir%%WotVer%\polarfox.vxSettingsApi*
 set API2=%ModsDir%%WotVer%\poliroid.modslistapi*
 set ZipArh=..\BattleObserver_%ModVer%_WOT_%WotVer%.zip
-set ToExclude=-x!*.db -x!*.log -x!res_mods -x!logs -x!other
+set ToExclude=-x!*.db -x!*.log -x!res_mods -x!logs -x!other -x!protanki
 set AutoUpdate=..\AutoUpdate.zip
 
 DEL %ModsDir%%WotVer%\armagomen.battleObserver*

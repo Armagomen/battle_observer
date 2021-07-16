@@ -43,7 +43,7 @@ class ShotResultResolver(object):
             fullPiercingPower = shot.piercingPower[GLOBAL.FIRST] * piercingMultiplier
         else:
             fullPiercingPower = self.computePiercingPower(hitPoint, shot, piercingMultiplier)
-        armor, piercingPower, ricochet, noDamage = self.computeArmor(cDetails, shot, fullPiercingPower, isHE, isHC)
+        armor, piercingPower, ricochet, noDamage = self.computeArmor(cDetails, shot, fullPiercingPower, isHE)
         shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower)
         return shotResult, armor, piercingPower, shot.shell.caliber, ricochet, noDamage
 
