@@ -30,7 +30,7 @@ class Distance(DistanceMeta):
     def onMinimapVehicleRemoved(self, vId):
         if self.isPostmortem:
             return
-        if vId in self.vehicles and (not self.vehicles[vId].isAlive() or self.settings[DISTANCE.SPOTTED]):
+        if vId in self.vehicles and not self.settings[DISTANCE.SPOTTED]:
             del self.vehicles[vId]
             del self.positionsCache[vId]
 
@@ -63,6 +63,9 @@ class Distance(DistanceMeta):
         if feedback is not None:
             feedback.onMinimapVehicleAdded += self.onMinimapVehicleAdded
             feedback.onMinimapVehicleRemoved += self.onMinimapVehicleRemoved
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled += self.onVehicleKilled
         self.timeEvent.start()
 
     def onExitBattlePage(self):
@@ -74,7 +77,15 @@ class Distance(DistanceMeta):
         if feedback is not None:
             feedback.onMinimapVehicleAdded -= self.onMinimapVehicleAdded
             feedback.onMinimapVehicleRemoved -= self.onMinimapVehicleRemoved
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled -= self.onVehicleKilled
         super(Distance, self).onExitBattlePage()
+
+    def onVehicleKilled(self, vehicleID, *args, **kwargs):
+        if vehicleID in self.vehicles:
+            del self.vehicles[vehicleID]
+            del self.positionsCache[vehicleID]
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.as_onControlModeChangedS(ctrlMode)
