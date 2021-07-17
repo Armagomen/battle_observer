@@ -20,6 +20,34 @@ class Distance(DistanceMeta):
         super(Distance, self)._populate()
         self.as_startUpdateS(self.settings)
 
+    def onEnterBattlePage(self):
+        super(Distance, self).onEnterBattlePage()
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            handler.onCameraChanged += self.onCameraChanged
+        feedback = self.sessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onMinimapVehicleAdded += self.onMinimapVehicleAdded
+            feedback.onMinimapVehicleRemoved += self.onMinimapVehicleRemoved
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled += self.onVehicleKilled
+        self.timeEvent.start()
+
+    def onExitBattlePage(self):
+        self.timeEvent.stop()
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            handler.onCameraChanged -= self.onCameraChanged
+        feedback = self.sessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onMinimapVehicleAdded -= self.onMinimapVehicleAdded
+            feedback.onMinimapVehicleRemoved -= self.onMinimapVehicleRemoved
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled -= self.onVehicleKilled
+        super(Distance, self).onExitBattlePage()
+
     def onMinimapVehicleAdded(self, vProxy, vInfo, _):
         if self.isPostmortem:
             return
@@ -51,34 +79,6 @@ class Distance(DistanceMeta):
         self.macrosDict[DISTANCE.TANK_NAME] = vehicleName
         self.macrosDict[DISTANCE.DIST] = distance
         self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
-
-    def onEnterBattlePage(self):
-        super(Distance, self).onEnterBattlePage()
-        handler = avatar_getter.getInputHandler()
-        if handler is not None:
-            handler.onCameraChanged += self.onCameraChanged
-        feedback = self.sessionProvider.shared.feedback
-        if feedback is not None:
-            feedback.onMinimapVehicleAdded += self.onMinimapVehicleAdded
-            feedback.onMinimapVehicleRemoved += self.onMinimapVehicleRemoved
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled += self.onVehicleKilled
-        self.timeEvent.start()
-
-    def onExitBattlePage(self):
-        self.timeEvent.stop()
-        handler = avatar_getter.getInputHandler()
-        if handler is not None:
-            handler.onCameraChanged -= self.onCameraChanged
-        feedback = self.sessionProvider.shared.feedback
-        if feedback is not None:
-            feedback.onMinimapVehicleAdded -= self.onMinimapVehicleAdded
-            feedback.onMinimapVehicleRemoved -= self.onMinimapVehicleRemoved
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled -= self.onVehicleKilled
-        super(Distance, self).onExitBattlePage()
 
     def onVehicleKilled(self, vehicleID, *args, **kwargs):
         if vehicleID in self.vehicles:
