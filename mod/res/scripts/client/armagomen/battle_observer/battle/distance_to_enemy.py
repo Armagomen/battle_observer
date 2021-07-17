@@ -28,9 +28,7 @@ class Distance(DistanceMeta):
             self.positionsCache[vProxy.id] = vProxy.position
 
     def onMinimapVehicleRemoved(self, vId):
-        if self.isPostmortem:
-            return
-        if vId in self.vehicles and not self.settings[DISTANCE.SPOTTED]:
+        if vId in self.vehicles and self.settings[DISTANCE.SPOTTED]:
             del self.vehicles[vId]
             del self.positionsCache[vId]
 
