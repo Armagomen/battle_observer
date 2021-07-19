@@ -61,16 +61,16 @@ class Distance(DistanceMeta):
             del self.positionsCache[vId]
 
     def updateDistance(self):
-        distance = GLOBAL.F_ZERO
-        vehicleID = GLOBAL.ZERO
+        distance = None
+        vehicleID = None
         for vehID, entity in self.vehicles.iteritems():
             if not entity.isDestroyed and entity.position != self.positionsCache[vehID]:
                 self.positionsCache[vehID] = entity.position
             dist = self._player.vehicle.position.distTo(self.positionsCache[vehID])
-            if not distance or dist < distance:
+            if distance is None or dist < distance:
                 distance = dist
                 vehicleID = vehID
-        if not distance:
+        if distance is None or vehicleID is None:
             return self.as_setDistanceS(GLOBAL.EMPTY_LINE)
         vehicleName = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
         if self.macrosDict[DISTANCE.TANK_NAME] == vehicleName and self.macrosDict[DISTANCE.DIST] == distance:

@@ -30,11 +30,10 @@ class BattleCore(object):
     def hasDogTag(self, base, *args, **kwargs):
         return False if self.settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
 
-    def _isObservingDogTagFix(self, *args):
+    @staticmethod
+    def _isObservingDogTagFix(*args):
         player = getPlayer()
-        if player is None:
-            return True
-        elif player.vehicle is None:
+        if player is None or player.vehicle is None:
             return True
         else:
             return not player.vehicle.isPlayerVehicle

@@ -11,7 +11,6 @@ from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 
 UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
-GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
 _MIN_PIERCING_DIST = 100.0
 _MAX_PIERCING_DIST = 500.0
 _LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
@@ -44,7 +43,7 @@ class ShotResultResolver(object):
         else:
             fullPiercingPower = self.computePiercingPower(hitPoint, shot, piercingMultiplier)
         armor, piercingPower, ricochet, noDamage = self.computeArmor(cDetails, shot, fullPiercingPower, isHE)
-        shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower)
+        shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower, shot)
         return shotResult, armor, piercingPower, shot.shell.caliber, ricochet, noDamage
 
     @staticmethod
@@ -82,10 +81,11 @@ class ShotResultResolver(object):
         return computedArmor, max(fullPiercingPower, GLOBAL.F_ZERO), ricochet, noDamage
 
     @staticmethod
-    def shotResult(armor, piercingPower):
-        if armor < piercingPower * GREAT_PIERCED:
+    def shotResult(armor, piercingPower, shot):
+        piercingPowerOffset = piercingPower * shot.shell.piercingPowerRandomization
+        if armor < piercingPower - piercingPowerOffset:
             return SHOT_RESULT.GREAT_PIERCED
-        elif armor > piercingPower * NOT_PIERCED:
+        elif armor > piercingPower + piercingPowerOffset:
             return SHOT_RESULT.NOT_PIERCED
         else:
             return SHOT_RESULT.LITTLE_PIERCED
