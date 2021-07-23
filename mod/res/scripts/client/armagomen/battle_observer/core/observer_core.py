@@ -13,13 +13,12 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 
 class ObserverCore(object):
-    __slots__ = ("modsDir", "gameVersion", "workingDir", "isFileValid", "mod_version",
-                 "configLoader", "moduleLoader", "componentsLoader", "limiterEnabled")
+    __slots__ = ("modsDir", "gameVersion", "isFileValid", "mod_version", "configLoader", "moduleLoader",
+                 "componentsLoader", "limiterEnabled")
 
     def __init__(self, configLoader):
         self.configLoader = configLoader
         self.modsDir, self.gameVersion = getCurrentModPath()
-        self.workingDir = os.path.join(self.modsDir, self.gameVersion)
         self.isFileValid = self.isModValidFileName()
         self.mod_version = 'v{0} - {1}'.format(__version__, self.gameVersion)
         self.componentsLoader = ComponentsLoader()
@@ -33,7 +32,7 @@ class ObserverCore(object):
             logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, self.mod_version))
 
     def isModValidFileName(self):
-        return FILE_NAME.format(__version__) in os.listdir(self.workingDir)
+        return FILE_NAME.format(__version__) in os.listdir(os.path.join(self.modsDir, self.gameVersion))
 
     def start(self):
         update = UpdateMain()
