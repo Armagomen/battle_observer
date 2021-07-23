@@ -456,15 +456,15 @@ class DefaultSettings(object):
             GLOBAL.Y: GLOBAL.ZERO,
             FLIGHT_TIME.SPG_ONLY: True,
             FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
-            FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1f s. - %(distance).1f m.</font>"
+            FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1fs. - %(distance).1f m.</font>"
         }
         self.distance_to_enemy = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: -190,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
-            DISTANCE.SPOTTED: False,
-            DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance)s meters to %(name)s.</font>"
+            DISTANCE.SPOTTED: True,
+            DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance).1fm. to %(name)s.</font>"
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,

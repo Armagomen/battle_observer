@@ -1,7 +1,7 @@
+from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
-from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.utils.common import logWarning, openWebBrowser
+from armagomen.utils.common import logWarning, openWebBrowser, createFileInDir
 from debug_utils import LOG_CURRENT_EXCEPTION
 
 settingsVersion = 33
@@ -226,8 +226,8 @@ class ConfigInterface(CreateElement):
         if event == self.apiEvents.WINDOW_CLOSED:
             if self.configSelect:
                 import os
-                self.configLoader.createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
-                                                  {'loadConfig': self.configLoader.configsList[self.selected]})
+                createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
+                                {'loadConfig': self.configLoader.configsList[self.selected]})
                 self.configLoader.readConfig(self.configLoader.configsList[self.selected])
 
     def updateMod(self, blockID):

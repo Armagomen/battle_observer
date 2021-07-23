@@ -11,7 +11,6 @@ from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 
 UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
-GREAT_PIERCED, NOT_PIERCED = 0.75, 1.25
 _MIN_PIERCING_DIST = 100.0
 _MAX_PIERCING_DIST = 500.0
 _LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
@@ -36,29 +35,28 @@ class ShotResultResolver(object):
         cDetails = self.resolver._getAllCollisionDetails(hitPoint, direction, entity)
         if cDetails is None:
             return UNDEFINED_RESULT
-        vehicleDescriptor = self._player.getVehicleDescriptor()
-        shot = vehicleDescriptor.shot
-        isHE = shot.shell.kind == SHELLS.HIGH_EXPLOSIVE
-        if isHE or shot.shell.kind == SHELLS.HOLLOW_CHARGE:
+        shot = self._player.getVehicleDescriptor().shot
+        shell = shot.shell
+        isHE = shell.kind == SHELLS.HIGH_EXPLOSIVE
+        if isHE or shell.kind == SHELLS.HOLLOW_CHARGE:
             fullPiercingPower = shot.piercingPower[GLOBAL.FIRST] * piercingMultiplier
         else:
             fullPiercingPower = self.computePiercingPower(hitPoint, shot, piercingMultiplier)
-        armor, piercingPower, ricochet, noDamage = self.computeArmor(cDetails, shot, fullPiercingPower, isHE)
-        shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower)
-        return shotResult, armor, piercingPower, shot.shell.caliber, ricochet, noDamage
+        armor, piercingPower, ricochet, noDamage = self.computeArmor(cDetails, shell, fullPiercingPower, isHE)
+        shotResult = SHOT_RESULT.NOT_PIERCED if noDamage or ricochet else self.shotResult(armor, piercingPower, shell)
+        return shotResult, armor, piercingPower, shell.caliber, ricochet, noDamage
 
     @staticmethod
     def isModernMechanics(shell):
         return shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and shell.type.shieldPenetration
 
-    def computeArmor(self, cDetails, shot, fullPiercingPower, isHE):
+    def computeArmor(self, cDetails, shell, fullPiercingPower, isHE):
         computedArmor = GLOBAL.ZERO
         power = fullPiercingPower
         ricochet = False
         noDamage = True
         isJet = False
         jetStartDist = GLOBAL.F_ZERO
-        shell = shot.shell
         for detail in cDetails:
             matInfo = detail.matInfo
             if matInfo is None:
@@ -82,10 +80,11 @@ class ShotResultResolver(object):
         return computedArmor, max(fullPiercingPower, GLOBAL.F_ZERO), ricochet, noDamage
 
     @staticmethod
-    def shotResult(armor, piercingPower):
-        if armor < piercingPower * GREAT_PIERCED:
+    def shotResult(armor, piercingPower, shell):
+        piercingPowerOffset = piercingPower * shell.piercingPowerRandomization
+        if armor < piercingPower - piercingPowerOffset:
             return SHOT_RESULT.GREAT_PIERCED
-        elif armor > piercingPower * NOT_PIERCED:
+        elif armor > piercingPower + piercingPowerOffset:
             return SHOT_RESULT.NOT_PIERCED
         else:
             return SHOT_RESULT.LITTLE_PIERCED

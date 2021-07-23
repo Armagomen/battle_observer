@@ -20,38 +20,6 @@ class Distance(DistanceMeta):
         super(Distance, self)._populate()
         self.as_startUpdateS(self.settings)
 
-    def onMinimapVehicleAdded(self, vProxy, vInfo, _):
-        if self.isPostmortem:
-            return
-        if self._player.team != vInfo.team and vProxy.isAlive():
-            self.vehicles[vProxy.id] = vProxy
-            self.positionsCache[vProxy.id] = vProxy.position
-
-    def onMinimapVehicleRemoved(self, vId):
-        if vId in self.vehicles and self.settings[DISTANCE.SPOTTED]:
-            del self.vehicles[vId]
-            del self.positionsCache[vId]
-
-    def updateDistance(self):
-        distance = GLOBAL.ZERO
-        vehicleID = GLOBAL.ZERO
-        for vehID, entity in self.vehicles.iteritems():
-            if not entity.isDestroyed and entity.position != self.positionsCache[vehID]:
-                self.positionsCache[vehID] = entity.position
-            dist = int(self._player.vehicle.position.distTo(self.positionsCache[vehID]))
-            if distance and dist >= distance:
-                continue
-            distance = dist
-            vehicleID = vehID
-        if not distance:
-            return self.as_setDistanceS(GLOBAL.EMPTY_LINE)
-        vehicleName = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
-        if self.macrosDict[DISTANCE.TANK_NAME] == vehicleName and self.macrosDict[DISTANCE.DIST] == distance:
-            return
-        self.macrosDict[DISTANCE.TANK_NAME] = vehicleName
-        self.macrosDict[DISTANCE.DIST] = distance
-        self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
-
     def onEnterBattlePage(self):
         super(Distance, self).onEnterBattlePage()
         handler = avatar_getter.getInputHandler()
@@ -79,6 +47,37 @@ class Distance(DistanceMeta):
         if arena is not None:
             arena.onVehicleKilled -= self.onVehicleKilled
         super(Distance, self).onExitBattlePage()
+
+    def onMinimapVehicleAdded(self, vProxy, vInfo, _):
+        if self.isPostmortem:
+            return
+        if self._player.team != vInfo.team and vProxy.isAlive():
+            self.vehicles[vProxy.id] = vProxy
+            self.positionsCache[vProxy.id] = vProxy.position
+
+    def onMinimapVehicleRemoved(self, vId):
+        if vId in self.vehicles and self.settings[DISTANCE.SPOTTED]:
+            del self.vehicles[vId]
+            del self.positionsCache[vId]
+
+    def updateDistance(self):
+        distance = None
+        vehicleID = None
+        for vehID, entity in self.vehicles.iteritems():
+            if not entity.isDestroyed and entity.position != self.positionsCache[vehID]:
+                self.positionsCache[vehID] = entity.position
+            dist = self._player.vehicle.position.distTo(self.positionsCache[vehID])
+            if distance is None or dist < distance:
+                distance = dist
+                vehicleID = vehID
+        if distance is None or vehicleID is None:
+            return self.as_setDistanceS(GLOBAL.EMPTY_LINE)
+        vehicleName = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
+        if self.macrosDict[DISTANCE.TANK_NAME] == vehicleName and self.macrosDict[DISTANCE.DIST] == distance:
+            return
+        self.macrosDict[DISTANCE.TANK_NAME] = vehicleName
+        self.macrosDict[DISTANCE.DIST] = distance
+        self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
 
     def onVehicleKilled(self, vehicleID, *args, **kwargs):
         if vehicleID in self.vehicles:

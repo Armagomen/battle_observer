@@ -1,6 +1,8 @@
+import json
 import locale
 import os
 from collections import namedtuple
+from shutil import rmtree
 from string import printable
 
 import BigWorld
@@ -9,7 +11,7 @@ import ResMgr
 
 from BattleReplay import isPlaying, isLoading
 from Event import SafeEvent
-from armagomen.constants import MOD_NAME
+from armagomen.constants import MOD_NAME, GLOBAL, CACHE_DIRS
 
 
 def isReplay():
@@ -71,14 +73,54 @@ def vector3(x, y, z):
     return Math.Vector3(x, y, z)
 
 
+mpdPathCache = None
+
+
 def getCurrentModPath():
-    p = os.path
-    cwd = os.getcwdu() if p.supports_unicode_filenames else os.getcwd()
-    if any(x in cwd for x in ("win32", "win64")):
-        cwd = p.split(cwd)[0]
-    for sec in ResMgr.openSection(p.join(cwd, 'paths.xml'))['Paths'].values():
-        if './mods/' in sec.asString:
-            return p.split(p.realpath(p.join(cwd, p.normpath(sec.asString))))
+    global mpdPathCache
+    if mpdPathCache is None:
+        p = os.path
+        cwd = os.getcwdu() if p.supports_unicode_filenames else os.getcwd()
+        if any(x in cwd for x in ("win32", "win64")):
+            cwd = p.split(cwd)[0]
+        cleanupUpdates(cwd)
+        for sec in ResMgr.openSection(p.join(cwd, 'paths.xml'))['Paths'].values():
+            if './mods/' in sec.asString:
+                mpdPathCache = p.split(p.realpath(p.join(cwd, p.normpath(sec.asString))))
+    return mpdPathCache
+
+
+def cleanupUpdates(cwd):
+    path = os.path.join(cwd, "updates")
+    # Gather directory contents
+    contents = [os.path.join(path, i) for i in os.listdir(path)]
+    # Iterate and remove each item in the appropriate manner
+    if contents:
+        for i in contents:
+            os.remove(i) if os.path.isfile(i) or os.path.islink(i) else rmtree(i)
+
+
+def removeDirs(normpath, name):
+    if os.path.exists(normpath):
+        rmtree(normpath, ignore_errors=True, onerror=None)
+        if name is not None:
+            logInfo('CLEANING CACHE: {0}'.format(name))
+
+
+def clearClientCache(category=None):
+    path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
+    path = os.path.split(path)[GLOBAL.FIRST]
+    if category is None:
+        for dirName in CACHE_DIRS:
+            removeDirs(os.path.join(path, dirName), dirName)
+    else:
+        removeDirs(os.path.join(path, category), category)
+
+
+def createFileInDir(path, data):
+    """Creates a new file in a folder or replace old."""
+    with open(path, 'w') as f:
+        json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
 
 
 def overrideMethod(wg_class, method_name="__init__"):
