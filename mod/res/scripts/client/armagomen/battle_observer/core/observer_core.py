@@ -1,14 +1,12 @@
 import os
-from shutil import rmtree
 
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import FILE_NAME, MESSAGES, GLOBAL, CACHE_DIRS, MAIN, \
-    MOD_NAME
-from armagomen.utils.common import logInfo, getPreferencesFilePath, getCurrentModPath, logWarning, setMaxFrameRate
+from armagomen.constants import FILE_NAME, MESSAGES, MAIN, MOD_NAME
+from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, setMaxFrameRate, clearClientCache
 from gui.Scaleform.daapi.settings import config as packages
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
@@ -31,25 +29,10 @@ class ObserverCore(object):
         self.limiterEnabled = settings.main[MAIN.ENABLE_FPS_LIMITER]
         ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
-    def clearClientCache(self, category=None):
-        path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
-        path = os.path.split(path)[GLOBAL.FIRST]
-        if category is None:
-            for dirName in CACHE_DIRS:
-                self.removeDirs(os.path.join(path, dirName), dirName)
-        else:
-            self.removeDirs(os.path.join(path, category), category)
-
-    @staticmethod
-    def removeDirs(normpath, dir_name):
-        if os.path.exists(normpath):
-            rmtree(normpath, ignore_errors=True, onerror=None)
-            logInfo('CLEANING CACHE: {0}'.format(dir_name))
-
     def onExit(self):
         if self.isFileValid:
             if settings.main[MAIN.AUTO_CLEAR_CACHE]:
-                self.clearClientCache()
+                clearClientCache()
             logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, self.mod_version))
 
     def isModValidFileName(self):

@@ -4,7 +4,7 @@ import os
 import time
 
 from armagomen.constants import LOAD_LIST, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath
+from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, createFileInDir
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
@@ -81,19 +81,13 @@ class ConfigLoader(object):
 
     def createLoadJSON(self, path):
         cName = 'armagomen'
-        self.createFileInDir(path, {'loadConfig': cName})
+        createFileInDir(path, {'loadConfig': cName})
         self.loadError(path, 'NEW CONFIGURATION FILE load.json IS CREATED')
         return cName
 
     def updateConfigFile(self, fileName, settings):
         path = os.path.join(self.path, self.cName, '{}.json'.format(fileName))
-        self.createFileInDir(path, settings)
-
-    @staticmethod
-    def createFileInDir(path, data):
-        """Creates a new file in a folder or replace old."""
-        with open(path, 'w') as f:
-            json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
+        createFileInDir(path, settings)
 
     @staticmethod
     def isNotEqualLen(data1, data2):
@@ -147,13 +141,13 @@ class ConfigLoader(object):
             if file_name in listdir:
                 try:
                     if self.updateData(self.getFileData(file_path), internal_cfg):
-                        self.createFileInDir(file_path, internal_cfg)
+                        createFileInDir(file_path, internal_cfg)
                 except Exception as error:
                     self.loadError(file_path, error.message)
                     logWarning('readConfig: {} {}'.format(file_name, repr(error)))
                     continue
             else:
-                self.createFileInDir(file_path, internal_cfg)
+                createFileInDir(file_path, internal_cfg)
             self.settings.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
         if self.configInterface is not None:
