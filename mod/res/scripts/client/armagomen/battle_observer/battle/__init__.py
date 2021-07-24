@@ -2,7 +2,7 @@ from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
-from armagomen.utils.common import logError, callback, logWarning
+from armagomen.utils.common import logError, callback, logWarning, logInfo
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -38,11 +38,11 @@ def getContextMenuHandlers():
 class ObserverBusinessHandler(PackageBusinessHandler):
 
     def __init__(self):
-        listeners = [
+        listeners = (
             (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, self.callbackListener),
             (VIEW_ALIAS.RANKED_BATTLE_PAGE, self.callbackListener),
             (VIEW_ALIAS.EPIC_RANDOM_PAGE, self.callbackListener)
-        ]
+        )
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def callbackListener(self, event):

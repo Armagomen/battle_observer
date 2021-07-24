@@ -2,6 +2,7 @@ import os
 
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.components import ComponentsLoader
+from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
 from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.battle_observer.settings.default_settings import settings
@@ -41,7 +42,11 @@ class ObserverCore(object):
             logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
             self.componentsLoader.start()
             self.configLoader.start()
-            packages.BATTLE_PACKAGES += ("armagomen.battle_observer.battle",)
+            BATTLE_PACKAGES = packages.BATTLE_PACKAGES_BY_ARENA_TYPE
+            for guiType in BATTLE_PACKAGES:
+                if guiType in BATTLES_RANGE:
+                    BATTLE_PACKAGES[guiType] += ("armagomen.battle_observer.battle",)
+            packages.BATTLE_PACKAGES_BY_DEFAULT += ("armagomen.battle_observer.battle",)
             packages.LOBBY_PACKAGES += ("armagomen.battle_observer.lobby",)
 
     def onGUISpaceEntered(self, spaceID):
