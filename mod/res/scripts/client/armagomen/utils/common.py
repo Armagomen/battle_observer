@@ -73,12 +73,12 @@ def vector3(x, y, z):
     return Math.Vector3(x, y, z)
 
 
-mpdPathCache = None
+modPathCache = None
 
 
 def getCurrentModPath():
-    global mpdPathCache
-    if mpdPathCache is None:
+    global modPathCache
+    if modPathCache is None:
         p = os.path
         cwd = os.getcwdu() if p.supports_unicode_filenames else os.getcwd()
         if any(x in cwd for x in ("win32", "win64")):
@@ -86,8 +86,8 @@ def getCurrentModPath():
         cleanupUpdates(cwd)
         for sec in ResMgr.openSection(p.join(cwd, 'paths.xml'))['Paths'].values():
             if './mods/' in sec.asString:
-                mpdPathCache = p.split(p.realpath(p.join(cwd, p.normpath(sec.asString))))
-    return mpdPathCache
+                modPathCache = p.split(p.realpath(p.join(cwd, p.normpath(sec.asString))))
+    return modPathCache
 
 
 def cleanupUpdates(cwd):
