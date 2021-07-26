@@ -68,7 +68,8 @@ class ViewSettings(object):
                 ALIASES.WG_COMP: (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
                                   self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle),
                 ALIASES.DATE_TIME: self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED],
-                ALIASES.DISTANCE: self.cfg.distance_to_enemy[GLOBAL.ENABLED]
+                ALIASES.DISTANCE: self.cfg.distance_to_enemy[GLOBAL.ENABLED],
+                ALIASES.OWN_HEALTH: self.cfg.own_health[GLOBAL.ENABLED],
             })
         return self.__cache
 
@@ -92,6 +93,8 @@ class ViewSettings(object):
             new_aliases.append(ALIASES.TEAM_BASES)
         elif self.getSetting(ALIASES.TIMER) and BATTLE_VIEW_ALIASES.BATTLE_TIMER in new_aliases:
             new_aliases.append(ALIASES.TIMER)
+        elif self.getSetting(ALIASES.OWN_HEALTH) and BATTLE_VIEW_ALIASES.DAMAGE_PANEL in new_aliases:
+            new_aliases.append(ALIASES.OWN_HEALTH)
         elif self.getSetting(ALIASES.DEBUG) and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
             new_aliases.remove(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
             new_aliases.append(ALIASES.DEBUG)

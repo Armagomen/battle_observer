@@ -2,10 +2,12 @@ from collections import defaultdict, namedtuple
 
 import Keys
 from Event import SafeEvent
-from armagomen.constants import (ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL,
-                                 DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS,
-                                 MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
-                                 TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM, DISTANCE)
+from armagomen.constants import (
+    ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL,
+    DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS,
+    MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
+    TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM, DISTANCE, OWN_HEALTH,
+)
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -465,6 +467,13 @@ class DefaultSettings(object):
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             DISTANCE.SPOTTED: True,
             DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance).1fm. to %(name)s.</font>"
+        }
+        self.own_health = {
+            GLOBAL.ENABLED: False,
+            GLOBAL.X: GLOBAL.ZERO,
+            GLOBAL.Y: 120,
+            GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
+            OWN_HEALTH.TEMPLATE: "<font color='#f5ff8f'>%(cur_health)s/%(max_health)s (%(per_health)s%%)</font>"
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,
