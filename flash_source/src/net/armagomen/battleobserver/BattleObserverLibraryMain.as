@@ -13,9 +13,9 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
 	import net.armagomen.battleobserver.battle.components.DistanceUI;
-	import net.armagomen.battleobserver.battle.components.OwnHealthUI;
 	import net.armagomen.battleobserver.battle.components.FlightTimeUI;
 	import net.armagomen.battleobserver.battle.components.ObserverDateTimesUI;
+	import net.armagomen.battleobserver.battle.components.OwnHealthUI;
 	import net.armagomen.battleobserver.battle.components.UserBackGroundUI;
 	import net.armagomen.battleobserver.battle.components.batlletimer.ObserverBattleTimerUI;
 	import net.armagomen.battleobserver.battle.components.debugpanel.ObserverDebugPanelUI;
@@ -37,7 +37,6 @@ package net.armagomen.battleobserver
 	public class BattleObserverLibraryMain extends MovieClip
 	{
 		
-		
 		public function BattleObserverLibraryMain()
 		{
 			super();
@@ -55,43 +54,46 @@ package net.armagomen.battleobserver
 				case "Observer_DamageLog_UI": 
 					this.registerComponent(this.addChild(new DamageLogsUI), ui_name);
 					break;
-				case "Observer_MainGun_UI":
+				case "Observer_MainGun_UI": 
 					this.registerComponent(this.addChild(new MainGunUI), ui_name);
 					break;
-				case "Observer_DebugPanel_UI":
+				case "Observer_DebugPanel_UI": 
 					this.registerComponent(this.addChild(new ObserverDebugPanelUI), ui_name);
 					break;
-				case "Observer_DateTimes_UI":
+				case "Observer_DateTimes_UI": 
 					this.registerComponent(this.addChild(new ObserverDateTimesUI), ui_name);
 					break;
-				case "Observer_BattleTimer_UI":
+				case "Observer_BattleTimer_UI": 
 					this.registerComponent(this.addChild(new ObserverBattleTimerUI), ui_name);
 					break;
-				case "Observer_SixthSense_UI":
+				case "Observer_SixthSense_UI": 
 					this.registerComponent(this.addChild(new SixthSenseUI), ui_name);
 					break;
-				case "Observer_TeamBases_UI":
+				case "Observer_TeamBases_UI": 
 					this.registerComponent(this.addChild(new TeamBasesUI), ui_name);
 					break;
-				case "Observer_ArmorCalculator_UI":
+				case "Observer_ArmorCalculator_UI": 
 					this.registerComponent(this.addChild(new ArmorCalculatorUI), ui_name);
 					break;
-				case "Observer_FlightTime_UI":
+				case "Observer_FlightTime_UI": 
 					this.registerComponent(this.addChild(new FlightTimeUI), ui_name);
 					break;
-				case "Observer_DispersionTimer_UI":
+				case "Observer_DispersionTimer_UI": 
 					this.registerComponent(this.addChild(new DispersionTimerUI), ui_name);
 					break;
-				case "Observer_Distance_UI":
+				case "Observer_Distance_UI": 
 					this.registerComponent(this.addChild(new DistanceUI), ui_name);
 					break;
-				case "Observer_PlayersPanels_UI":
+				case "Observer_OwnHealth_UI": 
+					this.registerComponent(this.addChild(new OwnHealthUI), ui_name);
+					break;
+				case "Observer_PlayersPanels_UI": 
 					this.registerComponent(this.addChild(new PlayersPanelsUI), ui_name);
 					break;
-				case "Observer_Minimap_UI":
+				case "Observer_Minimap_UI": 
 					this.registerComponent(this.addChild(new MinimapUI), ui_name);
 					break;
-				case "Observer_WGCompSettings_UI":
+				case "Observer_WGCompSettings_UI": 
 					this.registerComponent(this.addChild(new WGComponentsSetting), ui_name);
 					break;
 				default: 
