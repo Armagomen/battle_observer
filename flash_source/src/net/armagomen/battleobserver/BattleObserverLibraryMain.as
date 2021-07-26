@@ -101,9 +101,11 @@ package net.armagomen.battleobserver
 			}
 			BaseBattlePage.prototype['as_updateBattleObserverChildIndexes'] = function():void
 			{
-				var prebattleTimer:* = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
-				if (prebattleTimer){
-					this._idx = this.setChildIndex(prebattleTimer, this.numChildren - 1);
+				var prebattleTimer:DisplayObject = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
+				if (prebattleTimer)
+				{
+					this.removeChild(prebattleTimer);
+					this.addChild(prebattleTimer);
 				}
 			}
 		}
