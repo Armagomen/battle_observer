@@ -416,6 +416,14 @@ translate = {
         "y_tooltip": "Position von der Mitte des Bildschirmes gemessen.",
         "template": "String-Muster. Makros: %(distance)s, %(name)s",
         "align": "Text align.",
-        "spottedOnly": "Informationen nur über erkannte Feinde."
-    }
+    },
+    "own_health": {
+        "header": "Own health.",
+        "x": "Position des Textes waagerecht",
+        "x_tooltip": "Position von der Mitte des Bildschirmes gemessen. Textausrichtung ---|Zentriert|---",
+        "y": "Position des Textes senkrechtrecht",
+        "y_tooltip": "Position von der Mitte des Bildschirmes gemessen.",
+        "template": "String-Muster. Makros: %(cur_health)s, %(max_health)s, %(per_health)s",
+        "align": "Text align.",
+    },
 }
