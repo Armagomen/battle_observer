@@ -25,8 +25,7 @@ from web.cache.web_downloader import WebDownloader
 LAST_UPDATE = defaultdict()
 DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
 
-modsDir, gameVersion = getCurrentModPath()
-workingDir = os.path.join(modsDir, gameVersion)
+workingDir = os.path.join(*getCurrentModPath())
 
 
 def fixDialogCloseWindow():

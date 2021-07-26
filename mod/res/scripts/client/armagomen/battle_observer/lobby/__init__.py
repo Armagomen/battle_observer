@@ -6,6 +6,7 @@ from armagomen.utils.common import logError, callback, logWarning
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
+from gui.Scaleform.framework.entities.View import ViewKey
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
@@ -47,19 +48,18 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def callbackListener(self, event):
         self._app.as_loadLibrariesS([SWF.LOBBY])
-        callback(1.0, lambda: self.eventListener(event))
+        callback(0.2, lambda: self.eventListener(event))
 
     def eventListener(self, event):
         if event.name == VIEW_ALIAS.LOBBY_HANGAR:
             lobby_page = self._app.containerManager.getContainer(WindowLayer.VIEW).getView()
-            if lobby_page is not None and lobby_page._isDAAPIInited():
-                flash = lobby_page.flashObject
-                if hasattr(flash, SWF.ATTRIBUTE_NAME):
-                    for comp, enabled in getComponents():
-                        if enabled and not lobby_page.isFlashComponentRegistered(comp):
-                            flash.as_createBattleObserverComp(comp)
-                else:
-                    to_format_str = "lobby_page {}, has ho attribute {}"
-                    logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
+            if lobby_page is None or not lobby_page._isDAAPIInited():
+                return callback(0.2, lambda: self.eventListener(event))
+            flash = lobby_page.flashObject
+            if hasattr(flash, SWF.ATTRIBUTE_NAME):
+                for comp, enabled in getComponents():
+                    if enabled and not lobby_page.isFlashComponentRegistered(comp):
+                        flash.as_createBattleObserverComp(comp)
             else:
-                callback(0.2, lambda: self.eventListener(event))
+                to_format_str = "lobby_page {}, has ho attribute {}"
+                logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))

@@ -1,14 +1,15 @@
 from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
-from armagomen.utils.common import logError, callback, logWarning
+from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN
+from armagomen.utils.common import logError, callback, logWarning, logInfo
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
+from gui.shared.events import ViewEventType
 
 
 def getViewSettings():
@@ -38,28 +39,29 @@ def getContextMenuHandlers():
 class ObserverBusinessHandler(PackageBusinessHandler):
 
     def __init__(self):
-        listeners = [
+        listeners = (
             (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, self.callbackListener),
             (VIEW_ALIAS.RANKED_BATTLE_PAGE, self.callbackListener),
             (VIEW_ALIAS.EPIC_RANDOM_PAGE, self.callbackListener)
-        ]
+        )
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def callbackListener(self, event):
         self._app.as_loadLibrariesS([SWF.BATTLE])
-        callback(1.0, lambda: self.eventListener(event))
+        callback(0.2, lambda: self.eventListener(event))
 
     def eventListener(self, event):
         battle_page = self._app.containerManager.getViewByKey(event.loadParams.viewKey)
-        if battle_page is not None and battle_page._isDAAPIInited():
-            flash = battle_page.flashObject
-            if hasattr(flash, SWF.ATTRIBUTE_NAME):
-                for comp in SORTED_ALIASES:
-                    if view_settings.getSetting(comp) and not battle_page.isFlashComponentRegistered(comp):
-                        flash.as_createBattleObserverComp(comp)
-                flash.as_updateBattleObserverChildIndexes()
-            else:
-                to_format_str = "battle_page {}, has ho attribute {}"
-                logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
-        else:
-            callback(0.2, lambda: self.eventListener(event))
+        if battle_page is None or not battle_page._isDAAPIInited():
+            return callback(0.2, lambda: self.eventListener(event))
+        flash = battle_page.flashObject
+        if not hasattr(flash, SWF.ATTRIBUTE_NAME):
+            to_format_str = "battle_page {}, has ho attribute {}"
+            return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
+        for comp in SORTED_ALIASES:
+            if not view_settings.getSetting(comp) or battle_page.isFlashComponentRegistered(comp):
+                continue
+            if view_settings.cfg.main[MAIN.DEBUG]:
+                logInfo(comp + " loading flash")
+            flash.as_createBattleObserverComp(comp)
+        flash.as_updateBattleObserverChildIndexes()

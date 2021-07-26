@@ -24,13 +24,10 @@ class ConfigLoader(object):
     def __init__(self, settings):
         self.settings = settings
         self.cName = None
-        self.path = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
+        self.path = os.path.join(getCurrentModPath()[GLOBAL.FIRST], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
         self.configInterface = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
-
-    def start(self):
-        self.getConfig(self.path)
 
     def encodeData(self, data):
         """encode dict keys/values to utf-8."""
@@ -63,11 +60,11 @@ class ConfigLoader(object):
             return True
         return False
 
-    def getConfig(self, path):
+    def start(self):
         """Loading the main settings_core file with the parameters which settings_core to load next"""
-        load_json = os.path.join(path, 'load.json')
-        if self.makeDirs(path):
-            self.loadError(path, 'CONFIGURATION FILES IS NOT FOUND')
+        load_json = os.path.join(self.path, 'load.json')
+        if self.makeDirs(self.path):
+            self.loadError(self.path, 'CONFIGURATION FILES IS NOT FOUND')
             self.cName = self.createLoadJSON(load_json)
             self.configsList.append(self.cName)
         else:
@@ -75,9 +72,9 @@ class ConfigLoader(object):
                 self.cName = self.getFileData(load_json).get('loadConfig')
             else:
                 self.cName = self.createLoadJSON(load_json)
-            self.makeDirs(os.path.join(path, self.cName))
+            self.makeDirs(os.path.join(self.path, self.cName))
         self.readConfig(self.cName)
-        removeOldFiles(os.path.join(path, self.cName))
+        removeOldFiles(os.path.join(self.path, self.cName))
 
     def createLoadJSON(self, path):
         cName = 'armagomen'
@@ -155,7 +152,6 @@ class ConfigLoader(object):
 
     def loadHangarSettings(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOGIN:
-            ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings
             try:
                 from gui.modsListApi import g_modsListApi
                 from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
@@ -166,3 +162,5 @@ class ConfigLoader(object):
                 self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
                                                        self.settings, self)
                 self.configInterface.start()
+            finally:
+                ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings
