@@ -80,6 +80,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 self.as_colorBlindPPbarsS(vehicleID, self.COLORS[self.battle_ctx.isEnemy(vehicleID)])
 
     def onAddedToStorage(self, vehicleID, isEnemy):
+        """called from flash after creation in as_AddVehIdToListS"""
         if vehicleID in self._vehicles:
             return
         vInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
@@ -150,7 +151,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                                          VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
                                      })
 
-    def onPlayersDamaged(self, vehicleID, attackerID, damage):
+    def onPlayersDamaged(self, targetID, attackerID, damage):
         self.playersDamage[attackerID] += damage
         self.as_updateTextFieldS(attackerID, PANELS.DAMAGES_TF,
                                  self.damagesText % {PANELS.DAMAGE: self.playersDamage[attackerID]})

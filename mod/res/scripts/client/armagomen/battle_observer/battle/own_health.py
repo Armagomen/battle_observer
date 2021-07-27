@@ -51,17 +51,24 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             ctrl.onVehicleStateUpdated -= self.__onVehicleStateUpdated
         super(OwnHealth, self).onExitBattlePage()
 
+    # def __onVehicleControlling(self, vehicle):
+    #     if self.isPostmortem:
+    #         return self.as_setOwnHealthS(GLOBAL.EMPTY_LINE)
+    #     self.__maxHealth = vehicle.maxHealth
+    #     self._updateHealth(vehicle.health)
+    #     ctrl = self.sessionProvider.shared.vehicleState
+    #     if ctrl is None:
+    #         return
+    #     value = ctrl.getStateValue(VEHICLE_VIEW_STATE.HEALTH)
+    #     if value is not None:
+    #         self.__onVehicleStateUpdated(VEHICLE_VIEW_STATE.HEALTH, value)
+
     def __onVehicleControlling(self, vehicle):
         if self.isPostmortem:
             return self.as_setOwnHealthS(GLOBAL.EMPTY_LINE)
-        self.__maxHealth = vehicle.maxHealth
+        if self.__maxHealth != vehicle.maxHealth:
+            self.__maxHealth = vehicle.maxHealth
         self._updateHealth(vehicle.health)
-        ctrl = self.sessionProvider.shared.vehicleState
-        if ctrl is None:
-            return
-        value = ctrl.getStateValue(VEHICLE_VIEW_STATE.HEALTH)
-        if value is not None:
-            self.__onVehicleStateUpdated(VEHICLE_VIEW_STATE.HEALTH, value)
 
     def __onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.HEALTH:
