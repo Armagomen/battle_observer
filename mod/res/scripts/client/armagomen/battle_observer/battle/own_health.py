@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
+from armagomen.utils.common import percentToRBG
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, normalizeHealthPercent
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
@@ -15,6 +16,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             VEHICLE.CUR: GLOBAL.ZERO,
             VEHICLE.MAX: GLOBAL.ZERO,
             VEHICLE.PERCENT: GLOBAL.ZERO,
+            OWN_HEALTH.COLOR: percentToRBG(1.0)
         })
         self.isPostmortem = False
         self.__maxHealth = GLOBAL.ZERO
@@ -76,5 +78,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             return
         self.macrosDict[VEHICLE.CUR] = health
         self.macrosDict[VEHICLE.MAX] = self.__maxHealth
+        self.macrosDict[OWN_HEALTH.COLOR] = percentToRBG(health / self.__maxHealth)
         self.macrosDict[VEHICLE.PERCENT] = normalizeHealthPercent(health, self.__maxHealth)
         self.as_setOwnHealthS(self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict)

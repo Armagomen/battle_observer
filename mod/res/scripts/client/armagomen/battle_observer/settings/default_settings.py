@@ -473,7 +473,7 @@ class DefaultSettings(object):
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: 120,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
-            OWN_HEALTH.TEMPLATE: "<font color='#f5ff8f'>%(health)s/%(maxHealth)s (%(percent)s%%)</font>"
+            OWN_HEALTH.TEMPLATE: "<font color='%(color)s'>%(health)s/%(maxHealth)s (%(percent)s%%)</font>"
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,

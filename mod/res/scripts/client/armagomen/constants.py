@@ -291,7 +291,7 @@ ALIASES = __Aliases(
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME", "SPOTTED"))(
     "distance_to_enemy", "template", "align", "distance", "name", "spottedOnly")
 
-OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN",))("own_health", "template", "align")
+OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("own_health", "template", "align", "color")
 
 
 class PANELS:
