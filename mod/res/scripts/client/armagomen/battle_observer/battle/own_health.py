@@ -33,23 +33,18 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling += self.__onVehicleControlling
+            ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
             vehicle = ctrl.getControllingVehicle()
             if vehicle is not None:
                 self.__onVehicleControlling(vehicle)
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled += self.onVehicleKilled
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled -= self.onVehicleKilled
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling -= self.__onVehicleControlling
@@ -64,7 +59,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is None:
             return
-        ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
         value = ctrl.getStateValue(VEHICLE_VIEW_STATE.HEALTH)
         if value is not None:
             self.__onVehicleStateUpdated(VEHICLE_VIEW_STATE.HEALTH, value)
@@ -72,10 +66,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
     def __onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.HEALTH:
             self._updateHealth(value)
-
-    def onVehicleKilled(self, vehicleID, *_, **__):
-        if vehicleID == self._player.playerVehicleID:
-            self.as_setOwnHealthS(GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *_, **__):
         self.as_onControlModeChangedS(ctrlMode)
