@@ -1,44 +1,32 @@
 from collections import defaultdict
 
-import BigWorld
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
-from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM
+from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, normalizeHealthPercent
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
-# from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener # 1.14
+from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
 
 
-class OwnHealth(OwnHealthMeta):  # , IPrebattleSetupsListener): # 1.14
+class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
     def __init__(self):
         super(OwnHealth, self).__init__()
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, **{
-            OWN_HEALTH.CUR_HEALTH: GLOBAL.ZERO,
-            OWN_HEALTH.MAX_HEALTH: GLOBAL.ZERO,
-            OWN_HEALTH.PER_HEALTH: GLOBAL.ZERO,
+            VEHICLE.CUR: GLOBAL.ZERO,
+            VEHICLE.MAX: GLOBAL.ZERO,
+            VEHICLE.PERCENT: GLOBAL.ZERO,
         })
         self.isPostmortem = False
-        self.__maxHealth = 0
-
-    def setSetupsVehicle(self, vehicle):  # remove in 1.14
-        pass
+        self.__maxHealth = GLOBAL.ZERO
 
     def updateVehicleParams(self, vehicle, _):
-        self.__maxHealth = vehicle.descriptor.maxHealth
-        self._updateHealth(self.__maxHealth)
-
-    def updateVehicleSetups(self, vehicle):  # remove in 1.14
-        pass
-
-    def stopSetupsSelection(self):  # remove in 1.14
-        pass
+        if self.__maxHealth != vehicle.descriptor.maxHealth:
+            self.__maxHealth = vehicle.descriptor.maxHealth
+            self._updateHealth(self.__maxHealth)
 
     def _populate(self):
         super(OwnHealth, self)._populate()
         self.as_startUpdateS(self.settings)
-
-    def _dispose(self):
-        super(OwnHealth, self)._dispose()
 
     def onEnterBattlePage(self):
         super(OwnHealth, self).onEnterBattlePage()
@@ -86,7 +74,7 @@ class OwnHealth(OwnHealthMeta):  # , IPrebattleSetupsListener): # 1.14
             self._updateHealth(value)
 
     def onVehicleKilled(self, vehicleID, *_, **__):
-        if vehicleID == BigWorld.player().playerVehicleID:
+        if vehicleID == self._player.playerVehicleID:
             self.as_setOwnHealthS(GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *_, **__):
@@ -96,12 +84,12 @@ class OwnHealth(OwnHealthMeta):  # , IPrebattleSetupsListener): # 1.14
             self.as_setOwnHealthS(GLOBAL.EMPTY_LINE)
 
     def _updateHealth(self, health):
-        if self.isPostmortem or health > self.__maxHealth or self.__maxHealth <= 0:
+        if self.isPostmortem or health > self.__maxHealth or self.__maxHealth <= GLOBAL.ZERO:
             return
         health = normalizeHealth(health)
-        if self.macrosDict[OWN_HEALTH.CUR_HEALTH] == health and self.macrosDict[OWN_HEALTH.MAX_HEALTH] == self.__maxHealth:
+        if self.macrosDict[VEHICLE.CUR] == health and self.macrosDict[VEHICLE.MAX] == self.__maxHealth:
             return
-        self.macrosDict[OWN_HEALTH.CUR_HEALTH] = health
-        self.macrosDict[OWN_HEALTH.MAX_HEALTH] = self.__maxHealth
-        self.macrosDict[OWN_HEALTH.PER_HEALTH] = normalizeHealthPercent(health, self.__maxHealth)
+        self.macrosDict[VEHICLE.CUR] = health
+        self.macrosDict[VEHICLE.MAX] = self.__maxHealth
+        self.macrosDict[VEHICLE.PERCENT] = normalizeHealthPercent(health, self.__maxHealth)
         self.as_setOwnHealthS(self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict)
