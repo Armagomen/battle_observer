@@ -6,7 +6,7 @@ from armagomen.battle_observer.meta.battle.debug_panel_meta import DebugPanelMet
 from gui.battle_control.controllers import debug_ctrl
 from gui.shared.personality import ServicesLocator
 
-debug_ctrl._UPDATE_INTERVAL = 0.5
+debug_ctrl._UPDATE_INTERVAL = 0.6
 
 
 class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):

@@ -129,7 +129,7 @@ class DamageLog(DamageLogsMeta):
             if e_type in DAMAGE_LOG.TOP_MACROS_NAME:
                 if e_type == EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
                     self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
-                    self.top_log[DAMAGE_LOG.ASSIST_STUN] = 0
+                    self.top_log[DAMAGE_LOG.ASSIST_STUN] = GLOBAL.ZERO
                 self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += data
                 self.updateTopLog()
             if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):

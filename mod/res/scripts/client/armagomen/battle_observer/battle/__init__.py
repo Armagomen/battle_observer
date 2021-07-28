@@ -14,16 +14,17 @@ from gui.shared import EVENT_BUS_SCOPE
 def getViewSettings():
     settings = []
     for alias in SORTED_ALIASES:
-        if view_settings.getSetting(alias):
-            try:
-                class_name = alias.split("_")[GLOBAL.ONE]
-                file_name = ALIAS_TO_PATH.get(alias)
-                module_class = getattr(import_module(file_name, package=__package__), class_name)
-                settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
-                _GAME_UI.add(alias)
-                _SPECTATOR_UI.add(alias)
-            except Exception as err:
-                logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
+        if not view_settings.getSetting(alias):
+            continue
+        try:
+            class_name = alias.split("_")[GLOBAL.ONE]
+            file_name = ALIAS_TO_PATH.get(alias)
+            module_class = getattr(import_module(file_name, package=__package__), class_name)
+            settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
+            _GAME_UI.add(alias)
+            _SPECTATOR_UI.add(alias)
+        except Exception as err:
+            logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
     return settings
 
 

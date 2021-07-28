@@ -36,18 +36,20 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                        self.barColors[COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME])
         self.vehicleColor = self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         isInEpicRange = self._arenaVisitor.gui.isInEpicRange()
-        if not isInEpicRange and not self.isEpicRandomBattle:
-            keysParser.onKeyPressed += self.onKeyPressed
-            if self.hpBarsEnable:
-                self.settingsCore.onSettingsApplied += self.onSettingsApplied
-                if self.settings[PANELS.ON_KEY_DOWN]:
-                    keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
-            if self.damagesEnable:
-                arena = self._arenaVisitor.getArenaSubscription()
-                if arena is not None:
-                    arena.onVehicleHealthChanged += self.onPlayersDamaged
-                    keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY,
-                                                 self.settings[PANELS.DAMAGES_HOT_KEY])
+        if isInEpicRange or self.isEpicRandomBattle:
+            return
+        keysParser.onKeyPressed += self.onKeyPressed
+        if self.hpBarsEnable:
+            self.settingsCore.onSettingsApplied += self.onSettingsApplied
+            if self.settings[PANELS.ON_KEY_DOWN]:
+                keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
+        if not self.damagesEnable:
+            return
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleHealthChanged += self.onPlayersDamaged
+            keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY,
+                                         self.settings[PANELS.DAMAGES_HOT_KEY])
 
     def _dispose(self):
         self._vehicles.clear()
@@ -100,11 +102,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_AddPPanelBarS(vehicleID, color, self.colors[COLORS.GLOBAL],
                                   self.settings[PANELS.BAR_SETTINGS], PANELS.TEAM[isEnemy],
                                   not self.settings[PANELS.ON_KEY_DOWN])
-            self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth,
+            scale = self.getBarScale(newHealth, maxHealth)
+            self.as_updatePPanelBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,
                                          VEHICLE.MAX: maxHealth,
-                                         VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
+                                         VEHICLE.PERCENT: scale * 100
                                      })
         if isEnemy and self.settings[PANELS.SPOTTED_FIX]:
             self.as_setSpottedPositionS(vehicleID)
@@ -122,12 +125,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def onVehicleKilled(self, targetID):
         if targetID in self._vehicles:
-            self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, GLOBAL.ZERO, GLOBAL.EMPTY_LINE)
+            self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, GLOBAL.EMPTY_LINE)
 
     @staticmethod
-    def getPercent(current, maximum):
+    def getBarScale(current, maximum):
         if current > GLOBAL.ZERO:
-            return float(current) / maximum * 100
+            return float(current) / maximum
         else:
             return GLOBAL.F_ZERO
 
@@ -144,11 +147,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if vehicleID not in self._vehicles:
             self.as_AddVehIdToListS(vehicleID, self.battle_ctx.isEnemy(vehicleID))
         elif self.hpBarsEnable:
-            self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth,
+            scale = self.getBarScale(newHealth, maxHealth)
+            self.as_updatePPanelBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,
                                          VEHICLE.MAX: maxHealth,
-                                         VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
+                                         VEHICLE.PERCENT: scale * 100
                                      })
 
     def onPlayersDamaged(self, targetID, attackerID, damage):

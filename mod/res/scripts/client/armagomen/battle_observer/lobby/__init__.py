@@ -19,7 +19,7 @@ def getViewSettings():
     view_settings = []
     if enable:
         try:
-            class_name = alias.split("_")[1]
+            class_name = alias.split("_")[GLOBAL.ONE]
             module_class = getattr(import_module(".date_times", package=__package__), class_name)
             view_settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
         except Exception as err:
