@@ -66,6 +66,7 @@
 		{
 			if (this.bar.scaleX != newScale)
 			{
+				newScale = newScale < 0 ? 0 : newScale > 1.0 ? 1.0 : newScale;
 				if (this.animationEnabled)
 				{
 					this.animation.continueTo(newScale, this.visible ? this.animationTime: 0.02);

@@ -97,11 +97,11 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				{
 					if (this.fpsBarEnabled)
 					{
-						fpsBar.setNewScale(Math.min(1.0, fps / this.maxFps));
+						fpsBar.setNewScale(fps / this.maxFps);
 					}
 					if (this.pingBarEnabled)
 					{
-						pingBar.setNewScale(Math.max(0.0, 1.0 - ping / 200));
+						pingBar.setNewScale(1.0 - ping / 200);
 					}
 				}
 			}

@@ -44,13 +44,13 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			if (this.bases[team])
 			{
-				this.bases[team].updateBase(points / 100.0, invadersCnt, time, text);
+				this.bases[team].updateBase(points * 0.01, invadersCnt, time, text);
 			}
 			else
 			{
 				var base:TeamBase = new TeamBase(this.animationEnabled(), this.isColorBlind());
 				base.create(this.settings, this.shadowSettings, this.colors, team);
-				base.updateBase(points / 100.0, invadersCnt, time, text);
+				base.updateBase(points * 0.01, invadersCnt, time, text);
 				if (this.bases["green"] || this.bases["red"])
 				{
 					var offset:Number = this.settings.y >= 0 ? this.settings.height + 4 : -(this.settings.height + 4);
@@ -65,7 +65,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			if (this.bases[team])
 			{
-				this.bases[team].updateBase(points / 100.0, invadersCnt, time, text);
+				this.bases[team].updateBase(points * 0.01, invadersCnt, time, text);
 			}
 		}
 		

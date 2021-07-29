@@ -170,7 +170,7 @@ COLOR_MAX_PURPLE, COLOR_MAX_GREEN, COLOR_MULTIPLIER = (0.8333, 0.3333, 255)
 
 
 def percentToRBG(percent, saturation=0.5, brightness=1.0):
-    """percent is float number in range 0 - 2.4"""
+    """percent is float number in range 0 - 2.4 purple, or 1.0 green"""
     normalized_percent = min(COLOR_MAX_PURPLE, percent * COLOR_MAX_GREEN)
     tuple_values = hsv_to_rgb(normalized_percent, saturation, brightness)
     r, g, b = (int(i * COLOR_MULTIPLIER) for i in tuple_values)
