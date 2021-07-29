@@ -114,7 +114,7 @@
 			this.timer = new TextExt("timer", settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
 			this.invaders = new TextExt("invaders", iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
 			
-			this.x = App.appWidth / 2 - baseMain.width / 2;
+			this.x = App.appWidth >> 1 - baseMain.width >> 1;
 			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;
 			
 			if (this.animate)

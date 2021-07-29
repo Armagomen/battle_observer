@@ -18,7 +18,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var graphEnabled:Boolean   = false;
 		private var fpsBarEnabled:Boolean  = false;
 		private var pingBarEnabled:Boolean = false;
-		private var maxFps:int             = 200;
+		private var maxFps:Number          = 0.02;
 		public var getShadowSettings:Function;
 		public var animationEnabled:Function;
 		private var loaded:Boolean         = false;
@@ -59,7 +59,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 					{
 						if (vSync)
 						{
-							this.maxFps = limit;
+							this.maxFps = limit * 0.01;
 						}
 						var fps:Object       = data.debugGraphics.fpsBar;
 						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
@@ -97,11 +97,11 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				{
 					if (this.fpsBarEnabled)
 					{
-						fpsBar.setNewScale(Math.min(1.0, fps / this.maxFps));
+						fpsBar.setNewScale(Math.min(1.0, fps * this.maxFps));
 					}
 					if (this.pingBarEnabled)
 					{
-						pingBar.setNewScale(Math.max(0.0, 1.0 - ping / 200));
+						pingBar.setNewScale(Math.max(0.0, 1.0 - ping * 0.02));
 					}
 				}
 			}
