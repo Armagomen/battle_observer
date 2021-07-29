@@ -3,7 +3,7 @@ from collections import defaultdict
 from armagomen.battle_observer.core import keysParser
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
-from armagomen.utils.common import callback, logWarning, percentToRBG
+from armagomen.utils.common import callback, logWarning, percentToRGB
 from constants import ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -143,7 +143,7 @@ class DamageLog(DamageLogsMeta):
         """update global sums in log"""
         if self.settings.log_total[GLOBAL.ENABLED]:
             value = self.top_log[DAMAGE_LOG.PLAYER_DAMAGE] / DAMAGE_LOG.AVG_DAMAGE_DATA
-            self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = percentToRBG(value, **self.settings.log_total[
+            self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = percentToRGB(value, **self.settings.log_total[
                 DAMAGE_LOG.AVG_COLOR])
             self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
@@ -230,7 +230,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         vehicle[DAMAGE_LOG.TANK_NAME] = DAMAGE_LOG.LIST_SEPARATOR.join(sorted(vehicle[DAMAGE_LOG.TANK_NAMES]))
         percent = float(vehicle[DAMAGE_LOG.TOTAL_DAMAGE]) / vehicle[DAMAGE_LOG.MAX_HEALTH]
-        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRBG(percent, **settings[DAMAGE_LOG.AVG_COLOR])
+        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRGB(percent, **settings[DAMAGE_LOG.AVG_COLOR])
         callback(0.1, lambda: self.updateExtendedLog(log_dict, settings))
 
     def updateExtendedLog(self, log_dict, settings, altMode=False):
