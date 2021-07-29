@@ -8,14 +8,14 @@ package net.armagomen.battleobserver
 	import flash.events.*;
 	import flash.utils.*;
 	import net.armagomen.battleobserver.hangar.ObserverDateTimesUI;
-	import net.wg.gui.lobby.LobbyPage;
+	import net.wg.gui.lobby.hangar.Hangar;
 
 	public class BattleObserverLibraryMainHangar extends MovieClip
 	{
 		public function BattleObserverLibraryMainHangar()
 		{
 			super();
-			LobbyPage.prototype['as_createBattleObserverComp'] = function(ui_name:String):void
+			Hangar.prototype['as_createBattleObserverComp'] = function(ui_name:String):void
 			{
 				switch (ui_name)
 				{
