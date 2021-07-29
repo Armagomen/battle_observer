@@ -2,9 +2,10 @@ from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import keysParser
-from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
+from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import getEntity
+from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
 
@@ -66,11 +67,11 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                     arena.onVehicleHealthChanged -= self.onPlayersDamaged
         super(PlayersPanels, self)._dispose()
 
-    def onKeyPressed(self, name, show):
+    def onKeyPressed(self, name, isKeyDown):
         if name == PANELS.BAR_HOT_KEY:
-            self.healthOnAlt(show)
+            self.healthOnAlt(isKeyDown)
         elif name == PANELS.DAMAGES_HOT_KEY:
-            self.as_setPlayersDamageVisibleS(show)
+            self.as_setPlayersDamageVisibleS(isKeyDown)
 
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:
@@ -102,7 +103,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_AddPPanelBarS(vehicleID, color, self.colors[COLORS.GLOBAL],
                                   self.settings[PANELS.BAR_SETTINGS], PANELS.TEAM[isEnemy],
                                   not self.settings[PANELS.ON_KEY_DOWN])
-            scale = self.getBarScale(newHealth, maxHealth)
+            scale = round(getHealthPercent(newHealth, maxHealth), 3)
             self.as_updatePPanelBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,
@@ -127,13 +128,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if targetID in self._vehicles:
             self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, GLOBAL.EMPTY_LINE)
 
-    @staticmethod
-    def getBarScale(current, maximum):
-        if current > GLOBAL.ZERO:
-            return float(current) / maximum
-        else:
-            return GLOBAL.F_ZERO
-
     def replaceIconColor(self, vehicleID, classTag, enemy):
         self.as_setVehicleIconColorS(vehicleID, self.vehicleColor[classTag],
                                      self.settings[PANELS.ICONS_BLACKOUT], enemy)
@@ -147,7 +141,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if vehicleID not in self._vehicles:
             self.as_AddVehIdToListS(vehicleID, self.battle_ctx.isEnemy(vehicleID))
         elif self.hpBarsEnable:
-            scale = self.getBarScale(newHealth, maxHealth)
+            scale = round(getHealthPercent(newHealth, maxHealth), 3)
             self.as_updatePPanelBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,
