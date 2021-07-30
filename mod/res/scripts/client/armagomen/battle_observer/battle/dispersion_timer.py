@@ -1,8 +1,8 @@
 from collections import defaultdict
 from math import log
 
-from armagomen.constants import DISPERSION, GLOBAL, POSTMORTEM, DISPERSION_TIME
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
+from armagomen.constants import DISPERSION, GLOBAL, POSTMORTEM, DISPERSION_TIME
 from armagomen.utils.common import events, logInfo
 from gui.battle_control import avatar_getter
 
@@ -14,7 +14,8 @@ class DispersionTimer(DispersionTimerMeta):
         self.timer_regular = None
         self.timer_done = None
         self.macro = None
-        self.max_angle = GLOBAL.F_ZERO
+        self.max_angle = None
+        self.isPostmortem = False
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
@@ -28,19 +29,19 @@ class DispersionTimer(DispersionTimerMeta):
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.as_onControlModeChangedS(ctrlMode)
-        if ctrlMode in POSTMORTEM.MODES:
+        self.isPostmortem = ctrlMode in POSTMORTEM.MODES
+        if self.isPostmortem:
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
     def updateDispersion(self, avatar, dispersionAngle):
-        if not avatar.isVehicleAlive:
+        if self.isPostmortem:
             return
-        roundAngle = round(dispersionAngle * 100, GLOBAL.TWO)
-        if self.max_angle > roundAngle:
-            self.max_angle = roundAngle
+        if self.max_angle is None:
+            self.max_angle = dispersionAngle
             if self.isDebug:
                 logInfo("DispersionTimer - renew max dispersion angle %s" % self.max_angle)
-        timing = round(avatar.vehicleTypeDescriptor.gun.aimingTime, GLOBAL.ONE) * log(roundAngle / self.max_angle)
-        percent = int(self.max_angle / roundAngle * 100)
+        timing = round(avatar.vehicleTypeDescriptor.gun.aimingTime, GLOBAL.ONE) * log(dispersionAngle / self.max_angle)
+        percent = int(self.max_angle / dispersionAngle * 100)
         if self.macro[DISPERSION_TIME.TIMER] == timing and self.macro[DISPERSION_TIME.PERCENT] == percent:
             return
         self.macro[DISPERSION_TIME.TIMER] = timing
@@ -56,9 +57,6 @@ class DispersionTimer(DispersionTimerMeta):
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
         events.onDispersionAngleChanged += self.updateDispersion
-        self.max_angle = round(self._player.getVehicleDescriptor().gun.shotDispersionAngle * 100, GLOBAL.TWO)
-        if self.isDebug:
-            logInfo("DispersionTimer - set max dispersion angle %s" % self.max_angle)
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
