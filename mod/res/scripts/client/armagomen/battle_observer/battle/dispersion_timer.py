@@ -1,5 +1,5 @@
 from collections import defaultdict
-from math import log
+from math import log, ceil
 
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.constants import DISPERSION, GLOBAL, POSTMORTEM, DISPERSION_TIME
@@ -14,7 +14,7 @@ class DispersionTimer(DispersionTimerMeta):
         self.timer_regular = None
         self.timer_done = None
         self.macro = None
-        self.max_angle = None
+        self.min_angle = None
         self.isPostmortem = False
 
     def _populate(self):
@@ -31,22 +31,25 @@ class DispersionTimer(DispersionTimerMeta):
         self.as_onControlModeChangedS(ctrlMode)
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
         if self.isPostmortem:
+            self.min_angle = None
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
-    def updateDispersion(self, avatar, dispersionAngle):
+    def updateDispersion(self, gunRotator):
         if self.isPostmortem:
             return
-        if self.max_angle is None:
-            self.max_angle = dispersionAngle
+        dispersionAngle = gunRotator.dispersionAngle
+        aimingTime = self._player.vehicleTypeDescriptor.gun.aimingTime
+        if self.min_angle is None or self.min_angle > dispersionAngle:
+            self.min_angle = dispersionAngle
             if self.isDebug:
-                logInfo("DispersionTimer - renew max dispersion angle %s" % self.max_angle)
-        timing = round(avatar.vehicleTypeDescriptor.gun.aimingTime, GLOBAL.ONE) * log(dispersionAngle / self.max_angle)
-        percent = int(self.max_angle / dispersionAngle * 100)
+                logInfo("DispersionTimer - renew max dispersion angle %s" % self.min_angle)
+        timing = round(aimingTime, GLOBAL.TWO) * log(dispersionAngle / self.min_angle)
+        percent = int(ceil(self.min_angle / dispersionAngle * 100))
         if self.macro[DISPERSION_TIME.TIMER] == timing and self.macro[DISPERSION_TIME.PERCENT] == percent:
             return
         self.macro[DISPERSION_TIME.TIMER] = timing
         self.macro[DISPERSION_TIME.PERCENT] = percent
-        if timing <= GLOBAL.ZERO:
+        if percent == 100:
             self.as_updateTimerTextS(self.timer_done % self.macro)
         else:
             self.as_updateTimerTextS(self.timer_regular % self.macro)

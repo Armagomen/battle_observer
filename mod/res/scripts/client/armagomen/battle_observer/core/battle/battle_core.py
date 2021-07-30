@@ -49,10 +49,10 @@ class BattleCore(object):
                 msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
 
     @staticmethod
-    @overrideMethod(VehicleGunRotator, "updateRotationAndGunMarker")
+    @overrideMethod(VehicleGunRotator, "__updateGunMarker")
     def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
         base(rotator, *args, **kwargs)
-        events.onDispersionAngleChanged(rotator._avatar, rotator.dispersionAngle)
+        events.onDispersionAngleChanged(rotator)
 
     def onArenaCreated(self):
         if self.settings.log_total[GLOBAL.ENABLED]:
