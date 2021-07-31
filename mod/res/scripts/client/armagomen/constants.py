@@ -273,8 +273,10 @@ BATTLE_TIMER = namedtuple("BATTLE_TIMER", (
 
 EFFECTS = namedtuple("EFFECTS", (
     "NAME", "NO_FLASH_BANG", "NO_SHOCK_WAVE", "NO_BINOCULARS", "IS_PLAYER_VEHICLE", "SHOW_FLASH_BANG",
-    "SHOW_SHOCK_WAVE"))(
-    "effects", "noFlashBang", "noShockWave", "noBinoculars", "isPlayerVehicle", "showFlashBang", "showShockWave")
+    "SHOW_SHOCK_WAVE", "NO_SNIPER_DYNAMIC"))(
+    "effects", "noFlashBang", "noShockWave", "noBinoculars", "isPlayerVehicle", "showFlashBang", "showShockWave",
+    "noSniperDynamic"
+)
 
 TEAM_BASES = namedtuple("TEAM_BASES", (
     "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE", "BASE_FONT", "FONT_SIZE", "HUNDRED"))(

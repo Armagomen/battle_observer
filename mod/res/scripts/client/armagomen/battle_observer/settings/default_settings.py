@@ -176,7 +176,8 @@ class DefaultSettings(object):
             EFFECTS.NO_FLASH_BANG: False,
             EFFECTS.NO_SHOCK_WAVE: False,
             # EFFECTS.NO_LIGHT_EFFECT: False,
-            EFFECTS.NO_BINOCULARS: False
+            EFFECTS.NO_BINOCULARS: False,
+            EFFECTS.NO_SNIPER_DYNAMIC: False,
         }
         self.zoom = {
             GLOBAL.ENABLED: False,
