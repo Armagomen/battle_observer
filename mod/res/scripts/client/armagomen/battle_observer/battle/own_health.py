@@ -2,7 +2,8 @@ from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
-from armagomen.utils.common import percentToRGB, events
+from armagomen.utils.common import percentToRGB
+from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, normalizeHealthPercent
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
@@ -28,11 +29,11 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
 
     def _populate(self):
         super(OwnHealth, self)._populate()
-        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        g_events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
-        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        g_events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
         super(OwnHealth, self)._dispose()
 
     def onEnterBattlePage(self):

@@ -3,7 +3,8 @@ from math import log, ceil
 
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.constants import DISPERSION, GLOBAL, POSTMORTEM, DISPERSION_TIME
-from armagomen.utils.common import events, logInfo
+from armagomen.utils.common import logInfo
+from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
 
 
@@ -25,11 +26,11 @@ class DispersionTimer(DispersionTimerMeta):
                                  color=self.settings[DISPERSION.TIMER_COLOR],
                                  color_done=self.settings[DISPERSION.TIMER_DONE_COLOR],
                                  timer=None, percent=None)
-        events.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+        g_events.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
-        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        g_events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
         super(DispersionTimer, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
@@ -63,12 +64,12 @@ class DispersionTimer(DispersionTimerMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
-        events.onDispersionAngleChanged += self.updateDispersion
+        g_events.onDispersionAngleChanged += self.updateDispersion
 
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
-        events.onDispersionAngleChanged -= self.updateDispersion
+        g_events.onDispersionAngleChanged -= self.updateDispersion
         super(DispersionTimer, self).onExitBattlePage()

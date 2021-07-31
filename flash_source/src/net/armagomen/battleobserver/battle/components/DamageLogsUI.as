@@ -53,7 +53,7 @@ package net.armagomen.battleobserver.battle.components
 				if (this.enableds.main){
 					this.top_log_inCenter = data.main.inCenter;
 					this.top_Log = new Sprite();
-					this.top_Log.x = !this.top_log_inCenter ? 0 : Math.ceil((App.appWidth >> 1));
+					this.top_Log.x = !this.top_log_inCenter ? 0 : Math.ceil(App.appWidth >> 1);
 					this.mainlog = new TextExt("damage", data.main.x, data.main.y, Filters.largeText, data.main.align, shadowSettings, this.top_Log);
 					this.addChild(this.top_Log);
 				}
@@ -98,7 +98,7 @@ package net.armagomen.battleobserver.battle.components
 		{
 			if (this.top_Log && this.top_log_inCenter)
 			{
-				this.top_Log.x = Math.ceil((App.appWidth >> 1));
+				this.top_Log.x = Math.ceil(App.appWidth >> 1);
 			}
 		}
 	}

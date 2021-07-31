@@ -12,7 +12,6 @@ import Math
 import ResMgr
 
 from BattleReplay import isPlaying, isLoading
-from Event import SafeEvent
 from armagomen.constants import MOD_NAME, GLOBAL, CACHE_DIRS
 
 
@@ -178,13 +177,3 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0):
     return "#{:02X}{:02X}{:02X}".format(r, g, b)
 
 
-class Events(object):
-
-    def __init__(self):
-        self.onArmorChanged = SafeEvent()
-        self.onMarkerColorChanged = SafeEvent()
-        self.onDispersionAngleChanged = SafeEvent()
-        self.onCrosshairPositionChanged = SafeEvent()
-
-
-events = Events()

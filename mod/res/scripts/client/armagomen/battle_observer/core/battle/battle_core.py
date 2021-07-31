@@ -5,7 +5,8 @@ from DogTagComponent import DogTagComponent
 from PlayerEvents import g_playerEvents
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
-from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, events, getPlayer
+from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, getPlayer
+from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.crosshair import CrosshairPanelContainer
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
@@ -55,13 +56,13 @@ class BattleCore(object):
     @overrideMethod(VehicleGunRotator, "__updateGunMarker")
     def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
         base(rotator, *args, **kwargs)
-        events.onDispersionAngleChanged(rotator)
+        g_events.onDispersionAngleChanged(rotator)
 
     @staticmethod
     @overrideMethod(CrosshairPanelContainer, "setPosition")
     def setPosition(base, container, x, y):
         base(container, x, y)
-        events.onCrosshairPositionChanged(x, y)
+        g_events.onCrosshairPositionChanged(x, y)
 
     def onArenaCreated(self):
         if self.settings.log_total[GLOBAL.ENABLED]:
