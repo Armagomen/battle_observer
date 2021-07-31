@@ -3,8 +3,6 @@
 	
 	import flash.display.*;
 	import flash.text.*;
-	import flash.geom.ColorTransform;
-	import net.armagomen.battleobserver.data.Constants;
 	import net.armagomen.battleobserver.utils.tween.Tween;
 	
 	/**

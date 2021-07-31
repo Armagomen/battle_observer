@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
-from armagomen.utils.common import percentToRGB
+from armagomen.utils.common import percentToRGB, events
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, normalizeHealthPercent
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
@@ -28,7 +28,12 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
 
     def _populate(self):
         super(OwnHealth, self)._populate()
+        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
+
+    def _dispose(self):
+        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        super(OwnHealth, self)._dispose()
 
     def onEnterBattlePage(self):
         super(OwnHealth, self).onEnterBattlePage()
@@ -65,7 +70,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             self._updateHealth(value)
 
     def onCameraChanged(self, ctrlMode, *_, **__):
-        self.as_onControlModeChangedS(ctrlMode)
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
         if self.isPostmortem:
             self.as_setOwnHealthS(GLOBAL.EMPTY_LINE)
