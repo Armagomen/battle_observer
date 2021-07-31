@@ -40,7 +40,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			this.yPos = basesSettings.y >= 0 ? basesSettings.y : App.appHeight + basesSettings.y;
 		}
 		
-		public function as_addTeamBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
+		public function as_addTeamBase(team:String, points:Number, invadersCnt:int, time:String, text:String):void
 		{
 			if (this.bases[team])
 			{
@@ -61,7 +61,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			}
 		}
 		
-		public function as_updateBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
+		public function as_updateBase(team:String, points:Number, invadersCnt:int, time:String, text:String):void
 		{
 			if (this.bases[team])
 			{

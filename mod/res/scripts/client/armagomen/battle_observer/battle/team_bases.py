@@ -1,10 +1,12 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen.constants import TEAM_BASES, COLORS
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
+from armagomen.constants import TEAM_BASES, COLORS
 from armagomen.utils.common import callback
 from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
 from gui.battle_control.controllers import team_bases_ctrl
 from helpers import time_utils
+
+_MAX_INVADERS_COUNT = 3
 
 
 class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
@@ -27,7 +29,7 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
     def addCapturingTeamBase(self, clientID, playerTeam, points, rate, timeLeft, invadersCnt, capturingStopped):
         item = _getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())
         self.basesDict[clientID] = item
-        self.as_addTeamBaseS(item.getColor(), points, self.getInvadersCountStr(invadersCnt),
+        self.as_addTeamBaseS(item.getColor(), points, self.getInvadersCount(invadersCnt),
                              time_utils.getTimeLeftFormat(timeLeft), item.getCapturingString(points))
         if capturingStopped:
             if invadersCnt > 0:
@@ -42,13 +44,13 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
         else:
             item = _getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())
             self.basesDict[clientID] = item
-            self.as_addTeamBaseS(item.getColor(), TEAM_BASES.HUNDRED, self.getInvadersCountStr(invadersCnt),
+            self.as_addTeamBaseS(item.getColor(), TEAM_BASES.HUNDRED, self.getInvadersCount(invadersCnt),
                                  time_utils.getTimeLeftFormat(timeLeft), item.getCapturedString())
 
     def updateTeamBasePoints(self, clientID, points, rate, timeLeft, invadersCnt):
         item = self.basesDict.get(clientID, None)
         if item:
-            self.as_updateBaseS(item.getColor(), points, self.getInvadersCountStr(invadersCnt),
+            self.as_updateBaseS(item.getColor(), points, self.getInvadersCount(invadersCnt),
                                 time_utils.getTimeLeftFormat(timeLeft), item.getCapturingString(points))
 
     def blockTeamBaseCapturing(self, clientID, points):
@@ -77,5 +79,5 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
         self.basesDict.clear()
 
     @staticmethod
-    def getInvadersCountStr(count):
-        return str(min(count, 3))
+    def getInvadersCount(count):
+        return count if count <= _MAX_INVADERS_COUNT else _MAX_INVADERS_COUNT
