@@ -107,12 +107,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			App.utils.data.cleanupDynamicObject(settings);
 		}
 		
-		public function updateHPBar(vehID:int, currHP:Number, maxHP:Number, text:String):void
+		public function updateHPBar(vehID:int, scale:Number, text:String):void
 		{
 			if (this.stoarge.hasOwnProperty(vehID))
 			{
 				var hpbar:ProgressBar = this.stoarge[vehID]["HpBar"];
-				var scale:Number = maxHP > 0 ? currHP / maxHP : 0;
 				hpbar.setNewScale(scale);
 				hpbar.setText(text);
 				if (scale == 0)

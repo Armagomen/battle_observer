@@ -1,7 +1,9 @@
 import json
 import locale
+import math
 import os
 from collections import namedtuple
+from colorsys import hsv_to_rgb
 from shutil import rmtree
 from string import printable
 
@@ -165,12 +167,24 @@ def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
 
+COLOR_MAX_PURPLE, COLOR_MAX_GREEN, COLOR_MULTIPLIER = (0.8333, 0.3333, 255)
+
+
+def percentToRGB(percent, saturation=0.5, brightness=1.0):
+    """percent is float number in range 0 - 2.4 purple, or 1.0 green"""
+    normalized_percent = min(COLOR_MAX_PURPLE, percent * COLOR_MAX_GREEN)
+    tuple_values = hsv_to_rgb(normalized_percent, saturation, brightness)
+    r, g, b = (int(math.ceil(i * COLOR_MULTIPLIER)) for i in tuple_values)
+    return "#{:02X}{:02X}{:02X}".format(r, g, b)
+
+
 class Events(object):
 
     def __init__(self):
         self.onArmorChanged = SafeEvent()
         self.onMarkerColorChanged = SafeEvent()
         self.onDispersionAngleChanged = SafeEvent()
+        self.onCrosshairPositionChanged = SafeEvent()
 
 
 events = Events()

@@ -66,7 +66,7 @@ class DefaultSettings(object):
                 GLOBAL.ENABLED: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
                 GLOBAL.X: -240,
-                GLOBAL.Y: 54
+                GLOBAL.Y: GLOBAL.ZERO
             },
             CLOCK.IN_BATTLE: {
                 GLOBAL.ENABLED: False,
@@ -176,7 +176,8 @@ class DefaultSettings(object):
             EFFECTS.NO_FLASH_BANG: False,
             EFFECTS.NO_SHOCK_WAVE: False,
             # EFFECTS.NO_LIGHT_EFFECT: False,
-            EFFECTS.NO_BINOCULARS: False
+            EFFECTS.NO_BINOCULARS: False,
+            EFFECTS.NO_SNIPER_DYNAMIC: False,
         }
         self.zoom = {
             GLOBAL.ENABLED: False,
@@ -473,7 +474,7 @@ class DefaultSettings(object):
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: 120,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
-            OWN_HEALTH.TEMPLATE: "<font color='#f5ff8f'>%(cur_health)s/%(max_health)s (%(per_health)s%%)</font>"
+            OWN_HEALTH.TEMPLATE: "<font color='%(color)s'>%(health)s/%(maxHealth)s (%(percent)s%%)</font>"
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,

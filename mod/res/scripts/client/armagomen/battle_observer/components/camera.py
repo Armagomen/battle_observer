@@ -8,7 +8,7 @@ from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
 from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.core import settings
-from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC
+from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
 from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay, callback
 
 settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": False, SNIPER.DYN_ZOOM: False}
@@ -39,6 +39,8 @@ def setSystemValue(base, zoomSettings, value):
 
 @overrideMethod(SniperCamera, "enable")
 def enable(base, camera, targetPos, saveZoom):
+    if settings.effects[EFFECTS.NO_SNIPER_DYNAMIC] and camera.isCameraDynamic():
+        camera.enableDynamicCamera(False)
     if settingsCache[SNIPER.DYN_ZOOM]:
         player = getPlayer()
         saveZoom = True
@@ -47,10 +49,10 @@ def enable(base, camera, targetPos, saveZoom):
         dist = player.vehicle.position.distTo(targetPos)
         if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
             dist_for_step = math.ceil(SNIPER.MAX_DIST / len(camera._cfg[SNIPER.ZOOMS]))
-            index = int(math.ceil(dist / dist_for_step) - GLOBAL.ONE)
+            index = int(math.floor(dist / dist_for_step))
             zoom = camera._cfg[SNIPER.ZOOMS][index]
         else:
-            zoom = min(round(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
+            zoom = min(math.floor(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
                        camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
         camera._cfg[SNIPER.ZOOM] = zoom
     return base(camera, targetPos, saveZoom)

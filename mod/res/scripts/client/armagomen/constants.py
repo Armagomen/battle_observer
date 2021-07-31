@@ -76,12 +76,12 @@ SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA",
         "autoMaintenance", "customizationChanged", "PurchaseForCrystal",
         "PurchaseForGold", "GameGreeting"))
 
-_Main = namedtuple("MAIN", (
+__Main = namedtuple("MAIN", (
     "AUTO_CLEAR_CACHE", "ENABLE_BARS_ANIMATION", "ENABLE_FPS_LIMITER", "HIDE_BADGES", "HIDE_CHAT", "HIDE_CLAN_ABBREV",
     "HIDE_DOG_TAGS", "MAX_FRAME_RATE", "NAME", "REMOVE_SHADOW_IN_PREBATTLE", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
     "ANONYMOUS_STRING", "CHANGE_ANONYMOUS_NAME", "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND",
     "HIDE_SERVER_IN_HANGAR", "DEBUG"))
-MAIN = _Main(
+MAIN = __Main(
     "autoClearCache", "enableBarsAnimation", "fps_enableFPSLimiter", "hideBadges", "hideChatInRandom", "hideClanAbbrev",
     "hide_dog_tags", "fps_maxFrameRate", "main", "removeShadowInPrebattle", "showFriendsAndClanInEars",
     "anonymousEnableShow", "anonymousString", "anonymousNameChange", "useKeyPairs", "ignore_commanders_voice",
@@ -115,11 +115,11 @@ PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME", "PREMIUM_FORMAT", "DEFAULT_FORM
     "premium_time", "premium_format", "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d "
                                       "Days. %(hours)02d:%(minutes)02d:%(seconds)02d</font>")
 
-_Sniper = namedtuple("SNIPER", (
+__Sniper = namedtuple("SNIPER", (
     "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "GUN_ZOOM", "METERS", "ZOOMS", "ZOOM_EXPOSURE",
     "INCREASED_ZOOM", "DEFAULT_STEPS", "EXPOSURE_FACTOR", "MAX_CALIBER", "MAX_DIST", "DISABLE_SNIPER",
     "DISABLE_LATENCY", "SKIP_CLIP", "CLIP"))
-SNIPER = _Sniper(
+SNIPER = __Sniper(
     "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zoomToGunMarker", "zoomXMeters", "zooms",
     "zoomExposure", "increasedZoom", [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0], 0.1, 60, 730.0,
     "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip")
@@ -141,8 +141,6 @@ class DAMAGE_LOG:
     CLASS_COLOR = "tankClassColor"
     MAX_HEALTH = "max_health"
     CLASS_ICON = "classIcon"
-    COLOR_MAX_PURPLE, COLOR_MAX_GREEN, COLOR_MULTIPLIER = (0.8333, 0.3333, 255)
-    COLOR_FORMAT = "#{:02X}{:02X}{:02X}"
     DAMAGE_AVG_COLOR = "tankDamageAvgColor"
     DAMAGE_LIST = "damageList"
     DONE_EXTENDED = "log_damage_extended"
@@ -252,15 +250,17 @@ SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
     "sixth_sense", "showTimer", "playTickSound", "lampShowTime", "timer", "TimerTemplate", "image", "lampTime",
     "timeLeft")
 
-_Dispersion = namedtuple("DISPERSION", (
+__Dispersion = namedtuple("DISPERSION", (
     "NAME", "CIRCLE_EXTRA_LAP", "CIRCLE_REPLACE", "CIRCLE_SCALE_CONFIG", "CIRCLE_SERVER", "ENABLED",
     "SCALE", "MAX_TIME", "SPG_GM_SCALE", "GUN_MARKER_MIN_SIZE", "MINUS_ONE_F", "TIMER_ENABLED",
     "TIMER_POSITION_X", "TIMER_POSITION_Y", "TIMER_COLOR", "TIMER_DONE_COLOR", "TIMER_DONE_TEMPLATE",
     "TIMER_REGULAR_TEMPLATE", "TIMER_ALIGN"))
-DISPERSION = _Dispersion(
+DISPERSION = __Dispersion(
     "dispersion_circle", "circle_extraServerLap", "circle_replaceOriginalCircle", "circle_scale", "useServerAim",
     "circle_enabled", 80, 5.0, 0.8, 16.0, -1.0, "timer_enabled", "timer_position_x", "timer_position_y",
     "timer_color", "timer_done_color", "timer_done_template", "timer_regular_template", "timer_align")
+
+DISPERSION_TIME = namedtuple("DISPERSION_TIME", ("TIMER", "PERCENT"))("timer", "percent")
 
 DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
     "NAME", "TEXT", "TEMPLATE", "GRAPHICS", "PING_BAR", "FPS_BAR", "FPS_COLOR", "PING_COLOR", "LAG_COLOR", "PING",
@@ -273,17 +273,19 @@ BATTLE_TIMER = namedtuple("BATTLE_TIMER", (
 
 EFFECTS = namedtuple("EFFECTS", (
     "NAME", "NO_FLASH_BANG", "NO_SHOCK_WAVE", "NO_BINOCULARS", "IS_PLAYER_VEHICLE", "SHOW_FLASH_BANG",
-    "SHOW_SHOCK_WAVE"))(
-    "effects", "noFlashBang", "noShockWave", "noBinoculars", "isPlayerVehicle", "showFlashBang", "showShockWave")
+    "SHOW_SHOCK_WAVE", "NO_SNIPER_DYNAMIC"))(
+    "effects", "noFlashBang", "noShockWave", "noBinoculars", "isPlayerVehicle", "showFlashBang", "showShockWave",
+    "noSniperDynamic"
+)
 
 TEAM_BASES = namedtuple("TEAM_BASES", (
     "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE", "BASE_FONT", "FONT_SIZE", "HUNDRED"))(
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
-_Aliases = namedtuple("ALIASES", (
+__Aliases = namedtuple("ALIASES", (
     "HP_BARS", "DAMAGE_LOG", "MAIN_GUN", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME",
     "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "WG_COMP", "DATE_TIME", "DISTANCE", "OWN_HEALTH"))
-ALIASES = _Aliases(
+ALIASES = __Aliases(
     "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_MainGun_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI",
@@ -293,8 +295,7 @@ ALIASES = _Aliases(
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME", "SPOTTED"))(
     "distance_to_enemy", "template", "align", "distance", "name", "spottedOnly")
 
-OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "CUR_HEALTH", "MAX_HEALTH", "PER_HEALTH"))(
-    "own_health", "template", "align", "cur_health", "max_health", "per_health")
+OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("own_health", "template", "align", "color")
 
 
 class PANELS:

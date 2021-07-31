@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
 from armagomen.constants import GLOBAL, DISTANCE, POSTMORTEM
+from armagomen.utils.common import events
 from armagomen.utils.timers import CyclicTimerEvent
 from gui.battle_control import avatar_getter
 
@@ -18,7 +19,12 @@ class Distance(DistanceMeta):
 
     def _populate(self):
         super(Distance, self)._populate()
+        events.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
+
+    def _dispose(self):
+        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        super(Distance, self)._dispose()
 
     def onEnterBattlePage(self):
         super(Distance, self).onEnterBattlePage()
@@ -85,7 +91,6 @@ class Distance(DistanceMeta):
             del self.positionsCache[vehicleID]
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
-        self.as_onControlModeChangedS(ctrlMode)
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
         if self.isPostmortem:
             self.timeEvent.stop()

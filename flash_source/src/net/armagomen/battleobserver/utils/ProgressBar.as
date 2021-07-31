@@ -3,8 +3,6 @@
 	
 	import flash.display.*;
 	import flash.text.*;
-	import flash.geom.ColorTransform;
-	import net.armagomen.battleobserver.data.Constants;
 	import net.armagomen.battleobserver.utils.tween.Tween;
 	
 	/**
@@ -66,6 +64,7 @@
 		{
 			if (this.bar.scaleX != newScale)
 			{
+				newScale = newScale < 0 ? 0 : newScale > 1.0 ? 1.0 : newScale;
 				if (this.animationEnabled)
 				{
 					this.animation.continueTo(newScale, this.visible ? this.animationTime: 0.02);

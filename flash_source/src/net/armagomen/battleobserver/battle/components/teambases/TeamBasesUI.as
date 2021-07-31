@@ -40,17 +40,17 @@ package net.armagomen.battleobserver.battle.components.teambases
 			this.yPos = basesSettings.y >= 0 ? basesSettings.y : App.appHeight + basesSettings.y;
 		}
 		
-		public function as_addTeamBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
+		public function as_addTeamBase(team:String, points:Number, invadersCnt:int, time:String, text:String):void
 		{
 			if (this.bases[team])
 			{
-				this.bases[team].updateBase(points / 100.0, invadersCnt, time, text);
+				this.bases[team].updateBase(points * 0.01, invadersCnt, time, text);
 			}
 			else
 			{
 				var base:TeamBase = new TeamBase(this.animationEnabled(), this.isColorBlind());
 				base.create(this.settings, this.shadowSettings, this.colors, team);
-				base.updateBase(points / 100.0, invadersCnt, time, text);
+				base.updateBase(points * 0.01, invadersCnt, time, text);
 				if (this.bases["green"] || this.bases["red"])
 				{
 					var offset:Number = this.settings.y >= 0 ? this.settings.height + 4 : -(this.settings.height + 4);
@@ -61,11 +61,11 @@ package net.armagomen.battleobserver.battle.components.teambases
 			}
 		}
 		
-		public function as_updateBase(team:String, points:Number, invadersCnt:String, time:String, text:String):void
+		public function as_updateBase(team:String, points:Number, invadersCnt:int, time:String, text:String):void
 		{
 			if (this.bases[team])
 			{
-				this.bases[team].updateBase(points / 100.0, invadersCnt, time, text);
+				this.bases[team].updateBase(points * 0.01, invadersCnt, time, text);
 			}
 		}
 		

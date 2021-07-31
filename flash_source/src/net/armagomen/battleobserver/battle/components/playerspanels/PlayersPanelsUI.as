@@ -14,9 +14,9 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			this.addVehicle(vehicle_id, enemy);
 		}
 		
-		public function as_updatePPanelBar(vehID:int, currHP:Number, maxHP:Number, text:String):void
+		public function as_updatePPanelBar(vehID:int, scale:Number, text:String):void
 		{
-			this.updateHPBar(vehID, currHP, maxHP, text);
+			this.updateHPBar(vehID, scale, text);
 		}
 		
 		public function as_setHPbarsVisible(vehID:int, vis:Boolean):void

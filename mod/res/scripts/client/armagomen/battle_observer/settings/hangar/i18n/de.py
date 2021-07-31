@@ -91,7 +91,8 @@ translate = {
         "noShockWave": "Keine Kameraerschütterung, wenn Panzer getroffen wurde",
         "noFlashBang": "Roten Blitz ausschalten, wenn eigener Panzer getroffen wurde",
         "noLightEffect": "Blitz und Flamme nach dem Brennen entfernen.",
-        "noBinoculars": "Schwarzen Schatten im Zielfernrohr entfernen"
+        "noBinoculars": "Schwarzen Schatten im Zielfernrohr entfernen",
+        "noSniperDynamic": "Deaktivieren Sie die dynamische Kamera im Scharfschützenmodus."
     },
     "debug_panel": {
         "header": "Panel für PING/FPS",

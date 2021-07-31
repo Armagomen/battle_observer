@@ -2,9 +2,10 @@ from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import keysParser
-from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
+from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import getEntity
+from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
 
@@ -36,18 +37,20 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                        self.barColors[COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME])
         self.vehicleColor = self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         isInEpicRange = self._arenaVisitor.gui.isInEpicRange()
-        if not isInEpicRange and not self.isEpicRandomBattle:
-            keysParser.onKeyPressed += self.onKeyPressed
-            if self.hpBarsEnable:
-                self.settingsCore.onSettingsApplied += self.onSettingsApplied
-                if self.settings[PANELS.ON_KEY_DOWN]:
-                    keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
-            if self.damagesEnable:
-                arena = self._arenaVisitor.getArenaSubscription()
-                if arena is not None:
-                    arena.onVehicleHealthChanged += self.onPlayersDamaged
-                    keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY,
-                                                 self.settings[PANELS.DAMAGES_HOT_KEY])
+        if isInEpicRange or self.isEpicRandomBattle:
+            return
+        keysParser.onKeyPressed += self.onKeyPressed
+        if self.hpBarsEnable:
+            self.settingsCore.onSettingsApplied += self.onSettingsApplied
+            if self.settings[PANELS.ON_KEY_DOWN]:
+                keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
+        if not self.damagesEnable:
+            return
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleHealthChanged += self.onPlayersDamaged
+            keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY,
+                                         self.settings[PANELS.DAMAGES_HOT_KEY])
 
     def _dispose(self):
         self._vehicles.clear()
@@ -64,11 +67,11 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                     arena.onVehicleHealthChanged -= self.onPlayersDamaged
         super(PlayersPanels, self)._dispose()
 
-    def onKeyPressed(self, name, show):
+    def onKeyPressed(self, name, isKeyDown):
         if name == PANELS.BAR_HOT_KEY:
-            self.healthOnAlt(show)
+            self.healthOnAlt(isKeyDown)
         elif name == PANELS.DAMAGES_HOT_KEY:
-            self.as_setPlayersDamageVisibleS(show)
+            self.as_setPlayersDamageVisibleS(isKeyDown)
 
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:
@@ -80,6 +83,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 self.as_colorBlindPPbarsS(vehicleID, self.COLORS[self.battle_ctx.isEnemy(vehicleID)])
 
     def onAddedToStorage(self, vehicleID, isEnemy):
+        """called from flash after creation in as_AddVehIdToListS"""
         if vehicleID in self._vehicles:
             return
         vInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
@@ -99,11 +103,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_AddPPanelBarS(vehicleID, color, self.colors[COLORS.GLOBAL],
                                   self.settings[PANELS.BAR_SETTINGS], PANELS.TEAM[isEnemy],
                                   not self.settings[PANELS.ON_KEY_DOWN])
-            self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth,
+            scale = round(getHealthPercent(newHealth, maxHealth), 3)
+            self.as_updatePPanelBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,
                                          VEHICLE.MAX: maxHealth,
-                                         VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
+                                         VEHICLE.PERCENT: scale * 100
                                      })
         if isEnemy and self.settings[PANELS.SPOTTED_FIX]:
             self.as_setSpottedPositionS(vehicleID)
@@ -121,14 +126,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def onVehicleKilled(self, targetID):
         if targetID in self._vehicles:
-            self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, GLOBAL.ZERO, GLOBAL.EMPTY_LINE)
-
-    @staticmethod
-    def getPercent(current, maximum):
-        if current > GLOBAL.ZERO:
-            return float(current) / maximum * 100
-        else:
-            return GLOBAL.F_ZERO
+            self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, GLOBAL.EMPTY_LINE)
 
     def replaceIconColor(self, vehicleID, classTag, enemy):
         self.as_setVehicleIconColorS(vehicleID, self.vehicleColor[classTag],
@@ -143,14 +141,15 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if vehicleID not in self._vehicles:
             self.as_AddVehIdToListS(vehicleID, self.battle_ctx.isEnemy(vehicleID))
         elif self.hpBarsEnable:
-            self.as_updatePPanelBarS(vehicleID, newHealth, maxHealth,
+            scale = round(getHealthPercent(newHealth, maxHealth), 3)
+            self.as_updatePPanelBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,
                                          VEHICLE.MAX: maxHealth,
-                                         VEHICLE.PERCENT: self.getPercent(newHealth, maxHealth)
+                                         VEHICLE.PERCENT: scale * 100
                                      })
 
-    def onPlayersDamaged(self, vehicleID, attackerID, damage):
+    def onPlayersDamaged(self, targetID, attackerID, damage):
         self.playersDamage[attackerID] += damage
         self.as_updateTextFieldS(attackerID, PANELS.DAMAGES_TF,
                                  self.damagesText % {PANELS.DAMAGE: self.playersDamage[attackerID]})

@@ -45,14 +45,18 @@ class ArmorCalculator(ArmorCalcMeta):
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = self.colors[ARMOR_CALC.NAME]
         self.template = self.settings[ARMOR_CALC.TEMPLATE]
+        events.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
+
+    def _dispose(self):
+        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):
         self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.typeColors.get(color, COLORS.C_RED)
         self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
-        self.as_onControlModeChangedS(ctrlMode)
         if ctrlMode in POSTMORTEM.MODES:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
 

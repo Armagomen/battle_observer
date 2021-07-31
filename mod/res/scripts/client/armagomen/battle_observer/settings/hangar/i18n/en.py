@@ -90,7 +90,8 @@ translate = {
         "noShockWave": "Remove camera shaking when hit by tank.",
         "noFlashBang": "Remove red flash when taking damage.",
         "noLightEffect": "Remove flash and flame after firing.",
-        "noBinoculars": "Remove the blackout in sniper mode."
+        "noBinoculars": "Remove the blackout in sniper mode.",
+        "noSniperDynamic": "Disable dynamic camera in sniper mode."
     },
     "debug_panel": {
         "header": "PANEL PING/FPS",

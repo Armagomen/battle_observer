@@ -34,11 +34,11 @@
 			this.animate = animationEnabled;
 		}
 		
-		public function updateBase(newScale:Number, invadersCnt:String, time:String, text:String):void
+		public function updateBase(newScale:Number, invadersCnt:int, time:String, text:String):void
 		{
 			if (this.animate)
 			{
-				newScale = Math.min(1.0, newScale + 0.01 * int(invadersCnt))
+				newScale = Math.min(1.0, newScale + 0.01 * invadersCnt)
 				this.animation.continueTo(newScale, newScale > this.progressBar.scaleX ? 1.0 : 0.1);
 			}
 			else
@@ -47,7 +47,7 @@
 			}
 			this.status.htmlText = text;
 			this.timer.text = time;
-			this.invaders.text = invadersCnt;
+			this.invaders.text = invadersCnt.toString();
 		}
 		
 		public function updateCaptureText(captureText:String):void
@@ -110,11 +110,11 @@
 			baseMain.addChild(PlayersIcon(iconWidth));
 			baseMain.addChild(TimeIcon(iconWidth, settings.width));
 			
-			this.status = new TextExt("status", settings.width >> 1, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
+			this.status = new TextExt("status", settings.width * 0.5, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
 			this.timer = new TextExt("timer", settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
 			this.invaders = new TextExt("invaders", iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
 			
-			this.x = App.appWidth / 2 - baseMain.width / 2;
+			this.x = App.appWidth * 0.5 - baseMain.width * 0.5;
 			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;
 			
 			if (this.animate)

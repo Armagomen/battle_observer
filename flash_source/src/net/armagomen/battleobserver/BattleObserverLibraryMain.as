@@ -97,7 +97,7 @@ package net.armagomen.battleobserver
 					this.registerComponent(this.addChild(new WGComponentsSetting), ui_name);
 					break;
 				default: 
-					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO]: No view component named - " + ui_name);
+					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + ui_name);
 					break;
 				}
 			}
