@@ -181,6 +181,10 @@ class DispersionCircle(object):
             self.hooksEnable = self.enabled and (not self.replaceOriginalCircle or self.extraServerLap)
             global DISPERSION_SCALE
             DISPERSION_SCALE = config[DISPERSION.CIRCLE_SCALE_CONFIG] * 0.01
+            if self.hooksEnable:
+                VehicleGunRotator.USE_LOCK_PREDICTION = config[DISPERSION.USE_LOCK_PREDICTION]
+            else:
+                VehicleGunRotator.USE_LOCK_PREDICTION = True
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if self.enabled:
