@@ -200,8 +200,8 @@ class DispersionCircle(object):
                 if self.replaceOriginalCircle:
                     client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
                 else:
-                    client = gun_marker_ctrl._DefaultGunMarkerController(
-                        CLIENT, _GunMarkersDPFactory().getClientProvider())
+                    client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT,
+                                                                         _GunMarkersDPFactory().getClientProvider())
                 server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
             return _GunMarkersDecorator(client, server, self.replaceOriginalCircle, self.extraServerLap)
         else:
