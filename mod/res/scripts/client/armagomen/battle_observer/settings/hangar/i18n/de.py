@@ -67,7 +67,8 @@ translate = {
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
-        "circle_enabled": "Улучшенный круг сведения.",
+        "circle_enabled": "Verbessertes Mischen.",
+        "circle_use_lock_prediction": "Das Fadenkreuz des Servers bleibt bei der Zielerfassung hängen.",
         "circle_extraServerLap": "Anzeige des Kreises für die Streuung der Kanone.",
         "circle_extraServerLap_tooltip": "Fügt einen zweiten Kreis der Server-Sichtung hinzu.",
         "circle_replaceOriginalCircle": "Ersetzen des originalen Kreises.",

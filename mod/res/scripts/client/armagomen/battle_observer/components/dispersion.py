@@ -181,6 +181,10 @@ class DispersionCircle(object):
             self.hooksEnable = self.enabled and (not self.replaceOriginalCircle or self.extraServerLap)
             global DISPERSION_SCALE
             DISPERSION_SCALE = config[DISPERSION.CIRCLE_SCALE_CONFIG] * 0.01
+            if self.hooksEnable:
+                VehicleGunRotator.USE_LOCK_PREDICTION = config[DISPERSION.USE_LOCK_PREDICTION]
+            else:
+                VehicleGunRotator.USE_LOCK_PREDICTION = True
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if self.enabled:
@@ -196,8 +200,8 @@ class DispersionCircle(object):
                 if self.replaceOriginalCircle:
                     client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
                 else:
-                    client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT,
-                                                                         _GunMarkersDPFactory().getClientProvider())
+                    client = gun_marker_ctrl._DefaultGunMarkerController(
+                        CLIENT, _GunMarkersDPFactory().getClientProvider())
                 server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
             return _GunMarkersDecorator(client, server, self.replaceOriginalCircle, self.extraServerLap)
         else:

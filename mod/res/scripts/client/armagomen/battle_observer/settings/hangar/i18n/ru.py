@@ -71,6 +71,7 @@ translate = {
     "dispersion_circle": {
         "header": "Улучшенное сведение / серверный прицел.",
         "circle_enabled": "Улучшенный круг сведения.",
+        "circle_use_lock_prediction": "Прилипание серверного прицела при захвате цели.",
         "circle_extraServerLap": "Отображать как дополнительный серверный прицел.",
         "circle_extraServerLap_tooltip": "Добавит второй круг сведения серверного прицела.",
         "circle_replaceOriginalCircle": "Заменить оригинальный круг сведения уменшенным.",
