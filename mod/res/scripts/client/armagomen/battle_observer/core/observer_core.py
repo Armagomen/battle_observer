@@ -1,4 +1,5 @@
 import os
+import sys
 
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.components import ComponentsLoader
@@ -39,6 +40,7 @@ class ObserverCore(object):
         update = UpdateMain()
         update.subscribe()
         if self.isFileValid:
+            logInfo("Launched at python " + sys.version)
             logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
             self.componentsLoader.start()
             self.configLoader.start()

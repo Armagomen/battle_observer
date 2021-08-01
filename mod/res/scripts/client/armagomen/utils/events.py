@@ -7,7 +7,6 @@ class Events(object):
         self.onArmorChanged = SafeEvent()
         self.onMarkerColorChanged = SafeEvent()
         self.onDispersionAngleChanged = SafeEvent()
-        self.onCrosshairPositionChanged = SafeEvent()
 
 
 g_events = Events()

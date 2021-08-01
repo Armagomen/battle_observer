@@ -45,11 +45,15 @@ class ArmorCalculator(ArmorCalcMeta):
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = self.colors[ARMOR_CALC.NAME]
         self.template = self.settings[ARMOR_CALC.TEMPLATE]
-        g_events.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
-        g_events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):

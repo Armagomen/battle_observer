@@ -26,11 +26,15 @@ class DispersionTimer(DispersionTimerMeta):
                                  color=self.settings[DISPERSION.TIMER_COLOR],
                                  color_done=self.settings[DISPERSION.TIMER_DONE_COLOR],
                                  timer=None, percent=None)
-        g_events.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
-        g_events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
         super(DispersionTimer, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
@@ -65,7 +69,6 @@ class DispersionTimer(DispersionTimerMeta):
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
         g_events.onDispersionAngleChanged += self.updateDispersion
-
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
