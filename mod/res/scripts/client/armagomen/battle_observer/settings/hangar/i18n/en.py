@@ -145,8 +145,8 @@ translate = {
     },
     "armor_calculator": {
         "header": "Penetration indicator - CALCULATOR GIVEN ARMOR",
-        "calcPosition*x": "Position the main text box of the calculator Horizontally",
-        "calcPosition*y": "Position the main text box of the calculator Vertically",
+        "position*x": "Position the main text box of the calculator Horizontally",
+        "position*y": "Position the main text box of the calculator Vertically",
         "template": "Template Main text field",
         "template_tooltip": "Macro format:% (name) data type s:d:f.<br>"
                             "s-string, d-decimal, f-floating point<br><br>"

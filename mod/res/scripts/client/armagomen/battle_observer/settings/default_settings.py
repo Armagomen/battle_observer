@@ -210,7 +210,7 @@ class DefaultSettings(object):
         }
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
-            ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 100},
+            ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 30},
             ARMOR_CALC.TEMPLATE: ARMOR_CALC.DEFAULT_TEMPLATE,
             ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE,
             ARMOR_CALC.RICOCHET: ARMOR_CALC.RICOCHET_MESSAGE,

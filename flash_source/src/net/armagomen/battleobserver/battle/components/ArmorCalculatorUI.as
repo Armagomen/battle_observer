@@ -32,7 +32,7 @@ package net.armagomen.battleobserver.battle.components
 		{
 			if (!this.loaded)
 			{
-				this.armorCalc = new TextExt("armorCalc", calc.calcPosition.x, calc.calcPosition.y, Filters.armorText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
+				this.armorCalc = new TextExt("armorCalc", calc.position.x, calc.position.y, Filters.armorText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
 				App.utils.data.cleanupDynamicObject(calc);
 				this.loaded = true;
 			}
