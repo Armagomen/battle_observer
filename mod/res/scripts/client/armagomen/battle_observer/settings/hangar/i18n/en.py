@@ -66,7 +66,8 @@ translate = {
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",
-        "circle_enabled": "Улучшенный круг сведения.",
+        "circle_enabled": "Improved crosshair.",
+        "circle_use_lock_prediction": "The server crosshair sticks on target lock.",
         "circle_extraServerLap": "Display server scatter circle.",
         "circle_extraServerLap_tooltip": "Adds a second circle of server crosshair.",
         "circle_replaceOriginalCircle": "Replace Original Circle.",
