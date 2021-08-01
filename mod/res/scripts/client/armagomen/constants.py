@@ -220,7 +220,7 @@ ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "MACROS_COUNTED_ARMOR",
     "MACROS_PIERCING_RESERVE", "MACROS_MESSAGE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE",
     "MESSAGES_TEMPLATE", "RICOCHET_MESSAGE", "NO_DAMAGE_MESSAGE", "DEFAULT_TEMPLATE"))(
-    "piercingPower", "armor_calculator", "calcPosition", "messages", "template", "color", "countedArmor",
+    "piercingPower", "armor_calculator", "position", "messages", "template", "color", "countedArmor",
     "piercingReserve", "message", "caliber", "ricochet", "noDamage",
     {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in
      set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}, "Ricochet",
@@ -405,7 +405,7 @@ class CONFIG_INTERFACE:
             "panels_icon_enabled": ("panels_icon_filter_strength",)
         },
         ARMOR_CALC.NAME: {
-            'showCalcPoints': ('calcPosition*x', 'calcPosition*y', 'template')
+            'showCalcPoints': ('position*x', 'position*y', 'template')
         },
         MAIN.NAME: {
             MAIN.ENABLE_FPS_LIMITER: (MAIN.MAX_FRAME_RATE,),

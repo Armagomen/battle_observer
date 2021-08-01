@@ -2,7 +2,7 @@ from collections import defaultdict, namedtuple
 
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.constants import ARMOR_CALC, GLOBAL, POSTMORTEM, COLORS
-from armagomen.utils.common import events
+from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
 
 OtherMessages = namedtuple("OtherMessages", ("ricochet", "noDamage"))
@@ -24,15 +24,15 @@ class ArmorCalculator(ArmorCalcMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
-        events.onArmorChanged += self.onArmorChanged
-        events.onMarkerColorChanged += self.onMarkerColorChanged
+        g_events.onArmorChanged += self.onArmorChanged
+        g_events.onMarkerColorChanged += self.onMarkerColorChanged
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
-        events.onArmorChanged -= self.onArmorChanged
-        events.onMarkerColorChanged -= self.onMarkerColorChanged
+        g_events.onArmorChanged -= self.onArmorChanged
+        g_events.onMarkerColorChanged -= self.onMarkerColorChanged
         super(ArmorCalculator, self).onExitBattlePage()
 
     def _populate(self):
@@ -45,11 +45,15 @@ class ArmorCalculator(ArmorCalcMeta):
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.typeColors = self.colors[ARMOR_CALC.NAME]
         self.template = self.settings[ARMOR_CALC.TEMPLATE]
-        events.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
-        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):

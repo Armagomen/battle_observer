@@ -1,7 +1,7 @@
 {
-  "calcPosition": {
+  "position": {
     "x": 0, 
-    "y": 100
+    "y": 30
   }, 
   "enabled": true, 
   "messages": {

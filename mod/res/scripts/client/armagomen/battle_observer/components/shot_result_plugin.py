@@ -4,7 +4,8 @@ from Vehicle import Vehicle
 from aih_constants import SHOT_RESULT
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import VEHICLE, GLOBAL, ALIASES
-from armagomen.utils.common import getPlayer, overrideMethod, events
+from armagomen.utils.common import getPlayer, overrideMethod
+from armagomen.utils.events import g_events
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES as SHELLS
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
@@ -119,8 +120,8 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
             color = self.__colors[shotResult]
             if self.__cache[markerType] != shotResult and self._parentObj.setGunMarkerColor(markerType, color):
                 self.__cache[markerType] = shotResult
-                events.onMarkerColorChanged(color)
-            events.onArmorChanged(armor, piercingPower, caliber, ricochet, noDamage)
+                g_events.onMarkerColorChanged(color)
+            g_events.onArmorChanged(armor, piercingPower, caliber, ricochet, noDamage)
 
     def __setEnabled(self, viewID):
         self.__isEnabled = self.__mapping[viewID] or viewID == CROSSHAIR_VIEW_ID.STRATEGIC

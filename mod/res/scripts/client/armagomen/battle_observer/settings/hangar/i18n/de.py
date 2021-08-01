@@ -145,8 +145,8 @@ translate = {
     },
     "armor_calculator": {
         "header": "Durchschlagsanzeiger (Berechnung der Panzerung)",
-        "calcPosition*x": "Position des Haupt Textfeldes waagerecht",
-        "calcPosition*y": "Position des Haupt Textfeldes senkrecht",
+        "position*x": "Position des Haupt Textfeldes waagerecht",
+        "position*y": "Position des Haupt Textfeldes senkrecht",
         "template": "Formatierung des Haupt-Textfeldes",
 
         "template_tooltip": "Makroformat:% (Name) Datentyp s:d:f.<br>"

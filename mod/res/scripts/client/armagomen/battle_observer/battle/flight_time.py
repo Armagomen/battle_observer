@@ -1,8 +1,8 @@
 from collections import defaultdict
 
-from armagomen.constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
-from armagomen.utils.common import vector3, events
+from armagomen.constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
+from armagomen.utils.common import vector3
 from gui.battle_control import avatar_getter
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -20,11 +20,15 @@ class FlightTime(FlightTimeMeta):
     def _populate(self):
         super(FlightTime, self)._populate()
         self.template = self.settings[FLIGHT_TIME.TEMPLATE]
-        events.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
-        events.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
         super(FlightTime, self)._dispose()
 
     def showOnCurrentTank(self):
