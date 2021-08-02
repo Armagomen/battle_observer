@@ -1,3 +1,5 @@
+import math
+
 from CurrentVehicle import g_currentVehicle
 from DogTagComponent import DogTagComponent
 from PlayerEvents import g_playerEvents
@@ -63,8 +65,10 @@ class BattleCore(object):
                     damage = dossier.getRandomStats().getAvgDamage()
                     assist = dossier.getRandomStats().getDamageAssistedEfficiencyWithStan()
                     if damage is not None:
-                        damage = round(damage)
+                        damage = math.floor(damage)
                         DAMAGE_LOG.AVG_DAMAGE_DATA = damage
-                        logInfo("set vehicle efficiency (avgDamage: {}, avgAssist: {})".format(damage, assist))
+                    if assist is not None:
+                        assist = math.floor(assist)
+                    logInfo("set vehicle efficiency (avgDamage: {}, avgAssist: {})".format(damage, assist))
             except AttributeError:
                 DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO

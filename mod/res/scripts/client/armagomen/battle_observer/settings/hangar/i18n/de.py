@@ -63,7 +63,8 @@ translate = {
         "hide_server_in_hangar": "Deaktiviere die Anzeige des Servers im Hangar.",
         "hide_server_in_hangar_tooltip": "Der Parameter funktioniert nach dem Neustart des "
                                          "Hangars oder dem Neustart des Spiels.",
-        "premium_time": "Display exact premium time."
+        "premium_time": "Display exact premium time.",
+        "unlock_crew_experience": "Deaktivieren Sie Beschleunigtes Besatzungstraining."
     },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
@@ -78,7 +79,7 @@ translate = {
         "timer_position_x": "Timer Position X",
         "timer_position_y": "Timer Position Y",
         "timer_color": "Timerfarbe, noch nicht konvergiert.",
-        "timer_done_color": "Timer- / Nachrichtenfarbe (volle Reduzierung).",
+        "timer_done_color": "Timer / Nachrichtenfarbe (volle Reduzierung).",
         "timer_align": "Text align."
     },
     "tank_carousel": {

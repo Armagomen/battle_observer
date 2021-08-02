@@ -141,7 +141,7 @@ class DispersionCircle(object):
     def createOverrideComponents(self, base, *args):
         if not self.hooksEnable:
             return base(*args)
-        self.player.base.setDevelopmentFeature(0, 'server_marker', True, '')
+        self.player.base.setDevelopmentFeature(GLOBAL.ZERO, 'server_marker', True, '')
         if base.__name__ == "createComponents":
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
