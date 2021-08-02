@@ -42,7 +42,7 @@ class ObserverCore(object):
         if not settings.main[MAIN.UNLOCK_CREW]:
             return
         vehicle = g_currentVehicle.item
-        if vehicle.isPostProgressionExists:
+        if vehicle.postProgressionAvailability() and vehicle.isPostProgressionExists:
             value = vehicle.postProgression.getCompletion() == PostProgressionCompletion.FULL
             if vehicle.isXPToTman and not value or not vehicle.isXPToTman and value:
                 self.uncheckTmenXPAccelerator(vehicle, value)
