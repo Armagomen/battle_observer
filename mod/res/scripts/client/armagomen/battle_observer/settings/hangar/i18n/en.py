@@ -63,7 +63,10 @@ translate = {
         "hide_server_in_hangar": "Disable the display of the server in the hangar.",
         "hide_server_in_hangar_tooltip": "The parameter will work after restarting the hangar or restarting the game.",
         "premium_time": "Display exact premium time.",
-        "unlock_crew_experience": "Uncheck Accelerated Crew Training."
+        "unlock_crew_experience": "Uncheck Accelerated Crew Training.",
+        "unlock_crew_experience_tooltip": "If the post-progression is available for the tank and the checkbox for the "
+                                          "crew is not pumped, it will be disabled automatically, as soon as the "
+                                          "progression level becomes maximum, you will be prompted to turn it back on."
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",

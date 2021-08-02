@@ -14,6 +14,7 @@ from gui.Scaleform.daapi.settings import config as packages
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils import decorators
+from gui.veh_post_progression.models.progression import PostProgressionCompletion
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 
@@ -32,15 +33,19 @@ class ObserverCore(object):
         g_currentVehicle.onChanged += self.onVehicleChanged
 
     @decorators.process('updateTankmen')
-    def uncheckTmenXPAccelerator(self, vehicle):
-        result = yield VehicleTmenXPAccelerator(vehicle, False).request()
+    def uncheckTmenXPAccelerator(self, vehicle, value):
+        result = yield VehicleTmenXPAccelerator(vehicle, value).request()
         if result.success:
-            logInfo("The checkbox for accelerated crew training is unchecked.")
+            logInfo("The checkbox for accelerated crew training is unchecked. %s" % vehicle.name)
 
     def onVehicleChanged(self):
+        if not settings.main[MAIN.UNLOCK_CREW]:
+            return
         vehicle = g_currentVehicle.item
-        if settings.main[MAIN.UNLOCK_CREW] and vehicle.isXPToTman:
-            self.uncheckTmenXPAccelerator(vehicle)
+        if vehicle.isPostProgressionExists:
+            value = vehicle.postProgression.getCompletion() == PostProgressionCompletion.FULL
+            if vehicle.isXPToTman and not value or not vehicle.isXPToTman and value:
+                self.uncheckTmenXPAccelerator(vehicle, value)
 
     def onExit(self):
         if self.isFileValid:
