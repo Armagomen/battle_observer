@@ -2,7 +2,6 @@ from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
 from armagomen.utils.common import logInfo
-from gui.Scaleform.Waiting import Waiting
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
@@ -22,7 +21,7 @@ class AccelerateTmenXp(object):
 
     def onVehicleChanged(self):
         vehicle = g_currentVehicle.item
-        if not settings.main[MAIN.UNLOCK_CREW] or Waiting.isOpened('updateTankmen') or not vehicle:
+        if not settings.main[MAIN.UNLOCK_CREW] or vehicle is None:
             return
         if vehicle.postProgressionAvailability() and vehicle.isPostProgressionExists:
             value = vehicle.postProgression.getCompletion() == PostProgressionCompletion.FULL
