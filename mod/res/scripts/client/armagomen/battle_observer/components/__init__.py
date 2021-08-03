@@ -23,7 +23,8 @@ class ComponentsLoader(object):
             'service_channel_filter': None,
             'shot_result_plugin': None,
             'tank_carousel': None,
-            'wg_logs_fixes': None
+            'wg_logs_fixes': None,
+            'tmen_xp': None
         }
 
     def start(self):

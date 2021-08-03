@@ -1,7 +1,6 @@
 import os
 import sys
 
-from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
@@ -11,10 +10,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import FILE_NAME, MESSAGES, MAIN, MOD_NAME
 from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, setMaxFrameRate, clearClientCache
 from gui.Scaleform.daapi.settings import config as packages
-from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.personality import ServicesLocator
-from gui.shared.utils import decorators
-from gui.veh_post_progression.models.progression import PostProgressionCompletion
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 
@@ -30,22 +26,6 @@ class ObserverCore(object):
         self.componentsLoader = ComponentsLoader()
         self.limiterEnabled = settings.main[MAIN.ENABLE_FPS_LIMITER]
         ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-        g_currentVehicle.onChanged += self.onVehicleChanged
-
-    @decorators.process('updateTankmen')
-    def uncheckTmenXPAccelerator(self, vehicle, value):
-        result = yield VehicleTmenXPAccelerator(vehicle, value).request()
-        if result.success:
-            logInfo("The checkbox for accelerated crew training is unchecked. %s" % vehicle.name)
-
-    def onVehicleChanged(self):
-        if not settings.main[MAIN.UNLOCK_CREW]:
-            return
-        vehicle = g_currentVehicle.item
-        if vehicle.postProgressionAvailability() and vehicle.isPostProgressionExists:
-            value = vehicle.postProgression.getCompletion() == PostProgressionCompletion.FULL
-            if vehicle.isXPToTman and not value or not vehicle.isXPToTman and value:
-                self.uncheckTmenXPAccelerator(vehicle, value)
 
     def onExit(self):
         if self.isFileValid:
