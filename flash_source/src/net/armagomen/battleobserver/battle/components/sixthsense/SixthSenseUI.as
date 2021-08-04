@@ -26,6 +26,10 @@
 		{
 			super();
 			this.x = App.appWidth >> 1;
+			this._container = new Sprite()
+			this._container.name = "image";
+			this._container.visible = false;
+			this.addChild(_container);
 		}
 		
 		public function as_startUpdate(settings:Object):void
@@ -33,19 +37,37 @@
 			if (!this.loaded)
 			{
 				var battlePage:* = parent;
-				if (battlePage._componentsStorage.hasOwnProperty(BATTLE_VIEW_ALIASES.SIXTH_SENSE))
+				var sixthSense:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
+				if (sixthSense)
 				{
-					var sixthSense:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
-					if (sixthSense)
-					{
-						battlePage.removeChild(sixthSense);
-					}
+					battlePage.removeChild(sixthSense);
 				}
 				this.animate = this.animationEnabled();
-				params = App.utils.data.cloneObject(settings);
+				this.params = settings;
 				this.setImage();
-				App.utils.data.cleanupDynamicObject(settings);
 				this.loaded = true;
+			}
+		}
+		
+		private function addLoadedImageAndTimer():void
+		{
+			this.image.smoothing = params.image.smoothing;
+			this.image.alpha = params.image.alpha;
+			this.image.scaleX = this.image.scaleY = params.image.scale;
+			this.image.x = params.image.x - image.width * 0.5;
+			this.image.y = params.image.y;
+			this._container.addChild(this.image);
+			if (params.showTimer)
+			{
+				this.timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+				if (this.animate)
+				{
+					this.animation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);
+				}
+				else
+				{
+					this.timer.alpha = params.timer.alpha;
+				}
 			}
 		}
 		
@@ -56,24 +78,7 @@
 				[Embed(source = "SixthSenseIcon.png")]
 				var Icon:Class;
 				this.image = new Icon();
-				this.image.smoothing = params.image.smoothing;
-				this.image.alpha = params.image.alpha;
-				this.image.scaleX = this.image.scaleY = params.image.scale;
-				this.image.x = params.image.x - image.width >> 1;
-				this.image.y = params.image.y;
-				this._container.addChild(this.image);
-				if (params.showTimer)
-				{
-					timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-					if (this.animate)
-					{
-						this.animation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);
-					}
-					else
-					{
-						timer.alpha = params.timer.alpha;
-					}
-				}
+				this.addLoadedImageAndTimer();
 			}
 			this._container.visible = true;
 		}
@@ -89,7 +94,7 @@
 			{
 				this.animation.start();
 			}
-			timer.htmlText = str;
+			this.timer.htmlText = str;
 		}
 		
 		private function imageLoaded(evt:Event):void
@@ -100,24 +105,7 @@
 				loaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
 			}
 			this.image = loaderInfo.content as Bitmap;
-			this.image.smoothing = params.image.smoothing;
-			this.image.alpha = params.image.alpha;
-			this.image.scaleX = this.image.scaleY = params.image.scale;
-			this.image.x = params.image.x - image.width >> 1;
-			this.image.y = params.image.y;
-			this._container.addChild(this.image);
-			if (params.showTimer)
-			{
-				timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-				if (this.animate)
-				{
-					this.animation = new Tween(this.timer, "alpha", 1, 0, 0.98, true);
-				}
-				else
-				{
-					timer.alpha = params.timer.alpha;
-				}
-			}
+			this.addLoadedImageAndTimer();
 		}
 		
 		private function setImage():void

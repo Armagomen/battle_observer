@@ -9,7 +9,7 @@
 	public class ObserverDateTimesUI extends ObserverBattleDispalaysble
 	{
 		private var dateTime:TextExt;
-		private var config:Object;
+		private var settings:Object;
 		public var getShadowSettings:Function;
 		private var loaded:Boolean = false;
 		
@@ -22,7 +22,7 @@
 		{
 			if (!this.loaded)
 			{
-				this.config = settings;
+				this.settings = settings;
 				var x:Number = settings.x < 0 ? App.appWidth + settings.x : settings.x;
 				var y:Number = settings.y < 0 ? App.appHeight + settings.y : settings.y;
 				dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
@@ -40,8 +40,8 @@
 		
 		override public function onResizeHandle(event:Event):void
 		{
-			dateTime.x = config.x < 0 ? App.appWidth + config.x : config.x;
-			dateTime.y = config.y < 0 ? App.appHeight + config.y : config.y;
+			dateTime.x = settings.x < 0 ? App.appWidth + settings.x : settings.x;
+			dateTime.y = settings.y < 0 ? App.appHeight + settings.y : settings.y;
 		}
 	}
 
