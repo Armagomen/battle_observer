@@ -24,16 +24,8 @@
 			if (!this.loaded)
 			{
 				this.config = settings;
-				var x:int = settings.x;
-				if (x < 0)
-				{
-					x = App.appWidth + x;
-				}
-				var y:int = settings.y;
-				if (y < 0)
-				{
-					y = App.appHeight + y;
-				}
+				var x:Number = settings.x < 0 ? App.appWidth + settings.x : settings.x;
+				var y:Number = settings.y < 0 ? App.appHeight + settings.y : settings.y;
 				dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
 				this.loaded = true;
 			}
@@ -49,18 +41,8 @@
 		
 		override public function onResizeHandle(event:Event):void
 		{
-			var x:int = config.x;
-			if (x < 0)
-			{
-				x = App.appWidth + x;
-			}
-			var y:int = config.y;
-			if (y < 0)
-			{
-				y = App.appHeight + y;
-			}
-			dateTime.x = x;
-			dateTime.y = y;
+			dateTime.x = config.x < 0 ? App.appWidth + config.x : config.x;
+			dateTime.y = config.y < 0 ? App.appHeight + config.y : config.y;
 		}
 	}
 
