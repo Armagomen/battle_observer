@@ -10,8 +10,6 @@
 	public class ObserverBattleTimerUI extends ObserverBattleDispalaysble
 	{
 		private var battleTimer:TextExt;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
 		
 		public function ObserverBattleTimerUI()
 		{
@@ -20,7 +18,7 @@
 		
 		public function as_startUpdate():void
 		{
-			if (!this.loaded)
+			if (this.battleTimer == null)
 			{
 				this.x = App.appWidth;
 				this.battleTimer = new TextExt("_timer", -8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, getShadowSettings(), this);
@@ -30,7 +28,6 @@
 				{
 					parent.removeChild(component);
 				}
-				this.loaded = true;
 			}
 		}
 		

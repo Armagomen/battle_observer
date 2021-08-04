@@ -16,8 +16,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	{
 		private var items:Object    = {};
 		private var stoarge:Object  = {};
-		public var getShadowSettings:Function;
-		public var animationEnabled:Function;
 		public var onAddedToStorage:Function;
 		private var animate:Boolean = false;
 		
@@ -88,11 +86,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				{
 					bar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
 				}
-				bar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText, getShadowSettings());
+				bar.addTextField(textX, settings.players_bars_text.y, autoSize, null, getShadowSettings());
 				bar.setVisible(startVisible);
 				this.stoarge[vehID]["HpBar"] = this.items[vehID].addChild(bar);
 			}
-			App.utils.data.cleanupDynamicObject(settings);
 		}
 		
 		public function updateHPBar(vehID:int, scale:Number, text:String):void
@@ -127,10 +124,9 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				{
 					autoSize = params.align == "left" ? "right" : "left";
 				}
-				this.stoarge[vehID][name] = new TextExt(name, team == "red" ? -params.x : params.x, params.y, Filters.normalText, autoSize, getShadowSettings(), items[vehID]);
+				this.stoarge[vehID][name] = new TextExt(name, team == "red" ? -params.x : params.x, params.y, null, autoSize, getShadowSettings(), items[vehID]);
 				this.stoarge[vehID][name].visible = name != "DamageTf";
 			}
-			App.utils.data.cleanupDynamicObject(params);
 		}
 		
 		public function updateTextField(vehID:int, name:String, text:String):void

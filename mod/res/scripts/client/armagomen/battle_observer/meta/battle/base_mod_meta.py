@@ -1,4 +1,5 @@
 from PlayerEvents import g_playerEvents
+from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import settings
 from armagomen.constants import ALIAS_TO_CONFIG_NAME, MAIN, COLORS, GLOBAL
 from armagomen.utils.common import logInfo, getPlayer
@@ -50,6 +51,9 @@ class BaseModMeta(BaseDAAPIComponent):
     def onDragFinished(self, x, y):
         self.settings["x"] = x
         self.settings["y"] = y
+
+    def isColorBlind(self):
+        return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
 
     def _populate(self):
         super(BaseModMeta, self)._populate()

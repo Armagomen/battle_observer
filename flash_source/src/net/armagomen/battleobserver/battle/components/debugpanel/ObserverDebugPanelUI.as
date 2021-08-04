@@ -17,9 +17,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var fpsBarEnabled:Boolean  = false;
 		private var pingBarEnabled:Boolean = false;
 		private var maxFps:int             = 200;
-		public var getShadowSettings:Function;
-		public var animationEnabled:Function;
-		private var loaded:Boolean         = false;
 		
 		public function ObserverDebugPanelUI()
 		{
@@ -28,7 +25,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		
 		public function as_startUpdate(data:Object, vSync:Boolean, limit:int):void
 		{
-			if (!this.loaded)
+			if (this.debugText == null)
 			{
 				this.graphEnabled = Boolean(data.debugGraphics.enabled);
 				if (this.graphEnabled)
@@ -44,16 +41,16 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 						}
 						var fps:Object       = data.debugGraphics.fpsBar;
 						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
-						fpsBar = this.addChild(new ProgressBar(animationEnabled(), fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0.3)) as ProgressBar;
-						App.utils.data.cleanupDynamicObject(fps);
+						this.fpsBar = new ProgressBar(animationEnabled(), fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0.3);
+						this.addChild(this.fpsBar);
 					}
 					
 					if (this.pingBarEnabled)
 					{
 						var ping:Object       = data.debugGraphics.pingBar;
 						var pingfilters:Array = [Filters.handleGlowFilter(ping.glowFilter)];
-						pingBar = this.addChild(new ProgressBar(animationEnabled(), ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0.3)) as ProgressBar;
-						App.utils.data.cleanupDynamicObject(ping);
+						this.pingBar = new ProgressBar(animationEnabled(), ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0.3);
+						this.addChild(this.pingBar);
 					}
 				}
 				this.debugText = new TextExt("_debugPanel", data.debugText.x, data.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
@@ -63,9 +60,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				{
 					battlePage.removeChild(debugPanel);
 				}
-				App.utils.data.cleanupDynamicObject(data);
-				this.loaded = true;
-				y
 			}
 		}
 		

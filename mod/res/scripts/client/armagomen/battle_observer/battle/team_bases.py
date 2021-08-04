@@ -1,4 +1,3 @@
-from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
 from armagomen.constants import TEAM_BASES, COLORS
 from armagomen.utils.common import callback
@@ -14,9 +13,6 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
     def __init__(self):
         super(TeamBases, self).__init__()
         self.basesDict = {}
-
-    def isColorBlind(self):
-        return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
 
     def _populate(self):
         super(TeamBases, self)._populate()

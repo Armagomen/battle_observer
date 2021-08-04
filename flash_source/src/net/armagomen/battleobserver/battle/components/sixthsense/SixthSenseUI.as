@@ -16,10 +16,7 @@
 		private var timer:TextExt;
 		private var image:Bitmap      = null;
 		private var _container:Sprite = null;
-		public var getShadowSettings:Function;
-		public var animationEnabled:Function;
 		private var animate:Boolean   = false;
-		private var loaded:Boolean    = false;
 		private var animation:Tween   = null;
 		
 		public function SixthSenseUI()
@@ -34,7 +31,7 @@
 		
 		public function as_startUpdate(settings:Object):void
 		{
-			if (!this.loaded)
+			if (this.image == null)
 			{
 				var battlePage:* = parent;
 				var sixthSense:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
@@ -45,7 +42,6 @@
 				this.animate = this.animationEnabled();
 				this.params = settings;
 				this.setImage();
-				this.loaded = true;
 			}
 		}
 		

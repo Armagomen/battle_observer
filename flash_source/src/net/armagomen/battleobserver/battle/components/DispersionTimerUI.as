@@ -7,8 +7,6 @@ package net.armagomen.battleobserver.battle.components
 	public class DispersionTimerUI extends ObserverBattleDispalaysble
 	{
 		private var dispersionTime:TextExt;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
 		
 		public function DispersionTimerUI()
 		{
@@ -17,18 +15,10 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_startUpdate(config:Object):void
 		{
-			if (!this.loaded)
+			if (this.dispersionTime == null)
 			{
 				dispersionTime = new TextExt("dispersionTimer", config.timer_position_x, config.timer_position_y, Filters.middleText, config.timer_align, getShadowSettings(), this);
-				App.utils.data.cleanupDynamicObject(config);
-				this.loaded = true;
 			}
-		}
-		
-		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
-		{
-			this.x = x;
-			this.y = y;
 		}
 		
 		public function as_upateTimerText(text:String):void

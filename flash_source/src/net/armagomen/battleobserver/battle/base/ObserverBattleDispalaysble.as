@@ -5,6 +5,11 @@ package net.armagomen.battleobserver.battle.base
 	
 	public class ObserverBattleDispalaysble extends BattleDisplayable
 	{
+		public var getConfig:Function;
+		public var getShadowSettings:Function;
+		public var animationEnabled:Function;
+		public var isColorBlind:Function;
+		public var getAlpha:Function;
 		
 		public function ObserverBattleDispalaysble()
 		{
@@ -36,6 +41,12 @@ package net.armagomen.battleobserver.battle.base
 		public function onResizeHandle(event:Event):void
 		{
 		
+		}
+		
+		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
+		{
+			this.x = x;
+			this.y = y;
 		}
 	}
 }

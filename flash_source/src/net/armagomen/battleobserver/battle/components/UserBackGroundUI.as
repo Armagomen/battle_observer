@@ -8,7 +8,6 @@
 	public class UserBackGroundUI extends ObserverBattleDispalaysble
 	{
 		private var groupMap:Array;
-		private var loaded:Boolean = false;
 		
 		public function UserBackGroundUI()
 		{
@@ -17,7 +16,7 @@
 		
 		public function as_startUpdate(data:Object):void
 		{
-			if (!this.loaded)
+			if (this.groupMap == null)
 			{
 				if (data.enabled)
 				{
@@ -27,7 +26,6 @@
 						setUserBackgounds();
 					}
 				}
-				this.loaded = true;
 			}
 		}
 		

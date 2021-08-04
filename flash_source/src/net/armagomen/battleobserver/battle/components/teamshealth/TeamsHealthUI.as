@@ -22,20 +22,15 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		private var hpBars:*             = null;
 		private var score:Score;
 		private var markers:Markers;
-		private var loaded:Boolean       = false;
-		private var isColorBlind:Boolean = false;
-		public var animationEnabled:Function;
-		public var getShadowSettings:Function;
-		public var getAlpha:Function;
 		
 		public function TeamsHealthUI()
 		{
 			super();
 		}
 		
-		public function as_startUpdate(settings:Object, colors:Object, colorBlind:Boolean):void
+		public function as_startUpdate(settings:Object, colors:Object):void
 		{
-			if (!this.loaded)
+			if (this.hpBars == null)
 			{
 				var battlePage:*      = parent;
 				var fragCorrelation:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
@@ -44,7 +39,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					parent.removeChild(fragCorrelation);
 					this.x = App.appWidth >> 1;
 					this.colors = colors;
-					this.isColorBlind = colorBlind;
 					var shadowSettings:Object = getShadowSettings();
 					var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
 					this.hpBars = this.createHpbars(settings, barWidth);
@@ -56,14 +50,13 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					this.redText = new TextExt("redText", textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
 					this.greenDiff = new TextExt("greenDiff", -55, 1, textStyle, TextFieldAutoSize.RIGHT, shadowSettings, this);
 					this.redDiff = new TextExt("redDiff", 55, 1, textStyle, TextFieldAutoSize.LEFT, shadowSettings, this);
-					this.score = new Score(shadowSettings, colorBlind, this.colors, settings.style);
+					this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
 					this.addChild(this.score);
 					if (settings.markers.enabled)
 					{
 						this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
 						this.addChild(this.markers);
 					}
-					this.loaded = true;
 				}
 			}
 		}
@@ -73,20 +66,16 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			switch (settings.style)
 			{
 			case "league": 
-				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
+				return new League(this.animationEnabled(), settings, barWidth, this.isColorBlind(), this.colors);
 			default: 
-				return new Default(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
+				return new Default(this.animationEnabled(), settings, barWidth, this.isColorBlind(), this.colors);
 			}
 		}
 		
 		public function as_colorBlind(enabled:Boolean):void
 		{
-			if (this.isColorBlind != enabled)
-			{
-				this.isColorBlind = enabled;
-				this.hpBars.setColorBlind(enabled);
-				this.score.setColorBlind(enabled);
-			}
+			this.hpBars.setColorBlind(enabled);
+			this.score.setColorBlind(enabled);
 		}
 		
 		public function as_difference(param:int):void

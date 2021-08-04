@@ -6,9 +6,7 @@ package net.armagomen.battleobserver.battle.components
 	
 	public class FlightTimeUI extends ObserverBattleDispalaysble
 	{
-		private var flyTime:TextExt;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
+		private var flightTime:TextExt;
 		
 		public function FlightTimeUI()
 		{
@@ -17,23 +15,15 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_startUpdate(flyght:Object):void
 		{
-			if (!this.loaded)
+			if (this.flightTime == null)
 			{
-				flyTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
-				App.utils.data.cleanupDynamicObject(flyght);
-				this.loaded = true;
+				flightTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
 			}
 		}
 		
 		public function as_flightTime(text:String):void
 		{
-			flyTime.htmlText = text;
-		}
-		
-		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
-		{
-			this.x = x;
-			this.y = y;
+			flightTime.htmlText = text;
 		}
 	}
 }

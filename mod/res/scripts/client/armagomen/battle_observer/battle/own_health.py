@@ -1,9 +1,10 @@
+import math
 from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
 from armagomen.utils.common import percentToRGB
-from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, normalizeHealthPercent
+from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, getHealthPercent
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
@@ -16,7 +17,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             VEHICLE.CUR: GLOBAL.ZERO,
             VEHICLE.MAX: GLOBAL.ZERO,
             VEHICLE.PERCENT: GLOBAL.ZERO,
-            OWN_HEALTH.COLOR: percentToRGB(1.0)
+            OWN_HEALTH.COLOR: percentToRGB(GLOBAL.F_ONE)
         })
         self.isPostmortem = False
         self.__maxHealth = GLOBAL.ZERO
@@ -84,9 +85,9 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         health = normalizeHealth(health)
         if self.macrosDict[VEHICLE.CUR] == health and self.macrosDict[VEHICLE.MAX] == self.__maxHealth:
             return
-        percent = normalizeHealthPercent(health, self.__maxHealth)
+        percent = getHealthPercent(health, self.__maxHealth)
         self.macrosDict[VEHICLE.CUR] = health
         self.macrosDict[VEHICLE.MAX] = self.__maxHealth
-        self.macrosDict[VEHICLE.PERCENT] = percent
-        self.macrosDict[OWN_HEALTH.COLOR] = percentToRGB(percent * 0.01, **self.settings[GLOBAL.AVG_COLOR])
+        self.macrosDict[VEHICLE.PERCENT] = int(math.ceil(percent * 100))
+        self.macrosDict[OWN_HEALTH.COLOR] = percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR])
         self.as_setOwnHealthS(self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict)

@@ -8,11 +8,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		private var bases:Object = {"green": null, "red": null};
 		private var settings:Object;
 		private var colors:Object;
-		private var shadowSettings:Object;
 		private var yPos:Number = 100;
-		public var getShadowSettings:Function;
-		public var isColorBlind:Function;
-		public var animationEnabled:Function;
 		
 		public function TeamBasesUI()
 		{
@@ -23,7 +19,6 @@ package net.armagomen.battleobserver.battle.components.teambases
 		{
 			this.settings = basesSettings;
 			this.colors = colors;
-			this.shadowSettings = getShadowSettings();
 			this.yPos = basesSettings.y >= 0 ? basesSettings.y : App.appHeight + basesSettings.y;
 		}
 		
@@ -36,7 +31,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			else
 			{
 				var base:TeamBase = new TeamBase(this.animationEnabled(), this.isColorBlind());
-				base.create(this.settings, this.shadowSettings, this.colors, team);
+				base.create(this.settings, this.getShadowSettings(), this.colors, team);
 				base.updateBase(points * 0.01, invadersCnt, time, text);
 				if (this.bases["green"] || this.bases["red"])
 				{

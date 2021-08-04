@@ -8,8 +8,6 @@ package net.armagomen.battleobserver.battle.components
 	public class ArmorCalculatorUI extends ObserverBattleDispalaysble
 	{
 		private var armorCalc:TextExt;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
 		
 		public function ArmorCalculatorUI()
 		{
@@ -18,18 +16,10 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_startUpdate(calc:Object):void
 		{
-			if (!this.loaded)
+			if (this.armorCalc == null)
 			{
 				this.armorCalc = new TextExt("armorCalc", calc.position.x, calc.position.y, Filters.armorText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
-				App.utils.data.cleanupDynamicObject(calc);
-				this.loaded = true;
 			}
-		}
-		
-		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
-		{
-			this.x = x;
-			this.y = y;
 		}
 		
 		public function as_armorCalc(text:String):void

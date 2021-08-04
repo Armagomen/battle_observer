@@ -9,8 +9,6 @@ package net.armagomen.battleobserver.battle.components.maingun
 	{
 		private var mainGun:TextExt = null;
 		private var mgunXCache:int  = 255;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean  = false;
 		
 		public function MainGunUI()
 		{
@@ -19,14 +17,12 @@ package net.armagomen.battleobserver.battle.components.maingun
 		
 		public function as_startUpdate(data:Object):void
 		{
-			if (!this.loaded)
+			if (this.mainGun == null)
 			{
 				this.x = (App.appWidth >> 1) + data.x;
 				this.y = data.y;
 				this.mgunXCache = data.x;
 				this.mainGun = new TextExt("mainGun", 0, 0, Filters.largeText, data.align, getShadowSettings(), this);
-				App.utils.data.cleanupDynamicObject(data);
-				this.loaded = true;
 			}
 		}
 		

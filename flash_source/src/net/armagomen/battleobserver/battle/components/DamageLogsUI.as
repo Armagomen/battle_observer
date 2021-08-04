@@ -12,11 +12,9 @@ package net.armagomen.battleobserver.battle.components
 		private var top_Log:Sprite           = null;
 		private var top_log_inCenter:Boolean = true;
 		private var enableds:Object          = null;
-		private var d_log:TextExt          = null;
-		private var in_log:TextExt         = null;
-		private var mainlog:TextExt        = null;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean           = false;
+		private var d_log:TextExt            = null;
+		private var in_log:TextExt           = null;
+		private var mainlog:TextExt          = null;
 		
 		private const IN_LOG:String          = "in_log";
 		private const D_LOG:String           = "d_log";
@@ -28,16 +26,15 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_startUpdate(data:Object, turned:Object):void
 		{
-			if (!this.loaded)
+			if (this.top_Log == null)
 			{
+				this.top_Log = new Sprite();
 				this.enableds = turned;
-				var shadowSettings:Object = getShadowSettings();
 				if (this.enableds.main)
 				{
 					this.top_log_inCenter = data.main.inCenter;
-					this.top_Log = new Sprite();
 					this.top_Log.x = !this.top_log_inCenter ? 0 : Math.ceil(App.appWidth >> 1);
-					this.mainlog = new TextExt("damage", data.main.x, data.main.y, Filters.largeText, data.main.align, shadowSettings, this.top_Log);
+					this.mainlog = new TextExt("damage", data.main.x, data.main.y, Filters.largeText, data.main.align, getShadowSettings(), this.top_Log);
 					this.addChild(this.top_Log);
 				}
 				if (this.enableds[D_LOG] || this.enableds[IN_LOG])
@@ -49,18 +46,16 @@ package net.armagomen.battleobserver.battle.components
 						if (this.enableds[D_LOG])
 						{
 							var topContainer:* = battleDamageLogPanel._detailsTopContainer;
-							this.d_log = new TextExt(D_LOG, data.d_log.x + 25, data.d_log.y, Filters.normalText, data.d_log.align, shadowSettings, topContainer);
+							this.d_log = new TextExt(D_LOG, data.d_log.x + 25, data.d_log.y, null, data.d_log.align, getShadowSettings(), topContainer);
 						}
 						if (this.enableds[IN_LOG])
 						{
 							var bottomContainer:* = battleDamageLogPanel._detailsBottomContainer;
-							this.in_log = new TextExt(IN_LOG, data.in_log.x + 10, -25 + data.in_log.y, Filters.normalText, data.in_log.align, shadowSettings, bottomContainer);
+							this.in_log = new TextExt(IN_LOG, data.in_log.x + 10, -25 + data.in_log.y, null, data.in_log.align, getShadowSettings(), bottomContainer);
 						}
 						battleDamageLogPanel.updateContainersPosition();
 					}
 				}
-				App.utils.data.cleanupDynamicObject(data);
-				this.loaded = true;
 			}
 		}
 		

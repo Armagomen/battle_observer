@@ -7,8 +7,6 @@ package net.armagomen.battleobserver.battle.components
 	public class DistanceUI extends ObserverBattleDispalaysble
 	{
 		private var distance:TextExt;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
 		
 		public function DistanceUI()
 		{
@@ -17,23 +15,15 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_startUpdate(flyght:Object):void
 		{
-			if (!this.loaded)
+			if (this.distance == null)
 			{
 				distance = new TextExt("distance", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
-				App.utils.data.cleanupDynamicObject(flyght);
-				this.loaded = true;
 			}
 		}
 		
 		public function as_setDistance(text:String):void
 		{
 			distance.htmlText = text;
-		}
-		
-		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
-		{
-			this.x = x;
-			this.y = y;
 		}
 	}
 }
