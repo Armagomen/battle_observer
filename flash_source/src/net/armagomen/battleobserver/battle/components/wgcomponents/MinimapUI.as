@@ -1,11 +1,11 @@
 package net.armagomen.battleobserver.battle.components.wgcomponents
 {
 	import flash.events.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
 	import net.wg.gui.battle.views.minimap.Minimap;
 	
-	public class MinimapUI extends BattleDisplayable
+	public class MinimapUI extends ObserverBattleDispalaysble
 	{
 		private var newScale:Number      = 1.0;
 		private var vpos:Number          = 150.0;
@@ -15,23 +15,6 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		public function MinimapUI()
 		{
 			super();
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-		}
-		
-		override protected function onDispose():void
-		{
-			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
-			super.onDispose();
 		}
 		
 		private function getMinimap():*
@@ -88,7 +71,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_MinimapCentered - minimap is Null !!!");
 		}
 		
-		private function _onResizeHandle(event:Event):void
+		override public function onResizeHandle(event:Event):void
 		{
 			newScale = Math.max((App.appHeight - vpos) / 630, 1.0);
 		}

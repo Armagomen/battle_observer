@@ -4,15 +4,14 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import flash.events.*;
 	import flash.filters.*;
 	import flash.text.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
 	import net.armagomen.battleobserver.battle.components.teamshealth.League;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
-	//import net.armagomen.battleobserver.battle.components.teamshealth.classic.Classic;
 	
-	public class TeamsHealthUI extends BattleDisplayable
+	public class TeamsHealthUI extends ObserverBattleDispalaysble
 	{
 		private var greenText:TextExt;
 		private var redText:TextExt;
@@ -62,7 +61,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					this.score = new Score(shadowSettings, colorBlind, this.colors, settings.style);
 					this.addChild(this.score);
 					
-					if (settings.markers.enabled){
+					if (settings.markers.enabled)
+					{
 						this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
 						this.addChild(this.markers);
 					}
@@ -92,32 +92,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
 			case "normal": 
 				return new Default(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
-			//case "classic":
-			//return new Classic(settings.style, this.isColorBlind, this.colors);
 			default: 
 				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
 			}
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-		}
-		
-		override protected function onDispose():void
-		{
-			this.hpBars = null;
-			this.score = null;
-			this.markers = null;
-			App.utils.data.cleanupDynamicObject(this.colors);
-			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
-			super.onDispose();
 		}
 		
 		public function as_colorBlind(enabled:Boolean):void
@@ -167,7 +144,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.markers.update_markers(correlationItemsLeft, correlationItemsRight);
 		}
 		
-		private function _onResizeHandle(event:Event):void
+		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
 		}

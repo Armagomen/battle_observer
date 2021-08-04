@@ -1,10 +1,9 @@
 package net.armagomen.battleobserver.battle.components.wgcomponents
 {
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
 	
-	
-	public class WGComponentsSetting extends BattleDisplayable
+	public class WGComponentsSetting extends ObserverBattleDispalaysble
 	{
 		
 		public function WGComponentsSetting()
@@ -12,16 +11,6 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			super();
 		}
 		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-		}
-	
 		public function as_hideShadowInPreBattle():void
 		{
 			var battlePage:*     = parent;

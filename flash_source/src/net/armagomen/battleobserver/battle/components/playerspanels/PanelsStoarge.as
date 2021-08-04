@@ -1,19 +1,18 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
-	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
-	import net.wg.gui.battle.components.BattleDisplayable;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
 	
-	public class PanelsStoarge extends BattleDisplayable
+	public class PanelsStoarge extends ObserverBattleDispalaysble
 	{
 		private var items:Object    = {};
 		private var stoarge:Object  = {};
@@ -25,17 +24,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		public function PanelsStoarge()
 		{
 			super();
-		
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
 		}
 		
 		override protected function onPopulate():void

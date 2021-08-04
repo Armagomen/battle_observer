@@ -3,10 +3,10 @@ package net.armagomen.battleobserver.battle.components.teambases
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBase;
-	import net.wg.gui.battle.components.*;
 	
-	public class TeamBasesUI extends BattleDisplayable
+	public class TeamBasesUI extends ObserverBattleDispalaysble
 	{
 		private var bases:Object = {"green": null, "red": null};
 		private var settings:Object;
@@ -20,16 +20,6 @@ package net.armagomen.battleobserver.battle.components.teambases
 		public function TeamBasesUI()
 		{
 			super();
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
 		}
 		
 		public function as_startUpdate(basesSettings:Object, colors:Object):void

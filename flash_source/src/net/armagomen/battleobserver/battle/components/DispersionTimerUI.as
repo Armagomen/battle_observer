@@ -1,15 +1,13 @@
 package net.armagomen.battleobserver.battle.components
 {
-	
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.gui.battle.components.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	
-	
-	public class DispersionTimerUI extends BattleDisplayable
+	public class DispersionTimerUI extends ObserverBattleDispalaysble
 	{
 		private var dispersionTime:TextField;
 		public var getShadowSettings:Function;
@@ -39,16 +37,6 @@ package net.armagomen.battleobserver.battle.components
 		public function as_upateTimerText(text:String):void
 		{
 			dispersionTime.htmlText = text;
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
 		}
 	}
 }

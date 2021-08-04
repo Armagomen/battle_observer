@@ -1,16 +1,15 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
 	import flash.display.*;
-	import flash.events.*;
 	import flash.text.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.data.constants.Time;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
+
 	
-	public class ObserverDebugPanelUI extends BattleDisplayable
+	public class ObserverDebugPanelUI extends ObserverBattleDispalaysble
 	{
 		private var debugText:TextExt      = null;
 		private var fpsBar:ProgressBar     = null;
@@ -33,16 +32,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			this.fpsBar = null;
 			this.pingBar = null;
 			super.onDispose();
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
 		}
 		
 		public function as_startUpdate(data:Object, vSync:Boolean, limit:int):void

@@ -3,11 +3,11 @@ package net.armagomen.battleobserver.battle.components
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.gui.battle.components.*;
 	
-	public class FlightTimeUI extends BattleDisplayable
+	public class FlightTimeUI extends ObserverBattleDispalaysble
 	{
 		private var flyTime:TextField;
 		public var getShadowSettings:Function;
@@ -38,17 +38,5 @@ package net.armagomen.battleobserver.battle.components
 			this.x = x;
 			this.y = y;
 		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-		
-		}
-	
 	}
 }

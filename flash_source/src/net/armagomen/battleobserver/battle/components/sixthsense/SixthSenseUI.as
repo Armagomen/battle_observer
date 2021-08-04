@@ -4,14 +4,13 @@
 	import flash.events.*;
 	import flash.net.URLRequest;
 	import flash.text.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
 	import net.armagomen.battleobserver.utils.tween.Tween;
+	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
-	
-	public class SixthSenseUI extends BattleDisplayable
+	public class SixthSenseUI extends ObserverBattleDispalaysble
 	{
 		private var params:Object     = null;
 		private var timer:TextExt;
@@ -19,7 +18,7 @@
 		private var _container:Sprite = null;
 		public var getShadowSettings:Function;
 		public var animationEnabled:Function;
-		private var animate:Boolean = false;
+		private var animate:Boolean   = false;
 		private var loaded:Boolean    = false;
 		private var animation:Tween   = null;
 		
@@ -50,33 +49,6 @@
 			}
 		}
 		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-		}
-		
-		override protected function onPopulate():void
-		{
-			super.onPopulate();
-			this._container = new Sprite()
-			this._container.name = "image";
-			this._container.visible = false;
-			this.addChild(_container);
-		}
-		
-		override protected function onDispose():void
-		{
-			this._container = null;
-			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
-			super.onDispose();
-		}
-		
 		public function as_show():void
 		{
 			if (!this.image)
@@ -96,7 +68,6 @@
 					if (this.animate)
 					{
 						this.animation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);
-						//this.animation.FPS = 30;
 					}
 					else
 					{
@@ -141,7 +112,6 @@
 				if (this.animate)
 				{
 					this.animation = new Tween(this.timer, "alpha", 1, 0, 0.98, true);
-					//this.animation.FPS = 30;
 				}
 				else
 				{
@@ -157,7 +127,7 @@
 			loader.load(new URLRequest('../../../' + params.image.img));
 		}
 		
-		private function _onResizeHandle(event:Event):void
+		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
 		}
