@@ -1,8 +1,5 @@
 package net.armagomen.battleobserver.battle.components.teambases
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBase;
 	

@@ -1,7 +1,6 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
-	import flash.display.*;
-	import flash.text.*;
+	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
@@ -25,13 +24,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		public function ObserverDebugPanelUI()
 		{
 			super();
-		}
-		
-		override protected function onDispose():void
-		{
-			this.fpsBar = null;
-			this.pingBar = null;
-			super.onDispose();
 		}
 		
 		public function as_startUpdate(data:Object, vSync:Boolean, limit:int):void

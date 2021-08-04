@@ -1,15 +1,14 @@
 ﻿package net.armagomen.battleobserver.battle.components
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import flash.events.Event;
+	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
 	public class ObserverDateTimesUI extends ObserverBattleDispalaysble
 	{
-		private var dateTime:TextField;
+		private var dateTime:TextExt;
 		private var config:Object;
 		public var getShadowSettings:Function;
 		private var loaded:Boolean = false;

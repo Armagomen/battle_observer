@@ -1,15 +1,12 @@
 package net.armagomen.battleobserver.battle.components
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	
 	public class DispersionTimerUI extends ObserverBattleDispalaysble
 	{
-		private var dispersionTime:TextField;
+		private var dispersionTime:TextExt;
 		public var getShadowSettings:Function;
 		private var loaded:Boolean = false;
 		

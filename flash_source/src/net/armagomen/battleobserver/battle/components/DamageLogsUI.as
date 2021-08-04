@@ -1,8 +1,7 @@
 package net.armagomen.battleobserver.battle.components
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import flash.display.Sprite;
+	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
@@ -13,9 +12,9 @@ package net.armagomen.battleobserver.battle.components
 		private var top_Log:Sprite           = null;
 		private var top_log_inCenter:Boolean = true;
 		private var enableds:Object          = null;
-		private var d_log:TextField          = null;
-		private var in_log:TextField         = null;
-		private var mainlog:TextField        = null;
+		private var d_log:TextExt          = null;
+		private var in_log:TextExt         = null;
+		private var mainlog:TextExt        = null;
 		public var getShadowSettings:Function;
 		private var loaded:Boolean           = false;
 		

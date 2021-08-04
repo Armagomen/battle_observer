@@ -84,8 +84,9 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         health = normalizeHealth(health)
         if self.macrosDict[VEHICLE.CUR] == health and self.macrosDict[VEHICLE.MAX] == self.__maxHealth:
             return
+        percent = normalizeHealthPercent(health, self.__maxHealth)
         self.macrosDict[VEHICLE.CUR] = health
         self.macrosDict[VEHICLE.MAX] = self.__maxHealth
-        self.macrosDict[VEHICLE.PERCENT] = normalizeHealthPercent(health, self.__maxHealth)
-        self.macrosDict[OWN_HEALTH.COLOR] = percentToRGB(self.macrosDict[VEHICLE.PERCENT] * 0.01)
+        self.macrosDict[VEHICLE.PERCENT] = percent
+        self.macrosDict[OWN_HEALTH.COLOR] = percentToRGB(percent * 0.01, **self.settings[GLOBAL.AVG_COLOR])
         self.as_setOwnHealthS(self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict)

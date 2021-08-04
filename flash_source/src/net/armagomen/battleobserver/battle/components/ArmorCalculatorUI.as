@@ -1,15 +1,13 @@
 package net.armagomen.battleobserver.battle.components
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
 	public class ArmorCalculatorUI extends ObserverBattleDispalaysble
 	{
-		private var armorCalc:TextField;
+		private var armorCalc:TextExt;
 		public var getShadowSettings:Function;
 		private var loaded:Boolean = false;
 		

@@ -1,15 +1,16 @@
 package net.armagomen.battleobserver.battle.components.teamshealth
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.filters.*;
-	import flash.text.*;
+	import flash.events.Event;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
 	import net.armagomen.battleobserver.battle.components.teamshealth.League;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
+	import net.wg.data.constants.Linkages;
+	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class TeamsHealthUI extends ObserverBattleDispalaysble
 	{
@@ -36,51 +37,34 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		{
 			if (!this.loaded)
 			{
-				var wgPanel:DisplayObject = this.getWGpanel();
-				if (wgPanel != null)
+				var battlePage:*      = parent;
+				var fragCorrelation:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+				if (fragCorrelation != null)
 				{
-					parent.removeChild(wgPanel);
+					parent.removeChild(fragCorrelation);
 					this.x = App.appWidth >> 1;
 					this.colors = colors;
 					this.isColorBlind = colorBlind;
-					
 					var shadowSettings:Object = getShadowSettings();
 					var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
 					this.hpBars = this.createHpbars(settings, barWidth);
-					var isLeague:Boolean = this.hpBars as League;
-					var textXpos:Number  = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
-					var textStyle:*      = !isLeague ? Filters.normalText : Filters.middleText;
-					
+					var isLeague:Boolean     = this.hpBars as League;
+					var textXpos:Number      = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
+					var textStyle:TextFormat = !isLeague ? Filters.normalText : Filters.middleText;
 					this.addChild(this.hpBars);
-					
-					this.greenText = new TextExt("greenText", -textXpos, 2, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
-					this.redText = new TextExt("redText", textXpos, 2, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
-					this.greenDiff = new TextExt("greenDiff", -55, 2, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
-					this.redDiff = new TextExt("redDiff", 55, 2, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
-					
+					this.greenText = new TextExt("greenText", -textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
+					this.redText = new TextExt("redText", textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
+					this.greenDiff = new TextExt("greenDiff", -55, 1, textStyle, TextFieldAutoSize.RIGHT, shadowSettings, this);
+					this.redDiff = new TextExt("redDiff", 55, 1, textStyle, TextFieldAutoSize.LEFT, shadowSettings, this);
 					this.score = new Score(shadowSettings, colorBlind, this.colors, settings.style);
 					this.addChild(this.score);
-					
 					if (settings.markers.enabled)
 					{
 						this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
 						this.addChild(this.markers);
 					}
-					
 					this.loaded = true;
 				}
-			}
-		}
-		
-		private function getWGpanel():DisplayObject
-		{
-			var battlePage:* = parent;
-			switch (true)
-			{
-			case battlePage._componentsStorage.hasOwnProperty(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR): 
-				return battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-			default: 
-				return null;
 			}
 		}
 		
@@ -90,10 +74,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			{
 			case "league": 
 				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
-			case "normal": 
-				return new Default(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
 			default: 
-				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
+				return new Default(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
 			}
 		}
 		
@@ -111,7 +93,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		{
 			if (param < 0)
 			{
-				this.redDiff.text = "+".concat((-param).toString());
+				this.redDiff.text = "+".concat(Math.abs(param).toString());
 				this.greenDiff.text = "";
 			}
 			else if (param > 0)

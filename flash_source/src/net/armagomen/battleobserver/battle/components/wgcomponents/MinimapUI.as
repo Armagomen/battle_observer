@@ -1,6 +1,6 @@
 package net.armagomen.battleobserver.battle.components.wgcomponents
 {
-	import flash.events.*;
+	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.minimap.Minimap;

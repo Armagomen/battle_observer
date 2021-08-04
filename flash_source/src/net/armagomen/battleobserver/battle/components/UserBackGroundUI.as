@@ -3,7 +3,6 @@
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.net.URLRequest;
-	import flash.text.*;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	
 	public class UserBackGroundUI extends ObserverBattleDispalaysble

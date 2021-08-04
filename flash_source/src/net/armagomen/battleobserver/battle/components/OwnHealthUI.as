@@ -1,15 +1,12 @@
 package net.armagomen.battleobserver.battle.components
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
 	public class OwnHealthUI extends ObserverBattleDispalaysble
 	{
-		private var own_health:TextField;
+		private var own_health:TextExt;
 		public var getShadowSettings:Function;
 		private var loaded:Boolean = false;
 		

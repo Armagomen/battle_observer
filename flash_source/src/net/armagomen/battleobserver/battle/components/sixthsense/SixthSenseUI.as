@@ -1,9 +1,9 @@
 ﻿package net.armagomen.battleobserver.battle.components.sixthsense
 {
 	import flash.display.*;
-	import flash.events.*;
+	import flash.events.Event;
 	import flash.net.URLRequest;
-	import flash.text.*;
+	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
