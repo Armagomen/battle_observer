@@ -52,9 +52,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if ctrl is not None:
             ctrl.onVehicleControlling += self.__onVehicleControlling
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
-            # vehicle = ctrl.getControllingVehicle()
-            # if vehicle is not None:
-            #     self.__onVehicleControlling(vehicle)
 
     def onExitBattlePage(self):
         ctrl = self.sessionProvider.shared.vehicleState

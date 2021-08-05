@@ -477,7 +477,7 @@ class DefaultSettings(object):
             GLOBAL.Y: 120,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             OWN_HEALTH.TEMPLATE: "%(health)s/%(maxHealth)s (%(percent)s%%)",
-            GLOBAL.AVG_COLOR: {"saturation": 0.95, "brightness": 0.85}
+            GLOBAL.AVG_COLOR: {"saturation": 1.0, "brightness": 1.0}
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,
