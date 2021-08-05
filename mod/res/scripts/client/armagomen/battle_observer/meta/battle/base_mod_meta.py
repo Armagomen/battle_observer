@@ -87,5 +87,5 @@ class BaseModMeta(BaseDAAPIComponent):
     def as_colorBlindS(self, enabled):
         return self.flashObject.as_colorBlind(enabled) if self._isDAAPIInited() else None
 
-    def as_onCrosshairPositionChanged(self, x, y):
+    def as_onCrosshairPositionChangedS(self, x, y):
         return self.flashObject.as_onCrosshairPositionChanged(x, y) if self._isDAAPIInited() else None

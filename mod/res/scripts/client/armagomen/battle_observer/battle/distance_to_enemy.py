@@ -20,13 +20,13 @@ class Distance(DistanceMeta):
         super(Distance, self)._populate()
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(Distance, self)._dispose()
 
     def onEnterBattlePage(self):

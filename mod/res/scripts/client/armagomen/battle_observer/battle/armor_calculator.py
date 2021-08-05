@@ -47,13 +47,13 @@ class ArmorCalculator(ArmorCalcMeta):
         self.template = self.settings[ARMOR_CALC.TEMPLATE]
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):

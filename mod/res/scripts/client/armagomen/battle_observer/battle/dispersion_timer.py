@@ -28,13 +28,13 @@ class DispersionTimer(DispersionTimerMeta):
                                  timer=None, percent=None)
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(DispersionTimer, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):

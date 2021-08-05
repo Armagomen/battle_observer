@@ -22,13 +22,13 @@ class FlightTime(FlightTimeMeta):
         self.template = self.settings[FLIGHT_TIME.TEMPLATE]
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(FlightTime, self)._dispose()
 
     def showOnCurrentTank(self):
