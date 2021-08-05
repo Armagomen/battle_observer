@@ -10,6 +10,7 @@ package net.armagomen.battleobserver.battle.base
 		public var animationEnabled:Function;
 		public var isColorBlind:Function;
 		public var getAlpha:Function;
+		public var getColors:Function;
 		
 		public function ObserverBattleDispalaysble()
 		{
@@ -38,10 +39,7 @@ package net.armagomen.battleobserver.battle.base
 			super.onDispose();
 		}
 		
-		public function onResizeHandle(event:Event):void
-		{
-		
-		}
+		public function onResizeHandle(event:Event):void {}
 		
 		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
 		{

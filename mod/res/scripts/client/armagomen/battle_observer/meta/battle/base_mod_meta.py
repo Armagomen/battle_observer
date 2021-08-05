@@ -45,6 +45,9 @@ class BaseModMeta(BaseDAAPIComponent):
     def getConfig(self):
         return self.settings
 
+    def getColors(self):
+        return self.colors
+
     def getAlpha(self):
         return round(min(1.0, self.colors[COLORS.GLOBAL][GLOBAL.ALPHA] * 1.4), 2)
 

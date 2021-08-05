@@ -17,8 +17,8 @@
 			super();
 			this.colors = colors;
 			
-			this.allyHpBar = new ProgressBar(animationEnabled, -50, 4, -barWidth, 22, Math.max(0.05, colors.alpha), Math.max(0.05, colors.bgAlpha), null, colors.ally, "allyBar");
-			this.enemyHpBar = new ProgressBar(animationEnabled, 50, 4, barWidth, 22, Math.max(0.05, colors.alpha), Math.max(0.05, colors.bgAlpha), null, colorBlind ? colors.enemyColorBlind : colors.enemy, "enemyBar");
+			this.allyHpBar = new ProgressBar(animationEnabled, -50, 4, -barWidth, 22, Math.max(0.05, colors.alpha), Math.max(0.05, colors.bgAlpha), null, colors.ally);
+			this.enemyHpBar = new ProgressBar(animationEnabled, 50, 4, barWidth, 22, Math.max(0.05, colors.alpha), Math.max(0.05, colors.bgAlpha), null, colorBlind ? colors.enemyColorBlind : colors.enemy);
 			
 			if (settings.outline.enabled)
 			{
@@ -32,7 +32,7 @@
 		
 		public function setColorBlind(enabled:Boolean):void
 		{	
-			Utils.updateColor(this.enemyHpBar, enabled ? this.colors.enemyColorBlind : this.colors.enemy);
+			this.enemyHpBar.updateColor(enabled ? this.colors.enemyColorBlind : this.colors.enemy);
 		}
 		
 		public function setBarScale(team:String, newScale:Number):void

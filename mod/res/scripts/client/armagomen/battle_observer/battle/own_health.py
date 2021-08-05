@@ -3,7 +3,7 @@ from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
-from armagomen.utils.common import percentToRGB
+from armagomen.utils.common import percentToRGB, logInfo
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, getHealthPercent
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
@@ -32,12 +32,18 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            handler.onCameraChanged += self.onCameraChanged
         self.as_startUpdateS(self.settings)
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            handler.onCameraChanged -= self.onCameraChanged
         super(OwnHealth, self)._dispose()
 
     def onEnterBattlePage(self):
@@ -46,17 +52,11 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if ctrl is not None:
             ctrl.onVehicleControlling += self.__onVehicleControlling
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
-            vehicle = ctrl.getControllingVehicle()
-            if vehicle is not None:
-                self.__onVehicleControlling(vehicle)
-        handler = avatar_getter.getInputHandler()
-        if handler is not None:
-            handler.onCameraChanged += self.onCameraChanged
+            # vehicle = ctrl.getControllingVehicle()
+            # if vehicle is not None:
+            #     self.__onVehicleControlling(vehicle)
 
     def onExitBattlePage(self):
-        handler = avatar_getter.getInputHandler()
-        if handler is not None:
-            handler.onCameraChanged -= self.onCameraChanged
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling -= self.__onVehicleControlling
@@ -65,7 +65,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
 
     def __onVehicleControlling(self, vehicle):
         if self.isPostmortem:
-            return self.as_setOwnHealthS(GLOBAL.EMPTY_LINE)
+            return self.as_setVisibleS(not self.isPostmortem)
         if self.__maxHealth != vehicle.maxHealth:
             self.__maxHealth = vehicle.maxHealth
         self._updateHealth(vehicle.health)
@@ -76,8 +76,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
 
     def onCameraChanged(self, ctrlMode, *_, **__):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
-        if self.isPostmortem:
-            self.as_setOwnHealthS(GLOBAL.EMPTY_LINE)
+        self.as_setVisibleS(not self.isPostmortem)
 
     def _updateHealth(self, health):
         if self.isPostmortem or health > self.__maxHealth or self.__maxHealth <= GLOBAL.ZERO:
@@ -86,8 +85,9 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if self.macrosDict[VEHICLE.CUR] == health and self.macrosDict[VEHICLE.MAX] == self.__maxHealth:
             return
         percent = getHealthPercent(health, self.__maxHealth)
+        color = percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR])
         self.macrosDict[VEHICLE.CUR] = health
         self.macrosDict[VEHICLE.MAX] = self.__maxHealth
         self.macrosDict[VEHICLE.PERCENT] = int(math.ceil(percent * 100))
-        self.macrosDict[OWN_HEALTH.COLOR] = percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR])
-        self.as_setOwnHealthS(self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict)
+        self.macrosDict[OWN_HEALTH.COLOR] = color
+        self.as_setOwnHealthS(percent, self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict, color)

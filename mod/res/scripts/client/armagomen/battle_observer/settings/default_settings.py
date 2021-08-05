@@ -476,7 +476,7 @@ class DefaultSettings(object):
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: 120,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
-            OWN_HEALTH.TEMPLATE: "<font color='%(color)s'>%(health)s/%(maxHealth)s (%(percent)s%%)</font>",
+            OWN_HEALTH.TEMPLATE: "%(health)s/%(maxHealth)s (%(percent)s%%)",
             GLOBAL.AVG_COLOR: {"saturation": 0.95, "brightness": 0.85}
         }
         self.save_shoot = {
