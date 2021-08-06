@@ -1,6 +1,6 @@
 from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.core import settings as g_settings
 from armagomen.constants import ALIAS_TO_CONFIG_NAME, MAIN, COLORS, GLOBAL
 from armagomen.utils.common import logInfo, getPlayer
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
@@ -12,7 +12,7 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 class BaseModMeta(BaseDAAPIComponent):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsCore = ServicesLocator.settingsCore
-    isDebug = property(lambda self: settings.main[MAIN.DEBUG])
+    isDebug = property(lambda self: g_settings.main[MAIN.DEBUG])
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
@@ -21,28 +21,29 @@ class BaseModMeta(BaseDAAPIComponent):
         self._arenaVisitor = self.sessionProvider.arenaVisitor
         self._player = getPlayer()
         self.settings = None
-        self.colors = settings.colors
-        self.vehicle_types = settings.vehicle_types
+        self.colors = g_settings.colors
+        self.vehicle_types = g_settings.vehicle_types
 
-    def getSettings(self):
+    def setSettings(self):
         settings_name = ALIAS_TO_CONFIG_NAME.get(self.getAlias())
+        settings = None
         if settings_name is not None:
-            data = getattr(settings, settings_name, None)
+            settings = getattr(g_settings, settings_name, None)
             if self.isDebug:
-                logInfo("Settings Name: %s - Settings Data: %s" % (settings_name, str(data)))
-            if data is not None:
-                return data
-        return settings
+                logInfo("Settings Name: %s - Settings Data: %s" % (settings_name, str(settings)))
+        self.settings = settings if settings is not None else g_settings
 
     @staticmethod
     def animationEnabled():
-        return settings.main[MAIN.ENABLE_BARS_ANIMATION]
+        return g_settings.main[MAIN.ENABLE_BARS_ANIMATION]
 
     @staticmethod
     def getShadowSettings():
-        return settings.shadow_settings
+        return g_settings.shadow_settings
 
-    def getConfig(self):
+    def getSettings(self):
+        if self.settings is None:
+            self.setSettings()
         return self.settings
 
     def getColors(self):
@@ -60,7 +61,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        self.settings = self.getSettings()
+        self.setSettings()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         if self._isDAAPIInited():

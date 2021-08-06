@@ -4,7 +4,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
-	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;

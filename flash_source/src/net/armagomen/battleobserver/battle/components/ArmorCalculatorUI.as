@@ -14,11 +14,13 @@ package net.armagomen.battleobserver.battle.components
 			super();
 		}
 		
-		public function as_startUpdate(calc:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.armorCalc == null)
 			{
-				this.armorCalc = new TextExt("armorCalc", calc.position.x, calc.position.y, Filters.armorText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
+				var settings:Object = this.getSettings();
+				this.armorCalc = new TextExt("armorCalc", settings.position.x, settings.position.y, Filters.armorText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
 			}
 		}
 		
