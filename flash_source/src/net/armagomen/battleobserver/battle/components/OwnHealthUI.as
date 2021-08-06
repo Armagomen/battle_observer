@@ -18,10 +18,9 @@ package net.armagomen.battleobserver.battle.components
 			if (this.own_health == null)
 			{
 				var colors:Object = getColors();
-				this.own_health = new ProgressBar(animationEnabled(), data.x - 70, data.y, 140, 20, Math.max(0.05, colors.global.alpha), Math.max(0.05, colors.global.bgAlpha), null, colors.global.ally, null, 0.4);
-				this.own_health.setOutline(false, colors.global.ally, Math.max(0.05, colors.global.alpha));
+				this.own_health = new ProgressBar(animationEnabled(), data.x - 70, data.y, 140, 20, 0.4, 0.25, null, colors.global.ally, null, 0.2);
+				this.own_health.setOutline(false, colors.global.ally, 0.45);
 				this.own_health.addTextField(70, -2, "center", Filters.normalText, getShadowSettings());
-				this.own_health.setVisible(false);
 				this.addChild(this.own_health);
 			}
 		}
