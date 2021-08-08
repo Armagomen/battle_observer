@@ -18,8 +18,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		private var redText:TextExt;
 		private var greenDiff:TextExt;
 		private var redDiff:TextExt;
-		private var colors:Object        = null;
-		private var hpBars:*             = null;
+		private var colors:Object = null;
+		private var hpBars:*      = null;
 		private var score:Score;
 		private var markers:Markers;
 		
@@ -27,7 +27,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		{
 			super();
 		}
-		override protected function onPopulate():void 
+		
+		override protected function onPopulate():void
 		{
 			super.onPopulate();
 			if (this.hpBars == null)
@@ -42,7 +43,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 					this.x = App.appWidth >> 1;
 					var shadowSettings:Object = getShadowSettings();
 					var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
-					this.hpBars = this.createHpbars(settings, barWidth);
+					this.hpBars = this.createHpBars(settings, barWidth);
 					var isLeague:Boolean     = this.hpBars as League;
 					var textXpos:Number      = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
 					var textStyle:TextFormat = !isLeague ? Filters.normalText : Filters.middleText;
@@ -62,7 +63,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			}
 		}
 		
-		private function createHpbars(settings:Object, barWidth:Number):*
+		private function createHpBars(settings:Object, barWidth:Number):*
 		{
 			switch (settings.style)
 			{

@@ -63,6 +63,6 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         for comp in SORTED_ALIASES:
             if view_settings.getSetting(comp):
                 flash.as_createBattleObserverComp(comp)
-            if view_settings.cfg.main[MAIN.DEBUG]:
-                logInfo(comp + " loading flash")
+                if view_settings.cfg.main[MAIN.DEBUG]:
+                    logInfo(comp + " loading flash")
         flash.as_updateBattleObserverChildIndexes()

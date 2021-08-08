@@ -16,7 +16,6 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
-        self._isReplay = self.sessionProvider.isReplayPlaying
         self._arenaDP = self.sessionProvider.getArenaDP()
         self._arenaVisitor = self.sessionProvider.arenaVisitor
         self._player = getPlayer()
@@ -52,9 +51,9 @@ class BaseModMeta(BaseDAAPIComponent):
     def getAlpha(self):
         return round(min(1.0, self.colors[COLORS.GLOBAL][GLOBAL.ALPHA] * 1.4), 2)
 
-    def onDragFinished(self, x, y):
-        self.settings["x"] = x
-        self.settings["y"] = y
+    # def onDragFinished(self, x, y):
+    #     self.settings["x"] = x
+    #     self.settings["y"] = y
 
     def isColorBlind(self):
         return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
