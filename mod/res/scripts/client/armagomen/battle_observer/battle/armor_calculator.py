@@ -12,11 +12,8 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def __init__(self):
         super(ArmorCalculator, self).__init__()
-        self.messages = None
-        self._cache = GLOBAL.ZERO
-        self.calcMacro = None
-        self.typeColors = None
-        self.template = None
+        self._cache = None
+        self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.otherMessages = None
 
     def onEnterBattlePage(self):
@@ -37,14 +34,10 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
-        self.messages = self.settings[ARMOR_CALC.MESSAGES]
         self.otherMessages = OtherMessages(
             (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.RICOCHET]),
             (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.NO_DAMAGE])
         )
-        self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.typeColors = self.colors[ARMOR_CALC.NAME]
-        self.template = self.settings[ARMOR_CALC.TEMPLATE]
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -56,8 +49,8 @@ class ArmorCalculator(ArmorCalcMeta):
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):
-        self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.typeColors.get(color, COLORS.C_RED)
-        self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.messages.get(color, GLOBAL.EMPTY_LINE)
+        self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.colors[ARMOR_CALC.NAME].get(color, COLORS.C_RED)
+        self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.settings[ARMOR_CALC.MESSAGES].get(color, GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         if ctrlMode in POSTMORTEM.MODES:
@@ -74,6 +67,6 @@ class ArmorCalculator(ArmorCalcMeta):
             self.calcMacro[ARMOR_CALC.PIERCING_POWER] = piercingPower
             self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = piercingPower - armor
             self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = caliber
-            self.as_armorCalcS(self.template % self.calcMacro)
+            self.as_armorCalcS(self.settings[ARMOR_CALC.TEMPLATE] % self.calcMacro)
         else:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
