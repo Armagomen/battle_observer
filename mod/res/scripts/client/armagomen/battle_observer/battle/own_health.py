@@ -37,7 +37,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if handler is not None:
             handler.onCameraChanged += self.onCameraChanged
         g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
-        self.as_startUpdateS(self.settings)
 
     def onArenaPeriod(self, period, *args):
         self.as_setVisibleS(period == ARENA_PERIOD.BATTLE)

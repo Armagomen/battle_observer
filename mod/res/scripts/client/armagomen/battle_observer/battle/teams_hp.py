@@ -92,7 +92,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         if self.settings[MARKERS.NAME][GLOBAL.ENABLED] and isNormalMode:
             self.markers = CorrelationMarkers(self._arenaDP, self.settingsCore, self.settings[MARKERS.NAME],
                                               self.vehicle_types, self.colors, self.as_markersS)
-        self.as_startUpdateS(self.settings, self.colors[COLORS.GLOBAL])
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
         if self.markers is not None:
             self.markers.populate()

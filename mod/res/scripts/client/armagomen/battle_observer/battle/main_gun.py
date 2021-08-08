@@ -47,7 +47,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             True: [self.settings[MAIN_GUN.DONE_ICON], self.settings[MAIN_GUN.FAILURE_ICON]],
             False: [GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE]
         }
-        self.as_startUpdateS(self.settings[GLOBAL.SETTINGS])
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
         if not self._gunScore:

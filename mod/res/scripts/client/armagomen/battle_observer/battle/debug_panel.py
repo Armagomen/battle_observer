@@ -26,9 +26,14 @@ class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
                                      fpsColor=self.settings[COLORS.NAME][DEBUG_PANEL.FPS_COLOR],
                                      PingLagColor=self.settings[COLORS.NAME][DEBUG_PANEL.LAG_COLOR],
                                      PING=GLOBAL.ZERO, FPS=GLOBAL.ZERO)
-        self.as_startUpdateS(self.settings,
-                             ServicesLocator.settingsCore.getSetting(GRAPHICS.VERTICAL_SYNC),
-                             ServicesLocator.settingsCore.getSetting(GRAPHICS.REFRESH_RATE))
+
+    @staticmethod
+    def isVerticalSync():
+        return ServicesLocator.settingsCore.getSetting(GRAPHICS.VERTICAL_SYNC)
+
+    @staticmethod
+    def getRefreshRate():
+        return ServicesLocator.settingsCore.getSetting(GRAPHICS.REFRESH_RATE)
 
     def updateDebugInfo(self, ping, fps, isLaggingNow, fpsReplay=-1):
         lagColor = self.__colors[isLaggingNow]

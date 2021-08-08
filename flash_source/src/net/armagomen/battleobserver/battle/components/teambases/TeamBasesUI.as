@@ -15,11 +15,12 @@ package net.armagomen.battleobserver.battle.components.teambases
 			super();
 		}
 		
-		public function as_startUpdate(basesSettings:Object, colors:Object):void
+		override protected function onPopulate():void 
 		{
-			this.settings = basesSettings;
-			this.colors = colors;
-			this.yPos = basesSettings.y >= 0 ? basesSettings.y : App.appHeight + basesSettings.y;
+			super.onPopulate();
+			this.settings = this.getSettings();
+			this.colors = this.getColors().global;
+			this.yPos = this.settings.y >= 0 ? this.settings.y : App.appHeight + this.settings.y;
 		}
 		
 		public function as_addTeamBase(team:String, points:Number, invadersCnt:int, time:String, text:String):void

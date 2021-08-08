@@ -23,7 +23,7 @@
 					this.groupMap = data.user_background as Array;
 					if (this.groupMap.length > 0)
 					{
-						setUserBackgounds();
+						this.setUserBackgounds();
 					}
 				}
 			}

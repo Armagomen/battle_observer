@@ -16,14 +16,15 @@
 			super();
 		}
 		
-		public function as_startUpdate(settings:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.dateTime == null)
 			{
-				this.settings = settings;
-				var x:Number = settings.x < 0 ? App.appWidth + settings.x : settings.x;
-				var y:Number = settings.y < 0 ? App.appHeight + settings.y : settings.y;
-				dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+				this.settings = this.getSettings().battle;
+				var x:Number = this.settings.x < 0 ? App.appWidth + this.settings.x : this.settings.x;
+				var y:Number = this.settings.y < 0 ? App.appHeight + this.settings.y : this.settings.y;
+				this.dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
 			}
 		}
 		
@@ -31,14 +32,14 @@
 		{
 			if (dateTime)
 			{
-				dateTime.htmlText = text;
+				this.dateTime.htmlText = text;
 			}
 		}
 		
 		override public function onResizeHandle(event:Event):void
 		{
-			dateTime.x = settings.x < 0 ? App.appWidth + settings.x : settings.x;
-			dateTime.y = settings.y < 0 ? App.appHeight + settings.y : settings.y;
+			this.dateTime.x = this.settings.x < 0 ? App.appWidth + this.settings.x : this.settings.x;
+			this.dateTime.y = this.settings.y < 0 ? App.appHeight + this.settings.y : this.settings.y;
 		}
 	}
 

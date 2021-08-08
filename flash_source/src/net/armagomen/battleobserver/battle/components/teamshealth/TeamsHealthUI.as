@@ -27,18 +27,19 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		{
 			super();
 		}
-		
-		public function as_startUpdate(settings:Object, colors:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.hpBars == null)
 			{
 				var battlePage:*      = parent;
 				var fragCorrelation:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				if (fragCorrelation != null)
 				{
+					var settings:Object = this.getSettings();
+					this.colors = this.getColors().global;
 					parent.removeChild(fragCorrelation);
 					this.x = App.appWidth >> 1;
-					this.colors = colors;
 					var shadowSettings:Object = getShadowSettings();
 					var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
 					this.hpBars = this.createHpbars(settings, barWidth);

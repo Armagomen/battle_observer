@@ -18,28 +18,33 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var pingBarEnabled:Boolean = false;
 		private var maxFps:int             = 200;
 		
+		public var isVerticalSync:Function;
+		public var getRefreshRate:Function;
+		
 		public function ObserverDebugPanelUI()
 		{
 			super();
 		}
 		
-		public function as_startUpdate(data:Object, vSync:Boolean, limit:int):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.debugText == null)
 			{
-				this.graphEnabled = Boolean(data.debugGraphics.enabled);
+				var settings:Object = this.getSettings();
+				this.graphEnabled = Boolean(settings.debugGraphics.enabled);
 				if (this.graphEnabled)
 				{
-					this.fpsBarEnabled = Boolean(data.debugGraphics.fpsBar.enabled);
-					this.pingBarEnabled = Boolean(data.debugGraphics.pingBar.enabled);
+					this.fpsBarEnabled = Boolean(settings.debugGraphics.fpsBar.enabled);
+					this.pingBarEnabled = Boolean(settings.debugGraphics.pingBar.enabled);
 					
 					if (this.fpsBarEnabled)
 					{
-						if (vSync)
+						if (this.isVerticalSync())
 						{
-							this.maxFps = limit;
+							this.maxFps = this.getRefreshRate();
 						}
-						var fps:Object       = data.debugGraphics.fpsBar;
+						var fps:Object       = settings.debugGraphics.fpsBar;
 						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
 						this.fpsBar = new ProgressBar(animationEnabled(), fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0.3);
 						this.addChild(this.fpsBar);
@@ -47,13 +52,13 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 					
 					if (this.pingBarEnabled)
 					{
-						var ping:Object       = data.debugGraphics.pingBar;
+						var ping:Object       = settings.debugGraphics.pingBar;
 						var pingfilters:Array = [Filters.handleGlowFilter(ping.glowFilter)];
 						this.pingBar = new ProgressBar(animationEnabled(), ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0.3);
 						this.addChild(this.pingBar);
 					}
 				}
-				this.debugText = new TextExt("_debugPanel", data.debugText.x, data.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+				this.debugText = new TextExt("_debugPanel", settings.debugText.x, settings.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, this.getShadowSettings(), this);
 				var battlePage:* = parent;
 				var debugPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.DEBUG_PANEL);
 				if (debugPanel)

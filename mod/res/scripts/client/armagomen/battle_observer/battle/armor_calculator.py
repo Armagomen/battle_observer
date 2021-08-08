@@ -48,7 +48,6 @@ class ArmorCalculator(ArmorCalcMeta):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
-        # self.as_startUpdateS()
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair

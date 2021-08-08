@@ -18,7 +18,6 @@ class DateTimes(DateTimesMeta):
         super(DateTimes, self)._populate()
         self.format = self.settings[CLOCK.IN_BATTLE][CLOCK.FORMAT]
         self.coding = checkDecoder(strftime(self.format))
-        self.as_startUpdateS(self.settings[CLOCK.IN_BATTLE])
         self.timerEvent.start()
 
     def _dispose(self):

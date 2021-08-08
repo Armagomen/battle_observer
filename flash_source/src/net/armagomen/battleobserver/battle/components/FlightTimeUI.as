@@ -13,17 +13,19 @@ package net.armagomen.battleobserver.battle.components
 			super();
 		}
 		
-		public function as_startUpdate(flyght:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.flightTime == null)
 			{
-				flightTime = new TextExt("flyTime", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
+				var settings:Object = this.getSettings();
+				this.flightTime = new TextExt("flyTime", settings.x, settings.y, Filters.middleText, settings.align, getShadowSettings(), this);
 			}
 		}
 		
 		public function as_flightTime(text:String):void
 		{
-			flightTime.htmlText = text;
+			this.flightTime.htmlText = text;
 		}
 	}
 }

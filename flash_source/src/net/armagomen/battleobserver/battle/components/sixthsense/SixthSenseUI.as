@@ -29,8 +29,9 @@
 			this.addChild(_container);
 		}
 		
-		public function as_startUpdate(settings:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.image == null)
 			{
 				var battlePage:* = parent;
@@ -40,7 +41,7 @@
 					battlePage.removeChild(sixthSense);
 				}
 				this.animate = this.animationEnabled();
-				this.params = settings;
+				this.params = this.getSettings();
 				this.setImage();
 			}
 		}

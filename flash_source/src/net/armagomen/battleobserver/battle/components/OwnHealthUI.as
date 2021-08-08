@@ -13,14 +13,16 @@ package net.armagomen.battleobserver.battle.components
 			super();
 		}
 		
-		public function as_startUpdate(data:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.own_health == null)
 			{
-				var colors:Object = getColors();
-				this.own_health = new ProgressBar(animationEnabled(), data.x - 70, data.y, 140, 20, 0.4, 0.25, null, colors.global.ally, null, 0.2);
+				var settings:Object = this.getSettings();
+				var colors:Object = this.getColors();
+				this.own_health = new ProgressBar(this.animationEnabled(), settings.x - 70, settings.y, 140, 20, 0.4, 0.25, null, colors.global.ally, null, 0.2);
 				this.own_health.setOutline(false, colors.global.ally, 0.45);
-				this.own_health.addTextField(70, -2, "center", Filters.normalText, getShadowSettings());
+				this.own_health.addTextField(70, -2, "center", Filters.normalText, this.getShadowSettings());
 				this.addChild(this.own_health);
 			}
 		}

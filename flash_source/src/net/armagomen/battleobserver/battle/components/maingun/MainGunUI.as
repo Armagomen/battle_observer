@@ -8,21 +8,21 @@ package net.armagomen.battleobserver.battle.components.maingun
 	public class MainGunUI extends ObserverBattleDispalaysble
 	{
 		private var mainGun:TextExt = null;
-		private var mgunXCache:int  = 255;
 		
 		public function MainGunUI()
 		{
 			super();
 		}
 		
-		public function as_startUpdate(data:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.mainGun == null)
 			{
-				this.x = (App.appWidth >> 1) + data.x;
-				this.y = data.y;
-				this.mgunXCache = data.x;
-				this.mainGun = new TextExt("mainGun", 0, 0, Filters.largeText, data.align, getShadowSettings(), this);
+				var settings:Object = this.getSettings().settings;
+				this.x = (App.appWidth >> 1) + settings.x;
+				this.y = settings.y;
+				this.mainGun = new TextExt("mainGun", 0, 0, Filters.largeText, settings.align, getShadowSettings(), this);
 			}
 		}
 		
@@ -36,7 +36,7 @@ package net.armagomen.battleobserver.battle.components.maingun
 		
 		override public function onResizeHandle(event:Event):void
 		{
-			this.x = (App.appWidth >> 1) + this.mgunXCache;
+			this.x = (App.appWidth >> 1) + this.getSettings().settings.x;
 		}
 	}
 }

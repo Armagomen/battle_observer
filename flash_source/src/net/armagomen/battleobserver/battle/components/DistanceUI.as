@@ -13,17 +13,19 @@ package net.armagomen.battleobserver.battle.components
 			super();
 		}
 		
-		public function as_startUpdate(flyght:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.distance == null)
 			{
-				distance = new TextExt("distance", flyght.x, flyght.y, Filters.middleText, flyght.align, getShadowSettings(), this);
+				var settings:Object = this.getSettings();
+				this.distance = new TextExt("distance", settings.x, settings.y, Filters.middleText, settings.align, this.getShadowSettings(), this);
 			}
 		}
 		
 		public function as_setDistance(text:String):void
 		{
-			distance.htmlText = text;
+			this.distance.htmlText = text;
 		}
 	}
 }

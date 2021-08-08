@@ -14,10 +14,6 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
         super(TeamBases, self).__init__()
         self.basesDict = {}
 
-    def _populate(self):
-        super(TeamBases, self)._populate()
-        self.as_startUpdateS(self.settings, self.colors[COLORS.GLOBAL])
-
     def onExitBattlePage(self):
         self.removeTeamsBases()
         super(TeamBases, self).onExitBattlePage()

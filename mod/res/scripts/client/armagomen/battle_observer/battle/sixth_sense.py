@@ -37,7 +37,6 @@ class SixthSense(SixthSenseMeta):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
-        self.as_startUpdateS(self.settings)
 
     def onExitBattlePage(self):
         self.stop()

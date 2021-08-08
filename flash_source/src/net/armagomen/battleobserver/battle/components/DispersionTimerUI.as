@@ -13,17 +13,19 @@ package net.armagomen.battleobserver.battle.components
 			super();
 		}
 		
-		public function as_startUpdate(config:Object):void
+		override protected function onPopulate():void 
 		{
+			super.onPopulate();
 			if (this.dispersionTime == null)
 			{
-				dispersionTime = new TextExt("dispersionTimer", config.timer_position_x, config.timer_position_y, Filters.middleText, config.timer_align, getShadowSettings(), this);
+				var settings:Object = this.getSettings();
+				this.dispersionTime = new TextExt("dispersionTimer", settings.timer_position_x, settings.timer_position_y, Filters.middleText, settings.timer_align, this.getShadowSettings(), this);
 			}
 		}
 		
 		public function as_upateTimerText(text:String):void
 		{
-			dispersionTime.htmlText = text;
+			this.dispersionTime.htmlText = text;
 		}
 	}
 }
