@@ -49,12 +49,13 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def eventListener(self, event):
         self._app.as_loadLibrariesS([SWF.BATTLE])
         self._app.loaderManager.onViewLoaded += self.__onViewLoaded
+        logInfo("loading flash libraries " + SWF.BATTLE)
 
     def __onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in ALIASES_TO_LOAD:
             return
         if view_settings.cfg.main[MAIN.DEBUG]:
-            logInfo(view.settings.alias + " loaded")
+            logInfo("__onViewLoaded " + view.settings.alias)
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
         flash = view.flashObject
         if not hasattr(flash, SWF.ATTRIBUTE_NAME):

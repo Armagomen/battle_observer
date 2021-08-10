@@ -187,25 +187,23 @@ class DispersionCircle(object):
                 VehicleGunRotator.USE_LOCK_PREDICTION = True
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
-        if self.enabled:
-            self.player = getPlayer()
-            bo_factory = BOGunMarkersDPFactory()
-            if isStrategic:
-                if self.replaceOriginalCircle:
-                    client = ObserverSPGGunMarkerController(CLIENT, bo_factory.getClientSPGProvider())
-                else:
-                    client = _SPGGunMarkerController(CLIENT, _GunMarkersDPFactory().getClientSPGProvider())
-                server = ObserverSPGGunMarkerController(SERVER, bo_factory.getServerSPGProvider())
-            else:
-                if self.replaceOriginalCircle:
-                    client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
-                else:
-                    client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT,
-                                                                         _GunMarkersDPFactory().getClientProvider())
-                server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
-            return _GunMarkersDecorator(client, server, self.replaceOriginalCircle, self.extraServerLap)
-        else:
+        if not self.enabled:
             return baseCreateGunMarker(isStrategic)
+        self.player = getPlayer()
+        bo_factory = BOGunMarkersDPFactory()
+        if isStrategic:
+            if self.replaceOriginalCircle:
+                client = ObserverSPGGunMarkerController(CLIENT, bo_factory.getClientSPGProvider())
+            else:
+                client = _SPGGunMarkerController(CLIENT, _GunMarkersDPFactory().getClientSPGProvider())
+            server = ObserverSPGGunMarkerController(SERVER, bo_factory.getServerSPGProvider())
+        else:
+            if self.replaceOriginalCircle:
+                client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
+            else:
+                client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, _GunMarkersDPFactory().getClientProvider())
+            server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
+        return _GunMarkersDecorator(client, server, self.replaceOriginalCircle, self.extraServerLap)
 
 
 dispersion_circle = DispersionCircle()
