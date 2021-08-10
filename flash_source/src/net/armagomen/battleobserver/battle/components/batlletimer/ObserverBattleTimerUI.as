@@ -1,54 +1,34 @@
 ﻿package net.armagomen.battleobserver.battle.components.batlletimer
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import flash.events.Event;
+	import flash.text.TextFieldAutoSize;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
 	
-	public class ObserverBattleTimerUI extends BattleDisplayable
+	public class ObserverBattleTimerUI extends ObserverBattleDispalaysble
 	{
 		private var battleTimer:TextExt;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
 		
 		public function ObserverBattleTimerUI()
 		{
 			super();
 		}
 		
-		override protected function configUI():void
+		override protected function onPopulate():void 
 		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-		}
-		
-		override protected function onDispose():void
-		{
-			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
-			super.onDispose();
-		}
-		
-		public function as_startUpdate():void
-		{
-			if (!this.loaded)
+			super.onPopulate();
+			if (this.battleTimer == null)
 			{
 				this.x = App.appWidth;
-				this.battleTimer = new TextExt("_timer", -8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, getShadowSettings(), this);
+				this.battleTimer = new TextExt("_timer", -8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this.getShadowSettings(), this);
 				var battlePage:* = parent;
 				var component:*  = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_TIMER);
 				if (component)
 				{
 					parent.removeChild(component);
 				}
-				this.loaded = true;
 			}
 		}
 		
@@ -60,7 +40,7 @@
 			}
 		}
 		
-		public function _onResizeHandle(event:Event):void
+		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth;
 		}

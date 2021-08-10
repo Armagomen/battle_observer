@@ -1,54 +1,31 @@
 package net.armagomen.battleobserver.battle.components
 {
-	
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.gui.battle.components.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	
-	
-	public class DispersionTimerUI extends BattleDisplayable
+	public class DispersionTimerUI extends ObserverBattleDispalaysble
 	{
-		private var dispersionTime:TextField;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
+		private var dispersionTime:TextExt;
 		
 		public function DispersionTimerUI()
 		{
 			super();
 		}
 		
-		public function as_startUpdate(config:Object):void
+		override protected function onPopulate():void 
 		{
-			if (!this.loaded)
+			super.onPopulate();
+			if (this.dispersionTime == null)
 			{
-				dispersionTime = new TextExt("dispersionTimer", config.timer_position_x, config.timer_position_y, Filters.middleText, config.timer_align, getShadowSettings(), this);
-				App.utils.data.cleanupDynamicObject(config);
-				this.loaded = true;
+				var settings:Object = this.getSettings();
+				this.dispersionTime = new TextExt("dispersionTimer", settings.timer_position_x, settings.timer_position_y, Filters.middleText, settings.timer_align, this.getShadowSettings(), this);
 			}
-		}
-		
-		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
-		{
-			this.x = x;
-			this.y = y;
 		}
 		
 		public function as_upateTimerText(text:String):void
 		{
-			dispersionTime.htmlText = text;
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
+			this.dispersionTime.htmlText = text;
 		}
 	}
 }

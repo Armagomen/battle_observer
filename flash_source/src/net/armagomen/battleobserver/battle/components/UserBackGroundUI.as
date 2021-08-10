@@ -3,45 +3,32 @@
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.net.URLRequest;
-	import flash.text.*;
-	import net.wg.gui.battle.components.*;
-
-	public class UserBackGroundUI extends BattleDisplayable
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	
+	public class UserBackGroundUI extends ObserverBattleDispalaysble
 	{
 		private var groupMap:Array;
-		private var loaded:Boolean = false;
-
+		
 		public function UserBackGroundUI()
 		{
 			super();
 		}
-
+		
 		public function as_startUpdate(data:Object):void
 		{
-			if (!this.loaded)
+			if (this.groupMap == null)
 			{
 				if (data.enabled)
 				{
 					this.groupMap = data.user_background as Array;
 					if (this.groupMap.length > 0)
 					{
-						setUserBackgounds();
+						this.setUserBackgounds();
 					}
 				}
-				this.loaded = true;
 			}
 		}
-
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-		}
-
+		
 		private function setUserBackgounds():void
 		{
 			for each (var item:Object in this.groupMap)
@@ -52,11 +39,11 @@
 					loader.cacheAsBitmap = true;
 					loader.z = this.groupMap.indexOf(item);
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded, false, 0, true);
-					loader.load(new URLRequest('../../../'+item.img));
+					loader.load(new URLRequest('../../../' + item.img));
 				}
 			}
 		}
-
+		
 		private function imageLoaded(evt:Event):void
 		{
 			var loaderInfo:LoaderInfo = evt.target as LoaderInfo;
@@ -65,7 +52,7 @@
 				loaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
 			}
 			var settings:Object = this.groupMap[loaderInfo.loader.z] as Object;
-			var image:Bitmap = loaderInfo.content as Bitmap;
+			var image:Bitmap    = loaderInfo.content as Bitmap;
 			if (settings.hasOwnProperty("smoothing"))
 			{
 				image.smoothing = settings.smoothing;
@@ -79,8 +66,9 @@
 			if (settings.hasOwnProperty("layer") && settings.layer == "debugPanel")
 			{
 				var battlePage:* = parent;
-				var debug:* = battlePage.getComponent("Observer_DebugPanel_UI");
-				if (debug){
+				var debug:*      = battlePage.getComponent("Observer_DebugPanel_UI");
+				if (debug)
+				{
 					debug.addChild(image);
 				}
 				return;

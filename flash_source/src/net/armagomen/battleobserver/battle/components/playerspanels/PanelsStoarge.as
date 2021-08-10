@@ -1,41 +1,26 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
-	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
-	import net.wg.gui.battle.components.BattleDisplayable;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
 	
-	public class PanelsStoarge extends BattleDisplayable
+	public class PanelsStoarge extends ObserverBattleDispalaysble
 	{
 		private var items:Object    = {};
 		private var stoarge:Object  = {};
-		public var getShadowSettings:Function;
-		public var animationEnabled:Function;
 		public var onAddedToStorage:Function;
 		private var animate:Boolean = false;
 		
 		public function PanelsStoarge()
 		{
 			super();
-		
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
 		}
 		
 		override protected function onPopulate():void
@@ -100,11 +85,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				{
 					bar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
 				}
-				bar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText, getShadowSettings());
+				bar.addTextField(textX, settings.players_bars_text.y, autoSize, null, getShadowSettings());
 				bar.setVisible(startVisible);
 				this.stoarge[vehID]["HpBar"] = this.items[vehID].addChild(bar);
 			}
-			App.utils.data.cleanupDynamicObject(settings);
 		}
 		
 		public function updateHPBar(vehID:int, scale:Number, text:String):void
@@ -139,10 +123,9 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				{
 					autoSize = params.align == "left" ? "right" : "left";
 				}
-				this.stoarge[vehID][name] = new TextExt(name, team == "red" ? -params.x : params.x, params.y, Filters.normalText, autoSize, getShadowSettings(), items[vehID]);
+				this.stoarge[vehID][name] = new TextExt(name, team == "red" ? -params.x : params.x, params.y, null, autoSize, getShadowSettings(), items[vehID]);
 				this.stoarge[vehID][name].visible = name != "DamageTf";
 			}
-			App.utils.data.cleanupDynamicObject(params);
 		}
 		
 		public function updateTextField(vehID:int, name:String, text:String):void

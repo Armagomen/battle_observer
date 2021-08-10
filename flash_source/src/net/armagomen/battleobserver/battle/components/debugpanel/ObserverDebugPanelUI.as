@@ -1,16 +1,14 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import flash.text.TextFieldAutoSize;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.data.constants.Time;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
+
 	
-	public class ObserverDebugPanelUI extends BattleDisplayable
+	public class ObserverDebugPanelUI extends ObserverBattleDispalaysble
 	{
 		private var debugText:TextExt      = null;
 		private var fpsBar:ProgressBar     = null;
@@ -19,72 +17,54 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var fpsBarEnabled:Boolean  = false;
 		private var pingBarEnabled:Boolean = false;
 		private var maxFps:int             = 200;
-		public var getShadowSettings:Function;
-		public var animationEnabled:Function;
-		private var loaded:Boolean         = false;
+		
+		public var isVerticalSync:Function;
+		public var getRefreshRate:Function;
 		
 		public function ObserverDebugPanelUI()
 		{
 			super();
 		}
 		
-		override protected function onDispose():void
+		override protected function onPopulate():void 
 		{
-			this.fpsBar = null;
-			this.pingBar = null;
-			super.onDispose();
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-		}
-		
-		public function as_startUpdate(data:Object, vSync:Boolean, limit:int):void
-		{
-			if (!this.loaded)
+			super.onPopulate();
+			if (this.debugText == null)
 			{
-				this.graphEnabled = Boolean(data.debugGraphics.enabled);
+				var settings:Object = this.getSettings();
+				this.graphEnabled = Boolean(settings.debugGraphics.enabled);
 				if (this.graphEnabled)
 				{
-					this.fpsBarEnabled = Boolean(data.debugGraphics.fpsBar.enabled);
-					this.pingBarEnabled = Boolean(data.debugGraphics.pingBar.enabled);
+					this.fpsBarEnabled = Boolean(settings.debugGraphics.fpsBar.enabled);
+					this.pingBarEnabled = Boolean(settings.debugGraphics.pingBar.enabled);
 					
 					if (this.fpsBarEnabled)
 					{
-						if (vSync)
+						if (this.isVerticalSync())
 						{
-							this.maxFps = limit;
+							this.maxFps = this.getRefreshRate();
 						}
-						var fps:Object       = data.debugGraphics.fpsBar;
+						var fps:Object       = settings.debugGraphics.fpsBar;
 						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
-						fpsBar = this.addChild(new ProgressBar(animationEnabled(), fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0.3)) as ProgressBar;
-						App.utils.data.cleanupDynamicObject(fps);
+						this.fpsBar = new ProgressBar(animationEnabled(), fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0.3);
+						this.addChild(this.fpsBar);
 					}
 					
 					if (this.pingBarEnabled)
 					{
-						var ping:Object       = data.debugGraphics.pingBar;
+						var ping:Object       = settings.debugGraphics.pingBar;
 						var pingfilters:Array = [Filters.handleGlowFilter(ping.glowFilter)];
-						pingBar = this.addChild(new ProgressBar(animationEnabled(), ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0.3)) as ProgressBar;
-						App.utils.data.cleanupDynamicObject(ping);
+						this.pingBar = new ProgressBar(animationEnabled(), ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0.3);
+						this.addChild(this.pingBar);
 					}
 				}
-				this.debugText = new TextExt("_debugPanel", data.debugText.x, data.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+				this.debugText = new TextExt("_debugPanel", settings.debugText.x, settings.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, this.getShadowSettings(), this);
 				var battlePage:* = parent;
 				var debugPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.DEBUG_PANEL);
 				if (debugPanel)
 				{
 					battlePage.removeChild(debugPanel);
 				}
-				App.utils.data.cleanupDynamicObject(data);
-				this.loaded = true;
-				y
 			}
 		}
 		

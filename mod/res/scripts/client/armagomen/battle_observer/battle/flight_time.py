@@ -13,22 +13,19 @@ class FlightTime(FlightTimeMeta):
 
     def __init__(self):
         super(FlightTime, self).__init__()
-        self.template = None
         self.shared = self.sessionProvider.shared
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, flightTime=GLOBAL.ZERO, distance=GLOBAL.ZERO)
 
     def _populate(self):
         super(FlightTime, self)._populate()
-        self.template = self.settings[FLIGHT_TIME.TEMPLATE]
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
-        self.as_startUpdateS(self.settings)
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(FlightTime, self)._dispose()
 
     def showOnCurrentTank(self):
@@ -63,4 +60,4 @@ class FlightTime(FlightTimeMeta):
         flatDist = position.flatDistTo(shotPos)
         self.macrosDict[FLIGHT_TIME.M_FLIGHT_TIME] = flatDist / shotVec.flatDistTo(VECTOR)
         self.macrosDict[FLIGHT_TIME.M_DISTANCE] = flatDist
-        self.as_flightTimeS(self.template % self.macrosDict)
+        self.as_flightTimeS(self.settings[FLIGHT_TIME.TEMPLATE] % self.macrosDict)

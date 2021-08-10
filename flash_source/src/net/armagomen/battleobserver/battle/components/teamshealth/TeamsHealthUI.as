@@ -1,140 +1,90 @@
 package net.armagomen.battleobserver.battle.components.teamshealth
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.filters.*;
-	import flash.text.*;
+	import flash.events.Event;
+	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
 	import net.armagomen.battleobserver.battle.components.teamshealth.League;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
-	//import net.armagomen.battleobserver.battle.components.teamshealth.classic.Classic;
+	import net.wg.data.constants.Linkages;
+	import net.wg.gui.battle.views.BaseBattlePage;
 	
-	public class TeamsHealthUI extends BattleDisplayable
+	public class TeamsHealthUI extends ObserverBattleDispalaysble
 	{
 		private var greenText:TextExt;
 		private var redText:TextExt;
 		private var greenDiff:TextExt;
 		private var redDiff:TextExt;
-		private var colors:Object        = null;
-		private var hpBars:*             = null;
+		private var colors:Object = null;
+		private var hpBars:*      = null;
 		private var score:Score;
 		private var markers:Markers;
-		private var loaded:Boolean       = false;
-		private var isColorBlind:Boolean = false;
-		public var animationEnabled:Function;
-		public var getShadowSettings:Function;
-		public var getAlpha:Function;
 		
 		public function TeamsHealthUI()
 		{
 			super();
 		}
 		
-		public function as_startUpdate(settings:Object, colors:Object, colorBlind:Boolean):void
+		override protected function onPopulate():void
 		{
-			if (!this.loaded)
+			super.onPopulate();
+			if (this.hpBars == null)
 			{
-				var wgPanel:DisplayObject = this.getWGpanel();
-				if (wgPanel != null)
+				var battlePage:*      = parent;
+				var fragCorrelation:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+				if (fragCorrelation != null)
 				{
-					parent.removeChild(wgPanel);
+					var settings:Object = this.getSettings();
+					this.colors = this.getColors().global;
+					parent.removeChild(fragCorrelation);
 					this.x = App.appWidth >> 1;
-					this.colors = colors;
-					this.isColorBlind = colorBlind;
-					
 					var shadowSettings:Object = getShadowSettings();
 					var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
-					this.hpBars = this.createHpbars(settings, barWidth);
-					var isLeague:Boolean = this.hpBars as League;
-					var textXpos:Number  = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
-					var textStyle:*      = !isLeague ? Filters.normalText : Filters.middleText;
-					
+					this.hpBars = this.createHpBars(settings, barWidth);
+					var isLeague:Boolean     = this.hpBars as League;
+					var textXpos:Number      = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
+					var textStyle:TextFormat = !isLeague ? Filters.normalText : Filters.middleText;
 					this.addChild(this.hpBars);
-					
-					this.greenText = new TextExt("greenText", -textXpos, 2, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
-					this.redText = new TextExt("redText", textXpos, 2, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
-					this.greenDiff = new TextExt("greenDiff", -55, 2, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
-					this.redDiff = new TextExt("redDiff", 55, 2, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
-					
-					this.score = new Score(shadowSettings, colorBlind, this.colors, settings.style);
+					this.greenText = new TextExt("greenText", -textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
+					this.redText = new TextExt("redText", textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
+					this.greenDiff = new TextExt("greenDiff", -55, 1, textStyle, TextFieldAutoSize.RIGHT, shadowSettings, this);
+					this.redDiff = new TextExt("redDiff", 55, 1, textStyle, TextFieldAutoSize.LEFT, shadowSettings, this);
+					this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
 					this.addChild(this.score);
-					
-					if (settings.markers.enabled){
+					if (settings.markers.enabled)
+					{
 						this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
 						this.addChild(this.markers);
 					}
-					
-					this.loaded = true;
 				}
 			}
 		}
 		
-		private function getWGpanel():DisplayObject
-		{
-			var battlePage:* = parent;
-			switch (true)
-			{
-			case battlePage._componentsStorage.hasOwnProperty(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR): 
-				return battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-			default: 
-				return null;
-			}
-		}
-		
-		private function createHpbars(settings:Object, barWidth:Number):*
+		private function createHpBars(settings:Object, barWidth:Number):*
 		{
 			switch (settings.style)
 			{
 			case "league": 
-				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
-			case "normal": 
-				return new Default(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
-			//case "classic":
-			//return new Classic(settings.style, this.isColorBlind, this.colors);
+				return new League(this.animationEnabled(), settings, barWidth, this.isColorBlind(), this.colors);
 			default: 
-				return new League(animationEnabled(), settings, barWidth, this.isColorBlind, this.colors);
+				return new Default(this.animationEnabled(), settings, barWidth, this.isColorBlind(), this.colors);
 			}
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-		}
-		
-		override protected function onDispose():void
-		{
-			this.hpBars = null;
-			this.score = null;
-			this.markers = null;
-			App.utils.data.cleanupDynamicObject(this.colors);
-			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
-			super.onDispose();
 		}
 		
 		public function as_colorBlind(enabled:Boolean):void
 		{
-			if (this.isColorBlind != enabled)
-			{
-				this.isColorBlind = enabled;
-				this.hpBars.setColorBlind(enabled);
-				this.score.setColorBlind(enabled);
-			}
+			this.hpBars.setColorBlind(enabled);
+			this.score.setColorBlind(enabled);
 		}
 		
 		public function as_difference(param:int):void
 		{
 			if (param < 0)
 			{
-				this.redDiff.text = "+".concat((-param).toString());
+				this.redDiff.text = "+".concat(Math.abs(param).toString());
 				this.greenDiff.text = "";
 			}
 			else if (param > 0)
@@ -167,7 +117,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.markers.update_markers(correlationItemsLeft, correlationItemsRight);
 		}
 		
-		private function _onResizeHandle(event:Event):void
+		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
 		}

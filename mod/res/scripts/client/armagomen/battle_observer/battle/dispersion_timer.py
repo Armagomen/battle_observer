@@ -12,29 +12,22 @@ class DispersionTimer(DispersionTimerMeta):
 
     def __init__(self):
         super(DispersionTimer, self).__init__()
-        self.timer_regular = None
-        self.timer_done = None
-        self.macro = None
+        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timer=GLOBAL.F_ZERO, percent=GLOBAL.ZERO)
         self.min_angle = None
         self.isPostmortem = False
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
-        self.timer_regular = self.settings[DISPERSION.TIMER_REGULAR_TEMPLATE]
-        self.timer_done = self.settings[DISPERSION.TIMER_DONE_TEMPLATE]
-        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR,
-                                 color=self.settings[DISPERSION.TIMER_COLOR],
-                                 color_done=self.settings[DISPERSION.TIMER_DONE_COLOR],
-                                 timer=None, percent=None)
+        self.macro.update(color=self.settings[DISPERSION.TIMER_COLOR],
+                          color_done=self.settings[DISPERSION.TIMER_DONE_COLOR])
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChanged
-        self.as_startUpdateS(self.settings)
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChanged
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(DispersionTimer, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
@@ -59,9 +52,9 @@ class DispersionTimer(DispersionTimerMeta):
         self.macro[DISPERSION_TIME.TIMER] = timing
         self.macro[DISPERSION_TIME.PERCENT] = percent
         if percent == 100:
-            self.as_updateTimerTextS(self.timer_done % self.macro)
+            self.as_updateTimerTextS(self.settings[DISPERSION.TIMER_DONE_TEMPLATE] % self.macro)
         else:
-            self.as_updateTimerTextS(self.timer_regular % self.macro)
+            self.as_updateTimerTextS(self.settings[DISPERSION.TIMER_REGULAR_TEMPLATE] % self.macro)
 
     def onEnterBattlePage(self):
         super(DispersionTimer, self).onEnterBattlePage()

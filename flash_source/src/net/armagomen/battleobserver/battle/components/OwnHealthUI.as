@@ -1,50 +1,42 @@
 package net.armagomen.battleobserver.battle.components
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
-	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.gui.battle.components.*;
-
-	public class OwnHealthUI extends BattleDisplayable
+	import net.armagomen.battleobserver.utils.ProgressBar;
+	
+	public class OwnHealthUI extends ObserverBattleDispalaysble
 	{
-		private var own_health:TextField;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
-
+		private var own_health:ProgressBar;
+		
 		public function OwnHealthUI()
 		{
 			super();
 		}
-
-		public function as_startUpdate(data:Object):void
+		
+		override protected function onPopulate():void 
 		{
-			if (this.loaded) return;
-			own_health = new TextExt("own_health", data.x, data.y, Filters.middleText, data.align, getShadowSettings(), this);
-			App.utils.data.cleanupDynamicObject(data);
-			this.loaded = true;
-		}
-
-		public function as_setOwnHealth(text:String):void
-		{
-			own_health.htmlText = text;
+			super.onPopulate();
+			if (this.own_health == null)
+			{
+				var settings:Object = this.getSettings();
+				var colors:Object = this.getColors();
+				this.own_health = new ProgressBar(this.animationEnabled(), settings.x - 70, settings.y, 140, 20, 0.4, 0.25, null, colors.global.ally, null, 0.2);
+				this.own_health.setOutline(false, colors.global.ally, 0.45);
+				this.own_health.addTextField(70, -2, "center", Filters.normalText, this.getShadowSettings());
+				this.addChild(this.own_health);
+			}
 		}
 		
-		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
+		public function as_setOwnHealth(scale:Number, text:String, color:String):void
 		{
-			this.x = x;
-			this.y = y;
+			this.own_health.setNewScale(scale);
+			this.own_health.setText(text);
+			this.own_health.updateColor(color);
 		}
-
-		override protected function configUI():void
+		
+		public function as_setVisible(param:Boolean):void
 		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
+			this.own_health.setVisible(param);
 		}
 	}
 }

@@ -6,7 +6,6 @@ from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
 from armagomen.utils.common import callback, logWarning, percentToRGB
 from constants import ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
-from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 
 class DamageLog(DamageLogsMeta):
@@ -16,7 +15,6 @@ class DamageLog(DamageLogsMeta):
         self.input_log = {}
         self.damage_log = {}
         self.top_log = None
-        self.isSPG = False
         self.vehicle_colors = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][VEHICLE_TYPES.UNKNOWN],
                                           **self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS])
         self.vehicle_icons = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_ICON][VEHICLE_TYPES.UNKNOWN],
@@ -57,7 +55,6 @@ class DamageLog(DamageLogsMeta):
         if self._player is not None and self._player.vehicle is not None:
             self.input_log.update(kills=set(), shots=list())
             self.damage_log.update(kills=set(), shots=list())
-            self.isSPG = VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
             extended_log = self.settings.log_damage_extended[GLOBAL.ENABLED] or self.settings.log_input_extended[
                 GLOBAL.ENABLED]
             if extended_log:
@@ -72,7 +69,7 @@ class DamageLog(DamageLogsMeta):
                 feedback = self.sessionProvider.shared.feedback
                 if feedback:
                     feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
-            if not self.isSPG:
+            if not self._arenaDP.getVehicleInfo().isSPG():
                 self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
             self.updateAvgDamage(self.sessionProvider.arenaVisitor.gui.isEpicBattle())
             self.updateTopLog()
@@ -144,7 +141,7 @@ class DamageLog(DamageLogsMeta):
         if self.settings.log_total[GLOBAL.ENABLED]:
             value = self.top_log[DAMAGE_LOG.PLAYER_DAMAGE] / DAMAGE_LOG.AVG_DAMAGE_DATA
             self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = percentToRGB(value, **self.settings.log_total[
-                DAMAGE_LOG.AVG_COLOR])
+                GLOBAL.AVG_COLOR])
             self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     def onVehicleAddUpdate(self, vehicleID, *args, **kwargs):
@@ -230,7 +227,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         vehicle[DAMAGE_LOG.TANK_NAME] = DAMAGE_LOG.LIST_SEPARATOR.join(sorted(vehicle[DAMAGE_LOG.TANK_NAMES]))
         percent = float(vehicle[DAMAGE_LOG.TOTAL_DAMAGE]) / vehicle[DAMAGE_LOG.MAX_HEALTH]
-        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRGB(percent, **settings[DAMAGE_LOG.AVG_COLOR])
+        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRGB(percent, **settings[GLOBAL.AVG_COLOR])
         callback(0.1, lambda: self.updateExtendedLog(log_dict, settings))
 
     def updateExtendedLog(self, log_dict, settings, altMode=False):

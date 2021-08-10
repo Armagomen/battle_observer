@@ -1,43 +1,26 @@
 package net.armagomen.battleobserver.battle.components.teambases
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBase;
-	import net.wg.gui.battle.components.*;
 	
-	public class TeamBasesUI extends BattleDisplayable
+	public class TeamBasesUI extends ObserverBattleDispalaysble
 	{
 		private var bases:Object = {"green": null, "red": null};
 		private var settings:Object;
 		private var colors:Object;
-		private var shadowSettings:Object;
 		private var yPos:Number = 100;
-		public var getShadowSettings:Function;
-		public var isColorBlind:Function;
-		public var animationEnabled:Function;
 		
 		public function TeamBasesUI()
 		{
 			super();
 		}
 		
-		override protected function configUI():void
+		override protected function onPopulate():void 
 		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-		}
-		
-		public function as_startUpdate(basesSettings:Object, colors:Object):void
-		{
-			this.settings = basesSettings;
-			this.colors = colors;
-			this.shadowSettings = getShadowSettings();
-			this.yPos = basesSettings.y >= 0 ? basesSettings.y : App.appHeight + basesSettings.y;
+			super.onPopulate();
+			this.settings = this.getSettings();
+			this.colors = this.getColors().global;
+			this.yPos = this.settings.y >= 0 ? this.settings.y : App.appHeight + this.settings.y;
 		}
 		
 		public function as_addTeamBase(team:String, points:Number, invadersCnt:int, time:String, text:String):void
@@ -49,7 +32,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 			else
 			{
 				var base:TeamBase = new TeamBase(this.animationEnabled(), this.isColorBlind());
-				base.create(this.settings, this.shadowSettings, this.colors, team);
+				base.create(this.settings, this.getShadowSettings(), this.colors, team);
 				base.updateBase(points * 0.01, invadersCnt, time, text);
 				if (this.bases["green"] || this.bases["red"])
 				{

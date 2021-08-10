@@ -1,51 +1,28 @@
 package net.armagomen.battleobserver.battle.components.maingun
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import flash.events.Event;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.gui.battle.components.*;
 	
-	public class MainGunUI extends BattleDisplayable
+	public class MainGunUI extends ObserverBattleDispalaysble
 	{
 		private var mainGun:TextExt = null;
-		private var mgunXCache:int  = 255;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean  = false;
 		
 		public function MainGunUI()
 		{
 			super();
 		}
 		
-		override protected function configUI():void
+		override protected function onPopulate():void 
 		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-		}
-		
-		override protected function onDispose():void
-		{
-			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
-			super.onDispose();
-		}
-		
-		public function as_startUpdate(data:Object):void
-		{
-			if (!this.loaded)
+			super.onPopulate();
+			if (this.mainGun == null)
 			{
-				this.x = (App.appWidth >> 1) + data.x;
-				this.y = data.y;
-				this.mgunXCache = data.x;
-				this.mainGun = new TextExt("mainGun", 0, 0, Filters.largeText, data.align, getShadowSettings(), this);
-				App.utils.data.cleanupDynamicObject(data);
-				this.loaded = true;
+				var settings:Object = this.getSettings().settings;
+				this.x = (App.appWidth >> 1) + settings.x;
+				this.y = settings.y;
+				this.mainGun = new TextExt("mainGun", 0, 0, Filters.largeText, settings.align, getShadowSettings(), this);
 			}
 		}
 		
@@ -57,9 +34,9 @@ package net.armagomen.battleobserver.battle.components.maingun
 			}
 		}
 		
-		private function _onResizeHandle(event:Event):void
+		override public function onResizeHandle(event:Event):void
 		{
-			this.x = (App.appWidth >> 1) + this.mgunXCache;
+			this.x = (App.appWidth >> 1) + this.getSettings().settings.x;
 		}
 	}
 }

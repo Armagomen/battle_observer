@@ -276,7 +276,7 @@ class DefaultSettings(object):
                 "spottedIcon": "<img src='{dir}/detection.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS),
                 "stunIcon": "<img src='{dir}/stun.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS)
             },
-            DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
+            GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
 
         self.log_damage_extended = {
@@ -313,7 +313,7 @@ class DefaultSettings(object):
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
-            DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
+            GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
         self.log_input_extended = {
             GLOBAL.ENABLED: False,
@@ -351,7 +351,7 @@ class DefaultSettings(object):
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
-            DAMAGE_LOG.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
+            GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
 
         self.hp_bars = {
@@ -476,7 +476,8 @@ class DefaultSettings(object):
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: 120,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
-            OWN_HEALTH.TEMPLATE: "<font color='%(color)s'>%(health)s/%(maxHealth)s (%(percent)s%%)</font>"
+            OWN_HEALTH.TEMPLATE: "%(health)s/%(maxHealth)s (%(percent)s%%)",
+            GLOBAL.AVG_COLOR: {"saturation": 1.0, "brightness": 1.0}
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,

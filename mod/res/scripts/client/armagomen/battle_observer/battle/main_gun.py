@@ -1,8 +1,8 @@
 from collections import defaultdict
 from math import ceil
 
-from armagomen.constants import MAIN_GUN, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
+from armagomen.constants import MAIN_GUN, GLOBAL, POSTMORTEM
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -12,7 +12,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def __init__(self):
         super(MainGun, self).__init__()
-        self.macros = None
+        self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR, )
         self._gunScore = GLOBAL.ZERO
         self.gunLeft = GLOBAL.ZERO
         self.gunIcons = None
@@ -40,14 +40,13 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def _populate(self):
         super(MainGun, self)._populate()
-        self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR, mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
-                                  mainGunColor=self.colors[MAIN_GUN.NAME][MAIN_GUN.COLOR],
-                                  mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
+        self.macros.update(mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
+                           mainGunColor=self.colors[MAIN_GUN.NAME][MAIN_GUN.COLOR],
+                           mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
         self.gunIcons = {
             True: [self.settings[MAIN_GUN.DONE_ICON], self.settings[MAIN_GUN.FAILURE_ICON]],
             False: [GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE]
         }
-        self.as_startUpdateS(self.settings[GLOBAL.SETTINGS])
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
         if not self._gunScore:

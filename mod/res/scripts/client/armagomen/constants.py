@@ -66,6 +66,7 @@ class GLOBAL:
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48",
                   "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
+    AVG_COLOR = "avgColor"
 
 
 SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
@@ -134,7 +135,6 @@ class DAMAGE_LOG:
     ASSIST_DAMAGE = "assistDamage"
     ASSIST_STUN = "stun"
     ATTACK_REASON = "attackReason"
-    AVG_COLOR = "avgColor"
     AVG_DAMAGE = "tankAvgDamage"
     AVG_DAMAGE_DATA = 0.0
     BLOCKED_DAMAGE = "blockedDamage"

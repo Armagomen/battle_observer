@@ -1,78 +1,45 @@
 ﻿package net.armagomen.battleobserver.battle.components
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import flash.events.Event;
+	import flash.text.TextFieldAutoSize;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.gui.battle.components.*;
-
-	public class ObserverDateTimesUI extends BattleDisplayable
+	
+	public class ObserverDateTimesUI extends ObserverBattleDispalaysble
 	{
-		private var dateTime:TextField;
-		private var config:Object;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
-
+		private var dateTime:TextExt;
+		private var settings:Object;
+		
 		public function ObserverDateTimesUI()
 		{
 			super();
 		}
-
-		override protected function configUI():void
+		
+		override protected function onPopulate():void 
 		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-		}
-
-		override protected function onDispose():void
-		{
-			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
-			super.onDispose();
-		}
-
-		public function as_startUpdate(settings:Object):void
-		{
-			if (!this.loaded){
-			this.config = settings;
-			var x:int = settings.x;
-			if (x < 0){
-				x = App.appWidth + x;
-			}
-			var y:int = settings.y;
-			if (y < 0){
-				y = App.appHeight + y;
-			}
-			dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
-			this.loaded = true;
+			super.onPopulate();
+			if (this.dateTime == null)
+			{
+				this.settings = this.getSettings().battle;
+				var x:Number = this.settings.x < 0 ? App.appWidth + this.settings.x : this.settings.x;
+				var y:Number = this.settings.y < 0 ? App.appHeight + this.settings.y : this.settings.y;
+				this.dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
 			}
 		}
-
+		
 		public function as_setDateTime(text:String):void
 		{
 			if (dateTime)
 			{
-				dateTime.htmlText = text;
+				this.dateTime.htmlText = text;
 			}
 		}
-
-		public function _onResizeHandle(event:Event):void
+		
+		override public function onResizeHandle(event:Event):void
 		{
-			var x:int = config.x;
-			if (x < 0){
-				x = App.appWidth + x;
-			}
-			var y:int = config.y;
-			if (y < 0){
-				y = App.appHeight + y;
-			}
-			dateTime.x = x;
-			dateTime.y = y;
+			this.dateTime.x = this.settings.x < 0 ? App.appWidth + this.settings.x : this.settings.x;
+			this.dateTime.y = this.settings.y < 0 ? App.appHeight + this.settings.y : this.settings.y;
 		}
 	}
 

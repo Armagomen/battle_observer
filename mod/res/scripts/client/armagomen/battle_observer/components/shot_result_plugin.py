@@ -18,14 +18,15 @@ _LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
 
 
 class ShotResultResolver(object):
-    __slots__ = ("resolver", "_player")
+    __slots__ = ("resolver", "_player", "_team")
 
     def __init__(self):
         self.resolver = _CrosshairShotResults
         self._player = getPlayer()
+        self._team = self._player.team
 
     def isAlly(self, entity):
-        return entity.publicInfo[VEHICLE.TEAM] == self._player.team
+        return entity.publicInfo[VEHICLE.TEAM] == self._team
 
     def getShotResult(self, collision, hitPoint, direction, piercingMultiplier):
         if collision is None:

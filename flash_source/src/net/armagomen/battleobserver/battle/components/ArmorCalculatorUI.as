@@ -1,54 +1,34 @@
 package net.armagomen.battleobserver.battle.components
 {
-	import flash.display.*;
-	import flash.events.*;
-	import flash.text.*;
+	import flash.text.TextFieldAutoSize;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.gui.battle.components.*;
 	
-	public class ArmorCalculatorUI extends BattleDisplayable
+	public class ArmorCalculatorUI extends ObserverBattleDispalaysble
 	{
-		private var armorCalc:TextField;
-		public var getShadowSettings:Function;
-		private var loaded:Boolean = false;
+		private var armorCalc:TextExt;
 		
 		public function ArmorCalculatorUI()
 		{
 			super();
 		}
 		
-		override protected function configUI():void
+		override protected function onPopulate():void 
 		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
-		}
-		
-		public function as_startUpdate(calc:Object):void
-		{
-			if (!this.loaded)
+			super.onPopulate();
+			if (this.armorCalc == null)
 			{
-				this.armorCalc = new TextExt("armorCalc", calc.position.x, calc.position.y, Filters.armorText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
-				App.utils.data.cleanupDynamicObject(calc);
-				this.loaded = true;
+				var settings:Object = this.getSettings();
+				this.armorCalc = new TextExt("armorCalc", settings.position.x, settings.position.y, Filters.armorText, TextFieldAutoSize.CENTER, this.getShadowSettings(), this);
 			}
-		}
-		
-		public function as_onCrosshairPositionChanged(x:Number, y:Number):void
-		{
-			this.x = x;
-			this.y = y;
 		}
 		
 		public function as_armorCalc(text:String):void
 		{
 			if (armorCalc)
 			{
-				armorCalc.htmlText = text;
+				this.armorCalc.htmlText = text;
 			}
 		}
 	

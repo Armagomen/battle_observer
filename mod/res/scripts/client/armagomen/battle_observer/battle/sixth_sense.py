@@ -16,20 +16,12 @@ class SixthSense(SixthSenseMeta):
 
     def __init__(self):
         super(SixthSense, self).__init__()
-        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.template = None
-        self.showTimer = None
-        self.macro[SIXTH_SENSE.M_TIME] = None
-        self._timer = None
-        self.__soundID = self._arenaVisitor.type.getCountdownTimerSound()
+        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, lampTime=GLOBAL.ZERO)
+        self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS, self._arenaVisitor.type.getCountdownTimerSound())
 
     def _populate(self):
         super(SixthSense, self)._populate()
-        self.template = self.settings[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE]
-        self.showTimer = self.settings[SIXTH_SENSE.SHOW_TIMER]
         self.macro[SIXTH_SENSE.M_TIME] = self.settings[SIXTH_SENSE.TIME]
-        self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS, self.settings[SIXTH_SENSE.PLAY_TICK_SOUND],
-                                      self.__soundID)
 
     def onEnterBattlePage(self):
         super(SixthSense, self).onEnterBattlePage()
@@ -37,7 +29,6 @@ class SixthSense(SixthSenseMeta):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
-        self.as_startUpdateS(self.settings)
 
     def onExitBattlePage(self):
         self.stop()
@@ -60,17 +51,17 @@ class SixthSense(SixthSenseMeta):
 
     def handleTimer(self, timeLeft):
         self.macro[SIXTH_SENSE.M_TIME_LEFT] = timeLeft
-        self.as_updateTimerS(self.template % self.macro)
+        self.as_updateTimerS(self.settings[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE] % self.macro)
 
     def show(self):
         self.as_showS()
-        if self.showTimer:
-            self._timer.start(self.settings[SIXTH_SENSE.TIME])
+        if self.settings[SIXTH_SENSE.SHOW_TIMER]:
+            self._timer.start(self.settings[SIXTH_SENSE.TIME], self.settings[SIXTH_SENSE.PLAY_TICK_SOUND])
         else:
             callback(float(self.settings[SIXTH_SENSE.TIME]), self.as_hideS)
 
     def stop(self):
-        if self.showTimer:
+        if self.settings[SIXTH_SENSE.SHOW_TIMER]:
             self._timer.stop()
         else:
             self.as_hideS()

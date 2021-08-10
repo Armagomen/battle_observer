@@ -43,17 +43,17 @@
 				this.backGround.graphics.beginFill(Utils.colorConvert(bgColor), bgAlpha);
 				this.backGround.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
 				this.backGround.graphics.endFill();
-				this.addChild(backGround);
+				this.addChild(this.backGround);
 			}
 			this.bar.graphics.beginFill(this.COLOR, alpha);
 			this.bar.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
 			this.bar.graphics.endFill();
 			if (filters != null)
 			{
-				bar.filters = filters;
+				this.bar.filters = filters;
 			}
 			
-			this.addChild(bar);
+			this.addChild(this.bar);
 			if (this.animationEnabled)
 			{
 				this.animation = new Tween(this.bar, "scaleX", this.bar.scaleX, 1.0, this.animationTime, true);
@@ -89,9 +89,9 @@
 		public function setOutline(customColor:Boolean = false, color:String = "#000000", alpha:Number = 1.0):void
 		{
 			this.costumColor = customColor;
-			outline.graphics.lineStyle(1, customColor ? Utils.colorConvert(color) : this.COLOR, Math.max(0.05, alpha), true, LineScaleMode.NONE);
-			outline.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
-			this.addChild(outline);
+			this.outline.graphics.lineStyle(1, customColor ? Utils.colorConvert(color) : this.COLOR, Math.max(0.05, alpha), true, LineScaleMode.NONE);
+			this.outline.graphics.drawRect(0, 0, this.WIDTH, this.HEIGHT);
+			this.addChild(this.outline);
 		}
 		
 		public function setVisible(vis:Boolean):void

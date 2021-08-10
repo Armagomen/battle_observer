@@ -12,18 +12,9 @@ class BattleTimer(BattleTimerMeta, IAbstractPeriodView):
         super(BattleTimer, self).__init__()
         self.timer = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timerColor=COLORS.NORMAL_TEXT,
                                  timer=BATTLE_TIMER.START_STRING)
-        self.template = None
-        self.color = None
-
-    def _populate(self):
-        super(BattleTimer, self)._populate()
-        self.template = self.settings[BATTLE_TIMER.TEMPLATE]
-        self.color = (self.settings[BATTLE_TIMER.COLOR], self.settings[BATTLE_TIMER.END_COLOR])
-        self.as_startUpdateS()
 
     def setTotalTime(self, totalTime):
-        color = self.color[totalTime < BATTLE_TIMER.END_BATTLE_SEC]
-        if color != self.timer[BATTLE_TIMER.COLOR]:
-            self.timer[BATTLE_TIMER.COLOR] = color
+        self.timer[BATTLE_TIMER.COLOR] = self.settings[BATTLE_TIMER.END_COLOR] \
+            if totalTime < BATTLE_TIMER.END_BATTLE_SEC else self.settings[BATTLE_TIMER.COLOR]
         self.timer[BATTLE_TIMER.M_TIMER] = BATTLE_TIMER.TIME_FORMAT % divmod(totalTime, ONE_MINUTE)
-        self.as_timerS(self.template % self.timer)
+        self.as_timerS(self.settings[BATTLE_TIMER.TEMPLATE] % self.timer)

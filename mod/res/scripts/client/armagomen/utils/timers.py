@@ -35,10 +35,9 @@ class Timer(object):
 class SixthSenseTimer(Timer):
     __slots__ = ("_callback", "_func_hide", "_func_update", "_play_sound", "__sounds", "__soundID")
 
-    def __init__(self, update, hide, play_sound, soundID):
+    def __init__(self, update, hide, soundID):
         super(SixthSenseTimer, self).__init__()
         self._func_update = update
-        self._play_sound = play_sound
         self._func_hide = hide
         self.__sounds = dict()
         self.__soundID = soundID
@@ -54,18 +53,18 @@ class SixthSenseTimer(Timer):
                 sound.stop()
             sound.play()
 
-    def timeTicking(self, seconds):
+    def timeTicking(self, seconds, play_sound):
         if seconds > CONSTANTS.ZERO:
             self._callback = callback(CONSTANTS.ONE_SECOND, lambda: self.timeTicking(seconds - CONSTANTS.ONE))
             self._func_update(seconds)
-            if self._play_sound:
+            if play_sound:
                 self.callWWISE(self.__soundID)
         else:
             self.stop()
 
-    def start(self, seconds):
+    def start(self, seconds, play_sound):
         super(SixthSenseTimer, self).start()
-        self.timeTicking(seconds)
+        self.timeTicking(seconds, play_sound)
 
     def destroy(self):
         for sound in self.__sounds.values():
