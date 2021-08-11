@@ -54,13 +54,12 @@ class SixthSenseTimer(Timer):
             sound.play()
 
     def timeTicking(self, seconds, play_sound):
-        if seconds > CONSTANTS.ZERO:
-            self._callback = callback(CONSTANTS.ONE_SECOND, lambda: self.timeTicking(seconds - CONSTANTS.ONE))
-            self._func_update(seconds)
-            if play_sound:
-                self.callWWISE(self.__soundID)
-        else:
-            self.stop()
+        if seconds <= CONSTANTS.ZERO:
+            return self.stop()
+        self._callback = callback(CONSTANTS.ONE_SECOND, lambda: self.timeTicking(seconds - CONSTANTS.ONE, play_sound))
+        self._func_update(seconds)
+        if play_sound:
+            self.callWWISE(self.__soundID)
 
     def start(self, seconds, play_sound):
         super(SixthSenseTimer, self).start()
