@@ -24,14 +24,20 @@ class ObserverCore(object):
         self.isFileValid = self.isModValidFileName()
         self.mod_version = 'v{0} - {1}'.format(__version__, self.gameVersion)
         self.componentsLoader = ComponentsLoader()
-        self.limiterEnabled = settings.main[MAIN.ENABLE_FPS_LIMITER]
         ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        settings.onModSettingsChanged += self.onModSettingsChanged
+
+    @staticmethod
+    def onModSettingsChanged(config, blockID):
+        if blockID == MAIN.NAME and config[MAIN.ENABLE_FPS_LIMITER]:
+            setMaxFrameRate(config[MAIN.MAX_FRAME_RATE])
 
     def onExit(self):
-        if self.isFileValid:
-            if settings.main[MAIN.AUTO_CLEAR_CACHE]:
-                clearClientCache()
-            logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, self.mod_version))
+        if not self.isFileValid:
+            return
+        if settings.main[MAIN.AUTO_CLEAR_CACHE]:
+            clearClientCache()
+        logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, self.mod_version))
 
     def isModValidFileName(self):
         return FILE_NAME.format(__version__) in os.listdir(os.path.join(self.modsDir, self.gameVersion))
@@ -39,29 +45,26 @@ class ObserverCore(object):
     def start(self):
         update = UpdateMain()
         update.subscribe()
-        if self.isFileValid:
-            logInfo("Launched at python " + sys.version)
-            logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
-            self.componentsLoader.start()
-            self.configLoader.start()
-            BATTLE_PACKAGES = packages.BATTLE_PACKAGES_BY_ARENA_TYPE
-            for guiType in BATTLE_PACKAGES:
-                if guiType in BATTLES_RANGE:
-                    BATTLE_PACKAGES[guiType] += ("armagomen.battle_observer.battle",)
-            packages.BATTLE_PACKAGES_BY_DEFAULT += ("armagomen.battle_observer.battle",)
-            packages.LOBBY_PACKAGES += ("armagomen.battle_observer.lobby",)
+        if not self.isFileValid:
+            return
+        logInfo("Launched at python " + sys.version)
+        logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
+        self.componentsLoader.start()
+        self.configLoader.start()
+        BATTLE_PACKAGES = packages.BATTLE_PACKAGES_BY_ARENA_TYPE
+        for guiType in BATTLE_PACKAGES:
+            if guiType in BATTLES_RANGE:
+                BATTLE_PACKAGES[guiType] += ("armagomen.battle_observer.battle",)
+        packages.BATTLE_PACKAGES_BY_DEFAULT += ("armagomen.battle_observer.battle",)
+        packages.LOBBY_PACKAGES += ("armagomen.battle_observer.lobby",)
 
     def onGUISpaceEntered(self, spaceID):
-        if not self.isFileValid and spaceID in (GuiGlobalSpaceID.LOGIN, GuiGlobalSpaceID.LOBBY):
-            from gui.Scaleform.daapi.view import dialogs
-            from gui import DialogsInterface
-            locked = MESSAGES.LOCKED_BY_FILE_NAME.format(FILE_NAME.format(__version__))
-            logWarning(locked)
-            title = '{0} is locked'.format(MOD_NAME)
-            btn = DialogButtons('Close')
-            DialogsInterface.showDialog(dialogs.SimpleDialogMeta(title, locked, btn), lambda proceed: None)
-
-        if spaceID in (GuiGlobalSpaceID.LOBBY, GuiGlobalSpaceID.BATTLE):
-            if settings.main[MAIN.ENABLE_FPS_LIMITER] != self.limiterEnabled:
-                self.limiterEnabled = settings.main[MAIN.ENABLE_FPS_LIMITER]
-                setMaxFrameRate(settings.main[MAIN.MAX_FRAME_RATE] if self.limiterEnabled else 300)
+        if self.isFileValid or spaceID not in (GuiGlobalSpaceID.LOGIN, GuiGlobalSpaceID.LOBBY):
+            return
+        from gui.Scaleform.daapi.view import dialogs
+        from gui import DialogsInterface
+        locked = MESSAGES.LOCKED_BY_FILE_NAME.format(FILE_NAME.format(__version__))
+        logWarning(locked)
+        title = '{0} is locked'.format(MOD_NAME)
+        btn = DialogButtons('Close')
+        DialogsInterface.showDialog(dialogs.SimpleDialogMeta(title, locked, btn), lambda proceed: None)
