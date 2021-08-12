@@ -93,6 +93,8 @@ def getCurrentModPath():
 def cleanupUpdates(cwd):
     path = os.path.join(cwd, "updates")
     # Gather directory contents
+    if not os.path.exists(path):
+        return os.makedirs(path)
     contents = [os.path.join(path, i) for i in os.listdir(path)]
     # Iterate and remove each item in the appropriate manner
     if contents:

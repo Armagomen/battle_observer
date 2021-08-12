@@ -64,4 +64,4 @@ class ObserverCore(object):
         if spaceID in (GuiGlobalSpaceID.LOBBY, GuiGlobalSpaceID.BATTLE):
             if settings.main[MAIN.ENABLE_FPS_LIMITER] != self.limiterEnabled:
                 self.limiterEnabled = settings.main[MAIN.ENABLE_FPS_LIMITER]
-                setMaxFrameRate(settings[MAIN.MAX_FRAME_RATE] if self.limiterEnabled else 300)
+                setMaxFrameRate(settings.main[MAIN.MAX_FRAME_RATE] if self.limiterEnabled else 300)
