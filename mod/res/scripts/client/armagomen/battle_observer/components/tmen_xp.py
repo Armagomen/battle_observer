@@ -1,7 +1,8 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
-from armagomen.utils.common import logInfo
+from armagomen.utils.common import logInfo, overrideMethod
+from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
@@ -10,7 +11,6 @@ from gui.veh_post_progression.models.progression import PostProgressionCompletio
 class AccelerateTmenXp(object):
     def __init__(self):
         self.inProcess = False
-        g_currentVehicle.onChanged += self.onVehicleChanged
 
     @decorators.process('updateTankmen')
     def accelerateTmenXp(self, vehicle, value):
@@ -31,3 +31,15 @@ class AccelerateTmenXp(object):
 
 
 tmenXP = AccelerateTmenXp()
+
+
+@overrideMethod(Hangar, "_populate")
+def hangarPopulate(base, *args):
+    g_currentVehicle.onChanged += tmenXP.onVehicleChanged
+    return base(*args)
+
+
+@overrideMethod(Hangar, "_dispose")
+def hangarPopulate(base, *args):
+    g_currentVehicle.onChanged -= tmenXP.onVehicleChanged
+    return base(*args)
