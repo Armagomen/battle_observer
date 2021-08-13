@@ -9,8 +9,7 @@ from gui.veh_post_progression.models.progression import PostProgressionCompletio
 
 class AccelerateTmenXp(object):
     def __init__(self):
-        self.__vehicle = None
-        self.__value = None
+        self.inProcess = False
         g_currentVehicle.onChanged += self.onVehicleChanged
 
     @decorators.process('updateTankmen')
@@ -18,18 +17,16 @@ class AccelerateTmenXp(object):
         result = yield VehicleTmenXPAccelerator(vehicle, value).request()
         if result.success:
             logInfo("The accelerated crew training is %s for %s" % (value, vehicle.name))
+        self.inProcess = False
 
     def onVehicleChanged(self):
         vehicle = g_currentVehicle.item
-        if not settings.main[MAIN.UNLOCK_CREW] or vehicle is None:
+        if not settings.main[MAIN.UNLOCK_CREW] or vehicle is None or self.inProcess:
             return
-        if vehicle.postProgressionAvailability() and vehicle.isPostProgressionExists:
+        if vehicle.postProgressionAvailability():
             value = vehicle.postProgression.getCompletion() == PostProgressionCompletion.FULL
-            if self.__vehicle == vehicle.intCD and self.__value == value:
-                return
             if vehicle.isXPToTman and not value or not vehicle.isXPToTman and value:
-                self.__vehicle = vehicle.intCD
-                self.__value = value
+                self.inProcess = True
                 self.accelerateTmenXp(vehicle, value)
 
 

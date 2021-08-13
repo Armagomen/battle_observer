@@ -16,7 +16,7 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 class ObserverCore(object):
     __slots__ = ("modsDir", "gameVersion", "isFileValid", "mod_version", "configLoader", "moduleLoader",
-                 "componentsLoader", "limiterEnabled")
+                 "componentsLoader")
 
     def __init__(self, configLoader):
         self.configLoader = configLoader
