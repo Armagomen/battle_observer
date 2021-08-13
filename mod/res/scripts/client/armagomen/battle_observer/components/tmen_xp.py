@@ -8,7 +8,7 @@ from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
 
 
-class AccelerateTmenXp(object):
+class AccelerateCrewXp(object):
     def __init__(self):
         self.inProcess = False
 
@@ -30,16 +30,16 @@ class AccelerateTmenXp(object):
                 self.accelerateTmenXp(vehicle, value)
 
 
-tmenXP = AccelerateTmenXp()
+crewXP = AccelerateCrewXp()
 
 
 @overrideMethod(Hangar, "_populate")
 def hangarPopulate(base, *args):
-    g_currentVehicle.onChanged += tmenXP.onVehicleChanged
+    g_currentVehicle.onChanged += crewXP.onVehicleChanged
     return base(*args)
 
 
 @overrideMethod(Hangar, "_dispose")
 def hangarDispose(base, *args):
-    g_currentVehicle.onChanged -= tmenXP.onVehicleChanged
+    g_currentVehicle.onChanged -= crewXP.onVehicleChanged
     return base(*args)
