@@ -40,6 +40,6 @@ def hangarPopulate(base, *args):
 
 
 @overrideMethod(Hangar, "_dispose")
-def hangarPopulate(base, *args):
+def hangarDispose(base, *args):
     g_currentVehicle.onChanged -= tmenXP.onVehicleChanged
     return base(*args)
