@@ -64,8 +64,8 @@ translate = {
         "hide_server_in_hangar_tooltip": "Der Parameter funktioniert nach dem Neustart des "
                                          "Hangars oder dem Neustart des Spiels.",
         "premium_time": "Display exact premium time.",
-        "unlock_crew_experience": "Deaktivieren / aktivieren Sie Beschleunigtes Besatzungstraining Automatisch.",
-        "unlock_crew_experience_tooltip": "Wenn das 'Feld-Upgrade' für den Panzer verfügbar ist und nicht gepumpt "
+        "auto_crew_training": "Deaktivieren / aktivieren Sie Beschleunigtes Besatzungstraining Automatisch.",
+        "auto_crew_training_tooltip": "Wenn das 'Feld-Upgrade' für den Panzer verfügbar ist und nicht gepumpt "
                                           "wird, wird das Kontrollkästchen für die Besatzung automatisch deaktiviert, "
                                           "sobald die Fortschrittsstufe maximal ist, werden Sie aufgefordert, sie "
                                           "wieder einzuschalten."

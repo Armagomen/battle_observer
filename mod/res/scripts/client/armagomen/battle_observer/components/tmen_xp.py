@@ -22,14 +22,16 @@ class AccelerateCrewXp(object):
         self.inProcess = False
 
     def onVehicleChanged(self):
-        vehicle = g_currentVehicle.item
-        if not settings.main[MAIN.UNLOCK_CREW] or vehicle is None or self.inProcess:
+        if not settings.main[MAIN.CREW_TRAINING]:
             return
-        if vehicle.postProgressionAvailability():
-            value = vehicle.postProgression.getCompletion() == PostProgressionCompletion.FULL
-            if vehicle.isXPToTman and not value or not vehicle.isXPToTman and value:
-                self.inProcess = True
-                self.accelerateTmenXp(vehicle, value)
+        vehicle = g_currentVehicle.item
+        if vehicle is None or self.inProcess or not vehicle.isElite or vehicle.isAwaitingBattle:
+            return
+        postProgression = vehicle.postProgressionAvailability() and vehicle.isPostProgressionExists
+        value = not postProgression or vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL
+        if vehicle.isXPToTman and not value or not vehicle.isXPToTman and value:
+            self.inProcess = True
+            self.accelerateTmenXp(vehicle, value)
 
     def hangarPopulate(self, base, *args):
         g_currentVehicle.onChanged += self.onVehicleChanged

@@ -63,8 +63,8 @@ translate = {
         "hide_server_in_hangar": "Disable the display of the server in the hangar.",
         "hide_server_in_hangar_tooltip": "The parameter will work after restarting the hangar or restarting the game.",
         "premium_time": "Display exact premium time.",
-        "unlock_crew_experience": "Uncheck / Tick Accelerated Crew Training Automatically.",
-        "unlock_crew_experience_tooltip": "If the 'Field Upgrade' is available for the tank and is not pumped, the "
+        "auto_crew_training": "Uncheck / Tick Accelerated Crew Training Automatically.",
+        "auto_crew_training_tooltip": "If the 'Field Upgrade' is available for the tank and is not pumped, the "
                                           "checkbox for the crew will be unchecked automatically, as soon as the level "
                                           "of progression is at its maximum, you will be prompted to turn it back on."
     },
