@@ -6,7 +6,7 @@ from armagomen.constants import DEBUG_PANEL, GLOBAL, COLORS
 from gui.battle_control.controllers import debug_ctrl
 from gui.shared.personality import ServicesLocator
 
-debug_ctrl._UPDATE_INTERVAL = 0.6
+debug_ctrl._UPDATE_INTERVAL = 0.4
 
 
 class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):

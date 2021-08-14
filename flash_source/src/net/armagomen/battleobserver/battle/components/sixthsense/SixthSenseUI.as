@@ -38,7 +38,8 @@
 				var sixthSense:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
 				if (sixthSense)
 				{
-					battlePage.removeChild(sixthSense);
+					sixthSense.alpha = 0;
+					//battlePage.removeChild(sixthSense);
 				}
 				this.animate = this.animationEnabled();
 				this.params = this.getSettings();

@@ -11,6 +11,8 @@ from gui.veh_post_progression.models.progression import PostProgressionCompletio
 class AccelerateCrewXp(object):
     def __init__(self):
         self.inProcess = False
+        overrideMethod(Hangar, "_populate")(self.hangarPopulate)
+        overrideMethod(Hangar, "_dispose")(self.hangarDispose)
 
     @decorators.process('updateTankmen')
     def accelerateTmenXp(self, vehicle, value):
@@ -29,17 +31,13 @@ class AccelerateCrewXp(object):
                 self.inProcess = True
                 self.accelerateTmenXp(vehicle, value)
 
+    def hangarPopulate(self, base, *args):
+        g_currentVehicle.onChanged += self.onVehicleChanged
+        return base(*args)
+
+    def hangarDispose(self, base, *args):
+        g_currentVehicle.onChanged -= self.onVehicleChanged
+        return base(*args)
+
 
 crewXP = AccelerateCrewXp()
-
-
-@overrideMethod(Hangar, "_populate")
-def hangarPopulate(base, *args):
-    g_currentVehicle.onChanged += crewXP.onVehicleChanged
-    return base(*args)
-
-
-@overrideMethod(Hangar, "_dispose")
-def hangarDispose(base, *args):
-    g_currentVehicle.onChanged -= crewXP.onVehicleChanged
-    return base(*args)
