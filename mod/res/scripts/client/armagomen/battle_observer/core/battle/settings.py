@@ -100,9 +100,22 @@ class ViewSettings(object):
             new_aliases.append(ALIASES.DEBUG)
         elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in new_aliases:
             if self.getSetting(ALIASES.HP_BARS):
+                new_aliases.remove(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR)
                 new_aliases.append(ALIASES.HP_BARS)
             if self.getSetting(ALIASES.PANELS):
                 new_aliases.append(ALIASES.PANELS)
             if self.getSetting(ALIASES.MAIN_GUN):
                 new_aliases.append(ALIASES.MAIN_GUN)
         return tuple(new_aliases)
+
+    def getHiddenWGComponents(self):
+        components = []
+        if self.getSetting(ALIASES.HP_BARS):
+            components.append(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR)
+        if self.getSetting(ALIASES.SIXTH_SENSE):
+            components.append(BATTLE_VIEW_ALIASES.SIXTH_SENSE)
+        if self.getSetting(ALIASES.DEBUG):
+            components.append(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
+        if self.getSetting(ALIASES.TIMER):
+            components.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
+        return components

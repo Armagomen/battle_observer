@@ -120,7 +120,6 @@ class DispersionCircle(object):
     settingsCore = ServicesLocator.settingsCore
 
     def __init__(self):
-        self.handleChanged = False
         self.enabled = False
         self.hooksEnable = False
         self.replaceOriginalCircle = False
@@ -139,7 +138,7 @@ class DispersionCircle(object):
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
 
     def createOverrideComponents(self, base, *args):
-        if not self.hooksEnable:
+        if not self.hooksEnable or self.player is None:
             return base(*args)
         self.player.base.setDevelopmentFeature(GLOBAL.ZERO, 'server_marker', True, '')
         if base.__name__ == "createComponents":
@@ -181,10 +180,8 @@ class DispersionCircle(object):
             self.hooksEnable = self.enabled and (not self.replaceOriginalCircle or self.extraServerLap)
             global DISPERSION_SCALE
             DISPERSION_SCALE = config[DISPERSION.CIRCLE_SCALE_CONFIG] * 0.01
-            # if self.hooksEnable:
-            #     VehicleGunRotator.USE_LOCK_PREDICTION = config[DISPERSION.USE_LOCK_PREDICTION]
-            # else:
-            #     VehicleGunRotator.USE_LOCK_PREDICTION = True
+            if self.enabled and not self.extraServerLap:
+                VehicleGunRotator.USE_LOCK_PREDICTION = config[DISPERSION.USE_LOCK_PREDICTION]
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if not self.enabled:

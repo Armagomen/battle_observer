@@ -66,4 +66,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
                 flash.as_createBattleObserverComp(comp)
                 if view_settings.cfg.main[MAIN.DEBUG]:
                     logInfo(comp + " loading flash")
+        hiddenWGComponents = view_settings.getHiddenWGComponents()
+        if hiddenWGComponents:
+            flash.as_observerHideWgComponents(hiddenWGComponents)
         flash.as_updateBattleObserverChildIndexes()

@@ -23,12 +23,6 @@
 			{
 				this.x = App.appWidth;
 				this.battleTimer = new TextExt("_timer", -8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this.getShadowSettings(), this);
-				var battlePage:* = parent;
-				var component:*  = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_TIMER);
-				if (component)
-				{
-					parent.removeChild(component);
-				}
 			}
 		}
 		

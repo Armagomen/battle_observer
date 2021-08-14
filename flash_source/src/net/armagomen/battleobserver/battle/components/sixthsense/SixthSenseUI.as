@@ -9,6 +9,7 @@
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.tween.Tween;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
+	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class SixthSenseUI extends ObserverBattleDispalaysble
 	{
@@ -34,13 +35,6 @@
 			super.onPopulate();
 			if (this.image == null)
 			{
-				var battlePage:* = parent;
-				var sixthSense:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
-				if (sixthSense)
-				{
-					sixthSense.alpha = 0;
-					//battlePage.removeChild(sixthSense);
-				}
 				this.animate = this.animationEnabled();
 				this.params = this.getSettings();
 				this.setImage();

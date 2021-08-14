@@ -33,32 +33,26 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			super.onPopulate();
 			if (this.hpBars == null)
 			{
-				var battlePage:*      = parent;
-				var fragCorrelation:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-				if (fragCorrelation != null)
+				var settings:Object = this.getSettings();
+				this.colors = this.getColors().global;
+				this.x = App.appWidth >> 1;
+				var shadowSettings:Object = getShadowSettings();
+				var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
+				this.hpBars = this.createHpBars(settings, barWidth);
+				var isLeague:Boolean     = this.hpBars as League;
+				var textXpos:Number      = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
+				var textStyle:TextFormat = !isLeague ? Filters.normalText : Filters.middleText;
+				this.addChild(this.hpBars);
+				this.greenText = new TextExt("greenText", -textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
+				this.redText = new TextExt("redText", textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
+				this.greenDiff = new TextExt("greenDiff", -55, 1, textStyle, TextFieldAutoSize.RIGHT, shadowSettings, this);
+				this.redDiff = new TextExt("redDiff", 55, 1, textStyle, TextFieldAutoSize.LEFT, shadowSettings, this);
+				this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
+				this.addChild(this.score);
+				if (settings.markers.enabled)
 				{
-					var settings:Object = this.getSettings();
-					this.colors = this.getColors().global;
-					parent.removeChild(fragCorrelation);
-					this.x = App.appWidth >> 1;
-					var shadowSettings:Object = getShadowSettings();
-					var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
-					this.hpBars = this.createHpBars(settings, barWidth);
-					var isLeague:Boolean     = this.hpBars as League;
-					var textXpos:Number      = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
-					var textStyle:TextFormat = !isLeague ? Filters.normalText : Filters.middleText;
-					this.addChild(this.hpBars);
-					this.greenText = new TextExt("greenText", -textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
-					this.redText = new TextExt("redText", textXpos, 1, textStyle, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
-					this.greenDiff = new TextExt("greenDiff", -55, 1, textStyle, TextFieldAutoSize.RIGHT, shadowSettings, this);
-					this.redDiff = new TextExt("redDiff", 55, 1, textStyle, TextFieldAutoSize.LEFT, shadowSettings, this);
-					this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
-					this.addChild(this.score);
-					if (settings.markers.enabled)
-					{
-						this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
-						this.addChild(this.markers);
-					}
+					this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
+					this.addChild(this.markers);
 				}
 			}
 		}

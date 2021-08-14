@@ -59,12 +59,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 					}
 				}
 				this.debugText = new TextExt("_debugPanel", settings.debugText.x, settings.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, this.getShadowSettings(), this);
-				var battlePage:* = parent;
-				var debugPanel:* = battlePage.getComponent(BATTLE_VIEW_ALIASES.DEBUG_PANEL);
-				if (debugPanel)
-				{
-					battlePage.removeChild(debugPanel);
-				}
 			}
 		}
 		

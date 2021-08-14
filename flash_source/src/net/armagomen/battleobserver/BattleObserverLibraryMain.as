@@ -110,6 +110,20 @@ package net.armagomen.battleobserver
 					this.addChild(prebattleTimer);
 				}
 			}
+			
+			BaseBattlePage.prototype['as_observerHideWgComponents'] = function(components:Array):void
+			{
+				var hidden:Sprite = new Sprite();
+				this.addChild(hidden);
+				hidden.visible = false;
+				for each (var item:String in components) 
+				{
+					var component:DisplayObject = this.getComponent(item);
+					if (component){
+						hidden.addChild(component);
+					}
+				}
+			}
 		}
 	}
 }
