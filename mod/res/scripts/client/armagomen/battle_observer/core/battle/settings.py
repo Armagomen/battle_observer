@@ -1,6 +1,3 @@
-from collections import defaultdict
-
-from PlayerEvents import g_playerEvents
 from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAIN
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
@@ -32,62 +29,64 @@ class ViewSettings(object):
     def notEpicBattle(self):
         return not self.sessionProvider.arenaVisitor.gui.isEpicBattle()
 
-    def isAllowedBattle(self):
-        if self.__isAllowed is None:
-            self.__isAllowed = False
-            arenaVisitor = self.sessionProvider.arenaVisitor
-            if arenaVisitor is not None:
-                self.__isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
-        return self.__isAllowed
-
     def __init__(self, cfg):
-        g_playerEvents.onAvatarBecomeNonPlayer += self.clear
-        overrideMethod(SharedPage)(self.new_SharedPage_init)
         self.cfg = cfg
-        self.__isAllowed = None
-        self.__cache = defaultdict(lambda: False)
+        overrideMethod(SharedPage)(self.new_SharedPage_init)
 
-    @property
-    def cache(self):
-        if not self.__cache:
-            self.__cache.update({
-                ALIASES.HP_BARS: self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle(),
-                ALIASES.DAMAGE_LOG: (self.cfg.log_total[GLOBAL.ENABLED] or
-                                     self.cfg.log_damage_extended[GLOBAL.ENABLED] or
-                                     self.cfg.log_input_extended[GLOBAL.ENABLED]),
-                ALIASES.MAIN_GUN: self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle(),
-                ALIASES.DEBUG: self.cfg.debug_panel[GLOBAL.ENABLED],
-                ALIASES.TIMER: self.cfg.battle_timer[GLOBAL.ENABLED],
-                ALIASES.SIXTH_SENSE: self.cfg.sixth_sense[GLOBAL.ENABLED],
-                ALIASES.TEAM_BASES: self.cfg.team_bases_panel[GLOBAL.ENABLED],
-                ALIASES.ARMOR_CALC: self.cfg.armor_calculator[GLOBAL.ENABLED],
-                ALIASES.FLIGHT_TIME: self.cfg.flight_time[GLOBAL.ENABLED],
-                ALIASES.DISPERSION_TIMER: (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
-                                           self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED]),
-                ALIASES.PANELS: self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle(),
-                ALIASES.MINIMAP: (self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED]
-                                  and self.notEpicBattle()),
-                ALIASES.USER_BACKGROUND: self.cfg.user_background[GLOBAL.ENABLED],
-                ALIASES.WG_COMP: (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
-                                  self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle()),
-                ALIASES.DATE_TIME: self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED],
-                ALIASES.DISTANCE: self.cfg.distance_to_enemy[GLOBAL.ENABLED],
-                ALIASES.OWN_HEALTH: self.cfg.own_health[GLOBAL.ENABLED],
-            })
-        return self.__cache
+    def getSetting(self, alias):
+        isAllowed = False
+        arenaVisitor = self.sessionProvider.arenaVisitor
+        if arenaVisitor is not None:
+            isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
+        if not isAllowed:
+            return isAllowed
+
+        if alias == ALIASES.HP_BARS:
+            return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
+        elif alias == ALIASES.DAMAGE_LOG:
+            return (self.cfg.log_total[GLOBAL.ENABLED] or self.cfg.log_damage_extended[GLOBAL.ENABLED] or
+                    self.cfg.log_input_extended[GLOBAL.ENABLED])
+        elif alias == ALIASES.MAIN_GUN:
+            return self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle()
+        elif alias == ALIASES.DEBUG:
+            return self.cfg.debug_panel[GLOBAL.ENABLED]
+        elif alias == ALIASES.TIMER:
+            return self.cfg.battle_timer[GLOBAL.ENABLED]
+        elif alias == ALIASES.SIXTH_SENSE:
+            return self.cfg.sixth_sense[GLOBAL.ENABLED]
+        elif alias == ALIASES.TEAM_BASES:
+            return self.cfg.team_bases_panel[GLOBAL.ENABLED]
+        elif alias == ALIASES.ARMOR_CALC:
+            return self.cfg.armor_calculator[GLOBAL.ENABLED]
+        elif alias == ALIASES.FLIGHT_TIME:
+            return self.cfg.flight_time[GLOBAL.ENABLED]
+        elif alias == ALIASES.DISPERSION_TIMER:
+            return (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
+                    self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED])
+        elif alias == ALIASES.PANELS:
+            return self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle()
+        elif alias == ALIASES.MINIMAP:
+            return (self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED]
+                    and self.notEpicBattle())
+        elif alias == ALIASES.USER_BACKGROUND:
+            return self.cfg.user_background[GLOBAL.ENABLED]
+        elif alias == ALIASES.WG_COMP:
+            return (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
+                    self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle())
+        elif alias == ALIASES.DATE_TIME:
+            return self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
+        elif alias == ALIASES.DISTANCE:
+            return self.cfg.distance_to_enemy[GLOBAL.ENABLED]
+        elif alias == ALIASES.OWN_HEALTH:
+            return self.cfg.own_health[GLOBAL.ENABLED]
+        else:
+            return False
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
         config = page._SharedPage__componentsConfig._ComponentsConfig__config
         newConfig = tuple((i, self.checkAndReplaceAlias(aliases)) for i, aliases in config)
         page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig
-
-    def getSetting(self, alias):
-        return self.cache[alias] and self.isAllowedBattle()
-
-    def clear(self):
-        self.__cache.clear()
-        self.__isAllowed = None
 
     def checkAndReplaceAlias(self, aliases):
         new_aliases = list(aliases)
