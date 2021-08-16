@@ -12,7 +12,6 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def __init__(self):
         super(ArmorCalculator, self).__init__()
-        self._cache = None
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.otherMessages = None
 
@@ -57,9 +56,6 @@ class ArmorCalculator(ArmorCalcMeta):
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
 
     def onArmorChanged(self, armor, piercingPower, caliber, ricochet, noDamage):
-        if self._cache == armor:
-            return
-        self._cache = armor
         if armor is not None:
             self.calcMacro[ARMOR_CALC.RICOCHET] = self.otherMessages.ricochet[ricochet]
             self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.otherMessages.noDamage[noDamage]
