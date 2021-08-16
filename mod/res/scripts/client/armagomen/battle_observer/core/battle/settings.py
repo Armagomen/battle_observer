@@ -18,18 +18,20 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
                  ARENA_GUI_TYPE.SORTIE_2,
                  ARENA_GUI_TYPE.FORT_BATTLE_2,
                  ARENA_GUI_TYPE.TUTORIAL,
+                 ARENA_GUI_TYPE.EPIC_BATTLE,
                  ARENA_GUI_TYPE.MAPBOX}
 
 
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
-    @property
     def isRandomBattle(self):
         return (self.sessionProvider.arenaVisitor.gui.isRandomBattle() or
                 self.sessionProvider.arenaVisitor.gui.isMapbox())
 
-    @property
+    def notEpicBattle(self):
+        return not self.sessionProvider.arenaVisitor.gui.isEpicBattle()
+
     def isAllowedBattle(self):
         if self.__isAllowed is None:
             self.__isAllowed = False
@@ -49,11 +51,11 @@ class ViewSettings(object):
     def cache(self):
         if not self.__cache:
             self.__cache.update({
-                ALIASES.HP_BARS: self.cfg.hp_bars[GLOBAL.ENABLED],
+                ALIASES.HP_BARS: self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle(),
                 ALIASES.DAMAGE_LOG: (self.cfg.log_total[GLOBAL.ENABLED] or
                                      self.cfg.log_damage_extended[GLOBAL.ENABLED] or
                                      self.cfg.log_input_extended[GLOBAL.ENABLED]),
-                ALIASES.MAIN_GUN: self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle,
+                ALIASES.MAIN_GUN: self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle(),
                 ALIASES.DEBUG: self.cfg.debug_panel[GLOBAL.ENABLED],
                 ALIASES.TIMER: self.cfg.battle_timer[GLOBAL.ENABLED],
                 ALIASES.SIXTH_SENSE: self.cfg.sixth_sense[GLOBAL.ENABLED],
@@ -62,11 +64,11 @@ class ViewSettings(object):
                 ALIASES.FLIGHT_TIME: self.cfg.flight_time[GLOBAL.ENABLED],
                 ALIASES.DISPERSION_TIMER: (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
                                            self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED]),
-                ALIASES.PANELS: self.cfg.players_panels[GLOBAL.ENABLED],
+                ALIASES.PANELS: self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle(),
                 ALIASES.MINIMAP: self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED],
                 ALIASES.USER_BACKGROUND: self.cfg.user_background[GLOBAL.ENABLED],
                 ALIASES.WG_COMP: (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
-                                  self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle),
+                                  self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle()),
                 ALIASES.DATE_TIME: self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED],
                 ALIASES.DISTANCE: self.cfg.distance_to_enemy[GLOBAL.ENABLED],
                 ALIASES.OWN_HEALTH: self.cfg.own_health[GLOBAL.ENABLED],
@@ -80,7 +82,7 @@ class ViewSettings(object):
         page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig
 
     def getSetting(self, alias):
-        return self.cache[alias] and self.isAllowedBattle
+        return self.cache[alias] and self.isAllowedBattle()
 
     def clear(self):
         self.__cache.clear()
