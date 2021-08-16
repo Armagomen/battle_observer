@@ -30,7 +30,7 @@ class AccelerateCrewXp(object):
             return
         availability = vehicle.postProgressionAvailability().result and vehicle.isPostProgressionExists
         value = not availability or vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL
-        if vehicle.isXPToTman and not value or not vehicle.isXPToTman and value:
+        if vehicle.isXPToTman != value:
             self.inProcess = True
             self.accelerateTmenXp(vehicle, value)
 
