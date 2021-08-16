@@ -36,7 +36,7 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ()
+    __slots__ = ('_listeners', '_scope', '_app', '_appNS')
 
     def __init__(self):
         listeners = [(VIEW_ALIAS.LOBBY_HANGAR, self.eventListener)]

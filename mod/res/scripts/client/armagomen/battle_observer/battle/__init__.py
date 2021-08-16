@@ -1,5 +1,6 @@
 from importlib import import_module
 
+from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
@@ -40,24 +41,31 @@ ALIASES_TO_LOAD = (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ()
+    __slots__ = ("flash", '_listeners', '_scope', '_app', '_appNS')
 
     def __init__(self):
+        self.flash = None
         listeners = ((alias, self.eventListener) for alias in ALIASES_TO_LOAD)
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def eventListener(self, event):
         self._app.as_loadLibrariesS([SWF.BATTLE])
-        self._app.loaderManager.onViewLoaded += self.__onViewLoaded
+        self._app.loaderManager.onViewLoaded += self.onViewLoaded
+        g_playerEvents.onAvatarReady += self.onAvatarReady
         logInfo("loading flash libraries " + SWF.BATTLE)
+        
+    def fini(self):
+        self.flash = None
+        super(ObserverBusinessHandler, self).fini()
 
-    def __onViewLoaded(self, view, *args):
+    def onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in ALIASES_TO_LOAD:
             return
+        self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         if view_settings.cfg.main[MAIN.DEBUG]:
             logInfo("__onViewLoaded " + view.settings.alias)
-        self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
         flash = view.flashObject
+        self.flash = flash
         if not hasattr(flash, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
@@ -66,7 +74,11 @@ class ObserverBusinessHandler(PackageBusinessHandler):
                 flash.as_createBattleObserverComp(comp)
                 if view_settings.cfg.main[MAIN.DEBUG]:
                     logInfo(comp + " loading flash")
-        hiddenWGComponents = view_settings.getHiddenWGComponents()
-        if hiddenWGComponents:
-            flash.as_observerHideWgComponents(hiddenWGComponents)
         flash.as_updateBattleObserverChildIndexes()
+
+    def onAvatarReady(self):
+        g_playerEvents.onAvatarReady -= self.onAvatarReady
+        if self.flash is not None:
+            hiddenWGComponents = view_settings.getHiddenWGComponents()
+            if hiddenWGComponents:
+                self.flash.as_observerHideWgComponents(hiddenWGComponents)
