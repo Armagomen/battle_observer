@@ -65,7 +65,8 @@ class ViewSettings(object):
                 ALIASES.DISPERSION_TIMER: (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
                                            self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED]),
                 ALIASES.PANELS: self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle(),
-                ALIASES.MINIMAP: self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED],
+                ALIASES.MINIMAP: (self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED]
+                                  and self.notEpicBattle()),
                 ALIASES.USER_BACKGROUND: self.cfg.user_background[GLOBAL.ENABLED],
                 ALIASES.WG_COMP: (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
                                   self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle()),
