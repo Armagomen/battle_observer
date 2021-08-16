@@ -7,6 +7,8 @@ class Events(object):
         self.onArmorChanged = SafeEvent()
         self.onMarkerColorChanged = SafeEvent()
         self.onDispersionAngleChanged = SafeEvent()
+        self.onDisconnected = SafeEvent()
+        self.onConnected = SafeEvent()
 
 
 g_events = Events()

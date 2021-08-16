@@ -7,9 +7,11 @@ __maintainer__ = "Armagomen"
 __email__ = "armagomen@gmail.com"
 __status__ = "Production"
 __http__ = "localhost"
-__all__ = ['init', 'fini']
+__all__ = ['init', 'fini', 'onConnected', 'onDisconnected']
 
 from armagomen.battle_observer.core import m_core
+from armagomen.utils.common import logInfo
+from armagomen.utils.events import g_events
 
 
 def init():
@@ -18,3 +20,13 @@ def init():
 
 def fini():
     m_core.onExit()
+
+
+def onConnected(*args, **kwargs):
+    g_events.onConnected()
+    logInfo("onConnected")
+
+
+def onDisconnected(*args, **kwargs):
+    g_events.onDisconnected()
+    logInfo("onDisconnected")
