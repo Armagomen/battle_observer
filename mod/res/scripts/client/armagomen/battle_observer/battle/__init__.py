@@ -16,6 +16,8 @@ def getViewSettings():
     settings = []
     for alias in SORTED_ALIASES:
         if not view_settings.getSetting(alias):
+            _GAME_UI.discard(alias)
+            _SPECTATOR_UI.discard(alias)
             continue
         try:
             class_name = alias.split("_")[GLOBAL.ONE]

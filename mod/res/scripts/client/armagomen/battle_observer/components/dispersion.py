@@ -16,8 +16,6 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.container import Crosshair
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
-from helpers import dependency
-from skeletons.gui.shared.utils import IHangarSpace
 
 CLIENT = _MARKER_TYPE.CLIENT
 SERVER = _MARKER_TYPE.SERVER
@@ -116,7 +114,6 @@ class BOGunMarkersDPFactory(_GunMarkersDPFactory):
 
 
 class DispersionCircle(object):
-    hangarSpace = dependency.descriptor(IHangarSpace)
     settingsCore = ServicesLocator.settingsCore
 
     def __init__(self):

@@ -74,7 +74,7 @@ class Distance(DistanceMeta):
         for vehID, entity in self.vehicles.iteritems():
             if not entity.isDestroyed and entity.position != self.positionsCache[vehID]:
                 self.positionsCache[vehID] = entity.position
-            dist = self._player.vehicle.position.distTo(self.positionsCache[vehID])
+            dist = self._player.position.distTo(self.positionsCache[vehID])
             if distance is None or dist < distance:
                 distance = dist
                 vehicleID = vehID
