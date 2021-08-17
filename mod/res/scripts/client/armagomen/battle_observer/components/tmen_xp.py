@@ -28,8 +28,10 @@ class AccelerateCrewXp(object):
         vehicle = g_currentVehicle.item
         if vehicle is None or self.inProcess or not vehicle.isElite or vehicle.isAwaitingBattle:
             return
-        availability = vehicle.postProgressionAvailability().result and vehicle.isPostProgressionExists
-        value = not availability or vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL
+        value = False
+        if vehicle.isFullyElite:
+            availability = vehicle.postProgressionAvailability().result
+            value = not availability or vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL
         if vehicle.isXPToTman != value:
             self.inProcess = True
             self.accelerateTmenXp(vehicle, value)
