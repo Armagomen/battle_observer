@@ -1,5 +1,5 @@
 __author__ = "Armagomen"
-__version__ = "1.34.5"
+__version__ = "1.34.6"
 __copyright__ = "Copyright 2014-2021, Armagomen"
 __credits__ = ["Armagomen"]
 __license__ = "CC BY-NC-SA 4.0"
@@ -10,7 +10,6 @@ __http__ = "localhost"
 __all__ = ['init', 'fini', 'onConnected', 'onDisconnected']
 
 from armagomen.battle_observer.core import m_core
-from armagomen.utils.common import logInfo
 from armagomen.utils.events import g_events
 
 
@@ -24,9 +23,7 @@ def fini():
 
 def onConnected(*args, **kwargs):
     g_events.onConnected()
-    logInfo("onConnected")
 
 
 def onDisconnected(*args, **kwargs):
     g_events.onDisconnected()
-    logInfo("onDisconnected")
