@@ -1,6 +1,6 @@
 from math import degrees
 
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.core import settings, view_settings
 from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
@@ -70,7 +70,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
     _plugins = base(plugin, arenaVisitor)
-    if settings.minimap[GLOBAL.ENABLED]:
+    if settings.minimap[GLOBAL.ENABLED] and view_settings.notEpicBattle():
         if settings.minimap[MINIMAP.DEATH_PERMANENT]:
             _plugins['vehicles'] = ArenaVehiclesPlugin
         _plugins['personal'] = PersonalEntriesPlugin

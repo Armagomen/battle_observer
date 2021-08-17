@@ -41,43 +41,43 @@ class ViewSettings(object):
         if not isAllowed:
             return isAllowed
 
-        if alias == ALIASES.HP_BARS:
+        if alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
-        elif alias == ALIASES.DAMAGE_LOG:
+        elif alias is ALIASES.DAMAGE_LOG:
             return (self.cfg.log_total[GLOBAL.ENABLED] or self.cfg.log_damage_extended[GLOBAL.ENABLED] or
                     self.cfg.log_input_extended[GLOBAL.ENABLED])
-        elif alias == ALIASES.MAIN_GUN:
+        elif alias is ALIASES.MAIN_GUN:
             return self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle()
-        elif alias == ALIASES.DEBUG:
+        elif alias is ALIASES.DEBUG:
             return self.cfg.debug_panel[GLOBAL.ENABLED]
-        elif alias == ALIASES.TIMER:
+        elif alias is ALIASES.TIMER:
             return self.cfg.battle_timer[GLOBAL.ENABLED]
-        elif alias == ALIASES.SIXTH_SENSE:
+        elif alias is ALIASES.SIXTH_SENSE:
             return self.cfg.sixth_sense[GLOBAL.ENABLED]
-        elif alias == ALIASES.TEAM_BASES:
+        elif alias is ALIASES.TEAM_BASES:
             return self.cfg.team_bases_panel[GLOBAL.ENABLED]
-        elif alias == ALIASES.ARMOR_CALC:
+        elif alias is ALIASES.ARMOR_CALC:
             return self.cfg.armor_calculator[GLOBAL.ENABLED]
-        elif alias == ALIASES.FLIGHT_TIME:
+        elif alias is ALIASES.FLIGHT_TIME:
             return self.cfg.flight_time[GLOBAL.ENABLED]
-        elif alias == ALIASES.DISPERSION_TIMER:
+        elif alias is ALIASES.DISPERSION_TIMER:
             return (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
                     self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED])
-        elif alias == ALIASES.PANELS:
+        elif alias is ALIASES.PANELS:
             return self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle()
-        elif alias == ALIASES.MINIMAP:
+        elif alias is ALIASES.MINIMAP:
             return (self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED]
                     and self.notEpicBattle())
-        elif alias == ALIASES.USER_BACKGROUND:
+        elif alias is ALIASES.USER_BACKGROUND:
             return self.cfg.user_background[GLOBAL.ENABLED]
-        elif alias == ALIASES.WG_COMP:
-            return (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
-                    self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle())
-        elif alias == ALIASES.DATE_TIME:
+        elif alias is ALIASES.WG_COMP:
+            return self.notEpicBattle() and (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
+                                             self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle())
+        elif alias is ALIASES.DATE_TIME:
             return self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
-        elif alias == ALIASES.DISTANCE:
-            return self.cfg.distance_to_enemy[GLOBAL.ENABLED]
-        elif alias == ALIASES.OWN_HEALTH:
+        elif alias is ALIASES.DISTANCE:
+            return self.cfg.distance_to_enemy[GLOBAL.ENABLED] and self.notEpicBattle()
+        elif alias is ALIASES.OWN_HEALTH:
             return self.cfg.own_health[GLOBAL.ENABLED]
         else:
             return False
