@@ -1,4 +1,4 @@
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.core import settings, view_settings
 from armagomen.constants import MAIN, ANOTHER, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.arena_info import settings as arena_settings
@@ -9,7 +9,7 @@ _PLAYER_STATUS = arena_settings.PLAYER_STATUS
 
 @overrideMethod(VehicleArenaInfoVO)
 def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
-    if kwargs:
+    if view_settings.notEpicBattle() and kwargs:
         if settings.main[MAIN.HIDE_BADGES] and ANOTHER.BADGES in kwargs:
             kwargs[ANOTHER.BADGES] = None
         if settings.main[MAIN.SHOW_ANONYMOUS] and ANOTHER.ACCOUNT_DBID in kwargs:
