@@ -7,6 +7,8 @@ from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
 
+FULL = PostProgressionCompletion.FULL
+
 
 class AccelerateCrewXp(object):
 
@@ -22,6 +24,13 @@ class AccelerateCrewXp(object):
             logInfo("The accelerated crew training is %s for %s" % (value, vehicle.name))
         self.inProcess = False
 
+    @staticmethod
+    def checkXP(vehicle):
+        xp = 0
+        for step in vehicle.postProgression.iterUnorderedSteps():
+            xp += step.getPrice().xp
+        return vehicle.xp >= xp
+
     def onVehicleChanged(self):
         if not settings.main[MAIN.CREW_TRAINING]:
             return
@@ -31,7 +40,7 @@ class AccelerateCrewXp(object):
         value = False
         if vehicle.isFullyElite:
             availability = vehicle.postProgressionAvailability().result
-            value = not availability or vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL
+            value = not availability or vehicle.postProgression.getCompletion() is FULL or self.checkXP(vehicle)
         if vehicle.isXPToTman != value:
             self.inProcess = True
             self.accelerateTmenXp(vehicle, value)
