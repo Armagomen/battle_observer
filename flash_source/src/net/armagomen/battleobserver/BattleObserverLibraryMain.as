@@ -23,7 +23,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
 	import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
-	import net.armagomen.battleobserver.battle.components.wgcomponents.WGComponentsSetting;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.BattleDisplayable;
@@ -86,10 +85,7 @@ package net.armagomen.battleobserver
 					this.registerComponent(this.addChild(new PlayersPanelsUI), ui_name);
 					break;
 				case "Observer_Minimap_UI": 
-					this.registerComponent(this.addChild(new MinimapUI), ui_name);
-					break;
-				case "Observer_WGCompSettings_UI": 
-					this.registerComponent(this.addChild(new WGComponentsSetting), ui_name);
+					this.registerComponent(new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP)), ui_name);
 					break;
 				default: 
 					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + ui_name);
@@ -97,12 +93,19 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype['as_updateBattleObserverChildIndexes'] = function():void
+			BaseBattlePage.prototype['as_observerUpdateComponents'] = function(shadow:Boolean):void
 			{
-				var prebattleTimer:BattleDisplayable = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
+				var prebattleTimer:* = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
 				if (prebattleTimer)
 				{
 					this.addChild(prebattleTimer);
+					prebattleTimer.background.shadow.visible = !shadow;
+					prebattleTimer.background.shadow.alpha = int(!shadow);
+				}
+				var minimap:* = this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP);
+				if (minimap)
+				{
+					this.addChild(minimap);
 				}
 			}
 			
@@ -117,6 +120,7 @@ package net.armagomen.battleobserver
 					}
 				}
 			}
+			
 		}
 	}
 }

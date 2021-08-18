@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES
+from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -66,7 +66,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         for comp in SORTED_ALIASES:
             if view_settings.getSetting(comp):
                 flash.as_createBattleObserverComp(comp)
-        flash.as_updateBattleObserverChildIndexes()
+        flash.as_observerUpdateComponents(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         hiddenWGComponents = view_settings.getHiddenWGComponents()
         if hiddenWGComponents:
             flash.as_observerHideWgComponents(hiddenWGComponents)

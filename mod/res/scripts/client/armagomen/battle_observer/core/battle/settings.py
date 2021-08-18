@@ -71,9 +71,6 @@ class ViewSettings(object):
                     and self.notEpicBattle())
         elif alias is ALIASES.USER_BACKGROUND:
             return self.cfg.user_background[GLOBAL.ENABLED]
-        elif alias is ALIASES.WG_COMP:
-            return self.notEpicBattle() and (self.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE] or
-                                             self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle())
         elif alias is ALIASES.DATE_TIME:
             return self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is ALIASES.DISTANCE:
@@ -121,6 +118,8 @@ class ViewSettings(object):
             components.append(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
         if self.getSetting(ALIASES.TIMER):
             components.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
+        if self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle():
+            components.append(BATTLE_VIEW_ALIASES.BATTLE_MESSENGER)
         return components
 
     @staticmethod

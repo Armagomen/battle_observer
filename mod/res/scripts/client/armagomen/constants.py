@@ -285,12 +285,12 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
 
 __Aliases = namedtuple("ALIASES", (
     "HP_BARS", "DAMAGE_LOG", "MAIN_GUN", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME",
-    "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "WG_COMP", "DATE_TIME", "DISTANCE", "OWN_HEALTH"))
+    "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "DATE_TIME", "DISTANCE", "OWN_HEALTH"))
 ALIASES = __Aliases(
     "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_MainGun_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI",
-    "Observer_UserBackGround_UI", "Observer_WGCompSettings_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
+    "Observer_UserBackGround_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
     "Observer_OwnHealth_UI")
 
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME", "SPOTTED"))(
@@ -462,7 +462,6 @@ ALIAS_TO_PATH = {
     ALIASES.PANELS: ".players_panels",
     ALIASES.MINIMAP: ".minimap",
     ALIASES.USER_BACKGROUND: ".user_background",
-    ALIASES.WG_COMP: ".wg_comp_settings",
     ALIASES.DATE_TIME: ".date_times",
     ALIASES.DISTANCE: ".distance_to_enemy",
     ALIASES.OWN_HEALTH: ".own_health",
@@ -483,13 +482,12 @@ ALIAS_TO_CONFIG_NAME = {
     ALIASES.MINIMAP: MINIMAP.NAME,
     ALIASES.USER_BACKGROUND: USER_BACKGROUND.NAME,
     ALIASES.DATE_TIME: CLOCK.NAME,
-    ALIASES.WG_COMP: MAIN.NAME,
     ALIASES.DISTANCE: DISTANCE.NAME,
     ALIASES.OWN_HEALTH: OWN_HEALTH.NAME,
 }
 
 SORTED_ALIASES = (
-    ALIASES.WG_COMP, ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
+    ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
     ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
     ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.DATE_TIME, ALIASES.DISTANCE, ALIASES.OWN_HEALTH, ALIASES.USER_BACKGROUND
 )
