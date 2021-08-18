@@ -36,6 +36,7 @@ package net.armagomen.battleobserver.battle.base
 		override protected function onDispose():void
 		{
 			this.removeEventListener(Event.RESIZE, this.onResizeHandle);
+			this.removeChildren();
 			super.onDispose();
 		}
 		

@@ -31,6 +31,10 @@ def getEntity(entity_id):
     return BigWorld.entity(entity_id)
 
 
+def getDistanceTo(targetPos):
+    return getPlayer().position.distTo(targetPos)
+
+
 def setMaxFrameRate(fps):
     BigWorld.wg_setMaxFrameRate(fps + 1)
     BigWorld.savePreferences()
@@ -177,5 +181,3 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0):
     tuple_values = hsv_to_rgb(normalized_percent, saturation, brightness)
     r, g, b = (int(math.ceil(i * COLOR_MULTIPLIER)) for i in tuple_values)
     return "#{:02X}{:02X}{:02X}".format(r, g, b)
-
-

@@ -6,9 +6,7 @@ package net.armagomen.battleobserver
 	 */
 	
 	import flash.display.*;
-	import flash.events.*;
 	import flash.text.Font;
-	import flash.utils.*;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
@@ -27,12 +25,9 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
 	import net.armagomen.battleobserver.battle.components.wgcomponents.WGComponentsSetting;
 	import net.armagomen.battleobserver.font.BattleObserver;
-	import net.armagomen.battleobserver.utils.*;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.*;
-	import net.wg.gui.battle.random.views.*;
+	import net.wg.gui.battle.components.BattleDisplayable;
 	import net.wg.gui.battle.views.BaseBattlePage;
-	import net.wg.infrastructure.base.*;
 	
 	public class BattleObserverLibraryMain extends MovieClip
 	{
@@ -101,26 +96,24 @@ package net.armagomen.battleobserver
 					break;
 				}
 			}
+			
 			BaseBattlePage.prototype['as_updateBattleObserverChildIndexes'] = function():void
 			{
-				var prebattleTimer:DisplayObject = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
+				var prebattleTimer:BattleDisplayable = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
 				if (prebattleTimer)
 				{
-					this.removeChild(prebattleTimer);
 					this.addChild(prebattleTimer);
 				}
 			}
 			
 			BaseBattlePage.prototype['as_observerHideWgComponents'] = function(components:Array):void
 			{
-				var hidden:Sprite = new Sprite();
-				this.addChild(hidden);
-				hidden.visible = false;
 				for each (var item:String in components) 
 				{
-					var component:DisplayObject = this.getComponent(item);
+					var component:BattleDisplayable = this.getComponent(item);
 					if (component){
-						hidden.addChild(component);
+						component.visible = false;
+						component.alpha = 0;
 					}
 				}
 			}

@@ -1,6 +1,7 @@
 from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAIN
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
+from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
@@ -121,3 +122,10 @@ class ViewSettings(object):
         if self.getSetting(ALIASES.TIMER):
             components.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
         return components
+
+    @staticmethod
+    def getViewAliases():
+        return (VIEW_ALIAS.CLASSIC_BATTLE_PAGE,
+                VIEW_ALIAS.RANKED_BATTLE_PAGE,
+                VIEW_ALIAS.EPIC_RANDOM_PAGE,
+                VIEW_ALIAS.EPIC_BATTLE_PAGE)
