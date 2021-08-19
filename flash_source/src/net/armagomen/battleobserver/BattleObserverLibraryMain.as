@@ -82,7 +82,7 @@ package net.armagomen.battleobserver
 					this.registerComponent(this.addChild(new OwnHealthUI), ui_name);
 					break;
 				case "Observer_PlayersPanels_UI": 
-					this.registerComponent(this.addChild(new PlayersPanelsUI), ui_name);
+					this.registerComponent(new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), ui_name);
 					break;
 				case "Observer_Minimap_UI": 
 					this.registerComponent(new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP)), ui_name);
