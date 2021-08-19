@@ -10,13 +10,13 @@ def getRowCount(base, *args, **kwargs):
     return settings.tank_carousel[CAROUSEL.ROWS] if settings.tank_carousel[GLOBAL.ENABLED] else base(*args, **kwargs)
 
 
-@overrideMethod(DoubleCarouselTypeSetting, "enableSmallCarousel")
-def enableSmallCarousel(base, *args, **kwargs):
-    return settings.tank_carousel[CAROUSEL.SMALL] and settings.tank_carousel[GLOBAL.ENABLED] or base(*args, **kwargs)
-
-
 def onModSettingsChanged(config, blockID):
     if blockID == CAROUSEL.NAME:
+        DoubleCarouselTypeSetting.DOUBLE_CAROUSEL_TYPES = (
+            DoubleCarouselTypeSetting.OPTIONS.SMALL if config[CAROUSEL.SMALL] and config[
+                GLOBAL.ENABLED] else DoubleCarouselTypeSetting.OPTIONS.ADAPTIVE
+            , DoubleCarouselTypeSetting.OPTIONS.SMALL
+        )
         ServicesLocator.settingsCore.onSettingsChanged(CAROUSEL.SETTINGS)
 
 
