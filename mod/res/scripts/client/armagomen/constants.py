@@ -254,12 +254,11 @@ __Dispersion = namedtuple("DISPERSION", (
     "NAME", "CIRCLE_EXTRA_LAP", "CIRCLE_REPLACE", "CIRCLE_SCALE_CONFIG", "CIRCLE_SERVER", "ENABLED",
     "SCALE", "MAX_TIME", "SPG_GM_SCALE", "GUN_MARKER_MIN_SIZE", "MINUS_ONE_F", "TIMER_ENABLED",
     "TIMER_POSITION_X", "TIMER_POSITION_Y", "TIMER_COLOR", "TIMER_DONE_COLOR", "TIMER_DONE_TEMPLATE",
-    "TIMER_REGULAR_TEMPLATE", "TIMER_ALIGN", "USE_LOCK_PREDICTION"))
+    "TIMER_REGULAR_TEMPLATE", "TIMER_ALIGN"))
 DISPERSION = __Dispersion(
     "dispersion_circle", "circle_extraServerLap", "circle_replaceOriginalCircle", "circle_scale", "useServerAim",
     "circle_enabled", 80, 5.0, 0.8, 16.0, -1.0, "timer_enabled", "timer_position_x", "timer_position_y",
-    "timer_color", "timer_done_color", "timer_done_template", "timer_regular_template", "timer_align",
-    "circle_use_lock_prediction")
+    "timer_color", "timer_done_color", "timer_done_template", "timer_regular_template", "timer_align")
 
 DISPERSION_TIME = namedtuple("DISPERSION_TIME", ("TIMER", "PERCENT"))("timer", "percent")
 

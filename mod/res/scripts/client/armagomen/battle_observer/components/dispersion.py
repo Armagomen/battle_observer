@@ -3,8 +3,6 @@ from Math import MatrixAnimation
 
 import aih_constants
 from AvatarInputHandler import gun_marker_ctrl
-from AvatarInputHandler.gun_marker_ctrl import _MARKER_TYPE, _MARKER_FLAG, \
-    _SPGGunMarkerController, _GunMarkersDPFactory
 from BattleReplay import g_replayCtrl
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import settings
@@ -17,8 +15,9 @@ from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CO
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.shared.personality import ServicesLocator
 
-CLIENT = _MARKER_TYPE.CLIENT
-SERVER = _MARKER_TYPE.SERVER
+CLIENT = gun_marker_ctrl._MARKER_TYPE.CLIENT
+SERVER = gun_marker_ctrl._MARKER_TYPE.SERVER
+MARKER_FLAG = gun_marker_ctrl._MARKER_FLAG
 DISPERSION_SCALE = 0.8
 
 DEV_FACTORIES_COLLECTION = (
@@ -44,7 +43,7 @@ class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
         self.__screenRatio = screenResolution()[0] * 0.5 * DISPERSION_SCALE
 
 
-class ObserverSPGGunMarkerController(_SPGGunMarkerController):
+class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
     def _updateDispersionData(self):
         self._size *= DISPERSION_SCALE
@@ -79,16 +78,16 @@ class _GunMarkersDecorator(gun_marker_ctrl._GunMarkersDecorator):
 
     def __updateClient(self, position, direction, size, relaxTime, collData):
         self.__clientState = (position, direction, collData)
-        if self.__gunMarkersFlags & _MARKER_FLAG.CLIENT_MODE_ENABLED:
+        if self.__gunMarkersFlags & MARKER_FLAG.CLIENT_MODE_ENABLED:
             self.__clientMarker.update(CLIENT, position, direction, size, relaxTime, collData)
 
     def __updateServer(self, position, direction, size, relaxTime, collData):
         self.__serverState = (position, direction, collData)
-        if self.__gunMarkersFlags & _MARKER_FLAG.SERVER_MODE_ENABLED:
+        if self.__gunMarkersFlags & MARKER_FLAG.SERVER_MODE_ENABLED:
             self.__serverMarker.update(SERVER, position, direction, size, relaxTime, collData)
 
 
-class BOGunMarkersDPFactory(_GunMarkersDPFactory):
+class BOGunMarkersDPFactory(gun_marker_ctrl._GunMarkersDPFactory):
 
     @staticmethod
     def _makeDefaultProvider():
@@ -121,7 +120,6 @@ class DispersionCircle(object):
         self.hooksEnable = False
         self.replaceOriginalCircle = False
         self.extraServerLap = False
-        self.player = None
         settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
         overrideMethod(gm_factory, "createComponents")(self.createOverrideComponents)
@@ -135,9 +133,10 @@ class DispersionCircle(object):
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
 
     def createOverrideComponents(self, base, *args):
-        if not self.hooksEnable or self.player is None:
+        player = getPlayer()
+        if not self.hooksEnable or player is None:
             return base(*args)
-        self.player.base.setDevelopmentFeature(GLOBAL.ZERO, 'server_marker', True, '')
+        player.base.setDevelopmentFeature(GLOBAL.ZERO, 'server_marker', True, '')
         if base.__name__ == "createComponents":
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
@@ -164,8 +163,8 @@ class DispersionCircle(object):
         return base(*args, **kwargs) if not self.hooksEnable else None
 
     def setGunMarkerColor(self, base, cr_panel, markerType, color):
-        if self.hooksEnable and markerType == _MARKER_TYPE.CLIENT:
-            base(cr_panel, _MARKER_TYPE.SERVER, color)
+        if self.hooksEnable and markerType == CLIENT:
+            base(cr_panel, SERVER, color)
         return base(cr_panel, markerType, color)
 
     def onModSettingsChanged(self, config, blockID):
@@ -177,25 +176,20 @@ class DispersionCircle(object):
             self.hooksEnable = self.enabled and (not self.replaceOriginalCircle or self.extraServerLap)
             global DISPERSION_SCALE
             DISPERSION_SCALE = config[DISPERSION.CIRCLE_SCALE_CONFIG] * 0.01
-            if self.enabled and not self.extraServerLap:
-                VehicleGunRotator.USE_LOCK_PREDICTION = config[DISPERSION.USE_LOCK_PREDICTION]
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if not self.enabled:
             return baseCreateGunMarker(isStrategic)
-        self.player = getPlayer()
         bo_factory = BOGunMarkersDPFactory()
         if isStrategic:
-            if self.replaceOriginalCircle:
-                client = ObserverSPGGunMarkerController(CLIENT, bo_factory.getClientSPGProvider())
-            else:
-                client = _SPGGunMarkerController(CLIENT, _GunMarkersDPFactory().getClientSPGProvider())
-            server = ObserverSPGGunMarkerController(SERVER, bo_factory.getServerSPGProvider())
+            controller, factory = (SPGController, bo_factory) if self.replaceOriginalCircle else \
+                (gun_marker_ctrl._SPGGunMarkerController, gun_marker_ctrl._GunMarkersDPFactory())
+            client = controller(CLIENT, factory.getClientSPGProvider())
+            server = SPGController(SERVER, bo_factory.getServerSPGProvider())
         else:
-            if self.replaceOriginalCircle:
-                client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
-            else:
-                client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, _GunMarkersDPFactory().getClientProvider())
+            controller, factory = (_DefaultGunMarkerController, bo_factory) if self.replaceOriginalCircle else \
+                (gun_marker_ctrl._DefaultGunMarkerController, gun_marker_ctrl._GunMarkersDPFactory())
+            client = controller(CLIENT, factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
         return _GunMarkersDecorator(client, server, self.replaceOriginalCircle, self.extraServerLap)
 
