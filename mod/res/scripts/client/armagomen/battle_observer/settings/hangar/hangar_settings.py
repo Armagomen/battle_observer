@@ -15,7 +15,8 @@ class CreateElement(object):
         self.cache = None
         self.getter = None
 
-    def createLabel(self, blockID, varName):
+    @staticmethod
+    def createLabel(blockID, varName):
         block = localization.get(blockID, {})
         text = block.get(varName, varName)
         if text == varName:

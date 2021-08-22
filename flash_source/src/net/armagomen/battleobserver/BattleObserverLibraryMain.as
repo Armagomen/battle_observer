@@ -115,8 +115,9 @@ package net.armagomen.battleobserver
 				{
 					var component:BattleDisplayable = this.getComponent(item);
 					if (component){
-						component.visible = false;
-						component.alpha = 0;
+						component.removeChildren();
+						//component.visible = false;
+						//component.alpha = 0;
 					}
 				}
 			}
