@@ -16,15 +16,14 @@ class CreateElement(object):
         self.getter = None
 
     @staticmethod
-    def createLabel(blockID, varName):
+    def createLabel(blockID, name):
         block = localization.get(blockID, {})
-        text = block.get(varName, varName)
-        if text == varName:
+        text = block.get(name, name)
+        if text == name:
             return None
-        tooltip = block.get('{}_tooltip'.format(varName), GLOBAL.EMPTY_LINE)
-        if tooltip:
-            tooltip = '{HEADER}%s{/HEADER}{BODY}%s{/BODY}' % (text, tooltip)
-        return {'type': 'Label', 'text': text.decode(encoding="utf-8"), 'tooltip': tooltip.decode(encoding="utf-8")}
+        tooltip = '{HEADER}%s{/HEADER}{BODY}%s{/BODY}' % (text, block.get('{}_tooltip'.format(name), GLOBAL.EMPTY_LINE))
+        return {'type': 'Label', 'text': text.decode(encoding="utf-8"), 'tooltip': tooltip.decode(encoding="utf-8"),
+                'tooltipIcon': 'no_icon'}
 
     @staticmethod
     def createEmpty():
