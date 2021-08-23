@@ -25,7 +25,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.components.BattleDisplayable;
 	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class BattleObserverLibraryMain extends MovieClip
@@ -113,11 +112,9 @@ package net.armagomen.battleobserver
 			{
 				for each (var item:String in components) 
 				{
-					var component:BattleDisplayable = this.getComponent(item);
+					var component:* = this.getComponent(item);
 					if (component){
 						component.removeChildren();
-						//component.visible = false;
-						//component.alpha = 0;
 					}
 				}
 			}

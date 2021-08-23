@@ -1,5 +1,6 @@
 from importlib import import_module
 
+from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
@@ -48,11 +49,20 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def eventListener(self, event):
         self._app.as_loadLibrariesS([SWF.BATTLE])
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
+        g_playerEvents.onAvatarReady += self.onAvatarReady
         logInfo("loading flash libraries " + SWF.BATTLE)
 
     def fini(self):
         self.flash = None
         super(ObserverBusinessHandler, self).fini()
+
+    def onAvatarReady(self):
+        g_playerEvents.onAvatarReady -= self.onAvatarReady
+        if self.flash is None:
+            return
+        hiddenWGComponents = view_settings.getHiddenWGComponents()
+        if hiddenWGComponents:
+            self.flash.as_observerHideWgComponents(hiddenWGComponents)
 
     def onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in view_settings.getViewAliases():
@@ -67,6 +77,4 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             if view_settings.getSetting(comp):
                 flash.as_createBattleObserverComp(comp)
         flash.as_observerUpdateComponents(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
-        hiddenWGComponents = view_settings.getHiddenWGComponents()
-        if hiddenWGComponents:
-            flash.as_observerHideWgComponents(hiddenWGComponents)
+
