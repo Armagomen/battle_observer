@@ -110,11 +110,15 @@ package net.armagomen.battleobserver
 			
 			BaseBattlePage.prototype['as_observerHideWgComponents'] = function(components:Array):void
 			{
+				var hidden:Sprite = this.addChild(new Sprite());
+				hidden.visible = false;
+				hidden.mouseChildren = false;
+				hidden.mouseEnabled = false;
 				for each (var item:String in components) 
 				{
 					var component:* = this.getComponent(item);
 					if (component){
-						component.removeChildren();
+						hidden.addChild(component);
 					}
 				}
 			}
