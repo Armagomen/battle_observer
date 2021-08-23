@@ -4,6 +4,7 @@ from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, P
 from armagomen.utils.common import logWarning, openWebBrowser, createFileInDir, logInfo
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.utils.functions import makeTooltip
+import os
 
 settingsVersion = 33
 KEY_CONTROL = [[29]]
@@ -224,15 +225,8 @@ class ConfigInterface(CreateElement):
         if event == self.apiEvents.WINDOW_CLOSED:
             self.vxSettingsApi.onSettingsChanged -= self.onSettingsChanged
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
-            if self.configSelect:
-                import os
-                self.inited.clear()
-                createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
-                                {'loadConfig': self.configLoader.configsList[self.selected]})
-                self.configLoader.readConfig(self.configLoader.configsList[self.selected])
         elif event == self.apiEvents.WINDOW_LOADED:
-            if self.configSelect:
-                self.configSelect = False
+            self.configSelect = False
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
             self.vxSettingsApi.onDataChanged += self.onDataChanged
 
@@ -240,6 +234,7 @@ class ConfigInterface(CreateElement):
         if blockID not in self.inited:
             try:
                 self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID))
+                self.inited.add(blockID)
             except Exception:
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
 
@@ -252,6 +247,10 @@ class ConfigInterface(CreateElement):
             self.selected = data['selectedConfig']
             self.configSelect = True
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
+            self.inited.clear()
+            createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
+                            {'loadConfig': self.configLoader.configsList[self.selected]})
+            self.configLoader.readConfig(self.configLoader.configsList[self.selected])
         else:
             settings = getattr(self.settings, blockID)
             for key, value in data.iteritems():
@@ -259,16 +258,16 @@ class ConfigInterface(CreateElement):
                 if paramName in updatedConfigLink:
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
-                    elif key == HP_BARS.STYLE and not isinstance(value, basestring):
+                    elif key == HP_BARS.STYLE and not isinstance(value, str):
                         value = HP_BARS.STYLES[value]
                     elif key == "zoomSteps*steps":
                         value = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
                     newParamType = type(value)
                     oldParamType = type(updatedConfigLink[paramName])
                     if oldParamType != newParamType:
-                        if oldParamType == float and newParamType == int:
+                        if oldParamType is float and newParamType is int:
                             value = float(value)
-                        elif oldParamType == int and newParamType == float:
+                        elif oldParamType is int and newParamType is float:
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
             self.configLoader.updateConfigFile(blockID, settings)
