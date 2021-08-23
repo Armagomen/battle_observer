@@ -4,9 +4,7 @@ package net.armagomen.battleobserver
 	 * ...
 	 * @author Armagomen
 	 */
-	import flash.display.*;
-	import flash.events.*;
-	import flash.utils.*;
+	import flash.display.MovieClip;
 	import net.armagomen.battleobserver.hangar.ObserverDateTimesUI;
 	import net.wg.gui.lobby.hangar.Hangar;
 
@@ -22,7 +20,7 @@ package net.armagomen.battleobserver
 				case "Observer_DateTimes_UI":
 					if (!this.isFlashComponentRegisteredS(ui_name))
 					{
-						this.registerFlashComponent(this.addChildAt(new ObserverDateTimesUI(ui_name), 0), ui_name);
+						this.registerFlashComponent(this.addChild(new ObserverDateTimesUI), ui_name);
 					}
 					break;
 				}

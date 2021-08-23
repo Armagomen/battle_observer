@@ -6,22 +6,18 @@
 	import net.armagomen.battleobserver.hangar.utils.Filters;
 	import net.armagomen.battleobserver.hangar.utils.TextExt;
 	import net.wg.infrastructure.base.BaseDAAPIComponent;
-
-	import net.wg.gui.lobby.header.LobbyHeader;
 	
 	public class ObserverDateTimesUI extends BaseDAAPIComponent
 	{
 		private var dateTime:TextExt;
-		private var premium:TextExt;
 		private var config:Object;
 		public var getShdowSettings:Function;
-
-		public function ObserverDateTimesUI(compName:String)
+		
+		public function ObserverDateTimesUI()
 		{
 			super();
-			this.name = compName;
 		}
-
+		
 		override protected function configUI():void
 		{
 			super.configUI();
@@ -32,67 +28,44 @@
 			this.buttonMode = false;
 			this.addEventListener(Event.RESIZE, this._onResizeHandle);
 		}
-
+		
 		override protected function onDispose():void
 		{
 			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
 			this.as_clearScene();
 			super.onDispose();
 		}
-
+		
 		public function as_clearScene():void
 		{
-			while (this.numChildren > 0){
+			while (this.numChildren > 0)
+			{
 				this.removeChildAt(0);
 			}
 			this.dateTime = null;
+			App.utils.data.cleanupDynamicObject(this.config);
 		}
-
+		
 		public function as_startUpdate(settings:Object):void
 		{
 			this.config = settings;
-			var x:int = settings.x;
-			if (x < 0){
-				x = App.appWidth + x;
-			}
-			var y:int = settings.y;
-			if (y < 0){
-				y = App.appHeight + y;
-			}
-			dateTime = new TextExt("time", x, y, Filters.largeText, TextFieldAutoSize.LEFT, getShdowSettings(), this);
-			premium = new TextExt("premium", 284, 50, Filters.mediumText, TextFieldAutoSize.CENTER, getShdowSettings(), this);
+			this.x = settings.reverse_x && settings.x < 0 ? parent.width + settings.x : settings.x
+			this.y = settings.reverse_y && settings.y < 0 ? parent.height + settings.y : settings.y
+			this.dateTime = new TextExt("time", 0, 0, Filters.largeText, TextFieldAutoSize.LEFT, getShdowSettings(), this);
 		}
-
+		
 		public function as_setDateTime(text:String):void
 		{
-			if (dateTime)
+			if (this.dateTime)
 			{
-				dateTime.htmlText = text;
+				this.dateTime.htmlText = text;
 			}
 		}
 		
-		public function as_setPremiumLeft(text:String):void
-		{
-			if (premium)
-			{
-				premium.htmlText = text;
-			}
-		}
-		
-		
-
 		public function _onResizeHandle(event:Event):void
 		{
-			var x:int = config.x;
-			if (x < 0){
-				x = App.appWidth + x;
-			}
-			var y:int = config.y;
-			if (y < 0){
-				y = App.appHeight + y;
-			}
-			dateTime.x = x;
-			dateTime.y = y;
+			this.x = this.config.reverse_x && this.config.x < 0 ? parent.width + this.config.x : this.config.x
+			this.y = this.config.reverse_y && this.config.y < 0 ? parent.height + this.config.y : this.config.y
 		}
 	}
 

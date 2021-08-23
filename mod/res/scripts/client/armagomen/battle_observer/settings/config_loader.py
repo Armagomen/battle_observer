@@ -108,16 +108,14 @@ class ConfigLoader(object):
                 new_param = external_cfg.get(key)
                 if new_param is not None:
                     new_param_type = type(new_param)
-                    # if new_param_type == str:
-                    #     for before, after in GLOBAL.REPLACE:
-                    #         if before in new_param:
-                    #             file_update = True
-                    #             new_param = new_param.replace(before, after)
+                    if new_param_type is str and GLOBAL.REPLACE[GLOBAL.FIRST] in new_param:
+                        file_update = True
+                        new_param = new_param.replace(*GLOBAL.REPLACE)
                     if new_param_type != old_param_type:
                         file_update = True
-                        if old_param_type == int and new_param_type == float:
+                        if old_param_type is int and new_param_type is float:
                             internal_cfg[key] = int(round(new_param))
-                        elif old_param_type == float and new_param_type == int:
+                        elif old_param_type is float and new_param_type is int:
                             internal_cfg[key] = float(new_param)
                     else:
                         internal_cfg[key] = new_param
@@ -131,6 +129,7 @@ class ConfigLoader(object):
         logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
         file_list = ['{}.json'.format(name) for name in LOAD_LIST]
         listdir = os.listdir(direct_path)
+        configSelect = self.configInterface is not None and self.configInterface.configSelect
         for num, module_name in enumerate(LOAD_LIST, GLOBAL.ZERO):
             file_name = file_list[num]
             file_path = os.path.join(direct_path, file_name)
@@ -138,7 +137,8 @@ class ConfigLoader(object):
             if file_name in listdir:
                 try:
                     if self.updateData(self.getFileData(file_path), internal_cfg):
-                        createFileInDir(file_path, internal_cfg)
+                        if not configSelect:
+                            createFileInDir(file_path, internal_cfg)
                 except Exception as error:
                     self.loadError(file_path, error.message)
                     logWarning('readConfig: {} {}'.format(file_name, repr(error)))

@@ -1,8 +1,9 @@
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
-from armagomen.utils.common import logWarning, openWebBrowser, createFileInDir
+from armagomen.utils.common import logWarning, openWebBrowser, createFileInDir, logInfo
 from debug_utils import LOG_CURRENT_EXCEPTION
+from gui.shared.utils.functions import makeTooltip
 
 settingsVersion = 33
 KEY_CONTROL = [[29]]
@@ -21,12 +22,8 @@ class CreateElement(object):
         text = block.get(name, name)
         if text == name:
             return None
-        tooltipText = block.get('{}_tooltip'.format(name), GLOBAL.EMPTY_LINE)
-        if tooltipText:
-            tooltipText = "{BODY}%s{/BODY}" % tooltipText
-        tooltip = '{HEADER}%s{/HEADER}%s' % (text, tooltipText)
-        return {'type': 'Label', 'text': text.decode(encoding="utf-8"), 'tooltip': tooltip.decode(encoding="utf-8"),
-                'tooltipIcon': 'no_icon'}
+        tooltip = makeTooltip(text, block.get('{}_tooltip'.format(name), None))
+        return {'type': 'Label', 'text': text, 'tooltip': tooltip, 'tooltipIcon': 'no_icon'}
 
     @staticmethod
     def createEmpty():
@@ -35,7 +32,7 @@ class CreateElement(object):
     @staticmethod
     def getControlType(value, cType):
         if cType is None:
-            if isinstance(value, basestring):
+            if isinstance(value, str):
                 if value.startswith("#"):
                     return 'TextInputColor'
                 return 'TextInputField'
@@ -89,7 +86,8 @@ class CreateElement(object):
             result.update({'snapInterval': step, 'format': '{{value}}'})
         return result
 
-    def createBlock(self, blockID, settings, column1, column2):
+    @staticmethod
+    def createBlock(blockID, settings, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
         result = {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
@@ -101,14 +99,14 @@ class CreateElement(object):
 
     def createItem(self, blockID, key, value):
         val_type = type(value)
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             if GLOBAL.ALIGN in key:
                 return self.createRadioButtonGroup(blockID, key,
                                                    *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
             if blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
                 return self.createRadioButtonGroup(blockID, key,
                                                    *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
-        if isinstance(value, (basestring, bool)):
+        if isinstance(value, (str, bool)):
             return self.createControl(blockID, key, value)
         elif val_type is int:
             if DISPERSION.CIRCLE_SCALE_CONFIG in key:
@@ -184,8 +182,6 @@ class ConfigInterface(CreateElement):
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
                                    useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
-        vxSettingsApi.onSettingsChanged += self.onSettingsChanged
-        vxSettingsApi.onDataChanged += self.onDataChanged
 
     def addModificationToModList(self):
         """register settings_core window in modsListApi"""
@@ -220,34 +216,41 @@ class ConfigInterface(CreateElement):
             for blockID in CONFIG_INTERFACE.BLOCK_IDS:
                 self.updateMod(blockID)
             self.load_window()
-            self.configSelect = False
 
     def onFeedbackReceived(self, container, event):
         """Feedback EVENT"""
         if container != MOD_NAME:
             return
         if event == self.apiEvents.WINDOW_CLOSED:
+            self.vxSettingsApi.onSettingsChanged -= self.onSettingsChanged
+            self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.configSelect:
                 import os
+                self.inited.clear()
                 createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
                                 {'loadConfig': self.configLoader.configsList[self.selected]})
                 self.configLoader.readConfig(self.configLoader.configsList[self.selected])
+        elif event == self.apiEvents.WINDOW_LOADED:
+            if self.configSelect:
+                self.configSelect = False
+            self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
+            self.vxSettingsApi.onDataChanged += self.onDataChanged
 
     def updateMod(self, blockID):
         if blockID not in self.inited:
             try:
                 self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID))
             except Exception:
-                LOG_CURRENT_EXCEPTION(tags=["%s" % MOD_NAME])
+                LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings_core in the settings_core file."""
-        if MOD_NAME != modID:
+        logInfo(blockID)
+        if self.configSelect or MOD_NAME != modID:
             return
         if blockID == ANOTHER.CONFIG_SELECT and self.selected != data['selectedConfig']:
             self.selected = data['selectedConfig']
             self.configSelect = True
-            self.inited.clear()
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
         else:
             settings = getattr(self.settings, blockID)
@@ -269,8 +272,7 @@ class ConfigInterface(CreateElement):
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
             self.configLoader.updateConfigFile(blockID, settings)
-            if not self.configSelect:
-                self.settings.onModSettingsChanged(settings, blockID)
+            self.settings.onModSettingsChanged(settings, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""

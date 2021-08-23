@@ -9,6 +9,3 @@ class DateTimesMeta(BaseModMeta):
 
     def as_setDateTimeS(self, text=GLOBAL.EMPTY_LINE):
         return self.flashObject.as_setDateTime(text) if self._isDAAPIInited() else None
-
-    def as_setPremiumLeftS(self, timeLeft=GLOBAL.EMPTY_LINE):
-        return self.flashObject.as_setPremiumLeft(timeLeft) if self._isDAAPIInited() else None

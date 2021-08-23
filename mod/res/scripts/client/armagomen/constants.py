@@ -67,6 +67,7 @@ class GLOBAL:
                   "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
     AVG_COLOR = "avgColor"
+    REPLACE = ("\n", "<br>")
 
 
 SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
