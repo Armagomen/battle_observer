@@ -240,7 +240,8 @@ class ConfigInterface(CreateElement):
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings_core in the settings_core file."""
-        logInfo(blockID)
+        if self.settings.main[MAIN.DEBUG]:
+            logInfo("change settings '%s' - %s" % (self.configLoader.configsList[self.selected], blockID))
         if self.configSelect or MOD_NAME != modID:
             return
         if blockID == ANOTHER.CONFIG_SELECT and self.selected != data['selectedConfig']:
