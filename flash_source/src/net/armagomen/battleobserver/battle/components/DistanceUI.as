@@ -19,7 +19,7 @@ package net.armagomen.battleobserver.battle.components
 			if (this.distance == null)
 			{
 				var settings:Object = this.getSettings();
-				this.distance = new TextExt("distance", settings.x, settings.y, Filters.middleText, settings.align, this.getShadowSettings(), this);
+				this.distance = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, this.getShadowSettings(), this);
 			}
 		}
 		

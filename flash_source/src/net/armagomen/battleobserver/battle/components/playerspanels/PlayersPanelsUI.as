@@ -126,7 +126,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				{
 					autoSize = params.align == "left" ? "right" : "left";
 				}
-				this.stoarge[vehID][name] = new TextExt(name, team == "red" ? -params.x : params.x, params.y, null, autoSize, getShadowSettings(), items[vehID]);
+				this.stoarge[vehID][name] = new TextExt(team == "red" ? -params.x : params.x, params.y, null, autoSize, getShadowSettings(), items[vehID]);
 				this.stoarge[vehID][name].visible = name != "DamageTf";
 			}
 		}

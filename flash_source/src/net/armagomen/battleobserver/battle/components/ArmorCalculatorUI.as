@@ -20,7 +20,7 @@ package net.armagomen.battleobserver.battle.components
 			if (this.armorCalc == null)
 			{
 				var settings:Object = this.getSettings();
-				this.armorCalc = new TextExt("armorCalc", settings.position.x, settings.position.y, Filters.armorText, TextFieldAutoSize.CENTER, this.getShadowSettings(), this);
+				this.armorCalc = new TextExt(settings.position.x, settings.position.y, Filters.armorText, TextFieldAutoSize.CENTER, this.getShadowSettings(), this);
 			}
 		}
 		

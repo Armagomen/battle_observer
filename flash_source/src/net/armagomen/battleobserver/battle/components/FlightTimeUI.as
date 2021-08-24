@@ -19,7 +19,7 @@ package net.armagomen.battleobserver.battle.components
 			if (this.flightTime == null)
 			{
 				var settings:Object = this.getSettings();
-				this.flightTime = new TextExt("flyTime", settings.x, settings.y, Filters.middleText, settings.align, getShadowSettings(), this);
+				this.flightTime = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, getShadowSettings(), this);
 			}
 		}
 		

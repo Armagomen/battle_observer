@@ -7,13 +7,12 @@
 
 	public class TextExt extends TextField
 	{
-		public function TextExt(name:String, x:Number, y:Number, style:TextFormat, align:String, shadowSettings:Object, ui:*)
+		public function TextExt(x:Number, y:Number, style:TextFormat, align:String, shadowSettings:Object, ui:*)
 		{
 			super();
 			if (style == null){
 				style = Filters.normalText;
 			}
-			this.name = name;
 			this.x = x;
 			this.y = y;
 			this.width = 1;

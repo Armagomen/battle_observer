@@ -22,7 +22,7 @@
 			if (this.battleTimer == null)
 			{
 				this.x = App.appWidth;
-				this.battleTimer = new TextExt("_timer", -8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this.getShadowSettings(), this);
+				this.battleTimer = new TextExt(-8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this.getShadowSettings(), this);
 			}
 		}
 		

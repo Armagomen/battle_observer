@@ -61,9 +61,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.arrowRed.graphics.endFill();
 			this.arrowRed.visible = false;
 			
-			this.greenScore = new TextExt("greenScore", -25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, shadowSettings, this);
+			this.greenScore = new TextExt(-25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, shadowSettings, this);
 			this.greenScore.antiAliasType = AntiAliasType.NORMAL;
-			this.redScore = new TextExt("redScore", 25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, shadowSettings, this);
+			this.redScore = new TextExt(25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, shadowSettings, this);
 			this.redScore.antiAliasType = AntiAliasType.NORMAL;
 			
 			this.addChild(this.arrowDots);

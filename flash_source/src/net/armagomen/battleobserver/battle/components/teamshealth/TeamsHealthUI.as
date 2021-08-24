@@ -42,10 +42,10 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 				var isLeague:Boolean     = this.hpBars as League;
 				var textXpos:Number      = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
 				this.addChild(this.hpBars);
-				this.greenText = new TextExt("greenText", -textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
-				this.redText = new TextExt("redText", textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
-				this.greenDiff = new TextExt("greenDiff", -55, 1, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
-				this.redDiff = new TextExt("redDiff", 55, 1, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
+				this.greenText = new TextExt(-textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
+				this.redText = new TextExt(textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
+				this.greenDiff = new TextExt(-55, 1, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
+				this.redDiff = new TextExt(55, 1, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
 				this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
 				this.addChild(this.score);
 				if (settings.markers.enabled)

@@ -22,7 +22,7 @@ package net.armagomen.battleobserver.battle.components.maingun
 				var settings:Object = this.getSettings().settings;
 				this.x = (App.appWidth >> 1) + settings.x;
 				this.y = settings.y;
-				this.mainGun = new TextExt("mainGun", 0, 0, Filters.largeText, settings.align, getShadowSettings(), this);
+				this.mainGun = new TextExt(0, 0, Filters.largeText, settings.align, getShadowSettings(), this);
 			}
 		}
 		

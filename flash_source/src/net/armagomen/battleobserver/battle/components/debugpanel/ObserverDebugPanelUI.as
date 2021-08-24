@@ -58,7 +58,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 						this.addChild(this.pingBar);
 					}
 				}
-				this.debugText = new TextExt("_debugPanel", settings.debugText.x, settings.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, this.getShadowSettings(), this);
+				this.debugText = new TextExt(settings.debugText.x, settings.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, this.getShadowSettings(), this);
 			}
 		}
 		

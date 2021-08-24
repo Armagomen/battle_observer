@@ -39,46 +39,46 @@ package net.armagomen.battleobserver
 				switch (ui_name)
 				{
 				case "Observer_UserBackGround_UI": 
-					this.registerComponent(this.addChildAt(new UserBackGroundUI, 0), ui_name);
+					this.registerComponent(this.addChildAt(new UserBackGroundUI(), 0), ui_name);
 					break;
 				case "Observer_TeamsHP_UI": 
-					this.registerComponent(this.addChild(new TeamsHealthUI), ui_name);
+					this.registerComponent(this.addChild(new TeamsHealthUI()), ui_name);
 					break;
 				case "Observer_DamageLog_UI": 
-					this.registerComponent(this.addChild(new DamageLogsUI), ui_name);
+					this.registerComponent(this.addChild(new DamageLogsUI()), ui_name);
 					break;
 				case "Observer_MainGun_UI": 
-					this.registerComponent(this.addChild(new MainGunUI), ui_name);
+					this.registerComponent(this.addChild(new MainGunUI()), ui_name);
 					break;
 				case "Observer_DebugPanel_UI": 
-					this.registerComponent(this.addChild(new ObserverDebugPanelUI), ui_name);
+					this.registerComponent(this.addChild(new ObserverDebugPanelUI()), ui_name);
 					break;
 				case "Observer_DateTimes_UI": 
-					this.registerComponent(this.addChild(new ObserverDateTimesUI), ui_name);
+					this.registerComponent(this.addChild(new ObserverDateTimesUI()), ui_name);
 					break;
 				case "Observer_BattleTimer_UI": 
-					this.registerComponent(this.addChild(new ObserverBattleTimerUI), ui_name);
+					this.registerComponent(this.addChild(new ObserverBattleTimerUI()), ui_name);
 					break;
 				case "Observer_SixthSense_UI": 
-					this.registerComponent(this.addChild(new SixthSenseUI), ui_name);
+					this.registerComponent(this.addChild(new SixthSenseUI()), ui_name);
 					break;
 				case "Observer_TeamBases_UI": 
-					this.registerComponent(this.addChild(new TeamBasesUI), ui_name);
+					this.registerComponent(this.addChild(new TeamBasesUI()), ui_name);
 					break;
 				case "Observer_ArmorCalculator_UI": 
-					this.registerComponent(this.addChild(new ArmorCalculatorUI), ui_name);
+					this.registerComponent(this.addChild(new ArmorCalculatorUI()), ui_name);
 					break;
 				case "Observer_FlightTime_UI": 
-					this.registerComponent(this.addChild(new FlightTimeUI), ui_name);
+					this.registerComponent(this.addChild(new FlightTimeUI()), ui_name);
 					break;
 				case "Observer_DispersionTimer_UI": 
-					this.registerComponent(this.addChild(new DispersionTimerUI), ui_name);
+					this.registerComponent(this.addChild(new DispersionTimerUI()), ui_name);
 					break;
 				case "Observer_Distance_UI": 
-					this.registerComponent(this.addChild(new DistanceUI), ui_name);
+					this.registerComponent(this.addChild(new DistanceUI()), ui_name);
 					break;
 				case "Observer_OwnHealth_UI": 
-					this.registerComponent(this.addChild(new OwnHealthUI), ui_name);
+					this.registerComponent(this.addChild(new OwnHealthUI()), ui_name);
 					break;
 				case "Observer_PlayersPanels_UI": 
 					this.registerComponent(new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), ui_name);
@@ -110,7 +110,7 @@ package net.armagomen.battleobserver
 			
 			BaseBattlePage.prototype['as_observerHideWgComponents'] = function(components:Array):void
 			{
-				var hidden:Sprite = this.addChild(new Sprite());
+				var hidden:Sprite = this.addChildAt(new Sprite, 0);
 				hidden.visible = false;
 				hidden.mouseChildren = false;
 				hidden.mouseEnabled = false;

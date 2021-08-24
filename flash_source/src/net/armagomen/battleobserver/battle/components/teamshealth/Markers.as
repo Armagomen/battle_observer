@@ -19,11 +19,11 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			Filters.markersFormat.letterSpacing = 0.9;
 			this.y = settings.y;
 			
-			this.allyM = new TextExt("allyM", -settings.x, 0, Filters.markersFormat, TextFieldAutoSize.RIGHT, shadowSettings, this);
+			this.allyM = new TextExt(-settings.x, 0, Filters.markersFormat, TextFieldAutoSize.RIGHT, shadowSettings, this);
 			this.allyM.embedFonts = true;
 			this.allyM.alpha = alpha;
 			
-			this.enemyM = new TextExt("enemyM", settings.x, 0, Filters.markersFormat, TextFieldAutoSize.LEFT, shadowSettings, this);
+			this.enemyM = new TextExt(settings.x, 0, Filters.markersFormat, TextFieldAutoSize.LEFT, shadowSettings, this);
 			this.enemyM.embedFonts = true;
 			this.enemyM.alpha = alpha;
 		}

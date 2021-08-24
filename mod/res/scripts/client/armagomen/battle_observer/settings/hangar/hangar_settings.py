@@ -164,7 +164,7 @@ class Getter(object):
                     dic, param = self.getLinkToParam(settings, key)
                     key_val.append((key, dic[param]))
         except Exception:
-            LOG_CURRENT_EXCEPTION(tags=["%s" % MOD_NAME])
+            LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
         return key_val
 
 
@@ -205,7 +205,7 @@ class ConfigInterface(CreateElement):
                                           dict(), lambda *args: None, button_handler=self.onButtonPress)
             except Exception as err:
                 logWarning('ConfigInterface startLoad {}'.format(repr(err)))
-                LOG_CURRENT_EXCEPTION(tags=["%s" % MOD_NAME])
+                LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
 

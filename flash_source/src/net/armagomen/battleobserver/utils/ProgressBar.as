@@ -83,7 +83,7 @@
 		
 		public function addTextField(x:Number, y:Number, align:String, format:TextFormat, shdowSettings:Object):void
 		{
-			this.uiText = new TextExt("text", x, y, format, align, shdowSettings, this);
+			this.uiText = new TextExt(x, y, format, align, shdowSettings, this);
 		}
 		
 		public function setOutline(customColor:Boolean = false, color:String = "#000000", alpha:Number = 1.0):void

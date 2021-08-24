@@ -110,9 +110,9 @@
 			baseMain.addChild(PlayersIcon(iconWidth));
 			baseMain.addChild(TimeIcon(iconWidth, settings.width));
 			
-			this.status = new TextExt("status", settings.width * 0.5, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
-			this.timer = new TextExt("timer", settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
-			this.invaders = new TextExt("invaders", iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
+			this.status = new TextExt(settings.width * 0.5, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
+			this.timer = new TextExt(settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
+			this.invaders = new TextExt(iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
 			
 			this.x = App.appWidth * 0.5 - baseMain.width * 0.5;
 			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;

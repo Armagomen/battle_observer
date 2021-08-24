@@ -51,7 +51,7 @@
 			this._container.addChild(this.image);
 			if (params.showTimer)
 			{
-				this.timer = new TextExt("timer", params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+				this.timer = new TextExt(params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
 				if (this.animate)
 				{
 					this.animation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);

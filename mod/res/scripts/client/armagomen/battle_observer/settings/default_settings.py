@@ -69,7 +69,7 @@ class DefaultSettings(object):
                 GLOBAL.X: -240,
                 GLOBAL.Y: GLOBAL.ZERO,
                 "reverse_x": True,
-                "reverse_y": False
+                "reverse_y": True
             },
             CLOCK.IN_BATTLE: {
                 GLOBAL.ENABLED: False,
