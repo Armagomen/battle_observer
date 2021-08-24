@@ -1,12 +1,13 @@
+import os
+
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
 from armagomen.utils.common import logWarning, openWebBrowser, createFileInDir, logInfo
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.utils.functions import makeTooltip
-import os
 
-settingsVersion = 33
+settingsVersion = 34
 KEY_CONTROL = [[29]]
 KEY_ALT = [[56]]
 
@@ -14,17 +15,18 @@ KEY_ALT = [[56]]
 class CreateElement(object):
 
     def __init__(self):
-        self.cache = None
         self.getter = None
 
     @staticmethod
     def createLabel(blockID, name):
         block = localization.get(blockID, {})
-        text = block.get(name, name)
-        if text == name:
+        if name not in block:
             return None
-        tooltip = makeTooltip(text, block.get('{}_tooltip'.format(name), None))
-        return {'type': 'Label', 'text': text, 'tooltip': tooltip, 'tooltipIcon': 'no_icon'}
+        return {
+            'type': 'Label', 'text': block[name],
+            'tooltip': makeTooltip(block[name], block.get('{}_tooltip'.format(name))),
+            'tooltipIcon': 'no_icon'
+        }
 
     @staticmethod
     def createEmpty():
@@ -90,13 +92,12 @@ class CreateElement(object):
     @staticmethod
     def createBlock(blockID, settings, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
-        result = {
+        return {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
             'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True),
             'showToggleButton': GLOBAL.ENABLED in settings, 'inBattle': False,
             'position': CONFIG_INTERFACE.BLOCK_IDS.index(blockID), 'column1': column1, 'column2': column2
         }
-        return result
 
     def createItem(self, blockID, key, value):
         val_type = type(value)
