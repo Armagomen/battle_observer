@@ -116,12 +116,10 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_AddTextFieldS(vehicleID, PANELS.DAMAGES_TF, self.damagesSettings, PANELS.TEAM[isEnemy])
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
-        for vehicleID in aliveAllies.difference(self._vehicles):
-            self.as_AddVehIdToListS(vehicleID, False)
-        for vehicleID in aliveEnemies.difference(self._vehicles):
-            self.as_AddVehIdToListS(vehicleID, True)
+        for vehicleID in aliveAllies.union(aliveEnemies).difference(self._vehicles):
+            self.as_AddVehIdToListS(vehicleID, vehicleID in aliveEnemies)
         if self.hpBarsEnable:
-            for vehicleID in deadAllies | deadEnemies:
+            for vehicleID in deadAllies.union(deadEnemies):
                 self.onVehicleKilled(vehicleID)
 
     def onVehicleKilled(self, targetID):
