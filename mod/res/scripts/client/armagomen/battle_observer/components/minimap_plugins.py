@@ -3,6 +3,7 @@ from math import degrees
 from armagomen.battle_observer.core import settings, view_settings
 from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod
+from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
@@ -19,6 +20,10 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
             yawLimits = vInfo.vehicleType.turretYawLimits
             if yawLimits is not None:
                 self.__yawLimits = (degrees(yawLimits[0]), degrees(yawLimits[1]))
+
+    def _calcCircularVisionRadius(self):
+        vehAttrs = self.sessionProvider.shared.feedback.getVehicleAttrs()
+        return vehAttrs.get('circularVisionRadius', VISIBILITY.MIN_RADIUS)
 
 
 class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
@@ -73,5 +78,5 @@ def _setupPlugins(base, plugin, arenaVisitor):
     if settings.minimap[GLOBAL.ENABLED] and view_settings.notEpicBattle():
         if settings.minimap[MINIMAP.DEATH_PERMANENT]:
             _plugins['vehicles'] = ArenaVehiclesPlugin
-        _plugins['personal'] = PersonalEntriesPlugin
+    _plugins['personal'] = PersonalEntriesPlugin
     return _plugins

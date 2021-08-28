@@ -77,4 +77,3 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             if view_settings.getSetting(comp):
                 flash.as_createBattleObserverComp(comp)
         flash.as_observerUpdateComponents(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
-

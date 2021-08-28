@@ -1,5 +1,6 @@
-from SoundGroups import g_instance
+from functools import partial
 
+from SoundGroups import g_instance
 from armagomen.utils.common import callback, cancelCallback
 
 
@@ -56,7 +57,8 @@ class SixthSenseTimer(Timer):
     def timeTicking(self, seconds, play_sound):
         if seconds <= CONSTANTS.ZERO:
             return self.stop()
-        self._callback = callback(CONSTANTS.ONE_SECOND, lambda: self.timeTicking(seconds - CONSTANTS.ONE, play_sound))
+        self._callback = None
+        self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE, play_sound))
         self._func_update(seconds)
         if play_sound:
             self.callWWISE(self.__soundID)
@@ -80,6 +82,7 @@ class CyclicTimerEvent(Timer):
         self._function = function
 
     def update(self):
+        self._callback = None
         self._callback = callback(self._interval, self.update)
         self._function()
 
