@@ -127,3 +127,11 @@ class ViewSettings(object):
                 VIEW_ALIAS.RANKED_BATTLE_PAGE,
                 VIEW_ALIAS.EPIC_RANDOM_PAGE,
                 VIEW_ALIAS.EPIC_BATTLE_PAGE)
+
+    def getExternalComponents(self):
+        components = []
+        if self.getSetting(ALIASES.PANELS):
+            components.append(ALIASES.PANELS)
+        if self.getSetting(ALIASES.MINIMAP):
+            components.append(ALIASES.MINIMAP)
+        return components

@@ -8,8 +8,6 @@ from gui.veh_post_progression.models.progression import PostProgressionCompletio
 from helpers import dependency
 from skeletons.gui.shared.utils import IHangarSpace
 
-FULL = PostProgressionCompletion.FULL
-
 
 class AccelerateCrewXp(object):
     hangarSpace = dependency.descriptor(IHangarSpace)
@@ -42,7 +40,8 @@ class AccelerateCrewXp(object):
         value = False
         if vehicle.isFullyElite:
             availability = vehicle.postProgressionAvailability().result
-            value = not availability or vehicle.postProgression.getCompletion() is FULL or self.checkXP(vehicle)
+            complete = vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL
+            value = not availability or complete or self.checkXP(vehicle)
         if vehicle.isXPToTman != value:
             self.inProcess = True
             self.accelerateTmenXp(vehicle, value)

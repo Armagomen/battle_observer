@@ -63,6 +63,9 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         hiddenWGComponents = view_settings.getHiddenWGComponents()
         if hiddenWGComponents:
             self.flash.as_observerHideWgComponents(hiddenWGComponents)
+        external = view_settings.getExternalComponents()
+        if external:
+            self.flash.as_observerRegisterExternalComponents(external)
 
     def onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in view_settings.getViewAliases():
