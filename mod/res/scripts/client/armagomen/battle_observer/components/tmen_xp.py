@@ -26,16 +26,15 @@ class AccelerateCrewXp(object):
 
     @staticmethod
     def checkXP(vehicle):
-        xp = 0
-        for step in vehicle.postProgression.iterUnorderedSteps():
-            xp += step.getPrice().xp
+        iterator = vehicle.postProgression.iterOrderedSteps()
+        xp = sum(step.getPrice().xp for step in iterator if not step.isRestricted() and not step.isReceived())
         return vehicle.xp >= xp
 
     def onVehicleChanged(self):
         if not settings.main[MAIN.CREW_TRAINING]:
             return
         vehicle = g_currentVehicle.item
-        if vehicle is None or self.inProcess or not vehicle.isElite or vehicle.isLocked:
+        if vehicle is None or vehicle.isLocked or self.inProcess or not vehicle.isElite:
             return
         value = False
         if vehicle.isFullyElite:

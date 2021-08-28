@@ -39,11 +39,13 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ("flash", '_listeners', '_scope', '_app', '_appNS')
+    __slots__ = ('flash', '__external', '__viewAliases', '_listeners', '_scope', '_app', '_appNS')
 
     def __init__(self):
         self.flash = None
-        listeners = ((alias, self.eventListener) for alias in view_settings.getViewAliases())
+        self.__external = view_settings.getExternalComponents()
+        self.__viewAliases = view_settings.getViewAliases()
+        listeners = ((alias, self.eventListener) for alias in self.__viewAliases)
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def eventListener(self, event):
@@ -63,20 +65,18 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         hiddenWGComponents = view_settings.getHiddenWGComponents()
         if hiddenWGComponents:
             self.flash.as_observerHideWgComponents(hiddenWGComponents)
-        external = view_settings.getExternalComponents()
-        if external:
-            self.flash.as_observerRegisterExternalComponents(external)
+        if self.__external:
+            self.flash.as_observerRegisterExternalComponents(self.__external)
 
     def onViewLoaded(self, view, *args):
-        if view.settings is None or view.settings.alias not in view_settings.getViewAliases():
+        if view.settings is None or view.settings.alias not in self.__viewAliases:
             return
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
-        flash = view.flashObject
-        self.flash = flash
-        if not hasattr(flash, SWF.ATTRIBUTE_NAME):
+        self.flash = view.flashObject
+        if not hasattr(self.flash, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
-            return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
-        for comp in SORTED_ALIASES:
-            if view_settings.getSetting(comp):
-                flash.as_createBattleObserverComp(comp)
-        flash.as_observerUpdateComponents(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
+            return logError(to_format_str.format(repr(self.flash), SWF.ATTRIBUTE_NAME))
+        for alias in SORTED_ALIASES:
+            if view_settings.getSetting(alias) and alias not in self.__external:
+                self.flash.as_createBattleObserverComp(alias)
+        self.flash.as_observerUpdateComponents(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
