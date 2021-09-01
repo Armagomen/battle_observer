@@ -3,10 +3,11 @@ from collections import defaultdict
 from armagomen.battle_observer.core import keysParser
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
-from armagomen.utils.common import callback, logWarning, percentToRGB
+from armagomen.utils.common import callback, logWarning, percentToRGB, logInfo
 from constants import ATTACK_REASONS, SHELL_TYPES_LIST
-from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID as EV_ID
+from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 
+from gui.Scaleform.daapi.view.battle.shared.ribbons_aggregator import _FEEDBACK_EVENT_TO_RIBBON_CLS_FACTORY
 
 class DamageLog(DamageLogsMeta):
 
@@ -35,17 +36,17 @@ class DamageLog(DamageLogsMeta):
         super(DamageLog, self)._dispose()
 
     def isLogEnabled(self, eventType):
-        if eventType == EV_ID.PLAYER_DAMAGED_HP_ENEMY:
+        if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
             return self.settings.log_damage_extended[GLOBAL.ENABLED]
-        elif eventType == EV_ID.ENEMY_DAMAGED_HP_PLAYER:
+        elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
             return self.settings.log_input_extended[GLOBAL.ENABLED]
         logWarning(DAMAGE_LOG.WARNING_MESSAGE)
         return False
 
     def getLogDictAndSettings(self, eventType):
-        if eventType == EV_ID.PLAYER_DAMAGED_HP_ENEMY:
+        if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
             return self.damage_log, self.settings.log_damage_extended
-        elif eventType == EV_ID.ENEMY_DAMAGED_HP_PLAYER:
+        elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
             return self.input_log, self.settings.log_input_extended
         logWarning(DAMAGE_LOG.WARNING_MESSAGE)
         raise ValueError("eventType %s NOT FOUND")
@@ -117,22 +118,20 @@ class DamageLog(DamageLogsMeta):
             e_type = event.getType()
             extra = event.getExtra()
             data = 0
-            if e_type == EV_ID.PLAYER_SPOTTED_ENEMY:
+            if e_type == FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY:
                 data += event.getCount()
             elif e_type in DAMAGE_LOG.TOP_LOG_ASSIST or e_type in DAMAGE_LOG.EXTENDED_DAMAGE:
                 data += int(extra.getDamage())
-            elif e_type == EV_ID.DESTRUCTIBLE_DAMAGED:
+            elif e_type == FEEDBACK_EVENT_ID.DESTRUCTIBLE_DAMAGED:
                 data += int(extra)
             if e_type in DAMAGE_LOG.TOP_MACROS_NAME:
-                if e_type == EV_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
+                if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
                     self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
                     self.top_log[DAMAGE_LOG.ASSIST_STUN] = GLOBAL.ZERO
                 self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += data
                 self.updateTopLog()
             if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
                 log_dict, settings = self.getLogDictAndSettings(e_type)
-                if log_dict is None:
-                    return
                 self.addToExtendedLog(log_dict, settings, event.getTargetID(),
                                       extra.getAttackReasonID(), data, extra.getShellType(), extra.isShellGold())
 
@@ -150,7 +149,7 @@ class DamageLog(DamageLogsMeta):
         if vehicleInfoVO:
             vehicleType = vehicleInfoVO.vehicleType
             if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
-                log_dict, settings = self.getLogDictAndSettings(EV_ID.ENEMY_DAMAGED_HP_PLAYER)
+                log_dict, settings = self.getLogDictAndSettings(FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
                 vehicle = log_dict.get(vehicleID, {})
                 if vehicle and vehicle.get(DAMAGE_LOG.VEHICLE_CLASS) is None:
                     vehicle[DAMAGE_LOG.VEHICLE_CLASS] = vehicleType.classTag
@@ -166,10 +165,10 @@ class DamageLog(DamageLogsMeta):
         if self._player is not None:
             if self._player.playerVehicleID in (targetID, attackerID):
                 if self._player.playerVehicleID == targetID:
-                    eventID = EV_ID.ENEMY_DAMAGED_HP_PLAYER
+                    eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
                     target = attackerID
                 else:
-                    eventID = EV_ID.PLAYER_DAMAGED_HP_ENEMY
+                    eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
                     target = targetID
                 log_dict, settings = self.getLogDictAndSettings(eventID)
                 log_dict[DAMAGE_LOG.KILLS].add(target)
