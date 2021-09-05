@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
-from armagomen.utils.common import logInfo
+from armagomen.utils.common import logInfo, callback
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
@@ -27,8 +27,10 @@ class AccelerateCrewXp(object):
     @staticmethod
     def checkXP(vehicle):
         iterator = vehicle.postProgression.iterOrderedSteps()
-        xp = sum(step.getPrice().xp for step in iterator if not step.isRestricted() and not step.isReceived())
-        return vehicle.xp >= xp
+        return vehicle.xp >= sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
+
+    def onChanged(self):
+        callback(1.0, self.onVehicleChanged)
 
     def onVehicleChanged(self):
         if not settings.main[MAIN.CREW_TRAINING]:
@@ -46,10 +48,10 @@ class AccelerateCrewXp(object):
             self.accelerateTmenXp(vehicle, value)
 
     def onSpaceCreating(self):
-        g_currentVehicle.onChanged += self.onVehicleChanged
+        g_currentVehicle.onChanged += self.onChanged
 
     def onSpaceDestroy(self, inited):
-        g_currentVehicle.onChanged -= self.onVehicleChanged
+        g_currentVehicle.onChanged -= self.onChanged
 
 
 crewXP = AccelerateCrewXp()
