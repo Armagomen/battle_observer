@@ -21,7 +21,7 @@ class AccelerateCrewXp(object):
     def accelerateTmenXp(self, vehicle, value):
         result = yield VehicleTmenXPAccelerator(vehicle, value).request()
         if result.success:
-            logInfo("The accelerated crew training is %s for %s" % (value, vehicle.name))
+            logInfo("The accelerated crew training is %s for %s" % (value, vehicle.userName))
         self.inProcess = False
 
     @staticmethod
@@ -30,13 +30,12 @@ class AccelerateCrewXp(object):
         return vehicle.xp >= sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
 
     def onChanged(self):
-        callback(1.0, self.onVehicleChanged)
+        if settings.main[MAIN.CREW_TRAINING] and g_currentVehicle.isPresent() and not self.inProcess:
+            callback(1.0, self.onVehicleChanged)
 
     def onVehicleChanged(self):
-        if not settings.main[MAIN.CREW_TRAINING]:
-            return
         vehicle = g_currentVehicle.item
-        if vehicle is None or vehicle.isLocked or self.inProcess or not vehicle.isElite:
+        if not vehicle.isElite or g_currentVehicle.isLocked() or g_currentVehicle.isInBattle():
             return
         value = False
         if vehicle.isFullyElite:
