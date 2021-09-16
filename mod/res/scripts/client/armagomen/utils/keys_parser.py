@@ -38,36 +38,34 @@ class HotKeysParser(object):
         self.clear()
 
     def onKeyUp(self, event):
-        if event.key in self.usableKeys:
-            key = event.key
-            if not avatar_getter.isForcedGuiControlMode() or key in self.pressedKeys:
-                for keyName, keys in self.keysMap.iteritems():
-                    if self.pressedKeys.issuperset(keys):
-                        self.onKeyPressed(keyName, False)
-                if self.config.main[USE_KEY_PAIRS]:
-                    if key in KEY_ALIAS_CONTROL:
-                        self.pressedKeys.difference_update(KEY_ALIAS_CONTROL)
-                    elif key in KEY_ALIAS_ALT:
-                        self.pressedKeys.difference_update(KEY_ALIAS_ALT)
-                    elif key in KEY_ALIAS_SHIFT:
-                        self.pressedKeys.difference_update(KEY_ALIAS_SHIFT)
-                self.pressedKeys.discard(key)
+        if event.key not in self.usableKeys or avatar_getter.isForcedGuiControlMode():
+            return
+        for keyName, keys in self.keysMap.iteritems():
+            if self.pressedKeys.issuperset(keys):
+                self.onKeyPressed(keyName, False)
+        if self.config.main[USE_KEY_PAIRS]:
+            if event.key in KEY_ALIAS_CONTROL:
+                self.pressedKeys.difference_update(KEY_ALIAS_CONTROL)
+            elif event.key in KEY_ALIAS_ALT:
+                self.pressedKeys.difference_update(KEY_ALIAS_ALT)
+            elif event.key in KEY_ALIAS_SHIFT:
+                self.pressedKeys.difference_update(KEY_ALIAS_SHIFT)
+        self.pressedKeys.discard(event.key)
 
     def onKeyDown(self, event):
-        if event.key in self.usableKeys:
-            key = event.key
-            if not avatar_getter.isForcedGuiControlMode() or key in self.pressedKeys:
-                if self.config.main[USE_KEY_PAIRS]:
-                    if key in KEY_ALIAS_CONTROL:
-                        self.pressedKeys.update(KEY_ALIAS_CONTROL)
-                    elif key in KEY_ALIAS_ALT:
-                        self.pressedKeys.update(KEY_ALIAS_ALT)
-                    elif key in KEY_ALIAS_SHIFT:
-                        self.pressedKeys.update(KEY_ALIAS_SHIFT)
-                self.pressedKeys.add(key)
-                for keyName, keys in self.keysMap.iteritems():
-                    if self.pressedKeys.issuperset(keys):
-                        self.onKeyPressed(keyName, True)
+        if event.key not in self.usableKeys or avatar_getter.isForcedGuiControlMode():
+            return
+        if self.config.main[USE_KEY_PAIRS]:
+            if event.key in KEY_ALIAS_CONTROL:
+                self.pressedKeys.update(KEY_ALIAS_CONTROL)
+            elif event.key in KEY_ALIAS_ALT:
+                self.pressedKeys.update(KEY_ALIAS_ALT)
+            elif event.key in KEY_ALIAS_SHIFT:
+                self.pressedKeys.update(KEY_ALIAS_SHIFT)
+        self.pressedKeys.add(event.key)
+        for keyName, keys in self.keysMap.iteritems():
+            if self.pressedKeys.issuperset(keys):
+                self.onKeyPressed(keyName, True)
 
     @staticmethod
     def normalizeKey(keyList):
