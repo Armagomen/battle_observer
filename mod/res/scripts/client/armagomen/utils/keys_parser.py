@@ -71,7 +71,7 @@ class HotKeysParser(object):
     def normalizeKey(keyList):
         keys = set()
         for key in keyList:
-            if type(key) is list:
+            if isinstance(key, (list, set, tuple)):
                 keys.update(key)
             else:
                 keys.add(key)
