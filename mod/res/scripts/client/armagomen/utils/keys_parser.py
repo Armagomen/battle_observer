@@ -2,7 +2,6 @@ from Event import SafeEvent
 from PlayerEvents import g_playerEvents
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT
 from gui import InputHandler
-from gui.battle_control import avatar_getter
 
 USE_KEY_PAIRS = "useKeyPairs"
 
@@ -38,7 +37,7 @@ class HotKeysParser(object):
         self.clear()
 
     def onKeyUp(self, event):
-        if event.key not in self.usableKeys or avatar_getter.isForcedGuiControlMode():
+        if event.key not in self.usableKeys or event.key not in self.pressedKeys:
             return
         for keyName, keys in self.keysMap.iteritems():
             if self.pressedKeys.issuperset(keys):
@@ -53,7 +52,7 @@ class HotKeysParser(object):
         self.pressedKeys.discard(event.key)
 
     def onKeyDown(self, event):
-        if event.key not in self.usableKeys or avatar_getter.isForcedGuiControlMode():
+        if event.key not in self.usableKeys or event.key in self.pressedKeys:
             return
         if self.config.main[USE_KEY_PAIRS]:
             if event.key in KEY_ALIAS_CONTROL:

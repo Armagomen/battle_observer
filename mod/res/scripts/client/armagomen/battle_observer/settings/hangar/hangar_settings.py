@@ -6,10 +6,11 @@ from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, P
 from armagomen.utils.common import logWarning, openWebBrowser, createFileInDir, logInfo
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.utils.functions import makeTooltip
+from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 
-settingsVersion = 34
-KEY_CONTROL = [[29]]
-KEY_ALT = [[56]]
+settingsVersion = 35
+KEY_CONTROL = [KEY_ALIAS_CONTROL]
+KEY_ALT = [KEY_ALIAS_ALT]
 
 
 class CreateElement(object):

@@ -51,7 +51,6 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def eventListener(self, event):
         self._app.as_loadLibrariesS([SWF.BATTLE])
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
-        g_playerEvents.onAvatarReady += self.onAvatarReady
         logInfo("loading flash libraries " + SWF.BATTLE)
 
     def fini(self):
@@ -72,6 +71,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if view.settings is None or view.settings.alias not in self.__viewAliases:
             return
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
+        g_playerEvents.onAvatarReady += self.onAvatarReady
         self.flash = view.flashObject
         if not hasattr(self.flash, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
