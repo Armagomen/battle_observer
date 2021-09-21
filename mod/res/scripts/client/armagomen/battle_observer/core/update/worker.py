@@ -39,6 +39,15 @@ class DialogWindow(object):
         self.parent = view
 
     @async
+    def showUpdateError(self, message):
+        builder = WarningDialogBuilder()
+        builder.setFormattedTitle("ERROR DOWNLOAD - Battle Observer Update")
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
+        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.PURCHASE))
+        raise AsyncReturn(result)
+
+    @async
     def showUpdateFinished(self):
         message = self.localization['messageOK'].format(LAST_UPDATE.get('tag_name', __version__))
         builder = WarningDialogBuilder()
@@ -87,9 +96,13 @@ class DownloadThread(object):
             logInfo('start downloading update {}'.format(LAST_UPDATE.get('tag_name', __version__)))
             self.downloader.download(DOWNLOAD_URLS['last'], self.onDownloaded)
         except Exception as error:
+            message = 'update {} - download failed: {}'.format(LAST_UPDATE.get('tag_name', __version__), repr(error))
+            Waiting.hide('updating')
+            logError(message)
+            self.dialog.showUpdateError(message)
+        finally:
             self.downloader.close()
             self.downloader = None
-            logError('update {} - download failed: {}'.format(LAST_UPDATE.get('tag_name', __version__), repr(error)))
 
     def onDownloaded(self, _url, data):
         if data is not None:
@@ -102,8 +115,6 @@ class DownloadThread(object):
             Waiting.hide('updating')
             self.dialog.showUpdateFinished()
             logInfo('update downloading finished {}'.format(LAST_UPDATE.get('tag_name', __version__)))
-        self.downloader.close()
-        self.downloader = None
         self.dialog = None
 
 
