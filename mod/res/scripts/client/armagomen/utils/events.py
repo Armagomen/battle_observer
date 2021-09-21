@@ -9,6 +9,7 @@ class Events(object):
         self.onDispersionAngleChanged = SafeEvent()
         self.onDisconnected = SafeEvent()
         self.onConnected = SafeEvent()
+        self.onHangarLoaded = SafeEvent()
 
 
 g_events = Events()

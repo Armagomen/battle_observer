@@ -3,6 +3,7 @@ from importlib import import_module
 from armagomen.battle_observer.core import settings
 from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES
 from armagomen.utils.common import logError, logWarning
+from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -49,6 +50,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def __onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias != VIEW_ALIAS.LOBBY_HANGAR:
             return
+        g_events.onHangarLoaded(view)
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "hangar_page {}, has ho attribute {}"

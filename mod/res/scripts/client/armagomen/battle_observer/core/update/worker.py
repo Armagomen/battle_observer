@@ -11,13 +11,17 @@ from armagomen.battle_observer import __version__
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, URLS, MESSAGES, HEADERS
 from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
-    getCurrentModPath
+    getCurrentModPath, callback
+from armagomen.utils.events import g_events
 from async import async, await, AsyncReturn
+from frameworks.wulf import WindowLayer
+from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.personality import ServicesLocator
-from skeletons.gui.app_loader import GuiGlobalSpaceID
+from helpers import dependency
+from skeletons.gui.app_loader import IAppLoader
 from web.cache.web_downloader import WebDownloader
 
 LAST_UPDATE = defaultdict()
@@ -27,42 +31,37 @@ workingDir = os.path.join(*getCurrentModPath())
 
 
 class DialogWindow(object):
-    __slots__ = ("localization",)
+    __slots__ = ("localization", "parent")
 
-    def __init__(self):
+    def __init__(self, view):
         self.localization = localization['updateDialog']
+        self.parent = view
 
-    def getFinishedBuilder(self):
+    @async
+    def showUpdateFinished(self):
         message = self.localization['messageOK'].format(LAST_UPDATE.get('tag_name', __version__))
         builder = WarningDialogBuilder()
         builder.setFormattedTitle(self.localization['titleOK'])
         builder.setFormattedMessage(message)
-        builder.addButton(DialogButtons.PURCHASE, "Restart", True, rawLabel=self.localization['buttonOK'])
-        builder.addButton(DialogButtons.CANCEL, "Cancel", False, rawLabel=self.localization['buttonCancel'])
-        return builder
-
-    def getNewVersionBuilder(self):
-        message = self.localization['messageNEW'].format(workingDir)
-        gitMessage = LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE)
-        message += '\n\n{0}'.format(re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
-        builder = InfoDialogBuilder()
-        builder.setFormattedTitle(self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', __version__)))
-        builder.setFormattedMessage(message)
-        builder.addButton(DialogButtons.RESEARCH, "Automatic", True, rawLabel=self.localization['buttonAUTO'])
-        builder.addButton(DialogButtons.PURCHASE, "Manually", False, rawLabel=self.localization['buttonHANDLE'])
-        builder.addButton(DialogButtons.CANCEL, "Cancel", False, rawLabel=self.localization['buttonCancel'])
-        return builder
-
-    @async
-    def showUpdateFinished(self):
-        result = yield await(dialogs.showSimple(self.getFinishedBuilder().build(), DialogButtons.PURCHASE))
+        builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=self.localization['buttonOK'])
+        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
+        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.PURCHASE))
         if result:
             restartGame()
         raise AsyncReturn(result)
 
     @async
     def showNewVersionAvailable(self):
-        result = yield await(dialogs.show(self.getNewVersionBuilder().build()))
+        message = self.localization['messageNEW'].format(workingDir)
+        gitMessage = LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE)
+        message += '\n\n{0}'.format(re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
+        builder = InfoDialogBuilder()
+        builder.setFormattedTitle(self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', __version__)))
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=self.localization['buttonAUTO'])
+        builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=self.localization['buttonHANDLE'])
+        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
+        result = yield await(dialogs.show(builder.build(self.parent)))
         if result.result == DialogButtons.RESEARCH:
             runDownload = DownloadThread()
             runDownload.start()
@@ -105,11 +104,11 @@ class DownloadThread(object):
 
 
 class UpdateMain(object):
-    __slots__ = ("screen_to_load",)
+    appLoader = dependency.descriptor(IAppLoader)
+    __slots__ = ("inHangar",)
 
     def __init__(self):
-        is_login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
-        self.screen_to_load = GuiGlobalSpaceID.LOGIN if is_login_server_selection else GuiGlobalSpaceID.LOBBY
+        self.inHangar = not ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
 
     def get_update_data(self):
         try:
@@ -129,7 +128,7 @@ class UpdateMain(object):
             new_version = LAST_UPDATE.get('tag_name', __version__)
             local_ver = self.tupleVersion(__version__)
             server_ver = self.tupleVersion(new_version)
-            if local_ver < server_ver:
+            if local_ver != server_ver:
                 assets = LAST_UPDATE.get('assets')
                 for asset in assets:
                     filename = asset.get('name', '')
@@ -151,10 +150,25 @@ class UpdateMain(object):
     def subscribe(self):
         result = self.request_last_version()
         if result:
-            ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+            if self.inHangar:
+                g_events.onHangarLoaded += self.onHangarLoaded
+            else:
+                self.waitingLoginLoaded()
 
-    def onGUISpaceEntered(self, spaceID):
-        if self.screen_to_load == spaceID:
-            dialog = DialogWindow()
+    def waitingLoginLoaded(self):
+        app = self.appLoader.getApp()
+        if app is None or app.containerManager is None:
+            callback(2.0, self.waitingLoginLoaded)
+            return
+        view = app.containerManager.getView(WindowLayer.VIEW)
+        if view and view.settings.alias == VIEW_ALIAS.LOGIN and view.isCreated():
+            logInfo(view.settings.alias)
+            dialog = DialogWindow(view)
             dialog.showNewVersionAvailable()
-            ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
+        else:
+            callback(2.0, self.waitingLoginLoaded)
+
+    def onHangarLoaded(self, view):
+        dialog = DialogWindow(view)
+        dialog.showNewVersionAvailable()
+        g_events.onHangarLoaded -= self.onHangarLoaded
