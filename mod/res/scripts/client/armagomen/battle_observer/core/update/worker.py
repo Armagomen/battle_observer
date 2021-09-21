@@ -6,6 +6,7 @@ from collections import defaultdict
 from io import BytesIO
 from zipfile import ZipFile
 
+from gui.Scaleform.Waiting import Waiting
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.settings.hangar.i18n import localization
@@ -63,8 +64,9 @@ class DialogWindow(object):
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
         result = yield await(dialogs.show(builder.build(self.parent)))
         if result.result == DialogButtons.RESEARCH:
-            runDownload = DownloadThread()
+            runDownload = DownloadThread(self)
             runDownload.start()
+            Waiting.show('updating')
             raise AsyncReturn(True)
         elif result.result == DialogButtons.PURCHASE:
             openWebBrowser(DOWNLOAD_URLS['full'])
@@ -74,10 +76,11 @@ class DialogWindow(object):
 
 
 class DownloadThread(object):
-    __slots__ = ("downloader",)
+    __slots__ = ("downloader", "dialog")
 
-    def __init__(self):
+    def __init__(self, dialog):
         self.downloader = WebDownloader(GLOBAL.ONE)
+        self.dialog = dialog
 
     def start(self):
         try:
@@ -96,19 +99,20 @@ class DownloadThread(object):
                     if newFile not in old_files:
                         logInfo('update, add new file {}'.format(newFile))
                         archive.extract(newFile, workingDir)
-            dialog = DialogWindow()
-            dialog.showUpdateFinished()
+            Waiting.hide('updating')
+            self.dialog.showUpdateFinished()
             logInfo('update downloading finished {}'.format(LAST_UPDATE.get('tag_name', __version__)))
         self.downloader.close()
         self.downloader = None
+        self.dialog = None
 
 
 class UpdateMain(object):
     appLoader = dependency.descriptor(IAppLoader)
-    __slots__ = ("inHangar",)
+    __slots__ = ("inLogin",)
 
     def __init__(self):
-        self.inHangar = not ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+        self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
 
     def get_update_data(self):
         try:
@@ -128,7 +132,7 @@ class UpdateMain(object):
             new_version = LAST_UPDATE.get('tag_name', __version__)
             local_ver = self.tupleVersion(__version__)
             server_ver = self.tupleVersion(new_version)
-            if local_ver != server_ver:
+            if local_ver < server_ver:
                 assets = LAST_UPDATE.get('assets')
                 for asset in assets:
                     filename = asset.get('name', '')
@@ -150,10 +154,10 @@ class UpdateMain(object):
     def subscribe(self):
         result = self.request_last_version()
         if result:
-            if self.inHangar:
-                g_events.onHangarLoaded += self.onHangarLoaded
-            else:
+            if self.inLogin:
                 self.waitingLoginLoaded()
+            else:
+                g_events.onHangarLoaded += self.onHangarLoaded
 
     def waitingLoginLoaded(self):
         app = self.appLoader.getApp()
@@ -162,7 +166,6 @@ class UpdateMain(object):
             return
         view = app.containerManager.getView(WindowLayer.VIEW)
         if view and view.settings.alias == VIEW_ALIAS.LOGIN and view.isCreated():
-            logInfo(view.settings.alias)
             dialog = DialogWindow(view)
             dialog.showNewVersionAvailable()
         else:
