@@ -8,16 +8,14 @@ from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
-from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, URLS, MESSAGES, HEADERS
 from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
     getCurrentModPath
 from async import async, await, AsyncReturn
-from debug_utils import LOG_CURRENT_EXCEPTION
-from gui.DialogsInterface import showDialog
-from gui.Scaleform.daapi.view.dialogs import SimpleDialogMeta
-from gui.Scaleform.daapi.view.dialogs.SimpleDialog import SimpleDialog
+from gui.impl.dialogs import dialogs
+from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
+from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from web.cache.web_downloader import WebDownloader
@@ -28,58 +26,52 @@ DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_obse
 workingDir = os.path.join(*getCurrentModPath())
 
 
-def fixDialogCloseWindow():
-    old_dispose = SimpleDialog._dispose
-
-    def closeWindowFix(dialog):
-        if len(dialog._SimpleDialog__buttons) >= 2:
-            dialog._SimpleDialog__isProcessed = True
-        return old_dispose(dialog)
-
-    def onWindowClose(dialog):
-        return dialog.destroy()
-
-    SimpleDialog._dispose = closeWindowFix
-    SimpleDialog.onWindowClose = onWindowClose
-
-
 class DialogWindow(object):
     __slots__ = ("localization",)
 
     def __init__(self):
         self.localization = localization['updateDialog']
 
-    @staticmethod
-    def onPressButtonFinished(proceed):
-        if proceed:
-            restartGame()
+    def getFinishedBuilder(self):
+        message = self.localization['messageOK'].format(LAST_UPDATE.get('tag_name', __version__))
+        builder = WarningDialogBuilder()
+        builder.setFormattedTitle(self.localization['titleOK'])
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.PURCHASE, "Restart", True, rawLabel=self.localization['buttonOK'])
+        builder.addButton(DialogButtons.CANCEL, "Cancel", False, rawLabel=self.localization['buttonCancel'])
+        return builder
 
-    def onPressButtonAvailable(self, proceed):
-        if proceed:
+    def getNewVersionBuilder(self):
+        message = self.localization['messageNEW'].format(workingDir)
+        gitMessage = LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE)
+        message += '\n\n{0}'.format(re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
+        builder = InfoDialogBuilder()
+        builder.setFormattedTitle(self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', __version__)))
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.RESEARCH, "Automatic", True, rawLabel=self.localization['buttonAUTO'])
+        builder.addButton(DialogButtons.PURCHASE, "Manually", False, rawLabel=self.localization['buttonHANDLE'])
+        builder.addButton(DialogButtons.CANCEL, "Cancel", False, rawLabel=self.localization['buttonCancel'])
+        return builder
+
+    @async
+    def showUpdateFinished(self):
+        result = yield await(dialogs.showSimple(self.getFinishedBuilder().build(), DialogButtons.PURCHASE))
+        if result:
+            restartGame()
+        raise AsyncReturn(result)
+
+    @async
+    def showNewVersionAvailable(self):
+        result = yield await(dialogs.show(self.getNewVersionBuilder().build()))
+        if result.result == DialogButtons.RESEARCH:
             runDownload = DownloadThread()
             runDownload.start()
-        else:
+            raise AsyncReturn(True)
+        elif result.result == DialogButtons.PURCHASE:
             openWebBrowser(DOWNLOAD_URLS['full'])
-
-    def getDialogUpdateFinished(self):
-        message = self.localization['messageOK'].format(LAST_UPDATE.get('tag_name', __version__))
-        title = self.localization['titleOK']
-        button = DialogButtons(self.localization['buttonOK'])
-        return SimpleDialogMeta(title, message, buttons=button)
-
-    def getDialogNewVersionAvailable(self):
-        message = self.localization['messageNEW'].format(LAST_UPDATE.get('tag_name', __version__), workingDir)
-        gitMessage = LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE)
-        message += '<br>{0}'.format(re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
-        title = self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', __version__))
-        buttons = DialogButtons(self.localization['buttonAUTO'], self.localization['buttonHANDLE'])
-        return SimpleDialogMeta(title, message, buttons=buttons)
-
-    def showUpdateFinished(self):
-        showDialog(self.getDialogUpdateFinished(), self.onPressButtonFinished)
-
-    def showNewVersionAvailable(self):
-        showDialog(self.getDialogNewVersionAvailable(), self.onPressButtonAvailable)
+            raise AsyncReturn(True)
+        else:
+            raise AsyncReturn(False)
 
 
 class DownloadThread(object):
@@ -119,56 +111,50 @@ class UpdateMain(object):
         is_login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         self.screen_to_load = GuiGlobalSpaceID.LOGIN if is_login_server_selection else GuiGlobalSpaceID.LOBBY
 
-    @async
-    def request_last_version(self, url):
-        def get_update_data():
-            try:
-                opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(), urllib2.HTTPRedirectHandler())
-                opener.addheaders = HEADERS
-                response = opener.open(url)
-                return json.load(response)
-            except urllib2.URLError:
-                logWarning("Technical problems with the server, please inform the developer.")
-
+    def get_update_data(self):
         try:
-            params = get_update_data()
-            if params:
-                LAST_UPDATE.update(params)
-                new_version = LAST_UPDATE.get('tag_name', __version__)
-                local_ver = self.tupleVersion(__version__)
-                server_ver = self.tupleVersion(new_version)
-                if local_ver < server_ver:
-                    assets = LAST_UPDATE.get('assets')
-                    for asset in assets:
-                        filename = asset.get('name', '')
-                        download_url = asset.get('browser_download_url')
-                        if filename == 'AutoUpdate.zip':
-                            DOWNLOAD_URLS['last'] = download_url
-                        elif filename.startswith('BattleObserver_'):
-                            DOWNLOAD_URLS['full'] = download_url
-                    ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-                    logInfo(MESSAGES.NEW_VERSION.format(new_version))
-                else:
-                    logInfo(MESSAGES.UPDATE_CHECKED)
-        except Exception:
-            LOG_CURRENT_EXCEPTION()
-        raise AsyncReturn(True)
+            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(), urllib2.HTTPRedirectHandler())
+            opener.addheaders = HEADERS
+            response = opener.open(URLS.UPDATE_GITHUB_API_URL)
+        except urllib2.URLError:
+            logWarning("Technical problems with the server, please inform the developer.")
+        else:
+            return json.load(response)
+
+    def request_last_version(self):
+        result = False
+        params = self.get_update_data()
+        if params:
+            LAST_UPDATE.update(params)
+            new_version = LAST_UPDATE.get('tag_name', __version__)
+            local_ver = self.tupleVersion(__version__)
+            server_ver = self.tupleVersion(new_version)
+            if local_ver < server_ver:
+                assets = LAST_UPDATE.get('assets')
+                for asset in assets:
+                    filename = asset.get('name', '')
+                    download_url = asset.get('browser_download_url')
+                    if filename == 'AutoUpdate.zip':
+                        DOWNLOAD_URLS['last'] = download_url
+                    elif filename.startswith('BattleObserver_'):
+                        DOWNLOAD_URLS['full'] = download_url
+                result = True
+                logInfo(MESSAGES.NEW_VERSION.format(new_version))
+            else:
+                logInfo(MESSAGES.UPDATE_CHECKED)
+        return result
 
     @staticmethod
     def tupleVersion(version):
         return tuple(map(int, version.split(GLOBAL.DOT)))
 
-    @async
     def subscribe(self):
-        yield await(self.request_last_version(URLS.UPDATE_GITHUB_API_URL))
+        result = self.request_last_version()
+        if result:
+            ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
     def onGUISpaceEntered(self, spaceID):
         if self.screen_to_load == spaceID:
-            self.onNewModVersion()
+            dialog = DialogWindow()
+            dialog.showNewVersionAvailable()
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
-
-    @staticmethod
-    def onNewModVersion():
-        fixDialogCloseWindow()
-        dialog = DialogWindow()
-        dialog.showNewVersionAvailable()

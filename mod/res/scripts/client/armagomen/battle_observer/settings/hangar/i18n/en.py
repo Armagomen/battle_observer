@@ -392,12 +392,12 @@ translate = {
         "messageOK": "Click RESTART to complete the Upgrade process. v{0}",
         "buttonAUTO": "Automatically",
         "buttonHANDLE": "Manually",
-        "messageNEW": "New version is available. v{0}\n\n"
-                      "<b>Choose one of the following download options.</b>\n\n"
-                      "<b>Automatic</b> - will download and unzip the update to your update {1} folder\n\n"
+        "buttonCancel": "Cancel",
+        "messageNEW": "<b>Choose one of the following download options.</b>\n"
+                      "<b>Automatic</b> - will download and unzip the update to your update {0} folder\n"
                       "<b>Manually</b> - will open link in the browser to the same archive but you will have "
                       "to extract the package and copy the *.wotmod files manually.\n",
-        "titleNEW": "New version is available. v{0}"
+        "titleNEW": "Battle Observer Update is available v{0}"
     },
     "sixth_sense": {
         "header": "Sixth sense.",

@@ -4,12 +4,15 @@ import sys
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
-from armagomen.battle_observer.core.update.dialog_button import DialogButtons
 from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import FILE_NAME, MESSAGES, MAIN, MOD_NAME
 from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, setMaxFrameRate, clearClientCache
+from async import async, await
 from gui.Scaleform.daapi.settings import config as packages
+from gui.impl.dialogs import dialogs
+from gui.impl.dialogs.builders import WarningDialogBuilder
+from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
@@ -61,10 +64,18 @@ class ObserverCore(object):
     def onGUISpaceEntered(self, spaceID):
         if self.isFileValid or spaceID not in (GuiGlobalSpaceID.LOGIN, GuiGlobalSpaceID.LOBBY):
             return
-        from gui.Scaleform.daapi.view import dialogs
-        from gui import DialogsInterface
+        self.showLockedDialog()
+
+    def getLockedDialog(self, title, message):
+        builder = WarningDialogBuilder()
+        builder.setFormattedTitle(title)
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.CANCEL, "Close", True, rawLabel="Close")
+        return builder.build()
+
+    @async
+    def showLockedDialog(self):
         locked = MESSAGES.LOCKED_BY_FILE_NAME.format(FILE_NAME.format(__version__))
         logWarning(locked)
         title = '{0} is locked'.format(MOD_NAME)
-        btn = DialogButtons('Close')
-        DialogsInterface.showDialog(dialogs.SimpleDialogMeta(title, locked, btn), lambda proceed: None)
+        yield await(dialogs.showSimple(self.getLockedDialog(title, locked), DialogButtons.PURCHASE))
