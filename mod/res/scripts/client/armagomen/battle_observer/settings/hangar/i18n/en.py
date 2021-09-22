@@ -153,6 +153,7 @@ translate = {
         "position*x": "Position the main text box of the calculator Horizontally",
         "position*y": "Position the main text box of the calculator Vertically",
         "template": "Template Main text field",
+        "display_on_allies": "Display on allies",
         "template_tooltip": "Macro format:% (name) data type s:d:f.<br>"
                             "s-string, d-decimal, f-floating point<br><br>"
                             "List of available macros:<br>"

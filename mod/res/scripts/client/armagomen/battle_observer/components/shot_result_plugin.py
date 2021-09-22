@@ -3,9 +3,10 @@ from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle
 from aih_constants import SHOT_RESULT
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import VEHICLE, GLOBAL, ALIASES
+from armagomen.constants import VEHICLE, GLOBAL, ALIASES, ARMOR_CALC
 from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
+from armagomen.battle_observer.core import settings
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES as SHELLS
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
@@ -18,18 +19,19 @@ _LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
 
 
 class ShotResultResolver(object):
-    __slots__ = ("resolver", "_player", "_team")
+    __slots__ = ("resolver", "_player")
 
     def __init__(self):
         self.resolver = _CrosshairShotResults
-        self._player = getPlayer()
-        self._team = self._player.team
+        self._player = None
 
     def isAlly(self, entity):
-        return entity.publicInfo[VEHICLE.TEAM] == self._team
+        if not settings.armor_calculator[ARMOR_CALC.ON_ALLY]:
+            return entity.publicInfo[VEHICLE.TEAM] == self._player.team
+        return False
 
     def getShotResult(self, collision, hitPoint, direction, piercingMultiplier):
-        if collision is None:
+        if collision is None or self._player is None:
             return UNDEFINED_RESULT
         entity = collision.entity
         if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive() or self.isAlly(entity):
@@ -135,6 +137,10 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     def __onGunMarkerStateChanged(self, markerType, position, direction, collision):
         if self.__isEnabled:
             self.__updateColor(markerType, position, collision, direction)
+
+    def start(self):
+        super(ShotResultIndicatorPlugin, self).start()
+        self.__resolver._player = getPlayer()
 
 
 @overrideMethod(plugins, 'createPlugins')

@@ -220,13 +220,14 @@ POSTMORTEM = namedtuple("POSTMORTEM", ("DURATION", "PARAMS", "CAM_MATRIX", "MODE
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "MACROS_COUNTED_ARMOR",
     "MACROS_PIERCING_RESERVE", "MACROS_MESSAGE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE",
-    "MESSAGES_TEMPLATE", "RICOCHET_MESSAGE", "NO_DAMAGE_MESSAGE", "DEFAULT_TEMPLATE"))(
+    "MESSAGES_TEMPLATE", "RICOCHET_MESSAGE", "NO_DAMAGE_MESSAGE", "DEFAULT_TEMPLATE", "ON_ALLY"))(
     "piercingPower", "armor_calculator", "position", "messages", "template", "color", "countedArmor",
     "piercingReserve", "message", "caliber", "ricochet", "noDamage",
     {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in
      set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}, "Ricochet",
     "critical shot, no damage", "<p align='center'>%(ricochet)s%(noDamage)s<br>"
-                                "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>")
+                                "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
+    "display_on_allies")
 
 MARKERS = namedtuple("MARKERS", ("NAME", "HOT_KEY", "CLASS_COLOR", "TYPE_ICON", "ICON"))(
     "markers", "showMarkers_hotkey", "markersClassColor", {

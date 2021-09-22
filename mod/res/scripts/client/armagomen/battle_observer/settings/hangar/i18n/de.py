@@ -154,7 +154,7 @@ translate = {
         "position*x": "Position des Haupt Textfeldes waagerecht",
         "position*y": "Position des Haupt Textfeldes senkrecht",
         "template": "Formatierung des Haupt-Textfeldes",
-
+        "display_on_allies": "Bei Verbündeten anzeigen",
         "template_tooltip": "Makroformat:% (Name) Datentyp s:d:f.<br>"
                             "s-string, d-dezimal, f-gleitkomma <br><br>"
                             "Liste der verfügbaren Makros:<br>"

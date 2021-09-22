@@ -44,7 +44,7 @@ class DialogWindow(object):
         builder.setFormattedTitle("ERROR DOWNLOAD - Battle Observer Update")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
-        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.PURCHASE))
+        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.CANCEL))
         raise AsyncReturn(result)
 
     @async
