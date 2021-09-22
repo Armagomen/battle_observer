@@ -403,11 +403,13 @@ translate = {
         "buttonAUTO": "Automatically",
         "buttonHANDLE": "Manually",
         "buttonCancel": "Cancel",
-        "messageNEW": "<b>Сhoose one of the following download options.</b>\n"
-                      "<b>Automatic</b> - will download and unzip the update to your update {0} folder\n"
-                      "<b>Manually</b> - will open link in the browser to the same archive but you will have "
-                      "to extract the package and copy the *.wotmod files manually.\n",
-        "titleNEW": "Battle Observer Update is available v{0}"
+        "messageNEW":
+            "<font size='15'><font size='20' color='#FFFF00'><b>Choose a download option.</b></font>\n"
+            "<p align='left'><font color ='#00FF00'><b>Automatically</b></font> - download and unpack the archive"
+            "updates to the folder {0}\n<font color='#FFFF00'><b>Manually</b></font> - will open a link to"
+            "the same archive, but you will have to extract the package and copy the *.wotmod file manually.</p></font>"
+            "\n<font size='20 'color='#FFFF00'><b>Changelog</b></font>\n",
+        "titleNEW": "Battle Observer\n<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
     },
     "sixth_sense": {
         "header": "Sixth sense.",

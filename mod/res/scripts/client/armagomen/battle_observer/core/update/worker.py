@@ -63,11 +63,10 @@ class DialogWindow(object):
     @async
     def showNewVersionAvailable(self):
         message = self.localization['messageNEW'].format(workingDir)
-        gitMessage = LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE)
-        message += '\n\n{0}'.format(re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, gitMessage))
+        gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE))
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', __version__)))
-        builder.setFormattedMessage(message)
+        builder.setFormattedMessage(message + "<p align='left'><font size='15'>" + gitMessage + "</font></p>")
         builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=self.localization['buttonAUTO'])
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=self.localization['buttonHANDLE'])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
