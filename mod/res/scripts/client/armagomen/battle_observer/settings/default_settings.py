@@ -442,7 +442,7 @@ class DefaultSettings(object):
             PANELS.BAR_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.HP_TEMPLATE: "<font face='$FieldFont' color='#FAFAFA' size='15'>%(health)s</font>",
             PANELS.BAR_SETTINGS: {
-                PANELS.TEXT_SETTINGS: {GLOBAL.X: 35, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center},
+                PANELS.BAR_TEXT_SETTINGS: {GLOBAL.X: 35, GLOBAL.Y: GLOBAL.ZERO, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center},
                 PANELS.BAR: {
                     GLOBAL.X: GLOBAL.ZERO,
                     GLOBAL.Y: 2,

@@ -27,47 +27,46 @@ class GLOBAL:
     def __init__(self):
         pass
 
-    CONFIG_ERROR = "Incorrect macros in config file."
-    ONE_SECOND = 1.0
     ALIGN = "align"
     ALIGN_LIST = namedtuple("ALIGN_LIST", ("left", "center", "right"))("left", "center", "right")
-    RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
     ALPHA = "alpha"
+    AVG_COLOR = "avgColor"
     BG_ALPHA = "bgAlpha"
     BLUR_X = "blurX"
     BLUR_Y = "blurY"
     COLOR = "color"
-    CUSTOM_COLOR = "customColor"
-    DOT = "."
     COMMA_SEP = ", "
+    CONFIG_ERROR = "Incorrect macros in config file."
+    CUSTOM_COLOR = "customColor"
+    C_INTERFACE_SPLITTER = "*"
+    DOT = "."
     EMPTY_LINE = ""
     ENABLED = "enabled"
     FIRST, LAST = (0, -1)
+    F_ONE = 1.0
+    F_ZERO = float(FIRST)
     GLOW_FILTER = "glowFilter"
     HEIGHT = "height"
+    ICONS_DIR = "img://gui/maps/icons"
     IMG = "img"
+    IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'",
+                  "vspace": "vspace='-13'"}
     INNER = "inner"
     KNOCKOUT = "knockout"
+    ONE = 1
+    ONE_SECOND = 1.0
+    OUTLINE = "outline"
+    REPLACE = ("\n", "<br>")
+    RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
     SCALE = "scale"
     SETTINGS = "settings"
     SMOOTHING = "smoothing"
     STRENGTH = "strength"
+    TWO = 2
     WIDTH = "width"
     X = "x"
     Y = "y"
     ZERO = FIRST
-    F_ZERO = float(FIRST)
-    ONE = 1
-    TWO = 2
-    F_ONE = 1.0
-    OUTLINE = "outline"
-    ICONS_DIR = "img://gui/maps/icons"
-    C_INTERFACE_SPLITTER = "*"
-    IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48",
-                  "size": "width='24' height='24'",
-                  "vspace": "vspace='-13'"}
-    AVG_COLOR = "avgColor"
-    REPLACE = ("\n", "<br>")
 
 
 SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
@@ -123,7 +122,7 @@ __Sniper = namedtuple("SNIPER", (
     "DISABLE_LATENCY", "SKIP_CLIP", "CLIP"))
 SNIPER = __Sniper(
     "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zoomToGunMarker", "zoomXMeters", "zooms",
-    "zoomExposure", "increasedZoom", [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0], 0.1, 60, 730.0,
+    "zoomExposure", "increasedZoom", [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0], 0.05, 60, 730.0,
     "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip")
 
 
@@ -311,7 +310,7 @@ class PANELS:
     # hp_bars
     BARS_ENABLED = "players_bars_enabled"
     BAR_SETTINGS = "players_bars_settings"
-    TEXT_SETTINGS = "players_bars_text"
+    BAR_TEXT_SETTINGS = "players_bars_text"
     BAR = "players_bars_bar"
     HP_TEMPLATE = "players_bars_hp_text"
     ON_KEY_DOWN = "players_bars_on_key_pressed"
