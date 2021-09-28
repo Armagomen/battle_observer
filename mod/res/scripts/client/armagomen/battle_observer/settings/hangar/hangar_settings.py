@@ -179,7 +179,7 @@ class ConfigInterface(CreateElement):
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.selected = self.configLoader.configsList.index(self.configLoader.cName)
+        self.selected = 0
         self.configSelect = False
         self.getter = Getter()
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
@@ -196,7 +196,8 @@ class ConfigInterface(CreateElement):
         }
         self.modsListApi.addModification(**kwargs)
 
-    def start(self):
+    def start(self, index):
+        self.selected = index
         self.addModificationToModList()
         for blockID in CONFIG_INTERFACE.BLOCK_IDS:
             if blockID in self.inited:

@@ -185,9 +185,8 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0):
 
 
 def urlResponse(url):
-    result = openUrl(url)
-    response = result.getData()
-    return json.load(response)
+    response = openUrl(url)
+    return json.loads(response.getData(), "utf-8")
 
 # try:
 #     from gui.Scaleform.daapi.view.lobby.event_battle_queue import EventBattleQueue

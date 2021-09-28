@@ -21,8 +21,7 @@ class ObserverCore(object):
     __slots__ = ("modsDir", "gameVersion", "isFileValid", "mod_version", "configLoader", "moduleLoader",
                  "componentsLoader")
 
-    def __init__(self, configLoader):
-        self.configLoader = configLoader
+    def __init__(self):
         self.modsDir, self.gameVersion = getCurrentModPath()
         self.isFileValid = self.isModValidFileName()
         self.mod_version = 'v{0} - {1}'.format(__version__, self.gameVersion)
@@ -53,7 +52,6 @@ class ObserverCore(object):
         logInfo("Launched at python " + sys.version)
         logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
         self.componentsLoader.start()
-        self.configLoader.start()
         BATTLE_PACKAGES = packages.BATTLE_PACKAGES_BY_ARENA_TYPE
         for guiType in BATTLE_PACKAGES:
             if guiType in BATTLES_RANGE:

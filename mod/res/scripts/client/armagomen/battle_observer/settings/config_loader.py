@@ -27,6 +27,7 @@ class ConfigLoader(object):
         self.path = os.path.join(getCurrentModPath()[GLOBAL.FIRST], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
         self.configInterface = None
+        self.start()
         ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
 
     def encodeData(self, data):
@@ -161,6 +162,6 @@ class ConfigLoader(object):
                 from armagomen.battle_observer.settings.hangar.hangar_settings import ConfigInterface
                 self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
                                                        self.settings, self)
-                self.configInterface.start()
+                self.configInterface.start(self.configsList.index(self.cName))
             finally:
                 ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings

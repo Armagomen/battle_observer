@@ -5,7 +5,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.utils.keys_parser import HotKeysParser
 
 c_Loader = ConfigLoader(settings)
-m_core = ObserverCore(c_Loader)
+m_core = ObserverCore()
 view_settings = ViewSettings(settings)
 b_core = BattleCore(settings)
 keysParser = HotKeysParser(settings)
