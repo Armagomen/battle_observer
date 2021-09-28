@@ -59,25 +59,28 @@ class ConfigLoader(object):
 
     def start(self):
         """Loading the main settings_core file with the parameters which settings_core to load next"""
-        load_json = os.path.join(self.path, 'load.json')
         if self.makeDirs(self.path):
             self.loadError(self.path, 'CONFIGURATION FILES IS NOT FOUND')
-            self.cName = self.createLoadJSON(load_json)
+            self.cName = self.createLoadJSON(error=True)
             self.configsList.append(self.cName)
         else:
+            load_json = os.path.join(self.path, 'load.json')
             if os.path.exists(load_json):
                 self.cName = self.getFileData(load_json).get('loadConfig')
             else:
-                self.cName = self.createLoadJSON(load_json)
+                self.cName = self.createLoadJSON(error=True)
             self.makeDirs(os.path.join(self.path, self.cName))
         self.readConfig(self.cName)
         removeOldFiles(os.path.join(self.path, self.cName))
 
-    def createLoadJSON(self, path):
-        cName = 'armagomen'
+    def createLoadJSON(self, cName=None, error=False):
+        if cName is None:
+            cName = 'armagomen'
+        path = os.path.join(self.path, 'load.json')
         createFileInDir(path, {'loadConfig': cName})
-        self.loadError(path, 'NEW CONFIGURATION FILE load.json IS CREATED')
-        return cName
+        if error:
+            self.loadError(path, 'NEW CONFIGURATION FILE load.json IS CREATED')
+            return cName
 
     def updateConfigFile(self, fileName, settings):
         path = os.path.join(self.path, self.cName, '{}.json'.format(fileName))

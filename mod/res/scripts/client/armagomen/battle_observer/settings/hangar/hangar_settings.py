@@ -240,10 +240,9 @@ class ConfigInterface(CreateElement):
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.selected != self.newConfig:
                 self.inited.clear()
-                self.selected = self.newConfig
-                createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
-                                {'loadConfig': self.configLoader.configsList[self.selected]})
                 self.configLoader.readConfig(self.configLoader.configsList[self.selected])
+                self.configLoader.createLoadJSON(cName=self.configLoader.configsList[self.selected])
+                self.selected = self.newConfig
         elif event == self.apiEvents.WINDOW_LOADED:
             self.filesUpdateLocked = False
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
