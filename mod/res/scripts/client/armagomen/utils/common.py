@@ -181,3 +181,14 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0):
     tuple_values = hsv_to_rgb(normalized_percent, saturation, brightness)
     r, g, b = (int(math.ceil(i * COLOR.MULTIPLIER)) for i in tuple_values)
     return COLOR.TEMPLATE.format(r, g, b)
+
+
+try:
+    from gui.Scaleform.daapi.view.lobby.event_battle_queue import EventBattleQueue
+except (ImportError, Exception):
+    pass
+else:
+    @overrideMethod(EventBattleQueue, "as_showQuickStartPanelS")
+    def new_as_showQuickStartPanelS(base, queue, data):
+        queue.onQuickStartPanelAction(data['vehID'])
+        return base(queue, data)
