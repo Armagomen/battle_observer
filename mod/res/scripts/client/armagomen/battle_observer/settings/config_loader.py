@@ -5,8 +5,6 @@ import time
 
 from armagomen.constants import LOAD_LIST, GLOBAL
 from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, createFileInDir
-from gui.shared.personality import ServicesLocator
-from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 
 def removeOldFiles(configPath):
@@ -19,16 +17,14 @@ def removeOldFiles(configPath):
 
 
 class ConfigLoader(object):
-    __slots__ = ('cName', 'path', 'configsList', 'configInterface', 'settings')
+    __slots__ = ('cName', 'path', 'configsList', 'settings')
 
     def __init__(self, settings):
         self.settings = settings
         self.cName = None
         self.path = os.path.join(getCurrentModPath()[GLOBAL.FIRST], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
-        self.configInterface = None
         self.start()
-        ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
 
     def encodeData(self, data):
         """encode dict keys/values to utf-8."""
@@ -130,7 +126,6 @@ class ConfigLoader(object):
         logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
         file_list = ['{}.json'.format(name) for name in LOAD_LIST]
         listdir = os.listdir(direct_path)
-        configSelect = self.configInterface is not None and self.configInterface.configSelect
         for num, module_name in enumerate(LOAD_LIST, GLOBAL.ZERO):
             file_name = file_list[num]
             file_path = os.path.join(direct_path, file_name)
@@ -138,8 +133,7 @@ class ConfigLoader(object):
             if file_name in listdir:
                 try:
                     if self.updateData(self.getFileData(file_path), internal_cfg):
-                        if not configSelect:
-                            createFileInDir(file_path, internal_cfg)
+                        createFileInDir(file_path, internal_cfg)
                 except Exception as error:
                     self.loadError(file_path, error.message)
                     logWarning('readConfig: {} {}'.format(file_name, repr(error)))
@@ -148,20 +142,4 @@ class ConfigLoader(object):
                 createFileInDir(file_path, internal_cfg)
             self.settings.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
-        if self.configInterface is not None:
-            self.configInterface.onUserConfigUpdateComplete()
-
-    def loadHangarSettings(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.LOGIN:
-            try:
-                from gui.modsListApi import g_modsListApi
-                from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-            except ImportError as err:
-                logWarning("%s: Settings API not loaded" % repr(err))
-            else:
-                from armagomen.battle_observer.settings.hangar.hangar_settings import ConfigInterface
-                self.configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
-                                                       self.settings, self)
-                self.configInterface.start(self.configsList.index(self.cName))
-            finally:
-                ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings
+        self.settings.onUserConfigUpdateComplete()

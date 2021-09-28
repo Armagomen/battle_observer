@@ -4,9 +4,12 @@ from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
     SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS
 from armagomen.utils.common import logWarning, openWebBrowser, createFileInDir, logInfo
+from armagomen.utils.events import g_events
 from debug_utils import LOG_CURRENT_EXCEPTION
+from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
+from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 35
 KEY_CONTROL = [KEY_ALIAS_CONTROL]
@@ -179,12 +182,20 @@ class ConfigInterface(CreateElement):
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.selected = 0
-        self.configSelect = False
+        self.selected = self.newConfig = self.configLoader.configsList.index(self.configLoader.cName)
+        self.filesUpdateLocked = False
         self.getter = Getter()
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
                                    useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
+        ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
+        self.settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
+
+    def loadHangarSettings(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.LOGIN:
+            self.addModificationToModList()
+            self.addModsToVX()
+            ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings
 
     def addModificationToModList(self):
         """register settings_core window in modsListApi"""
@@ -196,9 +207,7 @@ class ConfigInterface(CreateElement):
         }
         self.modsListApi.addModification(**kwargs)
 
-    def start(self, index):
-        self.selected = index
-        self.addModificationToModList()
+    def addModsToVX(self):
         for blockID in CONFIG_INTERFACE.BLOCK_IDS:
             if blockID in self.inited:
                 continue
@@ -216,7 +225,7 @@ class ConfigInterface(CreateElement):
         self.vxSettingsApi.loadWindow(MOD_NAME)
 
     def onUserConfigUpdateComplete(self):
-        if self.configSelect:
+        if self.filesUpdateLocked:
             for blockID in CONFIG_INTERFACE.BLOCK_IDS:
                 self.updateMod(blockID)
             self.load_window()
@@ -226,10 +235,17 @@ class ConfigInterface(CreateElement):
         if container != MOD_NAME:
             return
         if event == self.apiEvents.WINDOW_CLOSED:
+            self.filesUpdateLocked = True
             self.vxSettingsApi.onSettingsChanged -= self.onSettingsChanged
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
+            if self.selected != self.newConfig:
+                self.inited.clear()
+                self.selected = self.newConfig
+                createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
+                                {'loadConfig': self.configLoader.configsList[self.selected]})
+                self.configLoader.readConfig(self.configLoader.configsList[self.selected])
         elif event == self.apiEvents.WINDOW_LOADED:
-            self.configSelect = False
+            self.filesUpdateLocked = False
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
             self.vxSettingsApi.onDataChanged += self.onDataChanged
 
@@ -245,16 +261,11 @@ class ConfigInterface(CreateElement):
         """Saves made by the user settings_core in the settings_core file."""
         if self.settings.main[MAIN.DEBUG]:
             logInfo("change settings '%s' - %s" % (self.configLoader.configsList[self.selected], blockID))
-        if self.configSelect or MOD_NAME != modID:
+        if self.filesUpdateLocked or MOD_NAME != modID:
             return
         if blockID == ANOTHER.CONFIG_SELECT and self.selected != data['selectedConfig']:
-            self.selected = data['selectedConfig']
-            self.configSelect = True
+            self.newConfig = data['selectedConfig']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            self.inited.clear()
-            createFileInDir(os.path.join(self.configLoader.path, 'load.json'),
-                            {'loadConfig': self.configLoader.configsList[self.selected]})
-            self.configLoader.readConfig(self.configLoader.configsList[self.selected])
         else:
             settings = getattr(self.settings, blockID)
             for key, value in data.iteritems():

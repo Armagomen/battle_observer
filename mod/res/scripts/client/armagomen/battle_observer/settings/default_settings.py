@@ -16,6 +16,7 @@ class DefaultSettings(object):
 
     def __init__(self):
         self.onModSettingsChanged = SafeEvent()
+        self.onUserConfigUpdateComplete = SafeEvent()
 
         self.main = {
             MAIN.HIDE_CHAT: False,
