@@ -1,9 +1,6 @@
 import copy
-import json
-import urllib2
 
-from armagomen.constants import HEADERS
-from armagomen.utils.common import logWarning
+from armagomen.utils.common import urlResponse
 
 URL = "https://api.worldoftanks.ru/wot/account/info/?"
 API_KEY = "application_id=2a7b45c57d9197bfa7fcb0e342673292&account_id="
@@ -13,17 +10,6 @@ WTR = "{url}{key}{ids}&fields=global_rating&language=en".format(url=URL, key=API
 SEPARATOR = "%2C+"
 CACHE = {}
 WTR_CACHE = {}
-
-
-def urlResponse(apiUrl):
-    try:
-        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(), urllib2.HTTPRedirectHandler())
-        opener.addheaders = HEADERS
-        response = opener.open(apiUrl)
-    except urllib2.URLError:
-        logWarning("Technical problems with the server, please inform the developer.")
-    else:
-        return json.load(response)
 
 
 def getCachedStatisticData(databaseIDS, update=True):

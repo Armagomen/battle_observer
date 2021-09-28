@@ -1,21 +1,19 @@
-import json
 import os
 import re
-import urllib2
 from collections import defaultdict
 from io import BytesIO
 from zipfile import ZipFile
 
-from gui.Scaleform.Waiting import Waiting
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import GLOBAL, URLS, MESSAGES, HEADERS
-from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, logWarning, \
-    getCurrentModPath, callback
+from armagomen.constants import GLOBAL, URLS, MESSAGES
+from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, getCurrentModPath, callback, \
+    urlResponse
 from armagomen.utils.events import g_events
 from async import async, await, AsyncReturn
 from frameworks.wulf import WindowLayer
+from gui.Scaleform.Waiting import Waiting
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
@@ -124,19 +122,9 @@ class UpdateMain(object):
     def __init__(self):
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
 
-    def get_update_data(self):
-        try:
-            opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(), urllib2.HTTPRedirectHandler())
-            opener.addheaders = HEADERS
-            response = opener.open(URLS.UPDATE_GITHUB_API_URL)
-        except urllib2.URLError:
-            logWarning("Technical problems with the server, please inform the developer.")
-        else:
-            return json.load(response)
-
     def request_last_version(self):
         result = False
-        params = self.get_update_data()
+        params = urlResponse(URLS.UPDATE_GITHUB_API_URL)
         if params:
             LAST_UPDATE.update(params)
             new_version = LAST_UPDATE.get('tag_name', __version__)

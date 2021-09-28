@@ -13,6 +13,7 @@ import ResMgr
 
 from BattleReplay import isPlaying, isLoading
 from armagomen.constants import MOD_NAME, GLOBAL, CACHE_DIRS
+from helpers.http import openUrl
 
 
 def isReplay():
@@ -182,6 +183,11 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0):
     r, g, b = (int(math.ceil(i * COLOR.MULTIPLIER)) for i in tuple_values)
     return COLOR.TEMPLATE.format(r, g, b)
 
+
+def urlResponse(url):
+    result = openUrl(url)
+    response = result.getData()
+    return json.load(response)
 
 # try:
 #     from gui.Scaleform.daapi.view.lobby.event_battle_queue import EventBattleQueue
