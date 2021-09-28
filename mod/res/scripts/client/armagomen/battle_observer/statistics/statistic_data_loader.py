@@ -12,11 +12,15 @@ CACHE = {}
 WTR_CACHE = {}
 
 
+def normalizeIDS(databaseIDS):
+    return (str(databaseID) for databaseID in databaseIDS if databaseID)
+
+
 def getCachedStatisticData(databaseIDS, update=True):
     databaseIDS = [databaseID for databaseID in databaseIDS if databaseID not in CACHE]
     if not update or not databaseIDS:
         return CACHE
-    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(databaseIDS)))
+    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
     if not result:
         return CACHE
     data = result.get("data")
@@ -27,7 +31,7 @@ def getCachedStatisticData(databaseIDS, update=True):
 
 
 def getStatisticData(databaseIDS):
-    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(databaseIDS)))
+    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
     if not result:
         return {}
     data = result.get("data")
@@ -39,7 +43,7 @@ def getCachedWTR(databaseIDS, update=True):
     databaseIDS = [databaseID for databaseID in databaseIDS if databaseID not in CACHE]
     if not update or not databaseIDS:
         return WTR_CACHE
-    result = urlResponse(WTR.format(ids=SEPARATOR.join(databaseIDS)))
+    result = urlResponse(WTR.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
     if not result:
         return WTR_CACHE
     data = result.get("data")
@@ -50,8 +54,7 @@ def getCachedWTR(databaseIDS, update=True):
 
 
 def getWTRRating(databaseIDS):
-    result = urlResponse(WTR.format(ids=SEPARATOR.join(databaseIDS)))
-    data = copy.deepcopy(result.get("data"))
-    print type(data), data
+    result = urlResponse(WTR.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
+    data = result.get("data")
     if data:
-        return {int(databaseID): int(data[databaseID][u"global_rating"]) for databaseID in data}
+        return {int(databaseID): int(value[u"global_rating"]) for databaseID, value in data.iteritems()}

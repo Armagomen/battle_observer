@@ -326,6 +326,10 @@ class PANELS:
     SPOTTED_FIX = "panels_spotted_fix"
     DAMAGE = "damage"
     TEAM = ("green", "red")
+    # ststistics
+    STATISTIC_ENABLE = "players_statistic_enabled"
+    STATISTIC_PATTERN = "players_statistic_pattern"
+    STATISTIC_SETTINGS = "players_statistic_settings"
 
 
 SAVE_SHOOT = namedtuple("SAVE_SHOOT", ("NAME", "MSG", "TEMPLATE", "DESTROYED_BLOCK", "VEHICLE", "TEAM", "HOT_KEY"))(

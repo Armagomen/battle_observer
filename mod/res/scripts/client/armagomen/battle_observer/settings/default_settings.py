@@ -1,3 +1,4 @@
+# coding=utf-8
 from collections import defaultdict, namedtuple
 
 import Keys
@@ -456,7 +457,17 @@ class DefaultSettings(object):
                         GLOBAL.ALPHA: 0.5
                     }
                 }
-            }
+            },
+            PANELS.STATISTIC_ENABLE: False,
+            PANELS.STATISTIC_PATTERN: {
+                "bad": "<b><font color='#FE7903' size='20'>•</font></b>",
+                "good": "<b><font color='#60FF00' size='20'>•</font></b>",
+                "normal": "<b><font color='#F8F400' size='20'>•</font></b>",
+                "unique": "<b><font color='#D042F3' size='20'>•</font></b>",
+                "very_bad": "<b><font color='#FE0E00' size='20'>•</font></b>",
+                "very_good": "<b><font color='#02C9B3' size='20'>•</font></b>"
+            },
+            PANELS.STATISTIC_SETTINGS: {GLOBAL.X: -87, GLOBAL.Y: -10, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left},
         }
         self.flight_time = {
             GLOBAL.ENABLED: False,

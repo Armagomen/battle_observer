@@ -166,10 +166,6 @@ def checkDecoder(_string):
 
 
 def convertDictToNamedtuple(dictionary):
-    """
-    :rtype: namedtuple
-    :type dictionary: dict
-    """
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
 

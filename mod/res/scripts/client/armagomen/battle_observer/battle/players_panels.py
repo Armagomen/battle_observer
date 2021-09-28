@@ -4,8 +4,9 @@ from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import keysParser
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.battle_observer.statistics.statistic_data_loader import getWTRRating
+from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
 from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
-from armagomen.utils.common import getEntity, logError, logInfo
+from armagomen.utils.common import getEntity
 from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
@@ -21,9 +22,11 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesEnable = False
         self.damagesText = None
         self.damagesSettings = None
+        self.ratings = None
         self.battle_ctx = self.sessionProvider.getCtx()
         self.isEpicRandomBattle = self._arenaVisitor.gui.isEpicRandomBattle()
         self._vehicles = set()
+        self.accountIDToVehicleID = {}
         self.playersDamage = defaultdict(int)
 
     def _populate(self):
@@ -33,6 +36,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesEnable = self.settings[PANELS.DAMAGES_ENABLED]
         self.damagesText = self.settings[PANELS.DAMAGES_TEMPLATE]
         self.damagesSettings = self.settings[PANELS.DAMAGES_SETTINGS]
+        self.statisticSettings = self.settings[PANELS.STATISTIC_SETTINGS]
         self.barColors = self.colors[COLORS.GLOBAL]
         self.COLORS = (self.barColors[COLORS.ALLY_MAME],
                        self.barColors[COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME])
@@ -46,16 +50,16 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if self.settings[PANELS.ON_KEY_DOWN]:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
         arena = self._arenaVisitor.getArenaSubscription()
-        ids = [str(vehicle["accountDBID"]) for vehicle in arena.vehicles.itervalues()]
-        rating = getWTRRating(ids)
-        logInfo(rating)
+        if self.settings[PANELS.STATISTIC_ENABLE]:
+            self.accountIDToVehicleID = {vehicleID: vehicle["accountDBID"] for vehicleID, vehicle in
+                                         arena.vehicles.iteritems()}
+            self.ratings = getWTRRating(self.accountIDToVehicleID.itervalues())
         if not self.damagesEnable:
             return
         if arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
             keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY,
                                          self.settings[PANELS.DAMAGES_HOT_KEY])
-
 
     def _dispose(self):
         self._vehicles.clear()
@@ -119,6 +123,10 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
             self.as_AddTextFieldS(vehicleID, PANELS.DAMAGES_TF, self.damagesSettings, PANELS.TEAM[isEnemy])
+        if self.ratings:
+            self.as_AddTextFieldS(vehicleID, "WTR", self.statisticSettings, PANELS.TEAM[isEnemy])
+            self.as_updateTextFieldS(vehicleID, "WTR",
+                                     getStatisticString(self.ratings[self.accountIDToVehicleID[vehicleID]]))
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies.union(aliveEnemies).difference(self._vehicles):
