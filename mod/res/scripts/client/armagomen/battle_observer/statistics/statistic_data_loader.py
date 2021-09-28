@@ -32,7 +32,7 @@ def getStatisticData(databaseIDS):
         return {}
     data = result.get("data")
     if data:
-        return {databaseID: data[str(databaseID)]["statistics"]["random"] for databaseID in databaseIDS}
+        return {int(databaseID): data[databaseID]["statistics"]["random"] for databaseID in data}
 
 
 def getCachedWTR(databaseIDS, update=True):
@@ -44,13 +44,14 @@ def getCachedWTR(databaseIDS, update=True):
         return WTR_CACHE
     data = result.get("data")
     if data:
-        for databaseID, value in data:
+        for databaseID, value in data.iteritems():
             WTR_CACHE[int(databaseID)] = value["global_rating"]
     return WTR_CACHE
 
 
 def getWTRRating(databaseIDS):
     result = urlResponse(WTR.format(ids=SEPARATOR.join(databaseIDS)))
-    data = result.get("data")
+    data = copy.deepcopy(result.get("data"))
+    print type(data), data
     if data:
-        return {int(databaseID): value["global_rating"] for databaseID, value in data}
+        return {int(databaseID): int(data[databaseID][u"global_rating"]) for databaseID in data}

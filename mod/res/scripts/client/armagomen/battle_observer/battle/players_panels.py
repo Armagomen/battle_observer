@@ -3,8 +3,9 @@ from collections import defaultdict
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import keysParser
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
+from armagomen.battle_observer.statistics.statistic_data_loader import getWTRRating
 from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
-from armagomen.utils.common import getEntity
+from armagomen.utils.common import getEntity, logError, logInfo
 from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
@@ -44,13 +45,17 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
+        arena = self._arenaVisitor.getArenaSubscription()
+        ids = [str(vehicle["accountDBID"]) for vehicle in arena.vehicles.itervalues()]
+        rating = getWTRRating(ids)
+        logInfo(rating)
         if not self.damagesEnable:
             return
-        arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
             keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY,
                                          self.settings[PANELS.DAMAGES_HOT_KEY])
+
 
     def _dispose(self):
         self._vehicles.clear()
