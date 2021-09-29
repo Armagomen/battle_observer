@@ -48,11 +48,11 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
-        arena = self._arenaVisitor.getArenaSubscription()
         if self.settings[PANELS.STATISTIC_ENABLE]:
-            self.ratings = getWTRRating(vehicle["accountDBID"] for vehicle in arena.vehicles.itervalues())
+            self.ratings = getWTRRating(vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
         if not self.damagesEnable:
             return
+        arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
             keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY,
