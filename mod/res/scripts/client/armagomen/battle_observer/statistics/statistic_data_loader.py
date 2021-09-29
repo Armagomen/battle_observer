@@ -3,18 +3,18 @@ import copy
 import constants
 from armagomen.utils.common import urlResponse
 
-realm = constants.AUTH_REALM.lower()
-statisticEnabled = realm in ["ru", "eu", "na", "asia"]
-if realm == "na":
-    realm = "com"
+region = constants.AUTH_REALM.lower()
+statisticEnabled = region in ["ru", "eu", "na", "asia"]
+if region == "na":
+    region = "com"
 
 if statisticEnabled:
-    URL = "https://api.worldoftanks.{}/wot/account/info/?".format(realm)
+    URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
     API_KEY = "application_id=2a7b45c57d9197bfa7fcb0e342673292&account_id="
     STAT_URL = "{url}{key}{ids}&extra=statistics.random&fields=statistics.random&" \
                "language=en".format(url=URL, key=API_KEY, ids="{ids}")
     WTR = "{url}{key}{ids}&fields=global_rating&language=en".format(url=URL, key=API_KEY, ids="{ids}")
-    SEPARATOR = "%2C+"
+    SEPARATOR = "%2C"
     CACHE = {}
     WTR_CACHE = {}
 
@@ -34,8 +34,8 @@ def getCachedStatisticData(databaseIDS, update=True):
         return CACHE
     data = result.get("data")
     if data:
-        for databaseID in databaseIDS:
-            CACHE[databaseID] = copy.deepcopy(data[str(databaseID)]["statistics"]["random"])
+        for databaseID, value in data.iteritems():
+            CACHE[int(databaseID)] = copy.deepcopy(value["statistics"]["random"])
     return CACHE
 
 
@@ -47,7 +47,7 @@ def getStatisticData(databaseIDS):
         return {}
     data = result.get("data")
     if data:
-        return {int(databaseID): data[databaseID]["statistics"]["random"] for databaseID in data}
+        return {int(databaseID): value["statistics"]["random"] for databaseID, value in data.iteritems()}
 
 
 def getCachedWTR(databaseIDS, update=True):
@@ -62,7 +62,7 @@ def getCachedWTR(databaseIDS, update=True):
     data = result.get("data")
     if data:
         for databaseID, value in data.iteritems():
-            WTR_CACHE[int(databaseID)] = value["global_rating"]
+            WTR_CACHE[int(databaseID)] = int(value["global_rating"])
     return WTR_CACHE
 
 

@@ -6,8 +6,8 @@ WTR_COLORS = {2971: "bad", 4530: "normal", 6370: "good", 8525: "very_good", 1015
 
 def getStatisticString(wtr):
     result = "very_bad"
-    for value in sorted(WTR_COLORS):
-        if wtr > value:
+    for value in sorted(WTR_COLORS.iterkeys()):
+        if wtr >= value:
             result = WTR_COLORS[value]
         else:
             break
