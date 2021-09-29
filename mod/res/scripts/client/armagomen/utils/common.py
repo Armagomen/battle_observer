@@ -13,6 +13,7 @@ import ResMgr
 
 from BattleReplay import isPlaying, isLoading
 from armagomen.constants import MOD_NAME, GLOBAL, CACHE_DIRS
+from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers.http import openUrl
 
 
@@ -181,8 +182,12 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0):
 
 
 def urlResponse(url):
-    response = openUrl(url)
-    return json.loads(response.getData(), "utf-8")
+    try:
+        response = openUrl(url)
+        return json.loads(response.getData(), "utf-8")
+    except Exception as err:
+        logError(repr(err))
+        return {}
 
 # try:
 #     from gui.Scaleform.daapi.view.lobby.event_battle_queue import EventBattleQueue

@@ -26,7 +26,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.battle_ctx = self.sessionProvider.getCtx()
         self.isEpicRandomBattle = self._arenaVisitor.gui.isEpicRandomBattle()
         self._vehicles = set()
-        self.accountIDToVehicleID = {}
         self.playersDamage = defaultdict(int)
 
     def _populate(self):
@@ -51,9 +50,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
         arena = self._arenaVisitor.getArenaSubscription()
         if self.settings[PANELS.STATISTIC_ENABLE]:
-            self.accountIDToVehicleID = {vehicleID: vehicle["accountDBID"] for vehicleID, vehicle in
-                                         arena.vehicles.iteritems()}
-            self.ratings = getWTRRating(self.accountIDToVehicleID.itervalues())
+            self.ratings = getWTRRating(vehicle["accountDBID"] for vehicle in arena.vehicles.itervalues())
         if not self.damagesEnable:
             return
         if arena is not None:
@@ -123,10 +120,9 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
             self.as_AddTextFieldS(vehicleID, PANELS.DAMAGES_TF, self.damagesSettings, PANELS.TEAM[isEnemy])
-        if self.ratings:
+        if self.ratings and vInfoVO.player.accountDBID:
             self.as_AddTextFieldS(vehicleID, "WTR", self.statisticSettings, PANELS.TEAM[isEnemy])
-            self.as_updateTextFieldS(vehicleID, "WTR",
-                                     getStatisticString(self.ratings[self.accountIDToVehicleID[vehicleID]]))
+            self.as_updateTextFieldS(vehicleID, "WTR", getStatisticString(self.ratings[vInfoVO.player.accountDBID]))
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies.union(aliveEnemies).difference(self._vehicles):

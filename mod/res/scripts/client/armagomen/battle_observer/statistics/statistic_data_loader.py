@@ -19,57 +19,47 @@ if statisticEnabled:
     WTR_CACHE = {}
 
 
-def normalizeIDS(databaseIDS):
-    return (str(databaseID) for databaseID in databaseIDS if databaseID)
+def normalizeIDS(databaseIDS, wtr=False):
+    if wtr:
+        return (str(_id) for _id in databaseIDS if _id and _id not in WTR_CACHE)
+    return (str(_id) for _id in databaseIDS if _id and _id not in CACHE)
 
 
-def getCachedStatisticData(databaseIDS, update=True):
-    if not statisticEnabled:
+def getCachedStatisticData(databaseIDS):
+    if not statisticEnabled or not databaseIDS:
         return
-    databaseIDS = [databaseID for databaseID in databaseIDS if databaseID not in CACHE]
-    if not update or not databaseIDS:
-        return CACHE
     result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
-    if not result:
-        return CACHE
     data = result.get("data")
     if data:
-        for databaseID, value in data.iteritems():
-            CACHE[int(databaseID)] = copy.deepcopy(value["statistics"]["random"])
-    return CACHE
+        for _id, value in data.iteritems():
+            CACHE[int(_id)] = copy.deepcopy(value["statistics"]["random"])
+    return {_id: CACHE[_id] for _id in databaseIDS if _id and _id in CACHE}
 
 
 def getStatisticData(databaseIDS):
-    if not statisticEnabled:
+    if not statisticEnabled or not databaseIDS:
         return
     result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
-    if not result:
-        return {}
     data = result.get("data")
     if data:
-        return {int(databaseID): value["statistics"]["random"] for databaseID, value in data.iteritems()}
+        return {int(_id): value["statistics"]["random"] for _id, value in data.iteritems()}
 
 
-def getCachedWTR(databaseIDS, update=True):
-    if not statisticEnabled:
+def getCachedWTR(databaseIDS):
+    if not statisticEnabled or not databaseIDS:
         return
-    databaseIDS = [databaseID for databaseID in databaseIDS if databaseID not in CACHE]
-    if not update or not databaseIDS:
-        return WTR_CACHE
-    result = urlResponse(WTR.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
-    if not result:
-        return WTR_CACHE
+    result = urlResponse(WTR.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS, True))))
     data = result.get("data")
     if data:
         for databaseID, value in data.iteritems():
             WTR_CACHE[int(databaseID)] = int(value["global_rating"])
-    return WTR_CACHE
+    return {_id: WTR_CACHE[_id] for _id in databaseIDS if _id and _id in WTR_CACHE}
 
 
 def getWTRRating(databaseIDS):
-    if not statisticEnabled:
+    if not statisticEnabled or not databaseIDS:
         return
-    result = urlResponse(WTR.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
+    result = urlResponse(WTR.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS, True))))
     data = result.get("data")
     if data:
-        return {int(databaseID): int(value[u"global_rating"]) for databaseID, value in data.iteritems()}
+        return {int(_id): int(value[u"global_rating"]) for _id, value in data.iteritems()}
