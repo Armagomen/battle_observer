@@ -3,7 +3,7 @@ from collections import defaultdict
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import keysParser
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
-from armagomen.battle_observer.statistics.statistic_data_loader import getWTRRating
+from armagomen.battle_observer.statistics.statistic_data_loader import getWTRRating, getCachedWTR
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
 from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import getEntity
@@ -49,7 +49,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if self.settings[PANELS.ON_KEY_DOWN]:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
         if self.settings[PANELS.STATISTIC_ENABLE]:
-            self.ratings = getWTRRating(vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
+            # self.ratings = getWTRRating(vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
+            self.ratings = getCachedWTR(vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
         if not self.damagesEnable:
             return
         arena = self._arenaVisitor.getArenaSubscription()

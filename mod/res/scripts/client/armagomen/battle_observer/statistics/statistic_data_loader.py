@@ -26,8 +26,9 @@ def normalizeIDS(databaseIDS, wtr=False):
 
 
 def getCachedStatisticData(databaseIDS):
-    if not statisticEnabled or not databaseIDS:
+    if not statisticEnabled:
         return
+    databaseIDS = tuple(databaseIDS)
     result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
     data = result.get("data")
     if data:
@@ -37,7 +38,7 @@ def getCachedStatisticData(databaseIDS):
 
 
 def getStatisticData(databaseIDS):
-    if not statisticEnabled or not databaseIDS:
+    if not statisticEnabled:
         return
     result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
     data = result.get("data")
@@ -46,8 +47,9 @@ def getStatisticData(databaseIDS):
 
 
 def getCachedWTR(databaseIDS):
-    if not statisticEnabled or not databaseIDS:
+    if not statisticEnabled:
         return
+    databaseIDS = tuple(databaseIDS)
     result = urlResponse(WTR.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS, True))))
     data = result.get("data")
     if data:
@@ -57,7 +59,7 @@ def getCachedWTR(databaseIDS):
 
 
 def getWTRRating(databaseIDS):
-    if not statisticEnabled or not databaseIDS:
+    if not statisticEnabled:
         return
     result = urlResponse(WTR.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS, True))))
     data = result.get("data")
