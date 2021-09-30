@@ -23,12 +23,17 @@ def normalizeIDS(databaseIDS):
     return (str(_id) for _id in databaseIDS if _id and _id not in CACHE)
 
 
+def request(databaseIDS):
+    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
+    data = result.get("data")
+    return data
+
+
 def getCachedStatisticData(databaseIDS):
     if not statisticEnabled:
         return
     databaseIDS = tuple(databaseIDS)
-    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
-    data = result.get("data")
+    data = request(databaseIDS)
     if data:
         for _id, value in data.iteritems():
             CACHE[int(_id)] = copy.deepcopy(value)
@@ -38,7 +43,6 @@ def getCachedStatisticData(databaseIDS):
 def getStatisticData(databaseIDS):
     if not statisticEnabled:
         return
-    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
-    data = result.get("data")
+    data = request(databaseIDS)
     if data:
         return {int(_id): value for _id, value in data.iteritems()}
