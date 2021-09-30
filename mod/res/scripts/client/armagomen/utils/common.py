@@ -13,7 +13,6 @@ import ResMgr
 
 from BattleReplay import isPlaying, isLoading
 from armagomen.constants import MOD_NAME, GLOBAL, CACHE_DIRS
-from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers.http import openUrl
 
 
@@ -188,13 +187,3 @@ def urlResponse(url):
     except Exception as err:
         logError(repr(err))
         return {}
-
-# try:
-#     from gui.Scaleform.daapi.view.lobby.event_battle_queue import EventBattleQueue
-# except (ImportError, Exception):
-#     pass
-# else:
-#     @overrideMethod(EventBattleQueue, "as_showQuickStartPanelS")
-#     def new_as_showQuickStartPanelS(base, queue, data):
-#         queue.onQuickStartPanelAction(data['vehID'])
-#         return base(queue, data)
