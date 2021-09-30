@@ -19,30 +19,19 @@ if statisticEnabled:
     WTR_CACHE = {}
 
 
-def normalizeIDS(databaseIDS):
-    return (str(_id) for _id in databaseIDS if _id and _id not in CACHE)
-
-
 def request(databaseIDS):
-    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(normalizeIDS(databaseIDS))))
-    data = result.get("data")
-    return data
+    result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(str(_id) for _id in databaseIDS)))
+    return result.get("data", None)
 
 
 def getCachedStatisticData(databaseIDS):
     if not statisticEnabled:
         return
-    databaseIDS = tuple(databaseIDS)
-    data = request(databaseIDS)
-    if data:
-        for _id, value in data.iteritems():
-            CACHE[int(_id)] = copy.deepcopy(value)
-    return {_id: CACHE[_id] for _id in databaseIDS if _id and _id in CACHE}
-
-
-def getStatisticData(databaseIDS):
-    if not statisticEnabled:
-        return
-    data = request(databaseIDS)
-    if data:
-        return {int(_id): value for _id, value in data.iteritems()}
+    notZeroIds = tuple(_id for _id in databaseIDS if _id)
+    toRequest = tuple(_id for _id in notZeroIds if _id not in CACHE)
+    if toRequest:
+        data = request(toRequest)
+        if data is not None:
+            for _id, value in data.iteritems():
+                CACHE[int(_id)] = copy.deepcopy(value)
+    return {_id: CACHE[_id] for _id in notZeroIds if _id in CACHE}

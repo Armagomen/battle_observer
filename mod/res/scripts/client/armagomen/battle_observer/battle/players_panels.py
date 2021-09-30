@@ -3,7 +3,7 @@ from collections import defaultdict
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import keysParser
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
-from armagomen.battle_observer.statistics.statistic_data_loader import getCachedStatisticData
+from armagomen.battle_observer.statistics.statistic_data_loader import getCachedStatisticData, statisticEnabled
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
 from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import getEntity
@@ -48,7 +48,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
-        if self.settings[PANELS.STATISTIC_ENABLE]:
+        if statisticEnabled and self.settings[PANELS.STATISTIC_ENABLE]:
             self.statisticsData = getCachedStatisticData(
                 vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
         if not self.damagesEnable:
