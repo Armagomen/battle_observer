@@ -459,13 +459,14 @@ class DefaultSettings(object):
                 }
             },
             PANELS.STATISTIC_ENABLE: False,
-            PANELS.STATISTIC_PATTERN: {
-                "bad": "<font color='#FE7903' size='30'>•</font>",
-                "good": "<font color='#60FF00' size='30'>•</font>",
-                "normal": "<font color='#F8F400' size='30'>•</font>",
-                "unique": "<font color='#D042F3' size='30'>•</font>",
-                "very_bad": "<font color='#FE0E00' size='30'>•</font>",
-                "very_good": "<font color='#02C9B3' size='30'>•</font>"
+            PANELS.STATISTIC_PATTERN: "<font color='%(color)s' size='30'>•</font>",
+            PANELS.STATISTIC_COLORS: {
+                "very_good": "#02C9B3",
+                "bad": "#FE7903",
+                "normal": "#F8F400",
+                "good": "#60FF00",
+                "unique": "#D042F3",
+                "very_bad": "#FE0E00",
             },
             PANELS.STATISTIC_SETTINGS: {GLOBAL.X: -87, GLOBAL.Y: -10, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.right},
         }
