@@ -19,10 +19,7 @@ if statisticEnabled:
     WTR_CACHE = {}
 
 
-
-def normalizeIDS(databaseIDS, wtr=False):
-    if wtr:
-        return (str(_id) for _id in databaseIDS if _id and _id not in WTR_CACHE)
+def normalizeIDS(databaseIDS):
     return (str(_id) for _id in databaseIDS if _id and _id not in CACHE)
 
 
