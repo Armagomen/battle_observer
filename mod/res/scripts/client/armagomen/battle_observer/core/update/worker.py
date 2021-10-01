@@ -1,144 +1,100 @@
 import os
-import re
 from collections import defaultdict
 from io import BytesIO
 from zipfile import ZipFile
 
+from Event import SafeEvent
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
-from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, URLS, MESSAGES
-from armagomen.utils.common import restartGame, logInfo, openWebBrowser, logError, getCurrentModPath, callback, \
+from armagomen.utils.common import logInfo, logError, getCurrentModPath, callback, \
     urlResponse
 from armagomen.utils.events import g_events
-from async import async, await, AsyncReturn
+from armagomen.utils.dialogs import UpdateDialogs
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.Waiting import Waiting
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
-from gui.impl.dialogs import dialogs
-from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
-from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.personality import ServicesLocator
 from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 from web.cache.web_downloader import WebDownloader
 
-LAST_UPDATE = defaultdict()
-DOWNLOAD_URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
-
-workingDir = os.path.join(*getCurrentModPath())
-
-
-class DialogWindow(object):
-    __slots__ = ("localization", "parent")
-
-    def __init__(self, view):
-        self.localization = localization['updateDialog']
-        self.parent = view
-
-    @async
-    def showUpdateError(self, message):
-        builder = WarningDialogBuilder()
-        builder.setFormattedTitle("ERROR DOWNLOAD - Battle Observer Update")
-        builder.setFormattedMessage(message)
-        builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
-        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.CANCEL))
-        raise AsyncReturn(result)
-
-    @async
-    def showUpdateFinished(self):
-        message = self.localization['messageOK'].format(LAST_UPDATE.get('tag_name', __version__))
-        builder = WarningDialogBuilder()
-        builder.setFormattedTitle(self.localization['titleOK'])
-        builder.setFormattedMessage(message)
-        builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=self.localization['buttonOK'])
-        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
-        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.PURCHASE))
-        if result:
-            restartGame()
-        raise AsyncReturn(result)
-
-    @async
-    def showNewVersionAvailable(self):
-        message = self.localization['messageNEW'].format(workingDir)
-        gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, LAST_UPDATE.get("body", GLOBAL.EMPTY_LINE))
-        builder = InfoDialogBuilder()
-        builder.setFormattedTitle(self.localization['titleNEW'].format(LAST_UPDATE.get('tag_name', __version__)))
-        builder.setFormattedMessage(message + "<p align='left'><font size='15'>" + gitMessage + "</font></p>")
-        builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=self.localization['buttonAUTO'])
-        builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=self.localization['buttonHANDLE'])
-        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
-        result = yield await(dialogs.show(builder.build(self.parent)))
-        if result.result == DialogButtons.RESEARCH:
-            runDownload = DownloadThread(self)
-            runDownload.start()
-            Waiting.show('updating')
-            raise AsyncReturn(True)
-        elif result.result == DialogButtons.PURCHASE:
-            openWebBrowser(DOWNLOAD_URLS['full'])
-            raise AsyncReturn(True)
-        else:
-            raise AsyncReturn(False)
-
 
 class DownloadThread(object):
-    __slots__ = ("downloader", "dialog")
+    __slots__ = ("dialog", "onDownloadFinished")
 
     def __init__(self, dialog):
-        self.downloader = WebDownloader(GLOBAL.ONE)
         self.dialog = dialog
+        self.onDownloadFinished = SafeEvent()
 
-    def start(self):
+    def start(self, url, info):
+        Waiting.show('updating')
+        downloader = WebDownloader(GLOBAL.ONE)
         try:
-            logInfo('start downloading update {}'.format(LAST_UPDATE.get('tag_name', __version__)))
-            self.downloader.download(DOWNLOAD_URLS['last'], self.onDownloaded)
+            logInfo('downloading started {} at {}'.format(info, url))
+            downloader.download(url, self.onDownloaded)
         except Exception as error:
-            message = 'update {} - download failed: {}'.format(LAST_UPDATE.get('tag_name', __version__), repr(error))
+            message = 'update {} - download failed: {}'.format(info, repr(error))
             Waiting.hide('updating')
             logError(message)
             self.dialog.showUpdateError(message)
         finally:
-            self.downloader.close()
-            self.downloader = None
+            downloader.close()
 
     def onDownloaded(self, _url, data):
+        Waiting.hide('updating')
+        self.onDownloadFinished(data)
+        logInfo('downloading finished: {}'.format(_url))
+
+
+class UpdateMain(object):
+    URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
+    appLoader = dependency.descriptor(IAppLoader)
+
+    __slots__ = ("inLogin", "view", "dialogs", "download", "workingDir", "updateData")
+
+    def __init__(self):
+        self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+        self.view = None
+        self.workingDir = os.path.join(*getCurrentModPath())
+        self.dialogs = UpdateDialogs()
+        self.download = DownloadThread(self.dialogs)
+        self.updateData = defaultdict()
+
+        self.dialogs.onClickDownload += self.onDownloadStart
+        self.download.onDownloadFinished += self.onDownloadFinished
+
+    def onDownloadStart(self):
+        info = self.updateData.get('tag_name', __version__)
+        self.download.start(self.URLS['last'], info)
+
+    def onDownloadFinished(self, data):
         if data is not None:
-            old_files = os.listdir(workingDir)
+            old_files = os.listdir(self.workingDir)
             with BytesIO(data) as zip_file, ZipFile(zip_file) as archive:
                 for newFile in archive.namelist():
                     if newFile not in old_files:
                         logInfo('update, add new file {}'.format(newFile))
-                        archive.extract(newFile, workingDir)
-            Waiting.hide('updating')
-            self.dialog.showUpdateFinished()
-            logInfo('update downloading finished {}'.format(LAST_UPDATE.get('tag_name', __version__)))
-        self.dialog = None
-
-
-class UpdateMain(object):
-    appLoader = dependency.descriptor(IAppLoader)
-    __slots__ = ("inLogin",)
-
-    def __init__(self):
-        self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+                        archive.extract(newFile, self.workingDir)
+        self.dialogs.showUpdateFinished(self.updateData)
 
     def request_last_version(self):
         result = False
         params = urlResponse(URLS.UPDATE_GITHUB_API_URL)
         if params:
-            LAST_UPDATE.update(params)
-            new_version = LAST_UPDATE.get('tag_name', __version__)
+            self.updateData.update(params)
+            new_version = params.get('tag_name', __version__)
             local_ver = self.tupleVersion(__version__)
             server_ver = self.tupleVersion(new_version)
             if local_ver < server_ver:
-                assets = LAST_UPDATE.get('assets')
+                assets = params.get('assets')
                 for asset in assets:
                     filename = asset.get('name', '')
                     download_url = asset.get('browser_download_url')
                     if filename == 'AutoUpdate.zip':
-                        DOWNLOAD_URLS['last'] = download_url
+                        self.URLS['last'] = download_url
                     elif filename.startswith('BattleObserver_'):
-                        DOWNLOAD_URLS['full'] = download_url
+                        self.URLS['full'] = download_url
                 result = True
                 logInfo(MESSAGES.NEW_VERSION.format(new_version))
             else:
@@ -156,6 +112,9 @@ class UpdateMain(object):
                 self.waitingLoginLoaded()
             else:
                 g_events.onHangarLoaded += self.onHangarLoaded
+        else:
+            self.dialogs = None
+            self.download = None
 
     def waitingLoginLoaded(self):
         app = self.appLoader.getApp()
@@ -164,12 +123,12 @@ class UpdateMain(object):
             return
         view = app.containerManager.getView(WindowLayer.VIEW)
         if view and view.settings.alias == VIEW_ALIAS.LOGIN and view.isCreated():
-            dialog = DialogWindow(view)
-            dialog.showNewVersionAvailable()
+            self.dialogs.setView(view)
+            self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS)
         else:
             callback(2.0, self.waitingLoginLoaded)
 
     def onHangarLoaded(self, view):
-        dialog = DialogWindow(view)
-        dialog.showNewVersionAvailable()
+        self.dialogs.setView(view)
+        self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS)
         g_events.onHangarLoaded -= self.onHangarLoaded
