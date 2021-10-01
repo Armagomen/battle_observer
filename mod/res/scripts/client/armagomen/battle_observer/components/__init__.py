@@ -18,7 +18,6 @@ class ComponentsLoader(object):
             'minimap_plugins': None,
             'postmortem': None,
             'premium_time': None,
-            'played_together': None,
             'save_shoot_lite': None,
             'service_channel_filter': None,
             'shot_result_plugin': None,

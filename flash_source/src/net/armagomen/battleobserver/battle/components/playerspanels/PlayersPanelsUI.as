@@ -57,7 +57,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				{
 					var obse:Sprite = new Sprite();
 					obse.name = "battleОbserver";
-					obse.x = enemy ? -380 : 380;
+					obse.x = enemy ? -381 : 380;
 					this.items[vehID] = listitem.addChild(obse);
 					this.stoarge[vehID] = {};
 					this.onAddedToStorage(vehID, enemy);

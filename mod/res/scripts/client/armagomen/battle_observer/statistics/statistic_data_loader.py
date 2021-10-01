@@ -15,7 +15,7 @@ if statisticEnabled:
     API_KEY = "application_id=2a7b45c57d9197bfa7fcb0e342673292&account_id="
     STAT_URL = "{url}{key}{ids}&extra=statistics.random&fields={fields}&language=en".format(
         url=URL, key=API_KEY, ids="{ids}", fields=FIELDS)
-    CACHE = {}
+CACHE = {}
 
 
 def request(databaseIDS):
