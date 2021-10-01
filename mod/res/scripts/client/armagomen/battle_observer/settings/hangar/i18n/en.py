@@ -254,7 +254,12 @@ translate = {
                                        "classes. <br> The slider below affects the brightness. <br> Recommended "
                                        "filter strength -1.25",
         "panels_icon_filter_strength": "Filter strength (brightness)",
-        "panels_spotted_fix": "Correct size and position of detection status."
+        "panels_spotted_fix": "Correct size and position of detection status.",
+        "players_statistic_enabled": "Включить отображение WTR рейтинга в ушах",
+        "players_statistic_enabled_tooltip": "Для дополнительной настройки отребуется зание HTML. Файл настроек "
+                                             "/mods/configs/mod_battle_observer/ имя конфига /players_panels.json",
+        "players_statistic_pattern": "Форматирование вывода",
+        "players_statistic_pattern_tooltip": "Доступные макросы WTR, colorWTR, winRate, battles.",
     },
     "zoom": {
         "header": "SNIPER MODE, ZOOM-X",

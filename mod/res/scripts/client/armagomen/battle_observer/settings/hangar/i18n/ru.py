@@ -240,12 +240,12 @@ translate = {
         "settings*align_tooltip": "Выравнивание:<br>left - влево<br>center - по центру<br>right - вправо"
     },
     "team_bases_panel": {
-        "header": "Индикация захвата базы.",
+        "header": "Индикация захвата базы",
         "y": "Позиция полосы захвата по вертикали",
-        "scale": "Масштабирование полос захвата.",
-        "boBases": "Включить полосы захвата из мода.",
-        "outline*enabled": "Включить контур.",
-        "outline*color": "Цвет контура."
+        "scale": "Масштабирование полос захвата",
+        "boBases": "Включить полосы захвата из мода",
+        "outline*enabled": "Включить контур",
+        "outline*color": "Цвет контура"
     },
     "vehicle_types": {
         "header": "Цвета классов техники.",
@@ -258,24 +258,29 @@ translate = {
     },
     "players_panels": {
         "header": "Панели со списком игроков (уши).",
-        "players_damages_enabled": "Урон игроков в списках команд.",
-        "players_damages_hotkey": "Клавиша для отображения урона.",
+        "players_damages_enabled": "Урон игроков в списках команд",
+        "players_damages_hotkey": "Клавиша для отображения урона",
         "players_damages_settings*x": "Положение текста по горизонтали",
         "players_damages_settings*y": "Положение текста по вертикали",
-        "players_bars_enabled": "Хп игроков в ушах.",
-        "players_bars_settings*players_bars_bar*outline*enabled": "Включить контур.",
-        "players_bars_settings*players_bars_bar*outline*customColor": "Пользовательский цвет контура.",
-        "players_bars_settings*players_bars_bar*outline*color": "Пользовательский цвет контура.",
-        "players_bars_settings*players_bars_bar*outline*alpha": "Прозрачность контура.",
+        "players_bars_enabled": "Хп игроков в ушах",
+        "players_bars_settings*players_bars_bar*outline*enabled": "Включить контур",
+        "players_bars_settings*players_bars_bar*outline*customColor": "Пользовательский цвет контура",
+        "players_bars_settings*players_bars_bar*outline*color": "Пользовательский цвет контура",
+        "players_bars_settings*players_bars_bar*outline*alpha": "Прозрачность контура",
         "players_bars_hotkey": "Клавиша отображения ХП",
-        "players_bars_classColor": "Окрасить полосы ХП в ушах по цвету типа техники.",
-        "players_bars_on_key_pressed": "Отображать полосы только по нажатию клавиши.",
-        "panels_icon_enabled": "Перекрасить иконки танков.",
+        "players_bars_classColor": "Окрасить полосы ХП в ушах по цвету типа техники",
+        "players_bars_on_key_pressed": "Отображать полосы только по нажатию клавиши",
+        "panels_icon_enabled": "Перекрасить иконки танков",
         "panels_icon_enabled_tooltip": "Данная функция перекрашивает любые иконки техники в ушах в цвет классов"
                                        " техники.<br>Сила фильтра влияет на яркость."
                                        "<br>Рекомендуемая сила фильтра -1.25",
         "panels_icon_filter_strength": "Сила фильтра (яркость)",
-        "panels_spotted_fix": "Исправить размер и позицию лампочек засвета."
+        "panels_spotted_fix": "Исправить размер и позицию лампочек засвета",
+        "players_statistic_enabled": "Включить отображение WTR рейтинга в ушах",
+        "players_statistic_enabled_tooltip": "Для дополнительной настройки откройте файл настроек "
+                                             "/mods/configs/mod_battle_observer/ имя конфига /players_panels.json",
+        "players_statistic_pattern": "Форматирование вывода",
+        "players_statistic_pattern_tooltip": "Доступные макросы WTR, colorWTR, winRate, battles.",
     },
     "zoom": {
         "header": "Снайперский режим ZOOM-X (Динамическая кратность приближения).",
