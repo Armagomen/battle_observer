@@ -1,10 +1,10 @@
-from collections import defaultdict
-
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import PANELS
 from armagomen.utils.common import logError
 
-WTR_COLORS = {2971: "bad", 4530: "normal", 6370: "good", 8525: "very_good", 10158: "unique"}
+WTR_COLORS = ((2971, "bad"), (4530, "normal"), (6370, "good"), (8525, "very_good"), (10158, "unique"))
+COLORS = settings.players_panels[PANELS.STATISTIC_COLORS]
+DEFAULT_COLOR = "#fafafa"
 CACHE = {}
 
 
@@ -17,17 +17,17 @@ def getPercent(data):
     battles = int(data["statistics"]["random"]["battles"])
     if wins:
         return float(wins) / battles * 100, battles
-    return 0, battles
+    return 0.0, battles
 
 
 def getColor(wtr):
     result = "very_bad"
-    for value in sorted(WTR_COLORS.iterkeys()):
+    for value, colorName in WTR_COLORS:
         if wtr >= value:
-            result = WTR_COLORS[value]
+            result = colorName
         else:
             break
-    return settings.players_panels[PANELS.STATISTIC_COLORS][result]
+    return COLORS.get(result, DEFAULT_COLOR)
 
 
 def getStatisticString(databaseID, users):
@@ -40,6 +40,6 @@ def getStatisticString(databaseID, users):
             values = {"WTR": wtr, "colorWTR": color, "winRate": winRate, "battles": battles}
             CACHE[databaseID] = settings.players_panels[PANELS.STATISTIC_PATTERN] % values
         except (ValueError, KeyError, ZeroDivisionError) as error:
-            logError(repr(error))
+            logError("{}.getStatisticString {}".format(__package__, repr(error)))
             return ""
     return CACHE[databaseID]

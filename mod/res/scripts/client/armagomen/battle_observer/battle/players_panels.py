@@ -23,6 +23,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesText = None
         self.damagesSettings = None
         self.statisticsData = None
+        self.statisticSettings = None
         self.battle_ctx = self.sessionProvider.getCtx()
         self.isEpicRandomBattle = self._arenaVisitor.gui.isEpicRandomBattle()
         self._vehicles = set()
@@ -48,7 +49,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
-        if statisticEnabled and self.settings[PANELS.STATISTIC_ENABLE]:
+        if statisticEnabled and self.settings[PANELS.STATISTIC_ENABLED]:
             self.statisticsData = getCachedStatisticData(
                 vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
         if not self.damagesEnable:

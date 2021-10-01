@@ -458,7 +458,7 @@ class DefaultSettings(object):
                     }
                 }
             },
-            PANELS.STATISTIC_ENABLE: False,
+            PANELS.STATISTIC_ENABLED: False,
             PANELS.STATISTIC_PATTERN: "<font color='%(colorWTR)s' size='30'>•</font>",
             PANELS.STATISTIC_COLORS: {
                 "very_good": "#02C9B3",
