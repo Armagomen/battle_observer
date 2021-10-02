@@ -10,8 +10,6 @@ class Events(object):
         self.onDisconnected = SafeEvent()
         self.onConnected = SafeEvent()
         self.onHangarLoaded = SafeEvent()
-        self.init = SafeEvent()
-        self.fini = SafeEvent()
 
 
 g_events = Events()

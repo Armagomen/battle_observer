@@ -1,10 +1,9 @@
-import codecs
-import json
 import os
-import time
 
 from armagomen.constants import LOAD_LIST, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, createFileInDir
+from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, createFileInDir, getFileData
+from armagomen.utils.dialogs import LoadingErrorDialog
+from armagomen.utils.events import g_events
 
 
 def removeOldFiles(configPath):
@@ -17,38 +16,15 @@ def removeOldFiles(configPath):
 
 
 class ConfigLoader(object):
-    __slots__ = ('cName', 'path', 'configsList', 'settings')
+    __slots__ = ('cName', 'path', 'configsList', 'settings', 'errorMessages')
 
     def __init__(self, settings):
         self.settings = settings
         self.cName = None
         self.path = os.path.join(getCurrentModPath()[GLOBAL.FIRST], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
+        self.errorMessages = []
         self.start()
-
-    def encodeData(self, data):
-        """encode dict keys/values to utf-8."""
-        if isinstance(data, dict):
-            return {self.encodeData(key): self.encodeData(value) for key, value in data.iteritems()}
-        elif isinstance(data, list):
-            return [self.encodeData(element) for element in data]
-        elif isinstance(data, basestring):
-            return data.encode('utf-8')
-        else:
-            return data
-
-    def getFileData(self, path):
-        """Gets a dict from JSON."""
-        try:
-            with open(path, 'r') as fh:
-                return self.encodeData(json.load(fh))
-        except Exception:
-            with codecs.open(path, 'r', 'utf-8-sig') as fh:
-                return self.encodeData(json.loads(fh.read()))
-
-    def loadError(self, file_name, error):
-        with codecs.open(os.path.join(self.path, 'Errors.log'), 'a', 'utf-8-sig') as fh:
-            fh.write('%s: %s: %s, %s\n' % (time.asctime(), 'ERROR CONFIG DATA', file_name, error))
 
     @staticmethod
     def makeDirs(path):
@@ -60,13 +36,13 @@ class ConfigLoader(object):
     def start(self):
         """Loading the main settings_core file with the parameters which settings_core to load next"""
         if self.makeDirs(self.path):
-            self.loadError(self.path, 'CONFIGURATION FILES IS NOT FOUND')
+            self.errorMessages.append('CONFIGURATION FILES IS NOT FOUND')
             self.cName = self.createLoadJSON(error=True)
             self.configsList.append(self.cName)
         else:
             load_json = os.path.join(self.path, 'load.json')
             if os.path.exists(load_json):
-                self.cName = self.getFileData(load_json).get('loadConfig')
+                self.cName = getFileData(load_json).get('loadConfig')
             else:
                 self.cName = self.createLoadJSON(error=True)
             self.makeDirs(os.path.join(self.path, self.cName))
@@ -79,7 +55,7 @@ class ConfigLoader(object):
         path = os.path.join(self.path, 'load.json')
         createFileInDir(path, {'loadConfig': cName})
         if error:
-            self.loadError(path, 'NEW CONFIGURATION FILE load.json IS CREATED')
+            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
             return cName
 
     def updateConfigFile(self, fileName, settings):
@@ -135,10 +111,10 @@ class ConfigLoader(object):
             internal_cfg = getattr(self.settings, module_name)
             if file_name in listdir:
                 try:
-                    if self.updateData(self.getFileData(file_path), internal_cfg):
+                    if self.updateData(getFileData(file_path), internal_cfg):
                         createFileInDir(file_path, internal_cfg)
                 except Exception as error:
-                    self.loadError(file_path, error.message)
+                    self.errorMessages.append(" ".join((file_path, error.message)))
                     logWarning('readConfig: {} {}'.format(file_name, repr(error)))
                     continue
             else:
@@ -146,3 +122,12 @@ class ConfigLoader(object):
             self.settings.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
         self.settings.onUserConfigUpdateComplete()
+        if self.errorMessages:
+            g_events.onHangarLoaded += self.onHangarLoaded
+
+    def onHangarLoaded(self, view):
+        dialog = LoadingErrorDialog()
+        dialog.setView(view)
+        dialog.showLoadingError("\n".join(self.errorMessages))
+        g_events.onHangarLoaded -= self.onHangarLoaded
+        del self.errorMessages[:]

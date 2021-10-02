@@ -1,7 +1,9 @@
+import codecs
 import json
 import locale
 import math
 import os
+import time
 from collections import namedtuple
 from colorsys import hsv_to_rgb
 from shutil import rmtree
@@ -129,10 +131,37 @@ def clearClientCache(category=None):
         removeDirs(os.path.join(path, category), category)
 
 
+def encodeData(data):
+    """encode dict keys/values to utf-8."""
+    if isinstance(data, dict):
+        return {encodeData(key): encodeData(value) for key, value in data.iteritems()}
+    elif isinstance(data, list):
+        return [encodeData(element) for element in data]
+    elif isinstance(data, basestring):
+        return data.encode('utf-8')
+    else:
+        return data
+
+
+def getFileData(path):
+    """Gets a dict from JSON."""
+    try:
+        with open(path, 'r') as fh:
+            return encodeData(json.load(fh))
+    except Exception:
+        with codecs.open(path, 'r', 'utf-8-sig') as fh:
+            return encodeData(json.loads(fh.read()))
+
+
 def createFileInDir(path, data):
     """Creates a new file in a folder or replace old."""
     with open(path, 'w') as f:
         json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
+
+
+def loadError(path, file_name, error):
+    with codecs.open(os.path.join(path, 'Errors.log'), 'a', 'utf-8-sig') as fh:
+        fh.write('%s: %s: %s, %s\n' % (time.asctime(), 'ERROR CONFIG DATA', file_name, error))
 
 
 def overrideMethod(wg_class, method_name="__init__"):
@@ -171,7 +200,17 @@ def checkDecoder(_string):
 
 
 def convertDictToNamedtuple(dictionary):
+    """
+    :type dictionary: dict
+    """
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
+
+
+def convertNamedtupleToDict(named):
+    """
+    :type named: namedtuple
+    """
+    return dict(named._asdict())
 
 
 COLOR = namedtuple("COLOR", ("PURPLE", "GREEN", "MULTIPLIER", "TEMPLATE"))(0.8333, 0.3333, 255, "#{:02X}{:02X}{:02X}")
