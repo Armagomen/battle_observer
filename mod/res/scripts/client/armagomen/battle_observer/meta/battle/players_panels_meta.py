@@ -22,6 +22,9 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_updateTextFieldS(self, vehicleID, name, text):
         return self.flashObject.as_updateTextField(vehicleID, name, text) if self._isDAAPIInited() else None
 
+    def as_setVehicleDeadS(self, vehicleID):
+        return self.flashObject.as_setVehicleDead(vehicleID) if self._isDAAPIInited() else None
+
     def as_updatePPanelBarS(self, vehicleID, scale, textField):
         return self.flashObject.as_updatePPanelBar(vehicleID, scale, textField) if self._isDAAPIInited() else None
 

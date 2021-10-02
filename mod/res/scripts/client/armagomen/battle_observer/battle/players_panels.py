@@ -27,6 +27,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.battle_ctx = self.sessionProvider.getCtx()
         self.isEpicRandomBattle = self._arenaVisitor.gui.isEpicRandomBattle()
         self._vehicles = set()
+        self._deadVehicles = set()
         self.playersDamage = defaultdict(int)
 
     def _populate(self):
@@ -57,8 +58,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
-            keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY,
-                                         self.settings[PANELS.DAMAGES_HOT_KEY])
+            keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, self.settings[PANELS.DAMAGES_HOT_KEY])
 
     def _dispose(self):
         self._vehicles.clear()
@@ -131,13 +131,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies.union(aliveEnemies).difference(self._vehicles):
             self.as_AddVehIdToListS(vehicleID, vehicleID in aliveEnemies)
-        if self.hpBarsEnable:
-            for vehicleID in deadAllies.union(deadEnemies):
-                self.onVehicleKilled(vehicleID)
+        for vehicleID in deadAllies.union(deadEnemies).difference(self._deadVehicles):
+            self.onVehicleKilled(vehicleID)
 
-    def onVehicleKilled(self, targetID):
-        if targetID in self._vehicles:
-            self.as_updatePPanelBarS(targetID, GLOBAL.ZERO, GLOBAL.EMPTY_LINE)
+    def onVehicleKilled(self, vehicleID):
+        self.as_setVehicleDeadS(vehicleID)
+        self._deadVehicles.add(vehicleID)
 
     def replaceIconColor(self, vehicleID, classTag, enemy):
         self.as_setVehicleIconColorS(vehicleID, self.vehicleColor[classTag],
