@@ -264,7 +264,8 @@ translate = {
         "players_statistic_enabled": "Включить отображение WTR рейтинга в ушах",
         "players_statistic_enabled_tooltip": "Для дополнительной настройки отребуется зание HTML. Файл настроек "
                                              "/mods/configs/mod_battle_observer/ имя конфига /players_panels.json",
-        "players_statistic_pattern": "Форматирование вывода",
+        "players_statistic_pattern_left": "Форматирование вывода союзники",
+        "players_statistic_pattern_right": "Форматирование вывода противник",
         "players_statistic_pattern_tooltip": "Доступные макросы WTR, colorWTR, winRate, battles.",
     },
     "zoom": {

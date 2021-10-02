@@ -328,7 +328,8 @@ class PANELS:
     TEAM = ("green", "red")
     # ststistics
     STATISTIC_ENABLED = "players_statistic_enabled"
-    STATISTIC_PATTERN = "players_statistic_pattern"
+    STATISTIC_PATTERN_LEFT = "players_statistic_pattern_left"
+    STATISTIC_PATTERN_RIGHT = "players_statistic_pattern_right"
     STATISTIC_SETTINGS = "players_statistic_settings"
     STATISTIC_COLORS = "players_statistic_colors"
 
@@ -388,14 +389,14 @@ class CONFIG_INTERFACE:
             'outline*enabled': ('outline*color',)
         },
         PANELS.PANELS_NAME: {
-            "players_bars_enabled": (
+            PANELS.BARS_ENABLED: (
                 "players_bars_settings*players_bars_bar*outline*enabled",
                 "players_bars_settings*players_bars_bar*outline*customColor",
                 "players_bars_settings*players_bars_bar*outline*color",
                 "players_bars_settings*players_bars_bar*outline*alpha",
-                "players_bars_hotkey",
-                "players_bars_classColor",
-                "players_bars_on_key_pressed",
+                PANELS.BAR_HOT_KEY,
+                PANELS.BAR_CLASS_COLOR,
+                PANELS.ON_KEY_DOWN,
             ),
             'players_bars_settings*players_bars_bar*outline*customColor': (
                 'players_bars_settings*players_bars_bar*outline*color',
@@ -405,13 +406,11 @@ class CONFIG_INTERFACE:
                 'players_bars_settings*players_bars_bar*outline*alpha',
                 'players_bars_settings*players_bars_bar*outline*customColor'
             ),
-            'players_damages_enabled': (
-                'players_damages_hotkey', 'players_damages_settings*x', 'players_damages_settings*y'
+            PANELS.DAMAGES_ENABLED: (
+                PANELS.DAMAGES_HOT_KEY, 'players_damages_settings*x', 'players_damages_settings*y'
             ),
-            "panels_icon_enabled": ("panels_icon_filter_strength",)
-        },
-        ARMOR_CALC.NAME: {
-            'showCalcPoints': ('position*x', 'position*y', 'template')
+            PANELS.ICONS_ENABLED: (PANELS.ICONS_BLACKOUT,),
+            PANELS.STATISTIC_ENABLED: (PANELS.STATISTIC_PATTERN_RIGHT, PANELS.STATISTIC_PATTERN_LEFT)
         },
         MAIN.NAME: {
             MAIN.ENABLE_FPS_LIMITER: (MAIN.MAX_FRAME_RATE,),

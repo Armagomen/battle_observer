@@ -125,7 +125,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if self.statisticsData and vInfoVO.player.accountDBID:
             self.as_AddTextFieldS(vehicleID, "WTR", self.statisticSettings, PANELS.TEAM[isEnemy])
             self.as_updateTextFieldS(vehicleID, "WTR",
-                                     getStatisticString(vInfoVO.player.accountDBID, self.statisticsData))
+                                     getStatisticString(vInfoVO.player.accountDBID, self.statisticsData, isEnemy))
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies.union(aliveEnemies).difference(self._vehicles):
