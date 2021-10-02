@@ -296,7 +296,8 @@ ALIASES = __Aliases(
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME", "SPOTTED"))(
     "distance_to_enemy", "template", "align", "distance", "name", "spottedOnly")
 
-OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("own_health", "template", "align", "color")
+OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("own_health", "template", "align",
+                                                                              "color")
 
 
 class PANELS:
@@ -355,11 +356,6 @@ LOAD_LIST = (
     DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME,
     SIXTH_SENSE.NAME, USER_BACKGROUND.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, CLOCK.NAME, DISTANCE.NAME,
     OWN_HEALTH.NAME,
-)
-
-CACHE_DIRS = (
-    "account_caches", "battle_results", "clan_cache", "custom_data", "dossier_cache", "messenger_cache",
-    "storage_cache", "tutorial_cache", "veh_cmp_cache", "web_cache", "profile"
 )
 
 

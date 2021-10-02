@@ -12,8 +12,9 @@ import Math
 import ResMgr
 
 from BattleReplay import isPlaying, isLoading
-from armagomen.constants import MOD_NAME, GLOBAL, CACHE_DIRS
 from helpers.http import openUrl
+
+MOD_NAME = "BATTLE_OBSERVER"
 
 
 def isReplay():
@@ -116,9 +117,13 @@ def removeDirs(normpath, name):
 
 def clearClientCache(category=None):
     path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
-    path = os.path.split(path)[GLOBAL.FIRST]
+    path = os.path.split(path)[0]
+    dirs = (
+        "account_caches", "battle_results", "clan_cache", "custom_data", "dossier_cache", "messenger_cache",
+        "storage_cache", "tutorial_cache", "veh_cmp_cache", "web_cache", "profile"
+    )
     if category is None:
-        for dirName in CACHE_DIRS:
+        for dirName in dirs:
             removeDirs(os.path.join(path, dirName), dirName)
     else:
         removeDirs(os.path.join(path, category), category)
