@@ -30,16 +30,13 @@ def getColor(wtr):
     return COLORS.get(result, DEFAULT_COLOR)
 
 
-def getStatisticString(databaseID, users, isEnemy):
+def getStatisticString(databaseID, users):
     if databaseID not in CACHE:
         try:
             data = users[databaseID]
             wtr = getWTR(data)
-            color = getColor(wtr)
             winRate, battles = getPercent(data)
-            values = {"WTR": wtr, "colorWTR": color, "winRate": winRate, "battles": battles}
-            pattern = PANELS.STATISTIC_PATTERN_RIGHT if isEnemy else PANELS.STATISTIC_PATTERN_LEFT
-            CACHE[databaseID] = settings.players_panels[pattern] % values
+            CACHE[databaseID] = {"WTR": wtr, "colorWTR": getColor(wtr), "winRate": winRate, "battles": battles}
         except (ValueError, KeyError, ZeroDivisionError) as error:
             logError("{}.getStatisticString {}".format(__package__, repr(error)))
             return ""

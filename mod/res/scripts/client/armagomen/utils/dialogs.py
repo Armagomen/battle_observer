@@ -63,3 +63,20 @@ class UpdateDialogs(object):
             raise AsyncReturn(True)
         else:
             raise AsyncReturn(False)
+
+
+class LoadingErrorDialog(object):
+    def __init__(self):
+        self.parent = None
+
+    def setView(self, view):
+        self.parent = view
+
+    @async
+    def showLoadingError(self, message):
+        builder = WarningDialogBuilder()
+        builder.setFormattedTitle("Battle Observer")
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
+        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.CANCEL))
+        raise AsyncReturn(result)

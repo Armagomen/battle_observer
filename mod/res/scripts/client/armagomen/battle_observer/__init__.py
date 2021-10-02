@@ -9,16 +9,8 @@ __status__ = "Production"
 __http__ = "localhost"
 __all__ = ['init', 'fini', 'onConnected', 'onDisconnected']
 
-from armagomen.battle_observer.core import m_core
+from armagomen.battle_observer.core import init, fini
 from armagomen.utils.events import g_events
-
-
-def init():
-    m_core.start()
-
-
-def fini():
-    m_core.onExit()
 
 
 def onConnected(*args, **kwargs):

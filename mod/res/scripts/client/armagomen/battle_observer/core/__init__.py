@@ -1,10 +1,14 @@
-from armagomen.utils.common import logWarning
-
+loadError = False
+errorMessage = ""
 try:
     from gui.modsListApi import g_modsListApi
     from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
 except ImportError as err:
-    logWarning("%s: Settings API not found, mod not loaded, please install api packages" % repr(err))
+    from armagomen.utils.common import logWarning
+
+    errorMessage = repr(err)
+    logWarning(errorMessage)
+    loadError = True
 else:
     from armagomen.battle_observer.core.battle import BattleCore, ViewSettings
     from armagomen.battle_observer.core.observer_core import ObserverCore
@@ -19,3 +23,16 @@ else:
     b_core = BattleCore(settings)
     keysParser = HotKeysParser(settings)
     configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, c_Loader)
+
+
+def init():
+    if loadError:
+        from armagomen.battle_observer.core.loading_error import LoadingError
+        return LoadingError(errorMessage)
+    m_core.start()
+
+
+def fini():
+    if loadError:
+        return
+    m_core.onExit()
