@@ -23,7 +23,8 @@ class ComponentsLoader(object):
             'shot_result_plugin': None,
             'tank_carousel': None,
             'wg_logs_fixes': None,
-            'tmen_xp': None
+            'tmen_xp': None,
+            'for_tests': None
         }
 
     def start(self):

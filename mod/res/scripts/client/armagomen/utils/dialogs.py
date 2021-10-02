@@ -11,16 +11,21 @@ from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
 
 
-class UpdateDialogs(object):
-    __slots__ = ("localization", "parent", "onClickDownload")
-
+class DialogBase(object):
     def __init__(self):
-        self.localization = localization['updateDialog']
-        self.parent = None
-        self.onClickDownload = SafeEvent()
+        self.view = None
 
     def setView(self, view):
-        self.parent = view
+        self.view = view
+
+
+class UpdateDialogs(DialogBase):
+    __slots__ = ("localization", "view", "onClickDownload")
+
+    def __init__(self):
+        super(UpdateDialogs, self).__init__()
+        self.localization = localization['updateDialog']
+        self.onClickDownload = SafeEvent()
 
     @async
     def showUpdateError(self, message):
@@ -28,7 +33,7 @@ class UpdateDialogs(object):
         builder.setFormattedTitle("ERROR DOWNLOAD - Battle Observer Update")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
-        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.CANCEL))
+        result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
         raise AsyncReturn(result)
 
     @async
@@ -39,7 +44,7 @@ class UpdateDialogs(object):
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=self.localization['buttonOK'])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
-        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.PURCHASE))
+        result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.PURCHASE))
         if result:
             restartGame()
         raise AsyncReturn(result)
@@ -54,7 +59,7 @@ class UpdateDialogs(object):
         builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=self.localization['buttonAUTO'])
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=self.localization['buttonHANDLE'])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
-        result = yield await(dialogs.show(builder.build(self.parent)))
+        result = yield await(dialogs.show(builder.build(self.view)))
         if result.result == DialogButtons.RESEARCH:
             self.onClickDownload()
             raise AsyncReturn(True)
@@ -65,12 +70,7 @@ class UpdateDialogs(object):
             raise AsyncReturn(False)
 
 
-class LoadingErrorDialog(object):
-    def __init__(self):
-        self.parent = None
-
-    def setView(self, view):
-        self.parent = view
+class LoadingErrorDialog(DialogBase):
 
     @async
     def showLoadingError(self, message):
@@ -78,5 +78,5 @@ class LoadingErrorDialog(object):
         builder.setFormattedTitle("Battle Observer")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
-        result = yield await(dialogs.showSimple(builder.build(self.parent), DialogButtons.CANCEL))
+        result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
         raise AsyncReturn(result)

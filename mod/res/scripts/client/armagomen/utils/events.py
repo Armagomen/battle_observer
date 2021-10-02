@@ -10,6 +10,7 @@ class Events(object):
         self.onDisconnected = SafeEvent()
         self.onConnected = SafeEvent()
         self.onHangarLoaded = SafeEvent()
+        self.onBattlePageLoaded = SafeEvent()
 
 
 g_events = Events()

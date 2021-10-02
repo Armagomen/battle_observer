@@ -4,6 +4,7 @@ from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
+from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -70,6 +71,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in self.__viewAliases:
             return
+        g_events.onBattlePageLoaded(view)
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         g_playerEvents.onAvatarReady += self.onAvatarReady
         self.flash = view.flashObject
