@@ -11,7 +11,7 @@ if region == "na":
 if statisticEnabled:
     URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
     SEPARATOR = "%2C"
-    FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating"))
+    FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
     API_KEY = "application_id=2a7b45c57d9197bfa7fcb0e342673292&account_id="
     STAT_URL = "{url}{key}{ids}&extra=statistics.random&fields={fields}&language=en".format(
         url=URL, key=API_KEY, ids="{ids}", fields=FIELDS)

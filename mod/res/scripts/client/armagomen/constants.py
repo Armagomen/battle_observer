@@ -285,13 +285,13 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
 
 __Aliases = namedtuple("ALIASES", (
     "HP_BARS", "DAMAGE_LOG", "MAIN_GUN", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME",
-    "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "DATE_TIME", "DISTANCE", "OWN_HEALTH"))
+    "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "BATTLE_LOADING"))
 ALIASES = __Aliases(
     "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_MainGun_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI",
     "Observer_UserBackGround_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
-    "Observer_OwnHealth_UI")
+    "Observer_OwnHealth_UI", "Observer_BattleLoading_UI")
 
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME", "SPOTTED"))(
     "distance_to_enemy", "template", "align", "distance", "name", "spottedOnly")
@@ -348,6 +348,9 @@ MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "LOCKED_BY_FILE_NAME", "UP
     "START LOADING", "SHUTTING DOWN", "ERROR: file {} is not valid, mod locked, please install mod from official site",
     "The update check is completed, you have the current version.",
     "An update {} is detected, the client will be restarted at the end of the download.")
+
+BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME", ))("battle_loading", )
+
 
 LOAD_LIST = (
     HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
@@ -465,6 +468,7 @@ ALIAS_TO_PATH = {
     ALIASES.DATE_TIME: ".date_times",
     ALIASES.DISTANCE: ".distance_to_enemy",
     ALIASES.OWN_HEALTH: ".own_health",
+    ALIASES.BATTLE_LOADING: ".battle_loading",
 }
 
 ALIAS_TO_CONFIG_NAME = {
@@ -487,7 +491,7 @@ ALIAS_TO_CONFIG_NAME = {
 }
 
 SORTED_ALIASES = (
-    ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
+    ALIASES.BATTLE_LOADING, ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
     ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
     ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.DATE_TIME, ALIASES.DISTANCE, ALIASES.OWN_HEALTH, ALIASES.USER_BACKGROUND
 )

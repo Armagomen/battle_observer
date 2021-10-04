@@ -132,11 +132,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         for vehicleID in aliveAllies.union(aliveEnemies).difference(self._vehicles):
             self.as_AddVehIdToListS(vehicleID, vehicleID in aliveEnemies)
         for vehicleID in deadAllies.union(deadEnemies).difference(self._deadVehicles):
-            self.onVehicleKilled(vehicleID)
-
-    def onVehicleKilled(self, vehicleID):
-        self.as_setVehicleDeadS(vehicleID)
-        self._deadVehicles.add(vehicleID)
+            self.as_setVehicleDeadS(vehicleID)
+            self._deadVehicles.add(vehicleID)
 
     def replaceIconColor(self, vehicleID, classTag, enemy):
         self.as_setVehicleIconColorS(vehicleID, self.vehicleColor[classTag],

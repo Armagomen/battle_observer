@@ -8,6 +8,7 @@ package net.armagomen.battleobserver
 	import flash.display.*;
 	import flash.text.Font;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
+	import net.armagomen.battleobserver.battle.components.BattleLoadingUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
 	import net.armagomen.battleobserver.battle.components.DistanceUI;
@@ -79,9 +80,13 @@ package net.armagomen.battleobserver
 				case "Observer_OwnHealth_UI": 
 					this.registerComponent(this.addChild(new OwnHealthUI()), ui_name);
 					break;
+				case "Observer_BattleLoading_UI": 
+					this.registerComponent(new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING)), ui_name);
+					break;
 				default: 
 					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + ui_name);
 					break;
+					
 				}
 			}
 			
@@ -126,6 +131,7 @@ package net.armagomen.battleobserver
 					case "Observer_Minimap_UI": 
 						this.registerComponent(new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP)), ui_name);
 						break;
+						
 					}
 				}
 			}

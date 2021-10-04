@@ -20,6 +20,10 @@ def getPercent(data):
     return 0.0, battles
 
 
+def getNickName(data):
+    return data.get("nickname")
+
+
 def getColor(wtr):
     result = "very_bad"
     for value, colorName in WTR_COLORS:
@@ -36,7 +40,8 @@ def getStatisticString(databaseID, users):
             data = users[databaseID]
             wtr = getWTR(data)
             winRate, battles = getPercent(data)
-            CACHE[databaseID] = {"WTR": wtr, "colorWTR": getColor(wtr), "winRate": winRate, "battles": battles}
+            CACHE[databaseID] = {"WTR": wtr, "colorWTR": getColor(wtr), "winRate": winRate, "battles": battles,
+                                 "nickname": getNickName(data)}
         except (ValueError, KeyError, ZeroDivisionError) as error:
             logError("{}.getStatisticString {}".format(__package__, repr(error)))
             return ""

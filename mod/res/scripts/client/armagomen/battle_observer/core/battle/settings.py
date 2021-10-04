@@ -41,8 +41,9 @@ class ViewSettings(object):
             isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
         if not isAllowed:
             return isAllowed
-
-        if alias is ALIASES.HP_BARS:
+        if alias is ALIASES.BATTLE_LOADING:
+            return True
+        elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
         elif alias is ALIASES.DAMAGE_LOG:
             return (self.cfg.log_total[GLOBAL.ENABLED] or self.cfg.log_damage_extended[GLOBAL.ENABLED] or
