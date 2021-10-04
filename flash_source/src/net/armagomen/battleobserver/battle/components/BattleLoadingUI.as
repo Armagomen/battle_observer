@@ -6,14 +6,13 @@ package net.armagomen.battleobserver.battle.components
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
-
+	
 	public class BattleLoadingUI extends ObserverBattleDispalaysble
 	{
 		private var loading:*;
 		public var py_getStatisticString:Function;
 		public var py_getIconColor:Function;
 		public var py_getIconMultiplier:Function;
-		
 		
 		public function BattleLoadingUI(loading:*)
 		{
@@ -33,35 +32,48 @@ package net.armagomen.battleobserver.battle.components
 		
 		private function setVehicleIconColor(listitem:*):void
 		{
-			var color:String = py_getIconColor(listitem.model.vehicleID);
-			var multiplier:Number = py_getIconMultiplier();
+			var color:String           = py_getIconColor(listitem.model.vehicleID);
+			var multiplier:Number      = py_getIconMultiplier();
 			var icon:BattleAtlasSprite = listitem._vehicleIcon;
 			icon['battleObserver'] = {"color": Utils.colorConvert(color), "multiplier": multiplier};
 			if (!icon.hasEventListener(Event.RENDER))
 			{
 				icon.addEventListener(Event.RENDER, this.onRenderHendle);
 			}
-
+		
 		}
 		
-		public function afterPopulate():void
+		public function afterPopulate(statistics:Boolean, setIcon:Boolean):void
 		{
 			for each (var ally:* in this.loading.form._allyRenderers)
 			{
-				this.setVehicleIconColor(ally);
-				ally._textField.autoSize = TextFieldAutoSize.LEFT;
-				if (ally.model.accountDBID != 0)
+				if (setIcon)
 				{
-					ally._textField.htmlText = this.py_getStatisticString(ally.model.accountDBID, false);
+					this.setVehicleIconColor(ally);
 				}
+				if (statistics)
+				{
+					ally._textField.autoSize = TextFieldAutoSize.LEFT;
+					if (ally.model.accountDBID != 0)
+					{
+						ally._textField.htmlText = this.py_getStatisticString(ally.model.accountDBID, false);
+					}
+				}
+				
 			}
 			for each (var enemy:* in this.loading.form._enemyRenderers)
 			{
-				this.setVehicleIconColor(enemy);
-				enemy._textField.autoSize = TextFieldAutoSize.RIGHT;
-				if (enemy.model.accountDBID != 0)
+				if (setIcon)
 				{
-					enemy._textField.htmlText = this.py_getStatisticString(enemy.model.accountDBID, true);
+					this.setVehicleIconColor(enemy);
+				}
+				if (statistics)
+				{
+					enemy._textField.autoSize = TextFieldAutoSize.RIGHT;
+					if (enemy.model.accountDBID != 0)
+					{
+						enemy._textField.htmlText = this.py_getStatisticString(enemy.model.accountDBID, true);
+					}
 				}
 			}
 		}

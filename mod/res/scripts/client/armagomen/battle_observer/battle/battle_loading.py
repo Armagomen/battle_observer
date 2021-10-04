@@ -20,7 +20,11 @@ class BattleLoading(BaseModMeta):
     def _populate(self):
         super(BattleLoading, self)._populate()
         if statisticEnabled and self.statisticsData:
-            callback(0.1, self.flashObject.afterPopulate)
+            callback(0.1, self.afterPopulate)
+
+    def afterPopulate(self):
+        self.flashObject.afterPopulate(settings.players_panels[PANELS.STATISTIC_ENABLED],
+                                       settings.players_panels[PANELS.ICONS_ENABLED])
 
     def py_getStatisticString(self, accountDBID, isEnemy):
         pattern = ENEMY_PATTERN if isEnemy else ALLY_PATTERN
