@@ -41,7 +41,7 @@ class ViewSettings(object):
             isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
         if not isAllowed:
             return isAllowed
-        if alias is ALIASES.BATTLE_LOADING:
+        if alias is ALIASES.BATTLE_LOADING or alias is ALIASES.FULL_STATS:
             return True
         elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
@@ -130,7 +130,7 @@ class ViewSettings(object):
                 VIEW_ALIAS.EPIC_BATTLE_PAGE)
 
     def getExternalComponents(self):
-        components = []
+        components = [ALIASES.FULL_STATS]
         if self.getSetting(ALIASES.PANELS):
             components.append(ALIASES.PANELS)
         if self.getSetting(ALIASES.MINIMAP):

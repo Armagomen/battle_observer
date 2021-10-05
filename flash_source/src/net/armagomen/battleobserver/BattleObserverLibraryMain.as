@@ -9,6 +9,7 @@ package net.armagomen.battleobserver
 	import flash.text.Font;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
 	import net.armagomen.battleobserver.battle.components.BattleLoadingUI;
+	import net.armagomen.battleobserver.battle.components.FullStatsUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
 	import net.armagomen.battleobserver.battle.components.DistanceUI;
@@ -131,7 +132,9 @@ package net.armagomen.battleobserver
 					case "Observer_Minimap_UI": 
 						this.registerComponent(new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP)), ui_name);
 						break;
-						
+					case "Observer_FullStats_UI": 
+						this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS)), ui_name);
+						break;
 					}
 				}
 			}

@@ -3,6 +3,7 @@ package net.armagomen.battleobserver.battle.components
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextField;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
@@ -32,10 +33,8 @@ package net.armagomen.battleobserver.battle.components
 		
 		private function setVehicleIconColor(listitem:*):void
 		{
-			var color:String           = py_getIconColor(listitem.model.vehicleID);
-			var multiplier:Number      = py_getIconMultiplier();
 			var icon:BattleAtlasSprite = listitem._vehicleIcon;
-			icon['battleObserver'] = {"color": Utils.colorConvert(color), "multiplier": multiplier};
+			icon['battleObserver'] = {"color": Utils.colorConvert(py_getIconColor(listitem.model.vehicleID)), "multiplier": py_getIconMultiplier()};
 			if (!icon.hasEventListener(Event.RENDER))
 			{
 				icon.addEventListener(Event.RENDER, this.onRenderHendle);
@@ -43,7 +42,7 @@ package net.armagomen.battleobserver.battle.components
 		
 		}
 		
-		public function afterPopulate(statistics:Boolean, setIcon:Boolean):void
+		public function as_showStats(statistics:Boolean, setIcon:Boolean):void
 		{
 			for each (var ally:* in this.loading.form._allyRenderers)
 			{
@@ -53,11 +52,7 @@ package net.armagomen.battleobserver.battle.components
 				}
 				if (statistics)
 				{
-					ally._textField.autoSize = TextFieldAutoSize.LEFT;
-					if (ally.model.accountDBID != 0)
-					{
-						ally._textField.htmlText = this.py_getStatisticString(ally.model.accountDBID, false);
-					}
+					this.setPlayerText(ally, false);
 				}
 				
 			}
@@ -69,12 +64,16 @@ package net.armagomen.battleobserver.battle.components
 				}
 				if (statistics)
 				{
-					enemy._textField.autoSize = TextFieldAutoSize.RIGHT;
-					if (enemy.model.accountDBID != 0)
-					{
-						enemy._textField.htmlText = this.py_getStatisticString(enemy.model.accountDBID, true);
-					}
+					this.setPlayerText(enemy, true);
 				}
+			}
+		}
+		
+		private function setPlayerText(holder:*, isEnemy:Boolean):void
+		{
+			if (holder.model.accountDBID != 0){
+				holder._textField.autoSize = isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				holder._textField.htmlText = py_getStatisticString(holder.model.accountDBID, isEnemy);
 			}
 		}
 	

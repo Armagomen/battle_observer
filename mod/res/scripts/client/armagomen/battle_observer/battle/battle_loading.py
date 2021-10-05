@@ -1,7 +1,7 @@
 # coding=utf-8
 from armagomen.battle_observer.core import settings
-from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
-from armagomen.battle_observer.statistics.statistic_data_loader import getCachedStatisticData, statisticEnabled
+from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
+from armagomen.battle_observer.statistics.statistic_data_loader import statisticEnabled
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
 from armagomen.constants import VEHICLE_TYPES, PANELS
 from armagomen.utils.common import callback
@@ -10,21 +10,16 @@ ALLY_PATTERN = "<font color='%(colorWTR)s'>[%(WTR)d]</font><font color='%(colorW
 ENEMY_PATTERN = "<font color='%(colorWTR)s'>%(nickname).10s</font><font color='%(colorWTR)s'>[%(WTR)d]</font>"
 
 
-class BattleLoading(BaseModMeta):
-
-    def __init__(self):
-        super(BattleLoading, self).__init__()
-        self.statisticsData = getCachedStatisticData(
-            vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
+class BattleLoading(StatsMeta):
 
     def _populate(self):
         super(BattleLoading, self)._populate()
         if statisticEnabled and self.statisticsData:
-            callback(0.1, self.afterPopulate)
+            callback(0.01, self.afterPopulate)
 
     def afterPopulate(self):
-        self.flashObject.afterPopulate(settings.players_panels[PANELS.STATISTIC_ENABLED],
-                                       settings.players_panels[PANELS.ICONS_ENABLED])
+        self.as_showStats(settings.players_panels[PANELS.STATISTIC_ENABLED],
+                          settings.players_panels[PANELS.ICONS_ENABLED])
 
     def py_getStatisticString(self, accountDBID, isEnemy):
         pattern = ENEMY_PATTERN if isEnemy else ALLY_PATTERN
