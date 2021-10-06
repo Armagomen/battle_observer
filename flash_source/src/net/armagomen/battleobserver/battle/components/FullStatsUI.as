@@ -38,6 +38,7 @@ package net.armagomen.battleobserver.battle.components
 		override protected function onDispose():void
 		{
 			this.removeListeners();
+			App.utils.data.cleanupDynamicObject(this.cached);
 			super.onDispose();
 		}
 		
@@ -110,7 +111,7 @@ package net.armagomen.battleobserver.battle.components
 				playerName.autoSize = holder.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
 				playerName.htmlText = py_getStatisticString(holder.data.accountDBID, holder.statsItem._isEnemy);
 				if (!holder.data.isAlive()){
-					playerName.alpha = 0.6;
+					playerName.alpha = 0.5;
 				}
 			}
 		}

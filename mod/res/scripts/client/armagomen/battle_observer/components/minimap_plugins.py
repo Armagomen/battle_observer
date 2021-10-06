@@ -78,5 +78,5 @@ def _setupPlugins(base, plugin, arenaVisitor):
     if settings.minimap[GLOBAL.ENABLED] and view_settings.notEpicBattle():
         if settings.minimap[MINIMAP.DEATH_PERMANENT]:
             _plugins['vehicles'] = ArenaVehiclesPlugin
-    _plugins['personal'] = PersonalEntriesPlugin
+        _plugins['personal'] = PersonalEntriesPlugin
     return _plugins
