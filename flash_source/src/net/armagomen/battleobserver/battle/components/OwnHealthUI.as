@@ -1,10 +1,10 @@
 package net.armagomen.battleobserver.battle.components
 {
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	
-	public class OwnHealthUI extends ObserverBattleDispalaysble
+	public class OwnHealthUI extends ObserverBattleDisplayable
 	{
 		private var own_health:ProgressBar;
 		

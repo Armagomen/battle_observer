@@ -1,11 +1,11 @@
 package net.armagomen.battleobserver.battle.components
 {
 	import flash.text.TextFieldAutoSize;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
-	public class ArmorCalculatorUI extends ObserverBattleDispalaysble
+	public class ArmorCalculatorUI extends ObserverBattleDisplayable
 	{
 		private var armorCalc:TextExt;
 		

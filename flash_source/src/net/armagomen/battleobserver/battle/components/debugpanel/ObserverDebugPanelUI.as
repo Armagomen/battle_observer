@@ -1,14 +1,14 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
 	import flash.text.TextFieldAutoSize;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 
 	
-	public class ObserverDebugPanelUI extends ObserverBattleDispalaysble
+	public class ObserverDebugPanelUI extends ObserverBattleDisplayable
 	{
 		private var debugText:TextExt      = null;
 		private var fpsBar:ProgressBar     = null;

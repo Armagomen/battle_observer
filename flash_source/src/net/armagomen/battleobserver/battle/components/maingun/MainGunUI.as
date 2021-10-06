@@ -1,11 +1,11 @@
 package net.armagomen.battleobserver.battle.components.maingun
 {
 	import flash.events.Event;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
-	public class MainGunUI extends ObserverBattleDispalaysble
+	public class MainGunUI extends ObserverBattleDisplayable
 	{
 		private var mainGun:TextExt = null;
 		

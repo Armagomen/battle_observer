@@ -3,7 +3,7 @@ package net.armagomen.battleobserver.battle.base
 	import net.wg.gui.battle.components.BattleDisplayable;
 	import flash.events.Event;
 	
-	public class ObserverBattleDispalaysble extends BattleDisplayable
+	public class ObserverBattleDisplayable extends BattleDisplayable
 	{
 		public var getSettings:Function;
 		public var getShadowSettings:Function;
@@ -12,7 +12,7 @@ package net.armagomen.battleobserver.battle.base
 		public var getAlpha:Function;
 		public var getColors:Function;
 		
-		public function ObserverBattleDispalaysble()
+		public function ObserverBattleDisplayable()
 		{
 			super();
 		}

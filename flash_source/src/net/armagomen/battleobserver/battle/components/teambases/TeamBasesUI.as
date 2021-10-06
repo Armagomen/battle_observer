@@ -1,9 +1,9 @@
 package net.armagomen.battleobserver.battle.components.teambases
 {
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBase;
 	
-	public class TeamBasesUI extends ObserverBattleDispalaysble
+	public class TeamBasesUI extends ObserverBattleDisplayable
 	{
 		private var bases:Object = {"green": null, "red": null};
 		private var settings:Object;

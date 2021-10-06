@@ -2,12 +2,12 @@ package net.armagomen.battleobserver.battle.components
 {
 	import flash.display.Sprite;
 	import flash.events.Event;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
-	public class DamageLogsUI extends ObserverBattleDispalaysble
+	public class DamageLogsUI extends ObserverBattleDisplayable
 	{
 		private var top_Log:Sprite           = null;
 		private var top_log_inCenter:Boolean = true;

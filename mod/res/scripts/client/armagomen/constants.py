@@ -469,8 +469,8 @@ ALIAS_TO_PATH = {
     ALIASES.DATE_TIME: ".date_times",
     ALIASES.DISTANCE: ".distance_to_enemy",
     ALIASES.OWN_HEALTH: ".own_health",
-    ALIASES.BATTLE_LOADING: ".battle_loading",
-    ALIASES.FULL_STATS: ".full_stats",
+    ALIASES.BATTLE_LOADING: ".statistics.battle_loading",
+    ALIASES.FULL_STATS: ".statistics.full_stats",
 }
 
 ALIAS_TO_CONFIG_NAME = {

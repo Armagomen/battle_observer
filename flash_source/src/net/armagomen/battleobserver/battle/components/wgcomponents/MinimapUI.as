@@ -1,11 +1,11 @@
 package net.armagomen.battleobserver.battle.components.wgcomponents
 {
 	import flash.events.Event;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.minimap.Minimap;
 	
-	public class MinimapUI extends ObserverBattleDispalaysble
+	public class MinimapUI extends ObserverBattleDisplayable
 	{
 		private var newScale:Number   = 1.0;
 		private var vpos:Number       = 150.0;

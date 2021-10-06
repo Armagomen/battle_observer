@@ -2,9 +2,9 @@ package net.armagomen.battleobserver.battle.components
 {
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	
-	public class DispersionTimerUI extends ObserverBattleDispalaysble
+	public class DispersionTimerUI extends ObserverBattleDisplayable
 	{
 		private var dispersionTime:TextExt;
 		

@@ -3,7 +3,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import flash.events.Event;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
 	import net.armagomen.battleobserver.battle.components.teamshealth.League;
 	import net.armagomen.battleobserver.utils.Filters;
@@ -12,7 +12,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import net.wg.data.constants.Linkages;
 	import net.wg.gui.battle.views.BaseBattlePage;
 	
-	public class TeamsHealthUI extends ObserverBattleDispalaysble
+	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
 		private var greenText:TextExt;
 		private var redText:TextExt;

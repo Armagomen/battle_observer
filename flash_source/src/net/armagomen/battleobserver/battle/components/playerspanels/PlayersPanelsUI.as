@@ -3,7 +3,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
@@ -12,7 +12,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	import net.wg.gui.battle.components.stats.playersPanel.interfaces.IPlayersPanelListItem;
 	import net.wg.gui.battle.random.views.stats.components.playersPanel.interfaces.IPlayersPanelListItemHolder;
 	
-	public class PlayersPanelsUI extends ObserverBattleDispalaysble
+	public class PlayersPanelsUI extends ObserverBattleDisplayable
 	{
 		private var playersPanel:*  = null;
 		private var items:Object    = new Object();

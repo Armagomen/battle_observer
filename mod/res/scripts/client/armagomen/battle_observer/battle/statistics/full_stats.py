@@ -10,14 +10,6 @@ ENEMY_PATTERN = "<font color='%(colorWTR)s'>%(nickname)s</font><font color='%(co
 
 class FullStats(StatsMeta):
 
-    @staticmethod
-    def py_statisticEnabled():
-        return settings.players_panels[PANELS.STATISTIC_ENABLED]
-
-    @staticmethod
-    def py_iconEnabled():
-        return settings.players_panels[PANELS.ICONS_ENABLED]
-
     def py_getStatisticString(self, accountDBID, isEnemy):
         pattern = ENEMY_PATTERN if isEnemy else ALLY_PATTERN
         return pattern % getStatisticString(accountDBID, self.statisticsData)

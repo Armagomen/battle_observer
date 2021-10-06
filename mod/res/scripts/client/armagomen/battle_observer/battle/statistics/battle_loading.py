@@ -12,15 +12,6 @@ ENEMY_PATTERN = "<font color='%(colorWTR)s'>%(nickname).10s</font><font color='%
 
 class BattleLoading(StatsMeta):
 
-    def _populate(self):
-        super(BattleLoading, self)._populate()
-        if statisticEnabled and self.statisticsData:
-            callback(0.01, self.afterPopulate)
-
-    def afterPopulate(self):
-        self.as_showStats(settings.players_panels[PANELS.STATISTIC_ENABLED],
-                          settings.players_panels[PANELS.ICONS_ENABLED])
-
     def py_getStatisticString(self, accountDBID, isEnemy):
         pattern = ENEMY_PATTERN if isEnemy else ALLY_PATTERN
         return pattern % getStatisticString(accountDBID, self.statisticsData)

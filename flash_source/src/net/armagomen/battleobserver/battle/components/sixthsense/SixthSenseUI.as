@@ -4,14 +4,14 @@
 	import flash.events.Event;
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.tween.Tween;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.BaseBattlePage;
 	
-	public class SixthSenseUI extends ObserverBattleDispalaysble
+	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
 		private var params:Object     = null;
 		private var timer:TextExt;

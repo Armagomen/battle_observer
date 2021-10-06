@@ -4,11 +4,11 @@ package net.armagomen.battleobserver.battle.components
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
 	
-	public class FullStatsUI extends ObserverBattleDispalaysble
+	public class FullStatsUI extends ObserverBattleDisplayable
 	{
 		private var fullStats:*               = null;
 		public var py_getStatisticString:Function;

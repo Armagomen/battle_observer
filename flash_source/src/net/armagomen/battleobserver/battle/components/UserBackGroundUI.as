@@ -3,9 +3,9 @@
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.net.URLRequest;
-	import net.armagomen.battleobserver.battle.base.ObserverBattleDispalaysble;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	
-	public class UserBackGroundUI extends ObserverBattleDispalaysble
+	public class UserBackGroundUI extends ObserverBattleDisplayable
 	{
 		private var groupMap:Array;
 		
