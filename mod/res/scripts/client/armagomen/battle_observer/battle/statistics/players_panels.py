@@ -1,12 +1,14 @@
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
 from armagomen.constants import VEHICLE_TYPES, STATISTICS
 
 
-class BattleLoading(StatsMeta):
+class PlayersPanelsStatistic(StatsMeta):
 
-    def py_getStatisticString(self, accountDBID, isEnemy, vehicleID):
-        pattern = self.settings[STATISTICS.LOADING_RIGHT] if isEnemy else self.settings[STATISTICS.LOADING_LEFT]
+    def py_getStatisticString(self, accountDBID, vehicleID):
+        pattern = settings.statistics[STATISTICS.PANELS_LEFT] if self._arenaDP.isAlly(vehicleID) else \
+            settings.statistics[STATISTICS.PANELS_RIGHT]
         vInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
         return pattern % getStatisticString(accountDBID, self.statisticsData, vInfoVO.player.clanAbbrev)
 

@@ -1,13 +1,9 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
 	import flash.display.Sprite;
-	import flash.events.Event;
-	import flash.geom.ColorTransform;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.armagomen.battleobserver.utils.Utils;
-	import net.wg.gui.battle.components.BattleAtlasSprite;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
 	import net.wg.gui.battle.components.stats.playersPanel.interfaces.IPlayersPanelListItem;
 	import net.wg.gui.battle.random.views.stats.components.playersPanel.interfaces.IPlayersPanelListItemHolder;
@@ -47,12 +43,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
 		{
 			var listitem:* = this.getListitem(vehicleID, enemy);
-			if (listitem && !listitem.hasOwnProperty("battleОbserver"))
+			if (listitem && !listitem.hasOwnProperty("battleObserver"))
 			{
-				var battleОbserver:Sprite = new Sprite();
-				battleОbserver.name = "battleОbserver";
-				battleОbserver.x = enemy ? -381 : 380;
-				this.items[vehicleID] = listitem.addChild(battleОbserver);
+				var battleObserver:Sprite = new Sprite();
+				battleObserver.name = "battleObserver";
+				battleObserver.x = enemy ? -381 : 380;
+				this.items[vehicleID] = listitem.addChild(battleObserver);
 				this.storage[vehicleID] = new Object();
 				this.onAddedToStorage(vehicleID, enemy);
 			}
@@ -70,7 +66,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					healthBar.setVisible(false);
 				}
 			}
-
 		}
 		
 		public function as_sethealthBarsVisible(vehicleID:int, vis:Boolean):void
@@ -154,22 +149,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setSpottedPosition - listitem is Null !!!");
 		}
-		
-		public function as_setVehicleIconColor(vehicleID:int, color:String, multipler:Number, enemy:Boolean):void
-		{
-			var listitem:* = this.getListitem(vehicleID, enemy);
-			if (listitem)
-			{
-				var icon:BattleAtlasSprite = listitem.vehicleIcon;
-				icon['battleObserver'] = {"color": Utils.colorConvert(color), "multipler": multipler};
-				if (!icon.hasEventListener(Event.RENDER))
-				{
-					icon.addEventListener(Event.RENDER, this.onRenderHendle);
-				}
-			}
-			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setVehicleIconColor - listitem is Null !!!");
-		}
-		
+			
 		public function as_colorBlindPPbars(vehicleID:int, hpColor:String):void
 		{
 			if (this.storage.hasOwnProperty(vehicleID))
@@ -188,15 +168,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					field.DamageTf.visible = vis;
 				}
 			}
-		}
-		
-		private function onRenderHendle(eve:Event):void
-		{
-			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
-			var tColor:ColorTransform  = icon.transform.colorTransform;
-			tColor.color = icon['battleObserver']['color'];
-			tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = icon['battleObserver']['multipler'];
-			icon.transform.colorTransform = tColor;
 		}
 		
 		private function getListitem(vehicleID:int, enemy:Boolean):IPlayersPanelListItem

@@ -1,4 +1,4 @@
-from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAIN
+from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAIN, STATISTICS
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -41,8 +41,9 @@ class ViewSettings(object):
             isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
         if not isAllowed:
             return isAllowed
-        if alias is ALIASES.BATTLE_LOADING or alias is ALIASES.FULL_STATS:
-            return True
+        if alias is ALIASES.BATTLE_LOADING or alias is ALIASES.FULL_STATS or alias is ALIASES.PANELS_STAT:
+            return self.cfg.statistics[GLOBAL.ENABLED] and (self.cfg.statistics[STATISTICS.STATISTIC_ENABLED] or
+                                                            self.cfg.statistics[STATISTICS.ICON_ENABLED])
         elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
         elif alias is ALIASES.DAMAGE_LOG:
@@ -130,9 +131,13 @@ class ViewSettings(object):
                 VIEW_ALIAS.EPIC_BATTLE_PAGE)
 
     def getExternalComponents(self):
-        components = [ALIASES.FULL_STATS]
+        components = []
         if self.getSetting(ALIASES.PANELS):
             components.append(ALIASES.PANELS)
         if self.getSetting(ALIASES.MINIMAP):
             components.append(ALIASES.MINIMAP)
+        if self.getSetting(ALIASES.FULL_STATS):
+            components.append(ALIASES.FULL_STATS)
+        if self.getSetting(ALIASES.PANELS_STAT):
+            components.append(ALIASES.PANELS_STAT)
         return components

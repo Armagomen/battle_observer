@@ -286,29 +286,37 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
 __Aliases = namedtuple("ALIASES", (
     "HP_BARS", "DAMAGE_LOG", "MAIN_GUN", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME",
     "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "BATTLE_LOADING",
-    "FULL_STATS"))
+    "FULL_STATS", "PANELS_STAT"))
 ALIASES = __Aliases(
     "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_MainGun_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI",
     "Observer_UserBackGround_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
-    "Observer_OwnHealth_UI", "Observer_BattleLoading_UI", "Observer_FullStats_UI")
+    "Observer_OwnHealth_UI", "Observer_BattleLoading_UI", "Observer_FullStats_UI", "Observer_PlayersPanelsStatistic_UI")
 
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME", "SPOTTED"))(
     "distance_to_enemy", "template", "align", "distance", "name", "spottedOnly")
 
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("own_health", "template", "align",
                                                                               "color")
-
+STATISTICS = namedtuple("STATISTICS", (
+    "NAME", "STATISTIC_ENABLED",
+    "LOADING_LEFT", "LOADING_RIGHT",
+    "TAB_LEFT", "TAB_RIGHT",
+    "PANELS_LEFT", "PANELS_RIGHT",
+    "COLORS", "ICON_ENABLED", "ICON_BLACKOUT"))(
+    "statistics", "statistics_enabled",
+    "statistics_pattern_loading_left", "statistics_pattern_loading_right",
+    "statistics_pattern_tab_left", "statistics_pattern_tab_right",
+    "statistics_pattern_panels_left", "statistics_pattern_panels_right",
+    "statistics_colors", "icon_enabled", "icon_blackout"
+)
 
 class PANELS:
     def __init__(self):
         pass
 
     PANELS_NAME = "players_panels"
-    # icons
-    ICONS_BLACKOUT = "panels_icon_filter_strength"
-    ICONS_ENABLED = "panels_icon_enabled"
     # hp_bars
     BARS_ENABLED = "players_bars_enabled"
     BAR_SETTINGS = "players_bars_settings"
@@ -328,12 +336,6 @@ class PANELS:
     SPOTTED_FIX = "panels_spotted_fix"
     DAMAGE = "damage"
     TEAM = ("green", "red")
-    # ststistics
-    STATISTIC_ENABLED = "players_statistic_enabled"
-    STATISTIC_PATTERN_LEFT = "players_statistic_pattern_left"
-    STATISTIC_PATTERN_RIGHT = "players_statistic_pattern_right"
-    STATISTIC_SETTINGS = "players_statistic_settings"
-    STATISTIC_COLORS = "players_statistic_colors"
 
 
 SAVE_SHOOT = namedtuple("SAVE_SHOOT", ("NAME", "MSG", "TEMPLATE", "DESTROYED_BLOCK", "VEHICLE", "TEAM", "HOT_KEY"))(
@@ -359,7 +361,7 @@ LOAD_LIST = (
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
     DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME,
     SIXTH_SENSE.NAME, USER_BACKGROUND.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, CLOCK.NAME, DISTANCE.NAME,
-    OWN_HEALTH.NAME,
+    OWN_HEALTH.NAME, STATISTICS.NAME
 )
 
 
@@ -409,8 +411,6 @@ class CONFIG_INTERFACE:
             PANELS.DAMAGES_ENABLED: (
                 PANELS.DAMAGES_HOT_KEY, 'players_damages_settings*x', 'players_damages_settings*y'
             ),
-            PANELS.ICONS_ENABLED: (PANELS.ICONS_BLACKOUT,),
-            PANELS.STATISTIC_ENABLED: (PANELS.STATISTIC_PATTERN_RIGHT, PANELS.STATISTIC_PATTERN_LEFT)
         },
         MAIN.NAME: {
             MAIN.ENABLE_FPS_LIMITER: (MAIN.MAX_FRAME_RATE,),
@@ -471,6 +471,7 @@ ALIAS_TO_PATH = {
     ALIASES.OWN_HEALTH: ".own_health",
     ALIASES.BATTLE_LOADING: ".statistics.battle_loading",
     ALIASES.FULL_STATS: ".statistics.full_stats",
+    ALIASES.PANELS_STAT: ".statistics.players_panels"
 }
 
 ALIAS_TO_CONFIG_NAME = {
@@ -490,11 +491,14 @@ ALIAS_TO_CONFIG_NAME = {
     ALIASES.DATE_TIME: CLOCK.NAME,
     ALIASES.DISTANCE: DISTANCE.NAME,
     ALIASES.OWN_HEALTH: OWN_HEALTH.NAME,
+    ALIASES.BATTLE_LOADING: STATISTICS.NAME,
+    ALIASES.FULL_STATS: STATISTICS.NAME,
+    ALIASES.PANELS_STAT: STATISTICS.NAME
 }
 
 SORTED_ALIASES = (
     ALIASES.BATTLE_LOADING, ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
     ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
     ALIASES.PANELS, ALIASES.MINIMAP, ALIASES.DATE_TIME, ALIASES.DISTANCE, ALIASES.OWN_HEALTH, ALIASES.USER_BACKGROUND,
-    ALIASES.FULL_STATS
+    ALIASES.FULL_STATS, ALIASES.PANELS_STAT
 )

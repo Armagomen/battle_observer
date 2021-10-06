@@ -1,17 +1,16 @@
-package net.armagomen.battleobserver.battle.components
+package net.armagomen.battleobserver.battle.components.ststistics
 {
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	import flash.text.TextFieldAutoSize;
 	import flash.text.TextField;
-	import flash.utils.setTimeout;
-	import net.armagomen.battleobserver.utils.Utils;
+	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
+	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
 	
-	public class BattleLoadingUI extends ObserverBattleDisplayable
+	public class FullStatsUI extends ObserverBattleDisplayable
 	{
-		private var loading:*;
+		private var fullStats:*               = null;
 		public var py_getStatisticString:Function;
 		public var py_getIconColor:Function;
 		public var py_getIconMultiplier:Function;
@@ -21,9 +20,9 @@ package net.armagomen.battleobserver.battle.components
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		
-		public function BattleLoadingUI(loading:*)
+		public function FullStatsUI(fullStats:*)
 		{
-			this.loading = loading;
+			this.fullStats = fullStats
 			super();
 		}
 		
@@ -33,6 +32,7 @@ package net.armagomen.battleobserver.battle.components
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
 			this.createCache();
+			this.addListeners();
 		}
 		
 		override protected function onDispose():void
@@ -42,36 +42,16 @@ package net.armagomen.battleobserver.battle.components
 			super.onDispose();
 		}
 		
-		private function timeout():void
-		{
-			setTimeout(this.createCache, 50);
-		}
-		
 		private function createCache():void
 		{
-			if (this.loading.form)
+			for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
 			{
-				for each (var ally:* in this.loading.form._allyRenderers)
-				{
-					if (!ally.model){
-						this.timeout();
-						return;
-					}
-					this.cached[ally.model.vehicleID] = ally;
-				}
-				for each (var enemy:* in this.loading.form._enemyRenderers)
-				{
-					if (!enemy.model){
-						this.timeout();
-						return;
-					}
-					this.cached[enemy.model.vehicleID] = enemy;
-				}
-				this.addListeners();
+				this.cached[ally.data.vehicleID] = ally;
+				
 			}
-			else
+			for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
 			{
-				this.timeout();
+				this.cached[enemy.data.vehicleID] = enemy;
 			}
 		}
 		
@@ -79,14 +59,15 @@ package net.armagomen.battleobserver.battle.components
 		{
 			for each (var holder:* in this.cached)
 			{
-				var icon:BattleAtlasSprite = holder._vehicleIcon;
-				icon['battleObserver_color'] = Utils.colorConvert(py_getIconColor(holder.model.vehicleID));
+				var icon:BattleAtlasSprite = holder.statsItem.vehicleIcon;
+				icon['battleObserver_color'] = Utils.colorConvert(py_getIconColor(holder.data.vehicleID));
 				icon['battleObserver_multiplier'] = py_getIconMultiplier();
-				icon['battleObserver_vehicleID'] = holder.model.vehicleID;
+				icon['battleObserver_vehicleID'] = holder.data.vehicleID;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
 				}
+				holder.statsItem._playerNameTF.autoSize = holder.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
 			}
 		}
 		
@@ -94,9 +75,9 @@ package net.armagomen.battleobserver.battle.components
 		{
 			for each (var holder:* in this.cached)
 			{
-				if (holder._vehicleIcon.hasEventListener(Event.RENDER))
+				if (holder.statsItem.vehicleIcon.hasEventListener(Event.RENDER))
 				{
-					holder._vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
+					holder.statsItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
 				}
 			}
 		}
@@ -112,6 +93,7 @@ package net.armagomen.battleobserver.battle.components
 			{
 				this.setPlayerText(this.cached[icon['battleObserver_vehicleID']]);
 			}
+		
 		}
 		
 		private function setVehicleIconColor(icon:BattleAtlasSprite):void
@@ -124,14 +106,13 @@ package net.armagomen.battleobserver.battle.components
 		
 		private function setPlayerText(holder:*):void
 		{
-			if (holder.model.accountDBID != 0)
+			if (holder.data.accountDBID != 0)
 			{
-				var playerName:TextField = holder._textField;
-				playerName.autoSize = holder._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-				playerName.htmlText = py_getStatisticString(holder.model.accountDBID, holder._isEnemy);
-				if (!holder.model.isAlive())
+				var playerName:TextField = holder.statsItem._playerNameTF;
+				playerName.htmlText = py_getStatisticString(holder.data.accountDBID, holder.statsItem._isEnemy, holder.data.vehicleID);
+				if (!holder.data.isAlive())
 				{
-					playerName.alpha = 0.5;
+					playerName.alpha = 0.6;
 				}
 			}
 		}

@@ -8,8 +8,6 @@ package net.armagomen.battleobserver
 	import flash.display.*;
 	import flash.text.Font;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
-	import net.armagomen.battleobserver.battle.components.BattleLoadingUI;
-	import net.armagomen.battleobserver.battle.components.FullStatsUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
 	import net.armagomen.battleobserver.battle.components.DistanceUI;
@@ -22,6 +20,9 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.maingun.MainGunUI;
 	import net.armagomen.battleobserver.battle.components.playerspanels.PlayersPanelsUI;
 	import net.armagomen.battleobserver.battle.components.sixthsense.SixthSenseUI;
+	import net.armagomen.battleobserver.battle.components.ststistics.BattleLoadingUI;
+	import net.armagomen.battleobserver.battle.components.ststistics.FullStatsUI;
+	import net.armagomen.battleobserver.battle.components.ststistics.PlayersPanelsStatisticUI;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
 	import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
@@ -134,6 +135,9 @@ package net.armagomen.battleobserver
 						break;
 					case "Observer_FullStats_UI": 
 						this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS)), ui_name);
+						break;
+					case "Observer_PlayersPanelsStatistic_UI": 
+						this.registerComponent(new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), ui_name);
 						break;
 					}
 				}

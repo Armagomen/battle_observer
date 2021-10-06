@@ -1,5 +1,7 @@
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 from armagomen.battle_observer.statistics.statistic_data_loader import getCachedStatisticData
+from armagomen.constants import STATISTICS
 
 
 class StatsMeta(BaseModMeta):
@@ -10,18 +12,12 @@ class StatsMeta(BaseModMeta):
 
     @staticmethod
     def py_statisticEnabled():
-        return False
+        return settings.statistics[STATISTICS.STATISTIC_ENABLED]
 
     @staticmethod
     def py_iconEnabled():
-        return True
-
-    def py_getStatisticString(self, accountDBID, isEnemy):
-        pass
-
-    def py_getIconColor(self, vehicleID):
-        pass
+        return settings.statistics[STATISTICS.ICON_ENABLED]
 
     @staticmethod
     def py_getIconMultiplier():
-        pass
+        return settings.statistics[STATISTICS.ICON_BLACKOUT]

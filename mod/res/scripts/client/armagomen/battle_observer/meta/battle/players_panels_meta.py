@@ -28,10 +28,6 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_updatePPanelBarS(self, vehicleID, scale, textField):
         return self.flashObject.as_updatePPanelBar(vehicleID, scale, textField) if self._isDAAPIInited() else None
 
-    def as_setVehicleIconColorS(self, vehID, color, multiplier, enemy):
-        return self.flashObject.as_setVehicleIconColor(vehID, color, multiplier,
-                                                       enemy) if self._isDAAPIInited() else None
-
     def as_setHPbarsVisibleS(self, vehID, visible):
         return self.flashObject.as_setHPbarsVisible(vehID, visible) if self._isDAAPIInited() else None
 

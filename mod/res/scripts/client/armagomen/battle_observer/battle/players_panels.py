@@ -3,9 +3,7 @@ from collections import defaultdict
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import keysParser
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
-from armagomen.battle_observer.statistics.statistic_data_loader import getCachedStatisticData, statisticEnabled
-from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
-from armagomen.constants import VEHICLE, GLOBAL, PANELS, COLORS, VEHICLE_TYPES
+from armagomen.constants import VEHICLE, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import getEntity
 from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -37,7 +35,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesEnable = self.settings[PANELS.DAMAGES_ENABLED]
         self.damagesText = self.settings[PANELS.DAMAGES_TEMPLATE]
         self.damagesSettings = self.settings[PANELS.DAMAGES_SETTINGS]
-        self.statisticSettings = self.settings[PANELS.STATISTIC_SETTINGS]
         self.barColors = self.colors[COLORS.GLOBAL]
         self.COLORS = (self.barColors[COLORS.ALLY_MAME],
                        self.barColors[COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME])
@@ -50,9 +47,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
-        if statisticEnabled and self.settings[PANELS.STATISTIC_ENABLED]:
-            self.statisticsData = getCachedStatisticData(
-                vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
+
         if not self.damagesEnable:
             return
         arena = self._arenaVisitor.getArenaSubscription()
@@ -99,8 +94,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             return
         self._vehicles.add(vehicleID)
         classTag = vInfoVO.vehicleType.classTag
-        if self.settings[PANELS.ICONS_ENABLED]:
-            self.replaceIconColor(vehicleID, classTag, isEnemy)
         if self.hpBarsEnable and vInfoVO.isAlive():
             maxHealth = vInfoVO.vehicleType.maxHealth
             newHealth = getattr(getEntity(vehicleID), 'health', maxHealth)
@@ -122,11 +115,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
             self.as_AddTextFieldS(vehicleID, PANELS.DAMAGES_TF, self.damagesSettings, PANELS.TEAM[isEnemy])
-        if self.statisticsData and vInfoVO.player.accountDBID:
-            self.as_AddTextFieldS(vehicleID, "WTR", self.statisticSettings, PANELS.TEAM[isEnemy])
-            pattern = PANELS.STATISTIC_PATTERN_RIGHT if isEnemy else PANELS.STATISTIC_PATTERN_LEFT
-            statistics = self.settings[pattern] % getStatisticString(vInfoVO.player.accountDBID, self.statisticsData)
-            self.as_updateTextFieldS(vehicleID, "WTR", statistics)
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies.union(aliveEnemies).difference(self._vehicles):
@@ -134,10 +122,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         for vehicleID in deadAllies.union(deadEnemies).difference(self._deadVehicles):
             self.as_setVehicleDeadS(vehicleID)
             self._deadVehicles.add(vehicleID)
-
-    def replaceIconColor(self, vehicleID, classTag, enemy):
-        self.as_setVehicleIconColorS(vehicleID, self.vehicleColor[classTag],
-                                     self.settings[PANELS.ICONS_BLACKOUT], enemy)
 
     def healthOnAlt(self, enable):
         if self.hpBarsEnable:

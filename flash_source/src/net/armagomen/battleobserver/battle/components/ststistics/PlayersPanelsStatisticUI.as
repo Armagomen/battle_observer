@@ -1,16 +1,16 @@
-package net.armagomen.battleobserver.battle.components
+package net.armagomen.battleobserver.battle.components.ststistics
 {
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	import flash.text.TextField;
-	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
 	
-	public class FullStatsUI extends ObserverBattleDisplayable
+	public class PlayersPanelsStatisticUI extends ObserverBattleDisplayable
 	{
-		private var fullStats:*               = null;
+		private static const NAME_WIDTH:int   = 130;
+		
+		private var panels:*                  = null;
 		public var py_getStatisticString:Function;
 		public var py_getIconColor:Function;
 		public var py_getIconMultiplier:Function;
@@ -20,9 +20,9 @@ package net.armagomen.battleobserver.battle.components
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		
-		public function FullStatsUI(fullStats:*)
+		public function PlayersPanelsStatisticUI(panels:*)
 		{
-			this.fullStats = fullStats
+			this.panels = panels;
 			super();
 		}
 		
@@ -44,39 +44,49 @@ package net.armagomen.battleobserver.battle.components
 		
 		private function createCache():void
 		{
-			for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
+			for each (var ally:* in panels.listRight._items)
 			{
-				this.cached[ally.data.vehicleID] = ally;
-				
+				this.cached[ally.vehicleID] = ally;
 			}
-			for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
+			for each (var enemy:* in panels.listLeft._items)
 			{
-				this.cached[enemy.data.vehicleID] = enemy;
+				this.cached[enemy.vehicleID] = enemy;
 			}
 		}
 		
+		/// item._listItem, item.getVehicleData().accountDBID
+		/// item._listItem.vehicleTF, item._listItem.playerNameCutTF, item._listItem.playerNameFullTF
+		/// item._listItem.vehicleIcon
+		/// item._listItem.vehicleTF
+		
 		private function addListeners():void
 		{
-			for each (var holder:* in this.cached)
+			for each (var item:* in this.cached)
 			{
-				var icon:BattleAtlasSprite = holder.statsItem.vehicleIcon;
-				icon['battleObserver_color'] = Utils.colorConvert(py_getIconColor(holder.data.vehicleID));
+				var icon:BattleAtlasSprite = item._listItem.vehicleIcon;
+				icon['battleObserver_color'] = Utils.colorConvert(py_getIconColor(item.vehicleID));
 				icon['battleObserver_multiplier'] = py_getIconMultiplier();
-				icon['battleObserver_vehicleID'] = holder.data.vehicleID;
+				icon['battleObserver_vehicleID'] = item.vehicleID;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
+				}
+				
+				if (this.statisticsEnabled)
+				{
+					item._listItem.playerNameCutTF.width = NAME_WIDTH;
+					item._listItem.playerNameFullTF.width = NAME_WIDTH;
 				}
 			}
 		}
 		
 		private function removeListeners():void
 		{
-			for each (var holder:* in this.cached)
+			for each (var item:* in this.cached)
 			{
-				if (holder.statsItem.vehicleIcon.hasEventListener(Event.RENDER))
+				if (item._listItem.vehicleIcon.hasEventListener(Event.RENDER))
 				{
-					holder.statsItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
+					item._listItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
 				}
 			}
 		}
@@ -92,7 +102,6 @@ package net.armagomen.battleobserver.battle.components
 			{
 				this.setPlayerText(this.cached[icon['battleObserver_vehicleID']]);
 			}
-		
 		}
 		
 		private function setVehicleIconColor(icon:BattleAtlasSprite):void
@@ -103,15 +112,17 @@ package net.armagomen.battleobserver.battle.components
 			icon.transform.colorTransform = tColor;
 		}
 		
-		private function setPlayerText(holder:*):void
+		private function setPlayerText(item:*):void
 		{
-			if (holder.data.accountDBID != 0)
+			var accountDBID:int = item.getVehicleData().accountDBID;
+			if (accountDBID != 0)
 			{
-				var playerName:TextField = holder.statsItem._playerNameTF;
-				playerName.autoSize = holder.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-				playerName.htmlText = py_getStatisticString(holder.data.accountDBID, holder.statsItem._isEnemy);
-				if (!holder.data.isAlive()){
-					playerName.alpha = 0.5;
+				item._listItem.playerNameFullTF.htmlText = py_getStatisticString(accountDBID, item.vehicleID);
+				item._listItem.playerNameCutTF.htmlText = py_getStatisticString(accountDBID, item.vehicleID);
+				if (!item._listItem._isAlive)
+				{
+					item._listItem.playerNameFullTF.alpha = 0.6;
+					item._listItem.playerNameCutTF.alpha = 0.6;
 				}
 			}
 		}

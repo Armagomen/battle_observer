@@ -7,7 +7,7 @@ from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL,
     DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS,
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
-    TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM, DISTANCE, OWN_HEALTH,
+    TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM, DISTANCE, OWN_HEALTH, STATISTICS,
 )
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -431,8 +431,6 @@ class DefaultSettings(object):
         }
         self.players_panels = {
             GLOBAL.ENABLED: False,
-            PANELS.ICONS_ENABLED: True,
-            PANELS.ICONS_BLACKOUT: -1.25,
             PANELS.SPOTTED_FIX: True,
             PANELS.DAMAGES_ENABLED: True,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
@@ -457,19 +455,7 @@ class DefaultSettings(object):
                         GLOBAL.ALPHA: 0.5
                     }
                 }
-            },
-            PANELS.STATISTIC_ENABLED: False,
-            PANELS.STATISTIC_PATTERN_LEFT: "<font color='%(colorWTR)s' size='30'>•</font>",
-            PANELS.STATISTIC_PATTERN_RIGHT: "<font color='%(colorWTR)s' size='30'>•</font>",
-            PANELS.STATISTIC_COLORS: {
-                "very_good": "#02C9B3",
-                "bad": "#FE7903",
-                "normal": "#F8F400",
-                "good": "#60FF00",
-                "unique": "#D042F3",
-                "very_bad": "#FE0E00",
-            },
-            PANELS.STATISTIC_SETTINGS: {GLOBAL.X: -87, GLOBAL.Y: -10, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.right},
+            }
         }
         self.flight_time = {
             GLOBAL.ENABLED: False,
@@ -528,6 +514,27 @@ class DefaultSettings(object):
                                         ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
         self.damage_log = DamageLogsSettings(self.log_total, self.log_damage_extended, self.log_input_extended,
                                              self.log_global)
+
+        self.statistics = {
+            GLOBAL.ENABLED: False,
+            STATISTICS.STATISTIC_ENABLED: False,
+            STATISTICS.LOADING_LEFT: "<font color='%(colorWTR)s'>[%(WTR)d] %(nickname).10s</font>%(clanTag)s",
+            STATISTICS.LOADING_RIGHT: "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).10s [%(WTR)d]</font>",
+            STATISTICS.TAB_LEFT: "<font color='%(colorWTR)s'>[%(WTR)d] %(nickname).10s</font>%(clanTag)s",
+            STATISTICS.TAB_RIGHT: "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).10s [%(WTR)d]</font>",
+            STATISTICS.PANELS_LEFT: "<font color='%(colorWTR)s'>[%(WTR)d] %(nickname).10s</font>%(clanTag)s",
+            STATISTICS.PANELS_RIGHT: "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).10s [%(WTR)d]</font>",
+            STATISTICS.COLORS: {
+                "very_good": "#02C9B3",
+                "bad": "#FE7903",
+                "normal": "#F8F400",
+                "good": "#60FF00",
+                "unique": "#D042F3",
+                "very_bad": "#FE0E00",
+            },
+            STATISTICS.ICON_ENABLED: False,
+            STATISTICS.ICON_BLACKOUT: -1.25,
+        }
 
 
 settings = DefaultSettings()
