@@ -8,9 +8,6 @@ class StatsMeta(BaseModMeta):
         self.statisticsData = getCachedStatisticData(
             vInfo.player.accountDBID for vInfo in self._arenaDP.getVehiclesInfoIterator())
 
-    def as_updateVehicleStatusS(self, data):
-        return self.flashObject.as_updateVehicleStatus(data) if self._isDAAPIInited() else None
-
     def as_showStats(self, statisticEnabled, iconEnabled):
         return self.flashObject.as_showStats(statisticEnabled, iconEnabled) if self._isDAAPIInited() else None
 
