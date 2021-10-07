@@ -304,12 +304,16 @@ STATISTICS = namedtuple("STATISTICS", (
     "LOADING_LEFT", "LOADING_RIGHT",
     "TAB_LEFT", "TAB_RIGHT",
     "PANELS_LEFT", "PANELS_RIGHT",
-    "COLORS", "ICON_ENABLED", "ICON_BLACKOUT"))(
+    "PANELS_LEFT_CUT", "PANELS_RIGHT_CUT",
+    "COLORS", "ICON_ENABLED", "ICON_BLACKOUT",
+    "PANELS_FULL_WIDTH", "PANELS_CUT_WIDTH"))(
     "statistics", "statistics_enabled",
     "statistics_pattern_loading_left", "statistics_pattern_loading_right",
     "statistics_pattern_tab_left", "statistics_pattern_tab_right",
     "statistics_pattern_panels_left", "statistics_pattern_panels_right",
-    "statistics_colors", "icon_enabled", "icon_blackout"
+    "statistics_pattern_panels_left_cut", "statistics_pattern_panels_right_cut",
+    "statistics_colors", "icon_enabled", "icon_blackout",
+    "panels_full_width", "panels_cut_width"
 )
 
 class PANELS:

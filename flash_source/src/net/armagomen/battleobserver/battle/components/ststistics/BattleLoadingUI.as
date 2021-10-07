@@ -44,7 +44,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function timeout():void
 		{
-			setTimeout(this.createCache, 50);
+			setTimeout(this.createCache, 100);
 		}
 		
 		private function createCache():void

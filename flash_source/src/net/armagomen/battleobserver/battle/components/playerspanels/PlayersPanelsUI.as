@@ -68,12 +68,15 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		public function as_sethealthBarsVisible(vehicleID:int, vis:Boolean):void
+		public function as_setHealthBarsVisible(vehicles:Array, vis:Boolean):void
 		{
-			if (this.storage.hasOwnProperty(vehicleID) && this.storage[vehicleID].hasOwnProperty("healthBar"))
+			for each (var vehicleID:int in vehicles) 
 			{
-				var healthBar:ProgressBar = this.storage[vehicleID]["healthBar"];
-				healthBar.setVisible(vis);
+				if (this.storage.hasOwnProperty(vehicleID) && this.storage[vehicleID].hasOwnProperty("healthBar"))
+				{
+					var healthBar:ProgressBar = this.storage[vehicleID]["healthBar"];
+					healthBar.setVisible(vis);
+				}
 			}
 		}
 		

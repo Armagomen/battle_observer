@@ -8,7 +8,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 	
 	public class PlayersPanelsStatisticUI extends ObserverBattleDisplayable
 	{
-		private static const NAME_WIDTH:int   = 130;
 		
 		private var panels:*                  = null;
 		public var py_getStatisticString:Function;
@@ -16,6 +15,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getIconMultiplier:Function;
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
+		public var py_getCutWidth:Function;
+		public var py_getFullWidth:Function;
 		private var cached:Object             = new Object;
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
@@ -74,8 +75,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				
 				if (this.statisticsEnabled)
 				{
-					item._listItem.playerNameCutTF.width = NAME_WIDTH;
-					item._listItem.playerNameFullTF.width = NAME_WIDTH;
+					item._listItem.playerNameCutTF.width = py_getCutWidth();
+					item._listItem.playerNameFullTF.width = py_getFullWidth();
 				}
 			}
 		}
@@ -117,10 +118,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var accountDBID:int = item.getVehicleData().accountDBID;
 			if (accountDBID != 0)
 			{
-				var playerNameHtml:String = py_getStatisticString(accountDBID, item.vehicleID);
+				var playerNameHtml:String = py_getStatisticString(accountDBID, item.vehicleID, false);
 				if (playerNameHtml){
 					item._listItem.playerNameFullTF.htmlText = playerNameHtml;
-					item._listItem.playerNameCutTF.htmlText = playerNameHtml;
+					item._listItem.playerNameCutTF.htmlText = py_getStatisticString(accountDBID, item.vehicleID, true);
 					if (!item._listItem._isAlive)
 					{
 						item._listItem.playerNameFullTF.alpha = 0.6;
