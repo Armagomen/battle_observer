@@ -14,7 +14,6 @@ class ComponentsLoader(object):
             'donate_messages': None,
             'effects': None,
             'friends': None,
-            'hide_server': None,
             'minimap_plugins': None,
             'postmortem': None,
             'premium_time': None,

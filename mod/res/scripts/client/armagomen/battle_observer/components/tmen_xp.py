@@ -16,7 +16,7 @@ class AccelerateCrewXp(object):
         overrideMethod(Hangar, "__onCurrentVehicleChanged")(self.onVehicleChanged)
 
     @decorators.process('updateTankmen')
-    def accelerateTmenXp(self, vehicle, value):
+    def accelerateCrewXp(self, vehicle, value):
         """
         :type value: bool
         :type vehicle: Vehicle
@@ -48,7 +48,7 @@ class AccelerateCrewXp(object):
             value = not availability or complete or self.checkXP(vehicle)
         if vehicle.isXPToTman != value:
             self.inProcess = True
-            self.accelerateTmenXp(vehicle, value)
+            self.accelerateCrewXp(vehicle, value)
 
 
 crewXP = AccelerateCrewXp()

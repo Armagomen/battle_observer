@@ -60,9 +60,6 @@ translate = {
                                            "The parameter will replace all voiceovers of bloggers, "
                                            "Chuck Norris and so on with the standard / from the voiceover mod. ",
         "disable_score_sound": "Deaktivieren Sie den Sound zur Änderung der Partitur",
-        "hide_server_in_hangar": "Deaktiviere die Anzeige des Servers im Hangar.",
-        "hide_server_in_hangar_tooltip": "Der Parameter funktioniert nach dem Neustart des "
-                                         "Hangars oder dem Neustart des Spiels.",
         "premium_time": "Display exact premium time.",
         "auto_crew_training": "Deaktivieren / aktivieren Sie Beschleunigtes Besatzungstraining Automatisch.",
         "auto_crew_training_tooltip": "Wenn das 'Feld-Upgrade' für den Panzer verfügbar ist und nicht gepumpt "

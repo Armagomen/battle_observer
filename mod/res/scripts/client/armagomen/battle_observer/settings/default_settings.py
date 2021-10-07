@@ -36,7 +36,6 @@ class DefaultSettings(object):
             MAIN.IGNORE_COMMANDERS: False,
             MAIN.HIDE_DOG_TAGS: False,
             MAIN.DISABLE_SCORE_SOUND: False,
-            MAIN.HIDE_SERVER_IN_HANGAR: False,
             MAIN.DEBUG: False,
             PREMIUM.PREMIUM_TIME: True,
             PREMIUM.PREMIUM_FORMAT: PREMIUM.DEFAULT_FORMAT_PREMIUM,
