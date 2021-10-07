@@ -118,7 +118,7 @@ class DispersionCircle(object):
     def __init__(self):
         self.enabled = False
         self.hooksEnable = False
-        self.replaceOriginalCircle = False
+        self.replaceWGCircle = False
         self.extraServerLap = False
         settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
@@ -169,11 +169,14 @@ class DispersionCircle(object):
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION.NAME:
-            self.replaceOriginalCircle = config[DISPERSION.CIRCLE_REPLACE]
             self.extraServerLap = config[DISPERSION.CIRCLE_EXTRA_LAP]
+            if self.extraServerLap:
+                self.replaceWGCircle = False
+            else:
+                self.replaceWGCircle = config[DISPERSION.CIRCLE_REPLACE]
             self.enabled = config[GLOBAL.ENABLED] and config[DISPERSION.ENABLED] and not \
                 g_replayCtrl.isPlaying
-            self.hooksEnable = self.enabled and (not self.replaceOriginalCircle or self.extraServerLap)
+            self.hooksEnable = self.enabled and (not self.replaceWGCircle or self.extraServerLap)
             global DISPERSION_SCALE
             DISPERSION_SCALE = config[DISPERSION.CIRCLE_SCALE_CONFIG] * 0.01
 
@@ -182,16 +185,16 @@ class DispersionCircle(object):
             return baseCreateGunMarker(isStrategic)
         bo_factory = BOGunMarkersDPFactory()
         if isStrategic:
-            controller, factory = (SPGController, bo_factory) if self.replaceOriginalCircle else \
+            controller, factory = (SPGController, bo_factory) if self.replaceWGCircle else \
                 (gun_marker_ctrl._SPGGunMarkerController, gun_marker_ctrl._GunMarkersDPFactory())
             client = controller(CLIENT, factory.getClientSPGProvider())
             server = SPGController(SERVER, bo_factory.getServerSPGProvider())
         else:
-            controller, factory = (_DefaultGunMarkerController, bo_factory) if self.replaceOriginalCircle else \
+            controller, factory = (_DefaultGunMarkerController, bo_factory) if self.replaceWGCircle else \
                 (gun_marker_ctrl._DefaultGunMarkerController, gun_marker_ctrl._GunMarkersDPFactory())
             client = controller(CLIENT, factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
-        return _GunMarkersDecorator(client, server, self.replaceOriginalCircle, self.extraServerLap)
+        return _GunMarkersDecorator(client, server, self.replaceWGCircle, self.extraServerLap)
 
 
 dispersion_circle = DispersionCircle()
