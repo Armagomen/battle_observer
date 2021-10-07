@@ -127,11 +127,14 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			if (holder.model.accountDBID != 0)
 			{
-				var playerName:TextField = holder._textField;
-				playerName.htmlText = py_getStatisticString(holder.model.accountDBID, holder._isEnemy, holder.model.vehicleID);
-				if (!holder.model.isAlive())
-				{
-					playerName.alpha = 0.6;
+				
+				var playerNameHtml:String = py_getStatisticString(holder.model.accountDBID, holder._isEnemy, holder.model.vehicleID);
+				if (playerNameHtml){
+					holder._textField.htmlText = playerNameHtml;
+					if (!holder.model.isAlive())
+					{
+						holder._textField.alpha = 0.6;
+					}
 				}
 			}
 		}

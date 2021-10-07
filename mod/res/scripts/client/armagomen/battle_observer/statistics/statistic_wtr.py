@@ -1,8 +1,8 @@
 from armagomen.battle_observer.core import settings
-from armagomen.utils.common import logError
+from armagomen.constants import STATISTICS
 
 WTR_COLORS = ((2971, "bad"), (4530, "normal"), (6370, "good"), (8525, "very_good"), (10158, "unique"))
-COLORS = settings.statistics["statistics_colors"]
+COLORS = settings.statistics[STATISTICS.COLORS]
 DEFAULT_COLOR = "#fafafa"
 CACHE = {}
 
@@ -35,14 +35,13 @@ def getColor(wtr):
 
 def getStatisticString(databaseID, users, clanTag):
     if databaseID not in CACHE:
-        try:
+        if databaseID in users:
             data = users[databaseID]
             wtr = getWTR(data)
             winRate, battles = getPercent(data)
             clanTag = "[{}]".format(clanTag) if clanTag else ""
             CACHE[databaseID] = {"WTR": wtr, "colorWTR": getColor(wtr), "winRate": winRate, "battles": battles,
                                  "nickname": getNickName(data), "clanTag": clanTag}
-        except (ValueError, KeyError, ZeroDivisionError) as error:
-            logError("{}.getStatisticString {}".format(__package__, repr(error)))
-            return {}
+        else:
+            return None
     return CACHE[databaseID]

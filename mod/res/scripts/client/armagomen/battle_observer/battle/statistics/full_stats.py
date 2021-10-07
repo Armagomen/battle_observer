@@ -8,7 +8,10 @@ class FullStats(StatsMeta):
     def py_getStatisticString(self, accountDBID, isEnemy, vehicleID):
         pattern = self.settings[STATISTICS.TAB_RIGHT] if isEnemy else self.settings[STATISTICS.TAB_LEFT]
         vInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
-        return pattern % getStatisticString(accountDBID, self.statisticsData, vInfoVO.player.clanAbbrev)
+        result = getStatisticString(accountDBID, self.statisticsData, vInfoVO.player.clanAbbrev)
+        if result is not None:
+            return pattern % result
+        return None
 
     def py_getIconColor(self, vehicleID):
         vInfoVO = self._arenaDP.getVehicleInfo(vehicleID)

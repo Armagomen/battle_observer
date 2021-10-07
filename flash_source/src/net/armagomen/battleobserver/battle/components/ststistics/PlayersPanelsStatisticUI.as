@@ -117,12 +117,15 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var accountDBID:int = item.getVehicleData().accountDBID;
 			if (accountDBID != 0)
 			{
-				item._listItem.playerNameFullTF.htmlText = py_getStatisticString(accountDBID, item.vehicleID);
-				item._listItem.playerNameCutTF.htmlText = py_getStatisticString(accountDBID, item.vehicleID);
-				if (!item._listItem._isAlive)
-				{
-					item._listItem.playerNameFullTF.alpha = 0.6;
-					item._listItem.playerNameCutTF.alpha = 0.6;
+				var playerNameHtml:String = py_getStatisticString(accountDBID, item.vehicleID);
+				if (playerNameHtml){
+					item._listItem.playerNameFullTF.htmlText = playerNameHtml;
+					item._listItem.playerNameCutTF.htmlText = playerNameHtml;
+					if (!item._listItem._isAlive)
+					{
+						item._listItem.playerNameFullTF.alpha = 0.6;
+						item._listItem.playerNameCutTF.alpha = 0.6;
+					}
 				}
 			}
 		}
