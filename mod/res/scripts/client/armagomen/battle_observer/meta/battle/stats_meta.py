@@ -1,6 +1,6 @@
 from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
-from armagomen.battle_observer.statistics.statistic_data_loader import getCachedStatisticData
+from armagomen.battle_observer.statistics.statistic_data_loader import getCachedStatisticData, statisticEnabled
 from armagomen.constants import STATISTICS
 
 
@@ -12,7 +12,7 @@ class StatsMeta(BaseModMeta):
 
     @staticmethod
     def py_statisticEnabled():
-        return settings.statistics[STATISTICS.STATISTIC_ENABLED]
+        return statisticEnabled and settings.statistics[STATISTICS.STATISTIC_ENABLED]
 
     @staticmethod
     def py_iconEnabled():
