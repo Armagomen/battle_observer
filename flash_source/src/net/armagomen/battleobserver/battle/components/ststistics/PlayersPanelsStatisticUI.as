@@ -17,9 +17,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_iconEnabled:Function;
 		public var py_getCutWidth:Function;
 		public var py_getFullWidth:Function;
-		private var cached:Object             = new Object;
+		private var cached:Object             = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
+		private var stringsCache:Object       = new Object();
+		private var stringsCacheCut:Object       = new Object();
+		
 		
 		public function PlayersPanelsStatisticUI(panels:*)
 		{
@@ -40,6 +43,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.cached);
+			App.utils.data.cleanupDynamicObject(this.stringsCache);
+			App.utils.data.cleanupDynamicObject(this.stringsCacheCut);
 			super.onDispose();
 		}
 		
@@ -118,15 +123,20 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var accountDBID:int = item.getVehicleData().accountDBID;
 			if (accountDBID != 0)
 			{
-				var playerNameHtml:String = py_getStatisticString(accountDBID, item.vehicleID, false);
-				if (playerNameHtml){
-					item._listItem.playerNameFullTF.htmlText = playerNameHtml;
-					item._listItem.playerNameCutTF.htmlText = py_getStatisticString(accountDBID, item.vehicleID, true);
-					if (!item._listItem._isAlive)
-					{
-						item._listItem.playerNameFullTF.alpha = 0.6;
-						item._listItem.playerNameCutTF.alpha = 0.6;
+				if (!this.stringsCache.hasOwnProperty(accountDBID))
+				{
+					var playerNameHtml:String = py_getStatisticString(accountDBID, item.vehicleID, false);
+					if (playerNameHtml){
+						this.stringsCache[accountDBID] = playerNameHtml;
+						this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, item.vehicleID, true);
 					}
+				}
+				item._listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID];
+				item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[accountDBID];
+				if (!item._listItem._isAlive)
+				{
+					item._listItem.playerNameFullTF.alpha = 0.6;
+					item._listItem.playerNameCutTF.alpha = 0.6;
 				}
 			}
 		}
