@@ -2,7 +2,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 {
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
@@ -17,7 +16,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getIconMultiplier:Function;
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
-		private var cached:Object             = new Object;
+		private var cached:Object             = new Object();
+		private var namesCache:Object         = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		
@@ -53,7 +53,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			{
 				for each (var ally:* in this.loading.form._allyRenderers)
 				{
-					if (!ally.model){
+					if (!ally.model)
+					{
 						this.timeout();
 						return;
 					}
@@ -61,7 +62,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				}
 				for each (var enemy:* in this.loading.form._enemyRenderers)
 				{
-					if (!enemy.model){
+					if (!enemy.model)
+					{
 						this.timeout();
 						return;
 					}
@@ -80,8 +82,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			for each (var holder:* in this.cached)
 			{
 				var icon:BattleAtlasSprite = holder._vehicleIcon;
-				icon['battleObserver_color'] = Utils.colorConvert(py_getIconColor(holder.model.vehicleID));
-				icon['battleObserver_multiplier'] = py_getIconMultiplier();
+				var tColor:ColorTransform  = icon.transform.colorTransform;
+				tColor.color = Utils.colorConvert(py_getIconColor(holder.model.vehicleType));
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
+				icon['battleObserver_cTansform'] = tColor;
 				icon['battleObserver_vehicleID'] = holder.model.vehicleID;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
@@ -107,7 +111,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
 			if (this.iconEnabled)
 			{
-				this.setVehicleIconColor(icon);
+				icon.transform.colorTransform = icon['battleObserver_cTansform'];
 			}
 			if (this.statisticsEnabled)
 			{
@@ -115,22 +119,17 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 		}
 		
-		private function setVehicleIconColor(icon:BattleAtlasSprite):void
-		{
-			var tColor:ColorTransform = icon.transform.colorTransform;
-			tColor.color = icon['battleObserver_color'];
-			tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = icon['battleObserver_multiplier'];
-			icon.transform.colorTransform = tColor;
-		}
-		
 		private function setPlayerText(holder:*):void
 		{
 			if (holder.model.accountDBID != 0)
 			{
-				
-				var playerNameHtml:String = py_getStatisticString(holder.model.accountDBID, holder._isEnemy, holder.model.vehicleID);
-				if (playerNameHtml){
-					holder._textField.htmlText = playerNameHtml;
+				if (!this.namesCache.hasOwnProperty(holder.model.accountDBID))
+				{
+					this.namesCache[holder.model.accountDBID] = py_getStatisticString(holder.model.accountDBID, holder._isEnemy, holder.model.clanAbbrev);
+				}
+				if (this.namesCache[holder.model.accountDBID])
+				{
+					holder._textField.htmlText = this.namesCache[holder.model.accountDBID];
 					if (!holder.model.isAlive())
 					{
 						holder._textField.alpha = 0.6;

@@ -21,8 +21,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var stringsCache:Object       = new Object();
-		private var stringsCacheCut:Object       = new Object();
-		
+		private var stringsCacheCut:Object    = new Object();
 		
 		public function PlayersPanelsStatisticUI(panels:*)
 		{
@@ -60,24 +59,24 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 		}
 		
-		/// item._listItem, item.getVehicleData().accountDBID
-		/// item._listItem.vehicleTF, item._listItem.playerNameCutTF, item._listItem.playerNameFullTF
-		/// item._listItem.vehicleIcon
-		/// item._listItem.vehicleTF
+		/// item._listItem, item.vehicleID, item.accountDBID, item.getVehicleData().vehicleType
+		/// item._listItem.playerNameCutTF, item._listItem.playerNameFullTF
+		/// item._listItem.vehicleIcon, item._listItem.vehicleTF
 		
 		private function addListeners():void
 		{
 			for each (var item:* in this.cached)
 			{
 				var icon:BattleAtlasSprite = item._listItem.vehicleIcon;
-				icon['battleObserver_color'] = Utils.colorConvert(py_getIconColor(item.vehicleID));
-				icon['battleObserver_multiplier'] = py_getIconMultiplier();
+				var tColor:ColorTransform  = icon.transform.colorTransform;
+				tColor.color = Utils.colorConvert(py_getIconColor(item.getVehicleData().vehicleType));
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
+				icon['battleObserver_cTansform'] = tColor;
 				icon['battleObserver_vehicleID'] = item.vehicleID;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
 				}
-				
 				if (this.statisticsEnabled)
 				{
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
@@ -102,7 +101,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
 			if (this.iconEnabled)
 			{
-				this.setVehicleIconColor(icon);
+				icon.transform.colorTransform = icon['battleObserver_cTansform'];
 			}
 			if (this.statisticsEnabled)
 			{
@@ -110,33 +109,30 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 		}
 		
-		private function setVehicleIconColor(icon:BattleAtlasSprite):void
-		{
-			var tColor:ColorTransform = icon.transform.colorTransform;
-			tColor.color = icon['battleObserver_color'];
-			tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = icon['battleObserver_multiplier'];
-			icon.transform.colorTransform = tColor;
-		}
-		
 		private function setPlayerText(item:*):void
 		{
-			var accountDBID:int = item.getVehicleData().accountDBID;
+			var accountDBID:Number = item.accountDBID;
 			if (accountDBID != 0)
 			{
 				if (!this.stringsCache.hasOwnProperty(accountDBID))
 				{
-					var playerNameHtml:String = py_getStatisticString(accountDBID, item.vehicleID, false);
-					if (playerNameHtml){
+					var isEnemy:Boolean       = item.getVehicleData().teamColor == "vm_enemy"
+					var playerNameHtml:String = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, false);
+					if (playerNameHtml)
+					{
 						this.stringsCache[accountDBID] = playerNameHtml;
-						this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, item.vehicleID, true);
+						this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, true);
 					}
 				}
-				item._listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID];
-				item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[accountDBID];
-				if (!item._listItem._isAlive)
+				if (this.stringsCache[accountDBID])
 				{
-					item._listItem.playerNameFullTF.alpha = 0.6;
-					item._listItem.playerNameCutTF.alpha = 0.6;
+					item._listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID];
+					item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[accountDBID];
+					if (!item._listItem._isAlive)
+					{
+						item._listItem.playerNameFullTF.alpha = 0.6;
+						item._listItem.playerNameCutTF.alpha = 0.6;
+					}
 				}
 			}
 		}
