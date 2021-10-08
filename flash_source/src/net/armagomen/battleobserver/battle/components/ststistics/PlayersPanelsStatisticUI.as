@@ -2,6 +2,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 {
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
+	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
@@ -22,6 +23,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconEnabled:Boolean       = false;
 		private var stringsCache:Object       = new Object();
 		private var stringsCacheCut:Object    = new Object();
+		private var count:Number              = 0;
 		
 		public function PlayersPanelsStatisticUI(panels:*)
 		{
@@ -35,28 +37,42 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
 			this.createCache();
-			this.addListeners();
 		}
 		
-		override protected function onDispose():void
+		override protected function onBeforeDispose():void
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.cached);
 			App.utils.data.cleanupDynamicObject(this.stringsCache);
 			App.utils.data.cleanupDynamicObject(this.stringsCacheCut);
-			super.onDispose();
+			super.onBeforeDispose();
+		}
+		
+		private function timeout():void
+		{
+			this.count++;
+			if (count < 100)
+			{
+				setTimeout(this.createCache, 100);
+			}
 		}
 		
 		private function createCache():void
 		{
-			for each (var ally:* in panels.listRight._items)
+			if (!this.panels.listLeft || !this.panels.listLeft._items)
+			{
+				timeout();
+				return;
+			}
+			for each (var ally:* in this.panels.listRight._items)
 			{
 				this.cached[ally.vehicleID] = ally;
 			}
-			for each (var enemy:* in panels.listLeft._items)
+			for each (var enemy:* in this.panels.listLeft._items)
 			{
 				this.cached[enemy.vehicleID] = enemy;
 			}
+			this.addListeners();
 		}
 		
 		/// item._listItem, item.vehicleID, item.accountDBID, item.getVehicleData().vehicleType

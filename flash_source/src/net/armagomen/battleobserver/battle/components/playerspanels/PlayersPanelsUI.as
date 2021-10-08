@@ -5,27 +5,18 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
-	import net.wg.gui.battle.components.stats.playersPanel.interfaces.IPlayersPanelListItem;
-	import net.wg.gui.battle.random.views.stats.components.playersPanel.interfaces.IPlayersPanelListItemHolder;
 	
 	public class PlayersPanelsUI extends ObserverBattleDisplayable
 	{
-		private var playersPanel:*  = null;
-		private var items:Object    = new Object();
-		private var storage:Object  = new Object();
+		private var playersPanel:* = null;
+		private var items:Object   = new Object();
+		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
-		private var animate:Boolean = false;
 		
 		public function PlayersPanelsUI(panels:*)
 		{
 			this.playersPanel = panels;
 			super();
-		}
-		
-		override protected function onPopulate():void
-		{
-			super.onPopulate();
-			this.animate = this.animationEnabled();
 		}
 		
 		public function as_clearStorage():void
@@ -70,7 +61,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_setHealthBarsVisible(vehicles:Array, vis:Boolean):void
 		{
-			for each (var vehicleID:int in vehicles) 
+			for each (var vehicleID:int in vehicles)
 			{
 				if (this.storage.hasOwnProperty(vehicleID) && this.storage[vehicleID].hasOwnProperty("healthBar"))
 				{
@@ -98,7 +89,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					barX = -barX;
 					textX = -textX;
 				}
-				var healthBar:ProgressBar = new ProgressBar(this.animate, barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, 0.6);
+				var healthBar:ProgressBar = new ProgressBar(this.animationEnabled(), barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, 0.6);
 				if (settings.players_bars_bar.outline.enabled)
 				{
 					healthBar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
@@ -152,10 +143,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_setSpottedPosition - listitem is Null !!!");
 		}
-			
+		
 		public function as_colorBlindPPbars(vehicleID:int, hpColor:String):void
 		{
-			if (this.storage.hasOwnProperty(vehicleID))
+			if (this.storage.hasOwnProperty(vehicleID) && this.storage[vehicleID].hasOwnProperty("healthBar"))
 			{
 				var healthBar:ProgressBar = this.storage[vehicleID]["healthBar"];
 				healthBar.updateColor(hpColor);
@@ -173,12 +164,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		private function getListitem(vehicleID:int, enemy:Boolean):IPlayersPanelListItem
+		private function getListitem(vehicleID:int, enemy:Boolean):*
 		{
 			if (playersPanel)
 			{
-				var list:*                             = enemy ? playersPanel.listRight : playersPanel.listLeft;
-				var holder:IPlayersPanelListItemHolder = list.getHolderByVehicleID(vehicleID);
+				var list:*   = enemy ? playersPanel.listRight : playersPanel.listLeft;
+				var holder:* = list.getHolderByVehicleID(vehicleID);
 				if (holder && holder.getListItem())
 				{
 					return holder.getListItem();

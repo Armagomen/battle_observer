@@ -3,6 +3,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
@@ -19,6 +20,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var namesCache:Object         = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
+		private var count:Number              = 0;
 		
 		public function FullStatsUI(fullStats:*)
 		{
@@ -32,27 +34,50 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
 			this.createCache();
-			this.addListeners();
 		}
 		
-		override protected function onDispose():void
+		override protected function onBeforeDispose():void
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.cached);
-			super.onDispose();
+			super.onBeforeDispose();
+		}
+		
+		private function timeout():void
+		{
+			this.count++;
+			if (count < 100)
+			{
+				setTimeout(this.createCache, 100);
+			}
 		}
 		
 		private function createCache():void
 		{
+			if (!this.fullStats._tableCtrl || !this.fullStats._tableCtrl._allyRenderers)
+			{
+				this.timeout();
+				return;
+			}
 			for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
 			{
+				if (!ally.data)
+				{
+					this.timeout();
+					return;
+				}
 				this.cached[ally.data.vehicleID] = ally;
-				
 			}
 			for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
 			{
+				if (!enemy.data)
+				{
+					this.timeout();
+					return;
+				}
 				this.cached[enemy.data.vehicleID] = enemy;
 			}
+			this.addListeners();
 		}
 		
 		private function addListeners():void

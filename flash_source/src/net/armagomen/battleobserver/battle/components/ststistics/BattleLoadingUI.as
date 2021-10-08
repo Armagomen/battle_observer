@@ -20,6 +20,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var namesCache:Object         = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
+		private var count:Number              = 0;
 		
 		public function BattleLoadingUI(loading:*)
 		{
@@ -35,46 +36,48 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.createCache();
 		}
 		
-		override protected function onDispose():void
+		override protected function onBeforeDispose():void
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.cached);
-			super.onDispose();
+			super.onBeforeDispose();
 		}
 		
 		private function timeout():void
 		{
-			setTimeout(this.createCache, 100);
+			this.count++;
+			if (count < 100)
+			{
+				setTimeout(this.createCache, 100);
+			}
 		}
 		
 		private function createCache():void
 		{
-			if (this.loading.form)
-			{
-				for each (var ally:* in this.loading.form._allyRenderers)
-				{
-					if (!ally.model)
-					{
-						this.timeout();
-						return;
-					}
-					this.cached[ally.model.vehicleID] = ally;
-				}
-				for each (var enemy:* in this.loading.form._enemyRenderers)
-				{
-					if (!enemy.model)
-					{
-						this.timeout();
-						return;
-					}
-					this.cached[enemy.model.vehicleID] = enemy;
-				}
-				this.addListeners();
-			}
-			else
+			if (!this.loading.form)
 			{
 				this.timeout();
+				return;
 			}
+			for each (var ally:* in this.loading.form._allyRenderers)
+			{
+				if (!ally.model)
+				{
+					this.timeout();
+					return;
+				}
+				this.cached[ally.model.vehicleID] = ally;
+			}
+			for each (var enemy:* in this.loading.form._enemyRenderers)
+			{
+				if (!enemy.model)
+				{
+					this.timeout();
+					return;
+				}
+				this.cached[enemy.model.vehicleID] = enemy;
+			}
+			this.addListeners();
 		}
 		
 		private function addListeners():void
