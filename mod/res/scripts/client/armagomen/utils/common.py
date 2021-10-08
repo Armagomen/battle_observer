@@ -103,7 +103,11 @@ def cleanupUpdates(cwd):
     # Gather directory contents
     if not os.path.exists(path):
         return os.makedirs(path)
-    contents = [os.path.join(path, i) for i in os.listdir(path)]
+    ignored = set()
+    section = ResMgr.openSection(os.path.join(cwd, 'game_info.xml'))
+    for value in section['game']['upcoming_patches'].values():
+        ignored.add([val.asString for val in value.values()][0].split("\\")[0])
+    contents = [os.path.join(path, i) for i in os.listdir(path) if i not in ignored]
     # Iterate and remove each item in the appropriate manner
     if contents:
         for i in contents:
