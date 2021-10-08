@@ -6,6 +6,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.gui.battle.components.BattleAtlasSprite;
+	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	
 	public class PlayersPanelsStatisticUI extends ObserverBattleDisplayable
 	{
@@ -37,15 +38,28 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
 			this.createCache();
+			this.panels.addEventListener(Event.CHANGE, this.onChange);
 		}
 		
-		override protected function onBeforeDispose():void
+		private function clear():void
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.cached);
 			App.utils.data.cleanupDynamicObject(this.stringsCache);
 			App.utils.data.cleanupDynamicObject(this.stringsCacheCut);
+		}
+		
+		override protected function onBeforeDispose():void
+		{
+			this.clear();
+			this.panels.removeEventListener(Event.CHANGE, this.onChange);
 			super.onBeforeDispose();
+		}
+		
+		private function onChange(eve:Event):void
+		{
+			this.clear();
+			this.createCache();
 		}
 		
 		private function timeout():void
@@ -97,6 +111,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				{
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();
+					var oldMode:int = int(this.panels.state);
+					this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
+					this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.FULL);
+					this.panels.as_setPanelMode(oldMode);
 				}
 			}
 		}
@@ -105,6 +123,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			for each (var item:* in this.cached)
 			{
+				if (!item || !item._listItem || !item._listItem.vehicleIcon)
+				{
+					continue;
+				}
 				if (item._listItem.vehicleIcon.hasEventListener(Event.RENDER))
 				{
 					item._listItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
