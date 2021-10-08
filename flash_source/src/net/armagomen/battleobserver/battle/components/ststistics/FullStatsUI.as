@@ -88,8 +88,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				var tColor:ColorTransform  = icon.transform.colorTransform;
 				tColor.color = Utils.colorConvert(py_getIconColor(holder.data.vehicleType));
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
-				icon['battleObserver_cTansform'] = tColor;
-				icon['battleObserver_vehicleID'] = holder.data.vehicleID;
+				icon['cTansform'] = tColor;
+				icon['vehicleID'] = holder.data.vehicleID;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
@@ -114,11 +114,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
 			if (this.iconEnabled)
 			{
-				icon.transform.colorTransform = icon['battleObserver_cTansform'];
+				icon.transform.colorTransform = icon['cTansform'];
 			}
 			if (this.statisticsEnabled)
 			{
-				this.setPlayerText(this.cached[icon['battleObserver_vehicleID']]);
+				this.setPlayerText(this.cached[icon['vehicleID']]);
 			}
 		
 		}

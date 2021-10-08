@@ -56,7 +56,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, self.settings[PANELS.DAMAGES_HOT_KEY])
 
     def _dispose(self):
-        self._vehicles.clear()
+        self.clear()
         self.flashObject.as_clearStorage()
         isInEpicRange = self._arenaVisitor.gui.isInEpicRange()
         if not isInEpicRange and not self.isEpicRandomBattle:
@@ -69,6 +69,17 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 if arena is not None:
                     arena.onVehicleHealthChanged -= self.onPlayersDamaged
         super(PlayersPanels, self)._dispose()
+
+    def clear(self):
+        self._vehicles.clear()
+        self._deadVehicles.clear()
+        self.playersDamage.clear()
+
+    def createNewStorage(self):
+        vehicles = self._vehicles.copy()
+        self.clear()
+        for vehicleID in vehicles:
+            self.as_AddVehIdToListS(vehicleID, not self._arenaDP.isAlly(vehicleID))
 
     def onKeyPressed(self, name, isKeyDown):
         if name == PANELS.BAR_HOT_KEY:

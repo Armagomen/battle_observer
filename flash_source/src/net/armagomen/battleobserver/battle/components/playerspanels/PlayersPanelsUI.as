@@ -1,6 +1,7 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
 	import flash.display.Sprite;
+	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
@@ -12,6 +13,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var items:Object   = new Object();
 		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
+		public var createNewStorage:Function;
 		
 		public function PlayersPanelsUI(panels:*)
 		{
@@ -25,10 +27,23 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			App.utils.data.cleanupDynamicObject(items);
 		}
 		
-		override protected function onDispose():void
+		override protected function onPopulate():void 
+		{
+			super.onPopulate();
+			this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
+		}
+
+		override protected function onBeforeDispose():void
 		{
 			this.as_clearStorage();
-			super.onDispose();
+			this.playersPanel.removeEventListener(Event.CHANGE, this.onChange);
+			super.onBeforeDispose();
+		}
+		
+		private function onChange(eve:Event):void
+		{
+			this.as_clearStorage();
+			this.createNewStorage();
 		}
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void

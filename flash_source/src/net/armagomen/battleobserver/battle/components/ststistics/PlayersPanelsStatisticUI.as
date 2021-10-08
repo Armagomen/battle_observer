@@ -101,8 +101,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				var tColor:ColorTransform  = icon.transform.colorTransform;
 				tColor.color = Utils.colorConvert(py_getIconColor(item.getVehicleData().vehicleType));
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
-				icon['battleObserver_cTansform'] = tColor;
-				icon['battleObserver_vehicleID'] = item.vehicleID;
+				icon['cTansform'] = tColor;
+				icon['vehicleID'] = item.vehicleID;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
@@ -111,11 +111,14 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				{
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();
-					var oldMode:int = int(this.panels.state);
-					this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
-					this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.FULL);
-					this.panels.as_setPanelMode(oldMode);
 				}
+			}
+			if (this.statisticsEnabled)
+			{
+				var oldMode:int = int(this.panels.state);
+				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
+				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.FULL);
+				this.panels.as_setPanelMode(oldMode);
 			}
 		}
 		
@@ -139,14 +142,14 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
 			if (this.iconEnabled)
 			{
-				icon.transform.colorTransform = icon['battleObserver_cTansform'];
+				icon.transform.colorTransform = icon['cTansform'];
 			}
 			if (this.statisticsEnabled)
 			{
-				this.setPlayerText(this.cached[icon['battleObserver_vehicleID']]);
+				this.setPlayerText(this.cached[icon['vehicleID']]);
 			}
 		}
-		
+
 		private function setPlayerText(item:*):void
 		{
 			var accountDBID:Number = item.accountDBID;

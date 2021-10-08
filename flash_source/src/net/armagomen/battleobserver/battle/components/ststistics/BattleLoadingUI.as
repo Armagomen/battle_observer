@@ -34,13 +34,27 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
 			this.createCache();
+			this.loading.addEventListener(Event.CHANGE, this.onChange);
 		}
 		
 		override protected function onBeforeDispose():void
 		{
+			this.clear();
+			this.loading.removeEventListener(Event.CHANGE, this.onChange);
+			super.onBeforeDispose();
+		}
+		
+		private function clear():void
+		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.cached);
-			super.onBeforeDispose();
+			App.utils.data.cleanupDynamicObject(this.namesCache);
+		}
+		
+		private function onChange(eve:Event):void
+		{
+			this.clear();
+			this.createCache();
 		}
 		
 		private function timeout():void
@@ -88,8 +102,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				var tColor:ColorTransform  = icon.transform.colorTransform;
 				tColor.color = Utils.colorConvert(py_getIconColor(holder.model.vehicleType));
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
-				icon['battleObserver_cTansform'] = tColor;
-				icon['battleObserver_vehicleID'] = holder.model.vehicleID;
+				icon['cTansform'] = tColor;
+				icon['vehicleID'] = holder.model.vehicleID;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
@@ -102,6 +116,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			for each (var holder:* in this.cached)
 			{
+				if (!holder || !holder._vehicleIcon)
+				{
+					continue;
+				}
 				if (holder._vehicleIcon.hasEventListener(Event.RENDER))
 				{
 					holder._vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
@@ -114,11 +132,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
 			if (this.iconEnabled)
 			{
-				icon.transform.colorTransform = icon['battleObserver_cTansform'];
+				icon.transform.colorTransform = icon['cTansform'];
 			}
 			if (this.statisticsEnabled)
 			{
-				this.setPlayerText(this.cached[icon['battleObserver_vehicleID']]);
+				this.setPlayerText(this.cached[icon['vehicleID']]);
 			}
 		}
 		
