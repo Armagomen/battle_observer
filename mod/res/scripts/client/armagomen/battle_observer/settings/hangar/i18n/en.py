@@ -30,7 +30,8 @@ translate = {
         "selectedConfig": "Config",
         "donate_button_ua": "DONATE UA - Гривна",
         "donate_button_eu": "DONATE EUR|USD|RUB",
-        "support_button": "Discord support"
+        "donate_button_patreon": "Subscribe on Patreon",
+        "discord_button": "Discord support & chat"
     },
     "main": {
         "header": "GENERAL SETTINGS",

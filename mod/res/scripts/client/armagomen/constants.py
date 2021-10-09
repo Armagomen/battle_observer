@@ -16,9 +16,12 @@ HEADERS = [('User-Agent', MOD_NAME)]
 SWF = namedtuple("SWF", ("BATTLE", "LOBBY", "ATTRIBUTE_NAME"))(
     'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_createBattleObserverComp')
 
-URLS = namedtuple("URLS", ("HOST_NAME", "DONATE_UA_URL", "DONATE_EU_URL", "SUPPORT_URL", "UPDATE_GITHUB_API_URL"))(
-    "armagomen.bb-t.ru", "https://donatua.com/@armagomen", "https://www.donationalerts.com/r/armagomenvs",
-    "https://discord.gg/NuhuhTN", "https://api.github.com/repos/Armagomen/battle_observer/releases/latest")
+URLS = namedtuple("URLS", ("HOST_NAME", "DONATE_UA_URL", "DONATE_EU_URL", "SUPPORT_URL", "UPDATE_GITHUB_API_URL",
+                           "PATREON_URL"))("armagomen.bb-t.ru", "https://donatua.com/@armagomen",
+                                       "https://www.donationalerts.com/r/armagomenvs",
+                                       "https://discord.gg/NuhuhTN",
+                                       "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
+                                       "https://www.patreon.com/armagomen")
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
 
@@ -316,6 +319,7 @@ STATISTICS = namedtuple("STATISTICS", (
     "panels_full_width", "panels_cut_width"
 )
 
+
 class PANELS:
     def __init__(self):
         pass
@@ -356,8 +360,7 @@ MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "LOCKED_BY_FILE_NAME", "UP
     "The update check is completed, you have the current version.",
     "An update {} is detected, the client will be restarted at the end of the download.")
 
-BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME", ))("battle_loading", )
-
+BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )
 
 LOAD_LIST = (
     HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
@@ -373,7 +376,7 @@ class CONFIG_INTERFACE:
     def __init__(self):
         pass
 
-    DONATE_BUTTONS = ('donate_button_ua', 'donate_button_ru', 'donate_button_eu', 'support_button')
+    DONATE_BUTTONS = ('donate_button_ua', 'donate_button_eu', 'donate_button_patreon', 'discord_button')
     BLOCK_IDS = (
         ANOTHER.CONFIG_SELECT, MAIN.NAME, STATISTICS.NAME, DISPERSION.NAME, CAROUSEL.NAME, EFFECTS.NAME,
         DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,

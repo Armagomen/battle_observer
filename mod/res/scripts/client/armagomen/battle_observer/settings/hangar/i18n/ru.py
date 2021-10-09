@@ -30,7 +30,8 @@ translate = {
         "selectedConfig": "Выбрать настройки.",
         "donate_button_ua": "DONATE UA - Гривна",
         "donate_button_eu": "DONATE EUR|USD|RUB",
-        "support_button": "Discord сервер мода."
+        "donate_button_patreon": "Subscribe on Patreon",
+        "discord_button": "Discord сервер мода."
     },
     "main": {
         "header": "Настройки без категории.",

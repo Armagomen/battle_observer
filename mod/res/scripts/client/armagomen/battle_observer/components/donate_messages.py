@@ -11,9 +11,7 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 MESSAGES = {
     True: ("Поддержите разработку мода. Спасибо что вы с нами.",
            "А ты уже поддержал разработку мода?",
-           "Мод существует только благодаря вашей поддержке, нет поддержки нет желания что-либо делать.",
            "Мы измеряем сотые доли секунды, которые отделяют победителя от участника.",
-           "У нас есть даже то, чего ещё нет.",
            "Мы не боимся штрафов за превышение скорости работы. Ускоряй мод поддержкой.!",
            "Из скромного – только размер поддержки!",
            "Родина-мать зовёт поддержать!",
@@ -22,13 +20,11 @@ MESSAGES = {
            ),
     False: ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
             "Have you already supported the development?",
-            "Mod exists only from your support, no support. no desire to do anything.",
             "Only modest thing we've got is your support.",
             "How about sharing with those in need?",
             "Everything is possible together. Even collect some founds for the server.",
             "We measure the milliseconds that separate the winner from the competitor.",
             "Motherland urges to support!",
-            "We've got stuff that don't exist yet",
             "We are not afraid of penalties for fast work. Speed up the mod with support!"
             )
 }
@@ -52,8 +48,8 @@ class Donate(object):
     def getDonateMessage(self):
         # type: () -> str
         return "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
-               "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
-                                                                        msg=self.getRandomMessage())
+               "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a> | <a href='event:{patreon}'>PATREON</a>".format(
+            ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL, patreon=URLS.PATREON_URL, msg=self.getRandomMessage())
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:

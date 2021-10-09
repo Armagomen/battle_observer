@@ -329,7 +329,8 @@ class ConfigInterface(CreateElement):
                                                    self.configLoader.configsList, self.selected)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_eu', URLS.DONATE_EU_URL, 'Button'),
-                       self.createControl(blockID, 'support_button', URLS.SUPPORT_URL, 'Button')]
+                       self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
+                       self.createControl(blockID, 'discord_button', URLS.SUPPORT_URL, 'Button')]
         else:
             items = []
             for key, value in self.getter.keyValueGetter(settings):
