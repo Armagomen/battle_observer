@@ -12,21 +12,21 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_AddVehIdToListS(self, vehID, isEnemy):
         return self.flashObject.as_AddVehIdToList(vehID, isEnemy) if self._isDAAPIInited() else None
 
-    def as_AddPPanelBarS(self, vehID, color, bgColor, settings, teamName, startVisible):
-        return self.flashObject.as_AddPPanelBar(vehID, color, bgColor, settings, teamName,
+    def as_addHealthBarS(self, vehID, color, bgColor, settings, teamName, startVisible):
+        return self.flashObject.as_addHealthBar(vehID, color, bgColor, settings, teamName,
                                                 startVisible) if self._isDAAPIInited() else None
 
-    def as_AddTextFieldS(self, vehID, name, params, teamName):
-        return self.flashObject.as_AddTextField(vehID, name, params, teamName) if self._isDAAPIInited() else None
+    def as_addDamageS(self, vehID, params):
+        return self.flashObject.as_addDamage(vehID, params) if self._isDAAPIInited() else None
 
-    def as_updateTextFieldS(self, vehicleID, name, text):
-        return self.flashObject.as_updateTextField(vehicleID, name, text) if self._isDAAPIInited() else None
+    def as_updateDamageS(self, vehicleID, text):
+        return self.flashObject.as_updateDamage(vehicleID, text) if self._isDAAPIInited() else None
 
     def as_setVehicleDeadS(self, vehicleID):
         return self.flashObject.as_setVehicleDead(vehicleID) if self._isDAAPIInited() else None
 
-    def as_updatePPanelBarS(self, vehicleID, scale, textField):
-        return self.flashObject.as_updatePPanelBar(vehicleID, scale, textField) if self._isDAAPIInited() else None
+    def as_updateHealthBarS(self, vehicleID, scale, textField):
+        return self.flashObject.as_updateHealthBar(vehicleID, scale, textField) if self._isDAAPIInited() else None
 
     def as_setHealthBarsVisibleS(self, vehID, visible):
         return self.flashObject.as_setHealthBarsVisible(vehID, visible) if self._isDAAPIInited() else None

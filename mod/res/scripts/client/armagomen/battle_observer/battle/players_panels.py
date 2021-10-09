@@ -112,11 +112,11 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 color = self.vehicleColor[classTag]
             else:
                 color = self.COLORS[isEnemy]
-            self.as_AddPPanelBarS(vehicleID, color, self.colors[COLORS.GLOBAL],
+            self.as_addHealthBarS(vehicleID, color, self.colors[COLORS.GLOBAL],
                                   self.settings[PANELS.BAR_SETTINGS], PANELS.TEAM[isEnemy],
                                   not self.settings[PANELS.ON_KEY_DOWN])
             scale = round(getHealthPercent(newHealth, maxHealth), 3)
-            self.as_updatePPanelBarS(vehicleID, scale,
+            self.as_updateHealthBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,
                                          VEHICLE.MAX: maxHealth,
@@ -125,7 +125,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if isEnemy and self.settings[PANELS.SPOTTED_FIX]:
             self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
-            self.as_AddTextFieldS(vehicleID, PANELS.DAMAGES_TF, self.damagesSettings, PANELS.TEAM[isEnemy])
+            self.as_addDamageS(vehicleID, self.damagesSettings)
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies.union(aliveEnemies).difference(self._vehicles):
@@ -143,7 +143,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_AddVehIdToListS(vehicleID, self.battle_ctx.isEnemy(vehicleID))
         elif self.hpBarsEnable:
             scale = round(getHealthPercent(newHealth, maxHealth), 3)
-            self.as_updatePPanelBarS(vehicleID, scale,
+            self.as_updateHealthBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,
                                          VEHICLE.MAX: maxHealth,
@@ -152,5 +152,4 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def onPlayersDamaged(self, targetID, attackerID, damage):
         self.playersDamage[attackerID] += damage
-        self.as_updateTextFieldS(attackerID, PANELS.DAMAGES_TF,
-                                 self.damagesText % {PANELS.DAMAGE: self.playersDamage[attackerID]})
+        self.as_updateDamageS(attackerID, self.damagesText % {PANELS.DAMAGE: self.playersDamage[attackerID]})
