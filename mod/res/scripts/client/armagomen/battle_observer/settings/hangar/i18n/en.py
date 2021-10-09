@@ -26,7 +26,7 @@ timeFormat_tooltip = """Directive Meaning
 %%  A literal '%' character."""
 translate = {
     "configSelect": {
-        "header": "SELECT CONFIG",
+        "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
         "selectedConfig": "Config",
         "donate_button_ua": "DONATE UA - Гривна",
         "donate_button_eu": "DONATE EUR|USD|RUB",
@@ -65,6 +65,21 @@ translate = {
         "auto_crew_training_tooltip": "If the 'Field Upgrade' is available for the tank and is not pumped, the "
                                       "checkbox for the crew will be unchecked automatically, as soon as the level "
                                       "of progression is at its maximum, you will be prompted to turn it back on."
+    },
+    "statistics": {
+        "header": "WTR (WGR) Player Statistics | Tank icons",
+        "statistics_enabled": "Enable player statistics WTR rating",
+        "statistics_enabled_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
+                                      "For more fine-tuning see the statistics.json file."
+                                      " Available macro names: WTR, colorWTR, winRate, nickname, battles, clanTag",
+        "icon_enabled": "Repaint tank icons in the colors of vehicle classes",
+        "icon_enabled_tooltip": "This function repaints any vehicle icons in the ears, taboo window, on the loading "
+                                "screen in the color of vehicle classes.<br>"
+                                "Filter strength affects brightness.<br>Recommended filter strength -1.25",
+        "icon_blackout": "Filter strength (brightness)",
+
+        "panels_full_width": "Player Name Field Width - Big Ears",
+        "panels_cut_width": "Player Name Field Width - Small Ears"
     },
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",
@@ -247,18 +262,7 @@ translate = {
         "players_bars_hotkey": "HP display key",
         "players_bars_classColor": "Color the HP stripes in the ears according to the color of the technique type.",
         "players_bars_on_key_pressed": "Show stripes only on key press.",
-        "panels_icon_enabled": "Repaint tank icons.",
-        "panels_icon_enabled_tooltip": "This function repaints any vehicle icons in the ears in the color of vehicle "
-                                       "classes. <br> The slider below affects the brightness. <br> Recommended "
-                                       "filter strength -1.25",
-        "panels_icon_filter_strength": "Filter strength (brightness)",
-        "panels_spotted_fix": "Correct size and position of detection status.",
-        "players_statistic_enabled": "Включить отображение WTR рейтинга в ушах",
-        "players_statistic_enabled_tooltip": "Для дополнительной настройки отребуется зание HTML. Файл настроек "
-                                             "/mods/configs/mod_battle_observer/ имя конфига /players_panels.json",
-        "players_statistic_pattern_left": "Форматирование вывода союзники",
-        "players_statistic_pattern_right": "Форматирование вывода противник",
-        "players_statistic_pattern_tooltip": "Доступные макросы WTR, colorWTR, winRate, battles.",
+        "panels_spotted_fix": "Correct size and position of detection status."
     },
     "zoom": {
         "header": "SNIPER MODE, ZOOM-X",

@@ -1,7 +1,7 @@
 import copy
 
 import constants
-from armagomen.utils.common import urlResponse
+from armagomen.utils.common import urlResponse, logInfo
 
 region = constants.AUTH_REALM.lower()
 statisticEnabled = region in ["ru", "eu", "na", "asia"]
@@ -30,6 +30,7 @@ def getCachedStatisticData(databaseIDS):
     toRequest = tuple(_id for _id in notZeroIds if _id not in CACHE)
     if toRequest:
         data = request(toRequest)
+        logInfo("Get statistics data from WG api")
         if data is not None:
             for _id, value in data.iteritems():
                 CACHE[int(_id)] = copy.deepcopy(value)

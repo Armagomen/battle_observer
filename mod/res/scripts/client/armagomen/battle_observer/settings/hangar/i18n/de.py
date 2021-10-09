@@ -67,6 +67,21 @@ translate = {
                                           "sobald die Fortschrittsstufe maximal ist, werden Sie aufgefordert, sie "
                                           "wieder einzuschalten."
     },
+    "statistics": {
+        "header": "WTR (WGR) Player Statistics | Tank icons",
+        "statistics_enabled": "Включить статистику игроков",
+        "statistics_enabled_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
+                                      "For more fine-tuning see the statistics.json file."
+                                      "Available macro names: WTR, colorWTR, winRate, nickname, battles, clanTag",
+        "icon_enabled": "Repaint tank icons in the colors of vehicle classes",
+        "icon_enabled_tooltip": "This function repaints any vehicle icons in the ears, taboo window, on the loading "
+                                "screen in the color of vehicle classes.<br>"
+                                "Filter strength affects brightness.<br>Recommended filter strength -1.25",
+        "icon_blackout": "Filter strength (brightness)",
+
+        "panels_full_width": "Player Name Field Width - Big Ears",
+        "panels_cut_width": "Player Name Field Width - Small Ears"
+    },
     "dispersion_circle": {
         "header": "Kreis für Streuung der Kanone. (Mischen)",
         "circle_enabled": "Verbessertes Mischen.",
@@ -252,18 +267,7 @@ translate = {
         "players_bars_hotkey": "HP Display-Taste",
         "players_bars_classColor": "Färben Sie die HP-Streifen in den Ohren entsprechend der Farbe des Techniktyps.",
         "players_bars_on_key_pressed": "Streifen nur beim Tastendruck anzeigen.",
-        "panels_icon_enabled": "Tanksymbole neu streichen.",
-        "panels_icon_enabled_tooltip": "Diese Funktion malt alle Fahrzeugsymbole in den Ohren in der Farbe der "
-                                       "Fahrzeugklassen neu. <br> Der Schieberegler unten beeinflusst die "
-                                       "Helligkeit. <br> Empfohlene Filterstärke -1.25",
-        "panels_icon_filter_strength": "Filterstärke (Helligkeit)",
-        "panels_spotted_fix": "Richtige Größe und Position des Erkennungsstatus.",
-        "players_statistic_enabled": "Включить отображение WTR рейтинга в ушах",
-        "players_statistic_enabled_tooltip": "Для дополнительной настройки отребуется зание HTML. Файл настроек "
-                                             "/mods/configs/mod_battle_observer/ имя конфига /players_panels.json",
-        "players_statistic_pattern_left": "Форматирование вывода союзники",
-        "players_statistic_pattern_right": "Форматирование вывода противник",
-        "players_statistic_pattern_tooltip": "Доступные макросы WTR, colorWTR, winRate, battles.",
+        "panels_spotted_fix": "Richtige Größe und Position des Erkennungsstatus."
     },
     "zoom": {
         "header": "Zoom für Richtschützenansicht (Sniper Zoom IN)",

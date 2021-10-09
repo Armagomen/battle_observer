@@ -26,7 +26,7 @@ timeFormat_tooltip = """Формат - Значение
 %% - Знак '%'"""
 translate = {
     "configSelect": {
-        "header": "ВЫБОР НАСТРОЕК",
+        "header": "ВЫБОР НАСТРОЕК из mods/configs/mod_battle_observer",
         "selectedConfig": "Выбрать настройки.",
         "donate_button_ua": "DONATE UA - Гривна",
         "donate_button_eu": "DONATE EUR|USD|RUB",
@@ -68,6 +68,21 @@ translate = {
                                       "на экипаж будет снята автоматически. Как только уровень прогрессии станет "
                                       "максимальным, либо на данном танке не предусмотрена прокачка и танк стал "
                                       "элитным, вам предложит включить ускоренное обучение экипажа."
+    },
+    "statistics": {
+        "header": "Статистика игроков WTR(WGR) | Иконки танков",
+        "statistics_enabled": "Включить статистику игроков WTR рейтинг",
+        "statistics_enabled_tooltip": "Статистика будет отображатся на: экране загрузки, в ушах, окне по табу.<br>"
+                                      "Для более тонкой настройки смотри файл statistics.json<br>"
+                                      "Доступные имена макросов: WTR, colorWTR, winRate, nickname, battles, clanTag",
+        "icon_enabled": "Перекрасить иконки танков в цвета классов техники",
+        "icon_enabled_tooltip": "Данная функция перекрашивает любые иконки техники в ушах, окне по табу, на экране"
+                                " загрузки в цвет классов техники.<br>Сила фильтра влияет на яркость."
+                                "<br>Рекомендуемая сила фильтра -1.25",
+        "icon_blackout": "Сила фильтра (яркость)",
+
+        "panels_full_width": "Ширина поля имени игрока - большие уши.",
+        "panels_cut_width": "Ширина поля имени игрока - малые уши."
     },
     "dispersion_circle": {
         "header": "Улучшенное сведение / серверный прицел.",
@@ -266,18 +281,7 @@ translate = {
         "players_bars_hotkey": "Клавиша отображения ХП",
         "players_bars_classColor": "Окрасить полосы ХП в ушах по цвету типа техники",
         "players_bars_on_key_pressed": "Отображать полосы только по нажатию клавиши",
-        "panels_icon_enabled": "Перекрасить иконки танков",
-        "panels_icon_enabled_tooltip": "Данная функция перекрашивает любые иконки техники в ушах в цвет классов"
-                                       " техники.<br>Сила фильтра влияет на яркость."
-                                       "<br>Рекомендуемая сила фильтра -1.25",
-        "panels_icon_filter_strength": "Сила фильтра (яркость)",
-        "panels_spotted_fix": "Исправить размер и позицию лампочек засвета",
-        "players_statistic_enabled": "Включить отображение WTR рейтинга в ушах",
-        "players_statistic_enabled_tooltip": "Для дополнительной настройки откройте файл настроек "
-                                             "/mods/configs/mod_battle_observer/ имя конфига /players_panels.json",
-        "players_statistic_pattern_left": "Форматирование вывода союзники",
-        "players_statistic_pattern_right": "Форматирование вывода противник",
-        "players_statistic_pattern_tooltip": "Доступные макросы WTR, colorWTR, winRate, battles.",
+        "panels_spotted_fix": "Исправить размер и позицию лампочек засвета"
     },
     "zoom": {
         "header": "Снайперский режим ZOOM-X (Динамическая кратность приближения).",

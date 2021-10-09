@@ -102,6 +102,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			for each (var holder:* in this.cached)
 			{
+				if (!holder || !holder.statsItem || !holder.statsItem.vehicleIcon)
+				{
+					continue;
+				}
 				if (holder.statsItem.vehicleIcon.hasEventListener(Event.RENDER))
 				{
 					holder.statsItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
