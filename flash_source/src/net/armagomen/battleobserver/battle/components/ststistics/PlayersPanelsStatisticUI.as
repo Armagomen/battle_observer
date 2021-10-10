@@ -142,7 +142,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
 			if (this.iconEnabled)
 			{
-				icon.transform.colorTransform = icon['cTansform'];
+				if (icon.transform.colorTransform !== icon['cTansform']){
+					icon.transform.colorTransform = icon['cTansform'];
+				}
 			}
 			if (this.statisticsEnabled)
 			{

@@ -11,7 +11,8 @@ from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 
-BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND)
+BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND,
+                      msgs_ctrl._PLAYER_KILL_ENEMY_SOUND, msgs_ctrl._PLAYER_KILL_ALLY_SOUND)
 
 
 class BattleCore(object):
@@ -47,9 +48,11 @@ class BattleCore(object):
             if settings[MAIN.ENABLE_FPS_LIMITER]:
                 setMaxFrameRate(settings[MAIN.MAX_FRAME_RATE])
             if settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
-                msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
+                msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = \
+                    msgs_ctrl._PLAYER_KILL_ENEMY_SOUND = msgs_ctrl._PLAYER_KILL_ALLY_SOUND = None
             elif not settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
-                msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
+                msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND, \
+                msgs_ctrl._PLAYER_KILL_ENEMY_SOUND, msgs_ctrl._PLAYER_KILL_ALLY_SOUND = BASE_NOTIFICATIONS
 
     @staticmethod
     @overrideMethod(VehicleGunRotator, "__updateGunMarker")
