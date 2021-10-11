@@ -36,4 +36,4 @@ def init():
 def fini():
     if loadError:
         return
-    m_core.onExit()
+    m_core.onExit(settings)

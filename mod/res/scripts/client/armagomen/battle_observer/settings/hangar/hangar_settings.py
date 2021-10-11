@@ -8,7 +8,7 @@ from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-settingsVersion = 35
+settingsVersion = 36
 KEY_CONTROL = [KEY_ALIAS_CONTROL]
 KEY_ALT = [KEY_ALIAS_ALT]
 
@@ -237,8 +237,8 @@ class ConfigInterface(CreateElement):
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.selected != self.newConfig:
                 self.inited.clear()
-                self.configLoader.readConfig(self.configLoader.configsList[self.selected])
-                self.configLoader.createLoadJSON(cName=self.configLoader.configsList[self.selected])
+                self.configLoader.readConfig(self.configLoader.configsList[self.newConfig])
+                self.configLoader.createLoadJSON(cName=self.configLoader.configsList[self.newConfig])
                 self.selected = self.newConfig
         elif event == self.apiEvents.WINDOW_LOADED:
             self.filesUpdateLocked = False

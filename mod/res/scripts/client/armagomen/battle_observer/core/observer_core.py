@@ -5,9 +5,8 @@ from armagomen.battle_observer import __version__
 from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
 from armagomen.battle_observer.core.update.worker import UpdateMain
-from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import FILE_NAME, MESSAGES, MAIN, MOD_NAME
-from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, setMaxFrameRate, clearClientCache
+from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache
 from async import async, await
 from gui.Scaleform.daapi.settings import config as packages
 from gui.impl.dialogs import dialogs
@@ -27,14 +26,8 @@ class ObserverCore(object):
         self.mod_version = 'v{0} - {1}'.format(__version__, self.gameVersion)
         self.componentsLoader = ComponentsLoader()
         ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-        settings.onModSettingsChanged += self.onModSettingsChanged
 
-    @staticmethod
-    def onModSettingsChanged(config, blockID):
-        if blockID == MAIN.NAME and config[MAIN.ENABLE_FPS_LIMITER]:
-            setMaxFrameRate(config[MAIN.MAX_FRAME_RATE])
-
-    def onExit(self):
+    def onExit(self, settings):
         if not self.isFileValid:
             return
         if settings.main[MAIN.AUTO_CLEAR_CACHE]:
@@ -64,7 +57,8 @@ class ObserverCore(object):
             return
         self.showLockedDialog()
 
-    def getLockedDialog(self, title, message):
+    @staticmethod
+    def getLockedDialog(title, message):
         builder = WarningDialogBuilder()
         builder.setFormattedTitle(title)
         builder.setFormattedMessage(message)
