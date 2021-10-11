@@ -2,7 +2,6 @@ import os
 import sys
 
 from armagomen.battle_observer import __version__
-from armagomen.battle_observer.components import ComponentsLoader
 from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
 from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.constants import FILE_NAME, MESSAGES, MAIN, MOD_NAME
@@ -24,7 +23,6 @@ class ObserverCore(object):
         self.modsDir, self.gameVersion = getCurrentModPath()
         self.isFileValid = self.isModValidFileName()
         self.mod_version = 'v{0} - {1}'.format(__version__, self.gameVersion)
-        self.componentsLoader = ComponentsLoader()
         ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
     def onExit(self, settings):
@@ -40,11 +38,8 @@ class ObserverCore(object):
     def start(self):
         update = UpdateMain()
         update.subscribe()
-        if not self.isFileValid:
-            return
         logInfo("Launched at python " + sys.version)
         logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
-        self.componentsLoader.start()
         BATTLE_PACKAGES = packages.BATTLE_PACKAGES_BY_ARENA_TYPE
         for guiType in BATTLE_PACKAGES:
             if guiType in BATTLES_RANGE:

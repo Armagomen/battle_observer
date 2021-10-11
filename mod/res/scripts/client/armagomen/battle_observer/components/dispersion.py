@@ -151,13 +151,13 @@ class DispersionCircle(object):
         return None if self.hooksEnable else base(*args, **kwargs)
 
     def setShotPosition(self, base, gun, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
-        if self.hooksEnable:
-            mPos, mDir, mSize, imSize, collData = \
-                gun._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, gun._VehicleGunRotator__dispersionAngles)
-            gun._VehicleGunRotator__lastShotPoint = mPos
-            gun._avatar.inputHandler.updateGunMarker2(mPos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
-        else:
-            return base(gun, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
+        base(gun, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
+        if not self.hooksEnable:
+            return
+        mPos, mDir, mSize, imSize, collData = \
+            gun._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, gun._VehicleGunRotator__dispersionAngles)
+        gun._VehicleGunRotator__lastShotPoint = mPos
+        gun._avatar.inputHandler.updateGunMarker2(mPos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
 
     def onServerGunMarkerStateChanged(self, base, *args, **kwargs):
         return base(*args, **kwargs) if not self.hooksEnable else None

@@ -11,6 +11,7 @@ except ImportError as err:
     loadError = True
 else:
     from armagomen.battle_observer.settings.default_settings import settings
+    from armagomen.battle_observer.components import ComponentsLoader
     from armagomen.battle_observer.core.battle.settings import ViewSettings
     from armagomen.battle_observer.core.battle.battle_core import BattleCore
     from armagomen.battle_observer.core.observer_core import ObserverCore
@@ -19,18 +20,21 @@ else:
     from armagomen.battle_observer.settings.config_loader import ConfigLoader
 
     view_settings = ViewSettings(settings)
-    b_core = BattleCore(settings)
-    keysParser = HotKeysParser(settings)
     m_core = ObserverCore()
-    c_Loader = ConfigLoader(settings)
-    configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, c_Loader)
+    keysParser = HotKeysParser(settings)
+    if m_core.isFileValid:
+        componentsLoader = ComponentsLoader()
+        componentsLoader.start()
+        m_core.start()
+        b_core = BattleCore(settings)
+        c_Loader = ConfigLoader(settings)
+        configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, c_Loader)
 
 
 def init():
     if loadError:
         from armagomen.battle_observer.core.loading_error import LoadingError
         return LoadingError(errorMessage)
-    m_core.start()
 
 
 def fini():
