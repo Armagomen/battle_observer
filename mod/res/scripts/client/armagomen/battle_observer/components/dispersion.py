@@ -150,14 +150,14 @@ class DispersionCircle(object):
     def applySettings(self, base, *args, **kwargs):
         return None if self.hooksEnable else base(*args, **kwargs)
 
-    def setShotPosition(self, base, gun, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
-        base(gun, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
+    def setShotPosition(self, base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
+        base(rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
         if not self.hooksEnable:
             return
-        mPos, mDir, mSize, imSize, collData = \
-            gun._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, gun._VehicleGunRotator__dispersionAngles)
-        gun._VehicleGunRotator__lastShotPoint = mPos
-        gun._avatar.inputHandler.updateGunMarker2(mPos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
+        ePos, mDir, mSize, imSize, collData = \
+            rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
+        rotator._avatar.inputHandler.updateGunMarker2(ePos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
+        # rotator._VehicleGunRotator__lastShotPoint = ePos
 
     def onServerGunMarkerStateChanged(self, base, *args, **kwargs):
         return base(*args, **kwargs) if not self.hooksEnable else None
@@ -184,15 +184,18 @@ class DispersionCircle(object):
         if not self.enabled:
             return baseCreateGunMarker(isStrategic)
         bo_factory = BOGunMarkersDPFactory()
+        wg_factory = gun_marker_ctrl._GunMarkersDPFactory()
         if isStrategic:
-            controller, factory = (SPGController, bo_factory) if self.replaceWGCircle else \
-                (gun_marker_ctrl._SPGGunMarkerController, gun_marker_ctrl._GunMarkersDPFactory())
-            client = controller(CLIENT, factory.getClientSPGProvider())
+            if self.replaceWGCircle:
+                client = SPGController(CLIENT, bo_factory.getClientSPGProvider())
+            else:
+                client = gun_marker_ctrl._SPGGunMarkerController(CLIENT, wg_factory.getClientSPGProvider())
             server = SPGController(SERVER, bo_factory.getServerSPGProvider())
         else:
-            controller, factory = (_DefaultGunMarkerController, bo_factory) if self.replaceWGCircle else \
-                (gun_marker_ctrl._DefaultGunMarkerController, gun_marker_ctrl._GunMarkersDPFactory())
-            client = controller(CLIENT, factory.getClientProvider())
+            if self.replaceWGCircle:
+                client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
+            else:
+                client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, wg_factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
         return _GunMarkersDecorator(client, server, self.replaceWGCircle, self.extraServerLap)
 

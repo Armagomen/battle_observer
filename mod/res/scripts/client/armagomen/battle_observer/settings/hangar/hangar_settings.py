@@ -291,22 +291,20 @@ class ConfigInterface(CreateElement):
         if blockID in CONFIG_INTERFACE.HANDLER_VALUES:
             if varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
                 values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]
-                if varName in CONFIG_INTERFACE.HANDLER_VALUES["reversed_values"]:
-                    if varName == 'dynamic_zoom*enabled':
-                        for val in values:
-                            self.setHandlerValue(blockID, val, value)
-                            value = not value
-                        return
-                    elif varName == PANELS.BAR_CLASS_COLOR:
-                        value = not value
                 self.setHandlerValue(blockID, values, value)
         if blockID == MAIN.NAME and varName == MAIN.USE_KEY_PAIRS:
             self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
 
-    def setHandlerValue(self, blockID, data, value):
+    def setHandlerValue(self, blockID, values, value):
         getObject = self.vxSettingsApi.getDAAPIObject
-        for var in data:
-            obj = getObject(blockID, var)
+        for varName in values:
+            if varName in CONFIG_INTERFACE.HANDLER_VALUES["reversed_values"]:
+                if varName == PANELS.BAR_CLASS_COLOR:
+                    value = not value
+                elif varName == DISPERSION.CIRCLE_REPLACE:
+                    value = self.settings.dispersion_circle[DISPERSION.ENABLED] and \
+                            not self.settings.dispersion_circle[DISPERSION.CIRCLE_EXTRA_LAP] and not value
+            obj = getObject(blockID, varName)
             if obj is not None:
                 obj.alpha = 0.4 if not value else GLOBAL.F_ONE
                 obj.mouseEnabled = value
