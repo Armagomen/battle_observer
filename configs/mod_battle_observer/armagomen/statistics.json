@@ -1,0 +1,24 @@
+{
+  "enabled": true, 
+  "icon_blackout": -1.25, 
+  "icon_enabled": true, 
+  "panels_cut_width": 60, 
+  "panels_full_width": 140, 
+  "statistics_colors": {
+    "bad": "#FE7903", 
+    "good": "#60FF00", 
+    "normal": "#F8F400", 
+    "unique": "#D042F3", 
+    "very_bad": "#FE0E00", 
+    "very_good": "#02C9B3"
+  }, 
+  "statistics_enabled": true, 
+  "statistics_pattern_loading_left": "<font color='%(colorWTR)s'>[%(WTR)d] %(nickname).8s</font>%(clanTag)s", 
+  "statistics_pattern_loading_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).8s [%(WTR)d]</font>", 
+  "statistics_pattern_panels_left": "<font color='%(colorWTR)s'>[%(WTR)d] %(nickname).10s</font>%(clanTag)s", 
+  "statistics_pattern_panels_left_cut": "<font color='%(colorWTR)s'>%(nickname).9s</font>", 
+  "statistics_pattern_panels_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).10s [%(WTR)d]</font>", 
+  "statistics_pattern_panels_right_cut": "<font color='%(colorWTR)s'>%(nickname).9s</font>", 
+  "statistics_pattern_tab_left": "<font color='%(colorWTR)s'>[%(WTR)d] %(nickname).15s</font>%(clanTag)s", 
+  "statistics_pattern_tab_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).15s [%(WTR)d]</font>"
+}

@@ -27,7 +27,7 @@ timeFormat_tooltip = """Формат - Значение
 translate = {
     "configSelect": {
         "header": "ВЫБОР НАСТРОЕК из mods/configs/mod_battle_observer",
-        "selectedConfig": "Выбрать настройки.",
+        "selector": "Выбрать настройки.",
         "donate_button_ua": "DONATE UA - Гривна",
         "donate_button_eu": "DONATE EUR|USD|RUB",
         "donate_button_patreon": "Subscribe on Patreon",
@@ -242,10 +242,6 @@ translate = {
     },
     "main_gun": {
         "header": "Oсновной калибр.",
-        "mainGunDoneIcon": "Настройка макроса - %(mainGunDoneIcon)s | s:d:f | type data",
-        "mainGunDynamic": "Динамический расчёт урона до получения медали.",
-        "mainGunFailureIcon": "Настройка макроса - %(mainGunFailureIcon)s | s:d:f | type data",
-        "mainGunIcon": "Настройка макроса - %(mainGunIcon)s | s:d:f | type data",
         "settings*x": "Позиция по горизонтали (от центра экрана)",
         "settings*y": "Позиция по вертикали (от верхнего края)",
         "settings*align": "Выравнивание:",

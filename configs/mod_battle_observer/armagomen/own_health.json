@@ -1,0 +1,11 @@
+{
+  "align": "center", 
+  "avgColor": {
+    "brightness": 1.0, 
+    "saturation": 1.0
+  }, 
+  "enabled": false, 
+  "template": "%(health)s/%(maxHealth)s (%(percent)s%%)", 
+  "x": 0, 
+  "y": 120
+}

@@ -16,9 +16,10 @@ def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
     if view_settings.notEpicBattle() and kwargs:
         if settings.main[MAIN.HIDE_BADGES] and ANOTHER.BADGES in kwargs:
             kwargs[ANOTHER.BADGES] = None
-        if not getStatisticEnabled() and settings.main[MAIN.SHOW_ANONYMOUS] and ANOTHER.ACCOUNT_DBID in kwargs:
+        if settings.main[MAIN.SHOW_ANONYMOUS] and ANOTHER.ACCOUNT_DBID in kwargs:
             if kwargs[ANOTHER.ACCOUNT_DBID] == GLOBAL.ZERO:
-                kwargs[ANOTHER.IS_TEAM_KILLER] = _PLAYER_STATUS.IS_TEAM_KILLER
+                if not getStatisticEnabled():
+                    kwargs[ANOTHER.IS_TEAM_KILLER] = _PLAYER_STATUS.IS_TEAM_KILLER
                 if settings.main[MAIN.CHANGE_ANONYMOUS_NAME] and ANOTHER.NAME in kwargs:
                     kwargs[ANOTHER.NAME] = settings.main[MAIN.ANONYMOUS_STRING]
         if settings.main[MAIN.HIDE_CLAN_ABBREV] and ANOTHER.CLAN_DBID in kwargs and ANOTHER.CLAN_ABBR in kwargs:

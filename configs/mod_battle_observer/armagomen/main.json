@@ -4,6 +4,7 @@
   "anonymousNameChange": false, 
   "anonymousString": "Anonymous", 
   "autoClearCache": false, 
+  "auto_crew_training": true, 
   "disable_score_sound": true, 
   "enableBarsAnimation": true, 
   "fps_enableFPSLimiter": false, 
@@ -12,10 +13,10 @@
   "hideChatInRandom": false, 
   "hideClanAbbrev": false, 
   "hide_dog_tags": true, 
-  "ignore_commanders_voice": true,
+  "ignore_commanders_voice": true, 
   "premium_format": "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d Дн. %(hours)02d:%(minutes)02d:%(seconds)02d</font>", 
   "premium_time": true, 
-  "removeShadowInPrebattle": false, 
+  "removeShadowInPrebattle": true, 
   "showFriendsAndClanInEars": true, 
   "useKeyPairs": false
 }

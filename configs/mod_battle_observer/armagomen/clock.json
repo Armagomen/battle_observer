@@ -9,7 +9,9 @@
   "hangar": {
     "enabled": true, 
     "format": "<textformat tabstops='[145]'>%d %b %Y<tab>%X</textformat>", 
+    "reverse_x": true, 
+    "reverse_y": true, 
     "x": -255, 
-    "y": 54
+    "y": 0
   }
 }

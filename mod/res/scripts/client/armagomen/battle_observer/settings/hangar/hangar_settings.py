@@ -173,14 +173,14 @@ class ConfigInterface(CreateElement):
 
     def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, configLoader):
         super(ConfigInterface, self).__init__()
-        self.configLoader = configLoader
+        self.cLoader = configLoader
         self.modsListApi = modsListApi
         self.settings = settings
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.selected = self.newConfig = self.configLoader.configsList.index(self.configLoader.cName)
-        self.filesUpdateLocked = False
+        self.currentConfig = self.newConfig = self.cLoader.configsList.index(self.cLoader.cName)
+        self.filesUpdateLocked = self.currentConfig != self.newConfig
         self.getter = Getter()
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
                                    useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
@@ -231,17 +231,16 @@ class ConfigInterface(CreateElement):
         """Feedback EVENT"""
         if container != MOD_NAME:
             return
+        self.filesUpdateLocked = self.currentConfig != self.newConfig
         if event == self.apiEvents.WINDOW_CLOSED:
-            self.filesUpdateLocked = True
             self.vxSettingsApi.onSettingsChanged -= self.onSettingsChanged
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
-            if self.selected != self.newConfig:
+            if self.filesUpdateLocked:
                 self.inited.clear()
-                self.configLoader.readConfig(self.configLoader.configsList[self.newConfig])
-                self.configLoader.createLoadJSON(cName=self.configLoader.configsList[self.newConfig])
-                self.selected = self.newConfig
+                self.cLoader.readConfig(self.cLoader.configsList[self.newConfig])
+                self.cLoader.createLoadJSON(cName=self.cLoader.configsList[self.newConfig])
+                self.currentConfig = self.newConfig
         elif event == self.apiEvents.WINDOW_LOADED:
-            self.filesUpdateLocked = False
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
             self.vxSettingsApi.onDataChanged += self.onDataChanged
 
@@ -255,13 +254,13 @@ class ConfigInterface(CreateElement):
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings_core in the settings_core file."""
-        if self.settings.main[MAIN.DEBUG]:
-            logInfo("change settings '%s' - %s" % (self.configLoader.configsList[self.selected], blockID))
         if self.filesUpdateLocked or MOD_NAME != modID:
             return
-        if blockID == ANOTHER.CONFIG_SELECT and self.selected != data['selectedConfig']:
-            self.newConfig = data['selectedConfig']
+        if blockID == ANOTHER.CONFIG_SELECT and self.currentConfig != data['selector']:
+            self.newConfig = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
+            if self.settings.main[MAIN.DEBUG]:
+                logInfo("change settings '%s' - %s" % (self.cLoader.configsList[self.newConfig], blockID))
         else:
             settings = getattr(self.settings, blockID)
             for key, value in data.iteritems():
@@ -281,7 +280,7 @@ class ConfigInterface(CreateElement):
                         elif oldParamType is int and newParamType is float:
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
-            self.configLoader.updateConfigFile(blockID, settings)
+            self.cLoader.updateConfigFile(blockID, settings)
             self.settings.onModSettingsChanged(settings, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
@@ -323,8 +322,7 @@ class ConfigInterface(CreateElement):
         column1 = []
         column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selectedConfig',
-                                                   self.configLoader.configsList, self.selected)]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.cLoader.configsList, self.newConfig)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_eu', URLS.DONATE_EU_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
@@ -335,10 +333,8 @@ class ConfigInterface(CreateElement):
                 item = self.createItem(blockID, key, value)
                 if item is not None:
                     items.append(item)
-            _iter = GLOBAL.ZERO
-            middleLen = round(len(items) / 2.0)
-            for item in items:
-                column = column1 if _iter < middleLen else column2
+            middleIndex = (len(items) + 1) // 2
+            for index, item in enumerate(items):
+                column = column1 if index < middleIndex else column2
                 column.append(item)
-                _iter += GLOBAL.ONE
         return self.createBlock(blockID, settings, column1, column2)

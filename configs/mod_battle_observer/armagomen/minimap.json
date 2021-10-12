@@ -1,6 +1,6 @@
 {
   "enabled": true, 
-  "permanentMinimapDeath": true, 
+  "permanentMinimapDeath": false, 
   "showDeathNames": false, 
   "zoom": {
     "enabled": true, 

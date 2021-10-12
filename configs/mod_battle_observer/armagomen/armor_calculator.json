@@ -1,8 +1,5 @@
 {
-  "position": {
-    "x": 0, 
-    "y": 30
-  }, 
+  "display_on_allies": false, 
   "enabled": true, 
   "messages": {
     "green": "<font size='20' color='#66FF33'>Да пребудет с тобой сила.</font>", 
@@ -12,5 +9,11 @@
     "red": "<font size='20' color='#FF0000'>Фугас, настало твое время.</font>", 
     "yellow": "<font size='20' color='#FAF829'>Переходи на темную сторону силы.</font>"
   }, 
-  "template": "<font size='18' color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font>"
+  "noDamage": "Без урона", 
+  "position": {
+    "x": 0, 
+    "y": 30
+  }, 
+  "ricochet": "Рикошет", 
+  "template": "<p align='center'>%(ricochet)s%(noDamage)s<br><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>"
 }

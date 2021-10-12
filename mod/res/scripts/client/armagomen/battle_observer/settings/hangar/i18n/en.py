@@ -27,7 +27,7 @@ timeFormat_tooltip = """Directive Meaning
 translate = {
     "configSelect": {
         "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
-        "selectedConfig": "Config",
+        "selector": "Config",
         "donate_button_ua": "DONATE UA - Гривна",
         "donate_button_eu": "DONATE EUR|USD|RUB",
         "donate_button_patreon": "Subscribe on Patreon",
@@ -224,10 +224,6 @@ translate = {
     },
     "main_gun": {
         "header": "MAIN GUN",
-        "mainGunDoneIcon": "configure macro %(mainGunDoneIcon)s",
-        "mainGunDynamic": "Dynamic calc. of the damage up to receive the medal 'Main Gun'",
-        "mainGunFailureIcon": "configure macro %(mainGunFailureIcon)s",
-        "mainGunIcon": "configure macro %(mainGunIcon)s",
         "settings*x": "the horizontal Position of (center of screen)",
         "settings*y": "the vertical Position (upper edge)",
         "settings*align": "Alignment text:"

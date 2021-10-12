@@ -2,6 +2,6 @@
   "enabled": true, 
   "max": 160.0, 
   "min": 4.0, 
-  "scrollMultiple": 1, 
+  "scrollSensitivity": 6.0, 
   "startDeadDist": 18.0
 }

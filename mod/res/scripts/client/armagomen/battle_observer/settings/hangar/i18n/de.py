@@ -27,7 +27,7 @@ timeFormat_tooltip = """Directive Meaning
 translate = {
     "configSelect": {
         "header": "Wähle Konfiguration (Verzeichnis: mods/configs/mod_battle_observer)",
-        "selectedConfig": "Config",
+        "selector": "Config",
         "donate_button_ua": "DONATE UA - Гривна",
         "donate_button_eu": "DONATE EUR|USD|RUB",
         "donate_button_patreon": "Subscribe on Patreon",
@@ -227,10 +227,6 @@ translate = {
     },
     "main_gun": {
         "header": "Grosskaliber",
-        "mainGunDoneIcon": "Einstellung für Makro: %(mainGunDoneIcon)s",
-        "mainGunDynamic": "Dynamische Berechnung für verbl. Schaden bis zum 'Grosskaliber'",
-        "mainGunFailureIcon": "Einstellung für Makro: %(mainGunFailureIcon)s",
-        "mainGunIcon": "Einstellung für Makro: %(mainGunIcon)s",
         "settings*x": "Position waagerecht von der Mitte gemessen",
         "settings*y": "Position senkrecht vom oberen Rand gemessen",
         "settings*align": "Ausrichtung des Textes:",

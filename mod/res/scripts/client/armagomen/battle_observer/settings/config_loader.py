@@ -6,15 +6,6 @@ from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
 
-def removeOldFiles(configPath):
-    files = ("markers.json", "panels_icon.json", "players_bars.json", "players_damages.json",
-             "players_spotted.json", "postmortem_panel.json")
-    for _file in files:
-        path = os.path.join(configPath, _file)
-        if os.path.exists(path):
-            os.remove(path)
-
-
 class ConfigLoader(object):
     __slots__ = ('cName', 'path', 'configsList', 'settings', 'errorMessages')
 
@@ -35,23 +26,26 @@ class ConfigLoader(object):
 
     def start(self):
         """Loading the main settings_core file with the parameters which settings_core to load next"""
+        createLoadJson = False
         if self.makeDirs(self.path):
             self.errorMessages.append('CONFIGURATION FILES IS NOT FOUND')
-            self.cName = self.createLoadJSON(error=True)
-            self.configsList.append(self.cName)
+            createLoadJson = True
         else:
             load_json = os.path.join(self.path, 'load.json')
             if os.path.exists(load_json):
                 self.cName = getFileData(load_json).get('loadConfig')
             else:
-                self.cName = self.createLoadJSON(error=True)
+                createLoadJson = True
+        if createLoadJson:
+            self.cName = self.createLoadJSON(error=True)
             self.makeDirs(os.path.join(self.path, self.cName))
+            if self.cName not in self.configsList:
+                self.configsList.append(self.cName)
         self.readConfig(self.cName)
-        removeOldFiles(os.path.join(self.path, self.cName))
 
     def createLoadJSON(self, cName=None, error=False):
         if cName is None:
-            cName = 'armagomen'
+            cName = 'ERROR_CreatedAutomatically_ERROR'
         path = os.path.join(self.path, 'load.json')
         createFileInDir(path, {'loadConfig': cName})
         if error:

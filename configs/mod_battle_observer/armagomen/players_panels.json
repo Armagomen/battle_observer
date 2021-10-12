@@ -1,7 +1,5 @@
 {
   "enabled": true, 
-  "panels_icon_enabled": true, 
-  "panels_icon_filter_strength": -1.25, 
   "panels_spotted_fix": true, 
   "players_bars_classColor": false, 
   "players_bars_enabled": true, 
@@ -31,7 +29,7 @@
       "y": 0
     }
   }, 
-  "players_damages_enabled": true, 
+  "players_damages_enabled": false, 
   "players_damages_hotkey": [
     [
       56
