@@ -1,29 +1,29 @@
 # coding=utf-8
 from armagomen.battle_observer import __version__
 
-timeFormat_tooltip = """Directive Meaning
-%a  Locale’s abbreviated weekday name.
-%A  Locale’s full weekday name.
-%b  Locale’s abbreviated month name.
-%B  Locale’s full month name.
-%c  Locale’s appropriate date and time representation.
-%d  Day of the month as a decimal number [01,31].
-%H  Hour (24-hour clock) as a decimal number [00,23].
-%I  Hour (12-hour clock) as a decimal number [01,12].
-%j  Day of the year as a decimal number [001,366].
-%m  Month as a decimal number [01,12].
-%M  Minute as a decimal number [00,59].
-%p  Locale’s equivalent of either AM or PM.
-%S  Second as a decimal number [00,61].
-%U  Week number of the year (Sunday as the first day of the week) as a decimal number [00,53].
-%w  Weekday as a decimal number [0(Sunday),6].
-%W  Week number of the year (Monday as the first day of the week) as a decimal number [00,53].
-%x  Locale’s appropriate date representation.
-%X  Locale’s appropriate time representation.
-%y  Year without century as a decimal number [00,99].
-%Y  Year with century as a decimal number.
-%Z  Time zone name (no characters if no time zone exists).
-%%  A literal '%' character."""
+timeFormat_tooltip = ("Directive Meaning\n"
+                      "%a  Locale’s abbreviated weekday name.\n"
+                      "%A  Locale’s full weekday name.\n"
+                      "%b  Locale’s abbreviated month name.\n"
+                      "%B  Locale’s full month name.\n"
+                      "%c  Locale’s appropriate date and time representation.\n"
+                      "%d  Day of the month as a decimal number [01,31].\n"
+                      "%H  Hour (24-hour clock) as a decimal number [00,23].\n"
+                      "%I  Hour (12-hour clock) as a decimal number [01,12].\n"
+                      "%j  Day of the year as a decimal number [001,366].\n"
+                      "%m  Month as a decimal number [01,12].\n"
+                      "%M  Minute as a decimal number [00,59].\n"
+                      "%p  Locale’s equivalent of either AM or PM.\n"
+                      "%S  Second as a decimal number [00,61].\n"
+                      "%U  Week number of the year (Sunday as the first day of the week) as a decimal number [00,53].\n"
+                      "%w  Weekday as a decimal number [0(Sunday),6].\n"
+                      "%W  Week number of the year (Monday as the first day of the week) as a decimal number [00,53].\n"
+                      "%x  Locale’s appropriate date representation.\n"
+                      "%X  Locale’s appropriate time representation.\n"
+                      "%y  Year without century as a decimal number [00,99].\n"
+                      "%Y  Year with century as a decimal number.\n"
+                      "%Z  Time zone name (no characters if no time zone exists).\n"
+                      "%%  A literal '%' character.")
 translate = {
     "configSelect": {
         "header": "Wähle Konfiguration (Verzeichnis: mods/configs/mod_battle_observer)",
@@ -45,16 +45,19 @@ translate = {
         "smallDoubleCarousel": "Verwenden Sie kleine Symbole im Karussell.",
         "carouselRows": "Reihenanzahl des mehrreihigen Panzerkarussells.",
         "hideBadges": "Deaktivieren Sie Chevrons/Ribbons im Spielerpanel",
-        "fps_enableFPSLimiter": "Включить ограничитель FPS",
-        "enableFPSLimiter_tooltip": "Внимание, для полного отключения или включения необходим перезапуск игры.",
+        "fps_enableFPSLimiter": "FPS-Limiter aktivieren",
+        "enableFPSLimiter_tooltip": "Achtung, um das Spiel vollständig zu deaktivieren oder zu aktivieren,"
+                                    " müssen Sie das Spiel neu starten.",
         "fps_maxFrameRate": "Maximum Frame Rate",
         "hideClanAbbrev": "Deaktiviere Clan-Anzeige im Playerspanel, Tab Screen, Ladebildschirm.",
         "hideChatInRandom": "Chat in Zufallsgefechten deaktivieren",
         "hideChatInRandom_tooltip": "Chat in Zufsallsgefechten komplett deaktivieren."
                                     "<br> incl. Chat-Formular und alles, was damit verbunden ist",
         "anonymousEnableShow": "Show Anonymous.",
+        "anonymousEnableShow_tooltip": "Nur wenn die Spielerstatistik deaktiviert ist, wird der Parameter"
+                                       " bei aktivierter Statistik nicht berücksichtigt.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
-        "anonymousNameChange": "Сhange Anonymous Name",
+        "anonymousNameChange": "Change Anonymous Name",
         "hide_dog_tags": "Deaktivieren Sie die Anzeige von Token.",
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
@@ -64,13 +67,13 @@ translate = {
         "premium_time": "Display exact premium time.",
         "auto_crew_training": "Deaktivieren / aktivieren Sie Beschleunigtes Besatzungstraining Automatisch.",
         "auto_crew_training_tooltip": "Wenn das 'Feld-Upgrade' für den Panzer verfügbar ist und nicht gepumpt "
-                                          "wird, wird das Kontrollkästchen für die Besatzung automatisch deaktiviert, "
-                                          "sobald die Fortschrittsstufe maximal ist, werden Sie aufgefordert, sie "
-                                          "wieder einzuschalten."
+                                      "wird, wird das Kontrollkästchen für die Besatzung automatisch deaktiviert, "
+                                      "sobald die Fortschrittsstufe maximal ist, werden Sie aufgefordert, sie "
+                                      "wieder einzuschalten."
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",
-        "statistics_enabled": "Включить статистику игроков",
+        "statistics_enabled": "Enable player statistics",
         "statistics_enabled_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
                                       "For more fine-tuning see the statistics.json file."
                                       "Available macro names: WTR, colorWTR, winRate, nickname, battles, clanTag",
