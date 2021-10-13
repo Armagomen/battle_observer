@@ -34,6 +34,13 @@ def sniper_create(base, camera, data):
         ]
 
 
+@overrideMethod(SniperCamera, "__getZooms")
+def new__getZooms(base, camera):
+    if not settings.zoom[GLOBAL.ENABLED] or isReplay() or not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
+        return base(camera)
+    return camera._cfg['zooms']
+
+
 @overrideMethod(SniperZoomSetting, "setSystemValue")
 def setSystemValue(base, zoomSettings, value):
     return base(zoomSettings, GLOBAL.ZERO if settingsCache[SNIPER.DYN_ZOOM] else value)

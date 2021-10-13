@@ -11,6 +11,7 @@ package net.armagomen.battleobserver.battle.base
 		public var isColorBlind:Function;
 		public var getAlpha:Function;
 		public var getColors:Function;
+		public var doLog:Function;
 		
 		public function ObserverBattleDisplayable()
 		{

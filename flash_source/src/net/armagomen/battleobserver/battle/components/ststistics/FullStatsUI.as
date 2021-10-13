@@ -84,7 +84,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			for each (var holder:* in this.cached)
 			{
-				var icon:BattleAtlasSprite = holder.statsItem.vehicleIcon;
+				var icon:BattleAtlasSprite = holder.statsItem._vehicleIcon;
 				var tColor:ColorTransform  = icon.transform.colorTransform;
 				tColor.color = Utils.colorConvert(py_getIconColor(holder.data.vehicleType));
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
