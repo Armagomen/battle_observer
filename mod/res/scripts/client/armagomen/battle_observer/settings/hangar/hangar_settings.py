@@ -180,7 +180,7 @@ class ConfigInterface(CreateElement):
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
         self.currentConfig = self.newConfig = self.cLoader.configsList.index(self.cLoader.cName)
-        self.filesUpdateLocked = self.currentConfig != self.newConfig
+        self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
         self.getter = Getter()
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
                                    useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
@@ -222,7 +222,7 @@ class ConfigInterface(CreateElement):
         self.vxSettingsApi.loadWindow(MOD_NAME)
 
     def onUserConfigUpdateComplete(self):
-        if self.filesUpdateLocked:
+        if self.newConfigLoadingInProcess:
             for blockID in CONFIG_INTERFACE.BLOCK_IDS:
                 self.updateMod(blockID)
             self.load_window()
@@ -231,11 +231,11 @@ class ConfigInterface(CreateElement):
         """Feedback EVENT"""
         if container != MOD_NAME:
             return
-        self.filesUpdateLocked = self.currentConfig != self.newConfig
+        self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
         if event == self.apiEvents.WINDOW_CLOSED:
             self.vxSettingsApi.onSettingsChanged -= self.onSettingsChanged
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
-            if self.filesUpdateLocked:
+            if self.newConfigLoadingInProcess:
                 self.inited.clear()
                 self.cLoader.readConfig(self.cLoader.configsList[self.newConfig])
                 self.cLoader.createLoadJSON(cName=self.cLoader.configsList[self.newConfig])
@@ -254,7 +254,7 @@ class ConfigInterface(CreateElement):
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings_core in the settings_core file."""
-        if self.filesUpdateLocked or MOD_NAME != modID:
+        if self.newConfigLoadingInProcess or MOD_NAME != modID:
             return
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfig != data['selector']:
             self.newConfig = data['selector']
