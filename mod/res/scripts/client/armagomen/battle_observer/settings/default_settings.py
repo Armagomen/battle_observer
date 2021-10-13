@@ -242,7 +242,6 @@ class DefaultSettings(object):
                 COLORS.C_PURPLE: COLORS.BLIND
             }
         }
-
         self.log_global = {
             DAMAGE_LOG.WG_POS: False,
             DAMAGE_LOG.WG_CRITS: False,
@@ -259,7 +258,6 @@ class DefaultSettings(object):
         additional = {reason: "<img src='{dir}/module.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS) for reason
                       in ATTACK_REASONS if reason not in self.log_global[DAMAGE_LOG.ATTACK_REASON]}
         self.log_global[DAMAGE_LOG.ATTACK_REASON].update(additional)
-
         self.log_total = {
             GLOBAL.ENABLED: False,
             GLOBAL.SETTINGS: {
@@ -281,7 +279,6 @@ class DefaultSettings(object):
             },
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-
         self.log_damage_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
@@ -356,7 +353,6 @@ class DefaultSettings(object):
             },
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-
         self.hp_bars = {
             GLOBAL.ENABLED: True,
             HP_BARS.STYLE: HP_BARS.STYLES.league,

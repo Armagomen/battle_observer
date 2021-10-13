@@ -17,9 +17,13 @@ settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": F
 @overrideMethod(SniperCamera, "_readConfigs")
 def sniper_create(base, camera, data):
     base(camera, data)
+    if not settings.zoom[GLOBAL.ENABLED] or isReplay():
+        return
     if settings.effects[EFFECTS.NO_SNIPER_DYNAMIC] and camera.isCameraDynamic():
         camera.enableDynamicCamera(False)
-    if not settings.zoom[GLOBAL.ENABLED] or isReplay() or not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
+    if settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]:
+        camera.setSniperZoomSettings(-1)
+    if not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
         return
     if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > GLOBAL.TWO:
         steps = settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
@@ -59,7 +63,7 @@ def enable(base, camera, targetPos, saveZoom):
             index = int(math.floor(dist / dist_for_step))
             zoom = camera._cfg[SNIPER.ZOOMS][index]
         else:
-            zoom = min(math.floor(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
+            zoom = min(math.ceil(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
                        camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
         camera._cfg[SNIPER.ZOOM] = zoom
     return base(camera, targetPos, saveZoom)

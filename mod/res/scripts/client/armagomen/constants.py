@@ -407,14 +407,6 @@ class CONFIG_INTERFACE:
                 PANELS.BAR_CLASS_COLOR,
                 PANELS.ON_KEY_DOWN,
             ),
-            'players_bars_settings*players_bars_bar*outline*customColor': (
-                'players_bars_settings*players_bars_bar*outline*color',
-            ),
-            'players_bars_settings*players_bars_bar*outline*enabled': (
-                'players_bars_settings*players_bars_bar*outline*color',
-                'players_bars_settings*players_bars_bar*outline*alpha',
-                'players_bars_settings*players_bars_bar*outline*customColor'
-            ),
             PANELS.DAMAGES_ENABLED: (
                 PANELS.DAMAGES_HOT_KEY, 'players_damages_settings*x', 'players_damages_settings*y'
             ),
@@ -443,7 +435,7 @@ class CONFIG_INTERFACE:
         SIXTH_SENSE.NAME: {
             SIXTH_SENSE.SHOW_TIMER: (SIXTH_SENSE.PLAY_TICK_SOUND,)
         },
-        "reversed_values": {PANELS.BAR_CLASS_COLOR, DISPERSION.CIRCLE_REPLACE},
+        "reversed_values": {DISPERSION.CIRCLE_REPLACE},
         DISPERSION.NAME: {
             DISPERSION.TIMER_ENABLED: (DISPERSION.TIMER_REGULAR_TEMPLATE,
                                        DISPERSION.TIMER_DONE_TEMPLATE,

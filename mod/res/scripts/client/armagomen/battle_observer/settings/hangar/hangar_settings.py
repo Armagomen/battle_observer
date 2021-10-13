@@ -8,7 +8,7 @@ from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-settingsVersion = 36
+settingsVersion = 37
 KEY_CONTROL = [KEY_ALIAS_CONTROL]
 KEY_ALT = [KEY_ALIAS_ALT]
 
@@ -296,13 +296,12 @@ class ConfigInterface(CreateElement):
 
     def setHandlerValue(self, blockID, values, value):
         getObject = self.vxSettingsApi.getDAAPIObject
+        oldValue = value
         for varName in values:
             if varName in CONFIG_INTERFACE.HANDLER_VALUES["reversed_values"]:
-                if varName == PANELS.BAR_CLASS_COLOR:
-                    value = not value
-                elif varName == DISPERSION.CIRCLE_REPLACE:
-                    value = self.settings.dispersion_circle[DISPERSION.ENABLED] and \
-                            not self.settings.dispersion_circle[DISPERSION.CIRCLE_EXTRA_LAP] and not value
+                value = not value
+            else:
+                value = oldValue
             obj = getObject(blockID, varName)
             if obj is not None:
                 obj.alpha = 0.4 if not value else GLOBAL.F_ONE

@@ -39,12 +39,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		override protected function onBeforeDispose():void
 		{
-			this.clear();
+			this.as_clear();
 			this.loading.removeEventListener(Event.CHANGE, this.onChange);
 			super.onBeforeDispose();
 		}
 		
-		private function clear():void
+		public function as_clear():void
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.cached);
@@ -53,7 +53,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function onChange(eve:Event):void
 		{
-			this.clear();
+			this.as_clear();
 			this.createCache();
 		}
 		

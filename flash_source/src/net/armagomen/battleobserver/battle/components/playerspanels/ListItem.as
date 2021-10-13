@@ -70,13 +70,17 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function updateHealth(scale:Number, text:String):void
 		{
-			this.healthBar.setNewScale(scale);
-			this.healthBar.setText(text);
+			if (this.healthBar){
+				this.healthBar.setNewScale(scale);
+				this.healthBar.setText(text);
+			}
 		}
 		
 		public function setHealthVisible(vis:Boolean):void
 		{
-			this.healthBar.setVisible(vis);
+			if (this.healthBar){
+				this.healthBar.setVisible(vis);
+			}
 		}
 		
 		public function setDamageVisible(vis:Boolean):void
@@ -92,7 +96,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			this.healthBar.updateColor(hpColor);
 		}
 		
-		public function setDedth():void
+		public function setDeath():void
 		{
 			this.alpha = 0.6;
 			this.updateHealth(0, "");

@@ -98,7 +98,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		{
 			if (this.storage.hasOwnProperty(vehicleID))
 			{
-				this.storage[vehicleID].setDedth();
+				this.storage[vehicleID].setDeath();
 			}
 		}
 		
