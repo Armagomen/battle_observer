@@ -140,11 +140,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function onRenderHendle(eve:Event):void
 		{
 			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
-			if (this.iconEnabled)
+			if (this.iconEnabled && icon.transform.colorTransform !== icon['cTansform'])
 			{
-				if (icon.transform.colorTransform !== icon['cTansform']){
-					icon.transform.colorTransform = icon['cTansform'];
-				}
+				icon.transform.colorTransform = icon['cTansform'];
 			}
 			if (this.statisticsEnabled)
 			{
@@ -173,8 +171,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[accountDBID];
 					if (!item._listItem._isAlive)
 					{
-						item._listItem.playerNameFullTF.alpha = 0.6;
-						item._listItem.playerNameCutTF.alpha = 0.6;
+						item._listItem.playerNameFullTF.alpha = 0.55;
+						item._listItem.playerNameCutTF.alpha = 0.55;
 					}
 				}
 			}

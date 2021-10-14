@@ -130,7 +130,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function onRenderHendle(eve:Event):void
 		{
 			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
-			if (this.iconEnabled)
+			if (this.iconEnabled && icon.transform.colorTransform != icon['cTansform'])
 			{
 				icon.transform.colorTransform = icon['cTansform'];
 			}
@@ -153,7 +153,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					holder._textField.htmlText = this.namesCache[holder.model.accountDBID];
 					if (!holder.model.isAlive())
 					{
-						holder._textField.alpha = 0.6;
+						holder._textField.alpha = 0.55;
 					}
 				}
 			}

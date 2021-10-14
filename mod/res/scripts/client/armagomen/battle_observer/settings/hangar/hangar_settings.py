@@ -1,6 +1,6 @@
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, PANELS, \
-    SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, URLS, STATISTICS
+from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, \
+    URLS, STATISTICS
 from armagomen.utils.common import logWarning, openWebBrowser, logInfo
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
@@ -294,20 +294,22 @@ class ConfigInterface(CreateElement):
         if blockID == MAIN.NAME and varName == MAIN.USE_KEY_PAIRS:
             self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
 
+    @staticmethod
+    def checkValue(varName, value):
+        if varName in CONFIG_INTERFACE.HANDLER_VALUES["reversed_values"]:
+            return not value
+        return value
+
     def setHandlerValue(self, blockID, values, value):
         getObject = self.vxSettingsApi.getDAAPIObject
-        oldValue = value
         for varName in values:
-            if varName in CONFIG_INTERFACE.HANDLER_VALUES["reversed_values"]:
-                value = not value
-            else:
-                value = oldValue
+            result = self.checkValue(varName, value)
             obj = getObject(blockID, varName)
             if obj is not None:
-                obj.alpha = 0.4 if not value else GLOBAL.F_ONE
-                obj.mouseEnabled = value
-                obj.mouseChildren = value
-                obj.tabEnabled = value
+                obj.alpha = 0.4 if not result else GLOBAL.F_ONE
+                obj.mouseEnabled = result
+                obj.mouseChildren = result
+                obj.tabEnabled = result
 
     @staticmethod
     def onButtonPress(container, blockID, varName, value):

@@ -51,9 +51,10 @@ class BaseModMeta(BaseDAAPIComponent):
     def getAlpha(self):
         return round(min(1.0, self.colors[COLORS.GLOBAL][GLOBAL.ALPHA] * 1.4), 2)
 
-    def doLog(self, *args):
+    @staticmethod
+    def doLog(*args):
         for arg in args:
-            print arg, dir(arg)
+            print arg
 
     def isColorBlind(self):
         return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))

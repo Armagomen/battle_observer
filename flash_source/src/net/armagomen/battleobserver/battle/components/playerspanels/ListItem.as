@@ -24,7 +24,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function updateDamage(text:String):void
 		{
-			this.damage.htmlText = text;
+			if (this.damage)
+			{
+				this.damage.htmlText = text;
+			}
 		}
 		
 		public function addDamage(params:Object):void
@@ -70,7 +73,8 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function updateHealth(scale:Number, text:String):void
 		{
-			if (this.healthBar){
+			if (this.healthBar)
+			{
 				this.healthBar.setNewScale(scale);
 				this.healthBar.setText(text);
 			}
@@ -78,14 +82,15 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function setHealthVisible(vis:Boolean):void
 		{
-			if (this.healthBar){
+			if (this.healthBar)
+			{
 				this.healthBar.setVisible(vis);
 			}
 		}
 		
 		public function setDamageVisible(vis:Boolean):void
 		{
-			if (damage.visible != vis)
+			if (this.damage && this.damage.visible != vis)
 			{
 				this.damage.visible = vis
 			}
@@ -93,12 +98,15 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function setColor(hpColor:String):void
 		{
-			this.healthBar.updateColor(hpColor);
+			if (this.healthBar)
+			{
+				this.healthBar.updateColor(hpColor);
+			}
 		}
 		
 		public function setDeath():void
 		{
-			this.alpha = 0.6;
+			this.alpha = 0.55;
 			this.updateHealth(0, "");
 			this.setHealthVisible(false);
 		}

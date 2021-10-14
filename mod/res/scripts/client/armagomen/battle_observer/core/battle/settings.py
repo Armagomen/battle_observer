@@ -28,22 +28,19 @@ class ViewSettings(object):
                 self.sessionProvider.arenaVisitor.gui.isMapbox())
 
     def notEpicBattle(self):
-        return not self.sessionProvider.arenaVisitor.gui.isEpicBattle()
+        return not self.sessionProvider.arenaVisitor.gui.isInEpicRange()
 
     def __init__(self, cfg):
         self.cfg = cfg
+        self.isAllowed = False
         overrideMethod(SharedPage)(self.new_SharedPage_init)
 
     def getSetting(self, alias):
-        isAllowed = False
-        arenaVisitor = self.sessionProvider.arenaVisitor
-        if arenaVisitor is not None:
-            isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
-        if not isAllowed:
-            return isAllowed
+        if not self.isAllowed:
+            return self.isAllowed
         if alias is ALIASES.BATTLE_LOADING or alias is ALIASES.FULL_STATS or alias is ALIASES.PANELS_STAT:
-            return self.cfg.statistics[GLOBAL.ENABLED] and (self.cfg.statistics[STATISTICS.STATISTIC_ENABLED] or
-                                                            self.cfg.statistics[STATISTICS.ICON_ENABLED])
+            return self.notEpicBattle() and self.cfg.statistics[GLOBAL.ENABLED] and (
+                    self.cfg.statistics[STATISTICS.STATISTIC_ENABLED] or self.cfg.statistics[STATISTICS.ICON_ENABLED])
         elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
         elif alias is ALIASES.DAMAGE_LOG:
@@ -82,8 +79,17 @@ class ViewSettings(object):
         else:
             return False
 
+    def setIsAllowed(self):
+        arenaVisitor = self.sessionProvider.arenaVisitor
+        if arenaVisitor is not None:
+            self.isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
+        else:
+            self.isAllowed = False
+
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
+        if not self.isAllowed:
+            return
         config = page._SharedPage__componentsConfig._ComponentsConfig__config
         newConfig = tuple((i, self.checkAndReplaceAlias(aliases)) for i, aliases in config)
         page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig

@@ -140,7 +140,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					holder.statsItem._playerNameTF.htmlText = this.namesCache[holder.data.accountDBID];
 					if (!holder.data.isAlive())
 					{
-						holder.statsItem._playerNameTF.alpha = 0.6;
+						holder.statsItem._playerNameTF.alpha = 0.55;
 					}
 				}
 			}

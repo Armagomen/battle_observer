@@ -13,6 +13,7 @@ from gui.shared import EVENT_BUS_SCOPE
 
 
 def getViewSettings():
+    view_settings.setIsAllowed()
     settings = []
     for alias in SORTED_ALIASES:
         if not view_settings.getSetting(alias):
