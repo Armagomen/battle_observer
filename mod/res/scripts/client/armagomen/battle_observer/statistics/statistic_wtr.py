@@ -45,3 +45,9 @@ def getStatisticString(databaseID, users, clanTag):
         else:
             return None
     return CACHE[databaseID]
+
+
+def getStatisticColor(databaseID):
+    if databaseID in CACHE:
+        return CACHE[databaseID]["colorWTR"]
+    return DEFAULT_COLOR

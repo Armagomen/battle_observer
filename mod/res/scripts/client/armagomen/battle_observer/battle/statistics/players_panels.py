@@ -1,6 +1,6 @@
 from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
-from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
+from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString, getStatisticColor
 from armagomen.constants import VEHICLE_TYPES, STATISTICS
 
 
@@ -28,3 +28,7 @@ class PlayersPanelsStatistic(StatsMeta):
     @staticmethod
     def py_getFullWidth():
         return settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
+
+    @staticmethod
+    def py_getStatColor(accountDBID):
+        return getStatisticColor(accountDBID)

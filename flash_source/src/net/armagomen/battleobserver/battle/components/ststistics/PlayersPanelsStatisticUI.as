@@ -14,6 +14,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var panels:*                  = null;
 		public var py_getStatisticString:Function;
 		public var py_getIconColor:Function;
+		public var py_getStatColor:Function;
 		public var py_getIconMultiplier:Function;
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
@@ -25,6 +26,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var stringsCache:Object       = new Object();
 		private var stringsCacheCut:Object    = new Object();
 		private var count:Number              = 0;
+		private var colors:Object             = new Object();
 		
 		public function PlayersPanelsStatisticUI(panels:*)
 		{
@@ -45,8 +47,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.cached);
-			App.utils.data.cleanupDynamicObject(this.stringsCache);
-			App.utils.data.cleanupDynamicObject(this.stringsCacheCut);
 		}
 		
 		override protected function onBeforeDispose():void
@@ -109,6 +109,14 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				}
 				if (this.statisticsEnabled)
 				{
+					var accountDBID:int = item.accountDBID;
+					if (accountDBID != 0)
+					{
+						var isEnemy:Boolean = item.getVehicleData().teamColor == "vm_enemy"
+						this.stringsCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, false);
+						this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, true);
+						this.colors[accountDBID] = Utils.colorConvert(py_getStatColor(accountDBID));
+					}
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();
 				}
@@ -149,31 +157,29 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				this.setPlayerText(this.cached[icon['vehicleID']]);
 			}
 		}
-
+		
 		private function setPlayerText(item:*):void
 		{
-			var accountDBID:Number = item.accountDBID;
+			var accountDBID:int = item.accountDBID;
 			if (accountDBID != 0)
 			{
-				if (!this.stringsCache.hasOwnProperty(accountDBID))
+				if (this.colors[accountDBID])
 				{
-					var isEnemy:Boolean       = item.getVehicleData().teamColor == "vm_enemy"
-					var playerNameHtml:String = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, false);
-					if (playerNameHtml)
-					{
-						this.stringsCache[accountDBID] = playerNameHtml;
-						this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, true);
-					}
+					item._listItem.vehicleTF.textColor = this.colors[accountDBID];
 				}
 				if (this.stringsCache[accountDBID])
 				{
 					item._listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID];
+				}
+				if (this.stringsCacheCut[accountDBID])
+				{
 					item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[accountDBID];
-					if (!item._listItem._isAlive)
-					{
-						item._listItem.playerNameFullTF.alpha = 0.55;
-						item._listItem.playerNameCutTF.alpha = 0.55;
-					}
+				}
+				if (!item._listItem._isAlive)
+				{
+					item._listItem.playerNameFullTF.alpha = 0.55;
+					item._listItem.playerNameCutTF.alpha = 0.55;
+					item._listItem.vehicleTF.alpha = 0.55;
 				}
 			}
 		}
