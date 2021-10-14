@@ -12,10 +12,10 @@ def getWTR(data):
 
 
 def getPercent(data):
-    wins = int(data["statistics"]["random"]["wins"])
+    wins = float(data["statistics"]["random"]["wins"])
     battles = int(data["statistics"]["random"]["battles"])
     if wins:
-        return float(wins) / battles * 100, battles
+        return wins / battles * 100, battles
     return 0.0, battles
 
 

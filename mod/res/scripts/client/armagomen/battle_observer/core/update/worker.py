@@ -3,14 +3,13 @@ from collections import defaultdict
 from io import BytesIO
 from zipfile import ZipFile
 
-from Event import SafeEvent
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
 from armagomen.constants import GLOBAL, URLS, MESSAGES
 from armagomen.utils.common import logInfo, logError, getCurrentModPath, callback, \
     urlResponse
-from armagomen.utils.events import g_events
 from armagomen.utils.dialogs import UpdateDialogs
+from armagomen.utils.events import g_events
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.Waiting import Waiting
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -21,54 +20,34 @@ from web.cache.web_downloader import WebDownloader
 
 
 class DownloadThread(object):
-    __slots__ = ("dialog", "onDownloadFinished")
+    URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
+    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "view", "workingDir", "updateData")
 
-    def __init__(self, dialog):
-        self.dialog = dialog
-        self.onDownloadFinished = SafeEvent()
+    def __init__(self):
+        self.updateData = defaultdict()
+        self.dialogs = UpdateDialogs()
+        self.downloader = None
+        self.dialogs.onClickDownload += self.startDownload
+        self.workingDir = os.path.join(*getCurrentModPath())
 
-    def start(self, url, info):
+    def startDownload(self):
+        info = self.updateData.get('tag_name', __version__)
+        url = self.URLS['last']
         Waiting.show('updating')
-        downloader = WebDownloader(GLOBAL.ONE)
-        try:
+        self.downloader = WebDownloader(GLOBAL.ONE)
+        if info and url:
             logInfo('downloading started {} at {}'.format(info, url))
-            downloader.download(url, self.onDownloaded)
-        except Exception as error:
-            message = 'update {} - download failed: {}'.format(info, repr(error))
+            self.downloader.download(url, self.onDownloaded)
+        else:
+            message = 'update {} - download failed: {}'.format(info, url)
             Waiting.hide('updating')
             logError(message)
-            self.dialog.showUpdateError(message)
-        finally:
-            downloader.close()
+            self.dialogs.showUpdateError(message)
+        self.dialogs.onClickDownload -= self.startDownload
 
     def onDownloaded(self, _url, data):
         Waiting.hide('updating')
-        self.onDownloadFinished(data)
         logInfo('downloading finished: {}'.format(_url))
-
-
-class UpdateMain(object):
-    URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
-    appLoader = dependency.descriptor(IAppLoader)
-
-    __slots__ = ("inLogin", "view", "dialogs", "download", "workingDir", "updateData")
-
-    def __init__(self):
-        self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
-        self.view = None
-        self.workingDir = os.path.join(*getCurrentModPath())
-        self.dialogs = UpdateDialogs()
-        self.download = DownloadThread(self.dialogs)
-        self.updateData = defaultdict()
-
-        self.dialogs.onClickDownload += self.onDownloadStart
-        self.download.onDownloadFinished += self.onDownloadFinished
-
-    def onDownloadStart(self):
-        info = self.updateData.get('tag_name', __version__)
-        self.download.start(self.URLS['last'], info)
-
-    def onDownloadFinished(self, data):
         if data is not None:
             old_files = os.listdir(self.workingDir)
             with BytesIO(data) as zip_file, ZipFile(zip_file) as archive:
@@ -77,6 +56,20 @@ class UpdateMain(object):
                         logInfo('update, add new file {}'.format(newFile))
                         archive.extract(newFile, self.workingDir)
         self.dialogs.showUpdateFinished(self.updateData)
+        if self.downloader is not None:
+            self.downloader.close()
+            self.downloader = None
+
+
+class UpdateMain(DownloadThread):
+    appLoader = dependency.descriptor(IAppLoader)
+
+    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "view", "workingDir", "updateData")
+
+    def __init__(self):
+        super(UpdateMain, self).__init__()
+        self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+        self.view = None
 
     def request_last_version(self):
         result = False
@@ -114,7 +107,6 @@ class UpdateMain(object):
                 g_events.onHangarLoaded += self.onHangarLoaded
         else:
             self.dialogs = None
-            self.download = None
 
     def waitingLoginLoaded(self):
         app = self.appLoader.getApp()
