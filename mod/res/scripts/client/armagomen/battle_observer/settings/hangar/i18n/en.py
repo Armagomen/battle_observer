@@ -72,6 +72,8 @@ translate = {
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",
         "statistics_enabled": "Enable player statistics WTR rating",
+        "statistics_change_vehicle_name_color": "Change the color of the tank name in the ears to the color "
+                                                "of the statistics",
         "statistics_enabled_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
                                       "For more fine-tuning see the statistics.json file."
                                       " Available macro names: WTR, colorWTR, winRate, nickname, battles, clanTag",

@@ -31,4 +31,4 @@ class PlayersPanelsStatistic(StatsMeta):
 
     @staticmethod
     def py_getStatColor(accountDBID):
-        return getStatisticColor(accountDBID)
+        return getStatisticColor(accountDBID) if settings.statistics[STATISTICS.CHANGE_VEHICLE_COLOR] else None

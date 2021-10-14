@@ -304,13 +304,13 @@ OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("o
                                                                               "color")
 STATISTICS = namedtuple("STATISTICS", (
     "NAME", "STATISTIC_ENABLED",
-    "LOADING_LEFT", "LOADING_RIGHT",
+    "LOADING_LEFT", "LOADING_RIGHT", "CHANGE_VEHICLE_COLOR",
     "TAB_LEFT", "TAB_RIGHT",
     "PANELS_LEFT", "PANELS_RIGHT",
     "PANELS_LEFT_CUT", "PANELS_RIGHT_CUT",
     "COLORS", "ICON_ENABLED", "ICON_BLACKOUT",
     "PANELS_FULL_WIDTH", "PANELS_CUT_WIDTH"))(
-    "statistics", "statistics_enabled",
+    "statistics", "statistics_enabled", "statistics_change_vehicle_name_color",
     "statistics_pattern_loading_left", "statistics_pattern_loading_right",
     "statistics_pattern_tab_left", "statistics_pattern_tab_right",
     "statistics_pattern_panels_left", "statistics_pattern_panels_right",

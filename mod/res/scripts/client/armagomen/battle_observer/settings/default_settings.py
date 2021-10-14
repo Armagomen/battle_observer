@@ -511,6 +511,7 @@ class DefaultSettings(object):
         self.statistics = {
             GLOBAL.ENABLED: False,
             STATISTICS.STATISTIC_ENABLED: False,
+            STATISTICS.CHANGE_VEHICLE_COLOR: True,
             STATISTICS.LOADING_LEFT: "<font color='%(colorWTR)s'>%(nickname).12s</font>%(clanTag)s",
             STATISTICS.LOADING_RIGHT: "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).12s</font>",
             STATISTICS.TAB_LEFT: "<font color='%(colorWTR)s'>[%(WTR)d] %(nickname)s</font>%(clanTag)s",

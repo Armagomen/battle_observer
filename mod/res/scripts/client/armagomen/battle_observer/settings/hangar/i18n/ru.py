@@ -74,6 +74,7 @@ translate = {
     "statistics": {
         "header": "Статистика игроков WTR(WGR) | Иконки танков",
         "statistics_enabled": "Включить статистику игроков WTR рейтинг",
+        "statistics_change_vehicle_name_color": "Изменить цвет названия танка в ушах на цвет статистики",
         "statistics_enabled_tooltip": "Статистика будет отображатся на: экране загрузки, в ушах, окне по табу.<br>"
                                       "Для более тонкой настройки смотри файл statistics.json<br>"
                                       "Доступные имена макросов: WTR, colorWTR, winRate, nickname, battles, clanTag",
@@ -84,7 +85,7 @@ translate = {
         "icon_blackout": "Сила фильтра (яркость)",
 
         "panels_full_width": "Ширина поля имени игрока - большие уши.",
-        "panels_cut_width": "Ширина поля имени игрока - малые уши."
+        "panels_cut_width": "Ширина поля имени игрока - малые уши.",
     },
     "dispersion_circle": {
         "header": "Улучшенное сведение / серверный прицел.",
