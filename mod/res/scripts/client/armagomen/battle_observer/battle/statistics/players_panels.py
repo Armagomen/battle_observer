@@ -16,7 +16,7 @@ class PlayersPanelsStatistic(StatsMeta):
         result = getStatisticString(accountDBID, self.statisticsData, clanAbbrev)
         if result is not None:
             return pattern % result
-        return None
+        return GLOBAL.EMPTY_LINE
 
     def py_getIconColor(self, classTag):
         return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag, GLOBAL.EMPTY_LINE)
