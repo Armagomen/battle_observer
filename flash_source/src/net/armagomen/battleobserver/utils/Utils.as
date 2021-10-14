@@ -7,14 +7,21 @@ package net.armagomen.battleobserver.utils
 	{
 		public static function colorConvert(color:String):uint
 		{
-			return uint(parseInt("0x" + color.substr(1), 16));
+			if (color)
+			{
+				return uint(parseInt("0x" + color.substr(1), 16));
+			}
+			else
+			{
+				return 0
+			}
 		}
 		
-		public static function updateColor(object:DisplayObject, hpColor:String): void 
+		public static function updateColor(object:DisplayObject, hpColor:String):void
 		{
-            var colorInfo: ColorTransform = object.transform.colorTransform;
-            colorInfo.color = colorConvert(hpColor);
-            object.transform.colorTransform = colorInfo;
+			var colorInfo:ColorTransform = object.transform.colorTransform;
+			colorInfo.color = colorConvert(hpColor);
+			object.transform.colorTransform = colorInfo;
 		}
 	}
 }

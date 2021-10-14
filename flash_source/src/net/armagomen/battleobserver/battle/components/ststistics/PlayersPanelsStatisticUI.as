@@ -115,7 +115,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 						var isEnemy:Boolean = item.getVehicleData().teamColor == "vm_enemy"
 						this.stringsCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, false);
 						this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, true);
-						this.colors[accountDBID] = Utils.colorConvert(py_getStatColor(accountDBID));
+						var color:String = py_getStatColor(accountDBID);
+						if (color){
+							this.colors[accountDBID] = Utils.colorConvert(color);
+						}
 					}
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();

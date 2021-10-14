@@ -1,7 +1,7 @@
 from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString, getStatisticColor
-from armagomen.constants import VEHICLE_TYPES, STATISTICS
+from armagomen.constants import VEHICLE_TYPES, STATISTICS, GLOBAL
 
 
 class PlayersPanelsStatistic(StatsMeta):
@@ -19,7 +19,7 @@ class PlayersPanelsStatistic(StatsMeta):
         return None
 
     def py_getIconColor(self, classTag):
-        return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag)
+        return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag, GLOBAL.EMPTY_LINE)
 
     @staticmethod
     def py_getCutWidth():
@@ -31,4 +31,6 @@ class PlayersPanelsStatistic(StatsMeta):
 
     @staticmethod
     def py_getStatColor(accountDBID):
-        return getStatisticColor(accountDBID) if settings.statistics[STATISTICS.CHANGE_VEHICLE_COLOR] else None
+        if settings.statistics[STATISTICS.CHANGE_VEHICLE_COLOR]:
+            return getStatisticColor(accountDBID)
+        return GLOBAL.EMPTY_LINE

@@ -303,8 +303,8 @@ DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NA
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("own_health", "template", "align",
                                                                               "color")
 STATISTICS = namedtuple("STATISTICS", (
-    "NAME", "STATISTIC_ENABLED",
-    "LOADING_LEFT", "LOADING_RIGHT", "CHANGE_VEHICLE_COLOR",
+    "NAME", "STATISTIC_ENABLED", "CHANGE_VEHICLE_COLOR",
+    "LOADING_LEFT", "LOADING_RIGHT",
     "TAB_LEFT", "TAB_RIGHT",
     "PANELS_LEFT", "PANELS_RIGHT",
     "PANELS_LEFT_CUT", "PANELS_RIGHT_CUT",
