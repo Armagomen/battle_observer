@@ -159,30 +159,27 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			{
 				this.setPlayerText(this.cached[icon['vehicleID']]);
 			}
+			if (!this.cached[icon['vehicleID']]._listItem._isAlive && (this.statisticsEnabled || this.iconEnabled))
+			{
+				icon.parent.alpha = 0.6;
+			}
 		}
 		
 		private function setPlayerText(item:*):void
 		{
-			var accountDBID:int = item.accountDBID;
-			if (accountDBID != 0)
+			if (item.accountDBID != 0)
 			{
-				if (this.colors[accountDBID])
+				if (this.colors[item.accountDBID])
 				{
-					item._listItem.vehicleTF.textColor = this.colors[accountDBID];
+					item._listItem.vehicleTF.textColor = this.colors[item.accountDBID];
 				}
-				if (this.stringsCache[accountDBID])
+				if (this.stringsCache[item.accountDBID])
 				{
-					item._listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID];
+					item._listItem.playerNameFullTF.htmlText = this.stringsCache[item.accountDBID];
 				}
-				if (this.stringsCacheCut[accountDBID])
+				if (this.stringsCacheCut[item.accountDBID])
 				{
-					item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[accountDBID];
-				}
-				if (!item._listItem._isAlive)
-				{
-					item._listItem.playerNameFullTF.alpha = 0.55;
-					item._listItem.playerNameCutTF.alpha = 0.55;
-					item._listItem.vehicleTF.alpha = 0.55;
+					item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[item.accountDBID];
 				}
 			}
 		}

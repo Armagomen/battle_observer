@@ -106,7 +106,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function setDeath():void
 		{
-			this.alpha = 0.55;
 			this.updateHealth(0, "");
 			this.setHealthVisible(false);
 		}

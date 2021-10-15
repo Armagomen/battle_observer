@@ -30,6 +30,9 @@ class ViewSettings(object):
     def notEpicBattle(self):
         return not self.sessionProvider.arenaVisitor.gui.isInEpicRange()
 
+    def notEpicRandomBattle(self):
+        return not self.sessionProvider.arenaVisitor.gui.isEpicRandomBattle()
+
     def __init__(self, cfg):
         self.cfg = cfg
         self.isAllowed = False
@@ -39,7 +42,7 @@ class ViewSettings(object):
         if not self.isAllowed:
             return self.isAllowed
         if alias is ALIASES.BATTLE_LOADING or alias is ALIASES.FULL_STATS or alias is ALIASES.PANELS_STAT:
-            return self.notEpicBattle() and self.cfg.statistics[GLOBAL.ENABLED] and (
+            return self.notEpicBattle() and self.notEpicRandomBattle() and self.cfg.statistics[GLOBAL.ENABLED] and (
                     self.cfg.statistics[STATISTICS.STATISTIC_ENABLED] or self.cfg.statistics[STATISTICS.ICON_ENABLED])
         elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
@@ -64,16 +67,16 @@ class ViewSettings(object):
             return (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
                     self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED])
         elif alias is ALIASES.PANELS:
-            return self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle()
+            return self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle() and self.notEpicRandomBattle()
         elif alias is ALIASES.MINIMAP:
             return (self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED]
                     and self.notEpicBattle())
         elif alias is ALIASES.USER_BACKGROUND:
-            return self.cfg.user_background[GLOBAL.ENABLED]
+            return self.cfg.user_background[GLOBAL.ENABLED] and self.notEpicBattle()
         elif alias is ALIASES.DATE_TIME:
             return self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is ALIASES.DISTANCE:
-            return self.cfg.distance_to_enemy[GLOBAL.ENABLED] and self.notEpicBattle()
+            return self.cfg.distance_to_enemy[GLOBAL.ENABLED] and self.notEpicBattle() and self.notEpicRandomBattle()
         elif alias is ALIASES.OWN_HEALTH:
             return self.cfg.own_health[GLOBAL.ENABLED]
         else:

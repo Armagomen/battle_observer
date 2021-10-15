@@ -351,9 +351,9 @@ SAVE_SHOOT = namedtuple("SAVE_SHOOT", ("NAME", "MSG", "TEMPLATE", "DESTROYED_BLO
 
 ANOTHER = namedtuple("ANOTHER", (
     "CONFIG_SELECT", "SHADOW_SETTINGS", "FRIEND_LIST", "ACCOUNT_DBID", "USERS", "DBID", "BADGES", "IS_TEAM_KILLER",
-    "NAME", "CLAN_DBID", "CLAN_ABBR"))(
+    "NAME", "FAKE_NAME", "CLAN_DBID", "CLAN_ABBR"))(
     "configSelect", "shadow_settings", "friendList", "accountDBID", "users", "databaseID", "badges", "isTeamKiller",
-    "name", "clanDBID", "clanAbbrev")
+    "name", "fakeName", "clanDBID", "clanAbbrev")
 
 MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "LOCKED_BY_FILE_NAME", "UPDATE_CHECKED", "NEW_VERSION"))(
     "START LOADING", "SHUTTING DOWN", "ERROR: file {} is not valid, mod locked, please install mod from official site",

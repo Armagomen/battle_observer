@@ -94,7 +94,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
 				}
-				holder.statsItem._playerNameTF.autoSize = holder.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				if (this.statisticsEnabled)
+				{
+					this.namesCache[holder.data.accountDBID] = py_getStatisticString(holder.data.accountDBID, holder.statsItem._isEnemy, holder.data.clanAbbrev);
+					holder.statsItem._playerNameTF.autoSize = holder.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				}
 			}
 		}
 		
@@ -124,25 +128,17 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			{
 				this.setPlayerText(this.cached[icon['vehicleID']]);
 			}
-		
+			if (!this.cached[icon['vehicleID']].data.isAlive() && (this.statisticsEnabled || this.iconEnabled))
+			{
+				icon.parent.alpha = 0.6;
+			}
 		}
 		
 		private function setPlayerText(holder:*):void
 		{
-			if (holder.data.accountDBID != 0)
+			if (holder.data.accountDBID != 0 && this.namesCache[holder.data.accountDBID])
 			{
-				if (!this.namesCache.hasOwnProperty(holder.data.accountDBID))
-				{
-					this.namesCache[holder.data.accountDBID] = py_getStatisticString(holder.data.accountDBID, holder.statsItem._isEnemy, holder.data.clanAbbrev);
-				}
-				if (this.namesCache[holder.data.accountDBID])
-				{
-					holder.statsItem._playerNameTF.htmlText = this.namesCache[holder.data.accountDBID];
-					if (!holder.data.isAlive())
-					{
-						holder.statsItem._playerNameTF.alpha = 0.55;
-					}
-				}
+				holder.statsItem._playerNameTF.htmlText = this.namesCache[holder.data.accountDBID];
 			}
 		}
 	}

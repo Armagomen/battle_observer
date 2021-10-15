@@ -21,7 +21,7 @@ def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
                 if not getStatisticEnabled():
                     kwargs[ANOTHER.IS_TEAM_KILLER] = _PLAYER_STATUS.IS_TEAM_KILLER
                 if settings.main[MAIN.CHANGE_ANONYMOUS_NAME] and ANOTHER.NAME in kwargs:
-                    kwargs[ANOTHER.NAME] = settings.main[MAIN.ANONYMOUS_STRING]
+                    kwargs[ANOTHER.NAME] = kwargs[ANOTHER.FAKE_NAME] = settings.main[MAIN.ANONYMOUS_STRING]
         if settings.main[MAIN.HIDE_CLAN_ABBREV] and ANOTHER.CLAN_DBID in kwargs and ANOTHER.CLAN_ABBR in kwargs:
             kwargs[ANOTHER.CLAN_DBID] = GLOBAL.FIRST
             kwargs[ANOTHER.CLAN_ABBR] = GLOBAL.EMPTY_LINE

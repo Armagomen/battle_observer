@@ -108,7 +108,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
 				}
-				holder._textField.autoSize = holder._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				if (this.statisticsEnabled)
+				{
+					this.namesCache[holder.model.accountDBID] = py_getStatisticString(holder.model.accountDBID, holder._isEnemy, holder.model.clanAbbrev);
+					holder._textField.autoSize = holder._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				}
 			}
 		}
 		
@@ -142,19 +146,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function setPlayerText(holder:*):void
 		{
-			if (holder.model.accountDBID != 0)
+			if (holder.model.accountDBID != 0 && this.namesCache[holder.model.accountDBID])
 			{
-				if (!this.namesCache.hasOwnProperty(holder.model.accountDBID))
+				holder._textField.htmlText = this.namesCache[holder.model.accountDBID];
+				if (!holder.model.isAlive())
 				{
-					this.namesCache[holder.model.accountDBID] = py_getStatisticString(holder.model.accountDBID, holder._isEnemy, holder.model.clanAbbrev);
-				}
-				if (this.namesCache[holder.model.accountDBID])
-				{
-					holder._textField.htmlText = this.namesCache[holder.model.accountDBID];
-					if (!holder.model.isAlive())
-					{
-						holder._textField.alpha = 0.55;
-					}
+					holder._textField.parent.alpha = 0.6;
 				}
 			}
 		}
