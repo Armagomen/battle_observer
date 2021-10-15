@@ -13,6 +13,8 @@ class PlayersPanelsStatistic(StatsMeta):
         else:
             pattern = settings.statistics[STATISTICS.PANELS_RIGHT] if isEnemy else \
                 settings.statistics[STATISTICS.PANELS_LEFT]
+        if not pattern:
+            return GLOBAL.EMPTY_LINE
         result = getStatisticString(accountDBID, self.statisticsData, clanAbbrev)
         if result is not None:
             return pattern % result
