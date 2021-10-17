@@ -3,7 +3,7 @@ import re
 from Event import SafeEvent
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import GLOBAL
+from armagomen.constants import GLOBAL, CREW_XP
 from armagomen.utils.common import restartGame, openWebBrowser
 from async import async, await, AsyncReturn
 from gui.impl.dialogs import dialogs
@@ -39,7 +39,7 @@ class UpdateDialogs(DialogBase):
     @async
     def showUpdateFinished(self, params):
         message = self.localization['messageOK'].format(params.get('tag_name', __version__))
-        builder = WarningDialogBuilder()
+        builder = InfoDialogBuilder()
         builder.setFormattedTitle(self.localization['titleOK'])
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=self.localization['buttonOK'])
@@ -79,4 +79,27 @@ class LoadingErrorDialog(DialogBase):
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
+        raise AsyncReturn(result)
+
+
+class CrewDialog(DialogBase):
+    DESCRIPTIONS = {
+        CREW_XP.NOT_AVAILABLE: localization["crewDialog"][CREW_XP.NOT_AVAILABLE],
+        CREW_XP.IS_FULL_XP: localization["crewDialog"][CREW_XP.IS_FULL_XP],
+        CREW_XP.IS_FULL_COMPLETE: localization["crewDialog"][CREW_XP.IS_FULL_COMPLETE],
+        CREW_XP.NED_TURN_OFF: localization["crewDialog"][CREW_XP.NED_TURN_OFF]
+    }
+
+    def __init__(self):
+        super(CrewDialog, self).__init__()
+        self.localization = localization["crewDialog"]
+
+    @async
+    def showCrewDialog(self, value, description):
+        builder = InfoDialogBuilder()
+        builder.setFormattedTitle("Battle Observer")
+        builder.setFormattedMessage(self.DESCRIPTIONS[description] + self.localization["mark" if value else "uncheck"])
+        builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=self.localization["submit"])
+        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization["cancel"])
+        result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.SUBMIT))
         raise AsyncReturn(result)

@@ -18,10 +18,10 @@ SWF = namedtuple("SWF", ("BATTLE", "LOBBY", "ATTRIBUTE_NAME"))(
 
 URLS = namedtuple("URLS", ("HOST_NAME", "DONATE_UA_URL", "DONATE_EU_URL", "SUPPORT_URL", "UPDATE_GITHUB_API_URL",
                            "PATREON_URL"))("armagomen.bb-t.ru", "https://donatua.com/@armagomen",
-                                       "https://www.donationalerts.com/r/armagomenvs",
-                                       "https://discord.gg/NuhuhTN",
-                                       "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
-                                       "https://www.patreon.com/armagomen")
+                                           "https://www.donationalerts.com/r/armagomenvs",
+                                           "https://discord.gg/NuhuhTN",
+                                           "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
+                                           "https://www.patreon.com/armagomen")
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
 
@@ -362,6 +362,10 @@ MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "LOCKED_BY_FILE_NAME", "UP
 
 BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )
 
+CREW_XP = namedtuple("CREW_XP", ("NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF"))(
+    "notAvailable", "isFullXp", "isFullComplete", "needTurnOff"
+)
+
 LOAD_LIST = (
     HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
@@ -447,7 +451,7 @@ class CONFIG_INTERFACE:
             DISPERSION.ENABLED: (DISPERSION.CIRCLE_SCALE_CONFIG,
                                  DISPERSION.CIRCLE_EXTRA_LAP,
                                  DISPERSION.CIRCLE_REPLACE),
-            DISPERSION.CIRCLE_EXTRA_LAP: (DISPERSION.CIRCLE_REPLACE, )
+            DISPERSION.CIRCLE_EXTRA_LAP: (DISPERSION.CIRCLE_REPLACE,)
 
         },
         STATISTICS.NAME: {
