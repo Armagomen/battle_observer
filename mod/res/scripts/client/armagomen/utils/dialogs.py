@@ -1,6 +1,5 @@
 import re
 
-from Event import SafeEvent
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CREW_XP
@@ -25,7 +24,6 @@ class UpdateDialogs(DialogBase):
     def __init__(self):
         super(UpdateDialogs, self).__init__()
         self.localization = localization['updateDialog']
-        self.onClickDownload = SafeEvent()
 
     @async
     def showUpdateError(self, message):
@@ -60,14 +58,9 @@ class UpdateDialogs(DialogBase):
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=self.localization['buttonHANDLE'])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localization['buttonCancel'])
         result = yield await(dialogs.show(builder.build(self.view)))
-        if result.result == DialogButtons.RESEARCH:
-            self.onClickDownload()
-            raise AsyncReturn(True)
-        elif result.result == DialogButtons.PURCHASE:
+        if result.result == DialogButtons.PURCHASE:
             openWebBrowser(urls['full'])
-            raise AsyncReturn(True)
-        else:
-            raise AsyncReturn(False)
+        raise AsyncReturn(result.result == DialogButtons.RESEARCH)
 
 
 class LoadingErrorDialog(DialogBase):

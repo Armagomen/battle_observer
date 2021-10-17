@@ -6,10 +6,10 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
 from armagomen.constants import GLOBAL, URLS, MESSAGES
-from armagomen.utils.common import logInfo, logError, getCurrentModPath, callback, \
-    urlResponse
+from armagomen.utils.common import logInfo, logError, getCurrentModPath, callback, urlResponse
 from armagomen.utils.dialogs import UpdateDialogs
 from armagomen.utils.events import g_events
+from async import async, await
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.Waiting import Waiting
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -27,7 +27,6 @@ class DownloadThread(object):
         self.updateData = defaultdict()
         self.dialogs = UpdateDialogs()
         self.downloader = None
-        self.dialogs.onClickDownload += self.startDownload
         self.workingDir = os.path.join(*getCurrentModPath())
 
     def startDownload(self):
@@ -42,8 +41,13 @@ class DownloadThread(object):
             message = 'update {} - download failed: {}'.format(info, url)
             Waiting.hide('updating')
             logError(message)
+            self.closeDownloader()
             self.dialogs.showUpdateError(message)
-        self.dialogs.onClickDownload -= self.startDownload
+
+    def closeDownloader(self):
+        if self.downloader is not None:
+            self.downloader.close()
+            self.downloader = None
 
     def onDownloaded(self, _url, data):
         Waiting.hide('updating')
@@ -56,9 +60,7 @@ class DownloadThread(object):
                         logInfo('update, add new file {}'.format(newFile))
                         archive.extract(newFile, self.workingDir)
         self.dialogs.showUpdateFinished(self.updateData)
-        if self.downloader is not None:
-            self.downloader.close()
-            self.downloader = None
+        self.closeDownloader()
 
 
 class UpdateMain(DownloadThread):
@@ -108,6 +110,7 @@ class UpdateMain(DownloadThread):
         else:
             self.dialogs = None
 
+    @async
     def waitingLoginLoaded(self):
         app = self.appLoader.getApp()
         if app is None or app.containerManager is None:
@@ -116,11 +119,16 @@ class UpdateMain(DownloadThread):
         view = app.containerManager.getView(WindowLayer.VIEW)
         if view and view.settings.alias == VIEW_ALIAS.LOGIN and view.isCreated():
             self.dialogs.setView(view)
-            self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS)
+            result = yield await(self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS))
+            if result:
+                self.startDownload()
         else:
             callback(2.0, self.waitingLoginLoaded)
 
+    @async
     def onHangarLoaded(self, view):
-        self.dialogs.setView(view)
-        self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS)
         g_events.onHangarLoaded -= self.onHangarLoaded
+        self.dialogs.setView(view)
+        result = yield await(self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS))
+        if result:
+            self.startDownload()
