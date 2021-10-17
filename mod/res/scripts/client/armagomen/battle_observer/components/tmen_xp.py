@@ -29,7 +29,7 @@ class AccelerateCrewXp(object):
         if app is not None or app.containerManager is not None:
             view = app.containerManager.getView(WindowLayer.VIEW)
             self.dialog.setView(view)
-        dialogResult = yield await(self.dialog.showCrewDialog(value, description))
+        dialogResult = yield await(self.dialog.showCrewDialog(value, description, vehicle.userName))
         if dialogResult:
             self.accelerateCrewXp(vehicle, value)
         self.inProcess = False
