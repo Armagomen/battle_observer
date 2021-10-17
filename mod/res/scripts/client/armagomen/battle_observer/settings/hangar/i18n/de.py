@@ -434,6 +434,7 @@ translate = {
         "y_tooltip": "Position von der Mitte des Bildschirmes gemessen.",
         "template": "String-Muster. Makros: %(distance)s, %(name)s",
         "align": "Text align.",
+        "spottedOnly": "Information only on detected enemies."
     },
     "own_health": {
         "header": "Own health.",
@@ -449,9 +450,9 @@ translate = {
         "disable": "Disable accelerated crew training.",
         "submit": "Apply",
         "cancel": "Cancel",
-        "notAvailable": "Field upgrades are not available for this vehicle.\n",
-        "isFullXp": "You have accumulated the necessary amount of experience to fully upgrade the field upgrade.\n",
-        "isFullComplete": "You have pumped the field upgrade to the highest possible level.\n",
-        "needTurnOff": "You do not have field upgrades, it is recommended to disable accelerated crew training.\n"
+        "notAvailable": "Field upgrades are not available for this vehicle.",
+        "isFullXp": "You have accumulated the necessary amount of experience to fully upgrade the field upgrade.",
+        "isFullComplete": "You have pumped the field upgrade to the highest possible level.",
+        "needTurnOff": "You do not have field upgrades, it is recommended to disable accelerated crew training."
     },
 }

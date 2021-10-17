@@ -83,9 +83,10 @@ class CrewDialog(DialogBase):
 
     @async
     def showCrewDialog(self, value, description, vehicle_name):
+        message = self.localized[description] + "\n\n" + self.localized["enable" if value else "disable"]
         builder = InfoDialogBuilder()
         builder.setFormattedTitle("Battle Observer\n" + vehicle_name)
-        builder.setFormattedMessage(self.localized[description] + self.localized["enable" if value else "disable"])
+        builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=self.localized["submit"])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localized["cancel"])
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.SUBMIT))
