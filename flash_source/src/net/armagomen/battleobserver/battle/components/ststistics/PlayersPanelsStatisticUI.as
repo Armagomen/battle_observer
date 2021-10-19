@@ -5,8 +5,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
-	import net.wg.gui.battle.components.BattleAtlasSprite;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
+	import net.wg.gui.battle.random.views.stats.components.playersPanel.events.PlayersPanelEvent;
 	
 	public class PlayersPanelsStatisticUI extends ObserverBattleDisplayable
 	{
@@ -20,13 +20,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_iconEnabled:Function;
 		public var py_getCutWidth:Function;
 		public var py_getFullWidth:Function;
-		private var cached:Object             = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var stringsCache:Object       = new Object();
 		private var stringsCacheCut:Object    = new Object();
 		private var count:Number              = 0;
 		private var colors:Object             = new Object();
+		private var iconColors:Object         = new Object();
 		
 		public function PlayersPanelsStatisticUI(panels:*)
 		{
@@ -34,32 +34,38 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super();
 		}
 		
-		override protected function onPopulate():void
+		override public function as_onAfterPopulate():void
 		{
-			super.onPopulate();
+			super.as_onAfterPopulate();
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
-			this.createCache();
+			this.addListeners();
 			this.panels.addEventListener(Event.CHANGE, this.onChange);
+			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange);
 		}
 		
 		private function clear():void
 		{
 			this.removeListeners();
-			App.utils.data.cleanupDynamicObject(this.cached);
+			App.utils.data.cleanupDynamicObject(this.stringsCache);
+			App.utils.data.cleanupDynamicObject(this.stringsCacheCut);
+			App.utils.data.cleanupDynamicObject(this.colors);
+			App.utils.data.cleanupDynamicObject(this.iconColors);
+			this.count = 0;
 		}
 		
 		override protected function onBeforeDispose():void
 		{
 			this.clear();
 			this.panels.removeEventListener(Event.CHANGE, this.onChange);
+			this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange);
 			super.onBeforeDispose();
 		}
 		
-		private function onChange(eve:Event):void
+		private function onChange(eve:*):void
 		{
 			this.clear();
-			this.createCache();
+			this.addListeners();
 		}
 		
 		private function timeout():void
@@ -67,11 +73,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.count++;
 			if (count < 100)
 			{
-				setTimeout(this.createCache, 100);
+				setTimeout(this.addListeners, 100);
 			}
 		}
 		
-		private function createCache():void
+		private function addListeners():void
 		{
 			if (!this.panels.listLeft || !this.panels.listLeft._items)
 			{
@@ -80,49 +86,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 			for each (var ally:* in this.panels.listRight._items)
 			{
-				this.cached[ally.vehicleID] = ally;
+				this.addListener(ally);
 			}
 			for each (var enemy:* in this.panels.listLeft._items)
 			{
-				this.cached[enemy.vehicleID] = enemy;
-			}
-			this.addListeners();
-		}
-		
-		/// item._listItem, item.vehicleID, item.accountDBID, item.getVehicleData().vehicleType
-		/// item._listItem.playerNameCutTF, item._listItem.playerNameFullTF
-		/// item._listItem.vehicleIcon, item._listItem.vehicleTF
-		
-		private function addListeners():void
-		{
-			for each (var item:* in this.cached)
-			{
-				var icon:BattleAtlasSprite = item._listItem.vehicleIcon;
-				var tColor:ColorTransform  = icon.transform.colorTransform;
-				tColor.color = Utils.colorConvert(py_getIconColor(item.getVehicleData().vehicleType));
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
-				icon['cTansform'] = tColor;
-				icon['vehicleID'] = item.vehicleID;
-				if (!icon.hasEventListener(Event.RENDER))
-				{
-					icon.addEventListener(Event.RENDER, this.onRenderHendle);
-				}
-				if (this.statisticsEnabled)
-				{
-					var accountDBID:int = item.accountDBID;
-					if (accountDBID != 0)
-					{
-						var isEnemy:Boolean = item.getVehicleData().teamColor == "vm_enemy"
-						this.stringsCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, false);
-						this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, true);
-						var color:String = py_getStatColor(accountDBID);
-						if (color){
-							this.colors[accountDBID] = Utils.colorConvert(color);
-						}
-					}
-					item._listItem.playerNameCutTF.width = py_getCutWidth();
-					item._listItem.playerNameFullTF.width = py_getFullWidth();
-				}
+				this.addListener(enemy);
 			}
 			if (this.statisticsEnabled)
 			{
@@ -130,38 +98,88 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
 				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.FULL);
 				this.panels.as_setPanelMode(oldMode);
+				this.panels.parent.updateDamageLogPosition();
+			}
+		}
+		
+		/// item._listItem, item.vehicleID, item.accountDBID, item.getVehicleData().vehicleType
+		/// item._listItem.playerNameCutTF, item._listItem.playerNameFullTF
+		/// item._listItem.vehicleIcon, item._listItem.vehicleTF
+		
+		private function addListener(item:*):void
+		{
+			var icon:* = item._listItem.vehicleIcon;
+			icon.bo_color = Utils.colorConvert(py_getIconColor(item.getVehicleData().vehicleType));
+			icon.bo_mulpipier = py_getIconMultiplier();
+			icon.item = item;
+			if (!icon.hasEventListener(Event.RENDER))
+			{
+				icon.addEventListener(Event.RENDER, this.onRenderHendle);
+			}
+			if (this.statisticsEnabled)
+			{
+				var accountDBID:int = item.accountDBID;
+				if (accountDBID != 0)
+				{
+					var isEnemy:Boolean = item.getVehicleData().teamColor == "vm_enemy"
+					this.stringsCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, false);
+					this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, true);
+					var color:String = py_getStatColor(accountDBID);
+					if (color)
+					{
+						this.colors[accountDBID] = Utils.colorConvert(color);
+					}
+				}
+				item._listItem.playerNameCutTF.width = py_getCutWidth();
+				item._listItem.playerNameFullTF.width = py_getFullWidth();
 			}
 		}
 		
 		private function removeListeners():void
 		{
-			for each (var item:* in this.cached)
+			if (!this.panels.listLeft || !this.panels.listLeft._items)
 			{
-				if (!item || !item._listItem || !item._listItem.vehicleIcon)
-				{
-					continue;
-				}
-				if (item._listItem.vehicleIcon.hasEventListener(Event.RENDER))
-				{
-					item._listItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
-				}
+				return;
+			}
+			for each (var ally:* in this.panels.listRight._items)
+			{
+				this.removeListener(ally);
+			}
+			for each (var enemy:* in this.panels.listLeft._items)
+			{
+				this.removeListener(enemy);
+			}
+		}
+		
+		private function removeListener(item:*):void
+		{
+			if (!item || !item._listItem || !item._listItem.vehicleIcon)
+			{
+				return;
+			}
+			if (item._listItem.vehicleIcon.hasEventListener(Event.RENDER))
+			{
+				item._listItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
 			}
 		}
 		
 		private function onRenderHendle(eve:Event):void
 		{
-			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
-			if (this.iconEnabled && icon.transform.colorTransform !== icon['cTansform'])
+			var icon:* = eve.target;
+			if (icon.transform.colorTransform.color == icon.bo_color)
 			{
-				icon.transform.colorTransform = icon['cTansform'];
+				return;
+			}
+			if (this.iconEnabled)
+			{
+				var tColor:ColorTransform = icon.transform.colorTransform;
+				tColor.color = icon.bo_color;
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = icon.bo_mulpipier;
+				icon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsEnabled)
 			{
-				this.setPlayerText(this.cached[icon['vehicleID']]);
-			}
-			if (!this.cached[icon['vehicleID']]._listItem._isAlive && (this.statisticsEnabled || this.iconEnabled))
-			{
-				icon.parent.alpha = 0.6;
+				this.setPlayerText(icon.item);
 			}
 		}
 		
@@ -180,6 +198,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				if (this.stringsCacheCut[item.accountDBID])
 				{
 					item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[item.accountDBID];
+				}
+				if (!item._listItem._isAlive)
+				{
+					item._listItem.playerNameCutTF.alpha = 0.6;
+					item._listItem.playerNameFullTF.alpha = 0.6;
+					item._listItem.vehicleTF.alpha = 0.6;
 				}
 			}
 		}

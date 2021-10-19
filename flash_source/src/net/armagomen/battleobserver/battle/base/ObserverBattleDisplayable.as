@@ -34,6 +34,8 @@ package net.armagomen.battleobserver.battle.base
 			this.addEventListener(Event.RESIZE, this.onResizeHandle);
 		}
 		
+		public function as_onAfterPopulate():void {}
+		
 		override protected function onDispose():void
 		{
 			this.removeEventListener(Event.RESIZE, this.onResizeHandle);

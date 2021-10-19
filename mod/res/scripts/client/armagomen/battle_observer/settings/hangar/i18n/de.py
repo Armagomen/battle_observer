@@ -446,8 +446,8 @@ translate = {
         "align": "Text align.",
     },
     "crewDialog": {
-        "enable": "Enable accelerated crew training.",
-        "disable": "Disable accelerated crew training.",
+        "enable": "Enable accelerated crew training?",
+        "disable": "Disable accelerated crew training?",
         "submit": "Apply",
         "cancel": "Cancel",
         "notAvailable": "Field upgrades are not available for this vehicle.",

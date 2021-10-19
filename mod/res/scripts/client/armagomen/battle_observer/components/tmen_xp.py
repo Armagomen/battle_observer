@@ -62,7 +62,7 @@ class AccelerateCrewXp(object):
         value = False
         description = CREW_XP.NED_TURN_OFF
         if vehicle.isFullyElite:
-            availability = vehicle.postProgressionAvailability().result
+            availability = vehicle.postProgressionAvailability(unlockOnly=True).result
             complete = vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL
             fullXP = self.checkXP(vehicle)
             if not availability:

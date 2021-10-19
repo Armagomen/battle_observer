@@ -6,7 +6,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
-	import net.wg.gui.battle.components.BattleAtlasSprite;
 	
 	public class BattleLoadingUI extends ObserverBattleDisplayable
 	{
@@ -16,7 +15,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getIconMultiplier:Function;
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
-		private var cached:Object             = new Object();
 		private var namesCache:Object         = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
@@ -28,13 +26,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super();
 		}
 		
-		override protected function onPopulate():void
+		override public function as_onAfterPopulate():void
 		{
-			super.onPopulate();
+			super.as_onAfterPopulate();
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
-			this.createCache();
 			this.loading.addEventListener(Event.CHANGE, this.onChange);
+			this.addListeners();
 		}
 		
 		override protected function onBeforeDispose():void
@@ -47,14 +45,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public function as_clear():void
 		{
 			this.removeListeners();
-			App.utils.data.cleanupDynamicObject(this.cached);
 			App.utils.data.cleanupDynamicObject(this.namesCache);
 		}
 		
 		private function onChange(eve:Event):void
 		{
 			this.as_clear();
-			this.createCache();
+			this.addListeners();
 		}
 		
 		private function timeout():void
@@ -62,11 +59,47 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.count++;
 			if (count < 100)
 			{
-				setTimeout(this.createCache, 100);
+				setTimeout(this.addListeners, 100);
 			}
 		}
 		
-		private function createCache():void
+		private function addListeners():void
+		{
+			if (!this.loading.form || !this.loading.form._allyRenderers || !this.loading.form._allyRenderers[0].model)
+			{
+				this.timeout();
+				return;
+			}
+			for each (var ally:* in this.loading.form._allyRenderers)
+			{
+				this.addListener(ally)
+			}
+			for each (var enemy:* in this.loading.form._enemyRenderers)
+			{
+				this.addListener(enemy)
+			}
+		}
+		
+		private function addListener(item:*):void
+		{
+			var icon:*                = item._vehicleIcon;
+			var tColor:ColorTransform = new ColorTransform();
+			tColor.color = Utils.colorConvert(py_getIconColor(item.model.vehicleType));
+			tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
+			icon.cTansform = tColor;
+			icon.item = item;
+			if (!icon.hasEventListener(Event.RENDER))
+			{
+				icon.addEventListener(Event.RENDER, this.onRenderHendle);
+			}
+			if (this.statisticsEnabled)
+			{
+				this.namesCache[item.model.accountDBID] = py_getStatisticString(item.model.accountDBID, item._isEnemy, item.model.clanAbbrev);
+				item._textField.autoSize = item._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+			}
+		}
+		
+		private function removeListeners():void
 		{
 			if (!this.loading.form)
 			{
@@ -75,84 +108,44 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 			for each (var ally:* in this.loading.form._allyRenderers)
 			{
-				if (!ally.model)
-				{
-					this.timeout();
-					return;
-				}
-				this.cached[ally.model.vehicleID] = ally;
+				this.removeListener(ally)
 			}
 			for each (var enemy:* in this.loading.form._enemyRenderers)
 			{
-				if (!enemy.model)
-				{
-					this.timeout();
-					return;
-				}
-				this.cached[enemy.model.vehicleID] = enemy;
-			}
-			this.addListeners();
-		}
-		
-		private function addListeners():void
-		{
-			for each (var holder:* in this.cached)
-			{
-				var icon:BattleAtlasSprite = holder._vehicleIcon;
-				var tColor:ColorTransform  = icon.transform.colorTransform;
-				tColor.color = Utils.colorConvert(py_getIconColor(holder.model.vehicleType));
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
-				icon['cTansform'] = tColor;
-				icon['vehicleID'] = holder.model.vehicleID;
-				if (!icon.hasEventListener(Event.RENDER))
-				{
-					icon.addEventListener(Event.RENDER, this.onRenderHendle);
-				}
-				if (this.statisticsEnabled)
-				{
-					this.namesCache[holder.model.accountDBID] = py_getStatisticString(holder.model.accountDBID, holder._isEnemy, holder.model.clanAbbrev);
-					holder._textField.autoSize = holder._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-				}
+				this.removeListener(enemy)
 			}
 		}
 		
-		private function removeListeners():void
+		private function removeListener(item:*):void
 		{
-			for each (var holder:* in this.cached)
+			if (!item || !item._vehicleIcon)
 			{
-				if (!holder || !holder._vehicleIcon)
-				{
-					continue;
-				}
-				if (holder._vehicleIcon.hasEventListener(Event.RENDER))
-				{
-					holder._vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
-				}
+				return;
+			}
+			if (item._vehicleIcon.hasEventListener(Event.RENDER))
+			{
+				item._vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
 			}
 		}
 		
 		private function onRenderHendle(eve:Event):void
 		{
-			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
-			if (this.iconEnabled && icon.transform.colorTransform != icon['cTansform'])
+			var icon:* = eve.target;
+			if (this.iconEnabled)
 			{
-				icon.transform.colorTransform = icon['cTansform'];
+				icon.transform.colorTransform = icon.cTansform;
 			}
 			if (this.statisticsEnabled)
 			{
-				this.setPlayerText(this.cached[icon['vehicleID']]);
+				this.setPlayerText(icon.item);
 			}
 		}
 		
-		private function setPlayerText(holder:*):void
+		private function setPlayerText(item:*):void
 		{
-			if (holder.model.accountDBID != 0 && this.namesCache[holder.model.accountDBID])
+			if (item.model.accountDBID != 0 && this.namesCache[item.model.accountDBID])
 			{
-				holder._textField.htmlText = this.namesCache[holder.model.accountDBID];
-				if (!holder.model.isAlive())
-				{
-					holder._textField.parent.alpha = 0.6;
-				}
+				item._textField.htmlText = this.namesCache[item.model.accountDBID];
 			}
 		}
 	}

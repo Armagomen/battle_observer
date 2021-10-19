@@ -6,7 +6,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
-	import net.wg.gui.battle.components.BattleAtlasSprite;
 	
 	public class FullStatsUI extends ObserverBattleDisplayable
 	{
@@ -16,11 +15,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getIconMultiplier:Function;
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
-		private var cached:Object             = new Object();
 		private var namesCache:Object         = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var count:Number              = 0;
+		private var iconColors:Object         = new Object();
 		
 		public function FullStatsUI(fullStats:*)
 		{
@@ -28,18 +27,17 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super();
 		}
 		
-		override protected function onPopulate():void
+		override public function as_onAfterPopulate():void
 		{
-			super.onPopulate();
+			super.as_onAfterPopulate();
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
-			this.createCache();
+			this.addListeners();
 		}
 		
 		override protected function onBeforeDispose():void
 		{
 			this.removeListeners();
-			App.utils.data.cleanupDynamicObject(this.cached);
 			super.onBeforeDispose();
 		}
 		
@@ -48,11 +46,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.count++;
 			if (count < 100)
 			{
-				setTimeout(this.createCache, 100);
+				setTimeout(this.addListeners, 2000);
 			}
 		}
 		
-		private function createCache():void
+		private function addListeners():void
 		{
 			if (!this.fullStats._tableCtrl || !this.fullStats._tableCtrl._allyRenderers)
 			{
@@ -61,84 +59,90 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 			for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
 			{
-				if (!ally.data)
-				{
-					this.timeout();
-					return;
-				}
-				this.cached[ally.data.vehicleID] = ally;
+				this.addListener(ally)
 			}
 			for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
 			{
-				if (!enemy.data)
-				{
-					this.timeout();
-					return;
-				}
-				this.cached[enemy.data.vehicleID] = enemy;
+				this.addListener(enemy)
 			}
-			this.addListeners();
 		}
 		
-		private function addListeners():void
+		private function addListener(item:*):void
 		{
-			for each (var holder:* in this.cached)
+			var icon:* = item.statsItem._vehicleIcon;
+			iconColors[item.getVehicleID()] = [Utils.colorConvert(py_getIconColor(item.data.vehicleType)), py_getIconMultiplier()];
+			icon.item = item;
+			if (!icon.hasEventListener(Event.RENDER))
 			{
-				var icon:BattleAtlasSprite = holder.statsItem._vehicleIcon;
-				var tColor:ColorTransform  = icon.transform.colorTransform;
-				tColor.color = Utils.colorConvert(py_getIconColor(holder.data.vehicleType));
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = py_getIconMultiplier();
-				icon['cTansform'] = tColor;
-				icon['vehicleID'] = holder.data.vehicleID;
-				if (!icon.hasEventListener(Event.RENDER))
-				{
-					icon.addEventListener(Event.RENDER, this.onRenderHendle);
-				}
-				if (this.statisticsEnabled)
-				{
-					this.namesCache[holder.data.accountDBID] = py_getStatisticString(holder.data.accountDBID, holder.statsItem._isEnemy, holder.data.clanAbbrev);
-					holder.statsItem._playerNameTF.autoSize = holder.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-				}
+				icon.addEventListener(Event.RENDER, this.onRenderHendle);
+			}
+			if (this.statisticsEnabled)
+			{
+				this.namesCache[item.data.accountDBID] = py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev);
+				item.statsItem._playerNameTF.autoSize = item.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
 			}
 		}
 		
 		private function removeListeners():void
 		{
-			for each (var holder:* in this.cached)
+			if (!this.fullStats._tableCtrl || !this.fullStats._tableCtrl._allyRenderers)
 			{
-				if (!holder || !holder.statsItem || !holder.statsItem.vehicleIcon)
-				{
-					continue;
-				}
-				if (holder.statsItem.vehicleIcon.hasEventListener(Event.RENDER))
-				{
-					holder.statsItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
-				}
+				return;
+			}
+			for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
+			{
+				this.removeListener(ally)
+			}
+			for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
+			{
+				this.removeListener(enemy)
+			}
+		}
+		
+		private function removeListener(item:*):void
+		{
+			if (!item || !item.statsItem || !item.statsItem._vehicleIcon)
+			{
+				return;
+			}
+			if (item.statsItem._vehicleIcon.hasEventListener(Event.RENDER))
+			{
+				item.statsItem._vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
 			}
 		}
 		
 		private function onRenderHendle(eve:Event):void
 		{
-			var icon:BattleAtlasSprite = eve.target as BattleAtlasSprite;
+			var icon:*      = eve.target;
+			var vehicleID:* = icon.item.getVehicleID();
+			if (icon.transform.colorTransform.color == iconColors[vehicleID][0])
+			{
+				return;
+			}
 			if (this.iconEnabled)
 			{
-				icon.transform.colorTransform = icon['cTansform'];
+				var tColor:ColorTransform = new ColorTransform();
+				tColor.color = iconColors[vehicleID][0];
+				tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
+				tColor.alphaOffset = icon.transform.colorTransform.alphaOffset;
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = iconColors[vehicleID][1];
+				icon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsEnabled)
 			{
-				this.setPlayerText(this.cached[icon['vehicleID']]);
-			}
-			if (!this.cached[icon['vehicleID']].data.isAlive() && (this.statisticsEnabled || this.iconEnabled))
-			{
-				icon.parent.alpha = 0.6;
+				this.setPlayerText(icon.item);
 			}
 		}
 		
-		private function setPlayerText(holder:*):void
+		private function setPlayerText(item:*):void
 		{
-			if (holder.data.accountDBID != 0 && this.namesCache[holder.data.accountDBID])
+			if (item.data.accountDBID != 0 && this.namesCache[item.data.accountDBID])
 			{
-				holder.statsItem._playerNameTF.htmlText = this.namesCache[holder.data.accountDBID];
+				item.statsItem._playerNameTF.htmlText = this.namesCache[item.data.accountDBID];
+			}
+			if (!item.data.isAlive())
+			{
+				item.statsItem._playerNameTF.alpha = 0.6;
 			}
 		}
 	}

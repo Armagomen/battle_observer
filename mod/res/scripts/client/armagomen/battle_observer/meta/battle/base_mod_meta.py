@@ -68,6 +68,7 @@ class BaseModMeta(BaseDAAPIComponent):
             self.flashObject.setCompVisible(False)
             if self.isDebug:
                 logInfo("battle module '%s' loaded" % self.getAlias())
+        self.as_onAfterPopulateS()
 
     def _dispose(self):
         g_playerEvents.onAvatarReady -= self.onEnterBattlePage
@@ -93,3 +94,6 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def as_onCrosshairPositionChangedS(self, x, y):
         return self.flashObject.as_onCrosshairPositionChanged(x, y) if self._isDAAPIInited() else None
+
+    def as_onAfterPopulateS(self):
+        return self.flashObject.as_onAfterPopulate() if self._isDAAPIInited() else None
