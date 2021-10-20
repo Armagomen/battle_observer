@@ -9,11 +9,15 @@ package net.armagomen.battleobserver.utils
 		{
 			if (color)
 			{
+				if (color == "#000000")
+				{
+					color = "#000001";
+				}
 				return uint(parseInt("0x" + color.substr(1), 16));
 			}
 			else
 			{
-				return 0
+				return 1;
 			}
 		}
 		

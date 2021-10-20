@@ -67,34 +67,41 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function addListeners():void
 		{
-			if (!this.loading.form || !this.loading.form._allyRenderers || !this.loading.form._allyRenderers[0].model)
+			if (!this.loading.form || !this.loading.form._allyRenderers)
 			{
 				this.timeout();
 				return;
 			}
 			for each (var ally:* in this.loading.form._allyRenderers)
 			{
-				this.addListener(ally)
+				this.addItemListener(ally)
 			}
 			for each (var enemy:* in this.loading.form._enemyRenderers)
 			{
-				this.addListener(enemy)
+				this.addItemListener(enemy)
 			}
 		}
 		
-		private function addListener(item:*):void
+		private function addItemListener(item:*):void
 		{
-			var icon:* = item._vehicleIcon;
-			this.iconsColor[item.model.vehicleID] = [Utils.colorConvert(py_getIconColor(item.model.vehicleType)), py_getIconMultiplier()];
-			icon.item = item;
-			if (!icon.hasEventListener(Event.RENDER))
+			if (!item.model)
 			{
-				icon.addEventListener(Event.RENDER, this.onRenderHendle);
+				setTimeout(this.addItemListener, 100, item);
 			}
-			if (this.statisticsEnabled)
+			else
 			{
-				this.namesCache[item.model.accountDBID] = py_getStatisticString(item.model.accountDBID, item._isEnemy, item.model.clanAbbrev);
-				item._textField.autoSize = item._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				var icon:* = item._vehicleIcon;
+				this.iconsColor[item.model.vehicleID] = [Utils.colorConvert(py_getIconColor(item.model.vehicleType)), py_getIconMultiplier()];
+				icon.item = item;
+				if (!icon.hasEventListener(Event.RENDER))
+				{
+					icon.addEventListener(Event.RENDER, this.onRenderHendle);
+				}
+				if (this.statisticsEnabled)
+				{
+					this.namesCache[item.model.accountDBID] = py_getStatisticString(item.model.accountDBID, item._isEnemy, item.model.clanAbbrev);
+					item._textField.autoSize = item._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				}
 			}
 		}
 		
@@ -129,12 +136,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function onRenderHendle(eve:Event):void
 		{
-			var icon:* = eve.target;
-			if (icon.transform.colorTransform.color == this.iconsColor[icon.item.model.vehicleID][0])
-			{
-				return;
-			}
-			if (this.iconEnabled)
+			var icon:*              = eve.target;
+			var changeColor:Boolean = icon.transform.colorTransform.color == 0;
+			if (this.iconEnabled && changeColor)
 			{
 				var tColor:ColorTransform = new ColorTransform();
 				tColor.color = this.iconsColor[icon.item.model.vehicleID][0];
@@ -143,7 +147,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconsColor[icon.item.model.vehicleID][1];
 				icon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled)
+			if (this.statisticsEnabled && changeColor)
 			{
 				this.setPlayerText(icon.item);
 			}

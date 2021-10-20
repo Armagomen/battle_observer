@@ -55,31 +55,41 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			if (!this.fullStats._tableCtrl || !this.fullStats._tableCtrl._allyRenderers)
 			{
 				this.timeout();
-				return;
 			}
-			for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
+			else
 			{
-				this.addListener(ally)
-			}
-			for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
-			{
-				this.addListener(enemy)
+				for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
+				{
+					this.addItemListener(ally)
+				}
+				for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
+				{
+					this.addItemListener(enemy)
+				}
 			}
 		}
 		
-		private function addListener(item:*):void
+		private function addItemListener(item:*):void
 		{
-			var icon:* = item.statsItem._vehicleIcon;
-			iconColors[item.getVehicleID()] = [Utils.colorConvert(py_getIconColor(item.data.vehicleType)), py_getIconMultiplier()];
-			icon.item = item;
-			if (!icon.hasEventListener(Event.RENDER))
+			if (!item.containsData || !item.statsItem)
 			{
-				icon.addEventListener(Event.RENDER, this.onRenderHendle);
+				setTimeout(this.addItemListener, 200, item);
 			}
-			if (this.statisticsEnabled)
+			else
 			{
-				this.namesCache[item.data.accountDBID] = py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev);
-				item.statsItem._playerNameTF.autoSize = item.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				var icon:* = item.statsItem._vehicleIcon;
+				iconColors[item.getVehicleID()] = [Utils.colorConvert(py_getIconColor(item.data.vehicleType)), py_getIconMultiplier()];
+				icon.item = item;
+				icon.bo_color = 0;
+				if (!icon.hasEventListener(Event.RENDER))
+				{
+					icon.addEventListener(Event.RENDER, this.onRenderHendle);
+				}
+				if (this.statisticsEnabled)
+				{
+					this.namesCache[item.data.accountDBID] = py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev);
+					item.statsItem._playerNameTF.autoSize = item.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				}
 			}
 		}
 		
@@ -113,14 +123,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function onRenderHendle(eve:Event):void
 		{
-			var icon:*      = eve.target;
-			var vehicleID:* = icon.item.getVehicleID();
-			if (icon.transform.colorTransform.color == iconColors[vehicleID][0])
+			var icon:*              = eve.target;
+			var changeColor:Boolean = icon.transform.colorTransform.color == 0;
+			if (this.iconEnabled && changeColor)
 			{
-				return;
-			}
-			if (this.iconEnabled)
-			{
+				var vehicleID:*           = icon.item.getVehicleID();
 				var tColor:ColorTransform = new ColorTransform();
 				tColor.color = iconColors[vehicleID][0];
 				tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
@@ -128,7 +135,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = iconColors[vehicleID][1];
 				icon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled)
+			if (this.statisticsEnabled && changeColor && icon.item.data.accountDBID != 0)
 			{
 				this.setPlayerText(icon.item);
 			}
@@ -136,13 +143,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function setPlayerText(item:*):void
 		{
-			if (item.data.accountDBID != 0 && this.namesCache[item.data.accountDBID])
+			if (this.namesCache[item.data.accountDBID])
 			{
 				item.statsItem._playerNameTF.htmlText = this.namesCache[item.data.accountDBID];
-			}
-			if (!item.data.isAlive())
-			{
-				item.statsItem._playerNameTF.alpha = 0.6;
+				if (!item.data.isAlive())
+				{
+					item.statsItem._playerNameTF.alpha = 0.66;
+				}
 			}
 		}
 	}

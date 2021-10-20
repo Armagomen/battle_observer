@@ -14,14 +14,15 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var panels:*                  = null;
 		public var py_getStatisticString:Function;
 		public var py_getIconColor:Function;
-		public var py_getStatColor:Function;
 		public var py_getIconMultiplier:Function;
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
 		public var py_getCutWidth:Function;
 		public var py_getFullWidth:Function;
+		public var py_vehicleStatisticColorEnabled:Function;
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
+		private var colorEnabled:Boolean      = false;
 		private var stringsCache:Object       = new Object();
 		private var stringsCacheCut:Object    = new Object();
 		private var count:Number              = 0;
@@ -37,8 +38,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		override public function as_onAfterPopulate():void
 		{
 			super.as_onAfterPopulate();
-			this.statisticsEnabled = py_statisticEnabled();
-			this.iconEnabled = py_iconEnabled();
+			this.statisticsEnabled = this.py_statisticEnabled();
+			this.iconEnabled = this.py_iconEnabled();
+			this.colorEnabled = this.py_vehicleStatisticColorEnabled();
 			this.addListeners();
 			this.panels.addEventListener(Event.CHANGE, this.onChange);
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange);
@@ -84,13 +86,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				timeout();
 				return;
 			}
-			for each (var ally:* in this.panels.listRight._items)
+			for each (var ally:* in this.panels.listLeft._items)
 			{
-				this.addListener(ally);
+				this.addItemListener(ally);
 			}
-			for each (var enemy:* in this.panels.listLeft._items)
+			for each (var enemy:* in this.panels.listRight._items)
 			{
-				this.addListener(enemy);
+				this.addItemListener(enemy);
 			}
 			if (this.statisticsEnabled)
 			{
@@ -106,32 +108,37 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		/// item._listItem.playerNameCutTF, item._listItem.playerNameFullTF
 		/// item._listItem.vehicleIcon, item._listItem.vehicleTF
 		
-		private function addListener(item:*):void
+		private function addItemListener(item:*):void
 		{
-			var icon:* = item._listItem.vehicleIcon;
-			icon.bo_color = Utils.colorConvert(py_getIconColor(item.getVehicleData().vehicleType));
-			icon.bo_mulpipier = py_getIconMultiplier();
-			icon.item = item;
-			if (!icon.hasEventListener(Event.RENDER))
+			var vehicleData:* = item.getVehicleData();
+			if (!item.vehicleData || !item._listItem)
 			{
-				icon.addEventListener(Event.RENDER, this.onRenderHendle);
+				setTimeout(this.addItemListener, 200, item);
 			}
-			if (this.statisticsEnabled)
+			else
 			{
-				var accountDBID:int = item.accountDBID;
-				if (accountDBID != 0)
+				var icon:* = item._listItem.vehicleIcon;
+				icon.bo_color = Utils.colorConvert(py_getIconColor(item.vehicleData.vehicleType));
+				icon.bo_mulpipier = py_getIconMultiplier();
+				icon.item = item;
+				if (!icon.hasEventListener(Event.RENDER))
 				{
-					var isEnemy:Boolean = item.getVehicleData().teamColor == "vm_enemy"
-					this.stringsCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, false);
-					this.stringsCacheCut[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.getVehicleData().clanAbbrev, true);
-					var color:String = py_getStatColor(accountDBID);
-					if (color)
-					{
-						this.colors[accountDBID] = Utils.colorConvert(color);
-					}
+					icon.addEventListener(Event.RENDER, this.onRenderHendle);
 				}
-				item._listItem.playerNameCutTF.width = py_getCutWidth();
-				item._listItem.playerNameFullTF.width = py_getFullWidth();
+				if (this.statisticsEnabled)
+				{
+					var accountDBID:int = item.accountDBID;
+					if (accountDBID != 0)
+					{
+						var isEnemy:Boolean = vehicleData.teamColor == "vm_enemy";
+						var strings:Array   = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
+						this.stringsCacheCut[accountDBID] = strings[0];
+						this.stringsCache[accountDBID] = strings[1];
+						this.colors[accountDBID] = Utils.colorConvert(strings[2]);
+					}
+					item._listItem.playerNameCutTF.width = py_getCutWidth();
+					item._listItem.playerNameFullTF.width = py_getFullWidth();
+				}
 			}
 		}
 		
@@ -141,11 +148,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			{
 				return;
 			}
-			for each (var ally:* in this.panels.listRight._items)
+			for each (var ally:* in this.panels.listLeft._items)
 			{
 				this.removeListener(ally);
 			}
-			for each (var enemy:* in this.panels.listLeft._items)
+			for each (var enemy:* in this.panels.listRight._items)
 			{
 				this.removeListener(enemy);
 			}
@@ -165,19 +172,16 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function onRenderHendle(eve:Event):void
 		{
-			var icon:* = eve.target;
-			if (icon.transform.colorTransform.color == icon.bo_color)
-			{
-				return;
-			}
-			if (this.iconEnabled)
+			var icon:*              = eve.target;
+			var changeColor:Boolean = icon.transform.colorTransform.color == 0;
+			if (this.iconEnabled && changeColor)
 			{
 				var tColor:ColorTransform = icon.transform.colorTransform;
 				tColor.color = icon.bo_color;
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = icon.bo_mulpipier;
 				icon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled)
+			if (this.statisticsEnabled && changeColor && icon.item.accountDBID != 0)
 			{
 				this.setPlayerText(icon.item);
 			}
@@ -185,25 +189,25 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function setPlayerText(item:*):void
 		{
-			if (item.accountDBID != 0)
+			if (this.colorEnabled && this.colors[item.accountDBID])
 			{
-				if (this.colors[item.accountDBID])
+				item._listItem.vehicleTF.textColor = this.colors[item.accountDBID];
+			}
+			if (this.stringsCache[item.accountDBID])
+			{
+				item._listItem.playerNameFullTF.htmlText = this.stringsCache[item.accountDBID];
+			}
+			if (this.stringsCacheCut[item.accountDBID])
+			{
+				item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[item.accountDBID];
+			}
+			if (!item._listItem._isAlive)
+			{
+				item._listItem.playerNameCutTF.alpha = 0.66;
+				item._listItem.playerNameFullTF.alpha = 0.66;
+				if (this.colorEnabled && this.colors[item.accountDBID])
 				{
-					item._listItem.vehicleTF.textColor = this.colors[item.accountDBID];
-				}
-				if (this.stringsCache[item.accountDBID])
-				{
-					item._listItem.playerNameFullTF.htmlText = this.stringsCache[item.accountDBID];
-				}
-				if (this.stringsCacheCut[item.accountDBID])
-				{
-					item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[item.accountDBID];
-				}
-				if (!item._listItem._isAlive)
-				{
-					item._listItem.playerNameCutTF.alpha = 0.6;
-					item._listItem.playerNameFullTF.alpha = 0.6;
-					item._listItem.vehicleTF.alpha = 0.6;
+					item._listItem.vehicleTF.alpha = 0.66;
 				}
 			}
 		}
