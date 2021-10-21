@@ -37,6 +37,7 @@ class GLOBAL:
     BG_ALPHA = "bgAlpha"
     BLUR_X = "blurX"
     BLUR_Y = "blurY"
+    BOT_START_SWITCH = ":"
     COLOR = "color"
     COMMA_SEP = ", "
     CONFIG_ERROR = "Incorrect macros in config file."

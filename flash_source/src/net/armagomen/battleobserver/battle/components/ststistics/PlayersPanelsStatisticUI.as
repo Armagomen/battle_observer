@@ -150,15 +150,15 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 			for each (var ally:* in this.panels.listLeft._items)
 			{
-				this.removeListener(ally);
+				this.removeItemListener(ally);
 			}
 			for each (var enemy:* in this.panels.listRight._items)
 			{
-				this.removeListener(enemy);
+				this.removeItemListener(enemy);
 			}
 		}
 		
-		private function removeListener(item:*):void
+		private function removeItemListener(item:*):void
 		{
 			if (!item || !item._listItem || !item._listItem.vehicleIcon)
 			{
