@@ -10,10 +10,10 @@ class PlayersPanelsStatistic(StatsMeta):
             self.settings[STATISTICS.PANELS_LEFT_CUT]
         patternFUL = self.settings[STATISTICS.PANELS_RIGHT] if isEnemy else \
             self.settings[STATISTICS.PANELS_LEFT]
-        result = getStatisticString(accountDBID, self.statisticsData, clanAbbrev)
+        result = getStatisticString(accountDBID, clanAbbrev)
         if result is not None:
             return patternCUT % result, patternFUL % result, result["colorWTR"]
-        return GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE
+        return None, None, None
 
     def py_getIconColor(self, classTag):
         return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag, GLOBAL.EMPTY_LINE)

@@ -2,7 +2,8 @@ from importlib import import_module
 
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN
+from armagomen.battle_observer.statistics.statistic_data_loader import setCachedStatisticData
+from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN, ALIASES
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
@@ -10,6 +11,8 @@ from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
+from helpers import dependency
+from skeletons.gui.battle_session import IBattleSessionProvider
 
 
 def getViewSettings():
@@ -41,16 +44,21 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('flash', '__external', '__viewAliases', '_listeners', '_scope', '_app', '_appNS')
+    __slots__ = ('flash', '__external', '__viewAliases', '_listeners', '_scope', '_app', '_appNS', 'statisticsData')
+    sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
         self.flash = None
+        self.statisticsData = None
         self.__external = view_settings.getExternalComponents()
         self.__viewAliases = view_settings.getViewAliases()
         listeners = ((alias, self.eventListener) for alias in self.__viewAliases)
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def eventListener(self, event):
+        if view_settings.getSetting(ALIASES.PANELS_STAT):
+            _arenaDP = self.sessionProvider.getArenaDP()
+            setCachedStatisticData(vInfo.player.accountDBID for vInfo in _arenaDP.getVehiclesInfoIterator())
         self._app.as_loadLibrariesS([SWF.BATTLE])
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
         logInfo("loading flash libraries " + SWF.BATTLE)

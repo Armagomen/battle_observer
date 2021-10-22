@@ -9,7 +9,7 @@ class FullStats(StatsMeta):
         pattern = self.settings[STATISTICS.TAB_RIGHT] if isEnemy else self.settings[STATISTICS.TAB_LEFT]
         if not pattern:
             return GLOBAL.EMPTY_LINE
-        result = getStatisticString(accountDBID, self.statisticsData, clanAbbrev)
+        result = getStatisticString(accountDBID, clanAbbrev)
         if result is not None:
             return pattern % result
         return GLOBAL.EMPTY_LINE

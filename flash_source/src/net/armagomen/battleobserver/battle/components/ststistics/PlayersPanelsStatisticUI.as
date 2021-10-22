@@ -134,7 +134,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 						var strings:Array   = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
 						this.stringsCacheCut[accountDBID] = strings[0];
 						this.stringsCache[accountDBID] = strings[1];
-						this.colors[accountDBID] = Utils.colorConvert(strings[2]);
+						if (strings[2]){
+							this.colors[accountDBID] = Utils.colorConvert(strings[2]);
+						}
 					}
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();

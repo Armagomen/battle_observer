@@ -17,7 +17,7 @@ package net.armagomen.battleobserver.utils
 			}
 			else
 			{
-				return 1;
+				return null;
 			}
 		}
 		

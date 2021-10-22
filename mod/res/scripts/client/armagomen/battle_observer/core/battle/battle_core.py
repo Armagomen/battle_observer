@@ -7,11 +7,13 @@ from VehicleGunRotator import VehicleGunRotator
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, getPlayer
 from armagomen.utils.events import g_events
+# from gui.Scaleform.daapi.view.battle.shared.stats_exchange import BattleStatisticsDataController
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 
 BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND)
+
 
 
 class BattleCore(object):
@@ -24,6 +26,19 @@ class BattleCore(object):
         overrideMethod(DogTagComponent, "_isObserving")(self._isObservingDogTagFix)
         overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByTankmen")(self.setSoundMode)
         overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByCommanderSkinID")(self.setSoundMode)
+        # overrideMethod(BattleStatisticsDataController, "as_updateVehiclesInfoS")(self.as_updateVehicles)
+        # overrideMethod(BattleStatisticsDataController, "as_updateVehiclesStatsS")(self.as_updateVehicles)
+
+    # def as_updateVehicles(self, base, controller, data):
+    #     base(controller, data)
+    #     items = data.get("leftItems")
+    #     if not items:
+    #         items = data.get("rightItems")
+    #
+    #     for item in items:
+    #         vehicleID = item["vehicleID"]
+    #         isEnemy = item["isEnemy"]
+    #         print vehicleID, isEnemy
 
     def setSoundMode(self, base, *args, **kwargs):
         if self.settings.main[MAIN.IGNORE_COMMANDERS]:

@@ -23,7 +23,7 @@ def request(databaseIDS):
     return result.get("data", None)
 
 
-def getCachedStatisticData(databaseIDS):
+def setCachedStatisticData(databaseIDS):
     if not statisticEnabled:
         return
     notZeroIds = tuple(_id for _id in databaseIDS if _id)
@@ -35,3 +35,7 @@ def getCachedStatisticData(databaseIDS):
             for _id, value in data.iteritems():
                 CACHE[int(_id)] = copy.deepcopy(value)
     return {_id: CACHE[_id] for _id in notZeroIds if _id in CACHE}
+
+
+def getStatisticForUser(databaseID):
+    return CACHE.get(databaseID)

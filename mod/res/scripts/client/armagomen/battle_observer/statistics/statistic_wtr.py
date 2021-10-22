@@ -1,4 +1,5 @@
 from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.statistics.statistic_data_loader import getStatisticForUser
 from armagomen.constants import STATISTICS
 
 WTR_COLORS = ((2971, "bad"), (4530, "normal"), (6370, "good"), (8525, "very_good"), (10158, "unique"))
@@ -33,10 +34,10 @@ def getColor(wtr):
     return COLORS.get(result, DEFAULT_COLOR)
 
 
-def getStatisticString(databaseID, users, clanTag):
+def getStatisticString(databaseID, clanTag):
     if databaseID not in CACHE:
-        if databaseID in users:
-            data = users[databaseID]
+        data = getStatisticForUser(databaseID)
+        if data is not None:
             wtr = getWTR(data)
             winRate, battles = getPercent(data)
             clanTag = "[{}]".format(clanTag) if clanTag else ""
