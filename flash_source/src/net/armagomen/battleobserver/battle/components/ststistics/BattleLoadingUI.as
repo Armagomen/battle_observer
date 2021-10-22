@@ -16,10 +16,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
 		private var namesCache:Object         = new Object();
-		private var iconsColor:Object         = new Object();
+		private var iconsColors:Object        = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var count:Number              = 0;
+		private var iconMultiplier:Number     = -1.25;
 		
 		public function BattleLoadingUI(loading:*)
 		{
@@ -32,6 +33,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super.as_onAfterPopulate();
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
+			this.iconMultiplier = py_getIconMultiplier();
 			this.loading.addEventListener(Event.CHANGE, this.onChange);
 			this.addListeners();
 		}
@@ -47,7 +49,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.namesCache);
-			App.utils.data.cleanupDynamicObject(this.iconsColor);
+			App.utils.data.cleanupDynamicObject(this.iconsColors);
 		}
 		
 		private function onChange(eve:Event):void
@@ -91,7 +93,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			else
 			{
 				var icon:* = item._vehicleIcon;
-				this.iconsColor[item.model.vehicleID] = [Utils.colorConvert(py_getIconColor(item.model.vehicleType)), py_getIconMultiplier()];
+				if (!this.iconsColors[item.model.vehicleType])
+				{
+					this.iconsColors[item.model.vehicleType] = Utils.colorConvert(py_getIconColor(item.model.vehicleType));
+				}
 				icon.item = item;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
@@ -141,10 +146,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			if (this.iconEnabled && changeColor)
 			{
 				var tColor:ColorTransform = new ColorTransform();
-				tColor.color = this.iconsColor[icon.item.model.vehicleID][0];
+				tColor.color = this.iconsColors[icon.item.model.vehicleType];
 				tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
 				tColor.alphaOffset = icon.transform.colorTransform.alphaOffset;
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconsColor[icon.item.model.vehicleID][1];
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				icon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsEnabled && changeColor)

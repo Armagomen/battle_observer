@@ -15,7 +15,6 @@ from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND)
 
 
-
 class BattleCore(object):
 
     def __init__(self, settings):

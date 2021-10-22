@@ -44,12 +44,11 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('flash', '__external', '__viewAliases', '_listeners', '_scope', '_app', '_appNS', 'statisticsData')
+    __slots__ = ('flash', '__external', '__viewAliases', '_listeners', '_scope', '_app', '_appNS')
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
         self.flash = None
-        self.statisticsData = None
         self.__external = view_settings.getExternalComponents()
         self.__viewAliases = view_settings.getViewAliases()
         listeners = ((alias, self.eventListener) for alias in self.__viewAliases)
@@ -57,8 +56,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def eventListener(self, event):
         if view_settings.getSetting(ALIASES.PANELS_STAT):
-            _arenaDP = self.sessionProvider.getArenaDP()
-            setCachedStatisticData(vInfo.player.accountDBID for vInfo in _arenaDP.getVehiclesInfoIterator())
+            arenaDP = self.sessionProvider.getArenaDP()
+            setCachedStatisticData(vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator())
         self._app.as_loadLibrariesS([SWF.BATTLE])
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
         logInfo("loading flash libraries " + SWF.BATTLE)

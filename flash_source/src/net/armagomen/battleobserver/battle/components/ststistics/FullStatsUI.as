@@ -20,6 +20,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconEnabled:Boolean       = false;
 		private var count:Number              = 0;
 		private var iconColors:Object         = new Object();
+		private var iconMultiplier:Number     = -1.25;
 		
 		public function FullStatsUI(fullStats:*)
 		{
@@ -32,6 +33,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super.as_onAfterPopulate();
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
+			this.iconMultiplier = py_getIconMultiplier();
 			this.addListeners();
 		}
 		
@@ -78,9 +80,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			else
 			{
 				var icon:* = item.statsItem._vehicleIcon;
-				iconColors[item.getVehicleID()] = [Utils.colorConvert(py_getIconColor(item.data.vehicleType)), py_getIconMultiplier()];
+				if (!this.iconColors[item.data.vehicleType])
+				{
+					this.iconColors[item.data.vehicleType] = Utils.colorConvert(py_getIconColor(item.data.vehicleType));
+				}
 				icon.item = item;
-				icon.bo_color = 0;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
 					icon.addEventListener(Event.RENDER, this.onRenderHendle);
@@ -127,12 +131,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var changeColor:Boolean = icon.transform.colorTransform.color == 0;
 			if (this.iconEnabled && changeColor)
 			{
-				var vehicleID:*           = icon.item.getVehicleID();
 				var tColor:ColorTransform = new ColorTransform();
-				tColor.color = iconColors[vehicleID][0];
+				tColor.color = this.iconColors[icon.item.data.vehicleType];
 				tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
 				tColor.alphaOffset = icon.transform.colorTransform.alphaOffset;
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = iconColors[vehicleID][1];
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				icon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsEnabled && changeColor && icon.item.data.accountDBID != 0)

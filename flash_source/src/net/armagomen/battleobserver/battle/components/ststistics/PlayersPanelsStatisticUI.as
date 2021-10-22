@@ -28,6 +28,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var count:Number              = 0;
 		private var colors:Object             = new Object();
 		private var iconColors:Object         = new Object();
+		private var iconMultiplier:Number     = -1.25;
 		
 		public function PlayersPanelsStatisticUI(panels:*)
 		{
@@ -41,6 +42,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.statisticsEnabled = this.py_statisticEnabled();
 			this.iconEnabled = this.py_iconEnabled();
 			this.colorEnabled = this.py_vehicleStatisticColorEnabled();
+			this.iconMultiplier = this.py_getIconMultiplier();
 			this.addListeners();
 			this.panels.addEventListener(Event.CHANGE, this.onChange);
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange);
@@ -118,8 +120,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			else
 			{
 				var icon:* = item._listItem.vehicleIcon;
-				icon.bo_color = Utils.colorConvert(py_getIconColor(item.vehicleData.vehicleType));
-				icon.bo_mulpipier = py_getIconMultiplier();
+				if (!this.iconColors[item.vehicleData.vehicleType])
+				{
+					this.iconColors[item.vehicleData.vehicleType] = Utils.colorConvert(py_getIconColor(item.vehicleData.vehicleType));
+				}
 				icon.item = item;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
@@ -134,7 +138,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 						var strings:Array   = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
 						this.stringsCacheCut[accountDBID] = strings[0];
 						this.stringsCache[accountDBID] = strings[1];
-						if (strings[2]){
+						if (strings[2])
+						{
 							this.colors[accountDBID] = Utils.colorConvert(strings[2]);
 						}
 					}
@@ -179,38 +184,35 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			if (this.iconEnabled && changeColor)
 			{
 				var tColor:ColorTransform = icon.transform.colorTransform;
-				tColor.color = icon.bo_color;
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = icon.bo_mulpipier;
+				tColor.color = this.iconColors[icon.item.vehicleData.vehicleType];
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				icon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsEnabled && changeColor && icon.item.accountDBID != 0)
 			{
-				this.setPlayerText(icon.item);
+				this.setPlayerText(icon.item._listItem, icon.item.accountDBID);
 			}
 		}
 		
-		private function setPlayerText(item:*):void
+		private function setPlayerText(listItem:*, accountDBID:int):void
 		{
-			if (this.colorEnabled && this.colors[item.accountDBID])
+			if (this.colorEnabled && this.colors[accountDBID])
 			{
-				item._listItem.vehicleTF.textColor = this.colors[item.accountDBID];
+				listItem.vehicleTF.textColor = this.colors[accountDBID];
 			}
-			if (this.stringsCache[item.accountDBID])
+			if (this.stringsCache[accountDBID])
 			{
-				item._listItem.playerNameFullTF.htmlText = this.stringsCache[item.accountDBID];
+				listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID];
 			}
-			if (this.stringsCacheCut[item.accountDBID])
+			if (this.stringsCacheCut[accountDBID])
 			{
-				item._listItem.playerNameCutTF.htmlText = this.stringsCacheCut[item.accountDBID];
+				listItem.playerNameCutTF.htmlText = this.stringsCacheCut[accountDBID];
 			}
-			if (!item._listItem._isAlive)
+			if (!listItem._isAlive)
 			{
-				item._listItem.playerNameCutTF.alpha = 0.66;
-				item._listItem.playerNameFullTF.alpha = 0.66;
-				if (this.colorEnabled && this.colors[item.accountDBID])
-				{
-					item._listItem.vehicleTF.alpha = 0.66;
-				}
+				listItem.playerNameCutTF.alpha = 0.66;
+				listItem.playerNameFullTF.alpha = 0.66;
+				listItem.vehicleTF.alpha = 0.66;
 			}
 		}
 	}
