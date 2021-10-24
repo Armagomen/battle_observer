@@ -60,7 +60,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             setCachedStatisticData(vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator())
         self._app.as_loadLibrariesS([SWF.BATTLE])
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
-        logInfo("loading flash libraries " + SWF.BATTLE)
+        logInfo("loading flash libraries swf={}, alias={}".format(SWF.BATTLE, event.alias))
 
     def fini(self):
         self.flash = None

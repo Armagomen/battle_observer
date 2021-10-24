@@ -1,9 +1,8 @@
 # coding=utf-8
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.constants import GLOBAL
-from armagomen.utils.common import callback
 from armagomen.utils.dialogs import LoadingErrorDialog
-from frameworks.wulf import WindowLayer
+from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.shared.personality import ServicesLocator
 from helpers import dependency
@@ -26,17 +25,10 @@ class LoadingError(object):
                            "damaged. Please copy correct files from the archive with the mod." \
                            "</font>\n\n{}".format(errorMessage)
         self.loadAlias = VIEW_ALIAS.LOGIN if self.getSetting(GAME.LOGIN_SERVER_SELECTION) else VIEW_ALIAS.LOBBY_HANGAR
-        self.waitingLoginLoaded()
+        g_events.onLoginLoaded += self.onLoginLoaded
 
-    def waitingLoginLoaded(self):
-        app = self.appLoader.getApp()
-        if app is None or app.containerManager is None:
-            callback(2.0, self.waitingLoginLoaded)
-            return
-        view = app.containerManager.getView(WindowLayer.VIEW)
-        if view and view.settings.alias == self.loadAlias and view.isCreated():
-            dialog = LoadingErrorDialog()
-            dialog.setView(view)
-            dialog.showLoadingError(self.message)
-        else:
-            callback(2.0, self.waitingLoginLoaded)
+    def onLoginLoaded(self, view):
+        dialog = LoadingErrorDialog()
+        dialog.setView(view)
+        dialog.showLoadingError(self.message)
+        g_events.onLoginLoaded -= self.onLoginLoaded

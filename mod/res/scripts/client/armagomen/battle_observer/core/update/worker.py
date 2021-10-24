@@ -104,31 +104,19 @@ class UpdateMain(DownloadThread):
         result = self.request_last_version()
         if result:
             if self.inLogin:
-                self.waitingLoginLoaded()
+                g_events.onLoginLoaded += self.showDialog
             else:
-                g_events.onHangarLoaded += self.onHangarLoaded
+                g_events.onHangarLoaded += self.showDialog
         else:
             self.dialogs = None
 
     @async
-    def waitingLoginLoaded(self):
-        app = self.appLoader.getApp()
-        if app is None or app.containerManager is None:
-            callback(2.0, self.waitingLoginLoaded)
-            return
-        view = app.containerManager.getView(WindowLayer.VIEW)
-        if view and view.settings.alias == VIEW_ALIAS.LOGIN and view.isCreated():
-            self.dialogs.setView(view)
-            result = yield await(self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS))
-            if result:
-                self.startDownload()
-        else:
-            callback(2.0, self.waitingLoginLoaded)
-
-    @async
-    def onHangarLoaded(self, view):
-        g_events.onHangarLoaded -= self.onHangarLoaded
+    def showDialog(self, view):
         self.dialogs.setView(view)
         result = yield await(self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS))
         if result:
             self.startDownload()
+        if self.inLogin:
+            g_events.onLoginLoaded -= self.showDialog
+        else:
+            g_events.onHangarLoaded -= self.showDialog
