@@ -12,7 +12,7 @@ class PlayersPanelsStatistic(StatsMeta):
             self.settings[STATISTICS.PANELS_LEFT]
         result = getStatisticString(accountDBID, clanAbbrev)
         if result is not None:
-            return patternCUT % result, patternFUL % result, result["colorWTR"]
+            return patternFUL % result, patternCUT % result, result["colorWTR"]
         return None, None, None
 
     def py_getIconColor(self, classTag):

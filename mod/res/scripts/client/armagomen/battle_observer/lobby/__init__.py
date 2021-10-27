@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from armagomen.battle_observer.core import settings
-from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES
+from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES, MAIN
 from armagomen.utils.common import logError, logWarning, callback, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -16,9 +16,9 @@ def checkSettings():
 
 
 def getViewSettings():
-    alias, enable = checkSettings()
+    alias, enabled = checkSettings()
     view_settings = []
-    if enable:
+    if enabled:
         try:
             class_name = alias.split("_")[GLOBAL.ONE]
             module_class = getattr(import_module(".date_times", package=__package__), class_name)
@@ -61,13 +61,16 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             return
         if view.settings.alias == VIEW_ALIAS.LOGIN:
             callback(1.0, lambda: g_events.onLoginLoaded(view))
-            # logInfo("onViewLoaded, alias {}".format(view.settings.alias))
+            if settings.main[MAIN.DEBUG]:
+                logInfo("onViewLoaded, alias={}".format(view.settings.alias))
         elif view.settings.alias == VIEW_ALIAS.LOBBY_HANGAR:
             callback(1.0, lambda: g_events.onHangarLoaded(view))
-            # logInfo("onViewLoaded, alias {}".format(view.settings.alias))
+            if settings.main[MAIN.DEBUG]:
+                logInfo("onViewLoaded, alias={}".format(view.settings.alias))
+            comp, enabled = checkSettings()
+            if not enabled:
+                return
             if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
                 to_format_str = "hangar_page {}, has ho attribute {}"
                 return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
-            comp, enabled = checkSettings()
-            if enabled:
-                view.flashObject.as_createBattleObserverComp(comp)
+            view.flashObject.as_createBattleObserverComp(comp)
