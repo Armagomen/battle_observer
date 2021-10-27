@@ -42,12 +42,12 @@ package net.armagomen.battleobserver.battle.components.ststistics.liasItem
 		
 		public function addListener():void 
 		{
-			super.addItemListener(item._listItem.vehicleIcon);
+			this.addItemListener(this.item._listItem.vehicleIcon);
 		}
 		
 		public function removeListener():void 
 		{
-			super.removeItemListener(item._listItem.vehicleIcon);
+			this.removeItemListener(this.item._listItem.vehicleIcon);
 		}
 	}
 
