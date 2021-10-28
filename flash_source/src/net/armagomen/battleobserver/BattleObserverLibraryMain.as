@@ -82,9 +82,6 @@ package net.armagomen.battleobserver
 				case "Observer_OwnHealth_UI": 
 					this.registerComponent(this.addChild(new OwnHealthUI()), ui_name);
 					break;
-				case "Observer_BattleLoading_UI": 
-					this.registerComponent(new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING)), ui_name);
-					break;
 				default: 
 					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + ui_name);
 					break;
@@ -133,14 +130,15 @@ package net.armagomen.battleobserver
 					case "Observer_Minimap_UI": 
 						this.registerComponent(new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP)), ui_name);
 						break;
-					case "Observer_FullStats_UI": 
-						this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS)), ui_name);
-						break;
-					case "Observer_PlayersPanelsStatistic_UI": 
-						this.registerComponent(new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), ui_name);
-						break;
 					}
 				}
+			}
+			
+			BaseBattlePage.prototype['as_observerStatisticComponents'] = function():void
+			{
+				this.registerComponent(new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING)), "Observer_BattleLoading_UI");
+				this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS)), "Observer_FullStats_UI");
+				this.registerComponent(new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), "Observer_PlayersPanelsStatistic_UI");
 			}
 		}
 	}

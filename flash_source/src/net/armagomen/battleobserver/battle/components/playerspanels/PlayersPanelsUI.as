@@ -28,6 +28,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		{
 			super.onPopulate();
 			this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
+			this.playersPanel.parent.updateDamageLogPosition();
 		}
 		
 		override protected function onBeforeDispose():void

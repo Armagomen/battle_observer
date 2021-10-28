@@ -1,13 +1,11 @@
 package net.armagomen.battleobserver.battle.components.ststistics
 {
+	import flash.events.Event;
+	import flash.geom.ColorTransform;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.battle.components.ststistics.liasItem.FullStatsListItem;
 	import net.armagomen.battleobserver.utils.Utils;
-	import net.wg.infrastructure.events.ListDataProviderEvent;
-	
-	ListDataProviderEvent.UPDATE_ITEM
 	
 	public class FullStatsUI extends ObserverBattleDisplayable
 	{
@@ -17,11 +15,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getIconMultiplier:Function;
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
+		private var namesCache:Object         = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var count:Number              = 0;
+		private var iconColors:Object         = new Object();
 		private var iconMultiplier:Number     = -1.25;
-		private var listItems:Vector.<FullStatsListItem>;
 		
 		public function FullStatsUI(fullStats:*)
 		{
@@ -35,21 +34,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.statisticsEnabled = py_statisticEnabled();
 			this.iconEnabled = py_iconEnabled();
 			this.iconMultiplier = py_getIconMultiplier();
-			this.listItems = new Vector.<FullStatsListItem>();
 			this.addListeners();
 		}
 		
 		override protected function onBeforeDispose():void
 		{
-			this.clear();
-			this.listItems = null;
-			super.onBeforeDispose();
-		}
-		
-		private function clear():void
-		{
 			this.removeListeners();
-			this.listItems.splice(0, this.listItems.length);
+			super.onBeforeDispose();
 		}
 		
 		private function timeout():void
@@ -88,26 +79,80 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 			else
 			{
-				var statistic:Boolean = this.statisticsEnabled && item.data.accountDBID != 0;
-				var listItem:FullStatsListItem = new FullStatsListItem(item, statistic, this.iconEnabled, false, 
-				                                                       Utils.colorConvert(py_getIconColor(item.data.vehicleType)), this.iconMultiplier);
-				this.listItems.push(listItem);
-				if (statistic)
+				var icon:* = item.statsItem._vehicleIcon;
+				if (!this.iconColors[item.data.vehicleType])
 				{
-					listItem.setStatisticStrings(py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev));
+					this.iconColors[item.data.vehicleType] = Utils.colorConvert(py_getIconColor(item.data.vehicleType));
+				}
+				icon.item = item;
+				if (!icon.hasEventListener(Event.RENDER))
+				{
+					icon.addEventListener(Event.RENDER, this.onRenderHendle);
+				}
+				if (this.statisticsEnabled)
+				{
+					if (item.data.accountDBID != 0)
+					{
+						this.namesCache[item.data.accountDBID] = py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev);
+					}
 					item.statsItem._playerNameTF.autoSize = item.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
 				}
-				listItem.addListener();
 			}
 		}
 		
 		private function removeListeners():void
 		{
-			for each (var listItem:FullStatsListItem in this.listItems)
+			if (!this.fullStats._tableCtrl || !this.fullStats._tableCtrl._allyRenderers)
 			{
-				listItem.removeListener();
+				return;
+			}
+			for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
+			{
+				this.removeListener(ally)
+			}
+			for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
+			{
+				this.removeListener(enemy)
 			}
 		}
 		
+		private function removeListener(item:*):void
+		{
+			if (!item || !item.statsItem || !item.statsItem._vehicleIcon)
+			{
+				return;
+			}
+			if (item.statsItem._vehicleIcon.hasEventListener(Event.RENDER))
+			{
+				item.statsItem._vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
+			}
+		}
+		
+		private function onRenderHendle(eve:Event):void
+		{
+			var icon:* = eve.target;
+			if (this.iconEnabled && icon.transform.colorTransform.color != this.iconColors[icon.item.data.vehicleType])
+			{
+				var tColor:ColorTransform = new ColorTransform();
+				tColor.color = this.iconColors[icon.item.data.vehicleType];
+				tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
+				tColor.alphaOffset = icon.transform.colorTransform.alphaOffset;
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+				icon.transform.colorTransform = tColor;
+			}
+			if (this.statisticsEnabled && icon.item.data.accountDBID != 0)
+			{
+				this.setPlayerText(icon.item);
+			}
+		}
+		
+		private function setPlayerText(item:*):void
+		{
+			item.statsItem._playerNameTF.htmlText = this.namesCache[item.data.accountDBID];
+			if (!item.data.isAlive())
+			{
+				item.statsItem._playerNameTF.alpha = 0.66;
+			}
+		}
 	}
 }

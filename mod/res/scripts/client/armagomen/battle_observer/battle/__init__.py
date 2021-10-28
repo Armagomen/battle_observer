@@ -86,6 +86,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if not hasattr(self.flash, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(self.flash), SWF.ATTRIBUTE_NAME))
+        if view_settings.getSetting(ALIASES.PANELS_STAT):
+            self.flash.as_observerStatisticComponents()
         for alias in SORTED_ALIASES:
             if view_settings.getSetting(alias) and alias not in self.__external:
                 self.flash.as_createBattleObserverComp(alias)
