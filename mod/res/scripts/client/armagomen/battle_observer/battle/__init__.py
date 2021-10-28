@@ -3,7 +3,8 @@ from importlib import import_module
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import view_settings
 from armagomen.battle_observer.statistics.statistic_data_loader import setCachedStatisticData
-from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN, ALIASES
+from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN, ALIASES, STATISTICS_ALIASES, \
+    EXTERNAL_ALIASES
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
@@ -18,7 +19,7 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 def getViewSettings():
     view_settings.setIsAllowed()
     settings = []
-    for alias in SORTED_ALIASES:
+    for alias in SORTED_ALIASES + STATISTICS_ALIASES + EXTERNAL_ALIASES:
         if not view_settings.getSetting(alias):
             _GAME_UI.discard(alias)
             _SPECTATOR_UI.discard(alias)
@@ -89,6 +90,6 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if view_settings.getSetting(ALIASES.PANELS_STAT):
             self.flash.as_observerStatisticComponents()
         for alias in SORTED_ALIASES:
-            if view_settings.getSetting(alias) and alias not in self.__external:
+            if view_settings.getSetting(alias):
                 self.flash.as_createBattleObserverComp(alias)
         self.flash.as_observerUpdateComponents(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])

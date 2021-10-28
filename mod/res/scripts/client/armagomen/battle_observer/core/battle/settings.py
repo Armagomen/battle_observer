@@ -145,8 +145,4 @@ class ViewSettings(object):
             components.append(ALIASES.PANELS)
         if self.getSetting(ALIASES.MINIMAP):
             components.append(ALIASES.MINIMAP)
-        if self.getSetting(ALIASES.FULL_STATS):
-            components.append(ALIASES.FULL_STATS)
-        if self.getSetting(ALIASES.PANELS_STAT):
-            components.append(ALIASES.PANELS_STAT)
         return components
