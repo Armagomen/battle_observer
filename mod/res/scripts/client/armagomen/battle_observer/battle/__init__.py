@@ -80,8 +80,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in self.__viewAliases:
             return
-        g_events.onBattlePageLoaded(view)
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
+        g_events.onBattlePageLoaded(view)
         g_playerEvents.onAvatarReady += self.onAvatarReady
         self.flash = view.flashObject
         if not hasattr(self.flash, SWF.ATTRIBUTE_NAME):

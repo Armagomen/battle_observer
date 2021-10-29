@@ -52,8 +52,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             self._app.loaderManager.onViewLoaded += self._onViewLoaded
 
     def fini(self):
-        super(ObserverBusinessHandler, self).fini()
         self.swfLoaded = False
+        super(ObserverBusinessHandler, self).fini()
 
     @staticmethod
     def _onViewLoaded(view, *args):
