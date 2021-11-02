@@ -176,9 +176,9 @@ class DamageLog(DamageLogsMeta):
     def checkShell(self, attack_reason_id, gold, is_dlog, shell_type):
         if is_dlog and attack_reason_id == GLOBAL.ZERO:
             if self._player is not None:
-                v_desc = self._player.getVehicleDescriptor()
-                shell_type = v_desc.shot.shell.kind
-                shell_icon_name = v_desc.shot.shell.iconName
+                shell = self._player.getVehicleDescriptor().shot.shell
+                shell_type = shell.kind
+                shell_icon_name = shell.iconName
                 gold = shell_icon_name in DAMAGE_LOG.PREMIUM_SHELLS
             else:
                 shell_type = DAMAGE_LOG.UNDEFINED

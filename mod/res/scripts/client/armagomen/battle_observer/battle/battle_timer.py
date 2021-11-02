@@ -14,7 +14,9 @@ class BattleTimer(BattleTimerMeta, IAbstractPeriodView):
                                  timer=BATTLE_TIMER.START_STRING)
 
     def setTotalTime(self, totalTime):
-        self.timer[BATTLE_TIMER.COLOR] = self.settings[BATTLE_TIMER.END_COLOR] \
-            if totalTime < BATTLE_TIMER.END_BATTLE_SEC else self.settings[BATTLE_TIMER.COLOR]
+        if totalTime < BATTLE_TIMER.END_BATTLE_SEC:
+            self.timer[BATTLE_TIMER.COLOR] = self.settings[BATTLE_TIMER.END_COLOR]
+        else:
+            self.timer[BATTLE_TIMER.COLOR] = self.settings[BATTLE_TIMER.COLOR]
         self.timer[BATTLE_TIMER.M_TIMER] = BATTLE_TIMER.TIME_FORMAT % divmod(totalTime, ONE_MINUTE)
         self.as_timerS(self.settings[BATTLE_TIMER.TEMPLATE] % self.timer)

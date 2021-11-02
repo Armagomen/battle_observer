@@ -56,6 +56,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def eventListener(self, event):
+        if not view_settings.isAllowed:
+            return
         if view_settings.getSetting(ALIASES.PANELS_STAT):
             arenaDP = self.sessionProvider.getArenaDP()
             setCachedStatisticData(vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator())
