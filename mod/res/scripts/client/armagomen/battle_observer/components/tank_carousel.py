@@ -10,14 +10,14 @@ def getRowCount(base, *args, **kwargs):
     return settings.tank_carousel[CAROUSEL.ROWS] if settings.tank_carousel[GLOBAL.ENABLED] else base(*args, **kwargs)
 
 
-@overrideMethod(CarouselTypeSetting, "getDefaultValue")
+@overrideMethod(DoubleCarouselTypeSetting, "getDefaultValue")
 def getDefaultValue(base, *args):
     if settings.tank_carousel[CAROUSEL.SMALL] and settings.tank_carousel[GLOBAL.ENABLED]:
         return DoubleCarouselTypeSetting.DOUBLE_CAROUSEL_TYPES.index(DoubleCarouselTypeSetting.OPTIONS.SMALL)
     return base(*args)
 
 
-@overrideMethod(CarouselTypeSetting, "enableSmallCarousel")
+@overrideMethod(DoubleCarouselTypeSetting, "enableSmallCarousel")
 def enableSmallCarousel(base, *args):
     return settings.tank_carousel[CAROUSEL.SMALL] and settings.tank_carousel[GLOBAL.ENABLED] or base(*args)
 
