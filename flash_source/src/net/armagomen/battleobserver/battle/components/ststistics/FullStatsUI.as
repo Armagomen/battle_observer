@@ -16,10 +16,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_statisticEnabled:Function;
 		public var py_iconEnabled:Function;
 		private var namesCache:Object         = new Object();
+		private var iconsColors:Object        = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var count:Number              = 0;
-		private var iconColors:Object         = new Object();
 		private var iconMultiplier:Number     = -1.25;
 		
 		public function FullStatsUI(fullStats:*)
@@ -40,6 +40,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		override protected function onBeforeDispose():void
 		{
 			this.removeListeners();
+			if (App.instance && App.utils)
+			{
+				App.utils.data.cleanupDynamicObject(this.namesCache);
+				App.utils.data.cleanupDynamicObject(this.iconsColors);
+			}
+			this.namesCache = null;
+			this.iconsColors = null;
 			super.onBeforeDispose();
 		}
 		
@@ -80,9 +87,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			else
 			{
 				var icon:* = item.statsItem._vehicleIcon;
-				if (!this.iconColors[item.data.vehicleType])
+				if (!this.iconsColors[item.data.vehicleType])
 				{
-					this.iconColors[item.data.vehicleType] = Utils.colorConvert(py_getIconColor(item.data.vehicleType));
+					this.iconsColors[item.data.vehicleType] = Utils.colorConvert(py_getIconColor(item.data.vehicleType));
 				}
 				icon.item = item;
 				if (!icon.hasEventListener(Event.RENDER))
@@ -131,10 +138,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function onRenderHendle(eve:Event):void
 		{
 			var icon:* = eve.target;
-			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconColors[icon.item.data.vehicleType] || icon.transform.colorTransform.color == 0))
+			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconsColors[icon.item.data.vehicleType] || icon.transform.colorTransform.color == 0))
 			{
 				var tColor:ColorTransform = new ColorTransform();
-				tColor.color = this.iconColors[icon.item.data.vehicleType];
+				tColor.color = this.iconsColors[icon.item.data.vehicleType];
 				tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
 				tColor.alphaOffset = icon.transform.colorTransform.alphaOffset;
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;

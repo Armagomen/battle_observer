@@ -18,7 +18,7 @@ class BaseModMeta(BaseDAAPIComponent):
         super(BaseModMeta, self).__init__()
         self._arenaDP = self.sessionProvider.getArenaDP()
         self._arenaVisitor = self.sessionProvider.arenaVisitor
-        self._player = getPlayer()
+        self._player = None
         self.settings = None
         self.colors = settings.colors
         self.vehicle_types = settings.vehicle_types
@@ -55,10 +55,10 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
+        self._player = getPlayer()
         self.setSettings()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
-        self.as_setComponentVisible(False)
         if self.isDebug:
             logInfo("battle module '%s' loaded" % self.getAlias())
         self.as_onAfterPopulateS()
@@ -71,7 +71,6 @@ class BaseModMeta(BaseDAAPIComponent):
             logInfo("battle module '%s' destroyed" % self.getAlias())
 
     def onEnterBattlePage(self):
-        self._player = getPlayer()
         self.as_setComponentVisible(True)
 
     def onExitBattlePage(self):

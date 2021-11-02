@@ -30,6 +30,7 @@ package net.armagomen.battleobserver.battle.base
 		
 		override protected function onPopulate():void
 		{
+			this.setCompVisible(false);
 			super.onPopulate();
 			this.addEventListener(Event.RESIZE, this.onResizeHandle);
 		}

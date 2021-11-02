@@ -42,14 +42,19 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			this.as_clear();
 			this.loading.removeEventListener(Event.CHANGE, this.onChange);
+			this.namesCache = null;
+			this.iconsColors = null;
 			super.onBeforeDispose();
 		}
 		
 		public function as_clear():void
 		{
 			this.removeListeners();
-			App.utils.data.cleanupDynamicObject(this.namesCache);
-			App.utils.data.cleanupDynamicObject(this.iconsColors);
+			if (App.instance && App.utils)
+			{
+				App.utils.data.cleanupDynamicObject(this.namesCache);
+				App.utils.data.cleanupDynamicObject(this.iconsColors);
+			}
 		}
 		
 		private function onChange(eve:Event):void

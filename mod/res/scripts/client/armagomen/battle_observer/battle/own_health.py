@@ -39,7 +39,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
 
     def onArenaPeriod(self, period, *args):
-        self.as_setVisibleS(period == ARENA_PERIOD.BATTLE)
+        self.as_setComponentVisible(period == ARENA_PERIOD.BATTLE)
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -52,7 +52,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         super(OwnHealth, self)._dispose()
 
     def onEnterBattlePage(self):
-        super(OwnHealth, self).onEnterBattlePage()
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling += self.__onVehicleControlling
@@ -63,11 +62,10 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if ctrl is not None:
             ctrl.onVehicleControlling -= self.__onVehicleControlling
             ctrl.onVehicleStateUpdated -= self.__onVehicleStateUpdated
-        super(OwnHealth, self).onExitBattlePage()
 
     def __onVehicleControlling(self, vehicle):
         if self.isPostmortem:
-            return self.as_setVisibleS(False)
+            return self.as_setComponentVisible(False)
         if self.__maxHealth != vehicle.maxHealth:
             self.__maxHealth = vehicle.maxHealth
         self._updateHealth(vehicle.health)
@@ -78,7 +76,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
 
     def onCameraChanged(self, ctrlMode, *_, **__):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
-        self.as_setVisibleS(not self.isPostmortem)
+        self.as_setComponentVisible(not self.isPostmortem and self._player.arena.period == ARENA_PERIOD.BATTLE)
 
     def _updateHealth(self, health):
         if self.isPostmortem or health > self.__maxHealth or self.__maxHealth <= GLOBAL.ZERO:

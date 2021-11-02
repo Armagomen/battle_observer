@@ -11,7 +11,7 @@ class Distance(DistanceMeta):
     def __init__(self):
         super(Distance, self).__init__()
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
-        self.timeEvent = CyclicTimerEvent(0.2, self.updateDistance)
+        self.timeEvent = None
         self.positionsCache = {}
         self.isPostmortem = False
         self.vehicles = {}
@@ -40,10 +40,13 @@ class Distance(DistanceMeta):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleKilled += self.onVehicleKilled
+        self.timeEvent = CyclicTimerEvent(0.2, self.updateDistance)
         self.timeEvent.start()
 
     def onExitBattlePage(self):
-        self.timeEvent.stop()
+        if self.timeEvent is not None:
+            self.timeEvent.stop()
+            self.timeEvent = None
         handler = avatar_getter.getInputHandler()
         if handler is not None:
             handler.onCameraChanged -= self.onCameraChanged
@@ -95,7 +98,8 @@ class Distance(DistanceMeta):
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
         if self.isPostmortem:
-            self.timeEvent.stop()
+            if self.timeEvent is not None:
+                self.timeEvent.stop()
             self.positionsCache.clear()
             self.vehicles.clear()
             self.as_setDistanceS(GLOBAL.EMPTY_LINE)

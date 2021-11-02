@@ -27,7 +27,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var stringsCacheCut:Object    = new Object();
 		private var count:Number              = 0;
 		private var colors:Object             = new Object();
-		private var iconColors:Object         = new Object();
+		private var iconsColors:Object        = new Object();
 		private var iconMultiplier:Number     = -1.25;
 		
 		public function PlayersPanelsStatisticUI(panels:*)
@@ -51,10 +51,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function clear():void
 		{
 			this.removeListeners();
-			App.utils.data.cleanupDynamicObject(this.stringsCache);
-			App.utils.data.cleanupDynamicObject(this.stringsCacheCut);
-			App.utils.data.cleanupDynamicObject(this.colors);
-			App.utils.data.cleanupDynamicObject(this.iconColors);
+			if (App.instance && App.utils)
+			{
+				App.utils.data.cleanupDynamicObject(this.stringsCache);
+				App.utils.data.cleanupDynamicObject(this.stringsCacheCut);
+				App.utils.data.cleanupDynamicObject(this.colors);
+				App.utils.data.cleanupDynamicObject(this.iconsColors);
+			}
 			this.count = 0;
 		}
 		
@@ -76,6 +79,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.clear();
 			this.panels.removeEventListener(Event.CHANGE, this.onChange);
 			this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange);
+			this.stringsCache = null;
+			this.stringsCacheCut = null;
+			this.colors = null;
+			this.iconsColors = null;
 			super.onBeforeDispose();
 		}
 		
@@ -125,9 +132,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			else
 			{
 				var icon:* = item._listItem.vehicleIcon;
-				if (!this.iconColors[item.vehicleData.vehicleType])
+				if (!this.iconsColors[item.vehicleData.vehicleType])
 				{
-					this.iconColors[item.vehicleData.vehicleType] = Utils.colorConvert(py_getIconColor(item.vehicleData.vehicleType));
+					this.iconsColors[item.vehicleData.vehicleType] = Utils.colorConvert(py_getIconColor(item.vehicleData.vehicleType));
 				}
 				icon.item = item;
 				if (!icon.hasEventListener(Event.RENDER))
@@ -185,10 +192,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function onRenderHendle(eve:Event):void
 		{
 			var icon:* = eve.target;
-			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconColors[icon.item.vehicleData.vehicleType] || icon.transform.colorTransform.color == 0))
+			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconsColors[icon.item.vehicleData.vehicleType] || icon.transform.colorTransform.color == 0))
 			{
 				var tColor:ColorTransform = icon.transform.colorTransform;
-				tColor.color = this.iconColors[icon.item.vehicleData.vehicleType];
+				tColor.color = this.iconsColors[icon.item.vehicleData.vehicleType];
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				icon.transform.colorTransform = tColor;
 			}

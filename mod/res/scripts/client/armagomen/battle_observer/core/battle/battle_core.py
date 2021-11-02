@@ -7,7 +7,6 @@ from VehicleGunRotator import VehicleGunRotator
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import setMaxFrameRate, overrideMethod, logInfo, getPlayer
 from armagomen.utils.events import g_events
-# from gui.Scaleform.daapi.view.battle.shared.stats_exchange import BattleStatisticsDataController
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl

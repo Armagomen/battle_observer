@@ -8,6 +8,3 @@ class OwnHealthMeta(BaseModMeta):
 
     def as_setOwnHealthS(self, scale, text, color):
         return self.flashObject.as_setOwnHealth(scale, text, color) if self._isDAAPIInited() else None
-
-    def as_setVisibleS(self, param):
-        return self.flashObject.as_setVisible(param) if self._isDAAPIInited() else None

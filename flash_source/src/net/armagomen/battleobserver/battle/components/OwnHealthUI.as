@@ -16,7 +16,7 @@ package net.armagomen.battleobserver.battle.components
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
-			if (this.own_health == null)
+			if (!this.own_health)
 			{
 				var settings:Object = this.getSettings();
 				var colors:Object = this.getColors();
@@ -32,11 +32,6 @@ package net.armagomen.battleobserver.battle.components
 			this.own_health.setNewScale(scale);
 			this.own_health.setText(text);
 			this.own_health.updateColor(color);
-		}
-		
-		public function as_setVisible(param:Boolean):void
-		{
-			this.own_health.setVisible(param);
 		}
 	}
 }
