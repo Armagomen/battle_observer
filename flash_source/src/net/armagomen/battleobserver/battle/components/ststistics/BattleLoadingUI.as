@@ -104,7 +104,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				}
 				if (this.statisticsEnabled)
 				{
-					if (item.model.accountDBID != 0){
+					if (item.model.accountDBID != 0)
+					{
 						this.namesCache[item.model.accountDBID] = py_getStatisticString(item.model.accountDBID, item._isEnemy, item.model.clanAbbrev);
 					}
 					item._textField.autoSize = item._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
@@ -143,8 +144,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function onRenderHendle(eve:Event):void
 		{
-			var icon:*              = eve.target;
-			if (this.iconEnabled && icon.transform.colorTransform.color != this.iconsColors[icon.item.model.vehicleType])
+			var icon:* = eve.target;
+			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconsColors[icon.item.model.vehicleType] || icon.transform.colorTransform.color == 0))
 			{
 				var tColor:ColorTransform = new ColorTransform();
 				tColor.color = this.iconsColors[icon.item.model.vehicleType];

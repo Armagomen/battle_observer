@@ -24,13 +24,8 @@ class BaseModMeta(BaseDAAPIComponent):
         self.vehicle_types = settings.vehicle_types
 
     def setSettings(self):
-        settings_name = ALIAS_TO_CONFIG_NAME.get(self.getAlias())
-        _settings = None
-        if settings_name is not None:
-            _settings = getattr(settings, settings_name, None)
-            if self.isDebug:
-                logInfo("Settings Name: %s - Settings Data: %s" % (settings_name, str(_settings)))
-        self.settings = _settings or settings
+        settings_name = ALIAS_TO_CONFIG_NAME.get(self.getAlias(), GLOBAL.EMPTY_LINE)
+        self.settings = getattr(settings, settings_name, None) or settings
 
     @staticmethod
     def animationEnabled():
@@ -63,10 +58,9 @@ class BaseModMeta(BaseDAAPIComponent):
         self.setSettings()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
-        if self._isDAAPIInited():
-            self.flashObject.setCompVisible(False)
-            if self.isDebug:
-                logInfo("battle module '%s' loaded" % self.getAlias())
+        self.as_setComponentVisible(False)
+        if self.isDebug:
+            logInfo("battle module '%s' loaded" % self.getAlias())
         self.as_onAfterPopulateS()
 
     def _dispose(self):
@@ -78,12 +72,13 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def onEnterBattlePage(self):
         self._player = getPlayer()
-        if self._isDAAPIInited():
-            self.flashObject.setCompVisible(True)
+        self.as_setComponentVisible(True)
 
     def onExitBattlePage(self):
-        if self._isDAAPIInited():
-            self.flashObject.setCompVisible(False)
+        self.as_setComponentVisible(False)
+
+    def as_setComponentVisible(self, param):
+        return self.flashObject.setCompVisible(param) if self._isDAAPIInited() else None
 
     def as_startUpdateS(self, *args):
         return self.flashObject.as_startUpdate(*args) if self._isDAAPIInited() else None

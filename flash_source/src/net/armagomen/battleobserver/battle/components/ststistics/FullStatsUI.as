@@ -131,7 +131,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function onRenderHendle(eve:Event):void
 		{
 			var icon:* = eve.target;
-			if (this.iconEnabled && icon.transform.colorTransform.color != this.iconColors[icon.item.data.vehicleType])
+			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconColors[icon.item.data.vehicleType] || icon.transform.colorTransform.color == 0))
 			{
 				var tColor:ColorTransform = new ColorTransform();
 				tColor.color = this.iconColors[icon.item.data.vehicleType];

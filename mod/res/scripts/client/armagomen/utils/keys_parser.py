@@ -52,7 +52,7 @@ class HotKeysParser(object):
         self.pressedKeys.discard(event.key)
 
     def onKeyDown(self, event):
-        if event.key not in self.usableKeys or event.key in self.pressedKeys:
+        if event.isModifierDown() or event.key not in self.usableKeys or event.key in self.pressedKeys:
             return
         if self.config.main[USE_KEY_PAIRS]:
             if event.key in KEY_ALIAS_CONTROL:

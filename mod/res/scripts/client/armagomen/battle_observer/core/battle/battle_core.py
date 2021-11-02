@@ -25,19 +25,6 @@ class BattleCore(object):
         overrideMethod(DogTagComponent, "_isObserving")(self._isObservingDogTagFix)
         overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByTankmen")(self.setSoundMode)
         overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByCommanderSkinID")(self.setSoundMode)
-        # overrideMethod(BattleStatisticsDataController, "as_updateVehiclesInfoS")(self.as_updateVehicles)
-        # overrideMethod(BattleStatisticsDataController, "as_updateVehiclesStatsS")(self.as_updateVehicles)
-
-    # def as_updateVehicles(self, base, controller, data):
-    #     base(controller, data)
-    #     items = data.get("leftItems")
-    #     if not items:
-    #         items = data.get("rightItems")
-    #
-    #     for item in items:
-    #         vehicleID = item["vehicleID"]
-    #         isEnemy = item["isEnemy"]
-    #         print vehicleID, isEnemy
 
     def setSoundMode(self, base, *args, **kwargs):
         if self.settings.main[MAIN.IGNORE_COMMANDERS]:
@@ -50,10 +37,7 @@ class BattleCore(object):
     @staticmethod
     def _isObservingDogTagFix(*args):
         player = getPlayer()
-        if player is None or player.vehicle is None:
-            return True
-        else:
-            return not player.vehicle.isPlayerVehicle
+        return player is None or player.vehicle is None or not player.vehicle.isPlayerVehicle
 
     @staticmethod
     def onModSettingsChanged(settings, blockID):

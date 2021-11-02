@@ -58,7 +58,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.count = 0;
 		}
 		
-		override public function setCompVisible(param0:Boolean):void 
+		override public function setCompVisible(param0:Boolean):void
 		{
 			super.setCompVisible(param0);
 			if (this.statisticsEnabled)
@@ -185,7 +185,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function onRenderHendle(eve:Event):void
 		{
 			var icon:* = eve.target;
-			if (this.iconEnabled && icon.transform.colorTransform.color != this.iconColors[icon.item.vehicleData.vehicleType])
+			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconColors[icon.item.vehicleData.vehicleType] || icon.transform.colorTransform.color == 0))
 			{
 				var tColor:ColorTransform = icon.transform.colorTransform;
 				tColor.color = this.iconColors[icon.item.vehicleData.vehicleType];

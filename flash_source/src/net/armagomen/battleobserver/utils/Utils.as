@@ -7,18 +7,7 @@ package net.armagomen.battleobserver.utils
 	{
 		public static function colorConvert(color:String):uint
 		{
-			if (color)
-			{
-				if (color == "#000000")
-				{
-					color = "#000001";
-				}
-				return uint(parseInt("0x" + color.substr(1), 16));
-			}
-			else
-			{
-				return null;
-			}
+			return uint(parseInt(color.substr(1), 16));
 		}
 		
 		public static function updateColor(object:DisplayObject, hpColor:String):void
