@@ -2,11 +2,10 @@ from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
 from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle
 from aih_constants import SHOT_RESULT
-from armagomen.battle_observer.core import view_settings
-from armagomen.constants import VEHICLE, GLOBAL, ALIASES, ARMOR_CALC
+from armagomen.battle_observer.core import settings
+from armagomen.constants import VEHICLE, GLOBAL, ARMOR_CALC
 from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
-from armagomen.battle_observer.core import settings
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES as SHELLS
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
@@ -146,6 +145,6 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 @overrideMethod(plugins, 'createPlugins')
 def createPlugins(base, *args):
     _plugins = base(*args)
-    if view_settings.getSetting(ALIASES.ARMOR_CALC):
+    if settings.armor_calculator[GLOBAL.ENABLED]:
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
