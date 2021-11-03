@@ -60,6 +60,10 @@ def logInfo(message):
     BigWorld.logInfo(MOD_NAME, str(message), None)
 
 
+def logDebug(message):
+    BigWorld.logDebug(MOD_NAME, str(message), None)
+
+
 def logWarning(message):
     BigWorld.logWarning(MOD_NAME, str(message), None)
 

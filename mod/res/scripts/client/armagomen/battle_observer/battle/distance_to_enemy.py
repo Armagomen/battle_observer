@@ -1,8 +1,11 @@
 from collections import defaultdict
 
+from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
 from armagomen.constants import GLOBAL, DISTANCE, POSTMORTEM
+from armagomen.utils.common import logDebug
 from armagomen.utils.timers import CyclicTimerEvent
+from constants import ARENA_PERIOD, ARENA_PERIOD_NAMES
 from gui.battle_control import avatar_getter
 
 
@@ -20,12 +23,24 @@ class Distance(DistanceMeta):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
+        g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
+        g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
         super(Distance, self)._dispose()
+
+    def onArenaPeriod(self, period, *args):
+        if period == ARENA_PERIOD.BATTLE:
+            self.timeEvent = CyclicTimerEvent(0.3, self.updateDistance)
+            self.timeEvent.start()
+        elif self.timeEvent is not None:
+            self.timeEvent.stop()
+            self.timeEvent = None
+        if self.isDebug:
+            logDebug("onArenaPeriod: " + ARENA_PERIOD_NAMES.get(period, 'Unknown'))
 
     def onEnterBattlePage(self):
         super(Distance, self).onEnterBattlePage()
@@ -39,8 +54,6 @@ class Distance(DistanceMeta):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleKilled += self.onVehicleKilled
-        self.timeEvent = CyclicTimerEvent(0.2, self.updateDistance)
-        self.timeEvent.start()
 
     def onExitBattlePage(self):
         if self.timeEvent is not None:
@@ -67,6 +80,8 @@ class Distance(DistanceMeta):
     def onMinimapVehicleRemoved(self, vId):
         if vId in self.vehicles:
             del self.vehicles[vId]
+            if self.isDebug:
+                logDebug("onMinimapVehicleRemoved: " + str(vId))
 
     def updateDistance(self):
         distance = None
@@ -89,6 +104,8 @@ class Distance(DistanceMeta):
     def onVehicleKilled(self, vehicleID, *args, **kwargs):
         if vehicleID in self.vehicles:
             del self.vehicles[vehicleID]
+            if self.isDebug:
+                logDebug("onVehicleKilled: " + str(vehicleID))
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES

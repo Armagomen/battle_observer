@@ -1,7 +1,9 @@
 import copy
 
 import constants
-from armagomen.utils.common import urlResponse, logInfo
+from armagomen.constants import MAIN
+from armagomen.utils.common import urlResponse, logDebug
+from armagomen.battle_observer.core import settings
 
 region = constants.AUTH_REALM.lower()
 statisticEnabled = region in ["ru", "eu", "na", "asia"]
@@ -29,12 +31,14 @@ def setCachedStatisticData(databaseIDS):
     notZeroIds = tuple(_id for _id in databaseIDS if _id)
     toRequest = tuple(_id for _id in notZeroIds if _id not in CACHE)
     if toRequest:
-        logInfo("START request statistics data from WG api")
+        if settings.main[MAIN.DEBUG]:
+            logDebug("START request statistics data: ids={}, len={} ".format(toRequest, len(toRequest)))
         data = request(toRequest)
         if data is not None:
             for _id, value in data.iteritems():
                 CACHE[int(_id)] = copy.deepcopy(value)
-        logInfo("FINISH request statistics data from WG api")
+        if settings.main[MAIN.DEBUG]:
+            logDebug("FINISH request statistics data")
 
 
 def getStatisticForUser(databaseID):
