@@ -465,7 +465,6 @@ class DefaultSettings(object):
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: -190,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
-            DISTANCE.SPOTTED: True,
             DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance).1fm. to %(name)s.</font>"
         }
         self.own_health = {

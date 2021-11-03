@@ -427,14 +427,13 @@ translate = {
         "playTickSound": "Play tick sound."
     },
     "distance_to_enemy": {
-        "header": "Entfernung zum nächsten Feind.",
+        "header": "Entfernung zum nächsten entdeckten Feind.",
         "x": "Position des Textes waagerecht",
         "x_tooltip": "Position von der Mitte des Bildschirmes gemessen. Textausrichtung ---|Zentriert|---",
         "y": "Position des Textes senkrechtrecht",
         "y_tooltip": "Position von der Mitte des Bildschirmes gemessen.",
         "template": "String-Muster. Makros: %(distance)s, %(name)s",
-        "align": "Text align.",
-        "spottedOnly": "Information only on detected enemies."
+        "align": "Text align."
     },
     "own_health": {
         "header": "Own health.",

@@ -23,6 +23,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			if (this.minimap)
 			{
 				App.graphicsOptimizationMgr.unregister(this.minimap);
+				this.minimap.parent.addChild(this.minimap);
 			}
 			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_startUpdate - minimap is Null !!!");
 			vpos = num * 2;

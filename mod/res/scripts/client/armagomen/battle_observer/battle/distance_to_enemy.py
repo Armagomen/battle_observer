@@ -12,7 +12,6 @@ class Distance(DistanceMeta):
         super(Distance, self).__init__()
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
         self.timeEvent = None
-        self.positionsCache = {}
         self.isPostmortem = False
         self.vehicles = {}
 
@@ -64,23 +63,20 @@ class Distance(DistanceMeta):
             return
         if self._player.team != vInfo.team and vProxy.isAlive():
             self.vehicles[vProxy.id] = vProxy
-            self.positionsCache[vProxy.id] = vProxy.position
 
     def onMinimapVehicleRemoved(self, vId):
-        if vId in self.vehicles and self.settings[DISTANCE.SPOTTED]:
+        if vId in self.vehicles:
             del self.vehicles[vId]
-            del self.positionsCache[vId]
 
     def updateDistance(self):
         distance = None
         vehicleID = None
         for vehID, entity in self.vehicles.iteritems():
-            if not entity.isDestroyed and entity.position != self.positionsCache[vehID]:
-                self.positionsCache[vehID] = entity.position
-            dist = self._player.position.distTo(self.positionsCache[vehID])
-            if distance is None or dist < distance:
-                distance = dist
-                vehicleID = vehID
+            if not entity.isDestroyed:
+                dist = self._player.position.distTo(entity.position)
+                if distance is None or dist < distance:
+                    distance = dist
+                    vehicleID = vehID
         if distance is None or vehicleID is None:
             return self.as_setDistanceS(GLOBAL.EMPTY_LINE)
         vehicleName = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
@@ -93,13 +89,11 @@ class Distance(DistanceMeta):
     def onVehicleKilled(self, vehicleID, *args, **kwargs):
         if vehicleID in self.vehicles:
             del self.vehicles[vehicleID]
-            del self.positionsCache[vehicleID]
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
         if self.isPostmortem:
             if self.timeEvent is not None:
                 self.timeEvent.stop()
-            self.positionsCache.clear()
             self.vehicles.clear()
             self.as_setDistanceS(GLOBAL.EMPTY_LINE)

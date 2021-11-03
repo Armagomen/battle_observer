@@ -29,12 +29,12 @@ def setCachedStatisticData(databaseIDS):
     notZeroIds = tuple(_id for _id in databaseIDS if _id)
     toRequest = tuple(_id for _id in notZeroIds if _id not in CACHE)
     if toRequest:
+        logInfo("START request statistics data from WG api")
         data = request(toRequest)
-        logInfo("Get statistics data from WG api")
         if data is not None:
             for _id, value in data.iteritems():
                 CACHE[int(_id)] = copy.deepcopy(value)
-    return {_id: CACHE[_id] for _id in notZeroIds if _id in CACHE}
+        logInfo("FINISH request statistics data from WG api")
 
 
 def getStatisticForUser(databaseID):

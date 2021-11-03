@@ -94,4 +94,4 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         for alias in SORTED_ALIASES:
             if view_settings.getSetting(alias):
                 self.flash.as_createBattleObserverComp(alias)
-        self.flash.as_observerUpdateComponents(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
+        self.flash.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])

@@ -418,14 +418,13 @@ translate = {
         "playTickSound": "Play tick sound."
     },
     "distance_to_enemy": {
-        "header": "Distance to the nearest enemy.",
+        "header": "Distance to the closest spotted enemy.",
         "x": "Horizontal text position",
         "x_tooltip": "Position from the center of the screen. Align text ---|center|---",
         "y": "Vertical text position",
         "y_tooltip": "Position from the center of the screen.",
         "template": "String pattern. Macros: %(distance)s, %(name)s",
-        "align": "Text align.",
-        "spottedOnly": "Information only on detected enemies."
+        "align": "Text align."
     },
     "own_health": {
         "header": "Player vehicle health.",

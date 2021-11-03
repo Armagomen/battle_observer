@@ -298,8 +298,8 @@ ALIASES = __Aliases(
     "Observer_UserBackGround_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
     "Observer_OwnHealth_UI", "Observer_BattleLoading_UI", "Observer_FullStats_UI", "Observer_PlayersPanelsStatistic_UI")
 
-DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME", "SPOTTED"))(
-    "distance_to_enemy", "template", "align", "distance", "name", "spottedOnly")
+DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
+    "distance_to_enemy", "template", "align", "distance", "name")
 
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("own_health", "template", "align",
                                                                               "color")

@@ -89,7 +89,7 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype['as_observerUpdateComponents'] = function(shadow:Boolean):void
+			BaseBattlePage.prototype['as_observerUpdatePrebattleTimer'] = function(shadow:Boolean):void
 			{
 				var prebattleTimer:* = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
 				if (prebattleTimer)
@@ -97,11 +97,6 @@ package net.armagomen.battleobserver
 					this.addChild(prebattleTimer);
 					prebattleTimer.background.shadow.visible = !shadow;
 					prebattleTimer.background.shadow.alpha = int(!shadow);
-				}
-				var minimap:* = this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP);
-				if (minimap)
-				{
-					this.addChild(minimap);
 				}
 			}
 			
