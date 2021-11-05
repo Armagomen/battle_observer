@@ -10,7 +10,6 @@ class Minimap(MinimapMeta):
         super(Minimap, self)._populate()
         keysParser.registerComponent(MINIMAP.HOT_KEY, self.settings[MINIMAP.ZOOM][MINIMAP.HOT_KEY])
         keysParser.onKeyPressed += self.onKeyPressed
-        self.as_startUpdateS(self.settings[MINIMAP.ZOOM][MINIMAP.INDENT])
 
     def _dispose(self):
         keysParser.onKeyPressed -= self.onKeyPressed
@@ -20,3 +19,9 @@ class Minimap(MinimapMeta):
         if key == MINIMAP.HOT_KEY:
             self.as_MinimapCenteredS(isKeyDown)
             avatar_getter.setForcedGuiControlMode(isKeyDown, cursorVisible=isKeyDown)
+
+    def onExitBattlePage(self):
+        pass
+
+    def onEnterBattlePage(self):
+        self.as_startUpdateS(self.settings[MINIMAP.ZOOM][MINIMAP.INDENT])

@@ -1,5 +1,5 @@
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
-from armagomen.constants import TEAM_BASES, COLORS
+from armagomen.constants import TEAM_BASES
 from armagomen.utils.common import callback
 from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
 from gui.battle_control.controllers import team_bases_ctrl
@@ -16,7 +16,9 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
 
     def onExitBattlePage(self):
         self.removeTeamsBases()
-        super(TeamBases, self).onExitBattlePage()
+
+    def onEnterBattlePage(self):
+        pass
 
     def addCapturingTeamBase(self, clientID, playerTeam, points, rate, timeLeft, invadersCnt, capturingStopped):
         item = _getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())

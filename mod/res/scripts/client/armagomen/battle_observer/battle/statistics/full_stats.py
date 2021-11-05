@@ -16,3 +16,9 @@ class FullStats(StatsMeta):
 
     def py_getIconColor(self, classTag):
         return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag)
+
+    def onExitBattlePage(self):
+        pass
+
+    def onEnterBattlePage(self):
+        pass

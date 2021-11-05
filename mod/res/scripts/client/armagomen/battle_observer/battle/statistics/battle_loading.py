@@ -18,5 +18,7 @@ class BattleLoading(StatsMeta):
         return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag)
 
     def onEnterBattlePage(self):
-        super(BattleLoading, self).onEnterBattlePage()
         self.flashObject.as_clear()
+
+    def onExitBattlePage(self):
+        pass

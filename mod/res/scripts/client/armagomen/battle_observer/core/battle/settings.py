@@ -88,6 +88,7 @@ class ViewSettings(object):
             self.isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
         else:
             self.isAllowed = False
+        return self.isAllowed
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
@@ -138,11 +139,3 @@ class ViewSettings(object):
                 VIEW_ALIAS.RANKED_BATTLE_PAGE,
                 VIEW_ALIAS.EPIC_RANDOM_PAGE,
                 VIEW_ALIAS.EPIC_BATTLE_PAGE)
-
-    def getExternalComponents(self):
-        components = []
-        if self.getSetting(ALIASES.PANELS):
-            components.append(ALIASES.PANELS)
-        if self.getSetting(ALIASES.MINIMAP):
-            components.append(ALIASES.MINIMAP)
-        return components

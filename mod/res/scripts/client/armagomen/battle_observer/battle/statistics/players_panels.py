@@ -26,3 +26,9 @@ class PlayersPanelsStatistic(StatsMeta):
 
     def py_vehicleStatisticColorEnabled(self):
         return self.settings[STATISTICS.CHANGE_VEHICLE_COLOR]
+
+    def onExitBattlePage(self):
+        pass
+
+    def onEnterBattlePage(self):
+        pass
