@@ -83,10 +83,10 @@ package net.armagomen.battleobserver
 					this.registerComponent(this.addChild(new OwnHealthUI()), ui_name);
 					break;
 				case "Observer_PlayersPanels_UI": 
-					this.registerComponent(new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), ui_name);
+					this.registerComponent(this.addChild(new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL))), ui_name);
 					break;
 				case "Observer_Minimap_UI": 
-					this.registerComponent(new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP)), ui_name);
+					this.registerComponent(this.addChild(new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP))), ui_name);
 					break;
 				default: 
 					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + ui_name);

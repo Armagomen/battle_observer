@@ -60,7 +60,7 @@ class GLOBAL:
     ONE = 1
     ONE_SECOND = 1.0
     OUTLINE = "outline"
-    REPLACE = ("\n", "<br>")
+    REPLACE = ("PingLagColor", "pingColor")
     RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
     SCALE = "scale"
     SETTINGS = "settings"
@@ -269,8 +269,8 @@ DISPERSION_TIME = namedtuple("DISPERSION_TIME", ("TIMER", "PERCENT"))("timer", "
 
 DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
     "NAME", "TEXT", "TEMPLATE", "GRAPHICS", "PING_BAR", "FPS_BAR", "FPS_COLOR", "PING_COLOR", "LAG_COLOR", "PING",
-    "FPS", "LAG"))("debug_panel", "debugText", "text", "debugGraphics", "pingBar", "fpsBar", "fpsColor", "pingColor",
-                   "pingLagColor", "PING", "FPS", "PingLagColor")
+    "FPS"))("debug_panel", "debugText", "text", "debugGraphics", "pingBar", "fpsBar", "fpsColor", "pingColor",
+            "pingLagColor", "PING", "FPS")
 
 BATTLE_TIMER = namedtuple("BATTLE_TIMER", (
     "NAME", "TEMPLATE", "COLOR", "END_COLOR", "M_TIMER", "TIME_FORMAT", "START_STRING", "END_BATTLE_SEC"))(

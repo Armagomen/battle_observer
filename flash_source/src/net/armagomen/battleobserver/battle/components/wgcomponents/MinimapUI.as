@@ -11,6 +11,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		private var vpos:Number       = 150.0;
 		private var sizeBefore:Number = 2.0;
 		private var minimap:Minimap   = null;
+		private var offset:Number     = 315.0;
 		
 		public function MinimapUI(minimap:Minimap)
 		{
@@ -23,11 +24,12 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			if (this.minimap)
 			{
 				App.graphicsOptimizationMgr.unregister(this.minimap);
-				this.minimap.parent.addChild(this.minimap);
+				this.parent.addChild(this.minimap);
 			}
 			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_startUpdate - minimap is Null !!!");
-			vpos = num * 2;
-			newScale = Math.max((App.appHeight - vpos) / 630, 1.0);
+			this.vpos = num * 2;
+			this.newScale = Math.max((App.appHeight - vpos) / 630, 1.0);
+			this.offset = 315 * newScale;
 		}
 		
 		public function as_MinimapCentered(enabled:Boolean):void
@@ -36,21 +38,20 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			{
 				if (enabled)
 				{
-					sizeBefore = this.minimap.currentSizeIndex;
-					var offset:Number = 315 * newScale;
+					this.sizeBefore = this.minimap.currentSizeIndex;
 					this.minimap.setAllowedSizeIndex(5.0);
-					this.minimap.scaleX = this.minimap.scaleY = newScale;
-					this.minimap.x = App.appWidth * 0.5 - offset;
-					this.minimap.y = App.appHeight * 0.5 - offset;
+					this.minimap.scaleX = this.minimap.scaleY = this.newScale;
+					this.minimap.x = App.appWidth * 0.5 - this.offset;
+					this.minimap.y = App.appHeight * 0.5 - this.offset;
 				}
 				else
 				{
-					this.minimap.setAllowedSizeIndex(sizeBefore);
+					this.minimap.setAllowedSizeIndex(this.sizeBefore);
 					this.minimap.scaleX = this.minimap.scaleY = 1.0;
 					this.minimap.x = App.appWidth - this.minimap.currentWidth;
 					this.minimap.y = App.appHeight - this.minimap.currentHeight;
 				}
-				var battlePage:* = this.minimap.parent;
+				var battlePage:* = this.parent;
 				battlePage.showComponent(BATTLE_VIEW_ALIASES.PLAYER_MESSAGES, !enabled);
 			}
 			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] as_MinimapCentered - minimap is Null !!!");
@@ -58,7 +59,7 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		
 		override public function onResizeHandle(event:Event):void
 		{
-			newScale = Math.max((App.appHeight - vpos) / 630, 1.0);
+			newScale = Math.max((App.appHeight - this.vpos) / 630, 1.0);
 		}
 	}
 }
