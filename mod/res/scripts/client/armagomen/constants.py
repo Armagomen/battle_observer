@@ -440,7 +440,6 @@ class CONFIG_INTERFACE:
         SIXTH_SENSE.NAME: {
             SIXTH_SENSE.SHOW_TIMER: (SIXTH_SENSE.PLAY_TICK_SOUND,)
         },
-        "reversed_values": {DISPERSION.CIRCLE_REPLACE},
         DISPERSION.NAME: {
             DISPERSION.TIMER_ENABLED: (DISPERSION.TIMER_REGULAR_TEMPLATE,
                                        DISPERSION.TIMER_DONE_TEMPLATE,
@@ -449,7 +448,6 @@ class CONFIG_INTERFACE:
                                        DISPERSION.TIMER_POSITION_X,
                                        DISPERSION.TIMER_POSITION_Y,
                                        DISPERSION.TIMER_ALIGN),
-            DISPERSION.CIRCLE_EXTRA_LAP: (DISPERSION.CIRCLE_REPLACE,),
             DISPERSION.ENABLED: (DISPERSION.CIRCLE_SCALE_CONFIG,
                                  DISPERSION.CIRCLE_EXTRA_LAP,
                                  DISPERSION.CIRCLE_REPLACE),

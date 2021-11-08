@@ -294,22 +294,15 @@ class ConfigInterface(CreateElement):
         if blockID == MAIN.NAME and varName == MAIN.USE_KEY_PAIRS:
             self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
 
-    @staticmethod
-    def checkValue(varName, value):
-        if varName in CONFIG_INTERFACE.HANDLER_VALUES["reversed_values"]:
-            return not value
-        return value
-
     def setHandlerValue(self, blockID, values, value):
         getObject = self.vxSettingsApi.getDAAPIObject
         for varName in values:
-            result = self.checkValue(varName, value)
             obj = getObject(blockID, varName)
             if obj is not None:
-                obj.alpha = 0.4 if not result else GLOBAL.F_ONE
-                obj.mouseEnabled = result
-                obj.mouseChildren = result
-                obj.tabEnabled = result
+                obj.alpha = 0.4 if not value else GLOBAL.F_ONE
+                obj.mouseEnabled = value
+                obj.mouseChildren = value
+                obj.tabEnabled = value
 
     @staticmethod
     def onButtonPress(container, blockID, varName, value):

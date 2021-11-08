@@ -28,8 +28,8 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_updateHealthBarS(self, vehicleID, scale, textField):
         return self.flashObject.as_updateHealthBar(vehicleID, scale, textField) if self._isDAAPIInited() else None
 
-    def as_setHealthBarsVisibleS(self, vehID, visible):
-        return self.flashObject.as_setHealthBarsVisible(vehID, visible) if self._isDAAPIInited() else None
+    def as_setHealthBarsVisibleS(self, visible):
+        return self.flashObject.as_setHealthBarsVisible(visible) if self._isDAAPIInited() else None
 
     def as_setPlayersDamageVisibleS(self, visible):
         return self.flashObject.as_setPlayersDamageVisible(visible) if self._isDAAPIInited() else None

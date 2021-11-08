@@ -15,7 +15,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		public function ListItem(enemy:Boolean, animation:Boolean, shadowSettings:Object)
 		{
 			super();
-			this.name = "battleObserver";
 			this.isEnemy = enemy;
 			this.animation = animation;
 			this.shadowSettings = shadowSettings;

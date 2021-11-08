@@ -136,7 +136,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def healthOnAlt(self, enable):
         if self.hpBarsEnable:
-            self.as_setHealthBarsVisibleS(self._vehicles, enable)
+            self.as_setHealthBarsVisibleS(enable)
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):
         if vehicleID not in self._vehicles:

@@ -7,7 +7,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	
 	public class PlayersPanelsUI extends ObserverBattleDisplayable
 	{
-		private const MOD_NAME:String = "battleObserver";
 		private var playersPanel:* = null;
 		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
@@ -21,6 +20,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_clearStorage():void
 		{
+			for each (var item:ListItem in this.storage) 
+			{
+				if (item && item.parent){
+					item.parent.removeChild(item);
+				}
+			}
 			App.utils.data.cleanupDynamicObject(this.storage);
 		}
 		
@@ -47,7 +52,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
 		{
 			var listitem:* = this.getWGListitem(vehicleID, enemy);
-			if (listitem && !listitem.hasOwnProperty(MOD_NAME))
+			if (listitem && !this.storage[vehicleID])
 			{
 				this.storage[vehicleID] = new ListItem(enemy, animationEnabled(), getShadowSettings());
 				this.onAddedToStorage(vehicleID, enemy);
@@ -63,7 +68,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		public function as_setHealthBarsVisible(vehicles:Array, vis:Boolean):void
+		public function as_setHealthBarsVisible(vis:Boolean):void
 		{
 			for each (var item:ListItem in storage)
 			{
