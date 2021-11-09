@@ -22,7 +22,7 @@ class ComponentsLoader(object):
             'shot_result_plugin': None,
             'tank_carousel': None,
             'wg_logs_fixes': None,
-            'vehicle_battle_booster': None,
+            'vehicle_battle_boosters': None,
             'tmen_xp': None,
             'for_tests': None
         }
