@@ -5,9 +5,11 @@ from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
 from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.constants import FILE_NAME, MESSAGES, MAIN, MOD_NAME
-from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache
+from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache, overrideMethod
+from armagomen.utils.events import g_events
 from async import async, await
 from gui.Scaleform.daapi.settings import config as packages
+from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
@@ -66,3 +68,12 @@ class ObserverCore(object):
         logWarning(locked)
         title = '{0} is locked'.format(MOD_NAME)
         yield await(dialogs.showSimple(self.getLockedDialog(title, locked), DialogButtons.PURCHASE))
+
+
+def chacgeVehicle(base, *args, **kwargs):
+    base(*args, **kwargs)
+    g_events.onHangarVehicleChanged()
+
+
+overrideMethod(Hangar, "__onCurrentVehicleChanged")(chacgeVehicle)
+overrideMethod(Hangar, "__updateAll")(chacgeVehicle)

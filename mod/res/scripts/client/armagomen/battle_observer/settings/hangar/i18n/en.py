@@ -67,7 +67,12 @@ translate = {
         "auto_crew_training": "Uncheck / Tick Accelerated Crew Training Automatically.",
         "auto_crew_training_tooltip": "If the 'Field Upgrade' is available for the tank and is not pumped, the "
                                       "checkbox for the crew will be unchecked automatically, as soon as the level "
-                                      "of progression is at its maximum, you will be prompted to turn it back on."
+                                      "of progression is at its maximum, you will be prompted to turn it back on.",
+        "do_not_buy_directives_for_currency_automatically": "Do not replenish directives for currency (automatically)",
+        "do_not_buy_directives_for_currency_automatically_tooltip":
+            "Prevent automatic replenishment of instructions for game currency if they are not in stock. "
+            "It will also turn on automatic replenishment from the warehouse if they are there and you forgot to "
+            "tick the box.",
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",

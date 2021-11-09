@@ -1,11 +1,11 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, CREW_XP
-from armagomen.utils.common import logInfo, overrideMethod
+from armagomen.utils.common import logInfo
 from armagomen.utils.dialogs import CrewDialog
+from armagomen.utils.events import g_events
 from async import async, await
 from frameworks.wulf import WindowLayer
-from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.shared.gui_items.Vehicle import Vehicle
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
@@ -20,8 +20,7 @@ class AccelerateCrewXp(object):
     def __init__(self):
         self.inProcess = False
         self.dialog = CrewDialog()
-        overrideMethod(Hangar, "__onCurrentVehicleChanged")(self.onVehicleChanged)
-        overrideMethod(Hangar, "__updateAll")(self.onVehicleChanged)
+        g_events.onHangarVehicleChanged += self.onVehicleChanged
 
     @async
     def showDialog(self, vehicle, value, description):
@@ -52,8 +51,7 @@ class AccelerateCrewXp(object):
         iterator = vehicle.postProgression.iterOrderedSteps()
         return vehicle.xp >= sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
 
-    def onVehicleChanged(self, base, *args, **kwargs):
-        base(*args, **kwargs)
+    def onVehicleChanged(self):
         if not settings.main[MAIN.CREW_TRAINING] or not g_currentVehicle.isPresent() or self.inProcess:
             return
         vehicle = g_currentVehicle.item  # type: Vehicle

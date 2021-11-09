@@ -69,7 +69,12 @@ translate = {
         "auto_crew_training_tooltip": "Wenn das 'Feld-Upgrade' für den Panzer verfügbar ist und nicht gepumpt "
                                       "wird, wird das Kontrollkästchen für die Besatzung automatisch deaktiviert, "
                                       "sobald die Fortschrittsstufe maximal ist, werden Sie aufgefordert, sie "
-                                      "wieder einzuschalten."
+                                      "wieder einzuschalten.",
+        "do_not_buy_directives_for_currency_automatically": "Do not replenish directives for currency (automatically)",
+        "do_not_buy_directives_for_currency_automatically_tooltip":
+            "Prevent automatic replenishment of instructions for game currency if they are not in stock. "
+            "It will also turn on automatic replenishment from the warehouse if they are there and you forgot to "
+            "tick the box.",
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",

@@ -39,7 +39,8 @@ class DefaultSettings(object):
             MAIN.DEBUG: False,
             PREMIUM.PREMIUM_TIME: True,
             PREMIUM.PREMIUM_FORMAT: PREMIUM.DEFAULT_FORMAT_PREMIUM,
-            MAIN.CREW_TRAINING: True
+            MAIN.CREW_TRAINING: True,
+            MAIN.DIRECTIVES: True,
         }
         self.user_background = {
             GLOBAL.ENABLED: False,

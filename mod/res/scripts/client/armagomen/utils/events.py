@@ -12,6 +12,7 @@ class Events(object):
         self.onLoginLoaded = SafeEvent()
         self.onHangarLoaded = SafeEvent()
         self.onBattlePageLoaded = SafeEvent()
+        self.onHangarVehicleChanged = SafeEvent()
 
 
 g_events = Events()
