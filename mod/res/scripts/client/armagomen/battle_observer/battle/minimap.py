@@ -20,8 +20,6 @@ class Minimap(MinimapMeta):
             self.as_MinimapCenteredS(isKeyDown)
             avatar_getter.setForcedGuiControlMode(isKeyDown, cursorVisible=isKeyDown)
 
-    def onExitBattlePage(self):
-        pass
-
     def onEnterBattlePage(self):
+        super(Minimap, self).onEnterBattlePage()
         self.as_startUpdateS(self.settings[MINIMAP.ZOOM][MINIMAP.INDENT])

@@ -16,9 +16,7 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
 
     def onExitBattlePage(self):
         self.removeTeamsBases()
-
-    def onEnterBattlePage(self):
-        pass
+        super(TeamBases, self).onExitBattlePage()
 
     def addCapturingTeamBase(self, clientID, playerTeam, points, rate, timeLeft, invadersCnt, capturingStopped):
         item = _getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())

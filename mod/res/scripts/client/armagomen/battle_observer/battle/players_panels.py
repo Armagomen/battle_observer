@@ -153,9 +153,3 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def onPlayersDamaged(self, targetID, attackerID, damage):
         self.playersDamage[attackerID] += damage
         self.as_updateDamageS(attackerID, self.damagesText % {PANELS.DAMAGE: self.playersDamage[attackerID]})
-
-    def onExitBattlePage(self):
-        pass
-
-    def onEnterBattlePage(self):
-        pass

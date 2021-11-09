@@ -91,7 +91,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function addItemListener(item:*):void
 		{
-			if (!item.model)
+			if (!item.model || !item.model.vehicleType)
 			{
 				setTimeout(this.addItemListener, 100, item);
 			}

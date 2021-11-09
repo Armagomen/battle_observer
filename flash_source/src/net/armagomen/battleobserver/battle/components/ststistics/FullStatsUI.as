@@ -80,7 +80,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function addItemListener(item:*):void
 		{
-			if (!item.containsData || !item.statsItem)
+			if (!item.containsData || !item.statsItem || !item.data.vehicleType)
 			{
 				setTimeout(this.addItemListener, 200, item);
 			}

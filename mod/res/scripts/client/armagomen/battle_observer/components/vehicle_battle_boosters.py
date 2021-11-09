@@ -22,12 +22,10 @@ def onVehicleChanged():
     vehicle = g_currentVehicle.item  # type: Vehicle
     if g_currentVehicle.isLocked() or g_currentVehicle.isInBattle():
         return
-    value = vehicle.isAutoBattleBoosterEquip()
-    newValue = value
     for battleBooster in vehicle.battleBoosters.installed.getItems():
-        newValue = battleBooster.inventoryCount > 0
-    if value != newValue:
-        boosterEquip(vehicle, newValue)
+        value = battleBooster.inventoryCount > 0
+        if value != vehicle.isAutoBattleBoosterEquip():
+            boosterEquip(vehicle, value)
 
 
 g_events.onHangarVehicleChanged += onVehicleChanged
