@@ -234,9 +234,8 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0):
 
 
 def urlResponse(url):
-    try:
-        response = openUrl(url)
-        return json.loads(response.getData(), "utf-8")
-    except Exception as err:
-        logError(repr(err))
-        return {}
+    response = openUrl(url)
+    responseData = response.getData()
+    if responseData is not None:
+        return json.loads(responseData, "utf-8")
+    return responseData

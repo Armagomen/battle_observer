@@ -10,16 +10,13 @@ package net.armagomen.battleobserver.battle.components.ststistics
 	
 	public class PlayersPanelsStatisticUI extends ObserverBattleDisplayable
 	{
-		
-		private var panels:*                  = null;
 		public var py_getStatisticString:Function;
 		public var py_getIconColor:Function;
 		public var py_getIconMultiplier:Function;
-		public var py_statisticEnabled:Function;
-		public var py_iconEnabled:Function;
 		public var py_getCutWidth:Function;
 		public var py_getFullWidth:Function;
 		public var py_vehicleStatisticColorEnabled:Function;
+		private var panels:*                  = null;
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var colorEnabled:Boolean      = false;
@@ -30,17 +27,17 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconsColors:Object        = new Object();
 		private var iconMultiplier:Number     = -1.25;
 		
-		public function PlayersPanelsStatisticUI(panels:*)
+		public function PlayersPanelsStatisticUI(panels:*, statsEnabled:Boolean, iconEnabled:Boolean)
 		{
 			this.panels = panels;
+			this.statisticsEnabled = statsEnabled;
+			this.iconEnabled = iconEnabled;
 			super();
 		}
 		
 		override public function as_onAfterPopulate():void
 		{
 			super.as_onAfterPopulate();
-			this.statisticsEnabled = this.py_statisticEnabled();
-			this.iconEnabled = this.py_iconEnabled();
 			this.colorEnabled = this.py_vehicleStatisticColorEnabled();
 			this.iconMultiplier = this.py_getIconMultiplier();
 			this.addListeners();

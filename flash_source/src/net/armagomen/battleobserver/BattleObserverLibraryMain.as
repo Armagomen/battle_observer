@@ -118,11 +118,11 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype['as_observerStatisticComponents'] = function():void
+			BaseBattlePage.prototype['as_observerStatisticComponents'] = function(statsEnabled:Boolean, iconEnabled:Boolean):void
 			{
-				this.registerComponent(new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING)), "Observer_BattleLoading_UI");
-				this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS)), "Observer_FullStats_UI");
-				this.registerComponent(new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), "Observer_PlayersPanelsStatistic_UI");
+				this.registerComponent(new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING), statsEnabled, iconEnabled), "Observer_BattleLoading_UI");
+				this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS), statsEnabled, iconEnabled), "Observer_FullStats_UI");
+				this.registerComponent(new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL), statsEnabled, iconEnabled), "Observer_PlayersPanelsStatistic_UI");
 			}
 		}
 	}

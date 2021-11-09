@@ -1,6 +1,6 @@
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
-from armagomen.constants import VEHICLE_TYPES, STATISTICS, GLOBAL
+from armagomen.constants import STATISTICS, GLOBAL
 
 
 class BattleLoading(StatsMeta):
@@ -13,12 +13,3 @@ class BattleLoading(StatsMeta):
         if result is not None:
             return pattern % result
         return GLOBAL.EMPTY_LINE
-
-    def py_getIconColor(self, classTag):
-        return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag)
-
-    def onEnterBattlePage(self):
-        self.flashObject.as_clear()
-
-    def onExitBattlePage(self):
-        pass

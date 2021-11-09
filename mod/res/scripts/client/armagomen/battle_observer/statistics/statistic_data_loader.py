@@ -4,6 +4,8 @@ import constants
 from armagomen.constants import MAIN
 from armagomen.utils.common import urlResponse, logDebug
 from armagomen.battle_observer.core import settings
+from helpers import dependency
+from skeletons.gui.battle_session import IBattleSessionProvider
 
 region = constants.AUTH_REALM.lower()
 statisticEnabled = region in ["ru", "eu", "na", "asia"]
@@ -22,23 +24,30 @@ CACHE = {}
 
 def request(databaseIDS):
     result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(str(_id) for _id in databaseIDS)))
-    return result.get("data", None)
+    if result is not None:
+        result = result.get("data")
+    return result
 
 
-def setCachedStatisticData(databaseIDS):
+def setCachedStatisticData():
     if not statisticEnabled:
-        return
-    notZeroIds = tuple(_id for _id in databaseIDS if _id)
-    toRequest = tuple(_id for _id in notZeroIds if _id not in CACHE)
+        return False
+    sessionProvider = dependency.instance(IBattleSessionProvider)
+    arenaDP = sessionProvider.getArenaDP()
+    toRequest = [vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator() if
+                 vInfo.player.accountDBID and vInfo.player.accountDBID not in CACHE]
+    result = False
     if toRequest:
         if settings.main[MAIN.DEBUG]:
             logDebug("START request statistics data: ids={}, len={} ".format(toRequest, len(toRequest)))
         data = request(toRequest)
-        if data is not None:
+        result = data is not None
+        if result:
             for _id, value in data.iteritems():
                 CACHE[int(_id)] = copy.deepcopy(value)
         if settings.main[MAIN.DEBUG]:
             logDebug("FINISH request statistics data")
+    return result
 
 
 def getStatisticForUser(databaseID):

@@ -11,8 +11,6 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addL
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from gui.shared.events import AppLifeCycleEvent
-from helpers import dependency
-from skeletons.gui.battle_session import IBattleSessionProvider
 
 
 def getViewSettings():
@@ -44,11 +42,11 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('__viewAliases', '_listeners', '_scope', '_app', '_appNS')
-    sessionProvider = dependency.descriptor(IBattleSessionProvider)
+    __slots__ = ('__viewAliases', '__statistics', '_listeners', '_scope', '_app', '_appNS')
 
     def __init__(self):
         self.__viewAliases = view_settings.getViewAliases()
+        self.__statistics = False
         listeners = [(alias, self.eventListener) for alias in self.__viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
@@ -69,9 +67,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if event.ns == APP_NAME_SPACE.SF_BATTLE:
             if not view_settings.isAllowed:
                 return
-            if view_settings.getSetting(ALIASES.PANELS_STAT):
-                arenaDP = self.sessionProvider.getArenaDP()
-                setCachedStatisticData(vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator())
+            if view_settings.isStatisticEnabled:
+                self.__statistics = setCachedStatisticData()
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 
@@ -84,8 +81,9 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if not hasattr(flash, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
-        if view_settings.getSetting(ALIASES.PANELS_STAT):
-            flash.as_observerStatisticComponents()
+        iconsEnabled = view_settings.isIconsEnabled
+        if self.__statistics or iconsEnabled:
+            flash.as_observerStatisticComponents(self.__statistics, iconsEnabled)
         for alias in SORTED_ALIASES:
             if view_settings.getSetting(alias):
                 flash.as_createBattleObserverComp(alias)

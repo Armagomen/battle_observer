@@ -1,6 +1,6 @@
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
-from armagomen.constants import VEHICLE_TYPES, STATISTICS, GLOBAL
+from armagomen.constants import STATISTICS, GLOBAL
 
 
 class FullStats(StatsMeta):
@@ -14,11 +14,3 @@ class FullStats(StatsMeta):
             return pattern % result
         return GLOBAL.EMPTY_LINE
 
-    def py_getIconColor(self, classTag):
-        return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag)
-
-    def onExitBattlePage(self):
-        pass
-
-    def onEnterBattlePage(self):
-        pass

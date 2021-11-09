@@ -13,8 +13,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getStatisticString:Function;
 		public var py_getIconColor:Function;
 		public var py_getIconMultiplier:Function;
-		public var py_statisticEnabled:Function;
-		public var py_iconEnabled:Function;
 		private var namesCache:Object         = new Object();
 		private var iconsColors:Object        = new Object();
 		private var statisticsEnabled:Boolean = false;
@@ -22,17 +20,17 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var count:Number              = 0;
 		private var iconMultiplier:Number     = -1.25;
 		
-		public function BattleLoadingUI(loading:*)
+		public function BattleLoadingUI(loading:*, statsEnabled:Boolean, iconEnabled:Boolean)
 		{
 			this.loading = loading;
+			this.statisticsEnabled = statsEnabled;
+			this.iconEnabled = iconEnabled;
 			super();
 		}
 		
 		override public function as_onAfterPopulate():void
 		{
 			super.as_onAfterPopulate();
-			this.statisticsEnabled = py_statisticEnabled();
-			this.iconEnabled = py_iconEnabled();
 			this.iconMultiplier = py_getIconMultiplier();
 			this.loading.addEventListener(Event.CHANGE, this.onChange);
 			this.addListeners();

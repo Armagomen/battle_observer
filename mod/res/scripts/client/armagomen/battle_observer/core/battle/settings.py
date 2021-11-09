@@ -23,6 +23,7 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
+    @property
     def isRandomBattle(self):
         return (self.sessionProvider.arenaVisitor.gui.isRandomBattle() or
                 self.sessionProvider.arenaVisitor.gui.isMapbox())
@@ -38,19 +39,28 @@ class ViewSettings(object):
         self.isAllowed = False
         overrideMethod(SharedPage)(self.new_SharedPage_init)
 
+    @property
+    def isStatisticEnabled(self):
+        return self.notEpicBattle() and self.notEpicRandomBattle() and self.cfg.statistics[GLOBAL.ENABLED] and \
+               self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
+
+    @property
+    def isIconsEnabled(self):
+        return self.notEpicBattle() and self.notEpicRandomBattle() and self.cfg.statistics[GLOBAL.ENABLED] and \
+               self.cfg.statistics[STATISTICS.ICON_ENABLED]
+
     def getSetting(self, alias):
         if not self.isAllowed:
             return self.isAllowed
         if alias is ALIASES.BATTLE_LOADING or alias is ALIASES.FULL_STATS or alias is ALIASES.PANELS_STAT:
-            return self.notEpicBattle() and self.notEpicRandomBattle() and self.cfg.statistics[GLOBAL.ENABLED] and (
-                    self.cfg.statistics[STATISTICS.STATISTIC_ENABLED] or self.cfg.statistics[STATISTICS.ICON_ENABLED])
+            return self.isStatisticEnabled or self.isIconsEnabled
         elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
         elif alias is ALIASES.DAMAGE_LOG:
             return (self.cfg.log_total[GLOBAL.ENABLED] or self.cfg.log_damage_extended[GLOBAL.ENABLED] or
                     self.cfg.log_input_extended[GLOBAL.ENABLED])
         elif alias is ALIASES.MAIN_GUN:
-            return self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle()
+            return self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle
         elif alias is ALIASES.DEBUG:
             return self.cfg.debug_panel[GLOBAL.ENABLED]
         elif alias is ALIASES.TIMER:
@@ -129,7 +139,7 @@ class ViewSettings(object):
             components.append(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
         if self.getSetting(ALIASES.TIMER):
             components.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
-        if self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle():
+        if self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle:
             components.append(BATTLE_VIEW_ALIASES.BATTLE_MESSENGER)
         return components
 
