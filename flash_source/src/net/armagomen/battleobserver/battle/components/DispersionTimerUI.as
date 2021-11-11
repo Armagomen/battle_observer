@@ -23,6 +23,12 @@ package net.armagomen.battleobserver.battle.components
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.dispersionTime = null;
+		}
+		
 		public function as_upateTimerText(text:String):void
 		{
 			this.dispersionTime.htmlText = text;

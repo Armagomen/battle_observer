@@ -32,6 +32,12 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 			this.offset = 315 * newScale;
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.minimap = null;
+		}
+		
 		public function as_MinimapCentered(enabled:Boolean):void
 		{
 			if (this.minimap)

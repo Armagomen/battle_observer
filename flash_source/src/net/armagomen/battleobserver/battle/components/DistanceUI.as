@@ -23,6 +23,12 @@ package net.armagomen.battleobserver.battle.components
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.distance = null;
+		}
+		
 		public function as_setDistance(text:String):void
 		{
 			this.distance.htmlText = text;

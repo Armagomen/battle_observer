@@ -14,17 +14,24 @@
 			super();
 		}
 		
-		public function as_startUpdate(data:Object):void
+		override protected function onBeforeDispose():void 
 		{
+			super.onBeforeDispose();
+			for each (var item:Object in this.groupMap){
+				App.utils.data.cleanupDynamicObject(item);
+			}
+			this.groupMap = null;
+		}
+		
+		override public function as_onAfterPopulate():void 
+		{
+			super.as_onAfterPopulate();
 			if (this.groupMap == null)
 			{
-				if (data.enabled)
+				this.groupMap = this.getSettings().user_background as Array;
+				if (this.groupMap.length > 0)
 				{
-					this.groupMap = data.user_background as Array;
-					if (this.groupMap.length > 0)
-					{
-						this.setUserBackgounds();
-					}
+					this.setUserBackgounds();
 				}
 			}
 		}

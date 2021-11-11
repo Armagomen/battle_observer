@@ -26,6 +26,12 @@
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.battleTimer = null;
+		}
+		
 		public function as_timer(timer:String):void
 		{
 			if (this.battleTimer)

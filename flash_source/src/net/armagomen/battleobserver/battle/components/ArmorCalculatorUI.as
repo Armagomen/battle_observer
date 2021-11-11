@@ -24,6 +24,12 @@ package net.armagomen.battleobserver.battle.components
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.armorCalc = null;
+		}
+		
 		public function as_armorCalc(text:String):void
 		{
 			if (armorCalc)

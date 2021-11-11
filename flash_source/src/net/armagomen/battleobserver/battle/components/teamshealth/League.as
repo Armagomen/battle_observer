@@ -62,6 +62,21 @@
 				}
 			}
 		}
+		
+		public function remove():void
+		{
+			this.removeChildren();
+			this.allyHpBar = null;
+			this.enemyHpBar = null;
+			this.hpBars_bg = null;
+			if (this.animationEnabled){
+				this.allyAnimation.stop();
+				this.allyAnimation = null;
+				this.enemyAnimation.stop();
+				this.enemyAnimation = null;
+			}
+			App.utils.data.cleanupDynamicObject(this.colors);
+		}
 	}
 
 }

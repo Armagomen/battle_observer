@@ -38,10 +38,15 @@ package net.armagomen.battleobserver.battle.base
 			this.setCompVisible(false);
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			this.removeChildren();
+			super.onBeforeDispose();
+		}
+		
 		override protected function onDispose():void
 		{
 			this.removeEventListener(Event.RESIZE, this.onResizeHandle);
-			this.removeChildren();
 			super.onDispose();
 		}
 		

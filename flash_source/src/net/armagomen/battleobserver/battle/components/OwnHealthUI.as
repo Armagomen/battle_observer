@@ -27,6 +27,13 @@ package net.armagomen.battleobserver.battle.components
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.own_health.remove()
+			this.own_health = null;
+		}
+		
 		public function as_setOwnHealth(scale:Number, text:String, color:String):void
 		{
 			this.own_health.setNewScale(scale);

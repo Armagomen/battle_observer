@@ -41,6 +41,20 @@
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			App.utils.data.cleanupDynamicObject(this.params);
+			if (this.animation){
+				this.animation.stop();
+				this.animation = null;
+			}
+			this._container.removeChildren();
+			this.timer = null;
+			this.image = null;
+			this._container = null;
+		}
+		
 		private function addLoadedImageAndTimer():void
 		{
 			this.image.smoothing = params.image.smoothing;

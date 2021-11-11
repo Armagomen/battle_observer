@@ -24,6 +24,20 @@ package net.armagomen.battleobserver.battle.components
 			super();
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			if (this.top_Log)
+			{
+				this.top_Log.removeChildren();
+				this.top_Log = null;
+			}
+			App.utils.data.cleanupDynamicObject(this.enableds);
+			this.d_log = null;
+			this.in_log = null;
+			this.mainlog = null;
+		}
+		
 		public function as_startUpdate(data:Object, turned:Object):void
 		{
 			if (this.top_Log == null)

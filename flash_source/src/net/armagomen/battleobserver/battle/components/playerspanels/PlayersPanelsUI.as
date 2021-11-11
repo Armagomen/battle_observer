@@ -24,6 +24,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			for each (var item:ListItem in this.storage) 
 			{
 				if (item && item.parent){
+					item.removeChildren();
 					item.parent.removeChild(item);
 				}
 			}
@@ -51,9 +52,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		override protected function onBeforeDispose():void
 		{
+			super.onBeforeDispose();
 			this.as_clearStorage();
 			this.playersPanel.removeEventListener(Event.CHANGE, this.onChange);
-			super.onBeforeDispose();
+			this.playersPanel = null;
 		}
 		
 		private function onChange(eve:Event):void

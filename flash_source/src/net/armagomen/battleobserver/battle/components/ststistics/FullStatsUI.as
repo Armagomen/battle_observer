@@ -53,7 +53,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.count++;
 			if (count < 100)
 			{
-				setTimeout(this.addListeners, 2000);
+				setTimeout(this.addListeners, 1000);
 			}
 		}
 		

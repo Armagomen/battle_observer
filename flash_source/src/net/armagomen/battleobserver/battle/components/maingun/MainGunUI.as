@@ -26,6 +26,12 @@ package net.armagomen.battleobserver.battle.components.maingun
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.mainGun = null;
+		}
+		
 		public function as_mainGunText(GunText:String):void
 		{
 			if (this.mainGun)

@@ -62,6 +62,20 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			if (this.fpsBarEnabled){
+				this.fpsBar.remove();
+				this.fpsBar = null;
+			}
+			if (this.pingBarEnabled){
+				this.pingBar.remove();
+				this.pingBar = null;
+			}
+			this.debugText = null;
+		}
+		
 		public function as_fpsPing(debug:String, fps:int, ping:int):void
 		{
 			if (this.debugText)

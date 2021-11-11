@@ -64,13 +64,14 @@
 		{
 			if (this.bar.scaleX != newScale)
 			{
-				if (this.animationEnabled)
+				var scale:Number = Math.max(0, newScale);
+				if (this.animationEnabled && this.visible)
 				{
-					this.animation.continueTo(Math.max(0, newScale), this.visible ? this.animationTime: 0.02);
+					this.animation.continueTo(scale, this.visible ? this.animationTime: 0.01);
 				}
 				else
 				{
-					this.bar.scaleX = Math.max(0, newScale);
+					this.bar.scaleX = scale;
 				}
 			}
 		}
@@ -108,6 +109,20 @@
 			if (!this.costumColor)
 			{
 				Utils.updateColor(this.outline, hpColor);
+			}
+		}
+		
+		public function remove():void
+		{
+			this.removeChildren();
+			this.bar = null;
+			this.backGround = null;
+			this.outline = null;
+			this.uiText = null;
+			if (this.animation)
+			{
+				this.animation.stop();
+				this.animation = null;
 			}
 		}
 	}

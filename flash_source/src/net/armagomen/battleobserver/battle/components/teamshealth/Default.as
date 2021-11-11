@@ -46,5 +46,14 @@
 				this.enemyHpBar.setNewScale(newScale);
 			}
 		}
+		
+		public function remove():void
+		{
+			this.removeChildren();
+			this.allyHpBar.remove();
+			this.allyHpBar = null;
+			this.enemyHpBar.remove();
+			this.enemyHpBar = null;
+		}
 	}
 }

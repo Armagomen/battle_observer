@@ -80,6 +80,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.stringsCacheCut = null;
 			this.colors = null;
 			this.iconsColors = null;
+			this.panels = null;
 			super.onBeforeDispose();
 		}
 		
@@ -94,7 +95,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.count++;
 			if (count < 100)
 			{
-				setTimeout(this.addListeners, 100);
+				setTimeout(this.addListeners, 1000);
 			}
 		}
 		

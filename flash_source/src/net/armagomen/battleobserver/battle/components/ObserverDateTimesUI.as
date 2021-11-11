@@ -28,6 +28,13 @@
 			}
 		}
 		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.dateTime = null;
+			App.utils.data.cleanupDynamicObject(this.settings);
+		}
+		
 		public function as_setDateTime(text:String):void
 		{
 			if (dateTime)

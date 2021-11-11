@@ -64,6 +64,7 @@
 		public function remove():void
 		{
 			this.animation.stop();
+			this.removeChildren();
 			this.progressBar = null;
 			this.status = null;
 			this.timer = null;

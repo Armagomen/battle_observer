@@ -66,7 +66,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.count++;
 			if (count < 100)
 			{
-				setTimeout(this.addListeners, 100);
+				setTimeout(this.addListeners, 1000);
 			}
 		}
 		
@@ -91,7 +91,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			if (!item.model || !item.model.vehicleType)
 			{
-				setTimeout(this.addItemListener, 100, item);
+				setTimeout(this.addItemListener, 200, item);
 			}
 			else
 			{
