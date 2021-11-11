@@ -27,11 +27,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconsColors:Object        = new Object();
 		private var iconMultiplier:Number     = -1.25;
 		
-		public function PlayersPanelsStatisticUI(panels:*, statsEnabled:Boolean, iconEnabled:Boolean)
+		public function PlayersPanelsStatisticUI(panels:*, statsEnabled:Boolean, icon:Boolean)
 		{
 			this.panels = panels;
 			this.statisticsEnabled = statsEnabled;
-			this.iconEnabled = iconEnabled;
+			this.iconEnabled = icon;
 			super();
 		}
 		
@@ -61,7 +61,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		override public function setCompVisible(param0:Boolean):void
 		{
 			super.setCompVisible(param0);
-			if (this.statisticsEnabled)
+			if (this.statisticsEnabled && param0)
 			{
 				var oldMode:int = int(this.panels.state);
 				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
@@ -122,17 +122,21 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function addItemListener(item:*):void
 		{
 			var vehicleData:* = item.getVehicleData();
-			if (!item.vehicleData || !item._listItem || !item.vehicleData.vehicleType)
+			if (!vehicleData || !item._listItem || !vehicleData.vehicleType)
 			{
 				setTimeout(this.addItemListener, 200, item);
 			}
 			else
 			{
-				var icon:* = item._listItem.vehicleIcon;
-				if (!this.iconsColors[item.vehicleData.vehicleType])
+				if (this.iconEnabled)
 				{
-					this.iconsColors[item.vehicleData.vehicleType] = Utils.colorConvert(py_getIconColor(item.vehicleData.vehicleType));
+					var typeColor:String = py_getIconColor(vehicleData.vehicleType);
+					if (!this.iconsColors[vehicleData.vehicleType] && typeColor)
+					{
+						this.iconsColors[vehicleData.vehicleType] = Utils.colorConvert(typeColor);
+					}
 				}
+				var icon:* = item._listItem.vehicleIcon;
 				icon.item = item;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
@@ -145,9 +149,15 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					{
 						var isEnemy:Boolean = vehicleData.teamColor == "vm_enemy";
 						var strings:Array   = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
-						this.stringsCache[accountDBID] = strings[0];
-						this.stringsCacheCut[accountDBID] = strings[1];
-						if (this.colorEnabled)
+						if (strings[0])
+						{
+							this.stringsCache[accountDBID] = strings[0];
+						}
+						if (strings[1])
+						{
+							this.stringsCacheCut[accountDBID] = strings[1];
+						}
+						if (this.colorEnabled && strings[2])
 						{
 							this.colors[accountDBID] = Utils.colorConvert(strings[2]);
 						}
@@ -155,6 +165,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();
 				}
+				
 			}
 		}
 		
@@ -189,12 +200,17 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function onRenderHendle(eve:Event):void
 		{
 			var icon:* = eve.target;
-			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconsColors[icon.item.vehicleData.vehicleType] || icon.transform.colorTransform.color == 0))
+			if (this.iconEnabled)
 			{
-				var tColor:ColorTransform = icon.transform.colorTransform;
-				tColor.color = this.iconsColors[icon.item.vehicleData.vehicleType];
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				icon.transform.colorTransform = tColor;
+				var iconColor:uint    = icon.transform.colorTransform.color;
+				var newIconColor:uint = this.iconsColors[icon.item.vehicleData.vehicleType];
+				if (iconColor != newIconColor || iconColor == 0)
+				{
+					var tColor:ColorTransform = icon.transform.colorTransform;
+					tColor.color = newIconColor;
+					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+					icon.transform.colorTransform = tColor;
+				}
 			}
 			if (this.statisticsEnabled && icon.item.accountDBID != 0)
 			{

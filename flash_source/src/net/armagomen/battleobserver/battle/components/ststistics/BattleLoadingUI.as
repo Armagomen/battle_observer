@@ -95,11 +95,15 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 			else
 			{
-				var icon:* = item._vehicleIcon;
-				if (!this.iconsColors[item.model.vehicleType])
+				if (this.iconEnabled)
 				{
-					this.iconsColors[item.model.vehicleType] = Utils.colorConvert(py_getIconColor(item.model.vehicleType));
+					var typeColor:String = py_getIconColor(item.model.vehicleType);
+					if (!this.iconsColors[item.model.vehicleType] && typeColor)
+					{
+						this.iconsColors[item.model.vehicleType] = Utils.colorConvert(typeColor);
+					}
 				}
+				var icon:* = item._vehicleIcon;
 				icon.item = item;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
@@ -148,14 +152,19 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private function onRenderHendle(eve:Event):void
 		{
 			var icon:* = eve.target;
-			if (this.iconEnabled && (icon.transform.colorTransform.color != this.iconsColors[icon.item.model.vehicleType] || icon.transform.colorTransform.color == 0))
+			if (this.iconEnabled)
 			{
-				var tColor:ColorTransform = new ColorTransform();
-				tColor.color = this.iconsColors[icon.item.model.vehicleType];
-				tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
-				tColor.alphaOffset = icon.transform.colorTransform.alphaOffset;
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				icon.transform.colorTransform = tColor;
+				var iconColor:uint = icon.transform.colorTransform.color;
+				var newIconColor:uint = this.iconsColors[icon.item.model.vehicleType];
+				if  (iconColor != newIconColor || iconColor == 0)
+				{
+					var tColor:ColorTransform = new ColorTransform();
+					tColor.color = newIconColor;
+					tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
+					tColor.alphaOffset = icon.transform.colorTransform.alphaOffset;
+					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+					icon.transform.colorTransform = tColor;
+				}
 			}
 			if (this.statisticsEnabled && icon.item.model.accountDBID != 0)
 			{

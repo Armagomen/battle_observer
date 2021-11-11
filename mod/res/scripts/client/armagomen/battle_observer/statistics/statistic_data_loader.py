@@ -30,13 +30,15 @@ def request(databaseIDS):
 
 
 def setCachedStatisticData():
+    result = False
     if not statisticEnabled:
-        return False
+        return result
     sessionProvider = dependency.instance(IBattleSessionProvider)
     arenaDP = sessionProvider.getArenaDP()
+    if arenaDP is None:
+        return result
     toRequest = [vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator() if
                  vInfo.player.accountDBID and vInfo.player.accountDBID not in CACHE]
-    result = False
     if toRequest:
         if settings.main[MAIN.DEBUG]:
             logDebug("START request statistics data: ids={}, len={} ".format(toRequest, len(toRequest)))

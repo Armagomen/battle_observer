@@ -17,21 +17,21 @@ package net.armagomen.battleobserver.utils.tween
 	[Event(name = "motionChange", type = "net.armagomen.battleobserver.utils.tween.TweenEvent")]
 	public class Tween extends EventDispatcher
 	{
-		private var _position:Number       = NaN;
-		public var prevTime:Number         = NaN;
-		public var prevPos:Number          = NaN;
-		public var isPlaying:Boolean       = false;
-		private var _fps:Number            = 30;
-		private var _time:Number           = NaN;
-		public var begin:Number            = NaN;
-		public var change:Number           = NaN;
-		public var looping:Boolean         = false;
-		private var _timer:Timer           = null;
-		private var _startTime:Number      = NaN;
-		public var prop:String             = "";
-		private var _duration:Number       = NaN;
-		public var obj:Object              = null;
-		public var useSeconds:Boolean      = false;
+		private var _position:Number  = NaN;
+		public var prevTime:Number    = NaN;
+		public var prevPos:Number     = NaN;
+		public var isPlaying:Boolean  = false;
+		private var _fps:Number       = 30;
+		private var _time:Number      = NaN;
+		public var begin:Number       = NaN;
+		public var change:Number      = NaN;
+		public var looping:Boolean    = false;
+		private var _timer:Timer      = null;
+		private var _startTime:Number = NaN;
+		public var prop:String        = "";
+		private var _duration:Number  = NaN;
+		public var obj:Object         = null;
+		public var useSeconds:Boolean = false;
 		
 		public function Tween(obj:Object, prop:String, begin:Number, finish:Number, duration:Number, useSeconds:Boolean = false)
 		{
@@ -81,17 +81,6 @@ package net.armagomen.battleobserver.utils.tween
 			if (this.useSeconds)
 			{
 				this._startTime = getTimer() - this._time * 1000;
-			}
-		}
-		
-		public function set FPS(fps:Number):void
-		{
-			var oldIsPlaying:Boolean = this.isPlaying;
-			this.stopEnterFrame();
-			this._fps = fps;
-			if (oldIsPlaying)
-			{
-				this.startEnterFrame();
 			}
 		}
 		
@@ -219,11 +208,6 @@ package net.armagomen.battleobserver.utils.tween
 		{
 			this.nextFrame();
 			timerEvent.updateAfterEvent();
-		}
-		
-		public function get FPS():Number
-		{
-			return this._fps;
 		}
 		
 		public function rewind(t:Number = 0):void

@@ -34,16 +34,16 @@
 			this.animate = animationEnabled;
 		}
 		
-		public function updateBase(newScale:Number, invadersCnt:int, time:String, text:String):void
+		public function updateBase(newScale:int, invadersCnt:int, time:String, text:String):void
 		{
 			if (this.animate)
 			{
-				newScale = Math.min(1.0, newScale + 0.01 * invadersCnt)
-				this.animation.continueTo(newScale, newScale > this.progressBar.scaleX ? 1.0 : 0.1);
+				var scale:Number = Math.min(1.0, (newScale + invadersCnt) * 0.01);
+				this.animation.continueTo(scale, scale > this.progressBar.scaleX ? 1.0 : 0.01);
 			}
 			else
 			{
-				this.progressBar.scaleX = newScale;
+				this.progressBar.scaleX = newScale * 0.01;
 			}
 			this.status.htmlText = text;
 			this.timer.text = time;
@@ -59,6 +59,19 @@
 		{
 			this.basesFormat = new TextFormat(bases.text_settings.font, bases.text_settings.size, Utils.colorConvert(bases.text_settings.color), bases.text_settings.bold, bases.text_settings.italic, bases.text_settings.underline);
 			this.createBase(bases, shadowSettings, colors, team);
+		}
+		
+		public function remove():void
+		{
+			this.animation.stop();
+			this.progressBar = null;
+			this.status = null;
+			this.timer = null;
+			this.invaders = null;
+			this.basesFormat = null;
+			this.animation = null;
+			this.colorBlind = false;
+			this.animate = false;
 		}
 		
 		private function PlayersIcon(width:Number):Bitmap

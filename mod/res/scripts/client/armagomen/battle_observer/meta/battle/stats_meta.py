@@ -9,9 +9,3 @@ class StatsMeta(BaseModMeta):
 
     def py_getIconColor(self, classTag):
         return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag, GLOBAL.EMPTY_LINE)
-
-    def onExitBattlePage(self):
-        pass
-
-    def onEnterBattlePage(self):
-        pass

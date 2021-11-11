@@ -1,6 +1,7 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
 	import flash.events.Event;
+	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.components.playerspanels.ListItem;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
@@ -33,7 +34,19 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		{
 			super.onPopulate();
 			this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
-			this.playersPanel.parent.updateDamageLogPosition();
+		}
+		
+		override public function setCompVisible(param0:Boolean):void 
+		{
+			super.setCompVisible(param0);
+			if (param0)
+			{
+				var oldMode:int = int(this.playersPanel.state);
+				this.playersPanel.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
+				this.playersPanel.as_setPanelMode(PLAYERS_PANEL_STATE.FULL);
+				this.playersPanel.as_setPanelMode(oldMode);
+				this.playersPanel.parent.updateDamageLogPosition();
+			}
 		}
 		
 		override protected function onBeforeDispose():void
