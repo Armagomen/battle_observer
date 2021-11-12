@@ -12,20 +12,14 @@ MESSAGES = {
     True: ("Поддержите разработку мода. Спасибо что вы с нами.",
            "А ты уже поддержал разработку мода?",
            "Мы измеряем сотые доли секунды, которые отделяют победителя от участника.",
-           "Мы не боимся штрафов за превышение скорости работы. Ускоряй мод поддержкой.!",
-           "Из скромного – только размер поддержки!",
-           "Родина-мать зовёт поддержать!",
-           "Вместе возможно всё. Даже собрать на сервер.",
-           "Как насчёт того, чтобы поделиться с теми, кто в нужде?"
+           "Мы не боимся штрафов за превышение скорости работы. Ускоряй мод донатиком.!",
+           "Родина-мать зовёт поддержать!"
            ),
     False: ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
             "Have you already supported the development?",
-            "Only modest thing we've got is your support.",
-            "How about sharing with those in need?",
-            "Everything is possible together. Even collect some founds for the server.",
             "We measure the milliseconds that separate the winner from the competitor.",
             "Motherland urges to support!",
-            "We are not afraid of penalties for fast work. Speed up the mod with support!"
+            "We are not afraid of penalties for fast work. Speed up the mod with donate!"
             )
 }
 
