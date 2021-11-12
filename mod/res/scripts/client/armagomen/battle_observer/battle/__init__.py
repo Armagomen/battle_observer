@@ -64,9 +64,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
 
     def onAppInitializing(self, event):
-        if event.ns == APP_NAME_SPACE.SF_BATTLE:
-            if not view_settings.isAllowed:
-                return
+        if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
             if view_settings.isStatisticEnabled:
                 self.__statistics = setCachedStatisticData()
             self._app.as_loadLibrariesS([SWF.BATTLE])

@@ -141,6 +141,8 @@ class ViewSettings(object):
             components.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
         if self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle:
             components.append(BATTLE_VIEW_ALIASES.BATTLE_MESSENGER)
+        if self.cfg.main[MAIN.HIDE_HINT]:
+            components.append(BATTLE_VIEW_ALIASES.HINT_PANEL)
         return components
 
     @staticmethod

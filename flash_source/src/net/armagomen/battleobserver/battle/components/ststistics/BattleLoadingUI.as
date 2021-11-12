@@ -107,7 +107,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				icon.item = item;
 				if (!icon.hasEventListener(Event.RENDER))
 				{
-					icon.addEventListener(Event.RENDER, this.onRenderHendle);
+					icon.addEventListener(Event.RENDER, this.onRenderHendle, false, 0, true);
 				}
 				if (this.statisticsEnabled)
 				{

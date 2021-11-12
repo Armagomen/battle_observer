@@ -49,7 +49,7 @@ class Donate(object):
         # type: () -> str
         return "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
                "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a> | <a href='event:{patreon}'>PATREON</a>".format(
-            ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL, patreon=URLS.PATREON_URL, msg=self.getRandomMessage())
+                ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL, patreon=URLS.PATREON_URL, msg=self.getRandomMessage())
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:

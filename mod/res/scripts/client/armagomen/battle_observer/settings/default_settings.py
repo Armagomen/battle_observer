@@ -41,6 +41,8 @@ class DefaultSettings(object):
             PREMIUM.PREMIUM_FORMAT: PREMIUM.DEFAULT_FORMAT_PREMIUM,
             MAIN.CREW_TRAINING: True,
             MAIN.DIRECTIVES: True,
+            MAIN.HIDE_HINT: False,
+            MAIN.FIELD_MAIL: False,
         }
         self.user_background = {
             GLOBAL.ENABLED: False,

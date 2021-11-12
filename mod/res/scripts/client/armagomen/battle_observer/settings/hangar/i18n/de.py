@@ -75,6 +75,8 @@ translate = {
             "Prevent automatic replenishment of instructions for game currency if they are not in stock. "
             "It will also turn on automatic replenishment from the warehouse if they are there and you forgot to "
             "tick the box.",
+        "hide_hint_panel": "Hinweise im Kampf deaktivieren",
+        "hide_field_mail": "Feldmail deaktivieren.",
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",
