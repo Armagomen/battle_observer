@@ -1,6 +1,7 @@
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
 from armagomen.constants import STATISTICS
+from armagomen.utils.common import parseColorToHex
 
 
 class PlayersPanelsStatistic(StatsMeta):
@@ -12,7 +13,7 @@ class PlayersPanelsStatistic(StatsMeta):
             self.settings[STATISTICS.PANELS_LEFT]
         result = getStatisticString(accountDBID, clanAbbrev)
         if result is not None:
-            return patternFUL % result, patternCUT % result, result["colorWTR"]
+            return patternFUL % result, patternCUT % result, parseColorToHex(result["colorWTR"])
         return None, None, None
 
     def py_getCutWidth(self):

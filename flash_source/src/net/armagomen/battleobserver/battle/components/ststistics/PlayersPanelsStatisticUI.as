@@ -20,8 +20,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var colorEnabled:Boolean      = false;
-		private var stringsCache:Object       = new Object();
-		private var stringsCacheCut:Object    = new Object();
+		private var stringsCache:Object       = new Object();;
 		private var count:Number              = 0;
 		private var colors:Object             = new Object();
 		private var iconsColors:Object        = new Object();
@@ -51,7 +50,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			if (App.instance && App.utils)
 			{
 				App.utils.data.cleanupDynamicObject(this.stringsCache);
-				App.utils.data.cleanupDynamicObject(this.stringsCacheCut);
 				App.utils.data.cleanupDynamicObject(this.colors);
 				App.utils.data.cleanupDynamicObject(this.iconsColors);
 			}
@@ -77,7 +75,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.panels.removeEventListener(Event.CHANGE, this.onChange);
 			this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange);
 			this.stringsCache = null;
-			this.stringsCacheCut = null;
 			this.colors = null;
 			this.iconsColors = null;
 			this.panels = null;
@@ -95,7 +92,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.count++;
 			if (count < 100)
 			{
-				setTimeout(this.addListeners, 1000);
+				setTimeout(this.addListeners, 2000);
 			}
 		}
 		
@@ -149,18 +146,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					if (accountDBID != 0)
 					{
 						var isEnemy:Boolean = vehicleData.teamColor == "vm_enemy";
-						var strings:Array   = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
-						this.stringsCache[accountDBID] = strings[0];
-						this.stringsCacheCut[accountDBID] = strings[1];
-						if (this.colorEnabled && strings[2])
-						{
-							this.colors[accountDBID] = Utils.colorConvert(strings[2]);
-						}
+						this.stringsCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
 					}
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();
 				}
-				
 			}
 		}
 		
@@ -207,7 +197,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					icon.transform.colorTransform = tColor;
 				}
 			}
-			if (this.statisticsEnabled && this.stringsCache[icon.item.accountDBID])
+			if (this.statisticsEnabled && this.stringsCache[icon.item.accountDBID][0])
 			{
 				this.setPlayerText(icon.item._listItem, icon.item.accountDBID);
 			}
@@ -217,10 +207,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			if (this.colorEnabled)
 			{
-				listItem.vehicleTF.textColor = this.colors[accountDBID];
+				listItem.vehicleTF.textColor = this.stringsCache[accountDBID][2];
 			}
-			listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID];
-			listItem.playerNameCutTF.htmlText = this.stringsCacheCut[accountDBID];
+			listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID][0];
+			listItem.playerNameCutTF.htmlText = this.stringsCache[accountDBID][1];
 			if (!listItem._isAlive)
 			{
 				listItem.playerNameCutTF.alpha = 0.66;

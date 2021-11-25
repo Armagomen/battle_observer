@@ -239,3 +239,7 @@ def urlResponse(url):
     if responseData is not None:
         return json.loads(responseData, "utf-8")
     return responseData
+
+
+def parseColorToHex(color):
+    return hex(int("0x" + color[1:], 16))
