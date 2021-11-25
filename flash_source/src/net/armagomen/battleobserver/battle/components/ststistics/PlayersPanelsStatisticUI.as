@@ -125,7 +125,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var vehicleData:* = item.getVehicleData();
 			if (!vehicleData || !item._listItem || !vehicleData.vehicleType)
 			{
-				setTimeout(this.addItemListener, 200, item);
+				setTimeout(this.addItemListener, 1000, item);
 			}
 			else
 			{
@@ -150,14 +150,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					{
 						var isEnemy:Boolean = vehicleData.teamColor == "vm_enemy";
 						var strings:Array   = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
-						if (strings[0])
-						{
-							this.stringsCache[accountDBID] = strings[0];
-						}
-						if (strings[1])
-						{
-							this.stringsCacheCut[accountDBID] = strings[1];
-						}
+						this.stringsCache[accountDBID] = strings[0];
+						this.stringsCacheCut[accountDBID] = strings[1];
 						if (this.colorEnabled && strings[2])
 						{
 							this.colors[accountDBID] = Utils.colorConvert(strings[2]);
@@ -213,7 +207,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					icon.transform.colorTransform = tColor;
 				}
 			}
-			if (this.statisticsEnabled && icon.item.accountDBID != 0)
+			if (this.statisticsEnabled && this.stringsCache[icon.item.accountDBID])
 			{
 				this.setPlayerText(icon.item._listItem, icon.item.accountDBID);
 			}

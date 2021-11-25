@@ -105,11 +105,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function setDeath():void
 		{
-			//this.updateHealth(0, "");
-			//this.setHealthVisible(false);
-			this.healthBar.remove();
-			this.removeChild(this.healthBar);
-			this.healthBar = null;
+			if (this.healthBar)
+			{
+				this.healthBar.remove();
+				this.removeChild(this.healthBar);
+				this.healthBar = null;
+			}
 		}
 	}
 }
