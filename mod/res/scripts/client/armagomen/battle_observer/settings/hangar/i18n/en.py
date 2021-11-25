@@ -75,6 +75,7 @@ translate = {
             "tick the box.",
         "hide_hint_panel": "Disable hints in battle",
         "hide_field_mail": "Disable field mail",
+        "auto_return_crew": "Automatic crew return",
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",

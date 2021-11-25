@@ -23,7 +23,7 @@ class ComponentsLoader(object):
             'tank_carousel': None,
             'wg_logs_fixes': None,
             'vehicle_battle_boosters': None,
-            'tmen_xp': None,
+            'crew': None,
             'for_tests': None
         }
 

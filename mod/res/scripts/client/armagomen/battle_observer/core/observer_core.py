@@ -70,10 +70,8 @@ class ObserverCore(object):
         yield await(dialogs.showSimple(self.getLockedDialog(title, locked), DialogButtons.PURCHASE))
 
 
-def chacgeVehicle(base, *args, **kwargs):
+@overrideMethod(Hangar, "__onCurrentVehicleChanged")
+@overrideMethod(Hangar, "__updateAll")
+def changeVehicle(base, *args, **kwargs):
     base(*args, **kwargs)
     g_events.onHangarVehicleChanged()
-
-
-overrideMethod(Hangar, "__onCurrentVehicleChanged")(chacgeVehicle)
-overrideMethod(Hangar, "__updateAll")(chacgeVehicle)

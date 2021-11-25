@@ -76,7 +76,8 @@ translate = {
             "It will also turn on automatic replenishment from the warehouse if they are there and you forgot to "
             "tick the box.",
         "hide_hint_panel": "Hinweise im Kampf deaktivieren",
-        "hide_field_mail": "Feldmail deaktivieren.",
+        "hide_field_mail": "Feldmail deaktivieren",
+        "auto_return_crew": "Automatische Crew-Rückkehr",
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",

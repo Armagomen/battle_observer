@@ -1,12 +1,14 @@
-from CurrentVehicle import g_currentVehicle
+from CurrentVehicle import g_currentVehicle, _CurrentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, CREW_XP
-from armagomen.utils.common import logInfo
+from armagomen.utils.common import logInfo, overrideMethod, logError
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
 from async import async, await
 from frameworks.wulf import WindowLayer
+from gui import SystemMessages
 from gui.shared.gui_items.Vehicle import Vehicle
+from gui.shared.gui_items.processors.tankman import TankmanReturn
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
@@ -14,13 +16,14 @@ from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 
 
-class AccelerateCrewXp(object):
+class CrewProcessor(object):
     appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self):
         self.inProcess = False
         self.dialog = CrewDialog()
         g_events.onHangarVehicleChanged += self.onVehicleChanged
+        overrideMethod(_CurrentVehicle, "_changeDone")(self.onChangeDone)
 
     @async
     def showDialog(self, vehicle, value, description):
@@ -55,7 +58,7 @@ class AccelerateCrewXp(object):
         if not settings.main[MAIN.CREW_TRAINING] or not g_currentVehicle.isPresent() or self.inProcess:
             return
         vehicle = g_currentVehicle.item  # type: Vehicle
-        if not vehicle.isElite or g_currentVehicle.isLocked() or g_currentVehicle.isInBattle():
+        if not vehicle.isElite or vehicle.isLocked or vehicle.isInBattle:
             return
         value = False
         description = CREW_XP.NED_TURN_OFF
@@ -74,5 +77,23 @@ class AccelerateCrewXp(object):
             self.inProcess = True
             self.showDialog(vehicle, value, description)
 
+    @decorators.process('crewReturning')
+    def _processReturnCrew(self, vehicle):
+        result = yield TankmanReturn(vehicle).request()
+        if result.userMsg:
+            SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType)
+            logInfo("{}: {}".format(vehicle.userName, result.userMsg))
 
-crewXP = AccelerateCrewXp()
+    def onChangeDone(self, base, *args, **kwargs):
+        try:
+            if settings.main[MAIN.CREW_RETURN] and g_currentVehicle.isPresent():
+                vehicle = g_currentVehicle.item  # type: Vehicle
+                if not vehicle.isInBattle and not vehicle.isCrewFull:
+                    self._processReturnCrew(vehicle)
+        except Exception as error:
+            logError("CrewProcessor onChangeDone: " + repr(error))
+        finally:
+            return base(*args, **kwargs)
+
+
+crew = CrewProcessor()
