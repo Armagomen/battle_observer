@@ -1,7 +1,7 @@
 import copy
 
 import constants
-from armagomen.constants import MAIN
+from armagomen.constants import MAIN, GLOBAL
 from armagomen.utils.common import urlResponse, logDebug
 from armagomen.battle_observer.core import settings
 from helpers import dependency
@@ -37,8 +37,13 @@ def setCachedStatisticData():
     arenaDP = sessionProvider.getArenaDP()
     if arenaDP is None:
         return result
-    toRequest = [vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator() if
-                 vInfo.player.accountDBID and vInfo.player.accountDBID not in CACHE]
+    toRequest = []
+    inCache = GLOBAL.ZERO
+    for vInfo in arenaDP.getVehiclesInfoIterator():
+        if vInfo.player.accountDBID and vInfo.player.accountDBID not in CACHE:
+            toRequest.append(vInfo.player.accountDBID)
+        elif vInfo.player.accountDBID in CACHE:
+            inCache += GLOBAL.ONE
     if toRequest:
         if settings.main[MAIN.DEBUG]:
             logDebug("START request statistics data: ids={}, len={} ".format(toRequest, len(toRequest)))
@@ -49,6 +54,8 @@ def setCachedStatisticData():
                 CACHE[int(_id)] = copy.deepcopy(value)
         if settings.main[MAIN.DEBUG]:
             logDebug("FINISH request statistics data")
+    else:
+        result = inCache > GLOBAL.ZERO
     return result
 
 

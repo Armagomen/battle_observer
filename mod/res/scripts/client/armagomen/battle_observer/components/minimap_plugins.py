@@ -75,7 +75,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
     _plugins = base(plugin, arenaVisitor)
-    if settings.minimap[GLOBAL.ENABLED] and view_settings.notEpicBattle():
+    if settings.minimap[GLOBAL.ENABLED] and view_settings.notEpicBattle:
         if settings.minimap[MINIMAP.DEATH_PERMANENT]:
             _plugins['vehicles'] = ArenaVehiclesPlugin
         _plugins['personal'] = PersonalEntriesPlugin

@@ -28,7 +28,7 @@ class CrewProcessor(object):
     @async
     def showDialog(self, vehicle, value, description):
         app = self.appLoader.getApp()
-        if app is not None or app.containerManager is not None:
+        if app is not None and app.containerManager is not None:
             view = app.containerManager.getView(WindowLayer.VIEW)
             self.dialog.setView(view)
         dialogResult = yield await(self.dialog.showCrewDialog(value, description, vehicle.userName))

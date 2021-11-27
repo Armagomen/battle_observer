@@ -197,9 +197,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					icon.transform.colorTransform = tColor;
 				}
 			}
-			if (this.statisticsEnabled && this.stringsCache[icon.item.accountDBID][0])
+			var accountDBID:int = icon.item.accountDBID;
+			if (this.statisticsEnabled && accountDBID != 0 && this.stringsCache[accountDBID][0])
 			{
-				this.setPlayerText(icon.item._listItem, icon.item.accountDBID);
+				this.setPlayerText(icon.item._listItem, accountDBID);
 			}
 		}
 		

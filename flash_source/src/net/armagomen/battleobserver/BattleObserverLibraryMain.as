@@ -107,9 +107,9 @@ package net.armagomen.battleobserver
 			
 			BaseBattlePage.prototype['as_observerHideWgComponents'] = function(components:Array):void
 			{
-				for each (var item:String in components)
+				for each (var alias:String in components)
 				{
-					var component:* = this.getComponent(item);
+					var component:* = this.getComponent(alias);
 					if (component)
 					{
 						component.visible = false;
