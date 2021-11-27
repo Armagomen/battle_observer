@@ -20,7 +20,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var colorEnabled:Boolean      = false;
-		private var stringsCache:Object       = new Object();;
+		private var dataCache:Object       = new Object();;
 		private var count:Number              = 0;
 		private var colors:Object             = new Object();
 		private var iconsColors:Object        = new Object();
@@ -49,7 +49,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.removeListeners();
 			if (App.instance && App.utils)
 			{
-				App.utils.data.cleanupDynamicObject(this.stringsCache);
+				App.utils.data.cleanupDynamicObject(this.dataCache);
 				App.utils.data.cleanupDynamicObject(this.colors);
 				App.utils.data.cleanupDynamicObject(this.iconsColors);
 			}
@@ -74,7 +74,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.clear();
 			this.panels.removeEventListener(Event.CHANGE, this.onChange);
 			this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange);
-			this.stringsCache = null;
+			this.dataCache = null;
 			this.colors = null;
 			this.iconsColors = null;
 			this.panels = null;
@@ -146,7 +146,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					if (accountDBID != 0)
 					{
 						var isEnemy:Boolean = vehicleData.teamColor == "vm_enemy";
-						this.stringsCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
+						this.dataCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
 					}
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();
@@ -198,20 +198,24 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				}
 			}
 			var accountDBID:int = icon.item.accountDBID;
-			if (this.statisticsEnabled && accountDBID != 0 && this.stringsCache[accountDBID][0])
+			if (this.statisticsEnabled && this.dataCache[accountDBID])
 			{
-				this.setPlayerText(icon.item._listItem, accountDBID);
+				this.setPlayerText(icon.item._listItem, this.dataCache[accountDBID]);
 			}
 		}
 		
-		private function setPlayerText(listItem:*, accountDBID:int):void
+		private function setPlayerText(listItem:*, data:Array):void
 		{
-			if (this.colorEnabled)
+			if (this.colorEnabled && data[2])
 			{
-				listItem.vehicleTF.textColor = this.stringsCache[accountDBID][2];
+				listItem.vehicleTF.textColor = data[2];
 			}
-			listItem.playerNameFullTF.htmlText = this.stringsCache[accountDBID][0];
-			listItem.playerNameCutTF.htmlText = this.stringsCache[accountDBID][1];
+			if (data[0]){
+				listItem.playerNameFullTF.htmlText = data[0];
+			}
+			if (data[1]){
+				listItem.playerNameCutTF.htmlText = data[1];
+			}
 			if (!listItem._isAlive)
 			{
 				listItem.playerNameCutTF.alpha = 0.66;

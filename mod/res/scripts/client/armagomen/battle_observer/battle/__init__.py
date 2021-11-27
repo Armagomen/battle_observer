@@ -2,7 +2,7 @@ from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
 from armagomen.battle_observer.statistics.statistic_data_loader import setCachedStatisticData
-from armagomen.constants import GLOBAL, SWF, ALIAS_TO_PATH, SORTED_ALIASES, MAIN, ALIASES, STATISTICS_ALIASES
+from armagomen.constants import SWF, ALIAS_TO_PATH, ALIASES, MAIN, STATISTICS_ALIASES
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
@@ -16,15 +16,14 @@ from gui.shared.events import AppLifeCycleEvent
 def getViewSettings():
     settings = []
     if view_settings.setIsAllowed():
-        for alias in SORTED_ALIASES + STATISTICS_ALIASES:
+        for alias in ALIASES:
             if not view_settings.getSetting(alias):
                 _GAME_UI.discard(alias)
                 _SPECTATOR_UI.discard(alias)
                 continue
             try:
-                class_name = alias.split("_")[GLOBAL.ONE]
-                file_name = ALIAS_TO_PATH.get(alias)
-                module_class = getattr(import_module(file_name, package=__package__), class_name)
+                file_path, class_name = ALIAS_TO_PATH[alias]
+                module_class = getattr(import_module(file_path, package=__package__), class_name)
                 settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
                 _GAME_UI.add(alias)
                 _SPECTATOR_UI.add(alias)
@@ -82,8 +81,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         iconsEnabled = view_settings.isIconsEnabled
         if self.__statistics or iconsEnabled:
             flash.as_observerStatisticComponents(self.__statistics, iconsEnabled)
-        for alias in SORTED_ALIASES:
-            if view_settings.getSetting(alias):
+        for alias in ALIASES:
+            if alias not in STATISTICS_ALIASES and view_settings.getSetting(alias):
                 flash.as_createBattleObserverComp(alias)
         flash.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         hiddenWGComponents = view_settings.getHiddenWGComponents()

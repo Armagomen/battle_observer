@@ -288,16 +288,17 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
     "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE", "BASE_FONT", "FONT_SIZE", "HUNDRED"))(
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
-__Aliases = namedtuple("ALIASES", (
-    "HP_BARS", "DAMAGE_LOG", "MAIN_GUN", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME",
-    "DISPERSION_TIMER", "PANELS", "MINIMAP", "USER_BACKGROUND", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "BATTLE_LOADING",
-    "FULL_STATS", "PANELS_STAT"))
-ALIASES = __Aliases(
-    "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_MainGun_UI", "Observer_DebugPanel_UI",
+ALIASES = namedtuple("ALIASES", (
+    "BATTLE_LOADING", "FULL_STATS", "PANELS_STAT", "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE",
+    "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH",
+    "USER_BACKGROUND", "PANELS", "MINIMAP"))(
+    "Observer_BattleLoading_UI", "Observer_FullStats_UI", "Observer_PlayersPanelsStatistic_UI",
+    "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
-    "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI",
-    "Observer_UserBackGround_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
-    "Observer_OwnHealth_UI", "Observer_BattleLoading_UI", "Observer_FullStats_UI", "Observer_PlayersPanelsStatistic_UI")
+    "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
+    "Observer_OwnHealth_UI", "Observer_UserBackGround_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI")
+
+STATISTICS_ALIASES = (ALIASES.BATTLE_LOADING, ALIASES.FULL_STATS, ALIASES.PANELS_STAT)
 
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
     "distance_to_enemy", "template", "align", "distance", "name")
@@ -454,32 +455,33 @@ class CONFIG_INTERFACE:
                                  DISPERSION.CIRCLE_REPLACE),
         },
         STATISTICS.NAME: {
-            STATISTICS.STATISTIC_ENABLED: (STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH),
+            STATISTICS.STATISTIC_ENABLED: (STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH,
+                                           STATISTICS.CHANGE_VEHICLE_COLOR),
             STATISTICS.ICON_ENABLED: (STATISTICS.ICON_BLACKOUT,)
         }
     }
 
 
 ALIAS_TO_PATH = {
-    ALIASES.HP_BARS: ".teams_hp",
-    ALIASES.DAMAGE_LOG: ".damage_log",
-    ALIASES.MAIN_GUN: ".main_gun",
-    ALIASES.DEBUG: ".debug_panel",
-    ALIASES.TIMER: ".battle_timer",
-    ALIASES.SIXTH_SENSE: ".sixth_sense",
-    ALIASES.TEAM_BASES: ".team_bases",
-    ALIASES.ARMOR_CALC: ".armor_calculator",
-    ALIASES.FLIGHT_TIME: ".flight_time",
-    ALIASES.DISPERSION_TIMER: ".dispersion_timer",
-    ALIASES.PANELS: ".players_panels",
-    ALIASES.MINIMAP: ".minimap",
-    ALIASES.USER_BACKGROUND: ".user_background",
-    ALIASES.DATE_TIME: ".date_times",
-    ALIASES.DISTANCE: ".distance_to_enemy",
-    ALIASES.OWN_HEALTH: ".own_health",
-    ALIASES.BATTLE_LOADING: ".statistics.battle_loading",
-    ALIASES.FULL_STATS: ".statistics.full_stats",
-    ALIASES.PANELS_STAT: ".statistics.players_panels"
+    ALIASES.HP_BARS: (".teams_hp", ALIASES.HP_BARS[9:-3]),
+    ALIASES.DAMAGE_LOG: (".damage_log", ALIASES.DAMAGE_LOG[9:-3]),
+    ALIASES.MAIN_GUN: (".main_gun", ALIASES.MAIN_GUN[9:-3]),
+    ALIASES.DEBUG: (".debug_panel", ALIASES.DEBUG[9:-3]),
+    ALIASES.TIMER: (".battle_timer", ALIASES.TIMER[9:-3]),
+    ALIASES.SIXTH_SENSE: (".sixth_sense", ALIASES.SIXTH_SENSE[9:-3]),
+    ALIASES.TEAM_BASES: (".team_bases", ALIASES.TEAM_BASES[9:-3]),
+    ALIASES.ARMOR_CALC: (".armor_calculator", ALIASES.ARMOR_CALC[9:-3]),
+    ALIASES.FLIGHT_TIME: (".flight_time", ALIASES.FLIGHT_TIME[9:-3]),
+    ALIASES.DISPERSION_TIMER: (".dispersion_timer", ALIASES.DISPERSION_TIMER[9:-3]),
+    ALIASES.PANELS: (".players_panels", ALIASES.PANELS[9:-3]),
+    ALIASES.MINIMAP: (".minimap", ALIASES.MINIMAP[9:-3]),
+    ALIASES.USER_BACKGROUND: (".user_background", ALIASES.USER_BACKGROUND[9:-3]),
+    ALIASES.DATE_TIME: (".date_times", ALIASES.DATE_TIME[9:-3]),
+    ALIASES.DISTANCE: (".distance_to_enemy", ALIASES.DISTANCE[9:-3]),
+    ALIASES.OWN_HEALTH: (".own_health", ALIASES.OWN_HEALTH[9:-3]),
+    ALIASES.BATTLE_LOADING: (".statistics.battle_loading", ALIASES.BATTLE_LOADING[9:-3]),
+    ALIASES.FULL_STATS: (".statistics.full_stats", ALIASES.FULL_STATS[9:-3]),
+    ALIASES.PANELS_STAT: (".statistics.players_panels", ALIASES.PANELS_STAT[9:-3]),
 }
 
 ALIAS_TO_CONFIG_NAME = {
@@ -503,11 +505,3 @@ ALIAS_TO_CONFIG_NAME = {
     ALIASES.FULL_STATS: STATISTICS.NAME,
     ALIASES.PANELS_STAT: STATISTICS.NAME
 }
-
-SORTED_ALIASES = (
-    ALIASES.MAIN_GUN, ALIASES.HP_BARS, ALIASES.DAMAGE_LOG, ALIASES.DEBUG, ALIASES.TIMER,
-    ALIASES.SIXTH_SENSE, ALIASES.TEAM_BASES, ALIASES.ARMOR_CALC, ALIASES.FLIGHT_TIME, ALIASES.DISPERSION_TIMER,
-    ALIASES.DATE_TIME, ALIASES.DISTANCE, ALIASES.OWN_HEALTH, ALIASES.USER_BACKGROUND, ALIASES.PANELS, ALIASES.MINIMAP
-)
-
-STATISTICS_ALIASES = (ALIASES.BATTLE_LOADING, ALIASES.FULL_STATS, ALIASES.PANELS_STAT)
