@@ -17,7 +17,6 @@
 		private var timer:TextExt;
 		private var image:Bitmap      = null;
 		private var _container:Sprite = null;
-		private var animate:Boolean   = false;
 		private var animation:Tween   = null;
 		
 		public function SixthSenseUI()
@@ -35,7 +34,6 @@
 			super.onPopulate();
 			if (this.image == null)
 			{
-				this.animate = this.animationEnabled();
 				this.params = this.getSettings();
 				this.setImage();
 			}
@@ -66,14 +64,7 @@
 			if (params.showTimer)
 			{
 				this.timer = new TextExt(params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-				if (this.animate)
-				{
-					this.animation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);
-				}
-				else
-				{
-					this.timer.alpha = params.timer.alpha;
-				}
+				this.animation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);
 			}
 		}
 		
@@ -96,10 +87,7 @@
 		
 		public function as_updateTimer(str:String):void
 		{
-			if (this.animate)
-			{
-				this.animation.start();
-			}
+			this.animation.start();
 			this.timer.htmlText = str;
 		}
 		

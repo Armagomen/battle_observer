@@ -80,9 +80,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			switch (settings.style)
 			{
 			case "league": 
-				return new League(this.animationEnabled(), settings, barWidth, this.isColorBlind(), this.colors);
+				return new League(settings, barWidth, this.isColorBlind(), this.colors);
 			default: 
-				return new Default(this.animationEnabled(), settings, barWidth, this.isColorBlind(), this.colors);
+				return new Default(settings, barWidth, this.isColorBlind(), this.colors);
 			}
 		}
 		

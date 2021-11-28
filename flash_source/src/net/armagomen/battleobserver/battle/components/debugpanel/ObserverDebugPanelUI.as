@@ -46,7 +46,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 						}
 						var fps:Object       = settings.debugGraphics.fpsBar;
 						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
-						this.fpsBar = new ProgressBar(animationEnabled(), fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0.3);
+						this.fpsBar = new ProgressBar(fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0.1);
 						this.addChild(this.fpsBar);
 					}
 					
@@ -54,7 +54,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 					{
 						var ping:Object       = settings.debugGraphics.pingBar;
 						var pingfilters:Array = [Filters.handleGlowFilter(ping.glowFilter)];
-						this.pingBar = new ProgressBar(animationEnabled(), ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0.3);
+						this.pingBar = new ProgressBar(ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0.1);
 						this.addChild(this.pingBar);
 					}
 				}
@@ -65,14 +65,17 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		override protected function onBeforeDispose():void 
 		{
 			super.onBeforeDispose();
-			if (this.fpsBarEnabled){
-				this.fpsBar.remove();
-				this.fpsBar = null;
-			}
-			if (this.pingBarEnabled){
-				this.pingBar.remove();
-				this.pingBar = null;
-			}
+			if (this.graphEnabled)
+				{
+					if (this.fpsBarEnabled){
+						this.fpsBar.remove();
+						this.fpsBar = null;
+					}
+					if (this.pingBarEnabled){
+						this.pingBar.remove();
+						this.pingBar = null;
+					}
+				}
 			this.debugText = null;
 		}
 		

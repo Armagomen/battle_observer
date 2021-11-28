@@ -12,13 +12,13 @@
 		private var colors:Object;
 		
 		
-		public function Default(animationEnabled:Boolean, settings:Object, barWidth:Number, colorBlind:Boolean, colors:Object)
+		public function Default(settings:Object, barWidth:Number, colorBlind:Boolean, colors:Object)
 		{
 			super();
 			this.colors = colors;
 			
-			this.allyHpBar = new ProgressBar(animationEnabled, -50, 4, -barWidth, 22, Math.max(0.05, colors.alpha), Math.max(0.05, colors.bgAlpha), null, colors.ally);
-			this.enemyHpBar = new ProgressBar(animationEnabled, 50, 4, barWidth, 22, Math.max(0.05, colors.alpha), Math.max(0.05, colors.bgAlpha), null, colorBlind ? colors.enemyColorBlind : colors.enemy);
+			this.allyHpBar = new ProgressBar(-50, 4, -barWidth, 22, Math.max(0.05, colors.alpha), Math.max(0.05, colors.bgAlpha), null, colors.ally);
+			this.enemyHpBar = new ProgressBar(50, 4, barWidth, 22, Math.max(0.05, colors.alpha), Math.max(0.05, colors.bgAlpha), null, colorBlind ? colors.enemyColorBlind : colors.enemy);
 			
 			if (settings.outline.enabled)
 			{

@@ -28,10 +28,6 @@ class BaseModMeta(BaseDAAPIComponent):
         self.settings = getattr(settings, settings_name, None) or settings
 
     @staticmethod
-    def animationEnabled():
-        return settings.main[MAIN.ENABLE_BARS_ANIMATION]
-
-    @staticmethod
     def getShadowSettings():
         return settings.shadow_settings
 

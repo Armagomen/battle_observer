@@ -7,7 +7,6 @@ package net.armagomen.battleobserver.battle.base
 	{
 		public var getSettings:Function;
 		public var getShadowSettings:Function;
-		public var animationEnabled:Function;
 		public var isColorBlind:Function;
 		public var getAlpha:Function;
 		public var getColors:Function;

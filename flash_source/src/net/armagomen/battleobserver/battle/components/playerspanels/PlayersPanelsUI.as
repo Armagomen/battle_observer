@@ -69,7 +69,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			var listitem:* = this.getWGListitem(vehicleID, enemy);
 			if (listitem && !this.storage[vehicleID])
 			{
-				this.storage[vehicleID] = new ListItem(enemy, animationEnabled(), getShadowSettings());
+				this.storage[vehicleID] = new ListItem(enemy, getShadowSettings());
 				this.onAddedToStorage(vehicleID, enemy);
 				listitem.addChild(this.storage[vehicleID]);
 			}

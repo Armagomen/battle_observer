@@ -13,12 +13,10 @@
 		private var enemyAnimation:Tween    = null;
 		private var defCommads:Vector.<int> = new <int>[1, 2, 2, 2, 2];
 		private var colors:Object;
-		private var animationEnabled:Boolean = false
 		
-		public function League(animation:Boolean, settings:Object, barWidth:Number, colorBlind:Boolean, colors:Object)
+		public function League(settings:Object, barWidth:Number, colorBlind:Boolean, colors:Object)
 		{
 			super();
-			this.animationEnabled = animation;
 			this.addChild(hpBars_bg);
 			this.addChild(allyHpBar);
 			this.addChild(enemyHpBar);
@@ -34,11 +32,8 @@
 			this.enemyHpBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Math.max(0.1, colors.alpha));
 			this.enemyHpBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
 			this.enemyHpBar.graphics.endFill();
-			if (this.animationEnabled)
-			{
-				this.allyAnimation = new Tween(this.allyHpBar, "scaleX", this.allyHpBar.scaleX, 1.0, 1, true);
-				this.enemyAnimation = new Tween(this.enemyHpBar, "scaleX", this.enemyHpBar.scaleX, 1.0, 1, true);
-			}
+			this.allyAnimation = new Tween(this.allyHpBar, "scaleX", this.allyHpBar.scaleX, 1.0, 1, true);
+			this.enemyAnimation = new Tween(this.enemyHpBar, "scaleX", this.enemyHpBar.scaleX, 1.0, 1, true);
 		
 		}
 		
@@ -52,14 +47,7 @@
 			var bar:Shape = team == "green" ? this.allyHpBar : this.enemyHpBar
 			if (bar.scaleX != newScale)
 			{
-				if (this.animationEnabled)
-				{
-					(team == "green" ? this.allyAnimation : this.enemyAnimation).continueTo(newScale, 1);
-				}
-				else
-				{
-					bar.scaleX = newScale;
-				}
+				(team == "green" ? this.allyAnimation : this.enemyAnimation).continueTo(newScale, 1);
 			}
 		}
 		
@@ -69,12 +57,10 @@
 			this.allyHpBar = null;
 			this.enemyHpBar = null;
 			this.hpBars_bg = null;
-			if (this.animationEnabled){
-				this.allyAnimation.stop();
-				this.allyAnimation = null;
-				this.enemyAnimation.stop();
-				this.enemyAnimation = null;
-			}
+			this.allyAnimation.stop();
+			this.allyAnimation = null;
+			this.enemyAnimation.stop();
+			this.enemyAnimation = null;
 			App.utils.data.cleanupDynamicObject(this.colors);
 		}
 	}

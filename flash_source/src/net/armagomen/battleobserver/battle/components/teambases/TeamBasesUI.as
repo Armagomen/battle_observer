@@ -39,13 +39,13 @@ package net.armagomen.battleobserver.battle.components.teambases
 			}
 			else
 			{
-				var base:TeamBase = new TeamBase(this.animationEnabled(), this.isColorBlind());
+				var base:TeamBase = new TeamBase(this.isColorBlind());
 				base.create(this.settings, this.getShadowSettings(), this.colors, team);
 				base.updateBase(points, invadersCnt, time, text);
+				var offset:Number = this.settings.y >= 0 ? this.settings.height + 4 : -(this.settings.height + 4);
 				for each (var t_base:TeamBase in this.bases) 
 				{
 					if (t_base){
-						var offset:Number = this.settings.y >= 0 ? this.settings.height + 4 : -(this.settings.height + 4);
 						base.y += offset;
 					}
 				}

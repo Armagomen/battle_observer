@@ -28,7 +28,6 @@ class DefaultSettings(object):
             MAIN.REMOVE_SHADOW_IN_PREBATTLE: False,
             MAIN.HIDE_BADGES: False,
             MAIN.HIDE_CLAN_ABBREV: False,
-            MAIN.ENABLE_BARS_ANIMATION: True,
             MAIN.ENABLE_FPS_LIMITER: False,
             MAIN.MAX_FRAME_RATE: 200,
             MAIN.AUTO_CLEAR_CACHE: False,

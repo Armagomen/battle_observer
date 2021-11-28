@@ -82,12 +82,12 @@ SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA",
         "PurchaseForGold", "GameGreeting"))
 
 __Main = namedtuple("MAIN", (
-    "AUTO_CLEAR_CACHE", "ENABLE_BARS_ANIMATION", "ENABLE_FPS_LIMITER", "HIDE_BADGES", "HIDE_CHAT", "HIDE_CLAN_ABBREV",
+    "AUTO_CLEAR_CACHE", "ENABLE_FPS_LIMITER", "HIDE_BADGES", "HIDE_CHAT", "HIDE_CLAN_ABBREV",
     "HIDE_DOG_TAGS", "MAX_FRAME_RATE", "NAME", "REMOVE_SHADOW_IN_PREBATTLE", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
     "ANONYMOUS_STRING", "CHANGE_ANONYMOUS_NAME", "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND",
     "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT", "FIELD_MAIL", "CREW_RETURN"))
 MAIN = __Main(
-    "autoClearCache", "enableBarsAnimation", "fps_enableFPSLimiter", "hideBadges", "hideChatInRandom", "hideClanAbbrev",
+    "autoClearCache", "fps_enableFPSLimiter", "hideBadges", "hideChatInRandom", "hideClanAbbrev",
     "hide_dog_tags", "fps_maxFrameRate", "main", "removeShadowInPrebattle", "showFriendsAndClanInEars",
     "anonymousEnableShow", "anonymousString", "anonymousNameChange", "useKeyPairs", "ignore_commanders_voice",
     "disable_score_sound", "DEBUG_MODE", "auto_crew_training",
@@ -303,8 +303,10 @@ STATISTICS_ALIASES = (ALIASES.BATTLE_LOADING, ALIASES.FULL_STATS, ALIASES.PANELS
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
     "distance_to_enemy", "template", "align", "distance", "name")
 
-OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE", "ALIGN", "COLOR"))("own_health", "template", "align",
-                                                                              "color")
+OWN_HEALTH = namedtuple("OWN_HEALTH", (
+    "NAME", "TEMPLATE", "ALIGN", "COLOR"))(
+    "own_health", "template", "align", "color")
+
 STATISTICS = namedtuple("STATISTICS", (
     "NAME", "STATISTIC_ENABLED", "CHANGE_VEHICLE_COLOR",
     "LOADING_LEFT", "LOADING_RIGHT",

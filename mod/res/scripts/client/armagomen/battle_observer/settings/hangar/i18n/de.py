@@ -35,7 +35,6 @@ translate = {
     },
     "main": {
         "header": "Allgemeine Einstellungen",
-        "enableBarsAnimation": "Aktivieren Sie die Animation aller Bedienfelder.",
         "showFriendsAndClanInEars": "Markiere Clanfreunde und dich in den Teamlisten.",
         "autoClearCache": "Löschen Sie den Spiel-Cache beim Beenden.",
         "autoClearCache_tooltip": "Bereinigen der temporären Dateien des Spiels im Ordner "

@@ -20,18 +20,15 @@
 		private var HEIGHT:Number            = 0;
 		private var COLOR:uint               = 0;
 		private var costumColor:Boolean      = false;
-		private var animationEnabled:Boolean = false;
 		private var animationTime:Number     = 1.0;
 		
-		public function ProgressBar(animate:Boolean, x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", time:Number = 1.0)
+		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", time:Number = 1.0)
 		{
 			super();
 			if (bgColor == null)
 			{
 				bgColor = "#000000";
 			}
-			
-			this.animationEnabled = animate;
 			this.animationTime = time;
 			this.x = x;
 			this.y = y;
@@ -54,10 +51,7 @@
 			}
 			
 			this.addChild(this.bar);
-			if (this.animationEnabled)
-			{
-				this.animation = new Tween(this.bar, "scaleX", this.bar.scaleX, 1.0, this.animationTime, true);
-			}
+			this.animation = new Tween(this.bar, "scaleX", this.bar.scaleX, 1.0, this.animationTime, true);
 		}
 		
 		public function setNewScale(newScale:Number):void
@@ -65,14 +59,7 @@
 			if (this.bar.scaleX != newScale)
 			{
 				var scale:Number = Math.max(0, newScale);
-				if (this.animationEnabled && this.visible)
-				{
-					this.animation.continueTo(scale, this.visible ? this.animationTime: 0.01);
-				}
-				else
-				{
-					this.bar.scaleX = scale;
-				}
+				this.animation.continueTo(scale, this.visible ? this.animationTime: 0.01);
 			}
 		}
 		
@@ -119,11 +106,8 @@
 			this.backGround = null;
 			this.outline = null;
 			this.uiText = null;
-			if (this.animation)
-			{
-				this.animation.stop();
-				this.animation = null;
-			}
+			this.animation.stop();
+			this.animation = null;
 		}
 	}
 }

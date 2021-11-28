@@ -40,7 +40,6 @@ translate = {
         "hideChatInRandom": "Disable chat in random battles",
         "hideChatInRandom_tooltip": "Completely disables the chat in random battles. "
                                     "<br> Removes the chat form and everything associated with it.",
-        "enableBarsAnimation": "Enable animation of all panels.",
         "showFriendsAndClanInEars": "Mark clan friends and yourself in the team lists.",
         "autoClearCache": "Clear the game cache on startup.",
         "autoClearCache_tooltip": "Cleaning the temporary files of the game in the folder "

@@ -25,26 +25,17 @@
 		private var Time:Class;
 		
 		private var colorBlind:Boolean     = false;
-		private var animate:Boolean        = false;
 		
-		public function TeamBase(animationEnabled:Boolean, colorBlind:Boolean)
+		public function TeamBase(colorBlind:Boolean)
 		{
 			super();
 			this.colorBlind = colorBlind;
-			this.animate = animationEnabled;
 		}
 		
 		public function updateBase(newScale:int, invadersCnt:int, time:String, text:String):void
 		{
-			if (this.animate)
-			{
-				var scale:Number = Math.min(1.0, (newScale + invadersCnt) * 0.01);
-				this.animation.continueTo(scale, scale > this.progressBar.scaleX ? 1.0 : 0.01);
-			}
-			else
-			{
-				this.progressBar.scaleX = newScale * 0.01;
-			}
+			var scale:Number = Math.min(1.0, (newScale + invadersCnt) * 0.01);
+			this.animation.continueTo(scale, scale > this.progressBar.scaleX ? 1.0 : 0.01);
 			this.status.htmlText = text;
 			this.timer.text = time;
 			this.invaders.text = invadersCnt.toString();
@@ -131,10 +122,7 @@
 			this.x = App.appWidth * 0.5 - baseMain.width * 0.5;
 			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;
 			
-			if (this.animate)
-			{
-				this.animation = new Tween(this.progressBar, "scaleX", this.progressBar.scaleX, 1.0, 1.0, true);
-			}
+			this.animation = new Tween(this.progressBar, "scaleX", this.progressBar.scaleX, 1.0, 1.0, true);
 		}
 	
 	}

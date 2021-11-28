@@ -35,7 +35,6 @@ translate = {
     },
     "main": {
         "header": "Настройки без категории.",
-        "enableBarsAnimation": "Включить анимацию всех панелей.",
         "showFriendsAndClanInEars": "Помечать друзей соклановцев и себя в списках команд.",
         "autoClearCache": "Очищать кэш игры после выхода.",
         "autoClearCache_tooltip": "Очистка временных файлов игры в папке AppData/Roaming/Wargaming.net/WorldOfTanks."

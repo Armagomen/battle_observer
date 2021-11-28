@@ -9,14 +9,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var healthBar:ProgressBar = null;
 		private var damage:TextExt        = null;
 		private var isEnemy:Boolean       = false;
-		private var animation:Boolean     = false;
 		private var shadowSettings:Object = null;
 		
-		public function ListItem(enemy:Boolean, animation:Boolean, shadowSettings:Object)
+		public function ListItem(enemy:Boolean, shadowSettings:Object)
 		{
 			super();
 			this.isEnemy = enemy;
-			this.animation = animation;
 			this.shadowSettings = shadowSettings;
 			this.x = enemy ? -381 : 380;
 		}
@@ -60,7 +58,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				barX = -barX;
 				textX = -textX;
 			}
-			this.healthBar = new ProgressBar(this.animation, barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, 0.6);
+			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colors.alpha, colors.bgAlpha, null, color, colors.bgColor, 0.6);
 			if (settings.players_bars_bar.outline.enabled)
 			{
 				this.healthBar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha);
