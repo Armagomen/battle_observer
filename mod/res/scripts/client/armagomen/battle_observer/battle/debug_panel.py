@@ -13,15 +13,13 @@ class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
 
     def __init__(self):
         super(DebugPanel, self).__init__()
-        self.__colors = None
+        self._isLaggingNow = False
         self.data = defaultdict(lambda: GLOBAL.CONFIG_ERROR, PING=GLOBAL.ZERO, FPS=GLOBAL.ZERO)
 
     def _populate(self):
         super(DebugPanel, self)._populate()
-        self.__colors = (self.settings[COLORS.NAME][DEBUG_PANEL.PING_COLOR],
-                         self.settings[COLORS.NAME][DEBUG_PANEL.LAG_COLOR])
         self.data.update(fpsColor=self.settings[COLORS.NAME][DEBUG_PANEL.FPS_COLOR],
-                         pingColor=self.settings[COLORS.NAME][DEBUG_PANEL.PING_COLOR])
+                         pingColor=self.getPingColor(self._isLaggingNow))
 
     @staticmethod
     def isVerticalSync():
@@ -31,9 +29,15 @@ class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
     def getRefreshRate():
         return ServicesLocator.settingsCore.getSetting(GRAPHICS.REFRESH_RATE)
 
-    def updateDebugInfo(self, ping, fps, isLaggingNow, *args, **kwargs):
-        if self.data[DEBUG_PANEL.FPS] != fps or self.data[DEBUG_PANEL.PING] != ping:
-            self.data[DEBUG_PANEL.PING_COLOR] = self.__colors[isLaggingNow]
-            self.data[DEBUG_PANEL.PING] = ping
-            self.data[DEBUG_PANEL.FPS] = fps
-            self.as_fpsPingS(self.settings[DEBUG_PANEL.TEXT][DEBUG_PANEL.TEMPLATE] % self.data, fps, ping)
+    def getPingColor(self, isLaggingNow):
+        if isLaggingNow:
+            return self.settings[COLORS.NAME][DEBUG_PANEL.LAG_COLOR]
+        return self.settings[COLORS.NAME][DEBUG_PANEL.PING_COLOR]
+
+    def updateDebugInfo(self, ping, fps, isLaggingNow, fpsReplay=-1):
+        if self._isLaggingNow != isLaggingNow:
+            self.data[DEBUG_PANEL.PING_COLOR] = self.getPingColor(isLaggingNow)
+            self._isLaggingNow = isLaggingNow
+        self.data[DEBUG_PANEL.PING] = ping
+        self.data[DEBUG_PANEL.FPS] = fps
+        self.as_fpsPingS(self.settings[DEBUG_PANEL.TEXT][DEBUG_PANEL.TEMPLATE] % self.data, fps, ping)

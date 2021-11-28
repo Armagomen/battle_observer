@@ -8,7 +8,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	{
 		private var healthBar:ProgressBar = null;
 		private var damage:TextExt        = null;
-		private var isEnemy:Boolean       = false;
+		public var isEnemy:Boolean       = false;
 		private var shadowSettings:Object = null;
 		
 		public function ListItem(enemy:Boolean, shadowSettings:Object)

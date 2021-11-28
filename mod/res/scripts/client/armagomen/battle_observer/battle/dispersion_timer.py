@@ -15,6 +15,8 @@ class DispersionTimer(DispersionTimerMeta):
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timer=GLOBAL.F_ZERO, percent=GLOBAL.ZERO)
         self.min_angle = None
         self.isPostmortem = False
+        self.timing = 0.0
+        self.percent = 0.0
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
@@ -39,22 +41,28 @@ class DispersionTimer(DispersionTimerMeta):
     def updateDispersion(self, gunRotator):
         if self.isPostmortem:
             return
+        update = False
         dispersionAngle = gunRotator.dispersionAngle
         aimingTime = self._player.vehicleTypeDescriptor.gun.aimingTime
         if self.min_angle is None or self.min_angle > dispersionAngle:
             self.min_angle = dispersionAngle
             if self.isDebug:
-                logInfo("DispersionTimer - renew max dispersion angle %s" % self.min_angle)
+                logInfo("DispersionTimer - renew min dispersion angle %s" % self.min_angle)
         timing = round(aimingTime, GLOBAL.TWO) * log(dispersionAngle / self.min_angle)
+        if self.timing != timing:
+            self.macro[DISPERSION_TIME.TIMER] = timing
+            self.timing = timing
+            update = True
         percent = int(ceil(self.min_angle / dispersionAngle * 100))
-        if self.macro[DISPERSION_TIME.TIMER] == timing and self.macro[DISPERSION_TIME.PERCENT] == percent:
-            return
-        self.macro[DISPERSION_TIME.TIMER] = timing
-        self.macro[DISPERSION_TIME.PERCENT] = percent
-        if percent == 100:
-            self.as_updateTimerTextS(self.settings[DISPERSION.TIMER_DONE_TEMPLATE] % self.macro)
-        else:
-            self.as_updateTimerTextS(self.settings[DISPERSION.TIMER_REGULAR_TEMPLATE] % self.macro)
+        if self.percent != percent:
+            self.macro[DISPERSION_TIME.PERCENT] = percent
+            self.percent = percent
+            update = True
+        if update:
+            if percent == 100:
+                self.as_updateTimerTextS(self.settings[DISPERSION.TIMER_DONE_TEMPLATE] % self.macro)
+            else:
+                self.as_updateTimerTextS(self.settings[DISPERSION.TIMER_REGULAR_TEMPLATE] % self.macro)
 
     def onEnterBattlePage(self):
         super(DispersionTimer, self).onEnterBattlePage()

@@ -11,7 +11,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var playersPanel:* = null;
 		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
-		public var createNewStorage:Function;
+		public var clear:Function;
 		
 		public function PlayersPanelsUI(panels:*)
 		{
@@ -21,9 +21,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_clearStorage():void
 		{
-			for each (var item:ListItem in this.storage) 
+			this.clear();
+			for each (var item:ListItem in this.storage)
 			{
-				if (item && item.parent){
+				if (item && item.parent)
+				{
 					item.removeChildren();
 					item.parent.removeChild(item);
 				}
@@ -37,7 +39,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
 		}
 		
-		override public function setCompVisible(param0:Boolean):void 
+		override public function setCompVisible(param0:Boolean):void
 		{
 			super.setCompVisible(param0);
 			if (param0)
@@ -61,11 +63,14 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private function onChange(eve:Event):void
 		{
 			this.as_clearStorage();
-			this.createNewStorage();
 		}
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
 		{
+			if (this.storage[vehicleID])
+			{
+				return;
+			}
 			var listitem:* = this.getWGListitem(vehicleID, enemy);
 			if (listitem && !this.storage[vehicleID])
 			{
@@ -135,11 +140,17 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		public function as_colorBlindPPbars(vehicleID:int, hpColor:String):void
+		public function as_colorBlindBars(hpColor:String):void
 		{
-			if (this.storage.hasOwnProperty(vehicleID))
+			if (this.storage)
 			{
-				this.storage[vehicleID].setColor(hpColor);
+				for each (var item:ListItem in this.storage)
+				{
+					if (item.isEnemy)
+					{
+						item.setColor(hpColor);
+					}
+				}
 			}
 		}
 		

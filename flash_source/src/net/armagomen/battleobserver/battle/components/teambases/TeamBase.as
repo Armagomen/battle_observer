@@ -124,6 +124,5 @@
 			
 			this.animation = new Tween(this.progressBar, "scaleX", this.progressBar.scaleX, 1.0, 1.0, true);
 		}
-	
 	}
 }

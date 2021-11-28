@@ -34,8 +34,8 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_setPlayersDamageVisibleS(self, visible):
         return self.flashObject.as_setPlayersDamageVisible(visible) if self._isDAAPIInited() else None
 
-    def as_colorBlindPPbarsS(self, vehicleID, color):
-        return self.flashObject.as_colorBlindPPbars(vehicleID, color) if self._isDAAPIInited() else None
+    def as_colorBlindBarsS(self, color):
+        return self.flashObject.as_colorBlindBars(color) if self._isDAAPIInited() else None
 
     def as_setSpottedPositionS(self, vehicleID):
         return self.flashObject.as_setSpottedPosition(vehicleID) if self._isDAAPIInited() else None
