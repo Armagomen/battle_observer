@@ -25,7 +25,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesText = self.settings[PANELS.DAMAGES_TEMPLATE]
         keysParser.onKeyPressed += self.onKeyPressed
         if self.hpBarsEnable:
-            self.settingsCore.onSettingsApplied += self.onSettingsApplied
+            if not self.settings[PANELS.BAR_CLASS_COLOR]:
+                self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
                 keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
         if not self.damagesEnable:
@@ -38,7 +39,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def _dispose(self):
         self.flashObject.as_clearStorage()
         keysParser.onKeyPressed -= self.onKeyPressed
-        if self.hpBarsEnable:
+        if self.hpBarsEnable and not self.settings[PANELS.BAR_CLASS_COLOR]:
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
         if self.damagesEnable:
             arena = self._arenaVisitor.getArenaSubscription()
@@ -56,8 +57,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_setPlayersDamageVisibleS(isKeyDown)
 
     def onSettingsApplied(self, diff):
-        if self.settings[PANELS.BAR_CLASS_COLOR]:
-            return
         if GRAPHICS.COLOR_BLIND in diff:
             barColor = self.getBarColor(True, diff[GRAPHICS.COLOR_BLIND])
             self.as_colorBlindBarsS(barColor)
@@ -77,8 +76,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         else:
             color = self.getBarColor(isEnemy)
         self.as_addHealthBarS(vehicleID, color, self.colors[COLORS.GLOBAL],
-                              self.settings[PANELS.BAR_SETTINGS], PANELS.TEAM[isEnemy],
-                              not self.settings[PANELS.ON_KEY_DOWN])
+                              self.settings[PANELS.BAR_SETTINGS], not self.settings[PANELS.ON_KEY_DOWN])
         scale = round(getHealthPercent(newHealth, maxHealth), 3)
         self.as_updateHealthBarS(vehicleID, scale,
                                  self.settings[PANELS.HP_TEMPLATE] % {

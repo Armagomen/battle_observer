@@ -39,10 +39,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
 		}
 		
-		override public function setCompVisible(param0:Boolean):void
+		override public function setCompVisible(visible:Boolean):void
 		{
-			super.setCompVisible(param0);
-			if (param0)
+			super.setCompVisible(visible);
+			if (visible)
 			{
 				var oldMode:int = int(this.playersPanel.state);
 				this.playersPanel.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
@@ -67,10 +67,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
 		{
-			if (this.storage[vehicleID])
-			{
-				return;
-			}
 			var listitem:* = this.getWGListitem(vehicleID, enemy);
 			if (listitem && !this.storage[vehicleID])
 			{
@@ -96,11 +92,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		public function as_addHealthBar(vehicleID:int, color:String, colors:Object, settings:Object, team:String, startVisible:Boolean):void
+		public function as_addHealthBar(vehicleID:int, color:String, colorParams:Object, settings:Object, startVisible:Boolean):void
 		{
 			if (this.storage.hasOwnProperty(vehicleID))
 			{
-				this.storage[vehicleID].addHealth(color, colors, settings, startVisible);
+				this.storage[vehicleID].addHealth(color, colorParams, settings, startVisible);
 			}
 		}
 		
