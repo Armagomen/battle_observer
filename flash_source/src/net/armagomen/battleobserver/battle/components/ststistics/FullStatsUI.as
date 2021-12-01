@@ -31,7 +31,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			super.as_onAfterPopulate();
 			this.iconMultiplier = py_getIconMultiplier();
-			setTimeout(this.addListeners, 2000);
+			setTimeout(this.addListeners, 4000);
 		}
 		
 		override protected function onBeforeDispose():void
