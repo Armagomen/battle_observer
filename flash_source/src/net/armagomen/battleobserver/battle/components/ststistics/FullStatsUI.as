@@ -17,7 +17,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconsColors:Object        = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
-		private var count:Number              = 0;
 		private var iconMultiplier:Number     = -1.25;
 		
 		public function FullStatsUI(fullStats:*, statsEnabled:Boolean, iconEnabled:Boolean)
@@ -32,7 +31,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			super.as_onAfterPopulate();
 			this.iconMultiplier = py_getIconMultiplier();
-			this.addListeners();
+			setTimeout(this.addListeners, 2000);
 		}
 		
 		override protected function onBeforeDispose():void
@@ -48,20 +47,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super.onBeforeDispose();
 		}
 		
-		private function timeout():void
-		{
-			this.count++;
-			if (count < 100)
-			{
-				setTimeout(this.addListeners, 1000);
-			}
-		}
-		
 		private function addListeners():void
 		{
 			if (!this.fullStats._tableCtrl || !this.fullStats._tableCtrl._allyRenderers)
 			{
-				this.timeout();
+				setTimeout(this.addListeners, 1000);
 			}
 			else
 			{

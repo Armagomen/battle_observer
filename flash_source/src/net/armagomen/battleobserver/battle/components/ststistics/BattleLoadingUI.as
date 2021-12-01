@@ -17,7 +17,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconsColors:Object        = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
-		private var count:Number              = 0;
 		private var iconMultiplier:Number     = -1.25;
 		
 		public function BattleLoadingUI(loading:*, statsEnabled:Boolean, iconEnabled:Boolean)
@@ -33,7 +32,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super.as_onAfterPopulate();
 			this.iconMultiplier = py_getIconMultiplier();
 			this.loading.addEventListener(Event.CHANGE, this.onChange);
-			this.addListeners();
+			setTimeout(this.addListeners, 1000);
 		}
 		
 		override protected function onBeforeDispose():void
@@ -61,29 +60,22 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.addListeners();
 		}
 		
-		private function timeout():void
-		{
-			this.count++;
-			if (count < 100)
-			{
-				setTimeout(this.addListeners, 1000);
-			}
-		}
-		
 		private function addListeners():void
 		{
 			if (!this.loading.form || !this.loading.form._allyRenderers)
 			{
-				this.timeout();
-				return;
+				setTimeout(this.addListeners, 1000);
 			}
-			for each (var ally:* in this.loading.form._allyRenderers)
+			else
 			{
-				this.addItemListener(ally)
-			}
-			for each (var enemy:* in this.loading.form._enemyRenderers)
-			{
-				this.addItemListener(enemy)
+				for each (var ally:* in this.loading.form._allyRenderers)
+				{
+					this.addItemListener(ally)
+				}
+				for each (var enemy:* in this.loading.form._enemyRenderers)
+				{
+					this.addItemListener(enemy)
+				}
 			}
 		}
 		
@@ -124,7 +116,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		{
 			if (!this.loading.form)
 			{
-				this.timeout();
 				return;
 			}
 			for each (var ally:* in this.loading.form._allyRenderers)

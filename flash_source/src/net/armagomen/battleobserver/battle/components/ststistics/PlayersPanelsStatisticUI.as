@@ -21,7 +21,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconEnabled:Boolean       = false;
 		private var colorEnabled:Boolean      = false;
 		private var dataCache:Object       = new Object();;
-		private var count:Number              = 0;
 		private var colors:Object             = new Object();
 		private var iconsColors:Object        = new Object();
 		private var iconMultiplier:Number     = -1.25;
@@ -39,7 +38,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super.as_onAfterPopulate();
 			this.colorEnabled = this.py_vehicleStatisticColorEnabled();
 			this.iconMultiplier = this.py_getIconMultiplier();
-			this.addListeners();
+			setTimeout(this.addListeners, 3000);
 			this.panels.addEventListener(Event.CHANGE, this.onChange);
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange);
 		}
@@ -53,7 +52,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				App.utils.data.cleanupDynamicObject(this.colors);
 				App.utils.data.cleanupDynamicObject(this.iconsColors);
 			}
-			this.count = 0;
 		}
 		
 		override public function setCompVisible(param0:Boolean):void
@@ -87,40 +85,32 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.addListeners();
 		}
 		
-		private function timeout():void
-		{
-			this.count++;
-			if (count < 100)
-			{
-				setTimeout(this.addListeners, 2000);
-			}
-		}
-		
 		private function addListeners():void
 		{
 			if (!this.panels.listLeft || !this.panels.listLeft._items)
 			{
-				timeout();
-				return;
+				setTimeout(this.addListeners, 1000);
 			}
-			for each (var ally:* in this.panels.listLeft._items)
+			else
 			{
-				this.addItemListener(ally);
-			}
-			for each (var enemy:* in this.panels.listRight._items)
-			{
-				this.addItemListener(enemy);
+				for each (var ally:* in this.panels.listLeft._items)
+				{
+					this.addItemListener(ally);
+				}
+				for each (var enemy:* in this.panels.listRight._items)
+				{
+					this.addItemListener(enemy);
+				}
 			}
 		}
 		
-		/// item._listItem, item.vehicleID, item.accountDBID, item.getVehicleData().vehicleType
+		/// item._listItem, item.vehicleID, item.accountDBID, item.vehicleData.vehicleType
 		/// item._listItem.playerNameCutTF, item._listItem.playerNameFullTF
 		/// item._listItem.vehicleIcon, item._listItem.vehicleTF
 		
 		private function addItemListener(item:*):void
 		{
-			var vehicleData:* = item.vehicleData;
-			if (!vehicleData || !item._listItem || !vehicleData.vehicleType)
+			if (!item.vehicleData || !item._listItem || !item.vehicleData.vehicleType)
 			{
 				setTimeout(this.addItemListener, 1000, item);
 			}
@@ -128,10 +118,10 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			{
 				if (this.iconEnabled)
 				{
-					var typeColor:String = py_getIconColor(vehicleData.vehicleType);
-					if (!this.iconsColors[vehicleData.vehicleType] && typeColor)
+					var typeColor:String = py_getIconColor(item.vehicleData.vehicleType);
+					if (!this.iconsColors[item.vehicleData.vehicleType] && typeColor)
 					{
-						this.iconsColors[vehicleData.vehicleType] = Utils.colorConvert(typeColor);
+						this.iconsColors[item.vehicleData.vehicleType] = Utils.colorConvert(typeColor);
 					}
 				}
 				var icon:* = item._listItem.vehicleIcon;
@@ -145,8 +135,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 					var accountDBID:int = item.accountDBID;
 					if (accountDBID != 0)
 					{
-						var isEnemy:Boolean = vehicleData.teamColor == "vm_enemy";
-						this.dataCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev);
+						var isEnemy:Boolean = item.vehicleData.teamColor == "vm_enemy";
+						this.dataCache[accountDBID] = py_getStatisticString(accountDBID, isEnemy, item.vehicleData.clanAbbrev);
 					}
 					item._listItem.playerNameCutTF.width = py_getCutWidth();
 					item._listItem.playerNameFullTF.width = py_getFullWidth();
