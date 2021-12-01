@@ -119,7 +119,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function addItemListener(item:*):void
 		{
-			var vehicleData:* = item.getVehicleData();
+			var vehicleData:* = item.vehicleData;
 			if (!vehicleData || !item._listItem || !vehicleData.vehicleType)
 			{
 				setTimeout(this.addItemListener, 1000, item);

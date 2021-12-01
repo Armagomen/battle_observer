@@ -26,6 +26,8 @@ def request(databaseIDS):
     result = urlResponse(STAT_URL.format(ids=SEPARATOR.join(str(_id) for _id in databaseIDS)))
     if result is not None:
         result = result.get("data")
+    if settings.main[MAIN.DEBUG]:
+        logDebug("request statistics result: data={}".format(result))
     return result
 
 

@@ -11,6 +11,7 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addL
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from gui.shared.events import AppLifeCycleEvent
+from helpers.func_utils import callback
 
 
 def getViewSettings():
@@ -69,12 +70,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 
-    def onViewLoaded(self, view, *args):
-        if view.settings is None or view.settings.alias not in self.__viewAliases:
-            return
-        self._app.loaderManager.onViewLoaded -= self.onViewLoaded
-        g_events.onBattlePageLoaded(view)
-        flash = view.flashObject
+    def load(self, flash):
         if not hasattr(flash, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
@@ -88,3 +84,10 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         hiddenWGComponents = view_settings.getHiddenWGComponents()
         if hiddenWGComponents:
             flash.as_observerHideWgComponents(hiddenWGComponents)
+
+    def onViewLoaded(self, view, *args):
+        if view.settings is None or view.settings.alias not in self.__viewAliases:
+            return
+        self._app.loaderManager.onViewLoaded -= self.onViewLoaded
+        g_events.onBattlePageLoaded(view)
+        callback(1.0, self, "load", view.flashObject)

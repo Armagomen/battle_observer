@@ -48,7 +48,7 @@ class DamageLog(DamageLogsMeta):
         elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
             return self.input_log, self.settings.log_input_extended
         logWarning(DAMAGE_LOG.WARNING_MESSAGE)
-        raise ValueError("eventType %s NOT FOUND")
+        raise ValueError("eventType %s NOT FOUND" % eventType)
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
@@ -71,7 +71,7 @@ class DamageLog(DamageLogsMeta):
                     feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
             if not self._arenaDP.getVehicleInfo().isSPG():
                 self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
-            self.updateAvgDamage(self.sessionProvider.arenaVisitor.gui.isEpicBattle())
+            self.updateAvgDamage()
             self.updateTopLog()
 
     def onExitBattlePage(self):
@@ -94,13 +94,11 @@ class DamageLog(DamageLogsMeta):
             self.top_log.clear()
         super(DamageLog, self).onExitBattlePage()
 
-    def updateAvgDamage(self, isEpicBattle):
+    def updateAvgDamage(self):
         """sets the average damage of the selected tank"""
-        if self._player is not None and not DAMAGE_LOG.AVG_DAMAGE_DATA and not isEpicBattle:
+        if self._player is not None and not DAMAGE_LOG.AVG_DAMAGE_DATA:
             max_health = self._player.vehicle.typeDescriptor.maxHealth
             DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, float(max_health))
-        elif isEpicBattle:
-            DAMAGE_LOG.AVG_DAMAGE_DATA = DAMAGE_LOG.FRONT_LINE_MIN_AVG
         self.top_log[DAMAGE_LOG.AVG_DAMAGE] = int(DAMAGE_LOG.AVG_DAMAGE_DATA)
 
     def keyEvent(self, key, isKeyDown):

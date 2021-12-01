@@ -2,7 +2,7 @@ from importlib import import_module
 
 from armagomen.battle_observer.core import settings
 from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES, MAIN
-from armagomen.utils.common import logError, logWarning, callback, logInfo
+from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -10,6 +10,7 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addL
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from gui.shared.events import AppLifeCycleEvent
+from helpers.func_utils import callback
 
 
 def checkSettings():
@@ -20,8 +21,7 @@ def getViewSettings():
     view_settings = []
     if checkSettings():
         try:
-            class_name = ALIASES.DATE_TIME.split("_")[GLOBAL.ONE]
-            module_class = getattr(import_module(".date_times", package=__package__), class_name)
+            module_class = getattr(import_module(".date_times", package=__package__), "DateTimes")
             view_settings.append(ComponentSettings(ALIASES.DATE_TIME, module_class, ScopeTemplates.DEFAULT_SCOPE))
         except Exception as err:
             logWarning("{}, {}, {}".format(__package__, ALIASES.DATE_TIME, repr(err)))
@@ -65,20 +65,23 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.LOBBY, event.ns))
 
     @staticmethod
-    def _onViewLoaded(view, *args):
+    def load(view):
+        g_events.onHangarLoaded(view)
+        if not checkSettings():
+            return
+        if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
+            to_format_str = "hangar_page {}, has ho attribute {}"
+            return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
+        view.flashObject.as_createBattleObserverComp(ALIASES.DATE_TIME)
+
+    def _onViewLoaded(self, view, *args):
         if view.settings is None:
             return
         if view.settings.alias == VIEW_ALIAS.LOGIN:
-            callback(1.0, lambda: g_events.onLoginLoaded(view))
+            callback(1.0, g_events, "onLoginLoaded", view)
             if settings.main[MAIN.DEBUG]:
                 logInfo("onViewLoaded, alias={}".format(view.settings.alias))
         elif view.settings.alias == VIEW_ALIAS.LOBBY_HANGAR:
-            callback(1.0, lambda: g_events.onHangarLoaded(view))
+            callback(1.0, self, "load", view)
             if settings.main[MAIN.DEBUG]:
                 logInfo("onViewLoaded, alias={}".format(view.settings.alias))
-            if not checkSettings():
-                return
-            if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
-                to_format_str = "hangar_page {}, has ho attribute {}"
-                return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
-            view.flashObject.as_createBattleObserverComp(ALIASES.DATE_TIME)

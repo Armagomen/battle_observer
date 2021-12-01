@@ -35,6 +35,7 @@ translate = {
     },
     "main": {
         "header": "Allgemeine Einstellungen",
+        "DEBUG_MODE": "DEBUG_MODE",
         "showFriendsAndClanInEars": "Markiere Clanfreunde und dich in den Teamlisten.",
         "autoClearCache": "Löschen Sie den Spiel-Cache beim Beenden.",
         "autoClearCache_tooltip": "Bereinigen der temporären Dateien des Spiels im Ordner "

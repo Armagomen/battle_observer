@@ -35,6 +35,7 @@ translate = {
     },
     "main": {
         "header": "Настройки без категории.",
+        "DEBUG_MODE": "DEBUG_MODE",
         "showFriendsAndClanInEars": "Помечать друзей соклановцев и себя в списках команд.",
         "autoClearCache": "Очищать кэш игры после выхода.",
         "autoClearCache_tooltip": "Очистка временных файлов игры в папке AppData/Roaming/Wargaming.net/WorldOfTanks."

@@ -35,6 +35,7 @@ translate = {
     },
     "main": {
         "header": "GENERAL SETTINGS",
+        "DEBUG_MODE": "DEBUG_MODE",
         "hideBadges": "Disable chevrons/ribbons: in ears, on tab window, on boot screen.",
         "hideClanAbbrev": "Disable clan display: in ears, on tab window, on boot screen.",
         "hideChatInRandom": "Disable chat in random battles",
