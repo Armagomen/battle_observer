@@ -1,9 +1,9 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
 	import flash.events.Event;
-	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.components.playerspanels.ListItem;
+	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
 	
 	public class PlayersPanelsUI extends ObserverBattleDisplayable
@@ -67,18 +67,21 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
 		{
-			var listitem:* = this.getWGListitem(vehicleID, enemy);
-			if (listitem && !this.storage[vehicleID])
+			if (!this.storage[vehicleID])
 			{
-				this.storage[vehicleID] = new ListItem(enemy, getShadowSettings());
-				this.onAddedToStorage(vehicleID, enemy);
-				listitem.addChild(this.storage[vehicleID]);
+				var listitem:* = this.getWGListitem(vehicleID, enemy);
+				if (listitem)
+				{
+					this.storage[vehicleID] = new ListItem(enemy, getShadowSettings());
+					this.onAddedToStorage(vehicleID, enemy);
+					listitem.addChild(this.storage[vehicleID]);
+				}
 			}
 		}
 		
 		public function as_updateHealthBar(vehicleID:int, scale:Number, text:String):void
 		{
-			if (this.storage.hasOwnProperty(vehicleID))
+			if (this.storage[vehicleID])
 			{
 				this.storage[vehicleID].updateHealth(scale, text);
 			}
@@ -94,7 +97,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_addHealthBar(vehicleID:int, color:String, colorParams:Object, settings:Object, startVisible:Boolean):void
 		{
-			if (this.storage.hasOwnProperty(vehicleID))
+			if (this.storage[vehicleID])
 			{
 				this.storage[vehicleID].addHealth(color, colorParams, settings, startVisible);
 			}
@@ -102,7 +105,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_addDamage(vehicleID:int, params:Object):void
 		{
-			if (this.storage.hasOwnProperty(vehicleID))
+			if (this.storage[vehicleID])
 			{
 				this.storage[vehicleID].addDamage(params);
 			}
@@ -110,7 +113,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_updateDamage(vehicleID:int, text:String):void
 		{
-			if (this.storage.hasOwnProperty(vehicleID))
+			if (this.storage[vehicleID])
 			{
 				this.storage[vehicleID].updateDamage(text);
 			}
@@ -118,7 +121,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_setVehicleDead(vehicleID:int):void
 		{
-			if (this.storage.hasOwnProperty(vehicleID))
+			if (this.storage[vehicleID])
 			{
 				this.storage[vehicleID].setDeath();
 			}
@@ -138,26 +141,20 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_colorBlindBars(hpColor:String):void
 		{
-			if (this.storage)
+			for each (var item:ListItem in this.storage)
 			{
-				for each (var item:ListItem in this.storage)
+				if (item.isEnemy)
 				{
-					if (item.isEnemy)
-					{
-						item.setColor(hpColor);
-					}
+					item.setColor(hpColor);
 				}
 			}
 		}
 		
 		public function as_setPlayersDamageVisible(vis:Boolean):void
 		{
-			if (this.storage)
+			for each (var item:ListItem in this.storage)
 			{
-				for each (var item:ListItem in this.storage)
-				{
-					item.setDamageVisible(vis);
-				}
+				item.setDamageVisible(vis);
 			}
 		}
 		

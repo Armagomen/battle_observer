@@ -7,7 +7,6 @@ from armagomen.utils.events import g_events
 from async import async, await
 from frameworks.wulf import WindowLayer
 from gui import SystemMessages
-from gui.shared.gui_items.Vehicle import Vehicle
 from gui.shared.gui_items.processors.tankman import TankmanReturn
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
@@ -17,7 +16,6 @@ from skeletons.gui.app_loader import IAppLoader
 
 
 class CrewProcessor(object):
-    appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self):
         self.inProcess = False
@@ -27,7 +25,7 @@ class CrewProcessor(object):
 
     @async
     def showDialog(self, vehicle, value, description):
-        app = self.appLoader.getApp()
+        app = dependency.instance(IAppLoader).getApp()
         if app is not None and app.containerManager is not None:
             view = app.containerManager.getView(WindowLayer.VIEW)
             self.dialog.setView(view)
@@ -38,44 +36,35 @@ class CrewProcessor(object):
 
     @decorators.process('updateTankmen')
     def accelerateCrewXp(self, vehicle, value):
-        """
-        :type value: bool
-        :type vehicle: Vehicle
-        """
         result = yield VehicleTmenXPAccelerator(vehicle, value, confirmationEnabled=False).request()
         if result.success:
             logInfo("The accelerated crew training is %s for '%s'" % (value, vehicle.userName))
 
     @staticmethod
-    def checkXP(vehicle):
-        """
-        :type vehicle: Vehicle
-        """
+    def isPPFullXP(vehicle):
         iterator = vehicle.postProgression.iterOrderedSteps()
         return vehicle.xp >= sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
+
+    def isAccelerateTraining(self, vehicle):
+        if not vehicle.postProgressionAvailability(unlockOnly=True).result:
+            return True, CREW_XP.NOT_AVAILABLE
+        elif vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL:
+            return True, CREW_XP.IS_FULL_COMPLETE
+        elif self.isPPFullXP(vehicle):
+            return True, CREW_XP.IS_FULL_XP
+        else:
+            return False, CREW_XP.NED_TURN_OFF
 
     def onVehicleChanged(self):
         if not settings.main[MAIN.CREW_TRAINING] or not g_currentVehicle.isPresent() or self.inProcess:
             return
-        vehicle = g_currentVehicle.item  # type: Vehicle
+        vehicle = g_currentVehicle.item
         if not vehicle.isElite or vehicle.isLocked or vehicle.isInBattle:
             return
-        value = False
-        description = CREW_XP.NED_TURN_OFF
-        if vehicle.isFullyElite:
-            availability = vehicle.postProgressionAvailability(unlockOnly=True).result
-            complete = vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL
-            fullXP = self.checkXP(vehicle)
-            if not availability:
-                description = CREW_XP.NOT_AVAILABLE
-            elif complete:
-                description = CREW_XP.IS_FULL_COMPLETE
-            elif fullXP:
-                description = CREW_XP.IS_FULL_XP
-            value = not availability or complete or fullXP
-        if vehicle.isXPToTman != value:
+        acceleration, description = self.isAccelerateTraining(vehicle)
+        if vehicle.isXPToTman != acceleration:
             self.inProcess = True
-            self.showDialog(vehicle, value, description)
+            self.showDialog(vehicle, acceleration, description)
 
     @decorators.process('crewReturning')
     def _processReturnCrew(self, vehicle):
@@ -87,7 +76,7 @@ class CrewProcessor(object):
     def onChangeDone(self, base, *args, **kwargs):
         try:
             if settings.main[MAIN.CREW_RETURN] and g_currentVehicle.isPresent():
-                vehicle = g_currentVehicle.item  # type: Vehicle
+                vehicle = g_currentVehicle.item
                 if not vehicle.isInBattle and not vehicle.isCrewFull:
                     self._processReturnCrew(vehicle)
         except Exception as error:

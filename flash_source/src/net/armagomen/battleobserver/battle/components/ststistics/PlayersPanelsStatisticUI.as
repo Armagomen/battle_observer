@@ -20,7 +20,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var colorEnabled:Boolean      = false;
-		private var dataCache:Object       = new Object();;
+		private var dataCache:Object          = new Object();
 		private var colors:Object             = new Object();
 		private var iconsColors:Object        = new Object();
 		private var iconMultiplier:Number     = -1.25;
@@ -200,10 +200,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			{
 				listItem.vehicleTF.textColor = data[2];
 			}
-			if (data[0]){
+			if (data[0])
+			{
 				listItem.playerNameFullTF.htmlText = data[0];
 			}
-			if (data[1]){
+			if (data[1])
+			{
 				listItem.playerNameCutTF.htmlText = data[1];
 			}
 			if (!listItem._isAlive)

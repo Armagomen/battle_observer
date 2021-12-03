@@ -13,7 +13,10 @@ MESSAGES = {
            "А ты уже поддержал разработку мода?",
            "Мы измеряем сотые доли секунды, которые отделяют победителя от участника.",
            "Мы не боимся штрафов за превышение скорости работы. Ускоряй мод донатиком.!",
-           "Родина-мать зовёт поддержать!"
+           "Родина-мать зовёт поддержать!",
+           "Присоединяйся к нашему фан клану <a href='event:https://ru.wargaming.net/clans/wot/571593/'>BOFUN</a>."
+           "Никаких обязательств, главное условие быть пользователем Battle Observer."
+           " Заявки принимаются только в специальном <a href='event:https://discord.gg/RBNfr9JWxZ'>Discord канале</a>"
            ),
     False: ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
             "Have you already supported the development?",
@@ -40,7 +43,6 @@ class Donate(object):
         return message
 
     def getDonateMessage(self):
-        # type: () -> str
         return "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
                "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a> | <a href='event:{patreon}'>PATREON</a>".format(
                 ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL, patreon=URLS.PATREON_URL, msg=self.getRandomMessage())

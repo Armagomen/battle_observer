@@ -413,7 +413,7 @@ translate = {
         "sys_keys*PurchaseForGold": "Покупки за золото.",
         "sys_keys*Remove": "Удаление предмета.",
         "sys_keys*Repair": "Ремонт (ручной режим)",
-        "sys_keys*Restore": "Восстанвление",
+        "sys_keys*Restore": "Восстановление",
         "sys_keys*Selling": "Продажа, один предмет.",
         "sys_keys*autoMaintenance": "Автоматическое обслуживание техники.",
         "sys_keys*customizationChanged": "Смена кастомизации"

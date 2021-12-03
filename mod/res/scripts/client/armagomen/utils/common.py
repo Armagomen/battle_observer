@@ -44,12 +44,12 @@ def setMaxFrameRate(fps):
     BigWorld.savePreferences()
 
 
-def callback(*args, **kwargs):
-    return BigWorld.callback(*args, **kwargs)
+def callback(delay, function):
+    return BigWorld.callback(delay, function)
 
 
-def cancelCallback(*args, **kwargs):
-    return BigWorld.cancelCallback(*args, **kwargs)
+def cancelCallback(callbackID):
+    return BigWorld.cancelCallback(callbackID)
 
 
 def logError(message):

@@ -145,9 +145,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			var icon:* = eve.target;
 			if (this.iconEnabled)
 			{
-				var iconColor:uint = icon.transform.colorTransform.color;
+				var iconColor:uint    = icon.transform.colorTransform.color;
 				var newIconColor:uint = this.iconsColors[icon.item.model.vehicleType];
-				if  (iconColor != newIconColor || iconColor == 0)
+				if (iconColor != newIconColor || iconColor == 0)
 				{
 					var tColor:ColorTransform = new ColorTransform();
 					tColor.color = newIconColor;
