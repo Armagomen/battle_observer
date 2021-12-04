@@ -119,7 +119,7 @@ def cleanupUpdates(cwd):
             os.remove(i) if os.path.isfile(i) or os.path.islink(i) else rmtree(i)
 
 
-def removeDirs(normpath, name):
+def removeDirs(normpath, name=None):
     if os.path.exists(normpath):
         rmtree(normpath, ignore_errors=True, onerror=None)
         if name is not None:
@@ -175,8 +175,8 @@ def loadError(path, file_name, error):
 
 def overrideMethod(wg_class, method_name="__init__"):
     """
-    :type wg_class: class object
-    :type method_name: unicode default __init__
+    wg_class: class object
+    method_name: unicode default __init__
     """
     class_name = wg_class.__name__
     if not hasattr(wg_class, method_name):
@@ -209,16 +209,10 @@ def checkDecoder(_string):
 
 
 def convertDictToNamedtuple(dictionary):
-    """
-    :type dictionary: dict
-    """
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
 
 def convertNamedtupleToDict(named):
-    """
-    :type named: namedtuple
-    """
     return dict(named._asdict())
 
 

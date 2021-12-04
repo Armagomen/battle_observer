@@ -29,6 +29,7 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.BaseBattlePage;
+	import flash.utils.setTimeout;
 	
 	public class BattleObserverLibraryMain extends MovieClip
 	{
@@ -83,10 +84,10 @@ package net.armagomen.battleobserver
 					this.registerComponent(this.addChild(new OwnHealthUI()), alias);
 					break;
 				case "Observer_PlayersPanels_UI": 
-					this.registerComponent(this.addChild(new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL))), alias);
+					setTimeout(this.registerComponent, 3000, new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), alias);
 					break;
 				case "Observer_Minimap_UI": 
-					this.registerComponent(this.addChild(new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP))), alias);
+					setTimeout(this.registerComponent, 5000, new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP)), alias);
 					break;
 				default: 
 					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);
@@ -102,6 +103,16 @@ package net.armagomen.battleobserver
 					this.addChild(prebattleTimer);
 					prebattleTimer.background.shadow.visible = !shadow;
 					prebattleTimer.background.shadow.alpha = int(!shadow);
+				}
+			}
+			
+			BaseBattlePage.prototype['as_observerUpdateMinimapIndex'] = function():void
+			{
+				var minimap:* = this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP);
+				if (minimap)
+				{
+					this.addChild(minimap);
+					App.graphicsOptimizationMgr.unregister(minimap);
 				}
 			}
 			

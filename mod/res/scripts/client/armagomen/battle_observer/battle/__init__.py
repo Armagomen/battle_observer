@@ -81,6 +81,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             if alias not in STATISTICS_ALIASES and view_settings.getSetting(alias):
                 flash.as_createBattleObserverComp(alias)
         flash.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
+        flash.as_observerUpdateMinimapIndex()
         hiddenWGComponents = view_settings.getHiddenWGComponents()
         if hiddenWGComponents:
             flash.as_observerHideWgComponents(hiddenWGComponents)
@@ -90,4 +91,4 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             return
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         g_events.onBattlePageLoaded(view)
-        callback(1.0, self, "load", view.flashObject)
+        callback(0.2, self, "load", view.flashObject)

@@ -36,13 +36,16 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
+			if (this.playersPanel)
+			{
+				this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
+			}
 		}
 		
 		override public function setCompVisible(visible:Boolean):void
 		{
 			super.setCompVisible(visible);
-			if (visible)
+			if (visible && this.playersPanel)
 			{
 				var oldMode:int = int(this.playersPanel.state);
 				this.playersPanel.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
@@ -55,9 +58,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			this.as_clearStorage();
-			this.playersPanel.removeEventListener(Event.CHANGE, this.onChange);
-			this.playersPanel = null;
+			if (this.playersPanel)
+			{
+				this.as_clearStorage();
+				this.playersPanel.removeEventListener(Event.CHANGE, this.onChange);
+				this.playersPanel = null;
+			}
 		}
 		
 		private function onChange(eve:Event):void
@@ -160,9 +166,9 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		private function getWGListitem(vehicleID:int, enemy:Boolean):*
 		{
-			if (playersPanel)
+			if (this.playersPanel)
 			{
-				var list:*   = enemy ? playersPanel.listRight : playersPanel.listLeft;
+				var list:*   = enemy ? this.playersPanel.listRight : this.playersPanel.listLeft;
 				var holder:* = list.getHolderByVehicleID(vehicleID);
 				if (holder)
 				{

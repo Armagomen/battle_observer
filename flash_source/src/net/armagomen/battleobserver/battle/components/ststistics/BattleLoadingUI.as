@@ -29,7 +29,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		override public function as_onAfterPopulate():void
 		{
-			super.as_onAfterPopulate();
 			this.iconMultiplier = py_getIconMultiplier();
 			this.loading.addEventListener(Event.CHANGE, this.onChange);
 			setTimeout(this.addListeners, 1000);
