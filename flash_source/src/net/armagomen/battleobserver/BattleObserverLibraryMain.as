@@ -7,6 +7,7 @@ package net.armagomen.battleobserver
 	
 	import flash.display.*;
 	import flash.text.Font;
+	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
@@ -29,7 +30,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.BaseBattlePage;
-	import flash.utils.setTimeout;
 	
 	public class BattleObserverLibraryMain extends MovieClip
 	{
@@ -37,10 +37,20 @@ package net.armagomen.battleobserver
 		{
 			super();
 			Font.registerFont(BattleObserver.fontClass);
-			BaseBattlePage.prototype['as_createBattleObserverComp'] = function(alias:String):void
+			BaseBattlePage.prototype['as_createBattleObserverComp'] = function(alias:String, statsEnabled:Boolean = false, iconEnabled:Boolean = false):void
 			{
 				switch (alias)
 				{
+				
+				case "Observer_BattleLoading_UI": 
+					this.registerComponent(new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING), statsEnabled, iconEnabled), alias);
+					break;
+				case "Observer_FullStats_UI": 
+					this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS), statsEnabled, iconEnabled), alias);
+					break;
+				case "Observer_PlayersPanelsStatistic_UI": 
+					this.registerComponent(new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL), statsEnabled, iconEnabled), alias);
+					break;
 				case "Observer_UserBackGround_UI": 
 					this.registerComponent(this.addChildAt(new UserBackGroundUI(), 0), alias);
 					break;
@@ -106,16 +116,6 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype['as_observerUpdateMinimapIndex'] = function():void
-			{
-				var minimap:* = this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP);
-				if (minimap)
-				{
-					this.addChild(minimap);
-					App.graphicsOptimizationMgr.unregister(minimap);
-				}
-			}
-			
 			BaseBattlePage.prototype['as_observerHideWgComponents'] = function(components:Array):void
 			{
 				for each (var alias:String in components)
@@ -127,13 +127,6 @@ package net.armagomen.battleobserver
 						component.alpha = 0;
 					}
 				}
-			}
-			
-			BaseBattlePage.prototype['as_observerStatisticComponents'] = function(statsEnabled:Boolean, iconEnabled:Boolean):void
-			{
-				this.registerComponent(new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING), statsEnabled, iconEnabled), "Observer_BattleLoading_UI");
-				this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS), statsEnabled, iconEnabled), "Observer_FullStats_UI");
-				this.registerComponent(new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL), statsEnabled, iconEnabled), "Observer_PlayersPanelsStatistic_UI");
 			}
 		}
 	}

@@ -2,15 +2,11 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 {
 	import flash.events.Event;
 	import flash.text.TextFieldAutoSize;
-	import flash.text.TextFormat;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
 	import net.armagomen.battleobserver.battle.components.teamshealth.League;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.data.constants.Linkages;
-	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
@@ -44,8 +40,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 				this.addChild(this.hpBars);
 				this.greenText = new TextExt(-textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
 				this.redText = new TextExt(textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
-				this.greenDiff = new TextExt(-55, 1, Filters.middleText, TextFieldAutoSize.RIGHT, shadowSettings, this);
-				this.redDiff = new TextExt(55, 1, Filters.middleText, TextFieldAutoSize.LEFT, shadowSettings, this);
+				this.greenDiff = new TextExt(-55, 2, Filters.normalBold, TextFieldAutoSize.RIGHT, shadowSettings, this);
+				this.redDiff = new TextExt(55, 2, Filters.normalBold, TextFieldAutoSize.LEFT, shadowSettings, this);
 				this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
 				this.addChild(this.score);
 				if (settings.markers.enabled)
@@ -113,8 +109,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		public function as_updateHealth(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
 		{
-			this.hpBars.setBarScale("green", totalAlliesHP > 0 ? alliesHP / totalAlliesHP : 1);
-			this.hpBars.setBarScale("red", totalEnemiesHP > 0 ? enemiesHP / totalEnemiesHP : 1);
+			this.hpBars.setBarScale(false, totalAlliesHP > 0 ? alliesHP / totalAlliesHP : 1);
+			this.hpBars.setBarScale(true, totalEnemiesHP > 0 ? enemiesHP / totalEnemiesHP : 1);
 			this.greenText.text = alliesHP.toString();
 			this.redText.text = enemiesHP.toString();
 		}

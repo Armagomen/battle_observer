@@ -332,7 +332,9 @@ translate = {
         "zoom*indent": "Indenting from the edges of the screen",
         "zoom*indent_tooltip": "It is necessary to specify an indent only from the top edge, below it will be the same",
         "permanentMinimapDeath": "Always show the destroyed on the map",
-        "showDeathNames": "Display the names of destroyed tanks."
+        "showDeathNames": "Display the names of destroyed tanks",
+        "real_view_radius": "Remove the limitation of the circle of vision",
+        "yaw_limits": "Show Hover Angles on all vehicles where they are"
     },
     "shadow_settings": {
         "header": "SETTING SHADOWS TEXT (Glow)",

@@ -14,6 +14,8 @@ package net.armagomen.battleobserver.battle.components.wgcomponents
 		public function MinimapUI(minimap:Minimap)
 		{
 			this.minimap = minimap;
+			minimap.parent.addChild(minimap);
+			App.graphicsOptimizationMgr.unregister(minimap);
 			super();
 		}
 		

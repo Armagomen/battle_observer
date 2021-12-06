@@ -2,7 +2,7 @@ from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
 from armagomen.battle_observer.statistics.statistic_data_loader import setCachedStatisticData
-from armagomen.constants import SWF, ALIAS_TO_PATH, ALIASES, MAIN, STATISTICS_ALIASES
+from armagomen.constants import SWF, ALIAS_TO_PATH, ALIASES, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
@@ -75,13 +75,10 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
         iconsEnabled = view_settings.isIconsEnabled
-        if self.__statistics or iconsEnabled:
-            flash.as_observerStatisticComponents(self.__statistics, iconsEnabled)
         for alias in ALIASES:
-            if alias not in STATISTICS_ALIASES and view_settings.getSetting(alias):
-                flash.as_createBattleObserverComp(alias)
+            if view_settings.getSetting(alias):
+                flash.as_createBattleObserverComp(alias, self.__statistics, iconsEnabled)
         flash.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
-        flash.as_observerUpdateMinimapIndex()
         hiddenWGComponents = view_settings.getHiddenWGComponents()
         if hiddenWGComponents:
             flash.as_observerHideWgComponents(hiddenWGComponents)
@@ -91,4 +88,4 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             return
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         g_events.onBattlePageLoaded(view)
-        callback(0.2, self, "load", view.flashObject)
+        callback(0.1, self, "load", view.flashObject)

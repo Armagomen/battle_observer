@@ -2,7 +2,6 @@
 {
 	import flash.display.*;
 	import net.armagomen.battleobserver.utils.ProgressBar;
-	import net.armagomen.battleobserver.utils.Utils;
 	
 	public class Default extends Sprite
 	{
@@ -10,7 +9,6 @@
 		private var allyHpBar:ProgressBar;
 		private var enemyHpBar:ProgressBar;
 		private var colors:Object;
-		
 		
 		public function Default(settings:Object, barWidth:Number, colorBlind:Boolean, colors:Object)
 		{
@@ -31,20 +29,13 @@
 		}
 		
 		public function setColorBlind(enabled:Boolean):void
-		{	
+		{
 			this.enemyHpBar.updateColor(enabled ? this.colors.enemyColorBlind : this.colors.enemy);
 		}
 		
-		public function setBarScale(team:String, newScale:Number):void
+		public function setBarScale(isEnemy:Boolean, newScale:Number):void
 		{
-			if (team == "green")
-			{
-				this.allyHpBar.setNewScale(newScale);
-			}
-			else
-			{
-				this.enemyHpBar.setNewScale(newScale);
-			}
+			(isEnemy ? this.enemyHpBar : this.allyHpBar).setNewScale(newScale);
 		}
 		
 		public function remove():void

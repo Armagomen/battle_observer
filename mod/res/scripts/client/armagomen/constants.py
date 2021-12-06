@@ -105,8 +105,10 @@ MAIN_GUN = namedtuple("MAIN_GUN", (
     "NAME", "COLOR", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))(
     "main_gun", "mainGunColor", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2)
 
-MINIMAP = namedtuple("MINIMAP", ("NAME", "DEATH_PERMANENT", "HOT_KEY", "INDENT", "SHOW_NAMES", "ZOOM"))(
-    "minimap", "permanentMinimapDeath", "zoom_hotkey", "indent", "showDeathNames", "zoom")
+MINIMAP = namedtuple("MINIMAP", (
+    "NAME", "DEATH_PERMANENT", "HOT_KEY", "INDENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW"))(
+    "minimap", "permanentMinimapDeath", "zoom_hotkey", "indent", "showDeathNames", "zoom", "real_view_radius",
+    "yaw_limits")
 
 HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "WIDTH", "DIFF", "ALIVE", "STYLES"))(
     "hp_bars", "style", "barsWidth", "differenceHP", "showAliveCount",
@@ -297,8 +299,6 @@ ALIASES = namedtuple("ALIASES", (
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
     "Observer_OwnHealth_UI", "Observer_UserBackGround_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI")
-
-STATISTICS_ALIASES = (ALIASES.BATTLE_LOADING, ALIASES.FULL_STATS, ALIASES.PANELS_STAT)
 
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
     "distance_to_enemy", "template", "align", "distance", "name")

@@ -1,8 +1,8 @@
 ﻿package net.armagomen.battleobserver.battle.components.teamshealth
 {
-	import net.armagomen.battleobserver.utils.tween.Tween;
 	import flash.display.*;
 	import net.armagomen.battleobserver.utils.Utils;
+	import net.armagomen.battleobserver.utils.tween.Tween;
 	
 	public class League extends Sprite
 	{
@@ -32,8 +32,8 @@
 			this.enemyHpBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Math.max(0.1, colors.alpha));
 			this.enemyHpBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
 			this.enemyHpBar.graphics.endFill();
-			this.allyAnimation = new Tween(this.allyHpBar, "scaleX", this.allyHpBar.scaleX, 1.0, 1, true);
-			this.enemyAnimation = new Tween(this.enemyHpBar, "scaleX", this.enemyHpBar.scaleX, 1.0, 1, true);
+			this.allyAnimation = new Tween(this.allyHpBar, "scaleX", 1.0, 0, 1, true);
+			this.enemyAnimation = new Tween(this.enemyHpBar, "scaleX", 1.0, 0, 1, true);
 		
 		}
 		
@@ -42,12 +42,12 @@
 			Utils.updateColor(this.enemyHpBar, enabled ? this.colors.enemyColorBlind : this.colors.enemy);
 		}
 		
-		public function setBarScale(team:String, newScale:Number):void
+		public function setBarScale(isEnemy:Boolean, newScale:Number):void
 		{
-			var bar:Shape = team == "green" ? this.allyHpBar : this.enemyHpBar
+			var bar:Shape = isEnemy ? this.enemyHpBar : this.allyHpBar;
 			if (bar.scaleX != newScale)
 			{
-				(team == "green" ? this.allyAnimation : this.enemyAnimation).continueTo(newScale, 1);
+				(isEnemy ? this.enemyAnimation : this.allyAnimation).continueTo(newScale, 1);
 			}
 		}
 		

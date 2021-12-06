@@ -487,6 +487,8 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             MINIMAP.DEATH_PERMANENT: False,
             MINIMAP.SHOW_NAMES: False,
+            MINIMAP.VIEW_RADIUS: False,
+            MINIMAP.YAW: True,
             MINIMAP.ZOOM: {
                 GLOBAL.ENABLED: False,
                 MINIMAP.INDENT: 180,

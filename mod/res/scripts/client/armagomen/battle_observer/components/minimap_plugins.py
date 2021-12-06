@@ -15,15 +15,17 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
     def start(self):
         super(PersonalEntriesPlugin, self).start()
-        if self.__yawLimits is None:
+        if settings.minimap[MINIMAP.YAW] and self.__yawLimits is None:
             vInfo = self._arenaDP.getVehicleInfo()
             yawLimits = vInfo.vehicleType.turretYawLimits
             if yawLimits is not None:
                 self.__yawLimits = (degrees(yawLimits[0]), degrees(yawLimits[1]))
 
     def _calcCircularVisionRadius(self):
-        vehAttrs = self.sessionProvider.shared.feedback.getVehicleAttrs()
-        return vehAttrs.get('circularVisionRadius', VISIBILITY.MIN_RADIUS)
+        if settings.minimap[MINIMAP.VIEW_RADIUS]:
+            vehAttrs = self.sessionProvider.shared.feedback.getVehicleAttrs()
+            return vehAttrs.get('circularVisionRadius', VISIBILITY.MIN_RADIUS)
+        return super(PersonalEntriesPlugin, self)._calcCircularVisionRadius()
 
 
 class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):

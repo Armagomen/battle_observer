@@ -11,16 +11,16 @@
 	 */
 	public class ProgressBar extends Sprite
 	{
-		private var bar:Shape                = new Shape();
-		private var backGround:Shape         = new Shape();
-		private var outline:Shape            = new Shape();
-		private var uiText:TextExt           = null;
-		private var animation:Tween          = null;
-		private var WIDTH:Number             = 0;
-		private var HEIGHT:Number            = 0;
-		private var COLOR:uint               = 0;
-		private var costumColor:Boolean      = false;
-		private var animationTime:Number     = 1.0;
+		private var bar:Shape            = new Shape();
+		private var backGround:Shape     = new Shape();
+		private var outline:Shape        = new Shape();
+		private var uiText:TextExt       = null;
+		private var animation:Tween      = null;
+		private var WIDTH:Number         = 0;
+		private var HEIGHT:Number        = 0;
+		private var COLOR:uint           = 0;
+		private var costumColor:Boolean  = false;
+		private var animationTime:Number = 1.0;
 		
 		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", time:Number = 1.0)
 		{
@@ -59,7 +59,7 @@
 			if (this.bar.scaleX != newScale)
 			{
 				var scale:Number = Math.max(0, newScale);
-				this.animation.continueTo(scale, this.visible ? this.animationTime: 0.01);
+				this.animation.continueTo(scale, this.visible ? this.animationTime : 0.01);
 			}
 		}
 		

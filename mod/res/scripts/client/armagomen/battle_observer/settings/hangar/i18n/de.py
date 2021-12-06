@@ -334,13 +334,15 @@ translate = {
     },
     "minimap": {
         "header": "MINI-KARTE",
-        "zoom*enabled": "Zentrierung der Minikarte aktivieren.",
+        "zoom*enabled": "Zentrierung der Minikarte aktivieren",
         "zoom*zoom_hotkey": "Minikarte zentrieren auf",
         "zoom*indent": "Einrücken von den Rändern des Bildschirms",
         "zoom*indent_tooltip": "Es ist notwendig, einen Einzug nur von der oberen Kante aus zu spezifizieren, "
-                               "darunter wird es gleich sein.",
+                               "darunter wird es gleich sein",
         "permanentMinimapDeath": "Zeige immer die zerstörten Panzer auf der Karte",
-        "showDeathNames": "Zeige die Namen der zerstörten Panzer an."
+        "showDeathNames": "Zeige die Namen der zerstörten Panzer an",
+        "real_view_radius": "Einschränkung des Sichtfelds entfernen",
+        "yaw_limits": "Schwebewinkel bei allen Fahrzeugen anzeigen, in denen sie sich befinden"
     },
     "shadow_settings": {
         "header": "SETTING SHADOWS TEXT (Glow)",
