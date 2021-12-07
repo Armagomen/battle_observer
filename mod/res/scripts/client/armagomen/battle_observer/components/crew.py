@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle, _CurrentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, CREW_XP
-from armagomen.utils.common import logInfo, overrideMethod, logError
+from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
 from async import async, await
@@ -59,7 +59,7 @@ class CrewProcessor(object):
         if not settings.main[MAIN.CREW_TRAINING] or not g_currentVehicle.isPresent() or self.inProcess:
             return
         vehicle = g_currentVehicle.item
-        if not vehicle.isElite or vehicle.isLocked or vehicle.isInBattle:
+        if not vehicle.isElite or vehicle.isLocked or vehicle.isInBattle or vehicle.userName in ignored_vehicles:
             return
         acceleration, description = self.isAccelerateTraining(vehicle)
         if vehicle.isXPToTman != acceleration:

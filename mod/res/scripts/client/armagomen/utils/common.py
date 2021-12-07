@@ -168,6 +168,26 @@ def createFileInDir(path, data):
         json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
 
 
+def getObserverCachePath():
+    path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
+    path = os.path.join(os.path.split(path)[0], "battle_observer")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    f_path = os.path.join(path, "crew_ignored.json")
+    if not os.path.isfile(f_path):
+        createFileInDir(f_path, {"vehicles": []})
+    return f_path
+
+
+ignored_vehicles = set(getFileData(getObserverCachePath())["vehicles"])
+
+
+def addVehicleToCache(vehicle):
+    path = getObserverCachePath()
+    ignored_vehicles.add(vehicle)
+    createFileInDir(path, {"vehicles": sorted(ignored_vehicles)})
+
+
 def loadError(path, file_name, error):
     with codecs.open(os.path.join(path, 'Errors.log'), 'a', 'utf-8-sig') as fh:
         fh.write('%s: %s: %s, %s\n' % (time.asctime(), 'ERROR CONFIG DATA', file_name, error))

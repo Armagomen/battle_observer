@@ -3,7 +3,7 @@ import re
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL
-from armagomen.utils.common import restartGame, openWebBrowser
+from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
 from async import async, await, AsyncReturn
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
@@ -89,5 +89,8 @@ class CrewDialog(DialogBase):
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=self.localized["submit"])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localized["cancel"])
-        result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.SUBMIT))
-        raise AsyncReturn(result)
+        builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=self.localized["ignore"])
+        result = yield await(dialogs.show(builder.build(self.view)))
+        if result.result == DialogButtons.PURCHASE:
+            addVehicleToCache(vehicle_name)
+        raise AsyncReturn(result.result == DialogButtons.SUBMIT)

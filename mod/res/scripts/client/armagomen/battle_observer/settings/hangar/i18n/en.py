@@ -452,6 +452,7 @@ translate = {
         "disable": "Disable accelerated crew training?",
         "submit": "Apply",
         "cancel": "Cancel",
+        "ignore": "Ignore this tank",
         "notAvailable": "Field upgrades are not available for this vehicle.",
         "isFullXp": "You have accumulated the necessary amount of experience to fully upgrade the field upgrade.",
         "isFullComplete": "You have pumped the field upgrade to the highest possible level.",
