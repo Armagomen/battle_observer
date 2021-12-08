@@ -16,7 +16,8 @@ MESSAGES = {
            "Родина-мать зовёт поддержать!",
            "Присоединяйся к нашему клану <a href='event:https://ru.wargaming.net/clans/wot/571593/'>[BOFUN]</a>. "
            "Никаких обязательств, главное условие быть пользователем Battle Observer."
-           " Заявки принимаются только в специальном <a href='event:https://discord.gg/RBNfr9JWxZ'>Discord канале</a>"
+           " Заявки принимаются в специальном <a href='event:https://discord.gg/RBNfr9JWxZ'>Discord канале</a>, "
+           "либо подайте заявку через страницу клана на сайте."
            ),
     False: ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
             "Have you already supported the development?",
@@ -51,7 +52,7 @@ class Donate(object):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=60)
+                self.timeDelta = currentTime + datetime.timedelta(minutes=40)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
 

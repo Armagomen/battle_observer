@@ -341,7 +341,7 @@ translate = {
                                "darunter wird es gleich sein",
         "permanentMinimapDeath": "Zeige immer die zerstörten Panzer auf der Karte",
         "showDeathNames": "Zeige die Namen der zerstörten Panzer an",
-        "real_view_radius": "Einschränkung des Sichtfelds entfernen",
+        "real_view_radius": "Einschränkung des Sichtfelds entfernen 445m",
         "yaw_limits": "Schwebewinkel bei allen Fahrzeugen anzeigen, in denen sie sich befinden"
     },
     "shadow_settings": {
