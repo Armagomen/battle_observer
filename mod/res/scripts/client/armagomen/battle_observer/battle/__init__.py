@@ -2,10 +2,9 @@ from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
 from armagomen.battle_observer.statistics.statistic_data_loader import setCachedStatisticData
-from armagomen.constants import SWF, ALIAS_TO_PATH, ALIASES, MAIN
+from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
-from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addListener, _removeListener
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -16,19 +15,15 @@ from helpers.func_utils import callback
 
 def getViewSettings():
     settings = []
-    if view_settings.setIsAllowed():
-        for alias in ALIASES:
-            if not view_settings.getSetting(alias):
-                _GAME_UI.discard(alias)
-                _SPECTATOR_UI.discard(alias)
-                continue
+    isAllowed, aliases = view_settings.setIsAllowed()
+    if isAllowed and aliases:
+        for alias in aliases:
             try:
                 file_path, class_name = ALIAS_TO_PATH[alias]
                 module_class = getattr(import_module(file_path, package=__package__), class_name)
                 settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
-                _GAME_UI.add(alias)
-                _SPECTATOR_UI.add(alias)
             except Exception as err:
+                view_settings.getComponents().remove(alias)
                 logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
     return settings
 
@@ -42,12 +37,12 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('__viewAliases', '__statistics', '_listeners', '_scope', '_app', '_appNS')
+    __slots__ = ('_viewAliases', '_statistics', '_listeners', '_scope', '_app', '_appNS')
 
     def __init__(self):
-        self.__viewAliases = view_settings.getViewAliases()
-        self.__statistics = False
-        listeners = [(alias, self.eventListener) for alias in self.__viewAliases]
+        self._viewAliases = view_settings.getViewAliases()
+        self._statistics = False
+        listeners = [(alias, self.eventListener) for alias in self._viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def init(self):
@@ -66,7 +61,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def onAppInitializing(self, event):
         if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
             if view_settings.isStatisticEnabled:
-                self.__statistics = setCachedStatisticData()
+                self._statistics = setCachedStatisticData()
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 
@@ -74,17 +69,12 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if not hasattr(flash, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
-        iconsEnabled = view_settings.isIconsEnabled
-        for alias in ALIASES:
-            if view_settings.getSetting(alias):
-                flash.as_createBattleObserverComp(alias, self.__statistics, iconsEnabled)
+        flash.as_observerCreateComponents(view_settings.getComponents(), self._statistics, view_settings.isIconsEnabled)
         flash.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
-        hiddenWGComponents = view_settings.getHiddenWGComponents()
-        if hiddenWGComponents:
-            flash.as_observerHideWgComponents(hiddenWGComponents)
+        flash.as_observerHideWgComponents(view_settings.getHiddenWGComponents())
 
     def onViewLoaded(self, view, *args):
-        if view.settings is None or view.settings.alias not in self.__viewAliases:
+        if view.settings is None or view.settings.alias not in self._viewAliases:
             return
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         g_events.onBattlePageLoaded(view)

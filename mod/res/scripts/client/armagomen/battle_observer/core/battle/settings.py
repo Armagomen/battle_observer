@@ -2,6 +2,7 @@ from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAI
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
+from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
@@ -28,6 +29,8 @@ class ViewSettings(object):
     def __init__(self, cfg):
         self.cfg = cfg
         self.isAllowed = False
+        self.__components = []
+        self.__hiddenComponents = []
         overrideMethod(SharedPage)(self.new_SharedPage_init)
 
     @property
@@ -54,8 +57,6 @@ class ViewSettings(object):
                self.cfg.statistics[STATISTICS.ICON_ENABLED]
 
     def getSetting(self, alias):
-        if not self.isAllowed:
-            return self.isAllowed
         if alias in STATISTIC_ALIASES:
             return self.isStatisticEnabled or self.isIconsEnabled
         elif alias is ALIASES.HP_BARS:
@@ -97,12 +98,41 @@ class ViewSettings(object):
             return False
 
     def setIsAllowed(self):
+        self.__components = []
+        self.__hiddenComponents = []
         arenaVisitor = self.sessionProvider.arenaVisitor
-        if arenaVisitor is not None:
-            self.isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
-        else:
+        if arenaVisitor is None:
             self.isAllowed = False
-        return self.isAllowed
+        else:
+            self.isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
+            if self.isAllowed:
+                self.setComponents()
+            self.setHiddenComponents()
+        return self.isAllowed, self.__components
+
+    def setComponents(self):
+        for alias in ALIASES:
+            if self.getSetting(alias):
+                self.__components.append(alias)
+                _GAME_UI.add(alias)
+                _SPECTATOR_UI.add(alias)
+            else:
+                _GAME_UI.discard(alias)
+                _SPECTATOR_UI.discard(alias)
+
+    def setHiddenComponents(self):
+        if ALIASES.HP_BARS in self.__components:
+            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR)
+        if ALIASES.SIXTH_SENSE in self.__components:
+            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.SIXTH_SENSE)
+        if ALIASES.DEBUG in self.__components:
+            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
+        if ALIASES.TIMER in self.__components:
+            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
+        if self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle:
+            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.BATTLE_MESSENGER)
+        if self.cfg.main[MAIN.HIDE_HINT]:
+            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.HINT_PANEL)
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
@@ -114,40 +144,27 @@ class ViewSettings(object):
 
     def checkAndReplaceAlias(self, aliases):
         new_aliases = list(aliases)
-        if self.getSetting(ALIASES.TEAM_BASES) and BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in new_aliases:
+        if ALIASES.TEAM_BASES in self.__components and BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in new_aliases:
             new_aliases.remove(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)
             new_aliases.append(ALIASES.TEAM_BASES)
-        elif self.getSetting(ALIASES.TIMER) and BATTLE_VIEW_ALIASES.BATTLE_TIMER in new_aliases:
+        elif ALIASES.TIMER in self.__components and BATTLE_VIEW_ALIASES.BATTLE_TIMER in new_aliases:
             new_aliases.append(ALIASES.TIMER)
-        elif self.getSetting(ALIASES.OWN_HEALTH) and BATTLE_VIEW_ALIASES.DAMAGE_PANEL in new_aliases:
+        elif ALIASES.OWN_HEALTH in self.__components and BATTLE_VIEW_ALIASES.DAMAGE_PANEL in new_aliases:
             new_aliases.append(ALIASES.OWN_HEALTH)
-        elif self.getSetting(ALIASES.DEBUG) and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
+        elif ALIASES.DEBUG in self.__components and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
             new_aliases.remove(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
             new_aliases.append(ALIASES.DEBUG)
         elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in new_aliases:
-            if self.getSetting(ALIASES.HP_BARS):
+            if ALIASES.HP_BARS in self.__components:
                 new_aliases.append(ALIASES.HP_BARS)
-            if self.getSetting(ALIASES.PANELS):
+            if ALIASES.PANELS in self.__components:
                 new_aliases.append(ALIASES.PANELS)
-            if self.getSetting(ALIASES.MAIN_GUN):
+            if ALIASES.MAIN_GUN in self.__components:
                 new_aliases.append(ALIASES.MAIN_GUN)
         return tuple(new_aliases)
 
     def getHiddenWGComponents(self):
-        components = []
-        if self.getSetting(ALIASES.HP_BARS):
-            components.append(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR)
-        if self.getSetting(ALIASES.SIXTH_SENSE):
-            components.append(BATTLE_VIEW_ALIASES.SIXTH_SENSE)
-        if self.getSetting(ALIASES.DEBUG):
-            components.append(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
-        if self.getSetting(ALIASES.TIMER):
-            components.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
-        if self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle:
-            components.append(BATTLE_VIEW_ALIASES.BATTLE_MESSENGER)
-        if self.cfg.main[MAIN.HIDE_HINT]:
-            components.append(BATTLE_VIEW_ALIASES.HINT_PANEL)
-        return components
+        return self.__hiddenComponents
 
     @staticmethod
     def getViewAliases():
@@ -155,3 +172,6 @@ class ViewSettings(object):
                 VIEW_ALIAS.RANKED_BATTLE_PAGE,
                 VIEW_ALIAS.EPIC_RANDOM_PAGE,
                 VIEW_ALIAS.EPIC_BATTLE_PAGE)
+
+    def getComponents(self):
+        return self.__components

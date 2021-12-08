@@ -14,7 +14,7 @@ FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 HEADERS = [('User-Agent', MOD_NAME)]
 
 SWF = namedtuple("SWF", ("BATTLE", "LOBBY", "ATTRIBUTE_NAME"))(
-    'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_createBattleObserverComp')
+    'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_observerCreateComponents')
 
 URLS = namedtuple("URLS", ("HOST_NAME", "DONATE_UA_URL", "DONATE_EU_URL", "SUPPORT_URL", "UPDATE_GITHUB_API_URL",
                            "PATREON_URL"))("armagomen.bb-t.ru", "https://donatua.com/@armagomen",

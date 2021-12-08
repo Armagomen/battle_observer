@@ -13,7 +13,7 @@ package net.armagomen.battleobserver
 		public function BattleObserverLibraryMainHangar()
 		{
 			super();
-			Hangar.prototype['as_createBattleObserverComp'] = function(ui_name:String):void
+			Hangar.prototype.as_observerCreateComponents = function(ui_name:String):void
 			{
 				switch (ui_name)
 				{
