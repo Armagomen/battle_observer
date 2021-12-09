@@ -15,13 +15,14 @@ package net.armagomen.battleobserver.battle.components
 		private var d_log:TextExt            = null;
 		private var in_log:TextExt           = null;
 		private var mainlog:TextExt          = null;
-		
+		private var damageLogPanel:*         = null;
 		private const IN_LOG:String          = "in_log";
 		private const D_LOG:String           = "d_log";
 		
-		public function DamageLogsUI()
+		public function DamageLogsUI(logsPanel:*)
 		{
 			super();
+			this.damageLogPanel = logsPanel;
 		}
 		
 		override protected function onBeforeDispose():void 
@@ -53,21 +54,19 @@ package net.armagomen.battleobserver.battle.components
 				}
 				if (this.enableds[D_LOG] || this.enableds[IN_LOG])
 				{
-					var page:*                 = this.parent;
-					var battleDamageLogPanel:* = page.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
-					if (battleDamageLogPanel)
+					if (this.damageLogPanel)
 					{
 						if (this.enableds[D_LOG])
 						{
-							var topContainer:* = battleDamageLogPanel._detailsTopContainer;
+							var topContainer:* = this.damageLogPanel._detailsTopContainer;
 							this.d_log = new TextExt(data.d_log.x + 25, data.d_log.y, null, data.d_log.align, getShadowSettings(), topContainer);
 						}
 						if (this.enableds[IN_LOG])
 						{
-							var bottomContainer:* = battleDamageLogPanel._detailsBottomContainer;
+							var bottomContainer:* = this.damageLogPanel._detailsBottomContainer;
 							this.in_log = new TextExt(data.in_log.x + 10, -25 + data.in_log.y, null, data.in_log.align, getShadowSettings(), bottomContainer);
 						}
-						battleDamageLogPanel.updateContainersPosition();
+						this.damageLogPanel.updateContainersPosition();
 					}
 				}
 			}

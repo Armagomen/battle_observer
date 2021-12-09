@@ -13,16 +13,16 @@ package net.armagomen.battleobserver
 		public function BattleObserverLibraryMainHangar()
 		{
 			super();
-			Hangar.prototype.as_observerCreateComponents = function(ui_name:String):void
+			Hangar.prototype.as_observerCreateComponents = function(aliases:Array):void
 			{
-				switch (ui_name)
+				for each (var alias:String in aliases) 
 				{
-				case "Observer_DateTimes_UI":
-					if (!this.isFlashComponentRegisteredS(ui_name))
+					switch (alias)
 					{
-						this.registerFlashComponent(this.addChild(new ObserverDateTimesUI), ui_name);
+					case "Observer_DateTimes_UI":
+						this.registerFlashComponent(this.addChild(new ObserverDateTimesUI), alias);
+						break;
 					}
-					break;
 				}
 			}
 		}

@@ -29,8 +29,8 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.views.BaseBattlePage;
 	import net.wg.gui.battle.components.BattleDisplayable;
+	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class BattleObserverLibraryMain extends MovieClip
 	{
@@ -45,61 +45,94 @@ package net.armagomen.battleobserver
 					switch (alias)
 					{
 					case "Observer_BattleLoading_UI": 
-						this.registerComponent(new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING), statsEnabled, iconEnabled), alias);
+						var statBattleLoading:BattleLoadingUI = new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING), statsEnabled, iconEnabled);
+						this.registerComponent(statBattleLoading, alias);
 						break;
 					case "Observer_FullStats_UI": 
-						this.registerComponent(new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS), statsEnabled, iconEnabled), alias);
+						var statFullStats:FullStatsUI = new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS), statsEnabled, iconEnabled);
+						this.registerComponent(statFullStats, alias);
 						break;
 					case "Observer_PlayersPanelsStatistic_UI": 
-						this.registerComponent(new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL), statsEnabled, iconEnabled), alias);
+						var statPanels:PlayersPanelsStatisticUI = new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL), statsEnabled, iconEnabled);
+						this.registerComponent(statPanels, alias);
 						break;
 					case "Observer_UserBackGround_UI": 
-						this.registerComponent(this.addChildAt(new UserBackGroundUI(), 0), alias);
+						var background:UserBackGroundUI = new UserBackGroundUI();
+						this.registerComponent(background, alias);
+						this.addChildAt(background, 0);
 						break;
 					case "Observer_TeamsHP_UI": 
-						this.registerComponent(this.addChild(new TeamsHealthUI()), alias);
+						var teamHealth:TeamsHealthUI = new TeamsHealthUI();
+						this.registerComponent(teamHealth, alias);
+						this.addChild(teamHealth)
 						break;
 					case "Observer_DamageLog_UI": 
-						this.registerComponent(this.addChild(new DamageLogsUI()), alias);
+						var damageLog:DamageLogsUI = new DamageLogsUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL));
+						this.registerComponent(damageLog, alias);
+						this.addChild(damageLog);
 						break;
 					case "Observer_MainGun_UI": 
-						this.registerComponent(this.addChild(new MainGunUI()), alias);
+						var mainGun:MainGunUI = new MainGunUI();
+						this.registerComponent(mainGun, alias);
+						this.addChild(mainGun);
 						break;
 					case "Observer_DebugPanel_UI": 
-						this.registerComponent(this.addChild(new ObserverDebugPanelUI()), alias);
+						var debugPanel:ObserverDebugPanelUI = new ObserverDebugPanelUI();
+						this.registerComponent(debugPanel, alias);
+						this.addChild(debugPanel);
 						break;
 					case "Observer_DateTimes_UI": 
-						this.registerComponent(this.addChild(new ObserverDateTimesUI()), alias);
+						var dateTime:ObserverDateTimesUI = new ObserverDateTimesUI();
+						this.registerComponent(dateTime, alias);
+						this.addChild(dateTime);
 						break;
 					case "Observer_BattleTimer_UI": 
-						this.registerComponent(this.addChild(new ObserverBattleTimerUI()), alias);
+						var battleTimer:ObserverBattleTimerUI = new ObserverBattleTimerUI();
+						this.registerComponent(battleTimer, alias);
+						this.addChild(battleTimer);
 						break;
 					case "Observer_SixthSense_UI": 
-						this.registerComponent(this.addChild(new SixthSenseUI()), alias);
+						var sixthSense:SixthSenseUI = new SixthSenseUI();
+						this.registerComponent(sixthSense, alias);
+						this.addChild(sixthSense);
 						break;
 					case "Observer_TeamBases_UI": 
-						this.registerComponent(this.addChild(new TeamBasesUI()), alias);
+						var teamBases:TeamBasesUI = new TeamBasesUI();
+						this.registerComponent(teamBases, alias);
+						this.addChild(teamBases)
 						break;
 					case "Observer_ArmorCalculator_UI": 
-						this.registerComponent(this.addChild(new ArmorCalculatorUI()), alias);
+						var armorCalculator:ArmorCalculatorUI = new ArmorCalculatorUI();
+						this.registerComponent(armorCalculator, alias);
+						this.addChild(armorCalculator);
 						break;
 					case "Observer_FlightTime_UI": 
-						this.registerComponent(this.addChild(new FlightTimeUI()), alias);
+						var flightTime:FlightTimeUI = new FlightTimeUI();
+						this.registerComponent(flightTime, alias);
+						this.addChild(flightTime);
 						break;
 					case "Observer_DispersionTimer_UI": 
-						this.registerComponent(this.addChild(new DispersionTimerUI()), alias);
+						var dispersionTimer:DispersionTimerUI = new DispersionTimerUI();
+						this.registerComponent(dispersionTimer, alias);
+						this.addChild(dispersionTimer);
 						break;
 					case "Observer_Distance_UI": 
-						this.registerComponent(this.addChild(new DistanceUI()), alias);
+						var distance:DistanceUI = new DistanceUI();
+						this.registerComponent(distance, alias);
+						this.addChild(distance);
 						break;
 					case "Observer_OwnHealth_UI": 
-						this.registerComponent(this.addChild(new OwnHealthUI()), alias);
+						var ownHealth:OwnHealthUI = new OwnHealthUI();
+						this.registerComponent(ownHealth, alias);
+						this.addChild(ownHealth);
 						break;
 					case "Observer_PlayersPanels_UI": 
-						setTimeout(this.registerComponent, 3000, new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL)), alias);
+						var playersPanel:PlayersPanelsUI = new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL));
+						setTimeout(this.registerComponent, 2000, playersPanel, alias);
 						break;
 					case "Observer_Minimap_UI": 
-						setTimeout(this.registerComponent, 5000, new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP)), alias);
+						var minimap:MinimapUI = new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP));
+						setTimeout(this.registerComponent, 2000, minimap, alias);
 						break;
 					default: 
 						DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);

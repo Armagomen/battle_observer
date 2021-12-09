@@ -72,7 +72,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "hangar_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
-        view.flashObject.as_createBattleObserverComp(ALIASES.DATE_TIME)
+        view.flashObject.as_observerCreateComponents([ALIASES.DATE_TIME])
 
     def _onViewLoaded(self, view, *args):
         if view.settings is None:
