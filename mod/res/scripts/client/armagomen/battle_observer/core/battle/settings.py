@@ -173,3 +173,7 @@ class ViewSettings(object):
 
     def getComponents(self):
         return self.__components
+
+    def removeComponent(self, alias):
+        if alias in self.__components:
+            self.__components.remove(alias)

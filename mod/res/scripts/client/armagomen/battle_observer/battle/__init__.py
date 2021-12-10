@@ -23,7 +23,7 @@ def getViewSettings():
                 module_class = getattr(import_module(file_path, package=__package__), class_name)
                 settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
             except Exception as err:
-                view_settings.getComponents().remove(alias)
+                view_settings.removeComponent(alias)
                 logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
     return settings
 
