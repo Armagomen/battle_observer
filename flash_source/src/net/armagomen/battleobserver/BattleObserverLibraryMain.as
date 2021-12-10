@@ -128,11 +128,11 @@ package net.armagomen.battleobserver
 						break;
 					case "Observer_PlayersPanels_UI": 
 						var playersPanel:PlayersPanelsUI = new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL));
-						setTimeout(this.registerComponent, 2000, playersPanel, alias);
+						setTimeout(this.registerComponent, 1000, playersPanel, alias);
 						break;
 					case "Observer_Minimap_UI": 
 						var minimap:MinimapUI = new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP));
-						setTimeout(this.registerComponent, 2000, minimap, alias);
+						setTimeout(this.registerComponent, 1000, minimap, alias);
 						break;
 					default: 
 						DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);

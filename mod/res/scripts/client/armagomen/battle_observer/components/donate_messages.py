@@ -17,7 +17,9 @@ MESSAGES = {
            "Присоединяйся к нашему клану <a href='event:https://ru.wargaming.net/clans/wot/571593/'>[BOFUN]</a>. "
            "Никаких обязательств, главное условие быть пользователем Battle Observer."
            " Заявки принимаются в специальном <a href='event:https://discord.gg/RBNfr9JWxZ'>Discord канале</a>, "
-           "либо подайте заявку через страницу клана на сайте."
+           "либо подайте заявку через страницу клана на сайте.",
+           "Порадуй мододела, отправь <a href='event:https://ru.wargaming.net/shop/wot/main/ru2022_ltbx_xmas_x1/'>"
+           "большую коробку</a>, ник Armagomen, с наступающим вас."
            ),
     False: ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
             "Have you already supported the development?",
@@ -44,9 +46,10 @@ class Donate(object):
         return message
 
     def getDonateMessage(self):
-        return "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
-               "UAH</a> | <a href='event:{all}'>USD/EUR/RUB</a> | <a href='event:{patreon}'>PATREON</a>".format(
-                ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL, patreon=URLS.PATREON_URL, msg=self.getRandomMessage())
+        pattern = "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
+                  "DONATUA</a> | <a href='event:{all}'>DONATIONALERTS</a> | <a href='event:{patreon}'>PATREON</a>"
+        return pattern.format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
+                              patreon=URLS.PATREON_URL, msg=self.getRandomMessage())
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:

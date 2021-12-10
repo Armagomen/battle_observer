@@ -29,6 +29,8 @@ class ViewSettings(object):
     def __init__(self, cfg):
         self.cfg = cfg
         self.isAllowed = False
+        self.__viewAliases = {VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE,
+                              VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE}
         self.__components = []
         self.__hiddenComponents = []
         overrideMethod(SharedPage)(self.new_SharedPage_init)
@@ -166,12 +168,8 @@ class ViewSettings(object):
     def getHiddenWGComponents(self):
         return self.__hiddenComponents
 
-    @staticmethod
-    def getViewAliases():
-        return (VIEW_ALIAS.CLASSIC_BATTLE_PAGE,
-                VIEW_ALIAS.RANKED_BATTLE_PAGE,
-                VIEW_ALIAS.EPIC_RANDOM_PAGE,
-                VIEW_ALIAS.EPIC_BATTLE_PAGE)
+    def getViewAliases(self):
+        return self.__viewAliases
 
     def getComponents(self):
         return self.__components

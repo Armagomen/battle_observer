@@ -8,6 +8,7 @@ class ComponentsLoader(object):
 
     def __init__(self):
         self.modules = {
+            'common': None,
             'badges': None,
             'camera': None,
             'dispersion': None,
