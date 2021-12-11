@@ -17,9 +17,17 @@ SWF = namedtuple("SWF", ("BATTLE", "LOBBY", "ATTRIBUTE_NAME"))(
     'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_observerCreateComponents')
 
 URLS = namedtuple("URLS", (
-    "HOST_NAME", "DONATE_UA_URL", "DONATE_EU_URL", "SUPPORT_URL",
-    "UPDATE_GITHUB_API_URL", "PATREON_URL", "CLAN", "DISCORD", "NY2022"
-))("armagomen.bb-t.ru", "https://donatua.com/@armagomen",
+    "HOST_NAME",
+    "DONATE_UA_URL",
+    "DONATE_EU_URL",
+    "SUPPORT_URL",
+    "UPDATE_GITHUB_API_URL",
+    "PATREON_URL",
+    "CLAN",
+    "DISCORD",
+    "NY2022"
+))("armagomen.bb-t.ru",
+   "https://donatua.com/@armagomen",
    "https://www.donationalerts.com/r/armagomenvs",
    "https://discord.gg/NuhuhTN",
    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
