@@ -29,16 +29,16 @@
       "y": 0
     }
   }, 
-  "players_damages_enabled": false, 
+  "players_damages_enabled": true, 
   "players_damages_hotkey": [
     [
       56
     ]
   ], 
   "players_damages_settings": {
-    "align": "center", 
-    "x": -50, 
-    "y": -2
+    "align": "right", 
+    "x": -45, 
+    "y": 0
   }, 
   "players_damages_text": "<font color='#FFFF00'>%(damage)s</font>"
 }

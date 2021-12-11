@@ -7,5 +7,5 @@
   "enabled": false, 
   "template": "%(health)s/%(maxHealth)s (%(percent)s%%)", 
   "x": 0, 
-  "y": 120
+  "y": 130
 }

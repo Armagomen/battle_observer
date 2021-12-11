@@ -47,7 +47,7 @@
   }, 
   "debugText": {
     "scale": 1.0, 
-    "text": "<textformat tabstops='[80]'>FPS <font color='%(fpsColor)s'><b>%(FPS)d</b></font><tab>PING <font color='%(PingLagColor)s'><b>%(PING)d</b></font></textformat>", 
+    "text": "<textformat tabstops='[80]'>FPS <font color='%(fpsColor)s'><b>%(FPS)d</b></font><tab>PING <font color='%(pingColor)s'><b>%(PING)d</b></font></textformat>", 
     "x": 5, 
     "y": 0
   }, 

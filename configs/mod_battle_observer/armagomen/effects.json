@@ -1,5 +1,5 @@
 {
-  "noBinoculars": false, 
+  "noBinoculars": true, 
   "noFlashBang": true, 
   "noShockWave": true, 
   "noSniperDynamic": false

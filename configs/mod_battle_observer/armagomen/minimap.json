@@ -1,7 +1,9 @@
 {
   "enabled": true, 
   "permanentMinimapDeath": false, 
+  "real_view_radius": true, 
   "showDeathNames": false, 
+  "yaw_limits": true, 
   "zoom": {
     "enabled": true, 
     "indent": 180, 

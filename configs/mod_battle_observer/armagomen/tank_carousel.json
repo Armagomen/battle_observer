@@ -1,5 +1,5 @@
 {
   "carouselRows": 3, 
-  "enabled": false, 
+  "enabled": true, 
   "smallDoubleCarousel": true
 }

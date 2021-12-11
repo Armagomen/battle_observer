@@ -1,9 +1,9 @@
 {
-  "circle_enabled": true, 
-  "circle_extraServerLap": true, 
+  "circle_enabled": false, 
+  "circle_extraServerLap": false, 
   "circle_replaceOriginalCircle": false, 
   "circle_scale": 70, 
-  "enabled": true, 
+  "enabled": false, 
   "timer_align": "left", 
   "timer_color": "#f5ff8f", 
   "timer_done_color": "#a6ffa6", 
