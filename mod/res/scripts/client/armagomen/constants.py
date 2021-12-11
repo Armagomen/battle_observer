@@ -16,12 +16,17 @@ HEADERS = [('User-Agent', MOD_NAME)]
 SWF = namedtuple("SWF", ("BATTLE", "LOBBY", "ATTRIBUTE_NAME"))(
     'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_observerCreateComponents')
 
-URLS = namedtuple("URLS", ("HOST_NAME", "DONATE_UA_URL", "DONATE_EU_URL", "SUPPORT_URL", "UPDATE_GITHUB_API_URL",
-                           "PATREON_URL"))("armagomen.bb-t.ru", "https://donatua.com/@armagomen",
-                                           "https://www.donationalerts.com/r/armagomenvs",
-                                           "https://discord.gg/NuhuhTN",
-                                           "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
-                                           "https://www.patreon.com/armagomen")
+URLS = namedtuple("URLS", (
+    "HOST_NAME", "DONATE_UA_URL", "DONATE_EU_URL", "SUPPORT_URL",
+    "UPDATE_GITHUB_API_URL", "PATREON_URL", "CLAN", "DISCORD", "NY2022"
+))("armagomen.bb-t.ru", "https://donatua.com/@armagomen",
+   "https://www.donationalerts.com/r/armagomenvs",
+   "https://discord.gg/NuhuhTN",
+   "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
+   "https://www.patreon.com/armagomen",
+   "https://ru.wargaming.net/clans/wot/571593",
+   "https://discord.gg/RBNfr9JWxZ",
+   "https://ru.wargaming.net/shop/wot/ny2022/")
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
 
