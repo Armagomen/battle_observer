@@ -199,7 +199,7 @@ class ConfigInterface(CreateElement):
         kwargs = {
             'id': MOD_NAME, 'name': localization['service']['name'],
             'description': localization['service']['description'],
-            'icon': 'scripts/client/armagomen/battle_observer/hangar_settings_image.png',
+            'icon': 'gui/maps/icons/battle_observer/hangar_settings_image.png',
             GLOBAL.ENABLED: True, 'login': True, 'lobby': True, 'callback': self.load_window
         }
         self.modsListApi.addModification(**kwargs)

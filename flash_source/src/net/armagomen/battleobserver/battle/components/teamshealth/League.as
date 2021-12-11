@@ -32,8 +32,8 @@
 			this.enemyHpBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Math.max(0.1, colors.alpha));
 			this.enemyHpBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
 			this.enemyHpBar.graphics.endFill();
-			this.allyAnimation = new Tween(this.allyHpBar, "scaleX", 1.0, 0, 1, true);
-			this.enemyAnimation = new Tween(this.enemyHpBar, "scaleX", 1.0, 0, 1, true);
+			this.allyAnimation = new Tween(this.allyHpBar, "scaleX", 1.0, 1.0, 1, true);
+			this.enemyAnimation = new Tween(this.enemyHpBar, "scaleX", 1.0, 1.0, 1, true);
 		
 		}
 		

@@ -9,24 +9,25 @@ from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 MESSAGES = {
-    True: ("Поддержите разработку мода. Спасибо что вы с нами.",
-           "А ты уже поддержал разработку мода?",
-           "Мы измеряем сотые доли секунды, которые отделяют победителя от участника.",
-           "Мы не боимся штрафов за превышение скорости работы. Ускоряй мод донатиком.!",
-           "Родина-мать зовёт поддержать!",
-           "Присоединяйся к нашему клану <a href='event:https://ru.wargaming.net/clans/wot/571593/'>[BOFUN]</a>. "
-           "Никаких обязательств, главное условие быть пользователем Battle Observer."
-           " Заявки принимаются в специальном <a href='event:https://discord.gg/RBNfr9JWxZ'>Discord канале</a>, "
-           "либо подайте заявку через страницу клана на сайте.",
-           "Порадуй мододела, отправь <a href='event:https://ru.wargaming.net/shop/wot/main/ru2022_ltbx_xmas_x1/'>"
-           "большую коробку</a>, ник Armagomen, с наступающим вас."
-           ),
-    False: ("Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
-            "Have you already supported the development?",
-            "We measure the milliseconds that separate the winner from the competitor.",
-            "Motherland urges to support!",
-            "We are not afraid of penalties for fast work. Speed up the mod with donate!"
-            )
+    True: (
+        "Поддержите разработку мода. Спасибо что вы с нами.",
+        "А ты уже поддержал разработку мода?",
+        "Мы измеряем сотые доли секунды, которые отделяют победителя от участника.",
+        "Мы не боимся штрафов за превышение скорости работы. Ускоряй мод донатиком.!",
+        "Родина-мать зовёт поддержать!",
+        "Присоединяйся к нашему клану <a href='event:https://ru.wargaming.net/clans/wot/571593'>[BOFUN]</a>. "
+        "Никаких обязательств, главное условие быть пользователем Battle Observer."
+        " Заявки принимаются в специальном <a href='event:https://discord.gg/RBNfr9JWxZ'>Discord канале</a>, "
+        "либо подайте заявку через страницу клана на сайте.",
+        "Порадуй мододела, отправь большую коробку ник Armagomen, с наступающим вас.",
+    ),
+    False: (
+        "Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
+        "Have you already supported the development?",
+        "We measure the milliseconds that separate the winner from the competitor.",
+        "Motherland urges to support!",
+        "We are not afraid of penalties for fast work. Speed up the mod with donate!"
+    )
 }
 
 
@@ -46,8 +47,21 @@ class Donate(object):
         return message
 
     def getDonateMessage(self):
-        pattern = "<b>'Battle Observer'</b><br><br><font color='#ffff73'>{msg}</font><br><br><a href='event:{ua}'>" \
-                  "DONATUA</a> | <a href='event:{all}'>DONATIONALERTS</a> | <a href='event:{patreon}'>PATREON</a>"
+        message = self.getRandomMessage()
+        if "Armagomen" in message:
+            return "<img src='img://gui/maps/icons/battle_observer/logo.png'>\n" \
+                   "<p>{}</p>\n" \
+                   "<p align='center'>" \
+                   "<a href='event:https://ru.wargaming.net/shop/wot/ny2022/'>Подарить коробочку</a>" \
+                   "</p>".format(message)
+
+        pattern = "<img src='img://gui/maps/icons/battle_observer/logo.png'>\n" \
+                  "<p>{msg}</p>\n" \
+                  "<p><textformat leading='3'>" \
+                  "<img src='img://gui/maps/icons/battle_observer/donatua.png' vspace='-3'> <a href='event:{ua}'>DonatUA</a>\n" \
+                  "<img src='img://gui/maps/icons/battle_observer/donationalerts.png' vspace='-3'> <a href='event:{all}'>DonationAlerts</a>\n" \
+                  "<img src='img://gui/maps/icons/battle_observer/patreon.png' vspace='-3'> <a href='event:{patreon}'>Patreon</a>" \
+                  "</textformat></p>"
         return pattern.format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
                               patreon=URLS.PATREON_URL, msg=self.getRandomMessage())
 
