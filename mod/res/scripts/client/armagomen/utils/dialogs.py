@@ -28,7 +28,8 @@ class UpdateDialogs(DialogBase):
     @async
     def showUpdateError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle("ERROR DOWNLOAD - Battle Observer Update")
+        builder.setFormattedTitle("<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
+                                  "ERROR DOWNLOAD UPDATE")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
@@ -68,7 +69,7 @@ class LoadingErrorDialog(DialogBase):
     @async
     def showLoadingError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle("Battle Observer")
+        builder.setFormattedTitle("<img src='img://gui/maps/icons/battle_observer/yellow_logo.png' vspace='16'>")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
@@ -85,7 +86,8 @@ class CrewDialog(DialogBase):
     def showCrewDialog(self, value, description, vehicle_name):
         message = self.localized[description] + "\n\n" + self.localized["enable" if value else "disable"]
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle("Battle Observer\n" + vehicle_name)
+        builder.setFormattedTitle("<img src='img://gui/maps/icons/battle_observer/yellow_logo.png' vspace='16'>\n"
+                                  + vehicle_name)
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=self.localized["submit"])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localized["cancel"])

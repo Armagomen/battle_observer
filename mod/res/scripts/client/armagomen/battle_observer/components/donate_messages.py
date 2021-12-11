@@ -47,7 +47,7 @@ class Donate(object):
         return message
 
     def getDonateMessage(self):
-        return "<img src='img://gui/maps/icons/battle_observer/logo.png'>\n" \
+        return "<img src='img://gui/maps/icons/battle_observer/blue_logo.png' width='220' height='14' vspace='16'>\n" \
                "<p>{msg}</p>\n" \
                "<p><textformat leading='3'>" \
                "<img src='img://gui/maps/icons/battle_observer/donatua.png' vspace='-3'> " \

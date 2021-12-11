@@ -432,8 +432,10 @@ translate = {
     "updateDialog": {
         "buttonOK": "ПЕРЕЗАГРУЗКА",
         "buttonWAIT": "ПОДОЖДИТЕ",
-        "titleWAIT": "Battle Observer Обновление - ПОДОЖДИТЕ",
-        "titleOK": "Battle Observer Обновление - ГОТОВО",
+        "titleWAIT": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
+                     "Обновление - ПОДОЖДИТЕ",
+        "titleOK": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
+                   "Обновление - ГОТОВО",
         "messageWAIT": "Подождите, идет загрузка Обновления v{0}",
         "messageOK": "Нажмите ПЕРЕЗАГРУЗКА, для завершения процесса Обновления. v{0}",
         "buttonAUTO": "Автоматически",
@@ -445,7 +447,8 @@ translate = {
             "обновления в папку. {0}\n<font color='#FFFF00'><b>Вручную</b></font> - откроет в браузере ссылку на"
             " этот-же архив но извлекать пакет и копировать *.wotmod файл/ы прийдется в ручном режиме.</p></font>"
             "\n<font size='20' color='#FFFF00'><b>Список изменений</b></font>\n",
-        "titleNEW": "Battle Observer\n<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>"
+        "titleNEW": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
+                    "<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>"
     },
     "sixth_sense": {
         "header": "Лампа 6-е чувство.",

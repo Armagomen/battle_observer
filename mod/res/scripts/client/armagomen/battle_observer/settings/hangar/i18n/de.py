@@ -417,8 +417,10 @@ translate = {
     "updateDialog": {
         "buttonOK": "RESTART",
         "buttonWAIT": "WAIT",
-        "titleWAIT": "Battle Observer Update - WAIT",
-        "titleOK": "Battle Observer Update - Press RESTART",
+        "titleWAIT": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
+                     "Update - WAIT",
+        "titleOK": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
+                   "Update - Press RESTART",
         "messageWAIT": "Wait while downloading Updates v{0}",
         "messageOK": "Click RESTART to complete the Upgrade process. v{0}",
         "buttonAUTO": "Automatically",
@@ -430,7 +432,8 @@ translate = {
             "updates to the folder {0}\n<font color='#FFFF00'><b>Manually</b></font> - will open a link to"
             "the same archive, but you will have to extract the package and copy the *.wotmod file manually.</p></font>"
             "\n<font size='20 'color='#FFFF00'><b>Changelog</b></font>\n",
-        "titleNEW": "Battle Observer\n<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
+        "titleNEW": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
+                    "<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
     },
     "sixth_sense": {
         "header": "Sixth sense.",
