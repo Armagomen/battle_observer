@@ -122,6 +122,6 @@ class ConfigLoader(object):
     def onHangarLoaded(self, view):
         dialog = LoadingErrorDialog()
         dialog.setView(view)
-        dialog.showLoadingError("\n".join(self.errorMessages))
+        dialog.showLoadingError("<br>".join(self.errorMessages))
         g_events.onHangarLoaded -= self.onHangarLoaded
         del self.errorMessages[:]

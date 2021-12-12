@@ -4,7 +4,7 @@ import sys
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
 from armagomen.battle_observer.core.update.worker import UpdateMain
-from armagomen.constants import FILE_NAME, MESSAGES, MAIN, MOD_NAME
+from armagomen.constants import FILE_NAME, MESSAGES, MAIN, MOD_NAME, IMG
 from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache
 from async import async, await
 from gui.Scaleform.daapi.settings import config as packages
@@ -64,5 +64,4 @@ class ObserverCore(object):
     def showLockedDialog(self):
         locked = MESSAGES.LOCKED_BY_FILE_NAME.format(FILE_NAME.format(__version__))
         logWarning(locked)
-        title = '{0} is locked'.format(MOD_NAME)
-        yield await(dialogs.showSimple(self.getLockedDialog(title, locked), DialogButtons.PURCHASE))
+        yield await(dialogs.showSimple(self.getLockedDialog(IMG.YELLOW, locked), DialogButtons.PURCHASE))

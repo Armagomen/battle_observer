@@ -1,29 +1,29 @@
 # coding=utf-8
 from armagomen.battle_observer import __version__
 
-timeFormat_tooltip = ("Directive Meaning\n"
-                      "%a  Locale’s abbreviated weekday name.\n"
-                      "%A  Locale’s full weekday name.\n"
-                      "%b  Locale’s abbreviated month name.\n"
-                      "%B  Locale’s full month name.\n"
-                      "%c  Locale’s appropriate date and time representation.\n"
-                      "%d  Day of the month as a decimal number [01,31].\n"
-                      "%H  Hour (24-hour clock) as a decimal number [00,23].\n"
-                      "%I  Hour (12-hour clock) as a decimal number [01,12].\n"
-                      "%j  Day of the year as a decimal number [001,366].\n"
-                      "%m  Month as a decimal number [01,12].\n"
-                      "%M  Minute as a decimal number [00,59].\n"
-                      "%p  Locale’s equivalent of either AM or PM.\n"
-                      "%S  Second as a decimal number [00,61].\n"
-                      "%U  Week number of the year (Sunday as the first day of the week) as a decimal number [00,53].\n"
-                      "%w  Weekday as a decimal number [0(Sunday),6].\n"
-                      "%W  Week number of the year (Monday as the first day of the week) as a decimal number [00,53].\n"
-                      "%x  Locale’s appropriate date representation.\n"
-                      "%X  Locale’s appropriate time representation.\n"
-                      "%y  Year without century as a decimal number [00,99].\n"
-                      "%Y  Year with century as a decimal number.\n"
-                      "%Z  Time zone name (no characters if no time zone exists).\n"
-                      "%%  A literal '%' character.\n")
+timeFormat_tooltip = ("Directive Meaning<br>"
+                      "%a  Locale’s abbreviated weekday name.<br>"
+                      "%A  Locale’s full weekday name.<br>"
+                      "%b  Locale’s abbreviated month name.<br>"
+                      "%B  Locale’s full month name.<br>"
+                      "%c  Locale’s appropriate date and time representation.<br>"
+                      "%d  Day of the month as a decimal number [01,31].<br>"
+                      "%H  Hour (24-hour clock) as a decimal number [00,23].<br>"
+                      "%I  Hour (12-hour clock) as a decimal number [01,12].<br>"
+                      "%j  Day of the year as a decimal number [001,366].<br>"
+                      "%m  Month as a decimal number [01,12].<br>"
+                      "%M  Minute as a decimal number [00,59].<br>"
+                      "%p  Locale’s equivalent of either AM or PM.<br>"
+                      "%S  Second as a decimal number [00,61].<br>"
+                      "%U  Week number of the year (Sunday as the first day of the week) as a decimal number [00,53].<br>"
+                      "%w  Weekday as a decimal number [0(Sunday),6].<br>"
+                      "%W  Week number of the year (Monday as the first day of the week) as a decimal number [00,53].<br>"
+                      "%x  Locale’s appropriate date representation.<br>"
+                      "%X  Locale’s appropriate time representation.<br>"
+                      "%y  Year without century as a decimal number [00,99].<br>"
+                      "%Y  Year with century as a decimal number.<br>"
+                      "%Z  Time zone name (no characters if no time zone exists).<br>"
+                      "%%  A literal '%' character.<br>")
 translate = {
     "configSelect": {
         "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
@@ -408,23 +408,19 @@ translate = {
     "updateDialog": {
         "buttonOK": "RESTART",
         "buttonWAIT": "WAIT",
-        "titleWAIT": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
-                     "Update - WAIT",
-        "titleOK": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
-                   "Update - Press RESTART",
+        "titleOK": "<br>Update - Press RESTART",
         "messageWAIT": "Wait while downloading Updates v{0}",
         "messageOK": "Click RESTART to complete the Upgrade process. v{0}",
         "buttonAUTO": "Automatically",
         "buttonHANDLE": "Manually",
         "buttonCancel": "Cancel",
         "messageNEW":
-            "<font size='15'><font size='20' color='#FFFF00'><b>Choose a download option.</b></font>\n"
+            "<font size='15'><font size='20' color='#FFFF00'><b>Choose a download option.</b></font><br>"
             "<p align='left'><font color ='#00FF00'><b>Automatically</b></font> - download and unpack the archive"
-            "updates to the folder {0}\n<font color='#FFFF00'><b>Manually</b></font> - will open a link to"
+            "updates to the folder {0}<br><font color='#FFFF00'><b>Manually</b></font> - will open a link to"
             "the same archive, but you will have to extract the package and copy the *.wotmod file manually.</p></font>"
-            "\n<font size='20 'color='#FFFF00'><b>Changelog</b></font>\n",
-        "titleNEW": "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='16'>\n"
-                    "<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
+            "<br><font size='20 'color='#FFFF00'><b>Changelog</b></font><br>",
+        "titleNEW": "<br><font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
     },
     "sixth_sense": {
         "header": "Sixth sense.",

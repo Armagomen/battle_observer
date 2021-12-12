@@ -16,6 +16,15 @@ HEADERS = [('User-Agent', MOD_NAME)]
 SWF = namedtuple("SWF", ("BATTLE", "LOBBY", "ATTRIBUTE_NAME"))(
     'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_observerCreateComponents')
 
+IMG = namedtuple("IMG", "BLUE YELLOW GREEN DONAT_UA DONATIONALERTS PATREON")(
+    "<img src='img://gui/maps/icons/battle_observer/blue_logo.png' width='220' height='16' vspace='26'>",
+    "<img src='img://gui/maps/icons/battle_observer/yellow_logo.png' vspace='26'>",
+    "<img src='img://gui/maps/icons/battle_observer/green_logo.png' vspace='26'>",
+    "<img src='img://gui/maps/icons/battle_observer/donatua.png' vspace='-3'>",
+    "<img src='img://gui/maps/icons/battle_observer/donationalerts.png' vspace='-3'>",
+    "<img src='img://gui/maps/icons/battle_observer/patreon.png' vspace='-3'>"
+)
+
 URLS = namedtuple("URLS", (
     "HOST_NAME",
     "DONATE_UA_URL",

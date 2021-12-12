@@ -2,7 +2,7 @@
 import datetime
 import random
 
-from armagomen.constants import URLS, GLOBAL
+from armagomen.constants import URLS, GLOBAL, IMG
 from armagomen.utils.common import logInfo
 from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
@@ -35,29 +35,27 @@ class Donate(object):
 
     def __init__(self):
         self.timeDelta = datetime.datetime.now()
-        self.lastMessage = ""
+        self.lastMessage = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
 
     def getRandomMessage(self):
         message = random.choice(MESSAGES[GLOBAL.RU_LOCALIZATION])
-        if message == self.lastMessage:
+        if message is self.lastMessage:
             message = self.getRandomMessage()
         else:
             self.lastMessage = message
         return message
 
     def getDonateMessage(self):
-        return "<img src='img://gui/maps/icons/battle_observer/blue_logo.png' width='220' height='14' vspace='16'>\n" \
-               "<p>{msg}</p>\n" \
+        return "{logo}<p>{msg}</p><br>" \
                "<p><textformat leading='3'>" \
-               "<img src='img://gui/maps/icons/battle_observer/donatua.png' vspace='-3'> " \
-               "<a href='event:{ua}'>DonatUA</a>\n" \
-               "<img src='img://gui/maps/icons/battle_observer/donationalerts.png' vspace='-3'> " \
-               "<a href='event:{all}'>DonationAlerts</a>\n" \
-               "<img src='img://gui/maps/icons/battle_observer/patreon.png' vspace='-3'> " \
-               "<a href='event:{patreon}'>Patreon</a>" \
+               "{donat_img} <a href='event:{ua}'>DonatUA</a><br>" \
+               "{alerts_img} <a href='event:{all}'>DonationAlerts</a><br>" \
+               "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
-                                          patreon=URLS.PATREON_URL, msg=self.getRandomMessage())
+                                          patreon=URLS.PATREON_URL, msg=self.getRandomMessage(),
+                                          logo=IMG.BLUE, donat_img=IMG.DONAT_UA, alerts_img=IMG.DONATIONALERTS,
+                                          patreon_img=IMG.PATREON)
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:
