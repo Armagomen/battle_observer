@@ -2,7 +2,7 @@
 import datetime
 import random
 
-from armagomen.constants import URLS, GLOBAL, IMG, getRandomLogo
+from armagomen.constants import URLS, GLOBAL, IMG, LOGO_SMALL
 from armagomen.utils.common import logInfo
 from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
@@ -54,7 +54,7 @@ class Donate(object):
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
                                           patreon=URLS.PATREON_URL, msg=self.getRandomMessage(),
-                                          logo=getRandomLogo(220, 16), donat_img=IMG.DONAT_UA,
+                                          logo=random.choice(LOGO_SMALL), donat_img=IMG.DONAT_UA,
                                           alerts_img=IMG.DONATIONALERTS, patreon_img=IMG.PATREON)
 
     def pushNewMessage(self, spaceID):

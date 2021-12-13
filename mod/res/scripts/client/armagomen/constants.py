@@ -14,18 +14,28 @@ FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
-SWF = namedtuple("SWF", ("BATTLE", "LOBBY", "ATTRIBUTE_NAME"))(
+SWF = namedtuple("SWF", "BATTLE LOBBY ATTRIBUTE_NAME")(
     'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_observerCreateComponents')
 
-LOGO = namedtuple("LOGO", "BLUE YELLOW GREEN")(
-    "<img src='img://gui/maps/icons/battle_observer/blue_logo.png' width='{}' height='{}' vspace='26'>",
-    "<img src='img://gui/maps/icons/battle_observer/yellow_logo.png' width='{}' height='{}' vspace='26'>",
-    "<img src='img://gui/maps/icons/battle_observer/green_logo.png' width='{}' height='{}' vspace='26'>",
+LOGO_SMALL = (
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo1.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo2.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo3.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo4.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo5.png' vspace='24'>",
+)
+
+LOGO_BIG = (
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo1.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo2.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo3.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo4.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo5.png' vspace='24'>",
 )
 
 
-def getRandomLogo(width=500, height=32):
-    return random.choice(LOGO).format(width, height)
+def getRandomBigLogo():
+    return random.choice(LOGO_BIG)
 
 
 IMG = namedtuple("IMG", "DONAT_UA DONATIONALERTS PATREON")(
@@ -54,7 +64,7 @@ URLS = namedtuple("URLS", (
    "https://discord.gg/RBNfr9JWxZ",
    "https://ru.wargaming.net/shop/wot/ny2022/")
 
-VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
+VEHICLE = namedtuple("VEHICLE", "CUR MAX TEAM PERCENT")("health", "maxHealth", "team", "percent")
 
 
 class GLOBAL:
@@ -62,7 +72,7 @@ class GLOBAL:
         pass
 
     ALIGN = "align"
-    ALIGN_LIST = namedtuple("ALIGN_LIST", ("left", "center", "right"))("left", "center", "right")
+    ALIGN_LIST = namedtuple("ALIGN_LIST", "left center right")("left", "center", "right")
     ALPHA = "alpha"
     AVG_COLOR = "avgColor"
     BG_ALPHA = "bgAlpha"
