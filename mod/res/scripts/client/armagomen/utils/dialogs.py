@@ -2,7 +2,7 @@ import re
 
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import GLOBAL, IMG
+from armagomen.constants import GLOBAL, getRandomLogo
 from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
 from async import async, await, AsyncReturn
 from gui.impl.dialogs import dialogs
@@ -28,7 +28,7 @@ class UpdateDialogs(DialogBase):
     @async
     def showUpdateError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle(IMG.GREEN + "\nERROR DOWNLOAD UPDATE")
+        builder.setFormattedTitle(getRandomLogo() + "\nERROR DOWNLOAD UPDATE")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
@@ -38,7 +38,7 @@ class UpdateDialogs(DialogBase):
     def showUpdateFinished(self, params):
         message = self.localized['messageOK'].format(params.get('tag_name', __version__))
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle(IMG.GREEN + self.localized['titleOK'])
+        builder.setFormattedTitle(getRandomLogo() + self.localized['titleOK'])
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=self.localized['buttonOK'])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localized['buttonCancel'])
@@ -52,7 +52,8 @@ class UpdateDialogs(DialogBase):
         message = self.localized['messageNEW'].format(path)
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, params.get("body", GLOBAL.EMPTY_LINE))
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle(IMG.GREEN + self.localized['titleNEW'].format(params.get('tag_name', __version__)))
+        builder.setFormattedTitle(
+            getRandomLogo() + self.localized['titleNEW'].format(params.get('tag_name', __version__)))
         builder.setFormattedMessage(message + "<p align='left'><font size='15'>" + gitMessage + "</font></p>")
         builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=self.localized['buttonAUTO'])
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=self.localized['buttonHANDLE'])
@@ -68,7 +69,7 @@ class LoadingErrorDialog(DialogBase):
     @async
     def showLoadingError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle(IMG.YELLOW)
+        builder.setFormattedTitle(getRandomLogo())
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel="CLOSE")
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
@@ -85,7 +86,7 @@ class CrewDialog(DialogBase):
     def showCrewDialog(self, value, description, vehicle_name):
         message = self.localized[description] + "\n\n" + self.localized["enable" if value else "disable"]
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle(IMG.YELLOW + "\n" + vehicle_name)
+        builder.setFormattedTitle(getRandomLogo() + "\n" + vehicle_name)
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=self.localized["submit"])
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localized["cancel"])

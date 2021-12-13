@@ -2,7 +2,7 @@
 import datetime
 import random
 
-from armagomen.constants import URLS, GLOBAL, IMG
+from armagomen.constants import URLS, GLOBAL, IMG, getRandomLogo
 from armagomen.utils.common import logInfo
 from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
@@ -54,16 +54,16 @@ class Donate(object):
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
                                           patreon=URLS.PATREON_URL, msg=self.getRandomMessage(),
-                                          logo=IMG.BLUE, donat_img=IMG.DONAT_UA, alerts_img=IMG.DONATIONALERTS,
-                                          patreon_img=IMG.PATREON)
+                                          logo=getRandomLogo(220, 16), donat_img=IMG.DONAT_UA,
+                                          alerts_img=IMG.DONATIONALERTS, patreon_img=IMG.PATREON)
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=30)
+                self.timeDelta = currentTime + datetime.timedelta(minutes=40)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
-                logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
+                logInfo("A donation message has been sent to the user. Repeated in 40 minutes.")
 
 
 donateMessage = Donate()
