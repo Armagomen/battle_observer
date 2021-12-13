@@ -18,19 +18,17 @@ SWF = namedtuple("SWF", "BATTLE LOBBY ATTRIBUTE_NAME")(
     'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_observerCreateComponents')
 
 LOGO_SMALL = (
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo1.png' vspace='24'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo2.png' vspace='24'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo3.png' vspace='24'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo4.png' vspace='24'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo5.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo1.png' width='220' height='22' vspace='10'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo2.png' width='220' height='22' vspace='10'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo3.png' width='220' height='22' vspace='10'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo4.png' width='220' height='22' vspace='10'>",
 )
 
 LOGO_BIG = (
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo1.png' vspace='24'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo2.png' vspace='24'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo3.png' vspace='24'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo4.png' vspace='24'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo5.png' vspace='24'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo1.png' width='500' height='32' vspace='16'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo2.png' width='500' height='32' vspace='16'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo3.png' width='500' height='32' vspace='16'>",
+    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo4.png' width='500' height='32' vspace='16'>",
 )
 
 
