@@ -7,8 +7,6 @@ from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
-from gui.battle_control import matrix_factory
-from gui.battle_control.battle_constants import VEHICLE_LOCATION
 
 
 class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
@@ -47,13 +45,12 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
     def __setDestroyed(self, vehicleID, entry):
         self.__clearAoIToFarCallback(vehicleID)
         if entry.setAlive(False) and not entry.wasSpotted():
-            if not entry.isActive():
-                self.__setActive(entry, True)
-            if entry.isActive() and not entry.isInAoI():
-                self._setInAoI(entry, True)
-            self._invoke(entry.getID(), 'setDead', True)
-            self._move(entry.getID(), CONTAINER_NAME.DEAD_VEHICLES)
-            self._invoke(entry.getID(), self._showNames)
+            entryID = entry.getID()
+            self._setInAoI(entry, True)
+            self.__setActive(entry, True)
+            self._move(entryID, CONTAINER_NAME.DEAD_VEHICLES)
+            self._invoke(entryID, 'setDead', True)
+            self._invoke(entryID, self._showNames)
         else:
             self.__setActive(entry, False)
 
