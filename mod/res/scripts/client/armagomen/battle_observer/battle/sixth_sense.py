@@ -25,29 +25,28 @@ class SixthSense(SixthSenseMeta):
 
     def onEnterBattlePage(self):
         super(SixthSense, self).onEnterBattlePage()
-        g_playerEvents.onArenaPeriodChange += self.__onRoundFinished
+        g_playerEvents.onRoundFinished += self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
-            ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
+            ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
 
     def onExitBattlePage(self):
         self.stop()
         self._timer.destroy()
-        g_playerEvents.onArenaPeriodChange -= self.__onRoundFinished
+        g_playerEvents.onRoundFinished -= self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
-            ctrl.onVehicleStateUpdated -= self.__onVehicleStateUpdated
+            ctrl.onVehicleStateUpdated -= self._onVehicleStateUpdated
         super(SixthSense, self).onExitBattlePage()
 
-    def __onVehicleStateUpdated(self, state, value):
+    def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             self.show() if value else self.stop()
         elif state in _STATES_TO_HIDE:
             self.stop()
 
-    def __onRoundFinished(self, period, *args):
-        if period == ARENA_PERIOD.AFTERBATTLE:
-            self.stop()
+    def _onRoundFinished(self, *args):
+        self.stop()
 
     def handleTimer(self, timeLeft):
         self.macro[SIXTH_SENSE.M_TIME_LEFT] = timeLeft
