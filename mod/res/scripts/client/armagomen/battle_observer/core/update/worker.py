@@ -14,8 +14,6 @@ from armagomen.utils.events import g_events
 from async import async, await
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
-from helpers import dependency
-from skeletons.gui.app_loader import IAppLoader
 from web.cache.web_downloader import WebDownloader
 
 
@@ -31,19 +29,16 @@ class DownloadThread(object):
         self.workingDir = os.path.join(*getCurrentModPath())
 
     def startDownload(self):
-        info = self.updateData.get('tag_name', __version__)
         url = self.URLS['last']
         Waiting.show('updating')
         self.downloader = WebDownloader(GLOBAL.ONE)
-        if info and url:
-            logInfo('downloading started {} at {}'.format(info, url))
+        if url:
+            logInfo('downloading started {} at {}'.format(self.updateData.get('tag_name', __version__), url))
             self.downloader.download(url, self.onDownloaded)
         else:
-            message = 'update {} - download failed: {}'.format(info, url)
             Waiting.hide('updating')
-            logError(message)
             self.closeDownloader()
-            self.dialogs.showUpdateError(message)
+            self.downloadError(url)
 
     def closeDownloader(self):
         if self.downloader is not None:
@@ -52,23 +47,28 @@ class DownloadThread(object):
 
     def onDownloaded(self, _url, data):
         Waiting.hide('updating')
-        logInfo('downloading finished: {}'.format(_url))
+        self.closeDownloader()
         if data is not None:
+            logInfo('downloading finished: {}'.format(_url))
             old_files = os.listdir(self.workingDir)
             with BytesIO(data) as zip_file, ZipFile(zip_file) as archive:
                 for newFile in archive.namelist():
                     if newFile not in old_files:
                         logInfo('update, add new file {}'.format(newFile))
                         archive.extract(newFile, self.workingDir)
-        title = getRandomBigLogo() + self.i18n['titleOK']
-        message = self.i18n['messageOK'].format(self.updateData.get('tag_name', __version__))
-        self.dialogs.showUpdateFinished(title, message)
-        self.closeDownloader()
+            title = getRandomBigLogo() + self.i18n['titleOK']
+            message = self.i18n['messageOK'].format(self.updateData.get('tag_name', __version__))
+            self.dialogs.showUpdateFinished(title, message)
+        else:
+            self.downloadError(_url)
+
+    def downloadError(self, url):
+        message = 'update {} - download failed: {}'.format(self.updateData.get('tag_name', __version__), url)
+        logError(message)
+        self.dialogs.showUpdateError(message)
 
 
 class UpdateMain(DownloadThread):
-    appLoader = dependency.descriptor(IAppLoader)
-
     __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "workingDir", "updateData", "i18n")
 
     def __init__(self):
