@@ -8,27 +8,23 @@ from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-MESSAGES = {
-    True: (
+if GLOBAL.RU_LOCALIZATION:
+    messages = (
         "Поддержите разработку мода. Спасибо что вы с нами.",
-        "А ты уже поддержал разработку мода?",
-        "Мы измеряем сотые доли секунды, которые отделяют победителя от участника.",
-        "Мы не боимся штрафов за превышение скорости работы. Ускоряй мод донатиком.!",
-        "Родина-мать зовёт поддержать!",
+        # "А ты уже поддержал разработку мода?",
+        # "Родина-мать зовёт поддержать!",
         "Присоединяйся к нашему клану <a href='event:{}'>[BOFUN]</a>. Никаких обязательств, главное условие "
         "быть пользователем Battle Observer. Заявки принимаются в специальном <a href='event:{}'>Discord канале</a>, "
         "либо подайте заявку через страницу клана на сайте.".format(URLS.CLAN, URLS.DISCORD),
-        "Порадуй мододела, отправь <a href='event:{}'>большую коробочку</a> ник Armagomen, "
-        "с наступающим вас.".format(URLS.NY2022),
-    ),
-    False: (
+        "Порадуй мододела, подари <a href='event:{}'>большую коробочку</a> ник Armagomen. "
+        "С наступающим.".format(URLS.NY2022),
+    )
+else:
+    messages = (
         "Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
         "Have you already supported the development?",
-        "We measure the milliseconds that separate the winner from the competitor.",
         "Motherland urges to support!",
-        "We are not afraid of penalties for fast work. Speed up the mod with donate!"
     )
-}
 
 
 class Donate(object):
@@ -39,21 +35,20 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
 
     def getRandomMessage(self):
-        message = random.choice(MESSAGES[GLOBAL.RU_LOCALIZATION])
+        message = random.choice(messages)
         if message is self.lastMessage:
             message = self.getRandomMessage()
-        else:
-            self.lastMessage = message
         return message
 
     def getDonateMessage(self):
+        self.lastMessage = self.getRandomMessage()
         return "{logo}<p>{msg}</p>\n" \
-               "<p><textformat leading='3'>" \
+               "<p><textformat leading='2'>" \
                "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
                "{alerts_img} <a href='event:{all}'>DonationAlerts</a>\n" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
-                                          patreon=URLS.PATREON_URL, msg=self.getRandomMessage(),
+                                          patreon=URLS.PATREON_URL, msg=self.lastMessage,
                                           logo=random.choice(LOGO_SMALL), donat_img=IMG.DONAT_UA,
                                           alerts_img=IMG.DONATIONALERTS, patreon_img=IMG.PATREON)
 
