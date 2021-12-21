@@ -1,18 +1,18 @@
 import os
+import re
 from collections import defaultdict
 from io import BytesIO
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
-from armagomen.constants import GLOBAL, URLS, MESSAGES
-from armagomen.utils.common import logInfo, logError, getCurrentModPath, callback, urlResponse
+from armagomen.battle_observer.core.update.i18n import getI18n, getButtons
+from armagomen.constants import GLOBAL, URLS, MESSAGES, getRandomBigLogo
+from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse
 from armagomen.utils.dialogs import UpdateDialogs
 from armagomen.utils.events import g_events
 from async import async, await
-from frameworks.wulf import WindowLayer
 from gui.Scaleform.Waiting import Waiting
-from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.shared.personality import ServicesLocator
 from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
@@ -21,9 +21,10 @@ from web.cache.web_downloader import WebDownloader
 
 class DownloadThread(object):
     URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
-    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "view", "workingDir", "updateData")
+    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "workingDir", "updateData", "i18n")
 
     def __init__(self):
+        self.i18n = getI18n()
         self.updateData = defaultdict()
         self.dialogs = UpdateDialogs()
         self.downloader = None
@@ -59,19 +60,20 @@ class DownloadThread(object):
                     if newFile not in old_files:
                         logInfo('update, add new file {}'.format(newFile))
                         archive.extract(newFile, self.workingDir)
-        self.dialogs.showUpdateFinished(self.updateData)
+        title = getRandomBigLogo() + self.i18n['titleOK']
+        message = self.i18n['messageOK'].format(self.updateData.get('tag_name', __version__))
+        self.dialogs.showUpdateFinished(title, message, getButtons())
         self.closeDownloader()
 
 
 class UpdateMain(DownloadThread):
     appLoader = dependency.descriptor(IAppLoader)
 
-    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "view", "workingDir", "updateData")
+    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "workingDir", "updateData", "i18n")
 
     def __init__(self):
         super(UpdateMain, self).__init__()
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
-        self.view = None
 
     def request_last_version(self):
         result = False
@@ -113,7 +115,10 @@ class UpdateMain(DownloadThread):
     @async
     def showDialog(self, view):
         self.dialogs.setView(view)
-        result = yield await(self.dialogs.showNewVersionAvailable(self.updateData, self.workingDir, self.URLS))
+        title = getRandomBigLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', __version__))
+        gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
+        message = self.i18n['messageNEW'].format(self.workingDir, gitMessage)
+        result = yield await(self.dialogs.showNewVersionAvailable(title, message, self.URLS, getButtons()))
         if result:
             self.startDownload()
         if self.inLogin:

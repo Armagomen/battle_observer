@@ -1,8 +1,5 @@
-import re
-
-from armagomen.battle_observer import __version__
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import GLOBAL, getRandomBigLogo
+from armagomen.constants import getRandomBigLogo
 from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
 from async import async, await, AsyncReturn
 from gui.impl.dialogs import dialogs
@@ -21,10 +18,6 @@ class DialogBase(object):
 
 class UpdateDialogs(DialogBase):
 
-    def __init__(self):
-        super(UpdateDialogs, self).__init__()
-        self.localized = localization['updateDialog']
-
     @async
     def showUpdateError(self, message):
         builder = WarningDialogBuilder()
@@ -35,29 +28,25 @@ class UpdateDialogs(DialogBase):
         raise AsyncReturn(result)
 
     @async
-    def showUpdateFinished(self, params):
-        message = self.localized['messageOK'].format(params.get('tag_name', __version__))
+    def showUpdateFinished(self, title, message, buttons):
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle(getRandomBigLogo() + self.localized['titleOK'])
+        builder.setFormattedTitle(title)
         builder.setFormattedMessage(message)
-        builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=self.localized['buttonOK'])
-        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localized['buttonCancel'])
+        builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=buttons['restart'])
+        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons['cancel'])
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.PURCHASE))
         if result:
             restartGame()
         raise AsyncReturn(result)
 
     @async
-    def showNewVersionAvailable(self, params, path, urls):
-        message = self.localized['messageNEW'].format(path)
-        gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, params.get("body", GLOBAL.EMPTY_LINE))
+    def showNewVersionAvailable(self, title, message, urls, buttons):
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle(
-            getRandomBigLogo() + self.localized['titleNEW'].format(params.get('tag_name', __version__)))
-        builder.setFormattedMessage(message + "<p align='left'><font size='15'>" + gitMessage + "</font></p>")
-        builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=self.localized['buttonAUTO'])
-        builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=self.localized['buttonHANDLE'])
-        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=self.localized['buttonCancel'])
+        builder.setFormattedTitle(title)
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=buttons['auto'])
+        builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons['handle'])
+        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons['cancel'])
         result = yield await(dialogs.show(builder.build(self.view)))
         if result.result == DialogButtons.PURCHASE:
             openWebBrowser(urls['full'])
