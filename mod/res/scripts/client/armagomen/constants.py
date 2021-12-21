@@ -207,7 +207,7 @@ class DAMAGE_LOG:
     LOG_MAX_LEN = 13
     LOG_MODE = ("extendedLog", "extendedLogALTMODE")
     MAIN_LOG = "main"
-    NEW_LINE, COMMA, LIST_SEPARATOR = ("<br>", ", ", " <font color='#FFFF00'>|</font> ")
+    NEW_LINE, COMMA, LIST_SEPARATOR = ("\n", ", ", " <font color='#FFFF00'>|</font> ")
     PERCENT_AVG_COLOR = "percentDamageAvgColor"
     PLAYER_DAMAGE = "playerDamage"
     RANDOM_MIN_AVG, FRONT_LINE_MIN_AVG = (1200.0, 4000.0)
@@ -270,7 +270,7 @@ ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "piercingReserve", "message", "caliber", "ricochet", "noDamage",
     {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in
      set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}, "Ricochet",
-    "critical shot, no damage", "<p align='center'>%(ricochet)s%(noDamage)s<br>"
+    "critical shot, no damage", "<p align='center'>%(ricochet)s%(noDamage)s\n"
                                 "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
     "display_on_allies")
 

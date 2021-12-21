@@ -47,10 +47,10 @@ class Donate(object):
         return message
 
     def getDonateMessage(self):
-        return "{logo}<p>{msg}</p><br>" \
+        return "{logo}<p>{msg}</p>\n" \
                "<p><textformat leading='3'>" \
-               "{donat_img} <a href='event:{ua}'>DonatUA</a><br>" \
-               "{alerts_img} <a href='event:{all}'>DonationAlerts</a><br>" \
+               "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
+               "{alerts_img} <a href='event:{all}'>DonationAlerts</a>\n" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
                                           patreon=URLS.PATREON_URL, msg=self.getRandomMessage(),

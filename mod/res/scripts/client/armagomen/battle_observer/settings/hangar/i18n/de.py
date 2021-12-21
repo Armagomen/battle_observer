@@ -1,28 +1,28 @@
 # coding=utf-8
 from armagomen.battle_observer import __version__
 
-timeFormat_tooltip = ("Directive Meaning<br>"
-                      "%a  Locale’s abbreviated weekday name.<br>"
-                      "%A  Locale’s full weekday name.<br>"
-                      "%b  Locale’s abbreviated month name.<br>"
-                      "%B  Locale’s full month name.<br>"
-                      "%c  Locale’s appropriate date and time representation.<br>"
-                      "%d  Day of the month as a decimal number [01,31].<br>"
-                      "%H  Hour (24-hour clock) as a decimal number [00,23].<br>"
-                      "%I  Hour (12-hour clock) as a decimal number [01,12].<br>"
-                      "%j  Day of the year as a decimal number [001,366].<br>"
-                      "%m  Month as a decimal number [01,12].<br>"
-                      "%M  Minute as a decimal number [00,59].<br>"
-                      "%p  Locale’s equivalent of either AM or PM.<br>"
-                      "%S  Second as a decimal number [00,61].<br>"
-                      "%U  Week number of the year (Sunday as the first day of the week) as a decimal number [00,53].<br>"
-                      "%w  Weekday as a decimal number [0(Sunday),6].<br>"
-                      "%W  Week number of the year (Monday as the first day of the week) as a decimal number [00,53].<br>"
-                      "%x  Locale’s appropriate date representation.<br>"
-                      "%X  Locale’s appropriate time representation.<br>"
-                      "%y  Year without century as a decimal number [00,99].<br>"
-                      "%Y  Year with century as a decimal number.<br>"
-                      "%Z  Time zone name (no characters if no time zone exists).<br>"
+timeFormat_tooltip = ("Directive Meaning\n"
+                      "%a  Locale’s abbreviated weekday name.\n"
+                      "%A  Locale’s full weekday name.\n"
+                      "%b  Locale’s abbreviated month name.\n"
+                      "%B  Locale’s full month name.\n"
+                      "%c  Locale’s appropriate date and time representation.\n"
+                      "%d  Day of the month as a decimal number [01,31].\n"
+                      "%H  Hour (24-hour clock) as a decimal number [00,23].\n"
+                      "%I  Hour (12-hour clock) as a decimal number [01,12].\n"
+                      "%j  Day of the year as a decimal number [001,366].\n"
+                      "%m  Month as a decimal number [01,12].\n"
+                      "%M  Minute as a decimal number [00,59].\n"
+                      "%p  Locale’s equivalent of either AM or PM.\n"
+                      "%S  Second as a decimal number [00,61].\n"
+                      "%U  Week number of the year (Sunday as the first day of the week) as a decimal number [00,53].\n"
+                      "%w  Weekday as a decimal number [0(Sunday),6].\n"
+                      "%W  Week number of the year (Monday as the first day of the week) as a decimal number [00,53].\n"
+                      "%x  Locale’s appropriate date representation.\n"
+                      "%X  Locale’s appropriate time representation.\n"
+                      "%y  Year without century as a decimal number [00,99].\n"
+                      "%Y  Year with century as a decimal number.\n"
+                      "%Z  Time zone name (no characters if no time zone exists).\n"
                       "%%  A literal '%' character.")
 translate = {
     "configSelect": {
@@ -40,7 +40,7 @@ translate = {
         "autoClearCache": "Löschen Sie den Spiel-Cache beim Beenden.",
         "autoClearCache_tooltip": "Bereinigen der temporären Dateien des Spiels im Ordner "
                                   "AppData/Roaming/Wargaming.net/WorldOfTanks."
-                                  "<br> Dort geänderte Ordner sind nicht betroffen.",
+                                  "\n Dort geänderte Ordner sind nicht betroffen.",
         "removeShadowInPrebattle": "Entferne den Blackout-Timer zu Beginn des Kampfes",
         "smallDoubleCarousel": "Verwenden Sie kleine Symbole im Karussell.",
         "carouselRows": "Reihenanzahl des mehrreihigen Panzerkarussells.",
@@ -52,7 +52,7 @@ translate = {
         "hideClanAbbrev": "Deaktiviere Clan-Anzeige im Playerspanel, Tab Screen, Ladebildschirm.",
         "hideChatInRandom": "Chat in Zufallsgefechten deaktivieren",
         "hideChatInRandom_tooltip": "Chat in Zufsallsgefechten komplett deaktivieren."
-                                    "<br> incl. Chat-Formular und alles, was damit verbunden ist",
+                                    "\n incl. Chat-Formular und alles, was damit verbunden ist",
         "anonymousEnableShow": "Show Anonymous.",
         "anonymousEnableShow_tooltip": "Nur wenn die Spielerstatistik deaktiviert ist, wird der Parameter"
                                        " bei aktivierter Statistik nicht berücksichtigt.",
@@ -91,8 +91,8 @@ translate = {
                                       "Available macro names: WTR, colorWTR, winRate, nickname, battles, clanTag",
         "icon_enabled": "Repaint tank icons in the colors of vehicle classes",
         "icon_enabled_tooltip": "This function repaints any vehicle icons in the ears, taboo window, on the loading "
-                                "screen in the color of vehicle classes.<br>"
-                                "Filter strength affects brightness.<br>Recommended filter strength -1.25",
+                                "screen in the color of vehicle classes.\n"
+                                "Filter strength affects brightness.\nRecommended filter strength -1.25",
         "icon_blackout": "Filter strength (brightness)",
 
         "panels_full_width": "Player Name Field Width - Big Ears",
@@ -131,8 +131,8 @@ translate = {
     "debug_panel": {
         "header": "Panel für PING/FPS",
         "debugText*text": "Format vom Panel: PING/FPS",
-        "debugText*text_tooltip": "HTML Formatierung möglich<br>verfügbare Makros:<br>%(PING)s<tab>- aktueller Ping"
-                                  "<br>%(FPS)s<tab>- aktuelle FPS<br>%(PingLagColor)s<tab>- Farbe für PING/LAG",
+        "debugText*text_tooltip": "HTML Formatierung möglich\nverfügbare Makros:\n%(PING)s<tab>- aktueller Ping"
+                                  "\n%(FPS)s<tab>- aktuelle FPS\n%(PingLagColor)s<tab>- Farbe für PING/LAG",
         "debugText*x": "Position waagerecht (X-Achse)",
         "debugText*y": "Position senkrecht (Y-Achse)",
         "debugText*scale": "Skalierung des 'Debug' Panels",
@@ -144,7 +144,7 @@ translate = {
     "battle_timer": {
         "header": "Gefechtstimer",
         "timerTemplate": "Formatierung des Textfeldes für den Gefechtstimer",
-        "timerTemplate_tooltip": "Verfügbare Makros:<br> %(timer)s<br> %(timerColor)s<br>HTML Formatierung möglich",
+        "timerTemplate_tooltip": "Verfügbare Makros:\n %(timer)s\n %(timerColor)s\nHTML Formatierung möglich",
         "timerColorEndBattle": "Farbe Makro %(timerColor)s wenn weniger als 2:00 Min.",
         "timerColor": "Farbe Makro %(timerColor)s"
     },
@@ -183,9 +183,9 @@ translate = {
         "position*y": "Position des Haupt Textfeldes senkrecht",
         "template": "Formatierung des Haupt-Textfeldes",
         "display_on_allies": "Bei Verbündeten anzeigen",
-        "template_tooltip": "Makroformat:% (Name) Datentyp s:d:f.<br>"
-                            "s-string, d-dezimal, f-gleitkomma <br><br>"
-                            "Liste der verfügbaren Makros:<br>"
+        "template_tooltip": "Makroformat:% (Name) Datentyp s:d:f.\n"
+                            "s-string, d-dezimal, f-gleitkomma \n\n"
+                            "Liste der verfügbaren Makros:\n"
                             "<li>%(countedArmor)d - Gezählte Rüstung.</li>"
                             "<li>%(piercingPower)d - Entfernungsbasierte Projektildurchdringung.</li>"
                             "<li>%(piercingReserve)d - Penetrationsreserve nach dem Durchbohren der Rüstung.</li>"
@@ -207,8 +207,8 @@ translate = {
         "wg_log_hide_crits_tooltip": "Entfernte 'kritische Treffer' aus dem detaillierten WG Protokoll",
         "wg_log_pos_fix": "Verschiebe Protokolle an die richtigen Positionen",
         "wg_log_pos_fix_tooltip": "Tauscht die Protokolle für verursachten und erhaltenen Schadens aus,"
-                                  "<br>Erhaltenen Schaden nach unten, Verursachten Schaden nach oben."
-                                  "<br>Ansonsten umgekehrt."
+                                  "\nErhaltenen Schaden nach unten, Verursachten Schaden nach oben."
+                                  "\nAnsonsten umgekehrt."
     },
     "log_total": {
         "header": "Gesamtprotokoll der Effizienz des Spielers",
@@ -233,8 +233,8 @@ translate = {
         "settings*x_tooltip": "In Bezug auf die Schadensanzeige.",
         "settings*y": "Position des detailierten Protokolls senkrecht",
         "settings*align": "Ausrichtung text:",
-        "settings*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
-                                  "<br>right - Rechtsbündig",
+        "settings*align_tooltip": "Ausrichtung:\nleft - Linksbündig\ncenter - Zentriert ausgerichtet"
+                                  "\nright - Rechtsbündig",
         "settings*y_tooltip": "In Bezug auf die Schadensanzeige.",
         "reverse": "zeige detailiertes Protokoll für einzelne Treffer",
         "shellColor*gold": "Einstellung für Makro: %(shellColor)s - Premium Munition",
@@ -245,8 +245,8 @@ translate = {
         "settings*x": "Position waagerecht von der Mitte gemessen",
         "settings*y": "Position senkrecht vom oberen Rand gemessen",
         "settings*align": "Ausrichtung des Textes:",
-        "settings*align_tooltip": "Ausrichtung:<br>left - Linksbündig<br>center - Zentriert ausgerichtet"
-                                  "<br>right - Rechtsbündig"
+        "settings*align_tooltip": "Ausrichtung:\nleft - Linksbündig\ncenter - Zentriert ausgerichtet"
+                                  "\nright - Rechtsbündig"
     },
     "team_bases_panel": {
         "header": "TEAM BASES PANEL (Leiste zur Anzeige der Basiseroberung)",
@@ -294,7 +294,7 @@ translate = {
         "zoomToGunMarker": "Aktivieren der Annäherung der Kamera an die Zentralmarkierung",
         "dynamic_zoom*zoomXMeters": "Empfindlichkeit bei Annäherung: in Metern",
         "dynamic_zoom*zoomXMeters_tooltip": "(Dynamischer Zoom = Enfernung / Empfindlichkeit bei Annäherung)"
-                                            "<br>Standard: alle 17 Meter + 1 (je kleiner die Zahl, desto mehr Zoom",
+                                            "\nStandard: alle 17 Meter + 1 (je kleiner die Zahl, desto mehr Zoom",
         "zoomSteps*enabled": "Zoom Stufen.",
         "zoomSteps*steps": "Zooms Stufen. (Trennung durch Komma)",
         "zoomSteps*steps_tooltip": "Sie können beliebig viele Werte (getrennt durch Komma und Leerzeichren)"
@@ -378,9 +378,9 @@ translate = {
         "global*enemyColorBlind": "Globale Farbe: Feind ist farbenblind",
         "global*enemy": "Globale Farbe: Feind",
         "global*alpha": "Transparenz der Panels",
-        "global*alpha_tooltip": "0 - vollständig transparent. <br> 1 - nicht transparent.",
+        "global*alpha_tooltip": "0 - vollständig transparent. \n 1 - nicht transparent.",
         "global*bgAlpha": "Hintergrundtransparenz von Panels",
-        "global*bgAlpha_tooltip": "0 - vollständig transparent. <br> 1 - nicht transparent.",
+        "global*bgAlpha_tooltip": "0 - vollständig transparent. \n 1 - nicht transparent.",
         "global*deadColor": "Zerstört",
     },
     "service_channel_filter": {
@@ -417,19 +417,19 @@ translate = {
     "updateDialog": {
         "buttonOK": "RESTART",
         "buttonWAIT": "WAIT",
-        "titleOK": "<br>Update - Press RESTART",
+        "titleOK": "\nUpdate - Press RESTART",
         "messageWAIT": "Wait while downloading Updates v{0}",
         "messageOK": "Click RESTART to complete the Upgrade process. v{0}",
         "buttonAUTO": "Automatically",
         "buttonHANDLE": "Manually",
         "buttonCancel": "Cancel",
         "messageNEW":
-            "<font size='15'><font size='20' color='#FFFF00'><b>Choose a download option.</b></font><br>"
-            "<p align='left'><font color ='#00FF00'><b>Automatically</b></font> - download and unpack the archive"
-            "updates to the folder {0}<br><font color='#FFFF00'><b>Manually</b></font> - will open a link to"
-            "the same archive, but you will have to extract the package and copy the *.wotmod file manually.</p></font>"
-            "<br><font size='20 'color='#FFFF00'><b>Changelog</b></font><br>",
-        "titleNEW": "<br><font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
+            "<font size='15'><font size='20' color='#FFFF00'><b>Choose a download option.</b></font>\n"
+            "<p><font color ='#00FF00'><b>Automatically</b></font> - download and unpack the archive"
+            "updates to the folder {0}\n<font color='#FFFF00'><b>Manually</b></font> - will open a link to"
+            "the same archive, but you will have to extract the package and copy the *.wotmod file manually."
+            "</p></font>\n<font size='20 'color='#FFFF00'><b>Changelog</b></font>\n",
+        "titleNEW": "\n<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
     },
     "sixth_sense": {
         "header": "Sixth sense.",

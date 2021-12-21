@@ -64,4 +64,4 @@ class ObserverCore(object):
     def showLockedDialog(self):
         locked = MESSAGES.LOCKED_BY_FILE_NAME.format(FILE_NAME.format(__version__))
         logWarning(locked)
-        yield await(dialogs.showSimple(self.getLockedDialog(getRandomBigLogo(), locked), DialogButtons.PURCHASE))
+        yield await(dialogs.showSimple(self.getLockedDialog(getRandomBigLogo(), locked), DialogButtons.CANCEL))

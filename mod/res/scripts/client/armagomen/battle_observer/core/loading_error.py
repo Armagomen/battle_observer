@@ -18,12 +18,12 @@ class LoadingError(object):
             self.message = "<font size='18'>Ошибка загрузки: файлы <font color='#FFFF00'><b>" \
                            "poliroid.modslistapi*.wotmod | polarfox.vxSettingsApi*.wotmod</b></font> отсутствуют " \
                            "либо повреждены. Пожалуйста скопируйте корректные файлы из архива с модом." \
-                           "</font><br><br>{}".format(errorMessage)
+                           "</font>\n\n{}".format(errorMessage)
         else:
             self.message = "<font size='18'> Error loading: files <font color='#FFFF00'><b>" \
                            "poliroid.modslistapi*.wotmod | polarfox.vxSettingsApi*.wotmod</b></font> missing or " \
                            "damaged. Please copy correct files from the archive with the mod." \
-                           "</font><br><br>{}".format(errorMessage)
+                           "</font>\n\n{}".format(errorMessage)
         self.loadAlias = VIEW_ALIAS.LOGIN if self.getSetting(GAME.LOGIN_SERVER_SELECTION) else VIEW_ALIAS.LOBBY_HANGAR
         g_events.onLoginLoaded += self.onLoginLoaded
 

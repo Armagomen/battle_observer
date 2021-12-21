@@ -173,19 +173,29 @@ def getObserverCachePath():
     path = os.path.join(os.path.split(path)[0], "battle_observer")
     if not os.path.exists(path):
         os.makedirs(path)
-    f_path = os.path.join(path, "crew_ignored.json")
-    if not os.path.isfile(f_path):
-        createFileInDir(f_path, {"vehicles": []})
-    return f_path
+    return path
 
 
-ignored_vehicles = set(getFileData(getObserverCachePath())["vehicles"])
+def getCrewPath():
+    path = os.path.join(getObserverCachePath(), "crew_ignored.json")
+    if not os.path.isfile(path):
+        createFileInDir(path, {"vehicles": []})
+    return path
+
+
+def getUpdatePath():
+    path = os.path.join(getObserverCachePath(), "update")
+    if not os.path.exists(path):
+        os.makedirs(path)
+    return path
+
+
+ignored_vehicles = set(getFileData(getCrewPath())["vehicles"])
 
 
 def addVehicleToCache(vehicle):
-    path = getObserverCachePath()
     ignored_vehicles.add(vehicle)
-    createFileInDir(path, {"vehicles": sorted(ignored_vehicles)})
+    createFileInDir(getCrewPath(), {"vehicles": sorted(ignored_vehicles)})
 
 
 def loadError(path, file_name, error):
