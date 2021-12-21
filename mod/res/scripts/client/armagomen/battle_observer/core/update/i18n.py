@@ -33,26 +33,6 @@ en = {
     "titleNEW": "\n<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
 }
 
-buttonsRU = {
-    "restart": "ПЕРЕЗАГРУЗКА",
-    "auto": "Автоматически",
-    "handle": "Вручную",
-    "cancel": "Отмена",
-}
-
-buttonsEN = {
-    "restart": "RESTART",
-    "auto": "Automatically",
-    "handle": "Manually",
-    "cancel": "Cancel",
-}
-
-
-def getButtons():
-    if GLOBAL.RU_LOCALIZATION:
-        return buttonsRU
-    return buttonsEN
-
 
 def getI18n():
     if GLOBAL.RU_LOCALIZATION:

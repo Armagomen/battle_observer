@@ -6,7 +6,7 @@ from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
-from armagomen.battle_observer.core.update.i18n import getI18n, getButtons
+from armagomen.battle_observer.core.update.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS, MESSAGES, getRandomBigLogo
 from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse
 from armagomen.utils.dialogs import UpdateDialogs
@@ -62,7 +62,7 @@ class DownloadThread(object):
                         archive.extract(newFile, self.workingDir)
         title = getRandomBigLogo() + self.i18n['titleOK']
         message = self.i18n['messageOK'].format(self.updateData.get('tag_name', __version__))
-        self.dialogs.showUpdateFinished(title, message, getButtons())
+        self.dialogs.showUpdateFinished(title, message)
         self.closeDownloader()
 
 
@@ -118,7 +118,7 @@ class UpdateMain(DownloadThread):
         title = getRandomBigLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', __version__))
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.workingDir, gitMessage)
-        result = yield await(self.dialogs.showNewVersionAvailable(title, message, self.URLS, getButtons()))
+        result = yield await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
         if result:
             self.startDownload()
         if self.inLogin:
