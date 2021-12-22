@@ -15,6 +15,8 @@ from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from web.cache.web_downloader import WebDownloader
 
+WAITING_UPDATE = 'updating'
+
 
 class DownloadThread(object):
     URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
@@ -28,7 +30,7 @@ class DownloadThread(object):
         self.modPath = os.path.join(*getCurrentModPath())
 
     def startDownload(self):
-        Waiting.show('updating')
+        Waiting.show(WAITING_UPDATE)
         mod_version = self.updateData.get('tag_name', __version__)
         path = os.path.join(getUpdatePath(), mod_version + ".zip")
         if os.path.isfile(path):
@@ -58,8 +60,8 @@ class DownloadThread(object):
                 if newFile not in old_files:
                     logInfo('update, add new file {}'.format(newFile))
                     archive.extract(newFile, self.modPath)
-        if Waiting.isOpened('updating'):
-            Waiting.hide('updating')
+        if Waiting.isOpened(WAITING_UPDATE):
+            Waiting.hide(WAITING_UPDATE)
 
     def onDownloaded(self, _url, data):
         self.closeDownloader()
@@ -75,9 +77,9 @@ class DownloadThread(object):
             self.downloadError(_url)
 
     def downloadError(self, url):
-        if Waiting.isOpened('updating'):
-            Waiting.hide('updating')
-        message = 'update {} - download failed: {}'.format(self.updateData.get('tag_name', __version__), url)
+        if Waiting.isOpened(WAITING_UPDATE):
+            Waiting.hide(WAITING_UPDATE)
+        message = 'update download failed: {}'.format(url)
         logError(message)
         self.dialogs.showUpdateError(message)
 
