@@ -10,12 +10,10 @@ from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
 
 if GLOBAL.RU_LOCALIZATION:
-    labels = (
-        "ПЕРЕЗАГРУЗКА", "Автоматически", "Вручную", "Отмена", "Закрыть", "Применить", "Игнорировать на этом танке")
+    labels = ("ПЕРЕЗАГРУЗКА", "Автоматически", "Вручную", "Отмена", "Закрыть", "Применить", "Игнорировать этот танк")
 else:
     labels = ("RESTART", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank")
-__buttons = namedtuple("BUTTONS", "restart auto handle cancel close apply ignore")
-buttons = __buttons(*labels)
+buttons = namedtuple("BUTTONS", "restart auto handle cancel close apply ignore")(*labels)
 
 
 class DialogBase(object):

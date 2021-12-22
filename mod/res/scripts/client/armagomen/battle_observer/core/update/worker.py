@@ -1,14 +1,13 @@
 import os
 import re
 from collections import defaultdict
-from io import BytesIO
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.update.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS, MESSAGES, getRandomBigLogo
-from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse
+from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse, getUpdatePath, createFileInDir
 from armagomen.utils.dialogs import UpdateDialogs
 from armagomen.utils.events import g_events
 from async import async, await
@@ -19,57 +18,72 @@ from web.cache.web_downloader import WebDownloader
 
 class DownloadThread(object):
     URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
-    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "workingDir", "updateData", "i18n")
+    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "modPath", "updateData", "i18n")
 
     def __init__(self):
         self.i18n = getI18n()
         self.updateData = defaultdict()
         self.dialogs = UpdateDialogs()
         self.downloader = None
-        self.workingDir = os.path.join(*getCurrentModPath())
+        self.modPath = os.path.join(*getCurrentModPath())
 
     def startDownload(self):
-        url = self.URLS['last']
         Waiting.show('updating')
-        self.downloader = WebDownloader(GLOBAL.ONE)
-        if url:
-            logInfo('downloading started {} at {}'.format(self.updateData.get('tag_name', __version__), url))
-            self.downloader.download(url, self.onDownloaded)
+        mod_version = self.updateData.get('tag_name', __version__)
+        path = os.path.join(getUpdatePath(), mod_version + ".zip")
+        if os.path.isfile(path):
+            logInfo('update is already downloaded to {}'.format(path))
+            self.extractZipArchive(path)
+            self.dialogs.showUpdateFinished(getRandomBigLogo() + self.i18n['titleOK'],
+                                            self.i18n['messageOK'].format(mod_version))
         else:
-            Waiting.hide('updating')
-            self.closeDownloader()
-            self.downloadError(url)
+            url = self.URLS['last']
+            self.downloader = WebDownloader(GLOBAL.ONE)
+            if url:
+                logInfo('downloading update started {} at {}'.format(mod_version, url))
+                self.downloader.download(url, self.onDownloaded)
+            else:
+                self.closeDownloader()
+                self.downloadError(url)
 
     def closeDownloader(self):
         if self.downloader is not None:
             self.downloader.close()
             self.downloader = None
 
+    def extractZipArchive(self, path):
+        old_files = os.listdir(self.modPath)
+        with ZipFile(path, "r") as archive:
+            for newFile in archive.namelist():
+                if newFile not in old_files:
+                    logInfo('update, add new file {}'.format(newFile))
+                    archive.extract(newFile, self.modPath)
+        if Waiting.isOpened('updating'):
+            Waiting.hide('updating')
+
     def onDownloaded(self, _url, data):
-        Waiting.hide('updating')
         self.closeDownloader()
         if data is not None:
-            logInfo('downloading finished: {}'.format(_url))
-            old_files = os.listdir(self.workingDir)
-            with BytesIO(data) as zip_file, ZipFile(zip_file) as archive:
-                for newFile in archive.namelist():
-                    if newFile not in old_files:
-                        logInfo('update, add new file {}'.format(newFile))
-                        archive.extract(newFile, self.workingDir)
-            title = getRandomBigLogo() + self.i18n['titleOK']
-            message = self.i18n['messageOK'].format(self.updateData.get('tag_name', __version__))
-            self.dialogs.showUpdateFinished(title, message)
+            mod_version = self.updateData.get('tag_name', __version__)
+            path = os.path.join(getUpdatePath(), mod_version + ".zip")
+            createFileInDir(path, data)
+            logInfo('downloading update finished to: {}'.format(path))
+            self.extractZipArchive(path)
+            self.dialogs.showUpdateFinished(getRandomBigLogo() + self.i18n['titleOK'],
+                                            self.i18n['messageOK'].format(mod_version))
         else:
             self.downloadError(_url)
 
     def downloadError(self, url):
+        if Waiting.isOpened('updating'):
+            Waiting.hide('updating')
         message = 'update {} - download failed: {}'.format(self.updateData.get('tag_name', __version__), url)
         logError(message)
         self.dialogs.showUpdateError(message)
 
 
 class UpdateMain(DownloadThread):
-    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "workingDir", "updateData", "i18n")
+    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "modPath", "updateData", "i18n")
 
     def __init__(self):
         super(UpdateMain, self).__init__()
@@ -117,7 +131,7 @@ class UpdateMain(DownloadThread):
         self.dialogs.setView(view)
         title = getRandomBigLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', __version__))
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
-        message = self.i18n['messageNEW'].format(self.workingDir, gitMessage)
+        message = self.i18n['messageNEW'].format(self.modPath, gitMessage)
         result = yield await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
         if result:
             self.startDownload()

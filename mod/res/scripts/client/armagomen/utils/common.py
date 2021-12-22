@@ -1,4 +1,4 @@
-import codecs
+import io
 import json
 import locale
 import math
@@ -154,18 +154,22 @@ def encodeData(data):
 
 def getFileData(path):
     """Gets a dict from JSON."""
-    try:
-        with open(path, 'r') as fh:
-            return encodeData(json.load(fh))
-    except Exception:
-        with codecs.open(path, 'r', 'utf-8-sig') as fh:
+    if ".json" in path:
+        with io.open(path, 'r', encoding='utf-8-sig') as fh:
             return encodeData(json.loads(fh.read()))
+    else:
+        with io.open(path, 'rb') as fh:
+            return fh.read()
 
 
 def createFileInDir(path, data):
     """Creates a new file in a folder or replace old."""
-    with open(path, 'w') as f:
-        json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
+    if isinstance(data, dict):
+        with io.open(path, 'w') as f:
+            json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
+    else:
+        with io.open(path, 'wb') as f:
+            f.write(data)
 
 
 def getObserverCachePath():
@@ -199,7 +203,7 @@ def addVehicleToCache(vehicle):
 
 
 def loadError(path, file_name, error):
-    with codecs.open(os.path.join(path, 'Errors.log'), 'a', 'utf-8-sig') as fh:
+    with io.open(os.path.join(path, 'Errors.log'), 'a', encoding='utf-8-sig') as fh:
         fh.write('%s: %s: %s, %s\n' % (time.asctime(), 'ERROR CONFIG DATA', file_name, error))
 
 
