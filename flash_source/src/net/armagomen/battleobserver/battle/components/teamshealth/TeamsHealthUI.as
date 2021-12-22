@@ -55,6 +55,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
+			this.removeChildren();
 			this.hpBars.remove();
 			this.hpBars = null;
 			this.greenDiff = null;
@@ -76,9 +77,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			switch (settings.style)
 			{
 			case "league": 
-				return new League(settings, barWidth, this.isColorBlind(), this.colors);
+				return new League(barWidth, this.isColorBlind(), this.colors);
 			default: 
-				return new Default(settings, barWidth, this.isColorBlind(), this.colors);
+				return new Default(settings.outline, barWidth, this.isColorBlind(), this.colors);
 			}
 		}
 		
