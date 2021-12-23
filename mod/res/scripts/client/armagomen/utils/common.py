@@ -3,7 +3,6 @@ import json
 import locale
 import math
 import os
-import time
 from collections import namedtuple
 from colorsys import hsv_to_rgb
 from shutil import rmtree
@@ -208,11 +207,6 @@ ignored_vehicles = set(openJsonFile(getCrewPath()).get("vehicles"))
 def addVehicleToCache(vehicle):
     ignored_vehicles.add(vehicle)
     writeJsonFile(getCrewPath(), {"vehicles": sorted(ignored_vehicles)})
-
-
-def loadError(path, file_name, error):
-    with open(os.path.join(path, 'Errors.log'), 'a') as fh:
-        fh.write('%s: %s: %s, %s\n' % (time.asctime(), 'ERROR CONFIG DATA', file_name, error))
 
 
 def overrideMethod(wg_class, method_name="__init__"):

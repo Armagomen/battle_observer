@@ -1,4 +1,4 @@
-from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, MAIN, STATISTICS
+from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, STATISTICS
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -131,10 +131,6 @@ class ViewSettings(object):
             self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
         if ALIASES.TIMER in self.__components:
             self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
-        if self.cfg.main[MAIN.HIDE_CHAT] and self.isRandomBattle:
-            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.BATTLE_MESSENGER)
-        if self.cfg.main[MAIN.HIDE_HINT]:
-            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.HINT_PANEL)
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)

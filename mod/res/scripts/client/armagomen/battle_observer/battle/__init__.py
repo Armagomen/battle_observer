@@ -71,7 +71,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
         flash.as_observerCreateComponents(view_settings.getComponents(), self._statistics, view_settings.isIconsEnabled)
         flash.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
-        flash.as_observerHideWgComponents(view_settings.getHiddenWGComponents())
+        # flash.as_observerHideWgComponents(view_settings.getHiddenWGComponents())
+        callback(2.0, flash, "as_observerHideWgComponents", view_settings.getHiddenWGComponents())
 
     def onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in self._viewAliases:
