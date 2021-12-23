@@ -20,9 +20,10 @@ package net.armagomen.battleobserver.battle.components
 			{
 				var settings:Object = this.getSettings();
 				var colors:Object = this.getColors();
-				this.own_health = new ProgressBar(settings.x - 70, settings.y, 140, 20, 0.4, 0.25, null, colors.global.ally, null, 0.2);
-				this.own_health.setOutline(false, colors.global.ally, 0.45);
-				this.own_health.addTextField(70, -2, "center", Filters.normalText, this.getShadowSettings());
+				var x:Number = -settings.width / 2;
+				this.own_health = new ProgressBar(x, settings.y, settings.width, settings.height, settings.alpha, settings.alpha * 0.7, null, colors.global.ally, null, 0.2);
+				this.own_health.setOutline(false, colors.global.ally, settings.alpha, settings.width, settings.height);
+				this.own_health.addTextField(x, -2, "center", Filters.normalText, this.getShadowSettings());
 				this.addChild(this.own_health);
 			}
 		}

@@ -30,15 +30,13 @@
 			this.animationTime = time;
 			this.x = x;
 			this.y = y;
-			this.width = width;
-			this.height = height;
 			this.barColor = Utils.colorConvert(color);
 			this.background.graphics.beginFill(Utils.colorConvert(bgColor), Math.max(0.1, bgAlpha));
-			this.background.graphics.drawRect(0, 0, this.width, this.height);
+			this.background.graphics.drawRect(0, 0, width, height);
 			this.background.graphics.endFill();
 			this.addChild(this.background);
 			this.bar.graphics.beginFill(this.barColor, Math.max(0.1, alpha));
-			this.bar.graphics.drawRect(0, 0, this.width, this.height);
+			this.bar.graphics.drawRect(0, 0, width, height);
 			this.bar.graphics.endFill();
 			if (filters != null)
 			{
@@ -67,11 +65,11 @@
 			this.uiText = new TextExt(x, y, format, align, shdowSettings, this);
 		}
 		
-		public function setOutline(customColor:Boolean = false, color:String = "#000000", alpha:Number = 1.0):void
+		public function setOutline(customColor:Boolean = false, color:String = "#000000", alpha:Number = 1.0, width:Number = 0, height:Number = 0):void
 		{
 			this.customColor = customColor;
 			this.outline.graphics.lineStyle(1, customColor ? Utils.colorConvert(color) : this.barColor, Math.max(0.2, alpha), true, LineScaleMode.NONE);
-			this.outline.graphics.drawRect(0, 0, this.width, this.height);
+			this.outline.graphics.drawRect(0, 0, width, height);
 			this.addChild(this.outline);
 		}
 		

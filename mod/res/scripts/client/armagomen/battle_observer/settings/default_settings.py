@@ -474,6 +474,9 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: 120,
+            GLOBAL.WIDTH: 140,
+            GLOBAL.HEIGHT: 20,
+            GLOBAL.ALPHA: 0.4,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             OWN_HEALTH.TEMPLATE: "%(health)s/%(maxHealth)s (%(percent)s%%)",
             GLOBAL.AVG_COLOR: {"saturation": 1.0, "brightness": 1.0}

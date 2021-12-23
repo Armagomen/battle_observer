@@ -20,8 +20,8 @@
 			
 			if (outline.enabled)
 			{
-				this.allyBar.setOutline(true, outline.color, Math.max(0.2, colors.bgAlpha));
-				this.enemyBar.setOutline(true, outline.color, Math.max(0.2, colors.bgAlpha));
+				this.allyBar.setOutline(true, outline.color, Math.max(0.2, colors.bgAlpha), barWidth, 22);
+				this.enemyBar.setOutline(true, outline.color, Math.max(0.2, colors.bgAlpha), barWidth, 22);
 			}
 			
 			this.addChild(this.allyBar);

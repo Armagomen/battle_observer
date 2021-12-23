@@ -1,4 +1,4 @@
-import io
+import codecs
 import json
 import locale
 import math
@@ -154,22 +154,18 @@ def encodeData(data):
 
 def getFileData(path):
     """Gets a dict from JSON."""
-    if ".json" in path:
-        with io.open(path, 'r', encoding='utf-8-sig') as fh:
-            return encodeData(json.loads(fh.read()))
-    else:
-        with io.open(path, 'rb') as fh:
-            return fh.read()
+    with codecs.open(path, 'r', encoding='utf-8') as dataFile:
+        return json.loads(dataFile.read(), encoding='utf-8')
 
 
 def createFileInDir(path, data):
     """Creates a new file in a folder or replace old."""
     if isinstance(data, dict):
-        with io.open(path, 'w') as f:
-            json.dump(data, f, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
+        with codecs.open(path, 'w', encoding='utf-8') as dataFile:
+            json.dump(data, dataFile, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
     else:
-        with io.open(path, 'wb') as f:
-            f.write(data)
+        with open(path, 'wb') as dataFile:
+            dataFile.write(data)
 
 
 def getObserverCachePath():
@@ -194,7 +190,7 @@ def getUpdatePath():
     return path
 
 
-ignored_vehicles = set(getFileData(getCrewPath())["vehicles"])
+ignored_vehicles = set(getFileData(getCrewPath()).get("vehicles"))
 
 
 def addVehicleToCache(vehicle):
@@ -203,7 +199,7 @@ def addVehicleToCache(vehicle):
 
 
 def loadError(path, file_name, error):
-    with io.open(os.path.join(path, 'Errors.log'), 'a', encoding='utf-8-sig') as fh:
+    with codecs.open(os.path.join(path, 'Errors.log'), 'a', encoding='utf-8') as fh:
         fh.write('%s: %s: %s, %s\n' % (time.asctime(), 'ERROR CONFIG DATA', file_name, error))
 
 
