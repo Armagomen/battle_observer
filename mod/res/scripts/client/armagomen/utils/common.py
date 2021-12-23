@@ -68,13 +68,18 @@ def logWarning(message):
     BigWorld.logWarning(MOD_NAME, str(message), None)
 
 
-def getPreferencesFilePath():
-    return BigWorld.wg_getPreferencesFilePath()
+preferencesDir = None
+
+
+def getPreferencesDir():
+    global preferencesDir
+    if preferencesDir in None:
+        normpath = os.path.normpath(unicode(BigWorld.wg_getPreferencesFilePath(), 'utf-8', errors='ignore'))
+        preferencesDir = os.path.split(normpath)[0]
+    return preferencesDir
 
 
 def restartGame():
-    BigWorld.savePreferences()
-    BigWorld.worldDrawEnabled(False)
     BigWorld.restartGame()
 
 
@@ -116,7 +121,7 @@ def cleanupUpdates(cwd):
     # Iterate and remove each item in the appropriate manner
     if contents:
         for i in contents:
-            os.remove(i) if os.path.isfile(i) or os.path.islink(i) else rmtree(i)
+            os.unlink(i) if os.path.isfile(i) or os.path.islink(i) else rmtree(i, ignore_errors=True)
 
 
 def removeDirs(normpath, name=None):
@@ -127,8 +132,7 @@ def removeDirs(normpath, name=None):
 
 
 def clearClientCache(category=None):
-    path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
-    path = os.path.split(path)[0]
+    path = getPreferencesDir()
     dirs = (
         "account_caches", "battle_results", "clan_cache", "custom_data", "dossier_cache", "messenger_cache",
         "storage_cache", "tutorial_cache", "veh_cmp_cache", "web_cache", "profile"
@@ -138,6 +142,7 @@ def clearClientCache(category=None):
             removeDirs(os.path.join(path, dirName), dirName)
     else:
         removeDirs(os.path.join(path, category), category)
+    cleanupObserverUpdates()
 
 
 def encodeData(data):
@@ -169,8 +174,7 @@ def createFileInDir(path, data):
 
 
 def getObserverCachePath():
-    path = os.path.normpath(unicode(getPreferencesFilePath(), 'utf-8', errors='ignore'))
-    path = os.path.join(os.path.split(path)[0], "battle_observer")
+    path = os.path.join(getPreferencesDir(), "battle_observer")
     if not os.path.exists(path):
         os.makedirs(path)
     return path
@@ -188,6 +192,14 @@ def getUpdatePath():
     if not os.path.exists(path):
         os.makedirs(path)
     return path
+
+
+def cleanupObserverUpdates():
+    root = getUpdatePath()
+    for filename in os.listdir(root):
+        filePath = os.path.join(root, filename)
+        if os.path.isfile(filePath):
+            os.unlink(filePath)
 
 
 ignored_vehicles = set(getFileData(getCrewPath()).get("vehicles"))
