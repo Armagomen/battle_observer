@@ -7,7 +7,7 @@ from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.update.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS, MESSAGES, getRandomBigLogo
-from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse, getUpdatePath, createFileInDir
+from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse, getUpdatePath, writeJsonFile
 from armagomen.utils.dialogs import UpdateDialogs
 from armagomen.utils.events import g_events
 from async import async, await
@@ -68,7 +68,8 @@ class DownloadThread(object):
         if data is not None:
             mod_version = self.updateData.get('tag_name', __version__)
             path = os.path.join(getUpdatePath(), mod_version + ".zip")
-            createFileInDir(path, data)
+            with open(path, "wb") as zipArchive:
+                zipArchive.write(data)
             logInfo('downloading update finished to: {}'.format(path))
             self.extractZipArchive(path)
             self.dialogs.showUpdateFinished(getRandomBigLogo() + self.i18n['titleOK'],

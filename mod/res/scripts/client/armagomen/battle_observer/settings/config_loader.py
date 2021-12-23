@@ -1,7 +1,7 @@
 import os
 
 from armagomen.constants import LOAD_LIST, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, createFileInDir, getFileData
+from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
@@ -33,7 +33,7 @@ class ConfigLoader(object):
         else:
             load_json = os.path.join(self.path, 'load.json')
             if os.path.exists(load_json):
-                self.cName = getFileData(load_json).get('loadConfig')
+                self.cName = openJsonFile(load_json).get('loadConfig')
             else:
                 createLoadJson = True
         if createLoadJson:
@@ -47,14 +47,14 @@ class ConfigLoader(object):
         if cName is None:
             cName = 'ERROR_CreatedAutomatically_ERROR'
         path = os.path.join(self.path, 'load.json')
-        createFileInDir(path, {'loadConfig': cName})
+        writeJsonFile(path, {'loadConfig': cName})
         if error:
             self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
             return cName
 
     def updateConfigFile(self, fileName, settings):
         path = os.path.join(self.path, self.cName, '{}.json'.format(fileName))
-        createFileInDir(path, settings)
+        writeJsonFile(path, settings)
 
     @staticmethod
     def isNotEqualLen(data1, data2):
@@ -105,14 +105,14 @@ class ConfigLoader(object):
             internal_cfg = getattr(self.settings, module_name)
             if file_name in listdir:
                 try:
-                    if self.updateData(getFileData(file_path), internal_cfg):
-                        createFileInDir(file_path, internal_cfg)
+                    if self.updateData(openJsonFile(file_path), internal_cfg):
+                        writeJsonFile(file_path, internal_cfg)
                 except Exception as error:
                     self.errorMessages.append(" ".join((file_path, error.message)))
                     logWarning('readConfig: {} {}'.format(file_name, repr(error)))
                     continue
             else:
-                createFileInDir(file_path, internal_cfg)
+                writeJsonFile(file_path, internal_cfg)
             self.settings.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
         self.settings.onUserConfigUpdateComplete()

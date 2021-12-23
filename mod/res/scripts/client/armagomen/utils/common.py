@@ -73,7 +73,7 @@ preferencesDir = None
 
 def getPreferencesDir():
     global preferencesDir
-    if preferencesDir in None:
+    if preferencesDir is None:
         normpath = os.path.normpath(unicode(BigWorld.wg_getPreferencesFilePath(), 'utf-8', errors='ignore'))
         preferencesDir = os.path.split(normpath)[0]
     return preferencesDir
@@ -157,20 +157,20 @@ def encodeData(data):
         return data
 
 
-def getFileData(path):
+def openJsonFile(path):
     """Gets a dict from JSON."""
-    with codecs.open(path, 'r', encoding='utf-8') as dataFile:
-        return json.loads(dataFile.read(), encoding='utf-8')
+    try:
+        with open(path, 'r') as dataFile:
+            return encodeData(json.load(dataFile, encoding='utf-8-sig'))
+    except Exception:
+        with codecs.open(path, 'r', 'utf-8-sig') as dataFile:
+            return encodeData(json.loads(dataFile.read(), encoding='utf-8-sig'))
 
 
-def createFileInDir(path, data):
-    """Creates a new file in a folder or replace old."""
-    if isinstance(data, dict):
-        with codecs.open(path, 'w', encoding='utf-8') as dataFile:
-            json.dump(data, dataFile, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
-    else:
-        with open(path, 'wb') as dataFile:
-            dataFile.write(data)
+def writeJsonFile(path, data):
+    """Creates a new json file in a folder or replace old."""
+    with open(path, 'w') as dataFile:
+        json.dump(data, dataFile, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
 
 
 def getObserverCachePath():
@@ -183,7 +183,7 @@ def getObserverCachePath():
 def getCrewPath():
     path = os.path.join(getObserverCachePath(), "crew_ignored.json")
     if not os.path.isfile(path):
-        createFileInDir(path, {"vehicles": []})
+        writeJsonFile(path, {"vehicles": []})
     return path
 
 
@@ -202,16 +202,16 @@ def cleanupObserverUpdates():
             os.unlink(filePath)
 
 
-ignored_vehicles = set(getFileData(getCrewPath()).get("vehicles"))
+ignored_vehicles = set(openJsonFile(getCrewPath()).get("vehicles"))
 
 
 def addVehicleToCache(vehicle):
     ignored_vehicles.add(vehicle)
-    createFileInDir(getCrewPath(), {"vehicles": sorted(ignored_vehicles)})
+    writeJsonFile(getCrewPath(), {"vehicles": sorted(ignored_vehicles)})
 
 
 def loadError(path, file_name, error):
-    with codecs.open(os.path.join(path, 'Errors.log'), 'a', encoding='utf-8') as fh:
+    with open(os.path.join(path, 'Errors.log'), 'a') as fh:
         fh.write('%s: %s: %s, %s\n' % (time.asctime(), 'ERROR CONFIG DATA', file_name, error))
 
 
@@ -273,7 +273,7 @@ def urlResponse(url):
     response = openUrl(url)
     responseData = response.getData()
     if responseData is not None:
-        return json.loads(responseData, "utf-8")
+        return json.loads(responseData, "utf-8-sig")
     return responseData
 
 
