@@ -14,6 +14,7 @@ from helpers.func_utils import callback
 from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerView
 
 
+# disable field mail tips
 @overrideMethod(PromoController, "__tryToShowTeaser")
 def __tryToShowTeaser(base, *args):
     if not settings.main[MAIN.FIELD_MAIL]:
@@ -27,6 +28,7 @@ def changeVehicle(base, *args, **kwargs):
     g_events.onHangarVehicleChanged()
 
 
+# disable commander voices
 @overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByTankmen")
 @overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByCommanderSkinID")
 def setSoundMode(base, *args, **kwargs):
@@ -35,23 +37,27 @@ def setSoundMode(base, *args, **kwargs):
     return base(*args, **kwargs)
 
 
+# disable dogTag
 @overrideMethod(_ClientArenaVisitor, "hasDogTag")
 def hasDogTag(base, *args, **kwargs):
     return False if settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
 
 
+# fix wg dogTag bug
 @overrideMethod(DogTagComponent, "_isObserving")
 def _isObservingDogTagFix(*args):
     player = getPlayer()
     return player is None or player.vehicle is None or not player.vehicle.isPlayerVehicle
 
 
+# update gun dispersion
 @overrideMethod(VehicleGunRotator, "__updateGunMarker")
 def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
     base(rotator, *args, **kwargs)
     g_events.onDispersionAngleChanged(rotator)
 
 
+# disable battle chat
 @overrideMethod(BattleMessengerView, "_populate")
 def messanger_populate(base, messanger):
     base(messanger)
@@ -67,6 +73,7 @@ def messanger_dispose(base, *args):
         pass
 
 
+# disable battle hints
 @overrideMethod(hint_plugins, "createPlugins")
 def createPlugins(base, *args, **kwargs):
     result = base(*args, **kwargs)
@@ -75,10 +82,7 @@ def createPlugins(base, *args, **kwargs):
     return result
 
 
-STUN_START = "artillery_stun_effect_start"
-STUN_END = "artillery_stun_effect_end"
-
-
+# disable battle artillery_stun_effect sound
 @overrideMethod(TimersPanel, "__playStunSoundIfNeed")
 def playStunSoundIfNeed(base, *args, **kwargs):
     if not settings.main[MAIN.STUN_SOUND]:
