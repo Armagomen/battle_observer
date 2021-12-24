@@ -16,7 +16,7 @@ if region == "na":
 xvmInstalled = False
 
 
-def checkXVM(*args, **kwargs):
+def checkXVM(spaceID):
     from sys import modules
     global xvmInstalled
     XVM = "xvm"

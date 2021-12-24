@@ -30,6 +30,7 @@ class ObserverCore(object):
             return
         if settings.main[MAIN.AUTO_CLEAR_CACHE]:
             clearClientCache()
+        ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
         logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, self.mod_version))
 
     def isModValidFileName(self):
