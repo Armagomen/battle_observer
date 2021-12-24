@@ -19,12 +19,14 @@ xvmInstalled = False
 def checkXVM(*args, **kwargs):
     from sys import modules
     global xvmInstalled
-    for key in modules.iterkeys():
-        if not xvmInstalled and "xvm" in key:
+    XVM = "xvm"
+    for key in modules:
+        if not xvmInstalled and XVM in key:
             xvmInstalled = True
             break
     ServicesLocator.appLoader.onGUISpaceEntered -= checkXVM
-    logInfo("xvm is {}".format(xvmInstalled))
+    if xvmInstalled:
+        logInfo("statistics/icons module is disabled, XVM is installed")
 
 
 ServicesLocator.appLoader.onGUISpaceEntered += checkXVM
