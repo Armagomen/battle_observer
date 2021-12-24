@@ -43,6 +43,7 @@ class DefaultSettings(object):
             MAIN.HIDE_HINT: False,
             MAIN.FIELD_MAIL: False,
             MAIN.CREW_RETURN: False,
+            MAIN.STUN_SOUND: False,
         }
         self.user_background = {
             GLOBAL.ENABLED: False,

@@ -1,9 +1,10 @@
 import copy
 
 import constants
-from armagomen.constants import MAIN, GLOBAL
-from armagomen.utils.common import urlResponse, logDebug
 from armagomen.battle_observer.core import settings
+from armagomen.constants import MAIN, GLOBAL
+from armagomen.utils.common import urlResponse, logDebug, logInfo
+from gui.shared.personality import ServicesLocator
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -11,6 +12,22 @@ region = constants.AUTH_REALM.lower()
 statisticEnabled = region in ["ru", "eu", "na", "asia"]
 if region == "na":
     region = "com"
+
+xvmInstalled = False
+
+
+def checkXVM(*args, **kwargs):
+    from sys import modules
+    global xvmInstalled
+    for key in modules.iterkeys():
+        if not xvmInstalled and "xvm" in key:
+            xvmInstalled = True
+            break
+    ServicesLocator.appLoader.onGUISpaceEntered -= checkXVM
+    logInfo("xvm is {}".format(xvmInstalled))
+
+
+ServicesLocator.appLoader.onGUISpaceEntered += checkXVM
 
 if statisticEnabled:
     URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
@@ -33,7 +50,7 @@ def request(databaseIDS):
 
 def setCachedStatisticData():
     result = False
-    if not statisticEnabled:
+    if not statisticEnabled or xvmInstalled:
         return result
     sessionProvider = dependency.instance(IBattleSessionProvider)
     arenaDP = sessionProvider.getArenaDP()

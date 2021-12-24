@@ -5,10 +5,12 @@ from armagomen.constants import MAIN
 from armagomen.utils.common import overrideMethod, getPlayer
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
+from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
+from helpers.func_utils import callback
 from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerView
 
 
@@ -50,16 +52,34 @@ def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
     g_events.onDispersionAngleChanged(rotator)
 
 
-@overrideMethod(BattleMessengerView, "addMessage")
-def addMessage(base, *args, **kwargs):
+@overrideMethod(BattleMessengerView, "_populate")
+def messanger_populate(base, messanger):
+    base(messanger)
     if settings.main[MAIN.HIDE_CHAT] and view_settings.isRandomBattle:
-        return
-    return base(*args, **kwargs)
+        callback(2.0, messanger, "_dispose")
 
 
-@overrideMethod(hint_plugins, 'createPlugins')
+@overrideMethod(BattleMessengerView, "_dispose")
+def messanger_dispose(base, *args):
+    try:
+        base(*args)
+    except AttributeError:
+        pass
+
+
+@overrideMethod(hint_plugins, "createPlugins")
 def createPlugins(base, *args, **kwargs):
     result = base(*args, **kwargs)
     if settings.main[MAIN.HIDE_HINT]:
         result.clear()
     return result
+
+
+STUN_START = "artillery_stun_effect_start"
+STUN_END = "artillery_stun_effect_end"
+
+
+@overrideMethod(TimersPanel, "__playStunSoundIfNeed")
+def playStunSoundIfNeed(base, *args, **kwargs):
+    if not settings.main[MAIN.STUN_SOUND]:
+        return base(*args, **kwargs)
