@@ -62,9 +62,9 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def updateMainGun(self):
         gunLeft = self.gunScore - self.damage
         achieved = gunLeft <= GLOBAL.ZERO
-        self.macros["mainGun"] = GLOBAL.EMPTY_LINE if achieved else gunLeft
-        self.macros["mainGunDoneIcon"] = self.gunIcons[achieved][GLOBAL.FIRST]
-        self.macros["mainGunFailureIcon"] = self.gunIcons[self.enemiesHP < gunLeft or self.playerDead][GLOBAL.LAST]
+        self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else gunLeft
+        self.macros[MAIN_GUN.DONE_ICON] = self.gunIcons[achieved][GLOBAL.FIRST]
+        self.macros[MAIN_GUN.FAILURE_ICON] = self.gunIcons[self.enemiesHP < gunLeft or self.playerDead][GLOBAL.LAST]
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):

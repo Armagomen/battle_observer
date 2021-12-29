@@ -1,6 +1,3 @@
-import sys
-
-from armagomen.utils.common import logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 
 
@@ -30,11 +27,7 @@ class ComponentsLoader(object):
 
     def start(self):
         for moduleName in self.modules:
-            path = "{}.{}".format(__package__, moduleName)
-            if path in sys.modules or self.modules[moduleName] is not None:
-                logWarning("{} module already loaded".format(path))
-            else:
-                try:
-                    self.modules[moduleName] = __import__(path)
-                except ImportError:
-                    LOG_CURRENT_EXCEPTION()
+            try:
+                self.modules[moduleName] = __import__("{}.{}".format(__package__, moduleName))
+            except ImportError:
+                LOG_CURRENT_EXCEPTION()

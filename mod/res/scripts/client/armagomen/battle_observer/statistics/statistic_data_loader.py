@@ -26,7 +26,9 @@ def checkXVM(spaceID):
             break
     ServicesLocator.appLoader.onGUISpaceEntered -= checkXVM
     if xvmInstalled:
-        logInfo("statistics/icons module is disabled, XVM is installed")
+        settings.statistics[GLOBAL.ENABLED] = False
+        settings.minimap[GLOBAL.ENABLED] = False
+        logInfo("statistics/icons/minimap module is disabled, XVM is installed")
 
 
 ServicesLocator.appLoader.onGUISpaceEntered += checkXVM

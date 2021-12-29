@@ -95,7 +95,7 @@ class DamageLog(DamageLogsMeta):
         super(DamageLog, self).onExitBattlePage()
 
     def updateAvgDamage(self):
-        """sets the average damage of the selected tank"""
+        """sets the average damage to the selected tank"""
         if self._player is not None and not DAMAGE_LOG.AVG_DAMAGE_DATA:
             max_health = self._player.vehicle.typeDescriptor.maxHealth
             DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, float(max_health))

@@ -51,13 +51,13 @@ class ViewSettings(object):
 
     @property
     def isStatisticEnabled(self):
-        return self.notEpicBattle and self.notEpicRandomBattle and self.cfg.statistics[GLOBAL.ENABLED] and \
-               self.cfg.statistics[STATISTICS.STATISTIC_ENABLED] and not xvmInstalled
+        return self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle and \
+               self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
 
     @property
     def isIconsEnabled(self):
-        return self.notEpicBattle and self.notEpicRandomBattle and self.cfg.statistics[GLOBAL.ENABLED] and \
-               self.cfg.statistics[STATISTICS.ICON_ENABLED] and not xvmInstalled
+        return self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle and \
+               self.cfg.statistics[STATISTICS.ICON_ENABLED]
 
     def getSetting(self, alias):
         if alias in STATISTIC_ALIASES:
@@ -88,7 +88,7 @@ class ViewSettings(object):
             return self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
         elif alias is ALIASES.MINIMAP:
             return (self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED]
-                    and self.notEpicBattle and not xvmInstalled)
+                    and self.notEpicBattle)
         elif alias is ALIASES.USER_BACKGROUND:
             return self.cfg.user_background[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DATE_TIME:

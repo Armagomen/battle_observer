@@ -142,8 +142,8 @@ COLORS = namedtuple("COLORS", (
     "deadColor")
 
 MAIN_GUN = namedtuple("MAIN_GUN", (
-    "NAME", "COLOR", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))(
-    "main_gun", "mainGunColor", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2)
+    "NAME", "COLOR", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE", "INFO"))(
+    "main_gun", "mainGunColor", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2, "mainGun")
 
 MINIMAP = namedtuple("MINIMAP", (
     "NAME", "DEATH_PERMANENT", "HOT_KEY", "INDENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW"))(
