@@ -13,8 +13,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getIconColor:Function;
 		public var py_getIconMultiplier:Function;
 		private var fullStats:*               = null;
-		private var namesCache:Object         = new Object();
-		private var iconsColors:Object        = new Object();
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
 		private var iconMultiplier:Number     = -1.25;
@@ -30,132 +28,39 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		override public function as_onAfterPopulate():void
 		{
 			this.iconMultiplier = py_getIconMultiplier();
-			setTimeout(this.addListeners, 4000);
 		}
 		
-		override protected function onBeforeDispose():void
+		public function as_updateInfo():void
 		{
-			this.removeListeners();
-			if (App.instance && App.utils)
-			{
-				App.utils.data.cleanupDynamicObject(this.namesCache);
-				App.utils.data.cleanupDynamicObject(this.iconsColors);
-			}
-			this.namesCache = null;
-			this.iconsColors = null;
-			super.onBeforeDispose();
-		}
-		
-		private function addListeners():void
-		{
-			if (!this.fullStats._tableCtrl || !this.fullStats._tableCtrl._allyRenderers)
-			{
-				setTimeout(this.addListeners, 1000);
-			}
-			else
-			{
-				for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
-				{
-					this.addItemListener(ally)
-				}
-				for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
-				{
-					this.addItemListener(enemy)
-				}
-			}
-		}
-		
-		private function addItemListener(item:*):void
-		{
-			if (!item.containsData || !item.statsItem || !item.data.vehicleType)
-			{
-				setTimeout(this.addItemListener, 200, item);
-			}
-			else
-			{
-				if (this.iconEnabled)
-				{
-					var typeColor:String = py_getIconColor(item.data.vehicleType);
-					if (!this.iconsColors[item.data.vehicleType] && typeColor)
-					{
-						this.iconsColors[item.data.vehicleType] = Utils.colorConvert(typeColor);
-					}
-				}
-				var icon:* = item.statsItem._vehicleIcon;
-				icon.item = item;
-				if (!icon.hasEventListener(Event.RENDER))
-				{
-					icon.addEventListener(Event.RENDER, this.onRenderHendle, false, 0, true);
-				}
-				if (this.statisticsEnabled)
-				{
-					if (item.data.accountDBID != 0)
-					{
-						this.namesCache[item.data.accountDBID] = py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev);
-					}
-					item.statsItem._playerNameTF.autoSize = item.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-				}
-			}
-		}
-		
-		private function removeListeners():void
-		{
-			if (!this.fullStats._tableCtrl || !this.fullStats._tableCtrl._allyRenderers)
-			{
-				return;
-			}
 			for each (var ally:* in this.fullStats._tableCtrl._allyRenderers)
 			{
-				this.removeListener(ally)
+				this.updateItem(ally);
 			}
 			for each (var enemy:* in this.fullStats._tableCtrl._enemyRenderers)
 			{
-				this.removeListener(enemy)
+				this.updateItem(enemy);
 			}
 		}
 		
-		private function removeListener(item:*):void
+		private function updateItem(item:*):void
 		{
-			if (!item || !item.statsItem || !item.statsItem._vehicleIcon)
-			{
-				return;
-			}
-			if (item.statsItem._vehicleIcon.hasEventListener(Event.RENDER))
-			{
-				item.statsItem._vehicleIcon.removeEventListener(Event.RENDER, this.onRenderHendle);
-			}
-		}
-		
-		private function onRenderHendle(eve:Event):void
-		{
-			var icon:* = eve.target;
-			
 			if (this.iconEnabled)
 			{
-				var iconColor:uint    = icon.transform.colorTransform.color;
-				var newIconColor:uint = this.iconsColors[icon.item.data.vehicleType];
-				if (iconColor != newIconColor || iconColor == 0)
+				var tColor:ColorTransform = new ColorTransform();
+				tColor.color = Utils.colorConvert(py_getIconColor(item.data.vehicleType));
+				tColor.alphaMultiplier = item.statsItem._vehicleIcon.transform.colorTransform.alphaMultiplier;
+				tColor.alphaOffset = item.statsItem._vehicleIcon.transform.colorTransform.alphaOffset;
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+				item.statsItem._vehicleIcon.transform.colorTransform = tColor;
+			}
+			if (this.statisticsEnabled && item.data.accountDBID != 0)
+			{
+				item.statsItem._playerNameTF.autoSize = item.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+				item.statsItem._playerNameTF.htmlText = py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev);
+				if (!item.data.isAlive())
 				{
-					var tColor:ColorTransform = new ColorTransform();
-					tColor.color = newIconColor;
-					tColor.alphaMultiplier = icon.transform.colorTransform.alphaMultiplier;
-					tColor.alphaOffset = icon.transform.colorTransform.alphaOffset;
-					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-					icon.transform.colorTransform = tColor;
+					item.statsItem._playerNameTF.alpha = 0.66;
 				}
-			}
-			if (this.statisticsEnabled && icon.item.data.accountDBID != 0)
-			{
-				this.setPlayerText(icon.item);
-			}
-		}
-		
-		private function setPlayerText(item:*):void
-		{
-			item.statsItem._playerNameTF.htmlText = this.namesCache[item.data.accountDBID];
-			if (!item.data.isAlive())
-			{
-				item.statsItem._playerNameTF.alpha = 0.66;
 			}
 		}
 	}

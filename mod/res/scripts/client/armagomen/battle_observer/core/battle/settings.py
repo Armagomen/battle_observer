@@ -1,4 +1,3 @@
-from armagomen.battle_observer.statistics.statistic_data_loader import xvmInstalled
 from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, STATISTICS
 from armagomen.utils.common import overrideMethod
 from constants import ARENA_GUI_TYPE
@@ -137,11 +136,11 @@ class ViewSettings(object):
         base(page, *args, **kwargs)
         if not self.isAllowed:
             return
-        config = page._SharedPage__componentsConfig._ComponentsConfig__config
-        newConfig = tuple((i, self.checkAndReplaceAlias(aliases)) for i, aliases in config)
-        page._SharedPage__componentsConfig._ComponentsConfig__config = newConfig
+        componentsConfig = page._SharedPage__componentsConfig
+        newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
+        componentsConfig._ComponentsConfig__config = newConfig
 
-    def checkAndReplaceAlias(self, aliases):
+    def addReplaceAlias(self, aliases):
         new_aliases = list(aliases)
         if ALIASES.TEAM_BASES in self.__components and BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in new_aliases:
             new_aliases.remove(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)

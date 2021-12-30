@@ -1,6 +1,8 @@
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
 from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
 from armagomen.constants import STATISTICS
+from armagomen.utils.common import callback
+from gui.shared import EVENT_BUS_SCOPE, events
 
 
 class FullStats(StatsMeta):
@@ -12,3 +14,13 @@ class FullStats(StatsMeta):
             if result is not None:
                 return pattern % result
         return None
+
+    def _populate(self):
+        super(FullStats, self)._populate()
+        self.addListener(events.GameEvent.FULL_STATS, self.update, scope=EVENT_BUS_SCOPE.BATTLE)
+
+    def _dispose(self):
+        self.removeListener(events.GameEvent.FULL_STATS, self.update, scope=EVENT_BUS_SCOPE.BATTLE)
+
+    def update(self, *args, **kwargs):
+        callback(0.2, self.as_updateInfoS)

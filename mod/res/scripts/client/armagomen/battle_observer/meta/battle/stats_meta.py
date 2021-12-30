@@ -9,3 +9,6 @@ class StatsMeta(BaseModMeta):
 
     def py_getIconColor(self, classTag):
         return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag, GLOBAL.EMPTY_LINE)
+
+    def as_updateInfoS(self):
+        return self.flashObject.as_updateInfo() if self._isDAAPIInited() else None

@@ -12,3 +12,8 @@ class BattleLoading(StatsMeta):
             if result is not None:
                 return pattern % result
         return None
+
+    def onEnterBattlePage(self):
+        super(BattleLoading, self).onEnterBattlePage()
+        if self._isDAAPIInited():
+            self._dispose()
