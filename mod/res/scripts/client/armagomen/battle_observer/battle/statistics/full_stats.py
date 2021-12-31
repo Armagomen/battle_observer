@@ -22,5 +22,6 @@ class FullStats(StatsMeta):
     def _dispose(self):
         self.removeListener(events.GameEvent.FULL_STATS, self.update, scope=EVENT_BUS_SCOPE.BATTLE)
 
-    def update(self, *args, **kwargs):
-        callback(0.2, self.as_updateInfoS)
+    def update(self, event):
+        if event.ctx['isDown']:
+            callback(0.1, self.as_updateInfoS)

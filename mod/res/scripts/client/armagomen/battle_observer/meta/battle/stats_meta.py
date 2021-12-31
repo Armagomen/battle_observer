@@ -12,3 +12,6 @@ class StatsMeta(BaseModMeta):
 
     def as_updateInfoS(self):
         return self.flashObject.as_updateInfo() if self._isDAAPIInited() else None
+
+    def as_updateVehicleS(self, isEnemy, vehicleID):
+        return self.flashObject.as_updateVehicle(isEnemy, vehicleID) if self._isDAAPIInited() else None

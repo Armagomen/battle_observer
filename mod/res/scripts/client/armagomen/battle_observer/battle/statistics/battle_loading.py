@@ -14,6 +14,5 @@ class BattleLoading(StatsMeta):
         return None
 
     def onEnterBattlePage(self):
-        super(BattleLoading, self).onEnterBattlePage()
         if self._isDAAPIInited():
             self._dispose()
