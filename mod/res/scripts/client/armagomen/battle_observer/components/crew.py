@@ -8,7 +8,7 @@ from armagomen.utils.events import g_events
 from async import async, await
 from frameworks.wulf import WindowLayer
 from gui import SystemMessages
-from gui.Scaleform.daapi.view.meta.ExchangeXpWindowMeta import ExchangeXpWindowMeta
+from gui.Scaleform.daapi.view.lobby.exchange.detailed_exchange_xp_dialog import ExchangeXPWindowDialog
 from gui.shared.gui_items.processors.tankman import TankmanReturn
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
@@ -26,7 +26,7 @@ class CrewProcessor(object):
         self.dialog = CrewDialog()
         g_events.onHangarVehicleChanged += self.onVehicleChanged
         overrideMethod(_CurrentVehicle, "_changeDone")(self.onChangeDone)
-        overrideMethod(ExchangeXpWindowMeta, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
+        overrideMethod(ExchangeXPWindowDialog, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
     @staticmethod
     def getLocalizedMessage(value, description):
@@ -96,7 +96,7 @@ class CrewProcessor(object):
         finally:
             return base(*args, **kwargs)
 
-    def onXPExchangeDataChanged(self, base, base_self, data, *a, **k):
+    def onXPExchangeDataChanged(self, base, dialog, data, *args, **kwargs):
         try:
             for vehicleData in data['vehicleList']:
                 vehicle = self.itemsCache.items.getItemByCD(vehicleData['id'])
@@ -104,7 +104,7 @@ class CrewProcessor(object):
         except Exception as error:
             logError("CrewProcessor onXPExchangeDataChanged: " + repr(error))
         finally:
-            return base(base_self, data, *a, **k)
+            return base(dialog, data, *args, **kwargs)
 
 
 crew = CrewProcessor()
