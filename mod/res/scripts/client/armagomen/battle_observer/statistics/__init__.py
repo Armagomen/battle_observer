@@ -11,6 +11,8 @@ from helpers import dependency
 from helpers.func_utils import callback
 from skeletons.gui.battle_session import IBattleSessionProvider
 
+METHOD_NAME = "updateVehicleStatus"
+
 
 @property
 def moduleEnabled():
@@ -18,12 +20,23 @@ def moduleEnabled():
                                                     settings.statistics[STATISTICS.STATISTIC_ENABLED])
 
 
+def updateItem(isEnemy, vehicleID):
+    callback(0.02, g_events, METHOD_NAME, isEnemy, vehicleID)
+
+
+def updateAllItems():
+    arenaDP = dependency.instance(IBattleSessionProvider).getArenaDP()
+    allyTeam = arenaDP.getNumberOfTeam()
+    for vinfoVO in arenaDP.getVehiclesInfoIterator():
+        updateItem(vinfoVO.team != allyTeam, vinfoVO.vehicleID)
+
+
 @overrideMethod(ClassicStatisticsDataController, "as_updateVehicleStatusS")
 @overrideMethod(RankedStatisticsDataController, "as_updateVehicleStatusS")
 def new_as_updateVehicleStatusS(base, controller, data):
     base(controller, data)
     if moduleEnabled:
-        callback(0.1, g_events, "updateVehicleStatus", data["isEnemy"], data["vehicleID"])
+        updateItem(data["isEnemy"], data["vehicleID"])
 
 
 @overrideMethod(ClassicStatisticsDataController, "as_updateVehiclesStatsS")
@@ -35,20 +48,15 @@ def new_as_updateVehiclesStatsS(base, controller, data):
         rightItems = data.get("rightItems")
         if rightItems:
             for item in rightItems:
-                callback(0.1, g_events, "updateVehicleStatus", True, item[vehicleID])
+                updateItem(True, item[vehicleID])
         leftItems = data.get("leftItems")
         if leftItems:
             for item in leftItems:
-                callback(0.1, g_events, "updateVehicleStatus", False, item[vehicleID])
+                updateItem(False, item[vehicleID])
 
 
-def updateAllItems():
-    arenaDP = dependency.instance(IBattleSessionProvider).getArenaDP()
-    allyTeam = arenaDP.getNumberOfTeam()
-    for vinfoVO in arenaDP.getVehiclesInfoIterator():
-        callback(0.1, g_events, "updateVehicleStatus", vinfoVO.team != allyTeam, vinfoVO.vehicleID)
-
-
+@overrideMethod(PlayersPanel, "as_setChatCommandsVisibilityS")
+@overrideMethod(PlayersPanel, "as_setIsInteractiveS")
 @overrideMethod(PlayersPanel, "as_setOverrideExInfoS")
 @overrideMethod(PlayersPanel, "as_setPanelModeS")
 def setPanelsState(base, *args):
