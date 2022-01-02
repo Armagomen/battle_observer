@@ -20,7 +20,7 @@ def moduleEnabled():
 
 @overrideMethod(ClassicStatisticsDataController, "as_updateVehicleStatusS")
 @overrideMethod(RankedStatisticsDataController, "as_updateVehicleStatusS")
-def invalidate(base, controller, data):
+def new_as_updateVehicleStatusS(base, controller, data):
     base(controller, data)
     if moduleEnabled:
         callback(0.1, g_events, "updateVehicleStatus", data["isEnemy"], data["vehicleID"])
@@ -28,17 +28,18 @@ def invalidate(base, controller, data):
 
 @overrideMethod(ClassicStatisticsDataController, "as_updateVehiclesStatsS")
 @overrideMethod(RankedStatisticsDataController, "as_updateVehiclesStatsS")
-def update(base, controller, data):
+def new_as_updateVehiclesStatsS(base, controller, data):
     base(controller, data)
     if moduleEnabled:
+        vehicleID = "vehicleID"
         rightItems = data.get("rightItems")
         if rightItems:
             for item in rightItems:
-                callback(0.1, g_events, "updateVehicleStatus", True, item["vehicleID"])
+                callback(0.1, g_events, "updateVehicleStatus", True, item[vehicleID])
         leftItems = data.get("leftItems")
         if leftItems:
             for item in leftItems:
-                callback(0.1, g_events, "updateVehicleStatus", False, item["vehicleID"])
+                callback(0.1, g_events, "updateVehicleStatus", False, item[vehicleID])
 
 
 def updateAllItems():
@@ -48,6 +49,7 @@ def updateAllItems():
         callback(0.1, g_events, "updateVehicleStatus", vinfoVO.team != allyTeam, vinfoVO.vehicleID)
 
 
+@overrideMethod(PlayersPanel, "as_setOverrideExInfoS")
 @overrideMethod(PlayersPanel, "as_setPanelModeS")
 def setPanelsState(base, *args):
     base(*args)
@@ -56,7 +58,7 @@ def setPanelsState(base, *args):
 
 
 @overrideMethod(ClassicPage, "as_setComponentsVisibilityS")
-def setVisible(base, page, visible, hidden):
+def new_as_setComponentsVisibilityS(base, page, visible, hidden):
     base(page, visible, hidden)
     if moduleEnabled and BATTLE_VIEW_ALIASES.PLAYERS_PANEL in visible:
         updateAllItems()
