@@ -8,16 +8,24 @@ from gui.Scaleform.daapi.view.battle.ranked.stats_exchange import RankedStatisti
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
 from helpers.func_utils import callback
+from skeletons.gui.app_loader import IAppLoader, GuiGlobalSpaceID
 from skeletons.gui.battle_session import IBattleSessionProvider
-
-METHOD_NAME = "updateVehicleStatus"
 
 
 class StatisticPlugin(object):
+    METHOD_NAME = "updateVehicleData"
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
+    appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self, settings):
         self.settings = settings
+        self.moduleEnabled = False
+        self.appLoader.onGUISpaceBeforeEnter += self.onGUISpaceBeforeEnter
+
+    def onGUISpaceBeforeEnter(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.BATTLE:
+            self.moduleEnabled = self.settings[GLOBAL.ENABLED] and (self.settings[STATISTICS.ICON_ENABLED] or
+                                                                    self.settings[STATISTICS.STATISTIC_ENABLED])
 
     def start(self):
         overrideMethod(ClassicStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
@@ -30,22 +38,14 @@ class StatisticPlugin(object):
         overrideMethod(PlayersPanel, "as_setPanelModeS")(self.setPanelsState)
         overrideMethod(ClassicPage, "as_setComponentsVisibilityS")(self.new_as_setComponentsVisibilityS)
 
-    @staticmethod
-    def updateItem(isEnemy, vehicleID):
-        callback(0.1, g_events, METHOD_NAME, isEnemy, vehicleID)
+    def updateItem(self, isEnemy, vehicleID):
+        callback(0.05, g_events, self.METHOD_NAME, isEnemy, vehicleID)
 
     def updateAllItems(self):
         arenaDP = self.sessionProvider.getArenaDP()
         allyTeam = arenaDP.getNumberOfTeam()
         for vinfoVO in arenaDP.getVehiclesInfoIterator():
             self.updateItem(vinfoVO.team != allyTeam, vinfoVO.vehicleID)
-
-    @property
-    def moduleEnabled(self):
-        if self.settings is None:
-            return False
-        return self.settings[GLOBAL.ENABLED] and (self.settings[STATISTICS.ICON_ENABLED] or
-                                                  self.settings[STATISTICS.STATISTIC_ENABLED])
 
     def new_as_updateVehicleStatusS(self, base, controller, data):
         base(controller, data)

@@ -10,8 +10,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 	
 	public class PlayersPanelsStatisticUI extends ObserverBattleDisplayable
 	{
-		public var py_getStatisticString:Function;
-		public var py_getIconColor:Function;
 		public var py_getIconMultiplier:Function;
 		public var py_getCutWidth:Function;
 		public var py_getFullWidth:Function;
@@ -21,6 +19,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconEnabled:Boolean       = false;
 		private var colorEnabled:Boolean      = false;
 		private var iconMultiplier:Number     = -1.25;
+		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
 		public function PlayersPanelsStatisticUI(panels:*, statsEnabled:Boolean, icon:Boolean)
 		{
@@ -35,6 +34,20 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super.as_onAfterPopulate();
 			this.colorEnabled = this.py_vehicleStatisticColorEnabled();
 			this.iconMultiplier = this.py_getIconMultiplier();
+			var fullWidth:Number = py_getFullWidth();
+			var cutWidth:Number = py_getCutWidth();
+			if (this.statisticsEnabled){
+				for each (var itemL:* in this.panels.listLeft._items) 
+				{
+					itemL._listItem.playerNameCutTF.width = cutWidth;
+					itemL._listItem.setPlayerNameFullWidth(fullWidth);
+				}
+				for each (var itemR:* in this.panels.listRight._items) 
+				{
+					itemR._listItem.playerNameCutTF.width = cutWidth;
+					itemR._listItem.setPlayerNameFullWidth(fullWidth);
+				}
+			}
 		}
 		
 		override public function setCompVisible(param0:Boolean):void
@@ -55,8 +68,8 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			this.panels = null;
 			super.onBeforeDispose();
 		}
-				
-		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int):void
+			
+		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, fullTF:String, cutTF:String, color:String):void
 		{
 			if (this.panels)
 			{
@@ -64,7 +77,35 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				var holder:* = list.getHolderByVehicleID(vehicleID);
 				if (holder)
 				{
-					this.udateInfo(holder.getListItem(), holder.vehicleData, holder.accountDBID, isEnemy);
+					var listItem:* = holder.getListItem();
+					if (this.iconEnabled && iconColor)
+					{
+						var tColor:ColorTransform = listItem.vehicleIcon.transform.colorTransform;
+						tColor.color = Utils.colorConvert(iconColor);
+						tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+						listItem.vehicleIcon.transform.colorTransform = tColor;
+					}
+					if (this.statisticsEnabled && holder.accountDBID != 0)
+					{
+						if (this.colorEnabled && color)
+						{
+							listItem.vehicleTF.textColor = Utils.colorConvert(color);
+						}
+						if (fullTF)
+						{
+							listItem.playerNameFullTF.htmlText = fullTF;
+						}
+						if (cutTF)
+						{
+							listItem.playerNameCutTF.htmlText = cutTF;
+						}
+						if (!listItem._isAlive)
+						{
+							listItem.playerNameCutTF.alpha = DEAD_TEXT_ALPHA;
+							listItem.playerNameFullTF.alpha = DEAD_TEXT_ALPHA;
+							listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
+						}
+					}
 				}
 			}
 		}
@@ -72,46 +113,5 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		/// item._listItem, item.vehicleID, item.accountDBID, item.vehicleData.vehicleType
 		/// item._listItem.playerNameCutTF, item._listItem.playerNameFullTF
 		/// item._listItem.vehicleIcon, item._listItem.vehicleTF
-		private function udateInfo(listItem:*, vehicleData:*, accountDBID:int, isEnemy:Boolean):void
-		{
-			if (this.iconEnabled)
-			{
-				var tColor:ColorTransform = listItem.vehicleIcon.transform.colorTransform;
-				tColor.color = Utils.colorConvert(py_getIconColor(vehicleData.vehicleType));
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				listItem.vehicleIcon.transform.colorTransform = tColor;
-			}
-			if (this.statisticsEnabled)
-			{
-				if (accountDBID != 0)
-				{
-					this.setPlayerText(listItem, py_getStatisticString(accountDBID, isEnemy, vehicleData.clanAbbrev));
-				}
-				listItem.playerNameCutTF.width = py_getCutWidth();
-				listItem.playerNameFullTF.width = py_getFullWidth();
-			}
-		}
-		
-		private function setPlayerText(listItem:*, data:Array):void
-		{
-			if (this.colorEnabled && data[2])
-			{
-				listItem.vehicleTF.textColor = data[2];
-			}
-			if (data[0])
-			{
-				listItem.playerNameFullTF.htmlText = data[0];
-			}
-			if (data[1])
-			{
-				listItem.playerNameCutTF.htmlText = data[1];
-			}
-			if (!listItem._isAlive)
-			{
-				listItem.playerNameCutTF.alpha = 0.66;
-				listItem.playerNameFullTF.alpha = 0.66;
-				listItem.vehicleTF.alpha = 0.66;
-			}
-		}
 	}
 }

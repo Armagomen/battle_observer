@@ -21,6 +21,7 @@ class FullStats(StatsMeta):
 
     def _dispose(self):
         self.removeListener(events.GameEvent.FULL_STATS, self.update, scope=EVENT_BUS_SCOPE.BATTLE)
+        super(FullStats, self)._dispose()
 
     def update(self, event):
         if event.ctx['isDown']:
