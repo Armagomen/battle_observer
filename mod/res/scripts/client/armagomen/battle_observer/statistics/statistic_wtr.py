@@ -1,11 +1,32 @@
+import datetime
+
 from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.statistics.statistic_data_loader import getStatisticForUser
 from armagomen.constants import STATISTICS
+from gui.shared.personality import ServicesLocator
+from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-WTR_COLORS = ((2971, "bad"), (4530, "normal"), (6370, "good"), (8525, "very_good"), (10158, "unique"))
+WTR_COLORS = ((2960, "bad"), (4520, "normal"), (6367, "good"), (8543, "very_good"), (10217, "unique"))
 COLORS = settings.statistics[STATISTICS.COLORS]
 DEFAULT_COLOR = "#fafafa"
-CACHE = {}
+
+
+class Cache(object):
+
+    def __init__(self):
+        self.data = {}
+        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=120)
+        ServicesLocator.appLoader.onGUISpaceEntered += self.clearCache
+
+    def clearCache(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.LOBBY:
+            currentTime = datetime.datetime.now()
+            if currentTime >= self.timeDelta:
+                self.timeDelta = currentTime + datetime.timedelta(minutes=120)
+                self.data.clear()
+
+
+cache = Cache()
 
 
 def getWTR(data):
@@ -35,14 +56,14 @@ def getColor(wtr):
 
 
 def getStatisticString(databaseID, clanTag):
-    if databaseID not in CACHE:
+    if databaseID not in cache.data:
         data = getStatisticForUser(databaseID)
         if data is not None:
             wtr = getWTR(data)
             winRate, battles = getPercent(data)
             clanTag = "[{}]".format(clanTag) if clanTag else ""
-            CACHE[databaseID] = {"WTR": wtr, "colorWTR": getColor(wtr), "winRate": winRate, "battles": battles,
-                                 "nickname": getNickName(data), "clanTag": clanTag}
+            cache.data[databaseID] = {"WTR": wtr, "colorWTR": getColor(wtr), "winRate": winRate, "battles": battles,
+                                      "nickname": getNickName(data), "clanTag": clanTag}
         else:
             return None
-    return CACHE[databaseID]
+    return cache.data[databaseID]
