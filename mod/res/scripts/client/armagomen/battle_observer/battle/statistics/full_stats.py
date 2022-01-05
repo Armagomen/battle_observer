@@ -1,5 +1,5 @@
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
-from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
+from armagomen.battle_observer.statistics.statistic_wtr import wtr_rating
 from armagomen.constants import STATISTICS
 from armagomen.utils.common import callback
 from gui.shared import EVENT_BUS_SCOPE, events
@@ -10,7 +10,7 @@ class FullStats(StatsMeta):
     def py_getStatisticString(self, accountDBID, isEnemy, clanAbbrev):
         pattern = self.settings[STATISTICS.TAB_RIGHT] if isEnemy else self.settings[STATISTICS.TAB_LEFT]
         if pattern:
-            result = getStatisticString(accountDBID, clanAbbrev)
+            result = wtr_rating.getStatisticString(accountDBID, clanAbbrev)
             if result is not None:
                 return pattern % result
         return None

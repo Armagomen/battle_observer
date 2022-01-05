@@ -267,9 +267,10 @@ def urlResponse(url):
     response = openUrl(url)
     responseData = response.getData()
     if responseData is not None:
-        return json.loads(responseData, "utf-8-sig")
+        return json.loads(responseData, encoding="utf-8-sig")
     return responseData
 
 
-def parseColorToHex(color):
-    return hex(int("0x" + color[1:], 16))
+def parseColorToHex(color, asInt=False):
+    color = "0x" + color[1:]
+    return int(color, 16) if asInt else color

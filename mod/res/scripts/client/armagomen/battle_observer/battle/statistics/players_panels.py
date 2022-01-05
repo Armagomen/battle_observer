@@ -1,5 +1,5 @@
 from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta
-from armagomen.battle_observer.statistics.statistic_wtr import getStatisticString
+from armagomen.battle_observer.statistics.statistic_wtr import wtr_rating
 from armagomen.constants import STATISTICS
 from armagomen.utils.events import g_events
 
@@ -25,7 +25,7 @@ class PlayersPanelsStatistic(StatsMeta):
             vInfo = self._arenaDP.getVehicleInfo(vehicleID)
             accountDBID = vInfo.player.accountDBID
             iconColor = self.py_getIconColor(vInfo.vehicleType.classTag)
-            result = getStatisticString(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
+            result = wtr_rating.getStatisticString(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
             if result is not None:
                 patternFUL = self.settings[STATISTICS.PANELS_RIGHT] if isEnemy else \
                     self.settings[STATISTICS.PANELS_LEFT]

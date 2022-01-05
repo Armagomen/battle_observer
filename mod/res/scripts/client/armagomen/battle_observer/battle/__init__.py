@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
-from armagomen.battle_observer.statistics.statistic_data_loader import setCachedStatisticData
+from armagomen.battle_observer.statistics.statistic_data_loader import statisticLoader
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
@@ -60,8 +60,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def onAppInitializing(self, event):
         if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
-            if view_settings.isStatisticEnabled:
-                self._statistics = setCachedStatisticData()
+            if statisticLoader.enabled and view_settings.isStatisticEnabled:
+                self._statistics = statisticLoader.setCachedStatisticData()
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 

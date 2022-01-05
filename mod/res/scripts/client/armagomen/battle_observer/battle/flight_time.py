@@ -28,27 +28,20 @@ class FlightTime(FlightTimeMeta):
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(FlightTime, self)._dispose()
 
-    def showOnCurrentTank(self):
-        if self.settings[FLIGHT_TIME.SPG_ONLY]:
-            return VEHICLE_CLASS_NAME.SPG in self._player.vehicleTypeDescriptor.type.tags
-        return True
-
     def onEnterBattlePage(self):
         super(FlightTime, self).onEnterBattlePage()
-        if self.showOnCurrentTank():
-            if self.shared.crosshair:
-                self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
-            handler = avatar_getter.getInputHandler()
-            if handler is not None:
-                handler.onCameraChanged += self.onCameraChanged
+        if self.shared.crosshair:
+            self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            handler.onCameraChanged += self.onCameraChanged
 
     def onExitBattlePage(self):
-        if self.showOnCurrentTank():
-            if self.shared.crosshair:
-                self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
-            handler = avatar_getter.getInputHandler()
-            if handler is not None:
-                handler.onCameraChanged += self.onCameraChanged
+        if self.shared.crosshair:
+            self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
+        handler = avatar_getter.getInputHandler()
+        if handler is not None:
+            handler.onCameraChanged += self.onCameraChanged
         super(FlightTime, self).onExitBattlePage()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):

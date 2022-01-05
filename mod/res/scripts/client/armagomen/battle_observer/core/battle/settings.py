@@ -1,6 +1,8 @@
-from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, STATISTICS
+from CurrentVehicle import g_currentVehicle
+from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME
 from armagomen.utils.common import overrideMethod
-from constants import ARENA_GUI_TYPE
+from armagomen.utils.events import g_events
+from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
@@ -29,11 +31,16 @@ class ViewSettings(object):
     def __init__(self, cfg):
         self.cfg = cfg
         self.isAllowed = False
+        self.isSPG = False
         self.__viewAliases = {VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE,
                               VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE}
         self.__components = []
         self.__hiddenComponents = []
+        g_events.onHangarVehicleChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
+
+    def onVehicleChanged(self):
+        self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
 
     @property
     def isRandomBattle(self):
@@ -79,6 +86,8 @@ class ViewSettings(object):
         elif alias is ALIASES.ARMOR_CALC:
             return self.cfg.armor_calculator[GLOBAL.ENABLED]
         elif alias is ALIASES.FLIGHT_TIME:
+            if self.cfg.flight_time[FLIGHT_TIME.SPG_ONLY]:
+                return self.cfg.flight_time[GLOBAL.ENABLED] and self.isSPG
             return self.cfg.flight_time[GLOBAL.ENABLED]
         elif alias is ALIASES.DISPERSION_TIMER:
             return (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
@@ -93,7 +102,8 @@ class ViewSettings(object):
         elif alias is ALIASES.DATE_TIME:
             return self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is ALIASES.DISTANCE:
-            return self.cfg.distance_to_enemy[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
+            return (not self.isSPG and self.cfg.distance_to_enemy[GLOBAL.ENABLED] and
+                    self.notEpicBattle and self.notEpicRandomBattle)
         elif alias is ALIASES.OWN_HEALTH:
             return self.cfg.own_health[GLOBAL.ENABLED]
         else:

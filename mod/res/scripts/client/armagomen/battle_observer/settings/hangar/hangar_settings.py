@@ -281,8 +281,8 @@ class ConfigInterface(CreateElement):
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
             if blockID == STATISTICS.NAME or blockID == MINIMAP.NAME:
-                from armagomen.battle_observer.statistics.statistic_data_loader import statisticEnabled
-                settings[GLOBAL.ENABLED] = settings[GLOBAL.ENABLED] and statisticEnabled
+                from armagomen.battle_observer.statistics.statistic_data_loader import statisticLoader
+                settings[GLOBAL.ENABLED] = settings[GLOBAL.ENABLED] and statisticLoader.enabled
             self.cLoader.updateConfigFile(blockID, settings)
             self.settings.onModSettingsChanged(settings, blockID)
 
