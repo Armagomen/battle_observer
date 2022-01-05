@@ -13,21 +13,28 @@ statisticEnabled = region in ["ru", "eu", "na", "asia"]
 if region == "na":
     region = "com"
 
-xvmInstalled = False
+statisticsPlugin = None
 
 
 def checkXVM(spaceID):
+    ServicesLocator.appLoader.onGUISpaceEntered -= checkXVM
+    global statisticEnabled
+    if not statisticEnabled:
+        return
     from sys import modules
-    global xvmInstalled
     XVM = "xvm"
     for key in modules:
-        if not xvmInstalled and XVM in key:
-            xvmInstalled = True
+        if statisticEnabled and XVM in key:
+            statisticEnabled = False
             break
-    ServicesLocator.appLoader.onGUISpaceEntered -= checkXVM
-    if xvmInstalled:
-        settings.statistics[GLOBAL.ENABLED] = False
-        settings.minimap[GLOBAL.ENABLED] = False
+    if statisticEnabled:
+        from armagomen.battle_observer.statistics.plugin import StatisticPlugin
+        global statisticsPlugin
+        statisticsPlugin = StatisticPlugin(settings.statistics)
+        statisticsPlugin.start()
+    else:
+        settings.statistics[GLOBAL.ENABLED] = statisticEnabled
+        settings.minimap[GLOBAL.ENABLED] = statisticEnabled
         logInfo("statistics/icons/minimap module is disabled, XVM is installed")
 
 
@@ -54,7 +61,7 @@ def request(databaseIDS):
 
 def setCachedStatisticData():
     result = False
-    if not statisticEnabled or xvmInstalled:
+    if not statisticEnabled:
         return result
     sessionProvider = dependency.instance(IBattleSessionProvider)
     arenaDP = sessionProvider.getArenaDP()

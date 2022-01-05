@@ -50,8 +50,7 @@ URLS = namedtuple("URLS", (
     "UPDATE_GITHUB_API_URL",
     "PATREON_URL",
     "CLAN",
-    "DISCORD",
-    "NY2022"
+    "DISCORD"
 ))("armagomen.bb-t.ru",
    "https://donatua.com/@armagomen",
    "https://www.donationalerts.com/r/armagomenvs",
@@ -59,8 +58,7 @@ URLS = namedtuple("URLS", (
    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
    "https://www.patreon.com/armagomen",
    "https://ru.wargaming.net/clans/wot/571593",
-   "https://discord.gg/RBNfr9JWxZ",
-   "https://ru.wargaming.net/shop/wot/ny2022/")
+   "https://discord.gg/RBNfr9JWxZ")
 
 VEHICLE = namedtuple("VEHICLE", "CUR MAX TEAM PERCENT")("health", "maxHealth", "team", "percent")
 

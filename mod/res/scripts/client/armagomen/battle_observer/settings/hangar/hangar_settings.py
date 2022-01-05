@@ -1,7 +1,6 @@
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.battle_observer.statistics.statistic_data_loader import xvmInstalled
-from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MINIMAP, MOD_NAME, MAIN, ANOTHER, \
-    URLS, STATISTICS
+from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MINIMAP, MOD_NAME, MAIN,\
+    ANOTHER, URLS, STATISTICS
 from armagomen.utils.common import logWarning, openWebBrowser, logInfo
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
@@ -282,7 +281,8 @@ class ConfigInterface(CreateElement):
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
             if blockID == STATISTICS.NAME or blockID == MINIMAP.NAME:
-                settings[GLOBAL.ENABLED] = settings[GLOBAL.ENABLED] and not xvmInstalled
+                from armagomen.battle_observer.statistics.statistic_data_loader import statisticEnabled
+                settings[GLOBAL.ENABLED] = settings[GLOBAL.ENABLED] and statisticEnabled
             self.cLoader.updateConfigFile(blockID, settings)
             self.settings.onModSettingsChanged(settings, blockID)
 

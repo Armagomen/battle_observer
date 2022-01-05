@@ -11,13 +11,9 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 if GLOBAL.RU_LOCALIZATION:
     messages = (
         "Поддержите разработку мода. Спасибо что вы с нами.",
-        # "А ты уже поддержал разработку мода?",
-        # "Родина-мать зовёт поддержать!",
         "Присоединяйся к нашему клану <a href='event:{}'>[BOFUN]</a>. Никаких обязательств, главное условие "
         "быть пользователем Battle Observer. Заявки принимаются в специальном <a href='event:{}'>Discord канале</a>, "
         "либо подайте заявку через страницу клана на сайте.".format(URLS.CLAN, URLS.DISCORD),
-        "Порадуй мододела, подари <a href='event:{}'>большую коробочку</a> ник Armagomen. "
-        "С наступающим.".format(URLS.NY2022),
     )
 else:
     messages = (
