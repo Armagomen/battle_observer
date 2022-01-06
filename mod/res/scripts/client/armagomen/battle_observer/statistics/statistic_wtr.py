@@ -48,7 +48,7 @@ class StatisticsWTR(object):
                 break
         return self.colors.get(result, self.DEFAULT_COLOR)
 
-    def getStatisticString(self, databaseID, clanTag):
+    def getStatisticsData(self, databaseID, clanTag):
         if databaseID not in self.cache.data:
             data = statisticLoader.getStatisticForUser(databaseID)
             if data is not None:

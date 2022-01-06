@@ -15,4 +15,4 @@ class StatsMeta(BaseModMeta):
 
     def as_updateVehicleS(self, isEnemy, vehicleID, vehicleIconColor, full, cut, color):
         if self._isDAAPIInited():
-            return self.flashObject.as_updateVehicle(isEnemy, vehicleID, vehicleIconColor, full, cut, color)
+            self.flashObject.as_updateVehicle(isEnemy, vehicleID, vehicleIconColor, full, cut, color)

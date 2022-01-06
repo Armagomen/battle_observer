@@ -25,7 +25,7 @@ class PlayersPanelsStatistic(StatsMeta):
             vInfo = self._arenaDP.getVehicleInfo(vehicleID)
             accountDBID = vInfo.player.accountDBID
             iconColor = self.py_getIconColor(vInfo.vehicleType.classTag)
-            result = wtr_rating.getStatisticString(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
+            result = wtr_rating.getStatisticsData(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
             if result is not None:
                 patternFUL = self.settings[STATISTICS.PANELS_RIGHT] if isEnemy else \
                     self.settings[STATISTICS.PANELS_LEFT]
