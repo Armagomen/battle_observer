@@ -80,7 +80,8 @@ translate = {
         "auto_return_crew": "Automatische Crew-Rückkehr",
         "auto_return_crew_tooltip": "If there is no crew on the selected tank, but there is one for it and is not in "
                                     "battle on another tank, the crew will be returned to the tank automatically.",
-        "disable_stun_sound": "Remove stun sound"
+        "disable_stun_sound": "Remove stun sound",
+        "hide_main_chat_in_hangar": "Disable general chat in the hangar"
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",

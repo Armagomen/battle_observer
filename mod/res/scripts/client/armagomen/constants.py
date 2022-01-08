@@ -122,14 +122,13 @@ __Main = namedtuple("MAIN", (
     "AUTO_CLEAR_CACHE", "ENABLE_FPS_LIMITER", "HIDE_BADGES", "HIDE_CHAT", "HIDE_CLAN_ABBREV",
     "HIDE_DOG_TAGS", "MAX_FRAME_RATE", "NAME", "REMOVE_SHADOW_IN_PREBATTLE", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
     "ANONYMOUS_STRING", "CHANGE_ANONYMOUS_NAME", "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND",
-    "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT", "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND"))
+    "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT", "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT"))
 MAIN = __Main(
     "autoClearCache", "fps_enableFPSLimiter", "hideBadges", "hideChatInRandom", "hideClanAbbrev",
     "hide_dog_tags", "fps_maxFrameRate", "main", "removeShadowInPrebattle", "showFriendsAndClanInEars",
     "anonymousEnableShow", "anonymousString", "anonymousNameChange", "useKeyPairs", "ignore_commanders_voice",
-    "disable_score_sound", "DEBUG_MODE", "auto_crew_training",
-    "do_not_buy_directives_for_currency_automatically", "hide_hint_panel", "hide_field_mail", "auto_return_crew",
-    "disable_stun_sound")
+    "disable_score_sound", "DEBUG_MODE", "auto_crew_training", "do_not_buy_directives_for_currency_automatically",
+    "hide_hint_panel", "hide_field_mail", "auto_return_crew", "disable_stun_sound", "hide_main_chat_in_hangar")
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "B_SILVER", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
@@ -141,7 +140,8 @@ COLORS = namedtuple("COLORS", (
 
 MAIN_GUN = namedtuple("MAIN_GUN", (
     "NAME", "COLOR", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE", "INFO"))(
-    "main_gun", "mainGunColor", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2, "mainGun")
+    "main_gun", "mainGunColor", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2,
+    "mainGun")
 
 MINIMAP = namedtuple("MINIMAP", (
     "NAME", "DEATH_PERMANENT", "HOT_KEY", "INDENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW"))(

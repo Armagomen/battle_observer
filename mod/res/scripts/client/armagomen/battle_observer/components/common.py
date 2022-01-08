@@ -11,6 +11,7 @@ from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from helpers.func_utils import callback
+from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerView
 
 
@@ -87,3 +88,15 @@ def createPlugins(base, *args, **kwargs):
 def playStunSoundIfNeed(base, *args, **kwargs):
     if not settings.main[MAIN.STUN_SOUND]:
         return base(*args, **kwargs)
+
+
+# hide shared chat button
+@overrideMethod(LobbyEntry, '__handleLazyChannelCtlInited')
+def handleLazyChannelCtlInited(base, entry, event):
+    if settings.main[MAIN.HIDE_MAIN_CHAT]:
+        ctx = event.ctx
+        controller = ctx.get('controller')
+        if controller is not None:
+            ctx.clear()
+            return
+    return base(entry, event)

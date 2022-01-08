@@ -44,6 +44,7 @@ class DefaultSettings(object):
             MAIN.FIELD_MAIL: False,
             MAIN.CREW_RETURN: False,
             MAIN.STUN_SOUND: False,
+            MAIN.HIDE_MAIN_CHAT: False,
         }
         self.user_background = {
             GLOBAL.ENABLED: False,
