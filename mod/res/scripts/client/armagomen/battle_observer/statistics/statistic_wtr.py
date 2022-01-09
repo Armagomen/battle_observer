@@ -34,9 +34,10 @@ class StatisticsWTR(object):
         self.wtr_ranges = ((2960, "bad"), (4520, "normal"), (6367, "good"), (8543, "very_good"), (10217, "unique"))
 
     def getPercent(self, data):
-        battles = int(data["statistics"]["random"]["battles"])
+        random = data["statistics"]["random"]
+        battles = int(random["battles"])
         if battles:
-            return float(data["statistics"]["random"]["wins"]) / battles * 100, battles
+            return float(random["wins"]) / battles * 100, battles
         return self.DEFAULT_WIN_RATE, battles
 
     def getColor(self, wtr):
