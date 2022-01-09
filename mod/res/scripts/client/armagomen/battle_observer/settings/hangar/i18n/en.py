@@ -24,7 +24,7 @@ timeFormat_tooltip = ("Directive Meaning\n"
                       "%Y  Year with century as a decimal number.\n"
                       "%Z  Time zone name (no characters if no time zone exists).\n"
                       "%%  A literal '%' character.\n")
-translate = {
+localization = {
     "configSelect": {
         "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
         "selector": "Config",

@@ -24,7 +24,7 @@ timeFormat_tooltip = ("Формат - Значение\n"
                       "%Y - Год с веком\n"
                       "%Z - Временная зона\n"
                       "%% - Знак '%'")
-translate = {
+localization = {
     "configSelect": {
         "header": "ВЫБОР НАСТРОЕК из mods/configs/mod_battle_observer",
         "selector": "Выбрать настройки.",
