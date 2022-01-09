@@ -97,6 +97,7 @@ def handleLazyChannelCtlInited(base, entry, event):
         ctx = event.ctx
         controller = ctx.get('controller')
         if controller is not None:
+            controller.deactivate()
             ctx.clear()
             return
     return base(entry, event)
