@@ -5,6 +5,7 @@ import random
 from armagomen.constants import URLS, GLOBAL, IMG, LOGO_SMALL
 from armagomen.utils.common import logInfo
 from gui.SystemMessages import pushMessage, SM_TYPE
+from gui.shared.ClanCache import g_clanCache
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
@@ -37,16 +38,25 @@ class Donate(object):
         return message
 
     def getDonateMessage(self):
-        self.lastMessage = self.getRandomMessage()
+        if GLOBAL.RU_LOCALIZATION and self.userInBOFAN:
+            message = messages[GLOBAL.FIRST]
+        else:
+            message = self.getRandomMessage()
+        self.lastMessage = message
         return "{logo}<p>{msg}</p>\n" \
                "<p><textformat leading='2'>" \
                "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
                "{alerts_img} <a href='event:{all}'>DonationAlerts</a>\n" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
-                                          patreon=URLS.PATREON_URL, msg=self.lastMessage,
+                                          patreon=URLS.PATREON_URL, msg=message,
                                           logo=random.choice(LOGO_SMALL), donat_img=IMG.DONAT_UA,
                                           alerts_img=IMG.DONATIONALERTS, patreon_img=IMG.PATREON)
+
+    @property
+    def userInBOFAN(self):
+        clanAbbrev = g_clanCache.clanAbbrev
+        return clanAbbrev is not None and clanAbbrev == "BOFAN"
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:

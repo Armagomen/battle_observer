@@ -6,11 +6,12 @@ from armagomen.constants import STATISTICS
 class BattleLoading(StatsMeta):
 
     def py_getStatisticString(self, accountDBID, isEnemy, clanAbbrev):
-        pattern = self.settings[STATISTICS.LOADING_RIGHT] if isEnemy else self.settings[STATISTICS.LOADING_LEFT]
-        if pattern:
-            result = wtr_rating.getStatisticsData(accountDBID, clanAbbrev)
-            if result is not None:
-                return pattern % result
+        if accountDBID:
+            pattern = self.settings[STATISTICS.LOADING_RIGHT] if isEnemy else self.settings[STATISTICS.LOADING_LEFT]
+            if pattern:
+                result = wtr_rating.getStatisticsData(accountDBID, clanAbbrev)
+                if result is not None:
+                    return pattern % result
         return None
 
     def onEnterBattlePage(self):
