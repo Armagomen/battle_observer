@@ -50,6 +50,16 @@ def setSystemValue(base, zoomSettings, value):
     return base(zoomSettings, GLOBAL.ZERO if settingsCache[SNIPER.DYN_ZOOM] else value)
 
 
+def checkZoomStep(zoom, steps):
+    result = steps[GLOBAL.FIRST]
+    for step in steps:
+        if zoom >= step:
+            result = step
+        else:
+            break
+    return result
+
+
 @overrideMethod(SniperCamera, "enable")
 def enable(base, camera, targetPos, saveZoom):
     if settingsCache[SNIPER.DYN_ZOOM]:
@@ -58,13 +68,10 @@ def enable(base, camera, targetPos, saveZoom):
         if settings.zoom[SNIPER.GUN_ZOOM]:
             targetPos = player.gunRotator.markerInfo[GLOBAL.FIRST]
         dist = player.position.distTo(targetPos)
+        zoom = min(math.ceil(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
+                   camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
         if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
-            dist_for_step = math.ceil(SNIPER.MAX_DIST / len(camera._cfg[SNIPER.ZOOMS]))
-            index = int(math.floor(dist / dist_for_step))
-            zoom = camera._cfg[SNIPER.ZOOMS][index]
-        else:
-            zoom = min(math.ceil(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
-                       camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
+            zoom = checkZoomStep(zoom, camera._cfg[SNIPER.ZOOMS])
         camera._cfg[SNIPER.ZOOM] = zoom
     return base(camera, targetPos, saveZoom)
 
