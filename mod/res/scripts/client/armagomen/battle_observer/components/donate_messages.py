@@ -12,9 +12,9 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 if GLOBAL.RU_LOCALIZATION:
     messages = (
         "Поддержите разработку мода. Спасибо что вы с нами.",
-        "Присоединяйся к нашему клану <a href='event:{}'>[BOFAN]</a>. Никаких обязательств, главное условие "
-        "быть пользователем Battle Observer. Заявки принимаются в специальном <a href='event:{}'>Discord канале</a>, "
-        "либо подайте заявку через страницу клана на сайте.".format(URLS.CLAN, URLS.DISCORD),
+        "Спасибо за финансовую поддержку разработки мода.",
+        "Присоединяйся к нашему клану <a href='event:BOFAN'>[BOFAN]</a>. Никаких обязательств. Вступай и получай "
+        "клановые бонусы (бустеры, камуфляжи, и многое другое)."
     )
 else:
     messages = (
@@ -32,31 +32,30 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
 
     def getRandomMessage(self):
-        message = random.choice(messages)
+        if GLOBAL.RU_LOCALIZATION and self.userInBOFAN:
+            message = random.choice(messages[:-1])
+        else:
+            message = random.choice(messages)
         if message is self.lastMessage:
             message = self.getRandomMessage()
         return message
 
     def getDonateMessage(self):
-        if GLOBAL.RU_LOCALIZATION and self.userInBOFAN:
-            message = messages[GLOBAL.FIRST]
-        else:
-            message = self.getRandomMessage()
-        self.lastMessage = message
+        self.lastMessage = self.getRandomMessage()
         return "{logo}<p>{msg}</p>\n" \
                "<p><textformat leading='2'>" \
                "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
                "{alerts_img} <a href='event:{all}'>DonationAlerts</a>\n" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
-                                          patreon=URLS.PATREON_URL, msg=message,
+                                          patreon=URLS.PATREON_URL, msg=self.lastMessage,
                                           logo=random.choice(LOGO_SMALL), donat_img=IMG.DONAT_UA,
                                           alerts_img=IMG.DONATIONALERTS, patreon_img=IMG.PATREON)
 
     @property
     def userInBOFAN(self):
         clanAbbrev = g_clanCache.clanAbbrev
-        return clanAbbrev is not None and clanAbbrev == "BOFAN"
+        return clanAbbrev is not None and clanAbbrev == URLS.CLAN_ABBREV
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:

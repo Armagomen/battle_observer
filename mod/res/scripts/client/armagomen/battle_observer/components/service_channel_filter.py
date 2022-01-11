@@ -2,6 +2,7 @@ from armagomen.battle_observer.core import settings
 from armagomen.constants import SERVICE_CHANNEL, GLOBAL, URLS
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
+from gui.shared import event_dispatcher
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
@@ -57,5 +58,7 @@ settings.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(NotificationPopUpViewer, "onClickAction")
 def clickAction(base, view, typeID, entityID, action):
     if action in URLS:
+        if action == URLS.CLAN_ABBREV:
+            return event_dispatcher.showClanProfileWindow(571593, action)
         return openWebBrowser(action)
     return base(view, typeID, entityID, action)
