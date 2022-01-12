@@ -16,8 +16,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.damage = GLOBAL.ZERO
         self.gunScore = GLOBAL.ZERO
         self.enemiesHP = GLOBAL.ZERO
-        self.gunIcons = None
         self.playerDead = False
+        self.totalEnemiesHP = GLOBAL.ZERO
 
     def onEnterBattlePage(self):
         super(MainGun, self).onEnterBattlePage()
@@ -42,13 +42,11 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.macros.update(mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
                            mainGunColor=self.colors[MAIN_GUN.NAME][MAIN_GUN.COLOR],
                            mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
-        self.gunIcons = {
-            True: [self.settings[MAIN_GUN.DONE_ICON], self.settings[MAIN_GUN.FAILURE_ICON]],
-            False: [GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE]
-        }
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
-        self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(ceil(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
+        if self.totalEnemiesHP != totalEnemiesHP:
+            self.totalEnemiesHP = totalEnemiesHP
+            self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(ceil(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
         if not self.playerDead and self.enemiesHP != enemiesHP:
             self.enemiesHP = enemiesHP
             self.updateMainGun()
@@ -63,11 +61,17 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         gunLeft = self.gunScore - self.damage
         achieved = gunLeft <= GLOBAL.ZERO
         self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else gunLeft
-        self.macros[MAIN_GUN.DONE_ICON] = self.gunIcons[achieved][GLOBAL.FIRST]
-        self.macros[MAIN_GUN.FAILURE_ICON] = self.gunIcons[self.enemiesHP < gunLeft or self.playerDead][GLOBAL.LAST]
+        if achieved:
+            self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON]
+        elif self.macros[MAIN_GUN.DONE_ICON]:
+            self.macros[MAIN_GUN.DONE_ICON] = GLOBAL.EMPTY_LINE
+        if self.enemiesHP < gunLeft or self.playerDead:
+            self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON]
+        elif self.macros[MAIN_GUN.FAILURE_ICON]:
+            self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
-        if ctrlMode in POSTMORTEM.MODES:
+        if not self.playerDead and ctrlMode in POSTMORTEM.MODES:
             self.playerDead = True
             self.updateMainGun()

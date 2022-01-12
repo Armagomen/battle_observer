@@ -8,11 +8,10 @@
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.tween.Tween;
-	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
+		private var loader:Loader     = null;
 		private var params:Object     = null;
 		private var timer:TextExt;
 		private var image:Bitmap      = null;
@@ -22,6 +21,7 @@
 		public function SixthSenseUI()
 		{
 			super();
+			this.loader = new Loader();
 			this.x = App.appWidth >> 1;
 			this._container = new Sprite()
 			this._container.name = "image";
@@ -29,7 +29,7 @@
 			this.addChild(_container);
 		}
 		
-		override protected function onPopulate():void 
+		override protected function onPopulate():void
 		{
 			super.onPopulate();
 			if (this.image == null)
@@ -37,13 +37,23 @@
 				this.params = this.getSettings();
 				this.setImage();
 			}
+			if (!this.loader.contentLoaderInfo.hasEventListener(Event.COMPLETE))
+			{
+				this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
+			}
+		
 		}
 		
-		override protected function onBeforeDispose():void 
+		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
 			App.utils.data.cleanupDynamicObject(this.params);
-			if (this.animation){
+			if (this.loader.contentLoaderInfo.hasEventListener(Event.COMPLETE))
+			{
+				this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
+			}
+			if (this.animation)
+			{
 				this.animation.stop();
 				this.animation = null;
 			}
@@ -93,20 +103,14 @@
 		
 		private function imageLoaded(evt:Event):void
 		{
-			var loaderInfo:LoaderInfo = evt.target as LoaderInfo;
-			if (loaderInfo.hasEventListener(Event.COMPLETE))
-			{
-				loaderInfo.removeEventListener(Event.COMPLETE, imageLoaded);
-			}
-			this.image = loaderInfo.content as Bitmap;
+			this.image = this.loader.contentLoaderInfo.content as Bitmap;
 			this.addLoadedImageAndTimer();
+			this.loader.close();
 		}
 		
 		private function setImage():void
 		{
-			var loader:Loader = new Loader();
-			loader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded);
-			loader.load(new URLRequest('../../../' + params.image.img));
+			this.loader.load(new URLRequest('../../../' + params.image.img));
 		}
 		
 		override public function onResizeHandle(event:Event):void
