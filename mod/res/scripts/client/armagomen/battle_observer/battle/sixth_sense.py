@@ -5,7 +5,6 @@ from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMet
 from armagomen.constants import GLOBAL, SIXTH_SENSE
 from armagomen.utils.common import callback
 from armagomen.utils.timers import SixthSenseTimer
-from constants import ARENA_PERIOD
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 
 _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
@@ -31,7 +30,7 @@ class SixthSense(SixthSenseMeta):
             ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
 
     def onExitBattlePage(self):
-        self.stop()
+        self.hide()
         self._timer.destroy()
         g_playerEvents.onRoundFinished -= self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
@@ -41,12 +40,12 @@ class SixthSense(SixthSenseMeta):
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
-            self.show() if value else self.stop()
+            self.show() if value else self.hide()
         elif state in _STATES_TO_HIDE:
-            self.stop()
+            self.hide()
 
     def _onRoundFinished(self, *args):
-        self.stop()
+        self.hide()
 
     def handleTimer(self, timeLeft):
         self.macro[SIXTH_SENSE.M_TIME_LEFT] = timeLeft
@@ -59,8 +58,7 @@ class SixthSense(SixthSenseMeta):
         else:
             callback(float(self.settings[SIXTH_SENSE.TIME]), self.as_hideS)
 
-    def stop(self):
+    def hide(self):
         if self.settings[SIXTH_SENSE.SHOW_TIMER]:
             self._timer.stop()
-        else:
-            self.as_hideS()
+        self.as_hideS()
