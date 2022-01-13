@@ -63,11 +63,11 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else gunLeft
         if achieved:
             self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON]
-        elif self.macros[MAIN_GUN.DONE_ICON]:
+        else:
             self.macros[MAIN_GUN.DONE_ICON] = GLOBAL.EMPTY_LINE
-        if self.enemiesHP < gunLeft or self.playerDead:
+        if not achieved and (self.enemiesHP < gunLeft or self.playerDead):
             self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON]
-        elif self.macros[MAIN_GUN.FAILURE_ICON]:
+        else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
