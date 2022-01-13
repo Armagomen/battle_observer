@@ -97,7 +97,7 @@ class GLOBAL:
     ONE = 1
     ONE_SECOND = 1.0
     OUTLINE = "outline"
-    REPLACE = ("PingLagColor", "pingColor")
+    REPLACE = ("%(battles)d", "%(battles)s")
     RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
     SCALE = "scale"
     SETTINGS = "settings"

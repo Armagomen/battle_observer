@@ -5,7 +5,7 @@ from armagomen.battle_observer.statistics.statistic_data_loader import statistic
 from armagomen.constants import STATISTICS
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
-
+from math import log, floor
 
 class WTRCache(object):
 
@@ -27,6 +27,8 @@ class StatisticsWTR(object):
     DEFAULT_COLOR = "#fafafa"
     DEFAULT_RATING = 0
     DEFAULT_WIN_RATE = 0.0
+    K = 1000.0
+    UNITS = ['', 'K', 'M', 'G', 'T', 'P']
 
     def __init__(self):
         self.cache = WTRCache()
@@ -37,8 +39,12 @@ class StatisticsWTR(object):
         random = data["statistics"]["random"]
         battles = int(random["battles"])
         if battles:
-            return float(random["wins"]) / battles * 100, battles
-        return self.DEFAULT_WIN_RATE, battles
+            return float(random["wins"]) / battles * 100, self.battlesFormat(battles)
+        return self.DEFAULT_WIN_RATE, str(battles)
+
+    def battlesFormat(self, battles):
+        magnitude = int(floor(log(battles, self.K)))
+        return '%.2f%s' % (battles / self.K ** magnitude, self.UNITS[magnitude])
 
     def getColor(self, wtr):
         result = "very_bad"

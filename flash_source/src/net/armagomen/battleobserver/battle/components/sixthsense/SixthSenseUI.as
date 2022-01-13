@@ -2,6 +2,7 @@
 {
 	import flash.display.*;
 	import flash.events.Event;
+	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
@@ -11,12 +12,14 @@
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
-		private var loader:Loader     = null;
-		private var params:Object     = null;
+		private var loader:Loader;
+		private var params:Object;
 		private var timer:TextExt;
-		private var image:Bitmap      = null;
-		private var _container:Sprite = null;
-		private var animation:Tween   = null;
+		private var _container:Sprite;
+		private var animation:Tween;
+		
+		[Embed(source = "SixthSenseIcon.png")]
+		private var DefaultIcon:Class;
 		
 		public function SixthSenseUI()
 		{
@@ -32,26 +35,18 @@
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			if (this.image == null)
-			{
-				this.params = this.getSettings();
-				this.setImage();
-			}
-			if (!this.loader.contentLoaderInfo.hasEventListener(Event.COMPLETE))
-			{
-				this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
-			}
-		
+			this.params = this.getSettings();
+			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
+			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			this.loader.load(new URLRequest('../../../' + params.image.img));
 		}
 		
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
 			App.utils.data.cleanupDynamicObject(this.params);
-			if (this.loader.contentLoaderInfo.hasEventListener(Event.COMPLETE))
-			{
-				this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
-			}
+			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
+			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
 			if (this.animation)
 			{
 				this.animation.stop();
@@ -59,18 +54,18 @@
 			}
 			this._container.removeChildren();
 			this.timer = null;
-			this.image = null;
 			this._container = null;
+			this.loader = null;
 		}
 		
-		private function addLoadedImageAndTimer():void
+		private function addLoadedImageAndTimer(image:Bitmap):void
 		{
-			this.image.smoothing = params.image.smoothing;
-			this.image.alpha = params.image.alpha;
-			this.image.scaleX = this.image.scaleY = params.image.scale;
-			this.image.x = params.image.x - image.width * 0.5;
-			this.image.y = params.image.y;
-			this._container.addChild(this.image);
+			image.smoothing = params.image.smoothing;
+			image.alpha = params.image.alpha;
+			image.scaleX = image.scaleY = params.image.scale;
+			image.x = params.image.x - image.width * 0.5;
+			image.y = params.image.y;
+			this._container.addChild(image);
 			if (params.showTimer)
 			{
 				this.timer = new TextExt(params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
@@ -80,13 +75,6 @@
 		
 		public function as_show():void
 		{
-			if (!this.image)
-			{
-				[Embed(source = "SixthSenseIcon.png")]
-				var Icon:Class;
-				this.image = new Icon();
-				this.addLoadedImageAndTimer();
-			}
 			this._container.visible = true;
 		}
 		
@@ -101,18 +89,18 @@
 			this.timer.htmlText = str;
 		}
 		
-		private function imageLoaded(evt:Event):void
+		private function onLoadError(e:IOErrorEvent):void
 		{
-			this.image = this.loader.contentLoaderInfo.content as Bitmap;
-			this.addLoadedImageAndTimer();
 			this.loader.close();
+			this.addLoadedImageAndTimer(new DefaultIcon() as Bitmap);
 		}
 		
-		private function setImage():void
+		private function imageLoaded(e:Event):void
 		{
-			this.loader.load(new URLRequest('../../../' + params.image.img));
+			this.addLoadedImageAndTimer(this.loader.content as Bitmap);
+			this.loader.unload();
 		}
-		
+			
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;

@@ -59,7 +59,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def updateMainGun(self):
         gunLeft = self.gunScore - self.damage
-        achieved = gunLeft <= GLOBAL.ZERO
+        achieved = self.damage >= self.gunScore
         self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else gunLeft
         if achieved:
             self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON]

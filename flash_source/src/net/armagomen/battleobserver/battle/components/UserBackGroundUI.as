@@ -43,7 +43,6 @@
 				if (item.enabled)
 				{
 					var loader:Loader = new Loader();
-					loader.cacheAsBitmap = true;
 					loader.z = this.groupMap.indexOf(item);
 					loader.contentLoaderInfo.addEventListener(Event.COMPLETE, imageLoaded, false, 0, true);
 					loader.load(new URLRequest('../../../' + item.img));
