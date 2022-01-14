@@ -32,8 +32,8 @@
 			this.enemyBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Math.max(0.2, colors.alpha));
 			this.enemyBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
 			this.enemyBar.graphics.endFill();
-			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 1.0, 1, true);
-			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 1.0, 1, true);	
+			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, 1, true);
+			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, 1, true);	
 		}
 		
 		public function setColorBlind(enabled:Boolean):void

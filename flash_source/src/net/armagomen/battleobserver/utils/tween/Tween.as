@@ -22,7 +22,7 @@ package net.armagomen.battleobserver.utils.tween
 		public var prevPos:Number     = NaN;
 		public var isPlaying:Boolean  = false;
 		private var _fps:Number       = 30;
-		private var _time:Number      = NaN;
+		private var _time:Number      = 0;
 		public var begin:Number       = NaN;
 		public var change:Number      = NaN;
 		public var looping:Boolean    = false;
@@ -48,7 +48,6 @@ package net.armagomen.battleobserver.utils.tween
 			this.useSeconds = useSeconds;
 			this.finish = finish;
 			this._timer = new Timer(100);
-			this.start();
 		}
 		
 		public function continueTo(finish:Number, duration:Number):void

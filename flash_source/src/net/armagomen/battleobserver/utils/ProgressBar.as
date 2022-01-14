@@ -43,7 +43,7 @@
 				this.bar.filters = filters;
 			}
 			this.addChild(this.bar);
-			this.animation = new Tween(this.bar, "scaleX", this.bar.scaleX, 1.0, this.animationTime, true);
+			this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime, true);
 		}
 		
 		public function setNewScale(newScale:Number):void
