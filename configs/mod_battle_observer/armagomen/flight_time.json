@@ -1,6 +1,6 @@
 {
   "align": "right", 
-  "enabled": false, 
+  "enabled": true, 
   "spgOnly": false, 
   "template": "<font color='#f5ff8f'>%(flightTime).1fs. - %(distance)dm.</font>", 
   "x": -110, 

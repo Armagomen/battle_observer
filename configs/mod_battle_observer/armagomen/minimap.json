@@ -1,6 +1,6 @@
 {
   "enabled": true, 
-  "permanentMinimapDeath": false, 
+  "permanentMinimapDeath": true, 
   "real_view_radius": true, 
   "showDeathNames": false, 
   "yaw_limits": true, 

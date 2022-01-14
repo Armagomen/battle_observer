@@ -1,11 +1,14 @@
 {
   "align": "center", 
+  "alpha": 0.4, 
   "avgColor": {
     "brightness": 1.0, 
     "saturation": 1.0
   }, 
   "enabled": false, 
+  "height": 20, 
   "template": "%(health)s/%(maxHealth)s (%(percent)s%%)", 
+  "width": 140, 
   "x": 0, 
   "y": 130
 }
