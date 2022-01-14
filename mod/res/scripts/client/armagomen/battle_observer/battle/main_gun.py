@@ -14,6 +14,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         super(MainGun, self).__init__()
         self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.damage = GLOBAL.ZERO
+        self.maxDamage = GLOBAL.ZERO
         self.gunScore = GLOBAL.ZERO
         self.enemiesHP = GLOBAL.ZERO
         self.playerDead = False
@@ -66,10 +67,9 @@ class MainGun(MainGunMeta, IBattleFieldListener):
                 self.updateMainGun()
 
     def updateMainGun(self):
-        maxDamage = max(self.playersDamage.itervalues()) if len(self.playersDamage) else GLOBAL.ZERO
-        isMoreDamage = maxDamage > self.damage and maxDamage > self.gunScore
+        isMoreDamage = self.maxDamage > self.damage and self.maxDamage > self.gunScore
         if isMoreDamage:
-            gunLeft = self.gunScore + (maxDamage - self.gunScore) - self.damage
+            gunLeft = self.maxDamage - self.damage
         else:
             gunLeft = self.gunScore - self.damage
         achieved = gunLeft <= GLOBAL.ZERO
@@ -82,9 +82,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
-        if not self.playerDead and ctrlMode in POSTMORTEM.MODES:
-            self.playerDead = True
-            self.updateMainGun()
+        self.playerDead = ctrlMode in POSTMORTEM.MODES
 
     def onPlayersDamaged(self, targetID, attackerID, damage):
         if self._player.playerVehicleID == attackerID:
@@ -92,3 +90,5 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         vInfo = self._arenaDP.getVehicleInfo(attackerID)
         if vInfo.team == self.allyTeam:
             self.playersDamage[attackerID] += damage
+            self.maxDamage = max(self.playersDamage.itervalues())
+            self.updateMainGun()
