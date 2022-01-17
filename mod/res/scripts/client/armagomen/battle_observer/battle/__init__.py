@@ -60,8 +60,9 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def onAppInitializing(self, event):
         if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
-            if statisticLoader.enabled and view_settings.isStatisticEnabled:
-                self._statistics = statisticLoader.setCachedStatisticData()
+            self._statistics = view_settings.isStatisticEnabled
+            if self._statistics:
+                statisticLoader.setCachedStatisticData()
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 

@@ -39,29 +39,21 @@ class StatisticsDataLoader(object):
 
     def setCachedStatisticData(self):
         arenaDP = self.sessionProvider.getArenaDP()
-        result = False
         if arenaDP is None or not self.enabled:
-            return result
+            return
         toRequest = []
-        inCache = GLOBAL.ZERO
         for vInfo in arenaDP.getVehiclesInfoIterator():
             if vInfo.player.accountDBID and vInfo.player.accountDBID not in self.cache:
                 toRequest.append(vInfo.player.accountDBID)
-            elif vInfo.player.accountDBID in self.cache:
-                inCache += GLOBAL.ONE
         if toRequest:
             if settings.main[MAIN.DEBUG]:
                 logDebug("START request statistics data: ids={}, len={} ".format(toRequest, len(toRequest)))
             data = self.request(toRequest)
-            result = data is not None
-            if result:
+            if data is not None:
                 for _id, value in data.iteritems():
                     self.cache[int(_id)] = copy.deepcopy(value)
             if settings.main[MAIN.DEBUG]:
                 logDebug("FINISH request statistics data")
-        else:
-            result = inCache > GLOBAL.ZERO
-        return result
 
     def getStatisticForUser(self, databaseID):
         return self.cache.get(databaseID)
@@ -84,8 +76,8 @@ def checkXVM(spaceID):
             statisticLoader.enabled = False
             break
     if not statisticLoader.enabled:
-        settings.statistics[GLOBAL.ENABLED] = statisticLoader.enabled
-        settings.minimap[GLOBAL.ENABLED] = statisticLoader.enabled
+        settings.statistics[GLOBAL.ENABLED] = False
+        settings.minimap[GLOBAL.ENABLED] = False
         logInfo("statistics/icons/minimap module is disabled, XVM is installed")
     else:
         statisticLoader.plugin.start()
