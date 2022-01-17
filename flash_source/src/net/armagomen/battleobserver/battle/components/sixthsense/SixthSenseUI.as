@@ -74,12 +74,14 @@
 				this.timer = new TextExt(params.timer.x, params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
 				this.animation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);
 			}
-			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height, 1.2, true);
-			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 1.2, true);
+			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height, 1, true);
+			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 1, true);
 		}
 		
 		public function as_show():void
 		{
+			this._container.y = 0;
+			this._container.alpha = 1.0;
 			this._container.visible = true;
 		}
 		
@@ -87,14 +89,15 @@
 		{
 			this.hideAnimation.start();
 			this.hideAnimation2.start();
-			setTimeout(this.afterHide, 1200);
+			setTimeout(this.afterHide, 1010);
 		}
 		
 		private function afterHide():void
 		{
+
 			this._container.visible = false;
-			this._container.alpha = 1.0;
-			this._container.y = 0;
+			this.hideAnimation.rewind();
+			this.hideAnimation2.rewind();
 		}
 		
 		

@@ -44,7 +44,7 @@ class StatisticsWTR(object):
 
     def battlesFormat(self, battles):
         magnitude = int(floor(log(battles, self.K)))
-        return '%.2f%s' % (battles / self.K ** magnitude, self.UNITS[magnitude])
+        return '%.1f%s' % (battles / self.K ** magnitude, self.UNITS[magnitude])
 
     def getColor(self, wtr):
         result = "very_bad"

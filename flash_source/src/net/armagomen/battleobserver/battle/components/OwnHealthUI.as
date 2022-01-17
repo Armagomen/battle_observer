@@ -1,5 +1,6 @@
 package net.armagomen.battleobserver.battle.components
 {
+	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
@@ -20,7 +21,7 @@ package net.armagomen.battleobserver.battle.components
 			{
 				var settings:Object = this.getSettings();
 				var colors:Object = this.getColors();
-				this.own_health = new ProgressBar(-settings.width / 2, settings.y, settings.width, settings.height, settings.alpha, settings.alpha * 0.7, null, colors.global.ally, null, 0.2);
+				this.own_health = new ProgressBar(( -settings.width / 2) + settings.x, settings.y, settings.width, settings.height, settings.alpha, settings.alpha * 0.7, null, colors.global.ally, null, 0.2);
 				this.own_health.setOutline(false, colors.global.ally, settings.alpha, settings.width, settings.height);
 				this.own_health.addTextField(settings.width / 2, -2, "center", Filters.normalText, this.getShadowSettings());
 				this.addChild(this.own_health);

@@ -1,4 +1,4 @@
-﻿package net.armagomen.battleobserver.battle.components.batlletimer
+﻿package net.armagomen.battleobserver.battle.components.battletimer
 {
 	import flash.events.Event;
 	import flash.text.TextFieldAutoSize;

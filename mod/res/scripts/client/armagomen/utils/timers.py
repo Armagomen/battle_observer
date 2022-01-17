@@ -30,7 +30,8 @@ class Timer(object):
 
     def start(self, *args):
         if self._callback is not None:
-            self.stop()
+            cancelCallback(self._callback)
+            self._callback = None
 
 
 class SixthSenseTimer(Timer):
@@ -57,7 +58,6 @@ class SixthSenseTimer(Timer):
     def timeTicking(self, seconds, play_sound):
         if seconds <= CONSTANTS.ZERO:
             return self.stop()
-        self._callback = None
         self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE, play_sound))
         self._func_update(seconds)
         if play_sound:
