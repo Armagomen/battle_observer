@@ -55,8 +55,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			}
 			if (this.statisticsEnabled && item.data.accountDBID != 0)
 			{
+				var dataString:String = py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev);
+				if (!dataString){
+					return;
+				}
 				item.statsItem._playerNameTF.autoSize = item.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-				item.statsItem._playerNameTF.htmlText = py_getStatisticString(item.data.accountDBID, item.statsItem._isEnemy, item.data.clanAbbrev);
+				item.statsItem._playerNameTF.htmlText = dataString;
 				if (!item.data.isAlive())
 				{
 					item.statsItem._playerNameTF.alpha = 0.66;

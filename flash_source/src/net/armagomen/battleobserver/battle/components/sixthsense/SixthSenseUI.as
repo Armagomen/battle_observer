@@ -5,11 +5,11 @@
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
-	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.tween.Tween;
+	import net.armagomen.battleobserver.utils.tween.TweenEvent;
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
@@ -57,6 +57,7 @@
 			}
 			this.hideAnimation.stop();
 			this.hideAnimation2.stop();
+			this.hideAnimation.removeEventListener(TweenEvent.MOTION_FINISH, this.afterAnimation);
 			this.hideAnimation = null;
 			this.hideAnimation2 = null;
 			this._container.removeChildren();
@@ -80,10 +81,17 @@
 			}
 			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height, 1, true);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 1, true);
+			this.hideAnimation.addEventListener(TweenEvent.MOTION_FINISH, this.afterAnimation, false, 0, true);
 		}
 		
 		public function as_show():void
 		{
+			if (this.hideAnimation.isPlaying){
+				this.hideAnimation.rewind();
+				this.hideAnimation2.rewind();
+			}
+			this._container.y = 0;
+			this._container.alpha = 1.0;
 			this._container.visible = true;
 		}
 		
@@ -92,15 +100,12 @@
 			if (!this.hideAnimation.isPlaying){
 				this.hideAnimation.start();
 				this.hideAnimation2.start();
-				setTimeout(this.afterHide, 1010);
 			}
 		}
 		
-		private function afterHide():void
+		private function afterAnimation(event:TweenEvent):void
 		{
 			this._container.visible = false;
-			this._container.y = 0;
-			this._container.alpha = 1.0;
 		}
 		
 		public function as_updateTimer(str:String):void

@@ -21,11 +21,16 @@ class StatisticPlugin(object):
         self.settings = settings
         self.moduleEnabled = False
         self.appLoader.onGUISpaceBeforeEnter += self.onGUISpaceBeforeEnter
+        self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
     def onGUISpaceBeforeEnter(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.BATTLE:
+        if spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
             self.moduleEnabled = self.settings[GLOBAL.ENABLED] and (self.settings[STATISTICS.ICON_ENABLED] or
                                                                     self.settings[STATISTICS.STATISTIC_ENABLED])
+
+    def onGUISpaceEntered(self, spaceID):
+        if self.moduleEnabled and spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
+            self.updateAllItems()
 
     def start(self):
         overrideMethod(ClassicStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
