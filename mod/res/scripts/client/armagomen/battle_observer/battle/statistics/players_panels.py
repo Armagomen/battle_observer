@@ -5,7 +5,6 @@ from armagomen.utils.events import g_events
 
 
 class PlayersPanelsStatistic(StatsMeta):
-    COLOR_WTR = "colorWTR"
 
     def __init__(self):
         super(PlayersPanelsStatistic, self).__init__()
@@ -24,14 +23,15 @@ class PlayersPanelsStatistic(StatsMeta):
         if vehicleID not in self.cache:
             vInfo = self._arenaDP.getVehicleInfo(vehicleID)
             accountDBID = vInfo.player.accountDBID
-            iconColor = self.py_getIconColor(vInfo.vehicleType.classTag)
+            iconColor = self.getIconColor(vInfo.vehicleType.classTag)
             result = wtr_rating.getStatisticsData(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
             if result is not None:
                 patternFUL = self.settings[STATISTICS.PANELS_RIGHT] if isEnemy else \
                     self.settings[STATISTICS.PANELS_LEFT]
                 patternCUT = self.settings[STATISTICS.PANELS_RIGHT_CUT] if isEnemy else \
                     self.settings[STATISTICS.PANELS_LEFT_CUT]
-                self.cache[vehicleID] = (iconColor, patternFUL % result, patternCUT % result, result[self.COLOR_WTR])
+                vehicleTextColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
+                self.cache[vehicleID] = (iconColor, patternFUL % result, patternCUT % result, vehicleTextColor)
             else:
                 self.cache[vehicleID] = (iconColor, None, None, None)
         self.as_updateVehicleS(isEnemy, vehicleID, *self.cache[vehicleID])
@@ -41,6 +41,3 @@ class PlayersPanelsStatistic(StatsMeta):
 
     def py_getFullWidth(self):
         return self.settings[STATISTICS.PANELS_FULL_WIDTH]
-
-    def py_vehicleStatisticColorEnabled(self):
-        return self.settings[STATISTICS.CHANGE_VEHICLE_COLOR]

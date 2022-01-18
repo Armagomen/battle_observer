@@ -1,9 +1,6 @@
 package net.armagomen.battleobserver.battle.components.ststistics
 {
-	import flash.events.Event;
 	import flash.geom.ColorTransform;
-	import flash.text.TextFieldAutoSize;
-	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Utils;
 	
@@ -13,6 +10,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getIconMultiplier:Function;
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
+		private var colorEnabled:Boolean      = false;
 		private var iconMultiplier:Number     = -1.25;
 		
 		public function BattleLoadingUI(loading:*, statsEnabled:Boolean, iconEnabled:Boolean)
@@ -25,7 +23,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		override public function as_onAfterPopulate():void
 		{
-			this.iconMultiplier = py_getIconMultiplier();
+			this.iconMultiplier = this.py_getIconMultiplier();
 		}
 		
 		private function getHolderByVehicleID(isEnemy:Boolean, vehicleID:int):*
@@ -53,7 +51,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			return null;
 		}
 		
-		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, data:String):void
+		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, dataString:String, vehicleTextColor:String):void
 		{
 			var item:* = this.getHolderByVehicleID(isEnemy, vehicleID);
 			if (!item)
@@ -65,15 +63,18 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			{
 				var tColor:ColorTransform = new ColorTransform();
 				tColor.color = Utils.colorConvert(iconColor);
-				;
 				tColor.alphaMultiplier = item._vehicleIcon.transform.colorTransform.alphaMultiplier;
 				tColor.alphaOffset = item._vehicleIcon.transform.colorTransform.alphaOffset;
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				item._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled && item.model.accountDBID != 0 && data)
+			if (this.statisticsEnabled && dataString)
 			{
-				item._textField.htmlText = data;
+				item._textField.htmlText = dataString;
+				if (vehicleTextColor)
+				{
+					item._vehicleField.textColor = Utils.colorConvert(vehicleTextColor);
+				}
 			}
 		}
 	}
