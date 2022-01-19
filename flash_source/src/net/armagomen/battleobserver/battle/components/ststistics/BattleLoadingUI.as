@@ -10,7 +10,6 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		public var py_getIconMultiplier:Function;
 		private var statisticsEnabled:Boolean = false;
 		private var iconEnabled:Boolean       = false;
-		private var colorEnabled:Boolean      = false;
 		private var iconMultiplier:Number     = -1.25;
 		
 		public function BattleLoadingUI(loading:*, statsEnabled:Boolean, iconEnabled:Boolean)
@@ -51,7 +50,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			return null;
 		}
 		
-		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, dataString:String, vehicleTextColor:String):void
+		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, fullName:String, cutName:String, vehicleTextColor:String):void
 		{
 			var item:* = this.getHolderByVehicleID(isEnemy, vehicleID);
 			if (!item)
@@ -59,7 +58,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				doLog("battle loading item is null ".concat(vehicleID));
 				return;
 			}
-			if (this.iconEnabled)
+			if (this.iconEnabled && iconColor)
 			{
 				var tColor:ColorTransform = new ColorTransform();
 				tColor.color = Utils.colorConvert(iconColor);
@@ -68,9 +67,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				item._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled && dataString)
+			if (this.statisticsEnabled)
 			{
-				item._textField.htmlText = dataString;
+				if (fullName)
+				{
+					item._textField.htmlText = fullName;
+				}
 				if (vehicleTextColor)
 				{
 					item._vehicleField.textColor = Utils.colorConvert(vehicleTextColor);

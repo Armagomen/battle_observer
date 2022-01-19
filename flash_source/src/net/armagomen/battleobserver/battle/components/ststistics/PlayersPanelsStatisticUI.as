@@ -15,7 +15,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconEnabled:Boolean             = false;
 		private var colorEnabled:Boolean            = false;
 		private var iconMultiplier:Number           = -1.25;
-		private static const DEAD_TEXT_ALPHA:Number = 0.68;
+		//private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
 		public function PlayersPanelsStatisticUI(panels:*, statsEnabled:Boolean, icon:Boolean)
 		{
@@ -65,7 +65,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			super.onBeforeDispose();
 		}
 		
-		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, fullTF:String, cutTF:String, vehicleTextColor:String):void
+		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, fullName:String, cutName:String, vehicleTextColor:String):void
 		{
 			if (this.panels)
 			{
@@ -87,20 +87,20 @@ package net.armagomen.battleobserver.battle.components.ststistics
 						{
 							listItem.vehicleTF.textColor = Utils.colorConvert(vehicleTextColor);
 						}
-						if (fullTF)
+						if (fullName)
 						{
-							listItem.playerNameFullTF.htmlText = fullTF;
+							listItem.playerNameFullTF.htmlText = fullName;
 						}
-						if (cutTF)
+						if (cutName)
 						{
-							listItem.playerNameCutTF.htmlText = cutTF;
+							listItem.playerNameCutTF.htmlText = cutName;
 						}
-						if (!listItem._isAlive)
-						{
-							listItem.playerNameCutTF.alpha = DEAD_TEXT_ALPHA;
-							listItem.playerNameFullTF.alpha = DEAD_TEXT_ALPHA;
-							listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
-						}
+						//if (!listItem._isAlive)
+						//{
+							//listItem.playerNameCutTF.alpha = DEAD_TEXT_ALPHA;
+							//listItem.playerNameFullTF.alpha = DEAD_TEXT_ALPHA;
+							//listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
+						//}
 					}
 				}
 			}

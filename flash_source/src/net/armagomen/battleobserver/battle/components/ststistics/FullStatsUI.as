@@ -12,7 +12,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var statisticsEnabled:Boolean       = false;
 		private var iconEnabled:Boolean             = false;
 		private var iconMultiplier:Number           = -1.25;
-		private static const DEAD_TEXT_ALPHA:Number = 0.68;
+		//private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
 		public function FullStatsUI(fullStats:*, statsEnabled:Boolean, iconEnabled:Boolean)
 		{
@@ -52,7 +52,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 			return null;
 		}
 		
-		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, dataString:String, vehicleTextColor:String):void
+		public function as_updateVehicle(isEnemy:Boolean, vehicleID:int, iconColor:String, fullName:String, cutName:String, vehicleTextColor:String):void
 		{
 			var item:* = this.getHolderByVehicleID(isEnemy, vehicleID);
 			if (!item)
@@ -60,7 +60,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				doLog("full stats item is null ".concat(vehicleID));
 				return;
 			}
-			if (this.iconEnabled)
+			if (this.iconEnabled && iconColor)
 			{
 				var tColor:ColorTransform = new ColorTransform();
 				tColor.color = Utils.colorConvert(iconColor);
@@ -69,19 +69,22 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				item.statsItem._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled && dataString)
+			if (this.statisticsEnabled)
 			{
-				item.statsItem._playerNameTF.autoSize = isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-				item.statsItem._playerNameTF.htmlText = dataString;
+				if (fullName)
+				{
+					item.statsItem._playerNameTF.autoSize = isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+					item.statsItem._playerNameTF.htmlText = fullName;
+				}
 				if (vehicleTextColor)
 				{
 					item.statsItem._vehicleNameTF.textColor = Utils.colorConvert(vehicleTextColor);
 				}
-				if (!item.data.isAlive())
-				{
-					item.statsItem._playerNameTF.alpha = DEAD_TEXT_ALPHA;
-					item.statsItem._vehicleNameTF.alpha = DEAD_TEXT_ALPHA;
-				}
+				//if (!item.data.isAlive())
+				//{
+					//item.statsItem._playerNameTF.alpha = DEAD_TEXT_ALPHA;
+					//item.statsItem._vehicleNameTF.alpha = DEAD_TEXT_ALPHA;
+				//}
 			}
 		}
 	}
