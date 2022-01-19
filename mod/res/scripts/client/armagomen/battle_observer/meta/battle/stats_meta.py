@@ -36,10 +36,10 @@ class StatsMeta(BaseModMeta):
             iconColor = self.getIconColor(vInfo.vehicleType.classTag)
             result = wtr_rating.getStatisticsData(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
             if result is not None:
-                full, cut = self.getPattern(isEnemy)
+                fullName, cut = self.getPattern(isEnemy)
                 cutName = cut % result if cut else None
                 vehicleTextColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
-                self.cache[vehicleID] = (iconColor, full % result, cutName, vehicleTextColor)
+                self.cache[vehicleID] = (iconColor, fullName % result, cutName, vehicleTextColor)
             else:
                 self.cache[vehicleID] = (iconColor, None, None, None)
         self.as_updateVehicleS(isEnemy, vehicleID, *self.cache[vehicleID])
