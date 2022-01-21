@@ -33,7 +33,7 @@ class Distance(DistanceMeta):
         super(Distance, self)._dispose()
 
     def onArenaPeriod(self, period, *args):
-        if period == ARENA_PERIOD.BATTLE:
+        if period == ARENA_PERIOD.BATTLE and self.timeEvent is None:
             self.timeEvent = CyclicTimerEvent(0.3, self.updateDistance)
             self.timeEvent.start()
         elif self.timeEvent is not None:

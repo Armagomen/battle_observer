@@ -29,7 +29,7 @@ class StatisticPlugin(object):
                                                                     self.settings[STATISTICS.STATISTIC_ENABLED])
 
     def onGUISpaceEntered(self, spaceID):
-        if self.moduleEnabled and spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
+        if self.moduleEnabled and spaceID in (GuiGlobalSpaceID.BATTLE_LOADING, GuiGlobalSpaceID.BATTLE):
             self.updateAllItems()
 
     def start(self):
