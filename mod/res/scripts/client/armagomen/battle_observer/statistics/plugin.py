@@ -44,13 +44,13 @@ class StatisticPlugin(object):
         overrideMethod(ClassicPage, "as_setComponentsVisibilityS")(self.new_as_setComponentsVisibilityS)
 
     def updateItem(self, isEnemy, vehicleID):
-        callback(0.05, g_events, self.METHOD_NAME, isEnemy, vehicleID)
+        callback(0.03, g_events, self.METHOD_NAME, isEnemy, vehicleID)
 
     def updateAllItems(self):
         arenaDP = self.sessionProvider.getArenaDP()
         allyTeam = arenaDP.getNumberOfTeam()
-        for vinfoVO in arenaDP.getVehiclesInfoIterator():
-            self.updateItem(vinfoVO.team != allyTeam, vinfoVO.vehicleID)
+        for vInfo in arenaDP.getVehiclesInfoIterator():
+            self.updateItem(vInfo.team != allyTeam, vInfo.vehicleID)
 
     def new_as_updateVehicleStatusS(self, base, controller, data):
         base(controller, data)

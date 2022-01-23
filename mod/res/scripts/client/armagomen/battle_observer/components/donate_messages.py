@@ -12,7 +12,7 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 if GLOBAL.RU_LOCALIZATION:
     messages = (
         "Поддержите разработку мода. Спасибо что вы с нами.",
-        "Спасибо за финансовую поддержку разработки мода.",
+        "Спасибо за финансовую поддержку.",
         "Присоединяйся к нашему клану <a href='event:BOFAN'>[BOFAN]</a>. Никаких обязательств. Вступай и получай "
         "клановые бонусы (бустеры, камуфляжи, и многое другое)."
     )
@@ -61,9 +61,9 @@ class Donate(object):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=60)
+                self.timeDelta = currentTime + datetime.timedelta(minutes=30)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
-                logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
+                logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
 
 
 donateMessage = Donate()

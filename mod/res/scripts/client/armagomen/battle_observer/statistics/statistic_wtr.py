@@ -1,26 +1,8 @@
-import datetime
+from math import log, floor
 
 from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.statistics.statistic_data_loader import statisticLoader
 from armagomen.constants import STATISTICS
-from gui.shared.personality import ServicesLocator
-from skeletons.gui.app_loader import GuiGlobalSpaceID
-from math import log, floor
-
-class WTRCache(object):
-
-    def __init__(self):
-        self.data = {}
-        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=120)
-        ServicesLocator.appLoader.onGUISpaceEntered += self.clearCache
-
-    def clearCache(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.LOBBY:
-            currentTime = datetime.datetime.now()
-            if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=120)
-                self.data.clear()
-                statisticLoader.clear()
 
 
 class StatisticsWTR(object):
@@ -31,7 +13,6 @@ class StatisticsWTR(object):
     UNITS = ['', 'K', 'M', 'G', 'T', 'P']
 
     def __init__(self):
-        self.cache = WTRCache()
         self.colors = settings.statistics[STATISTICS.COLORS]
         self.wtr_ranges = ((2960, "bad"), (4520, "normal"), (6367, "good"), (8543, "very_good"), (10217, "unique"))
 
@@ -56,17 +37,15 @@ class StatisticsWTR(object):
         return self.colors.get(result, self.DEFAULT_COLOR)
 
     def getStatisticsData(self, databaseID, clanTag):
-        if databaseID not in self.cache.data:
-            data = statisticLoader.getStatisticForUser(databaseID)
-            if data is not None:
-                wtr = int(data.get("global_rating", self.DEFAULT_RATING))
-                winRate, battles = self.getPercent(data)
-                self.cache.data[databaseID] = {"WTR": wtr, "colorWTR": self.getColor(wtr), "winRate": winRate,
-                                               "battles": battles, "nickname": data.get("nickname"),
-                                               "clanTag": "[{}]".format(clanTag) if clanTag else ""}
-            else:
-                return None
-        return self.cache.data[databaseID]
+        data = statisticLoader.getStatisticForUser(databaseID)
+        if data is not None:
+            wtr = int(data.get("global_rating", self.DEFAULT_RATING))
+            winRate, battles = self.getPercent(data)
+            return {"WTR": wtr, "colorWTR": self.getColor(wtr), "winRate": winRate,
+                    "battles": battles, "nickname": data.get("nickname"),
+                    "clanTag": "[{}]".format(clanTag) if clanTag else ""}
+        else:
+            return None
 
 
 wtr_rating = StatisticsWTR()

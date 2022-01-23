@@ -52,7 +52,7 @@ localization = {
         "hideChatInRandom": "Отключить чат в случайных боях",
         "hideChatInRandom_tooltip": "Полностью отключает чат в случайных боях.\nУбирает форму чата и все "
                                     "что с ней связано.",
-        "anonymousEnableShow": "Отмечать берюзовым цветом игроков с анонимайзером.",
+        "anonymousEnableShow": "Отмечать как team-killer игроков с анонимайзером.",
         "anonymousEnableShow_tooltip": "Только в том случае если отключена статистика игроков, параметр не будет "
                                        "учитыватся если включена статистика.",
         "anonymousNameChange": "Изменить имена игроков с анонимайзером.",
@@ -136,10 +136,10 @@ localization = {
         "header": "Панель PING/FPS.",
         "debugText*text": "Тестовое поле для форматирования PING / FPS",
         "debugText*text_tooltip": "HTML - ДА\nМакросы дебаг панели"
-                                  "\n%(PING)s | s:d:f | type data<tab>-Пинг"
-                                  "\n%(FPS)s | s:d:f | type data<tab>-текущий фпс"
-                                  "\n%(PingLagColor)s | s:d:f | type data"
-                                  "<tab>-цвет пинг/лага настраивается в настройке цветов.",
+                                  "\n%(PING)s <tab>Пинг"
+                                  "\n%(FPS)s <tab>Текущий фпс"
+                                  "\n%(pingColor)s <tab>цвет PING/LAG."
+                                  "\n%(fpsColor)s <tab>цвет FPS",
         "debugText*x": "Позиция окна по оси X",
         "debugText*y": "Позиция окна по оси Y",
         "debugText*scale": "Масштабирование дебаг панели",
