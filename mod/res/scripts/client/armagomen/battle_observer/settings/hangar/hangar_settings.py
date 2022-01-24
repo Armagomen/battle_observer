@@ -1,5 +1,5 @@
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MINIMAP, MOD_NAME, MAIN,\
+from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MINIMAP, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS
 from armagomen.utils.common import logWarning, openWebBrowser, logInfo
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
@@ -280,9 +280,6 @@ class ConfigInterface(CreateElement):
                         elif oldParamType is int and newParamType is float:
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
-            if blockID == STATISTICS.NAME or blockID == MINIMAP.NAME:
-                from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
-                settings[GLOBAL.ENABLED] = settings[GLOBAL.ENABLED] and statisticLoader.enabled
             self.cLoader.updateConfigFile(blockID, settings)
             self.settings.onModSettingsChanged(settings, blockID)
 

@@ -67,10 +67,10 @@ class BaseModMeta(BaseDAAPIComponent):
             logDebug("battle module '%s' destroyed" % self.getAlias())
 
     def onEnterBattlePage(self):
-        self.as_setComponentVisible(True)
+        pass
 
     def onExitBattlePage(self):
-        self.as_setComponentVisible(False)
+        pass
 
     def as_setComponentVisible(self, param):
         return self.flashObject.setCompVisible(param) if self._isDAAPIInited() else None

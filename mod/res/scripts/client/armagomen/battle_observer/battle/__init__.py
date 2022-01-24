@@ -1,7 +1,7 @@
 from importlib import import_module
 
-from armagomen.battle_observer.core import view_settings
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
+from armagomen.battle_observer.core import view_settings
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
@@ -37,11 +37,12 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('_viewAliases', '_statistics', '_listeners', '_scope', '_app', '_appNS')
+    __slots__ = ('_viewAliases', '_statistics', '_icons', '_listeners', '_scope', '_app', '_appNS')
 
     def __init__(self):
         self._viewAliases = view_settings.getViewAliases()
-        self._statistics = False
+        self._statistics = view_settings.isStatisticEnabled()
+        self._icons = view_settings.isIconsEnabled()
         listeners = [(alias, self.eventListener) for alias in self._viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
@@ -60,24 +61,21 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def onAppInitializing(self, event):
         if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
-            self._statistics = view_settings.isStatisticEnabled
             if self._statistics:
                 statisticLoader.setCachedStatisticData()
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
-
-    def load(self, flash):
-        if not hasattr(flash, SWF.ATTRIBUTE_NAME):
-            to_format_str = "battle_page {}, has ho attribute {}"
-            return logError(to_format_str.format(repr(flash), SWF.ATTRIBUTE_NAME))
-        flash.as_observerCreateComponents(view_settings.getComponents(), self._statistics, view_settings.isIconsEnabled)
-        flash.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
-        # flash.as_observerHideWgComponents(view_settings.getHiddenWGComponents())
-        callback(2.0, flash, "as_observerHideWgComponents", view_settings.getHiddenWGComponents())
 
     def onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in self._viewAliases:
             return
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         g_events.onBattlePageLoaded(view)
-        callback(0.1, self, "load", view.flashObject)
+        if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
+            to_format_str = "battle_page {}, has ho attribute {}"
+            return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
+        components = view_settings.getComponents()
+        view._blToggling.update(components[1:])
+        view.flashObject.as_observerCreateComponents(components, self._statistics, self._icons)
+        view.flashObject.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
+        callback(2.0, view.flashObject, "as_observerHideWgComponents", view_settings.getHiddenWGComponents())

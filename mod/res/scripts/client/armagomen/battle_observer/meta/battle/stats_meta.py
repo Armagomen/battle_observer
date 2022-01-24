@@ -36,7 +36,7 @@ class StatsMeta(BaseModMeta):
 
     def getPattern(self, isEnemy):
         g_events.updateVehicleData -= self._updateVehicleData
-        raise NotImplementedError('Method must be override!: %s.%s', self.__class__.__name__, 'getPattern')
+        raise NotImplementedError('Method getPattern in StatsMeta must be override! in %s' % self.__class__.__name__)
 
     def _updateVehicleData(self, isEnemy, vehicleID):
         vInfo = self._arenaDP.getVehicleInfo(vehicleID)

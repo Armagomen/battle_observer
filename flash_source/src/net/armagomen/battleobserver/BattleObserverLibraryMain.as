@@ -66,7 +66,7 @@ package net.armagomen.battleobserver
 					case "Observer_TeamsHP_UI": 
 						var teamHealth:TeamsHealthUI = new TeamsHealthUI();
 						this.registerComponent(teamHealth, alias);
-						this.addChild(teamHealth)
+						this.addChild(teamHealth);
 						break;
 					case "Observer_DamageLog_UI": 
 						var damageLog:DamageLogsUI = new DamageLogsUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL));
@@ -101,7 +101,7 @@ package net.armagomen.battleobserver
 					case "Observer_TeamBases_UI": 
 						var teamBases:TeamBasesUI = new TeamBasesUI();
 						this.registerComponent(teamBases, alias);
-						this.addChild(teamBases)
+						this.addChild(teamBases);
 						break;
 					case "Observer_ArmorCalculator_UI": 
 						var armorCalculator:ArmorCalculatorUI = new ArmorCalculatorUI();
@@ -130,15 +130,21 @@ package net.armagomen.battleobserver
 						break;
 					case "Observer_PlayersPanels_UI": 
 						var playersPanel:PlayersPanelsUI = new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL));
-						setTimeout(this.registerComponent, 1000, playersPanel, alias);
+						this.registerComponent(playersPanel, alias);
+						this.addChild(playersPanel);
 						break;
 					case "Observer_Minimap_UI": 
 						var minimap:MinimapUI = new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP));
-						setTimeout(this.registerComponent, 1000, minimap, alias);
+						this.registerComponent(minimap, alias);
+						this.addChild(minimap);
 						break;
 					default: 
 						DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);
 						break;
+					}
+					if (alias != "Observer_BattleLoading_UI"){
+						this.showComponent(alias, false);
+						this._vectorString1.push(alias);
 					}
 				}
 			}

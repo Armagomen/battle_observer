@@ -55,19 +55,17 @@ class ViewSettings(object):
     def notEpicRandomBattle(self):
         return not self.sessionProvider.arenaVisitor.gui.isEpicRandomBattle()
 
-    @property
     def isStatisticEnabled(self):
-        return self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle and \
-               self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
+        return not self.cfg.xvmInstalled and self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and \
+               self.notEpicRandomBattle and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
 
-    @property
     def isIconsEnabled(self):
-        return self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle and \
-               self.cfg.statistics[STATISTICS.ICON_ENABLED]
+        return not self.cfg.xvmInstalled and self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and \
+               self.notEpicRandomBattle and self.cfg.statistics[STATISTICS.ICON_ENABLED]
 
     def getSetting(self, alias):
         if alias in STATISTIC_ALIASES:
-            return self.isStatisticEnabled or self.isIconsEnabled
+            return self.isStatisticEnabled() or self.isIconsEnabled()
         elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DAMAGE_LOG:
@@ -95,8 +93,8 @@ class ViewSettings(object):
         elif alias is ALIASES.PANELS:
             return self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
         elif alias is ALIASES.MINIMAP:
-            return (self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and self.cfg.minimap[GLOBAL.ENABLED]
-                    and self.notEpicBattle)
+            return (not self.cfg.xvmInstalled and self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and
+                    self.cfg.minimap[GLOBAL.ENABLED] and self.notEpicBattle)
         elif alias is ALIASES.USER_BACKGROUND:
             return self.cfg.user_background[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DATE_TIME:

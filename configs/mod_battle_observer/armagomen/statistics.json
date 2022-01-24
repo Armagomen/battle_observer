@@ -3,7 +3,7 @@
   "icon_blackout": -1.25, 
   "icon_enabled": true, 
   "panels_cut_width": 60, 
-  "panels_full_width": 150, 
+  "panels_full_width": 160, 
   "statistics_change_vehicle_name_color": true, 
   "statistics_colors": {
     "bad": "#FE7903", 
@@ -16,10 +16,10 @@
   "statistics_enabled": true, 
   "statistics_pattern_loading_left": "<font color='%(colorWTR)s'>%(nickname).12s</font>%(clanTag)s", 
   "statistics_pattern_loading_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).12s</font>", 
-  "statistics_pattern_panels_left": "<font color='%(colorWTR)s'>%(WTR)d | %(nickname).12s</font>%(clanTag)s", 
+  "statistics_pattern_panels_left": "<font color='%(colorWTR)s'>%(battles)s | %(WTR)d | %(nickname).12s</font>%(clanTag)s", 
   "statistics_pattern_panels_left_cut": "<font color='%(colorWTR)s'>%(nickname).9s</font>", 
-  "statistics_pattern_panels_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).12s | %(WTR)d</font>", 
+  "statistics_pattern_panels_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).12s | %(WTR)d | %(battles)s</font>", 
   "statistics_pattern_panels_right_cut": "<font color='%(colorWTR)s'>%(nickname).9s</font>", 
-  "statistics_pattern_tab_left": "<font color='%(colorWTR)s'>%(WTR)d | %(nickname).15s</font>%(clanTag)s", 
-  "statistics_pattern_tab_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).15s | %(WTR)d</font>"
+  "statistics_pattern_tab_left": "<font color='%(colorWTR)s'>%(battles)s | %(WTR)d | %(nickname).15s</font>%(clanTag)s", 
+  "statistics_pattern_tab_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).15s | %(WTR)d | %(battles)s</font>"
 }

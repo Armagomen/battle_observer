@@ -5,7 +5,7 @@ from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
 from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.constants import FILE_NAME, MESSAGES, MAIN, getRandomBigLogo
-from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache
+from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache, cleanupUpdates
 from async import async, await
 from gui.Scaleform.daapi.settings import config as packages
 from gui.impl.dialogs import dialogs
@@ -30,6 +30,7 @@ class ObserverCore(object):
             return
         if settings.main[MAIN.AUTO_CLEAR_CACHE]:
             clearClientCache()
+        cleanupUpdates()
         ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
         logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, self.mod_version))
 

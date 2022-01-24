@@ -1,11 +1,9 @@
 from armagomen.constants import GLOBAL, STATISTICS
 from armagomen.utils.common import overrideMethod
 from armagomen.utils.events import g_events
-from gui.Scaleform.daapi.view.battle.classic import ClassicPage
 from gui.Scaleform.daapi.view.battle.classic.players_panel import PlayersPanel
 from gui.Scaleform.daapi.view.battle.classic.stats_exchange import ClassicStatisticsDataController
 from gui.Scaleform.daapi.view.battle.ranked.stats_exchange import RankedStatisticsDataController
-from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
 from helpers.func_utils import callback
 from skeletons.gui.app_loader import IAppLoader, GuiGlobalSpaceID
@@ -21,7 +19,14 @@ class StatisticPlugin(object):
         self.settings = settings
         self.moduleEnabled = False
         self.appLoader.onGUISpaceBeforeEnter += self.onGUISpaceBeforeEnter
-        self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        overrideMethod(ClassicStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
+        overrideMethod(RankedStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
+        overrideMethod(ClassicStatisticsDataController, "as_updateVehiclesStatsS")(self.new_as_updateVehiclesStatsS)
+        overrideMethod(RankedStatisticsDataController, "as_updateVehiclesStatsS")(self.new_as_updateVehiclesStatsS)
+        overrideMethod(PlayersPanel, "as_setChatCommandsVisibilityS")(self.updateItemsData)
+        overrideMethod(PlayersPanel, "as_setIsInteractiveS")(self.updateItemsData)
+        overrideMethod(PlayersPanel, "as_setOverrideExInfoS")(self.updateItemsData)
+        overrideMethod(PlayersPanel, "as_setPanelModeS")(self.updateItemsData)
 
     def onGUISpaceBeforeEnter(self, spaceID):
         if spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
@@ -31,18 +36,6 @@ class StatisticPlugin(object):
     def onGUISpaceEntered(self, spaceID):
         if self.moduleEnabled and spaceID in (GuiGlobalSpaceID.BATTLE_LOADING, GuiGlobalSpaceID.BATTLE):
             self.updateAllItems()
-
-    def start(self):
-        overrideMethod(ClassicStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
-        overrideMethod(RankedStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
-        overrideMethod(ClassicStatisticsDataController, "as_updateVehiclesStatsS")(self.new_as_updateVehiclesStatsS)
-        overrideMethod(RankedStatisticsDataController, "as_updateVehiclesStatsS")(self.new_as_updateVehiclesStatsS)
-        overrideMethod(PlayersPanel, "as_setChatCommandsVisibilityS")(self.updateItemsData)
-        overrideMethod(PlayersPanel, "as_setIsInteractiveS")(self.updateItemsData)
-        overrideMethod(PlayersPanel, "as_setOverrideExInfoS")(self.updateItemsData)
-        overrideMethod(PlayersPanel, "as_setPanelModeS")(self.updateItemsData)
-        overrideMethod(PlayersPanel, "as_setIsInteractive")(self.updateItemsData)
-        overrideMethod(ClassicPage, "as_setComponentsVisibilityS")(self.new_as_setComponentsVisibilityS)
 
     def updateItem(self, isEnemy, vehicleID):
         callback(0.1, g_events, self.METHOD_NAME, isEnemy, vehicleID)
@@ -74,9 +67,4 @@ class StatisticPlugin(object):
     def updateItemsData(self, base, *args):
         base(*args)
         if self.moduleEnabled:
-            self.updateAllItems()
-
-    def new_as_setComponentsVisibilityS(self, base, page, visible, hidden):
-        base(page, visible, hidden)
-        if self.moduleEnabled and BATTLE_VIEW_ALIASES.PLAYERS_PANEL in visible:
             self.updateAllItems()
