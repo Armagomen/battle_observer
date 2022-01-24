@@ -64,8 +64,10 @@ class StatsMeta(BaseModMeta):
         return self.DEFAULT_WIN_RATE, str(battles)
 
     def __battlesFormat(self, battles):
-        magnitude = int(floor(log(battles, self.K)))
-        return '%.1f%s' % (battles / self.K ** magnitude, self.UNITS[magnitude])
+        if battles >= self.K:
+            magnitude = int(floor(log(battles, self.K)))
+            return '%.1f%s' % (battles / self.K ** magnitude, self.UNITS[magnitude])
+        return battles
 
     def __getColor(self, wtr):
         result = "very_bad"

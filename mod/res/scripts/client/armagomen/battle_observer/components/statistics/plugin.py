@@ -45,7 +45,7 @@ class StatisticPlugin(object):
         overrideMethod(ClassicPage, "as_setComponentsVisibilityS")(self.new_as_setComponentsVisibilityS)
 
     def updateItem(self, isEnemy, vehicleID):
-        callback(0.03, g_events, self.METHOD_NAME, isEnemy, vehicleID)
+        callback(0.1, g_events, self.METHOD_NAME, isEnemy, vehicleID)
 
     def updateAllItems(self):
         arenaDP = self.sessionProvider.getArenaDP()
