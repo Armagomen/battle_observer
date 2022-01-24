@@ -37,10 +37,11 @@ class StatisticPlugin(object):
         overrideMethod(RankedStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
         overrideMethod(ClassicStatisticsDataController, "as_updateVehiclesStatsS")(self.new_as_updateVehiclesStatsS)
         overrideMethod(RankedStatisticsDataController, "as_updateVehiclesStatsS")(self.new_as_updateVehiclesStatsS)
-        overrideMethod(PlayersPanel, "as_setChatCommandsVisibilityS")(self.setPanelsState)
-        overrideMethod(PlayersPanel, "as_setIsInteractiveS")(self.setPanelsState)
-        overrideMethod(PlayersPanel, "as_setOverrideExInfoS")(self.setPanelsState)
-        overrideMethod(PlayersPanel, "as_setPanelModeS")(self.setPanelsState)
+        overrideMethod(PlayersPanel, "as_setChatCommandsVisibilityS")(self.updateItemsData)
+        overrideMethod(PlayersPanel, "as_setIsInteractiveS")(self.updateItemsData)
+        overrideMethod(PlayersPanel, "as_setOverrideExInfoS")(self.updateItemsData)
+        overrideMethod(PlayersPanel, "as_setPanelModeS")(self.updateItemsData)
+        overrideMethod(PlayersPanel, "as_setIsInteractive")(self.updateItemsData)
         overrideMethod(ClassicPage, "as_setComponentsVisibilityS")(self.new_as_setComponentsVisibilityS)
 
     def updateItem(self, isEnemy, vehicleID):
@@ -70,7 +71,7 @@ class StatisticPlugin(object):
                 for item in leftItems:
                     self.updateItem(False, item[vehicleID])
 
-    def setPanelsState(self, base, *args):
+    def updateItemsData(self, base, *args):
         base(*args)
         if self.moduleEnabled:
             self.updateAllItems()

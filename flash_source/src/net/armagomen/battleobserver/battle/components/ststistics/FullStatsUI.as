@@ -12,7 +12,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var statisticsEnabled:Boolean       = false;
 		private var iconEnabled:Boolean             = false;
 		private var iconMultiplier:Number           = -1.25;
-		//private static const DEAD_TEXT_ALPHA:Number = 0.68;
+		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
 		public function FullStatsUI(fullStats:*, statsEnabled:Boolean, iconEnabled:Boolean)
 		{
@@ -80,11 +80,11 @@ package net.armagomen.battleobserver.battle.components.ststistics
 				{
 					item.statsItem._vehicleNameTF.textColor = Utils.colorConvert(vehicleTextColor);
 				}
-				//if (!item.data.isAlive())
-				//{
-					//item.statsItem._playerNameTF.alpha = DEAD_TEXT_ALPHA;
-					//item.statsItem._vehicleNameTF.alpha = DEAD_TEXT_ALPHA;
-				//}
+				if (!item.data.isAlive())
+				{
+					item.statsItem._playerNameTF.alpha = DEAD_TEXT_ALPHA;
+					item.statsItem._vehicleNameTF.alpha = DEAD_TEXT_ALPHA;
+				}
 			}
 		}
 	}

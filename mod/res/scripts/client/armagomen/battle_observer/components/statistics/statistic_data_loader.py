@@ -1,8 +1,8 @@
 import copy
 
 import constants
+from armagomen.battle_observer.components.statistics.plugin import StatisticPlugin
 from armagomen.battle_observer.core import settings
-from armagomen.battle_observer.statistics.plugin import StatisticPlugin
 from armagomen.constants import MAIN, GLOBAL
 from armagomen.utils.common import urlResponse, logDebug, logInfo
 from gui.shared.personality import ServicesLocator
@@ -28,6 +28,7 @@ class StatisticsDataLoader(object):
         self.cache = {}
         self.enabled = region in ["ru", "eu", "com", "asia"]
         self.plugin = StatisticPlugin(settings.statistics)
+        ServicesLocator.appLoader.onGUISpaceBeforeEnter += self.checkXVM
 
     def request(self, databaseIDS):
         result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS)))
@@ -61,26 +62,22 @@ class StatisticsDataLoader(object):
     def clear(self):
         self.cache.clear()
 
+    def checkXVM(self, spaceID):
+        ServicesLocator.appLoader.onGUISpaceBeforeEnter -= self.checkXVM
+        if not self.enabled:
+            return
+        from sys import modules
+        XVM = "xvm"
+        for key in modules:
+            if self.enabled and XVM in key:
+                self.enabled = False
+                break
+        if not self.enabled:
+            settings.statistics[GLOBAL.ENABLED] = False
+            settings.minimap[GLOBAL.ENABLED] = False
+            logInfo("statistics/icons/minimap module is disabled, XVM is installed")
+        else:
+            self.plugin.start()
+
 
 statisticLoader = StatisticsDataLoader()
-
-
-def checkXVM(spaceID):
-    ServicesLocator.appLoader.onGUISpaceEntered -= checkXVM
-    if not statisticLoader.enabled:
-        return
-    from sys import modules
-    XVM = "xvm"
-    for key in modules:
-        if statisticLoader.enabled and XVM in key:
-            statisticLoader.enabled = False
-            break
-    if not statisticLoader.enabled:
-        settings.statistics[GLOBAL.ENABLED] = False
-        settings.minimap[GLOBAL.ENABLED] = False
-        logInfo("statistics/icons/minimap module is disabled, XVM is installed")
-    else:
-        statisticLoader.plugin.start()
-
-
-ServicesLocator.appLoader.onGUISpaceEntered += checkXVM

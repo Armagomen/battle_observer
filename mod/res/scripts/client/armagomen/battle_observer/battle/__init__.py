@@ -1,7 +1,7 @@
 from importlib import import_module
 
 from armagomen.battle_observer.core import view_settings
-from armagomen.battle_observer.statistics.statistic_data_loader import statisticLoader
+from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events

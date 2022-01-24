@@ -22,6 +22,7 @@ class ComponentsLoader(object):
             'wg_logs_fixes': None,
             'vehicle_battle_boosters': None,
             'crew': None,
+            'statistics.statistic_data_loader': None,
             'for_tests': None
         }
 

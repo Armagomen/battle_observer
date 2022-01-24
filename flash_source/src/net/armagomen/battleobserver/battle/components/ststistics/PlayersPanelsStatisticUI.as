@@ -15,7 +15,7 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		private var iconEnabled:Boolean             = false;
 		private var colorEnabled:Boolean            = false;
 		private var iconMultiplier:Number           = -1.25;
-		//private static const DEAD_TEXT_ALPHA:Number = 0.68;
+		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
 		public function PlayersPanelsStatisticUI(panels:*, statsEnabled:Boolean, icon:Boolean)
 		{
@@ -95,12 +95,12 @@ package net.armagomen.battleobserver.battle.components.ststistics
 						{
 							listItem.playerNameCutTF.htmlText = cutName;
 						}
-						//if (!listItem._isAlive)
-						//{
-							//listItem.playerNameCutTF.alpha = DEAD_TEXT_ALPHA;
-							//listItem.playerNameFullTF.alpha = DEAD_TEXT_ALPHA;
-							//listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
-						//}
+						if (!listItem._isAlive)
+						{
+							listItem.playerNameCutTF.alpha = DEAD_TEXT_ALPHA;
+							listItem.playerNameFullTF.alpha = DEAD_TEXT_ALPHA;
+							listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
+						}
 					}
 				}
 			}

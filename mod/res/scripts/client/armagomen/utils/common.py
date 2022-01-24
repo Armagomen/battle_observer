@@ -231,7 +231,8 @@ def overrideMethod(wg_class, method_name="__init__"):
 
             setattr(wg_class, method_name, override)
         else:
-            logError("{0} in {1} is not callable or undefined".format(method_name, class_name))
+            logError("overrideMethod error: {0} in {1} is not callable or undefined in "
+                     "{2}".format(method_name, class_name, new_method.__name__))
         return new_method
 
     return outer
