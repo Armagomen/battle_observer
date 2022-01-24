@@ -46,14 +46,17 @@ package net.armagomen.battleobserver
 					case "Observer_BattleLoading_UI": 
 						var statBattleLoading:BattleLoadingUI = new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING), statsEnabled, iconEnabled);
 						this.registerComponent(statBattleLoading, alias);
+						this.addChild(statBattleLoading);
 						break;
 					case "Observer_FullStats_UI": 
 						var statFullStats:FullStatsUI = new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS), statsEnabled, iconEnabled);
 						this.registerComponent(statFullStats, alias);
+						this.addChild(statFullStats);
 						break;
 					case "Observer_PlayersPanelsStatistic_UI": 
 						var statPanels:PlayersPanelsStatisticUI = new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL), statsEnabled, iconEnabled);
 						this.registerComponent(statPanels, alias);
+						this.addChild(statPanels);
 						break;
 					case "Observer_UserBackGround_UI": 
 						var background:UserBackGroundUI = new UserBackGroundUI();

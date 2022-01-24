@@ -14,6 +14,7 @@ class Events(object):
         self.onBattlePageLoaded = SafeEvent()
         self.onHangarVehicleChanged = SafeEvent()
         self.updateVehicleData = SafeEvent()
+        self.onComponentVisible = SafeEvent()
 
 
 g_events = Events()

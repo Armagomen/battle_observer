@@ -56,5 +56,11 @@ package net.armagomen.battleobserver.battle.base
 			this.x = x;
 			this.y = y;
 		}
+		
+		public function as_isComponentVisible(alias:String):Boolean
+		{
+			var page:* = this.parent;
+			return page.as_isComponentVisible(alias);
+		}
 	}
 }

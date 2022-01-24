@@ -27,6 +27,9 @@ class StatsMeta(BaseModMeta):
         if self._isDAAPIInited():
             self.flashObject.as_updateVehicle(isEnemy, vehicleID, iconColor, fullName, cutName, vehicleTextColor)
 
+    def as_isComponentVisibleS(self, alias):
+        return self.flashObject.as_isComponentVisible(alias) if self._isDAAPIInited() else False
+
     @property
     def vehicleTextColorEnabled(self):
         return self.settings[STATISTICS.CHANGE_VEHICLE_COLOR]
