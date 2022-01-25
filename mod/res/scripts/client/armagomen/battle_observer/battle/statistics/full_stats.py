@@ -1,4 +1,4 @@
-from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta, STATISTICS, g_events
+from armagomen.battle_observer.meta.battle.stats_meta import StatsMeta, STATISTICS
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 
 

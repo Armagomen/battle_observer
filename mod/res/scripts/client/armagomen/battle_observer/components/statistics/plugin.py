@@ -19,6 +19,7 @@ class StatisticPlugin(object):
         self.settings = settings
         self.moduleEnabled = False
         self.appLoader.onGUISpaceBeforeEnter += self.onGUISpaceBeforeEnter
+        self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         overrideMethod(ClassicStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
         overrideMethod(RankedStatisticsDataController, "as_updateVehicleStatusS")(self.new_as_updateVehicleStatusS)
         overrideMethod(ClassicStatisticsDataController, "as_updateVehiclesStatsS")(self.new_as_updateVehiclesStatsS)
