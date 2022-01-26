@@ -28,7 +28,6 @@ package net.armagomen.battleobserver.battle.wgcomponents
 		
 		private function keyDownHandler(event:KeyboardEvent):void
 		{
-			DebugUtils.LOG_WARNING("keyDownHandler " + event.keyCode);
 			if (event.keyCode == Keyboard.CONTROL && !this.isKeyDown)
 			{
 				this.isKeyDown = true;

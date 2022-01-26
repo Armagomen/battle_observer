@@ -33,6 +33,8 @@ package net.armagomen.battleobserver
 	
 	public class BattleObserverLibraryMain extends MovieClip
 	{
+		private var minimapBO:MinimapUI = null;
+		
 		public function BattleObserverLibraryMain()
 		{
 			super();
@@ -64,9 +66,9 @@ package net.armagomen.battleobserver
 						this.addChildAt(background, 0);
 						break;
 					case "Observer_TeamsHP_UI": 
-						var teamHealth:TeamsHealthUI = new TeamsHealthUI();
-						this.registerComponent(teamHealth, alias);
-						this.addChild(teamHealth);
+						var teamHealthUI:TeamsHealthUI = new TeamsHealthUI();
+						this.registerComponent(teamHealthUI, alias);
+						this.addChild(teamHealthUI);
 						break;
 					case "Observer_DamageLog_UI": 
 						var damageLog:DamageLogsUI = new DamageLogsUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL));
@@ -139,7 +141,6 @@ package net.armagomen.battleobserver
 					}
 					if (alias != "Observer_BattleLoading_UI"){
 						this.showComponent(alias, false);
-						this._vectorString1.push(alias);
 					}
 				}
 			}
@@ -157,8 +158,7 @@ package net.armagomen.battleobserver
 			
 			BaseBattlePage.prototype.as_createMimimapCentered = function():void
 			{
-				var minimap:MinimapUI = new MinimapUI(this);
-				this.addChild(minimap);
+				minimapBO = new MinimapUI(this);
 			}
 			
 			BaseBattlePage.prototype.as_observerHideWgComponents = function(components:Array):void

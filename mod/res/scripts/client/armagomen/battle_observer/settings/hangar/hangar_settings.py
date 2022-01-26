@@ -124,7 +124,7 @@ class CreateElement(object):
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 300.0, GLOBAL.F_ONE, value)
         elif val_type is list:
             if "_hotkey" in key:
-                return self.createHotKey(blockID, key, value, KEY_CONTROL if MINIMAP.HOT_KEY in key else KEY_ALT)
+                return self.createHotKey(blockID, key, value, KEY_ALT)
             if SNIPER.STEPS in key:
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 

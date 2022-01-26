@@ -55,9 +55,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).fini()
 
     def eventListener(self, event):
-        if not view_settings.isAllowed:
-            return
-        self._app.loaderManager.onViewLoaded += self.onViewLoaded
+        if view_settings.isAllowed:
+            self._app.loaderManager.onViewLoaded += self.onViewLoaded
 
     def onAppInitializing(self, event):
         if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
@@ -74,9 +73,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
-        components = view_settings.getComponents()
-        view._blToggling.update(components[1:])
-        view.flashObject.as_observerCreateComponents(components, self._statistics, self._icons)
+        view.flashObject.as_observerCreateComponents(view_settings.getComponents(), self._statistics, self._icons)
         view.flashObject.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         callback(2.0, view.flashObject, "as_observerHideWgComponents", view_settings.getHiddenWGComponents())
         minimapZoom = view_settings.cfg.minimap[GLOBAL.ENABLED] and view_settings.cfg.minimap[MINIMAP.ZOOM]
