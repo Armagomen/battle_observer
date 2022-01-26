@@ -144,8 +144,8 @@ MAIN_GUN = namedtuple("MAIN_GUN", (
     "mainGun")
 
 MINIMAP = namedtuple("MINIMAP", (
-    "NAME", "DEATH_PERMANENT", "HOT_KEY", "INDENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW"))(
-    "minimap", "permanentMinimapDeath", "zoom_hotkey", "indent", "showDeathNames", "zoom", "real_view_radius",
+    "NAME", "DEATH_PERMANENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW"))(
+    "minimap", "permanentMinimapDeath", "showDeathNames", "zoom", "real_view_radius",
     "yaw_limits")
 
 HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "WIDTH", "DIFF", "ALIVE", "STYLES"))(
@@ -331,12 +331,12 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
 ALIASES = namedtuple("ALIASES", (
     "BATTLE_LOADING", "FULL_STATS", "PANELS_STAT", "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE",
     "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH",
-    "USER_BACKGROUND", "PANELS", "MINIMAP"))(
+    "USER_BACKGROUND", "PANELS"))(
     "Observer_BattleLoading_UI", "Observer_FullStats_UI", "Observer_PlayersPanelsStatistic_UI",
     "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
-    "Observer_OwnHealth_UI", "Observer_UserBackGround_UI", "Observer_PlayersPanels_UI", "Observer_Minimap_UI")
+    "Observer_OwnHealth_UI", "Observer_UserBackGround_UI", "Observer_PlayersPanels_UI")
 
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
     "distance_to_enemy", "template", "align", "distance", "name")
@@ -514,7 +514,6 @@ ALIAS_TO_PATH = {
     ALIASES.FLIGHT_TIME: (".flight_time", ALIASES.FLIGHT_TIME[9:-3]),
     ALIASES.DISPERSION_TIMER: (".dispersion_timer", ALIASES.DISPERSION_TIMER[9:-3]),
     ALIASES.PANELS: (".players_panels", ALIASES.PANELS[9:-3]),
-    ALIASES.MINIMAP: (".minimap", ALIASES.MINIMAP[9:-3]),
     ALIASES.USER_BACKGROUND: (".user_background", ALIASES.USER_BACKGROUND[9:-3]),
     ALIASES.DATE_TIME: (".date_times", ALIASES.DATE_TIME[9:-3]),
     ALIASES.DISTANCE: (".distance_to_enemy", ALIASES.DISTANCE[9:-3]),
@@ -536,7 +535,6 @@ ALIAS_TO_CONFIG_NAME = {
     ALIASES.FLIGHT_TIME: FLIGHT_TIME.NAME,
     ALIASES.DISPERSION_TIMER: DISPERSION.NAME,
     ALIASES.PANELS: PANELS.PANELS_NAME,
-    ALIASES.MINIMAP: MINIMAP.NAME,
     ALIASES.USER_BACKGROUND: USER_BACKGROUND.NAME,
     ALIASES.DATE_TIME: CLOCK.NAME,
     ALIASES.DISTANCE: DISTANCE.NAME,

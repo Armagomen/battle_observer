@@ -92,9 +92,6 @@ class ViewSettings(object):
                     self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED])
         elif alias is ALIASES.PANELS:
             return self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
-        elif alias is ALIASES.MINIMAP:
-            return (not self.cfg.xvmInstalled and self.cfg.minimap[MINIMAP.ZOOM][GLOBAL.ENABLED] and
-                    self.cfg.minimap[GLOBAL.ENABLED] and self.notEpicBattle)
         elif alias is ALIASES.USER_BACKGROUND:
             return self.cfg.user_background[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DATE_TIME:

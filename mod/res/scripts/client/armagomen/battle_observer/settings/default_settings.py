@@ -496,11 +496,7 @@ class DefaultSettings(object):
             MINIMAP.SHOW_NAMES: False,
             MINIMAP.VIEW_RADIUS: False,
             MINIMAP.YAW: True,
-            MINIMAP.ZOOM: {
-                GLOBAL.ENABLED: False,
-                MINIMAP.INDENT: 180,
-                MINIMAP.HOT_KEY: [[Keys.KEY_LCONTROL]]
-            }
+            MINIMAP.ZOOM: False,
         }
         self.shadow_settings = {
             GLOBAL.COLOR: COLORS.BLACK,

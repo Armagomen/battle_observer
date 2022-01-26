@@ -26,7 +26,7 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.ststistics.PlayersPanelsStatisticUI;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
-	import net.armagomen.battleobserver.battle.components.wgcomponents.MinimapUI;
+	import net.armagomen.battleobserver.battle.wgcomponents.MinimapUI;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.BaseBattlePage;
@@ -133,11 +133,6 @@ package net.armagomen.battleobserver
 						this.registerComponent(playersPanel, alias);
 						this.addChild(playersPanel);
 						break;
-					case "Observer_Minimap_UI": 
-						var minimap:MinimapUI = new MinimapUI(this.getComponent(BATTLE_VIEW_ALIASES.MINIMAP));
-						this.registerComponent(minimap, alias);
-						this.addChild(minimap);
-						break;
 					default: 
 						DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);
 						break;
@@ -158,6 +153,12 @@ package net.armagomen.battleobserver
 					prebattleTimer.background.shadow.visible = !shadow;
 					prebattleTimer.background.shadow.alpha = int(!shadow);
 				}
+			}
+			
+			BaseBattlePage.prototype.as_createMimimapCentered = function():void
+			{
+				var minimap:MinimapUI = new MinimapUI(this);
+				this.addChild(minimap);
 			}
 			
 			BaseBattlePage.prototype.as_observerHideWgComponents = function(components:Array):void

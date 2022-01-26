@@ -336,10 +336,7 @@ localization = {
     },
     "minimap": {
         "header": "MINIMAP",
-        "zoom*enabled": "Enable minimap centered.",
-        "zoom*zoom_hotkey": "Centering mini map on",
-        "zoom*indent": "Indenting from the edges of the screen",
-        "zoom*indent_tooltip": "It is necessary to specify an indent only from the top edge, below it will be the same",
+        "zoom": "Enable minimap centered on Ctrl key down.",
         "permanentMinimapDeath": "Always show the destroyed on the map",
         "showDeathNames": "Display the names of destroyed tanks",
         "real_view_radius": "Remove the limitation of the circle of vision 445m",

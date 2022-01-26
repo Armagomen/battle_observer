@@ -2,7 +2,7 @@ from importlib import import_module
 
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN
+from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, MINIMAP, GLOBAL
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -79,3 +79,6 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         view.flashObject.as_observerCreateComponents(components, self._statistics, self._icons)
         view.flashObject.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         callback(2.0, view.flashObject, "as_observerHideWgComponents", view_settings.getHiddenWGComponents())
+        minimapZoom = view_settings.cfg.minimap[GLOBAL.ENABLED] and view_settings.cfg.minimap[MINIMAP.ZOOM]
+        if minimapZoom and not view_settings.cfg.xvmInstalled and view_settings.notEpicBattle:
+            view.flashObject.as_createMimimapCentered()
