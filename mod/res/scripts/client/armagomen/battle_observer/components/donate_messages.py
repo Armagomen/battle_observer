@@ -11,16 +11,15 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 if GLOBAL.RU_LOCALIZATION:
     messages = (
-        "Поддержите разработку мода. Спасибо что вы с нами.",
-        "Спасибо за финансовую поддержку.",
+        "<b>Поддержите</b> разработку мода донатом. Спасибо.",
+        "Спасибо за <b>финансовую</b> поддержку.",
         "Присоединяйся к нашему клану <a href='event:BOFAN'>[BOFAN]</a>. Никаких обязательств. Вступай и получай "
         "клановые бонусы (бустеры, камуфляжи, и многое другое)."
     )
 else:
     messages = (
-        "Please support the development of the 'Battle Observer' mod. Thank you for being with us.",
-        "Have you already supported the development?",
-        "Motherland urges to support!",
+        "<b>Support</b> the development of the mod with a donation. Thank you.",
+        "Thank you for your <b>financial</b> support."
     )
 
 
@@ -42,7 +41,7 @@ class Donate(object):
 
     def getDonateMessage(self):
         self.lastMessage = self.getRandomMessage()
-        return "{logo}<p>{msg}</p>\n" \
+        return "{logo}<p><font color='#ffff66'>{msg}</font></p>\n" \
                "<p><textformat leading='2'>" \
                "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
                "{alerts_img} <a href='event:{all}'>DonationAlerts</a>\n" \
