@@ -10,7 +10,6 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addL
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from gui.shared.events import AppLifeCycleEvent
-from helpers.func_utils import callback
 
 
 def getViewSettings():
@@ -75,7 +74,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
         view.flashObject.as_observerCreateComponents(view_settings.getComponents(), self._statistics, self._icons)
         view.flashObject.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
-        callback(2.0, view.flashObject, "as_observerHideWgComponents", view_settings.getHiddenWGComponents())
+        view.flashObject.as_observerHideWgComponents(view_settings.getHiddenWGComponents())
         minimapZoom = view_settings.cfg.minimap[GLOBAL.ENABLED] and view_settings.cfg.minimap[MINIMAP.ZOOM]
         if minimapZoom and not view_settings.cfg.xvmInstalled and view_settings.notEpicBattle:
             view.flashObject.as_createMimimapCentered()

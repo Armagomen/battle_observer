@@ -1,5 +1,5 @@
 from CurrentVehicle import g_currentVehicle
-from armagomen.constants import GLOBAL, MINIMAP, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME
+from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME
 from armagomen.utils.common import overrideMethod
 from armagomen.utils.events import g_events
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
@@ -55,13 +55,16 @@ class ViewSettings(object):
     def notEpicRandomBattle(self):
         return not self.sessionProvider.arenaVisitor.gui.isEpicRandomBattle()
 
-    def isStatisticEnabled(self):
+    @property
+    def statsMain(self):
         return not self.cfg.xvmInstalled and self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and \
-               self.notEpicRandomBattle and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
+               self.notEpicRandomBattle
+
+    def isStatisticEnabled(self):
+        return not self.statsMain and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
-        return not self.cfg.xvmInstalled and self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and \
-               self.notEpicRandomBattle and self.cfg.statistics[STATISTICS.ICON_ENABLED]
+        return not self.statsMain and self.cfg.statistics[STATISTICS.ICON_ENABLED]
 
     def getSetting(self, alias):
         if alias in STATISTIC_ALIASES:
@@ -69,8 +72,9 @@ class ViewSettings(object):
         elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DAMAGE_LOG:
-            return (self.cfg.log_total[GLOBAL.ENABLED] or self.cfg.log_damage_extended[GLOBAL.ENABLED] or
-                    self.cfg.log_input_extended[GLOBAL.ENABLED])
+            return not self.cfg.xvmInstalled and (self.cfg.log_total[GLOBAL.ENABLED] or
+                                                  self.cfg.log_damage_extended[GLOBAL.ENABLED] or
+                                                  self.cfg.log_input_extended[GLOBAL.ENABLED])
         elif alias is ALIASES.MAIN_GUN:
             return self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle
         elif alias is ALIASES.DEBUG:
@@ -78,9 +82,9 @@ class ViewSettings(object):
         elif alias is ALIASES.TIMER:
             return self.cfg.battle_timer[GLOBAL.ENABLED]
         elif alias is ALIASES.SIXTH_SENSE:
-            return self.cfg.sixth_sense[GLOBAL.ENABLED]
+            return not self.cfg.xvmInstalled and self.cfg.sixth_sense[GLOBAL.ENABLED]
         elif alias is ALIASES.TEAM_BASES:
-            return self.cfg.team_bases_panel[GLOBAL.ENABLED]
+            return not self.cfg.xvmInstalled and self.cfg.team_bases_panel[GLOBAL.ENABLED]
         elif alias is ALIASES.ARMOR_CALC:
             return self.cfg.armor_calculator[GLOBAL.ENABLED]
         elif alias is ALIASES.FLIGHT_TIME:
@@ -91,7 +95,8 @@ class ViewSettings(object):
             return (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
                     self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED])
         elif alias is ALIASES.PANELS:
-            return self.cfg.players_panels[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
+            return not self.cfg.xvmInstalled and self.cfg.players_panels[
+                GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
         elif alias is ALIASES.USER_BACKGROUND:
             return self.cfg.user_background[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DATE_TIME:
