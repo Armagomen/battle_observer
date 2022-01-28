@@ -12,3 +12,9 @@ class PlayersPanelsStatistic(StatsMeta):
 
     def py_getFullWidth(self):
         return self.settings[STATISTICS.PANELS_FULL_WIDTH]
+
+    def onExitBattlePage(self):
+        pass
+
+    def onEnterBattlePage(self):
+        pass

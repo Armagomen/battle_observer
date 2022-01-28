@@ -10,3 +10,9 @@ class FullStats(StatsMeta):
     def _updateVehicleData(self, isEnemy, vehicleID):
         if self.as_isComponentVisibleS(BATTLE_VIEW_ALIASES.FULL_STATS):
             super(FullStats, self)._updateVehicleData(isEnemy, vehicleID)
+
+    def onExitBattlePage(self):
+        pass
+
+    def onEnterBattlePage(self):
+        pass

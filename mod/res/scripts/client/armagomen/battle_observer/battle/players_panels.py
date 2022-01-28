@@ -36,6 +36,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             arena.onVehicleHealthChanged += self.onPlayersDamaged
             keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, self.settings[PANELS.DAMAGES_HOT_KEY])
 
+    def onExitBattlePage(self):
+        pass
+
+    def onEnterBattlePage(self):
+        pass
+
     def _dispose(self):
         self.flashObject.as_clearStorage()
         keysParser.onKeyPressed -= self.onKeyPressed

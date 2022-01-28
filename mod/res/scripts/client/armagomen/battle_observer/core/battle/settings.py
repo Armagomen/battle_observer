@@ -61,10 +61,10 @@ class ViewSettings(object):
                self.notEpicRandomBattle
 
     def isStatisticEnabled(self):
-        return not self.statsMain and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
+        return self.statsMain and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
-        return not self.statsMain and self.cfg.statistics[STATISTICS.ICON_ENABLED]
+        return self.statsMain and self.cfg.statistics[STATISTICS.ICON_ENABLED]
 
     def getSetting(self, alias):
         if alias in STATISTIC_ALIASES:
@@ -82,9 +82,9 @@ class ViewSettings(object):
         elif alias is ALIASES.TIMER:
             return self.cfg.battle_timer[GLOBAL.ENABLED]
         elif alias is ALIASES.SIXTH_SENSE:
-            return not self.cfg.xvmInstalled and self.cfg.sixth_sense[GLOBAL.ENABLED]
+            return self.cfg.sixth_sense[GLOBAL.ENABLED]
         elif alias is ALIASES.TEAM_BASES:
-            return not self.cfg.xvmInstalled and self.cfg.team_bases_panel[GLOBAL.ENABLED]
+            return self.cfg.team_bases_panel[GLOBAL.ENABLED]
         elif alias is ALIASES.ARMOR_CALC:
             return self.cfg.armor_calculator[GLOBAL.ENABLED]
         elif alias is ALIASES.FLIGHT_TIME:

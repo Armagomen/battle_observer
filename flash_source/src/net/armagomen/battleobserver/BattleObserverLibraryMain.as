@@ -26,14 +26,14 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.ststistics.PlayersPanelsStatisticUI;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
-	import net.armagomen.battleobserver.battle.wgcomponents.MinimapUI;
+	import net.armagomen.battleobserver.battle.wgcomponents.minimapZoom;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class BattleObserverLibraryMain extends MovieClip
 	{
-		private var minimapBO:MinimapUI = null;
+		private var mapZoom:minimapZoom = null;
 		
 		public function BattleObserverLibraryMain()
 		{
@@ -158,7 +158,7 @@ package net.armagomen.battleobserver
 			
 			BaseBattlePage.prototype.as_createMimimapCentered = function():void
 			{
-				minimapBO = new MinimapUI(this);
+				mapZoom = new minimapZoom(this);
 			}
 			
 			BaseBattlePage.prototype.as_observerHideWgComponents = function(components:Array):void

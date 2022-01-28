@@ -8,14 +8,18 @@ package net.armagomen.battleobserver.battle.wgcomponents
 	import net.wg.gui.battle.views.minimap.Minimap;
 	import flash.ui.Keyboard;
 	
-	public class MinimapUI extends Sprite
+	public class minimapZoom
 	{
-		private var sizeBefore:Number = 2.0;
+		private var oldSize:Number    = 2.0;
+		private var oldScale:Number   = 1.0;
 		private var minimap:Minimap   = null;
 		private var page:*            = null;
 		private var isKeyDown:Boolean = false;
 		
-		public function MinimapUI(page:*)
+		private static const CTRL:Array = [Keyboard.CONTROL, Keyboard.COMMAND, 163];
+		private static const MINUS_ONE:int = -1;
+		
+		public function minimapZoom(page:*)
 		{
 			super();
 			this.page = page;
@@ -28,7 +32,7 @@ package net.armagomen.battleobserver.battle.wgcomponents
 		
 		private function keyDownHandler(event:KeyboardEvent):void
 		{
-			if (event.keyCode == Keyboard.CONTROL && !this.isKeyDown)
+			if (!this.isKeyDown && CTRL.indexOf(event.keyCode) > MINUS_ONE)
 			{
 				this.isKeyDown = true;
 				this.minimapCentered(this.isKeyDown);
@@ -37,7 +41,7 @@ package net.armagomen.battleobserver.battle.wgcomponents
 		
 		private function keyUpHandler(event:KeyboardEvent):void
 		{
-			if (event.keyCode == Keyboard.CONTROL && this.isKeyDown)
+			if (this.isKeyDown && CTRL.indexOf(event.keyCode) > MINUS_ONE)
 			{
 				this.isKeyDown = false;
 				this.minimapCentered(this.isKeyDown);
@@ -50,17 +54,18 @@ package net.armagomen.battleobserver.battle.wgcomponents
 			{
 				if (enabled)
 				{
-					var newScale:Number = Math.max((App.appHeight - App.appHeight / 8) / 630, 1.0);
-					this.sizeBefore = this.minimap.currentSizeIndex;
-					this.minimap.setAllowedSizeIndex(5);
+					this.oldSize = this.minimap.currentSizeIndex;
+					this.oldScale = this.minimap.scaleX;
+					this.minimap.setAllowedSizeIndex(page.getAllowedMinimapSizeIndex(5));
+					var newScale:Number = (App.appHeight * 0.7) / this.minimap.currentWidth;
 					this.minimap.scaleX = this.minimap.scaleY = newScale;
-					this.minimap.x = App.appWidth * 0.5 - 315 * newScale;
-					this.minimap.y = App.appHeight * 0.5 - 315 * newScale;
+					this.minimap.x = App.appWidth * 0.5 - this.minimap.currentWidth * 0.5 * newScale;
+					this.minimap.y = App.appHeight * 0.5 - this.minimap.currentHeight * 0.5 * newScale;
 				}
 				else
 				{
-					this.minimap.setAllowedSizeIndex(this.sizeBefore);
-					this.minimap.scaleX = this.minimap.scaleY = 1.0;
+					this.minimap.setAllowedSizeIndex(this.oldSize);
+					this.minimap.scaleX = this.minimap.scaleY = this.oldScale;
 					this.minimap.x = App.appWidth - this.minimap.currentWidth;
 					this.minimap.y = App.appHeight - this.minimap.currentHeight;
 				}
