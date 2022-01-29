@@ -1,6 +1,7 @@
+# coding=utf-8
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MINIMAP, MOD_NAME, MAIN, \
-    ANOTHER, URLS, STATISTICS
+from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
+    ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
 from armagomen.utils.common import logWarning, openWebBrowser, logInfo
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
@@ -12,10 +13,15 @@ settingsVersion = 37
 KEY_CONTROL = [KEY_ALIAS_CONTROL]
 KEY_ALT = [KEY_ALIAS_ALT]
 
+LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
+LOCKED = ("<font color='#ff3d3d'> The function is not available, XVM is installed.</font>",
+          "<font color='#ff3d3d'> Функция недоступна, установлен XVM.</font>")
+
 
 class CreateElement(object):
 
     def __init__(self):
+        self.settings = None
         self.getter = None
 
     @staticmethod
@@ -90,13 +96,15 @@ class CreateElement(object):
             result.update({'snapInterval': step, 'format': '{{value}}'})
         return result
 
-    @staticmethod
-    def createBlock(blockID, settings, column1, column2):
+    def createBlock(self, blockID, settings, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
+        warning = self.settings.xvmInstalled and blockID in LOCKED_BLOCKS
+        if warning:
+            name += LOCKED[GLOBAL.RU_LOCALIZATION]
         return {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
-            'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True),
-            'showToggleButton': GLOBAL.ENABLED in settings, 'inBattle': False,
+            'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True) and not warning,
+            'showToggleButton': GLOBAL.ENABLED in settings and not warning, 'inBattle': False,
             'position': CONFIG_INTERFACE.BLOCK_IDS.index(blockID), 'column1': column1, 'column2': column2
         }
 

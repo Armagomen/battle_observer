@@ -72,9 +72,9 @@ class ViewSettings(object):
         elif alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DAMAGE_LOG:
-            return not self.cfg.xvmInstalled and (self.cfg.log_total[GLOBAL.ENABLED] or
-                                                  self.cfg.log_damage_extended[GLOBAL.ENABLED] or
-                                                  self.cfg.log_input_extended[GLOBAL.ENABLED])
+            return (self.cfg.log_total[GLOBAL.ENABLED] or
+                    self.cfg.log_damage_extended[GLOBAL.ENABLED] or
+                    self.cfg.log_input_extended[GLOBAL.ENABLED])
         elif alias is ALIASES.MAIN_GUN:
             return self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle
         elif alias is ALIASES.DEBUG:
@@ -164,6 +164,7 @@ class ViewSettings(object):
             new_aliases.append(ALIASES.DEBUG)
         elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in new_aliases:
             if ALIASES.HP_BARS in self.__components:
+                new_aliases.remove(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR)
                 new_aliases.append(ALIASES.HP_BARS)
             if ALIASES.PANELS in self.__components:
                 new_aliases.append(ALIASES.PANELS)
