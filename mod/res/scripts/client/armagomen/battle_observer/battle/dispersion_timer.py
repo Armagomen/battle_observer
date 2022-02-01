@@ -67,13 +67,13 @@ class DispersionTimer(DispersionTimerMeta):
     def onEnterBattlePage(self):
         super(DispersionTimer, self).onEnterBattlePage()
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onDispersionAngleChanged += self.updateDispersion
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         g_events.onDispersionAngleChanged -= self.updateDispersion
         super(DispersionTimer, self).onExitBattlePage()

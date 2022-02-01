@@ -1,12 +1,9 @@
 package net.armagomen.battleobserver.battle.wgcomponents
 {
-	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.KeyboardEvent;
-	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.views.BaseBattlePage;
-	import net.wg.gui.battle.views.minimap.Minimap;
 	import flash.ui.Keyboard;
+	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
+	import net.wg.gui.battle.views.minimap.Minimap;
 	
 	public class minimapZoom
 	{

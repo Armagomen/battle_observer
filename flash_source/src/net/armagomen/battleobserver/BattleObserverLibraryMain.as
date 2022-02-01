@@ -7,7 +7,6 @@ package net.armagomen.battleobserver
 	
 	import flash.display.*;
 	import flash.text.Font;
-	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;

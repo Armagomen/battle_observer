@@ -69,7 +69,7 @@
 		{
 			this.customColor = customColor;
 			this.outline.graphics.lineStyle(1, customColor ? Utils.colorConvert(color) : this.barColor, Math.max(0.2, alpha), true, LineScaleMode.NONE);
-			this.outline.graphics.drawRect(0, 0, width, height);
+			this.outline.graphics.drawRect(-1, -1, width + 1, height + 1);
 			this.addChild(this.outline);
 		}
 		

@@ -18,14 +18,14 @@ class ArmorCalculator(ArmorCalcMeta):
     def onEnterBattlePage(self):
         super(ArmorCalculator, self).onEnterBattlePage()
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
 
     def onExitBattlePage(self):
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         g_events.onArmorChanged -= self.onArmorChanged
         g_events.onMarkerColorChanged -= self.onMarkerColorChanged

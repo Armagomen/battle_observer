@@ -33,14 +33,14 @@ class FlightTime(FlightTimeMeta):
         if self.shared.crosshair:
             self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
 
     def onExitBattlePage(self):
         if self.shared.crosshair:
             self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         super(FlightTime, self).onExitBattlePage()
 

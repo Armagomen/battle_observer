@@ -27,6 +27,9 @@ package net.armagomen.battleobserver.battle.components.ststistics
 		
 		private function getHolderByVehicleID(isEnemy:Boolean, vehicleID:int):*
 		{
+			if (!this.loading.form){
+				return null;
+			}
 			if (isEnemy)
 			{
 				for each (var enemy:* in this.loading.form._enemyRenderers)

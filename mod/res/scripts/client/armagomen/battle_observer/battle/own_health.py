@@ -34,7 +34,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
 
@@ -46,7 +46,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         g_playerEvents.onArenaPeriodChange -= self.onArenaPeriod
         super(OwnHealth, self)._dispose()

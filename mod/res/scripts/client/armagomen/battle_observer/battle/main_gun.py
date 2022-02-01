@@ -28,7 +28,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         if feedback:
             feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
@@ -39,7 +39,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         if feedback:
             feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
