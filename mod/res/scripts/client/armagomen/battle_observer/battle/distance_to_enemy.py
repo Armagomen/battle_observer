@@ -45,7 +45,7 @@ class Distance(DistanceMeta):
     def onEnterBattlePage(self):
         super(Distance, self).onEnterBattlePage()
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
@@ -60,7 +60,7 @@ class Distance(DistanceMeta):
             self.timeEvent.stop()
             self.timeEvent = None
         handler = avatar_getter.getInputHandler()
-        if handler is not None:
+        if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
