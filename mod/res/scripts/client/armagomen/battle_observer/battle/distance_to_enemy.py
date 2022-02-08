@@ -34,7 +34,7 @@ class Distance(DistanceMeta):
 
     def onArenaPeriod(self, period, *args):
         if period == ARENA_PERIOD.BATTLE and self.timeEvent is None:
-            self.timeEvent = CyclicTimerEvent(0.3, self.updateDistance)
+            self.timeEvent = CyclicTimerEvent(0.5, self.updateDistance)
             self.timeEvent.start()
         elif self.timeEvent is not None:
             self.timeEvent.stop()
@@ -92,11 +92,9 @@ class Distance(DistanceMeta):
                 if distance is None or dist < distance:
                     distance = dist
                     vehicleID = vehID
-        if distance is None or vehicleID is None:
+        if distance is None:
             return self.as_setDistanceS(GLOBAL.EMPTY_LINE)
         vehicleName = self._arenaDP.getVehicleInfo(vehicleID).vehicleType.shortName
-        if self.macrosDict[DISTANCE.TANK_NAME] == vehicleName and self.macrosDict[DISTANCE.DIST] == distance:
-            return
         self.macrosDict[DISTANCE.TANK_NAME] = vehicleName
         self.macrosDict[DISTANCE.DIST] = distance
         self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
