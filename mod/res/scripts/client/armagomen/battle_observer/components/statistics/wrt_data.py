@@ -47,7 +47,6 @@ class WTRStatisticsAndIcons(object):
                 cutName = cut % result
                 vehicleTextColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
             self.cache[vInfo.vehicleID] = {"fullName": fullName, "cutName": cutName,
-                                           "iconMultiplier": self.settings[STATISTICS.ICON_BLACKOUT],
                                            "vehicleTextColor": vehicleTextColor}
 
     def __getPercent(self, data):

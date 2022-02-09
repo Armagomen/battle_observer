@@ -86,6 +86,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
             fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
             typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
+            iconMultiplier = view_settings.cfg.statistics[STATISTICS.ICON_BLACKOUT]
             self._statisticsComponent.updateAllItems()
             view.flashObject.as_createStatisticComponent(self._statistics, self._icons, self._statisticsComponent.cache,
-                                                         cutWidth, fullWidth, typeColors)
+                                                         cutWidth, fullWidth, typeColors, iconMultiplier)

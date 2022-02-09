@@ -1,4 +1,4 @@
-package net.armagomen.battleobserver.battle 
+package net.armagomen.battleobserver.battle
 {
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
@@ -7,42 +7,57 @@ package net.armagomen.battleobserver.battle
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.data.constants.generated.BATTLEATLAS;
-
-	public class StatisticsAndIcons 
+	
+	public class StatisticsAndIcons
 	{
-		private var battleLoading:* = null;
-		private var fullStats:* = null;
-		private var panels:* = null;
+		private var battleLoading:*                 = null;
+		private var fullStats:*                     = null;
+		private var panels:*                        = null;
 		
-		private var iconColors:Object = {};
-		private var statisticsData:Object = null;
+		private var iconColors:Object               = {};
+		private var statisticsData:Object           = null;
 		private var statisticsEnabled:Boolean       = false;
 		private var iconsEnabled:Boolean            = false;
-	
+		private var iconMultiplier:Number           = -1.25;
 		
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
-		public function StatisticsAndIcons(battlePage:*, statisticsEnabled:Boolean, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object) 
+		public function StatisticsAndIcons(battlePage:*, statisticsEnabled:Boolean, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
 		{
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
 			this.panels = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 			this.setIconColors(typeColors);
+			this.iconMultiplier = iconMultiplier;
 			this.statisticsData = statsData;
 			this.statisticsEnabled = statisticsEnabled;
 			this.iconsEnabled = iconsEnabled;
-			this.addListeners(cutWidth, fullWidth)
+			this.addListeners(cutWidth, fullWidth);
+			this.panels.addEventListener(Event.CHANGE, this.onChange);
 		}
 		
-		private function setIconColors(colors:Object):void{
-			for (var classTag:String in colors){
+		private function onChange(eve:Event):void
+		{
+			for each (var itemR:* in this.panels.listRight._items)
+			{
+				if (!itemR._listItem.vehicleIcon.hasEventListener(Event.RENDER))
+				{
+					itemR._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
+				}
+			}
+		}
+		
+		private function setIconColors(colors:Object):void
+		{
+			for (var classTag:String in colors)
+			{
 				this.iconColors[classTag] = Utils.colorConvert(colors[classTag]);
 			}
 			App.utils.data.cleanupDynamicObject(colors);
 		}
 		
 		private function addListeners(cutWidth:Number, fullWidth:Number):void
-		{		
+		{
 			for each (var itemL:* in this.panels.listLeft._items)
 			{
 				itemL._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
@@ -66,24 +81,23 @@ package net.armagomen.battleobserver.battle
 			}
 		}
 		
-		
 		private function onRenderPanels(eve:Event):void
 		{
-			var isEnemy:Boolean = eve.target.parent._isRightAligned;
-			var list:*   = isEnemy ? this.panels.listRight : this.panels.listLeft;
-			var holder:* = list.getItemHolderByIndex(eve.target.parent.holderItemID);
-			var statsData:Object = this.statisticsData[holder.vehicleData.vehicleID];
-			if (holder && statsData && holder.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
+			var isEnemy:Boolean  = eve.target.parent._isRightAligned;
+			var list:*           = isEnemy ? this.panels.listRight : this.panels.listLeft;
+			var holder:*         = list.getItemHolderByIndex(eve.target.parent.holderItemID);
+			if (holder && holder.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
 			{
 				var listItem:* = holder.getListItem();
 				if (this.iconsEnabled)
 				{
 					var tColor:ColorTransform = listItem.vehicleIcon.transform.colorTransform;
 					tColor.color = this.iconColors[holder.vehicleData.vehicleType];
-					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = statsData.iconMultiplier;
+					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
-				if (this.statisticsEnabled)
+				var statsData:Object = this.statisticsData[holder.vehicleData.vehicleID];
+				if (this.statisticsEnabled && statsData)
 				{
 					if (statsData.vehicleTextColor)
 					{
@@ -104,11 +118,13 @@ package net.armagomen.battleobserver.battle
 						listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
 					}
 				}
-				if (this.fullStats && this.fullStats.visible){
+				if (this.fullStats && this.fullStats.visible)
+				{
 					this.updateFullstats(holder.vehicleData.vehicleID, statsData, isEnemy);
 				}
 				
-				if (this.battleLoading && this.battleLoading.visible){
+				if (this.battleLoading && this.battleLoading.visible)
+				{
 					this.updateBattleloading(holder.vehicleData.vehicleID, statsData, isEnemy);
 				}
 			}
@@ -127,10 +143,10 @@ package net.armagomen.battleobserver.battle
 				tColor.color = this.iconColors[holder.data.vehicleType];
 				tColor.alphaMultiplier = holder.statsItem._vehicleIcon.transform.colorTransform.alphaMultiplier;
 				tColor.alphaOffset = holder.statsItem._vehicleIcon.transform.colorTransform.alphaOffset;
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = statsData.iconMultiplier;
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled)
+			if (this.statisticsEnabled && statsData)
 			{
 				if (statsData.fullName)
 				{
@@ -162,10 +178,10 @@ package net.armagomen.battleobserver.battle
 				tColor.color = this.iconColors[holder.model.vehicleType];
 				tColor.alphaMultiplier = holder._vehicleIcon.transform.colorTransform.alphaMultiplier;
 				tColor.alphaOffset = holder._vehicleIcon.transform.colorTransform.alphaOffset;
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = statsData.iconMultiplier;
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled)
+			if (this.statisticsEnabled && statsData)
 			{
 				if (statsData.fullName)
 				{
@@ -181,7 +197,8 @@ package net.armagomen.battleobserver.battle
 		private function getFullStatsHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
 		{
 			var tableCtrl:* = this.fullStats._tableCtrl;
-			if (!tableCtrl){
+			if (!tableCtrl)
+			{
 				return null;
 			}
 			if (isEnemy && tableCtrl._enemyRenderers)
@@ -210,7 +227,8 @@ package net.armagomen.battleobserver.battle
 		private function getLoadingHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
 		{
 			var form:* = this.battleLoading.form;
-			if (!form || !this.battleLoading.visible){
+			if (!form || !this.battleLoading.visible)
+			{
 				return null;
 			}
 			if (isEnemy && form._enemyRenderers)
