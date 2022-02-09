@@ -7,6 +7,7 @@ package net.armagomen.battleobserver
 	
 	import flash.display.*;
 	import flash.text.Font;
+	import net.armagomen.battleobserver.battle.StatisticsAndIcons;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
@@ -20,45 +21,29 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.maingun.MainGunUI;
 	import net.armagomen.battleobserver.battle.components.playerspanels.PlayersPanelsUI;
 	import net.armagomen.battleobserver.battle.components.sixthsense.SixthSenseUI;
-	import net.armagomen.battleobserver.battle.components.ststistics.BattleLoadingUI;
-	import net.armagomen.battleobserver.battle.components.ststistics.FullStatsUI;
-	import net.armagomen.battleobserver.battle.components.ststistics.PlayersPanelsStatisticUI;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
 	import net.armagomen.battleobserver.battle.wgcomponents.minimapZoom;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.BaseBattlePage;
+	import net.wg.infrastructure.base.AbstractView;
 	
-	public class BattleObserverLibraryMain extends MovieClip
+	public class BattleObserverLibraryMain extends AbstractView
 	{
 		private var mapZoom:minimapZoom = null;
+		private var statisticsBO:StatisticsAndIcons = null;
 		
 		public function BattleObserverLibraryMain()
 		{
 			super();
 			Font.registerFont(BattleObserver.fontClass);
-			BaseBattlePage.prototype.as_observerCreateComponents = function(aliases:Array, statsEnabled:Boolean = false, iconEnabled:Boolean = false):void
+			BaseBattlePage.prototype.as_observerCreateComponents = function(aliases:Array):void
 			{
 				for each (var alias:String in aliases)
 				{
 					switch (alias)
 					{
-					case "Observer_BattleLoading_UI": 
-						var statBattleLoading:BattleLoadingUI = new BattleLoadingUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING), statsEnabled, iconEnabled);
-						this.registerComponent(statBattleLoading, alias);
-						this.addChild(statBattleLoading);
-						break;
-					case "Observer_FullStats_UI": 
-						var statFullStats:FullStatsUI = new FullStatsUI(this.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS), statsEnabled, iconEnabled);
-						this.registerComponent(statFullStats, alias);
-						this.addChild(statFullStats);
-						break;
-					case "Observer_PlayersPanelsStatistic_UI": 
-						var statPanels:PlayersPanelsStatisticUI = new PlayersPanelsStatisticUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL), statsEnabled, iconEnabled);
-						this.registerComponent(statPanels, alias);
-						this.addChild(statPanels);
-						break;
 					case "Observer_UserBackGround_UI": 
 						var background:UserBackGroundUI = new UserBackGroundUI();
 						this.registerComponent(background, alias);
@@ -155,9 +140,14 @@ package net.armagomen.battleobserver
 				}
 			}
 			
+			BaseBattlePage.prototype.as_createStatisticComponent = function(statsEnabled:Boolean, iconsEnabled:Boolean, data:Object, cutWidth:Number, fullWidth:Number):void
+			{
+				this.statisticsBO = new StatisticsAndIcons(this, statsEnabled, iconsEnabled, data, cutWidth, fullWidth);
+			}
+			
 			BaseBattlePage.prototype.as_createMimimapCentered = function():void
 			{
-				mapZoom = new minimapZoom(this);
+				this.mapZoom = new minimapZoom(this);
 			}
 			
 			BaseBattlePage.prototype.as_observerHideWgComponents = function(components:Array):void
@@ -172,6 +162,13 @@ package net.armagomen.battleobserver
 					}
 				}
 			}
+		}
+		
+		override protected function onBeforeDispose():void 
+		{
+			super.onBeforeDispose();
+			this.mapZoom = null;
+			this.statisticsBO = null;
 		}
 	}
 }

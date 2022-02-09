@@ -1,10 +1,9 @@
 import copy
 
 import constants
-from armagomen.battle_observer.components.statistics.plugin import StatisticPlugin
-from armagomen.battle_observer.core import settings, view_settings
+from armagomen.battle_observer.core import settings
 from armagomen.constants import MAIN
-from armagomen.utils.common import urlResponse, logDebug, logInfo, isXvmInstalled
+from armagomen.utils.common import urlResponse, logDebug, logInfo
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -26,9 +25,7 @@ class StatisticsDataLoader(object):
     def __init__(self):
         self.cache = {}
         self.enabled = region in ["ru", "eu", "com", "asia"] and not settings.xvmInstalled
-        if not settings.xvmInstalled:
-            self.plugin = StatisticPlugin(settings.statistics)
-        else:
+        if settings.xvmInstalled:
             logInfo("statistics/icons/minimap module is disabled, XVM is installed")
 
     def request(self, databaseIDS):

@@ -1,12 +1,15 @@
 from math import floor, log
 
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
-from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import STATISTICS, VEHICLE_TYPES, GLOBAL
-from armagomen.utils.events import g_events
+from helpers import dependency
+from skeletons.gui.battle_session import IBattleSessionProvider
 
 
-class StatsMeta(BaseModMeta):
+class WTRStatisticsAndIcons(object):
+    sessionProvider = dependency.descriptor(IBattleSessionProvider)
+
     COLOR_WTR = 'colorWTR'
     DEFAULT_COLOR = "#fafafa"
     DEFAULT_WIN_RATE = 0.0
@@ -14,50 +17,44 @@ class StatsMeta(BaseModMeta):
     UNITS = ['', 'k', 'm', 'g', 't', 'p']
 
     def __init__(self):
-        super(StatsMeta, self).__init__()
+        self.settings = settings.statistics
+        self.vehicle_types = settings.vehicle_types
         self.wtr_ranges = ((2960, "bad"), (4520, "normal"), (6367, "good"), (8543, "very_good"), (10217, "unique"))
-
-    def py_getIconMultiplier(self):
-        return self.settings[STATISTICS.ICON_BLACKOUT]
+        self.cache = {}
 
     def getIconColor(self, classTag):
         return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag, GLOBAL.EMPTY_LINE)
-
-    def as_updateVehicleS(self, isEnemy, vehicleID, iconColor, fullName, cutName, vehicleTextColor):
-        if self._isDAAPIInited():
-            self.flashObject.as_updateVehicle(isEnemy, vehicleID, iconColor, fullName, cutName, vehicleTextColor)
-
-    def as_isComponentVisibleS(self, alias):
-        return self.flashObject.as_isComponentVisible(alias) if self._isDAAPIInited() else False
 
     @property
     def vehicleTextColorEnabled(self):
         return self.settings[STATISTICS.CHANGE_VEHICLE_COLOR]
 
     def getPattern(self, isEnemy):
-        g_events.updateVehicleData -= self._updateVehicleData
-        raise NotImplementedError('Method getPattern in StatsMeta must be override! in %s' % self.__class__.__name__)
-
-    def _updateVehicleData(self, isEnemy, vehicleID):
-        vInfo = self._arenaDP.getVehicleInfo(vehicleID)
-        accountDBID = vInfo.player.accountDBID
-        iconColor = self.getIconColor(vInfo.vehicleType.classTag)
-        result = self.getStatisticsData(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
-        if result is not None:
-            fullName, cut = self.getPattern(isEnemy)
-            cutName = cut % result if cut else None
-            vehicleTextColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
-            self.as_updateVehicleS(isEnemy, vehicleID, iconColor, fullName % result, cutName, vehicleTextColor)
+        if isEnemy:
+            return self.settings[STATISTICS.FULL_RIGHT], self.settings[STATISTICS.CUT_RIGHT]
         else:
-            self.as_updateVehicleS(isEnemy, vehicleID, iconColor, None, None, None)
+            return self.settings[STATISTICS.FULL_LEFT], self.settings[STATISTICS.CUT_LEFT]
 
-    def _populate(self):
-        super(StatsMeta, self)._populate()
-        g_events.updateVehicleData += self._updateVehicleData
-
-    def _dispose(self):
-        g_events.updateVehicleData -= self._updateVehicleData
-        super(StatsMeta, self)._dispose()
+    def updateAllItems(self):
+        arenaDP = self.sessionProvider.getArenaDP()
+        allyTeam = arenaDP.getNumberOfTeam()
+        for vInfo in arenaDP.getVehiclesInfoIterator():
+            isEnemy = vInfo.team != allyTeam
+            vehicleID = vInfo.vehicleID
+            accountDBID = vInfo.player.accountDBID
+            iconColor = self.getIconColor(vInfo.vehicleType.classTag)
+            result = self.getStatisticsData(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
+            fullName = None
+            cutName = None
+            vehicleTextColor = None
+            if result is not None:
+                full, cut = self.getPattern(isEnemy)
+                fullName = full % result
+                cutName = cut % result
+                vehicleTextColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
+            self.cache[vehicleID] = {"fullName": fullName, "cutName": cutName, "iconColor": iconColor,
+                                     "iconMultiplier": self.settings[STATISTICS.ICON_BLACKOUT],
+                                     "vehicleTextColor": vehicleTextColor}
 
     def __getPercent(self, data):
         random = data["statistics"]["random"]

@@ -22,8 +22,6 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
                  ARENA_GUI_TYPE.EPIC_BATTLE,
                  ARENA_GUI_TYPE.MAPBOX}
 
-STATISTIC_ALIASES = {ALIASES.BATTLE_LOADING, ALIASES.FULL_STATS, ALIASES.PANELS_STAT}
-
 
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
@@ -67,9 +65,7 @@ class ViewSettings(object):
         return self.statsMain and self.cfg.statistics[STATISTICS.ICON_ENABLED]
 
     def getSetting(self, alias):
-        if alias in STATISTIC_ALIASES:
-            return self.isStatisticEnabled() or self.isIconsEnabled()
-        elif alias is ALIASES.HP_BARS:
+        if alias is ALIASES.HP_BARS:
             return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DAMAGE_LOG:
             return (self.cfg.log_total[GLOBAL.ENABLED] or

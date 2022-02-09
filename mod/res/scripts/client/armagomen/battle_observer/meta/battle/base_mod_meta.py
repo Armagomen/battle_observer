@@ -44,7 +44,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @staticmethod
     def doLog(*args):
-        logInfo(", ".join(str(arg) for arg in args))
+        logInfo("\n".join(str(arg) + ":" + str(dir(arg)) for arg in args))
 
     def isColorBlind(self):
         return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))

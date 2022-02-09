@@ -1,8 +1,9 @@
 from importlib import import_module
 
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
+from armagomen.battle_observer.components.statistics.wrt_data import WTRStatisticsAndIcons
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, MINIMAP, GLOBAL
+from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, MINIMAP, GLOBAL, STATISTICS
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -36,12 +37,15 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('_viewAliases', '_statistics', '_icons', '_listeners', '_scope', '_app', '_appNS')
+    __slots__ = ('_viewAliases', '_statistics', '_icons', '_listeners', '_scope', '_app', '_appNS',
+                 '_statisticsComponent')
 
     def __init__(self):
         self._viewAliases = view_settings.getViewAliases()
         self._statistics = view_settings.isStatisticEnabled()
         self._icons = view_settings.isIconsEnabled()
+        if self._icons or self._statistics:
+            self._statisticsComponent = WTRStatisticsAndIcons()
         listeners = [(alias, self.eventListener) for alias in self._viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
@@ -72,9 +76,15 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
-        view.flashObject.as_observerCreateComponents(view_settings.getComponents(), self._statistics, self._icons)
+        view.flashObject.as_observerCreateComponents(view_settings.getComponents())
         view.flashObject.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         view.flashObject.as_observerHideWgComponents(view_settings.getHiddenWGComponents())
         minimapZoom = view_settings.cfg.minimap[GLOBAL.ENABLED] and view_settings.cfg.minimap[MINIMAP.ZOOM]
         if minimapZoom and not view_settings.cfg.xvmInstalled and view_settings.notEpicBattle:
             view.flashObject.as_createMimimapCentered()
+        if self._icons or self._statistics:
+            cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
+            fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
+            self._statisticsComponent.updateAllItems()
+            view.flashObject.as_createStatisticComponent(self._statistics, self._icons, self._statisticsComponent.cache,
+                                                         cutWidth, fullWidth)

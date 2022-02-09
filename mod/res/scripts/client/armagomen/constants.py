@@ -329,10 +329,9 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
 ALIASES = namedtuple("ALIASES", (
-    "BATTLE_LOADING", "FULL_STATS", "PANELS_STAT", "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE",
+    "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE",
     "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH",
     "USER_BACKGROUND", "PANELS"))(
-    "Observer_BattleLoading_UI", "Observer_FullStats_UI", "Observer_PlayersPanelsStatistic_UI",
     "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
@@ -347,17 +346,13 @@ OWN_HEALTH = namedtuple("OWN_HEALTH", (
 
 STATISTICS = namedtuple("STATISTICS", (
     "NAME", "STATISTIC_ENABLED", "CHANGE_VEHICLE_COLOR",
-    "LOADING_LEFT", "LOADING_RIGHT",
-    "TAB_LEFT", "TAB_RIGHT",
-    "PANELS_LEFT", "PANELS_RIGHT",
-    "PANELS_LEFT_CUT", "PANELS_RIGHT_CUT",
+    "FULL_LEFT", "FULL_RIGHT",
+    "CUT_LEFT", "CUT_RIGHT",
     "COLORS", "ICON_ENABLED", "ICON_BLACKOUT",
     "PANELS_FULL_WIDTH", "PANELS_CUT_WIDTH"))(
     "statistics", "statistics_enabled", "statistics_change_vehicle_name_color",
-    "statistics_pattern_loading_left", "statistics_pattern_loading_right",
-    "statistics_pattern_tab_left", "statistics_pattern_tab_right",
-    "statistics_pattern_panels_left", "statistics_pattern_panels_right",
-    "statistics_pattern_panels_left_cut", "statistics_pattern_panels_right_cut",
+    "statistics_pattern_full_left", "statistics_pattern_full_right",
+    "statistics_pattern_cut_left", "statistics_pattern_cut_right",
     "statistics_colors", "icon_enabled", "icon_blackout",
     "panels_full_width", "panels_cut_width"
 )
@@ -517,10 +512,7 @@ ALIAS_TO_PATH = {
     ALIASES.USER_BACKGROUND: (".user_background", ALIASES.USER_BACKGROUND[9:-3]),
     ALIASES.DATE_TIME: (".date_times", ALIASES.DATE_TIME[9:-3]),
     ALIASES.DISTANCE: (".distance_to_enemy", ALIASES.DISTANCE[9:-3]),
-    ALIASES.OWN_HEALTH: (".own_health", ALIASES.OWN_HEALTH[9:-3]),
-    ALIASES.BATTLE_LOADING: (".statistics.battle_loading", ALIASES.BATTLE_LOADING[9:-3]),
-    ALIASES.FULL_STATS: (".statistics.full_stats", ALIASES.FULL_STATS[9:-3]),
-    ALIASES.PANELS_STAT: (".statistics.players_panels", ALIASES.PANELS_STAT[9:-3]),
+    ALIASES.OWN_HEALTH: (".own_health", ALIASES.OWN_HEALTH[9:-3])
 }
 
 ALIAS_TO_CONFIG_NAME = {
@@ -538,8 +530,5 @@ ALIAS_TO_CONFIG_NAME = {
     ALIASES.USER_BACKGROUND: USER_BACKGROUND.NAME,
     ALIASES.DATE_TIME: CLOCK.NAME,
     ALIASES.DISTANCE: DISTANCE.NAME,
-    ALIASES.OWN_HEALTH: OWN_HEALTH.NAME,
-    ALIASES.BATTLE_LOADING: STATISTICS.NAME,
-    ALIASES.FULL_STATS: STATISTICS.NAME,
-    ALIASES.PANELS_STAT: STATISTICS.NAME
+    ALIASES.OWN_HEALTH: OWN_HEALTH.NAME
 }
