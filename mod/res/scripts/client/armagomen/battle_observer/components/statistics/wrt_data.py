@@ -2,7 +2,7 @@ from math import floor, log
 
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import STATISTICS, VEHICLE_TYPES, GLOBAL
+from armagomen.constants import STATISTICS
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -22,9 +22,6 @@ class WTRStatisticsAndIcons(object):
         self.wtr_ranges = ((2960, "bad"), (4520, "normal"), (6367, "good"), (8543, "very_good"), (10217, "unique"))
         self.cache = {}
 
-    def getIconColor(self, classTag):
-        return self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS].get(classTag, GLOBAL.EMPTY_LINE)
-
     @property
     def vehicleTextColorEnabled(self):
         return self.settings[STATISTICS.CHANGE_VEHICLE_COLOR]
@@ -39,22 +36,19 @@ class WTRStatisticsAndIcons(object):
         arenaDP = self.sessionProvider.getArenaDP()
         allyTeam = arenaDP.getNumberOfTeam()
         for vInfo in arenaDP.getVehiclesInfoIterator():
-            isEnemy = vInfo.team != allyTeam
-            vehicleID = vInfo.vehicleID
             accountDBID = vInfo.player.accountDBID
-            iconColor = self.getIconColor(vInfo.vehicleType.classTag)
             result = self.getStatisticsData(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
             fullName = None
             cutName = None
             vehicleTextColor = None
             if result is not None:
-                full, cut = self.getPattern(isEnemy)
+                full, cut = self.getPattern(vInfo.team != allyTeam)
                 fullName = full % result
                 cutName = cut % result
                 vehicleTextColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
-            self.cache[vehicleID] = {"fullName": fullName, "cutName": cutName, "iconColor": iconColor,
-                                     "iconMultiplier": self.settings[STATISTICS.ICON_BLACKOUT],
-                                     "vehicleTextColor": vehicleTextColor}
+            self.cache[vInfo.vehicleID] = {"fullName": fullName, "cutName": cutName,
+                                           "iconMultiplier": self.settings[STATISTICS.ICON_BLACKOUT],
+                                           "vehicleTextColor": vehicleTextColor}
 
     def __getPercent(self, data):
         random = data["statistics"]["random"]

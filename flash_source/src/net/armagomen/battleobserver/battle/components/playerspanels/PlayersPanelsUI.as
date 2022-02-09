@@ -68,7 +68,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		private function onChange(eve:Event):void
 		{
-			this.as_clearStorage();
+			for each (var itemR:* in this.playersPanel.listRight._items)
+			{
+				this.as_AddVehIdToList(itemR.vehicleData.vehicleID, true);
+			}
 		}
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void

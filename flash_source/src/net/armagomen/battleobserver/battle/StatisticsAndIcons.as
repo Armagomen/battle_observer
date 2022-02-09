@@ -6,6 +6,7 @@ package net.armagomen.battleobserver.battle
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
+	import net.wg.data.constants.generated.BATTLEATLAS;
 
 	public class StatisticsAndIcons 
 	{
@@ -13,6 +14,7 @@ package net.armagomen.battleobserver.battle
 		private var fullStats:* = null;
 		private var panels:* = null;
 		
+		private var iconColors:Object = {};
 		private var statisticsData:Object = null;
 		private var statisticsEnabled:Boolean       = false;
 		private var iconsEnabled:Boolean            = false;
@@ -20,18 +22,26 @@ package net.armagomen.battleobserver.battle
 		
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
-		public function StatisticsAndIcons(battlePage:*, statisticsEnabled:Boolean, iconsEnabled:Boolean, data:Object, cutWidth:Number, fullWidth:Number) 
+		public function StatisticsAndIcons(battlePage:*, statisticsEnabled:Boolean, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object) 
 		{
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
 			this.panels = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-			this.statisticsData = data;
+			this.setIconColors(typeColors);
+			this.statisticsData = statsData;
 			this.statisticsEnabled = statisticsEnabled;
 			this.iconsEnabled = iconsEnabled;
 			this.addListeners(cutWidth, fullWidth)
 		}
 		
-		public function addListeners(cutWidth:Number, fullWidth:Number):void
+		private function setIconColors(colors:Object):void{
+			for (var classTag:String in colors){
+				this.iconColors[classTag] = Utils.colorConvert(colors[classTag]);
+			}
+			App.utils.data.cleanupDynamicObject(colors);
+		}
+		
+		private function addListeners(cutWidth:Number, fullWidth:Number):void
 		{		
 			for each (var itemL:* in this.panels.listLeft._items)
 			{
@@ -62,30 +72,30 @@ package net.armagomen.battleobserver.battle
 			var isEnemy:Boolean = eve.target.parent._isRightAligned;
 			var list:*   = isEnemy ? this.panels.listRight : this.panels.listLeft;
 			var holder:* = list.getItemHolderByIndex(eve.target.parent.holderItemID);
-			var vehicleData:Object = this.statisticsData[holder.vehicleData.vehicleID];
-			if (holder && vehicleData)
+			var statsData:Object = this.statisticsData[holder.vehicleData.vehicleID];
+			if (holder && statsData && holder.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
 			{
 				var listItem:* = holder.getListItem();
-				if (this.iconsEnabled && vehicleData.iconColor)
+				if (this.iconsEnabled)
 				{
 					var tColor:ColorTransform = listItem.vehicleIcon.transform.colorTransform;
-					tColor.color = Utils.colorConvert(vehicleData.iconColor);
-					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = vehicleData.iconMultiplier;
+					tColor.color = this.iconColors[holder.vehicleData.vehicleType];
+					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = statsData.iconMultiplier;
 					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
 				if (this.statisticsEnabled)
 				{
-					if (vehicleData.vehicleTextColor)
+					if (statsData.vehicleTextColor)
 					{
-						listItem.vehicleTF.textColor = Utils.colorConvert(vehicleData.vehicleTextColor);
+						listItem.vehicleTF.textColor = Utils.colorConvert(statsData.vehicleTextColor);
 					}
-					if (vehicleData.fullName)
+					if (statsData.fullName)
 					{
-						listItem.playerNameFullTF.htmlText = vehicleData.fullName;
+						listItem.playerNameFullTF.htmlText = statsData.fullName;
 					}
-					if (vehicleData.cutName)
+					if (statsData.cutName)
 					{
-						listItem.playerNameCutTF.htmlText = vehicleData.cutName;
+						listItem.playerNameCutTF.htmlText = statsData.cutName;
 					}
 					if (!listItem._isAlive)
 					{
@@ -95,41 +105,41 @@ package net.armagomen.battleobserver.battle
 					}
 				}
 				if (this.fullStats && this.fullStats.visible){
-					this.updateFullstats(holder.vehicleData.vehicleID, vehicleData, isEnemy);
+					this.updateFullstats(holder.vehicleData.vehicleID, statsData, isEnemy);
 				}
 				
 				if (this.battleLoading && this.battleLoading.visible){
-					this.updateBattleloading(holder.vehicleData.vehicleID, vehicleData, isEnemy);
+					this.updateBattleloading(holder.vehicleData.vehicleID, statsData, isEnemy);
 				}
 			}
 		}
 		
-		private function updateFullstats(vehicleID:int, vehicleData:Object, isEnemy:Boolean):void
+		private function updateFullstats(vehicleID:int, statsData:Object, isEnemy:Boolean):void
 		{
 			var holder:* = this.getFullStatsHolderByVehicleID(vehicleID, isEnemy);
 			if (!holder)
 			{
 				return;
 			}
-			if (this.iconsEnabled && vehicleData.iconColor)
+			if (this.iconsEnabled && holder.data)
 			{
 				var tColor:ColorTransform = new ColorTransform();
-				tColor.color = Utils.colorConvert(vehicleData.iconColor);
+				tColor.color = this.iconColors[holder.data.vehicleType];
 				tColor.alphaMultiplier = holder.statsItem._vehicleIcon.transform.colorTransform.alphaMultiplier;
 				tColor.alphaOffset = holder.statsItem._vehicleIcon.transform.colorTransform.alphaOffset;
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = vehicleData.iconMultiplier;
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = statsData.iconMultiplier;
 				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsEnabled)
 			{
-				if (vehicleData.fullName)
+				if (statsData.fullName)
 				{
 					holder.statsItem._playerNameTF.autoSize = isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-					holder.statsItem._playerNameTF.htmlText = vehicleData.fullName;
+					holder.statsItem._playerNameTF.htmlText = statsData.fullName;
 				}
-				if (vehicleData.vehicleTextColor)
+				if (statsData.vehicleTextColor)
 				{
-					holder.statsItem._vehicleNameTF.textColor = Utils.colorConvert(vehicleData.vehicleTextColor);
+					holder.statsItem._vehicleNameTF.textColor = Utils.colorConvert(statsData.vehicleTextColor);
 				}
 				if (!holder.data.isAlive())
 				{
@@ -139,31 +149,31 @@ package net.armagomen.battleobserver.battle
 			}
 		}
 		
-		private function updateBattleloading(vehicleID:int, vehicleData:Object, isEnemy:Boolean):void
+		private function updateBattleloading(vehicleID:int, statsData:Object, isEnemy:Boolean):void
 		{
 			var holder:* = this.getLoadingHolderByVehicleID(vehicleID, isEnemy);
 			if (!holder)
 			{
 				return;
 			}
-			if (this.iconsEnabled && vehicleData.iconColor)
+			if (this.iconsEnabled && holder.model)
 			{
 				var tColor:ColorTransform = new ColorTransform();
-				tColor.color = Utils.colorConvert(vehicleData.iconColor);
+				tColor.color = this.iconColors[holder.model.vehicleType];
 				tColor.alphaMultiplier = holder._vehicleIcon.transform.colorTransform.alphaMultiplier;
 				tColor.alphaOffset = holder._vehicleIcon.transform.colorTransform.alphaOffset;
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = vehicleData.iconMultiplier;
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = statsData.iconMultiplier;
 				holder._vehicleIcon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsEnabled)
 			{
-				if (vehicleData.fullName)
+				if (statsData.fullName)
 				{
-					holder._textField.htmlText = vehicleData.fullName;
+					holder._textField.htmlText = statsData.fullName;
 				}
-				if (vehicleData.vehicleTextColor)
+				if (statsData.vehicleTextColor)
 				{
-					holder._vehicleField.textColor = Utils.colorConvert(vehicleData.vehicleTextColor);
+					holder._vehicleField.textColor = Utils.colorConvert(statsData.vehicleTextColor);
 				}
 			}
 		}

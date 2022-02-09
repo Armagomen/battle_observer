@@ -3,7 +3,7 @@ from importlib import import_module
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
 from armagomen.battle_observer.components.statistics.wrt_data import WTRStatisticsAndIcons
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, MINIMAP, GLOBAL, STATISTICS
+from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, MINIMAP, GLOBAL, STATISTICS, VEHICLE_TYPES
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -85,6 +85,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if self._icons or self._statistics:
             cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
             fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
+            typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
             self._statisticsComponent.updateAllItems()
             view.flashObject.as_createStatisticComponent(self._statistics, self._icons, self._statisticsComponent.cache,
-                                                         cutWidth, fullWidth)
+                                                         cutWidth, fullWidth, typeColors)

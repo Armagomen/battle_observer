@@ -56,7 +56,7 @@ class ViewSettings(object):
     @property
     def statsMain(self):
         return not self.cfg.xvmInstalled and self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and \
-               self.notEpicRandomBattle
+               self.notEpicRandomBattle and self.sessionProvider.arenaVisitor.gui.hasLabel()
 
     def isStatisticEnabled(self):
         return self.statsMain and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
