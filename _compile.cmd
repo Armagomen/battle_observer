@@ -20,7 +20,7 @@ set AutoUpdate=..\AutoUpdate.zip
 DEL %AutoUpdate%
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py -x!*.cmd %ModFile% .\mod\*
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %ZipArh% %ModsDir%\
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %ZipArh% %ModsDir%\%WotVer%\ %ModsDir%\configs\
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %AutoUpdate% %ModsDir%\%WotVer%\*
 
 DEL /s /q *.pyc
