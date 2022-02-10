@@ -115,9 +115,9 @@ package net.armagomen.battleobserver
 						this.addChild(ownHealth);
 						break;
 					case "Observer_PlayersPanels_UI": 
-						var playersPanel:PlayersPanelsUI = new PlayersPanelsUI(this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL));
+						var playersPanel:PlayersPanelsUI = new PlayersPanelsUI(this);
 						this.registerComponent(playersPanel, alias);
-						this.addChild(playersPanel);
+						//this.addChild(playersPanel);
 						break;
 					default: 
 						DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);

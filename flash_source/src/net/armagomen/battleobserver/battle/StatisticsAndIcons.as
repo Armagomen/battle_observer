@@ -7,6 +7,7 @@ package net.armagomen.battleobserver.battle
 	import net.wg.data.constants.generated.BATTLEATLAS;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
+	import net.wg.gui.battle.random.views.stats.components.playersPanel.events.PlayersPanelEvent;
 	
 	public class StatisticsAndIcons
 	{
@@ -19,7 +20,9 @@ package net.armagomen.battleobserver.battle
 		private var statisticsEnabled:Boolean       = false;
 		private var iconsEnabled:Boolean            = false;
 		private var iconMultiplier:Number           = -1.25;
-		
+		private var isReplay:Boolean                = false;
+		private var cutWidth:Number                 = 60.0;
+		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
 		public function StatisticsAndIcons(battlePage:*, statisticsEnabled:Boolean, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
@@ -32,11 +35,15 @@ package net.armagomen.battleobserver.battle
 			this.statisticsData = statsData;
 			this.statisticsEnabled = statisticsEnabled;
 			this.iconsEnabled = iconsEnabled;
-			this.addListeners(cutWidth, fullWidth);
+			this.cutWidth = cutWidth;
+			this.fullWidth = fullWidth;
 			this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
+			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onCountChange, false, 0, true);
+			this.isReplay = battlePage.getComponent(BATTLE_VIEW_ALIASES.CONSUMABLES_PANEL)._isReplay;
+			this.onChange(null);
 		}
 		
-		private function onChange(eve:Event):void
+		private function onCountChange(eve:Event):void
 		{
 			for each (var itemR:* in this.panels.listRight._items)
 			{
@@ -56,21 +63,32 @@ package net.armagomen.battleobserver.battle
 			App.utils.data.cleanupDynamicObject(colors);
 		}
 		
-		private function addListeners(cutWidth:Number, fullWidth:Number):void
+		private function onChange(eve:Event = null):void
 		{
+			if (eve && !this.isReplay)
+			{
+				return;
+			}
 			for each (var itemL:* in this.panels.listLeft._items)
 			{
-				itemL._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
-				itemL._listItem.playerNameCutTF.width = cutWidth;
-				itemL._listItem.setPlayerNameFullWidth(fullWidth);
+				if (!itemL._listItem.vehicleIcon.hasEventListener(Event.RENDER))
+				{
+					itemL._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
+					itemL._listItem.playerNameCutTF.width = this.cutWidth;
+					itemL._listItem.setPlayerNameFullWidth(this.fullWidth);
+				}
 			}
 			
 			for each (var itemR:* in this.panels.listRight._items)
 			{
-				itemR._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
-				itemR._listItem.playerNameCutTF.width = cutWidth;
-				itemR._listItem.setPlayerNameFullWidth(fullWidth);
+				if (!itemR._listItem.vehicleIcon.hasEventListener(Event.RENDER))
+				{
+					itemR._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
+					itemR._listItem.playerNameCutTF.width = this.cutWidth;
+					itemR._listItem.setPlayerNameFullWidth(this.fullWidth);
+				}
 			}
+			
 			if (this.statisticsEnabled)
 			{
 				var oldMode:int = int(this.panels.state);
@@ -83,9 +101,9 @@ package net.armagomen.battleobserver.battle
 		
 		private function onRenderPanels(eve:Event):void
 		{
-			var isEnemy:Boolean  = eve.target.parent._isRightAligned;
-			var list:*           = isEnemy ? this.panels.listRight : this.panels.listLeft;
-			var holder:*         = list.getItemHolderByIndex(eve.target.parent.holderItemID);
+			var isEnemy:Boolean = eve.currentTarget.parent._isRightAligned;
+			var list:*          = isEnemy ? this.panels.listRight : this.panels.listLeft;
+			var holder:*        = list.getItemHolderByIndex(eve.target.parent.holderItemID);
 			if (holder && holder.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
 			{
 				var listItem:* = holder.getListItem();

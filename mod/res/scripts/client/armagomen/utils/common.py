@@ -269,7 +269,7 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0):
 
 
 def urlResponse(url):
-    response = openUrl(url)
+    response = openUrl(url, 20.0)
     responseData = response.getData()
     if responseData is not None:
         return json.loads(responseData, encoding="utf-8-sig")

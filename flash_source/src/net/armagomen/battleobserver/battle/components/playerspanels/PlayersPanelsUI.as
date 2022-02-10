@@ -4,6 +4,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.components.playerspanels.ListItem;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
+	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
 	
 	public class PlayersPanelsUI extends ObserverBattleDisplayable
@@ -12,11 +13,13 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
 		public var clear:Function;
+		private var isReplay:Boolean = false;
 		
-		public function PlayersPanelsUI(panels:*)
+		public function PlayersPanelsUI(battlePage:*)
 		{
-			this.playersPanel = panels;
 			super();
+			this.playersPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
+			this.isReplay = battlePage.getComponent(BATTLE_VIEW_ALIASES.CONSUMABLES_PANEL)._isReplay;
 		}
 		
 		public function as_clearStorage():void
@@ -68,6 +71,13 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		private function onChange(eve:Event):void
 		{
+			if (this.isReplay){
+				this.as_clearStorage();
+				for each (var itemL:* in this.playersPanel.listLeft._items)
+				{
+					this.as_AddVehIdToList(itemL.vehicleData.vehicleID, false);
+				}
+			}
 			for each (var itemR:* in this.playersPanel.listRight._items)
 			{
 				this.as_AddVehIdToList(itemR.vehicleData.vehicleID, true);
