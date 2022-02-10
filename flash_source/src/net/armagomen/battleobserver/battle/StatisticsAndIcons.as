@@ -33,7 +33,7 @@ package net.armagomen.battleobserver.battle
 			this.statisticsEnabled = statisticsEnabled;
 			this.iconsEnabled = iconsEnabled;
 			this.addListeners(cutWidth, fullWidth);
-			this.panels.addEventListener(Event.CHANGE, this.onChange);
+			this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
 		}
 		
 		private function onChange(eve:Event):void
