@@ -4,9 +4,9 @@ package net.armagomen.battleobserver.battle
 	import flash.geom.ColorTransform;
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.utils.Utils;
-	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
-	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.data.constants.generated.BATTLEATLAS;
+	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
+	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	
 	public class StatisticsAndIcons
 	{
@@ -139,10 +139,8 @@ package net.armagomen.battleobserver.battle
 			}
 			if (this.iconsEnabled && holder.data)
 			{
-				var tColor:ColorTransform = new ColorTransform();
+				var tColor:ColorTransform = holder.statsItem._vehicleIcon.transform.colorTransform;
 				tColor.color = this.iconColors[holder.data.vehicleType];
-				tColor.alphaMultiplier = holder.statsItem._vehicleIcon.transform.colorTransform.alphaMultiplier;
-				tColor.alphaOffset = holder.statsItem._vehicleIcon.transform.colorTransform.alphaOffset;
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
 			}
@@ -174,10 +172,8 @@ package net.armagomen.battleobserver.battle
 			}
 			if (this.iconsEnabled && holder.model)
 			{
-				var tColor:ColorTransform = new ColorTransform();
+				var tColor:ColorTransform = holder._vehicleIcon.transform.colorTransform;
 				tColor.color = this.iconColors[holder.model.vehicleType];
-				tColor.alphaMultiplier = holder._vehicleIcon.transform.colorTransform.alphaMultiplier;
-				tColor.alphaOffset = holder._vehicleIcon.transform.colorTransform.alphaOffset;
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder._vehicleIcon.transform.colorTransform = tColor;
 			}
