@@ -24,6 +24,9 @@ timeFormat_tooltip = ("Формат - Значение\n"
                       "%Y - Год с веком\n"
                       "%Z - Временная зона\n"
                       "%% - Знак '%'")
+
+RESTART_TOOLTIP = "Для включения/отключения необходим перезапуск игры."
+
 localization = {
     "configSelect": {
         "header": "ВЫБОР НАСТРОЕК из mods/configs/mod_battle_observer",
@@ -46,8 +49,7 @@ localization = {
         "hideClanAbbrev": "Отключить отображение клана",
         "hideClanAbbrev_tooltip": "в ушах, окне по tab, на экране загрузки.",
         "fps_enableFPSLimiter": "Включить ограничитель FPS",
-        "fps_enableFPSLimiter_tooltip": "НЕОБХОДИМ ПЕРЕЗАПУСК ИГРЫ ПОСЛЕ ПРИМЕНЕНИЯ НАСТРОЙКИ",
-        "enableFPSLimiter_tooltip": "Внимание, для полного отключения или включения необходим перезапуск игры.",
+        "fps_enableFPSLimiter_tooltip": RESTART_TOOLTIP,
         "fps_maxFrameRate": "Максимальный FPS",
         "hideChatInRandom": "Отключить чат в случайных боях",
         "hideChatInRandom_tooltip": "Полностью отключает чат в случайных боях.\nУбирает форму чата и все "
@@ -82,7 +84,9 @@ localization = {
                                     "в бою на другом танке, экипаж будет возвращен в танк автоматически.",
         "disable_stun_sound": "Убрать звук оглушения",
         "hide_main_chat_in_hangar": "Отключить общий чат в ангаре",
-        "hide_main_chat_in_hangar_tooltip": "Для включения/отключения необходим перезапуск игры."
+        "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
+        "hide_button_counters_on_top_panel": "Отключить подсказки на кнопках в шапке ангара.",
+        "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
     },
     "statistics": {
         "header": "Статистика игроков WTR(WGR) | Иконки танков",

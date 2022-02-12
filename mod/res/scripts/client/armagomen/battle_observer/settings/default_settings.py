@@ -47,6 +47,7 @@ class DefaultSettings(object):
             MAIN.CREW_RETURN: False,
             MAIN.STUN_SOUND: False,
             MAIN.HIDE_MAIN_CHAT: False,
+            MAIN.HIDE_BTN_COUNTERS: False
         }
         self.user_background = {
             GLOBAL.ENABLED: False,

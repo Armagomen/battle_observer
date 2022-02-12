@@ -24,6 +24,9 @@ timeFormat_tooltip = ("Directive Meaning\n"
                       "%Y  Year with century as a decimal number.\n"
                       "%Z  Time zone name (no characters if no time zone exists).\n"
                       "%%  A literal '%' character.\n")
+
+RESTART_TOOLTIP = "To enable / disable you need to restart the game."
+
 localization = {
     "configSelect": {
         "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
@@ -47,7 +50,7 @@ localization = {
                                   "AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "\nFolders that are modified there are not affected.",
         "fps_enableFPSLimiter": "Enable FPS Limiter",
-        "enableFPSLimiter_tooltip": "Attention, to completely turn off or on, you must restart the game.",
+        "fps_enableFPSLimiter_tooltip": RESTART_TOOLTIP,
         "fps_maxFrameRate": "Maximum Frame Rate",
         "removeShadowInPrebattle": "Remove the blackout timer at the beginning of the battle",
         "smallDoubleCarousel": "Use small icons in the tank carousel.",
@@ -60,7 +63,7 @@ localization = {
         "hide_dog_tags": "Disable display of tokens.",
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
-                                           "The parameter will replace all voiceovers of bloggers, "
+                                           "The parameter will replace all voiceover of bloggers, "
                                            "Chuck Norris and so on with the standard / from the voiceover mod. ",
         "disable_score_sound": "Disable score change sound",
         "premium_time": "Display exact premium time.",
@@ -80,7 +83,9 @@ localization = {
                                     "battle on another tank, the crew will be returned to the tank automatically.",
         "disable_stun_sound": "Remove stun sound",
         "hide_main_chat_in_hangar": "Disable general chat in the hangar",
-        "hide_main_chat_in_hangar_tooltip": "To enable / disable you need to restart the game."
+        "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
+        "hide_button_counters_on_top_panel": "Disable tooltips on buttons in the hangar header",
+        "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",

@@ -7,6 +7,7 @@ from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
+from gui.Scaleform.daapi.view.meta.LobbyHeaderMeta import LobbyHeaderMeta
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
@@ -101,3 +102,11 @@ def handleLazyChannelCtlInited(base, entry, event):
             ctx.clear()
             return
     return base(entry, event)
+
+
+# hide button counters in lobby header
+@overrideMethod(LobbyHeaderMeta, "as_removeButtonCounterS")
+@overrideMethod(LobbyHeaderMeta, "as_setButtonCounterS")
+def buttonCounterS(base, *args, **kwargs):
+    if not settings.main[MAIN.HIDE_BTN_COUNTERS]:
+        return base(*args, **kwargs)
