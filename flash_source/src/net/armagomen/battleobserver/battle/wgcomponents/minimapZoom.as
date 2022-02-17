@@ -1,20 +1,14 @@
 package net.armagomen.battleobserver.battle.wgcomponents
 {
-	import flash.events.KeyboardEvent;
-	import flash.ui.Keyboard;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.minimap.Minimap;
 	
 	public class minimapZoom
 	{
-		private var oldSize:Number    = 2.0;
-		private var oldScale:Number   = 1.0;
-		private var minimap:Minimap   = null;
-		private var page:*            = null;
-		private var isKeyDown:Boolean = false;
-		
-		private static const CTRL:Array = [Keyboard.CONTROL, Keyboard.COMMAND, 163];
-		private static const MINUS_ONE:int = -1;
+		private var oldSize:Number  = 2.0;
+		private var oldScale:Number = 1.0;
+		private var minimap:Minimap = null;
+		private var page:*          = null;
 		
 		public function minimapZoom(page:*)
 		{
@@ -23,29 +17,9 @@ package net.armagomen.battleobserver.battle.wgcomponents
 			this.minimap = this.page.getComponent(BATTLE_VIEW_ALIASES.MINIMAP);
 			this.page.addChild(this.minimap);
 			App.graphicsOptimizationMgr.unregister(this.minimap);
-			App.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.keyDownHandler, false, 1, true);
-			App.stage.addEventListener(KeyboardEvent.KEY_UP, this.keyUpHandler, false, 1, true);
 		}
 		
-		private function keyDownHandler(event:KeyboardEvent):void
-		{
-			if (!this.isKeyDown && CTRL.indexOf(event.keyCode) > MINUS_ONE)
-			{
-				this.isKeyDown = true;
-				this.minimapCentered(this.isKeyDown);
-			}
-		}
-		
-		private function keyUpHandler(event:KeyboardEvent):void
-		{
-			if (this.isKeyDown && CTRL.indexOf(event.keyCode) > MINUS_ONE)
-			{
-				this.isKeyDown = false;
-				this.minimapCentered(this.isKeyDown);
-			}
-		}
-		
-		private function minimapCentered(enabled:Boolean):void
+		public function minimapCentered(enabled:Boolean):void
 		{
 			if (this.minimap)
 			{

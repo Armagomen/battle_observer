@@ -1,9 +1,10 @@
 from importlib import import_module
 
+from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
 from armagomen.battle_observer.components.statistics.wrt_data import WTRStatisticsAndIcons
 from armagomen.battle_observer.core import view_settings
-from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, MINIMAP, GLOBAL, STATISTICS, VEHICLE_TYPES
+from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES
 from armagomen.utils.common import logError, logWarning, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -38,12 +39,13 @@ def getContextMenuHandlers():
 
 class ObserverBusinessHandler(PackageBusinessHandler):
     __slots__ = ('_viewAliases', '_statistics', '_icons', '_listeners', '_scope', '_app', '_appNS',
-                 '_statisticsComponent')
+                 '_statisticsComponent', 'minimapPlugin')
 
     def __init__(self):
         self._viewAliases = view_settings.getViewAliases()
         self._statistics = view_settings.isStatisticEnabled()
         self._icons = view_settings.isIconsEnabled()
+        self.minimapPlugin = None
         if self._icons or self._statistics:
             self._statisticsComponent = WTRStatisticsAndIcons()
         listeners = [(alias, self.eventListener) for alias in self._viewAliases]
@@ -51,10 +53,14 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def init(self):
         super(ObserverBusinessHandler, self).init()
+        self.minimapPlugin = MinimapZoomPlugin()
         _addListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
 
     def fini(self):
         _removeListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
+        if self.minimapPlugin:
+            self.minimapPlugin.fini()
+            self.minimapPlugin = None
         super(ObserverBusinessHandler, self).fini()
 
     def eventListener(self, event):
@@ -79,14 +85,14 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         view.flashObject.as_observerCreateComponents(view_settings.getComponents())
         view.flashObject.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         view.flashObject.as_observerHideWgComponents(view_settings.getHiddenWGComponents())
-        minimapZoom = view_settings.cfg.minimap[GLOBAL.ENABLED] and view_settings.cfg.minimap[MINIMAP.ZOOM]
-        if minimapZoom and not view_settings.cfg.xvmInstalled and view_settings.notEpicBattle:
-            view.flashObject.as_createMimimapCentered()
+        if self.minimapPlugin and self.minimapPlugin.enabled:
+            self.minimapPlugin.init(view.flashObject)
         if self._icons or self._statistics:
             cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
             fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
             typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
             iconMultiplier = view_settings.cfg.statistics[STATISTICS.ICON_BLACKOUT]
             self._statisticsComponent.updateAllItems()
-            view.flashObject.as_createStatisticComponent(self._statistics, self._icons, self._statisticsComponent.cache,
+            view.flashObject.as_createStatisticComponent(self._statistics, self._icons,
+                                                         self._statisticsComponent.cache,
                                                          cutWidth, fullWidth, typeColors, iconMultiplier)

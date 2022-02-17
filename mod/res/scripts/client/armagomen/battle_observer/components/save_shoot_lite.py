@@ -49,8 +49,7 @@ class SaveShootLite(object):
 
     def onEnterBattlePage(self):
         if self.enabled:
-            keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey())
-            keysParser.onKeyPressed += self.keyEvent
+            keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey(), self.keyEvent)
             app = ServicesLocator.appLoader.getApp()
             if app is None:
                 return
@@ -61,9 +60,7 @@ class SaveShootLite(object):
 
     def onExitBattlePage(self):
         self.unlockShoot = False
-        if self.enabled:
-            keysParser.onKeyPressed -= self.keyEvent
-            self.vehicleErrorComponent = None
+        self.vehicleErrorComponent = None
 
     def is_targetAllyOrDeath(self, avatar):
         if avatar.target is not None and avatar.target.__class__.__name__ == SAVE_SHOOT.VEHICLE:
@@ -73,9 +70,8 @@ class SaveShootLite(object):
                 return self.destroyedBlock
         return False
 
-    def keyEvent(self, keyName, isKeyDown):
-        if keyName == SAVE_SHOOT.HOT_KEY:
-            self.unlockShoot = isKeyDown
+    def keyEvent(self, isKeyDown):
+        self.unlockShoot = isKeyDown
 
 
 save_shoot_lite = SaveShootLite()

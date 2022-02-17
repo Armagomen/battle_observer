@@ -23,18 +23,19 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.hpBarsEnable = self.settings[PANELS.BARS_ENABLED]
         self.damagesEnable = self.settings[PANELS.DAMAGES_ENABLED]
         self.damagesText = self.settings[PANELS.DAMAGES_TEMPLATE]
-        keysParser.onKeyPressed += self.onKeyPressed
         if self.hpBarsEnable:
             if not self.settings[PANELS.BAR_CLASS_COLOR]:
                 self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
-                keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY])
+                keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY],
+                                             self.onKeyPressedBars)
         if not self.damagesEnable:
             return
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
-            keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, self.settings[PANELS.DAMAGES_HOT_KEY])
+            keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, self.settings[PANELS.DAMAGES_HOT_KEY],
+                                         self.onKeyPressedDamages)
 
     def onExitBattlePage(self):
         pass
@@ -44,7 +45,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def _dispose(self):
         self.flashObject.as_clearStorage()
-        keysParser.onKeyPressed -= self.onKeyPressed
         if self.hpBarsEnable and not self.settings[PANELS.BAR_CLASS_COLOR]:
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
         if self.damagesEnable:
@@ -56,11 +56,11 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def clear(self):
         self.playersDamage.clear()
 
-    def onKeyPressed(self, name, isKeyDown):
-        if name is PANELS.BAR_HOT_KEY and self.hpBarsEnable:
-            self.as_setHealthBarsVisibleS(isKeyDown)
-        elif name is PANELS.DAMAGES_HOT_KEY and self.damagesEnable:
-            self.as_setPlayersDamageVisibleS(isKeyDown)
+    def onKeyPressedBars(self, isKeyDown):
+        self.as_setHealthBarsVisibleS(isKeyDown)
+
+    def onKeyPressedDamages(self, isKeyDown):
+        self.as_setPlayersDamageVisibleS(isKeyDown)
 
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:

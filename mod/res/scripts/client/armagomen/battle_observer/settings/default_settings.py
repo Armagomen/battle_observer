@@ -497,6 +497,7 @@ class DefaultSettings(object):
             MINIMAP.VIEW_RADIUS: False,
             MINIMAP.YAW: True,
             MINIMAP.ZOOM: False,
+            MINIMAP.ZOOM_KEY: [[29]]
         }
         self.shadow_settings = {
             GLOBAL.COLOR: COLORS.BLACK,

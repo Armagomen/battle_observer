@@ -55,7 +55,7 @@ package net.armagomen.battleobserver
 						this.addChild(teamHealthUI);
 						break;
 					case "Observer_DamageLog_UI": 
-						var damageLog:DamageLogsUI = new DamageLogsUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL));
+						var damageLog:DamageLogsUI = new DamageLogsUI(this);
 						this.registerComponent(damageLog, alias);
 						this.addChild(damageLog);
 						break;
@@ -123,9 +123,7 @@ package net.armagomen.battleobserver
 						DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);
 						break;
 					}
-					if (alias != "Observer_BattleLoading_UI"){
-						this.showComponent(alias, false);
-					}
+					this.showComponent(alias, false);
 				}
 			}
 			
@@ -148,6 +146,13 @@ package net.armagomen.battleobserver
 			BaseBattlePage.prototype.as_createMimimapCentered = function():void
 			{
 				this.mapZoom = new minimapZoom(this);
+			}
+			
+			BaseBattlePage.prototype.as_zoomMimimapCentered = function(enable:Boolean):void
+			{
+				if (this.mapZoom){
+					this.mapZoom.minimapCentered(enable);
+				}
 			}
 			
 			BaseBattlePage.prototype.as_observerHideWgComponents = function(components:Array):void

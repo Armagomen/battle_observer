@@ -341,11 +341,12 @@ localization = {
     },
     "minimap": {
         "header": "MINIMAP",
-        "zoom": "Enable minimap centered on Ctrl key down.",
+        "zoom": "Enable minimap centered on key down.",
         "permanentMinimapDeath": "Always show the destroyed on the map",
         "showDeathNames": "Display the names of destroyed tanks",
         "real_view_radius": "Remove the limitation of the circle of vision 445m",
-        "yaw_limits": "Show Hover Angles on all vehicles where they are"
+        "yaw_limits": "Show Hover Angles on all vehicles where they are",
+        "zoom_hotkey": "Hot key for zoom."
     },
     "shadow_settings": {
         "header": "SETTING SHADOWS TEXT (Glow)",

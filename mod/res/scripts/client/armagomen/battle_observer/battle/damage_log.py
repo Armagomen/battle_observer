@@ -58,13 +58,13 @@ class DamageLog(DamageLogsMeta):
             extended_log = self.settings.log_damage_extended[GLOBAL.ENABLED] or self.settings.log_input_extended[
                 GLOBAL.ENABLED]
             if extended_log:
-                keysParser.onKeyPressed += self.keyEvent
                 arena = self._arenaVisitor.getArenaSubscription()
                 if arena is not None:
                     arena.onVehicleAdded += self.onVehicleAddUpdate
                     arena.onVehicleUpdated += self.onVehicleAddUpdate
                     arena.onVehicleKilled += self.onVehicleKilled
-                keysParser.registerComponent(DAMAGE_LOG.HOT_KEY, self.settings.log_global[DAMAGE_LOG.HOT_KEY])
+                keysParser.registerComponent(DAMAGE_LOG.HOT_KEY, self.settings.log_global[DAMAGE_LOG.HOT_KEY],
+                                             self.onLogsAltMode)
             if self.settings.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
                 if feedback:
@@ -79,7 +79,6 @@ class DamageLog(DamageLogsMeta):
             extended_log = self.settings.log_damage_extended[GLOBAL.ENABLED] or self.settings.log_input_extended[
                 GLOBAL.ENABLED]
             if extended_log:
-                keysParser.onKeyPressed -= self.keyEvent
                 arena = self._arenaVisitor.getArenaSubscription()
                 if arena is not None:
                     arena.onVehicleAdded -= self.onVehicleAddUpdate
@@ -101,13 +100,12 @@ class DamageLog(DamageLogsMeta):
             DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, float(max_health))
         self.top_log[DAMAGE_LOG.AVG_DAMAGE] = int(DAMAGE_LOG.AVG_DAMAGE_DATA)
 
-    def keyEvent(self, key, isKeyDown):
+    def onLogsAltMode(self, isKeyDown):
         """hot key event"""
-        if key == DAMAGE_LOG.HOT_KEY:
-            if self.settings.log_damage_extended[GLOBAL.ENABLED]:
-                self.updateExtendedLog(self.damage_log, self.settings.log_damage_extended, altMode=isKeyDown)
-            if self.settings.log_input_extended[GLOBAL.ENABLED]:
-                self.updateExtendedLog(self.input_log, self.settings.log_input_extended, altMode=isKeyDown)
+        if self.settings.log_damage_extended[GLOBAL.ENABLED]:
+            self.updateExtendedLog(self.damage_log, self.settings.log_damage_extended, altMode=isKeyDown)
+        if self.settings.log_input_extended[GLOBAL.ENABLED]:
+            self.updateExtendedLog(self.input_log, self.settings.log_input_extended, altMode=isKeyDown)
 
     def __onPlayerFeedbackReceived(self, events, *args, **kwargs):
         """wg Feedback event parser"""

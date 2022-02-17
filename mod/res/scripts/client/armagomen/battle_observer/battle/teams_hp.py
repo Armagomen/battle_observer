@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GAME, GRAPHICS
 from armagomen.battle_observer.core import keysParser
-from armagomen.constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
+from armagomen.constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
 from gui.battle_control.arena_info.vos_collections import FragCorrelationSortKey
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
@@ -53,16 +53,12 @@ class CorrelationMarkers(object):
             result = GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE
         self.as_markersS(*result)
 
-    def keyEvent(self, key, isKeyDown):
-        if key == MARKERS.HOT_KEY and isKeyDown:
+    def keyEvent(self, isKeyDown):
+        if isKeyDown:
             self.settingsCore.applySettings({GAME.SHOW_VEHICLES_COUNTER: not self.enabled})
 
     def populate(self):
-        keysParser.registerComponent(MARKERS.HOT_KEY, self.settings[MARKERS.HOT_KEY])
-        keysParser.onKeyPressed += self.keyEvent
-
-    def dispose(self):
-        keysParser.onKeyPressed -= self.keyEvent
+        keysParser.registerComponent(MARKERS.HOT_KEY, self.settings[MARKERS.HOT_KEY], self.keyEvent)
 
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:
@@ -98,8 +94,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def _dispose(self):
         self.settingsCore.onSettingsApplied -= self.onSettingsApplied
-        if self.markers is not None:
-            self.markers.dispose()
         super(TeamsHP, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):

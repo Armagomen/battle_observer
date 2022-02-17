@@ -1,12 +1,33 @@
 from math import degrees
 
-from armagomen.battle_observer.core import settings, view_settings
+from armagomen.battle_observer.core import settings, view_settings, keysParser
 from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod
 from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
+from gui.battle_control import avatar_getter
+
+
+class MinimapZoomPlugin(object):
+
+    def __init__(self):
+        self.__battleView_as = None
+        self.enabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not settings.xvmInstalled
+
+    def init(self, battleView):
+        self.__battleView_as = battleView
+        self.__battleView_as.as_createMimimapCentered()
+        keysParser.registerComponent(MINIMAP.ZOOM_KEY, view_settings.cfg.minimap[MINIMAP.ZOOM_KEY], self.onKeyPressed)
+
+    def fini(self):
+        self.__battleView_as = None
+
+    def onKeyPressed(self, isKeyDown):
+        """hot key event"""
+        self.__battleView_as.as_zoomMimimapCentered(isKeyDown)
+        avatar_getter.setForcedGuiControlMode(isKeyDown, enableAiming=not isKeyDown, cursorVisible=isKeyDown)
 
 
 class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):

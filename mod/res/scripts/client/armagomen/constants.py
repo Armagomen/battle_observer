@@ -146,9 +146,9 @@ MAIN_GUN = namedtuple("MAIN_GUN", (
     "mainGun")
 
 MINIMAP = namedtuple("MINIMAP", (
-    "NAME", "DEATH_PERMANENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW"))(
+    "NAME", "DEATH_PERMANENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW", "ZOOM_KEY"))(
     "minimap", "permanentMinimapDeath", "showDeathNames", "zoom", "real_view_radius",
-    "yaw_limits")
+    "yaw_limits", "zoom_hotkey")
 
 HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "WIDTH", "DIFF", "ALIVE", "STYLES"))(
     "hp_bars", "style", "barsWidth", "differenceHP", "showAliveCount",
