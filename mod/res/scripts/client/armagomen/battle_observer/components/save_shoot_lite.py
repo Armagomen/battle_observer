@@ -1,6 +1,7 @@
 from Avatar import PlayerAvatar
 from PlayerEvents import g_playerEvents
-from armagomen.battle_observer.core import settings, keysParser
+from armagomen.battle_observer.core import settings
+from armagomen.utils.keys_listener import g_keysListener
 from armagomen.constants import GLOBAL, SAVE_SHOOT, MAIN
 from armagomen.utils.common import overrideMethod, isReplay
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
@@ -49,7 +50,7 @@ class SaveShootLite(object):
 
     def onEnterBattlePage(self):
         if self.enabled:
-            keysParser.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey(), self.keyEvent)
+            g_keysListener.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey(), self.keyEvent)
             app = ServicesLocator.appLoader.getApp()
             if app is None:
                 return

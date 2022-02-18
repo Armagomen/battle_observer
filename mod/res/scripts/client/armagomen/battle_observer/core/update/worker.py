@@ -6,8 +6,8 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.update.i18n import getI18n
-from armagomen.constants import GLOBAL, URLS, MESSAGES, getRandomBigLogo
-from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse, getUpdatePath, writeJsonFile
+from armagomen.constants import GLOBAL, URLS, MESSAGES, getRandomLogo
+from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse, getUpdatePath
 from armagomen.utils.dialogs import UpdateDialogs
 from armagomen.utils.events import g_events
 from async import async, await
@@ -36,7 +36,7 @@ class DownloadThread(object):
         if os.path.isfile(path):
             logInfo('update is already downloaded to {}'.format(path))
             self.extractZipArchive(path)
-            self.dialogs.showUpdateFinished(getRandomBigLogo() + self.i18n['titleOK'],
+            self.dialogs.showUpdateFinished(getRandomLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
         else:
             url = self.URLS['last']
@@ -72,7 +72,7 @@ class DownloadThread(object):
                 zipArchive.write(data)
             logInfo('downloading update finished to: {}'.format(path))
             self.extractZipArchive(path)
-            self.dialogs.showUpdateFinished(getRandomBigLogo() + self.i18n['titleOK'],
+            self.dialogs.showUpdateFinished(getRandomLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
         else:
             self.downloadError(_url)
@@ -132,7 +132,7 @@ class UpdateMain(DownloadThread):
     @async
     def showDialog(self, view):
         self.dialogs.setView(view)
-        title = getRandomBigLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', __version__))
+        title = getRandomLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', __version__))
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, gitMessage)
         result = yield await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))

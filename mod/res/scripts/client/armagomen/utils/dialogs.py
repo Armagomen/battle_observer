@@ -2,7 +2,7 @@
 from collections import namedtuple
 
 from armagomen.constants import GLOBAL
-from armagomen.constants import getRandomBigLogo
+from armagomen.constants import getRandomLogo
 from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
 from async import async, await, AsyncReturn
 from gui.impl.dialogs import dialogs
@@ -30,7 +30,7 @@ class UpdateDialogs(DialogBase):
     @async
     def showUpdateError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle(getRandomBigLogo() + "\nERROR DOWNLOAD UPDATE")
+        builder.setFormattedTitle(getRandomLogo() + "\nERROR DOWNLOAD UPDATE")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
@@ -67,7 +67,7 @@ class LoadingErrorDialog(DialogBase):
     @async
     def showLoadingError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle(getRandomBigLogo())
+        builder.setFormattedTitle(getRandomLogo())
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
         result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))

@@ -1,16 +1,19 @@
+from collections import namedtuple
+
 from PlayerEvents import g_playerEvents
+from armagomen.battle_observer.settings.default_settings import settings
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT
 from gui import InputHandler
 
 USE_KEY_PAIRS = "useKeyPairs"
 
+KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
 
-class HotKeysParser(object):
 
-    def __init__(self, config):
-        self.config = config
+class KeysListener(object):
+
+    def __init__(self):
         self.keysMap = dict()
-        self.keysFunk = dict()
         self.pressedKeys = set()
         self.usableKeys = set()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
@@ -18,13 +21,11 @@ class HotKeysParser(object):
 
     def registerComponent(self, keyName, keyList, keyFunction):
         normalizedKey = self.normalizeKey(keyList)
-        self.keysMap[keyName] = normalizedKey
-        self.keysFunk[keyName] = keyFunction
+        self.keysMap[keyName] = KeysData(normalizedKey, keyFunction)
         self.usableKeys.update(normalizedKey)
 
     def clear(self):
         self.keysMap.clear()
-        self.keysFunk.clear()
         self.usableKeys.clear()
         self.pressedKeys.clear()
 
@@ -40,10 +41,10 @@ class HotKeysParser(object):
     def onKeyUp(self, event):
         if event.key not in self.usableKeys or event.key not in self.pressedKeys:
             return
-        for keyName, keys in self.keysMap.iteritems():
-            if self.pressedKeys.issuperset(keys):
-                self.keysFunk[keyName](False)
-        if self.config.main[USE_KEY_PAIRS]:
+        for keyName, keysData in self.keysMap.iteritems():
+            if self.pressedKeys.issuperset(keysData.keys):
+                keysData.keyFunction(False)
+        if settings.main[USE_KEY_PAIRS]:
             if event.key in KEY_ALIAS_CONTROL:
                 self.pressedKeys.difference_update(KEY_ALIAS_CONTROL)
             elif event.key in KEY_ALIAS_ALT:
@@ -55,7 +56,7 @@ class HotKeysParser(object):
     def onKeyDown(self, event):
         if event.isModifierDown() or event.key not in self.usableKeys or event.key in self.pressedKeys:
             return
-        if self.config.main[USE_KEY_PAIRS]:
+        if settings.main[USE_KEY_PAIRS]:
             if event.key in KEY_ALIAS_CONTROL:
                 self.pressedKeys.update(KEY_ALIAS_CONTROL)
             elif event.key in KEY_ALIAS_ALT:
@@ -63,9 +64,9 @@ class HotKeysParser(object):
             elif event.key in KEY_ALIAS_SHIFT:
                 self.pressedKeys.update(KEY_ALIAS_SHIFT)
         self.pressedKeys.add(event.key)
-        for keyName, keys in self.keysMap.iteritems():
-            if self.pressedKeys.issuperset(keys):
-                self.keysFunk[keyName](True)
+        for keyName, keysData in self.keysMap.iteritems():
+            if self.pressedKeys.issuperset(keysData.keys):
+                keysData.keyFunction(True)
 
     @staticmethod
     def normalizeKey(keyList):
@@ -76,3 +77,6 @@ class HotKeysParser(object):
             else:
                 keys.add(key)
         return keys
+
+
+g_keysListener = KeysListener()

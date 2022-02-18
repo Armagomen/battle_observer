@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen.battle_observer.core import keysParser
+from armagomen.utils.keys_listener import g_keysListener
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
 from armagomen.utils.common import callback, logWarning, percentToRGB
@@ -63,8 +63,8 @@ class DamageLog(DamageLogsMeta):
                     arena.onVehicleAdded += self.onVehicleAddUpdate
                     arena.onVehicleUpdated += self.onVehicleAddUpdate
                     arena.onVehicleKilled += self.onVehicleKilled
-                keysParser.registerComponent(DAMAGE_LOG.HOT_KEY, self.settings.log_global[DAMAGE_LOG.HOT_KEY],
-                                             self.onLogsAltMode)
+                g_keysListener.registerComponent(DAMAGE_LOG.HOT_KEY, self.settings.log_global[DAMAGE_LOG.HOT_KEY],
+                                                 self.onLogsAltMode)
             if self.settings.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
                 if feedback:
@@ -107,28 +107,30 @@ class DamageLog(DamageLogsMeta):
         if self.settings.log_input_extended[GLOBAL.ENABLED]:
             self.updateExtendedLog(self.input_log, self.settings.log_input_extended, altMode=isKeyDown)
 
-    def __onPlayerFeedbackReceived(self, events, *args, **kwargs):
+    def parseEvent(self, event):
         """wg Feedback event parser"""
+        e_type = event.getType()
+        extra = event.getExtra()
+        data = 0
+        if e_type == FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY:
+            data += event.getCount()
+        elif e_type in DAMAGE_LOG.EXTRA_WITH_DAMAGE:
+            data += int(extra.getDamage())
+        if e_type in DAMAGE_LOG.TOP_MACROS_NAME:
+            if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
+                self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
+                self.top_log[DAMAGE_LOG.ASSIST_STUN] = GLOBAL.ZERO
+            self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += data
+            self.updateTopLog()
+        if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
+            log_dict, settings = self.getLogDictAndSettings(e_type)
+            self.addToExtendedLog(log_dict, settings, event.getTargetID(),
+                                  extra.getAttackReasonID(), data, extra.getShellType(), extra.isShellGold())
+
+    def __onPlayerFeedbackReceived(self, events):
+        """shared.feedback player events"""
         for event in events:
-            e_type = event.getType()
-            extra = event.getExtra()
-            data = 0
-            if e_type == FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY:
-                data += event.getCount()
-            elif e_type in DAMAGE_LOG.TOP_LOG_ASSIST or e_type in DAMAGE_LOG.EXTENDED_DAMAGE:
-                data += int(extra.getDamage())
-            elif e_type == FEEDBACK_EVENT_ID.DESTRUCTIBLE_DAMAGED:
-                data += int(extra)
-            if e_type in DAMAGE_LOG.TOP_MACROS_NAME:
-                if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
-                    self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
-                    self.top_log[DAMAGE_LOG.ASSIST_STUN] = GLOBAL.ZERO
-                self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += data
-                self.updateTopLog()
-            if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
-                log_dict, settings = self.getLogDictAndSettings(e_type)
-                self.addToExtendedLog(log_dict, settings, event.getTargetID(),
-                                      extra.getAttackReasonID(), data, extra.getShellType(), extra.isShellGold())
+            self.parseEvent(event)
 
     def updateTopLog(self):
         """update global sums in log"""

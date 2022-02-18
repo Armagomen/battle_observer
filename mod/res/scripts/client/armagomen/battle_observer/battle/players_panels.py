@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen.battle_observer.core import keysParser
+from armagomen.utils.keys_listener import g_keysListener
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.constants import VEHICLE, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import getEntity
@@ -27,15 +27,15 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if not self.settings[PANELS.BAR_CLASS_COLOR]:
                 self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
-                keysParser.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY],
-                                             self.onKeyPressedBars)
+                g_keysListener.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY],
+                                                 self.onKeyPressedBars)
         if not self.damagesEnable:
             return
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
-            keysParser.registerComponent(PANELS.DAMAGES_HOT_KEY, self.settings[PANELS.DAMAGES_HOT_KEY],
-                                         self.onKeyPressedDamages)
+            g_keysListener.registerComponent(PANELS.DAMAGES_HOT_KEY, self.settings[PANELS.DAMAGES_HOT_KEY],
+                                             self.onKeyPressedDamages)
 
     def onExitBattlePage(self):
         pass

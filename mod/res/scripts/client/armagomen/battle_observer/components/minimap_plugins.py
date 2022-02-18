@@ -1,6 +1,7 @@
 from math import degrees
 
-from armagomen.battle_observer.core import settings, view_settings, keysParser
+from armagomen.battle_observer.core import settings, view_settings
+from armagomen.utils.keys_listener import g_keysListener
 from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod
 from constants import VISIBILITY
@@ -19,7 +20,7 @@ class MinimapZoomPlugin(object):
     def init(self, battleView):
         self.__battleView_as = battleView
         self.__battleView_as.as_createMimimapCentered()
-        keysParser.registerComponent(MINIMAP.ZOOM_KEY, view_settings.cfg.minimap[MINIMAP.ZOOM_KEY], self.onKeyPressed)
+        g_keysListener.registerComponent(MINIMAP.ZOOM_KEY, view_settings.cfg.minimap[MINIMAP.ZOOM_KEY], self.onKeyPressed)
 
     def fini(self):
         self.__battleView_as = None

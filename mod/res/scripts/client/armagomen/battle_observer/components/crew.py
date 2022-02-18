@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle, _CurrentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import MAIN, CREW_XP, getRandomBigLogo
+from armagomen.constants import MAIN, CREW_XP, getRandomLogo
 from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
@@ -39,7 +39,7 @@ class CrewProcessor(object):
         if app is not None and app.containerManager is not None:
             view = app.containerManager.getView(WindowLayer.VIEW)
             self.dialog.setView(view)
-        title = getRandomBigLogo() + "\n" + vehicle.userName
+        title = getRandomLogo() + "\n" + vehicle.userName
         message = self.getLocalizedMessage(value, description)
         dialogResult = yield await(self.dialog.showCrewDialog(title, message, vehicle.userName))
         if dialogResult:

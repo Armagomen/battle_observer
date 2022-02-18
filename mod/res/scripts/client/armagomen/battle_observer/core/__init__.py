@@ -13,7 +13,6 @@ else:
     from armagomen.battle_observer.settings.default_settings import settings
     from armagomen.battle_observer.core.battle.settings import ViewSettings
     from armagomen.battle_observer.core.observer_core import ObserverCore
-    from armagomen.utils.keys_parser import HotKeysParser
     from armagomen.battle_observer.components import ComponentsLoader
     from armagomen.battle_observer.core.battle.battle_core import BattleCore
     from armagomen.battle_observer.settings.config_loader import ConfigLoader
@@ -21,7 +20,6 @@ else:
 
     view_settings = ViewSettings(settings)
     m_core = ObserverCore()
-    keysParser = HotKeysParser(settings)
     if m_core.isFileValid:
         componentsLoader = ComponentsLoader()
         componentsLoader.start()
