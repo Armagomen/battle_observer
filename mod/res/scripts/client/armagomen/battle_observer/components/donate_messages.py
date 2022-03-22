@@ -11,16 +11,23 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 if GLOBAL.RU_LOCALIZATION:
     messages = (
-        "<b>Поддержите</b> разработку мода донатом. Спасибо.",
-        "Спасибо за <b>финансовую</b> поддержку.",
-        "Передаем за проезд. :)",
-        "Присоединяйся к нашему клану <a href='event:BOFAN'>[BOFAN]</a>. Никаких обязательств. Вступай и получай "
-        "клановые бонусы (бустеры, камуфляжи, и многое другое)."
+        # "<b>Поддержите</b> разработку мода донатом. Спасибо.",
+        # "Спасибо за <b>финансовую</b> поддержку.",
+        # "Передаем за проезд. :)",
+        # "Присоединяйся к нашему клану <a href='event:BOFAN'>[BOFAN]</a>. Никаких обязательств. Вступай и получай "
+        # "клановые бонусы (бустеры, камуфляжи, и многое другое).",
+        "Привет, вы заметили что мод давно не обновляется, это все потому что я живу в Харькове - Украина, "
+        "и мой город постоянно подвергается обстрелам и бомбардировкам, почти постоянно нахжусь у бомбоубежище, "
+        "ситуация напряженная, денег нет, работы нет, сколько протянем еще не известно, если у кого есть возможность "
+        "помочь финансово мой PayPal armagomen@gmail.com спасибо за понимание.",
     )
 else:
     messages = (
-        "<b>Support</b> the development of the mod with a donation. Thank you.",
-        "Thank you for your <b>financial</b> support."
+        "Hello, you noticed that the mod has not been updated for a long time, this is all because I live in Kharkov"
+        " - Ukraine, and my city is constantly under shelling and bombing, I am almost always at the bomb shelter,"
+        " the situation is tense, there is no money, there is no work, how long we will last is not yet known if"
+        " anyone has the opportunity to help financially my PayPal armagomen@gmail.com thank you for your "
+        "understanding. Glory to Ukraine."
     )
 
 
@@ -45,12 +52,11 @@ class Donate(object):
         return "{logo}<p><font color='#ffff66'>{msg}</font></p>\n" \
                "<p><textformat leading='2'>" \
                "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
-               "{alerts_img} <a href='event:{all}'>DonationAlerts</a>\n" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
-               "</textformat></p>".format(ua=URLS.DONATE_UA_URL, all=URLS.DONATE_EU_URL,
+               "</textformat></p>".format(ua=URLS.DONATE_UA_URL,
                                           patreon=URLS.PATREON_URL, msg=self.lastMessage,
                                           logo=getRandomLogo(big=False), donat_img=IMG.DONAT_UA,
-                                          alerts_img=IMG.DONATIONALERTS, patreon_img=IMG.PATREON)
+                                          patreon_img=IMG.PATREON)
 
     @property
     def userInBOFAN(self):
