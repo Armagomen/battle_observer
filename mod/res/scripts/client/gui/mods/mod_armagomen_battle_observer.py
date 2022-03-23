@@ -1,7 +1,6 @@
-from armagomen.utils.common import urlResponse
+import locale
 
-response = urlResponse("http://ipinfo.io/json")
-if response and 'RU' not in response['country']:
+if locale.getdefaultlocale()[0] != 'ru_RU':
     import logging
 
     from armagomen.battle_observer import init, fini, onConnected, onDisconnected
