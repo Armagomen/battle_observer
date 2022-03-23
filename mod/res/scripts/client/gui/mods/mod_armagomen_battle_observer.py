@@ -1,9 +1,13 @@
-import logging
+from armagomen.utils.common import urlResponse
 
-from armagomen.battle_observer import init, fini, onConnected, onDisconnected
-from helpers.statistics import StatisticsCollector
+response = urlResponse("http://ipinfo.io/json")
+if response and 'RU' not in response['country']:
+    import logging
 
-if callable(init) and callable(fini):
-    logging.disable(logging.ERROR)
+    from armagomen.battle_observer import init, fini, onConnected, onDisconnected
+    from helpers.statistics import StatisticsCollector
 
-StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
+    if callable(init) and callable(fini):
+        logging.disable(logging.ERROR)
+
+    StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
