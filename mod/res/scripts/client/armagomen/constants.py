@@ -38,16 +38,17 @@ def getRandomLogo(big=True):
     return random.choice(LOGO_SMALL)
 
 
-IMG = namedtuple("IMG", "DONAT_UA DONATIONALERTS PATREON")(
+IMG = namedtuple("IMG", "DONAT_UA DONATIONALERTS PATREON PAYPAL")(
     "<img src='img://gui/maps/icons/battle_observer/donatua.png' vspace='-3'>",
     "<img src='img://gui/maps/icons/battle_observer/donationalerts.png' vspace='-3'>",
-    "<img src='img://gui/maps/icons/battle_observer/patreon.png' vspace='-3'>"
+    "<img src='img://gui/maps/icons/battle_observer/patreon.png' vspace='-3'>",
+    "<img src='img://gui/maps/icons/battle_observer/paypal.png' vspace='-3'>"
 )
 
 URLS = namedtuple("URLS", (
     "HOST_NAME",
     "DONATE_UA_URL",
-    "DONATE_EU_URL",
+    "PAYPAL_URL",
     "SUPPORT_URL",
     "UPDATE_GITHUB_API_URL",
     "PATREON_URL",
@@ -55,7 +56,7 @@ URLS = namedtuple("URLS", (
     "DISCORD"
 ))("armagomen.bb-t.ru",
    "https://donatua.com/@armagomen",
-   "https://www.donationalerts.com/r/armagomenvs",
+   "https://www.paypal.com/donate/?hosted_button_id=T5D6TZY9DGXBL",
    "https://discord.gg/NuhuhTN",
    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
    "https://www.patreon.com/armagomen",

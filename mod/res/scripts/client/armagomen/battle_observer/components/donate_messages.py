@@ -19,15 +19,15 @@ if GLOBAL.RU_LOCALIZATION:
         "Привет, вы заметили что мод давно не обновляется, это все потому что я живу в Харькове - Украина, "
         "и мой город постоянно подвергается обстрелам и бомбардировкам, почти постоянно нахжусь у бомбоубежище, "
         "ситуация напряженная, денег нет, работы нет, сколько протянем еще не известно, если у кого есть возможность "
-        "помочь финансово мой <b>PayPal armagomen@gmail.com</b> спасибо за понимание.",
+        "помочь финансово спасибо за понимание.",
     )
 else:
     messages = (
         "Hello, you noticed that the mod has not been updated for a long time, this is all because I live in Kharkov"
         " - Ukraine, and my city is constantly under shelling and bombing, I am almost always at the bomb shelter,"
         " the situation is tense, there is no money, there is no work, how long we will last is not yet known if"
-        " anyone has the opportunity to help financially my <b>PayPal armagomen@gmail.com</b> thank you for your "
-        "understanding. Glory to Ukraine."
+        " anyone has the opportunity to help financially thank you for your "
+        "understanding. Glory to Ukraine.",
     )
 
 
@@ -52,11 +52,12 @@ class Donate(object):
         return "{logo}<p><font color='#ffff66'>{msg}</font></p>\n" \
                "<p><textformat leading='2'>" \
                "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
+               "{paypal_img} <a href='event:{paypal}'>PayPal</a>\n" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
-               "</textformat></p>".format(ua=URLS.DONATE_UA_URL,
+               "</textformat></p>".format(ua=URLS.DONATE_UA_URL, paypal=URLS.PAYPAL_URL,
                                           patreon=URLS.PATREON_URL, msg=messages[GLOBAL.FIRST],
                                           logo=getRandomLogo(big=False), donat_img=IMG.DONAT_UA,
-                                          patreon_img=IMG.PATREON)
+                                          patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
     @property
     def userInBOFAN(self):
@@ -67,9 +68,9 @@ class Donate(object):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=30)
+                self.timeDelta = currentTime + datetime.timedelta(minutes=60)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
-                logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
+                logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
 
 
 donateMessage = Donate()
