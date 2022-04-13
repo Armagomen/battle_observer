@@ -32,7 +32,7 @@ localization = {
         "header": "ВЫБОР НАСТРОЕК из mods/configs/mod_battle_observer",
         "selector": "Выбрать настройки.",
         "donate_button_ua": "DONATE UA - Гривна",
-        "donate_button_eu": "DONATE EUR|USD|RUB",
+        "donate_button_paypal": "DONATE PayPal",
         "donate_button_patreon": "Subscribe on Patreon",
         "discord_button": "Discord сервер мода."
     },

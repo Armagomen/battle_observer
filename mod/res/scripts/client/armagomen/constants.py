@@ -423,7 +423,7 @@ class CONFIG_INTERFACE:
     def __init__(self):
         pass
 
-    DONATE_BUTTONS = ('donate_button_ua', 'donate_button_eu', 'donate_button_patreon', 'discord_button')
+    DONATE_BUTTONS = ('donate_button_ua', 'donate_button_paypal', 'donate_button_patreon', 'discord_button')
     BLOCK_IDS = (
         ANOTHER.CONFIG_SELECT, MAIN.NAME, STATISTICS.NAME, DISPERSION.NAME, CAROUSEL.NAME, EFFECTS.NAME,
         DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
