@@ -326,7 +326,7 @@ class ConfigInterface(CreateElement):
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selector', self.cLoader.configsList, self.newConfig)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
-                       self.createControl(blockID, 'donate_button_eu', URLS.DONATE_EU_URL, 'Button'),
+                       self.createControl(blockID, 'donate_button_paypal', URLS.PAYPAL_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.SUPPORT_URL, 'Button')]
         else:
