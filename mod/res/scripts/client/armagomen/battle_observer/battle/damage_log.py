@@ -127,7 +127,7 @@ class DamageLog(DamageLogsMeta):
             self.addToExtendedLog(log_dict, settings, event.getTargetID(),
                                   extra.getAttackReasonID(), data, extra.getShellType(), extra.isShellGold())
 
-    def __onPlayerFeedbackReceived(self, events):
+    def __onPlayerFeedbackReceived(self, _, events):
         """shared.feedback player events"""
         for event in events:
             self.parseEvent(event)
