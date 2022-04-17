@@ -54,7 +54,7 @@ URLS = namedtuple("URLS", (
     "PATREON_URL",
     "CLAN_ABBREV",
     "DISCORD"
-))("armagomen.bb-t.ru",
+))("http://armagomen-mods.at.ua",
    "https://donatua.com/@armagomen",
    "https://www.paypal.com/donate/?hosted_button_id=T5D6TZY9DGXBL",
    "https://discord.gg/NuhuhTN",
