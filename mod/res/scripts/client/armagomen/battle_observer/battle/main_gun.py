@@ -60,7 +60,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.enemiesHP = enemiesHP
             self.updateMainGun()
 
-    def __onPlayerFeedbackReceived(self, _, events, *a, **kw):
+    def __onPlayerFeedbackReceived(self, events):
         for event in events:
             if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
                 self.damage += int(event.getExtra().getDamage())
