@@ -14,8 +14,8 @@ FILE_NAME = "armagomen.battleObserver_{}.wotmod"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
-SWF = namedtuple("SWF", "BATTLE LOBBY ATTRIBUTE_NAME")(
-    'modBattleObserver.swf', 'modBattleObserverHangar.swf', 'as_observerCreateComponents')
+SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_NAME")(
+    'modBattleObserver.swf', 'modBattleObserverHangar.swf', ("armagomen.battle_observer.battle", ), ("armagomen.battle_observer.lobby", ), 'as_observerCreateComponents')
 
 LOGO_SMALL = (
     "<img src='img://gui/maps/icons/battle_observer/logo/small/logo1.png' width='220' height='22' vspace='10'>",
