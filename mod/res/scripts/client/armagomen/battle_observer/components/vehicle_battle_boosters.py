@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
-from armagomen.utils.common import logInfo
+from armagomen.utils.common import logInfo, logDebug
 from armagomen.utils.events import g_events
 from gui.shared.gui_items.Vehicle import Vehicle
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
@@ -21,6 +21,9 @@ def onVehicleChanged():
         return
     vehicle = g_currentVehicle.item  # type: Vehicle
     if g_currentVehicle.isLocked() or g_currentVehicle.isInBattle():
+        return
+    if not hasattr(vehicle, "battleBoosters") or vehicle.battleBoosters is None:
+        logDebug("No battle boosters available for this vehicle: %s" % vehicle.name)
         return
     for battleBooster in vehicle.battleBoosters.installed.getItems():
         value = battleBooster.inventoryCount > 0
