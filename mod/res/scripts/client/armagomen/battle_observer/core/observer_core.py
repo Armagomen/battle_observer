@@ -15,8 +15,7 @@ from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from constants import ARENA_GUI_TYPE
 
-BATTLE_TYPES_TO_INJECT_PACKAGES = {ARENA_GUI_TYPE.TRAINING,
-                                   ARENA_GUI_TYPE.RANKED,
+BATTLE_TYPES_TO_INJECT_PACKAGES = {ARENA_GUI_TYPE.RANKED,
                                    ARENA_GUI_TYPE.EPIC_RANDOM,
                                    ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
                                    ARENA_GUI_TYPE.SORTIE_2,
