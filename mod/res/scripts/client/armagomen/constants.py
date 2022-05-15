@@ -227,6 +227,9 @@ class DAMAGE_LOG:
     SHELL_ICONS = "shellIcons"
     SHOTS = "shots"
     SPOTTED_TANKS = "spottedTanks"
+    SPG_SHELL_TYPE_NO_STUN = "HIGH_EXPLOSIVE_SPG"
+    SPG_SHELL_TYPE_NO_STUN = "HIGH_EXPLOSIVE_SPG_STUN"
+    SPG_SHELL_TYPES = {SPG_SHELL_TYPE_NO_STUN, SPG_SHELL_TYPE_NO_STUN}
     STUN_ICON = "stunIcon"
     TANK_LEVEL = "TankLevel"
     TANK_NAME = "tankName"

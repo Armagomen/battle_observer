@@ -353,7 +353,7 @@ class DefaultSettings(object):
             ],
             DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
             DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
-                                                               tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST}),
+                                                               SHELL_TYPES_LIST + tuple(DAMAGE_LOG.PREMIUM_SHELLS) + tuple(DAMAGE_LOG.SPG_SHELL_TYPES)}),
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD

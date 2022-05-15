@@ -1,11 +1,23 @@
 from collections import defaultdict
 
-from armagomen.utils.keys_listener import g_keysListener
+from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
-from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
-from armagomen.utils.common import callback, logWarning, percentToRGB
-from constants import ATTACK_REASONS, SHELL_TYPES_LIST
+from armagomen.constants import MAIN, DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
+from armagomen.utils.common import callback, logDebug, logWarning, percentToRGB
+from armagomen.utils.keys_listener import g_keysListener
+from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES, SHELL_TYPES
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
+
+_BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE = {
+    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING: SHELL_TYPES.ARMOR_PIERCING,
+    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING_HE: SHELL_TYPES.ARMOR_PIERCING_HE,
+    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING_CR: SHELL_TYPES.ARMOR_PIERCING_CR,
+    BATTLE_LOG_SHELL_TYPES.HOLLOW_CHARGE: SHELL_TYPES.HOLLOW_CHARGE,
+    BATTLE_LOG_SHELL_TYPES.HE_MODERN: SHELL_TYPES.HIGH_EXPLOSIVE,
+    BATTLE_LOG_SHELL_TYPES.HE_LEGACY_STUN: 'HIGH_EXPLOSIVE_SPG_STUN',
+    BATTLE_LOG_SHELL_TYPES.HE_LEGACY_NO_STUN: 'HIGH_EXPLOSIVE_SPG',
+    BATTLE_LOG_SHELL_TYPES.SMOKE: SHELL_TYPES.SMOKE
+}
 
 
 class DamageLog(DamageLogsMeta):
@@ -171,7 +183,7 @@ class DamageLog(DamageLogsMeta):
                 log_dict[DAMAGE_LOG.KILLS].add(target)
                 self.updateExtendedLog(log_dict, settings)
 
-    def checkShell(self, attack_reason_id, gold, is_dlog, shell_type):
+    def checkShell(self, is_dlog, attack_reason_id, shell_type, gold):
         if is_dlog and attack_reason_id == GLOBAL.ZERO:
             if self._player is not None:
                 shell = self._player.getVehicleDescriptor().shot.shell
@@ -181,19 +193,28 @@ class DamageLog(DamageLogsMeta):
             else:
                 shell_type = DAMAGE_LOG.UNDEFINED
                 shell_icon_name = DAMAGE_LOG.UNDEFINED
-        elif shell_type in DAMAGE_LOG.PREMIUM_SHELLS or shell_type in SHELL_TYPES_LIST:
-            shell_icon_name = shell_type + DAMAGE_LOG.PREMIUM if gold else shell_type
+        elif shell_type is not None and shell_type in _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE:
+            shell_type = _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE[shell_type]
+            shell_icon_name = shell_type
+            if shell_type in DAMAGE_LOG.SPG_SHELL_TYPES:
+                if shell_type == DAMAGE_LOG.SPG_SHELL_TYPE_NO_STUN:
+                    gold = True
+                shell_type = SHELL_TYPES.HIGH_EXPLOSIVE
+            elif gold and shell_type != SHELL_TYPES.ARMOR_PIERCING_HE:
+                shell_icon_name = shell_type + DAMAGE_LOG.PREMIUM
+            if settings.main[MAIN.DEBUG]:
+                logDebug("Shell type: %s, shell icon: %s, gold: %s" % (shell_type, shell_icon_name, gold))
         else:
             shell_type = DAMAGE_LOG.UNDEFINED
             shell_icon_name = DAMAGE_LOG.UNDEFINED
-        return gold, shell_icon_name, shell_type
+        return shell_type, shell_icon_name, gold
 
     def addToExtendedLog(self, log_dict, settings, vehicle_id, attack_reason_id, damage, shell_type, gold):
         """add or update log item"""
         is_dlog = log_dict is self.damage_log
         if vehicle_id not in log_dict[DAMAGE_LOG.SHOTS]:
             log_dict[DAMAGE_LOG.SHOTS].append(vehicle_id)
-        gold, shell_icon_name, shell_type = self.checkShell(attack_reason_id, gold, is_dlog, shell_type)
+        shell_type, shell_icon_name, gold = self.checkShell(is_dlog, attack_reason_id, shell_type, gold)
         vehicle = log_dict.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         info = self._arenaDP.getVehicleInfo(vehicle_id)
         if vehicle:
