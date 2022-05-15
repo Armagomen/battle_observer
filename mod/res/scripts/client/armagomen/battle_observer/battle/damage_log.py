@@ -200,7 +200,7 @@ class DamageLog(DamageLogsMeta):
                 if shell_type == DAMAGE_LOG.SPG_SHELL_TYPE_NO_STUN:
                     gold = True
                 shell_type = SHELL_TYPES.HIGH_EXPLOSIVE
-            elif gold and shell_type != SHELL_TYPES.ARMOR_PIERCING_HE:
+            elif shell_type != SHELL_TYPES.ARMOR_PIERCING_HE and gold:
                 shell_icon_name = shell_type + DAMAGE_LOG.PREMIUM
             if settings.main[MAIN.DEBUG]:
                 logDebug("Shell type: %s, shell icon: %s, gold: %s" % (shell_type, shell_icon_name, gold))
