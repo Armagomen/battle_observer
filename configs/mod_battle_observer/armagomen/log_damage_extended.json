@@ -30,8 +30,8 @@
     "y": 0
   }, 
   "shellColor": {
-    "gold": "#FFD700", 
-    "normal": "#FAFAFA"
+    "normal": "#FAFAFA",
+    "gold": "#FFD700"
   }, 
   "shellIcons": {
     "ARMOR_PIERCING": "", 
@@ -41,6 +41,8 @@
     "ARMOR_PIERCING_PREMIUM": "", 
     "HIGH_EXPLOSIVE": "", 
     "HIGH_EXPLOSIVE_PREMIUM": "", 
+    "HIGH_EXPLOSIVE_SPG": "", 
+    "HIGH_EXPLOSIVE_SPG_STUN": "", 
     "HOLLOW_CHARGE": "", 
     "HOLLOW_CHARGE_PREMIUM": "", 
     "SMOKE": ""

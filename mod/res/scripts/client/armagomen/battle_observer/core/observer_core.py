@@ -2,17 +2,26 @@ import os
 import sys
 
 from armagomen.battle_observer import __version__
-from armagomen.battle_observer.core.battle.settings import BATTLES_RANGE
 from armagomen.battle_observer.core.update.worker import UpdateMain
-from armagomen.constants import FILE_NAME, MESSAGES, MAIN, getRandomLogo
+from armagomen.constants import SWF, FILE_NAME, MESSAGES, MAIN, getRandomLogo
 from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache, cleanupUpdates
 from async import async, await
 from gui.Scaleform.daapi.settings import config as packages
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
+from gui.shared.system_factory import registerScaleformBattlePackages
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
+from constants import ARENA_GUI_TYPE
+
+BATTLE_TYPES_TO_INJECT_PACKAGES = {ARENA_GUI_TYPE.RANKED,
+                                   ARENA_GUI_TYPE.EPIC_RANDOM,
+                                   ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
+                                   ARENA_GUI_TYPE.SORTIE_2,
+                                   ARENA_GUI_TYPE.FORT_BATTLE_2,
+                                   ARENA_GUI_TYPE.TUTORIAL,
+                                   ARENA_GUI_TYPE.EPIC_BATTLE}
 
 
 class ObserverCore(object):
@@ -42,12 +51,10 @@ class ObserverCore(object):
         update.subscribe()
         logInfo("Launched at python " + sys.version)
         logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
-        BATTLE_PACKAGES = packages.BATTLE_PACKAGES_BY_ARENA_TYPE
-        for guiType in BATTLE_PACKAGES:
-            if guiType in BATTLES_RANGE:
-                BATTLE_PACKAGES[guiType] += ("armagomen.battle_observer.battle",)
-        packages.BATTLE_PACKAGES_BY_DEFAULT += ("armagomen.battle_observer.battle",)
-        packages.LOBBY_PACKAGES += ("armagomen.battle_observer.lobby",)
+        for guiType in BATTLE_TYPES_TO_INJECT_PACKAGES:
+            registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
+        packages.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
+        packages.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
 
     def onGUISpaceEntered(self, spaceID):
         if self.isFileValid or spaceID not in (GuiGlobalSpaceID.LOGIN, GuiGlobalSpaceID.LOBBY):

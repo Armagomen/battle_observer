@@ -2,7 +2,7 @@ from importlib import import_module
 
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
-from armagomen.battle_observer.components.statistics.wrt_data import WTRStatisticsAndIcons
+from armagomen.battle_observer.components.statistics.wtr_data import WTRStatisticsAndIcons
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES
 from armagomen.utils.common import logError, logWarning, logInfo
