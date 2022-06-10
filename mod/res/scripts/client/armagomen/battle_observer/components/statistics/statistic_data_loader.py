@@ -1,4 +1,5 @@
 import copy
+import random
 
 import constants
 from armagomen.battle_observer.core import settings
@@ -18,9 +19,9 @@ class StatisticsDataLoader(object):
     URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
-    API_KEY = "ffa0979342d69fe92970571918cc59b6"
+    API_KEY = ("ffa0979342d69fe92970571918cc59b6", "76b3c385f1485e1fee1642c1e287c0ce")
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en".format(
-        url=URL, key=API_KEY, ids="{ids}", fields=FIELDS)
+        url=URL, key=random.choice(API_KEY), ids="{ids}", fields=FIELDS)
 
     def __init__(self):
         self.cache = {}
