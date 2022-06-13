@@ -4,7 +4,7 @@ import random
 import constants
 from armagomen.battle_observer.core import settings
 from armagomen.constants import MAIN
-from armagomen.utils.common import urlResponse, logDebug, logInfo
+from armagomen.utils.common import urlResponse, logDebug, logInfo, logError
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -27,19 +27,20 @@ class StatisticsDataLoader(object):
         self.cache = {}
         self.enabled = region in ["ru", "eu", "com", "asia"] and not settings.xvmInstalled
         if settings.xvmInstalled:
-            logInfo("statistics/icons/minimap module is disabled, XVM is installed")
+            logInfo("StatisticsDataLoader: statistics/icons/minimap module is disabled, XVM is installed")
 
     def request(self, databaseIDS):
         result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS)))
         if result is not None:
             result = result.get("data")
         if settings.main[MAIN.DEBUG]:
-            logDebug("request statistics result: data={}".format(result))
+            logDebug("StatisticsDataLoader: request result: data={}".format(result))
         return result
 
     def setCachedStatisticData(self):
         arenaDP = self.sessionProvider.getArenaDP()
         if arenaDP is None or not self.enabled:
+            logError("StatisticsDataLoader: arenaDP: {}, enabled: {}".format(arenaDP, self.enabled))
             return
         toRequest = []
         for vInfo in arenaDP.getVehiclesInfoIterator():
@@ -47,13 +48,13 @@ class StatisticsDataLoader(object):
                 toRequest.append(vInfo.player.accountDBID)
         if toRequest:
             if settings.main[MAIN.DEBUG]:
-                logDebug("START request statistics data: ids={}, len={} ".format(toRequest, len(toRequest)))
+                logDebug("StatisticsDataLoader: START request data: ids={}, len={} ".format(toRequest, len(toRequest)))
             data = self.request(toRequest)
             if data is not None:
                 for _id, value in data.iteritems():
                     self.cache[int(_id)] = copy.deepcopy(value)
             if settings.main[MAIN.DEBUG]:
-                logDebug("FINISH request statistics data")
+                logDebug("StatisticsDataLoader: FINISH request data")
 
     def getStatisticForUser(self, databaseID):
         return self.cache.get(databaseID)
