@@ -13,9 +13,17 @@ if region == "na":
     region = "com"
 
 
-class StatisticsDataLoader(object):
-    sessionProvider = dependency.descriptor(IBattleSessionProvider)
+def getArenaDP():
+    sessionProvider = dependency.instance(IBattleSessionProvider)
+    if sessionProvider is not None:
+        arenaDP = sessionProvider.getArenaDP()
+        if arenaDP is not None:
+            return arenaDP
+        logError("StatisticsDataLoader getArenaDP: arenaDP is {}".format(arenaDP))
+    logError("StatisticsDataLoader getArenaDP: sessionProvider is {}".format(sessionProvider))
 
+
+class StatisticsDataLoader(object):
     URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
@@ -38,9 +46,8 @@ class StatisticsDataLoader(object):
         return result
 
     def setCachedStatisticData(self):
-        arenaDP = self.sessionProvider.getArenaDP()
+        arenaDP = getArenaDP()
         if arenaDP is None or not self.enabled:
-            logError("StatisticsDataLoader: arenaDP: {}, enabled: {}".format(arenaDP, self.enabled))
             return
         toRequest = []
         for vInfo in arenaDP.getVehiclesInfoIterator():
