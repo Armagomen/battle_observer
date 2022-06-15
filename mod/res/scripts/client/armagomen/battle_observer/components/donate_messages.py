@@ -16,18 +16,14 @@ if GLOBAL.RU_LOCALIZATION:
         # "Передаем за проезд. :)",
         # "Присоединяйся к нашему клану <a href='event:BOFAN'>[BOFAN]</a>. Никаких обязательств. Вступай и получай "
         # "клановые бонусы (бустеры, камуфляжи, и многое другое).",
-        "Привет, вы заметили что мод давно не обновляется, это все потому что я живу в Харькове - Украина, "
-        "и мой город постоянно подвергается обстрелам и бомбардировкам, почти постоянно нахжусь у бомбоубежище, "
-        "ситуация напряженная, денег нет, работы нет, сколько протянем еще не известно, если у кого есть возможность "
-        "помочь финансово спасибо за понимание.",
+        "Доброго вечора ми з України.",
+        "Підтримай розробку мода, 60% від кожного донату піде на допомогу ЗСУ, все буде Україна.",
     )
 else:
     messages = (
-        "Hello, you noticed that the mod has not been updated for a long time, this is all because I live in Kharkov"
-        " - Ukraine, and my city is constantly under shelling and bombing, I am almost always at the bomb shelter,"
-        " the situation is tense, there is no money, there is no work, how long we will last is not yet known if"
-        " anyone has the opportunity to help financially thank you for your "
-        "understanding. Glory to Ukraine.",
+        "Good evening, we are from Ukraine.",
+        "Support the development of fashion, 60% of each donation will go to the aid of the Armed Forces, "
+        "everything will be Ukraine."
     )
 
 
@@ -39,23 +35,23 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
 
     def getRandomMessage(self):
-        if GLOBAL.RU_LOCALIZATION and self.userInBOFAN:
-            message = random.choice(messages[:-1])
-        else:
-            message = random.choice(messages)
+        # if GLOBAL.RU_LOCALIZATION and self.userInBOFAN:
+        #     message = random.choice(messages[:-1])
+        # else:
+        message = random.choice(messages)
         if message is self.lastMessage:
             message = self.getRandomMessage()
         return message
 
     def getDonateMessage(self):
-        # self.lastMessage = self.getRandomMessage()
+        self.lastMessage = self.getRandomMessage()
         return "{logo}<p><font color='#ffff66'>{msg}</font></p>\n" \
                "<p><textformat leading='2'>" \
                "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
                "{paypal_img} <a href='event:{paypal}'>PayPal</a>\n" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, paypal=URLS.PAYPAL_URL,
-                                          patreon=URLS.PATREON_URL, msg=messages[GLOBAL.FIRST],
+                                          patreon=URLS.PATREON_URL, msg=self.lastMessage,
                                           logo=getRandomLogo(big=False), donat_img=IMG.DONAT_UA,
                                           patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
