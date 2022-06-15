@@ -11,38 +11,30 @@ from helpers import getClientLanguage
 
 MOD_NAME = "BATTLE_OBSERVER"
 FILE_NAME = "armagomen.battleObserver_{}.wotmod"
+IMAGE_DIR = "img://gui/maps/icons/battle_observer"
 
 HEADERS = [('User-Agent', MOD_NAME)]
 
 SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_NAME")(
-    'modBattleObserver.swf', 'modBattleObserverHangar.swf', ("armagomen.battle_observer.battle", ), ("armagomen.battle_observer.lobby", ), 'as_observerCreateComponents')
+    'modBattleObserver.swf', 'modBattleObserverHangar.swf', ("armagomen.battle_observer.battle",),
+    ("armagomen.battle_observer.lobby",), 'as_observerCreateComponents')
 
-LOGO_SMALL = (
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo1.png' width='220' height='22' vspace='10'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo2.png' width='220' height='22' vspace='10'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo3.png' width='220' height='22' vspace='10'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/small/logo4.png' width='220' height='22' vspace='10'>",
-)
-
-LOGO_BIG = (
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo1.png' width='500' height='32' vspace='16'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo2.png' width='500' height='32' vspace='16'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo3.png' width='500' height='32' vspace='16'>",
-    "<img src='img://gui/maps/icons/battle_observer/logo/big/logo4.png' width='500' height='32' vspace='16'>",
-)
+LOGO_BIG = "<img src='{}/logo/big/logo%s.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
+LOGO_SMALL = "<img src='{}/logo/small/logo%s.png' width='220' height='22' vspace='10'>".format(IMAGE_DIR)
 
 
 def getRandomLogo(big=True):
+    number = random.choice(range(1, 5))
     if big:
-        return random.choice(LOGO_BIG)
-    return random.choice(LOGO_SMALL)
+        return LOGO_BIG % number
+    return LOGO_SMALL % number
 
 
 IMG = namedtuple("IMG", "DONAT_UA DONATIONALERTS PATREON PAYPAL")(
-    "<img src='img://gui/maps/icons/battle_observer/donatua.png' vspace='-3'>",
-    "<img src='img://gui/maps/icons/battle_observer/donationalerts.png' vspace='-3'>",
-    "<img src='img://gui/maps/icons/battle_observer/patreon.png' vspace='-3'>",
-    "<img src='img://gui/maps/icons/battle_observer/paypal.png' vspace='-3'>"
+    "<img src='{}/donatua.png' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donationalerts.png' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/patreon.png' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/paypal.png' vspace='-3'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
