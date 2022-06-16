@@ -19,15 +19,12 @@ SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_N
     'modBattleObserver.swf', 'modBattleObserverHangar.swf', ("armagomen.battle_observer.battle",),
     ("armagomen.battle_observer.lobby",), 'as_observerCreateComponents')
 
-LOGO_BIG = "<img src='{}/logo/big/logo%s.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
-LOGO_SMALL = "<img src='{}/logo/small/logo%s.png' width='220' height='22' vspace='10'>".format(IMAGE_DIR)
-
 
 def getRandomLogo(big=True):
-    number = random.choice(range(1, 5))
+    number = random.randint(1, 4)
     if big:
-        return LOGO_BIG % number
-    return LOGO_SMALL % number
+        return "<img src='{}/logo/big/logo{}.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR, number)
+    return "<img src='{}/logo/small/logo{}.png' width='220' height='22' vspace='10'>".format(IMAGE_DIR, number)
 
 
 IMG = namedtuple("IMG", "DONAT_UA DONATIONALERTS PATREON PAYPAL")(
