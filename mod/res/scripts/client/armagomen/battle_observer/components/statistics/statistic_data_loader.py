@@ -5,22 +5,10 @@ import constants
 from armagomen.battle_observer.core import settings
 from armagomen.constants import MAIN
 from armagomen.utils.common import urlResponse, logDebug, logInfo, logError
-from helpers import dependency
-from skeletons.gui.battle_session import IBattleSessionProvider
 
 region = constants.AUTH_REALM.lower()
 if region == "na":
     region = "com"
-
-
-def getArenaDP():
-    sessionProvider = dependency.instance(IBattleSessionProvider)
-    if sessionProvider is not None:
-        arenaDP = sessionProvider.getArenaDP()
-        if arenaDP is not None:
-            return arenaDP
-        logError("StatisticsDataLoader getArenaDP: arenaDP is {}".format(arenaDP))
-    logError("StatisticsDataLoader getArenaDP: sessionProvider is {}".format(sessionProvider))
 
 
 class StatisticsDataLoader(object):
@@ -33,7 +21,7 @@ class StatisticsDataLoader(object):
 
     def __init__(self):
         self.cache = {}
-        self.enabled = region in ["ru", "eu", "com", "asia"] and not settings.xvmInstalled
+        self.enabled = region in ["ru", "eu", "com", "asia"]
         if settings.xvmInstalled:
             logInfo("StatisticsDataLoader: statistics/icons/minimap module is disabled, XVM is installed")
 
@@ -45,14 +33,12 @@ class StatisticsDataLoader(object):
             logDebug("StatisticsDataLoader: request result: data={}".format(result))
         return result
 
-    def setCachedStatisticData(self):
-        arenaDP = getArenaDP()
-        if arenaDP is None or not self.enabled:
+    def setCachedStatisticData(self, arenaDP):
+        if not self.enabled:
             return
-        toRequest = []
-        for vInfo in arenaDP.getVehiclesInfoIterator():
-            if vInfo.player.accountDBID and vInfo.player.accountDBID not in self.cache:
-                toRequest.append(vInfo.player.accountDBID)
+        if arenaDP is None:
+            return logError("StatisticsDataLoader: arenaDP is None")
+        toRequest = [vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator()]
         if toRequest:
             if settings.main[MAIN.DEBUG]:
                 logDebug("StatisticsDataLoader: START request data: ids={}, len={} ".format(toRequest, len(toRequest)))

@@ -61,6 +61,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if self.minimapPlugin:
             self.minimapPlugin.fini()
             self.minimapPlugin = None
+        if self._statistics:
+            statisticLoader.clear()
         super(ObserverBusinessHandler, self).fini()
 
     def eventListener(self, event):
@@ -70,7 +72,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def onAppInitializing(self, event):
         if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
             if self._statistics:
-                statisticLoader.setCachedStatisticData()
+                statisticLoader.setCachedStatisticData(view_settings.sessionProvider.getArenaDP())
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 
@@ -85,7 +87,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         view.flashObject.as_observerCreateComponents(view_settings.getComponents())
         view.flashObject.as_observerUpdatePrebattleTimer(view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         view.flashObject.as_observerHideWgComponents(view_settings.getHiddenWGComponents())
-        if self.minimapPlugin and self.minimapPlugin.enabled:
+        if self.minimapPlugin is not None and self.minimapPlugin.enabled:
             self.minimapPlugin.init(view.flashObject)
         if self._icons or self._statistics:
             cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
