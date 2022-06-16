@@ -3,7 +3,7 @@ from math import log, ceil
 
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.constants import DISPERSION, GLOBAL, POSTMORTEM, DISPERSION_TIME
-from armagomen.utils.common import logInfo
+from armagomen.utils.common import logDebug
 from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
 
@@ -47,7 +47,7 @@ class DispersionTimer(DispersionTimerMeta):
         if self.min_angle is None or self.min_angle > dispersionAngle:
             self.min_angle = dispersionAngle
             if self.isDebug:
-                logInfo("DispersionTimer - renew min dispersion angle %s" % self.min_angle)
+                logDebug("DispersionTimer - renew min dispersion angle %s" % self.min_angle)
         timing = round(aimingTime, GLOBAL.TWO) * log(dispersionAngle / self.min_angle)
         if self.timing != timing:
             self.macro[DISPERSION_TIME.TIMER] = timing
