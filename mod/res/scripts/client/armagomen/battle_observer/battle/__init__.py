@@ -12,6 +12,7 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addL
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 from gui.shared.events import AppLifeCycleEvent
+from helpers.func_utils import callback
 
 
 def getViewSettings():
@@ -78,6 +79,18 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 
+    def loadStatisticView(self, view):
+        if self._statistics and not statisticLoader.loaded and statisticLoader.enabled:
+            return callback(0.1, self, "loadStatisticView", view)
+        cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
+        fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
+        typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
+        iconMultiplier = view_settings.cfg.statistics[STATISTICS.ICON_BLACKOUT]
+        self._statisticsComponent.updateAllItems(self._arenaDP)
+        view.flashObject.as_createStatisticComponent(self._statistics, self._icons,
+                                                     self._statisticsComponent.cache,
+                                                     cutWidth, fullWidth, typeColors, iconMultiplier)
+
     def onViewLoaded(self, view, *args):
         if view.settings is None or view.settings.alias not in self._viewAliases:
             return
@@ -92,11 +105,4 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if self.minimapPlugin is not None and self.minimapPlugin.enabled:
             self.minimapPlugin.init(view.flashObject)
         if self._icons or self._statistics:
-            cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
-            fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
-            typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
-            iconMultiplier = view_settings.cfg.statistics[STATISTICS.ICON_BLACKOUT]
-            self._statisticsComponent.updateAllItems(self._arenaDP)
-            view.flashObject.as_createStatisticComponent(self._statistics, self._icons,
-                                                         self._statisticsComponent.cache,
-                                                         cutWidth, fullWidth, typeColors, iconMultiplier)
+            self.loadStatisticView(view)
