@@ -39,12 +39,13 @@ def getContextMenuHandlers():
 
 class ObserverBusinessHandler(PackageBusinessHandler):
     __slots__ = ('_viewAliases', '_statistics', '_icons', '_listeners', '_scope', '_app', '_appNS',
-                 '_statisticsComponent', 'minimapPlugin')
+                 '_statisticsComponent', 'minimapPlugin', '_arenaDP')
 
     def __init__(self):
         self._viewAliases = view_settings.getViewAliases()
         self._statistics = view_settings.isStatisticEnabled()
         self._icons = view_settings.isIconsEnabled()
+        self._arenaDP = None
         self.minimapPlugin = None
         if self._icons or self._statistics:
             self._statisticsComponent = WTRStatisticsAndIcons()
@@ -54,6 +55,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def init(self):
         super(ObserverBusinessHandler, self).init()
         self.minimapPlugin = MinimapZoomPlugin()
+        self._arenaDP = view_settings.sessionProvider.getArenaDP()
         _addListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
 
     def fini(self):
@@ -72,7 +74,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def onAppInitializing(self, event):
         if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
             if self._statistics:
-                statisticLoader.setCachedStatisticData(view_settings.sessionProvider.getArenaDP())
+                statisticLoader.setCachedStatisticData(self._arenaDP)
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 
@@ -94,7 +96,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
             typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
             iconMultiplier = view_settings.cfg.statistics[STATISTICS.ICON_BLACKOUT]
-            self._statisticsComponent.updateAllItems()
+            self._statisticsComponent.updateAllItems(self._arenaDP)
             view.flashObject.as_createStatisticComponent(self._statistics, self._icons,
                                                          self._statisticsComponent.cache,
                                                          cutWidth, fullWidth, typeColors, iconMultiplier)

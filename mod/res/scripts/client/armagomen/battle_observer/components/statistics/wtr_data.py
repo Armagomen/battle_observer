@@ -3,12 +3,9 @@ from math import floor, log
 from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import STATISTICS
-from helpers import dependency
-from skeletons.gui.battle_session import IBattleSessionProvider
 
 
 class WTRStatisticsAndIcons(object):
-    sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     COLOR_WTR = 'colorWTR'
     DEFAULT_COLOR = "#fafafa"
@@ -32,8 +29,9 @@ class WTRStatisticsAndIcons(object):
         else:
             return self.settings[STATISTICS.FULL_LEFT], self.settings[STATISTICS.CUT_LEFT]
 
-    def updateAllItems(self):
-        arenaDP = self.sessionProvider.getArenaDP()
+    def updateAllItems(self, arenaDP):
+        if arenaDP is None:
+            return
         allyTeam = arenaDP.getNumberOfTeam()
         for vInfo in arenaDP.getVehiclesInfoIterator():
             accountDBID = vInfo.player.accountDBID

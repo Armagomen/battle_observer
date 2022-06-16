@@ -5,6 +5,7 @@ import constants
 from armagomen.battle_observer.core import settings
 from armagomen.constants import MAIN
 from armagomen.utils.common import urlResponse, logDebug, logInfo, logError
+from helpers.func_utils import callback
 
 region = constants.AUTH_REALM.lower()
 if region == "na":
@@ -33,21 +34,28 @@ class StatisticsDataLoader(object):
             logDebug("StatisticsDataLoader: request result: data={}".format(result))
         return result
 
+    def delayedLoad(self, arenaDP):
+        callback(0.01, self, "setCachedStatisticData", arenaDP)
+
     def setCachedStatisticData(self, arenaDP):
         if not self.enabled:
-            return
+            return logInfo("Statistics are not available in your region. Only ru, eu, com, asia")
         if arenaDP is None:
             return logError("StatisticsDataLoader: arenaDP is None")
-        toRequest = [vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator()]
-        if toRequest:
-            if settings.main[MAIN.DEBUG]:
-                logDebug("StatisticsDataLoader: START request data: ids={}, len={} ".format(toRequest, len(toRequest)))
-            data = self.request(toRequest)
-            if data is not None:
-                for _id, value in data.iteritems():
-                    self.cache[int(_id)] = copy.deepcopy(value)
+        users = [vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator() if vInfo.player.accountDBID]
+        if not users:
+            logError("StatisticsDataLoader: users list is empty, deferred loading")
+            return self.delayedLoad(arenaDP)
+        if settings.main[MAIN.DEBUG]:
+            logDebug("StatisticsDataLoader: START request data: ids={}, len={} ".format(users, len(users)))
+        data = self.request(users)
+        if data is not None:
+            for _id, value in data.iteritems():
+                self.cache[int(_id)] = copy.deepcopy(value)
             if settings.main[MAIN.DEBUG]:
                 logDebug("StatisticsDataLoader: FINISH request data")
+        else:
+            return self.delayedLoad(arenaDP)
 
     def getStatisticForUser(self, databaseID):
         return self.cache.get(databaseID)
