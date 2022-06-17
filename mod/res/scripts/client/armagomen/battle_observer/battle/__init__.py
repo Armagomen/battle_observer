@@ -40,7 +40,7 @@ def getContextMenuHandlers():
 
 class ObserverBusinessHandler(PackageBusinessHandler):
     __slots__ = ('_viewAliases', '_statistics', '_icons', '_listeners', '_scope', '_app', '_appNS',
-                 '_statisticComponent', 'minimapPlugin', '_arenaDP', 'statisticLoadTry', '_statisticLoader')
+                 '_wtr', 'minimapPlugin', '_arenaDP', 'statisticLoadTry', '_statisticLoader')
 
     def __init__(self):
         self._viewAliases = view_settings.getViewAliases()
@@ -51,7 +51,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self.statisticLoadTry = 0
         if self._icons or self._statistics:
             self._statisticLoader = StatisticsDataLoader()
-            self._statisticComponent = WTRStatisticsAndIcons(self._statisticLoader)
+            self._wtr = WTRStatisticsAndIcons(self._statisticLoader)
         listeners = [(alias, self.eventListener) for alias in self._viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
@@ -66,7 +66,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self.minimapPlugin = None
         if self._icons or self._statistics:
             self._statisticLoader = None
-            self._statisticComponent = None
+            self._wtr = None
         self._arenaDP = None
         self.statisticLoadTry = 0
         super(ObserverBusinessHandler, self).fini()
@@ -90,8 +90,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         iconMultiplier = view_settings.cfg.statistics[STATISTICS.ICON_BLACKOUT]
-        self._statisticComponent.updateAllItems(self._arenaDP)
-        view.flashObject.as_createStatisticComponent(self._statistics, self._icons, self._statisticComponent.cache,
+        self._wtr.updateAllItems(self._arenaDP)
+        view.flashObject.as_createStatisticComponent(self._statistics, self._icons, self._wtr.cache,
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
     def onViewLoaded(self, view, *args):

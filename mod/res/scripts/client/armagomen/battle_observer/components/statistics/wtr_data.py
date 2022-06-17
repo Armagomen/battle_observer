@@ -70,12 +70,11 @@ class WTRStatisticsAndIcons(object):
         return self.settings[STATISTICS.COLORS].get(result, self.DEFAULT_COLOR)
 
     def getStatisticsData(self, databaseID, clanTag):
-        data = self.statisticLoader.getStatisticForUser(databaseID)
+        data = self.statisticLoader.cache.get(databaseID)
         if data is not None:
             wtr = int(data.get("global_rating", 0))
             winRate, battles = self.__getPercent(data)
             return {"WTR": wtr, "colorWTR": self.__getColor(wtr), "winRate": winRate,
                     "battles": battles, "nickname": data.get("nickname"),
                     "clanTag": "[{}]".format(clanTag) if clanTag else ""}
-        else:
-            return None
+        return None
