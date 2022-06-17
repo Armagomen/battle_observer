@@ -27,7 +27,7 @@ package net.armagomen.battleobserver.battle.wgcomponents
 				{
 					this.oldSize = this.minimap.currentSizeIndex;
 					this.oldScale = this.minimap.scaleX;
-					this.minimap.setAllowedSizeIndex(page.getAllowedMinimapSizeIndex(5));
+					this.minimap.setAllowedSizeIndex(5.0);
 					var newScale:Number = (App.appHeight * 0.7) / this.minimap.currentWidth;
 					this.minimap.scaleX = this.minimap.scaleY = newScale;
 					this.minimap.x = App.appWidth * 0.5 - this.minimap.currentWidth * 0.5 * newScale;

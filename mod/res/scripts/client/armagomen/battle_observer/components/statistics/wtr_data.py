@@ -1,6 +1,5 @@
 from math import floor, log
 
-from armagomen.battle_observer.components.statistics.statistic_data_loader import statisticLoader
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import STATISTICS
 
@@ -13,7 +12,8 @@ class WTRStatisticsAndIcons(object):
     K = 1000.0
     UNITS = ['', 'k', 'm', 'g', 't', 'p']
 
-    def __init__(self):
+    def __init__(self, statisticLoader):
+        self.statisticLoader = statisticLoader
         self.settings = settings.statistics
         self.vehicle_types = settings.vehicle_types
         self.wtr_ranges = ((2960, "bad"), (4520, "normal"), (6367, "good"), (8543, "very_good"), (10217, "unique"))
@@ -70,7 +70,7 @@ class WTRStatisticsAndIcons(object):
         return self.settings[STATISTICS.COLORS].get(result, self.DEFAULT_COLOR)
 
     def getStatisticsData(self, databaseID, clanTag):
-        data = statisticLoader.getStatisticForUser(databaseID)
+        data = self.statisticLoader.getStatisticForUser(databaseID)
         if data is not None:
             wtr = int(data.get("global_rating", 0))
             winRate, battles = self.__getPercent(data)

@@ -36,7 +36,7 @@ class StatisticsDataLoader(object):
         return result
 
     def delayedLoad(self, arenaDP):
-        callback(0.01, self, "setCachedStatisticData", arenaDP)
+        callback(0.1, self, "setCachedStatisticData", arenaDP)
 
     def setCachedStatisticData(self, arenaDP):
         if not self.enabled:
@@ -65,6 +65,3 @@ class StatisticsDataLoader(object):
     def clear(self):
         self.cache.clear()
         self.loaded = False
-
-
-statisticLoader = StatisticsDataLoader()

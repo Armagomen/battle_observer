@@ -17,8 +17,8 @@ class MinimapZoomPlugin(object):
         self.__battleView_as = None
         self.enabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not settings.xvmInstalled
 
-    def init(self, battleView):
-        self.__battleView_as = battleView
+    def init(self, view):
+        self.__battleView_as = view.flashObject
         self.__battleView_as.as_createMimimapCentered()
         g_keysListener.registerComponent(MINIMAP.ZOOM_KEY, view_settings.cfg.minimap[MINIMAP.ZOOM_KEY], self.onKeyPressed)
 
