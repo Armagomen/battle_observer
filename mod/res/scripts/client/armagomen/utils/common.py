@@ -82,6 +82,10 @@ def restartGame():
     BigWorld.restartGame()
 
 
+def closeClient():
+    BigWorld.quit()
+
+
 def openWebBrowser(url):
     BigWorld.wg_openWebBrowser(url)
 
