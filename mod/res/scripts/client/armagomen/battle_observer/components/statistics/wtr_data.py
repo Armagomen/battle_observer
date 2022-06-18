@@ -12,8 +12,7 @@ class WTRStatisticsAndIcons(object):
     K = 1000.0
     UNITS = ['', 'k', 'm', 'g', 't', 'p']
 
-    def __init__(self, statisticLoader):
-        self.statisticLoader = statisticLoader
+    def __init__(self):
         self.settings = settings.statistics
         self.vehicle_types = settings.vehicle_types
         self.wtr_ranges = ((2960, "bad"), (4520, "normal"), (6367, "good"), (8543, "very_good"), (10217, "unique"))
@@ -29,13 +28,13 @@ class WTRStatisticsAndIcons(object):
         else:
             return self.settings[STATISTICS.FULL_LEFT], self.settings[STATISTICS.CUT_LEFT]
 
-    def updateAllItems(self, arenaDP):
+    def updateAllItems(self, arenaDP, dataLoader):
         if arenaDP is None:
             return
         allyTeam = arenaDP.getNumberOfTeam()
         for vInfo in arenaDP.getVehiclesInfoIterator():
             accountDBID = vInfo.player.accountDBID
-            result = self.getStatisticsData(accountDBID, vInfo.player.clanAbbrev) if accountDBID else None
+            result = self.getStatisticsData(accountDBID, vInfo.player.clanAbbrev, dataLoader) if accountDBID else None
             fullName = None
             cutName = None
             vehicleTextColor = None
@@ -46,6 +45,7 @@ class WTRStatisticsAndIcons(object):
                 vehicleTextColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
             self.cache[vInfo.vehicleID] = {"fullName": fullName, "cutName": cutName,
                                            "vehicleTextColor": vehicleTextColor}
+        return self.cache
 
     def __getPercent(self, data):
         random = data["statistics"]["random"]
@@ -69,8 +69,8 @@ class WTRStatisticsAndIcons(object):
                 break
         return self.settings[STATISTICS.COLORS].get(result, self.DEFAULT_COLOR)
 
-    def getStatisticsData(self, databaseID, clanTag):
-        data = self.statisticLoader.cache.get(databaseID)
+    def getStatisticsData(self, databaseID, clanTag, dataLoader):
+        data = dataLoader.getUserData(databaseID)
         if data is not None:
             wtr = int(data.get("global_rating", 0))
             winRate, battles = self.__getPercent(data)

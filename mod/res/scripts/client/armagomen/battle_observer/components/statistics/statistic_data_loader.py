@@ -59,6 +59,9 @@ class StatisticsDataLoader(object):
             return self.delayedLoad(arenaDP)
         self.loaded = True
 
+    def getUserData(self, databaseID):
+        return self.cache.get(databaseID)
+
     def clear(self):
         self.cache.clear()
         self.loaded = False

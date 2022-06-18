@@ -3,7 +3,7 @@ import math
 from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
-from armagomen.utils.common import setMaxFrameRate, logInfo
+from armagomen.utils.common import setMaxFrameRate, logDebug
 from gui.battle_control.controllers import msgs_ctrl
 
 BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND)
@@ -38,6 +38,7 @@ class BattleCore(object):
                         DAMAGE_LOG.AVG_DAMAGE_DATA = damage
                     if assist is not None:
                         assist = math.floor(assist)
-                    logInfo("set vehicle efficiency (avgDamage: {}, avgAssist: {})".format(damage, assist))
+                    if self.settings.main[MAIN.DEBUG]:
+                        logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})".format(damage, assist))
             except AttributeError:
                 DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO

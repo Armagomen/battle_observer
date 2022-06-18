@@ -114,20 +114,20 @@ package net.armagomen.battleobserver.battle
 					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
-				var statsData:Object = this.statisticsData[holder.vehicleData.vehicleID];
-				if (this.statisticsEnabled && statsData)
+				var vehicleID:int = holder.vehicleData.vehicleID;
+				if (this.statisticsEnabled && this.statisticsData && this.statisticsData[vehicleID])
 				{
-					if (statsData.vehicleTextColor)
+					if (this.statisticsData[vehicleID].vehicleTextColor)
 					{
-						listItem.vehicleTF.textColor = Utils.colorConvert(statsData.vehicleTextColor);
+						listItem.vehicleTF.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
 					}
-					if (statsData.fullName)
+					if (this.statisticsData[vehicleID].fullName)
 					{
-						listItem.playerNameFullTF.htmlText = statsData.fullName;
+						listItem.playerNameFullTF.htmlText = this.statisticsData[vehicleID].fullName;
 					}
-					if (statsData.cutName)
+					if (this.statisticsData[vehicleID].cutName)
 					{
-						listItem.playerNameCutTF.htmlText = statsData.cutName;
+						listItem.playerNameCutTF.htmlText = this.statisticsData[vehicleID].cutName;
 					}
 					if (!listItem._isAlive)
 					{
@@ -138,17 +138,17 @@ package net.armagomen.battleobserver.battle
 				}
 				if (this.fullStats && this.fullStats.visible)
 				{
-					this.updateFullstats(holder.vehicleData.vehicleID, statsData, isEnemy);
+					this.updateFullstats(vehicleID, isEnemy);
 				}
 				
 				if (this.battleLoading && this.battleLoading.visible)
 				{
-					this.updateBattleloading(holder.vehicleData.vehicleID, statsData, isEnemy);
+					this.updateBattleloading(vehicleID, isEnemy);
 				}
 			}
 		}
 		
-		private function updateFullstats(vehicleID:int, statsData:Object, isEnemy:Boolean):void
+		private function updateFullstats(vehicleID:int, isEnemy:Boolean):void
 		{
 			var holder:* = this.getFullStatsHolderByVehicleID(vehicleID, isEnemy);
 			if (!holder)
@@ -162,16 +162,16 @@ package net.armagomen.battleobserver.battle
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled && statsData)
+			if (this.statisticsEnabled && this.statisticsData && this.statisticsData[vehicleID])
 			{
-				if (statsData.fullName)
+				if (this.statisticsData[vehicleID].fullName)
 				{
 					holder.statsItem._playerNameTF.autoSize = isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-					holder.statsItem._playerNameTF.htmlText = statsData.fullName;
+					holder.statsItem._playerNameTF.htmlText = this.statisticsData[vehicleID].fullName;
 				}
-				if (statsData.vehicleTextColor)
+				if (this.statisticsData[vehicleID].vehicleTextColor)
 				{
-					holder.statsItem._vehicleNameTF.textColor = Utils.colorConvert(statsData.vehicleTextColor);
+					holder.statsItem._vehicleNameTF.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
 				}
 				if (!holder.data.isAlive())
 				{
@@ -181,7 +181,7 @@ package net.armagomen.battleobserver.battle
 			}
 		}
 		
-		private function updateBattleloading(vehicleID:int, statsData:Object, isEnemy:Boolean):void
+		private function updateBattleloading(vehicleID:int, isEnemy:Boolean):void
 		{
 			var holder:* = this.getLoadingHolderByVehicleID(vehicleID, isEnemy);
 			if (!holder)
@@ -195,15 +195,15 @@ package net.armagomen.battleobserver.battle
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled && statsData)
+			if (this.statisticsEnabled && this.statisticsData && this.statisticsData[vehicleID])
 			{
-				if (statsData.fullName)
+				if (this.statisticsData[vehicleID].fullName)
 				{
-					holder._textField.htmlText = statsData.fullName;
+					holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
 				}
-				if (statsData.vehicleTextColor)
+				if (this.statisticsData[vehicleID].vehicleTextColor)
 				{
-					holder._vehicleField.textColor = Utils.colorConvert(statsData.vehicleTextColor);
+					holder._vehicleField.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
 				}
 			}
 		}

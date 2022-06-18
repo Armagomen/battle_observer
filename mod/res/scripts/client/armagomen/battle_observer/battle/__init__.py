@@ -40,7 +40,7 @@ def getContextMenuHandlers():
 
 class ObserverBusinessHandler(PackageBusinessHandler):
     __slots__ = ('_viewAliases', '_statistics', '_icons', '_listeners', '_scope', '_app', '_appNS',
-                 '_wtr', 'minimapPlugin', '_arenaDP', 'statisticLoadTry', '_statisticLoader')
+                 '_wtr', 'minimapPlugin', '_arenaDP', '_statLoadTry', '_statDataLoader')
 
     def __init__(self):
         self._viewAliases = view_settings.getViewAliases()
@@ -48,10 +48,10 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self._icons = view_settings.isIconsEnabled()
         self._arenaDP = None
         self.minimapPlugin = MinimapZoomPlugin()
-        self.statisticLoadTry = 0
+        self._statLoadTry = 0
         if self._icons or self._statistics:
-            self._statisticLoader = StatisticsDataLoader()
-            self._wtr = WTRStatisticsAndIcons(self._statisticLoader)
+            self._statDataLoader = StatisticsDataLoader()
+            self._wtr = WTRStatisticsAndIcons()
         listeners = [(alias, self.eventListener) for alias in self._viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
@@ -65,10 +65,10 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self.minimapPlugin.fini()
         self.minimapPlugin = None
         if self._icons or self._statistics:
-            self._statisticLoader = None
+            self._statDataLoader = None
             self._wtr = None
         self._arenaDP = None
-        self.statisticLoadTry = 0
+        self._statLoadTry = 0
         super(ObserverBusinessHandler, self).fini()
 
     def eventListener(self, event):
@@ -78,20 +78,21 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def onAppInitializing(self, event):
         if event.ns == APP_NAME_SPACE.SF_BATTLE and view_settings.isAllowed:
             if self._statistics:
-                self._statisticLoader.setCachedStatisticData(self._arenaDP)
+                self._statDataLoader.setCachedStatisticData(self._arenaDP)
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 
     def loadStatisticView(self, view):
-        if self._statistics and not self._statisticLoader.loaded and self._statisticLoader.enabled and self.statisticLoadTry < 30:
-            self.statisticLoadTry += 1
-            return callback(0.2, self, "loadStatisticView", view)
+        if self._statistics:
+            if not self._statDataLoader.loaded and self._statDataLoader.enabled and self._statLoadTry < 30:
+                self._statLoadTry += 1
+                return callback(0.2, self, "loadStatisticView", view)
         cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         iconMultiplier = view_settings.cfg.statistics[STATISTICS.ICON_BLACKOUT]
-        self._wtr.updateAllItems(self._arenaDP)
-        view.flashObject.as_createStatisticComponent(self._statistics, self._icons, self._wtr.cache,
+        view.flashObject.as_createStatisticComponent(self._statistics, self._icons,
+                                                     self._wtr.updateAllItems(self._arenaDP, self._statDataLoader),
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
     def onViewLoaded(self, view, *args):

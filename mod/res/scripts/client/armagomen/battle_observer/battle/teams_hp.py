@@ -42,12 +42,12 @@ class CorrelationMarkers(object):
     def update(self):
         if self.enabled:
             left, right = [], []
-            for vInfoVO in sorted(self._arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
-                if not vInfoVO.isObserver():
-                    if vInfoVO.team == self.__allyTeam:
-                        left.append(self.getIcon(vInfoVO))
+            for vInfo in sorted(self._arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
+                if not vInfo.isObserver():
+                    if vInfo.team == self.__allyTeam:
+                        left.append(self.getIcon(vInfo))
                     else:
-                        right.append(self.getIcon(vInfoVO))
+                        right.append(self.getIcon(vInfo))
             result = GLOBAL.EMPTY_LINE.join(reversed(left)), GLOBAL.EMPTY_LINE.join(right)
         else:
             result = GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE
@@ -75,10 +75,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         super(TeamsHP, self).__init__()
         self.showAliveCount = False
         self.markers = None
-        self.observers = set()
-        for vinfoVo in self._arenaDP.getVehiclesInfoIterator():
-            if vinfoVo.isObserver():
-                self.observers.add(vinfoVo.vehicleID)
+        self.observers = set(vInfo.vehicleID for vInfo in self._arenaDP.getVehiclesInfoIterator() if vInfo.isObserver())
 
     def _populate(self):
         super(TeamsHP, self)._populate()
@@ -94,6 +91,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def _dispose(self):
         self.settingsCore.onSettingsApplied -= self.onSettingsApplied
+        self.markers = None
         super(TeamsHP, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):

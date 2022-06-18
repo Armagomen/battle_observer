@@ -83,7 +83,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             color = self.getBarColor(isEnemy)
         self.as_addHealthBarS(vehicleID, color, self.colors[COLORS.GLOBAL],
                               self.settings[PANELS.BAR_SETTINGS], not self.settings[PANELS.ON_KEY_DOWN])
-        scale = round(getHealthPercent(newHealth, maxHealth), 3)
+        scale = round(getHealthPercent(newHealth, maxHealth), 2)
         self.as_updateHealthBarS(vehicleID, scale,
                                  self.settings[PANELS.HP_TEMPLATE] % {
                                      VEHICLE.CUR: newHealth,
@@ -111,7 +111,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):
         if self.hpBarsEnable:
-            scale = round(getHealthPercent(newHealth, maxHealth), 3)
+            scale = round(getHealthPercent(newHealth, maxHealth), 2)
             self.as_updateHealthBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
                                          VEHICLE.CUR: newHealth,

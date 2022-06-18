@@ -24,6 +24,10 @@ class KeysListener(object):
         self.keysMap[keyName] = KeysData(normalizedKey, keyFunction)
         self.usableKeys.update(normalizedKey)
 
+    def unregisterComponent(self, keyName, keyList):
+        del self.keysMap[keyName]
+        self.usableKeys.difference_update(self.normalizeKey(keyList))
+
     def clear(self):
         self.keysMap.clear()
         self.usableKeys.clear()
