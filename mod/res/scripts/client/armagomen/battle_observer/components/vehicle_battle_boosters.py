@@ -23,7 +23,7 @@ def onVehicleChanged():
     if g_currentVehicle.isLocked() or g_currentVehicle.isInBattle():
         return
     if not hasattr(vehicle, "battleBoosters") or vehicle.battleBoosters is None:
-        logDebug("No battle boosters available for this vehicle: %s" % vehicle.name)
+        logDebug("No battle boosters available for this vehicle: {}", vehicle.name)
         return
     for battleBooster in vehicle.battleBoosters.installed.getItems():
         value = battleBooster.inventoryCount > 0

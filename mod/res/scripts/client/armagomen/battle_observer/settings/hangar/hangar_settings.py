@@ -2,7 +2,7 @@
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
-from armagomen.utils.common import logWarning, openWebBrowser, logInfo
+from armagomen.utils.common import logWarning, openWebBrowser, logDebug
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
@@ -267,8 +267,7 @@ class ConfigInterface(CreateElement):
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfig != data['selector']:
             self.newConfig = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            if self.settings.main[MAIN.DEBUG]:
-                logInfo("change settings '%s' - %s" % (self.cLoader.configsList[self.newConfig], blockID))
+            logDebug("change settings '{}' - {}", self.cLoader.configsList[self.newConfig], blockID)
         else:
             settings = getattr(self.settings, blockID)
             for key, value in data.iteritems():

@@ -79,9 +79,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             return
         if view.settings.alias == VIEW_ALIAS.LOGIN:
             callback(1.0, g_events, "onLoginLoaded", view)
-            if settings.main[MAIN.DEBUG]:
-                logDebug("onViewLoaded, alias={}".format(view.settings.alias))
+            logDebug("onViewLoaded, alias={}", view.settings.alias)
         elif view.settings.alias == VIEW_ALIAS.LOBBY_HANGAR:
             callback(1.0, self, "load", view)
-            if settings.main[MAIN.DEBUG]:
-                logDebug("onViewLoaded, alias={}".format(view.settings.alias))
+            logDebug("onViewLoaded, alias={}", view.settings.alias)

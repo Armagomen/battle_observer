@@ -46,8 +46,7 @@ class DispersionTimer(DispersionTimerMeta):
         aimingTime = self._player.vehicleTypeDescriptor.gun.aimingTime
         if self.min_angle is None or self.min_angle > dispersionAngle:
             self.min_angle = dispersionAngle
-            if self.isDebug:
-                logDebug("DispersionTimer - renew min dispersion angle %s" % self.min_angle)
+            logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
         timing = round(aimingTime, GLOBAL.TWO) * log(dispersionAngle / self.min_angle)
         if self.timing != timing:
             self.macro[DISPERSION_TIME.TIMER] = timing

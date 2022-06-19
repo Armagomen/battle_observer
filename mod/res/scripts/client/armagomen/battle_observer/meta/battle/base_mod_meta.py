@@ -1,7 +1,7 @@
 from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.core import settings
-from armagomen.constants import ALIAS_TO_CONFIG_NAME, MAIN, COLORS, GLOBAL
+from armagomen.constants import ALIAS_TO_CONFIG_NAME, COLORS, GLOBAL
 from armagomen.utils.common import logInfo, getPlayer, logDebug
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from gui.shared.personality import ServicesLocator
@@ -12,7 +12,6 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 class BaseModMeta(BaseDAAPIComponent):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsCore = ServicesLocator.settingsCore
-    isDebug = property(lambda self: settings.main[MAIN.DEBUG])
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
@@ -55,16 +54,14 @@ class BaseModMeta(BaseDAAPIComponent):
         self.setSettings()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
-        if self.isDebug:
-            logDebug("battle module '%s' loaded" % self.getAlias())
+        logDebug("battle module '{}' loaded", self.getAlias())
         self.as_onAfterPopulateS()
 
     def _dispose(self):
         g_playerEvents.onAvatarReady -= self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer -= self.onExitBattlePage
         super(BaseModMeta, self)._dispose()
-        if self.isDebug:
-            logDebug("battle module '%s' destroyed" % self.getAlias())
+        logDebug("battle module '{}' destroyed", self.getAlias())
 
     def onEnterBattlePage(self):
         self.as_setComponentVisible(True)

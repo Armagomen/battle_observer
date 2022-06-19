@@ -1,5 +1,4 @@
 from armagomen.battle_observer.core import settings
-from armagomen.constants import MAIN
 from armagomen.utils.common import logDebug
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 
@@ -10,17 +9,15 @@ class BaseModMeta(BaseDAAPIComponent):
         super(BaseModMeta, self).__init__()
 
     @staticmethod
-    def getShdowSettings():
+    def getShadowSettings():
         return settings.shadow_settings
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        if settings.main[MAIN.DEBUG] and self._isDAAPIInited():
-            logDebug("hangar module '%s' loaded" % self.getAlias())
+        logDebug("hangar module '{}' loaded", self.getAlias())
 
     def _dispose(self):
-        if settings.main[MAIN.DEBUG] and self._isDAAPIInited():
-            logDebug("hangar module '%s' dispose" % self.getAlias())
+        logDebug("hangar module '{}' dispose", self.getAlias())
         super(BaseModMeta, self)._dispose()
 
     def as_startUpdateS(self, *args):

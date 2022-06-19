@@ -39,8 +39,7 @@ class Distance(DistanceMeta):
         elif self.timeEvent is not None:
             self.timeEvent.stop()
             self.timeEvent = None
-        if self.isDebug:
-            logDebug("onArenaPeriod: " + ARENA_PERIOD_NAMES.get(period, 'Unknown'))
+        logDebug("onArenaPeriod: " + ARENA_PERIOD_NAMES.get(period, 'Unknown'))
 
     def onEnterBattlePage(self):
         super(Distance, self).onEnterBattlePage()
@@ -80,8 +79,7 @@ class Distance(DistanceMeta):
     def onMinimapVehicleRemoved(self, vId):
         if vId in self.vehicles:
             del self.vehicles[vId]
-            if self.isDebug:
-                logDebug("onMinimapVehicleRemoved: " + str(vId))
+            logDebug("onMinimapVehicleRemoved: {}", vId)
 
     def updateDistance(self):
         distance = None
@@ -102,8 +100,7 @@ class Distance(DistanceMeta):
     def onVehicleKilled(self, vehicleID, *args, **kwargs):
         if vehicleID in self.vehicles:
             del self.vehicles[vehicleID]
-            if self.isDebug:
-                logDebug("onVehicleKilled: " + str(vehicleID))
+            logDebug("onVehicleKilled: {}", vehicleID)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES

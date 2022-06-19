@@ -31,8 +31,7 @@ class StatisticsDataLoader(object):
         result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS)))
         if result is not None:
             result = result.get("data")
-        if settings.main[MAIN.DEBUG]:
-            logDebug("StatisticsDataLoader: request result: data={}".format(result))
+        logDebug("StatisticsDataLoader: request result: data={}", result)
         return result
 
     def delayedLoad(self, arenaDP):
@@ -47,14 +46,12 @@ class StatisticsDataLoader(object):
         if not users:
             logError("StatisticsDataLoader: users list is empty, deferred loading")
             return self.delayedLoad(arenaDP)
-        if settings.main[MAIN.DEBUG]:
-            logDebug("StatisticsDataLoader: START request data: ids={}, len={} ".format(users, len(users)))
+        logDebug("StatisticsDataLoader: START request data: ids={}, len={} ", users, len(users))
         data = self.request(users)
         if data is not None:
             for _id, value in data.iteritems():
                 self.cache[int(_id)] = copy.deepcopy(value)
-            if settings.main[MAIN.DEBUG]:
-                logDebug("StatisticsDataLoader: FINISH request data")
+            logDebug("StatisticsDataLoader: FINISH request data")
         else:
             return self.delayedLoad(arenaDP)
         self.loaded = True

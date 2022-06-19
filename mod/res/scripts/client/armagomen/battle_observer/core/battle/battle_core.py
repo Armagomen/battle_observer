@@ -38,7 +38,6 @@ class BattleCore(object):
                         DAMAGE_LOG.AVG_DAMAGE_DATA = damage
                     if assist is not None:
                         assist = math.floor(assist)
-                    if self.settings.main[MAIN.DEBUG]:
-                        logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})".format(damage, assist))
+                    logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
             except AttributeError:
                 DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO

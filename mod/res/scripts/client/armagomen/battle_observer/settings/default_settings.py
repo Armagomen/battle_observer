@@ -9,7 +9,7 @@ from armagomen.constants import (
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
     TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM, DISTANCE, OWN_HEALTH, STATISTICS,
 )
-from armagomen.utils.common import isXvmInstalled
+
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -19,7 +19,7 @@ class DefaultSettings(object):
     def __init__(self):
         self.onModSettingsChanged = SafeEvent()
         self.onUserConfigUpdateComplete = SafeEvent()
-        self.xvmInstalled = isXvmInstalled()
+        self.xvmInstalled = False
 
         self.main = {
             MAIN.HIDE_CHAT: False,

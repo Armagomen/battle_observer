@@ -202,8 +202,7 @@ class DamageLog(DamageLogsMeta):
                 shell_type = SHELL_TYPES.HIGH_EXPLOSIVE
             elif shell_type != SHELL_TYPES.ARMOR_PIERCING_HE and gold:
                 shell_icon_name = shell_type + DAMAGE_LOG.PREMIUM
-            if settings.main[MAIN.DEBUG]:
-                logDebug("Shell type: %s, shell icon: %s, gold: %s" % (shell_type, shell_icon_name, gold))
+            logDebug("Shell type: {}, shell icon: {}, gold: {}", shell_type, shell_icon_name, gold)
         else:
             shell_type = DAMAGE_LOG.UNDEFINED
             shell_icon_name = DAMAGE_LOG.UNDEFINED
