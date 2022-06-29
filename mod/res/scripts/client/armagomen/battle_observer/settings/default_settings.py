@@ -9,7 +9,6 @@ from armagomen.constants import (
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
     TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM, DISTANCE, OWN_HEALTH, STATISTICS,
 )
-
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -315,7 +314,7 @@ class DefaultSettings(object):
             ],
             DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
             DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
-                                                               tuple(DAMAGE_LOG.PREMIUM_SHELLS) + SHELL_TYPES_LIST}),
+                                                               DAMAGE_LOG.PREMIUM_SHELLS + SHELL_TYPES_LIST}),
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
@@ -353,7 +352,8 @@ class DefaultSettings(object):
             ],
             DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
             DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
-                                                               SHELL_TYPES_LIST + tuple(DAMAGE_LOG.PREMIUM_SHELLS) + tuple(DAMAGE_LOG.SPG_SHELL_TYPES)}),
+                                                               SHELL_TYPES_LIST + DAMAGE_LOG.PREMIUM_SHELLS +
+                                                               ("HIGH_EXPLOSIVE_SPG_STUN", "HIGH_EXPLOSIVE_SPG")}),
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
