@@ -123,21 +123,20 @@ class DamageLog(DamageLogsMeta):
         """wg Feedback event parser"""
         e_type = event.getType()
         extra = event.getExtra()
-        data = 0
+        value = GLOBAL.ZERO
         if e_type == FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY:
-            data += event.getCount()
+            value += event.getCount()
         elif e_type in DAMAGE_LOG.EXTRA_WITH_DAMAGE:
-            data += int(extra.getDamage())
+            value += int(extra.getDamage())
         if e_type in DAMAGE_LOG.TOP_MACROS_NAME:
             if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
                 self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
                 self.top_log[DAMAGE_LOG.ASSIST_STUN] = GLOBAL.ZERO
-            self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += data
+            self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += value
             self.updateTopLog()
         if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
             log_dict, settings = self.getLogDictAndSettings(e_type)
-            self.addToExtendedLog(log_dict, settings, event.getTargetID(),
-                                  extra.getAttackReasonID(), data, extra.getShellType(), extra.isShellGold())
+            self.addToExtendedLog(log_dict, settings, event.getTargetID(), value, extra)
 
     def __onPlayerFeedbackReceived(self, events):
         """shared.feedback player events"""
@@ -182,10 +181,11 @@ class DamageLog(DamageLogsMeta):
             log_dict[DAMAGE_LOG.KILLS].add(target)
             self.updateExtendedLog(log_dict, settings)
 
-    def checkPlayerShell(self, attack_reason_id, gold):
+    def checkPlayerShell(self, extra):
         shell_name = DAMAGE_LOG.UNDEFINED
         shell_icon_name = DAMAGE_LOG.UNDEFINED
-        if self._player is not None and attack_reason_id == GLOBAL.ZERO:
+        gold = extra.isShellGold()
+        if self._player is not None and extra.isShot():
             shell = self._player.getVehicleDescriptor().shot.shell
             shell_name = shell.kind
             shell_icon_name = shell.iconName
@@ -193,9 +193,10 @@ class DamageLog(DamageLogsMeta):
         return shell_name, shell_icon_name, gold
 
     @staticmethod
-    def checkShell(shell_type, gold):
-        shell_name = _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE.get(shell_type, DAMAGE_LOG.UNDEFINED)
+    def checkShell(extra):
+        shell_name = _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE.get(extra.getShellType(), DAMAGE_LOG.UNDEFINED)
         shell_icon_name = shell_name
+        gold = extra.isShellGold()
         if gold:
             gold_name = shell_name + DAMAGE_LOG.PREMIUM
             if gold_name in DAMAGE_LOG.PREMIUM_SHELLS:
@@ -206,15 +207,12 @@ class DamageLog(DamageLogsMeta):
     def getVehicleMaxHealth(self, vehicle_id):
         return self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
 
-    def addToExtendedLog(self, log_dict, settings, vehicle_id, attack_reason_id, damage, shell_type, gold):
+    def addToExtendedLog(self, log_dict, settings, vehicle_id, damage, extra):
         """add or update log item"""
         is_dlog = log_dict is self.damage_log
         if vehicle_id not in log_dict[DAMAGE_LOG.SHOTS]:
             log_dict[DAMAGE_LOG.SHOTS].append(vehicle_id)
-        if is_dlog:
-            shell_name, shell_icon_name, gold = self.checkPlayerShell(attack_reason_id, gold)
-        else:
-            shell_name, shell_icon_name, gold = self.checkShell(shell_type, gold)
+        shell_name, shell_icon_name, gold = self.checkPlayerShell(extra) if is_dlog else self.checkShell(extra)
         vehicle = log_dict.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         info = self._arenaDP.getVehicleInfo(vehicle_id)
         if not vehicle:
@@ -226,7 +224,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.ALL_DAMAGES] = DAMAGE_LOG.COMMA.join(str(x) for x in vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.LAST_DAMAGE] = vehicle[DAMAGE_LOG.DAMAGE_LIST][GLOBAL.LAST]
         vehicle[DAMAGE_LOG.ATTACK_REASON] = self.settings.log_global[DAMAGE_LOG.ATTACK_REASON][
-            ATTACK_REASONS[attack_reason_id]]
+            ATTACK_REASONS[extra.getAttackReasonID()]]
         vehicle[DAMAGE_LOG.SHELL_TYPE] = settings[DAMAGE_LOG.SHELL_TYPES][shell_name]
         vehicle[DAMAGE_LOG.SHELL_ICON] = settings[DAMAGE_LOG.SHELL_ICONS][shell_icon_name]
         vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]

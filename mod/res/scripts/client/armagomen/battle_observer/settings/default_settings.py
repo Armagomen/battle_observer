@@ -351,7 +351,7 @@ class DefaultSettings(object):
                 "</font></textformat>"
             ],
             DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
-            DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
+            DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell_icon: "" for shell_icon in
                                                                SHELL_TYPES_LIST + DAMAGE_LOG.PREMIUM_SHELLS +
                                                                ("HIGH_EXPLOSIVE_SPG_STUN", "HIGH_EXPLOSIVE_SPG")}),
             DAMAGE_LOG.SHELL_COLOR: {
