@@ -60,6 +60,7 @@ class ShotResultResolver(object):
         noDamage = True
         isJet = False
         jetStartDist = GLOBAL.F_ZERO
+        shellExtraData = self.resolver._SHELL_EXTRA_DATA[shell.kind]
         for detail in cDetails:
             matInfo = detail.matInfo
             if matInfo is None:
@@ -69,7 +70,7 @@ class ShotResultResolver(object):
             if isJet:
                 jetDist = detail.dist - jetStartDist
                 if jetDist > GLOBAL.F_ZERO:
-                    fullPiercingPower = power - jetDist * self.resolver._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
+                    fullPiercingPower = power - jetDist * shellExtraData.jetLossPPByDist
             else:
                 ricochet = self.resolver._shouldRicochet(shell, hitAngleCos, matInfo)
             if matInfo.vehicleDamageFactor:
@@ -77,7 +78,7 @@ class ShotResultResolver(object):
                 break
             elif isHE and self.isModernMechanics(shell):
                 fullPiercingPower -= computedArmor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-            elif self.resolver._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist > GLOBAL.F_ZERO:
+            elif shellExtraData.jetLossPPByDist > GLOBAL.F_ZERO:
                 isJet = True
                 jetStartDist += detail.dist + matInfo.armor * 0.001
         return computedArmor, max(fullPiercingPower, GLOBAL.F_ZERO), ricochet, noDamage
