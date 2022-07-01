@@ -7,7 +7,7 @@ from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO
 _PLAYER_STATUS = arena_settings.PLAYER_STATUS
 statistics = settings.statistics
 main = settings.main
-
+BOT_START_SWITCH = ":"
 
 @overrideMethod(VehicleArenaInfoVO)
 def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
@@ -19,7 +19,7 @@ def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
                 if not view_settings.isStatisticEnabled():
                     kwargs[ANOTHER.IS_TEAM_KILLER] = _PLAYER_STATUS.IS_TEAM_KILLER
                 if main[MAIN.CHANGE_ANONYMOUS_NAME] and ANOTHER.NAME in kwargs and \
-                        not kwargs[ANOTHER.NAME].startswith(GLOBAL.BOT_START_SWITCH):
+                        not kwargs[ANOTHER.NAME].startswith(BOT_START_SWITCH):
                     kwargs[ANOTHER.NAME] = kwargs[ANOTHER.FAKE_NAME] = main[MAIN.ANONYMOUS_STRING]
         if main[MAIN.HIDE_CLAN_ABBREV] and ANOTHER.CLAN_DBID in kwargs and ANOTHER.CLAN_ABBR in kwargs:
             kwargs[ANOTHER.CLAN_DBID] = GLOBAL.FIRST

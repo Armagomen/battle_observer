@@ -250,7 +250,7 @@ class DefaultSettings(object):
         }
         self.log_global = {
             DAMAGE_LOG.WG_POS: False,
-            DAMAGE_LOG.WG_CRITS: False,
+            DAMAGE_LOG.WG_CRITICS: False,
             DAMAGE_LOG.WG_BLOCKED: False,
             DAMAGE_LOG.WG_ASSIST: False,
             DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],

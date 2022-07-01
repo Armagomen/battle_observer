@@ -29,6 +29,6 @@
   ], 
   "wg_log_hide_assist": false, 
   "wg_log_hide_block": false, 
-  "wg_log_hide_crits": false, 
+  "wg_log_hide_critics": false,
   "wg_log_pos_fix": false
 }

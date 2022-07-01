@@ -5,6 +5,7 @@ from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
 from armagomen.utils.common import callback, logDebug, logWarning, percentToRGB
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES, SHELL_TYPES
+from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 
 _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE = {
@@ -170,65 +171,56 @@ class DamageLog(DamageLogsMeta):
                     self.updateExtendedLog(log_dict, settings)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
-        if self._player is not None:
-            if self._player.playerVehicleID in (targetID, attackerID):
-                if self._player.playerVehicleID == targetID:
-                    eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
-                    target = attackerID
-                else:
-                    eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
-                    target = targetID
-                log_dict, settings = self.getLogDictAndSettings(eventID)
-                log_dict[DAMAGE_LOG.KILLS].add(target)
-                self.updateExtendedLog(log_dict, settings)
-
-    def checkShell(self, is_dlog, attack_reason_id, shell_type, gold):
-        if is_dlog and attack_reason_id == GLOBAL.ZERO:
-            if self._player is not None:
-                shell = self._player.getVehicleDescriptor().shot.shell
-                shell_name = shell.kind
-                shell_icon_name = shell.iconName
-                gold = shell_icon_name in DAMAGE_LOG.PREMIUM_SHELLS
+        if self._player is not None and self._player.playerVehicleID in (targetID, attackerID):
+            if self._player.playerVehicleID == targetID:
+                eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
+                target = attackerID
             else:
-                shell_name = DAMAGE_LOG.UNDEFINED
-                shell_icon_name = DAMAGE_LOG.UNDEFINED
-        elif shell_type is not None and shell_type in _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE:
-            shell_name = _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE[shell_type]
-            shell_icon_name = shell_name
-            if gold:
-                gold_name = shell_name + DAMAGE_LOG.PREMIUM
-                if gold_name not in DAMAGE_LOG.PREMIUM_SHELLS:
-                    shell_icon_name = gold_name
-            logDebug("Shell type: {}, shell icon: {}, gold: {}", shell_name, shell_icon_name, gold)
-        else:
-            shell_name = DAMAGE_LOG.UNDEFINED
-            shell_icon_name = DAMAGE_LOG.UNDEFINED
+                eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
+                target = targetID
+            log_dict, settings = self.getLogDictAndSettings(eventID)
+            log_dict[DAMAGE_LOG.KILLS].add(target)
+            self.updateExtendedLog(log_dict, settings)
+
+    def checkPlayerShell(self, attack_reason_id, gold):
+        shell_name = DAMAGE_LOG.UNDEFINED
+        shell_icon_name = DAMAGE_LOG.UNDEFINED
+        if self._player is not None and attack_reason_id == GLOBAL.ZERO:
+            shell = self._player.getVehicleDescriptor().shot.shell
+            shell_name = shell.kind
+            shell_icon_name = shell.iconName
+            gold = shell_icon_name in DAMAGE_LOG.PREMIUM_SHELLS or gold
         return shell_name, shell_icon_name, gold
+
+    @staticmethod
+    def checkShell(shell_type, gold):
+        shell_name = _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE.get(shell_type, DAMAGE_LOG.UNDEFINED)
+        shell_icon_name = shell_name
+        if gold:
+            gold_name = shell_name + DAMAGE_LOG.PREMIUM
+            if gold_name in DAMAGE_LOG.PREMIUM_SHELLS:
+                shell_icon_name = gold_name
+        logDebug("Shell type: {}, shell icon: {}, gold: {}", shell_name, shell_icon_name, gold)
+        return shell_name, shell_icon_name, gold
+
+    def getVehicleMaxHealth(self, vehicle_id):
+        return self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
 
     def addToExtendedLog(self, log_dict, settings, vehicle_id, attack_reason_id, damage, shell_type, gold):
         """add or update log item"""
         is_dlog = log_dict is self.damage_log
         if vehicle_id not in log_dict[DAMAGE_LOG.SHOTS]:
             log_dict[DAMAGE_LOG.SHOTS].append(vehicle_id)
-        shell_name, shell_icon_name, gold = self.checkShell(is_dlog, attack_reason_id, shell_type, gold)
+        if is_dlog:
+            shell_name, shell_icon_name, gold = self.checkPlayerShell(attack_reason_id, gold)
+        else:
+            shell_name, shell_icon_name, gold = self.checkShell(shell_type, gold)
         vehicle = log_dict.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         info = self._arenaDP.getVehicleInfo(vehicle_id)
-        if vehicle:
-            vehicle[DAMAGE_LOG.DAMAGE_LIST].append(damage)
-            vehicle[DAMAGE_LOG.TANK_NAMES].add(info.vehicleType.shortName)
-        else:
-            vehicle[DAMAGE_LOG.INDEX] = len(log_dict[DAMAGE_LOG.SHOTS])
-            vehicle[DAMAGE_LOG.DAMAGE_LIST] = [damage]
-            vehicle[DAMAGE_LOG.VEHICLE_CLASS] = info.vehicleType.classTag
-            vehicle[DAMAGE_LOG.TANK_NAMES] = {info.vehicleType.shortName}
-            vehicle[DAMAGE_LOG.ICON_NAME] = info.vehicleType.iconName
-            vehicle[DAMAGE_LOG.USER_NAME] = info.player.name
-            vehicle[DAMAGE_LOG.TANK_LEVEL] = info.vehicleType.level
-            vehicle[DAMAGE_LOG.KILLED_ICON] = GLOBAL.EMPTY_LINE
-            vehicle[DAMAGE_LOG.CLASS_ICON] = self.vehicle_icons[info.vehicleType.classTag]
-            vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[info.vehicleType.classTag]
-            vehicle_id = self._player.playerVehicleID if not is_dlog else vehicle_id
-            vehicle[DAMAGE_LOG.MAX_HEALTH] = self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
+        if not vehicle:
+            self.createVehicle(info, log_dict, vehicle)
+        vehicle[DAMAGE_LOG.DAMAGE_LIST].append(damage)
+        vehicle[DAMAGE_LOG.TANK_NAMES].add(info.vehicleType.shortName)
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.ALL_DAMAGES] = DAMAGE_LOG.COMMA.join(str(x) for x in vehicle[DAMAGE_LOG.DAMAGE_LIST])
@@ -239,9 +231,22 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.SHELL_ICON] = settings[DAMAGE_LOG.SHELL_ICONS][shell_icon_name]
         vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         vehicle[DAMAGE_LOG.TANK_NAME] = DAMAGE_LOG.LIST_SEPARATOR.join(sorted(vehicle[DAMAGE_LOG.TANK_NAMES]))
-        percent = float(vehicle[DAMAGE_LOG.TOTAL_DAMAGE]) / vehicle[DAMAGE_LOG.MAX_HEALTH]
+        vehicle_id = self._player.playerVehicleID if not is_dlog else vehicle_id
+        percent = getHealthPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], self.getVehicleMaxHealth(vehicle_id))
         vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRGB(percent, **settings[GLOBAL.AVG_COLOR])
         callback(0.1, lambda: self.updateExtendedLog(log_dict, settings))
+
+    def createVehicle(self, info, log_dict, vehicle):
+        vehicle[DAMAGE_LOG.INDEX] = len(log_dict[DAMAGE_LOG.SHOTS])
+        vehicle[DAMAGE_LOG.DAMAGE_LIST] = list()
+        vehicle[DAMAGE_LOG.VEHICLE_CLASS] = info.vehicleType.classTag
+        vehicle[DAMAGE_LOG.TANK_NAMES] = set()
+        vehicle[DAMAGE_LOG.ICON_NAME] = info.vehicleType.iconName
+        vehicle[DAMAGE_LOG.USER_NAME] = info.player.name
+        vehicle[DAMAGE_LOG.TANK_LEVEL] = info.vehicleType.level
+        vehicle[DAMAGE_LOG.KILLED_ICON] = GLOBAL.EMPTY_LINE
+        vehicle[DAMAGE_LOG.CLASS_ICON] = self.vehicle_icons[info.vehicleType.classTag]
+        vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[info.vehicleType.classTag]
 
     def updateExtendedLog(self, log_dict, settings, altMode=False):
         """

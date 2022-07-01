@@ -30,7 +30,7 @@ def onModSettingsChanged(config, blockID):
 
 
 def validateSettings(config):
-    return {_ETYPE.RECEIVED_CRITICAL_HITS: config[DAMAGE_LOG.WG_CRITS],
+    return {_ETYPE.RECEIVED_CRITICAL_HITS: config[DAMAGE_LOG.WG_CRITICS],
             _ETYPE.BLOCKED_DAMAGE: config[DAMAGE_LOG.WG_BLOCKED],
             _ETYPE.ASSIST_DAMAGE: config[DAMAGE_LOG.WG_ASSIST],
             _ETYPE.STUN: config[DAMAGE_LOG.WG_ASSIST]}

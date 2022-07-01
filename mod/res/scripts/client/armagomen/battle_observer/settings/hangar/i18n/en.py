@@ -216,8 +216,8 @@ localization = {
         "wg_log_hide_assist_tooltip": "Removes the damage from intelligence detailed log WG",
         "wg_log_hide_block": "Hide blocked damage",
         "wg_log_hide_block_tooltip": "Removes the blocked damage from a detailed log WG",
-        "wg_log_hide_crits": "Hide critical hits",
-        "wg_log_hide_crits_tooltip": "Removes critical hits from the detailed log WG",
+        "wg_log_hide_critics": "Hide critical hits",
+        "wg_log_hide_critics_tooltip": "Removes critical hits from the detailed log WG",
         "wg_log_pos_fix": "Put logs into the right places.",
         "wg_log_pos_fix_tooltip": "Switches positions of caused damage and received damage logs."
                                   "\nIf enabled - received is at the bottom, caused is at the top."

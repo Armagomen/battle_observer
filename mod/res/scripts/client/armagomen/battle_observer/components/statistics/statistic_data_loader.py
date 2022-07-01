@@ -3,7 +3,6 @@ import random
 
 import constants
 from armagomen.battle_observer.core import settings
-from armagomen.constants import MAIN
 from armagomen.utils.common import urlResponse, logDebug, logInfo, logError
 from helpers.func_utils import callback
 
@@ -35,7 +34,7 @@ class StatisticsDataLoader(object):
         return result
 
     def delayedLoad(self, arenaDP):
-        callback(0.1, self, "setCachedStatisticData", arenaDP)
+        callback(0.2, self, "setCachedStatisticData", arenaDP)
 
     def setCachedStatisticData(self, arenaDP):
         if not self.enabled:
