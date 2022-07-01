@@ -215,7 +215,6 @@ class DAMAGE_LOG:
     STUN_ICON = "stunIcon"
     TANK_LEVEL = "TankLevel"
     TANK_NAME = "tankName"
-    TANK_NAMES = "tankNames"
     TEMPLATE_MAIN_DMG = "templateMainDMG"
     TOP_MACROS_NAME = {
         FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: PLAYER_DAMAGE,
