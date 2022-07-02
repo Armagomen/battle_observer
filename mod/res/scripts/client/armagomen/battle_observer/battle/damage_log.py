@@ -72,8 +72,7 @@ class DamageLog(DamageLogsMeta):
             if extended_log:
                 arena = self._arenaVisitor.getArenaSubscription()
                 if arena is not None:
-                    arena.onVehicleAdded += self.onVehicleAddUpdate
-                    arena.onVehicleUpdated += self.onVehicleAddUpdate
+                    arena.onVehicleUpdated += self.onVehicleUpdated
                     arena.onVehicleKilled += self.onVehicleKilled
                 g_keysListener.registerComponent(DAMAGE_LOG.HOT_KEY, self.settings.log_global[DAMAGE_LOG.HOT_KEY],
                                                  self.onLogsAltMode)
@@ -93,8 +92,7 @@ class DamageLog(DamageLogsMeta):
             if extended_log:
                 arena = self._arenaVisitor.getArenaSubscription()
                 if arena is not None:
-                    arena.onVehicleAdded -= self.onVehicleAddUpdate
-                    arena.onVehicleUpdated -= self.onVehicleAddUpdate
+                    arena.onVehicleUpdated -= self.onVehicleUpdated
                     arena.onVehicleKilled -= self.onVehicleKilled
             if self.settings.log_total[GLOBAL.ENABLED] or extended_log:
                 feedback = self.sessionProvider.shared.feedback
@@ -151,7 +149,7 @@ class DamageLog(DamageLogsMeta):
                 GLOBAL.AVG_COLOR])
             self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
-    def onVehicleAddUpdate(self, vehicleID, *args, **kwargs):
+    def onVehicleUpdated(self, vehicleID, *args, **kwargs):
         """update log item in GM-mode"""
         vehicleInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
         if vehicleInfoVO:
