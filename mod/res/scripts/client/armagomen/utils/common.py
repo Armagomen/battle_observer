@@ -14,6 +14,7 @@ import ResMgr
 
 from BattleReplay import isPlaying, isLoading
 from armagomen.battle_observer.settings.default_settings import settings
+from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
 from helpers.http import openUrl
 
 MOD_NAME = "BATTLE_OBSERVER"
@@ -282,3 +283,9 @@ def urlResponse(url):
 def parseColorToHex(color, asInt=False):
     color = "0x" + color[1:]
     return int(color, 16) if asInt else color
+
+
+def getPercent(param_a, param_b):
+    if param_b <= 0:
+        return 0.0
+    return float(normalizeHealth(param_a)) / param_b
