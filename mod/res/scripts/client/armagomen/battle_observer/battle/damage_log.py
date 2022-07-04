@@ -25,8 +25,8 @@ class DamageLog(DamageLogsMeta):
 
     def __init__(self):
         super(DamageLog, self).__init__()
-        self.input_log = LogData(set(), list(), dict())
-        self.damage_log = LogData(set(), list(), dict())
+        self.input_log = None
+        self.damage_log = None
         self.top_log = None
         self.top_log_enabled = False
         self.extended_log_enabled = False
@@ -71,6 +71,8 @@ class DamageLog(DamageLogsMeta):
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
         if self.extended_log_enabled:
+            self.input_log = LogData(set(), list(), dict())
+            self.damage_log = LogData(set(), list(), dict())
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleUpdated += self.onVehicleUpdated
