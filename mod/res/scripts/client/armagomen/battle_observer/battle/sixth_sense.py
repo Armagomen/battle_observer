@@ -16,11 +16,14 @@ class SixthSense(SixthSenseMeta):
     def __init__(self):
         super(SixthSense, self).__init__()
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, lampTime=GLOBAL.ZERO)
-        self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS, self._arenaVisitor.type.getCountdownTimerSound())
+        self._timer = None
 
     def _populate(self):
         super(SixthSense, self)._populate()
         self.macro[SIXTH_SENSE.M_TIME] = self.settings[SIXTH_SENSE.TIME]
+        if self.settings[SIXTH_SENSE.SHOW_TIMER]:
+            self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS,
+                                          self._arenaVisitor.type.getCountdownTimerSound())
 
     def onEnterBattlePage(self):
         super(SixthSense, self).onEnterBattlePage()
@@ -31,7 +34,8 @@ class SixthSense(SixthSenseMeta):
 
     def onExitBattlePage(self):
         self.hide()
-        self._timer.destroy()
+        if self._timer is not None:
+            self._timer.destroy()
         g_playerEvents.onRoundFinished -= self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
@@ -53,12 +57,12 @@ class SixthSense(SixthSenseMeta):
 
     def show(self):
         self.as_showS()
-        if self.settings[SIXTH_SENSE.SHOW_TIMER]:
+        if self._timer is not None:
             self._timer.start(self.settings[SIXTH_SENSE.TIME], self.settings[SIXTH_SENSE.PLAY_TICK_SOUND])
         else:
             callback(float(self.settings[SIXTH_SENSE.TIME]), self.as_hideS)
 
     def hide(self):
-        if self.settings[SIXTH_SENSE.SHOW_TIMER]:
+        if self._timer is not None:
             self._timer.stop()
         self.as_hideS()
