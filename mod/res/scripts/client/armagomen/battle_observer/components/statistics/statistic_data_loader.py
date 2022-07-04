@@ -23,6 +23,7 @@ class StatisticsDataLoader(object):
         self.cache = {}
         self.enabled = region in ["ru", "eu", "com", "asia"]
         self.loaded = False
+        self._load_try = 0
         if settings.xvmInstalled:
             logInfo("StatisticsDataLoader: statistics/icons/minimap module is disabled, XVM is installed")
 
@@ -34,7 +35,9 @@ class StatisticsDataLoader(object):
         return result
 
     def delayedLoad(self, arenaDP):
-        callback(0.2, self, "setCachedStatisticData", arenaDP)
+        if self._load_try < 30:
+            self._load_try += 1
+            callback(0.4, self, "setCachedStatisticData", arenaDP)
 
     def setCachedStatisticData(self, arenaDP):
         if not self.enabled:

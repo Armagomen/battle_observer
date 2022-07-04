@@ -86,7 +86,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if self._statistics:
             if not self._statDataLoader.loaded and self._statDataLoader.enabled and self._statLoadTry < 30:
                 self._statLoadTry += 1
-                return callback(0.2, self, "loadStatisticView", view)
+                return callback(0.4, self, "loadStatisticView", view)
         cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
