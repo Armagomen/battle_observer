@@ -13,10 +13,8 @@ class DispersionTimer(DispersionTimerMeta):
     def __init__(self):
         super(DispersionTimer, self).__init__()
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timer=GLOBAL.F_ZERO, percent=GLOBAL.ZERO)
-        self.min_angle = None
+        self.min_angle = GLOBAL.F_ONE
         self.isPostmortem = False
-        self.timing = 0.0
-        self.percent = 0.0
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
@@ -35,33 +33,22 @@ class DispersionTimer(DispersionTimerMeta):
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
         if self.isPostmortem:
-            self.min_angle = None
+            self.min_angle = GLOBAL.F_ONE
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
     def updateDispersion(self, gunRotator):
         if self.isPostmortem:
             return
-        update = False
         dispersionAngle = gunRotator.dispersionAngle
         aimingTime = self._player.vehicleTypeDescriptor.gun.aimingTime
-        if self.min_angle is None or self.min_angle > dispersionAngle:
+        if self.min_angle > dispersionAngle:
             self.min_angle = dispersionAngle
             logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
-        timing = round(aimingTime, GLOBAL.TWO) * log(dispersionAngle / self.min_angle)
-        if self.timing != timing:
-            self.macro[DISPERSION_TIME.TIMER] = timing
-            self.timing = timing
-            update = True
+        self.macro[DISPERSION_TIME.TIMER] = round(aimingTime, GLOBAL.TWO) * log(dispersionAngle / self.min_angle)
         percent = int(ceil(self.min_angle / dispersionAngle * 100))
-        if self.percent != percent:
-            self.macro[DISPERSION_TIME.PERCENT] = percent
-            self.percent = percent
-            update = True
-        if update:
-            if percent == 100:
-                self.as_updateTimerTextS(self.settings[DISPERSION.TIMER_DONE_TEMPLATE] % self.macro)
-            else:
-                self.as_updateTimerTextS(self.settings[DISPERSION.TIMER_REGULAR_TEMPLATE] % self.macro)
+        self.macro[DISPERSION_TIME.PERCENT] = percent
+        template = DISPERSION.TIMER_REGULAR_TEMPLATE if percent < 100 else DISPERSION.TIMER_DONE_TEMPLATE
+        self.as_updateTimerTextS(self.settings[template] % self.macro)
 
     def onEnterBattlePage(self):
         super(DispersionTimer, self).onEnterBattlePage()

@@ -84,9 +84,9 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def loadStatisticView(self, view):
         if self._statistics:
-            if not self._statDataLoader.loaded and self._statDataLoader.enabled and self._statLoadTry < 30:
+            if not self._statDataLoader.loaded and self._statDataLoader.enabled and self._statLoadTry < 20:
                 self._statLoadTry += 1
-                return callback(0.4, self, "loadStatisticView", view)
+                return callback(0.5, self, "loadStatisticView", view)
         cutWidth = view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]

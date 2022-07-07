@@ -35,9 +35,9 @@ class StatisticsDataLoader(object):
         return result
 
     def delayedLoad(self, arenaDP):
-        if self._load_try < 30:
+        if self._load_try < 20:
             self._load_try += 1
-            callback(0.4, self, "setCachedStatisticData", arenaDP)
+            callback(0.5, self, "setCachedStatisticData", arenaDP)
 
     def setCachedStatisticData(self, arenaDP):
         if not self.enabled:

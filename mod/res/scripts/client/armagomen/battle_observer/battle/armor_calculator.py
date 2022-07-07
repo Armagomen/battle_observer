@@ -33,10 +33,7 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
-        self.otherMessages = OtherMessages(
-            (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.RICOCHET]),
-            (GLOBAL.EMPTY_LINE, self.settings[ARMOR_CALC.NO_DAMAGE])
-        )
+        self.otherMessages = OtherMessages(self.settings[ARMOR_CALC.RICOCHET], self.settings[ARMOR_CALC.NO_DAMAGE])
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -57,8 +54,8 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def onArmorChanged(self, armor, piercingPower, caliber, ricochet, noDamage):
         if armor is not None:
-            self.calcMacro[ARMOR_CALC.RICOCHET] = self.otherMessages.ricochet[ricochet]
-            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.otherMessages.noDamage[noDamage]
+            self.calcMacro[ARMOR_CALC.RICOCHET] = self.otherMessages.ricochet if ricochet else GLOBAL.EMPTY_LINE
+            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.otherMessages.noDamage if noDamage else GLOBAL.EMPTY_LINE
             self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = armor
             self.calcMacro[ARMOR_CALC.PIERCING_POWER] = piercingPower
             self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = piercingPower - armor
