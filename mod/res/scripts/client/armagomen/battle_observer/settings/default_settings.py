@@ -18,7 +18,6 @@ class DefaultSettings(object):
     def __init__(self):
         self.onModSettingsChanged = SafeEvent()
         self.onUserConfigUpdateComplete = SafeEvent()
-        self.xvmInstalled = False
 
         self.main = {
             MAIN.HIDE_CHAT: False,

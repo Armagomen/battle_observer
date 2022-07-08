@@ -2,8 +2,7 @@ import copy
 import random
 
 import constants
-from armagomen.battle_observer.core import settings
-from armagomen.utils.common import urlResponse, logDebug, logInfo, logError
+from armagomen.utils.common import urlResponse, logDebug, logInfo, logError, xvmInstalled
 from helpers.func_utils import callback
 
 region = constants.AUTH_REALM.lower()
@@ -24,7 +23,7 @@ class StatisticsDataLoader(object):
         self.enabled = region in ["ru", "eu", "com", "asia"]
         self.loaded = False
         self._load_try = 0
-        if settings.xvmInstalled:
+        if xvmInstalled:
             logInfo("StatisticsDataLoader: statistics/icons/minimap module is disabled, XVM is installed")
 
     def request(self, databaseIDS):

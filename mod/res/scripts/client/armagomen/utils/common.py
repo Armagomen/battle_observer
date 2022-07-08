@@ -187,7 +187,7 @@ def isXvmInstalled():
     return xfw and xvm
 
 
-settings.xvmInstalled = isXvmInstalled()
+xvmInstalled = isXvmInstalled()
 
 
 def getCrewPath():

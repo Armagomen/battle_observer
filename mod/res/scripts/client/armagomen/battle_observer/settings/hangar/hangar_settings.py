@@ -2,7 +2,7 @@
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
-from armagomen.utils.common import logWarning, openWebBrowser, logDebug
+from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
@@ -98,7 +98,7 @@ class CreateElement(object):
 
     def createBlock(self, blockID, settings, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
-        warning = self.settings.xvmInstalled and blockID in LOCKED_BLOCKS
+        warning = xvmInstalled and blockID in LOCKED_BLOCKS
         if warning:
             name += LOCKED[GLOBAL.RU_LOCALIZATION]
         return {

@@ -1,9 +1,9 @@
 from math import degrees
 
 from armagomen.battle_observer.core import settings, view_settings
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.constants import GLOBAL, MINIMAP
-from armagomen.utils.common import overrideMethod
+from armagomen.utils.common import overrideMethod, xvmInstalled
+from armagomen.utils.keys_listener import g_keysListener
 from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
@@ -15,7 +15,7 @@ class MinimapZoomPlugin(object):
 
     def __init__(self):
         self.__battleView_as = None
-        self.enabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not settings.xvmInstalled
+        self.enabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not xvmInstalled
 
     def init(self, view):
         self.__battleView_as = view.flashObject
@@ -86,7 +86,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
     _plugins = base(plugin, arenaVisitor)
-    if settings.minimap[GLOBAL.ENABLED] and view_settings.notEpicBattle and not settings.xvmInstalled:
+    if settings.minimap[GLOBAL.ENABLED] and view_settings.notEpicBattle and not xvmInstalled:
         if settings.minimap[MINIMAP.DEATH_PERMANENT]:
             _plugins['vehicles'] = ArenaVehiclesPlugin
         _plugins['personal'] = PersonalEntriesPlugin

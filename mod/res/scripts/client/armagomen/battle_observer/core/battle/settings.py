@@ -1,6 +1,6 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME
-from armagomen.utils.common import overrideMethod
+from armagomen.utils.common import overrideMethod, xvmInstalled
 from armagomen.utils.events import g_events
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -58,12 +58,12 @@ class ViewSettings(object):
         return self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
 
     def isWTREnabled(self):
-        if self.cfg.xvmInstalled:
+        if xvmInstalled:
             return False
         return self.statsMain and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
-        if self.cfg.xvmInstalled:
+        if xvmInstalled:
             return False
         return self.statsMain and self.cfg.statistics[STATISTICS.ICON_ENABLED]
 
@@ -94,7 +94,7 @@ class ViewSettings(object):
             return (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
                     self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED])
         elif alias is ALIASES.PANELS:
-            return not self.cfg.xvmInstalled and self.cfg.players_panels[
+            return not xvmInstalled and self.cfg.players_panels[
                 GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
         elif alias is ALIASES.USER_BACKGROUND:
             return self.cfg.user_background[GLOBAL.ENABLED] and self.notEpicBattle
