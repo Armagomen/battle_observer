@@ -1,7 +1,7 @@
 import os
 
 from armagomen.constants import LOAD_LIST, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile, isXvmInstalled
+from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
@@ -11,7 +11,6 @@ class ConfigLoader(object):
 
     def __init__(self, settings):
         self.settings = settings
-        settings.xvmInstalled = isXvmInstalled()
         self.cName = None
         self.path = os.path.join(getCurrentModPath()[GLOBAL.FIRST], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]

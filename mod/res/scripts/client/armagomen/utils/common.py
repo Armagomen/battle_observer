@@ -187,6 +187,9 @@ def isXvmInstalled():
     return xfw and xvm
 
 
+settings.xvmInstalled = isXvmInstalled()
+
+
 def getCrewPath():
     path = os.path.join(getObserverCachePath(), "crew_ignored.json")
     if not os.path.isfile(path):

@@ -50,7 +50,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self._arenaDP = None
         self.minimapPlugin = MinimapZoomPlugin()
         self._statLoadTry = 0
-        self.statistics = Statistics(view_settings.isStatisticEnabled(), view_settings.isIconsEnabled(),
+        self.statistics = Statistics(view_settings.isWTREnabled(), view_settings.isIconsEnabled(),
                                      StatisticsDataLoader(), WTRStatistics())
         listeners = [(alias, self.eventListener) for alias in self._viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)

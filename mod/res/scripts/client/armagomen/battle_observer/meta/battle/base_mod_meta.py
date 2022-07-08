@@ -54,8 +54,8 @@ class BaseModMeta(BaseDAAPIComponent):
         self.setSettings()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
-        logDebug("battle module '{}' loaded", self.getAlias())
         self.as_onAfterPopulateS()
+        logDebug("battle module '{}' loaded", self.getAlias())
 
     def _dispose(self):
         g_playerEvents.onAvatarReady -= self.onEnterBattlePage

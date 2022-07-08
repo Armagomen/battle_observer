@@ -6,14 +6,14 @@ from armagomen.battle_observer.core.update.worker import UpdateMain
 from armagomen.constants import SWF, FILE_NAME, MESSAGES, MAIN, getRandomLogo
 from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache, cleanupUpdates
 from async import async, await
+from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings import config as packages
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
-from gui.shared.system_factory import registerScaleformBattlePackages
 from gui.shared.personality import ServicesLocator
+from gui.shared.system_factory import registerScaleformBattlePackages
 from skeletons.gui.app_loader import GuiGlobalSpaceID
-from constants import ARENA_GUI_TYPE
 
 BATTLE_TYPES_TO_INJECT_PACKAGES = {ARENA_GUI_TYPE.RANKED,
                                    ARENA_GUI_TYPE.EPIC_RANDOM,

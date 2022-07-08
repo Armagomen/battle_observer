@@ -16,7 +16,7 @@ def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
             kwargs[ANOTHER.BADGES] = None
         if main[MAIN.SHOW_ANONYMOUS] and ANOTHER.ACCOUNT_DBID in kwargs:
             if kwargs[ANOTHER.ACCOUNT_DBID] == GLOBAL.ZERO:
-                if not view_settings.isStatisticEnabled():
+                if not view_settings.isWTREnabled():
                     kwargs[ANOTHER.IS_TEAM_KILLER] = _PLAYER_STATUS.IS_TEAM_KILLER
                 if main[MAIN.CHANGE_ANONYMOUS_NAME] and ANOTHER.NAME in kwargs and \
                         not kwargs[ANOTHER.NAME].startswith(BOT_START_SWITCH):
