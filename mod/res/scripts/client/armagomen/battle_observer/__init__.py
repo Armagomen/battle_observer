@@ -1,5 +1,5 @@
 __author__ = "Armagomen"
-__version__ = "1.38.2"
+__version__ = "1.38.3"
 __copyright__ = "Copyright 2014-2022, Armagomen"
 __credits__ = ["Armagomen"]
 __license__ = "CC BY-NC-SA 4.0"
