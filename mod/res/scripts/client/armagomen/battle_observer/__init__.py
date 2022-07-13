@@ -6,7 +6,7 @@ __license__ = "CC BY-NC-SA 4.0"
 __maintainer__ = "Armagomen"
 __email__ = "armagomen@gmail.com"
 __status__ = "Production"
-__http__ = "localhost"
+__http__ = "https://donatua.com/@armagomen"
 __all__ = ['init', 'fini', 'onConnected', 'onDisconnected']
 
 from armagomen.battle_observer.core import init, fini

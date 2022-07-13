@@ -18,19 +18,22 @@ _LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
 
 
 class ShotResultResolver(object):
-    __slots__ = ("resolver", "_player")
+    __slots__ = ("resolver", "__player")
 
     def __init__(self):
         self.resolver = _CrosshairShotResults
-        self._player = None
+        self.__player = None
+
+    def setPlayer(self):
+        self.__player = getPlayer()
 
     def isAlly(self, entity):
         if not settings.armor_calculator[ARMOR_CALC.ON_ALLY]:
-            return entity.publicInfo[VEHICLE.TEAM] == self._player.team
+            return entity.publicInfo[VEHICLE.TEAM] == self.__player.team
         return False
 
     def getShotResult(self, collision, hitPoint, direction, piercingMultiplier):
-        if collision is None or self._player is None:
+        if collision is None or self.__player is None:
             return UNDEFINED_RESULT
         entity = collision.entity
         if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive() or self.isAlly(entity):
@@ -38,7 +41,7 @@ class ShotResultResolver(object):
         cDetails = self.resolver._getAllCollisionDetails(hitPoint, direction, entity)
         if cDetails is None:
             return UNDEFINED_RESULT
-        shot = self._player.getVehicleDescriptor().shot
+        shot = self.__player.getVehicleDescriptor().shot
         shell = shot.shell
         isHE = shell.kind == SHELLS.HIGH_EXPLOSIVE
         if isHE or shell.kind == SHELLS.HOLLOW_CHARGE:
@@ -65,7 +68,7 @@ class ShotResultResolver(object):
             matInfo = detail.matInfo
             if matInfo is None:
                 continue
-            hitAngleCos = detail.hitAngleCos if matInfo.useHitAngle else GLOBAL.F_ONE
+            hitAngleCos = detail.hitAngleCos
             computedArmor += self.resolver._computePenetrationArmor(shell, hitAngleCos, matInfo)
             if isJet:
                 jetDist = detail.dist - jetStartDist
@@ -102,7 +105,7 @@ class ShotResultResolver(object):
         :param multiplier: x
         :return Piercing Power: at distance
         """
-        distance = hitPoint.distTo(self._player.position)
+        distance = hitPoint.distTo(self.__player.position)
         p100, p500 = (pp * multiplier for pp in shot.piercingPower)
         if distance <= _MIN_PIERCING_DIST:
             return p100
@@ -141,7 +144,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
-        self.__resolver._player = getPlayer()
+        self.__resolver.setPlayer()
 
 
 @overrideMethod(plugins, 'createPlugins')
