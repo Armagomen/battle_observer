@@ -4,7 +4,6 @@ from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMet
 from armagomen.constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
 from armagomen.utils.common import vector3
 from gui.battle_control import avatar_getter
-from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 VECTOR = vector3(GLOBAL.F_ZERO, GLOBAL.F_ZERO, GLOBAL.F_ZERO)
 
@@ -41,7 +40,7 @@ class FlightTime(FlightTimeMeta):
             self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
-            handler.onCameraChanged += self.onCameraChanged
+            handler.onCameraChanged -= self.onCameraChanged
         super(FlightTime, self).onExitBattlePage()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):

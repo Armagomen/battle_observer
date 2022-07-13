@@ -55,7 +55,7 @@ class ShotResultResolver(object):
 
     def computeArmor(self, cDetails, shell, fullPiercingPower, isHE):
         computedArmor = GLOBAL.ZERO
-        power = fullPiercingPower
+        piercingPower = fullPiercingPower
         ricochet = False
         noDamage = True
         isJet = False
@@ -70,18 +70,19 @@ class ShotResultResolver(object):
             if isJet:
                 jetDist = detail.dist - jetStartDist
                 if jetDist > GLOBAL.F_ZERO:
-                    fullPiercingPower = power - jetDist * shellExtraData.jetLossPPByDist
+                    piercingPower = fullPiercingPower - jetDist * shellExtraData.jetLossPPByDist
             else:
                 ricochet = self.resolver._shouldRicochet(shell, hitAngleCos, matInfo)
             if matInfo.vehicleDamageFactor:
                 noDamage = False
                 break
             elif isHE and self.isModernMechanics(shell):
-                fullPiercingPower -= computedArmor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                piercingPower -= computedArmor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                piercingPower = max(piercingPower, GLOBAL.F_ZERO)
             elif shellExtraData.jetLossPPByDist > GLOBAL.F_ZERO:
                 isJet = True
                 jetStartDist += detail.dist + matInfo.armor * 0.001
-        return computedArmor, max(fullPiercingPower, GLOBAL.F_ZERO), ricochet, noDamage
+        return computedArmor, piercingPower, ricochet, noDamage
 
     @staticmethod
     def shotResult(armor, piercingPower, shell):

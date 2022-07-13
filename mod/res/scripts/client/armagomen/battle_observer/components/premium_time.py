@@ -16,12 +16,11 @@ class PremiumTime(object):
         overrideMethod(LobbyHeader, "_removeListeners")(self._removeListeners)
 
     def _getPremiumLabelText(self, timeDelta):
-        if settings.main[PREMIUM.PREMIUM_TIME]:
-            delta = float(getTimeDeltaFromNow(makeLocalServerTime(timeDelta)))
-            self.macros["days"], delta = divmod(delta, ONE_DAY)
-            self.macros["hours"], delta = divmod(delta, ONE_HOUR)
-            self.macros["minutes"], self.macros["seconds"] = divmod(delta, ONE_MINUTE)
-            return settings.main[PREMIUM.PREMIUM_FORMAT] % self.macros
+        delta = float(getTimeDeltaFromNow(makeLocalServerTime(timeDelta)))
+        self.macros["days"], delta = divmod(delta, ONE_DAY)
+        self.macros["hours"], delta = divmod(delta, ONE_HOUR)
+        self.macros["minutes"], self.macros["seconds"] = divmod(delta, ONE_MINUTE)
+        return settings.main[PREMIUM.PREMIUM_FORMAT] % self.macros
 
     def startCallback(self, base, header, data):
         self.stopCallback()

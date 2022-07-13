@@ -4,7 +4,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import STATISTICS
 
 
-class WTRStatisticsAndIcons(object):
+class WTRStatistics(object):
 
     COLOR_WTR = 'colorWTR'
     DEFAULT_COLOR = "#fafafa"

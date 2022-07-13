@@ -181,10 +181,7 @@ class DAMAGE_LOG:
     DONE_EXTENDED = "log_damage_extended"
     D_LOG = "d_log"
     IN_LOG = "in_log"
-    TOP_LOG_ASSIST = {FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY, FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY,
-                      FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR}
     EXTENDED_DAMAGE = {FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER}
-    EXTRA_WITH_DAMAGE = TOP_LOG_ASSIST.union(EXTENDED_DAMAGE)
     GLOBAL = "log_global"
     HOT_KEY = "logsAltmode_hotkey"
     ICONS = "icons"
@@ -192,7 +189,6 @@ class DAMAGE_LOG:
     INDEX = "index"
     IN_CENTER = "inCenter"
     KILLED_ICON = "killedIcon"
-    KILLS = "kills"
     LAST_DAMAGE = "lastDamage"
     LOG_MAX_LEN = 13
     LOG_MODE = ("extendedLog", "extendedLogALTMODE")

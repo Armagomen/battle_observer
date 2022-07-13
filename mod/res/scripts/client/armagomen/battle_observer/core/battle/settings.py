@@ -57,7 +57,7 @@ class ViewSettings(object):
     def statsMain(self):
         return self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
 
-    def isStatisticEnabled(self):
+    def isWTREnabled(self):
         if self.cfg.xvmInstalled:
             return False
         return self.statsMain and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]

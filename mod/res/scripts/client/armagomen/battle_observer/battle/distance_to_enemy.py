@@ -29,7 +29,7 @@ class Distance(DistanceMeta):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
-        g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
+        g_playerEvents.onArenaPeriodChange -= self.onArenaPeriod
         super(Distance, self)._dispose()
 
     def onArenaPeriod(self, period, *args):
