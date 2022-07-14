@@ -1,16 +1,10 @@
+from collections import namedtuple
 from functools import partial
 
 from SoundGroups import g_instance
 from armagomen.utils.common import callback, cancelCallback
 
-
-class CONSTANTS:
-    def __init__(self):
-        pass
-
-    ONE_SECOND = 1.0
-    ZERO = 0
-    ONE = 1
+CONSTANTS = namedtuple("CONSTANTS", ("ONE_SECOND", "ZERO", "ONE"))(1.0, 0, 1)
 
 
 class Timer(object):

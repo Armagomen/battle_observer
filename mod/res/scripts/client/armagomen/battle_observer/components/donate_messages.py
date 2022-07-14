@@ -11,19 +11,16 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 if GLOBAL.RU_LOCALIZATION:
     messages = (
-        # "<b>Поддержите</b> разработку мода донатом. Спасибо.",
-        # "Спасибо за <b>финансовую</b> поддержку.",
-        # "Передаем за проезд. :)",
-        # "Присоединяйся к нашему клану <a href='event:BOFAN'>[BOFAN]</a>. Никаких обязательств. Вступай и получай "
-        # "клановые бонусы (бустеры, камуфляжи, и многое другое).",
         "Доброго вечора ми з України.",
-        "Підтримай розробку мода, 60% від кожного донату піде на допомогу ЗСУ, все буде Україна.",
+        "Підтримай розробку мода, все буде Україна.",
+        "Батько наш - Бандера,\nУкраїна - мати,\nМи за Україну будем воювати!",
+        "Ой у лузі червона калина похилилася,\nЧогось наша славна Україна зажурилася.\n"
+        "А ми тую червону калину підіймемо,\nА ми нашу славну Україну, гей, гей, розвеселимо!",
     )
 else:
     messages = (
         "Good evening, we are from Ukraine.",
-        "Support the development of fashion, 60% of each donation will go to the aid of the Armed Forces, "
-        "everything will be Ukraine."
+        "Support the development of the mod, everything will be Ukraine."
     )
 
 

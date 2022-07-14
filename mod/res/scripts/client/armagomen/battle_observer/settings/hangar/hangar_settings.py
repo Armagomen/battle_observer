@@ -18,11 +18,50 @@ LOCKED = ("<font color='#ff3d3d'> The function is not available, XVM is installe
           "<font color='#ff3d3d'> Функция недоступна, установлен XVM.</font>")
 
 
+class Getter(object):
+    __slots__ = ()
+
+    @staticmethod
+    def getLinkToParam(data, settingPath):
+        path = settingPath.split(GLOBAL.C_INTERFACE_SPLITTER)
+        for fragment in path:
+            if fragment in data and isinstance(data[fragment], dict):
+                data = data[fragment]
+        return data, path[GLOBAL.LAST]
+
+    @staticmethod
+    def getCollectionIndex(value, collection):
+        index = GLOBAL.ZERO
+        if value in collection:
+            index = collection.index(value)
+        return collection, index
+
+    def getKeyPath(self, settings, path=()):
+        for key, value in settings.iteritems():
+            key_path = path + (key,)
+            if isinstance(value, dict):
+                for _path in self.getKeyPath(value, key_path):
+                    yield _path
+            else:
+                yield key_path
+
+    def keyValueGetter(self, settings):
+        key_val = []
+        try:
+            for key in sorted(self.getKeyPath(settings)):
+                key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
+                if GLOBAL.ENABLED != key:
+                    dic, param = self.getLinkToParam(settings, key)
+                    key_val.append((key, dic[param]))
+        except Exception:
+            LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
+        return key_val
+
+
 class CreateElement(object):
 
     def __init__(self):
-        self.settings = None
-        self.getter = None
+        self.getter = Getter()
 
     @staticmethod
     def createLabel(blockID, name):
@@ -96,7 +135,8 @@ class CreateElement(object):
             result.update({'snapInterval': step, 'format': '{{value}}'})
         return result
 
-    def createBlock(self, blockID, settings, column1, column2):
+    @staticmethod
+    def createBlock(blockID, settings, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
         warning = xvmInstalled and blockID in LOCKED_BLOCKS
         if warning:
@@ -137,46 +177,6 @@ class CreateElement(object):
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 
 
-class Getter(object):
-    __slots__ = ()
-
-    @staticmethod
-    def getLinkToParam(data, settingPath):
-        path = settingPath.split(GLOBAL.C_INTERFACE_SPLITTER)
-        for fragment in path:
-            if fragment in data and isinstance(data[fragment], dict):
-                data = data[fragment]
-        return data, path[GLOBAL.LAST]
-
-    @staticmethod
-    def getCollectionIndex(value, collection):
-        index = GLOBAL.ZERO
-        if value in collection:
-            index = collection.index(value)
-        return collection, index
-
-    def getKeyPath(self, settings, path=()):
-        for key, value in settings.iteritems():
-            key_path = path + (key,)
-            if isinstance(value, dict):
-                for _path in self.getKeyPath(value, key_path):
-                    yield _path
-            else:
-                yield key_path
-
-    def keyValueGetter(self, settings):
-        key_val = []
-        try:
-            for key in sorted(self.getKeyPath(settings)):
-                key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
-                if GLOBAL.ENABLED != key:
-                    dic, param = self.getLinkToParam(settings, key)
-                    key_val.append((key, dic[param]))
-        except Exception:
-            LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
-        return key_val
-
-
 class ConfigInterface(CreateElement):
 
     def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, configLoader):
@@ -189,7 +189,6 @@ class ConfigInterface(CreateElement):
         self.vxSettingsApi = vxSettingsApi
         self.currentConfig = self.newConfig = self.cLoader.configsList.index(self.cLoader.cName)
         self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
-        self.getter = Getter()
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
                                    useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
@@ -256,9 +255,10 @@ class ConfigInterface(CreateElement):
         if blockID not in self.inited:
             try:
                 self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID))
-                self.inited.add(blockID)
             except Exception:
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
+            else:
+                self.inited.add(blockID)
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings_core in the settings_core file."""
