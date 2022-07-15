@@ -11,6 +11,7 @@ from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
+                 ARENA_GUI_TYPE.FUN_RANDOM,
                  ARENA_GUI_TYPE.UNKNOWN,
                  ARENA_GUI_TYPE.TRAINING,
                  ARENA_GUI_TYPE.RANKED,
@@ -31,7 +32,8 @@ class ViewSettings(object):
         self.isAllowed = False
         self.isSPG = False
         self.__viewAliases = {VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE,
-                              VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE}
+                              VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE,
+                              VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE}
         self.__components = []
         self.__hiddenComponents = []
         g_events.onHangarVehicleChanged += self.onVehicleChanged

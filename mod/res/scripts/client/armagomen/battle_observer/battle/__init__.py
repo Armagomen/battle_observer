@@ -6,7 +6,7 @@ from armagomen.battle_observer.components.statistics.statistic_data_loader impor
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
 from armagomen.battle_observer.core import view_settings
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES
-from armagomen.utils.common import logError, logWarning, logInfo
+from armagomen.utils.common import logError, logWarning, logInfo, logDebug
 from armagomen.utils.events import g_events
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addListener, _removeListener
@@ -69,6 +69,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).fini()
 
     def eventListener(self, event):
+        logDebug("ObserverBusinessHandler/eventListener: isAllowed={}, alias={}", view_settings.isAllowed, event.alias)
         if view_settings.isAllowed:
             self._app.loaderManager.onViewLoaded += self.onViewLoaded
 
@@ -77,7 +78,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             if self.statistics.wtr:
                 self.statistics.dataLoader.setCachedStatisticData(self._arenaDP)
             self._app.as_loadLibrariesS([SWF.BATTLE])
-            logInfo("loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
+            logInfo("ObserverBusinessHandler loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
 
     def loadStatisticView(self, view):
         if self.statistics.wtr and self.statistics.dataLoader.enabled:
@@ -95,6 +96,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
     def onViewLoaded(self, view, *args):
+        logDebug("ObserverBusinessHandler/onViewLoaded: {}", view.settings.alias)
         if view.settings is None or view.settings.alias not in self._viewAliases:
             return
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
