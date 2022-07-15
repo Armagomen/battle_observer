@@ -87,7 +87,8 @@ class GLOBAL:
     ONE_SECOND = 1.0
     OUTLINE = "outline"
     REPLACE = ("%(battles)d", "%(battles)s")
-    RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
+    RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'be')
+    UKR_LOCALIZATION = getClientLanguage().lower() == 'uk'
     SCALE = "scale"
     SETTINGS = "settings"
     SMOOTHING = "smoothing"
