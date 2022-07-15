@@ -29,8 +29,8 @@ RESTART_TOOLTIP = "Для увімкнення/вимкнення необхід
 
 localization = {
     "configSelect": {
-        "header": "Вибір налаштувань із mods/configs/mod_battle_observer",
-        "selector": "Вибрати налаштування",
+        "header": "Пресети налаштувань",
+        "selector": "Вибрати пресет:",
         "donate_button_ua": "Підтримати розробку",
         "donate_button_paypal": "Підтримати через PayPal",
         "donate_button_patreon": "Підтримати через Patreon",
