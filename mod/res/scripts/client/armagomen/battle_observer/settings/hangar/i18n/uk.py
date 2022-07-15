@@ -37,12 +37,12 @@ localization = {
         "discord_button": "Discord сервер модифікації"
     },
     "main": {
-        "header": "Настройки без категорії",
+        "header": "Налаштування без категорії",
         "DEBUG_MODE": "DEBUG_MODE",
         "showFriendsAndClanInEars": "Позначити друзів, сокланівців і себе в списках команд",
         "autoClearCache": "Очищати кеш гри після виходу",
         "autoClearCache_tooltip": "Очистка тимчасових файлів гри в папці AppData/Roaming/Wargaming.net/WorldOfTanks.\n"
-                                  "Папки модифікацій і настройки, які зберігаються в тому ж місці, залишаться.",
+                                  "Папки модифікацій і налаштування, які зберігаються в тому ж місці, залишаться.",
         "removeShadowInPrebattle": "Прибрати затемнення таймеру на початку бою",
         "hideBadges": "Вимкнути відображення нашивок в бою",
         "hideBadges_tooltip": "Вимкнення відображення нашивок в бою у вухах, у вікні по клавіші Tab та на екрані завантаження.",
@@ -94,7 +94,7 @@ localization = {
         "statistics_enabled": "Увімкнути статистику гравців (WTR рейтинг)",
         "statistics_change_vehicle_name_color": "Змінити колір назви танку в вухах на колір згідно з статистикою гравця",
         "statistics_enabled_tooltip": "Статистика буде відображатися на екрані завантаження, у вухах, у вікні по клавіші Tab.\n"
-                                      "Для більш тонкої настройки дивись файл statistics.json\n"
+                                      "Для більш тонкого налаштування дивись файл statistics.json\n"
                                       "Доступні імена макросів: WTR, colorWTR, winRate, nickname, battles, clanTag",
         "icon_enabled": "Перефарбувати іконки танків в кольори класів техніки",
         "icon_enabled_tooltip": "Дана функція перефарбовує будь-які іконки техніки на екрані завантаження, у вухах, у вікні "
@@ -428,12 +428,12 @@ localization = {
     },
     "service": {
         "name": "Battle Observer - v{0}".format(__version__),
-        "description": "Открыть настройки мода Battle Observer",
-        "windowTitle": "Настройки мода Battle Observer - v{0}".format(__version__),
+        "description": "Відкрити налаштування мода Battle Observer",
+        "windowTitle": "Налаштування мода Battle Observer - v{0}".format(__version__),
         "buttonOK": "OK",
-        "buttonCancel": "Отмена",
-        "buttonApply": "Применить",
-        "enableButtonTooltip": "{HEADER}ВКЛ/ВЫКЛ{/HEADER}{BODY}Включить/Выключить модуль{/BODY}"
+        "buttonCancel": "Відміна",
+        "buttonApply": "Застосувати",
+        "enableButtonTooltip": "{HEADER}ВКЛ/ВЫКЛ{/HEADER}{BODY}Увімкнути/Вимкнути модуль{/BODY}"
     },
     "sixth_sense": {
         "header": "Лампа 6-е чувство.",
