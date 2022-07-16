@@ -84,7 +84,6 @@ class GLOBAL:
     INNER = "inner"
     KNOCKOUT = "knockout"
     ONE = 1
-    ONE_SECOND = 1.0
     OUTLINE = "outline"
     RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
     SCALE = "scale"
