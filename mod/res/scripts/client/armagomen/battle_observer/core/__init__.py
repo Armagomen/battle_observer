@@ -1,19 +1,16 @@
-import sys
-
-from armagomen.constants import MESSAGES
-from armagomen.utils.common import logWarning, isFileValid, clearClientCache, cleanupUpdates, logInfo
-
 __version__ = "1.38.5"
 loadError = False
 errorMessage = ""
 
 try:
+    import sys
+    from armagomen.constants import MESSAGES
+    from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError
     from gui.modsListApi import g_modsListApi
     from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
 except ImportError as err:
-
     errorMessage = repr(err)
-    logWarning(errorMessage)
+    logError(errorMessage)
     loadError = True
 else:
     if isFileValid(__version__):
@@ -24,7 +21,7 @@ else:
         from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
 
         logInfo("Launched at python " + sys.version)
-        logInfo('MOD {0}: {1}'.format(MESSAGES.START, __version__))
+        logInfo('MOD START LOADING: v{}'.format(__version__))
         update = UpdateMain(__version__)
         _view_settings = ViewSettings()
         componentsLoader = ComponentsLoader()
@@ -35,7 +32,7 @@ else:
         loadError = True
         errorMessage = "ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please " \
                        "install mod from official site".format(__version__)
-        logWarning(errorMessage)
+        logError(errorMessage)
 
 
 def init():
@@ -49,4 +46,4 @@ def fini():
         return
     clearClientCache()
     cleanupUpdates()
-    logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, __version__))
+    logInfo('MOD SHUTTING DOWN: v{}'.format(__version__))

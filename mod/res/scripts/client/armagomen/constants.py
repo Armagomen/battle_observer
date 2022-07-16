@@ -378,10 +378,6 @@ ANOTHER = namedtuple("ANOTHER", (
     "configSelect", "shadow_settings", "friendList", "accountDBID", "users", "databaseID", "badges", "isTeamKiller",
     "name", "fakeName", "clanDBID", "clanAbbrev")
 
-MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "UPDATE_CHECKED", "NEW_VERSION"))(
-    "START LOADING", "SHUTTING DOWN", "The update check is completed, you have the current version.",
-    "An update {} is detected, the client will be restarted at the end of the download.")
-
 BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )
 
 CREW_XP = namedtuple("CREW_XP", ("NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF"))(
