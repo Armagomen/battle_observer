@@ -33,6 +33,8 @@ en = {
     "titleNEW": "\n<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
 }
 
+uk = {}
+
 
 def getI18n():
     if GLOBAL.RU_LOCALIZATION:

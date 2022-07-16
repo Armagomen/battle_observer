@@ -78,9 +78,6 @@ class SettingsLoader(object):
                 new_param = external_cfg.get(key)
                 if new_param is not None:
                     new_param_type = type(new_param)
-                    if new_param_type is str and GLOBAL.REPLACE[GLOBAL.FIRST] in new_param:
-                        file_update = True
-                        new_param = new_param.replace(*GLOBAL.REPLACE)
                     if new_param_type != old_param_type:
                         file_update = True
                         if old_param_type is int and new_param_type is float:
