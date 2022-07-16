@@ -1,6 +1,7 @@
 from DogTagComponent import DogTagComponent
 from VehicleGunRotator import VehicleGunRotator
-from armagomen.battle_observer.core import settings, _view_settings
+from armagomen.battle_observer.core import _view_settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
 from armagomen.utils.common import overrideMethod, getPlayer
 from armagomen.utils.events import g_events

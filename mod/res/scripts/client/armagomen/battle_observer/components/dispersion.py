@@ -5,7 +5,7 @@ import aih_constants
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
 from VehicleGunRotator import VehicleGunRotator
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, DISPERSION
 from armagomen.utils.common import overrideMethod, getPlayer
 from constants import SERVER_TICK_LENGTH

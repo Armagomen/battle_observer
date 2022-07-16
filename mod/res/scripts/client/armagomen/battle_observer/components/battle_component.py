@@ -2,7 +2,7 @@ import math
 
 from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import setMaxFrameRate, logDebug
 from gui.battle_control.controllers import msgs_ctrl

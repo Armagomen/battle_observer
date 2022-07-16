@@ -91,6 +91,7 @@ class UpdateMain(DownloadThread):
         super(UpdateMain, self).__init__()
         self.version = version
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+        self.subscribe()
 
     def request_last_version(self):
         result = False

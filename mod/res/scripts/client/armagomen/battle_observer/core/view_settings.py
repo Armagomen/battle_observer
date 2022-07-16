@@ -1,12 +1,15 @@
 from CurrentVehicle import g_currentVehicle
-from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME
+from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
 from armagomen.utils.common import overrideMethod, xvmInstalled
 from armagomen.utils.events import g_events
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
+from gui.Scaleform.daapi.settings import config as packages
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
+from gui.shared.system_factory import registerScaleformBattlePackages
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -27,8 +30,7 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
-    def __init__(self, cfg):
-        self.cfg = cfg
+    def __init__(self):
         self.isAllowed = False
         self.isSPG = False
         self.__viewAliases = {VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE,
@@ -38,6 +40,10 @@ class ViewSettings(object):
         self.__hiddenComponents = []
         g_events.onHangarVehicleChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
+        for guiType in BATTLES_RANGE:
+            registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
+        packages.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
+        packages.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
 
     def onVehicleChanged(self):
         self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
@@ -57,56 +63,56 @@ class ViewSettings(object):
 
     @property
     def statsMain(self):
-        return self.cfg.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
+        return settings.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
 
     def isWTREnabled(self):
         if xvmInstalled:
             return False
-        return self.statsMain and self.cfg.statistics[STATISTICS.STATISTIC_ENABLED]
+        return self.statsMain and settings.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
         if xvmInstalled:
             return False
-        return self.statsMain and self.cfg.statistics[STATISTICS.ICON_ENABLED]
+        return self.statsMain and settings.statistics[STATISTICS.ICON_ENABLED]
 
     def getSetting(self, alias):
         if alias is ALIASES.HP_BARS:
-            return self.cfg.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle
+            return settings.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DAMAGE_LOG:
-            return (self.cfg.log_total[GLOBAL.ENABLED] or
-                    self.cfg.log_damage_extended[GLOBAL.ENABLED] or
-                    self.cfg.log_input_extended[GLOBAL.ENABLED])
+            return (settings.log_total[GLOBAL.ENABLED] or
+                    settings.log_damage_extended[GLOBAL.ENABLED] or
+                    settings.log_input_extended[GLOBAL.ENABLED])
         elif alias is ALIASES.MAIN_GUN:
-            return self.cfg.main_gun[GLOBAL.ENABLED] and self.isRandomBattle
+            return settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle
         elif alias is ALIASES.DEBUG:
-            return self.cfg.debug_panel[GLOBAL.ENABLED]
+            return settings.debug_panel[GLOBAL.ENABLED]
         elif alias is ALIASES.TIMER:
-            return self.cfg.battle_timer[GLOBAL.ENABLED]
+            return settings.battle_timer[GLOBAL.ENABLED]
         elif alias is ALIASES.SIXTH_SENSE:
-            return self.cfg.sixth_sense[GLOBAL.ENABLED]
+            return settings.sixth_sense[GLOBAL.ENABLED]
         elif alias is ALIASES.TEAM_BASES:
-            return self.cfg.team_bases_panel[GLOBAL.ENABLED]
+            return settings.team_bases_panel[GLOBAL.ENABLED]
         elif alias is ALIASES.ARMOR_CALC:
-            return self.cfg.armor_calculator[GLOBAL.ENABLED]
+            return settings.armor_calculator[GLOBAL.ENABLED]
         elif alias is ALIASES.FLIGHT_TIME:
-            if self.cfg.flight_time[FLIGHT_TIME.SPG_ONLY]:
-                return self.cfg.flight_time[GLOBAL.ENABLED] and self.isSPG
-            return self.cfg.flight_time[GLOBAL.ENABLED]
+            if settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
+                return settings.flight_time[GLOBAL.ENABLED] and self.isSPG
+            return settings.flight_time[GLOBAL.ENABLED]
         elif alias is ALIASES.DISPERSION_TIMER:
-            return (self.cfg.dispersion_circle[GLOBAL.ENABLED] and
-                    self.cfg.dispersion_circle[DISPERSION.TIMER_ENABLED])
+            return (settings.dispersion_circle[GLOBAL.ENABLED] and
+                    settings.dispersion_circle[DISPERSION.TIMER_ENABLED])
         elif alias is ALIASES.PANELS:
-            return not xvmInstalled and self.cfg.players_panels[
+            return not xvmInstalled and settings.players_panels[
                 GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
         elif alias is ALIASES.USER_BACKGROUND:
-            return self.cfg.user_background[GLOBAL.ENABLED] and self.notEpicBattle
+            return settings.user_background[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DATE_TIME:
-            return self.cfg.clock[GLOBAL.ENABLED] and self.cfg.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
+            return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is ALIASES.DISTANCE:
-            return (not self.isSPG and self.cfg.distance_to_enemy[GLOBAL.ENABLED] and
+            return (not self.isSPG and settings.distance_to_enemy[GLOBAL.ENABLED] and
                     self.notEpicBattle and self.notEpicRandomBattle)
         elif alias is ALIASES.OWN_HEALTH:
-            return self.cfg.own_health[GLOBAL.ENABLED]
+            return settings.own_health[GLOBAL.ENABLED]
         else:
             return False
 

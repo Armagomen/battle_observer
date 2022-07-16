@@ -5,6 +5,7 @@ from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlug
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
 from armagomen.battle_observer.core import _view_settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES
 from armagomen.utils.common import logError, logWarning, logInfo, logDebug
 from armagomen.utils.events import g_events
@@ -19,18 +20,18 @@ Statistics = namedtuple('Statistics', ('wtr', 'icons', 'dataLoader', 'wtrData'))
 
 
 def getViewSettings():
-    settings = []
+    viewSettings = []
     isAllowed, aliases = _view_settings.setIsAllowed()
     if isAllowed and aliases:
         for alias in aliases:
             try:
                 file_path, class_name = ALIAS_TO_PATH[alias]
                 module_class = getattr(import_module(file_path, package=__package__), class_name)
-                settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
+                viewSettings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
             except Exception as err:
                 _view_settings.removeComponent(alias)
                 logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
-    return settings
+    return viewSettings
 
 
 def getBusinessHandlers():
@@ -88,10 +89,10 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             wtrData = self.statistics.wtrData.updateAllItems(self._arenaDP, self.statistics.dataLoader)
         else:
             wtrData = {}
-        cutWidth = _view_settings.cfg.statistics[STATISTICS.PANELS_CUT_WIDTH]
-        fullWidth = _view_settings.cfg.statistics[STATISTICS.PANELS_FULL_WIDTH]
-        typeColors = _view_settings.cfg.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
-        iconMultiplier = _view_settings.cfg.statistics[STATISTICS.ICON_BLACKOUT]
+        cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]
+        fullWidth = settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
+        typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
+        iconMultiplier = settings.statistics[STATISTICS.ICON_BLACKOUT]
         view.flashObject.as_createStatisticComponent(self.statistics.wtr, self.statistics.icons, wtrData,
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
@@ -105,7 +106,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
         view.flashObject.as_observerCreateComponents(_view_settings.getComponents())
-        view.flashObject.as_observerUpdatePrebattleTimer(_view_settings.cfg.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
+        view.flashObject.as_observerUpdatePrebattleTimer(settings.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         view.flashObject.as_observerHideWgComponents(_view_settings.getHiddenWGComponents())
         if self.minimapPlugin.enabled:
             self.minimapPlugin.init(view)

@@ -1,4 +1,7 @@
-from armagomen.utils.common import logWarning, isFileValid, settings
+import sys
+
+from armagomen.constants import MESSAGES
+from armagomen.utils.common import logWarning, isFileValid, clearClientCache, cleanupUpdates, logInfo
 
 __version__ = "1.38.5"
 loadError = False
@@ -15,17 +18,19 @@ except ImportError as err:
 else:
     if isFileValid(__version__):
         from armagomen.battle_observer.core.view_settings import ViewSettings
-        from armagomen.battle_observer.core.observer_core import ObserverCore
+        from armagomen.battle_observer.core.update.worker import UpdateMain
         from armagomen.battle_observer.components import ComponentsLoader
-        from armagomen.battle_observer.settings.config_loader import ConfigLoader
-        from armagomen.battle_observer.settings.hangar.hangar_settings import ConfigInterface
+        from armagomen.battle_observer.settings.loader import SettingsLoader
+        from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
 
-        m_core = ObserverCore(__version__)
-        _view_settings = ViewSettings(settings)
+        logInfo("Launched at python " + sys.version)
+        logInfo('MOD {0}: {1}'.format(MESSAGES.START, __version__))
+        update = UpdateMain(__version__)
+        _view_settings = ViewSettings()
         componentsLoader = ComponentsLoader()
-        c_Loader = ConfigLoader(settings)
-        configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, c_Loader,
-                                          __version__)
+        settings_loader = SettingsLoader()
+        hangar_settings = SettingsInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
+                                            settings_loader, __version__)
     else:
         loadError = True
         errorMessage = "ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please " \
@@ -42,4 +47,6 @@ def init():
 def fini():
     if loadError:
         return
-    m_core.onExit(settings)
+    clearClientCache()
+    cleanupUpdates()
+    logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, __version__))

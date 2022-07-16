@@ -1,8 +1,8 @@
 # coding=utf-8
 from time import strftime
 
-from armagomen.battle_observer.core import settings
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import CLOCK
 from armagomen.utils.common import checkDecoder
 from armagomen.utils.timers import CyclicTimerEvent

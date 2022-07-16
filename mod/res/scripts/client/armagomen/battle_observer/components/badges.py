@@ -1,4 +1,5 @@
-from armagomen.battle_observer.core import settings, _view_settings
+from armagomen.battle_observer.core import _view_settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, ANOTHER, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.arena_info import settings as arena_settings

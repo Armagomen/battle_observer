@@ -2,7 +2,7 @@
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
-from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled
+from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
@@ -177,25 +177,24 @@ class CreateElement(object):
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 
 
-class ConfigInterface(CreateElement):
+class SettingsInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, configLoader, version):
-        super(ConfigInterface, self).__init__()
-        self.cLoader = configLoader
+    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settingsLoader, version):
+        super(SettingsInterface, self).__init__()
+        self.sLoader = settingsLoader
         self.modsListApi = modsListApi
-        self.settings = settings
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.currentConfig = self.newConfig = self.cLoader.configsList.index(self.cLoader.cName)
+        self.currentConfig = self.newConfig = self.sLoader.configsList.index(self.sLoader.cName)
         self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                   useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
+                                   useKeyPairs=settings.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
-        self.settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
+        settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
 
     def loadHangarSettings(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOGIN:
@@ -221,7 +220,7 @@ class ConfigInterface(CreateElement):
                 self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID),
                                           dict(), lambda *args: None, button_handler=self.onButtonPress)
             except Exception as err:
-                logWarning('ConfigInterface startLoad {}'.format(repr(err)))
+                logWarning('SettingsInterface startLoad {}'.format(repr(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
@@ -246,8 +245,8 @@ class ConfigInterface(CreateElement):
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.newConfigLoadingInProcess:
                 self.inited.clear()
-                self.cLoader.readConfig(self.cLoader.configsList[self.newConfig])
-                self.cLoader.createLoadJSON(cName=self.cLoader.configsList[self.newConfig])
+                self.sLoader.readConfig(self.sLoader.configsList[self.newConfig])
+                self.sLoader.createLoadJSON(cName=self.sLoader.configsList[self.newConfig])
                 self.currentConfig = self.newConfig
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
@@ -269,11 +268,11 @@ class ConfigInterface(CreateElement):
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfig != data['selector']:
             self.newConfig = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            logDebug("change settings '{}' - {}", self.cLoader.configsList[self.newConfig], blockID)
+            logDebug("change settings '{}' - {}", self.sLoader.configsList[self.newConfig], blockID)
         else:
-            settings = getattr(self.settings, blockID)
+            settings_block = getattr(settings, blockID)
             for key, value in data.iteritems():
-                updatedConfigLink, paramName = self.getter.getLinkToParam(settings, key)
+                updatedConfigLink, paramName = self.getter.getLinkToParam(settings_block, key)
                 if paramName in updatedConfigLink:
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
@@ -289,8 +288,8 @@ class ConfigInterface(CreateElement):
                         elif oldParamType is int and newParamType is float:
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
-            self.cLoader.updateConfigFile(blockID, settings)
-            self.settings.onModSettingsChanged(settings, blockID)
+            self.sLoader.updateConfigFile(blockID, settings_block)
+            settings.onModSettingsChanged(settings_block, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -321,18 +320,18 @@ class ConfigInterface(CreateElement):
 
     def getTemplate(self, blockID):
         """create templates, do not change..."""
-        settings = getattr(self.settings, blockID, {})
+        settings_block = getattr(settings, blockID, {})
         column1 = []
         column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.cLoader.configsList, self.newConfig)]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.newConfig)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_paypal', URLS.PAYPAL_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
             items = []
-            for key, value in self.getter.keyValueGetter(settings):
+            for key, value in self.getter.keyValueGetter(settings_block):
                 item = self.createItem(blockID, key, value)
                 if item is not None:
                     items.append(item)
@@ -340,4 +339,4 @@ class ConfigInterface(CreateElement):
             for index, item in enumerate(items):
                 column = column1 if index < middleIndex else column2
                 column.append(item)
-        return self.createBlock(blockID, settings, column1, column2)
+        return self.createBlock(blockID, settings_block, column1, column2)

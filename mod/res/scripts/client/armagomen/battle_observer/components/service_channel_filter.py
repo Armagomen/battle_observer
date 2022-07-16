@@ -1,4 +1,4 @@
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SERVICE_CHANNEL, GLOBAL, URLS
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
