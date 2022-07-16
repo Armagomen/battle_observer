@@ -17,7 +17,7 @@ from web.cache.web_downloader import WebDownloader
 WAITING_UPDATE = 'updating'
 
 __NAMES = (
-    "UPDATE_CHECKED", "NEW_VERSION", "STARTED", "NEW_FILE", "ALREADY_DOWNLOADED", "FINISHED", "FILED"
+    "UPDATE_CHECKED", "NEW_VERSION", "STARTED", "NEW_FILE", "ALREADY_DOWNLOADED", "FINISHED", "FAILED"
 )
 __MESSAGES = (
     "The update check is completed, you have the current version.",
@@ -29,7 +29,7 @@ __MESSAGES = (
     "DownloadThread: update download failed: {}"
 )
 
-SYS_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
+LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
 
 
 class DownloadThread(object):
@@ -49,14 +49,14 @@ class DownloadThread(object):
         path = os.path.join(getUpdatePath(), mod_version + ".zip")
         if os.path.isfile(path):
             self.extractZipArchive(path)
-            logInfo(SYS_MESSAGES.ALREADY_DOWNLOADED.format(path))
+            logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
             self.dialogs.showUpdateFinished(getRandomLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
         else:
             url = self.URLS['last']
             self.downloader = WebDownloader(GLOBAL.ONE)
             if url:
-                logInfo(SYS_MESSAGES.STARTED.format(mod_version, url))
+                logInfo(LOG_MESSAGES.STARTED.format(mod_version, url))
                 self.downloader.download(url, self.onDownloaded)
             else:
                 self.closeDownloader()
@@ -73,7 +73,7 @@ class DownloadThread(object):
             for newFile in archive.namelist():
                 if newFile not in old_files:
                     archive.extract(newFile, self.modPath)
-                    logInfo(SYS_MESSAGES.NEW_FILE.format(newFile))
+                    logInfo(LOG_MESSAGES.NEW_FILE.format(newFile))
         if Waiting.isOpened(WAITING_UPDATE):
             Waiting.hide(WAITING_UPDATE)
 
@@ -84,7 +84,7 @@ class DownloadThread(object):
             path = os.path.join(getUpdatePath(), mod_version + ".zip")
             with open(path, "wb") as zipArchive:
                 zipArchive.write(data)
-            logInfo(SYS_MESSAGES.FINISHED.format(path))
+            logInfo(LOG_MESSAGES.FINISHED.format(path))
             self.extractZipArchive(path)
             self.dialogs.showUpdateFinished(getRandomLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
@@ -94,7 +94,7 @@ class DownloadThread(object):
     def downloadError(self, url):
         if Waiting.isOpened(WAITING_UPDATE):
             Waiting.hide(WAITING_UPDATE)
-        message = SYS_MESSAGES.FILED.format(url)
+        message = LOG_MESSAGES.FAILED.format(url)
         logError(message)
         self.dialogs.showUpdateError(message)
 
@@ -125,9 +125,9 @@ class UpdateMain(DownloadThread):
                     elif filename.startswith('BattleObserver_'):
                         self.URLS['full'] = download_url
                 result = True
-                logInfo(SYS_MESSAGES.NEW_VERSION.format(new_version))
+                logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
             else:
-                logInfo(SYS_MESSAGES.UPDATE_CHECKED)
+                logInfo(LOG_MESSAGES.UPDATE_CHECKED)
         return result
 
     @staticmethod
