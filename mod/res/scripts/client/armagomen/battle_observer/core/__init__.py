@@ -1,3 +1,4 @@
+__version__ = "1.38.5"
 loadError = False
 errorMessage = ""
 try:
@@ -10,23 +11,26 @@ except ImportError as err:
     logWarning(errorMessage)
     loadError = True
 else:
-    from armagomen.battle_observer.settings.default_settings import settings
-    from armagomen.battle_observer.core.battle.settings import ViewSettings
-    from armagomen.battle_observer.core.observer_core import ObserverCore
-    from armagomen.battle_observer.components import ComponentsLoader
-    from armagomen.battle_observer.core.battle.battle_core import BattleCore
-    from armagomen.battle_observer.settings.config_loader import ConfigLoader
-    from armagomen.battle_observer.settings.hangar.hangar_settings import ConfigInterface
+    from armagomen.utils.common import isFileValid
 
-    view_settings = ViewSettings(settings)
-    m_core = ObserverCore()
-    if m_core.isFileValid:
+    if isFileValid(__version__):
+        from armagomen.battle_observer.settings.default_settings import settings
+        from armagomen.battle_observer.core.view_settings import ViewSettings
+        from armagomen.battle_observer.core.observer_core import ObserverCore
+        from armagomen.battle_observer.components import ComponentsLoader
+        from armagomen.battle_observer.settings.config_loader import ConfigLoader
+        from armagomen.battle_observer.settings.hangar.hangar_settings import ConfigInterface
+
+        m_core = ObserverCore(__version__)
+        _view_settings = ViewSettings(settings)
         componentsLoader = ComponentsLoader()
-        componentsLoader.start()
-        m_core.start()
-        b_core = BattleCore(settings)
         c_Loader = ConfigLoader(settings)
-        configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, c_Loader)
+        configInterface = ConfigInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, c_Loader,
+                                          __version__)
+    else:
+        loadError = True
+        errorMessage = "ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please " \
+                       "install mod from official site".format(__version__)
 
 
 def init():

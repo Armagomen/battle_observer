@@ -292,3 +292,8 @@ def getPercent(param_a, param_b):
     if param_b <= 0:
         return 0.0
     return float(normalizeHealth(param_a)) / param_b
+
+
+def isFileValid(version):
+    FILE_NAME = "armagomen.battleObserver_{}.wotmod"
+    return FILE_NAME.format(version) in os.listdir(os.path.join(*getCurrentModPath()))

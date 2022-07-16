@@ -179,7 +179,7 @@ class CreateElement(object):
 
 class ConfigInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, configLoader):
+    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, configLoader, version):
         super(ConfigInterface, self).__init__()
         self.cLoader = configLoader
         self.modsListApi = modsListApi
@@ -189,6 +189,8 @@ class ConfigInterface(CreateElement):
         self.vxSettingsApi = vxSettingsApi
         self.currentConfig = self.newConfig = self.cLoader.configsList.index(self.cLoader.cName)
         self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
+        localization['service']['name'] = localization['service']['name'].format(version)
+        localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
                                    useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived

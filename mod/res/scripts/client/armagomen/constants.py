@@ -10,7 +10,7 @@ from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from helpers import getClientLanguage
 
 MOD_NAME = "BATTLE_OBSERVER"
-FILE_NAME = "armagomen.battleObserver_{}.wotmod"
+
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -378,9 +378,8 @@ ANOTHER = namedtuple("ANOTHER", (
     "configSelect", "shadow_settings", "friendList", "accountDBID", "users", "databaseID", "badges", "isTeamKiller",
     "name", "fakeName", "clanDBID", "clanAbbrev")
 
-MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "LOCKED_BY_FILE_NAME", "UPDATE_CHECKED", "NEW_VERSION"))(
-    "START LOADING", "SHUTTING DOWN", "ERROR: file {} is not valid, mod locked, please install mod from official site",
-    "The update check is completed, you have the current version.",
+MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "UPDATE_CHECKED", "NEW_VERSION"))(
+    "START LOADING", "SHUTTING DOWN", "The update check is completed, you have the current version.",
     "An update {} is detected, the client will be restarted at the end of the download.")
 
 BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )

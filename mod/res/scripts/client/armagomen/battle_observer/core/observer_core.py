@@ -1,19 +1,11 @@
-import os
 import sys
 
-from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.update.worker import UpdateMain
-from armagomen.constants import SWF, FILE_NAME, MESSAGES, MAIN, getRandomLogo
-from armagomen.utils.common import logInfo, getCurrentModPath, logWarning, clearClientCache, cleanupUpdates
-from async import async, await
+from armagomen.constants import SWF, MESSAGES, MAIN
+from armagomen.utils.common import logInfo, getCurrentModPath, clearClientCache, cleanupUpdates
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings import config as packages
-from gui.impl.dialogs import dialogs
-from gui.impl.dialogs.builders import WarningDialogBuilder
-from gui.impl.pub.dialog_window import DialogButtons
-from gui.shared.personality import ServicesLocator
 from gui.shared.system_factory import registerScaleformBattlePackages
-from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 BATTLE_TYPES_TO_INJECT_PACKAGES = {ARENA_GUI_TYPE.RANKED,
                                    ARENA_GUI_TYPE.EPIC_RANDOM,
@@ -25,52 +17,25 @@ BATTLE_TYPES_TO_INJECT_PACKAGES = {ARENA_GUI_TYPE.RANKED,
 
 
 class ObserverCore(object):
-    __slots__ = ("modsDir", "gameVersion", "isFileValid", "mod_version", "configLoader", "moduleLoader",
-                 "componentsLoader")
+    __slots__ = ("gameVersion", "mod_version")
 
-    def __init__(self):
-        self.modsDir, self.gameVersion = getCurrentModPath()
-        self.isFileValid = self.isModValidFileName()
-        self.mod_version = 'v{0} - {1}'.format(__version__, self.gameVersion)
-        ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+    def __init__(self, version):
+        self.gameVersion = getCurrentModPath()[1]
+        self.mod_version = 'v{0} - {1}'.format(version, self.gameVersion)
+        update = UpdateMain(version)
+        update.subscribe()
+        self.start()
 
     def onExit(self, settings):
-        if not self.isFileValid:
-            return
         if settings.main[MAIN.AUTO_CLEAR_CACHE]:
             clearClientCache()
         cleanupUpdates()
-        ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
         logInfo('MOD {0}: {1}'.format(MESSAGES.FINISH, self.mod_version))
 
-    def isModValidFileName(self):
-        return FILE_NAME.format(__version__) in os.listdir(os.path.join(self.modsDir, self.gameVersion))
-
     def start(self):
-        update = UpdateMain()
-        update.subscribe()
         logInfo("Launched at python " + sys.version)
         logInfo('MOD {0}: {1}'.format(MESSAGES.START, self.mod_version))
         for guiType in BATTLE_TYPES_TO_INJECT_PACKAGES:
             registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
         packages.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
         packages.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
-
-    def onGUISpaceEntered(self, spaceID):
-        if self.isFileValid or spaceID not in (GuiGlobalSpaceID.LOGIN, GuiGlobalSpaceID.LOBBY):
-            return
-        self.showLockedDialog()
-
-    @staticmethod
-    def getLockedDialog(title, message):
-        builder = WarningDialogBuilder()
-        builder.setFormattedTitle(title)
-        builder.setFormattedMessage(message)
-        builder.addButton(DialogButtons.CANCEL, "Close", True, rawLabel="Close")
-        return builder.build()
-
-    @async
-    def showLockedDialog(self):
-        locked = MESSAGES.LOCKED_BY_FILE_NAME.format(FILE_NAME.format(__version__))
-        logWarning(locked)
-        yield await(dialogs.showSimple(self.getLockedDialog(getRandomLogo(), locked), DialogButtons.CANCEL))

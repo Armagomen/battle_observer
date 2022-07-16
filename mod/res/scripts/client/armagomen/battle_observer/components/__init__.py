@@ -24,8 +24,10 @@ class ComponentsLoader(object):
             'vehicle_battle_boosters': None,
             'crew': None,
             'statistics.statistic_data_loader': None,
+            'battle_component': None,
             'for_tests': None
         }
+        self.start()
 
     def start(self):
         for moduleName in self.modules:

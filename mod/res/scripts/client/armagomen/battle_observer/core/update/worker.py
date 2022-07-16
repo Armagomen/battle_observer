@@ -4,7 +4,6 @@ from collections import defaultdict
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.update.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS, MESSAGES, getRandomLogo
 from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse, getUpdatePath
@@ -20,7 +19,7 @@ WAITING_UPDATE = 'updating'
 
 class DownloadThread(object):
     URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
-    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "modPath", "updateData", "i18n")
+    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "modPath", "updateData", "i18n", "version")
 
     def __init__(self):
         self.i18n = getI18n()
@@ -31,7 +30,7 @@ class DownloadThread(object):
 
     def startDownload(self):
         Waiting.show(WAITING_UPDATE)
-        mod_version = self.updateData.get('tag_name', __version__)
+        mod_version = self.updateData.get('tag_name', self.version)
         path = os.path.join(getUpdatePath(), mod_version + ".zip")
         if os.path.isfile(path):
             logInfo('update is already downloaded to {}'.format(path))
@@ -66,7 +65,7 @@ class DownloadThread(object):
     def onDownloaded(self, _url, data):
         self.closeDownloader()
         if data is not None:
-            mod_version = self.updateData.get('tag_name', __version__)
+            mod_version = self.updateData.get('tag_name', self.version)
             path = os.path.join(getUpdatePath(), mod_version + ".zip")
             with open(path, "wb") as zipArchive:
                 zipArchive.write(data)
@@ -86,10 +85,11 @@ class DownloadThread(object):
 
 
 class UpdateMain(DownloadThread):
-    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "modPath", "updateData", "i18n")
+    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "modPath", "updateData", "i18n", "version")
 
-    def __init__(self):
+    def __init__(self, version):
         super(UpdateMain, self).__init__()
+        self.version = version
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
 
     def request_last_version(self):
@@ -97,8 +97,8 @@ class UpdateMain(DownloadThread):
         params = urlResponse(URLS.UPDATE_GITHUB_API_URL)
         if params:
             self.updateData.update(params)
-            new_version = params.get('tag_name', __version__)
-            local_ver = self.tupleVersion(__version__)
+            new_version = params.get('tag_name', self.version)
+            local_ver = self.tupleVersion(self.version)
             server_ver = self.tupleVersion(new_version)
             if local_ver < server_ver:
                 assets = params.get('assets')
@@ -132,7 +132,7 @@ class UpdateMain(DownloadThread):
     @async
     def showDialog(self, view):
         self.dialogs.setView(view)
-        title = getRandomLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', __version__))
+        title = getRandomLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, gitMessage)
         result = yield await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
