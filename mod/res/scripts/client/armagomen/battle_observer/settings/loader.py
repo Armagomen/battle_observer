@@ -2,10 +2,12 @@ import os
 
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import LOAD_LIST, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile
+from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile, logDebug
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
+JSON = '{}.json'
+READ_MESSAGE = "SettingsLoader/readConfig: {}: {}"
 
 class SettingsLoader(object):
     __slots__ = ('cName', 'path', 'configsList', 'settings', 'errorMessages')
@@ -94,19 +96,20 @@ class SettingsLoader(object):
         """Read settings_core file from JSON"""
         direct_path = os.path.join(self.path, configName)
         logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
-        file_list = ['{}.json'.format(name) for name in LOAD_LIST]
         listdir = os.listdir(direct_path)
-        for num, module_name in enumerate(LOAD_LIST, GLOBAL.ZERO):
-            file_name = file_list[num]
+        for module_name in LOAD_LIST:
+            file_name = JSON.format(module_name)
             file_path = os.path.join(direct_path, file_name)
             internal_cfg = getattr(settings, module_name)
             if file_name in listdir:
                 try:
                     if self.updateData(openJsonFile(file_path), internal_cfg):
                         writeJsonFile(file_path, internal_cfg)
+                    logDebug(READ_MESSAGE, self.cName, file_name)
                 except Exception as error:
-                    self.errorMessages.append(" ".join((file_path, error.message)))
-                    logWarning('readConfig: {} {}'.format(file_name, repr(error)))
+                    message = READ_MESSAGE.format(file_path, repr(error))
+                    self.errorMessages.append(message)
+                    logWarning(message)
                     continue
             else:
                 writeJsonFile(file_path, internal_cfg)
