@@ -3,8 +3,6 @@ loadError = False
 errorMessage = ""
 
 try:
-    import sys
-    from armagomen.constants import MESSAGES
     from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError
     from gui.modsListApi import g_modsListApi
     from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
@@ -14,13 +12,14 @@ except ImportError as err:
     loadError = True
 else:
     if isFileValid(__version__):
+        from sys import version as python_version
         from armagomen.battle_observer.core.view_settings import ViewSettings
         from armagomen.battle_observer.core.update.worker import UpdateMain
         from armagomen.battle_observer.components import ComponentsLoader
         from armagomen.battle_observer.settings.loader import SettingsLoader
         from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
 
-        logInfo("Launched at python " + sys.version)
+        logInfo("Launched at python v{}".format(python_version))
         logInfo('MOD START LOADING: v{}'.format(__version__))
         update = UpdateMain(__version__)
         _view_settings = ViewSettings()
