@@ -1,6 +1,10 @@
 __version__ = "1.38.5"
+
+from helpers import getShortClientVersion
+
 loadError = False
 errorMessage = ""
+shortClientVersion = getShortClientVersion()
 
 try:
     from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError
@@ -20,7 +24,7 @@ else:
         from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
 
         logInfo("Launched at python v{}".format(python_version))
-        logInfo('MOD START LOADING: v{}'.format(__version__))
+        logInfo('MOD START LOADING: v{} - {}'.format(__version__, shortClientVersion))
         update = UpdateMain(__version__)
         _view_settings = ViewSettings()
         componentsLoader = ComponentsLoader()
@@ -45,4 +49,4 @@ def fini():
         return
     clearClientCache()
     cleanupUpdates()
-    logInfo('MOD SHUTTING DOWN: v{}'.format(__version__))
+    logInfo('MOD SHUTTING DOWN: v{} - {}'.format(__version__, shortClientVersion))
