@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen.constants import GLOBAL
+from helpers import getClientLanguage
 
 ru = {
     "titleOK": "\nОбновление - ГОТОВО",
@@ -37,6 +37,6 @@ uk = {}
 
 
 def getI18n():
-    if GLOBAL.RU_LOCALIZATION:
+    if getClientLanguage().lower() in ('ru', 'uk', 'be'):
         return ru
     return en

@@ -7,7 +7,6 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
     SHOT_RESULT_TO_ALT_COLOR
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from helpers import getClientLanguage
 
 MOD_NAME = "BATTLE_OBSERVER"
 
@@ -85,7 +84,6 @@ class GLOBAL:
     KNOCKOUT = "knockout"
     ONE = 1
     OUTLINE = "outline"
-    RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'uk', 'be')
     SCALE = "scale"
     SETTINGS = "settings"
     SMOOTHING = "smoothing"

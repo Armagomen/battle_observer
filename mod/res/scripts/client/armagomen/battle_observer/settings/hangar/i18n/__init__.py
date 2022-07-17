@@ -1,6 +1,6 @@
-from armagomen.constants import GLOBAL
+from helpers import getClientLanguage
 
-if GLOBAL.RU_LOCALIZATION:
+if getClientLanguage().lower() in ('ru', 'uk', 'be'):
     from armagomen.battle_observer.settings.hangar.i18n.ru import localization
 else:
     from armagomen.battle_observer.settings.hangar.i18n.en import localization

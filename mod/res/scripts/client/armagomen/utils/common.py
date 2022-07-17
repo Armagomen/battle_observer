@@ -153,7 +153,7 @@ def encodeData(data):
         return {encodeData(key): encodeData(value) for key, value in data.iteritems()}
     elif isinstance(data, list):
         return [encodeData(element) for element in data]
-    elif isinstance(data, basestring):
+    elif isinstance(data, unicode):
         return data.encode('utf-8')
     else:
         return data

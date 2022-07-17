@@ -7,6 +7,7 @@ from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
+from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 37
@@ -14,20 +15,30 @@ KEY_CONTROL = [KEY_ALIAS_CONTROL]
 KEY_ALT = [KEY_ALIAS_ALT]
 
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
-LOCKED = ("<font color='#ff3d3d'> The function is not available, XVM is installed.</font>",
-          "<font color='#ff3d3d'> Функция недоступна, установлен XVM.</font>")
+
+
+@property
+def LOCKED_MESSAGE():
+    pattern = "<font color='#ff3d3d'> {}</font>"
+    language = getClientLanguage().lower()
+    if language in ('ru', 'be'):
+        return pattern.format("Функция недоступна, установлен XVM.")
+    elif language == "uk":
+        return pattern.format("Функція недоступна, встановлено XVM.")
+    else:
+        return pattern.format("The function is not available, XVM is installed.")
 
 
 class Getter(object):
     __slots__ = ()
 
     @staticmethod
-    def getLinkToParam(data, settingPath):
+    def getLinkToParam(settings_block, settingPath):
         path = settingPath.split(GLOBAL.C_INTERFACE_SPLITTER)
         for fragment in path:
-            if fragment in data and isinstance(data[fragment], dict):
-                data = data[fragment]
-        return data, path[GLOBAL.LAST]
+            if fragment in settings_block and isinstance(settings_block[fragment], dict):
+                settings_block = settings_block[fragment]
+        return settings_block, path[GLOBAL.LAST]
 
     @staticmethod
     def getCollectionIndex(value, collection):
@@ -36,8 +47,8 @@ class Getter(object):
             index = collection.index(value)
         return collection, index
 
-    def getKeyPath(self, settings, path=()):
-        for key, value in settings.iteritems():
+    def getKeyPath(self, settings_block, path=()):
+        for key, value in settings_block.iteritems():
             key_path = path + (key,)
             if isinstance(value, dict):
                 for _path in self.getKeyPath(value, key_path):
@@ -45,13 +56,13 @@ class Getter(object):
             else:
                 yield key_path
 
-    def keyValueGetter(self, settings):
+    def keyValueGetter(self, settings_block):
         key_val = []
         try:
-            for key in sorted(self.getKeyPath(settings)):
+            for key in sorted(self.getKeyPath(settings_block)):
                 key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
                 if GLOBAL.ENABLED != key:
-                    dic, param = self.getLinkToParam(settings, key)
+                    dic, param = self.getLinkToParam(settings_block, key)
                     key_val.append((key, dic[param]))
         except Exception:
             LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
@@ -140,7 +151,7 @@ class CreateElement(object):
         name = localization.get(blockID, {}).get("header", blockID)
         warning = xvmInstalled and blockID in LOCKED_BLOCKS
         if warning:
-            name += LOCKED[GLOBAL.RU_LOCALIZATION]
+            name += LOCKED_MESSAGE
         return {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
             'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True) and not warning,
