@@ -23,9 +23,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def onEnterBattlePage(self):
         super(MainGun, self).onEnterBattlePage()
-        # feedback = self.sessionProvider.shared.feedback
-        # if feedback:
-        #     feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -34,9 +31,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             arena.onVehicleHealthChanged += self.onPlayersDamaged
 
     def onExitBattlePage(self):
-        # feedback = self.sessionProvider.shared.feedback
-        # if feedback:
-        #     feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -58,12 +52,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         if not self.playerDead and self.enemiesHP != enemiesHP:
             self.enemiesHP = enemiesHP
             self.updateMainGun()
-
-    # def __onPlayerFeedbackReceived(self, events):
-    #     for event in events:
-    #         if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-    #             self.damage += int(event.getExtra().getDamage())
-    #             self.updateMainGun()
 
     def updateMainGun(self):
         dealtMoreDamage = self.damage < self.maxDamage > self.gunScore
