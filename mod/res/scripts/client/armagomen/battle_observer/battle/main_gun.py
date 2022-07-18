@@ -4,7 +4,6 @@ from math import ceil
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL, POSTMORTEM
 from gui.battle_control import avatar_getter
-from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
 
@@ -24,9 +23,9 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def onEnterBattlePage(self):
         super(MainGun, self).onEnterBattlePage()
-        feedback = self.sessionProvider.shared.feedback
-        if feedback:
-            feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
+        # feedback = self.sessionProvider.shared.feedback
+        # if feedback:
+        #     feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -35,9 +34,9 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             arena.onVehicleHealthChanged += self.onPlayersDamaged
 
     def onExitBattlePage(self):
-        feedback = self.sessionProvider.shared.feedback
-        if feedback:
-            feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
+        # feedback = self.sessionProvider.shared.feedback
+        # if feedback:
+        #     feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -60,11 +59,11 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.enemiesHP = enemiesHP
             self.updateMainGun()
 
-    def __onPlayerFeedbackReceived(self, events):
-        for event in events:
-            if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-                self.damage += int(event.getExtra().getDamage())
-                self.updateMainGun()
+    # def __onPlayerFeedbackReceived(self, events):
+    #     for event in events:
+    #         if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
+    #             self.damage += int(event.getExtra().getDamage())
+    #             self.updateMainGun()
 
     def updateMainGun(self):
         dealtMoreDamage = self.damage < self.maxDamage > self.gunScore
@@ -86,9 +85,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def onPlayersDamaged(self, targetID, attackerID, damage):
         if self._player.playerVehicleID == attackerID:
-            return
-        vInfo = self._arenaDP.getVehicleInfo(attackerID)
-        if vInfo.team == self.allyTeam:
+            self.damage += damage
+        elif self._arenaDP.isAlly(attackerID):
             self.playersDamage[attackerID] += damage
             self.maxDamage = max(self.playersDamage.itervalues())
-            self.updateMainGun()
+        self.updateMainGun()
