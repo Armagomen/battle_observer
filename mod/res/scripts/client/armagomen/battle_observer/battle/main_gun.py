@@ -19,7 +19,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.playerDead = False
         self.totalEnemiesHP = GLOBAL.ZERO
         self.playersDamage = defaultdict(int)
-        self.allyTeam = self._arenaDP.getNumberOfTeam()
 
     def onEnterBattlePage(self):
         super(MainGun, self).onEnterBattlePage()
@@ -74,7 +73,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def onPlayersDamaged(self, targetID, attackerID, damage):
         if self._player.playerVehicleID == attackerID:
             self.damage += damage
+            self.updateMainGun()
         elif self._arenaDP.isAlly(attackerID):
             self.playersDamage[attackerID] += damage
             self.maxDamage = max(self.playersDamage.itervalues())
-        self.updateMainGun()
+            self.updateMainGun()
