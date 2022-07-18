@@ -9,7 +9,7 @@ from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
-from gui.shared.system_factory import registerScaleformBattlePackages
+from gui.shared.system_factory import registerScaleformBattlePackages, collectScaleformBattlePackages
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -26,13 +26,6 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
                  ARENA_GUI_TYPE.EPIC_BATTLE,
                  ARENA_GUI_TYPE.MAPBOX}
 
-BATTLE_TYPES_TO_INJECT_PACKAGES = {ARENA_GUI_TYPE.RANKED,
-                                   ARENA_GUI_TYPE.EPIC_RANDOM,
-                                   ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
-                                   ARENA_GUI_TYPE.SORTIE_2,
-                                   ARENA_GUI_TYPE.FORT_BATTLE_2,
-                                   ARENA_GUI_TYPE.TUTORIAL,
-                                   ARENA_GUI_TYPE.EPIC_BATTLE}
 
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
@@ -47,8 +40,10 @@ class ViewSettings(object):
         self.__hiddenComponents = []
         g_events.onHangarVehicleChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
-        for guiType in BATTLE_TYPES_TO_INJECT_PACKAGES:
-            registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
+        for guiType in BATTLES_RANGE:
+            wgPackages = collectScaleformBattlePackages(guiType)
+            if wgPackages:
+                registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
         packages.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
         packages.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
 
