@@ -3,6 +3,7 @@ from math import ceil
 
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL, POSTMORTEM
+from armagomen.utils.common import logDebug
 from gui.battle_control import avatar_getter
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
@@ -12,8 +13,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def __init__(self):
         super(MainGun, self).__init__()
         self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.damage = GLOBAL.ZERO
-        self.maxDamage = GLOBAL.ZERO
         self.gunScore = GLOBAL.ZERO
         self.enemiesHP = GLOBAL.ZERO
         self.playerDead = False
@@ -53,11 +52,13 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
 
     def updateMainGun(self):
-        dealtMoreDamage = self.damage < self.maxDamage > self.gunScore
+        playerDamage = self.playersDamage[self._player.playerVehicleID]
+        maxDamage = max(self.playersDamage.itervalues())
+        dealtMoreDamage = playerDamage < maxDamage > self.gunScore
         if dealtMoreDamage:
-            gunLeft = self.maxDamage - self.damage
+            gunLeft = maxDamage - playerDamage
         else:
-            gunLeft = self.gunScore - self.damage
+            gunLeft = self.gunScore - playerDamage
         achieved = gunLeft <= GLOBAL.ZERO
         self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else gunLeft
         self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON] if achieved else GLOBAL.EMPTY_LINE
@@ -65,16 +66,14 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON]
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
+        logDebug("MainGun: playerDamage: {}, maxDamage: {}, dealtMoreDamage: {}, gunLeft: {}, achieved: {}",
+                 playerDamage,  maxDamage, dealtMoreDamage, gunLeft, achieved)
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.playerDead = ctrlMode in POSTMORTEM.MODES
 
     def onPlayersDamaged(self, targetID, attackerID, damage):
-        if self._player.playerVehicleID == attackerID:
-            self.damage += damage
-            self.updateMainGun()
-        elif self._arenaDP.isAlly(attackerID):
+        if self._arenaDP.isAlly(attackerID):
             self.playersDamage[attackerID] += damage
-            self.maxDamage = max(self.playersDamage.itervalues())
             self.updateMainGun()
