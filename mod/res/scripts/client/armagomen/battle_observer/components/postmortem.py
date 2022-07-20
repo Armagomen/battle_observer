@@ -1,6 +1,6 @@
 from AvatarInputHandler.control_modes import PostMortemControlMode
-from armagomen.battle_observer.core import settings
-from armagomen.constants import POSTMORTEM, GLOBAL, ARCADE
+from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.constants import POSTMORTEM, ARCADE
 from armagomen.utils.common import overrideMethod, callback
 
 
@@ -24,7 +24,7 @@ def enablePostMortem(base, mode, **kwargs):
     if POSTMORTEM.PARAMS in kwargs:
         kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, settings.arcade_camera[ARCADE.START_DEAD_DIST])
     kwargs[POSTMORTEM.CAM_MATRIX] = mode.camera.camera.matrix
-    kwargs[POSTMORTEM.DURATION] = GLOBAL.ONE_SECOND
+    kwargs[POSTMORTEM.DURATION] = 1.0
     if not ((mode._isPostmortemDelayEnabled() or bool(kwargs.get('respawn', False)))
             and bool(kwargs.get('bPostmortemDelay'))):
         mode._PostMortemControlMode__postmortemDelay = PostmortemDelay()
@@ -32,5 +32,5 @@ def enablePostMortem(base, mode, **kwargs):
         def setDelayDisabled():
             mode._PostMortemControlMode__postmortemDelay = None
 
-        callback(GLOBAL.ONE_SECOND, setDelayDisabled)
+        callback(1.0, setDelayDisabled)
     return base(mode, **kwargs)

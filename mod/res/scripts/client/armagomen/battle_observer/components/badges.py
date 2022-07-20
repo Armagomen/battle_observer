@@ -1,4 +1,5 @@
-from armagomen.battle_observer.core import settings, view_settings
+from armagomen.battle_observer.core import _view_settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, ANOTHER, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.arena_info import settings as arena_settings
@@ -11,12 +12,12 @@ BOT_START_SWITCH = ":"
 
 @overrideMethod(VehicleArenaInfoVO)
 def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
-    if view_settings.isAllowed and kwargs:
+    if _view_settings.isAllowed and kwargs:
         if main[MAIN.HIDE_BADGES] and ANOTHER.BADGES in kwargs:
             kwargs[ANOTHER.BADGES] = None
         if main[MAIN.SHOW_ANONYMOUS] and ANOTHER.ACCOUNT_DBID in kwargs:
             if kwargs[ANOTHER.ACCOUNT_DBID] == GLOBAL.ZERO:
-                if not view_settings.isWTREnabled():
+                if not _view_settings.isWTREnabled():
                     kwargs[ANOTHER.IS_TEAM_KILLER] = _PLAYER_STATUS.IS_TEAM_KILLER
                 if main[MAIN.CHANGE_ANONYMOUS_NAME] and ANOTHER.NAME in kwargs and \
                         not kwargs[ANOTHER.NAME].startswith(BOT_START_SWITCH):

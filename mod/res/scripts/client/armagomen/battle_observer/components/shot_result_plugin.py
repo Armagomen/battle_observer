@@ -2,7 +2,7 @@ from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
 from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle
 from aih_constants import SHOT_RESULT
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import VEHICLE, GLOBAL, ARMOR_CALC
 from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events

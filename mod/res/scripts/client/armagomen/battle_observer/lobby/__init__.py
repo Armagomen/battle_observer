@@ -1,7 +1,7 @@
 from importlib import import_module
 
-from armagomen.battle_observer.core import settings
-from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES, MAIN
+from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES
 from armagomen.utils.common import logError, logWarning, logInfo, logDebug
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS

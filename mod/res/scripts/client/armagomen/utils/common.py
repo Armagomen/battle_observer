@@ -133,6 +133,8 @@ def removeDirs(normpath, name=None):
 
 
 def clearClientCache(category=None):
+    if not settings.main["autoClearCache"]:
+        return
     dirs = (
         "account_caches", "battle_results", "clan_cache", "custom_data", "dossier_cache", "messenger_cache",
         "storage_cache", "tutorial_cache", "veh_cmp_cache", "web_cache", "profile"
@@ -151,7 +153,7 @@ def encodeData(data):
         return {encodeData(key): encodeData(value) for key, value in data.iteritems()}
     elif isinstance(data, list):
         return [encodeData(element) for element in data]
-    elif isinstance(data, basestring):
+    elif isinstance(data, unicode):
         return data.encode('utf-8')
     else:
         return data
@@ -292,3 +294,8 @@ def getPercent(param_a, param_b):
     if param_b <= 0:
         return 0.0
     return float(normalizeHealth(param_a)) / param_b
+
+
+def isFileValid(version):
+    FILE_NAME = "armagomen.battleObserver_{}.wotmod"
+    return FILE_NAME.format(version) in os.listdir(os.path.join(*getCurrentModPath()))

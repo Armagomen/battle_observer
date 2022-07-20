@@ -3,8 +3,8 @@ from math import ceil
 
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL, POSTMORTEM
+from armagomen.utils.common import logDebug
 from gui.battle_control import avatar_getter
-from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
 
@@ -13,20 +13,14 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def __init__(self):
         super(MainGun, self).__init__()
         self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
-        self.damage = GLOBAL.ZERO
-        self.maxDamage = GLOBAL.ZERO
         self.gunScore = GLOBAL.ZERO
         self.enemiesHP = GLOBAL.ZERO
         self.playerDead = False
         self.totalEnemiesHP = GLOBAL.ZERO
         self.playersDamage = defaultdict(int)
-        self.allyTeam = self._arenaDP.getNumberOfTeam()
 
     def onEnterBattlePage(self):
         super(MainGun, self).onEnterBattlePage()
-        feedback = self.sessionProvider.shared.feedback
-        if feedback:
-            feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -35,9 +29,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             arena.onVehicleHealthChanged += self.onPlayersDamaged
 
     def onExitBattlePage(self):
-        feedback = self.sessionProvider.shared.feedback
-        if feedback:
-            feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -60,35 +51,29 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.enemiesHP = enemiesHP
             self.updateMainGun()
 
-    def __onPlayerFeedbackReceived(self, events):
-        for event in events:
-            if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-                self.damage += int(event.getExtra().getDamage())
-                self.updateMainGun()
-
     def updateMainGun(self):
-        isMoreDamage = self.maxDamage > self.damage and self.maxDamage > self.gunScore
-        if isMoreDamage:
-            gunLeft = self.maxDamage - self.damage
+        playerDamage = self.playersDamage[self._player.playerVehicleID]
+        maxDamage = max(self.playersDamage.itervalues())
+        dealtMoreDamage = playerDamage < maxDamage > self.gunScore
+        if dealtMoreDamage:
+            gunLeft = maxDamage - playerDamage
         else:
-            gunLeft = self.gunScore - self.damage
+            gunLeft = self.gunScore - playerDamage
         achieved = gunLeft <= GLOBAL.ZERO
         self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else gunLeft
         self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON] if achieved else GLOBAL.EMPTY_LINE
-        if not achieved and self.enemiesHP < gunLeft or isMoreDamage:
+        if not achieved and self.enemiesHP < gunLeft or dealtMoreDamage:
             self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON]
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
+        logDebug("MainGun: playerDamage: {}, maxDamage: {}, dealtMoreDamage: {}, gunLeft: {}, achieved: {}",
+                 playerDamage,  maxDamage, dealtMoreDamage, gunLeft, achieved)
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.playerDead = ctrlMode in POSTMORTEM.MODES
 
     def onPlayersDamaged(self, targetID, attackerID, damage):
-        if self._player.playerVehicleID == attackerID:
-            return
-        vInfo = self._arenaDP.getVehicleInfo(attackerID)
-        if vInfo.team == self.allyTeam:
+        if self._arenaDP.isAlly(attackerID):
             self.playersDamage[attackerID] += damage
-            self.maxDamage = max(self.playersDamage.itervalues())
             self.updateMainGun()

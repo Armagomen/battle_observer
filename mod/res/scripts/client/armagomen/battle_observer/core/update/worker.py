@@ -1,12 +1,11 @@
 import os
 import re
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen.battle_observer import __version__
 from armagomen.battle_observer.core.update.i18n import getI18n
-from armagomen.constants import GLOBAL, URLS, MESSAGES, getRandomLogo
+from armagomen.constants import GLOBAL, URLS, getRandomLogo
 from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse, getUpdatePath
 from armagomen.utils.dialogs import UpdateDialogs
 from armagomen.utils.events import g_events
@@ -17,12 +16,27 @@ from web.cache.web_downloader import WebDownloader
 
 WAITING_UPDATE = 'updating'
 
+__NAMES = (
+    "UPDATE_CHECKED", "NEW_VERSION", "STARTED", "NEW_FILE", "ALREADY_DOWNLOADED", "FINISHED", "FAILED"
+)
+__MESSAGES = (
+    "The update check is completed, you have the current version.",
+    "An update {} is detected, the client will be restarted at the end of the download.",
+    "DownloadThread: update started {} at {}",
+    "DownloadThread: added new file {}",
+    "DownloadThread: update is already downloaded to: {}",
+    "DownloadThread: downloading update finished to: {}",
+    "DownloadThread: update download failed: {}"
+)
+
+LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
+
 
 class DownloadThread(object):
     URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
-    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "modPath", "updateData", "i18n")
 
     def __init__(self):
+        self.version = None
         self.i18n = getI18n()
         self.updateData = defaultdict()
         self.dialogs = UpdateDialogs()
@@ -31,18 +45,18 @@ class DownloadThread(object):
 
     def startDownload(self):
         Waiting.show(WAITING_UPDATE)
-        mod_version = self.updateData.get('tag_name', __version__)
+        mod_version = self.updateData.get('tag_name', self.version)
         path = os.path.join(getUpdatePath(), mod_version + ".zip")
         if os.path.isfile(path):
-            logInfo('update is already downloaded to {}'.format(path))
             self.extractZipArchive(path)
+            logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
             self.dialogs.showUpdateFinished(getRandomLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
         else:
             url = self.URLS['last']
             self.downloader = WebDownloader(GLOBAL.ONE)
             if url:
-                logInfo('downloading update started {} at {}'.format(mod_version, url))
+                logInfo(LOG_MESSAGES.STARTED.format(mod_version, url))
                 self.downloader.download(url, self.onDownloaded)
             else:
                 self.closeDownloader()
@@ -58,19 +72,19 @@ class DownloadThread(object):
         with ZipFile(path, "r") as archive:
             for newFile in archive.namelist():
                 if newFile not in old_files:
-                    logInfo('update, add new file {}'.format(newFile))
                     archive.extract(newFile, self.modPath)
+                    logInfo(LOG_MESSAGES.NEW_FILE.format(newFile))
         if Waiting.isOpened(WAITING_UPDATE):
             Waiting.hide(WAITING_UPDATE)
 
     def onDownloaded(self, _url, data):
         self.closeDownloader()
         if data is not None:
-            mod_version = self.updateData.get('tag_name', __version__)
+            mod_version = self.updateData.get('tag_name', self.version)
             path = os.path.join(getUpdatePath(), mod_version + ".zip")
             with open(path, "wb") as zipArchive:
                 zipArchive.write(data)
-            logInfo('downloading update finished to: {}'.format(path))
+            logInfo(LOG_MESSAGES.FINISHED.format(path))
             self.extractZipArchive(path)
             self.dialogs.showUpdateFinished(getRandomLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
@@ -80,28 +94,29 @@ class DownloadThread(object):
     def downloadError(self, url):
         if Waiting.isOpened(WAITING_UPDATE):
             Waiting.hide(WAITING_UPDATE)
-        message = 'update download failed: {}'.format(url)
+        message = LOG_MESSAGES.FAILED.format(url)
         logError(message)
         self.dialogs.showUpdateError(message)
 
 
 class UpdateMain(DownloadThread):
-    __slots__ = ("dialogs", "downloader", "updateData", "inLogin", "modPath", "updateData", "i18n")
 
-    def __init__(self):
+    def __init__(self, version):
         super(UpdateMain, self).__init__()
+        self.version = version
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+        self.subscribe()
 
     def request_last_version(self):
         result = False
-        params = urlResponse(URLS.UPDATE_GITHUB_API_URL)
-        if params:
-            self.updateData.update(params)
-            new_version = params.get('tag_name', __version__)
-            local_ver = self.tupleVersion(__version__)
+        response = urlResponse(URLS.UPDATE_GITHUB_API_URL)
+        if response:
+            self.updateData.update(response)
+            new_version = response.get('tag_name', self.version)
+            local_ver = self.tupleVersion(self.version)
             server_ver = self.tupleVersion(new_version)
             if local_ver < server_ver:
-                assets = params.get('assets')
+                assets = response.get('assets')
                 for asset in assets:
                     filename = asset.get('name', '')
                     download_url = asset.get('browser_download_url')
@@ -110,9 +125,9 @@ class UpdateMain(DownloadThread):
                     elif filename.startswith('BattleObserver_'):
                         self.URLS['full'] = download_url
                 result = True
-                logInfo(MESSAGES.NEW_VERSION.format(new_version))
+                logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
             else:
-                logInfo(MESSAGES.UPDATE_CHECKED)
+                logInfo(LOG_MESSAGES.UPDATE_CHECKED)
         return result
 
     @staticmethod
@@ -132,7 +147,7 @@ class UpdateMain(DownloadThread):
     @async
     def showDialog(self, view):
         self.dialogs.setView(view)
-        title = getRandomLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', __version__))
+        title = getRandomLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, gitMessage)
         result = yield await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))

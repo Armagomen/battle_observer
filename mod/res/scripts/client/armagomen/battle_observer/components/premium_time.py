@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import PREMIUM
 from armagomen.utils.common import overrideMethod, callback, cancelCallback
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader

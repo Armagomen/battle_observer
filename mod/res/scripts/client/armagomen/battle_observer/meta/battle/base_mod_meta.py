@@ -1,6 +1,6 @@
 from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen.battle_observer.core import settings
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import ALIAS_TO_CONFIG_NAME, COLORS, GLOBAL
 from armagomen.utils.common import logInfo, getPlayer, logDebug
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent

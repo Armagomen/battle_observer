@@ -2,14 +2,15 @@
 import datetime
 import random
 
-from armagomen.constants import URLS, GLOBAL, IMG, getRandomLogo
+from armagomen.constants import URLS, IMG, getRandomLogo
 from armagomen.utils.common import logInfo
 from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.ClanCache import g_clanCache
 from gui.shared.personality import ServicesLocator
+from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-if GLOBAL.RU_LOCALIZATION:
+if getClientLanguage().lower() in ('ru', 'uk', 'be'):
     messages = (
         "Доброго вечора ми з України.",
         "Підтримай розробку мода, все буде Україна.",

@@ -2,11 +2,12 @@
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
-from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled
+from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
 from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
+from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 37
@@ -14,20 +15,30 @@ KEY_CONTROL = [KEY_ALIAS_CONTROL]
 KEY_ALT = [KEY_ALIAS_ALT]
 
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
-LOCKED = ("<font color='#ff3d3d'> The function is not available, XVM is installed.</font>",
-          "<font color='#ff3d3d'> Функция недоступна, установлен XVM.</font>")
+
+
+@property
+def LOCKED_MESSAGE():
+    pattern = "<font color='#ff3d3d'> {}</font>"
+    language = getClientLanguage().lower()
+    if language in ('ru', 'be'):
+        return pattern.format("Функция недоступна, установлен XVM.")
+    elif language == "uk":
+        return pattern.format("Функція недоступна, встановлено XVM.")
+    else:
+        return pattern.format("The function is not available, XVM is installed.")
 
 
 class Getter(object):
     __slots__ = ()
 
     @staticmethod
-    def getLinkToParam(data, settingPath):
+    def getLinkToParam(settings_block, settingPath):
         path = settingPath.split(GLOBAL.C_INTERFACE_SPLITTER)
         for fragment in path:
-            if fragment in data and isinstance(data[fragment], dict):
-                data = data[fragment]
-        return data, path[GLOBAL.LAST]
+            if fragment in settings_block and isinstance(settings_block[fragment], dict):
+                settings_block = settings_block[fragment]
+        return settings_block, path[GLOBAL.LAST]
 
     @staticmethod
     def getCollectionIndex(value, collection):
@@ -36,8 +47,8 @@ class Getter(object):
             index = collection.index(value)
         return collection, index
 
-    def getKeyPath(self, settings, path=()):
-        for key, value in settings.iteritems():
+    def getKeyPath(self, settings_block, path=()):
+        for key, value in settings_block.iteritems():
             key_path = path + (key,)
             if isinstance(value, dict):
                 for _path in self.getKeyPath(value, key_path):
@@ -45,13 +56,13 @@ class Getter(object):
             else:
                 yield key_path
 
-    def keyValueGetter(self, settings):
+    def keyValueGetter(self, settings_block):
         key_val = []
         try:
-            for key in sorted(self.getKeyPath(settings)):
+            for key in sorted(self.getKeyPath(settings_block)):
                 key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
                 if GLOBAL.ENABLED != key:
-                    dic, param = self.getLinkToParam(settings, key)
+                    dic, param = self.getLinkToParam(settings_block, key)
                     key_val.append((key, dic[param]))
         except Exception:
             LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
@@ -140,7 +151,7 @@ class CreateElement(object):
         name = localization.get(blockID, {}).get("header", blockID)
         warning = xvmInstalled and blockID in LOCKED_BLOCKS
         if warning:
-            name += LOCKED[GLOBAL.RU_LOCALIZATION]
+            name += LOCKED_MESSAGE
         return {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
             'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True) and not warning,
@@ -177,23 +188,24 @@ class CreateElement(object):
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 
 
-class ConfigInterface(CreateElement):
+class SettingsInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settings, configLoader):
-        super(ConfigInterface, self).__init__()
-        self.cLoader = configLoader
+    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settingsLoader, version):
+        super(SettingsInterface, self).__init__()
+        self.sLoader = settingsLoader
         self.modsListApi = modsListApi
-        self.settings = settings
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.currentConfig = self.newConfig = self.cLoader.configsList.index(self.cLoader.cName)
+        self.currentConfig = self.newConfig = self.sLoader.configsList.index(self.sLoader.cName)
         self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
+        localization['service']['name'] = localization['service']['name'].format(version)
+        localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                   useKeyPairs=self.settings.main[MAIN.USE_KEY_PAIRS])
+                                   useKeyPairs=settings.main[MAIN.USE_KEY_PAIRS])
         vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
-        self.settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
+        settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
 
     def loadHangarSettings(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOGIN:
@@ -219,7 +231,7 @@ class ConfigInterface(CreateElement):
                 self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID),
                                           dict(), lambda *args: None, button_handler=self.onButtonPress)
             except Exception as err:
-                logWarning('ConfigInterface startLoad {}'.format(repr(err)))
+                logWarning('SettingsInterface startLoad {}'.format(repr(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
@@ -244,8 +256,8 @@ class ConfigInterface(CreateElement):
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.newConfigLoadingInProcess:
                 self.inited.clear()
-                self.cLoader.readConfig(self.cLoader.configsList[self.newConfig])
-                self.cLoader.createLoadJSON(cName=self.cLoader.configsList[self.newConfig])
+                self.sLoader.readConfig(self.sLoader.configsList[self.newConfig])
+                self.sLoader.createLoadJSON(cName=self.sLoader.configsList[self.newConfig])
                 self.currentConfig = self.newConfig
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
@@ -267,11 +279,11 @@ class ConfigInterface(CreateElement):
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfig != data['selector']:
             self.newConfig = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            logDebug("change settings '{}' - {}", self.cLoader.configsList[self.newConfig], blockID)
+            logDebug("change settings '{}' - {}", self.sLoader.configsList[self.newConfig], blockID)
         else:
-            settings = getattr(self.settings, blockID)
+            settings_block = getattr(settings, blockID)
             for key, value in data.iteritems():
-                updatedConfigLink, paramName = self.getter.getLinkToParam(settings, key)
+                updatedConfigLink, paramName = self.getter.getLinkToParam(settings_block, key)
                 if paramName in updatedConfigLink:
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
@@ -287,8 +299,8 @@ class ConfigInterface(CreateElement):
                         elif oldParamType is int and newParamType is float:
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
-            self.cLoader.updateConfigFile(blockID, settings)
-            self.settings.onModSettingsChanged(settings, blockID)
+            self.sLoader.updateConfigFile(blockID, settings_block)
+            settings.onModSettingsChanged(settings_block, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -319,18 +331,18 @@ class ConfigInterface(CreateElement):
 
     def getTemplate(self, blockID):
         """create templates, do not change..."""
-        settings = getattr(self.settings, blockID, {})
+        settings_block = getattr(settings, blockID, {})
         column1 = []
         column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.cLoader.configsList, self.newConfig)]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.newConfig)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_paypal', URLS.PAYPAL_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
             items = []
-            for key, value in self.getter.keyValueGetter(settings):
+            for key, value in self.getter.keyValueGetter(settings_block):
                 item = self.createItem(blockID, key, value)
                 if item is not None:
                     items.append(item)
@@ -338,4 +350,4 @@ class ConfigInterface(CreateElement):
             for index, item in enumerate(items):
                 column = column1 if index < middleIndex else column2
                 column.append(item)
-        return self.createBlock(blockID, settings, column1, column2)
+        return self.createBlock(blockID, settings_block, column1, column2)

@@ -7,10 +7,9 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
     SHOT_RESULT_TO_ALT_COLOR
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
-from helpers import getClientLanguage
 
 MOD_NAME = "BATTLE_OBSERVER"
-FILE_NAME = "armagomen.battleObserver_{}.wotmod"
+
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
 
 HEADERS = [('User-Agent', MOD_NAME)]
@@ -84,11 +83,7 @@ class GLOBAL:
     INNER = "inner"
     KNOCKOUT = "knockout"
     ONE = 1
-    ONE_SECOND = 1.0
     OUTLINE = "outline"
-    REPLACE = ("%(battles)d", "%(battles)s")
-    RU_LOCALIZATION = getClientLanguage().lower() in ('ru', 'be')
-    UKR_LOCALIZATION = getClientLanguage().lower() == 'uk'
     SCALE = "scale"
     SETTINGS = "settings"
     SMOOTHING = "smoothing"
@@ -379,17 +374,13 @@ ANOTHER = namedtuple("ANOTHER", (
     "configSelect", "shadow_settings", "friendList", "accountDBID", "users", "databaseID", "badges", "isTeamKiller",
     "name", "fakeName", "clanDBID", "clanAbbrev")
 
-MESSAGES = namedtuple("MESSAGES", ("START", "FINISH", "LOCKED_BY_FILE_NAME", "UPDATE_CHECKED", "NEW_VERSION"))(
-    "START LOADING", "SHUTTING DOWN", "ERROR: file {} is not valid, mod locked, please install mod from official site",
-    "The update check is completed, you have the current version.",
-    "An update {} is detected, the client will be restarted at the end of the download.")
-
 BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )
 
 CREW_XP = namedtuple("CREW_XP", ("NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF"))(
     "notAvailable", "isFullXp", "isFullComplete", "needTurnOff"
 )
 
+# Settings Loader List
 LOAD_LIST = (
     HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,

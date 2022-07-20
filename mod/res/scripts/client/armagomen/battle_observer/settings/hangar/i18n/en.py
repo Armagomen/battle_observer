@@ -1,29 +1,30 @@
 # coding=utf-8
-from armagomen.battle_observer import __version__
 
-timeFormat_tooltip = ("Directive Meaning\n"
-                      "%a  Locale’s abbreviated weekday name.\n"
-                      "%A  Locale’s full weekday name.\n"
-                      "%b  Locale’s abbreviated month name.\n"
-                      "%B  Locale’s full month name.\n"
-                      "%c  Locale’s appropriate date and time representation.\n"
-                      "%d  Day of the month as a decimal number [01,31].\n"
-                      "%H  Hour (24-hour clock) as a decimal number [00,23].\n"
-                      "%I  Hour (12-hour clock) as a decimal number [01,12].\n"
-                      "%j  Day of the year as a decimal number [001,366].\n"
-                      "%m  Month as a decimal number [01,12].\n"
-                      "%M  Minute as a decimal number [00,59].\n"
-                      "%p  Locale’s equivalent of either AM or PM.\n"
-                      "%S  Second as a decimal number [00,61].\n"
-                      "%U  Week number of the year (Sunday as the first day of the week) as a decimal number [00,53].\n"
-                      "%w  Weekday as a decimal number [0(Sunday),6].\n"
-                      "%W  Week number of the year (Monday as the first day of the week) as a decimal number [00,53].\n"
-                      "%x  Locale’s appropriate date representation.\n"
-                      "%X  Locale’s appropriate time representation.\n"
-                      "%y  Year without century as a decimal number [00,99].\n"
-                      "%Y  Year with century as a decimal number.\n"
-                      "%Z  Time zone name (no characters if no time zone exists).\n"
-                      "%%  A literal '%' character.\n")
+timeFormat_tooltip = (
+    "Directive Meaning\n"
+    "%a - Locale’s abbreviated weekday name.\n"
+    "%A - Locale’s full weekday name.\n"
+    "%b - Locale’s abbreviated month name.\n"
+    "%B - Locale’s full month name.\n"
+    "%c - Locale’s appropriate date and time representation.\n"
+    "%d - Day of the month as a decimal number [01,31].\n"
+    "%H - Hour (24-hour clock) as a decimal number [00,23].\n"
+    "%I - Hour (12-hour clock) as a decimal number [01,12].\n"
+    "%j - Day of the year as a decimal number [001,366].\n"
+    "%m - Month as a decimal number [01,12].\n"
+    "%M - Minute as a decimal number [00,59].\n"
+    "%p - Locale’s equivalent of either AM or PM.\n"
+    "%S - Second as a decimal number [00,61].\n"
+    "%U - Week number of the year (Sunday as the first day of the week) as a decimal number [00,53].\n"
+    "%w - Weekday as a decimal number [0(Sunday),6].\n"
+    "%W - Week number of the year (Monday as the first day of the week) as a decimal number [00,53].\n"
+    "%x - Locale’s appropriate date representation.\n"
+    "%X - Locale’s appropriate time representation.\n"
+    "%y - Year without century as a decimal number [00,99].\n"
+    "%Y - Year with century as a decimal number.\n"
+    "%Z - Time zone name (no characters if no time zone exists).\n"
+    "%% - A literal '%' character."
+)
 
 RESTART_TOOLTIP = "To enable / disable you need to restart the game."
 
@@ -409,9 +410,9 @@ localization = {
         "sys_keys*customizationChanged": "Customization Change"
     },
     "service": {
-        "name": "Battle Observer - v{0}".format(__version__),
+        "name": "Battle Observer - v{}",
         "description": "Battle Observer settings",
-        "windowTitle": "Battle Observer settings - v{0}".format(__version__),
+        "windowTitle": "Battle Observer settings - v{}",
         "buttonOK": "OK",
         "buttonCancel": "Cancel",
         "buttonApply": "Apply",

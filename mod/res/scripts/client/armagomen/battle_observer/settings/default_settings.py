@@ -511,10 +511,8 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
-        DamageLogsSettings = namedtuple('DamageLogsSettings',
-                                        ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
-        self.damage_log = DamageLogsSettings(self.log_total, self.log_damage_extended, self.log_input_extended,
-                                             self.log_global)
+        _logs = namedtuple('Logs', ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
+        self.damage_log = _logs(self.log_total, self.log_damage_extended, self.log_input_extended, self.log_global)
         self.statistics = {
             GLOBAL.ENABLED: False,
             STATISTICS.STATISTIC_ENABLED: False,

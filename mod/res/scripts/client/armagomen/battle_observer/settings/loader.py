@@ -1,16 +1,18 @@
 import os
 
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import LOAD_LIST, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile
+from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile, logDebug
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
+JSON = '{}.json'
+READ_MESSAGE = "SettingsLoader/readConfig: {}: {}"
 
-class ConfigLoader(object):
+class SettingsLoader(object):
     __slots__ = ('cName', 'path', 'configsList', 'settings', 'errorMessages')
 
-    def __init__(self, settings):
-        self.settings = settings
+    def __init__(self):
         self.cName = None
         self.path = os.path.join(getCurrentModPath()[GLOBAL.FIRST], "configs", "mod_battle_observer")
         self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
@@ -52,9 +54,9 @@ class ConfigLoader(object):
             self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
             return cName
 
-    def updateConfigFile(self, fileName, settings):
+    def updateConfigFile(self, fileName, _settings):
         path = os.path.join(self.path, self.cName, '{}.json'.format(fileName))
-        writeJsonFile(path, settings)
+        writeJsonFile(path, _settings)
 
     @staticmethod
     def isNotEqualLen(data1, data2):
@@ -78,9 +80,6 @@ class ConfigLoader(object):
                 new_param = external_cfg.get(key)
                 if new_param is not None:
                     new_param_type = type(new_param)
-                    if new_param_type is str and GLOBAL.REPLACE[GLOBAL.FIRST] in new_param:
-                        file_update = True
-                        new_param = new_param.replace(*GLOBAL.REPLACE)
                     if new_param_type != old_param_type:
                         file_update = True
                         if old_param_type is int and new_param_type is float:
@@ -97,25 +96,26 @@ class ConfigLoader(object):
         """Read settings_core file from JSON"""
         direct_path = os.path.join(self.path, configName)
         logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
-        file_list = ['{}.json'.format(name) for name in LOAD_LIST]
         listdir = os.listdir(direct_path)
-        for num, module_name in enumerate(LOAD_LIST, GLOBAL.ZERO):
-            file_name = file_list[num]
+        for module_name in LOAD_LIST:
+            file_name = JSON.format(module_name)
             file_path = os.path.join(direct_path, file_name)
-            internal_cfg = getattr(self.settings, module_name)
+            internal_cfg = getattr(settings, module_name)
             if file_name in listdir:
                 try:
                     if self.updateData(openJsonFile(file_path), internal_cfg):
                         writeJsonFile(file_path, internal_cfg)
+                    logDebug(READ_MESSAGE, self.cName, file_name)
                 except Exception as error:
-                    self.errorMessages.append(" ".join((file_path, error.message)))
-                    logWarning('readConfig: {} {}'.format(file_name, repr(error)))
+                    message = READ_MESSAGE.format(file_path, repr(error))
+                    self.errorMessages.append(message)
+                    logWarning(message)
                     continue
             else:
                 writeJsonFile(file_path, internal_cfg)
-            self.settings.onModSettingsChanged(internal_cfg, module_name)
+            settings.onModSettingsChanged(internal_cfg, module_name)
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
-        self.settings.onUserConfigUpdateComplete()
+        settings.onUserConfigUpdateComplete()
         if self.errorMessages:
             g_events.onHangarLoaded += self.onHangarLoaded
 

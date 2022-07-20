@@ -1,15 +1,15 @@
 # coding=utf-8
 from collections import namedtuple
 
-from armagomen.constants import GLOBAL
 from armagomen.constants import getRandomLogo
 from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
 from async import async, await, AsyncReturn
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
+from helpers import getClientLanguage
 
-if GLOBAL.RU_LOCALIZATION:
+if getClientLanguage().lower() in ('ru', 'uk', 'be'):
     labels = ("ПЕРЕЗАГРУЗКА", "Автоматически", "Вручную", "Отмена", "Закрыть", "Применить", "Игнорировать этот танк")
 else:
     labels = ("RESTART", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank")

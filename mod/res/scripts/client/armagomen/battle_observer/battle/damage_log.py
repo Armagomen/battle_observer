@@ -127,8 +127,7 @@ class DamageLog(DamageLogsMeta):
             self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += self.unpackTopLogValue(e_type, event, extra)
             self.updateTopLog()
         if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
-            log_data, settings = self.getLogDataAndSettings(e_type)
-            self.addToExtendedLog(log_data, settings, event.getTargetID(), extra)
+            self.addToExtendedLog(e_type, event.getTargetID(), extra)
 
     @staticmethod
     def unpackTopLogValue(e_type, event, extra):
@@ -192,23 +191,24 @@ class DamageLog(DamageLogsMeta):
             gold_name = shell_name + DAMAGE_LOG.PREMIUM
             if gold_name in DAMAGE_LOG.PREMIUM_SHELLS:
                 shell_icon_name = gold_name
-        logDebug("Shell type: {}, shell icon: {}, gold: {}", shell_name, shell_icon_name, gold)
         return shell_name, shell_icon_name, gold
 
     def getVehicleMaxHealth(self, vehicle_id):
         return self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
 
-    def addToExtendedLog(self, log_data, settings, vehicle_id, extra):
-        """add or update log item"""
-        is_dlog = log_data is self.damage_log
+    def addToExtendedLog(self, e_type, vehicle_id, extra):
+        """add to log item"""
+        is_player = e_type == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
+        log_data, settings = self.getLogDataAndSettings(e_type)
         if vehicle_id not in log_data.id_list:
             log_data.id_list.append(vehicle_id)
-        shell_name, shell_icon_name, gold = self.checkPlayerShell(extra) if is_dlog else self.checkShell(extra)
+        shell_name, shell_icon_name, gold = self.checkPlayerShell(extra) if is_player else self.checkShell(extra)
+        logDebug("Shell type: {}, shell icon: {}, gold: {}, player: {}", shell_name, shell_icon_name, gold, is_player)
         vehicle = log_data.vehicles.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         vehicleInfoVO = self._arenaDP.getVehicleInfo(vehicle_id)
         if not vehicle:
             self.createVehicle(vehicleInfoVO, vehicle, logLen=len(log_data.id_list))
-        vehicle_id = self._player.playerVehicleID if not is_dlog else vehicle_id
+        vehicle_id = self._player.playerVehicleID if not is_player else vehicle_id
         self.updateVehicleData(extra, gold, settings, shell_icon_name, shell_name, vehicle, vehicle_id)
         callback(0.1, lambda: self.updateExtendedLog(log_data, settings))
 
