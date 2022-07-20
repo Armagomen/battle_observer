@@ -123,76 +123,79 @@ localization = {
         "timer_done_color": "Колір: Повністю зведений",
         "timer_align": "Вирівнювання тексту"
     },
+    # region Part2
     "tank_carousel": {
-        "header": "Настройка карусели танков",
-        "carouselRows": "Кол-во рядов многорядной карусели танков.",
-        "carouselRows_tooltip": "Работает только если в клиенте включена многорядная карусель.",
-        "smallDoubleCarousel": "Принудительно использовать маленькие иконки."
+        "header": "Налаштування каруселі танків",
+        "carouselRows": "Кількість рядів каруселі танків",
+        "carouselRows_tooltip": "Потребує увімкненої багаторядної каруселі в налаштуваннях гри.",
+        "smallDoubleCarousel": "Примусово використовувати маленькі іконки"
     },
     "effects": {
-        "header": "Настройка визуальных эффектов",
-        "noShockWave": "Убрать тряску камеры при попадании по танку.",
-        "noFlashBang": "Убрать красную вспышку при получении урона.",
-        "noLightEffect": "Убрать вспышку и пламя после выстрела.",
-        "noBinoculars": "Убрать затемнение в снайперском режиме.",
-        "noSniperDynamic": "Отключить динамическую камеру в снайперском режиме."
+        "header": "Налаштування візуальних ефектів",
+        "noShockWave": "Прибрати потряхування камери при попаданні по танку",
+        "noFlashBang": "Прибрати червоний спалах при отриманні пошкоджень",
+        "noLightEffect": "Прибрати спалах і полум'я після пострілу",
+        "noBinoculars": "Прибрати затемнення в снайперському режимі",
+        "noSniperDynamic": "Вимкнути динамічну камеру в снайперському режимі"
     },
     "debug_panel": {
-        "header": "Панель PING/FPS",
-        "debugText*text": "Тестовое поле для форматирования PING/FPS",
-        "debugText*text_tooltip": "HTML - ДА\nМакросы для PING/FPS"
-                                  "\n%(PING)s <tab>Пинг"
-                                  "\n%(FPS)s <tab>Текущий фпс"
-                                  "\n%(pingColor)s <tab>цвет PING/LAG."
-                                  "\n%(fpsColor)s <tab>цвет FPS",
-        "debugText*x": "Позиция окна по оси X",
-        "debugText*y": "Позиция окна по оси Y",
-        "debugText*scale": "Масштабирование панели.",
-        "debugGraphics*enabled": "Показывать графические полосы PING/FPS",
-        "colors*fpsColor": "Цвет макроса %(fpsColor)s",
-        "colors*pingColor": "Цвет макроса %(pingLagColor)s - Нет лагов",
-        "colors*pingLagColor": "Цвет макроса %(pingLagColor)s - Есть лаги",
-        "debugGraphics*fpsBar*color": "Цвет полосы FPS",
-        "debugGraphics*fpsBar*enabled": "Включить графику для FPS",
-        "debugGraphics*pingBar*color": "Цвет полосы PING",
-        "debugGraphics*pingBar*enabled": "Включить графику для PING"
+        "header": "Панель FPS та PING",
+        "debugText*text": "Текстове поле форматування панелі FPS та PING",
+        "debugText*text_tooltip": "Макроси для панелі FPS та PING"
+                                  "\n%(PING)s <tab>Пінг"
+                                  "\n%(FPS)s <tab>Поточний FPS"
+                                  "\n%(fpsColor)s <tab>колір FPS"
+                                  "\n%(pingColor)s <tab>колір PING/LAG."
+                                  "\nПідтримується HTML.",
+        "debugText*x": "Позиція панелі по горизонталі",
+        "debugText*y": "Позиція панелі по вертикалі",
+        "debugText*scale": "Масштаб панелі",
+        "debugGraphics*enabled": "Відображати графічний індикатор FPS та PING",
+        "colors*fpsColor": "Колір макроса %(fpsColor)s",
+        "colors*pingColor": "Колір макроса %(pingLagColor)s - Лаги відсутні",
+        "colors*pingLagColor": "Колір макроса %(pingLagColor)s - Лаги присутні",
+        "debugGraphics*fpsBar*color": "Колір графічного індикатору FPS",
+        "debugGraphics*fpsBar*enabled": "Відображати графічний індикатор для FPS",
+        "debugGraphics*pingBar*color": "Колір графічного індикатору PING",
+        "debugGraphics*pingBar*enabled": "Відображати графічний індикатор для PING"
     },
     "battle_timer": {
-        "header": "Таймер боя.",
-        "timerTemplate": "Поле для форматирования таймера",
-        "timerTemplate_tooltip": "Доступные макросы:\n %(timer)s\n %(timerColor)s\nHTML - ДА",
-        "timerColorEndBattle": "Цвет макроса %(timerColor)s менее 2 минут",
-        "timerColor": "Цвет макроса %(timerColor)s нормальный"
+        "header": "Таймер бою",
+        "timerTemplate": "Поле для форматування таймера",
+        "timerTemplate_tooltip": "Доступні макроси:\n %(timer)s\n %(timerColor)s\nПідтримується HTML.",
+        "timerColorEndBattle": "Колір макроса %(timerColor)s: залишається <= 2 хв.",
+        "timerColor": "Колір макроса %(timerColor)s: звичайний"
     },
     "clock": {
-        "header": "Панель Часов в бою\ангаре.",
-        "battle*enabled": "Отображать в бою.",
-        "hangar*enabled": "Отображать в ангаре.",
-        "battle*format": "Форматирование строки.",
+        "header": "Годинник в ангарі та бою",
+        "battle*enabled": "Відображати в бою",
+        "hangar*enabled": "Відображати в ангарі",
+        "battle*format": "Поле для форматування годинника в бою",
         "battle*format_tooltip": timeFormat_tooltip,
-        "hangar*format": "Форматирование строки.",
+        "hangar*format": "Поле для форматування годинника в ангарі",
         "hangar*format_tooltip": timeFormat_tooltip,
-        "battle*x": "Позиция по горизонтали.",
-        "battle*y": "Позиция по вертикали.",
-        "hangar*x": "Позиция по горизонтали.",
-        "hangar*y": "Позиция по вертикали."
+        "battle*x": "Позиція в бою по горизонталі",
+        "battle*y": "Позиція в бою по вертикалі",
+        "hangar*x": "Позиція в ангарі по горизонталі",
+        "hangar*y": "Позиція в ангарі по вертикалі"
     },
     "hp_bars": {
-        "header": "Здоровье команд - Team Health",
-        "barsWidth": "Ширина полос",
-        "differenceHP": "Показывать разницу между общим здоровьем команд",
-        "showAliveCount": "Показывать на панели счета живых",
-        "style": "Стиль панели",
-        "outline*enabled": "Включить контур в стиле normal",
-        "outline*color": "Цвет контура.",
-        "markers*enabled": "Карусель маркеров техники.",
-        "markers*x": "Расстояние по Горизонтали от центра.",
-        "markers*x_tooltip": "Зеркально сдвигает значки от центра на заданное кол-во пикселей.",
-        "markers*y": "Позиция по Вертикали от верха.",
-        "markers*y_tooltip": "Позиция маркеров по Вертикали от верха экрана.",
-        "markers*showMarkers_hotkey": "Клавиша включения/отключения маркеров.",
-        "markers*markersClassColor": "Окрасить значки по цвету класса."
+        "header": "Здоров'я команд",
+        "barsWidth": "Ширина полосок",
+        "differenceHP": "Показувати різницю між загальними здоров'ями команд",
+        "showAliveCount": "Показувати на панелі рахунку живих",
+        "style": "Стиль панелі",
+        "outline*enabled": "Увімкнути контур в стилі \"normal\"",
+        "outline*color": "Колір контуру",
+        "markers*enabled": "Карусель маркерів техніки",
+        "markers*x": "Відстань по горизонталі від центру",
+        "markers*x_tooltip": "Зеркально переміщає значки від центру на задану кількість пікселів",
+        "markers*y": "Позиція по вертикалі від верху",
+        "markers*y_tooltip": "Позиція маркерів по вертикалі від верху экрану.",
+        "markers*showMarkers_hotkey": "Клавіша увімкнення/вимкнення маркерів",
+        "markers*markersClassColor": "Пофарбувати значки по кольору класу техніки"
     },
+    # endregion Part2 Done
     "armor_calculator": {
         "header": "Индикатор пробития - Калькулятор приведенной брони.",
         "position*x": "Позиция текста по Горизонтали",
@@ -434,7 +437,7 @@ localization = {
         "buttonOK": "OK",
         "buttonCancel": "Відміна",
         "buttonApply": "Застосувати",
-        "enableButtonTooltip": "{HEADER}ВКЛ/ВЫКЛ{/HEADER}{BODY}Увімкнути/Вимкнути модуль{/BODY}"
+        "enableButtonTooltip": "{HEADER}ВКЛ/ВИКЛ{/HEADER}{BODY}Увімкнути/Вимкнути модуль{/BODY}"
     },
     "sixth_sense": {
         "header": "Лампа 6-е чувство.",
