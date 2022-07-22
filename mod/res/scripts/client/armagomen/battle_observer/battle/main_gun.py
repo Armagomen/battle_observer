@@ -67,7 +67,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
         logDebug("MainGun: playerDamage: {}, maxDamage: {}, dealtMoreDamage: {}, gunLeft: {}, achieved: {}",
-                 playerDamage,  maxDamage, dealtMoreDamage, gunLeft, achieved)
+                 playerDamage, maxDamage, dealtMoreDamage, gunLeft, achieved)
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):

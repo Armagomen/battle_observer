@@ -13,20 +13,16 @@ KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
 class KeysListener(object):
 
     def __init__(self):
-        self.keysMap = dict()
+        self.keysMap = set()
         self.pressedKeys = set()
         self.usableKeys = set()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
 
-    def registerComponent(self, keyName, keyList, keyFunction):
+    def registerComponent(self, keyList, keyFunction):
         normalizedKey = self.normalizeKey(keyList)
-        self.keysMap[keyName] = KeysData(normalizedKey, keyFunction)
+        self.keysMap.add(KeysData(normalizedKey, keyFunction))
         self.usableKeys.update(normalizedKey)
-
-    def unregisterComponent(self, keyName, keyList):
-        del self.keysMap[keyName]
-        self.usableKeys.difference_update(self.normalizeKey(keyList))
 
     def clear(self):
         self.keysMap.clear()
@@ -45,7 +41,7 @@ class KeysListener(object):
     def onKeyUp(self, event):
         if event.key not in self.usableKeys or event.key not in self.pressedKeys:
             return
-        for keyName, keysData in self.keysMap.iteritems():
+        for keysData in self.keysMap:
             if self.pressedKeys.issuperset(keysData.keys):
                 keysData.keyFunction(False)
         if settings.main[USE_KEY_PAIRS]:
@@ -68,7 +64,7 @@ class KeysListener(object):
             elif event.key in KEY_ALIAS_SHIFT:
                 self.pressedKeys.update(KEY_ALIAS_SHIFT)
         self.pressedKeys.add(event.key)
-        for keyName, keysData in self.keysMap.iteritems():
+        for keysData in self.keysMap:
             if self.pressedKeys.issuperset(keysData.keys):
                 keysData.keyFunction(True)
 

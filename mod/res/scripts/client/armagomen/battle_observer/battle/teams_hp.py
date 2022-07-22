@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GAME, GRAPHICS
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 from armagomen.constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
+from armagomen.utils.keys_listener import g_keysListener
 from gui.battle_control.arena_info.vos_collections import FragCorrelationSortKey
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
@@ -58,7 +58,7 @@ class CorrelationMarkers(object):
             self.settingsCore.applySettings({GAME.SHOW_VEHICLES_COUNTER: not self.enabled})
 
     def populate(self):
-        g_keysListener.registerComponent(MARKERS.HOT_KEY, self.settings[MARKERS.HOT_KEY], self.keyEvent)
+        g_keysListener.registerComponent(self.settings[MARKERS.HOT_KEY], self.keyEvent)
 
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:

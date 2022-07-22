@@ -77,8 +77,7 @@ class DamageLog(DamageLogsMeta):
             if arena is not None:
                 arena.onVehicleUpdated += self.onVehicleUpdated
                 arena.onVehicleKilled += self.onVehicleKilled
-            g_keysListener.registerComponent(DAMAGE_LOG.HOT_KEY, self.settings.log_global[DAMAGE_LOG.HOT_KEY],
-                                             self.onLogsAltMode)
+            g_keysListener.registerComponent(self.settings.log_global[DAMAGE_LOG.HOT_KEY], self.onLogsAltMode)
         if self.top_log_enabled or self.extended_log_enabled:
             feedback = self.sessionProvider.shared.feedback
             if feedback:
