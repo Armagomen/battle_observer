@@ -123,6 +123,7 @@ def cleanupUpdates():
     if contents:
         for i in contents:
             os.unlink(i) if os.path.isfile(i) or os.path.islink(i) else rmtree(i, ignore_errors=True)
+            logInfo("cleanup updates: {}".format(i))
 
 
 def removeDirs(normpath, name=None):
@@ -263,7 +264,10 @@ def convertDictToNamedtuple(dictionary):
 
 
 def convertNamedtupleToDict(named):
-    return dict(named._asdict())
+    """
+    :type named: namedtuple
+    """
+    return named._asdict()
 
 
 COLOR = namedtuple("COLOR", ("PURPLE", "GREEN", "MULTIPLIER", "TEMPLATE"))(0.8333, 0.3333, 255, "#{:02X}{:02X}{:02X}")
