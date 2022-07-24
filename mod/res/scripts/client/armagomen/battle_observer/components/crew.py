@@ -30,8 +30,8 @@ class CrewProcessor(object):
 
     @staticmethod
     def getLocalizedMessage(value, description):
-        dialog = localization["crewDialog"]
-        return dialog[description] + "\n\n" + dialog["enable" if value else "disable"]
+        dialog = localization[CREW_XP.NAME]
+        return dialog[description] + "\n\n" + dialog[CREW_XP.ENABLE if value else CREW_XP.DISABLE]
 
     @async
     def showDialog(self, vehicle, value, description):

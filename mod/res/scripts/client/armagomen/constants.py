@@ -377,9 +377,9 @@ ANOTHER = namedtuple("ANOTHER", (
 
 BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )
 
-CREW_XP = namedtuple("CREW_XP", ("NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF"))(
-    "notAvailable", "isFullXp", "isFullComplete", "needTurnOff"
-)
+CREW_XP = namedtuple("CREW_XP", (
+    "NAME", "NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF", "ENABLE", "DISABLE"))(
+    "crewDialog", "notAvailable", "isFullXp", "isFullComplete", "needTurnOff", "enable", "disable")
 
 # Settings Loader List
 LOAD_LIST = (
