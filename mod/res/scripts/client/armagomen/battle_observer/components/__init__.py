@@ -7,7 +7,6 @@ class ComponentsLoader(object):
     def __init__(self):
         self.modules = {
             'badges': None,
-            'battle_component': None,
             'camera': None,
             'common': None,
             'crew': None,

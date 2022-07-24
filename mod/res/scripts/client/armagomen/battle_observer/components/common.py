@@ -1,15 +1,20 @@
+import math
+
+from CurrentVehicle import g_currentVehicle
 from DogTagComponent import DogTagComponent
+from PlayerEvents import g_playerEvents
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import _view_settings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import MAIN
-from armagomen.utils.common import overrideMethod, getPlayer
+from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
+from armagomen.utils.common import overrideMethod, getPlayer, setMaxFrameRate, logDebug
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.Scaleform.daapi.view.meta.LobbyHeaderMeta import LobbyHeaderMeta
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
+from gui.battle_control.controllers import msgs_ctrl
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from helpers.func_utils import callback
@@ -111,3 +116,37 @@ def handleLazyChannelCtlInited(base, entry, event):
 def buttonCounterS(base, *args, **kwargs):
     if not settings.main[MAIN.HIDE_BTN_COUNTERS]:
         return base(*args, **kwargs)
+
+
+BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND)
+
+
+def onModSettingsChanged(_settings, blockID):
+    if blockID == MAIN.NAME:
+        if _settings[MAIN.ENABLE_FPS_LIMITER]:
+            setMaxFrameRate(_settings[MAIN.MAX_FRAME_RATE])
+        if _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
+            msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
+        elif not _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
+            msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
+
+
+def onArenaCreated():
+    if settings.log_total[GLOBAL.ENABLED]:
+        try:
+            dossier = g_currentVehicle.getDossier()
+            if dossier:
+                damage = dossier.getRandomStats().getAvgDamage()
+                assist = dossier.getRandomStats().getDamageAssistedEfficiencyWithStan()
+                if damage is not None:
+                    damage = math.floor(damage)
+                    DAMAGE_LOG.AVG_DAMAGE_DATA = damage
+                if assist is not None:
+                    assist = math.floor(assist)
+                logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
+        except AttributeError:
+            DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO
+
+
+g_playerEvents.onArenaCreated += onArenaCreated
+settings.onModSettingsChanged += onModSettingsChanged
