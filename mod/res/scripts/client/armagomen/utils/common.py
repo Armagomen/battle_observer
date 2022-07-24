@@ -263,13 +263,6 @@ def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
 
-def convertNamedtupleToDict(named):
-    """
-    :type named: namedtuple
-    """
-    return named._asdict()
-
-
 COLOR = namedtuple("COLOR", ("PURPLE", "GREEN", "MULTIPLIER", "TEMPLATE"))(0.8333, 0.3333, 255, "#{:02X}{:02X}{:02X}")
 
 
