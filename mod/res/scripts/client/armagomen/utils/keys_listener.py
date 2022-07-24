@@ -13,7 +13,7 @@ KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
 class KeysListener(object):
 
     def __init__(self):
-        self.keysMap = set()
+        self.keysMap = list()
         self.pressedKeys = set()
         self.usableKeys = set()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
@@ -21,11 +21,11 @@ class KeysListener(object):
 
     def registerComponent(self, keyList, keyFunction):
         normalizedKey = self.normalizeKey(keyList)
-        self.keysMap.add(KeysData(normalizedKey, keyFunction))
+        self.keysMap.append(KeysData(normalizedKey, keyFunction))
         self.usableKeys.update(normalizedKey)
 
     def clear(self):
-        self.keysMap.clear()
+        self.keysMap = list()
         self.usableKeys.clear()
         self.pressedKeys.clear()
 

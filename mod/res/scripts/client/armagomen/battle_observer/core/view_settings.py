@@ -128,7 +128,7 @@ class ViewSettings(object):
             self.isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
             if self.isAllowed:
                 self.setComponents()
-            self.setHiddenComponents()
+                self.setHiddenComponents()
         return self.isAllowed, self.__components
 
     def setComponents(self):
