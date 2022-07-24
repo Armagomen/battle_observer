@@ -22,7 +22,8 @@ if getClientLanguage().lower() in ('ru', 'uk', 'be'):
 else:
     messages = (
         "Good evening, we are from Ukraine.",
-        "Support the development of the mod, everything will be Ukraine."
+        "Support the development of the mod, everything will be Ukraine.",
+        "In these difficult times, I really need your support, even your 10 euro will help. Glory to Ukraine",
     )
 
 
