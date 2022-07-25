@@ -47,6 +47,8 @@ class DamageLog(DamageLogsMeta):
         self.top_log_enabled = self.settings.log_total[GLOBAL.ENABLED]
         self.extended_log_enabled = (self.settings.log_damage_extended[GLOBAL.ENABLED] or
                                      self.settings.log_input_extended[GLOBAL.ENABLED])
+        if self.extended_log_enabled:
+            g_keysListener.registerComponent(self.settings.log_global[DAMAGE_LOG.HOT_KEY], self.onLogsAltMode)
 
     def _dispose(self):
         DAMAGE_LOG.AVG_DAMAGE_DATA = 0.0
@@ -70,35 +72,33 @@ class DamageLog(DamageLogsMeta):
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
-        if self.extended_log_enabled:
-            self.input_log = LogData(set(), list(), dict())
-            self.damage_log = LogData(set(), list(), dict())
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleUpdated += self.onVehicleUpdated
-                arena.onVehicleKilled += self.onVehicleKilled
-            g_keysListener.registerComponent(self.settings.log_global[DAMAGE_LOG.HOT_KEY], self.onLogsAltMode)
-        if self.top_log_enabled or self.extended_log_enabled:
-            feedback = self.sessionProvider.shared.feedback
-            if feedback:
-                feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
-        if self.top_log_enabled:
-            if not self._arenaDP.getVehicleInfo().isSPG():
-                self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
-            self.updateAvgDamage()
-            self.updateTopLog()
+        feedback = self.sessionProvider.shared.feedback
+        if feedback:
+            feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
+            if self.extended_log_enabled:
+                self.input_log = LogData(set(), list(), dict())
+                self.damage_log = LogData(set(), list(), dict())
+                arena = self._arenaVisitor.getArenaSubscription()
+                if arena is not None:
+                    arena.onVehicleUpdated += self.onVehicleUpdated
+                    arena.onVehicleKilled += self.onVehicleKilled
+            if self.top_log_enabled:
+                if not self._arenaDP.getVehicleInfo().isSPG():
+                    self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
+                self.updateAvgDamage()
+                self.updateTopLog()
 
     def onExitBattlePage(self):
-        if self.extended_log_enabled:
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleUpdated -= self.onVehicleUpdated
-                arena.onVehicleKilled -= self.onVehicleKilled
-        if self.top_log_enabled or self.extended_log_enabled:
-            feedback = self.sessionProvider.shared.feedback
-            if feedback:
-                feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
-        self.top_log.clear()
+        feedback = self.sessionProvider.shared.feedback
+        if feedback:
+            feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
+            if self.extended_log_enabled:
+                arena = self._arenaVisitor.getArenaSubscription()
+                if arena is not None:
+                    arena.onVehicleUpdated -= self.onVehicleUpdated
+                    arena.onVehicleKilled -= self.onVehicleKilled
+            if self.top_log_enabled:
+                self.top_log.clear()
         super(DamageLog, self).onExitBattlePage()
 
     def updateAvgDamage(self):
