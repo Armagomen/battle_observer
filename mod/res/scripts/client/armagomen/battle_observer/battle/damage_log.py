@@ -2,7 +2,7 @@ from collections import defaultdict, namedtuple
 
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
-from armagomen.utils.common import callback, logDebug, logWarning, percentToRGB, getPercent
+from armagomen.utils.common import logDebug, logWarning, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES, SHELL_TYPES
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
@@ -192,26 +192,23 @@ class DamageLog(DamageLogsMeta):
                 shell_icon_name = gold_name
         return shell_name, shell_icon_name, gold
 
-    def getVehicleMaxHealth(self, vehicle_id):
-        return self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
-
-    def addToExtendedLog(self, e_type, vehicle_id, extra):
+    def addToExtendedLog(self, e_type, target_id, extra):
         """add to log item"""
         is_player = e_type == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
         log_data, settings = self.getLogDataAndSettings(e_type)
-        if vehicle_id not in log_data.id_list:
-            log_data.id_list.append(vehicle_id)
+        if target_id not in log_data.id_list:
+            log_data.id_list.append(target_id)
         shell_name, shell_icon_name, gold = self.checkPlayerShell(extra) if is_player else self.checkShell(extra)
         logDebug("Shell type: {}, shell icon: {}, gold: {}, player: {}", shell_name, shell_icon_name, gold, is_player)
-        vehicle = log_data.vehicles.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
-        vehicleInfoVO = self._arenaDP.getVehicleInfo(vehicle_id)
+        vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
+        vehicleInfoVO = self._arenaDP.getVehicleInfo(target_id)
+        maxHealth = vehicleInfoVO.vehicleType.maxHealth if is_player else self._player.vehicle.typeDescriptor.maxHealth
         if not vehicle:
             self.createVehicle(vehicleInfoVO, vehicle, logLen=len(log_data.id_list))
-        vehicle_id = self._player.playerVehicleID if not is_player else vehicle_id
-        self.updateVehicleData(extra, gold, settings, shell_icon_name, shell_name, vehicle, vehicle_id)
-        callback(0.1, lambda: self.updateExtendedLog(log_data, settings))
+        self.updateVehicleData(extra, gold, settings, shell_icon_name, shell_name, vehicle, maxHealth)
+        self.updateExtendedLog(log_data, settings)
 
-    def updateVehicleData(self, extra, gold, settings, shell_icon_name, shell_name, vehicle, vehicle_id):
+    def updateVehicleData(self, extra, gold, settings, shell_icon_name, shell_name, vehicle, maxHealth):
         vehicle[DAMAGE_LOG.DAMAGE_LIST].append(extra.getDamage())
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
@@ -222,7 +219,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.SHELL_TYPE] = settings[DAMAGE_LOG.SHELL_TYPES][shell_name]
         vehicle[DAMAGE_LOG.SHELL_ICON] = settings[DAMAGE_LOG.SHELL_ICONS][shell_icon_name]
         vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
-        percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], self.getVehicleMaxHealth(vehicle_id))
+        percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
         vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRGB(percent, **settings[GLOBAL.AVG_COLOR])
 
     def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=0):

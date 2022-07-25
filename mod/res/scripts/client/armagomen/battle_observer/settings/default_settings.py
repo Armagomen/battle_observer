@@ -284,6 +284,10 @@ class DefaultSettings(object):
             },
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
+        shellTypes = defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST})
+        shellIcons = defaultdict(lambda: "", **{shell_icon: "" for shell_icon in SHELL_TYPES_LIST +
+                                                DAMAGE_LOG.PREMIUM_SHELLS +
+                                                ("HIGH_EXPLOSIVE_SPG_STUN", "HIGH_EXPLOSIVE_SPG")})
         self.log_damage_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
@@ -311,9 +315,8 @@ class DefaultSettings(object):
                 "%(userName).12s %(killedIcon)s",
                 "</font></textformat>"
             ],
-            DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
-            DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell: "" for shell in
-                                                               DAMAGE_LOG.PREMIUM_SHELLS + SHELL_TYPES_LIST}),
+            DAMAGE_LOG.SHELL_TYPES: shellTypes,
+            DAMAGE_LOG.SHELL_ICONS: shellIcons,
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
@@ -349,10 +352,8 @@ class DefaultSettings(object):
                 "%(userName).12s %(killedIcon)s",
                 "</font></textformat>"
             ],
-            DAMAGE_LOG.SHELL_TYPES: defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST}),
-            DAMAGE_LOG.SHELL_ICONS: defaultdict(lambda: "", **{shell_icon: "" for shell_icon in
-                                                               SHELL_TYPES_LIST + DAMAGE_LOG.PREMIUM_SHELLS +
-                                                               ("HIGH_EXPLOSIVE_SPG_STUN", "HIGH_EXPLOSIVE_SPG")}),
+            DAMAGE_LOG.SHELL_TYPES: shellTypes,
+            DAMAGE_LOG.SHELL_ICONS: shellIcons,
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
