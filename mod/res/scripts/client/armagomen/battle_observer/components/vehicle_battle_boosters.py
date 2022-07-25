@@ -3,7 +3,6 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
 from armagomen.utils.common import logInfo, logDebug
 from armagomen.utils.events import g_events
-from gui.shared.gui_items.Vehicle import Vehicle
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
 from gui.shared.utils import decorators
 
@@ -19,7 +18,7 @@ def boosterEquip(vehicle, value):
 def onVehicleChanged():
     if not settings.main[MAIN.DIRECTIVES]:
         return
-    vehicle = g_currentVehicle.item  # type: Vehicle
+    vehicle = g_currentVehicle.item
     if g_currentVehicle.isLocked() or g_currentVehicle.isInBattle():
         return
     if not hasattr(vehicle, "battleBoosters") or vehicle.battleBoosters is None:
