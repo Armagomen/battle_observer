@@ -1,61 +1,51 @@
 import os
 
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import LOAD_LIST, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile, logDebug
+from armagomen.constants import LOAD_LIST
+from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, configsPath
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
 JSON = '{}.json'
 READ_MESSAGE = "SettingsLoader/readConfig: {}: {}"
 
+
 class SettingsLoader(object):
-    __slots__ = ('cName', 'path', 'configsList', 'settings', 'errorMessages')
+    __slots__ = ('cName', 'configsList', 'settings', 'errorMessages')
 
     def __init__(self):
         self.cName = None
-        self.path = os.path.join(getCurrentModPath()[GLOBAL.FIRST], "configs", "mod_battle_observer")
-        self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
+        self.configsList = []
         self.errorMessages = []
         self.start()
 
-    @staticmethod
-    def makeDirs(path):
-        if not os.path.exists(path):
-            os.makedirs(path)
-            return True
-        return False
-
     def start(self):
         """Loading the main settings_core file with the parameters which settings_core to load next"""
-        createLoadJson = False
-        if self.makeDirs(self.path):
-            self.errorMessages.append('CONFIGURATION FILES IS NOT FOUND')
-            createLoadJson = True
+        load_json = os.path.join(configsPath, 'load.json')
+        if os.path.exists(load_json):
+            self.cName = openJsonFile(load_json).get('loadConfig')
         else:
-            load_json = os.path.join(self.path, 'load.json')
-            if os.path.exists(load_json):
-                self.cName = openJsonFile(load_json).get('loadConfig')
-            else:
-                createLoadJson = True
-        if createLoadJson:
             self.cName = self.createLoadJSON(error=True)
-            self.makeDirs(os.path.join(self.path, self.cName))
-            if self.cName not in self.configsList:
-                self.configsList.append(self.cName)
+            configPath = os.path.join(configsPath, self.cName)
+            if not os.path.exists(configPath):
+                os.makedirs(configPath)
+            self.errorMessages.append('CONFIGURATION FILES IS NOT FOUND')
         self.readConfig(self.cName)
+        for x in os.listdir(configsPath):
+            if os.path.isdir(os.path.join(configsPath, x)):
+                self.configsList.append(x)
 
     def createLoadJSON(self, cName=None, error=False):
         if cName is None:
             cName = 'ERROR_CreatedAutomatically_ERROR'
-        path = os.path.join(self.path, 'load.json')
+        path = os.path.join(configsPath, 'load.json')
         writeJsonFile(path, {'loadConfig': cName})
         if error:
             self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
             return cName
 
     def updateConfigFile(self, fileName, _settings):
-        path = os.path.join(self.path, self.cName, '{}.json'.format(fileName))
+        path = os.path.join(configsPath, self.cName, '{}.json'.format(fileName))
         writeJsonFile(path, _settings)
 
     @staticmethod
@@ -94,7 +84,7 @@ class SettingsLoader(object):
 
     def readConfig(self, configName):
         """Read settings_core file from JSON"""
-        direct_path = os.path.join(self.path, configName)
+        direct_path = os.path.join(configsPath, configName)
         logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
         listdir = os.listdir(direct_path)
         for module_name in LOAD_LIST:

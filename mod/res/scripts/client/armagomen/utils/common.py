@@ -108,6 +108,10 @@ def getCurrentModPath():
     return modPathCache
 
 
+configsPath = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
+if not os.path.exists(configsPath):
+    os.makedirs(configsPath)
+
 def cleanupUpdates():
     path = os.path.join(cwd, "updates")
     # Gather directory contents
