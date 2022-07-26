@@ -11,16 +11,10 @@ READ_MESSAGE = "SettingsLoader/readConfig: {}: {}"
 
 
 class SettingsLoader(object):
-    __slots__ = ('cName', 'configsList', 'settings', 'errorMessages')
+    __slots__ = ('cName', 'configsList', 'errorMessages')
 
     def __init__(self):
-        self.cName = None
-        self.configsList = []
         self.errorMessages = []
-        self.start()
-
-    def start(self):
-        """Loading the main settings_core file with the parameters which settings_core to load next"""
         load_json = os.path.join(configsPath, 'load.json')
         if os.path.exists(load_json):
             self.cName = openJsonFile(load_json).get('loadConfig')
@@ -31,9 +25,7 @@ class SettingsLoader(object):
                 os.makedirs(configPath)
             self.errorMessages.append('CONFIGURATION FILES IS NOT FOUND')
         self.readConfig(self.cName)
-        for x in os.listdir(configsPath):
-            if os.path.isdir(os.path.join(configsPath, x)):
-                self.configsList.append(x)
+        self.configsList = [x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x))]
 
     def createLoadJSON(self, cName=None, error=False):
         if cName is None:
@@ -45,7 +37,7 @@ class SettingsLoader(object):
             return cName
 
     def updateConfigFile(self, fileName, _settings):
-        path = os.path.join(configsPath, self.cName, '{}.json'.format(fileName))
+        path = os.path.join(configsPath, self.cName, JSON.format(fileName))
         writeJsonFile(path, _settings)
 
     @staticmethod
