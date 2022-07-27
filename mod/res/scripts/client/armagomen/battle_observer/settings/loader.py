@@ -14,7 +14,7 @@ class SettingsLoader(object):
     __slots__ = ('configName', 'configsList', 'errorMessages')
 
     def __init__(self):
-        self.errorMessages = set()
+        self.errorMessages = []
         g_events.onHangarLoaded += self.onHangarLoaded
         load_json = os.path.join(configsPath, 'load.json')
         if os.path.exists(load_json):
@@ -24,7 +24,7 @@ class SettingsLoader(object):
             configPath = os.path.join(configsPath, self.configName)
             if not os.path.exists(configPath):
                 os.makedirs(configPath)
-            self.errorMessages.add('CONFIGURATION FILES IS NOT FOUND')
+            self.errorMessages.append('CONFIGURATION FILES IS NOT FOUND')
         self.readConfig()
         self.configsList = [x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x))]
 
@@ -34,7 +34,7 @@ class SettingsLoader(object):
         path = os.path.join(configsPath, 'load.json')
         writeJsonFile(path, {'loadConfig': configName})
         if error:
-            self.errorMessages.add('NEW CONFIGURATION FILE load.json IS CREATED')
+            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
             return configName
 
     def updateConfigFile(self, fileName, _settings):
@@ -95,7 +95,7 @@ class SettingsLoader(object):
             file_data = openJsonFile(file_path)
         except Exception as error:
             message = READ_MESSAGE.format(file_path, repr(error))
-            self.errorMessages.add(message)
+            self.errorMessages.append(message)
             return logWarning(message)
         else:
             if self.updateData(file_data, internal_cfg):
@@ -108,5 +108,4 @@ class SettingsLoader(object):
             dialog = LoadingErrorDialog()
             dialog.setView(view)
             dialog.showLoadingError("\n".join(self.errorMessages))
-            self.errorMessages.clear()
-        g_events.onHangarLoaded -= self.onHangarLoaded
+            self.errorMessages = []
