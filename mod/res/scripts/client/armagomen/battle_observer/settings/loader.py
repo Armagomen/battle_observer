@@ -81,14 +81,13 @@ class SettingsLoader(object):
         direct_path = os.path.join(configsPath, self.configName)
         listdir = os.listdir(direct_path)
         for part_name in LOAD_LIST:
-            self.loadConfigPart(part_name, direct_path, listdir)
+            self.loadConfigPart(part_name, direct_path, listdir, getattr(settings, part_name))
         logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(self.configName))
         settings.onUserConfigUpdateComplete()
 
-    def loadConfigPart(self, part_name, direct_path, listdir):
+    def loadConfigPart(self, part_name, direct_path, listdir, internal_cfg):
         file_name = JSON.format(part_name)
         file_path = os.path.join(direct_path, file_name)
-        internal_cfg = getattr(settings, part_name)
         if file_name not in listdir:
             return writeJsonFile(file_path, internal_cfg)
         try:
