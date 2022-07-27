@@ -197,7 +197,7 @@ class SettingsInterface(CreateElement):
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.currentConfig = self.newConfig = self.sLoader.configsList.index(self.sLoader.cName)
+        self.currentConfig = self.newConfig = self.sLoader.configsList.index(self.sLoader.configName)
         self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
@@ -257,7 +257,7 @@ class SettingsInterface(CreateElement):
             if self.newConfigLoadingInProcess:
                 self.inited.clear()
                 self.sLoader.readConfig(self.sLoader.configsList[self.newConfig])
-                self.sLoader.createLoadJSON(cName=self.sLoader.configsList[self.newConfig])
+                self.sLoader.createLoadJSON(configName=self.sLoader.configsList[self.newConfig])
                 self.currentConfig = self.newConfig
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
