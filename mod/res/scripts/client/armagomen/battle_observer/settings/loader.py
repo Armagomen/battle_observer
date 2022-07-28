@@ -28,6 +28,11 @@ class SettingsLoader(object):
         self.readConfig()
         self.configsList = [x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x))]
 
+    def readOtherConfig(self, configID):
+        self.configName = self.configsList[configID]
+        self.readConfig()
+        self.createLoadJSON(configName=self.configName)
+
     def createLoadJSON(self, configName=None, error=False):
         if configName is None:
             configName = 'ERROR_CreatedAutomatically_ERROR'

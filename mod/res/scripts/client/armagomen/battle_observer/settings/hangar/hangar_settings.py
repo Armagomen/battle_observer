@@ -256,8 +256,7 @@ class SettingsInterface(CreateElement):
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.newConfigLoadingInProcess:
                 self.inited.clear()
-                self.sLoader.readConfig(self.sLoader.configsList[self.newConfig])
-                self.sLoader.createLoadJSON(configName=self.sLoader.configsList[self.newConfig])
+                self.sLoader.readOtherConfig(self.newConfig)
                 self.currentConfig = self.newConfig
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
@@ -335,7 +334,7 @@ class SettingsInterface(CreateElement):
         column1 = []
         column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.newConfig)]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfig)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_paypal', URLS.PAYPAL_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
