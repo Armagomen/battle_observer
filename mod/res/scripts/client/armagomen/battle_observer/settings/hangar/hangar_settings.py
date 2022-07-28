@@ -197,8 +197,8 @@ class SettingsInterface(CreateElement):
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.currentConfig = self.newConfig = self.sLoader.configsList.index(self.sLoader.configName)
-        self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
+        self.currentConfigID = self.newConfigID = self.sLoader.configsList.index(self.sLoader.configName)
+        self.newConfigLoadingInProcess = False
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
@@ -250,14 +250,14 @@ class SettingsInterface(CreateElement):
         """Feedback EVENT"""
         if container != MOD_NAME:
             return
-        self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
+        self.newConfigLoadingInProcess = self.currentConfigID != self.newConfigID
         if event == self.apiEvents.WINDOW_CLOSED:
             self.vxSettingsApi.onSettingsChanged -= self.onSettingsChanged
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.newConfigLoadingInProcess:
                 self.inited.clear()
-                self.sLoader.readOtherConfig(self.newConfig)
-                self.currentConfig = self.newConfig
+                self.sLoader.readOtherConfig(self.newConfigID)
+                self.currentConfigID = self.newConfigID
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
             self.vxSettingsApi.onDataChanged += self.onDataChanged
@@ -275,10 +275,10 @@ class SettingsInterface(CreateElement):
         """Saves made by the user settings_core in the settings_core file."""
         if self.newConfigLoadingInProcess or MOD_NAME != modID:
             return
-        if blockID == ANOTHER.CONFIG_SELECT and self.currentConfig != data['selector']:
-            self.newConfig = data['selector']
+        if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
+            self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            logDebug("change settings '{}' - {}", self.sLoader.configsList[self.newConfig], blockID)
+            logDebug("change settings '{}' - {}", self.sLoader.configsList[self.newConfigID], blockID)
         else:
             settings_block = getattr(settings, blockID)
             for key, value in data.iteritems():
@@ -334,7 +334,7 @@ class SettingsInterface(CreateElement):
         column1 = []
         column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfig)]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfigID)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_paypal', URLS.PAYPAL_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
