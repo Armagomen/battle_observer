@@ -347,6 +347,8 @@ class SettingsInterface(CreateElement):
                     items.append(item)
             middleIndex = (len(items) + 1) // 2
             for index, item in enumerate(items):
-                column = column1 if index < middleIndex else column2
-                column.append(item)
+                if index < middleIndex:
+                    column1.append(item)
+                else:
+                    column2.append(item)
         return self.createBlock(blockID, settings_block, column1, column2)
