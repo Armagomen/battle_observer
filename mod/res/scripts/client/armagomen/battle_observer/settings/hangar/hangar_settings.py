@@ -158,12 +158,11 @@ class CreateElement(object):
 
     def createItem(self, blockID, key, value):
         val_type = type(value)
-        if isinstance(value, str):
-            if GLOBAL.ALIGN in key:
-                return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
-            if blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
-                return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
-        if isinstance(value, (str, bool)):
+        if val_type is str and GLOBAL.ALIGN in key:
+            return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
+        elif val_type is str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
+            return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
+        elif val_type is str or val_type is bool:
             return self.createControl(blockID, key, value)
         elif val_type is int:
             if DISPERSION.CIRCLE_SCALE_CONFIG in key:
