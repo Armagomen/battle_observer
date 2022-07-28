@@ -125,7 +125,6 @@ class DefaultSettings(object):
             DEBUG_PANEL.TEXT: {
                 GLOBAL.X: 5,
                 GLOBAL.Y: GLOBAL.ZERO,
-                GLOBAL.SCALE: 1.0,
                 DEBUG_PANEL.TEMPLATE: ("<textformat tabstops='[75]'>FPS <font color='#E0E06D'><b>%(FPS)d</b></font>"
                                        "<tab>PING <font color='%(PingLagColor)s'><b>%(PING)d</b></font></textformat>")
             },

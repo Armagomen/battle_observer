@@ -149,7 +149,6 @@ localization = {
                                   "\n%(fpsColor)s <tab>цвет FPS",
         "debugText*x": "Позиция окна по оси X",
         "debugText*y": "Позиция окна по оси Y",
-        "debugText*scale": "Масштабирование панели.",
         "debugGraphics*enabled": "Показывать графические полосы PING/FPS",
         "colors*fpsColor": "Цвет макроса %(fpsColor)s",
         "colors*pingColor": "Цвет макроса %(pingLagColor)s - Нет лагов",

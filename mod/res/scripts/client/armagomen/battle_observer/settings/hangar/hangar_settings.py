@@ -3,7 +3,7 @@ from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
-from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
+from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
@@ -11,9 +11,6 @@ from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 37
-KEY_CONTROL = [KEY_ALIAS_CONTROL]
-KEY_ALT = [KEY_ALIAS_ALT]
-
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
 
 
@@ -163,11 +160,9 @@ class CreateElement(object):
         val_type = type(value)
         if isinstance(value, str):
             if GLOBAL.ALIGN in key:
-                return self.createRadioButtonGroup(blockID, key,
-                                                   *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
+                return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
             if blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
-                return self.createRadioButtonGroup(blockID, key,
-                                                   *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
+                return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
         if isinstance(value, (str, bool)):
             return self.createControl(blockID, key, value)
         elif val_type is int:
@@ -183,7 +178,7 @@ class CreateElement(object):
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 300.0, GLOBAL.F_ONE, value)
         elif val_type is list:
             if "_hotkey" in key:
-                return self.createHotKey(blockID, key, value, KEY_ALT)
+                return self.createHotKey(blockID, key, value, [KEY_ALIAS_ALT])
             if SNIPER.STEPS in key:
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 

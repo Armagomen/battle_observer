@@ -145,7 +145,6 @@ localization = {
                                   "\n%(fpsColor)s <tab>FPS color",
         "debugText*x": "window Position on the X-axis",
         "debugText*y": "window Position on the Y-axis",
-        "debugText*scale": "Scale debug panel",
         "debugGraphics*enabled": "Show fps/ping graphics bars",
         "colors*fpsColor": "Color macro %(fpsColor)s",
         "colors*pingColor": "Color macro %(pingLagColor)s - No lags",
