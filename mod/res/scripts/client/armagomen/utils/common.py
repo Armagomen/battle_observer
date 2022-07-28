@@ -4,7 +4,7 @@ import math
 import os
 from collections import namedtuple
 from colorsys import hsv_to_rgb
-from io import open
+from io import open as _open
 from shutil import rmtree
 from string import printable
 
@@ -168,13 +168,13 @@ def encodeData(data):
 
 def openJsonFile(path):
     """Gets a dict from JSON."""
-    with open(path, 'r', encoding=encoding) as dataFile:
+    with _open(path, 'r', encoding=encoding) as dataFile:
         return encodeData(json.load(dataFile, encoding=encoding))
 
 
 def writeJsonFile(path, data):
     """Creates a new json file in a folder or replace old."""
-    with open(path, 'w', encoding=encoding) as dataFile:
+    with _open(path, 'w', encoding=encoding) as dataFile:
         dataFile.write(unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)))
 
 
