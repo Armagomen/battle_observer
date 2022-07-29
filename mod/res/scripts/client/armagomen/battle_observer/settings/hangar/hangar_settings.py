@@ -93,7 +93,7 @@ class CreateElement(object):
                 if value.startswith("#"):
                     return 'TextInputColor'
                 return 'TextInputField'
-            elif type(value) is bool:
+            elif type(value) == bool:
                 return 'CheckBox'
         else:
             return cType
@@ -158,27 +158,27 @@ class CreateElement(object):
 
     def createItem(self, blockID, key, value):
         val_type = type(value)
-        if val_type is str and GLOBAL.ALIGN in key:
+        if val_type == str and GLOBAL.ALIGN in key:
             return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
-        elif val_type is str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
+        elif val_type == str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
             return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
-        elif val_type is str or val_type is bool:
+        elif val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
-        elif val_type is int:
+        elif val_type == int:
             if DISPERSION.CIRCLE_SCALE_CONFIG in key:
                 return self.createSlider(blockID, key, GLOBAL.ONE, 100, GLOBAL.ONE, value)
             return self.createStepper(blockID, key, -2000, 2000, GLOBAL.ONE, value)
-        elif val_type is float:
+        elif val_type == float:
             if STATISTICS.ICON_BLACKOUT in key:
                 return self.createStepper(blockID, key, -2.0, 2.0, 0.01, value)
-            if GLOBAL.ZERO <= value <= GLOBAL.F_ONE:
+            elif GLOBAL.ZERO <= value <= GLOBAL.F_ONE:
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 2.0, 0.01, value)
             else:
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 300.0, GLOBAL.F_ONE, value)
-        elif val_type is list:
+        elif val_type == list:
             if "_hotkey" in key:
                 return self.createHotKey(blockID, key, value, [KEY_ALIAS_ALT])
-            if SNIPER.STEPS in key:
+            elif SNIPER.STEPS in key:
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 
 
@@ -287,9 +287,9 @@ class SettingsInterface(CreateElement):
                     newParamType = type(value)
                     oldParamType = type(updatedConfigLink[paramName])
                     if oldParamType != newParamType:
-                        if oldParamType is float and newParamType is int:
+                        if oldParamType == float and newParamType == int:
                             value = float(value)
-                        elif oldParamType is int and newParamType is float:
+                        elif oldParamType == int and newParamType == float:
                             value = int(round(value))
                     updatedConfigLink[paramName] = value
             self.sLoader.updateConfigFile(blockID, settings_block)

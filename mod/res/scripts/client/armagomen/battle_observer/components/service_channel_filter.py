@@ -13,9 +13,9 @@ channel_filter = set()
 @overrideMethod(ServiceChannelManager, "__addClientMessage")
 def addClientMessage(base, *args, **kwargs):
     aux_data = kwargs.get(SERVICE_CHANNEL.AUX_DATA)
-    if aux_data and type(aux_data) is list:
+    if aux_data and type(aux_data) == list:
         first_element = aux_data[GLOBAL.FIRST]
-        if type(first_element) is not dict and first_element in channel_filter:
+        if not isinstance(first_element, dict) and first_element in channel_filter:
             return
     return base(*args, **kwargs)
 

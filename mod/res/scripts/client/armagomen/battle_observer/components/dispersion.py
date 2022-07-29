@@ -25,7 +25,7 @@ class Scale(object):
 
     @classmethod
     def setDispersionScale(cls, scale):
-        if scale != cls.DISPERSION_SCALE and type(scale) is float and scale <= 1.0:
+        if scale != cls.DISPERSION_SCALE and isinstance(scale, float) and scale <= 1.0:
             cls.DISPERSION_SCALE = scale
 
 

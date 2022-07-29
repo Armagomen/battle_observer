@@ -68,9 +68,9 @@ class SettingsLoader(object):
                     new_param_type = type(new_param)
                     if new_param_type != old_param_type:
                         file_update = True
-                        if old_param_type is int and new_param_type is float:
+                        if old_param_type == int and new_param_type == float:
                             internal_cfg[key] = int(round(new_param))
-                        elif old_param_type is float and new_param_type is int:
+                        elif old_param_type == float and new_param_type == int:
                             internal_cfg[key] = float(new_param)
                     else:
                         internal_cfg[key] = new_param
