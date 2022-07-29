@@ -225,7 +225,7 @@ class SettingsInterface(CreateElement):
                 self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID),
                                           dict(), lambda *args: None, button_handler=self.onButtonPress)
             except Exception as err:
-                logWarning('SettingsInterface startLoad {}'.format(repr(err)))
+                logWarning('SettingsInterface addModsToVX: {}'.format(repr(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
@@ -284,13 +284,6 @@ class SettingsInterface(CreateElement):
                         value = HP_BARS.STYLES[value]
                     elif key == "zoomSteps*steps":
                         value = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
-                    newParamType = type(value)
-                    oldParamType = type(updatedConfigLink[paramName])
-                    if oldParamType != newParamType:
-                        if oldParamType == float and newParamType == int:
-                            value = float(value)
-                        elif oldParamType == int and newParamType == float:
-                            value = int(round(value))
                     updatedConfigLink[paramName] = value
             self.sLoader.updateConfigFile(blockID, settings_block)
             settings.onModSettingsChanged(settings_block, blockID)
