@@ -6,7 +6,7 @@ from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonF
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
-JSON = '{}.json'
+JSON = "{}.json"
 READ_MESSAGE = "SettingsLoader/loadConfigPart: {}: {}"
 
 
@@ -20,27 +20,25 @@ class SettingsLoader(object):
         if os.path.exists(load_json):
             self.configName = openJsonFile(load_json).get('loadConfig')
         else:
-            self.configName = self.createLoadJSON(error=True)
+            self.configName = 'ERROR_CreatedAutomatically_ERROR'
             configPath = os.path.join(configsPath, self.configName)
             if not os.path.exists(configPath):
+                self.errorMessages.append('CONFIGURATION DIRS IS NOT FOUND, CREATE NEW')
                 os.makedirs(configPath)
-            self.errorMessages.append('CONFIGURATION FILES IS NOT FOUND')
+            self.createLoadJSON(self.configName)
+            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
         self.readConfig()
         self.configsList = [x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x))]
 
     def readOtherConfig(self, configID):
         self.configName = self.configsList[configID]
         self.readConfig()
-        self.createLoadJSON(configName=self.configName)
+        self.createLoadJSON(self.configName)
 
-    def createLoadJSON(self, configName=None, error=False):
-        if configName is None:
-            configName = 'ERROR_CreatedAutomatically_ERROR'
+    @staticmethod
+    def createLoadJSON(configName):
         path = os.path.join(configsPath, 'load.json')
         writeJsonFile(path, {'loadConfig': configName})
-        if error:
-            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
-            return configName
 
     def updateConfigFile(self, fileName, _settings):
         path = os.path.join(configsPath, self.configName, JSON.format(fileName))
@@ -82,12 +80,15 @@ class SettingsLoader(object):
 
     def readConfig(self):
         """Read settings_core file from JSON"""
-        logInfo('START UPDATE USER CONFIGURATION: {}'.format(self.configName))
+        logInfo("LOADING USER CONFIGURATION: {}".format(self.configName.upper()))
         direct_path = os.path.join(configsPath, self.configName)
         listdir = os.listdir(direct_path)
         for part_name in LOAD_LIST:
-            self.loadConfigPart(part_name, direct_path, listdir, getattr(settings, part_name))
-        logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(self.configName))
+            internal_cfg = getattr(settings, part_name)
+            if internal_cfg is None:
+                continue
+            self.loadConfigPart(part_name, direct_path, listdir, internal_cfg)
+        logInfo("LOADING '{}' CONFIGURATION COMPLETED".format(self.configName.upper()))
         settings.onUserConfigUpdateComplete()
 
     def loadConfigPart(self, part_name, direct_path, listdir, internal_cfg):
