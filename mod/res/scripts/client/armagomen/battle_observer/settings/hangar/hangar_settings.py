@@ -54,16 +54,11 @@ class Getter(object):
                 yield key_path
 
     def keyValueGetter(self, settings_block):
-        key_val = []
-        try:
-            for key in sorted(self.getKeyPath(settings_block)):
-                key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
-                if GLOBAL.ENABLED != key:
-                    dic, param = self.getLinkToParam(settings_block, key)
-                    key_val.append((key, dic[param]))
-        except Exception:
-            LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
-        return key_val
+        for key in sorted(self.getKeyPath(settings_block)):
+            key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
+            if GLOBAL.ENABLED != key:
+                dic, param = self.getLinkToParam(settings_block, key)
+                yield key, dic[param]
 
 
 class CreateElement(object):
@@ -272,7 +267,7 @@ class SettingsInterface(CreateElement):
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
             self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            logDebug("change settings '{}' - {}", self.sLoader.configsList[self.newConfigID], blockID)
+            logDebug("change config '{}' - {}", self.sLoader.configsList[self.newConfigID], blockID)
         else:
             settings_block = getattr(settings, blockID)
             for key, value in data.iteritems():
