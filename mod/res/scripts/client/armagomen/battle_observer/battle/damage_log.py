@@ -59,7 +59,6 @@ class DamageLog(DamageLogsMeta):
             return self.settings.log_damage_extended[GLOBAL.ENABLED]
         elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
             return self.settings.log_input_extended[GLOBAL.ENABLED]
-        logWarning(DAMAGE_LOG.WARNING_MESSAGE)
         return False
 
     def getLogDataAndSettings(self, eventType):
@@ -125,7 +124,7 @@ class DamageLog(DamageLogsMeta):
                 self.top_log[DAMAGE_LOG.ASSIST_STUN] = GLOBAL.ZERO
             self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += self.unpackTopLogValue(e_type, event, extra)
             self.updateTopLog()
-        if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
+        if self.isLogEnabled(e_type):
             self.addToExtendedLog(e_type, event.getTargetID(), extra)
 
     @staticmethod
@@ -159,16 +158,17 @@ class DamageLog(DamageLogsMeta):
                     self.updateExtendedLog(log_data, settings)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
-        if self._player is not None and self._player.playerVehicleID in (targetID, attackerID):
-            if self._player.playerVehicleID == targetID:
-                eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
-                target = attackerID
-            else:
-                eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
-                target = targetID
-            log_data, settings = self.getLogDataAndSettings(eventID)
-            log_data.kills.add(target)
-            self.updateExtendedLog(log_data, settings)
+        if self._player is None or self._player.playerVehicleID not in (targetID, attackerID):
+            return
+        if self._player.playerVehicleID == targetID:
+            eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
+            target = attackerID
+        else:
+            eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
+            target = targetID
+        log_data, settings = self.getLogDataAndSettings(eventID)
+        log_data.kills.add(target)
+        self.updateExtendedLog(log_data, settings)
 
     def checkPlayerShell(self, extra):
         shell_name = DAMAGE_LOG.UNDEFINED
@@ -236,7 +236,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[vehicleInfoVO.vehicleType.classTag]
 
     @staticmethod
-    def getResultString(log_data, settings, altMode=False):
+    def getLogLines(log_data, settings, altMode):
         template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[int(altMode)]])
         for vehicleID in reversed(log_data.id_list) if settings[DAMAGE_LOG.REVERSE] else log_data.id_list:
             if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
@@ -250,5 +250,5 @@ class DamageLog(DamageLogsMeta):
         """
         if not log_data.id_list:
             return
-        result = DAMAGE_LOG.NEW_LINE.join(self.getResultString(log_data, settings, altMode=altMode))
+        result = DAMAGE_LOG.NEW_LINE.join(self.getLogLines(log_data, settings, altMode))
         self.as_updateLogS(DAMAGE_LOG.D_LOG if log_data is self.damage_log else DAMAGE_LOG.IN_LOG, result)

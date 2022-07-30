@@ -330,5 +330,4 @@ class SettingsInterface(CreateElement):
             middleIndex = (len(columns) + int(len(columns) % 2 != 0)) / 2
             column1 = columns[:middleIndex]
             column2 = columns[middleIndex:]
-
         return self.createBlock(blockID, settings_block, column1, column2)
