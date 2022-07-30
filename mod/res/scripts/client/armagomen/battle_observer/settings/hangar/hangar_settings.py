@@ -310,11 +310,15 @@ class SettingsInterface(CreateElement):
             if varName in CONFIG_INTERFACE.DONATE_BUTTONS:
                 openWebBrowser(value)
 
+    def items(self, blockID, settings_block):
+        for key, value in self.getter.keyValueGetter(settings_block):
+            item = self.createItem(blockID, key, value)
+            if item is not None:
+                yield item
+
     def getTemplate(self, blockID):
         """create templates, do not change..."""
         settings_block = getattr(settings, blockID, {})
-        column1 = []
-        column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfigID)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
@@ -322,15 +326,9 @@ class SettingsInterface(CreateElement):
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
-            items = []
-            for key, value in self.getter.keyValueGetter(settings_block):
-                item = self.createItem(blockID, key, value)
-                if item is not None:
-                    items.append(item)
-            middleIndex = (len(items) + 1) // 2
-            for index, item in enumerate(items):
-                if index < middleIndex:
-                    column1.append(item)
-                else:
-                    column2.append(item)
+            columns = [item for item in self.items(blockID, settings_block)]
+            middleIndex = (len(columns) + int(len(columns) % 2 != 0)) / 2
+            column1 = columns[:middleIndex]
+            column2 = columns[middleIndex:]
+
         return self.createBlock(blockID, settings_block, column1, column2)
