@@ -235,16 +235,20 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.CLASS_ICON] = self.vehicle_icons[vehicleInfoVO.vehicleType.classTag]
         vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[vehicleInfoVO.vehicleType.classTag]
 
+    @staticmethod
+    def getResultString(log_data, settings, altMode=False):
+        template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[int(altMode)]])
+        for vehicleID in reversed(log_data.id_list) if settings[DAMAGE_LOG.REVERSE] else log_data.id_list:
+            if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
+                log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = settings[DAMAGE_LOG.KILLED_ICON]
+            yield template % log_data.vehicles[vehicleID]
+
     def updateExtendedLog(self, log_data, settings, altMode=False):
         """
         Final log processing and flash output,
         also works when the alt mode is activated by hot key.
         """
-        if log_data.id_list:
-            log_name = DAMAGE_LOG.D_LOG if log_data is self.damage_log else DAMAGE_LOG.IN_LOG
-            template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[int(altMode)]])
-            data = reversed(log_data.id_list) if settings[DAMAGE_LOG.REVERSE] else log_data.id_list
-            for vehicleID in data:
-                if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
-                    log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = settings[DAMAGE_LOG.KILLED_ICON]
-            self.as_updateLogS(log_name, DAMAGE_LOG.NEW_LINE.join(template % log_data.vehicles[key] for key in data))
+        if not log_data.id_list:
+            return
+        result = DAMAGE_LOG.NEW_LINE.join(self.getResultString(log_data, settings, altMode=altMode))
+        self.as_updateLogS(DAMAGE_LOG.D_LOG if log_data is self.damage_log else DAMAGE_LOG.IN_LOG, result)
