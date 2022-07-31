@@ -139,10 +139,11 @@ def onArenaCreated():
                 damage = dossier.getRandomStats().getAvgDamage()
                 assist = dossier.getRandomStats().getDamageAssistedEfficiencyWithStan()
                 if damage is not None:
-                    damage = math.floor(damage)
+                    damage = int(math.floor(damage))
                     DAMAGE_LOG.AVG_DAMAGE_DATA = damage
                 if assist is not None:
-                    assist = math.floor(assist)
+                    assist = int(math.floor(assist))
+                    DAMAGE_LOG.AVG_ASSIST_DATA = assist
                 logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
         except AttributeError:
             DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO

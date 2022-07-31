@@ -51,7 +51,8 @@ class DamageLog(DamageLogsMeta):
             g_keysListener.registerComponent(self.settings.log_global[DAMAGE_LOG.HOT_KEY], self.onLogsAltMode)
 
     def _dispose(self):
-        DAMAGE_LOG.AVG_DAMAGE_DATA = 0.0
+        DAMAGE_LOG.AVG_DAMAGE_DATA = 0
+        DAMAGE_LOG.AVG_ASSIST_DATA = 0
         super(DamageLog, self)._dispose()
 
     def isLogEnabled(self, eventType):
@@ -104,8 +105,9 @@ class DamageLog(DamageLogsMeta):
         """sets the average damage to the selected tank"""
         if self._player is not None and not DAMAGE_LOG.AVG_DAMAGE_DATA:
             max_health = self._player.vehicle.typeDescriptor.maxHealth
-            DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, float(max_health))
-        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = int(DAMAGE_LOG.AVG_DAMAGE_DATA)
+            DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, max_health)
+        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = DAMAGE_LOG.AVG_DAMAGE_DATA
+        self.top_log[DAMAGE_LOG.AVG_ASSIST] = DAMAGE_LOG.AVG_ASSIST_DATA
 
     def onLogsAltMode(self, isKeyDown):
         """hot key event"""
@@ -140,8 +142,11 @@ class DamageLog(DamageLogsMeta):
 
     def updateTopLog(self):
         """update global sums in log"""
-        percent = getPercent(self.top_log[DAMAGE_LOG.PLAYER_DAMAGE], DAMAGE_LOG.AVG_DAMAGE_DATA)
-        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = percentToRGB(percent, **self.settings.log_total[
+        percentDamage = getPercent(self.top_log[DAMAGE_LOG.PLAYER_DAMAGE], DAMAGE_LOG.AVG_DAMAGE_DATA)
+        percentAssist = getPercent(self.top_log[DAMAGE_LOG.ASSIST_DAMAGE], DAMAGE_LOG.AVG_ASSIST_DATA)
+        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = percentToRGB(percentDamage, **self.settings.log_total[
+            GLOBAL.AVG_COLOR])
+        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = percentToRGB(percentAssist, **self.settings.log_total[
             GLOBAL.AVG_COLOR])
         self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
@@ -222,7 +227,7 @@ class DamageLog(DamageLogsMeta):
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
         vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRGB(percent, **settings[GLOBAL.AVG_COLOR])
 
-    def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=0):
+    def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=1):
         if not update:
             vehicle[DAMAGE_LOG.INDEX] = logLen
             vehicle[DAMAGE_LOG.DAMAGE_LIST] = list()

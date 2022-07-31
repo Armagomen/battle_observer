@@ -168,11 +168,14 @@ class DAMAGE_LOG:
     ASSIST_STUN = "stun"
     ATTACK_REASON = "attackReason"
     AVG_DAMAGE = "tankAvgDamage"
-    AVG_DAMAGE_DATA = 0.0
+    AVG_ASSIST = "tankAvgAssist"
+    AVG_DAMAGE_DATA = 0
+    AVG_ASSIST_DATA = 0
     BLOCKED_DAMAGE = "blockedDamage"
     CLASS_COLOR = "tankClassColor"
     CLASS_ICON = "classIcon"
     DAMAGE_AVG_COLOR = "tankDamageAvgColor"
+    ASSIST_AVG_COLOR = "tankAssistAvgColor"
     DAMAGE_LIST = "damageList"
     DONE_EXTENDED = "log_damage_extended"
     D_LOG = "d_log"
