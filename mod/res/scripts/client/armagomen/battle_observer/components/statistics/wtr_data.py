@@ -5,7 +5,6 @@ from armagomen.constants import STATISTICS
 
 
 class WTRStatistics(object):
-
     COLOR_WTR = 'colorWTR'
     DEFAULT_COLOR = "#fafafa"
     DEFAULT_WIN_RATE = 0.0
@@ -16,7 +15,7 @@ class WTRStatistics(object):
         self.settings = settings.statistics
         self.vehicle_types = settings.vehicle_types
         self.wtr_ranges = ((2960, "bad"), (4520, "normal"), (6367, "good"), (8543, "very_good"), (10217, "unique"))
-        self.cache = {}
+        self.itemsData = {}
 
     @property
     def vehicleTextColorEnabled(self):
@@ -28,25 +27,22 @@ class WTRStatistics(object):
         else:
             return self.settings[STATISTICS.FULL_LEFT], self.settings[STATISTICS.CUT_LEFT]
 
-    def updateAllItems(self, dataLoader):
-        arenaDP = dataLoader.sessionProvider.getArenaDP()
+    def updateAllItems(self, arenaDP, loadedData):
         if arenaDP is None:
             return
         allyTeam = arenaDP.getNumberOfTeam()
         for vInfo in arenaDP.getVehiclesInfoIterator():
             accountDBID = vInfo.player.accountDBID
-            result = self.getStatisticsData(accountDBID, vInfo.player.clanAbbrev, dataLoader) if accountDBID else None
+            result = self.getStatisticsData(accountDBID, vInfo.player.clanAbbrev, loadedData) if accountDBID else None
             fullName = None
             cutName = None
-            vehicleTextColor = None
+            textColor = None
             if result is not None:
                 full, cut = self.getPattern(vInfo.team != allyTeam)
                 fullName = full % result
                 cutName = cut % result
-                vehicleTextColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
-            self.cache[vInfo.vehicleID] = {"fullName": fullName, "cutName": cutName,
-                                           "vehicleTextColor": vehicleTextColor}
-        return self.cache
+                textColor = result[self.COLOR_WTR] if self.vehicleTextColorEnabled else None
+            self.itemsData[vInfo.vehicleID] = {"fullName": fullName, "cutName": cutName, "vehicleTextColor": textColor}
 
     def __getPercent(self, data):
         random = data["statistics"]["random"]
@@ -70,8 +66,8 @@ class WTRStatistics(object):
                 break
         return self.settings[STATISTICS.COLORS].get(result, self.DEFAULT_COLOR)
 
-    def getStatisticsData(self, databaseID, clanTag, dataLoader):
-        data = dataLoader.getUserData(databaseID)
+    def getStatisticsData(self, databaseID, clanTag, loadedData):
+        data = loadedData.get(databaseID)
         if data is not None:
             wtr = int(data.get("global_rating", 0))
             winRate, battles = self.__getPercent(data)

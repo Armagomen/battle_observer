@@ -2,6 +2,7 @@ import copy
 import random
 
 import constants
+from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
 from armagomen.utils.common import urlResponse, logDebug, logInfo, logError, xvmInstalled, callback
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
@@ -21,26 +22,28 @@ class StatisticsDataLoader(object):
         url=URL, key=random.choice(API_KEY), ids="{ids}", fields=FIELDS)
 
     def __init__(self, wtrEnabled):
-        self.cache = {}
+        self.loadedData = {}
         self.enabled = region in ["ru", "eu", "com", "asia"] and wtrEnabled
         self.loaded = False
         self._load_try = 0
         if xvmInstalled:
             logInfo("StatisticsDataLoader: statistics/icons/minimap module is disabled, XVM is installed")
         elif wtrEnabled:
-            self.setCachedStatisticData()
+            self.wtrData = WTRStatistics()
+            callback(0.0, self.setCachedStatisticData)
 
     def request(self, databaseIDS):
         result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS)))
         if result is not None:
-            result = result.get("data")
+            data = result.get("data", {})
+            result = {int(key): copy.deepcopy(data[key]) for key in data}
         logDebug("StatisticsDataLoader: request result: data={}", result)
         return result
 
     def delayedLoad(self):
         if self._load_try < 20:
             self._load_try += 1
-            callback(0.2, self.setCachedStatisticData)
+            callback(0.5, self.setCachedStatisticData)
 
     def setCachedStatisticData(self):
         if not self.enabled:
@@ -55,16 +58,17 @@ class StatisticsDataLoader(object):
         logDebug("StatisticsDataLoader/setCachedStatisticData: START request data: ids={}, len={} ", users, len(users))
         data = self.request(users)
         if data is not None:
-            for _id, value in data.iteritems():
-                self.cache[int(_id)] = copy.deepcopy(value)
+            self.loadedData = data
             logDebug("StatisticsDataLoader/setCachedStatisticData: FINISH request users data")
         else:
             return self.delayedLoad()
         self.loaded = True
+        self.wtrData.updateAllItems(arenaDP, self.loadedData)
 
-    def getUserData(self, databaseID):
-        return self.cache.get(databaseID)
+    @property
+    def itemsWTRData(self):
+        return self.wtrData.itemsData if self.enabled else {}
 
     def clear(self):
-        self.cache.clear()
+        self.loadedData.clear()
         self.loaded = False

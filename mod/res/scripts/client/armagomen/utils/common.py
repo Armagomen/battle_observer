@@ -280,7 +280,7 @@ def urlResponse(url):
     response = openUrl(url, 20.0)
     responseData = response.getData()
     if responseData is not None:
-        return json.loads(responseData, encoding="utf-8-sig")
+        return encodeData(json.loads(responseData, encoding="utf-8-sig"))
     return responseData
 
 
