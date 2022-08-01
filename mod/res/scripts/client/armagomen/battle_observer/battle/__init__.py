@@ -10,13 +10,12 @@ from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TY
 from armagomen.utils.common import logError, logWarning, logInfo, logDebug
 from armagomen.utils.events import g_events
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
-from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addListener, _removeListener
+from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
-from gui.shared.events import AppLifeCycleEvent
 from helpers.func_utils import callback
 
-Statistics = namedtuple('Statistics', ('wtr', 'icons', 'dataLoader', 'wtrData'))
+Statistics = namedtuple('Statistics', ('dataLoader', 'wtrData'))
 
 
 def getViewSettings():
@@ -46,26 +45,16 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def __init__(self):
         self._viewAliases = _view_settings.getViewAliases()
-        self._arenaDP = None
         self.minimapPlugin = MinimapZoomPlugin()
         self._statLoadTry = 0
-        self.statistics = Statistics(_view_settings.isWTREnabled(), _view_settings.isIconsEnabled(),
-                                     StatisticsDataLoader(), WTRStatistics())
+        wtr = _view_settings.isWTREnabled()
+        self.statistics = Statistics(StatisticsDataLoader(wtr), WTRStatistics())
         listeners = [(alias, self.eventListener) for alias in self._viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
-    def init(self):
-        super(ObserverBusinessHandler, self).init()
-        self._arenaDP = _view_settings.sessionProvider.getArenaDP()
-        if self.statistics.wtr:
-            _addListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
-
     def fini(self):
-        if self.statistics.wtr:
-            _removeListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
         self.minimapPlugin.fini()
         self.minimapPlugin = None
-        self._arenaDP = None
         self._statLoadTry = 0
         super(ObserverBusinessHandler, self).fini()
 
@@ -74,23 +63,19 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
         logInfo("ObserverBusinessHandler loading flash libraries swf={}, alias={}".format(SWF.BATTLE, event.alias))
 
-    def onAppInitializing(self, event):
-        if event.ns == APP_NAME_SPACE.SF_BATTLE:
-            self.statistics.dataLoader.setCachedStatisticData(self._arenaDP)
-
-    def loadStatisticView(self, view):
-        if self.statistics.wtr and self.statistics.dataLoader.enabled:
+    def loadStatisticView(self, view, icons):
+        if self.statistics.dataLoader.enabled:
             if not self.statistics.dataLoader.loaded and self._statLoadTry < 20:
                 self._statLoadTry += 1
-                return callback(0.5, self, "loadStatisticView", view)
-            wtrData = self.statistics.wtrData.updateAllItems(self._arenaDP, self.statistics.dataLoader)
+                return callback(0.5, self, "loadStatisticView", view, icons)
+            wtrData = self.statistics.wtrData.updateAllItems(self.statistics.dataLoader)
         else:
             wtrData = {}
         cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         iconMultiplier = settings.statistics[STATISTICS.ICON_BLACKOUT]
-        view.flashObject.as_createStatisticComponent(self.statistics.wtr, self.statistics.icons, wtrData,
+        view.flashObject.as_createStatisticComponent(self.statistics.dataLoader.enabled, icons, wtrData,
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
     def onViewLoaded(self, view, *args):
@@ -107,5 +92,6 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         view.flashObject.as_observerHideWgComponents(_view_settings.getHiddenWGComponents())
         if self.minimapPlugin.enabled:
             self.minimapPlugin.init(view)
-        if self.statistics.icons or self.statistics.wtr:
-            self.loadStatisticView(view)
+        icons = _view_settings.isIconsEnabled()
+        if icons or self.statistics.dataLoader.enabled:
+            self.loadStatisticView(view, icons)

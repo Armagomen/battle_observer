@@ -2,8 +2,9 @@ import copy
 import random
 
 import constants
-from armagomen.utils.common import urlResponse, logDebug, logInfo, logError, xvmInstalled
-from helpers.func_utils import callback
+from armagomen.utils.common import urlResponse, logDebug, logInfo, logError, xvmInstalled, callback
+from helpers import dependency
+from skeletons.gui.battle_session import IBattleSessionProvider
 
 region = constants.AUTH_REALM.lower()
 if region == "na":
@@ -11,6 +12,7 @@ if region == "na":
 
 
 class StatisticsDataLoader(object):
+    sessionProvider = dependency.descriptor(IBattleSessionProvider)
     URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
@@ -18,13 +20,15 @@ class StatisticsDataLoader(object):
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en".format(
         url=URL, key=random.choice(API_KEY), ids="{ids}", fields=FIELDS)
 
-    def __init__(self):
+    def __init__(self, wtrEnabled):
         self.cache = {}
-        self.enabled = region in ["ru", "eu", "com", "asia"]
+        self.enabled = region in ["ru", "eu", "com", "asia"] and wtrEnabled
         self.loaded = False
         self._load_try = 0
         if xvmInstalled:
             logInfo("StatisticsDataLoader: statistics/icons/minimap module is disabled, XVM is installed")
+        elif wtrEnabled:
+            self.setCachedStatisticData()
 
     def request(self, databaseIDS):
         result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS)))
@@ -33,28 +37,29 @@ class StatisticsDataLoader(object):
         logDebug("StatisticsDataLoader: request result: data={}", result)
         return result
 
-    def delayedLoad(self, arenaDP):
+    def delayedLoad(self):
         if self._load_try < 20:
             self._load_try += 1
-            callback(0.5, self, "setCachedStatisticData", arenaDP)
+            callback(0.2, self.setCachedStatisticData)
 
-    def setCachedStatisticData(self, arenaDP):
+    def setCachedStatisticData(self):
         if not self.enabled:
             return logInfo("Statistics are not available in your region. Only ru, eu, com, asia")
+        arenaDP = self.sessionProvider.getArenaDP()
         if arenaDP is None:
-            return logError("StatisticsDataLoader: arenaDP is None")
+            logError("StatisticsDataLoader/setCachedStatisticData: arenaDP is None")
+            return self.delayedLoad()
         users = [vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator() if vInfo.player.accountDBID]
         if not users:
-            logError("StatisticsDataLoader: users list is empty, deferred loading")
-            return self.delayedLoad(arenaDP)
-        logDebug("StatisticsDataLoader: START request data: ids={}, len={} ", users, len(users))
+            return self.delayedLoad()
+        logDebug("StatisticsDataLoader/setCachedStatisticData: START request data: ids={}, len={} ", users, len(users))
         data = self.request(users)
         if data is not None:
             for _id, value in data.iteritems():
                 self.cache[int(_id)] = copy.deepcopy(value)
-            logDebug("StatisticsDataLoader: FINISH request data")
+            logDebug("StatisticsDataLoader/setCachedStatisticData: FINISH request users data")
         else:
-            return self.delayedLoad(arenaDP)
+            return self.delayedLoad()
         self.loaded = True
 
     def getUserData(self, databaseID):

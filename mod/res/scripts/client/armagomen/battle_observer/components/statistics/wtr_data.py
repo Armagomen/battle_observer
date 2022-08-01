@@ -28,7 +28,8 @@ class WTRStatistics(object):
         else:
             return self.settings[STATISTICS.FULL_LEFT], self.settings[STATISTICS.CUT_LEFT]
 
-    def updateAllItems(self, arenaDP, dataLoader):
+    def updateAllItems(self, dataLoader):
+        arenaDP = dataLoader.sessionProvider.getArenaDP()
         if arenaDP is None:
             return
         allyTeam = arenaDP.getNumberOfTeam()
