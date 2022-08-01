@@ -31,11 +31,7 @@ class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
-        self.isAllowed = False
         self.isSPG = False
-        self.__viewAliases = {VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE,
-                              VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE,
-                              VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE}
         self.__components = []
         self.__hiddenComponents = []
         g_events.onHangarVehicleChanged += self.onVehicleChanged
@@ -118,28 +114,24 @@ class ViewSettings(object):
         else:
             return False
 
-    def setIsAllowed(self):
+    def setComponents(self):
         self.__components = []
         self.__hiddenComponents = []
         arenaVisitor = self.sessionProvider.arenaVisitor
-        if arenaVisitor is None:
-            self.isAllowed = False
-        else:
-            self.isAllowed = arenaVisitor.getArenaGuiType() in BATTLES_RANGE
-            if self.isAllowed:
-                self.setComponents()
-                self.setHiddenComponents()
-        return self.isAllowed, self.__components
-
-    def setComponents(self):
-        for alias in ALIASES:
-            if self.getSetting(alias):
-                self.__components.append(alias)
-                _GAME_UI.add(alias)
-                _SPECTATOR_UI.add(alias)
-            else:
-                _GAME_UI.discard(alias)
-                _SPECTATOR_UI.discard(alias)
+        if arenaVisitor is not None and arenaVisitor.getArenaGuiType() in BATTLES_RANGE:
+            for alias in ALIASES:
+                if self.getSetting(alias):
+                    if alias not in self.__components:
+                        self.__components.append(alias)
+                    _GAME_UI.add(alias)
+                    _SPECTATOR_UI.add(alias)
+                else:
+                    _GAME_UI.discard(alias)
+                    _SPECTATOR_UI.discard(alias)
+                    if alias in self.__components:
+                        self.__components.remove(alias)
+            self.setHiddenComponents()
+        return self.__components
 
     def setHiddenComponents(self):
         if ALIASES.HP_BARS in self.__components:
@@ -153,7 +145,7 @@ class ViewSettings(object):
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
-        if not self.isAllowed:
+        if not self.__components:
             return
         componentsConfig = page._SharedPage__componentsConfig
         newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
@@ -184,8 +176,11 @@ class ViewSettings(object):
     def getHiddenWGComponents(self):
         return self.__hiddenComponents
 
-    def getViewAliases(self):
-        return self.__viewAliases
+    @staticmethod
+    def getViewAliases():
+        return {VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE,
+                VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE,
+                VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE}
 
     def getComponents(self):
         return self.__components

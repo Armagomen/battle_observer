@@ -21,21 +21,19 @@ Statistics = namedtuple('Statistics', ('wtr', 'icons', 'dataLoader', 'wtrData'))
 
 def getViewSettings():
     viewSettings = []
-    isAllowed, aliases = _view_settings.setIsAllowed()
-    if isAllowed and aliases:
-        for alias in aliases:
-            try:
-                file_path, class_name = ALIAS_TO_PATH[alias]
-                module_class = getattr(import_module(file_path, package=__package__), class_name)
-                viewSettings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
-            except Exception as err:
-                _view_settings.removeComponent(alias)
-                logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
+    for alias in _view_settings.setComponents():
+        try:
+            file_path, class_name = ALIAS_TO_PATH[alias]
+            module_class = getattr(import_module(file_path, package=__package__), class_name)
+            viewSettings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
+        except Exception as err:
+            _view_settings.removeComponent(alias)
+            logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
     return viewSettings
 
 
 def getBusinessHandlers():
-    return ObserverBusinessHandler(),
+    return (ObserverBusinessHandler(),)
 
 
 def getContextMenuHandlers():
@@ -59,10 +57,12 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     def init(self):
         super(ObserverBusinessHandler, self).init()
         self._arenaDP = _view_settings.sessionProvider.getArenaDP()
-        _addListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
+        if self.statistics.wtr:
+            _addListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
 
     def fini(self):
-        _removeListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
+        if self.statistics.wtr:
+            _removeListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
         self.minimapPlugin.fini()
         self.minimapPlugin = None
         self._arenaDP = None
@@ -70,16 +70,13 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).fini()
 
     def eventListener(self, event):
-        logDebug("ObserverBusinessHandler/eventListener: isAllowed={}, alias={}", _view_settings.isAllowed, event.alias)
-        if _view_settings.isAllowed:
-            self._app.loaderManager.onViewLoaded += self.onViewLoaded
+        self._app.as_loadLibrariesS([SWF.BATTLE])
+        self._app.loaderManager.onViewLoaded += self.onViewLoaded
+        logInfo("ObserverBusinessHandler loading flash libraries swf={}, alias={}".format(SWF.BATTLE, event.alias))
 
     def onAppInitializing(self, event):
-        if event.ns == APP_NAME_SPACE.SF_BATTLE and _view_settings.isAllowed:
-            if self.statistics.wtr:
-                self.statistics.dataLoader.setCachedStatisticData(self._arenaDP)
-            self._app.as_loadLibrariesS([SWF.BATTLE])
-            logInfo("ObserverBusinessHandler loading flash libraries swf={}, appNS={}".format(SWF.BATTLE, event.ns))
+        if event.ns == APP_NAME_SPACE.SF_BATTLE:
+            self.statistics.dataLoader.setCachedStatisticData(self._arenaDP)
 
     def loadStatisticView(self, view):
         if self.statistics.wtr and self.statistics.dataLoader.enabled:

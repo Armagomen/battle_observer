@@ -35,9 +35,6 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
 
     def getRandomMessage(self):
-        # if GLOBAL.RU_LOCALIZATION and self.userInBOFAN:
-        #     message = random.choice(messages[:-1])
-        # else:
         message = random.choice(messages)
         if message is self.lastMessage:
             message = self.getRandomMessage()
