@@ -42,8 +42,7 @@ class ViewSettings(object):
         g_events.onHangarVehicleChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
         for guiType in BATTLES_RANGE:
-            wgPackages = collectScaleformBattlePackages(guiType)
-            if wgPackages:
+            if collectScaleformBattlePackages(guiType):
                 registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
         packages.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
         packages.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
@@ -191,3 +190,6 @@ class ViewSettings(object):
 
     def removeComponent(self, alias):
         self.__components.discard(alias)
+        for bo_alias, wg_alias in TO_HIDE_ALIASES:
+            if alias == bo_alias:
+                self.__hiddenComponents.discard(wg_alias)
