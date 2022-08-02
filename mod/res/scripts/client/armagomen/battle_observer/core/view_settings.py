@@ -26,14 +26,19 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
                  ARENA_GUI_TYPE.EPIC_BATTLE,
                  ARENA_GUI_TYPE.MAPBOX}
 
+TO_HIDE_ALIASES = ((ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
+                   (ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
+                   (ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
+                   (ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER))
+
 
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
         self.isSPG = False
-        self.__components = []
-        self.__hiddenComponents = []
+        self.__components = set()
+        self.__hiddenComponents = set()
         g_events.onHangarVehicleChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
         for guiType in BATTLES_RANGE:
@@ -115,33 +120,32 @@ class ViewSettings(object):
             return False
 
     def setComponents(self):
-        self.__components = []
-        self.__hiddenComponents = []
         arenaVisitor = self.sessionProvider.arenaVisitor
         if arenaVisitor is not None and arenaVisitor.getArenaGuiType() in BATTLES_RANGE:
-            for alias in ALIASES:
-                if self.getSetting(alias):
-                    if alias not in self.__components:
-                        self.__components.append(alias)
-                    _GAME_UI.add(alias)
-                    _SPECTATOR_UI.add(alias)
-                else:
-                    _GAME_UI.discard(alias)
-                    _SPECTATOR_UI.discard(alias)
-                    if alias in self.__components:
-                        self.__components.remove(alias)
+            self.checkComponents()
             self.setHiddenComponents()
+        else:
+            self.__components.clear()
+            self.__hiddenComponents.clear()
         return self.__components
 
+    def checkComponents(self):
+        for alias in ALIASES:
+            if self.getSetting(alias):
+                self.__components.add(alias)
+                _GAME_UI.add(alias)
+                _SPECTATOR_UI.add(alias)
+            else:
+                _GAME_UI.discard(alias)
+                _SPECTATOR_UI.discard(alias)
+                self.__components.discard(alias)
+
     def setHiddenComponents(self):
-        if ALIASES.HP_BARS in self.__components:
-            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR)
-        if ALIASES.SIXTH_SENSE in self.__components:
-            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.SIXTH_SENSE)
-        if ALIASES.DEBUG in self.__components:
-            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
-        if ALIASES.TIMER in self.__components:
-            self.__hiddenComponents.append(BATTLE_VIEW_ALIASES.BATTLE_TIMER)
+        for alias, wg_alias in TO_HIDE_ALIASES:
+            if alias in self.__components:
+                self.__hiddenComponents.add(wg_alias)
+            else:
+                self.__hiddenComponents.discard(wg_alias)
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
@@ -186,5 +190,4 @@ class ViewSettings(object):
         return self.__components
 
     def removeComponent(self, alias):
-        if alias in self.__components:
-            self.__components.remove(alias)
+        self.__components.discard(alias)

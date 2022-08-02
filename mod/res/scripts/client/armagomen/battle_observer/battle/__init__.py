@@ -36,12 +36,11 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('_viewAliases', '_listeners', '_scope', '_app', '_appNS', 'minimapPlugin', '_statLoadTry',
-                 'statistics')
+    __slots__ = ('minimapPlugin', '_statLoadTry', 'statistics', 'viewAliases')
 
     def __init__(self):
-        self._viewAliases = _view_settings.getViewAliases()
-        listeners = [(alias, self.eventListener) for alias in self._viewAliases]
+        self.viewAliases = _view_settings.getViewAliases()
+        listeners = [(alias, self.eventListener) for alias in self.viewAliases]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = MinimapZoomPlugin()
         self._statLoadTry = 0
@@ -72,7 +71,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
     def onViewLoaded(self, view, *args):
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", view.settings.alias)
-        if view.settings is None or view.settings.alias not in self._viewAliases:
+        if view.settings is None or view.settings.alias not in self.viewAliases:
             return
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         g_events.onBattlePageLoaded(view)
