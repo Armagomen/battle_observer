@@ -23,23 +23,23 @@ class Distance(DistanceMeta):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
-        g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
+        g_playerEvents.onArenaPeriodChange += self.onArenaPeriodChange
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
-        g_playerEvents.onArenaPeriodChange -= self.onArenaPeriod
+        g_playerEvents.onArenaPeriodChange -= self.onArenaPeriodChange
         super(Distance, self)._dispose()
 
-    def onArenaPeriod(self, period, *args):
+    def onArenaPeriodChange(self, period, *args):
         if period == ARENA_PERIOD.BATTLE and self.timeEvent is None:
             self.timeEvent = CyclicTimerEvent(0.5, self.updateDistance)
             self.timeEvent.start()
         elif self.timeEvent is not None:
             self.timeEvent.stop()
             self.timeEvent = None
-        logDebug("onArenaPeriod: " + ARENA_PERIOD_NAMES.get(period, 'Unknown'))
+        logDebug("Distance: onArenaPeriodChange: {}", ARENA_PERIOD_NAMES[period])
 
     def onEnterBattlePage(self):
         super(Distance, self).onEnterBattlePage()
@@ -76,10 +76,10 @@ class Distance(DistanceMeta):
         if self._player.team != vInfo.team and vProxy.isAlive():
             self.vehicles[vProxy.id] = vProxy
 
-    def onMinimapVehicleRemoved(self, vId):
-        if vId in self.vehicles:
-            del self.vehicles[vId]
-            logDebug("onMinimapVehicleRemoved: {}", vId)
+    def onMinimapVehicleRemoved(self, vehicleID):
+        if vehicleID in self.vehicles:
+            del self.vehicles[vehicleID]
+            logDebug("Distance: onMinimapVehicleRemoved: {}", vehicleID)
 
     def updateDistance(self):
         distance = None
@@ -100,7 +100,7 @@ class Distance(DistanceMeta):
     def onVehicleKilled(self, vehicleID, *args, **kwargs):
         if vehicleID in self.vehicles:
             del self.vehicles[vehicleID]
-            logDebug("onVehicleKilled: {}", vehicleID)
+            logDebug("Distance: onVehicleKilled: {}", vehicleID)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES

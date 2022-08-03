@@ -4,9 +4,10 @@ from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlug
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import _view_settings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES
+from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES, MOD_NAME
 from armagomen.utils.common import logError, logWarning, logInfo, logDebug
 from armagomen.utils.events import g_events
+from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -24,6 +25,7 @@ def getViewSettings():
         except Exception as err:
             _view_settings.removeComponent(alias)
             logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
+            LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
     return viewSettings
 
 
