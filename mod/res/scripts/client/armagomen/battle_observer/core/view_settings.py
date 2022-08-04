@@ -26,7 +26,7 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
                  ARENA_GUI_TYPE.EPIC_BATTLE,
                  ARENA_GUI_TYPE.MAPBOX}
 
-TO_HIDE_ALIASES = ((ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
+ALIASES_TO_HIDE = ((ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
                    (ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
                    (ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
                    (ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER))
@@ -140,7 +140,7 @@ class ViewSettings(object):
                 self.__components.discard(alias)
 
     def setHiddenComponents(self):
-        for alias, wg_alias in TO_HIDE_ALIASES:
+        for alias, wg_alias in ALIASES_TO_HIDE:
             if alias in self.__components:
                 self.__hiddenComponents.add(wg_alias)
             else:
@@ -190,6 +190,6 @@ class ViewSettings(object):
 
     def removeComponent(self, alias):
         self.__components.discard(alias)
-        for bo_alias, wg_alias in TO_HIDE_ALIASES:
+        for bo_alias, wg_alias in ALIASES_TO_HIDE:
             if alias == bo_alias:
                 self.__hiddenComponents.discard(wg_alias)
