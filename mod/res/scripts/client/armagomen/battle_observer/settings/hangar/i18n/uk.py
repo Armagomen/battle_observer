@@ -433,9 +433,9 @@ localization = {
         "sys_keys*customizationChanged": "Зміна кастомізації"
     },
     "service": {
-        "name": "Battle Observer - v{0}".format(__version__),
+        "name": "Battle Observer - v{0}",
         "description": "Відкрити налаштування мода Battle Observer",
-        "windowTitle": "Налаштування мода Battle Observer - v{0}".format(__version__),
+        "windowTitle": "Налаштування мода Battle Observer - v{0}",
         "buttonOK": "OK",
         "buttonCancel": "Відміна",
         "buttonApply": "Застосувати",
