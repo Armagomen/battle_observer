@@ -168,11 +168,14 @@ class DAMAGE_LOG:
     ASSIST_STUN = "stun"
     ATTACK_REASON = "attackReason"
     AVG_DAMAGE = "tankAvgDamage"
-    AVG_DAMAGE_DATA = 0.0
+    AVG_ASSIST = "tankAvgAssist"
+    AVG_DAMAGE_DATA = 0
+    AVG_ASSIST_DATA = 0
     BLOCKED_DAMAGE = "blockedDamage"
     CLASS_COLOR = "tankClassColor"
     CLASS_ICON = "classIcon"
     DAMAGE_AVG_COLOR = "tankDamageAvgColor"
+    ASSIST_AVG_COLOR = "tankAssistAvgColor"
     DAMAGE_LIST = "damageList"
     DONE_EXTENDED = "log_damage_extended"
     D_LOG = "d_log"
@@ -242,14 +245,15 @@ STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL
 POSTMORTEM = namedtuple("POSTMORTEM", ("DURATION", "PARAMS", "CAM_MATRIX", "MODES"))(
     "transitionDuration", "postmortemParams", "camMatrix", {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM})
 
+__MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config. {}</font>".format(key) for key in
+                       set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}
+
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "MACROS_COUNTED_ARMOR",
     "MACROS_PIERCING_RESERVE", "MACROS_MESSAGE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE",
     "MESSAGES_TEMPLATE", "RICOCHET_MESSAGE", "NO_DAMAGE_MESSAGE", "DEFAULT_TEMPLATE", "ON_ALLY"))(
     "piercingPower", "armor_calculator", "position", "messages", "template", "color", "countedArmor",
-    "piercingReserve", "message", "caliber", "ricochet", "noDamage",
-    {key: "<font size='20' color='#FAFAFA'>Change me in config.</font>" for key in
-     set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}, "Ricochet",
+    "piercingReserve", "message", "caliber", "ricochet", "noDamage", __MESSAGES_TEMPLATE, "Ricochet",
     "critical shot, no damage", "<p align='center'>%(ricochet)s%(noDamage)s\n"
                                 "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
     "display_on_allies")
@@ -376,13 +380,13 @@ ANOTHER = namedtuple("ANOTHER", (
 
 BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )
 
-CREW_XP = namedtuple("CREW_XP", ("NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF"))(
-    "notAvailable", "isFullXp", "isFullComplete", "needTurnOff"
-)
+CREW_XP = namedtuple("CREW_XP", (
+    "NAME", "NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF", "ENABLE", "DISABLE"))(
+    "crewDialog", "notAvailable", "isFullXp", "isFullComplete", "needTurnOff", "enable", "disable")
 
 # Settings Loader List
 LOAD_LIST = (
-    HP_BARS.NAME, MAIN.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
+    MAIN.NAME, HP_BARS.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
     DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME,

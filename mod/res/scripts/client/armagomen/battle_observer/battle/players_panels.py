@@ -1,10 +1,10 @@
 from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.constants import VEHICLE, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import getEntity
+from armagomen.utils.keys_listener import g_keysListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
@@ -27,15 +27,13 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if not self.settings[PANELS.BAR_CLASS_COLOR]:
                 self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
-                g_keysListener.registerComponent(PANELS.BAR_HOT_KEY, self.settings[PANELS.BAR_HOT_KEY],
-                                                 self.onKeyPressedBars)
+                g_keysListener.registerComponent(self.settings[PANELS.BAR_HOT_KEY], self.as_setHealthBarsVisibleS)
         if not self.damagesEnable:
             return
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
-            g_keysListener.registerComponent(PANELS.DAMAGES_HOT_KEY, self.settings[PANELS.DAMAGES_HOT_KEY],
-                                             self.onKeyPressedDamages)
+            g_keysListener.registerComponent(self.settings[PANELS.DAMAGES_HOT_KEY], self.as_setPlayersDamageVisibleS)
 
     def onExitBattlePage(self):
         pass
@@ -55,12 +53,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def clear(self):
         self.playersDamage.clear()
-
-    def onKeyPressedBars(self, isKeyDown):
-        self.as_setHealthBarsVisibleS(isKeyDown)
-
-    def onKeyPressedDamages(self, isKeyDown):
-        self.as_setPlayersDamageVisibleS(isKeyDown)
 
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:

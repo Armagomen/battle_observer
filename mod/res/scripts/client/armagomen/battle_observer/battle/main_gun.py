@@ -14,6 +14,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         super(MainGun, self).__init__()
         self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.gunScore = GLOBAL.ZERO
+        self.gunLeft = GLOBAL.ZERO
         self.enemiesHP = GLOBAL.ZERO
         self.playerDead = False
         self.totalEnemiesHP = GLOBAL.ZERO
@@ -44,30 +45,33 @@ class MainGun(MainGunMeta, IBattleFieldListener):
                            mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
+        if self.enemiesHP != enemiesHP:
+            self.enemiesHP = enemiesHP
+            if enemiesHP < self.gunLeft:
+                self.updateMainGun(criteria="low enemy health")
         if self.totalEnemiesHP != totalEnemiesHP:
             self.totalEnemiesHP = totalEnemiesHP
             self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(ceil(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
-        if not self.playerDead and self.enemiesHP != enemiesHP:
-            self.enemiesHP = enemiesHP
-            self.updateMainGun()
+            self.updateMainGun(criteria="total health")
 
-    def updateMainGun(self):
+    def updateMainGun(self, criteria=None):
         playerDamage = self.playersDamage[self._player.playerVehicleID]
         maxDamage = max(self.playersDamage.itervalues())
         dealtMoreDamage = playerDamage < maxDamage > self.gunScore
         if dealtMoreDamage:
-            gunLeft = maxDamage - playerDamage
+            self.gunLeft = maxDamage - playerDamage
         else:
-            gunLeft = self.gunScore - playerDamage
-        achieved = gunLeft <= GLOBAL.ZERO
-        self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else gunLeft
+            self.gunLeft = self.gunScore - playerDamage
+        achieved = self.gunLeft <= GLOBAL.ZERO
+        self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else self.gunLeft
         self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON] if achieved else GLOBAL.EMPTY_LINE
-        if not achieved and self.enemiesHP < gunLeft or dealtMoreDamage:
-            self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON]
+        if not achieved and self.enemiesHP < self.gunLeft or dealtMoreDamage:
+            self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON] + criteria
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
-        logDebug("MainGun: playerDamage: {}, maxDamage: {}, dealtMoreDamage: {}, gunLeft: {}, achieved: {}",
-                 playerDamage,  maxDamage, dealtMoreDamage, gunLeft, achieved)
+        logDebug(
+            "MainGun: playerDamage={}, maxDamage={}, dealtMoreDamage={}, self.gunLeft={}, achieved={}, criteria={}",
+            playerDamage, maxDamage, dealtMoreDamage, self.gunLeft, achieved, criteria)
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
@@ -76,4 +80,5 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def onPlayersDamaged(self, targetID, attackerID, damage):
         if self._arenaDP.isAlly(attackerID):
             self.playersDamage[attackerID] += damage
-            self.updateMainGun()
+            if attackerID == self._player.playerVehicleID:
+                self.updateMainGun(criteria="player damage")

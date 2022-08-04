@@ -12,7 +12,7 @@ BOT_START_SWITCH = ":"
 
 @overrideMethod(VehicleArenaInfoVO)
 def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
-    if _view_settings.isAllowed and kwargs:
+    if kwargs:
         if main[MAIN.HIDE_BADGES] and ANOTHER.BADGES in kwargs:
             kwargs[ANOTHER.BADGES] = None
         if main[MAIN.SHOW_ANONYMOUS] and ANOTHER.ACCOUNT_DBID in kwargs:

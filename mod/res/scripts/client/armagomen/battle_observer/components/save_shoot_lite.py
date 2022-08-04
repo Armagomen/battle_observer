@@ -50,7 +50,7 @@ class SaveShootLite(object):
 
     def onEnterBattlePage(self):
         if self.enabled:
-            g_keysListener.registerComponent(SAVE_SHOOT.HOT_KEY, self.getHotKey(), self.keyEvent)
+            g_keysListener.registerComponent(self.getHotKey(), self.keyEvent)
             app = ServicesLocator.appLoader.getApp()
             if app is None:
                 return

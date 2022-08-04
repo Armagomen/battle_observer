@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GAME, GRAPHICS
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 from armagomen.constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
+from armagomen.utils.keys_listener import g_keysListener
 from gui.battle_control.arena_info.vos_collections import FragCorrelationSortKey
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
@@ -17,9 +17,10 @@ class CorrelationMarkers(object):
         self.colors = colors
         self.__allyTeam = self._arenaDP.getNumberOfTeam()
         self.__enemyTeam = self._arenaDP.getNumberOfTeam(enemy=True)
-        self.mcColor = settings[MARKERS.CLASS_COLOR]
+        self.vehicleTypeColor = settings[MARKERS.CLASS_COLOR]
         self.color = self.updateMarkersColorDict()
         self.enabled = self.settingsCore.getSetting(GAME.SHOW_VEHICLES_COUNTER)
+        g_keysListener.registerComponent(self.settings[MARKERS.HOT_KEY], self.keyEvent)
 
     def updateMarkersColorDict(self, isBlind=None):
         if isBlind is None:
@@ -33,7 +34,7 @@ class CorrelationMarkers(object):
 
     def getIcon(self, vInfoVO):
         isAlive = vInfoVO.isAlive()
-        if self.mcColor and isAlive:
+        if self.vehicleTypeColor and isAlive:
             color = self.vehicleTypes[VEHICLE_TYPES.CLASS_COLORS][vInfoVO.vehicleType.classTag]
         else:
             color = self.color[vInfoVO.team][isAlive]
@@ -43,7 +44,7 @@ class CorrelationMarkers(object):
         if self.enabled:
             left, right = [], []
             for vInfo in sorted(self._arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
-                if not vInfo.isObserver():
+                if not vInfo.vehicleType.isObserver:
                     if vInfo.team == self.__allyTeam:
                         left.append(self.getIcon(vInfo))
                     else:
@@ -56,9 +57,6 @@ class CorrelationMarkers(object):
     def keyEvent(self, isKeyDown):
         if isKeyDown:
             self.settingsCore.applySettings({GAME.SHOW_VEHICLES_COUNTER: not self.enabled})
-
-    def populate(self):
-        g_keysListener.registerComponent(MARKERS.HOT_KEY, self.settings[MARKERS.HOT_KEY], self.keyEvent)
 
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:
@@ -86,8 +84,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
             self.markers = CorrelationMarkers(self._arenaDP, self.settingsCore, self.settings[MARKERS.NAME],
                                               self.vehicle_types, self.colors, self.as_markersS)
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
-        if self.markers is not None:
-            self.markers.populate()
 
     def _dispose(self):
         self.settingsCore.onSettingsApplied -= self.onSettingsApplied

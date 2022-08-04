@@ -1,10 +1,10 @@
-import codecs
 import json
 import locale
 import math
 import os
 from collections import namedtuple
 from colorsys import hsv_to_rgb
+from io import open as _open
 from shutil import rmtree
 from string import printable
 
@@ -19,6 +19,7 @@ from helpers.http import openUrl
 
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
+encoding = 'utf-8'
 
 
 def isReplay():
@@ -108,6 +109,11 @@ def getCurrentModPath():
     return modPathCache
 
 
+configsPath = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
+if not os.path.exists(configsPath):
+    os.makedirs(configsPath)
+
+
 def cleanupUpdates():
     path = os.path.join(cwd, "updates")
     # Gather directory contents
@@ -123,6 +129,7 @@ def cleanupUpdates():
     if contents:
         for i in contents:
             os.unlink(i) if os.path.isfile(i) or os.path.islink(i) else rmtree(i, ignore_errors=True)
+            logInfo("cleanup updates: {}".format(i))
 
 
 def removeDirs(normpath, name=None):
@@ -161,18 +168,14 @@ def encodeData(data):
 
 def openJsonFile(path):
     """Gets a dict from JSON."""
-    try:
-        with open(path, 'r') as dataFile:
-            return encodeData(json.load(dataFile, encoding='utf-8-sig'))
-    except Exception:
-        with codecs.open(path, 'r', 'utf-8-sig') as dataFile:
-            return encodeData(json.loads(dataFile.read(), encoding='utf-8-sig'))
+    with _open(path, 'r', encoding=encoding) as dataFile:
+        return encodeData(json.load(dataFile, encoding=encoding))
 
 
 def writeJsonFile(path, data):
     """Creates a new json file in a folder or replace old."""
-    with open(path, 'w') as dataFile:
-        json.dump(data, dataFile, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
+    with _open(path, 'w', encoding=encoding) as dataFile:
+        dataFile.write(unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)))
 
 
 def getObserverCachePath():
@@ -262,10 +265,6 @@ def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
 
-def convertNamedtupleToDict(named):
-    return dict(named._asdict())
-
-
 COLOR = namedtuple("COLOR", ("PURPLE", "GREEN", "MULTIPLIER", "TEMPLATE"))(0.8333, 0.3333, 255, "#{:02X}{:02X}{:02X}")
 
 
@@ -281,7 +280,7 @@ def urlResponse(url):
     response = openUrl(url, 20.0)
     responseData = response.getData()
     if responseData is not None:
-        return json.loads(responseData, encoding="utf-8-sig")
+        return encodeData(json.loads(responseData, encoding="utf-8-sig"))
     return responseData
 
 

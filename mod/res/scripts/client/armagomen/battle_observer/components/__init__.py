@@ -6,12 +6,14 @@ class ComponentsLoader(object):
 
     def __init__(self):
         self.modules = {
-            'common': None,
             'badges': None,
             'camera': None,
+            'common': None,
+            'crew': None,
             'dispersion': None,
             'donate_messages': None,
             'effects': None,
+            'for_tests': None,
             'friends': None,
             'minimap_plugins': None,
             'postmortem': None,
@@ -20,12 +22,8 @@ class ComponentsLoader(object):
             'service_channel_filter': None,
             'shot_result_plugin': None,
             'tank_carousel': None,
-            'wg_logs_fixes': None,
             'vehicle_battle_boosters': None,
-            'crew': None,
-            'statistics.statistic_data_loader': None,
-            'battle_component': None,
-            'for_tests': None
+            'wg_logs_fixes': None,
         }
         self.start()
 

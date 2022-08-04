@@ -2,7 +2,7 @@ from collections import defaultdict, namedtuple
 
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
-from armagomen.utils.common import callback, logDebug, logWarning, percentToRGB, getPercent
+from armagomen.utils.common import logDebug, logWarning, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES, SHELL_TYPES
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
@@ -47,9 +47,12 @@ class DamageLog(DamageLogsMeta):
         self.top_log_enabled = self.settings.log_total[GLOBAL.ENABLED]
         self.extended_log_enabled = (self.settings.log_damage_extended[GLOBAL.ENABLED] or
                                      self.settings.log_input_extended[GLOBAL.ENABLED])
+        if self.extended_log_enabled:
+            g_keysListener.registerComponent(self.settings.log_global[DAMAGE_LOG.HOT_KEY], self.onLogsAltMode)
 
     def _dispose(self):
-        DAMAGE_LOG.AVG_DAMAGE_DATA = 0.0
+        DAMAGE_LOG.AVG_DAMAGE_DATA = 0
+        DAMAGE_LOG.AVG_ASSIST_DATA = 0
         super(DamageLog, self)._dispose()
 
     def isLogEnabled(self, eventType):
@@ -57,7 +60,6 @@ class DamageLog(DamageLogsMeta):
             return self.settings.log_damage_extended[GLOBAL.ENABLED]
         elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
             return self.settings.log_input_extended[GLOBAL.ENABLED]
-        logWarning(DAMAGE_LOG.WARNING_MESSAGE)
         return False
 
     def getLogDataAndSettings(self, eventType):
@@ -70,44 +72,42 @@ class DamageLog(DamageLogsMeta):
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
-        if self.extended_log_enabled:
-            self.input_log = LogData(set(), list(), dict())
-            self.damage_log = LogData(set(), list(), dict())
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleUpdated += self.onVehicleUpdated
-                arena.onVehicleKilled += self.onVehicleKilled
-            g_keysListener.registerComponent(DAMAGE_LOG.HOT_KEY, self.settings.log_global[DAMAGE_LOG.HOT_KEY],
-                                             self.onLogsAltMode)
-        if self.top_log_enabled or self.extended_log_enabled:
-            feedback = self.sessionProvider.shared.feedback
-            if feedback:
-                feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
-        if self.top_log_enabled:
-            if not self._arenaDP.getVehicleInfo().isSPG():
-                self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
-            self.updateAvgDamage()
-            self.updateTopLog()
+        feedback = self.sessionProvider.shared.feedback
+        if feedback:
+            feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
+            if self.extended_log_enabled:
+                self.input_log = LogData(set(), list(), dict())
+                self.damage_log = LogData(set(), list(), dict())
+                arena = self._arenaVisitor.getArenaSubscription()
+                if arena is not None:
+                    arena.onVehicleUpdated += self.onVehicleUpdated
+                    arena.onVehicleKilled += self.onVehicleKilled
+            if self.top_log_enabled:
+                if not self._arenaDP.getVehicleInfo().isSPG():
+                    self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
+                self.updateAvgDamage()
+                self.updateTopLog()
 
     def onExitBattlePage(self):
-        if self.extended_log_enabled:
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleUpdated -= self.onVehicleUpdated
-                arena.onVehicleKilled -= self.onVehicleKilled
-        if self.top_log_enabled or self.extended_log_enabled:
-            feedback = self.sessionProvider.shared.feedback
-            if feedback:
-                feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
-        self.top_log.clear()
+        feedback = self.sessionProvider.shared.feedback
+        if feedback:
+            feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
+            if self.extended_log_enabled:
+                arena = self._arenaVisitor.getArenaSubscription()
+                if arena is not None:
+                    arena.onVehicleUpdated -= self.onVehicleUpdated
+                    arena.onVehicleKilled -= self.onVehicleKilled
+            if self.top_log_enabled:
+                self.top_log.clear()
         super(DamageLog, self).onExitBattlePage()
 
     def updateAvgDamage(self):
         """sets the average damage to the selected tank"""
         if self._player is not None and not DAMAGE_LOG.AVG_DAMAGE_DATA:
             max_health = self._player.vehicle.typeDescriptor.maxHealth
-            DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, float(max_health))
-        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = int(DAMAGE_LOG.AVG_DAMAGE_DATA)
+            DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, max_health)
+        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = DAMAGE_LOG.AVG_DAMAGE_DATA
+        self.top_log[DAMAGE_LOG.AVG_ASSIST] = DAMAGE_LOG.AVG_ASSIST_DATA
 
     def onLogsAltMode(self, isKeyDown):
         """hot key event"""
@@ -126,7 +126,7 @@ class DamageLog(DamageLogsMeta):
                 self.top_log[DAMAGE_LOG.ASSIST_STUN] = GLOBAL.ZERO
             self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += self.unpackTopLogValue(e_type, event, extra)
             self.updateTopLog()
-        if e_type in DAMAGE_LOG.EXTENDED_DAMAGE and self.isLogEnabled(e_type):
+        if self.isLogEnabled(e_type):
             self.addToExtendedLog(e_type, event.getTargetID(), extra)
 
     @staticmethod
@@ -142,8 +142,11 @@ class DamageLog(DamageLogsMeta):
 
     def updateTopLog(self):
         """update global sums in log"""
-        percent = getPercent(self.top_log[DAMAGE_LOG.PLAYER_DAMAGE], DAMAGE_LOG.AVG_DAMAGE_DATA)
-        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = percentToRGB(percent, **self.settings.log_total[
+        percentDamage = getPercent(self.top_log[DAMAGE_LOG.PLAYER_DAMAGE], DAMAGE_LOG.AVG_DAMAGE_DATA)
+        percentAssist = getPercent(self.top_log[DAMAGE_LOG.ASSIST_DAMAGE], DAMAGE_LOG.AVG_ASSIST_DATA)
+        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = percentToRGB(percentDamage, **self.settings.log_total[
+            GLOBAL.AVG_COLOR])
+        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = percentToRGB(percentAssist, **self.settings.log_total[
             GLOBAL.AVG_COLOR])
         self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
@@ -160,16 +163,17 @@ class DamageLog(DamageLogsMeta):
                     self.updateExtendedLog(log_data, settings)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
-        if self._player is not None and self._player.playerVehicleID in (targetID, attackerID):
-            if self._player.playerVehicleID == targetID:
-                eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
-                target = attackerID
-            else:
-                eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
-                target = targetID
-            log_data, settings = self.getLogDataAndSettings(eventID)
-            log_data.kills.add(target)
-            self.updateExtendedLog(log_data, settings)
+        if self._player is None or self._player.playerVehicleID not in (targetID, attackerID):
+            return
+        if self._player.playerVehicleID == targetID:
+            eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
+            target = attackerID
+        else:
+            eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
+            target = targetID
+        log_data, settings = self.getLogDataAndSettings(eventID)
+        log_data.kills.add(target)
+        self.updateExtendedLog(log_data, settings)
 
     def checkPlayerShell(self, extra):
         shell_name = DAMAGE_LOG.UNDEFINED
@@ -193,26 +197,23 @@ class DamageLog(DamageLogsMeta):
                 shell_icon_name = gold_name
         return shell_name, shell_icon_name, gold
 
-    def getVehicleMaxHealth(self, vehicle_id):
-        return self._arenaDP.getVehicleInfo(vehicle_id).vehicleType.maxHealth
-
-    def addToExtendedLog(self, e_type, vehicle_id, extra):
+    def addToExtendedLog(self, e_type, target_id, extra):
         """add to log item"""
         is_player = e_type == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
         log_data, settings = self.getLogDataAndSettings(e_type)
-        if vehicle_id not in log_data.id_list:
-            log_data.id_list.append(vehicle_id)
+        if target_id not in log_data.id_list:
+            log_data.id_list.append(target_id)
         shell_name, shell_icon_name, gold = self.checkPlayerShell(extra) if is_player else self.checkShell(extra)
         logDebug("Shell type: {}, shell icon: {}, gold: {}, player: {}", shell_name, shell_icon_name, gold, is_player)
-        vehicle = log_data.vehicles.setdefault(vehicle_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
-        vehicleInfoVO = self._arenaDP.getVehicleInfo(vehicle_id)
+        vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
+        vehicleInfoVO = self._arenaDP.getVehicleInfo(target_id)
+        maxHealth = vehicleInfoVO.vehicleType.maxHealth if is_player else self._player.vehicle.typeDescriptor.maxHealth
         if not vehicle:
             self.createVehicle(vehicleInfoVO, vehicle, logLen=len(log_data.id_list))
-        vehicle_id = self._player.playerVehicleID if not is_player else vehicle_id
-        self.updateVehicleData(extra, gold, settings, shell_icon_name, shell_name, vehicle, vehicle_id)
-        callback(0.1, lambda: self.updateExtendedLog(log_data, settings))
+        self.updateVehicleData(extra, gold, settings, shell_icon_name, shell_name, vehicle, maxHealth)
+        self.updateExtendedLog(log_data, settings)
 
-    def updateVehicleData(self, extra, gold, settings, shell_icon_name, shell_name, vehicle, vehicle_id):
+    def updateVehicleData(self, extra, gold, settings, shell_icon_name, shell_name, vehicle, maxHealth):
         vehicle[DAMAGE_LOG.DAMAGE_LIST].append(extra.getDamage())
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
@@ -223,10 +224,10 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.SHELL_TYPE] = settings[DAMAGE_LOG.SHELL_TYPES][shell_name]
         vehicle[DAMAGE_LOG.SHELL_ICON] = settings[DAMAGE_LOG.SHELL_ICONS][shell_icon_name]
         vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
-        percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], self.getVehicleMaxHealth(vehicle_id))
+        percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
         vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRGB(percent, **settings[GLOBAL.AVG_COLOR])
 
-    def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=0):
+    def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=1):
         if not update:
             vehicle[DAMAGE_LOG.INDEX] = logLen
             vehicle[DAMAGE_LOG.DAMAGE_LIST] = list()
@@ -239,16 +240,20 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.CLASS_ICON] = self.vehicle_icons[vehicleInfoVO.vehicleType.classTag]
         vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[vehicleInfoVO.vehicleType.classTag]
 
+    @staticmethod
+    def getLogLines(log_data, settings, altMode):
+        template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[int(altMode)]])
+        for vehicleID in reversed(log_data.id_list) if settings[DAMAGE_LOG.REVERSE] else log_data.id_list:
+            if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
+                log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = settings[DAMAGE_LOG.KILLED_ICON]
+            yield template % log_data.vehicles[vehicleID]
+
     def updateExtendedLog(self, log_data, settings, altMode=False):
         """
         Final log processing and flash output,
         also works when the alt mode is activated by hot key.
         """
-        if log_data.id_list:
-            log_name = DAMAGE_LOG.D_LOG if log_data is self.damage_log else DAMAGE_LOG.IN_LOG
-            template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[int(altMode)]])
-            data = reversed(log_data.id_list) if settings[DAMAGE_LOG.REVERSE] else log_data.id_list
-            for vehicleID in data:
-                if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
-                    log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = settings[DAMAGE_LOG.KILLED_ICON]
-            self.as_updateLogS(log_name, DAMAGE_LOG.NEW_LINE.join(template % log_data.vehicles[key] for key in data))
+        if not log_data.id_list:
+            return
+        result = DAMAGE_LOG.NEW_LINE.join(self.getLogLines(log_data, settings, altMode))
+        self.as_updateLogS(DAMAGE_LOG.D_LOG if log_data is self.damage_log else DAMAGE_LOG.IN_LOG, result)

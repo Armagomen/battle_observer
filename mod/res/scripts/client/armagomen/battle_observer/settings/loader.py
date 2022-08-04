@@ -1,61 +1,47 @@
 import os
 
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import LOAD_LIST, GLOBAL
-from armagomen.utils.common import logWarning, logInfo, getCurrentModPath, writeJsonFile, openJsonFile, logDebug
+from armagomen.constants import LOAD_LIST
+from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, configsPath
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
-JSON = '{}.json'
-READ_MESSAGE = "SettingsLoader/readConfig: {}: {}"
+JSON = "{}.json"
+READ_MESSAGE = "SettingsLoader/loadConfigPart: {}: {}"
+
 
 class SettingsLoader(object):
-    __slots__ = ('cName', 'path', 'configsList', 'settings', 'errorMessages')
+    __slots__ = ('configName', 'configsList', 'errorMessages')
 
     def __init__(self):
-        self.cName = None
-        self.path = os.path.join(getCurrentModPath()[GLOBAL.FIRST], "configs", "mod_battle_observer")
-        self.configsList = [x for x in os.listdir(self.path) if os.path.isdir(os.path.join(self.path, x))]
         self.errorMessages = []
-        self.start()
+        g_events.onHangarLoaded += self.onHangarLoaded
+        load_json = os.path.join(configsPath, 'load.json')
+        if os.path.exists(load_json):
+            self.configName = openJsonFile(load_json).get('loadConfig')
+        else:
+            self.configName = 'ERROR_CreatedAutomatically_ERROR'
+            configPath = os.path.join(configsPath, self.configName)
+            if not os.path.exists(configPath):
+                self.errorMessages.append('CONFIGURATION DIRS IS NOT FOUND, CREATE NEW')
+                os.makedirs(configPath)
+            self.createLoadJSON(self.configName)
+            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
+        self.readConfig()
+        self.configsList = [x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x))]
+
+    def readOtherConfig(self, configID):
+        self.configName = self.configsList[configID]
+        self.readConfig()
+        self.createLoadJSON(self.configName)
 
     @staticmethod
-    def makeDirs(path):
-        if not os.path.exists(path):
-            os.makedirs(path)
-            return True
-        return False
-
-    def start(self):
-        """Loading the main settings_core file with the parameters which settings_core to load next"""
-        createLoadJson = False
-        if self.makeDirs(self.path):
-            self.errorMessages.append('CONFIGURATION FILES IS NOT FOUND')
-            createLoadJson = True
-        else:
-            load_json = os.path.join(self.path, 'load.json')
-            if os.path.exists(load_json):
-                self.cName = openJsonFile(load_json).get('loadConfig')
-            else:
-                createLoadJson = True
-        if createLoadJson:
-            self.cName = self.createLoadJSON(error=True)
-            self.makeDirs(os.path.join(self.path, self.cName))
-            if self.cName not in self.configsList:
-                self.configsList.append(self.cName)
-        self.readConfig(self.cName)
-
-    def createLoadJSON(self, cName=None, error=False):
-        if cName is None:
-            cName = 'ERROR_CreatedAutomatically_ERROR'
-        path = os.path.join(self.path, 'load.json')
-        writeJsonFile(path, {'loadConfig': cName})
-        if error:
-            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
-            return cName
+    def createLoadJSON(configName):
+        path = os.path.join(configsPath, 'load.json')
+        writeJsonFile(path, {'loadConfig': configName})
 
     def updateConfigFile(self, fileName, _settings):
-        path = os.path.join(self.path, self.cName, '{}.json'.format(fileName))
+        path = os.path.join(configsPath, self.configName, JSON.format(fileName))
         writeJsonFile(path, _settings)
 
     @staticmethod
@@ -82,9 +68,9 @@ class SettingsLoader(object):
                     new_param_type = type(new_param)
                     if new_param_type != old_param_type:
                         file_update = True
-                        if old_param_type is int and new_param_type is float:
+                        if old_param_type == int and new_param_type == float:
                             internal_cfg[key] = int(round(new_param))
-                        elif old_param_type is float and new_param_type is int:
+                        elif old_param_type == float and new_param_type == int:
                             internal_cfg[key] = float(new_param)
                     else:
                         internal_cfg[key] = new_param
@@ -92,36 +78,39 @@ class SettingsLoader(object):
                     file_update = True
         return file_update
 
-    def readConfig(self, configName):
+    def readConfig(self):
         """Read settings_core file from JSON"""
-        direct_path = os.path.join(self.path, configName)
-        logInfo('START UPDATE USER CONFIGURATION: {}'.format(configName))
+        logInfo("LOADING USER CONFIGURATION: {}".format(self.configName.upper()))
+        direct_path = os.path.join(configsPath, self.configName)
         listdir = os.listdir(direct_path)
-        for module_name in LOAD_LIST:
-            file_name = JSON.format(module_name)
-            file_path = os.path.join(direct_path, file_name)
-            internal_cfg = getattr(settings, module_name)
-            if file_name in listdir:
-                try:
-                    if self.updateData(openJsonFile(file_path), internal_cfg):
-                        writeJsonFile(file_path, internal_cfg)
-                    logDebug(READ_MESSAGE, self.cName, file_name)
-                except Exception as error:
-                    message = READ_MESSAGE.format(file_path, repr(error))
-                    self.errorMessages.append(message)
-                    logWarning(message)
-                    continue
-            else:
-                writeJsonFile(file_path, internal_cfg)
-            settings.onModSettingsChanged(internal_cfg, module_name)
-        logInfo('CONFIGURATION UPDATE COMPLETED: {}'.format(configName))
+        for part_name in LOAD_LIST:
+            internal_cfg = getattr(settings, part_name)
+            if internal_cfg is None:
+                continue
+            self.loadConfigPart(part_name, direct_path, listdir, internal_cfg)
+        logInfo("LOADING '{}' CONFIGURATION COMPLETED".format(self.configName.upper()))
         settings.onUserConfigUpdateComplete()
-        if self.errorMessages:
-            g_events.onHangarLoaded += self.onHangarLoaded
+
+    def loadConfigPart(self, part_name, direct_path, listdir, internal_cfg):
+        file_name = JSON.format(part_name)
+        file_path = os.path.join(direct_path, file_name)
+        if file_name not in listdir:
+            return writeJsonFile(file_path, internal_cfg)
+        try:
+            file_data = openJsonFile(file_path)
+        except Exception as error:
+            message = READ_MESSAGE.format(file_path, repr(error))
+            self.errorMessages.append(message)
+            return logWarning(message)
+        else:
+            if self.updateData(file_data, internal_cfg):
+                writeJsonFile(file_path, internal_cfg)
+            logDebug(READ_MESSAGE, self.configName, file_name)
+            settings.onModSettingsChanged(internal_cfg, part_name)
 
     def onHangarLoaded(self, view):
-        dialog = LoadingErrorDialog()
-        dialog.setView(view)
-        dialog.showLoadingError("\n".join(self.errorMessages))
-        g_events.onHangarLoaded -= self.onHangarLoaded
-        del self.errorMessages[:]
+        if self.errorMessages:
+            dialog = LoadingErrorDialog()
+            dialog.setView(view)
+            dialog.showLoadingError("\n".join(self.errorMessages))
+            self.errorMessages = []

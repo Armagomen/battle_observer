@@ -2,24 +2,24 @@ from importlib import import_module
 
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES
-from armagomen.utils.common import logError, logWarning, logInfo, logDebug
+from armagomen.utils.common import logError, logWarning, logDebug
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
-from gui.Scaleform.framework.package_layout import PackageBusinessHandler, _addListener, _removeListener
+from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
-from gui.shared.events import AppLifeCycleEvent
 from helpers.func_utils import callback
 
 
-def checkSettings():
+@property
+def enabled():
     return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]
 
 
 def getViewSettings():
     view_settings = []
-    if checkSettings():
+    if enabled:
         try:
             module_class = getattr(import_module(".date_times", package=__package__), "DateTimes")
             view_settings.append(ComponentSettings(ALIASES.DATE_TIME, module_class, ScopeTemplates.DEFAULT_SCOPE))
@@ -45,29 +45,21 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def eventListener(self, event):
+        if self.swfLoaded:
+            return
+        self._app.as_loadLibrariesS([SWF.LOBBY])
         self._app.loaderManager.onViewLoaded += self._onViewLoaded
-
-    def init(self):
-        super(ObserverBusinessHandler, self).init()
-        _addListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
+        self.swfLoaded = True
+        logDebug("loading flash libraries swf={}, alias={}", SWF.LOBBY, event.alias)
 
     def fini(self):
-        self.swfLoaded = False
-        _removeListener(AppLifeCycleEvent.INITIALIZING, self.onAppInitializing, EVENT_BUS_SCOPE.GLOBAL)
+        logDebug("destroy flash libraries swf={}, appNS={}", SWF.LOBBY, self._appNS)
         super(ObserverBusinessHandler, self).fini()
-
-    def onAppInitializing(self, event):
-        if event.ns == APP_NAME_SPACE.SF_LOBBY:
-            if not checkSettings() or self.swfLoaded:
-                return
-            self.swfLoaded = True
-            self._app.as_loadLibrariesS([SWF.LOBBY])
-            logInfo("loading flash libraries swf={}, appNS={}".format(SWF.LOBBY, event.ns))
 
     @staticmethod
     def load(view):
         g_events.onHangarLoaded(view)
-        if not checkSettings():
+        if not enabled:
             return
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "hangar_page {}, has ho attribute {}"

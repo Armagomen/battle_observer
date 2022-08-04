@@ -17,11 +17,13 @@ if getClientLanguage().lower() in ('ru', 'uk', 'be'):
         "Батько наш - Бандера,\nУкраїна - мати,\nМи за Україну будем воювати!",
         "Ой у лузі червона калина похилилася,\nЧогось наша славна Україна зажурилася.\n"
         "А ми тую червону калину підіймемо,\nА ми нашу славну Україну, гей, гей, розвеселимо!",
+        "В ці складні часи мені дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть. Слава Україні"
     )
 else:
     messages = (
         "Good evening, we are from Ukraine.",
-        "Support the development of the mod, everything will be Ukraine."
+        "Support the development of the mod, everything will be Ukraine.",
+        "In these difficult times, I really need your support, even your 10 euro will help. Glory to Ukraine",
     )
 
 
@@ -33,9 +35,6 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
 
     def getRandomMessage(self):
-        # if GLOBAL.RU_LOCALIZATION and self.userInBOFAN:
-        #     message = random.choice(messages[:-1])
-        # else:
         message = random.choice(messages)
         if message is self.lastMessage:
             message = self.getRandomMessage()

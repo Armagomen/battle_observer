@@ -3,7 +3,7 @@ from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
-from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT
+from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
@@ -11,9 +11,6 @@ from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 37
-KEY_CONTROL = [KEY_ALIAS_CONTROL]
-KEY_ALT = [KEY_ALIAS_ALT]
-
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
 
 
@@ -57,16 +54,11 @@ class Getter(object):
                 yield key_path
 
     def keyValueGetter(self, settings_block):
-        key_val = []
-        try:
-            for key in sorted(self.getKeyPath(settings_block)):
-                key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
-                if GLOBAL.ENABLED != key:
-                    dic, param = self.getLinkToParam(settings_block, key)
-                    key_val.append((key, dic[param]))
-        except Exception:
-            LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
-        return key_val
+        for key in sorted(self.getKeyPath(settings_block)):
+            key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
+            if GLOBAL.ENABLED != key:
+                dic, param = self.getLinkToParam(settings_block, key)
+                yield key, dic[param]
 
 
 class CreateElement(object):
@@ -96,7 +88,7 @@ class CreateElement(object):
                 if value.startswith("#"):
                     return 'TextInputColor'
                 return 'TextInputField'
-            elif type(value) is bool:
+            elif type(value) == bool:
                 return 'CheckBox'
         else:
             return cType
@@ -161,30 +153,27 @@ class CreateElement(object):
 
     def createItem(self, blockID, key, value):
         val_type = type(value)
-        if isinstance(value, str):
-            if GLOBAL.ALIGN in key:
-                return self.createRadioButtonGroup(blockID, key,
-                                                   *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
-            if blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
-                return self.createRadioButtonGroup(blockID, key,
-                                                   *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
-        if isinstance(value, (str, bool)):
+        if val_type == str and GLOBAL.ALIGN in key:
+            return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
+        elif val_type == str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
+            return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
+        elif val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
-        elif val_type is int:
+        elif val_type == int:
             if DISPERSION.CIRCLE_SCALE_CONFIG in key:
                 return self.createSlider(blockID, key, GLOBAL.ONE, 100, GLOBAL.ONE, value)
             return self.createStepper(blockID, key, -2000, 2000, GLOBAL.ONE, value)
-        elif val_type is float:
+        elif val_type == float:
             if STATISTICS.ICON_BLACKOUT in key:
                 return self.createStepper(blockID, key, -2.0, 2.0, 0.01, value)
-            if GLOBAL.ZERO <= value <= GLOBAL.F_ONE:
+            elif GLOBAL.ZERO <= value <= GLOBAL.F_ONE:
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 2.0, 0.01, value)
             else:
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 300.0, GLOBAL.F_ONE, value)
-        elif val_type is list:
+        elif val_type == list:
             if "_hotkey" in key:
-                return self.createHotKey(blockID, key, value, KEY_ALT)
-            if SNIPER.STEPS in key:
+                return self.createHotKey(blockID, key, value, [KEY_ALIAS_ALT])
+            elif SNIPER.STEPS in key:
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 
 
@@ -197,8 +186,8 @@ class SettingsInterface(CreateElement):
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
-        self.currentConfig = self.newConfig = self.sLoader.configsList.index(self.sLoader.cName)
-        self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
+        self.currentConfigID = self.newConfigID = self.sLoader.configsList.index(self.sLoader.configName)
+        self.newConfigLoadingInProcess = False
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
@@ -231,7 +220,7 @@ class SettingsInterface(CreateElement):
                 self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID),
                                           dict(), lambda *args: None, button_handler=self.onButtonPress)
             except Exception as err:
-                logWarning('SettingsInterface startLoad {}'.format(repr(err)))
+                logWarning('SettingsInterface addModsToVX: {}'.format(repr(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
@@ -250,15 +239,14 @@ class SettingsInterface(CreateElement):
         """Feedback EVENT"""
         if container != MOD_NAME:
             return
-        self.newConfigLoadingInProcess = self.currentConfig != self.newConfig
+        self.newConfigLoadingInProcess = self.currentConfigID != self.newConfigID
         if event == self.apiEvents.WINDOW_CLOSED:
             self.vxSettingsApi.onSettingsChanged -= self.onSettingsChanged
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.newConfigLoadingInProcess:
                 self.inited.clear()
-                self.sLoader.readConfig(self.sLoader.configsList[self.newConfig])
-                self.sLoader.createLoadJSON(cName=self.sLoader.configsList[self.newConfig])
-                self.currentConfig = self.newConfig
+                self.sLoader.readOtherConfig(self.newConfigID)
+                self.currentConfigID = self.newConfigID
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
             self.vxSettingsApi.onDataChanged += self.onDataChanged
@@ -276,10 +264,10 @@ class SettingsInterface(CreateElement):
         """Saves made by the user settings_core in the settings_core file."""
         if self.newConfigLoadingInProcess or MOD_NAME != modID:
             return
-        if blockID == ANOTHER.CONFIG_SELECT and self.currentConfig != data['selector']:
-            self.newConfig = data['selector']
+        if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
+            self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            logDebug("change settings '{}' - {}", self.sLoader.configsList[self.newConfig], blockID)
+            logDebug("change config '{}' - {}", self.sLoader.configsList[self.newConfigID], blockID)
         else:
             settings_block = getattr(settings, blockID)
             for key, value in data.iteritems():
@@ -291,13 +279,6 @@ class SettingsInterface(CreateElement):
                         value = HP_BARS.STYLES[value]
                     elif key == "zoomSteps*steps":
                         value = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
-                    newParamType = type(value)
-                    oldParamType = type(updatedConfigLink[paramName])
-                    if oldParamType != newParamType:
-                        if oldParamType is float and newParamType is int:
-                            value = float(value)
-                        elif oldParamType is int and newParamType is float:
-                            value = int(round(value))
                     updatedConfigLink[paramName] = value
             self.sLoader.updateConfigFile(blockID, settings_block)
             settings.onModSettingsChanged(settings_block, blockID)
@@ -329,25 +310,24 @@ class SettingsInterface(CreateElement):
             if varName in CONFIG_INTERFACE.DONATE_BUTTONS:
                 openWebBrowser(value)
 
+    def items(self, blockID, settings_block):
+        for key, value in self.getter.keyValueGetter(settings_block):
+            item = self.createItem(blockID, key, value)
+            if item is not None:
+                yield item
+
     def getTemplate(self, blockID):
         """create templates, do not change..."""
         settings_block = getattr(settings, blockID, {})
-        column1 = []
-        column2 = []
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.newConfig)]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfigID)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE_UA_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_paypal', URLS.PAYPAL_URL, 'Button'),
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
-            items = []
-            for key, value in self.getter.keyValueGetter(settings_block):
-                item = self.createItem(blockID, key, value)
-                if item is not None:
-                    items.append(item)
-            middleIndex = (len(items) + 1) // 2
-            for index, item in enumerate(items):
-                column = column1 if index < middleIndex else column2
-                column.append(item)
+            columns = [item for item in self.items(blockID, settings_block)]
+            middleIndex = (len(columns) + int(len(columns) % 2 != 0)) / 2
+            column1 = columns[:middleIndex]
+            column2 = columns[middleIndex:]
         return self.createBlock(blockID, settings_block, column1, column2)
