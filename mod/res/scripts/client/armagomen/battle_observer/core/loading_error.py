@@ -15,7 +15,12 @@ class LoadingError(object):
 
     def __init__(self, errorMessage):
         self.isDisplayed = False
-        if getClientLanguage().lower() in ('ru', 'uk', 'be'):
+        if getClientLanguage().lower() == 'uk':
+            self.message = "<font size='18'>Помилка завантаження: залежності модифікації <font color='#FFFF00'><b>" \
+                           "poliroid.modslistapi_*.wotmod та/або polarfox.vxSettingsApi_*.wotmod</b></font> " \
+                           "відсутні або пошкоджені.\Будь ласка, скопіюйте коректні файли із архіву з модифікацією." \
+                           "</font>\n\nПовідомлення про помилку: {}".format(errorMessage)
+        elif getClientLanguage().lower() in ('ru', 'be'):
             self.message = "<font size='18'>Ошибка загрузки: зависимости мода <font color='#FFFF00'><b>" \
                            "poliroid.modslistapi_*.wotmod и/или polarfox.vxSettingsApi_*.wotmod</b></font> " \
                            "отсутствуют либо повреждены.\nПожалуйста скопируйте корректные файлы из архива с модом." \

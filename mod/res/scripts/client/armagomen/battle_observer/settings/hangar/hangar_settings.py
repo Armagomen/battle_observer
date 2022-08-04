@@ -21,7 +21,7 @@ def LOCKED_MESSAGE():
     if language in ('ru', 'be'):
         return pattern.format("Функция недоступна, установлен XVM.")
     elif language == "uk":
-        return pattern.format("Функція недоступна, встановлено XVM.")
+        return pattern.format("Функція недоступна, тому що встановлений XVM.")
     else:
         return pattern.format("The function is not available, XVM is installed.")
 

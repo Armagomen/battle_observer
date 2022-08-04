@@ -9,7 +9,9 @@ from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
 from helpers import getClientLanguage
 
-if getClientLanguage().lower() in ('ru', 'uk', 'be'):
+if getClientLanguage().lower() == 'uk':
+    labels = ("ПЕРЕЗАВАНТАЖЕННЯ", "Автоматично", "Вручну", "Відміна", "Закрити", "Застосувати", "Ігнорувати цей танк")
+elif getClientLanguage().lower() in ('ru', 'uk', 'be'):
     labels = ("ПЕРЕЗАГРУЗКА", "Автоматически", "Вручную", "Отмена", "Закрыть", "Применить", "Игнорировать этот танк")
 else:
     labels = ("RESTART", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank")
