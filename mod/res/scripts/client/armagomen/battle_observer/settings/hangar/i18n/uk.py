@@ -30,8 +30,8 @@ RESTART_TOOLTIP = "Для увімкнення/вимкнення необхід
 
 localization = {
     "configSelect": {
-        "header": "Пресети налаштувань",
-        "selector": "Вибрати пресет:",
+        "header": "Варіанти налаштувань",
+        "selector": "Вибрати налаштування:",
         "donate_button_ua": "Підтримати розробку",
         "donate_button_paypal": "Підтримати через PayPal",
         "donate_button_patreon": "Підтримати через Patreon",
