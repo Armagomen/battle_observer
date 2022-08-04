@@ -277,7 +277,6 @@ localization = {
     },
     "vehicle_types": {
         "header": "Налаштування кольорів класів техніки",
-        # TODO: check with official translation in game
         "vehicleClassColors*AT-SPG": "ПТ-САУ",
         "vehicleClassColors*SPG": "САУ",
         "vehicleClassColors*heavyTank": "Важкий танк",
@@ -317,7 +316,6 @@ localization = {
                                    "Перейдіть в снайперський режим і ви отримаєте кратність наближення на "
                                    "перешкоду, а не в небо і побачите як працює даний параметр на практиці.",
         "dynamic_zoom*zoomXMeters": "Чутливість приближення в метрах",
-        # TODO: clarify things
         "dynamic_zoom*zoomXMeters_tooltip": "Автоматичний вибір означає, що відстань до цілі в метрах ділене на "
                                             "чутливість буде використовуватись для вибору кратності зуму.\n"
                                             "За замовчуванням на кожні 20 метрів приходиться х1 "
