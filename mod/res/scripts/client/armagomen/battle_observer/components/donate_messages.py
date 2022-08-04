@@ -21,7 +21,7 @@ if getClientLanguage().lower() == 'uk':
     )
 elif getClientLanguage().lower() in ('ru', 'uk', 'be'):
     messages = (
-        "Заглушка для уведомлений"
+        ""
     )
 else:
     messages = (
