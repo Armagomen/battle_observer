@@ -16,7 +16,7 @@ class Distance(DistanceMeta):
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
         self.timeEvent = None
         self.isPostmortem = False
-        self.vehicles = []
+        self.vehicles = {}
 
     def _populate(self):
         super(Distance, self)._populate()
@@ -74,18 +74,16 @@ class Distance(DistanceMeta):
         if self.isPostmortem:
             return
         if self._player.team != vInfo.team and vProxy.isAlive():
-            self.vehicles.append(vProxy)
+            self.vehicles[vInfo.vehicleID] = vProxy
 
     def removeVehicle(self, vehicleID, *args, **kwargs):
-        for vProxy in self.vehicles:
-            if vProxy.id == vehicleID:
-                self.vehicles.remove(vProxy)
-                break
+        if vehicleID in self.vehicles:
+            self.vehicles.pop(vehicleID)
 
     def updateDistance(self):
         distance = None
         vehicleName = None
-        for entity in self.vehicles:
+        for entity in self.vehicles.itervalues():
             dist = self._player.position.distTo(entity.position)
             if distance is None or dist < distance:
                 distance = dist
@@ -101,5 +99,5 @@ class Distance(DistanceMeta):
         if self.isPostmortem:
             if self.timeEvent is not None:
                 self.timeEvent.stop()
-            self.vehicles = []
+            self.vehicles.clear()
             self.as_setDistanceS(GLOBAL.EMPTY_LINE)
