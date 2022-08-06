@@ -73,7 +73,7 @@ def logWarning(message):
 
 
 def getPreferencesDir():
-    normpath = os.path.normpath(unicode(BigWorld.wg_getPreferencesFilePath(), 'utf-8', errors='ignore'))
+    normpath = os.path.normpath(BigWorld.wg_getPreferencesFilePath())
     return os.path.split(normpath)[0]
 
 
