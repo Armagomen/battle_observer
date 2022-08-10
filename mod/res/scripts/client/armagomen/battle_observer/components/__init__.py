@@ -1,5 +1,4 @@
-from armagomen.utils.common import logError, closeClient
-from debug_utils import LOG_CURRENT_EXCEPTION
+from debug_utils import LOG_CURRENT_EXCEPTION, CRITICAL_ERROR
 
 
 class ComponentsLoader(object):
@@ -33,5 +32,4 @@ class ComponentsLoader(object):
                 self.modules[moduleName] = __import__("{}.{}".format(__package__, moduleName))
             except ImportError as error:
                 LOG_CURRENT_EXCEPTION()
-                logError(error.message)
-                closeClient()
+                CRITICAL_ERROR(error.message)
