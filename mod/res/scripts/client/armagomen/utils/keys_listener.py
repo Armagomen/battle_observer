@@ -1,12 +1,15 @@
 from collections import namedtuple
 
+from Keys import KEY_LCONTROL, KEY_RCONTROL, KEY_RALT, KEY_LALT, KEY_LSHIFT, KEY_RSHIFT
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
-from bwobsolete_helpers.BWKeyBindings import KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT
 from gui import InputHandler
 
 KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
+KEY_ALIAS_CONTROL = (KEY_LCONTROL, KEY_RCONTROL)
+KEY_ALIAS_ALT = (KEY_LALT, KEY_RALT)
+KEY_ALIAS_SHIFT = (KEY_LSHIFT, KEY_RSHIFT)
 
 
 class KeysListener(object):
