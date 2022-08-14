@@ -7,9 +7,9 @@ from armagomen.constants import MAIN
 from gui import InputHandler
 
 KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
-KEY_ALIAS_CONTROL = (KEY_LCONTROL, KEY_RCONTROL)
-KEY_ALIAS_ALT = (KEY_LALT, KEY_RALT)
-KEY_ALIAS_SHIFT = (KEY_LSHIFT, KEY_RSHIFT)
+KEY_ALIAS_CONTROL = {KEY_LCONTROL, KEY_RCONTROL}
+KEY_ALIAS_ALT = {KEY_LALT, KEY_RALT}
+KEY_ALIAS_SHIFT = {KEY_LSHIFT, KEY_RSHIFT}
 
 
 class KeysListener(object):
@@ -22,8 +22,11 @@ class KeysListener(object):
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
 
-    def registerComponent(self, keyList, keyFunction):
-        normalizedKey = self.normalizeKey(keyList)
+    def registerComponent(self, keyFunction, keyList=None):
+        if not keyList:
+            normalizedKey = KEY_ALIAS_ALT
+        else:
+            normalizedKey = self.normalizeKey(keyList)
         self.keysMap.append(KeysData(normalizedKey, keyFunction))
         self.usableKeys.update(normalizedKey)
 

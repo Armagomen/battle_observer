@@ -48,7 +48,7 @@ class DamageLog(DamageLogsMeta):
         self.extended_log_enabled = (self.settings.log_damage_extended[GLOBAL.ENABLED] or
                                      self.settings.log_input_extended[GLOBAL.ENABLED])
         if self.extended_log_enabled:
-            g_keysListener.registerComponent(self.settings.log_global[DAMAGE_LOG.HOT_KEY], self.onLogsAltMode)
+            g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_global[DAMAGE_LOG.HOT_KEY])
 
     def _dispose(self):
         DAMAGE_LOG.AVG_DAMAGE_DATA = 0

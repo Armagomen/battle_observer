@@ -1,9 +1,9 @@
 # coding=utf-8
+from Keys import KEY_LALT, KEY_RALT
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
-from armagomen.utils.keys_listener import KEY_ALIAS_ALT
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
@@ -114,10 +114,10 @@ class CreateElement(object):
             result.update(type="RadioButtonGroup")
         return result
 
-    def createHotKey(self, blockID, varName, value, defaultValue):
+    def createHotKey(self, blockID, varName, value):
         result = self.createControl(blockID, varName, value, cType='KeyInput')
         if result is not None:
-            result['defaultValue'] = defaultValue
+            result['defaultValue'] = [[KEY_LALT, KEY_RALT]]
         return result
 
     def __createNumeric(self, blockID, varName, cType, value, vMin=GLOBAL.ZERO, vMax=GLOBAL.ZERO):
@@ -172,7 +172,7 @@ class CreateElement(object):
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 300.0, GLOBAL.F_ONE, value)
         elif val_type == list:
             if "_hotkey" in key:
-                return self.createHotKey(blockID, key, value, [KEY_ALIAS_ALT])
+                return self.createHotKey(blockID, key, value)
             elif SNIPER.STEPS in key:
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
 

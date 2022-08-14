@@ -1,9 +1,9 @@
 from Avatar import PlayerAvatar
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, SAVE_SHOOT, MAIN
+from armagomen.constants import GLOBAL, SAVE_SHOOT
 from armagomen.utils.common import overrideMethod, isReplay
-from armagomen.utils.keys_listener import g_keysListener, KEY_ALIAS_ALT
+from armagomen.utils.keys_listener import g_keysListener
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from gui.shared.personality import ServicesLocator
@@ -40,16 +40,9 @@ class SaveShootLite(object):
             self.destroyedBlock = config[SAVE_SHOOT.DESTROYED_BLOCK]
             self.msg = config[SAVE_SHOOT.MSG]
 
-    @staticmethod
-    def getHotKey():
-        if settings.main[MAIN.USE_KEY_PAIRS]:
-            return KEY_ALIAS_ALT
-        else:
-            return KEY_ALIAS_ALT[GLOBAL.FIRST],
-
     def onEnterBattlePage(self):
         if self.enabled:
-            g_keysListener.registerComponent(self.getHotKey(), self.keyEvent)
+            g_keysListener.registerComponent(self.keyEvent)
             app = ServicesLocator.appLoader.getApp()
             if app is None:
                 return

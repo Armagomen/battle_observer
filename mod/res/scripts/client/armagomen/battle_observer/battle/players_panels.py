@@ -27,13 +27,13 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if not self.settings[PANELS.BAR_CLASS_COLOR]:
                 self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
-                g_keysListener.registerComponent(self.settings[PANELS.BAR_HOT_KEY], self.as_setHealthBarsVisibleS)
-        if not self.damagesEnable:
-            return
+                g_keysListener.registerComponent(self.as_setHealthBarsVisibleS,
+                                                 keyList=self.settings[PANELS.BAR_HOT_KEY])
         arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
+        if self.damagesEnable and arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
-            g_keysListener.registerComponent(self.settings[PANELS.DAMAGES_HOT_KEY], self.as_setPlayersDamageVisibleS)
+            g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS,
+                                             keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
 
     def onExitBattlePage(self):
         pass

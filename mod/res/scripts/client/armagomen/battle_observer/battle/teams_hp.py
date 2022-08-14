@@ -20,7 +20,7 @@ class CorrelationMarkers(object):
         self.vehicleTypeColor = settings[MARKERS.CLASS_COLOR]
         self.color = self.updateMarkersColorDict()
         self.enabled = self.settingsCore.getSetting(GAME.SHOW_VEHICLES_COUNTER)
-        g_keysListener.registerComponent(self.settings[MARKERS.HOT_KEY], self.keyEvent)
+        g_keysListener.registerComponent(self.keyEvent, keyList=self.settings[MARKERS.HOT_KEY])
 
     def updateMarkersColorDict(self, isBlind=None):
         if isBlind is None:
