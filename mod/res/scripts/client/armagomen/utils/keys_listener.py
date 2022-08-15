@@ -18,14 +18,11 @@ class KeysListener(object):
         self.keysMap = list()
         self.pressedKeys = set()
         self.usableKeys = set()
-        self.useKeyPairs = False
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
 
     def registerComponent(self, keyFunction, keyList=None):
-        normalizedKey = KEY_ALIAS_ALT if not keyList else self.normalizeKey(keyList)
-        self.keysMap.append(KeysData(normalizedKey, keyFunction))
-        self.usableKeys.update(normalizedKey)
+        self.keysMap.append(KeysData(self.normalizeKey(keyList) if keyList else KEY_ALIAS_ALT, keyFunction))
 
     def clear(self):
         self.keysMap = list()
@@ -33,7 +30,6 @@ class KeysListener(object):
         self.pressedKeys.clear()
 
     def onEnterBattlePage(self):
-        self.useKeyPairs = settings.main[MAIN.USE_KEY_PAIRS]
         InputHandler.g_instance.onKeyDown += self.onKeyDown
         InputHandler.g_instance.onKeyUp += self.onKeyUp
 
@@ -46,42 +42,34 @@ class KeysListener(object):
         if event.key not in self.pressedKeys:
             return
         for keysData in self.keysMap:
-            if self.pressedKeys.issuperset(keysData.keys):
+            if event.key in keysData.keys:
                 keysData.keyFunction(False)
-        if self.useKeyPairs:
-            if event.key in KEY_ALIAS_CONTROL:
-                self.pressedKeys.difference_update(KEY_ALIAS_CONTROL)
-            elif event.key in KEY_ALIAS_ALT:
-                self.pressedKeys.difference_update(KEY_ALIAS_ALT)
-            elif event.key in KEY_ALIAS_SHIFT:
-                self.pressedKeys.difference_update(KEY_ALIAS_SHIFT)
-        else:
-            self.pressedKeys.discard(event.key)
+        self.pressedKeys.discard(event.key)
 
     def onKeyDown(self, event):
         if event.isModifierDown() or event.key not in self.usableKeys or event.key in self.pressedKeys:
             return
-        if self.useKeyPairs:
-            if event.key in KEY_ALIAS_CONTROL:
-                self.pressedKeys.update(KEY_ALIAS_CONTROL)
-            elif event.key in KEY_ALIAS_ALT:
-                self.pressedKeys.update(KEY_ALIAS_ALT)
-            elif event.key in KEY_ALIAS_SHIFT:
-                self.pressedKeys.update(KEY_ALIAS_SHIFT)
-        else:
-            self.pressedKeys.add(event.key)
         for keysData in self.keysMap:
-            if self.pressedKeys.issuperset(keysData.keys):
+            if event.key in keysData.keys:
                 keysData.keyFunction(True)
+        self.pressedKeys.add(event.key)
 
-    @staticmethod
-    def normalizeKey(keyList):
+    def normalizeKey(self, keyList):
         keys = set()
         for key in keyList:
             if isinstance(key, (list, set, tuple)):
                 keys.update(key)
             else:
                 keys.add(key)
+        if settings.main[MAIN.USE_KEY_PAIRS]:
+            for key in keys:
+                if key in KEY_ALIAS_CONTROL:
+                    keys.update(KEY_ALIAS_CONTROL)
+                elif key in KEY_ALIAS_ALT:
+                    keys.update(KEY_ALIAS_ALT)
+                elif key in KEY_ALIAS_SHIFT:
+                    keys.update(KEY_ALIAS_SHIFT)
+        self.usableKeys.update(keys)
         return keys
 
 
