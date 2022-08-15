@@ -23,10 +23,7 @@ class KeysListener(object):
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
 
     def registerComponent(self, keyFunction, keyList=None):
-        if not keyList:
-            normalizedKey = KEY_ALIAS_ALT
-        else:
-            normalizedKey = self.normalizeKey(keyList)
+        normalizedKey = KEY_ALIAS_ALT if not keyList else self.normalizeKey(keyList)
         self.keysMap.append(KeysData(normalizedKey, keyFunction))
         self.usableKeys.update(normalizedKey)
 
