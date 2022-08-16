@@ -1,33 +1,40 @@
 from CurrentVehicle import g_currentVehicle
+from adisp import AdispException, process
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
-from armagomen.utils.common import logInfo, logDebug
-from armagomen.utils.events import g_events
+from armagomen.utils.common import logInfo, logDebug, logError
+from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
-from gui.shared.utils import decorators
+from helpers.func_utils import oncePerPeriod
 
 
-@decorators.process('techMaintenance')
-def boosterEquip(vehicle, value):
-    if vehicle is not None:
-        result = yield VehicleAutoBattleBoosterEquipProcessor(vehicle, value).request()
-        if result.success:
-            logInfo("The isAutoBattleBoosterEquip is %s for '%s'" % (value, vehicle.userName))
+@oncePerPeriod(2)
+@process
+def changeValue(vehicle, value):
+    yield VehicleAutoBattleBoosterEquipProcessor(vehicle, value).request()
 
 
 def onVehicleChanged():
     if not settings.main[MAIN.DIRECTIVES]:
         return
     vehicle = g_currentVehicle.item
-    if g_currentVehicle.isLocked() or g_currentVehicle.isInBattle():
+    if vehicle is None or vehicle.isLocked or vehicle.isInBattle:
         return
     if not hasattr(vehicle, "battleBoosters") or vehicle.battleBoosters is None:
         logDebug("No battle boosters available for this vehicle: {}", vehicle.name)
         return
-    for battleBooster in vehicle.battleBoosters.installed.getItems():
-        value = battleBooster.inventoryCount > 0
-        if value != vehicle.isAutoBattleBoosterEquip():
-            boosterEquip(vehicle, value)
+    isAuto = vehicle.isAutoBattleBoosterEquip()
+    boosters = vehicle.battleBoosters.installed.getItems()
+    for battleBooster in boosters:
+        value = battleBooster.inventoryCount > 1
+        if value != isAuto:
+            try:
+                changeValue(vehicle, value)
+                logInfo("VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}".format(
+                    value, vehicle.userName, battleBooster.userName))
+            except AdispException as error:
+                logError(repr(error))
+                LOG_CURRENT_EXCEPTION()
 
 
-g_events.onHangarVehicleChanged += onVehicleChanged
+g_currentVehicle.onChanged += onVehicleChanged

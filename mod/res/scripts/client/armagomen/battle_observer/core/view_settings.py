@@ -2,7 +2,6 @@ from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
 from armagomen.utils.common import overrideMethod, xvmInstalled
-from armagomen.utils.events import g_events
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings import config as packages
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -39,7 +38,7 @@ class ViewSettings(object):
         self.isSPG = False
         self.__components = set()
         self.__hiddenComponents = set()
-        g_events.onHangarVehicleChanged += self.onVehicleChanged
+        g_currentVehicle.onChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
         for guiType in BATTLES_RANGE:
             if collectScaleformBattlePackages(guiType):

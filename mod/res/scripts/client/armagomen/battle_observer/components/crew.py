@@ -1,14 +1,14 @@
-from CurrentVehicle import g_currentVehicle, _CurrentVehicle
+from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import MAIN, CREW_XP, getRandomLogo
 from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
 from armagomen.utils.dialogs import CrewDialog
-from armagomen.utils.events import g_events
 from async import async, await
 from frameworks.wulf import WindowLayer
 from gui import SystemMessages
 from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
+from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.shared.gui_items.processors.tankman import TankmanReturn
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
@@ -24,8 +24,6 @@ class CrewProcessor(object):
     def __init__(self):
         self.inProcess = False
         self.dialog = CrewDialog()
-        g_events.onHangarVehicleChanged += self.onVehicleChanged
-        overrideMethod(_CurrentVehicle, "_changeDone")(self.onChangeDone)
         overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
     @staticmethod
@@ -68,15 +66,16 @@ class CrewProcessor(object):
             return False, CREW_XP.NED_TURN_OFF
 
     def onVehicleChanged(self):
-        if not settings.main[MAIN.CREW_TRAINING] or not g_currentVehicle.isPresent() or self.inProcess:
-            return
         vehicle = g_currentVehicle.item
-        if not vehicle.isElite or vehicle.isLocked or vehicle.isInBattle or vehicle.userName in ignored_vehicles:
+        if vehicle is None or vehicle.isLocked or vehicle.isInBattle:
             return
-        acceleration, description = self.isAccelerateTraining(vehicle)
-        if vehicle.isXPToTman != acceleration:
-            self.inProcess = True
-            self.showDialog(vehicle, acceleration, description)
+        if settings.main[MAIN.CREW_RETURN] and not vehicle.isCrewFull:
+            self._processReturnCrew(vehicle)
+        if settings.main[MAIN.CREW_TRAINING] and vehicle.userName not in ignored_vehicles and vehicle.isElite:
+            acceleration, description = self.isAccelerateTraining(vehicle)
+            if vehicle.isXPToTman != acceleration and not self.inProcess:
+                self.inProcess = True
+                self.showDialog(vehicle, acceleration, description)
 
     @decorators.process('crewReturning')
     def _processReturnCrew(self, vehicle):
@@ -84,17 +83,6 @@ class CrewProcessor(object):
         if result.userMsg:
             SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType)
             logInfo("{}: {}".format(vehicle.userName, result.userMsg))
-
-    def onChangeDone(self, base, *args, **kwargs):
-        try:
-            if settings.main[MAIN.CREW_RETURN] and g_currentVehicle.isPresent():
-                vehicle = g_currentVehicle.item
-                if not vehicle.isInBattle and not vehicle.isCrewFull:
-                    self._processReturnCrew(vehicle)
-        except Exception as error:
-            logError("CrewProcessor onChangeDone: " + repr(error))
-        finally:
-            return base(*args, **kwargs)
 
     def onXPExchangeDataChanged(self, base, dialog, data, *args, **kwargs):
         try:
@@ -112,3 +100,10 @@ class CrewProcessor(object):
 
 
 crew = CrewProcessor()
+
+
+@overrideMethod(Hangar, "__onCurrentVehicleChanged")
+@overrideMethod(Hangar, "__updateAll")
+def changeVehicle(base, *args, **kwargs):
+    base(*args, **kwargs)
+    crew.onVehicleChanged()
