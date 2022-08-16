@@ -5,10 +5,8 @@ from armagomen.constants import MAIN
 from armagomen.utils.common import logInfo, logDebug, logError
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
-from helpers.func_utils import oncePerPeriod
 
 
-@oncePerPeriod(2)
 @process
 def changeValue(vehicle, value):
     yield VehicleAutoBattleBoosterEquipProcessor(vehicle, value).request()
@@ -26,7 +24,7 @@ def onVehicleChanged():
     isAuto = vehicle.isAutoBattleBoosterEquip()
     boosters = vehicle.battleBoosters.installed.getItems()
     for battleBooster in boosters:
-        value = battleBooster.inventoryCount > 1
+        value = battleBooster.inventoryCount > 0
         if value != isAuto:
             try:
                 changeValue(vehicle, value)
