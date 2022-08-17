@@ -43,6 +43,14 @@ def getDistanceTo(targetPos):
     return getPlayer().position.distTo(targetPos)
 
 
+def distanceToEntityVehicle(entityID):
+    playerVehiclePosition = getPlayer().getOwnVehiclePosition()
+    entityVehicle = getEntity(entityID)
+    if entityVehicle is not None:
+        return (playerVehiclePosition - entityVehicle.position).length
+    return 0.0
+
+
 def setMaxFrameRate(fps):
     BigWorld.wg_setMaxFrameRate(fps + 1)
     BigWorld.savePreferences()
