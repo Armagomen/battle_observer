@@ -27,7 +27,7 @@ def onVehicleChanged():
         value = battleBooster.inventoryCount > 0
         if value != isAuto:
             try:
-                callback(1.0, lambda: changeValue(vehicle, value))
+                callback(1.0, changeValue, vehicle, value)
                 logInfo("VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}".format(
                     value, vehicle.userName, battleBooster.userName))
             except AdispException as error:

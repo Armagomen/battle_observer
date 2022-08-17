@@ -7,7 +7,7 @@ from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import _view_settings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
-from armagomen.utils.common import overrideMethod, getPlayer, setMaxFrameRate, logDebug
+from armagomen.utils.common import overrideMethod, getPlayer, setMaxFrameRate, logDebug, callback
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
@@ -16,7 +16,6 @@ from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
-from helpers.func_utils import callback
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerView
 
@@ -62,7 +61,7 @@ def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
 def messanger_populate(base, messanger):
     base(messanger)
     if settings.main[MAIN.HIDE_CHAT] and _view_settings.isRandomBattle:
-        callback(2.0, messanger, "_dispose")
+        callback(2.0, messanger._dispose)
 
 
 @overrideMethod(BattleMessengerView, "_dispose")

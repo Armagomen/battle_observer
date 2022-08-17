@@ -4,6 +4,7 @@ import math
 import os
 from collections import namedtuple
 from colorsys import hsv_to_rgb
+from functools import partial
 from io import open as _open
 from shutil import rmtree
 from string import printable
@@ -47,8 +48,8 @@ def setMaxFrameRate(fps):
     BigWorld.savePreferences()
 
 
-def callback(delay, function):
-    return BigWorld.callback(delay, function)
+def callback(delay, callMethod, *args, **kwargs):
+    return BigWorld.callback(delay, partial(callMethod, *args, **kwargs) if args or kwargs else callMethod)
 
 
 def cancelCallback(callbackID):

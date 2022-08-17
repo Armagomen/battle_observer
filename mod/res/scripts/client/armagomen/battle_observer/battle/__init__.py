@@ -5,14 +5,13 @@ from armagomen.battle_observer.components.statistics.statistic_data_loader impor
 from armagomen.battle_observer.core import _view_settings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES, MOD_NAME
-from armagomen.utils.common import logError, logWarning, logInfo, logDebug
+from armagomen.utils.common import logError, logWarning, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
-from helpers.func_utils import callback
 
 
 def getViewSettings():
@@ -63,7 +62,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if self.statistics.enabled:
             if not self.statistics.loaded and self._statLoadTry < 20:
                 self._statLoadTry += 1
-                return callback(0.5, self, "loadStatisticView", view, icons)
+                return callback(0.5, self.loadStatisticView, view, icons)
         cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]

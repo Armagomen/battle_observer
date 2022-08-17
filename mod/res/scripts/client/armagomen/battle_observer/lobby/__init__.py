@@ -2,14 +2,13 @@ from importlib import import_module
 
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES
-from armagomen.utils.common import logError, logWarning, logDebug
+from armagomen.utils.common import logError, logWarning, logDebug, callback
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
-from helpers.func_utils import callback
 
 
 @property
@@ -70,8 +69,8 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if view.settings is None:
             return
         if view.settings.alias == VIEW_ALIAS.LOGIN:
-            callback(1.0, g_events, "onLoginLoaded", view)
+            callback(1.0, g_events.onLoginLoaded, view)
             logDebug("onViewLoaded, alias={}", view.settings.alias)
         elif view.settings.alias == VIEW_ALIAS.LOBBY_HANGAR:
-            callback(1.0, self, "load", view)
+            callback(1.0, self.load, view)
             logDebug("onViewLoaded, alias={}", view.settings.alias)

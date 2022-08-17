@@ -98,7 +98,7 @@ def showTracer(base, avatar, shooterID, *args):
     try:
         if settings.zoom[SNIPER.DISABLE_SNIPER] and settings.zoom[GLOBAL.ENABLED] and not isReplay():
             if shooterID == avatar.playerVehicleID:
-                callback(max(settings.zoom[SNIPER.DISABLE_LATENCY], 0), lambda: changeControlMode(avatar))
+                callback(max(settings.zoom[SNIPER.DISABLE_LATENCY], 0), changeControlMode, avatar)
     except Exception as err:
         logError("I can't get out of sniper mode. Error {0}.changeControlMode, {1}".format(__package__, err))
     finally:

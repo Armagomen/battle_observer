@@ -59,7 +59,7 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
         item = self.basesDict.get(clientID, None)
         if item:
             self.as_updateCaptureTextS(item.getColor(), item.getCapturedString())
-            callback(5.0, lambda: self.removeTeamBase(clientID))
+            callback(5.0, self.removeTeamBase, clientID)
 
     def removeTeamBase(self, clientID):
         if clientID in self.basesDict:

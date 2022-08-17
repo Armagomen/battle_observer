@@ -25,7 +25,7 @@ class PremiumTime(object):
     def startCallback(self, base, header, data):
         self.stopCallback()
         if settings.main[PREMIUM.PREMIUM_TIME] and header.itemsCache.items.stats.isPremium:
-            self.callback = callback(1.0, lambda: self.startCallback(base, header, data))
+            self.callback = callback(1.0, self.startCallback, base, header, data)
             data["doLabel"] = self._getPremiumLabelText(header.itemsCache.items.stats.activePremiumExpiryTime)
         base(header, data)
 
