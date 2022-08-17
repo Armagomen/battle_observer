@@ -2,7 +2,7 @@ from CurrentVehicle import g_currentVehicle
 from adisp import AdispException, process
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
-from armagomen.utils.common import logInfo, logDebug, logError
+from armagomen.utils.common import logInfo, logDebug, logError, callback
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
 
@@ -27,7 +27,7 @@ def onVehicleChanged():
         value = battleBooster.inventoryCount > 0
         if value != isAuto:
             try:
-                changeValue(vehicle, value)
+                callback(1.0, lambda: changeValue(vehicle, value))
                 logInfo("VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}".format(
                     value, vehicle.userName, battleBooster.userName))
             except AdispException as error:
