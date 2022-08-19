@@ -1,10 +1,9 @@
-from CurrentVehicle import g_currentVehicle
+from CurrentVehicle import g_currentVehicle, _CurrentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import MAIN, CREW_XP, getRandomLogo
-from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
+from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles, callback
 from armagomen.utils.dialogs import CrewDialog
-from armagomen.utils.events import g_events
 from async import async, await
 from frameworks.wulf import WindowLayer
 from gui import SystemMessages
@@ -23,8 +22,7 @@ class CrewProcessor(object):
 
     def __init__(self):
         self.inProcess = False
-        self.dialog = CrewDialog()
-        g_events.onVehicleChanged += self.onVehicleChanged
+        overrideMethod(_CurrentVehicle, "_changeDone")(self.onChangeDone)
         overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
     @staticmethod
@@ -34,13 +32,15 @@ class CrewProcessor(object):
 
     @async
     def showDialog(self, vehicle, value, description):
+        self.inProcess = True
+        dialog = CrewDialog()
         app = dependency.instance(IAppLoader).getApp()
         if app is not None and app.containerManager is not None:
             view = app.containerManager.getView(WindowLayer.VIEW)
-            self.dialog.setView(view)
+            dialog.setView(view)
         title = getRandomLogo() + "\n" + vehicle.userName
         message = self.getLocalizedMessage(value, description)
-        dialogResult = yield await(self.dialog.showCrewDialog(title, message, vehicle.userName))
+        dialogResult = yield await(dialog.showCrewDialog(title, message, vehicle.userName))
         if dialogResult:
             self.accelerateCrewXp(vehicle, value)
         self.inProcess = False
@@ -68,15 +68,20 @@ class CrewProcessor(object):
 
     def onVehicleChanged(self):
         vehicle = g_currentVehicle.item
-        if vehicle is None or vehicle.isLocked or vehicle.isInBattle:
+        if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
             return
-        if settings.main[MAIN.CREW_RETURN] and not vehicle.isCrewFull:
-            self._processReturnCrew(vehicle)
         if settings.main[MAIN.CREW_TRAINING] and vehicle.userName not in ignored_vehicles and vehicle.isElite:
             acceleration, description = self.isAccelerateTraining(vehicle)
             if vehicle.isXPToTman != acceleration and not self.inProcess:
-                self.inProcess = True
                 self.showDialog(vehicle, acceleration, description)
+
+    def onChangeDone(self, base, currentVehicle):
+        base(currentVehicle)
+        vehicle = currentVehicle.item
+        if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
+            return
+        if settings.main[MAIN.CREW_RETURN] and not vehicle.isCrewFull:
+            callback(0.5, self._processReturnCrew, vehicle)
 
     @decorators.process('crewReturning')
     def _processReturnCrew(self, vehicle):
