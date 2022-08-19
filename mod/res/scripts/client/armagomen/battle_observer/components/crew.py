@@ -4,6 +4,7 @@ from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import MAIN, CREW_XP, getRandomLogo
 from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles, callback
 from armagomen.utils.dialogs import CrewDialog
+from armagomen.utils.events import g_events
 from async import async, await
 from frameworks.wulf import WindowLayer
 from gui import SystemMessages
@@ -22,7 +23,8 @@ class CrewProcessor(object):
 
     def __init__(self):
         self.inProcess = False
-        overrideMethod(_CurrentVehicle, "_changeDone")(self.onChangeDone)
+        g_events.onVehicleChanged += self.accelerateCrewTraining
+        overrideMethod(_CurrentVehicle, "_changeDone")(self.returnCrew)
         overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
     @staticmethod
@@ -66,21 +68,22 @@ class CrewProcessor(object):
         else:
             return False, CREW_XP.NED_TURN_OFF
 
-    def onVehicleChanged(self):
-        vehicle = g_currentVehicle.item
-        if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
-            return
-        if settings.main[MAIN.CREW_TRAINING] and vehicle.userName not in ignored_vehicles and vehicle.isElite:
+    def accelerateCrewTraining(self):
+        if settings.main[MAIN.CREW_TRAINING]:
+            vehicle = g_currentVehicle.item
+            if vehicle is None or vehicle.userName in ignored_vehicles or not vehicle.isElite or \
+                    vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
+                return
             acceleration, description = self.isAccelerateTraining(vehicle)
             if vehicle.isXPToTman != acceleration and not self.inProcess:
                 self.showDialog(vehicle, acceleration, description)
 
-    def onChangeDone(self, base, currentVehicle):
+    def returnCrew(self, base, currentVehicle):
         base(currentVehicle)
-        vehicle = currentVehicle.item
-        if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
-            return
-        if settings.main[MAIN.CREW_RETURN] and not vehicle.isCrewFull:
+        if settings.main[MAIN.CREW_RETURN]:
+            vehicle = currentVehicle.item
+            if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked or vehicle.isCrewFull:
+                return
             callback(0.5, self._processReturnCrew, vehicle)
 
     @decorators.process('crewReturning')
