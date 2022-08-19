@@ -4,11 +4,11 @@ from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import MAIN, CREW_XP, getRandomLogo
 from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
 from armagomen.utils.dialogs import CrewDialog
+from armagomen.utils.events import g_events
 from async import async, await
 from frameworks.wulf import WindowLayer
 from gui import SystemMessages
 from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
-from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.shared.gui_items.processors.tankman import TankmanReturn
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
@@ -24,6 +24,7 @@ class CrewProcessor(object):
     def __init__(self):
         self.inProcess = False
         self.dialog = CrewDialog()
+        g_events.onVehicleChanged += self.onVehicleChanged
         overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
     @staticmethod
@@ -100,10 +101,3 @@ class CrewProcessor(object):
 
 
 crew = CrewProcessor()
-
-
-@overrideMethod(Hangar, "__onCurrentVehicleChanged")
-@overrideMethod(Hangar, "__updateAll")
-def changeVehicle(base, *args, **kwargs):
-    base(*args, **kwargs)
-    crew.onVehicleChanged()

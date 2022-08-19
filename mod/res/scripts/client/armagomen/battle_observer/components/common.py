@@ -11,6 +11,7 @@ from armagomen.utils.common import overrideMethod, getPlayer, setMaxFrameRate, l
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
+from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.Scaleform.daapi.view.meta.LobbyHeaderMeta import LobbyHeaderMeta
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.controllers import msgs_ctrl
@@ -18,6 +19,13 @@ from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerView
+
+
+@overrideMethod(Hangar, "__onCurrentVehicleChanged")
+@overrideMethod(Hangar, "__updateAll")
+def changeVehicle(base, *args, **kwargs):
+    base(*args, **kwargs)
+    callback(1.0, g_events.onVehicleChanged)
 
 
 # disable field mail tips
