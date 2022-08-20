@@ -25,7 +25,7 @@ from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerVi
 @overrideMethod(Hangar, "__updateAll")
 def changeVehicle(base, *args, **kwargs):
     base(*args, **kwargs)
-    callback(1.0, g_events.onVehicleChanged)
+    callback(0.5, g_events.onVehicleChanged)
 
 
 # disable field mail tips

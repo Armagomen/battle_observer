@@ -1,8 +1,8 @@
-from CurrentVehicle import g_currentVehicle, _CurrentVehicle
+from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import MAIN, CREW_XP, getRandomLogo
-from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles, callback
+from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
 from async import async, await
@@ -22,9 +22,9 @@ class CrewProcessor(object):
     itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
+        self.invID = None
         self.inProcess = False
-        g_events.onVehicleChanged += self.accelerateCrewTraining
-        overrideMethod(_CurrentVehicle, "_changeDone")(self.returnCrew)
+        g_events.onVehicleChanged += self.updateCrew
         overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
     @staticmethod
@@ -78,13 +78,17 @@ class CrewProcessor(object):
             if vehicle.isXPToTman != acceleration and not self.inProcess:
                 self.showDialog(vehicle, acceleration, description)
 
-    def returnCrew(self, base, currentVehicle):
-        base(currentVehicle)
-        if settings.main[MAIN.CREW_RETURN]:
-            vehicle = currentVehicle.item
+    def updateCrew(self):
+        self.returnCrew()
+        self.accelerateCrewTraining()
+
+    def returnCrew(self):
+        if self.invID != g_currentVehicle.invID and settings.main[MAIN.CREW_RETURN]:
+            self.invID = g_currentVehicle.invID
+            vehicle = g_currentVehicle.item
             if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked or vehicle.isCrewFull:
                 return
-            callback(0.5, self._processReturnCrew, vehicle)
+            self._processReturnCrew(vehicle)
 
     @decorators.process('crewReturning')
     def _processReturnCrew(self, vehicle):
