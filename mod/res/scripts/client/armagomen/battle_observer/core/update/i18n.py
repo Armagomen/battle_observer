@@ -50,10 +50,13 @@ uk = {
 }
 
 
+language = getClientLanguage()
+
+
 def getI18n():
-    if getClientLanguage().lower() == 'uk':
-        return ru
-    elif getClientLanguage().lower() in ('ru', 'uk', 'be'):
+    if language == 'uk':
+        return uk
+    elif language in ('ru', 'be'):
         return ru
     else:
         return en

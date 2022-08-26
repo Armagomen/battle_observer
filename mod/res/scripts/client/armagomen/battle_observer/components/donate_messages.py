@@ -10,8 +10,7 @@ from gui.shared.personality import ServicesLocator
 from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-
-if getClientLanguage().lower() in ('ru', 'uk', 'be'):
+if getClientLanguage() in ('ru', 'uk', 'be'):
     messages = (
         "Доброго вечора ми з України.",
         "Підтримай розробку мода, все буде Україна.",

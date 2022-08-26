@@ -9,15 +9,14 @@ from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListene
 from helpers import getClientLanguage
 
 CRITERIA = namedtuple("CRITERIA", ("PLAYER_DAMAGE", "LOW_HEALTH", "TOTAL_HEALTH", "DEALT_MORE"))(0, 1, 2, 3)
-
 DEBUG_STRING = "MainGun: playerDamage={}, maxDamage={}, dealtMoreDamage={}, self.gunLeft={}, criteria={}"
-ln = getClientLanguage().lower()
 
-if ln == 'uk':
+language = getClientLanguage()
+if language == 'uk':
     I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Замало здоров'я у ворога",
                      CRITERIA.DEALT_MORE: "Інший гравець перевищує пошкодження"}
-elif ln in ('ru', 'be'):
-    I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Низкое здоровье врага",
+elif language in ('ru', 'be'):
+    I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Недостаточно здоровья врага",
                      CRITERIA.DEALT_MORE: "Больше урона у другого игрока"}
 else:
     I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Low enemy health",
@@ -68,14 +67,14 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         dealtMoreDamage = maxDamage > playerDamage > self.gunScore
         return dealtMoreDamage, maxDamage, playerDamage
 
-    def updateMainGun(self, criteria=GLOBAL.EMPTY_LINE):
+    def updateMainGun(self, criteria=None):
         dealtMoreDamage, maxDamage, playerDamage = self.checkDamage()
         if not self.isLowHealth:
             self.gunLeft = (maxDamage if dealtMoreDamage else self.gunScore) - playerDamage
             if dealtMoreDamage:
                 criteria = CRITERIA.DEALT_MORE
         self.updateMacrosDict(dealtMoreDamage, criteria)
-        logDebug(DEBUG_STRING, playerDamage, maxDamage, dealtMoreDamage, self.gunLeft, criteria)
+        logDebug(DEBUG_STRING, playerDamage, maxDamage, dealtMoreDamage, self.gunLeft, CRITERIA._fields[criteria])
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def updateMacrosDict(self, dealtMoreDamage, criteria):

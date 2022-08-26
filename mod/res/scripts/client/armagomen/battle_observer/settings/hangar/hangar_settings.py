@@ -17,7 +17,7 @@ LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
 @property
 def LOCKED_MESSAGE():
     pattern = "<font color='#ff3d3d'> {}</font>"
-    language = getClientLanguage().lower()
+    language = getClientLanguage()
     if language in ('ru', 'be'):
         return pattern.format("Функция недоступна, установлен XVM.")
     elif language == "uk":
