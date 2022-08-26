@@ -47,10 +47,10 @@ class Donate(object):
                "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
                "{paypal_img} <a href='event:{paypal}'>PayPal</a>\n" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
-               "</textformat></p>".format(ua=URLS.DONATE_UA_URL, paypal=URLS.PAYPAL_URL,
-                                          patreon=URLS.PATREON_URL, msg=self.lastMessage,
-                                          logo=getRandomLogo(big=False), donat_img=IMG.DONAT_UA,
-                                          patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
+               "</textformat></p>\n{qr}".format(ua=URLS.DONATE_UA_URL, paypal=URLS.PAYPAL_URL,
+                                                patreon=URLS.PATREON_URL, msg=self.lastMessage,
+                                                logo=getRandomLogo(big=False), donat_img=IMG.DONAT_UA,
+                                                patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL, qr=IMG.QR)
 
     @property
     def userInBOFAN(self):
