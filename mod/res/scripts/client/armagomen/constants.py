@@ -152,7 +152,7 @@ __Sniper = namedtuple("SNIPER", (
     "DISABLE_LATENCY", "SKIP_CLIP", "CLIP"))
 SNIPER = __Sniper(
     "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zoomToGunMarker", "zoomXMeters", "zooms",
-    "zoomExposure", "increasedZoom", [2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 16.0, 20.0, 25.0], 0.05, 60, 730.0,
+    "zoomExposure", "increasedZoom", [float(x) for x in xrange(2, 26, 2)], 0.05, 60, 730.0,
     "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip")
 
 
@@ -264,9 +264,6 @@ MARKERS = namedtuple("MARKERS", ("NAME", "HOT_KEY", "CLASS_COLOR", "TYPE_ICON", 
 CAROUSEL = namedtuple("CAROUSEL", ("NAME", "SMALL", "ROWS", "SETTINGS"))(
     "tank_carousel", "smallDoubleCarousel", "carouselRows", {GAME.CAROUSEL_TYPE: None, GAME.DOUBLE_CAROUSEL_TYPE: None})
 
-USER_BACKGROUND = namedtuple("USER_BACKGROUND", ("NAME", "CENTERED_X", "CENTERED_Y", "LAYER"))(
-    "user_background", "centeredX", "centeredY", "layer")
-
 FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TEMPLATE", "M_FLIGHT_TIME", "M_DISTANCE", "ALIGN"))(
     "flight_time", "spgOnly", "template", "flightTime", "distance", "align")
 
@@ -312,13 +309,12 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
 ALIASES = namedtuple("ALIASES", (
-    "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE",
-    "TEAM_BASES", "ARMOR_CALC", "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH",
-    "USER_BACKGROUND", "PANELS"))(
+    "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC",
+    "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "PANELS"))(
     "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
-    "Observer_OwnHealth_UI", "Observer_UserBackGround_UI", "Observer_PlayersPanels_UI")
+    "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI")
 
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
     "distance_to_enemy", "template", "align", "distance", "name")
@@ -364,7 +360,6 @@ class PANELS:
     # another
     SPOTTED_FIX = "panels_spotted_fix"
     DAMAGE = "damage"
-    TEAM = ("green", "red")
 
 
 SAVE_SHOOT = namedtuple("SAVE_SHOOT", ("NAME", "MSG", "TEMPLATE", "DESTROYED_BLOCK", "VEHICLE", "TEAM", "HOT_KEY"))(
@@ -388,8 +383,8 @@ LOAD_LIST = (
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
     DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.DONE_EXTENDED, DAMAGE_LOG.RECEIVED_EXTENDED, SAVE_SHOOT.NAME,
-    SIXTH_SENSE.NAME, USER_BACKGROUND.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, CLOCK.NAME, DISTANCE.NAME,
-    OWN_HEALTH.NAME, STATISTICS.NAME
+    SIXTH_SENSE.NAME, ANOTHER.SHADOW_SETTINGS, CAROUSEL.NAME, CLOCK.NAME, DISTANCE.NAME, OWN_HEALTH.NAME,
+    STATISTICS.NAME
 )
 
 
@@ -488,7 +483,6 @@ ALIAS_TO_PATH = {
     ALIASES.FLIGHT_TIME: (".flight_time", ALIASES.FLIGHT_TIME[9:-3]),
     ALIASES.DISPERSION_TIMER: (".dispersion_timer", ALIASES.DISPERSION_TIMER[9:-3]),
     ALIASES.PANELS: (".players_panels", ALIASES.PANELS[9:-3]),
-    ALIASES.USER_BACKGROUND: (".user_background", ALIASES.USER_BACKGROUND[9:-3]),
     ALIASES.DATE_TIME: (".date_times", ALIASES.DATE_TIME[9:-3]),
     ALIASES.DISTANCE: (".distance_to_enemy", ALIASES.DISTANCE[9:-3]),
     ALIASES.OWN_HEALTH: (".own_health", ALIASES.OWN_HEALTH[9:-3])
@@ -506,7 +500,6 @@ ALIAS_TO_CONFIG_NAME = {
     ALIASES.FLIGHT_TIME: FLIGHT_TIME.NAME,
     ALIASES.DISPERSION_TIMER: DISPERSION.NAME,
     ALIASES.PANELS: PANELS.PANELS_NAME,
-    ALIASES.USER_BACKGROUND: USER_BACKGROUND.NAME,
     ALIASES.DATE_TIME: CLOCK.NAME,
     ALIASES.DISTANCE: DISTANCE.NAME,
     ALIASES.OWN_HEALTH: OWN_HEALTH.NAME

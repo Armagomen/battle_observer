@@ -7,7 +7,7 @@ from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL,
     DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS,
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
-    TEAM_BASES, USER_BACKGROUND, VEHICLE_TYPES, PREMIUM, DISTANCE, OWN_HEALTH, STATISTICS,
+    TEAM_BASES, VEHICLE_TYPES, PREMIUM, DISTANCE, OWN_HEALTH, STATISTICS,
 )
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -46,22 +46,6 @@ class DefaultSettings(object):
             MAIN.STUN_SOUND: False,
             MAIN.HIDE_MAIN_CHAT: False,
             MAIN.HIDE_BTN_COUNTERS: False
-        }
-        self.user_background = {
-            GLOBAL.ENABLED: False,
-            USER_BACKGROUND.NAME: [{
-                GLOBAL.SMOOTHING: True,
-                GLOBAL.X: GLOBAL.ZERO,
-                GLOBAL.Y: GLOBAL.ZERO,
-                GLOBAL.ALPHA: 0.9,
-                GLOBAL.IMG: "mods/configs/mod_battle_observer/*.png",
-                GLOBAL.WIDTH: 300,
-                GLOBAL.HEIGHT: 150,
-                USER_BACKGROUND.CENTERED_X: False,
-                USER_BACKGROUND.CENTERED_Y: False,
-                GLOBAL.ENABLED: False,
-                USER_BACKGROUND.LAYER: GLOBAL.EMPTY_LINE
-            }]
         }
         self.tank_carousel = {
             GLOBAL.ENABLED: False,

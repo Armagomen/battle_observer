@@ -15,7 +15,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.FlightTimeUI;
 	import net.armagomen.battleobserver.battle.components.ObserverDateTimesUI;
 	import net.armagomen.battleobserver.battle.components.OwnHealthUI;
-	import net.armagomen.battleobserver.battle.components.UserBackGroundUI;
 	import net.armagomen.battleobserver.battle.components.battletimer.ObserverBattleTimerUI;
 	import net.armagomen.battleobserver.battle.components.debugpanel.ObserverDebugPanelUI;
 	import net.armagomen.battleobserver.battle.components.maingun.MainGunUI;
@@ -44,11 +43,6 @@ package net.armagomen.battleobserver
 				{
 					switch (alias)
 					{
-					case "Observer_UserBackGround_UI": 
-						var background:UserBackGroundUI = new UserBackGroundUI();
-						this.registerComponent(background, alias);
-						this.addChildAt(background, 0);
-						break;
 					case "Observer_TeamsHP_UI": 
 						var teamHealthUI:TeamsHealthUI = new TeamsHealthUI();
 						this.registerComponent(teamHealthUI, alias);
@@ -117,7 +111,6 @@ package net.armagomen.battleobserver
 					case "Observer_PlayersPanels_UI": 
 						var playersPanel:PlayersPanelsUI = new PlayersPanelsUI(this);
 						this.registerComponent(playersPanel, alias);
-						//this.addChild(playersPanel);
 						break;
 					default: 
 						DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);

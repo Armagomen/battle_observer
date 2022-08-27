@@ -1,19 +1,20 @@
 __version__ = "1.38.8"
 
+from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError
 from helpers import getShortClientVersion
 
 loadError = False
 errorMessage = ""
 shortClientVersion = getShortClientVersion()
 
+
 try:
-    from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError
     from gui.modsListApi import g_modsListApi
     from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
 except ImportError as err:
+    loadError = True
     errorMessage = repr(err)
     logError(errorMessage)
-    loadError = True
 else:
     if isFileValid(__version__):
         from sys import version as python_version
