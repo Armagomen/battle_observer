@@ -26,24 +26,21 @@ def getRandomLogo(big=True):
     return "<img src='{}/logo/small/logo{}.png' width='220' height='22' vspace='10'>".format(IMAGE_DIR, number)
 
 
-IMG = namedtuple("IMG", "DONAT_UA DONATIONALERTS PATREON PAYPAL QR")(
-    "<img src='{}/donatua.png' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donationalerts.png' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/patreon.png' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/paypal.png' vspace='-3'>".format(IMAGE_DIR),
+IMG = namedtuple("IMG", "DONAT_UA PATREON PAYPAL QR")(
+    "<img src='{}/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='{}/donate-qr.png' width='212' height='212' vspace='0'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
-    "HOST_NAME",
     "DONATE_UA_URL",
     "PAYPAL_URL",
     "UPDATE_GITHUB_API_URL",
     "PATREON_URL",
     "CLAN_ABBREV",
     "DISCORD"
-))("http://armagomen-mods.at.ua",
-   "https://donatua.com/@armagomen",
+))("https://donatua.com/@armagomen",
    "https://www.paypal.com/donate/?hosted_button_id=T5D6TZY9DGXBL",
    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
    "https://www.patreon.com/armagomen",
