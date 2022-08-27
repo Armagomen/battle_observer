@@ -18,7 +18,7 @@ _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE = {
     BATTLE_LOG_SHELL_TYPES.SMOKE: SHELL_TYPES.SMOKE
 }
 
-LogData = namedtuple('LogData', ['kills', 'id_list', 'vehicles'])
+LogData = namedtuple('LogData', 'kills id_list vehicles')
 
 
 class DamageLog(DamageLogsMeta):
@@ -49,11 +49,6 @@ class DamageLog(DamageLogsMeta):
                                      self.settings.log_input_extended[GLOBAL.ENABLED])
         if self.extended_log_enabled:
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_global[DAMAGE_LOG.HOT_KEY])
-
-    def _dispose(self):
-        DAMAGE_LOG.AVG_DAMAGE_DATA = 0
-        DAMAGE_LOG.AVG_ASSIST_DATA = 0
-        super(DamageLog, self)._dispose()
 
     def isLogEnabled(self, eventType):
         if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:

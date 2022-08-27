@@ -80,13 +80,12 @@ class GLOBAL:
                   "vspace": "vspace='-13'"}
     INNER = "inner"
     KNOCKOUT = "knockout"
-    ONE = 1
+    ONE, TWO = (1, 2)
     OUTLINE = "outline"
     SCALE = "scale"
     SETTINGS = "settings"
     SMOOTHING = "smoothing"
     STRENGTH = "strength"
-    TWO = 2
     WIDTH = "width"
     X = "x"
     Y = "y"
@@ -167,8 +166,8 @@ class DAMAGE_LOG:
     ATTACK_REASON = "attackReason"
     AVG_DAMAGE = "tankAvgDamage"
     AVG_ASSIST = "tankAvgAssist"
-    AVG_DAMAGE_DATA = 0
-    AVG_ASSIST_DATA = 0
+    AVG_DAMAGE_DATA = GLOBAL.ZERO
+    AVG_ASSIST_DATA = GLOBAL.ZERO
     BLOCKED_DAMAGE = "blockedDamage"
     CLASS_COLOR = "tankClassColor"
     CLASS_ICON = "classIcon"

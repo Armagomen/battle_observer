@@ -7,7 +7,7 @@ from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import _view_settings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
-from armagomen.utils.common import overrideMethod, getPlayer, setMaxFrameRate, logDebug, callback
+from armagomen.utils.common import overrideMethod, getPlayer, setMaxFrameRate, logDebug, callback, logError
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
@@ -132,6 +132,8 @@ def onModSettingsChanged(_settings, blockID):
 
 def onArenaCreated():
     if settings.log_total[GLOBAL.ENABLED]:
+        DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO
+        DAMAGE_LOG.AVG_ASSIST_DATA = GLOBAL.ZERO
         try:
             dossier = g_currentVehicle.getDossier()
             if dossier:
@@ -144,8 +146,8 @@ def onArenaCreated():
                     assist = int(math.floor(assist))
                     DAMAGE_LOG.AVG_ASSIST_DATA = assist
                 logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
-        except AttributeError:
-            DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO
+        except Exception as error:
+            logError(repr(error))
 
 
 g_playerEvents.onArenaCreated += onArenaCreated
