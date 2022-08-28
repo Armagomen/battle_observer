@@ -87,3 +87,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         icons = _view_settings.isIconsEnabled()
         if icons or self.statistics.enabled:
             self.loadStatisticView(view, icons)
+
+
+logInfo("package {} loaded".format(__package__))
+print getViewSettings()

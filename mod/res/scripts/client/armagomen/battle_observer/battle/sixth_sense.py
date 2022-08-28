@@ -22,8 +22,10 @@ class SixthSense(SixthSenseMeta):
         super(SixthSense, self)._populate()
         self.macro[SIXTH_SENSE.M_TIME] = self.settings[SIXTH_SENSE.TIME]
         if self.settings[SIXTH_SENSE.SHOW_TIMER]:
-            self._timer = SixthSenseTimer(self.handleTimer, self.as_hideS,
-                                          self._arenaVisitor.type.getCountdownTimerSound())
+            soundID = None
+            if self.settings[SIXTH_SENSE.PLAY_TICK_SOUND]:
+                soundID = self._arenaVisitor.type.getCountdownTimerSound()
+            self._timer = SixthSenseTimer(self.handleTimer, self.hide, soundID=soundID)
 
     def onEnterBattlePage(self):
         super(SixthSense, self).onEnterBattlePage()
@@ -58,9 +60,9 @@ class SixthSense(SixthSenseMeta):
     def show(self):
         self.as_showS()
         if self._timer is not None:
-            self._timer.start(self.settings[SIXTH_SENSE.TIME], self.settings[SIXTH_SENSE.PLAY_TICK_SOUND])
+            self._timer.start(self.settings[SIXTH_SENSE.TIME])
         else:
-            callback(float(self.settings[SIXTH_SENSE.TIME]), self.as_hideS)
+            callback(float(self.settings[SIXTH_SENSE.TIME]), self.hide)
 
     def hide(self):
         if self._timer is not None:

@@ -8,19 +8,16 @@ CONSTANTS = namedtuple("CONSTANTS", ("ONE_SECOND", "ZERO", "ONE"))(1.0, 0, 1)
 
 
 class Timer(object):
-    __slots__ = ("_callback", "_func_hide")
+    __slots__ = ("_callback",)
 
     def __init__(self):
         self._callback = None
-        self._func_hide = None
 
     def stop(self):
         """handle stop timer, callback will be stopped on next cycle tick after timeout"""
         if self._callback is not None:
             cancelCallback(self._callback)
             self._callback = None
-            if self._func_hide is not None:
-                self._func_hide()
 
     def start(self, *args):
         if self._callback is not None:
@@ -31,7 +28,7 @@ class Timer(object):
 class SixthSenseTimer(Timer):
     __slots__ = ("_callback", "_func_hide", "_func_update", "_play_sound", "__sounds", "__soundID")
 
-    def __init__(self, update, hide, soundID):
+    def __init__(self, update, hide, soundID=None):
         super(SixthSenseTimer, self).__init__()
         self._func_update = update
         self._func_hide = hide
@@ -49,17 +46,18 @@ class SixthSenseTimer(Timer):
                 sound.stop()
             sound.play()
 
-    def timeTicking(self, seconds, play_sound):
+    def timeTicking(self, seconds):
         if seconds <= CONSTANTS.ZERO:
-            return self.stop()
-        self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE, play_sound))
+            return self._func_hide()
+        self._callback = None
+        self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE))
         self._func_update(seconds)
-        if play_sound:
+        if self.__soundID is not None:
             self.callWWISE(self.__soundID)
 
-    def start(self, seconds, play_sound):
+    def start(self, seconds):
         super(SixthSenseTimer, self).start()
-        self.timeTicking(seconds, play_sound)
+        self.timeTicking(seconds)
 
     def destroy(self):
         for sound in self.__sounds.values():

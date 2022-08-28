@@ -105,8 +105,6 @@ class ViewSettings(object):
         elif alias is ALIASES.PANELS:
             return not xvmInstalled and settings.players_panels[
                 GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
-        elif alias is ALIASES.USER_BACKGROUND:
-            return settings.user_background[GLOBAL.ENABLED] and self.notEpicBattle
         elif alias is ALIASES.DATE_TIME:
             return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is ALIASES.DISTANCE:
