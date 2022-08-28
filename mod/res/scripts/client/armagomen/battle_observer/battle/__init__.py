@@ -90,4 +90,3 @@ class ObserverBusinessHandler(PackageBusinessHandler):
 
 
 logInfo("package {} loaded".format(__package__))
-print getViewSettings()
