@@ -13,6 +13,8 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
+__all__ = ()
+
 
 def getViewSettings():
     viewSettings = []

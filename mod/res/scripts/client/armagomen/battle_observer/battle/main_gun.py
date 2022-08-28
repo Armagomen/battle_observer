@@ -73,6 +73,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.gunLeft = (maxDamage if dealtMoreDamage else self.gunScore) - playerDamage
             if dealtMoreDamage:
                 criteria = CRITERIA.DEALT_MORE
+        else:
+            criteria = CRITERIA.LOW_HEALTH
         self.updateMacrosDict(dealtMoreDamage, criteria)
         logDebug(DEBUG_STRING, playerDamage, maxDamage, dealtMoreDamage, self.gunLeft, CRITERIA._fields[criteria])
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
