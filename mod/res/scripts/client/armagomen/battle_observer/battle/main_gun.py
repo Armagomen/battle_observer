@@ -4,23 +4,19 @@ from math import ceil
 
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL
-from armagomen.utils.common import logDebug
+from armagomen.utils.common import logError
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from helpers import getClientLanguage
 
 CRITERIA = namedtuple("CRITERIA", ("PLAYER_DAMAGE", "LOW_HEALTH", "TOTAL_HEALTH", "DEALT_MORE"))(0, 1, 2, 3)
-DEBUG_STRING = "MainGun: playerDamage={}, maxDamage={}, dealtMoreDamage={}, self.gunLeft={}, criteria={}"
 
 language = getClientLanguage()
 if language == 'uk':
-    I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Замало здоров'я у ворога",
-                     CRITERIA.DEALT_MORE: "Інший гравець перевищує пошкодження"}
+    I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Низьке здоров'я ворога"}
 elif language in ('ru', 'be'):
-    I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Недостаточно здоровья врага",
-                     CRITERIA.DEALT_MORE: "Больше урона у другого игрока"}
+    I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Низкое здоровье врага"}
 else:
-    I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Low enemy health",
-                     CRITERIA.DEALT_MORE: "More damage from another player"}
+    I18N_CRITERIA = {CRITERIA.LOW_HEALTH: "Low enemy health"}
 
 
 class MainGun(MainGunMeta, IBattleFieldListener):
@@ -33,6 +29,9 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.isLowHealth = False
         self.totalEnemiesHP = GLOBAL.ZERO
         self.playersDamage = defaultdict(int)
+        self.playerDamage = GLOBAL.ZERO
+        self.maxDamage = GLOBAL.ZERO
+        self.dealtMoreDamage = False
 
     def onEnterBattlePage(self):
         super(MainGun, self).onEnterBattlePage()
@@ -61,35 +60,31 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(ceil(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
             self.updateMainGun(criteria=CRITERIA.TOTAL_HEALTH)
 
-    def checkDamage(self):
-        playerDamage = self.playersDamage[self._player.playerVehicleID]
-        maxDamage = max(self.playersDamage.itervalues())
-        dealtMoreDamage = maxDamage > playerDamage > self.gunScore
-        return dealtMoreDamage, maxDamage, playerDamage
-
     def updateMainGun(self, criteria=None):
-        dealtMoreDamage, maxDamage, playerDamage = self.checkDamage()
+        if criteria is None:
+            return logError("MainGun/updateMainGun: wrong criteria=None")
         if not self.isLowHealth:
-            self.gunLeft = (maxDamage if dealtMoreDamage else self.gunScore) - playerDamage
-            if dealtMoreDamage:
-                criteria = CRITERIA.DEALT_MORE
-        else:
+            self.gunLeft = (self.maxDamage if self.dealtMoreDamage else self.gunScore) - self.playerDamage
+        elif criteria == CRITERIA.PLAYER_DAMAGE:
             criteria = CRITERIA.LOW_HEALTH
-        self.updateMacrosDict(dealtMoreDamage, criteria)
-        logDebug(DEBUG_STRING, playerDamage, maxDamage, dealtMoreDamage, self.gunLeft, CRITERIA._fields[criteria])
+        self.updateMacrosDict(criteria)
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
-    def updateMacrosDict(self, dealtMoreDamage, criteria):
+    def updateMacrosDict(self, criteria):
         achieved = self.gunLeft <= GLOBAL.ZERO
         self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved or self.isLowHealth else self.gunLeft
         self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON] if achieved else GLOBAL.EMPTY_LINE
-        if not achieved and (self.isLowHealth or dealtMoreDamage):
+        if not achieved and self.isLowHealth:
             self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON] + I18N_CRITERIA[criteria]
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
 
     def onPlayersDamaged(self, targetID, attackerID, damage):
-        if self._arenaDP.isAlly(attackerID):
+        if self._arenaDP.isAlly(attackerID) and not self.isLowHealth:
             self.playersDamage[attackerID] += damage
-            if attackerID == self._player.playerVehicleID:
-                self.updateMainGun(criteria=CRITERIA.PLAYER_DAMAGE)
+            if self.playersDamage[attackerID] > self.maxDamage:
+                self.maxDamage = self.playersDamage[attackerID]
+            self.playerDamage = self.playersDamage[self._player.playerVehicleID]
+            self.dealtMoreDamage = self.maxDamage > self.playerDamage > self.gunScore
+            if attackerID == self._player.playerVehicleID or self.dealtMoreDamage:
+                self.updateMainGun(criteria=CRITERIA.PLAYER_DAMAGE if not self.dealtMoreDamage else CRITERIA.DEALT_MORE)
