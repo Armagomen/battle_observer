@@ -17,6 +17,7 @@ from BattleReplay import isPlaying, isLoading
 from armagomen.battle_observer.settings.default_settings import settings
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
 from helpers.http import openUrl
+from external_strings_utils import unicode_from_utf8
 
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
@@ -82,8 +83,8 @@ def logWarning(message):
 
 
 def getPreferencesDir():
-    normpath = os.path.normpath(unicode(BigWorld.wg_getPreferencesFilePath(), 'utf-8', errors='ignore'))
-    return os.path.split(normpath)[0]
+    preferencesFilePath = unicode_from_utf8(BigWorld.wg_getPreferencesFilePath())[1]
+    return os.path.normpath(os.path.dirname(preferencesFilePath))
 
 
 preferencesDir = getPreferencesDir()
