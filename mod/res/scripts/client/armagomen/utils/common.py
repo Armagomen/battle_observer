@@ -139,9 +139,9 @@ def cleanupUpdates():
         logInfo("cleanup updates: {}".format(link))
 
 
-def removeDirs(normpath, name=None):
-    if os.path.exists(normpath):
-        rmtree(normpath, ignore_errors=True, onerror=None)
+def removeDirs(path, name=None):
+    if os.path.exists(path):
+        rmtree(path, ignore_errors=True, onerror=None)
         if name is not None:
             logInfo('CLEANING CACHE: {0}'.format(name))
 
