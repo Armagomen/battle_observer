@@ -15,9 +15,9 @@ import ResMgr
 
 from BattleReplay import isPlaying, isLoading
 from armagomen.battle_observer.settings.default_settings import settings
+from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
 from helpers.http import openUrl
-from external_strings_utils import unicode_from_utf8
 
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
@@ -106,20 +106,17 @@ def vector3(x, y, z):
     return Math.Vector3(x, y, z)
 
 
-modPathCache = None
 cwd = os.getcwdu() if os.path.supports_unicode_filenames else os.getcwd()
 
 
-def getCurrentModPath():
-    global modPathCache
-    if modPathCache is None:
-        for sec in ResMgr.openSection(os.path.join(cwd, 'paths.xml'))['Paths'].values():
-            if './mods/' in sec.asString:
-                modPathCache = os.path.split(os.path.realpath(os.path.join(cwd, os.path.normpath(sec.asString))))
-    return modPathCache
+def getCurrentModsPath():
+    for sec in ResMgr.openSection(os.path.join(cwd, 'paths.xml'))['Paths'].values():
+        if './mods/' in sec.asString:
+            return os.path.split(os.path.realpath(os.path.join(cwd, os.path.normpath(sec.asString))))
 
 
-configsPath = os.path.join(getCurrentModPath()[0], "configs", "mod_battle_observer")
+modsPath, gameVersion = getCurrentModsPath()
+configsPath = os.path.join(modsPath, "configs", "mod_battle_observer")
 if not os.path.exists(configsPath):
     os.makedirs(configsPath)
 
@@ -196,8 +193,7 @@ def getObserverCachePath():
 
 
 def isXvmInstalled():
-    mods, version = getCurrentModPath()
-    xfw = os.path.exists(os.path.join(mods, version, 'com.modxvm.xfw'))
+    xfw = os.path.exists(os.path.join(modsPath, gameVersion, 'com.modxvm.xfw'))
     xvm = os.path.exists(os.path.join(cwd, 'res_mods', 'mods', 'xfw_packages', 'xvm_main'))
     return xfw and xvm
 
@@ -307,4 +303,4 @@ def getPercent(param_a, param_b):
 
 def isFileValid(version):
     FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-    return FILE_NAME.format(version) in os.listdir(os.path.join(*getCurrentModPath()))
+    return FILE_NAME.format(version) in os.listdir(os.path.join(modsPath, gameVersion))

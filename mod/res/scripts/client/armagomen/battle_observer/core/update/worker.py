@@ -6,7 +6,7 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer.core.update.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS, getRandomLogo
-from armagomen.utils.common import logInfo, logError, getCurrentModPath, urlResponse, getUpdatePath
+from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, urlResponse, getUpdatePath
 from armagomen.utils.dialogs import UpdateDialogs
 from armagomen.utils.events import g_events
 from async import async, await
@@ -41,7 +41,7 @@ class DownloadThread(object):
         self.updateData = defaultdict()
         self.dialogs = UpdateDialogs()
         self.downloader = None
-        self.modPath = os.path.join(*getCurrentModPath())
+        self.modPath = os.path.join(modsPath, gameVersion)
 
     def startDownload(self):
         Waiting.show(WAITING_UPDATE)
