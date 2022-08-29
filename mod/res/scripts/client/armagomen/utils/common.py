@@ -131,12 +131,12 @@ def cleanupUpdates():
     if section['game']['upcoming_patches']:
         for value in section['game']['upcoming_patches'].values():
             ignored.update(val.asString.split("\\")[0] for val in value.values())
-    contents = [os.path.join(path, i) for i in os.listdir(path) if i not in ignored]
-    # Iterate and remove each item in the appropriate manner
-    if contents:
-        for i in contents:
-            os.unlink(i) if os.path.isfile(i) or os.path.islink(i) else rmtree(i, ignore_errors=True)
-            logInfo("cleanup updates: {}".format(i))
+    for _link in os.listdir(path):
+        if _link in ignored:
+            continue
+        link = os.path.join(path, _link)
+        os.unlink(link) if os.path.isfile(link) or os.path.islink(link) else rmtree(link, ignore_errors=True)
+        logInfo("cleanup updates: {}".format(link))
 
 
 def removeDirs(normpath, name=None):
