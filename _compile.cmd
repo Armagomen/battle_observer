@@ -1,11 +1,11 @@
 @Echo off
 set ModVer=1.38.9
 
-REM set WotVer=1.18.0.0
-REM set ModsDir=C:\Games\World_of_Tanks_RU\mods
+set WotVer=1.18.0.0
+set ModsDir=C:\Games\World_of_Tanks_EU\mods
 
-set WotVer="1.18.0.0 Common Test"
-set ModsDir=C:\Games\World_of_Tanks_CT\mods
+REM set WotVer="1.18.0.0 Common Test"
+REM set ModsDir=C:\Games\World_of_Tanks_CT\mods
 
 "python.exe" bo_compile_all.py -f -q -d scripts mod\res\scripts
 
@@ -16,12 +16,11 @@ DEL %ModsDir%\%WotVer%\armagomen.battleObserver*
 DEL %ModsDir%\%WotVer%\temp*
 DEL %ModsDir%\%WotVer%\readme*
 DEL ..\BattleObserver_*
-set AutoUpdate=..\AutoUpdate.zip
-DEL %AutoUpdate%
+DEL ..\AutoUpdate.zip
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py -x!*.cmd %ModFile% .\mod\*
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %ZipArh% %ModsDir%\%WotVer%\ %ModsDir%\configs\
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% %AutoUpdate% %ModsDir%\%WotVer%\*
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %ToExclude% ..\AutoUpdate.zip %ModsDir%\%WotVer%\*
 
 DEL /s /q *.pyc
 exit

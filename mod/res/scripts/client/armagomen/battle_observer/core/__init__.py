@@ -1,12 +1,11 @@
 __version__ = "1.38.9"
 
-from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError
-from helpers import getShortClientVersion
+from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion
 
 loadError = False
 errorMessage = ""
-shortClientVersion = getShortClientVersion()
 
+__all__ = (__version__,)
 
 try:
     from gui.modsListApi import g_modsListApi
@@ -16,7 +15,7 @@ except ImportError as err:
     errorMessage = repr(err)
     logError(errorMessage)
 else:
-    if isFileValid(__version__):
+    if isFileValid(__version__) and not loadError:
         from sys import version as python_version
         from armagomen.battle_observer.core.view_settings import ViewSettings
         from armagomen.battle_observer.core.update.worker import UpdateMain
@@ -25,7 +24,7 @@ else:
         from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
 
         logInfo("Launched at python v{}".format(python_version))
-        logInfo('MOD START LOADING: v{} - {}'.format(__version__, shortClientVersion))
+        logInfo('MOD START LOADING: v{} - {}'.format(__version__, gameVersion))
         update = UpdateMain(__version__)
         _view_settings = ViewSettings()
         componentsLoader = ComponentsLoader()
@@ -50,4 +49,4 @@ def fini():
         return
     clearClientCache()
     cleanupUpdates()
-    logInfo('MOD SHUTTING DOWN: v{} - {}'.format(__version__, shortClientVersion))
+    logInfo('MOD SHUTTING DOWN: v{} - {}'.format(__version__, gameVersion))
