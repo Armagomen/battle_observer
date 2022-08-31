@@ -1,7 +1,7 @@
 {
   "DEBUG_MODE": false, 
-  "anonymousEnableShow": false, 
-  "anonymousNameChange": false, 
+  "anonymousEnableShow": true, 
+  "anonymousNameChange": true, 
   "anonymousString": "Anonymous", 
   "autoClearCache": false, 
   "auto_crew_training": true, 
@@ -14,6 +14,7 @@
   "hideBadges": true, 
   "hideChatInRandom": false, 
   "hideClanAbbrev": true, 
+  "hide_button_counters_on_top_panel": true, 
   "hide_dog_tags": true, 
   "hide_field_mail": true, 
   "hide_hint_panel": true, 

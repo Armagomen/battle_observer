@@ -3,7 +3,7 @@
   "differenceHP": true, 
   "enabled": true, 
   "markers": {
-    "enabled": false, 
+    "enabled": true, 
     "markersClassColor": false, 
     "showMarkers_hotkey": [
       82
@@ -13,7 +13,7 @@
   }, 
   "outline": {
     "color": "#FAFAFA", 
-    "enabled": false
+    "enabled": true
   }, 
   "showAliveCount": false, 
   "style": "league"

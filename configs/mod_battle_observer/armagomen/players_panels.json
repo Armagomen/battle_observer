@@ -12,9 +12,9 @@
   "players_bars_on_key_pressed": false, 
   "players_bars_settings": {
     "players_bars_bar": {
-      "height": 22, 
+      "height": 20, 
       "outline": {
-        "alpha": 0.4, 
+        "alpha": 0.5, 
         "color": "#FAFAFA", 
         "customColor": false, 
         "enabled": true
@@ -26,7 +26,7 @@
     "players_bars_text": {
       "align": "center", 
       "x": 35, 
-      "y": 0
+      "y": -2
     }
   }, 
   "players_damages_enabled": true, 
@@ -37,7 +37,7 @@
   ], 
   "players_damages_settings": {
     "align": "right", 
-    "x": -45, 
+    "x": -40, 
     "y": 0
   }, 
   "players_damages_text": "<font color='#FFFF00'>%(damage)s</font>"

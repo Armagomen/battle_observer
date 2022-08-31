@@ -12,7 +12,7 @@
   "noDamage": "Без урона", 
   "position": {
     "x": 0, 
-    "y": 30
+    "y": 20
   }, 
   "ricochet": "Рикошет", 
   "template": "<p align='center'>%(ricochet)s%(noDamage)s<br><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>"

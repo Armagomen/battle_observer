@@ -30,8 +30,8 @@
     "y": 0
   }, 
   "shellColor": {
-    "normal": "#FAFAFA",
-    "gold": "#FFD700"
+    "gold": "#FFD700", 
+    "normal": "#FAFAFA"
   }, 
   "shellIcons": {
     "ARMOR_PIERCING": "", 
@@ -40,11 +40,13 @@
     "ARMOR_PIERCING_HE": "", 
     "ARMOR_PIERCING_PREMIUM": "", 
     "HIGH_EXPLOSIVE": "", 
+    "HIGH_EXPLOSIVE_MODERN_PREMIUM": "", 
     "HIGH_EXPLOSIVE_PREMIUM": "", 
     "HIGH_EXPLOSIVE_SPG": "", 
     "HIGH_EXPLOSIVE_SPG_STUN": "", 
     "HOLLOW_CHARGE": "", 
     "HOLLOW_CHARGE_PREMIUM": "", 
+    "NO_HIGH_EXPLOSIVE_MODERN_PREMIUM": "", 
     "SMOKE": ""
   }, 
   "shellTypes": {

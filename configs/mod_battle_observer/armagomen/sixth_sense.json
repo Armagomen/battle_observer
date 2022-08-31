@@ -1,9 +1,9 @@
 {
   "enabled": true, 
   "image": {
-    "alpha": 0.90, 
+    "alpha": 0.9, 
     "img": "mods/configs/mod_battle_observer/armagomen/SixthSenseIcon.png", 
-    "scale": 0.5, 
+    "scale": 0.6, 
     "smoothing": true, 
     "x": 0, 
     "y": 100
@@ -12,9 +12,9 @@
   "playTickSound": true, 
   "showTimer": true, 
   "timer": {
-    "TimerTemplate": "<font size='30' color='#fafafa'><b>%(timeLeft)d</b></font>", 
+    "TimerTemplate": "<font size='34' color='#fafafa'><b>%(timeLeft)d</b></font>", 
     "alpha": 1.0, 
     "x": -1, 
-    "y": 110
+    "y": 125
   }
 }

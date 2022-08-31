@@ -4,13 +4,10 @@
   "real_view_radius": true, 
   "showDeathNames": false, 
   "yaw_limits": true, 
-  "zoom": {
-    "enabled": true, 
-    "indent": 180, 
-    "zoom_hotkey": [
-      [
-        29
-      ]
+  "zoom": true, 
+  "zoom_hotkey": [
+    [
+      29
     ]
-  }
+  ]
 }
