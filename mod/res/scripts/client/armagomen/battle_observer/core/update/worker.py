@@ -1,6 +1,6 @@
 import os
 import re
-from collections import defaultdict, namedtuple
+from collections import namedtuple
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
@@ -38,7 +38,7 @@ class DownloadThread(object):
     def __init__(self):
         self.version = None
         self.i18n = getI18n()
-        self.updateData = defaultdict()
+        self.updateData = dict()
         self.dialogs = UpdateDialogs()
         self.downloader = None
         self.modPath = os.path.join(modsPath, gameVersion)

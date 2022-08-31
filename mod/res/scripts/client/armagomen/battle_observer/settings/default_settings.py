@@ -267,10 +267,9 @@ class DefaultSettings(object):
             },
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-        shellTypes = defaultdict(lambda: "", **{shell_type: "" for shell_type in SHELL_TYPES_LIST})
-        shellIcons = defaultdict(lambda: "", **{shell_icon: "" for shell_icon in SHELL_TYPES_LIST +
-                                                DAMAGE_LOG.PREMIUM_SHELLS +
-                                                ("HIGH_EXPLOSIVE_SPG_STUN", "HIGH_EXPLOSIVE_SPG")})
+        shellTypes = defaultdict(str, **{shell_type: "" for shell_type in SHELL_TYPES_LIST})
+        shellIcons = defaultdict(str, **{shell_icon: "" for shell_icon in SHELL_TYPES_LIST +
+                                         DAMAGE_LOG.PREMIUM_SHELLS + ("HIGH_EXPLOSIVE_SPG_STUN", "HIGH_EXPLOSIVE_SPG")})
         self.log_damage_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,

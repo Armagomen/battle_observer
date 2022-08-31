@@ -45,10 +45,9 @@ def getDistanceTo(targetPos):
 
 
 def distanceToEntityVehicle(entityID):
-    playerVehiclePosition = getPlayer().getOwnVehiclePosition()
     entityVehicle = getEntity(entityID)
     if entityVehicle is not None:
-        return (playerVehiclePosition - entityVehicle.position).length
+        return getDistanceTo(entityVehicle.position)
     return 0.0
 
 
