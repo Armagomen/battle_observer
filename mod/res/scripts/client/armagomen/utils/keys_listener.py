@@ -62,15 +62,13 @@ class KeysListener(object):
             else:
                 keys.add(key)
         if settings.main[MAIN.USE_KEY_PAIRS]:
-            pairs = set()
-            for key in keys:
+            for key in tuple(keys):
                 if key in KEY_ALIAS_CONTROL:
-                    pairs.update(KEY_ALIAS_CONTROL)
+                    keys.update(KEY_ALIAS_CONTROL)
                 elif key in KEY_ALIAS_ALT:
-                    pairs.update(KEY_ALIAS_ALT)
+                    keys.update(KEY_ALIAS_ALT)
                 elif key in KEY_ALIAS_SHIFT:
-                    pairs.update(KEY_ALIAS_SHIFT)
-            keys.update(pairs)
+                    keys.update(KEY_ALIAS_SHIFT)
         self.usableKeys.update(keys)
         return keys
 
