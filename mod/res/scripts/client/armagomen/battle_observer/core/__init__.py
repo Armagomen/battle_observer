@@ -1,4 +1,4 @@
-__version__ = "1.38.9"
+__version__ = "1.39.0"
 
 from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion
 
