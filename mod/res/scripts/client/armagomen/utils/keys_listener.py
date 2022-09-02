@@ -62,7 +62,7 @@ class KeysListener(object):
             else:
                 keys.add(key)
         if settings.main[MAIN.USE_KEY_PAIRS]:
-            for key in keys:
+            for key in tuple(keys):
                 if key in KEY_ALIAS_CONTROL:
                     keys.update(KEY_ALIAS_CONTROL)
                 elif key in KEY_ALIAS_ALT:
