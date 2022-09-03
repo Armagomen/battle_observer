@@ -279,6 +279,7 @@ class SettingsInterface(CreateElement):
                         value = HP_BARS.STYLES[value]
                     elif key == "zoomSteps*steps":
                         steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
+                        value = [val for val in steps if val >= 2.0]
                     updatedConfigLink[paramName] = value
             self.sLoader.updateConfigFile(blockID, settings_block)
             settings.onModSettingsChanged(settings_block, blockID)
