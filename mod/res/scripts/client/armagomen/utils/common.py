@@ -10,7 +10,6 @@ from shutil import rmtree
 from string import printable
 
 import BigWorld
-import Math
 import ResMgr
 
 from BattleReplay import isPlaying, isLoading
@@ -99,10 +98,6 @@ def closeClient():
 
 def openWebBrowser(url):
     BigWorld.wg_openWebBrowser(url)
-
-
-def vector3(x, y, z):
-    return Math.Vector3(x, y, z)
 
 
 cwd = os.getcwdu() if os.path.supports_unicode_filenames else os.getcwd()

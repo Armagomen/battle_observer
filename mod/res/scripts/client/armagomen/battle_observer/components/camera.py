@@ -21,7 +21,7 @@ def sniper_create(base, camera, data):
         return
     if settings.effects[EFFECTS.NO_SNIPER_DYNAMIC] and camera.isCameraDynamic():
         camera.enableDynamicCamera(False)
-    if settings.zoom[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]:
+    if settingsCache[SNIPER.DYN_ZOOM]:
         camera.setSniperZoomSettings(-1)
     if not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
         return
@@ -53,7 +53,7 @@ def setSystemValue(base, zoomSettings, value):
 def checkZoomStep(zoom, steps):
     result = steps[GLOBAL.FIRST]
     for step in steps:
-        if zoom >= step:
+        if step <= zoom:
             result = step
         else:
             break
@@ -122,7 +122,7 @@ settings.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(StrategicCamera, "_readConfigs")
 @overrideMethod(ArtyCamera, "_readConfigs")
 def reload_configs(base, camera, dataSection):
-    if any(settingsCache.itervalues()):
+    if settingsCache["needReloadArcadeConfig"] or settingsCache["needReloadStrategicConfig"]:
         camera._baseCfg.clear()
         camera._userCfg.clear()
         camera._cfg.clear()

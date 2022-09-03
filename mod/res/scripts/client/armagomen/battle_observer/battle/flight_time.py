@@ -2,10 +2,8 @@ from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 from armagomen.constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
-from armagomen.utils.common import vector3
 from gui.battle_control import avatar_getter
-
-VECTOR = vector3(GLOBAL.F_ZERO, GLOBAL.F_ZERO, GLOBAL.F_ZERO)
+from math_utils import VectorConstant
 
 
 class FlightTime(FlightTimeMeta):
@@ -50,6 +48,6 @@ class FlightTime(FlightTimeMeta):
     def __onGunMarkerStateChanged(self, markerType, position, *args, **kwargs):
         shotPos, shotVec = self._player.gunRotator.getCurShotPosition()
         flatDist = position.flatDistTo(shotPos)
-        self.macrosDict[FLIGHT_TIME.M_FLIGHT_TIME] = flatDist / shotVec.flatDistTo(VECTOR)
+        self.macrosDict[FLIGHT_TIME.M_FLIGHT_TIME] = flatDist / shotVec.flatDistTo(VectorConstant.Vector3Zero)
         self.macrosDict[FLIGHT_TIME.M_DISTANCE] = flatDist
         self.as_flightTimeS(self.settings[FLIGHT_TIME.TEMPLATE] % self.macrosDict)
