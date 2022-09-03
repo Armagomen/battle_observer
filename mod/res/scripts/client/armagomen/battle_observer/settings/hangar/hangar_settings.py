@@ -278,7 +278,7 @@ class SettingsInterface(CreateElement):
                     elif key == HP_BARS.STYLE and not isinstance(value, str):
                         value = HP_BARS.STYLES[value]
                     elif key == "zoomSteps*steps":
-                        value = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
+                        steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
                     updatedConfigLink[paramName] = value
             self.sLoader.updateConfigFile(blockID, settings_block)
             settings.onModSettingsChanged(settings_block, blockID)

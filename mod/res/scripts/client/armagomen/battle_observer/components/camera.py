@@ -26,7 +26,7 @@ def sniper_create(base, camera, data):
     if not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
         return
     if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > 3:
-        steps = settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
+        steps = [step for step in settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] if step >= GLOBAL.TWO]
         steps.sort()
         exposure_range = xrange(len(steps) + GLOBAL.ONE, GLOBAL.ONE, -GLOBAL.ONE)
         configs = (camera._cfg, camera._userCfg, camera._baseCfg)
