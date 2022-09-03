@@ -327,7 +327,7 @@ class SettingsInterface(CreateElement):
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
-            columns = [item for item in self.items(blockID, settings_block)]
+            columns = tuple(self.items(blockID, settings_block))
             middleIndex = (len(columns) + int(len(columns) % 2 != 0)) / 2
             column1 = columns[:middleIndex]
             column2 = columns[middleIndex:]

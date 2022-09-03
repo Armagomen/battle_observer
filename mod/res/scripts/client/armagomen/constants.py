@@ -148,11 +148,11 @@ PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME", "PREMIUM_FORMAT", "DEFAULT_FORM
 __Sniper = namedtuple("SNIPER", (
     "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "GUN_ZOOM", "METERS", "ZOOMS", "ZOOM_EXPOSURE",
     "INCREASED_ZOOM", "DEFAULT_STEPS", "EXPOSURE_FACTOR", "MAX_CALIBER", "MAX_DIST", "DISABLE_SNIPER",
-    "DISABLE_LATENCY", "SKIP_CLIP", "CLIP"))
+    "DISABLE_LATENCY", "SKIP_CLIP", "CLIP", "MIN_ZOOM"))
 SNIPER = __Sniper(
     "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zoomToGunMarker", "zoomXMeters", "zooms",
     "zoomExposure", "increasedZoom", [float(x) for x in xrange(2, 26, 2)], 0.05, 60, 730.0,
-    "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip")
+    "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip", 2.0)
 
 
 class DAMAGE_LOG:

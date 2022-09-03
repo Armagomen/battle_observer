@@ -38,13 +38,6 @@ def sniper_create(base, camera, data):
         ]
 
 
-# @overrideMethod(SniperCamera, "__getZooms")
-# def new__getZooms(base, camera):
-#     if not settings.zoom[GLOBAL.ENABLED] or isReplay() or not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
-#         return base(camera)
-#     return camera._cfg[SNIPER.ZOOMS]
-
-
 @overrideMethod(SniperZoomSetting, "setSystemValue")
 def setSystemValue(base, zoomSettings, value):
     return base(zoomSettings, GLOBAL.ZERO if settingsCache[SNIPER.DYN_ZOOM] else value)
@@ -54,13 +47,6 @@ def getSimilarStep(zoom, steps):
     if zoom <= steps[GLOBAL.ZERO]:
         return steps[GLOBAL.ZERO]
     return min(steps, key=lambda value: abs(value - zoom))
-    # result = steps[GLOBAL.FIRST]
-    # for step in steps:
-    #     if step <= zoom:
-    #         result = step
-    #     else:
-    #         break
-    # return result
 
 
 @overrideMethod(SniperCamera, "enable")
@@ -75,7 +61,7 @@ def enable(base, camera, targetPos, saveZoom):
                    camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
         if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
             zoom = getSimilarStep(zoom, camera._cfg[SNIPER.ZOOMS])
-        camera._cfg[SNIPER.ZOOM] = zoom
+        camera._cfg[SNIPER.ZOOM] = max(zoom, SNIPER.MIN_ZOOM)
     return base(camera, targetPos, saveZoom)
 
 
