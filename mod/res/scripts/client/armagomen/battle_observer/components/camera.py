@@ -25,7 +25,7 @@ def sniper_create(base, camera, data):
         camera.setSniperZoomSettings(-1)
     if not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
         return
-    if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > GLOBAL.TWO:
+    if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > 3:
         steps = settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]
         steps.sort()
         exposure_range = xrange(len(steps) + GLOBAL.ONE, GLOBAL.ONE, -GLOBAL.ONE)
@@ -38,11 +38,11 @@ def sniper_create(base, camera, data):
         ]
 
 
-@overrideMethod(SniperCamera, "__getZooms")
-def new__getZooms(base, camera):
-    if not settings.zoom[GLOBAL.ENABLED] or isReplay() or not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
-        return base(camera)
-    return camera._cfg[SNIPER.ZOOMS]
+# @overrideMethod(SniperCamera, "__getZooms")
+# def new__getZooms(base, camera):
+#     if not settings.zoom[GLOBAL.ENABLED] or isReplay() or not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
+#         return base(camera)
+#     return camera._cfg[SNIPER.ZOOMS]
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
@@ -50,14 +50,17 @@ def setSystemValue(base, zoomSettings, value):
     return base(zoomSettings, GLOBAL.ZERO if settingsCache[SNIPER.DYN_ZOOM] else value)
 
 
-def checkZoomStep(zoom, steps):
-    result = steps[GLOBAL.FIRST]
-    for step in steps:
-        if step <= zoom:
-            result = step
-        else:
-            break
-    return result
+def getSimilarStep(zoom, steps):
+    if zoom <= steps[GLOBAL.ZERO]:
+        return steps[GLOBAL.ZERO]
+    return min(steps, key=lambda value: abs(value - zoom))
+    # result = steps[GLOBAL.FIRST]
+    # for step in steps:
+    #     if step <= zoom:
+    #         result = step
+    #     else:
+    #         break
+    # return result
 
 
 @overrideMethod(SniperCamera, "enable")
@@ -71,7 +74,7 @@ def enable(base, camera, targetPos, saveZoom):
         zoom = min(math.ceil(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
                    camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
         if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
-            zoom = checkZoomStep(zoom, camera._cfg[SNIPER.ZOOMS])
+            zoom = getSimilarStep(zoom, camera._cfg[SNIPER.ZOOMS])
         camera._cfg[SNIPER.ZOOM] = zoom
     return base(camera, targetPos, saveZoom)
 
