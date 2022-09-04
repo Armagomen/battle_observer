@@ -15,7 +15,10 @@ settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": F
 
 
 @overrideMethod(SniperCamera, "_readConfigs")
-def sniper_create(base, camera, data):
+def sniper_readConfigs(base, camera, data):
+    camera._baseCfg.clear()
+    camera._userCfg.clear()
+    camera._cfg.clear()
     base(camera, data)
     if not settings.zoom[GLOBAL.ENABLED] or isReplay():
         return
@@ -25,17 +28,18 @@ def sniper_create(base, camera, data):
         camera.setSniperZoomSettings(-1)
     if not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
         return
-    if len(settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS]) > 3:
-        steps = [step for step in settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] if step >= GLOBAL.TWO]
+    steps = [step for step in settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] if step >= SNIPER.MIN_ZOOM]
+    if len(steps) > 3:
         steps.sort()
-        exposure_range = xrange(len(steps) + GLOBAL.ONE, GLOBAL.ONE, -GLOBAL.ONE)
-        configs = (camera._cfg, camera._userCfg, camera._baseCfg)
-        for cfg in configs:
-            cfg[SNIPER.INCREASED_ZOOM] = True
-            cfg[SNIPER.ZOOMS] = steps
-        camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = [
-            round(SNIPER.EXPOSURE_FACTOR * step, GLOBAL.ONE) for step in exposure_range
-        ]
+        camera.setUserConfigValue(SNIPER.INCREASED_ZOOM, True)
+        camera.setUserConfigValue(SNIPER.ZOOMS, steps)
+        # configs = (camera._cfg, camera._userCfg, camera._baseCfg)
+        # for cfg in configs:
+        #     cfg[SNIPER.INCREASED_ZOOM] = True
+        #     cfg[SNIPER.ZOOMS] = steps
+        exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
+        while len(steps) > len(exposure):
+            exposure.insert(GLOBAL.ZERO, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
@@ -44,9 +48,16 @@ def setSystemValue(base, zoomSettings, value):
 
 
 def getSimilarStep(zoom, steps):
-    if zoom <= steps[GLOBAL.ZERO]:
-        return steps[GLOBAL.ZERO]
     return min(steps, key=lambda value: abs(value - zoom))
+
+
+def getZoom(dist, steps):
+    zoom = min(math.ceil(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]), steps[GLOBAL.LAST])
+    if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
+        zoom = getSimilarStep(zoom, steps)
+    if zoom < SNIPER.MIN_ZOOM:
+        return SNIPER.MIN_ZOOM
+    return zoom
 
 
 @overrideMethod(SniperCamera, "enable")
@@ -56,12 +67,7 @@ def enable(base, camera, targetPos, saveZoom):
         saveZoom = True
         if settings.zoom[SNIPER.GUN_ZOOM]:
             targetPos = player.gunRotator.markerInfo[GLOBAL.FIRST]
-        dist = player.position.distTo(targetPos)
-        zoom = min(math.ceil(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]),
-                   camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
-        if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
-            zoom = getSimilarStep(zoom, camera._cfg[SNIPER.ZOOMS])
-        camera._cfg[SNIPER.ZOOM] = max(zoom, SNIPER.MIN_ZOOM)
+        camera._cfg[SNIPER.ZOOM] = getZoom(player.position.distTo(targetPos), camera._cfg[SNIPER.ZOOMS])
     return base(camera, targetPos, saveZoom)
 
 
@@ -89,7 +95,7 @@ def showTracer(base, avatar, shooterID, *args):
             if shooterID == avatar.playerVehicleID:
                 callback(max(settings.zoom[SNIPER.DISABLE_LATENCY], 0), changeControlMode, avatar)
     except Exception as err:
-        logError("I can't get out of sniper mode. Error {0}.changeControlMode, {1}".format(__package__, err))
+        logError("I can't get out of sniper mode. Error {}.changeControlMode, {}", __package__, err)
     finally:
         return base(avatar, shooterID, *args)
 

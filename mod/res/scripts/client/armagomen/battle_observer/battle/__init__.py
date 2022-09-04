@@ -5,7 +5,7 @@ from armagomen.battle_observer.components.statistics.statistic_data_loader impor
 from armagomen.battle_observer.core import _view_settings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES, MOD_NAME
-from armagomen.utils.common import logError, logWarning, logInfo, logDebug, callback
+from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -25,7 +25,7 @@ def getViewSettings():
             viewSettings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
         except Exception as err:
             _view_settings.removeComponent(alias)
-            logWarning("{}, {}, {}".format(__package__, alias, repr(err)))
+            logError("{}, {}, {}", __package__, alias, repr(err))
             LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
     return viewSettings
 
@@ -80,7 +80,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         g_events.onBattlePageLoaded(view)
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
-            return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
+            return logError(to_format_str, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
         view.flashObject.as_observerCreateComponents(_view_settings.getComponents())
         view.flashObject.as_observerUpdatePrebattleTimer(settings.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         view.flashObject.as_observerHideWgComponents(_view_settings.getHiddenWGComponents())

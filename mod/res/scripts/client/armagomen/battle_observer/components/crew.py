@@ -107,7 +107,7 @@ class CrewProcessor(object):
                 check, _ = self.isAccelerateTraining(vehicle)
                 vehicleData[CANDIDATE] &= check
         except Exception as error:
-            logError("CrewProcessor onXPExchangeDataChanged: " + repr(error))
+            logError("CrewProcessor onXPExchangeDataChanged: {}", repr(error))
         finally:
             return base(dialog, data, *args, **kwargs)
 

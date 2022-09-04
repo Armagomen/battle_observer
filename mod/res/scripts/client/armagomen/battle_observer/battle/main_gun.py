@@ -4,7 +4,6 @@ from math import ceil
 
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL
-from armagomen.utils.common import logError
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from helpers import getClientLanguage
 
@@ -62,7 +61,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def updateMainGun(self, criteria=None):
         if criteria is None:
-            return logError("MainGun/updateMainGun: wrong criteria=None")
+            return
         if not self.isLowHealth:
             self.gunLeft = (self.maxDamage if self.dealtMoreDamage else self.gunScore) - self.playerDamage
         elif criteria == CRITERIA.PLAYER_DAMAGE:

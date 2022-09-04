@@ -63,8 +63,8 @@ def cancelCallback(callbackID):
     return BigWorld.cancelCallback(callbackID)
 
 
-def logError(message):
-    BigWorld.logError(MOD_NAME, str(message), None)
+def logError(message, *args, **kwargs):
+    BigWorld.logError(MOD_NAME, str(message).format(*args, **kwargs), None)
 
 
 def logInfo(message):
@@ -247,8 +247,8 @@ def overrideMethod(wg_class, method_name="__init__"):
 
             setattr(wg_class, method_name, override)
         else:
-            logError("overrideMethod error: {0} in {1} is not callable or undefined in "
-                     "{2}".format(method_name, class_name, new_method.__name__))
+            logError("overrideMethod error: {} in {} is not callable or undefined in {}", method_name, class_name,
+                     new_method.__name__)
         return new_method
 
     return outer
