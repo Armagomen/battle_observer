@@ -14,7 +14,6 @@ settingsVersion = 37
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
 
 
-@property
 def LOCKED_MESSAGE():
     pattern = "<font color='#ff3d3d'> {}</font>"
     language = getClientLanguage()
@@ -143,7 +142,7 @@ class CreateElement(object):
         name = localization.get(blockID, {}).get("header", blockID)
         warning = xvmInstalled and blockID in LOCKED_BLOCKS
         if warning:
-            name += LOCKED_MESSAGE
+            name += LOCKED_MESSAGE()
         return {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
             'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True) and not warning,
