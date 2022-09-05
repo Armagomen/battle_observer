@@ -9,3 +9,6 @@ class DateTimesMeta(BaseModMeta):
 
     def as_setDateTimeS(self, text=GLOBAL.EMPTY_LINE):
         return self.flashObject.as_setDateTime(text) if self._isDAAPIInited() else None
+
+    def as_clearSceneS(self):
+        return self.flashObject.as_clearScene() if self._isDAAPIInited() else None
