@@ -71,7 +71,6 @@ class GLOBAL:
     ENABLED = "enabled"
     FIRST, LAST = (0, -1)
     F_ONE = 1.0
-    F_ZERO = float(FIRST)
     GLOW_FILTER = "glowFilter"
     HEIGHT = "height"
     ICONS_DIR = "img://gui/maps/icons"

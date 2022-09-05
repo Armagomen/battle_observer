@@ -34,7 +34,7 @@ def sniper_readConfigs(base, camera, data):
             cfg[SNIPER.ZOOMS] = steps
         exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
         while len(steps) > len(exposure):
-            exposure.insert(GLOBAL.ZERO, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
+            exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")

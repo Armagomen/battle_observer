@@ -63,7 +63,7 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
             if d != DISPERSION.MINUS_ONE_F and s != DISPERSION.MINUS_ONE_F:
                 dispersionAngle = d
         elif g_replayCtrl.isRecording and (g_replayCtrl.isServerAim and isServerAim or not isServerAim):
-            g_replayCtrl.setSPGGunMarkerParams(dispersionAngle, GLOBAL.F_ZERO)
+            g_replayCtrl.setSPGGunMarkerParams(dispersionAngle, GLOBAL.ZERO)
         self._dataProvider.setupConicDispersion(dispersionAngle)
 
 

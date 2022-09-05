@@ -62,7 +62,7 @@ class ShotResultResolver(object):
         ricochet = False
         noDamage = True
         isJet = False
-        jetStartDist = GLOBAL.F_ZERO
+        jetStartDist = GLOBAL.ZERO
         shellExtraData = self.resolver._SHELL_EXTRA_DATA[shell.kind]
         for detail in cDetails:
             matInfo = detail.matInfo
@@ -72,7 +72,7 @@ class ShotResultResolver(object):
             computedArmor += self.resolver._computePenetrationArmor(shell.kind, hitAngleCos, matInfo, shell.caliber)
             if isJet:
                 jetDist = detail.dist - jetStartDist
-                if jetDist > GLOBAL.F_ZERO:
+                if jetDist > GLOBAL.ZERO:
                     piercingPower = fullPiercingPower - jetDist * shellExtraData.jetLossPPByDist
             else:
                 ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
@@ -81,8 +81,8 @@ class ShotResultResolver(object):
                 break
             elif isHE and self.isModernMechanics(shell):
                 piercingPower -= computedArmor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-                piercingPower = max(piercingPower, GLOBAL.F_ZERO)
-            elif shellExtraData.jetLossPPByDist > GLOBAL.F_ZERO:
+                piercingPower = max(piercingPower, GLOBAL.ZERO)
+            elif shellExtraData.jetLossPPByDist > GLOBAL.ZERO:
                 isJet = True
                 jetStartDist += detail.dist + matInfo.armor * 0.001
         return computedArmor, piercingPower, ricochet, noDamage
