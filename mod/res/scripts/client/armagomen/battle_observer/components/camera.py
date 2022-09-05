@@ -16,9 +16,6 @@ settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": F
 
 @overrideMethod(SniperCamera, "_readConfigs")
 def sniper_readConfigs(base, camera, data):
-    camera._baseCfg.clear()
-    camera._userCfg.clear()
-    camera._cfg.clear()
     base(camera, data)
     if not settings.zoom[GLOBAL.ENABLED] or isReplay():
         return
@@ -31,12 +28,10 @@ def sniper_readConfigs(base, camera, data):
     steps = [step for step in settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] if step >= SNIPER.MIN_ZOOM]
     if len(steps) > 3:
         steps.sort()
-        camera.setUserConfigValue(SNIPER.INCREASED_ZOOM, True)
-        camera.setUserConfigValue(SNIPER.ZOOMS, steps)
-        # configs = (camera._cfg, camera._userCfg, camera._baseCfg)
-        # for cfg in configs:
-        #     cfg[SNIPER.INCREASED_ZOOM] = True
-        #     cfg[SNIPER.ZOOMS] = steps
+        configs = (camera._cfg, camera._userCfg, camera._baseCfg)
+        for cfg in configs:
+            cfg[SNIPER.INCREASED_ZOOM] = True
+            cfg[SNIPER.ZOOMS] = steps
         exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
         while len(steps) > len(exposure):
             exposure.insert(GLOBAL.ZERO, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
