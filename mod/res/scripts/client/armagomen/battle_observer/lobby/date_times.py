@@ -28,7 +28,11 @@ class DateTimes(DateTimesMeta):
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == CLOCK.NAME:
+            self.timerEvent.stop()
             self.updateDecoder()
+            self.as_clearSceneS()
+            self.as_startUpdateS(self.config)
+            self.timerEvent.start()
 
     def _dispose(self):
         self.timerEvent.stop()
