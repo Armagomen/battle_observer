@@ -13,16 +13,16 @@ class Timer(object):
     def __init__(self):
         self._callback = None
 
-    def stop(self):
-        """handle stop timer, callback will be stopped on next cycle tick after timeout"""
+    def cancelCallback(self):
         if self._callback is not None:
             cancelCallback(self._callback)
             self._callback = None
 
+    def stop(self):
+        self.cancelCallback()
+
     def start(self, *args):
-        if self._callback is not None:
-            cancelCallback(self._callback)
-            self._callback = None
+        self.cancelCallback()
 
 
 class SixthSenseTimer(Timer):
