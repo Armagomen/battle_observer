@@ -1,9 +1,8 @@
-import copy
 import random
 
 import constants
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
-from armagomen.utils.common import urlResponse, logDebug, logInfo, logError, xvmInstalled, callback
+from armagomen.utils.common import urlResponse, logDebug, logInfo, logError, callback
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -21,22 +20,19 @@ class StatisticsDataLoader(object):
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en".format(
         url=URL, key=random.choice(API_KEY), ids="{ids}", fields=FIELDS)
 
-    def __init__(self, wtrEnabled):
+    def __init__(self):
         self.loadedData = {}
-        self.enabled = region in ["ru", "eu", "com", "asia"] and wtrEnabled
+        self.enabled = region in ["ru", "eu", "com", "asia"]
         self.loaded = False
         self._load_try = 0
-        if xvmInstalled:
-            logInfo("StatisticsDataLoader: statistics/icons/minimap module is disabled, XVM is installed")
-        elif wtrEnabled:
-            self.wtrData = WTRStatistics()
-            callback(0.0, self.setCachedStatisticData)
+        self.__wtrData = WTRStatistics()
+        callback(0.0, self.setCachedStatisticData)
 
     def request(self, databaseIDS):
         result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS)))
         if result is not None:
             data = result.get("data", {})
-            result = {int(key): copy.deepcopy(data[key]) for key in data}
+            result = {int(key): value for key, value in data.iteritems() if value}
         logDebug("StatisticsDataLoader: request result: data={}", result)
         return result
 
@@ -63,11 +59,11 @@ class StatisticsDataLoader(object):
         else:
             return self.delayedLoad()
         self.loaded = True
-        self.wtrData.updateAllItems(arenaDP, self.loadedData)
+        self.__wtrData.updateAllItems(arenaDP, self.loadedData)
 
     @property
     def itemsWTRData(self):
-        return self.wtrData.itemsData if self.enabled else {}
+        return self.__wtrData.itemsData
 
     def clear(self):
         self.loadedData.clear()

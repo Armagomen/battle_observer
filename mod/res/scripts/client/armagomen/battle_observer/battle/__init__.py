@@ -15,6 +15,8 @@ from gui.shared import EVENT_BUS_SCOPE
 
 __all__ = ()
 
+logInfo("load package {} loaded".format(__package__))
+
 
 def getViewSettings():
     viewSettings = []
@@ -39,7 +41,7 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('minimapPlugin', '_statLoadTry', 'statistics', 'viewAliases')
+    __slots__ = ('minimapPlugin', '_statLoadTry', 'statistics', 'viewAliases', '_iconsEnabled', '_statisticsEnabled')
 
     def __init__(self):
         self.viewAliases = _view_settings.getViewAliases()
@@ -47,7 +49,9 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = MinimapZoomPlugin()
         self._statLoadTry = 0
-        self.statistics = StatisticsDataLoader(_view_settings.isWTREnabled())
+        self.statistics = StatisticsDataLoader() if _view_settings.isWTREnabled() else None
+        self._iconsEnabled = _view_settings.isIconsEnabled()
+        self._statisticsEnabled = self.statistics is not None and self.statistics.enabled
 
     def fini(self):
         self.minimapPlugin.fini()
@@ -60,16 +64,17 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
         logInfo("ObserverBusinessHandler loading flash libraries swf={}, alias={}".format(SWF.BATTLE, event.alias))
 
-    def loadStatisticView(self, view, icons):
-        if self.statistics.enabled:
+    def loadStatisticView(self, view):
+        if self._statisticsEnabled:
             if not self.statistics.loaded and self._statLoadTry < 20:
                 self._statLoadTry += 1
-                return callback(0.5, self.loadStatisticView, view, icons)
+                return callback(0.5, self.loadStatisticView, view)
+        statisticsItemsData = self.statistics.itemsWTRData if self._statisticsEnabled else {}
         cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         iconMultiplier = settings.statistics[STATISTICS.ICON_BLACKOUT]
-        view.flashObject.as_createStatisticComponent(self.statistics.enabled, icons, self.statistics.itemsWTRData,
+        view.flashObject.as_createStatisticComponent(self._statisticsEnabled, self._iconsEnabled, statisticsItemsData,
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
     def onViewLoaded(self, view, *args):
@@ -86,9 +91,5 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         view.flashObject.as_observerHideWgComponents(_view_settings.getHiddenWGComponents())
         if self.minimapPlugin.enabled:
             self.minimapPlugin.init(view)
-        icons = _view_settings.isIconsEnabled()
-        if icons or self.statistics.enabled:
-            self.loadStatisticView(view, icons)
-
-
-logInfo("package {} loaded".format(__package__))
+        if self._iconsEnabled or self._statisticsEnabled:
+            self.loadStatisticView(view)

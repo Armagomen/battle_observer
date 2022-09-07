@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
-from armagomen.utils.common import overrideMethod, xvmInstalled
+from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings import config as packages
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -68,11 +68,13 @@ class ViewSettings(object):
 
     def isWTREnabled(self):
         if xvmInstalled:
+            logInfo("Statistics module is disabled, XVM is installed")
             return False
         return self.statsMain and settings.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
         if xvmInstalled:
+            logInfo("Icons module is disabled, XVM is installed")
             return False
         return self.statsMain and settings.statistics[STATISTICS.ICON_ENABLED]
 
