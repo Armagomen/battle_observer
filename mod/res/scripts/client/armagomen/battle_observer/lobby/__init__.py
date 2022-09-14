@@ -31,34 +31,26 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('_listeners', '_scope', '_app', '_appNS', "swfLoaded")
+    __slots__ = ('_listeners', '_scope', '_app', '_appNS')
 
     def __init__(self):
-        self.swfLoaded = False
         listeners = [(VIEW_ALIAS.LOBBY_HANGAR, self.eventListener), (VIEW_ALIAS.LOGIN, self.eventListener)]
         super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def eventListener(self, event):
-        if self.swfLoaded:
-            return
-        self._app.as_loadLibrariesS([SWF.LOBBY])
         self._app.loaderManager.onViewLoaded += self._onViewLoaded
-        self.swfLoaded = True
-        logDebug("loading flash libraries swf={}, alias={}", SWF.LOBBY, event.alias)
-
-    def fini(self):
-        logDebug("destroy flash libraries swf={}, appNS={}", SWF.LOBBY, self._appNS)
-        super(ObserverBusinessHandler, self).fini()
+        if event.alias == VIEW_ALIAS.LOBBY_HANGAR:
+            self._app.as_loadLibrariesS([SWF.LOBBY])
+            logDebug("loading flash libraries swf={}, alias={}", SWF.LOBBY, event.alias)
 
     @staticmethod
     def load(view):
         g_events.onHangarLoaded(view)
-        if not (settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]):
-            return
-        if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
-            to_format_str = "hangar_page {}, has ho attribute {}"
-            return logError(to_format_str.format(repr(view.flashObject), SWF.ATTRIBUTE_NAME))
-        view.flashObject.as_observerCreateComponents([ALIASES.DATE_TIME])
+        if settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]:
+            if hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
+                view.flashObject.as_observerCreateComponents([ALIASES.DATE_TIME])
+            else:
+                logError("hangar_page {}, has ho attribute {}", view.settings.alias, SWF.ATTRIBUTE_NAME)
 
     def _onViewLoaded(self, view, *args):
         if view.settings is None:
