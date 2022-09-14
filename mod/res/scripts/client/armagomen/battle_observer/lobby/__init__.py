@@ -11,14 +11,9 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
 
-@property
-def enabled():
-    return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]
-
-
 def getViewSettings():
     view_settings = []
-    if enabled:
+    if settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]:
         try:
             module_class = getattr(import_module(".date_times", package=__package__), "DateTimes")
             view_settings.append(ComponentSettings(ALIASES.DATE_TIME, module_class, ScopeTemplates.DEFAULT_SCOPE))
@@ -58,7 +53,7 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     @staticmethod
     def load(view):
         g_events.onHangarLoaded(view)
-        if not enabled:
+        if not (settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]):
             return
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "hangar_page {}, has ho attribute {}"

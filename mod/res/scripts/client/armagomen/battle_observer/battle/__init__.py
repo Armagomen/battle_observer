@@ -41,7 +41,7 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandler(PackageBusinessHandler):
-    __slots__ = ('minimapPlugin', '_statLoadTry', 'statistics', 'viewAliases', '_iconsEnabled', '_statisticsEnabled')
+    __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
 
     def __init__(self):
         self.viewAliases = _view_settings.getViewAliases()
