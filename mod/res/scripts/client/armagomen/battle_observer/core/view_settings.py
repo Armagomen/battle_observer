@@ -49,44 +49,40 @@ class ViewSettings(object):
     def onVehicleChanged(self):
         self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
 
-    @property
     def isRandomBattle(self):
         return (self.sessionProvider.arenaVisitor.gui.isRandomBattle() or
                 self.sessionProvider.arenaVisitor.gui.isMapbox())
 
-    @property
     def notEpicBattle(self):
         return not self.sessionProvider.arenaVisitor.gui.isInEpicRange()
 
-    @property
     def notEpicRandomBattle(self):
         return not self.sessionProvider.arenaVisitor.gui.isEpicRandomBattle()
 
-    @property
-    def statsMain(self):
-        return settings.statistics[GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
+    def isStatisticsModuleEnabled(self):
+        return settings.statistics[GLOBAL.ENABLED] and self.notEpicBattle() and self.notEpicRandomBattle()
 
     def isWTREnabled(self):
         if xvmInstalled:
             logInfo("Statistics module is disabled, XVM is installed")
             return False
-        return self.statsMain and settings.statistics[STATISTICS.STATISTIC_ENABLED]
+        return self.isStatisticsModuleEnabled() and settings.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
         if xvmInstalled:
             logInfo("Icons module is disabled, XVM is installed")
             return False
-        return self.statsMain and settings.statistics[STATISTICS.ICON_ENABLED]
+        return self.isStatisticsModuleEnabled() and settings.statistics[STATISTICS.ICON_ENABLED]
 
     def getSetting(self, alias):
         if alias is ALIASES.HP_BARS:
-            return settings.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle
+            return settings.hp_bars[GLOBAL.ENABLED] and self.notEpicBattle()
         elif alias is ALIASES.DAMAGE_LOG:
             return (settings.log_total[GLOBAL.ENABLED] or
                     settings.log_damage_extended[GLOBAL.ENABLED] or
                     settings.log_input_extended[GLOBAL.ENABLED])
         elif alias is ALIASES.MAIN_GUN:
-            return settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle
+            return settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle()
         elif alias is ALIASES.DEBUG:
             return settings.debug_panel[GLOBAL.ENABLED]
         elif alias is ALIASES.TIMER:
@@ -106,12 +102,12 @@ class ViewSettings(object):
                     settings.dispersion_circle[DISPERSION.TIMER_ENABLED])
         elif alias is ALIASES.PANELS:
             return not xvmInstalled and settings.players_panels[
-                GLOBAL.ENABLED] and self.notEpicBattle and self.notEpicRandomBattle
+                GLOBAL.ENABLED] and self.notEpicBattle() and self.notEpicRandomBattle()
         elif alias is ALIASES.DATE_TIME:
             return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is ALIASES.DISTANCE:
             return (not self.isSPG and settings.distance_to_enemy[GLOBAL.ENABLED] and
-                    self.notEpicBattle and self.notEpicRandomBattle)
+                    self.notEpicBattle() and self.notEpicRandomBattle())
         elif alias is ALIASES.OWN_HEALTH:
             return settings.own_health[GLOBAL.ENABLED]
         else:

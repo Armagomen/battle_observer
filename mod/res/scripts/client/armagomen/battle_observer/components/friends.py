@@ -23,7 +23,7 @@ g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
 
 @overrideMethod(VehicleTypeInfoVO)
 def new_VehicleArenaInfoVO(init, vTypeVo, *args, **kwargs):
-    if _view_settings.notEpicBattle and settings.main[MAIN.SHOW_FRIENDS]:
+    if _view_settings.notEpicBattle() and settings.main[MAIN.SHOW_FRIENDS]:
         init(vTypeVo, *args, **kwargs)
         if kwargs and _cache[ANOTHER.ACCOUNT_DBID] > GLOBAL.ZERO:
             if not vTypeVo.isPremiumIGR and ANOTHER.ACCOUNT_DBID in kwargs:
@@ -36,7 +36,7 @@ def new_VehicleArenaInfoVO(init, vTypeVo, *args, **kwargs):
 
 @overrideMethod(VehicleTypeInfoVO, "update")
 def new_VehicleTypeInfoVO_update(update, vTypeVo, *args, **kwargs):
-    if _view_settings.notEpicBattle and settings.main[MAIN.SHOW_FRIENDS]:
+    if _view_settings.notEpicBattle() and settings.main[MAIN.SHOW_FRIENDS]:
         isPremiumIGR = getattr(vTypeVo, "isPremiumIGR", False)
         result = update(vTypeVo, *args, **kwargs)
         if kwargs.get('vehicleType') is not None and hasattr(vTypeVo, "isPremiumIGR") and isPremiumIGR:
