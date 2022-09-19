@@ -17,8 +17,7 @@ class StatisticsDataLoader(object):
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
     API_KEY = ("ffa0979342d69fe92970571918cc59b6", "76b3c385f1485e1fee1642c1e287c0ce")
-    STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en".format(
-        url=URL, key=random.choice(API_KEY), ids="{ids}", fields=FIELDS)
+    STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"
 
     def __init__(self):
         self.loadedData = {}
@@ -29,7 +28,8 @@ class StatisticsDataLoader(object):
         callback(0.0, self.setCachedStatisticData)
 
     def request(self, databaseIDS):
-        result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS)))
+        result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS),
+                                                  key=random.choice(self.API_KEY), url=self.URL, fields=self.FIELDS))
         if result is not None:
             data = result.get("data", {})
             result = {int(key): value for key, value in data.iteritems() if value}
