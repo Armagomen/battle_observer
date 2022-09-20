@@ -2,6 +2,7 @@ from math import floor, log
 
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import STATISTICS
+from armagomen.utils.common import logDebug
 
 
 class WTRStatistics(object):
@@ -18,6 +19,7 @@ class WTRStatistics(object):
         self.itemsData = {}
 
     def getPattern(self, isEnemy, data):
+        logDebug("isEnemy: {}, data:{}", isEnemy, data)
         if isEnemy:
             return self.settings[STATISTICS.FULL_RIGHT] % data, self.settings[STATISTICS.CUT_RIGHT] % data
         else:
