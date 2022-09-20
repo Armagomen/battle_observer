@@ -1,5 +1,3 @@
-import random
-
 import constants
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
 from armagomen.utils.common import urlResponse, logDebug, logInfo, logError, callback
@@ -16,7 +14,7 @@ class StatisticsDataLoader(object):
     URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
-    API_KEY = ("ffa0979342d69fe92970571918cc59b6", "76b3c385f1485e1fee1642c1e287c0ce")
+    API_KEY = "5500d1b937426e47e2b039e4a11990be"
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"
 
     def __init__(self):
@@ -28,8 +26,8 @@ class StatisticsDataLoader(object):
         callback(0.0, self.setCachedStatisticData)
 
     def request(self, databaseIDS):
-        result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(str(_id) for _id in databaseIDS),
-                                                  key=random.choice(self.API_KEY), url=self.URL, fields=self.FIELDS))
+        result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(databaseIDS), key=self.API_KEY,
+                                                  url=self.URL, fields=self.FIELDS))
         if result is not None:
             data = result.get("data", {})
             result = {int(key): value for key, value in data.iteritems() if value}
@@ -48,7 +46,8 @@ class StatisticsDataLoader(object):
         if arenaDP is None:
             logError("StatisticsDataLoader/setCachedStatisticData: arenaDP is None")
             return self.delayedLoad()
-        users = [vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator() if vInfo.player.accountDBID]
+        users = [str(vInfo.player.accountDBID) for vInfo in arenaDP.getVehiclesInfoIterator() if
+                 vInfo.player.accountDBID]
         if not users:
             return self.delayedLoad()
         logDebug("StatisticsDataLoader/setCachedStatisticData: START request data: ids={}, len={} ", users, len(users))
