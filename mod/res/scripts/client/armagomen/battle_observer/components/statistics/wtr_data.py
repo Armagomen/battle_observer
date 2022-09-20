@@ -2,6 +2,8 @@ from math import floor, log
 
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import STATISTICS
+from armagomen.utils.common import logDebug
+from gui.battle_control import avatar_getter
 
 
 class WTRStatistics(object):
@@ -18,13 +20,14 @@ class WTRStatistics(object):
         self.itemsData = {}
 
     def getPattern(self, isEnemy, data):
+        logDebug("isEnemy: {}, data:{}", isEnemy, data)
         if isEnemy:
             return self.settings[STATISTICS.FULL_RIGHT] % data, self.settings[STATISTICS.CUT_RIGHT] % data
         else:
             return self.settings[STATISTICS.FULL_LEFT] % data, self.settings[STATISTICS.CUT_LEFT] % data
 
     def updateAllItems(self, arenaDP, loadedData):
-        allyTeam = arenaDP.getVehicleInfo().team
+        allyTeam = avatar_getter.getPlayerTeam()
         for accountDBID in loadedData:
             vehicleID = arenaDP.getVehIDByAccDBID(accountDBID)
             vehInfo = arenaDP.getVehicleInfo(vehicleID)
