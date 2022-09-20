@@ -24,7 +24,7 @@ class WTRStatistics(object):
             return self.settings[STATISTICS.FULL_LEFT] % data, self.settings[STATISTICS.CUT_LEFT] % data
 
     def updateAllItems(self, arenaDP, loadedData):
-        allyTeam = arenaDP.getNumberOfTeam()
+        allyTeam = arenaDP.getVehicleInfo().team
         for accountDBID in loadedData:
             vehicleID = arenaDP.getVehIDByAccDBID(accountDBID)
             vehInfo = arenaDP.getVehicleInfo(vehicleID)
