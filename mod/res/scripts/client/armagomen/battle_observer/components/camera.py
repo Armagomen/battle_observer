@@ -9,7 +9,8 @@ from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
-from armagomen.utils.common import overrideMethod, getPlayer, logError, isReplay, callback
+from armagomen.utils.common import overrideMethod, logError, isReplay, callback
+from gui.battle_control.avatar_getter import getDistanceToGunMarker, getOwnVehiclePosition
 
 settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": False, SNIPER.DYN_ZOOM: False}
 
@@ -46,8 +47,8 @@ def getSimilarStep(zoom, steps):
     return min(steps, key=lambda value: abs(value - zoom))
 
 
-def getZoom(dist, steps):
-    zoom = min(math.ceil(dist / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]), steps[GLOBAL.LAST])
+def getZoom(distance, steps):
+    zoom = min(math.ceil(distance / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]), steps[GLOBAL.LAST])
     if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
         zoom = getSimilarStep(zoom, steps)
     if zoom < SNIPER.MIN_ZOOM:
@@ -58,11 +59,13 @@ def getZoom(dist, steps):
 @overrideMethod(SniperCamera, "enable")
 def enable(base, camera, targetPos, saveZoom):
     if settingsCache[SNIPER.DYN_ZOOM]:
-        player = getPlayer()
         saveZoom = True
         if settings.zoom[SNIPER.GUN_ZOOM]:
-            targetPos = player.gunRotator.markerInfo[GLOBAL.FIRST]
-        camera._cfg[SNIPER.ZOOM] = getZoom(player.position.distTo(targetPos), camera._cfg[SNIPER.ZOOMS])
+            distance = getDistanceToGunMarker()
+        else:
+            ownPosition = getOwnVehiclePosition()
+            distance = (targetPos - ownPosition).length if ownPosition is not None else 0.0
+        camera._cfg[SNIPER.ZOOM] = getZoom(distance, camera._cfg[SNIPER.ZOOMS])
     return base(camera, targetPos, saveZoom)
 
 

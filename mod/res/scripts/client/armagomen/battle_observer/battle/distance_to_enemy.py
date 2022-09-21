@@ -6,7 +6,7 @@ from armagomen.constants import GLOBAL, DISTANCE, POSTMORTEM
 from armagomen.utils.common import logDebug
 from armagomen.utils.timers import CyclicTimerEvent
 from constants import ARENA_PERIOD, ARENA_PERIOD_NAMES
-from gui.battle_control import avatar_getter
+from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler
 
 
 class Distance(DistanceMeta):
@@ -43,7 +43,7 @@ class Distance(DistanceMeta):
 
     def onEnterBattlePage(self):
         super(Distance, self).onEnterBattlePage()
-        handler = avatar_getter.getInputHandler()
+        handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         feedback = self.sessionProvider.shared.feedback
@@ -58,7 +58,7 @@ class Distance(DistanceMeta):
         if self.timeEvent is not None:
             self.timeEvent.stop()
             self.timeEvent = None
-        handler = avatar_getter.getInputHandler()
+        handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         feedback = self.sessionProvider.shared.feedback
@@ -84,7 +84,7 @@ class Distance(DistanceMeta):
         distance = None
         vehicleName = None
         for entity in self.vehicles.itervalues():
-            dist = self._player.position.distTo(entity.position)
+            dist = getDistanceToTarget(entity, avatar=self._player)
             if distance is None or dist < distance:
                 distance = dist
                 vehicleName = entity.typeDescriptor.type.shortUserString
