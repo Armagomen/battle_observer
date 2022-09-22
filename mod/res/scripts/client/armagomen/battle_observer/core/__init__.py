@@ -50,7 +50,7 @@ else:
     else:
         loadError = True
         errorMessage = 'ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please ' \
-                       'install mod from official site: https://github.com/Armagomen/battle_observer/releases/latest'.format(__version__)
+                       'install mod from official source: https://github.com/Armagomen/battle_observer/releases/latest'.format(__version__)
         logError(errorMessage)
 
 
