@@ -28,7 +28,7 @@ class DialogBase(object):
         self.view = view
 
 
-class UpdateDialogs(DialogBase):
+class UpdaterDialogs(DialogBase):
 
     @wg_async
     def showUpdateError(self, message):
