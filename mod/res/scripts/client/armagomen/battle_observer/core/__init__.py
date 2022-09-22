@@ -1,31 +1,34 @@
-__version__ = "1.39.2"
+__version__ = "1.39.3"
 
-from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion
+from debug_utils import LOG_CURRENT_EXCEPTION
 
 loadError = False
 errorMessage = ""
 
-__all__ = (__version__,)
+try:
+    from armagomen.battle_observer.core.update.worker import UpdateMain
+    update = UpdateMain(__version__)
+except:
+    LOG_CURRENT_EXCEPTION()
 
 try:
+    from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion
     from gui.modsListApi import g_modsListApi
     from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-except ImportError as err:
+    from sys import version as python_version
+    from armagomen.battle_observer.core.view_settings import ViewSettings
+    from armagomen.battle_observer.components import ComponentsLoader
+    from armagomen.battle_observer.settings.loader import SettingsLoader
+    from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
+except Exception as err:
+    LOG_CURRENT_EXCEPTION()
     loadError = True
     errorMessage = repr(err)
     logError(errorMessage)
 else:
-    if isFileValid(__version__) and not loadError:
-        from sys import version as python_version
-        from armagomen.battle_observer.core.view_settings import ViewSettings
-        from armagomen.battle_observer.core.update.worker import UpdateMain
-        from armagomen.battle_observer.components import ComponentsLoader
-        from armagomen.battle_observer.settings.loader import SettingsLoader
-        from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
-
+    if isFileValid(__version__):
         logInfo("Launched at python v{}".format(python_version))
         logInfo('MOD START LOADING: v{} - {}'.format(__version__, gameVersion))
-        update = UpdateMain(__version__)
         _view_settings = ViewSettings()
         componentsLoader = ComponentsLoader()
         settings_loader = SettingsLoader()
