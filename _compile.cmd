@@ -4,8 +4,8 @@ set ModVer=1.39.3
 set WotVer=1.18.0.2
 set ModsDir=C:\Games\World_of_Tanks_EU\mods
 
-REM set WotVer="1.18.0.0 Common Test"
-REM set ModsDir=C:\Games\World_of_Tanks_CT\mods
+@REM set WotVer="1.18.1.0 Common Test"
+@REM set ModsDir=C:\Games\World_of_Tanks_CT\mods
 
 "python.exe" bo_compile_all.py -f -q -d scripts mod\res\scripts
 
