@@ -1,5 +1,5 @@
 from CurrentVehicle import g_currentVehicle
-from adisp import AdispException, process
+from adisp import AdispException, adisp_process
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
 from armagomen.utils.common import logInfo, logDebug, logError
@@ -8,7 +8,7 @@ from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
 
 
-@process
+@adisp_process
 def changeValue(vehicle, value):
     yield VehicleAutoBattleBoosterEquipProcessor(vehicle, value).request()
 
