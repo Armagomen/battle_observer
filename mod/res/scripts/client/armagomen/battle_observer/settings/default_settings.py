@@ -176,7 +176,6 @@ class DefaultSettings(object):
             SNIPER.DISABLE_SNIPER: False,
             SNIPER.DISABLE_LATENCY: 0.5,
             SNIPER.SKIP_CLIP: True,
-            SNIPER.GUN_ZOOM: False,
             SNIPER.DYN_ZOOM: {
                 GLOBAL.ENABLED: False,
                 SNIPER.STEPS_ONLY: True,

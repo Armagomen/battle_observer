@@ -9,7 +9,7 @@ from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
-from armagomen.utils.common import overrideMethod, logError, isReplay, callback, getPlayer
+from armagomen.utils.common import overrideMethod, logError, isReplay, callback
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 
 settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": False, SNIPER.DYN_ZOOM: False}
@@ -60,10 +60,7 @@ def getZoom(distance, steps):
 def enable(base, camera, targetPos, saveZoom):
     if settingsCache[SNIPER.DYN_ZOOM]:
         saveZoom = True
-        player = getPlayer()
-        if settings.zoom[SNIPER.GUN_ZOOM]:
-            targetPos = player.gunRotator.markerInfo[GLOBAL.FIRST]
-        ownPosition = getOwnVehiclePosition(avatar=player)
+        ownPosition = getOwnVehiclePosition()
         distance = (targetPos - ownPosition).length if ownPosition is not None else 0.0
         camera._cfg[SNIPER.ZOOM] = getZoom(distance, camera._cfg[SNIPER.ZOOMS])
     return base(camera, targetPos, saveZoom)

@@ -299,7 +299,6 @@ localization = {
         "dynamic_zoom*enabled": "Automatic selection of the zoom ratio when switching to sniper mode.",
         "dynamic_zoom*steps_only": "Move only in fixed steps.",
         "dynamic_zoom*enabled_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
-        "zoomToGunMarker": "Enable the approximation of the camera to the Central marker information",
         "dynamic_zoom*zoomXMeters": "Sensitivity of approach in meters.",
         "dynamic_zoom*zoomXMeters_tooltip": "(dynamic_zoom = distance / Sensitivity of approach)\n"
                                             "The default is every 17 meters + 1 (the smaller the number, the more zoom",
