@@ -6,9 +6,9 @@ loadError = False
 errorMessage = ""
 
 try:
-    from armagomen.battle_observer.core.update.worker import UpdateMain
+    from armagomen.battle_observer.core.updater import Updater
 
-    update = UpdateMain(__version__)
+    updater = Updater(__version__)
 except Exception:
     LOG_CURRENT_EXCEPTION()
 
@@ -32,14 +32,14 @@ try:
     from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
     from armagomen.battle_observer.settings.loader import SettingsLoader
     from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion
-    from sys import version as python_version
+    from sys import version as pythonVersion
 except Exception as err:
     LOG_CURRENT_EXCEPTION()
     loadError = True
     errorMessage = repr(err)
 else:
     if isFileValid(__version__):
-        logInfo("Launched at python v{}".format(python_version))
+        logInfo('Launched at python v{}'.format(pythonVersion))
         logInfo('MOD START LOADING: v{} - {}'.format(__version__, gameVersion))
         _view_settings = ViewSettings()
         componentsLoader = ComponentsLoader()
@@ -49,8 +49,8 @@ else:
                                                 settings_loader, __version__)
     else:
         loadError = True
-        errorMessage = "ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please " \
-                       "install mod from official site".format(__version__)
+        errorMessage = 'ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please ' \
+                       'install mod from official site: https://github.com/Armagomen/battle_observer/releases/latest'.format(__version__)
         logError(errorMessage)
 
 

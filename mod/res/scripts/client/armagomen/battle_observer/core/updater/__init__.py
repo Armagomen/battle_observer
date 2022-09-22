@@ -4,10 +4,10 @@ from collections import namedtuple
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen.battle_observer.core.update.i18n import getI18n
+from armagomen.battle_observer.core.updater.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS, getRandomLogo
 from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, urlResponse, getUpdatePath
-from armagomen.utils.dialogs import UpdateDialogs
+from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.events import g_events
 from async import async, await
 from gui.Scaleform.Waiting import Waiting
@@ -39,7 +39,7 @@ class DownloadThread(object):
         self.version = None
         self.i18n = getI18n()
         self.updateData = dict()
-        self.dialogs = UpdateDialogs()
+        self.dialogs = UpdaterDialogs()
         self.downloader = None
         self.modPath = os.path.join(modsPath, gameVersion)
 
