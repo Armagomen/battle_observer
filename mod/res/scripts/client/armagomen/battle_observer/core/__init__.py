@@ -12,20 +12,6 @@ try:
 except Exception:
     LOG_CURRENT_EXCEPTION()
 
-
-def importApi():
-    try:
-        from gui.modsListApi import g_modsListApi
-        from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-    except Exception:
-        LOG_CURRENT_EXCEPTION()
-        return None, None, None
-    else:
-        return g_modsListApi, vxSettingsApi, vxSettingsApiEvents
-
-
-g_modsListApi, vxSettingsApi, vxSettingsApiEvents = importApi()
-
 try:
     from armagomen.battle_observer.components import ComponentsLoader
     from armagomen.battle_observer.core.view_settings import ViewSettings
@@ -44,13 +30,12 @@ else:
         _view_settings = ViewSettings()
         componentsLoader = ComponentsLoader()
         settings_loader = SettingsLoader()
-        if g_modsListApi is not None and vxSettingsApi is not None and vxSettingsApiEvents is not None:
-            hangar_settings = SettingsInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
-                                                settings_loader, __version__)
+        hangar_settings = SettingsInterface(settings_loader, __version__)
     else:
         loadError = True
         errorMessage = 'ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please ' \
-                       'install mod from official source: https://github.com/Armagomen/battle_observer/releases/latest'.format(__version__)
+                       'install mod from official source: https://github.com/Armagomen/battle_observer/releases/latest'.format(
+            __version__)
         logError(errorMessage)
 
 

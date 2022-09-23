@@ -25,6 +25,17 @@ def LOCKED_MESSAGE():
         return pattern.format("The function is not available, XVM is installed.")
 
 
+def importApi():
+    try:
+        from gui.modsListApi import g_modsListApi
+        from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
+    except Exception:
+        LOG_CURRENT_EXCEPTION()
+        return None, None, None
+    else:
+        return g_modsListApi, vxSettingsApi, vxSettingsApiEvents
+
+
 class Getter(object):
     __slots__ = ()
 
@@ -178,10 +189,13 @@ class CreateElement(object):
 
 class SettingsInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settingsLoader, version):
+    def __init__(self, settingsLoader, version):
+        g_modsListApi, vxSettingsApi, vxSettingsApiEvents = importApi()
+        if g_modsListApi is None or vxSettingsApi is None or vxSettingsApiEvents is None:
+            return
         super(SettingsInterface, self).__init__()
         self.sLoader = settingsLoader
-        self.modsListApi = modsListApi
+        self.modsListApi = g_modsListApi
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
