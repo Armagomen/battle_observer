@@ -99,10 +99,10 @@ class DownloadThread(object):
         self.dialogs.showUpdateError(message)
 
 
-class UpdateMain(DownloadThread):
+class Updater(DownloadThread):
 
     def __init__(self, version):
-        super(UpdateMain, self).__init__()
+        super(Updater, self).__init__()
         self.version = version
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         self.subscribe()
