@@ -33,9 +33,9 @@ else:
         hangar_settings = SettingsInterface(settings_loader, __version__)
     else:
         loadError = True
+        URL = 'https://github.com/Armagomen/battle_observer/releases/latest'
         errorMessage = 'ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please ' \
-                       'install mod from official source: https://github.com/Armagomen/battle_observer/releases/latest'.format(
-            __version__)
+                       'install mod from official source: {}'.format(__version__, URL)
         logError(errorMessage)
 
 
