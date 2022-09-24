@@ -1,7 +1,6 @@
 from importlib import import_module
 
-from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, CLOCK, SWF, ALIASES
+from armagomen.constants import SWF, ALIASES
 from armagomen.utils.common import logError, logWarning, logDebug, callback
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -13,12 +12,11 @@ from gui.shared import EVENT_BUS_SCOPE
 
 def getViewSettings():
     view_settings = []
-    if settings.clock[GLOBAL.ENABLED]:
-        try:
-            module_class = getattr(import_module(".date_times", package=__package__), "DateTimes")
-            view_settings.append(ComponentSettings(ALIASES.DATE_TIME, module_class, ScopeTemplates.DEFAULT_SCOPE))
-        except Exception as err:
-            logWarning("{}, {}, {}".format(__package__, ALIASES.DATE_TIME, repr(err)))
+    try:
+        module_class = getattr(import_module(".date_times", package=__package__), "DateTimes")
+        view_settings.append(ComponentSettings(ALIASES.DATE_TIME, module_class, ScopeTemplates.DEFAULT_SCOPE))
+    except Exception as err:
+        logWarning("{}, {}, {}".format(__package__, ALIASES.DATE_TIME, repr(err)))
     return view_settings
 
 
@@ -46,11 +44,10 @@ class ObserverBusinessHandler(PackageBusinessHandler):
     @staticmethod
     def load(view):
         g_events.onHangarLoaded(view)
-        if settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]:
-            if hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
-                view.flashObject.as_observerCreateComponents([ALIASES.DATE_TIME])
-            else:
-                logError("hangar_page {}, has ho attribute {}", view.settings.alias, SWF.ATTRIBUTE_NAME)
+        if hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
+            view.flashObject.as_observerCreateComponents([ALIASES.DATE_TIME])
+        else:
+            logError("hangar_page {}, has ho attribute {}", view.settings.alias, SWF.ATTRIBUTE_NAME)
 
     def _onViewLoaded(self, view, *args):
         if view.settings is None:

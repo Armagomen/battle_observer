@@ -21,7 +21,8 @@ class DateTimes(DateTimesMeta):
         self.updateDecoder()
         settings.onModSettingsChanged += self.onModSettingsChanged
         self.as_startUpdateS(self.config)
-        self.timerEvent.start()
+        if self.config[GLOBAL.ENABLED] and settings.clock[GLOBAL.ENABLED]:
+            self.timerEvent.start()
 
     def updateDecoder(self):
         self.coding = checkDecoder(strftime(self.config[CLOCK.FORMAT]))
@@ -31,7 +32,7 @@ class DateTimes(DateTimesMeta):
             self.timerEvent.stop()
             self.updateDecoder()
             self.as_startUpdateS(self.config)
-            if self.config[GLOBAL.ENABLED]:
+            if self.config[GLOBAL.ENABLED] and settings.clock[GLOBAL.ENABLED]:
                 self.timerEvent.start()
 
     def _dispose(self):
