@@ -168,13 +168,13 @@ localization = {
     "clock": {
         "header": "Панель Часов в бою\ангаре.",
         "battle*enabled": "Отображать в бою.",
-        "hangar*enabled": "Отображать в ангаре.",
         "battle*format": "Форматирование строки.",
         "battle*format_tooltip": timeFormat_tooltip,
-        "hangar*format": "Форматирование строки.",
-        "hangar*format_tooltip": timeFormat_tooltip,
         "battle*x": "Позиция по горизонтали.",
         "battle*y": "Позиция по вертикали.",
+        "hangar*enabled": "Отображать в ангаре.",
+        "hangar*format": "Форматирование строки.",
+        "hangar*format_tooltip": timeFormat_tooltip,
         "hangar*x": "Позиция по горизонтали.",
         "hangar*y": "Позиция по вертикали."
     },

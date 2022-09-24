@@ -58,9 +58,7 @@ class DefaultSettings(object):
                 GLOBAL.ENABLED: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
                 GLOBAL.X: -240,
-                GLOBAL.Y: GLOBAL.ZERO,
-                "reverse_x": True,
-                "reverse_y": True
+                GLOBAL.Y: GLOBAL.ZERO
             },
             CLOCK.IN_BATTLE: {
                 GLOBAL.ENABLED: False,

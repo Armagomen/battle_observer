@@ -12,7 +12,7 @@ class DateTimes(DateTimesMeta):
 
     def __init__(self):
         super(DateTimes, self).__init__()
-        self.config = settings.clock[CLOCK.IN_LOBBY].copy()
+        self.config = settings.clock[CLOCK.IN_LOBBY]
         self.coding = None
         self.timerEvent = CyclicTimerEvent(CLOCK.UPDATE_INTERVAL, self.updateTimeData)
 
@@ -28,34 +28,11 @@ class DateTimes(DateTimesMeta):
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == CLOCK.NAME:
-            inLobby = config[CLOCK.IN_LOBBY]
-            enabled = False
-            updateSettings = False
-            for key, value in inLobby.iteritems():
-                if key == GLOBAL.ENABLED:
-                    self.updateEnable(value)
-                    enabled = value
-                elif self.config[key] != value:
-                    updateSettings = True
-
-            if updateSettings and enabled:
-                self.updateSettings()
-            self.config = inLobby.copy()
-
-    def updateEnable(self, enable):
-        if not enable:
             self.timerEvent.stop()
-            self.as_clearSceneS()
-        else:
+            self.updateDecoder()
             self.as_startUpdateS(self.config)
-            self.timerEvent.start()
-
-    def updateSettings(self):
-        self.timerEvent.stop()
-        self.updateDecoder()
-        self.as_clearSceneS()
-        self.as_startUpdateS(self.config)
-        self.timerEvent.start()
+            if self.config[GLOBAL.ENABLED]:
+                self.timerEvent.start()
 
     def _dispose(self):
         self.timerEvent.stop()

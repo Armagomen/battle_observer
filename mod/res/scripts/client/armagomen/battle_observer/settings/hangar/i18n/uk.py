@@ -167,13 +167,13 @@ localization = {
     "clock": {
         "header": "Налаштування годиннику в ангарі та бою",
         "battle*enabled": "Відображати в бою",
-        "hangar*enabled": "Відображати в ангарі",
         "battle*format": "Поле для форматування годинника в бою",
         "battle*format_tooltip": timeFormat_tooltip,
-        "hangar*format": "Поле для форматування годинника в ангарі",
-        "hangar*format_tooltip": timeFormat_tooltip,
         "battle*x": "Позиція в бою по горизонталі",
         "battle*y": "Позиція в бою по вертикалі",
+        "hangar*enabled": "Відображати в ангарі",
+        "hangar*format": "Поле для форматування годинника в ангарі",
+        "hangar*format_tooltip": timeFormat_tooltip,
         "hangar*x": "Позиція в ангарі по горизонталі",
         "hangar*y": "Позиція в ангарі по вертикалі"
     },

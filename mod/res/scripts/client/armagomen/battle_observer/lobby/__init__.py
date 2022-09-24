@@ -13,7 +13,7 @@ from gui.shared import EVENT_BUS_SCOPE
 
 def getViewSettings():
     view_settings = []
-    if settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_LOBBY][GLOBAL.ENABLED]:
+    if settings.clock[GLOBAL.ENABLED]:
         try:
             module_class = getattr(import_module(".date_times", package=__package__), "DateTimes")
             view_settings.append(ComponentSettings(ALIASES.DATE_TIME, module_class, ScopeTemplates.DEFAULT_SCOPE))

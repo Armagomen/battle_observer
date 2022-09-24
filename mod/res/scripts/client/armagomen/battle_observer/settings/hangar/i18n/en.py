@@ -164,13 +164,13 @@ localization = {
     "clock": {
         "header": "CLOCK",
         "battle*enabled": "Display in battle.",
-        "hangar*enabled": "Display in hangar.",
         "battle*format": "format.",
         "battle*format_tooltip": timeFormat_tooltip,
-        "hangar*format": "format.",
-        "hangar*format_tooltip": timeFormat_tooltip,
         "battle*x": "battle X",
         "battle*y": "battle Y",
+        "hangar*enabled": "Display in hangar.",
+        "hangar*format": "format.",
+        "hangar*format_tooltip": timeFormat_tooltip,
         "hangar*x": "hangar X",
         "hangar*y": "hangar Y"
     },
