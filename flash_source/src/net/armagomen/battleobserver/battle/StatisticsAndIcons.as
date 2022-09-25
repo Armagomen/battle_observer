@@ -136,10 +136,10 @@ package net.armagomen.battleobserver.battle
 						listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
 					}
 				}
-				if (this.fullStats && this.fullStats.visible)
-				{
-					this.updateFullstats(vehicleID, isEnemy);
-				}
+				//if (this.fullStats && this.fullStats.visible)
+				//{
+					//this.updateFullstats(vehicleID, isEnemy);
+				//}
 				
 				if (this.battleLoading && this.battleLoading.visible)
 				{
