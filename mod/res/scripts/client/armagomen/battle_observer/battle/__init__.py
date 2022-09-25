@@ -15,7 +15,7 @@ from gui.shared import EVENT_BUS_SCOPE
 
 __all__ = ()
 
-logInfo("load package {} loaded".format(__package__))
+logInfo("load package: {}".format(__package__))
 
 
 def getViewSettings():
@@ -29,24 +29,24 @@ def getViewSettings():
             _view_settings.removeComponent(alias)
             logError("{}, {}, {}", __package__, alias, repr(err))
             LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
-    return viewSettings
+    return tuple(viewSettings)
 
 
 def getBusinessHandlers():
-    return (ObserverBusinessHandler(),)
+    return ObserverBusinessHandlerBattle(),
 
 
 def getContextMenuHandlers():
     return ()
 
 
-class ObserverBusinessHandler(PackageBusinessHandler):
+class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
 
     def __init__(self):
         self.viewAliases = _view_settings.getViewAliases()
         listeners = [(alias, self.eventListener) for alias in self.viewAliases]
-        super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
+        super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = MinimapZoomPlugin()
         self._statLoadTry = 0
         self.statistics = StatisticsDataLoader() if _view_settings.isWTREnabled() else None
@@ -57,12 +57,12 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         self.minimapPlugin.fini()
         self.minimapPlugin = None
         self._statLoadTry = 0
-        super(ObserverBusinessHandler, self).fini()
+        super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
         self._app.as_loadLibrariesS([SWF.BATTLE])
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
-        logInfo("ObserverBusinessHandler loading flash libraries swf={}, alias={}".format(SWF.BATTLE, event.alias))
+        logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
     def loadStatisticView(self, view):
         if self._statisticsEnabled:
