@@ -1,4 +1,4 @@
-__version__ = "1.39.3"
+__version__ = "1.39.4"
 
 from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion
 from debug_utils import LOG_CURRENT_EXCEPTION
