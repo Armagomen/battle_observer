@@ -298,3 +298,28 @@ def getPercent(param_a, param_b):
 def isFileValid(version):
     FILE_NAME = "armagomen.battleObserver_{}.wotmod"
     return FILE_NAME.format(version) in os.listdir(os.path.join(modsPath, gameVersion))
+
+
+from Math import Matrix, Vector3
+from math_utils import createTranslationMatrix
+from avatar_components.avatar_chat_key_handling import AvatarChatKeyHandling
+
+
+@overrideMethod(AvatarChatKeyHandling, "__getVehicleMatrixProvider")
+def wgFix(base, chatKey, cmd, vehicleID=None):
+    if vehicleID is None:
+        vehicleID = chatKey._AvatarChatKeyHandling__getVehicleIDByCmd(cmd)
+    vehicle = BigWorld.entities.get(vehicleID)
+    if vehicle is None:
+        position = BigWorld.player().arena.positions.get(vehicleID)
+        if position is not None:
+            maxDistance = 600.0
+            playerVehiclePosition = BigWorld.player().getOwnVehiclePosition()
+            if Vector3(position).distSqrTo(playerVehiclePosition) > maxDistance * maxDistance:
+                direction = Vector3(position) - playerVehiclePosition
+                direction.normalise()
+                return createTranslationMatrix(playerVehiclePosition + direction * maxDistance)
+            return createTranslationMatrix(position)
+        return
+    else:
+        return Matrix(vehicle.matrix)
