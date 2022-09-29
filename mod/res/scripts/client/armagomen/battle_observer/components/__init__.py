@@ -12,7 +12,7 @@ class ComponentsLoader(object):
             'dispersion': None,
             'donate_messages': None,
             'effects': None,
-            'for_tests': None,
+            'for_wg_fixes': None,
             'friends': None,
             'minimap_plugins': None,
             'postmortem': None,
