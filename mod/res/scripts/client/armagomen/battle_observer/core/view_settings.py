@@ -113,13 +113,12 @@ class ViewSettings(object):
             return False
 
     def setComponents(self):
+        self.__components.clear()
+        self.__hiddenComponents.clear()
         arenaVisitor = self.sessionProvider.arenaVisitor
         if arenaVisitor is not None and arenaVisitor.getArenaGuiType() in BATTLES_RANGE:
             self.checkComponents()
             self.setHiddenComponents()
-        else:
-            self.__components.clear()
-            self.__hiddenComponents.clear()
         return self.__components
 
     def checkComponents(self):

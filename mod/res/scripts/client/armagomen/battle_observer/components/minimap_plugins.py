@@ -8,7 +8,6 @@ from armagomen.utils.keys_listener import g_keysListener
 from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
-from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from gui.battle_control import avatar_getter
 
 
@@ -66,16 +65,15 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
             super(ArenaVehiclesPlugin, self)._hideVehicle(entry)
 
     def __setDestroyed(self, vehicleID, entry):
-        self.__clearAoIToFarCallback(vehicleID)
-        if entry.setAlive(False) and not entry.wasSpotted():
-            entryID = entry.getID()
+        if self.__isDestroyImmediately:
             self._setInAoI(entry, True)
-            self.__setActive(entry, True)
-            self._move(entryID, CONTAINER_NAME.DEAD_VEHICLES)
-            self._invoke(entryID, 'setDead', True)
-            self._invoke(entryID, self._showNames)
-        else:
-            self.__setActive(entry, False)
+        super(ArenaVehiclesPlugin, self).__setDestroyed(vehicleID, entry)
+        self._invoke(entry.getID(), self._showNames)
+
+    def __switchToVehicle(self, prevCtrlID):
+        if self.__isDestroyImmediately:
+            return
+        super(ArenaVehiclesPlugin, self).__switchToVehicle(prevCtrlID)
 
     @property
     def _showNames(self):
