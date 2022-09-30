@@ -21,7 +21,6 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
                  ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
                  ARENA_GUI_TYPE.SORTIE_2,
                  ARENA_GUI_TYPE.FORT_BATTLE_2,
-                 ARENA_GUI_TYPE.TUTORIAL,
                  ARENA_GUI_TYPE.EPIC_BATTLE,
                  ARENA_GUI_TYPE.MAPBOX}
 
