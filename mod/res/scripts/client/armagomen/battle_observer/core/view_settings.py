@@ -3,12 +3,10 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
 from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
-from gui.Scaleform.daapi.settings import config as packages
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
-from gui.shared.system_factory import registerScaleformBattlePackages, collectScaleformBattlePackages
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -30,6 +28,20 @@ ALIASES_TO_HIDE = ((ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
                    (ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER))
 
 
+def registerBattleObserverScaleformPackages():
+    from gui.Scaleform.daapi.settings import config
+    from gui.shared.system_factory import collectScaleformBattlePackages
+    config.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
+    config.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
+    config.registerScaleformLobbyPackages(SWF.LOBBY_PACKAGES)
+    for guiType in BATTLES_RANGE:
+        if collectScaleformBattlePackages(guiType):
+            config.registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
+
+
+registerBattleObserverScaleformPackages()
+
+
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
@@ -39,11 +51,6 @@ class ViewSettings(object):
         self.__hiddenComponents = set()
         g_currentVehicle.onChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
-        for guiType in BATTLES_RANGE:
-            if collectScaleformBattlePackages(guiType):
-                registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
-        packages.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
-        packages.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
 
     def onVehicleChanged(self):
         self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
