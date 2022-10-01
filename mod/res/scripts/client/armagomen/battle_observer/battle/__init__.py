@@ -60,9 +60,10 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        self._app.as_loadLibrariesS([SWF.BATTLE])
-        self._app.loaderManager.onViewLoaded += self.onViewLoaded
-        logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
+        if _view_settings.settingsAdded:
+            self._app.as_loadLibrariesS([SWF.BATTLE])
+            self._app.loaderManager.onViewLoaded += self.onViewLoaded
+            logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
     def loadStatisticView(self, view):
         if self._statisticsEnabled:

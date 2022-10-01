@@ -49,6 +49,7 @@ class ViewSettings(object):
         self.isSPG = False
         self.__components = set()
         self.__hiddenComponents = set()
+        self.settingsAdded = False
         g_currentVehicle.onChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
 
@@ -120,6 +121,7 @@ class ViewSettings(object):
             return False
 
     def setComponents(self):
+        self.settingsAdded = False
         self.__components.clear()
         self.__hiddenComponents.clear()
         arenaVisitor = self.sessionProvider.arenaVisitor
@@ -146,13 +148,20 @@ class ViewSettings(object):
             else:
                 self.__hiddenComponents.discard(wg_alias)
 
+    @staticmethod
+    def checkClassName(className):
+        return className in ("StrongholdPage", "EpicBattlePage", "EpicRandomPage", "ClassicPage")
+
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
-        if not self.__components:
-            return
-        componentsConfig = page._SharedPage__componentsConfig
-        newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
-        componentsConfig._ComponentsConfig__config = newConfig
+        if self.checkClassName(page.__class__.__name__):
+            if not self.__components:
+                self.__hiddenComponents.clear()
+                return
+            componentsConfig = page._SharedPage__componentsConfig
+            newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
+            componentsConfig._ComponentsConfig__config = newConfig
+            self.settingsAdded = True
 
     def addReplaceAlias(self, aliases):
         new_aliases = list(aliases)
