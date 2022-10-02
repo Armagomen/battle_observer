@@ -1,4 +1,4 @@
-from armagomen.battle_observer.core import _view_settings
+from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, ANOTHER, GLOBAL
 from armagomen.utils.common import overrideMethod
@@ -17,7 +17,7 @@ def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
             kwargs[ANOTHER.BADGES] = None
         if main[MAIN.SHOW_ANONYMOUS] and ANOTHER.ACCOUNT_DBID in kwargs:
             if kwargs[ANOTHER.ACCOUNT_DBID] == GLOBAL.ZERO:
-                if not _view_settings.isWTREnabled():
+                if not viewSettings.isWTREnabled():
                     kwargs[ANOTHER.IS_TEAM_KILLER] = _PLAYER_STATUS.IS_TEAM_KILLER
                 if main[MAIN.CHANGE_ANONYMOUS_NAME] and ANOTHER.NAME in kwargs and \
                         not kwargs[ANOTHER.NAME].startswith(BOT_START_SWITCH):

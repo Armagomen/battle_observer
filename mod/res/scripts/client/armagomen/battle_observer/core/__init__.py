@@ -1,13 +1,14 @@
 __version__ = "1.39.5"
 
-from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion
+from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
+    cleanupObserverUpdates
 from debug_utils import LOG_CURRENT_EXCEPTION
 
 loadError = False
 errorMessage = ""
-_view_settings = None
+viewSettings = None
 componentsLoader = None
-hangar_settings = None
+hangarSettings = None
 
 
 def checkUpdate():
@@ -20,7 +21,7 @@ def checkUpdate():
 
 
 def startLoadingMod():
-    global loadError, errorMessage, _view_settings, componentsLoader, hangar_settings
+    global loadError, errorMessage, viewSettings, componentsLoader, hangarSettings
     try:
         from armagomen.battle_observer.components import ComponentsLoader
         from armagomen.battle_observer.core.view_settings import ViewSettings
@@ -35,10 +36,10 @@ def startLoadingMod():
         if isFileValid(__version__):
             logInfo('Launched at python v{}'.format(version))
             logInfo('MOD START LOADING: v{} - {}'.format(__version__, gameVersion))
-            _view_settings = ViewSettings()
+            viewSettings = ViewSettings()
             componentsLoader = ComponentsLoader()
             settings_loader = SettingsLoader()
-            hangar_settings = SettingsInterface(settings_loader, __version__)
+            hangarSettings = SettingsInterface(settings_loader, __version__)
         else:
             loadError = True
             URL = 'https://github.com/Armagomen/battle_observer/releases/latest'
@@ -56,8 +57,8 @@ def init():
 
 
 def fini():
-    if loadError:
-        return
     clearClientCache()
+    cleanupObserverUpdates()
     cleanupUpdates()
-    logInfo('MOD SHUTTING DOWN: v{} - {}'.format(__version__, gameVersion))
+    if not loadError:
+        logInfo('MOD SHUTTING DOWN: v{} - {}'.format(__version__, gameVersion))

@@ -55,7 +55,13 @@ package net.armagomen.battleobserver.battle.components
 						this.in_log = new TextExt(data.in_log.x + 10, -25 + data.in_log.y, null, data.in_log.align, getShadowSettings(), bottomContainer);
 					}
 					this.damageLogPanel.updateContainersPosition();
-					this.damageLogPanel.parent.updateDamageLogPosition();
+					try 
+					{
+						this.damageLogPanel.parent.updateDamageLogPosition();
+					}
+					catch (err:Error)
+					{
+					}
 				}
 			}
 		}

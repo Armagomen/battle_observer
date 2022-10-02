@@ -152,7 +152,6 @@ def clearClientCache(category=None):
             removeDirs(os.path.join(preferencesDir, dirName), dirName)
     else:
         removeDirs(os.path.join(preferencesDir, category), category)
-    cleanupObserverUpdates()
 
 
 def encodeData(data):

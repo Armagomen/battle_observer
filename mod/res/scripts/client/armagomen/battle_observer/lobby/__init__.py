@@ -7,8 +7,6 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
-logInfo("load package: {}".format(__package__))
-
 
 def getViewSettings():
     view_settings = []
@@ -17,6 +15,7 @@ def getViewSettings():
         view_settings.append(ComponentSettings(ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE))
     except Exception as err:
         logWarning("{}, {}, {}".format(__package__, ALIASES.DATE_TIME, repr(err)))
+    logDebug("{}.getViewSettings: {}", __package__, view_settings)
     return tuple(view_settings)
 
 

@@ -4,7 +4,7 @@ from CurrentVehicle import g_currentVehicle
 from DogTagComponent import DogTagComponent
 from PlayerEvents import g_playerEvents
 from VehicleGunRotator import VehicleGunRotator
-from armagomen.battle_observer.core import _view_settings
+from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import overrideMethod, getPlayer, setMaxFrameRate, logDebug, callback, logError
@@ -76,7 +76,7 @@ def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
 @overrideMethod(BattleMessengerView, "_populate")
 def messanger_populate(base, messanger):
     base(messanger)
-    if settings.main[MAIN.HIDE_CHAT] and _view_settings.isRandomBattle:
+    if settings.main[MAIN.HIDE_CHAT] and viewSettings.isRandomBattle():
         callback(2.0, messanger._dispose)
 
 
