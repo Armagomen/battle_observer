@@ -1,9 +1,8 @@
-import constants
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
+from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF, REGIONS
 from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo, getPlayer
-from constants import ARENA_GUI_TYPE, ROLE_TYPE
+from constants import ARENA_GUI_TYPE, ROLE_TYPE, AUTH_REALM
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
@@ -78,8 +77,8 @@ class ViewSettings(object):
         if xvmInstalled:
             logInfo("Statistics module is disabled, XVM is installed")
             return False
-        return self.isStatisticsModuleEnabled() and settings.statistics[STATISTICS.STATISTIC_ENABLED] and \
-               constants.AUTH_REALM.lower() != "ru"
+        wtrEnabled = settings.statistics[STATISTICS.STATISTIC_ENABLED]
+        return self.isStatisticsModuleEnabled() and wtrEnabled and AUTH_REALM.lower() != REGIONS.RU
 
     def isIconsEnabled(self):
         if xvmInstalled:

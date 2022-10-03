@@ -2,9 +2,9 @@
 import datetime
 import random
 
-import constants
-from armagomen.constants import URLS, IMG, getRandomLogo
+from armagomen.constants import URLS, IMG, getRandomLogo, REGIONS
 from armagomen.utils.common import logInfo
+from constants import AUTH_REALM
 from gui.SystemMessages import pushMessage, SM_TYPE
 from gui.shared.ClanCache import g_clanCache
 from gui.shared.personality import ServicesLocator
@@ -66,5 +66,5 @@ class Donate(object):
                 logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
 
 
-if constants.AUTH_REALM.lower() != "ru":
+if AUTH_REALM.lower() != REGIONS.RU:
     Donate()
