@@ -57,8 +57,13 @@ class Donate(object):
         clanAbbrev = g_clanCache.clanAbbrev
         return clanAbbrev is not None and clanAbbrev == URLS.CLAN_ABBREV
 
+    @property
+    def showMessage(self):
+        clanAbbrev = g_clanCache.clanAbbrev
+        return clanAbbrev is None or "WG" not in g_clanCache.clanAbbrev
+
     def pushNewMessage(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.LOBBY:
+        if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
                 self.timeDelta = currentTime + datetime.timedelta(minutes=60)
