@@ -20,18 +20,18 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         if getClientLanguage() in ('ru', 'uk', 'be'):
             self.messages = (
-                "Доброго вечора ми з України.",
-                "Підтримай розробку мода, все буде Україна.",
-                "Батько наш - Бандера,\nУкраїна - мати,\nМи за Україну будем воювати!",
+                "Доброго вечора ми з України.\nСлава Україні",
+                "Підтримай розробку мода, все буде Україна.\nСлава Україні",
+                "Батько наш - Бандера,\nУкраїна - мати,\nМи за Україну будем воювати!\nСлава Україні",
                 "Ой у лузі червона калина похилилася,\nЧогось наша славна Україна зажурилася.\n"
-                "А ми тую червону калину підіймемо,\nА ми нашу славну Україну, гей, гей, розвеселимо!",
-                "В ці складні часи мені дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть. Слава Україні"
+                "А ми тую червону калину підіймемо,\nА ми нашу славну Україну, гей, гей, розвеселимо!\nСлава Україні",
+                "В ці складні часи мені дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть.\nСлава Україні"
             )
         else:
             self.messages = (
-                "Good evening, we are from Ukraine.",
-                "Support the development of the mod, everything will be Ukraine.",
-                "In these difficult times, I really need your support, even your 10 euro will help. Glory to Ukraine",
+                "Good evening, we are from Ukraine. Support the development of the mod.\nGlory to Ukraine",
+                "Support the development of the mod, everything will be Ukraine.\nGlory to Ukraine",
+                "In these difficult times, I really need your support, even your 10 euro will help.\nGlory to Ukraine",
             )
 
     def getRandomMessage(self):
