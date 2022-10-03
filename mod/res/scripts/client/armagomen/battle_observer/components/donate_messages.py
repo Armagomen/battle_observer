@@ -53,11 +53,6 @@ class Donate(object):
                                           patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
     @property
-    def userInBOUA(self):
-        clanAbbrev = g_clanCache.clanAbbrev
-        return clanAbbrev is not None and clanAbbrev == URLS.CLAN_ABBREV
-
-    @property
     def showMessage(self):
         clanAbbrev = g_clanCache.clanAbbrev
         return clanAbbrev is None or "WG" not in g_clanCache.clanAbbrev

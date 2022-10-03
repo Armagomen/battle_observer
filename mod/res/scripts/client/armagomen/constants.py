@@ -38,13 +38,11 @@ URLS = namedtuple("URLS", (
     "PAYPAL_URL",
     "UPDATE_GITHUB_API_URL",
     "PATREON_URL",
-    "CLAN_ABBREV",
     "DISCORD"
 ))("https://donatua.com/@armagomen",
    "https://www.paypal.com/donate/?hosted_button_id=T5D6TZY9DGXBL",
    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
    "https://www.patreon.com/armagomen",
-   "BO-UA",
    "https://discord.gg/Nma5T5snKW")
 
 VEHICLE = namedtuple("VEHICLE", "CUR MAX TEAM PERCENT")("health", "maxHealth", "team", "percent")
