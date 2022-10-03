@@ -5,7 +5,6 @@ class ComponentsLoader(object):
 
     def __init__(self):
         self.modules = {
-            'badges': None,
             'camera': None,
             'common': None,
             'crew': None,
@@ -17,6 +16,7 @@ class ComponentsLoader(object):
             'minimap_plugins': None,
             'postmortem': None,
             'premium_time': None,
+            'replace_vehicle_info': None,
             'save_shoot_lite': None,
             'service_channel_filter': None,
             'shot_result_plugin': None,

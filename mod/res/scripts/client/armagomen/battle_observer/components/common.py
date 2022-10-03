@@ -1,13 +1,12 @@
 import math
 
 from CurrentVehicle import g_currentVehicle
-from DogTagComponent import DogTagComponent
 from PlayerEvents import g_playerEvents
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
-from armagomen.utils.common import overrideMethod, getPlayer, setMaxFrameRate, logDebug, callback, logError
+from armagomen.utils.common import overrideMethod, setMaxFrameRate, logDebug, callback, logError
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.indicators import SixthSenseIndicator
@@ -33,7 +32,7 @@ def sixthSense(base, *args, **kwargs):
 @overrideMethod(Hangar, "__updateAll")
 def changeVehicle(base, *args, **kwargs):
     base(*args, **kwargs)
-    callback(0.5, g_events.onVehicleChanged)
+    callback(0.6, g_events.onVehicleChanged)
 
 
 # disable field mail tips
@@ -56,13 +55,6 @@ def setSoundMode(base, *args, **kwargs):
 @overrideMethod(_ClientArenaVisitor, "hasDogTag")
 def hasDogTag(base, *args, **kwargs):
     return False if settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
-
-
-# fix wg dogTag bug
-@overrideMethod(DogTagComponent, "_isObserving")
-def _isObservingDogTagFix(*args):
-    player = getPlayer()
-    return player is None or player.vehicle is None or not player.vehicle.isPlayerVehicle
 
 
 # update gun dispersion

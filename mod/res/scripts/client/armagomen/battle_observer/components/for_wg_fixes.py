@@ -9,7 +9,7 @@ getVehicleMatrixProviderErr = "fix: AvatarChatKeyHandling __getVehicleMatrixProv
 
 
 @overrideMethod(AvatarChatKeyHandling, "__getVehicleMatrixProvider")
-def wgFix(base, chatKey, cmd, vehicleID=None):
+def __getVehicleMatrixProviderFix(base, chatKey, cmd, vehicleID=None):
     try:
         return base(chatKey, cmd, vehicleID=vehicleID)
     except Exception as err:
