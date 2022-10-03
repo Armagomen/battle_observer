@@ -13,9 +13,10 @@ hangarSettings = None
 
 def checkUpdate():
     try:
+        from constants import AUTH_REALM
         from armagomen.battle_observer.core.updater import Updater
-
-        Updater(__version__)
+        if AUTH_REALM.lower() != "ru":
+            Updater(__version__)
     except Exception:
         LOG_CURRENT_EXCEPTION()
 
