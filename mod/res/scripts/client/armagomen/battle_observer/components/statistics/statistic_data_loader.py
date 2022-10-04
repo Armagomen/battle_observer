@@ -18,7 +18,7 @@ class StatisticsDataLoader(object):
 
     def __init__(self):
         self.loadedData = {}
-        self.enabled = region is not None
+        self.enabled = region is not None and AUTH_REALM.lower() != REGIONS.RU
         self.loaded = False
         self._load_try = 0
         self.__wtrData = WTRStatistics()
