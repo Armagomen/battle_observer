@@ -47,7 +47,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def _populate(self):
         super(MainGun, self)._populate()
         self.macros.update(mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
-                           mainGunColor=self.colors[MAIN_GUN.NAME][MAIN_GUN.COLOR],
                            mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):

@@ -207,9 +207,6 @@ class DefaultSettings(object):
             ARMOR_CALC.ON_ALLY: False,
         }
         self.colors = {
-            MAIN_GUN.NAME: {
-                MAIN_GUN.COLOR: COLORS.S_YELLOW
-            },
             COLORS.GLOBAL: {
                 COLORS.ALLY_MAME: COLORS.GREEN,
                 COLORS.ENEMY_MAME: COLORS.RED,

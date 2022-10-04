@@ -45,7 +45,7 @@ URLS = namedtuple("URLS", (
    "https://www.patreon.com/armagomen",
    "https://discord.gg/Nma5T5snKW")
 
-VEHICLE = namedtuple("VEHICLE", "CUR MAX TEAM PERCENT")("health", "maxHealth", "team", "percent")
+VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
 REGIONS = namedtuple("REGIONS", ("RU", "EU", "ASIA", "NA"))("ru", "eu", "asia", "com")
 
 class GLOBAL:
@@ -53,7 +53,7 @@ class GLOBAL:
         pass
 
     ALIGN = "align"
-    ALIGN_LIST = namedtuple("ALIGN_LIST", "left center right")("left", "center", "right")
+    ALIGN_LIST = namedtuple("ALIGN_LIST", ("left", "center", "right"))("left", "center", "right")
     ALPHA = "alpha"
     AVG_COLOR = "avgColor"
     BG_ALPHA = "bgAlpha"
@@ -120,8 +120,8 @@ COLORS = namedtuple("COLORS", (
     "deadColor")
 
 MAIN_GUN = namedtuple("MAIN_GUN", (
-    "NAME", "COLOR", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE", "INFO"))(
-    "main_gun", "mainGunColor", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2,
+    "NAME", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE", "INFO"))(
+    "main_gun", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2,
     "mainGun")
 
 MINIMAP = namedtuple("MINIMAP", (
