@@ -3,7 +3,7 @@
   "differenceHP": true, 
   "enabled": true, 
   "markers": {
-    "enabled": true, 
+    "enabled": false, 
     "markersClassColor": false, 
     "showMarkers_hotkey": [
       82
