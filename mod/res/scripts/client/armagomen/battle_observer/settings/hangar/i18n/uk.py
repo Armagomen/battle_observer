@@ -182,25 +182,25 @@ localization = {
         "hangar*y": "Позиція в ангарі по вертикалі"
     },
     "hp_bars": {
-        "header": "Налаштування панелі здоров'я команд",
-        "barsWidth": "Ширина полосок",
-        "differenceHP": "Показувати різницю між загальними здоров'ям команд",
+        "header": "Налаштування панелі міцності команд",
+        "barsWidth": "Ширина смуг міцності",
+        "differenceHP": "Показувати різницю між міцностями команд",
         "showAliveCount": "Показувати на панелі рахунку живих",
         "style": "Стиль панелі",
-        "outline*enabled": "Увімкнути контур в стилі \"normal\"",
+        "outline*enabled": "Увімкнути контур в стилі <b>normal</b>",
         "outline*color": "Колір контуру",
         "markers*enabled": "Карусель маркерів техніки",
-        "markers*x": "Відстань по горизонталі від центру",
-        "markers*x_tooltip": "Зеркально переміщає значки від центру на задану кількість пікселів",
-        "markers*y": "Позиція по вертикалі від верху",
+        "markers*x": "Відстань по горизонталі, від центру",
+        "markers*x_tooltip": "Зеркально переміщає значки від центру на задану відстань в пікселях",
+        "markers*y": "Позиція по вертикалі, від верху",
         "markers*y_tooltip": "Позиція маркерів по вертикалі від верху экрану.",
         "markers*showMarkers_hotkey": "Клавіша увімкнення/вимкнення маркерів",
         "markers*markersClassColor": "Пофарбувати значки каруселі по кольору класу техніки"
     },
     "armor_calculator": {
         "header": "Налаштування калькулятора наведеної броні",
-        "position*x": "Позиція по горизонталі",
-        "position*y": "Позиція по вертикалі",
+        "position*x": "Позиція по горизонталі, від центру",
+        "position*y": "Позиція по вертикалі, від центру",
         "template": "Поле для форматування",
         "display_on_allies": "Відображати на союзниках",
         "template_tooltip": "Формат макросів: %(ім'я)тип даних s:d:f.\n"
@@ -241,22 +241,22 @@ localization = {
     "log_damage_extended": {
         "header": "Налаштування розширеного логу ефективності гравця",
         "settings*x": "Позиція детального лога по горизонталі",
-        "settings*x_tooltip": "Відносно лівого списку гравців.",
+        "settings*x_tooltip": "Від місця WG лога.",
         "settings*y": "Позиція детального лога по вертикалі",
-        "settings*y_tooltip": "Відносно лівого списку гравців.",
+        "settings*y_tooltip": "Від місця WG лога.",
         "settings*align": "Вирівнювання:",
         "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа",
         "reverse": "Розвернути лог",
         "reverse_tooltip": "Додавати новий рядок на початок логу.",
-        "shellColor*gold": "Колір типу преміум снарядів",
-        "shellColor*normal": "Колір типу звичайних снарядів"
+        "shellColor*gold": "Колір преміум снарядів",
+        "shellColor*normal": "Колір звичайних снарядів"
     },
     "log_input_extended": {
         "header": "Налаштування розширеного логу отриманих пошкоджень",
         "settings*x": "Позиція детального лога по горизонталі",
-        "settings*x_tooltip": "Відносно дамаг панелі.",
+        "settings*x_tooltip": "Від місця WG лога.",
         "settings*y": "Позиція детального лога по вертикалі",
-        "settings*y_tooltip": "Відносно дамаг панелі.",
+        "settings*y_tooltip": "Від місця WG лога.",
         "settings*align": "Вирівнювання:",
         "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа",
         "reverse": "Розвернути лог",
@@ -290,17 +290,17 @@ localization = {
     },
     "players_panels": {
         "header": "Налаштування панелей з списком гравців",
-        "players_damages_enabled": "Пошкодження гравців в списках команд",
-        "players_damages_hotkey": "Клавіша для відображення пошкоджень",
+        "players_damages_enabled": "Завдана гравцями шкода",
+        "players_damages_hotkey": "Клавіша для відображення завданої шкоди",
         "players_damages_settings*x": "Позиція тексту по горизонталі",
         "players_damages_settings*y": "Позиція тексту по вертикалі",
-        "players_bars_enabled": "Здоров'я гравців у вухах",
+        "players_bars_enabled": "Відображати міцність машин",
         "players_bars_settings*players_bars_bar*outline*enabled": "Увімкнути контур",
         "players_bars_settings*players_bars_bar*outline*customColor": "Користувацький колір контуру",
         "players_bars_settings*players_bars_bar*outline*color": "Колір контуру",
         "players_bars_settings*players_bars_bar*outline*alpha": "Прозорість контуру",
-        "players_bars_hotkey": "Клавіша відображення здоров'я",
-        "players_bars_classColor": "Пофарбувати смуги здоров'я у вухах по кольору типу техніки",
+        "players_bars_hotkey": "Клавіша відображення міцності",
+        "players_bars_classColor": "Пофарбувати смуги міцності у вухах по кольору типу техніки",
         "players_bars_on_key_pressed": "Відображати смуги тільки по натисканню клавіші",
         "panels_spotted_fix": "Виправити розмір і позицію лампочок виявлення"
     },
@@ -312,16 +312,15 @@ localization = {
         "disable_cam_after_shot_latency": "Затримка автоматичного вимкнення режиму снайпера",
         "disable_cam_after_shot_skip_clip": "Не виходити із режиму, якщо є касетна система зарядження",
         "dynamic_zoom*zoomXMeters": "Чутливість наближення в метрах",
-        "dynamic_zoom*zoomXMeters_tooltip": "Автоматичний вибір означає, що відстань до цілі в метрах ділене на "
-                                            "чутливість буде використовуватись для вибору кратності зуму.\n"
-                                            "За замовчуванням на кожні 20 метрів приходиться х1 "
+        "dynamic_zoom*zoomXMeters_tooltip": "За замовчуванням на кожні 20 метрів приходиться х1 "
                                             "кратності наближення. Чим менше показник чутливості - "
                                             "тим більше кратність наближення в співвідношенні (дистанція до "
                                             "цілі/дистанція для збільшення кратності).",
-        "dynamic_zoom*enabled": "Автоматичний вибір кратності наближення",
+        "dynamic_zoom*enabled": "Автоматичний механізм вибору кратності наближення",
+        "dynamic_zoom*enabled_tooltip": "Якщо дана функція увімкнена, то <b>фіксований параметр</b> працювати не буде. "
+                                        "Автоматичний механізм вибору означає, що відстань до цілі в метрах ділене на "
+                                        "чутливість буде використовуватись для вибору кратності зуму.\n",
         "dynamic_zoom*steps_only": "Переміщатися тільки по фіксованим крокам",
-        "dynamic_zoom*enabled_tooltip": "Якщо дана функція увімкнена, то <b>фіксований параметр</b> "
-                                        "працювати не буде.",
         "zoomSteps*enabled": "Замінити кратності зуму",
         "zoomSteps*steps": "Кроки кратності зуму",
         "zoomSteps*steps_tooltip": "Кроки кратності зуму потрібно записати через кому і пробіл або лише кому. "
@@ -394,15 +393,15 @@ localization = {
         "armor_calculator*red": "Наведена броня: Шанс пробиття 0%",
         "armor_calculator*yellow": "Наведена броня: Шанс пробиття 50% (режим колірної сліпоти)",
         "armor_calculator*purple": "Наведена броня: Шанс пробиття 0% (режим колірної сліпоти)",
-        "global*ally": "Глобальний колір: союзники",
+        "global*ally": "Глобальний колір, союзник",
         "global*bgColor": "Колір фону панелей",
         "global*enemyColorBlind": "Глобальний колір: супротивники (колірна сліпота)",
-        "global*enemy": "Глобальний колір: супротивники",
+        "global*enemy": "Глобальний колір, супротивник",
         "global*alpha": "Прозорість панелей",
         "global*alpha_tooltip": "0 - прозорий.\n1 - не прозорий.",
         "global*bgAlpha": "Прозрачность фону панелей",
         "global*bgAlpha_tooltip": "0 - прозорий.\n1 - не прозорий.",
-        "global*deadColor": "Глобальний колір: знищений",
+        "global*deadColor": "Глобальний колір, знищено",
     },
     "service_channel_filter": {
         "header": "Налаштування фільтру повідомлень в системному каналі",
@@ -429,7 +428,7 @@ localization = {
         "name": "Battle Observer - v{0}",
         "description": "Відкрити налаштування мода Battle Observer",
         "windowTitle": "Налаштування мода Battle Observer - v{0}",
-        "buttonOK": "OK",
+        "buttonOK": "Добре",
         "buttonCancel": "Відміна",
         "buttonApply": "Застосувати",
         "enableButtonTooltip": "{HEADER}ВКЛ/ВИКЛ{/HEADER}{BODY}Увімкнути/Вимкнути модуль{/BODY}"
@@ -456,7 +455,7 @@ localization = {
         "align": "Вирівнювання тексту"
     },
     "own_health": {
-        "header": "Налаштування здоров'я техніки гравця",
+        "header": "Налаштування міцності техніки гравця",
         "x": "Позиція текста по горизонталі",
         "x_tooltip": "Положення від центру екрана",
         "y": "Позиция текста по Вертикали",
