@@ -235,7 +235,7 @@ localization = {
         "settings*x": "Позиція основного лога по горизонталі",
         "settings*y": "Позиція основного лога по вертикалі",
         "settings*align": "Вирівнювання:",
-        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - зправа",
+        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа",
         "mainLogScale": "Масштабування лога"
     },
     "log_damage_extended": {
@@ -245,7 +245,7 @@ localization = {
         "settings*y": "Позиція детального лога по вертикалі",
         "settings*y_tooltip": "Від місця WG лога.",
         "settings*align": "Вирівнювання:",
-        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - зправа",
+        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа",
         "reverse": "Розвернути лог",
         "reverse_tooltip": "Додавати новий рядок на початок лога.",
         "shellColor*gold": "Колір преміум снарядів",
@@ -258,7 +258,7 @@ localization = {
         "settings*y": "Позиція детального лога по вертикалі",
         "settings*y_tooltip": "Від місця WG лога.",
         "settings*align": "Вирівнювання:",
-        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - зправа",
+        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа",
         "reverse": "Розвернути лог",
         "reverse_tooltip": "Додавати новий рядок на початок лога.",
         "shellColor*gold": "Колір типу преміум снарядів",
@@ -269,7 +269,7 @@ localization = {
         "settings*x": "Позиція по горизонталі (від центру екрана)",
         "settings*y": "Позиція по вертикалі (від верхнього краю)",
         "settings*align": "Вирівнювання:",
-        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - зправа"
+        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа"
     },
     "team_bases_panel": {
         "header": "Налаштування індикатора захоплення бази",
