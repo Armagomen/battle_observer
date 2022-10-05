@@ -102,14 +102,14 @@ __Main = namedtuple("MAIN", (
     "HIDE_DOG_TAGS", "MAX_FRAME_RATE", "NAME", "REMOVE_SHADOW_IN_PREBATTLE", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
     "ANONYMOUS_STRING", "CHANGE_ANONYMOUS_NAME", "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND",
     "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT", "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT",
-    "HIDE_BTN_COUNTERS"))
+    "HIDE_BTN_COUNTERS", "PREMIUM_TIME"))
 MAIN = __Main(
     "autoClearCache", "fps_enableFPSLimiter", "hideBadges", "hideChatInRandom", "hideClanAbbrev",
     "hide_dog_tags", "fps_maxFrameRate", "main", "removeShadowInPrebattle", "showFriendsAndClanInEars",
     "anonymousEnableShow", "anonymousString", "anonymousNameChange", "useKeyPairs", "ignore_commanders_voice",
     "disable_score_sound", "DEBUG_MODE", "auto_crew_training", "do_not_buy_directives_for_currency_automatically",
     "hide_hint_panel", "hide_field_mail", "auto_return_crew", "disable_stun_sound", "hide_main_chat_in_hangar",
-    "hide_button_counters_on_top_panel")
+    "hide_button_counters_on_top_panel", "premium_time")
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "B_SILVER", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
@@ -138,9 +138,8 @@ CLOCK = namedtuple("CLOCK", (
     "clock", "battle", "hangar", "format", 1.0, "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>",
     "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>")
 
-PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME", "PREMIUM_FORMAT", "DEFAULT_FORMAT_PREMIUM"))(
-    "premium_time", "premium_format", "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d "
-                                      "Days. %(hours)02d:%(minutes)02d:%(seconds)02d</font>")
+PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME", ))(
+    "premium_time",)
 
 __Sniper = namedtuple("SNIPER", (
     "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "METERS", "ZOOMS", "ZOOM_EXPOSURE",

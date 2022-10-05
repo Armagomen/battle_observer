@@ -375,7 +375,6 @@ localization = {
         "armor_calculator*red": "Reduced Armor: 0% Penetration",
         "armor_calculator*yellow": "Reduced Armor: 50% Penetration (Colorblind Mode)",
         "armor_calculator*purple": "Reduced Armor: 0% Penetration (Colorblind Mode)",
-        "main_gun*mainGunColor": "Main caliber: Macro color% (mainGunColor) s",
         "global*ally": "Global color: allies",
         "global*bgColor": "Panel background color",
         "global*enemyColorBlind": "Global color: enemy is color blind",

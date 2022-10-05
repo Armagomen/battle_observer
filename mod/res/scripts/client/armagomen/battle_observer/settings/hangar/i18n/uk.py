@@ -394,7 +394,6 @@ localization = {
         "armor_calculator*red": "Наведена броня: Шанс пробиття 0%",
         "armor_calculator*yellow": "Наведена броня: Шанс пробиття 50% (режим колірної сліпоти)",
         "armor_calculator*purple": "Наведена броня: Шанс пробиття 0% (режим колірної сліпоти)",
-        "main_gun*mainGunColor": "Основний калібр: колір макроса %(mainGunColor)s",
         "global*ally": "Глобальний колір: союзники",
         "global*bgColor": "Колір фону панелей",
         "global*enemyColorBlind": "Глобальний колір: супротивники (колірна сліпота)",

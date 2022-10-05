@@ -388,7 +388,6 @@ localization = {
         "armor_calculator*red": "Приведенная броня: Пробитие 0%",
         "armor_calculator*yellow": "Приведенная броня: Пробитие 50% (Режим цветовой слепоты)",
         "armor_calculator*purple": "Приведенная броня: Пробитие 0% (Режим цветовой слепоты)",
-        "main_gun*mainGunColor": "Основной калибр: Цвет макроса %(mainGunColor)s",
         "global*ally": "Глобальный цвет: союзники",
         "global*bgColor": "Цвет фона панелей",
         "global*enemyColorBlind": "Глобальный цвет: противник - цветовая слепота",

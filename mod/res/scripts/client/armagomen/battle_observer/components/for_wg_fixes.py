@@ -5,7 +5,7 @@ from armagomen.utils.common import overrideMethod, logError
 from avatar_components.avatar_chat_key_handling import AvatarChatKeyHandling
 from math_utils import createTranslationMatrix
 
-getVehicleMatrixProviderErr = "fix: AvatarChatKeyHandling __getVehicleMatrixProvider, {}"
+getVehicleMatrixProviderErr = "fixed: AvatarChatKeyHandling __getVehicleMatrixProvider, {}"
 
 
 @overrideMethod(AvatarChatKeyHandling, "__getVehicleMatrixProvider")

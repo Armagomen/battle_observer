@@ -1,7 +1,5 @@
 from importlib import import_module
 
-from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
-from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES, MOD_NAME
@@ -43,13 +41,15 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
 
     def __init__(self):
+        from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
+        from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
         self.viewAliases = viewSettings.getViewAliases()
         listeners = [(alias, self.eventListener) for alias in self.viewAliases]
         super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = MinimapZoomPlugin()
-        self._statLoadTry = 0
         self.statistics = StatisticsDataLoader() if viewSettings.isWTREnabled() else None
         self._iconsEnabled = viewSettings.isIconsEnabled()
+        self._statLoadTry = 0
         self._statisticsEnabled = self.statistics is not None and self.statistics.enabled
 
     def fini(self):
