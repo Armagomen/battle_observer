@@ -32,7 +32,7 @@ ALIASES_TO_HIDE = (
 )
 
 
-def registerBattleObserverScaleformPackages():
+def registerBattleObserverPackages():
     from gui.Scaleform.daapi.settings import config
     from gui.shared.system_factory import collectScaleformBattlePackages
     config.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
@@ -43,7 +43,7 @@ def registerBattleObserverScaleformPackages():
             config.registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
 
 
-registerBattleObserverScaleformPackages()
+registerBattleObserverPackages()
 
 
 class ViewSettings(object):
