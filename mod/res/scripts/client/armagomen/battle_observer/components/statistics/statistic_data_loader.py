@@ -1,5 +1,5 @@
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
-from armagomen.constants import REGIONS, GLOBAL
+from armagomen.constants import REGIONS
 from armagomen.utils.common import urlResponse, logDebug, logError, callback
 from constants import AUTH_REALM
 from helpers import dependency
@@ -40,8 +40,7 @@ class StatisticsDataLoader(object):
 
     def setCachedStatisticData(self):
         if not self.enabled:
-            return logError("Statistics are not available in your region={}. Only {}", AUTH_REALM,
-                            GLOBAL.COMMA_SEP.join(REGIONS._fields))
+            return logError("Statistics are not available in your region={}. Only in {}", AUTH_REALM, REGIONS)
         arenaDP = self.sessionProvider.getArenaDP()
         if arenaDP is None:
             logError("StatisticsDataLoader/setCachedStatisticData: arenaDP is None")
