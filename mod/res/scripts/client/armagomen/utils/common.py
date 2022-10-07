@@ -168,8 +168,12 @@ def encodeData(data):
 
 def openJsonFile(path):
     """Gets a dict from JSON."""
-    with _open(path, 'r', encoding=encoding) as dataFile:
-        return encodeData(json.load(dataFile, encoding=encoding))
+    if os.path.exists(path):
+        with _open(path, 'r', encoding=encoding) as dataFile:
+            try:
+                return encodeData(json.load(dataFile, encoding=encoding))
+            except ValueError:
+                return encodeData(json.loads(dataFile.read(), encoding=encoding))
 
 
 def writeJsonFile(path, data):
@@ -194,13 +198,6 @@ def isXvmInstalled():
 xvmInstalled = isXvmInstalled()
 
 
-def getCrewPath():
-    path = os.path.join(getObserverCachePath(), "crew_ignored.json")
-    if not os.path.isfile(path):
-        writeJsonFile(path, {"vehicles": []})
-    return path
-
-
 def getUpdatePath():
     path = os.path.join(getObserverCachePath(), "update")
     if not os.path.exists(path):
@@ -216,12 +213,21 @@ def cleanupObserverUpdates():
             os.unlink(filePath)
 
 
-ignored_vehicles = set(openJsonFile(getCrewPath()).get("vehicles"))
+def openIgnoredVehicles():
+    path = os.path.join(getObserverCachePath(), "crew_ignored.json")
+    if not os.path.exists(path):
+        writeJsonFile(path, {"vehicles": []})
+        return set()
+    return set(openJsonFile(path).get("vehicles"))
+
+
+ignored_vehicles = openIgnoredVehicles()
 
 
 def addVehicleToCache(vehicle):
     ignored_vehicles.add(vehicle)
-    writeJsonFile(getCrewPath(), {"vehicles": sorted(ignored_vehicles)})
+    path = os.path.join(getObserverCachePath(), "crew_ignored.json")
+    writeJsonFile(path, {"vehicles": sorted(ignored_vehicles)})
 
 
 def overrideMethod(wg_class, method_name="__init__"):

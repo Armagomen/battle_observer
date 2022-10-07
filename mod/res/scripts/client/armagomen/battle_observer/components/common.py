@@ -5,7 +5,7 @@ from PlayerEvents import g_playerEvents
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG, ALIASES
+from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import overrideMethod, setMaxFrameRate, logDebug, callback, logError
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
@@ -24,7 +24,7 @@ from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerVi
 @overrideMethod(SixthSenseIndicator, "as_showS")
 @overrideMethod(SixthSenseIndicator, "as_hideS")
 def sixthSense(base, *args, **kwargs):
-    if ALIASES.SIXTH_SENSE not in viewSettings.getComponents():
+    if not settings.sixth_sense[GLOBAL.ENABLED] and not viewSettings.settingsAdded:
         return base(*args, **kwargs)
 
 

@@ -1,8 +1,9 @@
 from importlib import import_module
 
+from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES, MOD_NAME
+from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIASES, ALIAS_TO_PATH, MOD_NAME
 from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
 from debug_utils import LOG_CURRENT_EXCEPTION
@@ -16,7 +17,7 @@ __all__ = ()
 
 def getViewSettings():
     view_settings = []
-    for alias in viewSettings.setComponents():
+    for alias in ALIASES:
         try:
             file_path, class_name = ALIAS_TO_PATH[alias]
             module_class = getattr(import_module(file_path, package=__package__), class_name)
@@ -41,16 +42,21 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
 
     def __init__(self):
-        from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
         from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
         self.viewAliases = viewSettings.getViewAliases()
         listeners = [(alias, self.eventListener) for alias in self.viewAliases]
         super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = MinimapZoomPlugin()
-        self.statistics = StatisticsDataLoader() if viewSettings.isWTREnabled() else None
+        self.statistics = None
         self._iconsEnabled = viewSettings.isIconsEnabled()
         self._statLoadTry = 0
-        self._statisticsEnabled = self.statistics is not None and self.statistics.enabled
+        self._statisticsEnabled = False
+
+    def init(self):
+        super(ObserverBusinessHandlerBattle, self).init()
+        if viewSettings.isWTREnabled():
+            self.statistics = StatisticsDataLoader()
+            self._statisticsEnabled = self.statistics.enabled
 
     def fini(self):
         self.minimapPlugin.fini()

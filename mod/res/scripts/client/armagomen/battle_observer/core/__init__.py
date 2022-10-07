@@ -5,7 +5,6 @@ from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates
 from debug_utils import LOG_CURRENT_EXCEPTION
 
 loadError = False
-errorMessage = ""
 viewSettings = None
 componentsLoader = None
 hangarSettings = None
@@ -20,7 +19,8 @@ def checkUpdate():
 
 
 def startLoadingMod():
-    global loadError, errorMessage, viewSettings, componentsLoader, hangarSettings
+    global loadError
+    errorMessage = ""
     try:
         from armagomen.battle_observer.components import ComponentsLoader
         from armagomen.battle_observer.core.view_settings import ViewSettings
@@ -33,6 +33,7 @@ def startLoadingMod():
         errorMessage = repr(err)
     else:
         if isFileValid(__version__):
+            global viewSettings, componentsLoader, hangarSettings
             logInfo('Launched at python v{}'.format(version))
             logInfo('MOD START LOADING: v{} - {}'.format(__version__, gameVersion))
             viewSettings = ViewSettings()
@@ -45,11 +46,12 @@ def startLoadingMod():
             errorMessage = 'ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please ' \
                            'install mod from official source: {}'.format(__version__, URL)
             logError(errorMessage)
+    return errorMessage
 
 
 def init():
     checkUpdate()
-    startLoadingMod()
+    errorMessage = startLoadingMod()
     if loadError:
         from armagomen.battle_observer.core.loading_error import LoadingError
         return LoadingError(errorMessage)

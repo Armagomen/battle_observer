@@ -124,13 +124,14 @@ class ViewSettings(object):
             return False
 
     def setComponents(self):
-        self.settingsAdded = False
-        self.__components.clear()
-        self.__hiddenComponents.clear()
         if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
             self.checkComponents()
             self.setHiddenComponents()
-        return self.__components
+
+    def clear(self):
+        self.settingsAdded = False
+        self.__components.clear()
+        self.__hiddenComponents.clear()
 
     def checkComponents(self):
         for alias in ALIASES:
@@ -156,7 +157,9 @@ class ViewSettings(object):
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
+        self.clear()
         if self.checkPageName(page):
+            self.setComponents()
             if not self.__components:
                 self.__hiddenComponents.clear()
                 return
