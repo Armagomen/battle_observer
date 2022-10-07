@@ -3,7 +3,6 @@ from helpers import getClientLanguage
 
 ru = {
     "titleOK": "\nОбновление - ГОТОВО",
-    "messageWAIT": "Подождите, идет загрузка Обновления v{0}",
     "messageOK": "Нажмите ПЕРЕЗАГРУЗКА, для завершения процесса Обновления. v{0}",
     "messageNEW":
         "<font size='15'>"
@@ -19,7 +18,6 @@ ru = {
 
 en = {
     "titleOK": "\nUpdate - Press RESTART",
-    "messageWAIT": "Wait while downloading Updates v{0}",
     "messageOK": "Click RESTART to complete the Upgrade process. v{0}",
     "messageNEW":
         "<font size='15'>"
@@ -35,7 +33,6 @@ en = {
 
 uk = {
     "titleOK": "\nОновлення готове",
-    "messageWAIT": "Зачекайте, будь ласка, йде завантаження оновлення v{0}",
     "messageOK": "Нажміть ПЕРЕЗАВАНТАЖЕННЯ для завершення процесу оновлення. v{0}",
     "messageNEW":
         "<font size='15'>"
