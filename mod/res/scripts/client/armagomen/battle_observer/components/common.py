@@ -9,7 +9,6 @@ from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import overrideMethod, setMaxFrameRate, logDebug, callback, logError
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
-from gui.Scaleform.daapi.view.battle.shared.indicators import SixthSenseIndicator
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.Scaleform.daapi.view.meta.LobbyHeaderMeta import LobbyHeaderMeta
@@ -19,14 +18,6 @@ from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerView
-
-
-@overrideMethod(SixthSenseIndicator, "as_showS")
-@overrideMethod(SixthSenseIndicator, "as_hideS")
-def sixthSense(base, *args, **kwargs):
-    enabled = settings.sixth_sense[GLOBAL.ENABLED] and viewSettings.settingsAdded
-    if not enabled:
-        return base(*args, **kwargs)
 
 
 @overrideMethod(Hangar, "__onCurrentVehicleChanged")

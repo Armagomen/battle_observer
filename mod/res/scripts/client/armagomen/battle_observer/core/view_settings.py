@@ -4,7 +4,7 @@ from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, 
 from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo, getPlayer
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
-from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
+from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
@@ -139,10 +139,14 @@ class ViewSettings(object):
                 self.__components.add(alias)
                 _GAME_UI.add(alias)
                 _SPECTATOR_UI.add(alias)
+                if alias is ALIASES.SIXTH_SENSE:
+                    _NEVER_HIDE.add(alias)
             else:
                 _GAME_UI.discard(alias)
                 _SPECTATOR_UI.discard(alias)
                 self.__components.discard(alias)
+                if alias is ALIASES.SIXTH_SENSE:
+                    _NEVER_HIDE.discard(alias)
 
     def setHiddenComponents(self):
         for alias, wg_alias in ALIASES_TO_HIDE:
@@ -157,6 +161,7 @@ class ViewSettings(object):
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
+        self.clear()
         if self.checkPageName(page):
             self.setComponents()
             if not self.__components:
@@ -187,6 +192,8 @@ class ViewSettings(object):
                 new_aliases.append(ALIASES.PANELS)
             if ALIASES.MAIN_GUN in self.__components:
                 new_aliases.append(ALIASES.MAIN_GUN)
+        elif ALIASES.SIXTH_SENSE in self.__components and BATTLE_VIEW_ALIASES.SIXTH_SENSE in new_aliases:
+            new_aliases.remove(BATTLE_VIEW_ALIASES.SIXTH_SENSE)
         return tuple(new_aliases)
 
     def getHiddenWGComponents(self):

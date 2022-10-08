@@ -3,7 +3,7 @@ from importlib import import_module
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIASES, ALIAS_TO_PATH, MOD_NAME
+from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIAS_TO_PATH, MOD_NAME
 from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
 from debug_utils import LOG_CURRENT_EXCEPTION
@@ -17,14 +17,12 @@ __all__ = ()
 
 def getViewSettings():
     view_settings = []
-    viewSettings.clear()
-    for alias in ALIASES:
+    for alias, path_class in ALIAS_TO_PATH.iteritems():
         try:
-            file_path, class_name = ALIAS_TO_PATH[alias]
+            file_path, class_name = path_class
             module_class = getattr(import_module(file_path, package=__package__), class_name)
             view_settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
         except Exception as err:
-            viewSettings.removeComponent(alias)
             logError("{}, {}, {}", __package__, alias, repr(err))
             LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
     logDebug("{}.getViewSettings: {}", __package__, view_settings)
