@@ -48,6 +48,7 @@ URLS = namedtuple("URLS", (
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
 REGIONS = namedtuple("REGIONS", ("RU", "EU", "ASIA", "NA"))("ru", "eu", "asia", "com")
 
+
 class GLOBAL:
     def __init__(self):
         pass
@@ -138,8 +139,8 @@ CLOCK = namedtuple("CLOCK", (
     "clock", "battle", "hangar", "format", 1.0, "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>",
     "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>")
 
-PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME", ))(
-    "premium_time",)
+PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME",))(
+    "premium_time", )
 
 __Sniper = namedtuple("SNIPER", (
     "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "METERS", "ZOOMS", "ZOOM_EXPOSURE",
@@ -465,23 +466,6 @@ class CONFIG_INTERFACE:
         }
     }
 
-
-ALIAS_TO_PATH = {
-    ALIASES.HP_BARS: (".teams_hp", ALIASES.HP_BARS[9:-3]),
-    ALIASES.DAMAGE_LOG: (".damage_log", ALIASES.DAMAGE_LOG[9:-3]),
-    ALIASES.MAIN_GUN: (".main_gun", ALIASES.MAIN_GUN[9:-3]),
-    ALIASES.DEBUG: (".debug_panel", ALIASES.DEBUG[9:-3]),
-    ALIASES.TIMER: (".battle_timer", ALIASES.TIMER[9:-3]),
-    ALIASES.SIXTH_SENSE: (".sixth_sense", ALIASES.SIXTH_SENSE[9:-3]),
-    ALIASES.TEAM_BASES: (".team_bases", ALIASES.TEAM_BASES[9:-3]),
-    ALIASES.ARMOR_CALC: (".armor_calculator", ALIASES.ARMOR_CALC[9:-3]),
-    ALIASES.FLIGHT_TIME: (".flight_time", ALIASES.FLIGHT_TIME[9:-3]),
-    ALIASES.DISPERSION_TIMER: (".dispersion_timer", ALIASES.DISPERSION_TIMER[9:-3]),
-    ALIASES.PANELS: (".players_panels", ALIASES.PANELS[9:-3]),
-    ALIASES.DATE_TIME: (".date_times", ALIASES.DATE_TIME[9:-3]),
-    ALIASES.DISTANCE: (".distance_to_enemy", ALIASES.DISTANCE[9:-3]),
-    ALIASES.OWN_HEALTH: (".own_health", ALIASES.OWN_HEALTH[9:-3])
-}
 
 ALIAS_TO_CONFIG_NAME = {
     ALIASES.HP_BARS: HP_BARS.NAME,

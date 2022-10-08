@@ -1,12 +1,9 @@
-from importlib import import_module
-
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIAS_TO_PATH, MOD_NAME
+from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIASES
 from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
-from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -16,17 +13,34 @@ __all__ = ()
 
 
 def getViewSettings():
-    view_settings = []
-    for alias, path_class in ALIAS_TO_PATH.iteritems():
-        try:
-            file_path, class_name = path_class
-            module_class = getattr(import_module(file_path, package=__package__), class_name)
-            view_settings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
-        except Exception as err:
-            logError("{}, {}, {}", __package__, alias, repr(err))
-            LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
-    logDebug("{}.getViewSettings: {}", __package__, view_settings)
-    return tuple(view_settings)
+    from armagomen.battle_observer.battle.armor_calculator import ArmorCalculator
+    from armagomen.battle_observer.battle.battle_timer import BattleTimer
+    from armagomen.battle_observer.battle.damage_log import DamageLog
+    from armagomen.battle_observer.battle.date_times import DateTimes
+    from armagomen.battle_observer.battle.debug_panel import DebugPanel
+    from armagomen.battle_observer.battle.dispersion_timer import DispersionTimer
+    from armagomen.battle_observer.battle.distance_to_enemy import Distance
+    from armagomen.battle_observer.battle.flight_time import FlightTime
+    from armagomen.battle_observer.battle.main_gun import MainGun
+    from armagomen.battle_observer.battle.own_health import OwnHealth
+    from armagomen.battle_observer.battle.players_panels import PlayersPanels
+    from armagomen.battle_observer.battle.sixth_sense import SixthSense
+    from armagomen.battle_observer.battle.team_bases import TeamBases
+    from armagomen.battle_observer.battle.teams_hp import TeamsHP
+    return (ComponentSettings(ALIASES.ARMOR_CALC, ArmorCalculator, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.TIMER, BattleTimer, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DAMAGE_LOG, DamageLog, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DEBUG, DebugPanel, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DISPERSION_TIMER, DispersionTimer, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DISTANCE, Distance, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.FLIGHT_TIME, FlightTime, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.MAIN_GUN, MainGun, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.OWN_HEALTH, OwnHealth, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.PANELS, PlayersPanels, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.SIXTH_SENSE, SixthSense, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.TEAM_BASES, TeamBases, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.HP_BARS, TeamsHP, ScopeTemplates.DEFAULT_SCOPE))
 
 
 def getBusinessHandlers():

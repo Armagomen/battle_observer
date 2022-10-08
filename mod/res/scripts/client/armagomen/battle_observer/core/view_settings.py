@@ -160,8 +160,8 @@ class ViewSettings(object):
         return page.__class__.__name__ in ("StrongholdPage", "EpicBattlePage", "EpicRandomPage", "ClassicPage")
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
-        base(page, *args, **kwargs)
         self.clear()
+        base(page, *args, **kwargs)
         if self.checkPageName(page):
             self.setComponents()
             if not self.__components:
