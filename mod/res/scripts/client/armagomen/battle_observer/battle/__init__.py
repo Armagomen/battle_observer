@@ -17,6 +17,7 @@ __all__ = ()
 
 def getViewSettings():
     view_settings = []
+    viewSettings.clear()
     for alias in ALIASES:
         try:
             file_path, class_name = ALIAS_TO_PATH[alias]

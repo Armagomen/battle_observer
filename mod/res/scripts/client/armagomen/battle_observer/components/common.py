@@ -24,7 +24,8 @@ from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerVi
 @overrideMethod(SixthSenseIndicator, "as_showS")
 @overrideMethod(SixthSenseIndicator, "as_hideS")
 def sixthSense(base, *args, **kwargs):
-    if not settings.sixth_sense[GLOBAL.ENABLED] and not viewSettings.settingsAdded:
+    enabled = settings.sixth_sense[GLOBAL.ENABLED] and viewSettings.settingsAdded
+    if not enabled:
         return base(*args, **kwargs)
 
 

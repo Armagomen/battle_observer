@@ -157,7 +157,6 @@ class ViewSettings(object):
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         base(page, *args, **kwargs)
-        self.clear()
         if self.checkPageName(page):
             self.setComponents()
             if not self.__components:
