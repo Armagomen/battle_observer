@@ -28,7 +28,10 @@ class SettingsLoader(object):
             self.createLoadJSON(self.configName)
             self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
         self.readConfig()
-        self.configsList = [x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x))]
+
+    @property
+    def configsList(self):
+        return sorted(x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x)))
 
     def readOtherConfig(self, configID):
         self.configName = self.configsList[configID]
