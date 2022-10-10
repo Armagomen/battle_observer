@@ -10,14 +10,6 @@ componentsLoader = None
 hangarSettings = None
 
 
-def checkUpdate():
-    try:
-        from armagomen.battle_observer.core.updater import Updater
-        Updater(__version__)
-    except Exception:
-        LOG_CURRENT_EXCEPTION()
-
-
 def startLoadingMod():
     global loadError
     errorMessage = ""
@@ -50,7 +42,6 @@ def startLoadingMod():
 
 
 def init():
-    checkUpdate()
     errorMessage = startLoadingMod()
     if loadError:
         from armagomen.battle_observer.core.loading_error import LoadingError
