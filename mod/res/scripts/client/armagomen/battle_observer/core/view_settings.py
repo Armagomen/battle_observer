@@ -21,8 +21,7 @@ BATTLES_RANGE = {
     ARENA_GUI_TYPE.RANKED,
     ARENA_GUI_TYPE.SORTIE_2,
     ARENA_GUI_TYPE.TRAINING,
-    ARENA_GUI_TYPE.UNKNOWN,
-    ARENA_GUI_TYPE.COMP7
+    ARENA_GUI_TYPE.UNKNOWN
 }
 
 ALIASES_TO_HIDE = (
@@ -158,7 +157,7 @@ class ViewSettings(object):
 
     @staticmethod
     def checkPageName(page):
-        return page.__class__.__name__ in ("StrongholdPage", "EpicBattlePage", "EpicRandomPage", "ClassicPage")
+        return page.__class__.__name__ in ("StrongholdPage", "EpicBattlePage", "EpicRandomPage", "ClassicPage", )
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         self.clear()
