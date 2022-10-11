@@ -69,13 +69,13 @@ class ShotResultResolver(object):
             if matInfo is None:
                 continue
             hitAngleCos = detail.hitAngleCos
-            computedArmor += self.resolver._computePenetrationArmor(shell.kind, hitAngleCos, matInfo, shell.caliber)
+            computedArmor += self.resolver._computePenetrationArmor(shell, hitAngleCos, matInfo)
             if isJet:
                 jetDist = detail.dist - jetStartDist
                 if jetDist > GLOBAL.ZERO:
                     piercingPower = fullPiercingPower - jetDist * shellExtraData.jetLossPPByDist
             else:
-                ricochet = self.resolver._shouldRicochet(shell.kind, hitAngleCos, matInfo, shell.caliber)
+                ricochet = self.resolver._shouldRicochet(shell, hitAngleCos, matInfo)
             if matInfo.vehicleDamageFactor:
                 noDamage = False
                 break

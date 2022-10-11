@@ -3,7 +3,7 @@ from collections import namedtuple
 
 from armagomen.constants import getRandomLogo
 from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
-from async import async, await, AsyncReturn
+from wg_async import wg_async, wg_await, AsyncReturn
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
@@ -30,28 +30,28 @@ class DialogBase(object):
 
 class UpdaterDialogs(DialogBase):
 
-    @async
+    @wg_async
     def showUpdateError(self, message):
         builder = WarningDialogBuilder()
         builder.setFormattedTitle(getRandomLogo() + "\nERROR DOWNLOAD UPDATE")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
-        result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
+        result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
         raise AsyncReturn(result)
 
-    @async
+    @wg_async
     def showUpdateFinished(self, title, message):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(title)
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=buttons.restart)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
-        result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.PURCHASE))
+        result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.PURCHASE))
         if result:
             restartGame()
         raise AsyncReturn(result)
 
-    @async
+    @wg_async
     def showNewVersionAvailable(self, title, message, handleURL):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(title)
@@ -59,7 +59,7 @@ class UpdaterDialogs(DialogBase):
         builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=buttons.auto)
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.handle)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
-        result = yield await(dialogs.show(builder.build(self.view)))
+        result = yield wg_await(dialogs.show(builder.build(self.view)))
         if result.result == DialogButtons.PURCHASE:
             openWebBrowser(handleURL)
         raise AsyncReturn(result.result == DialogButtons.RESEARCH)
@@ -67,19 +67,19 @@ class UpdaterDialogs(DialogBase):
 
 class LoadingErrorDialog(DialogBase):
 
-    @async
+    @wg_async
     def showLoadingError(self, message):
         builder = WarningDialogBuilder()
         builder.setFormattedTitle(getRandomLogo())
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
-        result = yield await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
+        result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
         raise AsyncReturn(result)
 
 
 class CrewDialog(DialogBase):
 
-    @async
+    @wg_async
     def showCrewDialog(self, title, message, vehicle_name):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(title)
@@ -87,7 +87,7 @@ class CrewDialog(DialogBase):
         builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=buttons.apply)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.ignore)
-        result = yield await(dialogs.show(builder.build(self.view)))
+        result = yield wg_await(dialogs.show(builder.build(self.view)))
         if result.result == DialogButtons.PURCHASE:
             addVehicleToCache(vehicle_name)
         raise AsyncReturn(result.result == DialogButtons.SUBMIT)

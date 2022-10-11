@@ -5,7 +5,7 @@ from armagomen.constants import MAIN, CREW_XP, getRandomLogo
 from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
-from async import async, await
+from wg_async import wg_async, wg_await
 from frameworks.wulf import WindowLayer
 from gui import SystemMessages
 from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
@@ -32,7 +32,7 @@ class CrewProcessor(object):
         dialog = localization[CREW_XP.NAME]
         return dialog[description] + "\n\n" + dialog[CREW_XP.ENABLE if value else CREW_XP.DISABLE]
 
-    @async
+    @wg_async
     def showDialog(self, vehicle, value, description):
         self.inProcess = True
         dialog = CrewDialog()
@@ -42,12 +42,12 @@ class CrewProcessor(object):
             dialog.setView(view)
         title = getRandomLogo() + "\n" + vehicle.userName
         message = self.getLocalizedMessage(value, description)
-        dialogResult = yield await(dialog.showCrewDialog(title, message, vehicle.userName))
+        dialogResult = yield wg_await(dialog.showCrewDialog(title, message, vehicle.userName))
         if dialogResult:
             self.accelerateCrewXp(vehicle, value)
         self.inProcess = False
 
-    @decorators.process('updateTankmen')
+    @decorators.adisp_process('updateTankmen')
     def accelerateCrewXp(self, vehicle, value):
         result = yield VehicleTmenXPAccelerator(vehicle, value, confirmationEnabled=False).request()
         if result.success:
@@ -90,7 +90,7 @@ class CrewProcessor(object):
                 return
             self._processReturnCrew(vehicle)
 
-    @decorators.process('crewReturning')
+    @decorators.adisp_process('crewReturning')
     def _processReturnCrew(self, vehicle):
         result = yield TankmanReturn(vehicle).request()
         if result.userMsg:

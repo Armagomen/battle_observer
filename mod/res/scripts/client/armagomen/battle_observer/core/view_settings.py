@@ -8,7 +8,7 @@ from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
-from gui.shared.system_factory import registerScaleformBattlePackages, collectScaleformBattlePackages
+from gui.shared.system_factory import registerScaleformLobbyPackages, registerScaleformBattlePackages, collectScaleformBattlePackages
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -23,7 +23,8 @@ BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
                  ARENA_GUI_TYPE.FORT_BATTLE_2,
                  ARENA_GUI_TYPE.TUTORIAL,
                  ARENA_GUI_TYPE.EPIC_BATTLE,
-                 ARENA_GUI_TYPE.MAPBOX}
+                 ARENA_GUI_TYPE.MAPBOX,
+                 ARENA_GUI_TYPE.COMP7}
 
 ALIASES_TO_HIDE = ((ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
                    (ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
@@ -40,11 +41,11 @@ class ViewSettings(object):
         self.__hiddenComponents = set()
         g_currentVehicle.onChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
+        registerScaleformLobbyPackages(SWF.LOBBY_PACKAGES)
         for guiType in BATTLES_RANGE:
             if collectScaleformBattlePackages(guiType):
                 registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
         packages.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
-        packages.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
 
     def onVehicleChanged(self):
         self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG

@@ -9,7 +9,7 @@ from armagomen.constants import GLOBAL, URLS, getRandomLogo
 from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, urlResponse, getUpdatePath
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.events import g_events
-from async import async, await
+from wg_async import wg_async, wg_await
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from web.cache.web_downloader import WebDownloader
@@ -99,10 +99,10 @@ class DownloadThread(object):
         self.dialogs.showUpdateError(message)
 
 
-class UpdateMain(DownloadThread):
+class Updater(DownloadThread):
 
     def __init__(self, version):
-        super(UpdateMain, self).__init__()
+        super(Updater, self).__init__()
         self.version = version
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         self.subscribe()
@@ -144,13 +144,13 @@ class UpdateMain(DownloadThread):
         else:
             self.dialogs = None
 
-    @async
+    @wg_async
     def showDialog(self, view):
         self.dialogs.setView(view)
         title = getRandomLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, gitMessage)
-        result = yield await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
+        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
         if result:
             self.startDownload()
         if self.inLogin:
