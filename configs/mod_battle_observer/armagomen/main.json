@@ -13,7 +13,7 @@
   "fps_maxFrameRate": 200, 
   "hideBadges": true, 
   "hideChatInRandom": false, 
-  "hideClanAbbrev": true, 
+  "hideClanAbbrev": false, 
   "hide_button_counters_on_top_panel": true, 
   "hide_dog_tags": true, 
   "hide_field_mail": true, 

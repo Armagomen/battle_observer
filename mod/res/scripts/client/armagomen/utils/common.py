@@ -152,7 +152,6 @@ def clearClientCache(category=None):
             removeDirs(os.path.join(preferencesDir, dirName), dirName)
     else:
         removeDirs(os.path.join(preferencesDir, category), category)
-    cleanupObserverUpdates()
 
 
 def encodeData(data):
@@ -169,8 +168,12 @@ def encodeData(data):
 
 def openJsonFile(path):
     """Gets a dict from JSON."""
-    with _open(path, 'r', encoding=encoding) as dataFile:
-        return encodeData(json.load(dataFile, encoding=encoding))
+    if os.path.exists(path):
+        with _open(path, 'r', encoding=encoding) as dataFile:
+            try:
+                return encodeData(json.load(dataFile, encoding=encoding))
+            except ValueError:
+                return encodeData(json.loads(dataFile.read(), encoding=encoding))
 
 
 def writeJsonFile(path, data):
@@ -195,13 +198,6 @@ def isXvmInstalled():
 xvmInstalled = isXvmInstalled()
 
 
-def getCrewPath():
-    path = os.path.join(getObserverCachePath(), "crew_ignored.json")
-    if not os.path.isfile(path):
-        writeJsonFile(path, {"vehicles": []})
-    return path
-
-
 def getUpdatePath():
     path = os.path.join(getObserverCachePath(), "update")
     if not os.path.exists(path):
@@ -217,12 +213,21 @@ def cleanupObserverUpdates():
             os.unlink(filePath)
 
 
-ignored_vehicles = set(openJsonFile(getCrewPath()).get("vehicles"))
+def openIgnoredVehicles():
+    path = os.path.join(getObserverCachePath(), "crew_ignored.json")
+    if not os.path.exists(path):
+        writeJsonFile(path, {"vehicles": []})
+        return set()
+    return set(openJsonFile(path).get("vehicles"))
+
+
+ignored_vehicles = openIgnoredVehicles()
 
 
 def addVehicleToCache(vehicle):
     ignored_vehicles.add(vehicle)
-    writeJsonFile(getCrewPath(), {"vehicles": sorted(ignored_vehicles)})
+    path = os.path.join(getObserverCachePath(), "crew_ignored.json")
+    writeJsonFile(path, {"vehicles": sorted(ignored_vehicles)})
 
 
 def overrideMethod(wg_class, method_name="__init__"):
@@ -269,7 +274,7 @@ COLOR = namedtuple("COLOR", ("PURPLE", "GREEN", "MULTIPLIER", "TEMPLATE"))(0.833
 
 
 def percentToRGB(percent, saturation=0.5, brightness=1.0):
-    """percent is float number in range 0 - 2.4 purple, or 1.0 green"""
+    """Percent is float number in range 0 - 2.4 purple, or 1.0 green."""
     normalized_percent = min(COLOR.PURPLE, percent * COLOR.GREEN)
     tuple_values = hsv_to_rgb(normalized_percent, saturation, brightness)
     r, g, b = (int(math.ceil(i * COLOR.MULTIPLIER)) for i in tuple_values)

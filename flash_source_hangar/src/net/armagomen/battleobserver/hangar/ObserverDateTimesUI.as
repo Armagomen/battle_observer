@@ -48,10 +48,13 @@
 		
 		public function as_startUpdate(settings:Object):void
 		{
-			this.config = settings;
-			this.x = settings.reverse_x && settings.x < 0 ? parent.width + settings.x : settings.x
-			this.y = settings.reverse_y && settings.y < 0 ? parent.height + settings.y : settings.y
-			this.dateTime = new TextExt("time", 0, 0, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+			this.as_clearScene();
+			if (settings.enabled){
+				this.config = settings;
+				this.x = settings.x < 0 ? parent.width + settings.x : settings.x
+				this.y = settings.y < 0 ? parent.height + settings.y : settings.y
+				this.dateTime = new TextExt("time", 0, 0, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+			}
 		}
 		
 		public function as_setDateTime(text:String):void
@@ -64,8 +67,8 @@
 		
 		public function _onResizeHandle(event:Event):void
 		{
-			this.x = this.config.reverse_x && this.config.x < 0 ? parent.width + this.config.x : this.config.x
-			this.y = this.config.reverse_y && this.config.y < 0 ? parent.height + this.config.y : this.config.y
+			this.x = this.config.x < 0 ? parent.width + this.config.x : this.config.x
+			this.y = this.config.y < 0 ? parent.height + this.config.y : this.config.y
 		}
 	}
 

@@ -8,5 +8,5 @@
     "x": 255, 
     "y": 0
   }, 
-  "template": "%(mainGunIcon)s%(mainGunDoneIcon)s%(mainGunFailureIcon)s<font color='%(mainGunColor)s'>%(mainGun)s</font>"
+  "template": "%(mainGunIcon)s%(mainGunDoneIcon)s%(mainGunFailureIcon)s<font color='#E0E06D'>%(mainGun)s</font>"
 }

@@ -8,8 +8,8 @@
   }, 
   "global": {
     "ally": "#5ACB00", 
-    "alpha": 0.4, 
-    "bgAlpha": 0.4, 
+    "alpha": 0.45, 
+    "bgAlpha": 0.45, 
     "bgColor": "#000000", 
     "deadColor": "#858585", 
     "enemy": "#F30900", 

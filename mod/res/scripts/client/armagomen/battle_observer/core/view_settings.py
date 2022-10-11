@@ -1,35 +1,50 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
-from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo
+from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo, getPlayer
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
-from gui.Scaleform.daapi.settings import config as packages
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
-from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI
+from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
-from gui.shared.system_factory import registerScaleformLobbyPackages, registerScaleformBattlePackages, collectScaleformBattlePackages
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
-BATTLES_RANGE = {ARENA_GUI_TYPE.RANDOM,
-                 ARENA_GUI_TYPE.FUN_RANDOM,
-                 ARENA_GUI_TYPE.UNKNOWN,
-                 ARENA_GUI_TYPE.TRAINING,
-                 ARENA_GUI_TYPE.RANKED,
-                 ARENA_GUI_TYPE.EPIC_RANDOM,
-                 ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
-                 ARENA_GUI_TYPE.SORTIE_2,
-                 ARENA_GUI_TYPE.FORT_BATTLE_2,
-                 ARENA_GUI_TYPE.TUTORIAL,
-                 ARENA_GUI_TYPE.EPIC_BATTLE,
-                 ARENA_GUI_TYPE.MAPBOX,
-                 ARENA_GUI_TYPE.COMP7}
+BATTLES_RANGE = {
+    ARENA_GUI_TYPE.EPIC_BATTLE,
+    ARENA_GUI_TYPE.EPIC_RANDOM,
+    ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
+    ARENA_GUI_TYPE.FORT_BATTLE_2,
+    ARENA_GUI_TYPE.FUN_RANDOM,
+    ARENA_GUI_TYPE.MAPBOX,
+    ARENA_GUI_TYPE.RANDOM,
+    ARENA_GUI_TYPE.RANKED,
+    ARENA_GUI_TYPE.SORTIE_2,
+    ARENA_GUI_TYPE.TRAINING,
+    ARENA_GUI_TYPE.UNKNOWN,
+    ARENA_GUI_TYPE.COMP7
+}
 
-ALIASES_TO_HIDE = ((ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
-                   (ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
-                   (ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
-                   (ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER))
+ALIASES_TO_HIDE = (
+    (ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
+    (ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
+    (ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
+    (ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER)
+)
+
+
+def registerBattleObserverPackages():
+    from gui.Scaleform.daapi.settings import config
+    from gui.shared.system_factory import collectScaleformBattlePackages
+    config.LOBBY_PACKAGES += SWF.LOBBY_PACKAGES
+    config.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
+    config.registerScaleformLobbyPackages(SWF.LOBBY_PACKAGES)
+    for guiType in BATTLES_RANGE:
+        if collectScaleformBattlePackages(guiType):
+            config.registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
+
+
+registerBattleObserverPackages()
 
 
 class ViewSettings(object):
@@ -39,13 +54,9 @@ class ViewSettings(object):
         self.isSPG = False
         self.__components = set()
         self.__hiddenComponents = set()
+        self.settingsAdded = False
         g_currentVehicle.onChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
-        registerScaleformLobbyPackages(SWF.LOBBY_PACKAGES)
-        for guiType in BATTLES_RANGE:
-            if collectScaleformBattlePackages(guiType):
-                registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
-        packages.BATTLE_PACKAGES_BY_DEFAULT += SWF.BATTLE_PACKAGES
 
     def onVehicleChanged(self):
         self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
@@ -107,22 +118,21 @@ class ViewSettings(object):
         elif alias is ALIASES.DATE_TIME:
             return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is ALIASES.DISTANCE:
-            return (not self.isSPG and settings.distance_to_enemy[GLOBAL.ENABLED] and
-                    self.notEpicBattle() and self.notEpicRandomBattle())
+            return not self.isSPG and settings.distance_to_enemy[GLOBAL.ENABLED] and self.notEpicBattle()
         elif alias is ALIASES.OWN_HEALTH:
             return settings.own_health[GLOBAL.ENABLED]
         else:
             return False
 
     def setComponents(self):
-        arenaVisitor = self.sessionProvider.arenaVisitor
-        if arenaVisitor is not None and arenaVisitor.getArenaGuiType() in BATTLES_RANGE:
+        if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
             self.checkComponents()
             self.setHiddenComponents()
-        else:
-            self.__components.clear()
-            self.__hiddenComponents.clear()
-        return self.__components
+
+    def clear(self):
+        self.settingsAdded = False
+        self.__components.clear()
+        self.__hiddenComponents.clear()
 
     def checkComponents(self):
         for alias in ALIASES:
@@ -130,10 +140,14 @@ class ViewSettings(object):
                 self.__components.add(alias)
                 _GAME_UI.add(alias)
                 _SPECTATOR_UI.add(alias)
+                if alias is ALIASES.SIXTH_SENSE:
+                    _NEVER_HIDE.add(alias)
             else:
                 _GAME_UI.discard(alias)
                 _SPECTATOR_UI.discard(alias)
                 self.__components.discard(alias)
+                if alias is ALIASES.SIXTH_SENSE:
+                    _NEVER_HIDE.discard(alias)
 
     def setHiddenComponents(self):
         for alias, wg_alias in ALIASES_TO_HIDE:
@@ -142,13 +156,22 @@ class ViewSettings(object):
             else:
                 self.__hiddenComponents.discard(wg_alias)
 
+    @staticmethod
+    def checkPageName(page):
+        return page.__class__.__name__ in ("StrongholdPage", "EpicBattlePage", "EpicRandomPage", "ClassicPage")
+
     def new_SharedPage_init(self, base, page, *args, **kwargs):
+        self.clear()
         base(page, *args, **kwargs)
-        if not self.__components:
-            return
-        componentsConfig = page._SharedPage__componentsConfig
-        newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
-        componentsConfig._ComponentsConfig__config = newConfig
+        if self.checkPageName(page):
+            self.setComponents()
+            if not self.__components:
+                self.__hiddenComponents.clear()
+                return
+            componentsConfig = page._SharedPage__componentsConfig
+            newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
+            componentsConfig._ComponentsConfig__config = newConfig
+            self.settingsAdded = True
 
     def addReplaceAlias(self, aliases):
         new_aliases = list(aliases)
@@ -170,6 +193,8 @@ class ViewSettings(object):
                 new_aliases.append(ALIASES.PANELS)
             if ALIASES.MAIN_GUN in self.__components:
                 new_aliases.append(ALIASES.MAIN_GUN)
+        elif ALIASES.SIXTH_SENSE in self.__components and BATTLE_VIEW_ALIASES.SIXTH_SENSE in new_aliases:
+            new_aliases.remove(BATTLE_VIEW_ALIASES.SIXTH_SENSE)
         return tuple(new_aliases)
 
     def getHiddenWGComponents(self):

@@ -1,13 +1,9 @@
-from importlib import import_module
-
-from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
-from armagomen.battle_observer.core import _view_settings
+from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, ALIAS_TO_PATH, MAIN, STATISTICS, VEHICLE_TYPES, MOD_NAME
+from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIASES
 from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
-from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -15,54 +11,77 @@ from gui.shared import EVENT_BUS_SCOPE
 
 __all__ = ()
 
-logInfo("load package {} loaded".format(__package__))
-
 
 def getViewSettings():
-    viewSettings = []
-    for alias in _view_settings.setComponents():
-        try:
-            file_path, class_name = ALIAS_TO_PATH[alias]
-            module_class = getattr(import_module(file_path, package=__package__), class_name)
-            viewSettings.append(ComponentSettings(alias, module_class, ScopeTemplates.DEFAULT_SCOPE))
-        except Exception as err:
-            _view_settings.removeComponent(alias)
-            logError("{}, {}, {}", __package__, alias, repr(err))
-            LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
-    return viewSettings
+    from armagomen.battle_observer.battle.armor_calculator import ArmorCalculator
+    from armagomen.battle_observer.battle.battle_timer import BattleTimer
+    from armagomen.battle_observer.battle.damage_log import DamageLog
+    from armagomen.battle_observer.battle.date_times import DateTimes
+    from armagomen.battle_observer.battle.debug_panel import DebugPanel
+    from armagomen.battle_observer.battle.dispersion_timer import DispersionTimer
+    from armagomen.battle_observer.battle.distance_to_enemy import Distance
+    from armagomen.battle_observer.battle.flight_time import FlightTime
+    from armagomen.battle_observer.battle.main_gun import MainGun
+    from armagomen.battle_observer.battle.own_health import OwnHealth
+    from armagomen.battle_observer.battle.players_panels import PlayersPanels
+    from armagomen.battle_observer.battle.sixth_sense import SixthSense
+    from armagomen.battle_observer.battle.team_bases import TeamBases
+    from armagomen.battle_observer.battle.teams_hp import TeamsHP
+    return (ComponentSettings(ALIASES.ARMOR_CALC, ArmorCalculator, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.TIMER, BattleTimer, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DAMAGE_LOG, DamageLog, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DEBUG, DebugPanel, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DISPERSION_TIMER, DispersionTimer, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.DISTANCE, Distance, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.FLIGHT_TIME, FlightTime, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.MAIN_GUN, MainGun, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.OWN_HEALTH, OwnHealth, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.PANELS, PlayersPanels, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.SIXTH_SENSE, SixthSense, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.TEAM_BASES, TeamBases, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(ALIASES.HP_BARS, TeamsHP, ScopeTemplates.DEFAULT_SCOPE))
 
 
 def getBusinessHandlers():
-    return (ObserverBusinessHandler(),)
+    return ObserverBusinessHandlerBattle(),
 
 
 def getContextMenuHandlers():
     return ()
 
 
-class ObserverBusinessHandler(PackageBusinessHandler):
+class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
 
     def __init__(self):
-        self.viewAliases = _view_settings.getViewAliases()
+        from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
+        self.viewAliases = viewSettings.getViewAliases()
         listeners = [(alias, self.eventListener) for alias in self.viewAliases]
-        super(ObserverBusinessHandler, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
+        super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = MinimapZoomPlugin()
+        self.statistics = None
+        self._iconsEnabled = viewSettings.isIconsEnabled()
         self._statLoadTry = 0
-        self.statistics = StatisticsDataLoader() if _view_settings.isWTREnabled() else None
-        self._iconsEnabled = _view_settings.isIconsEnabled()
-        self._statisticsEnabled = self.statistics is not None and self.statistics.enabled
+        self._statisticsEnabled = False
+
+    def init(self):
+        super(ObserverBusinessHandlerBattle, self).init()
+        if viewSettings.isWTREnabled():
+            self.statistics = StatisticsDataLoader()
+            self._statisticsEnabled = self.statistics.enabled
 
     def fini(self):
         self.minimapPlugin.fini()
         self.minimapPlugin = None
         self._statLoadTry = 0
-        super(ObserverBusinessHandler, self).fini()
+        super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        self._app.as_loadLibrariesS([SWF.BATTLE])
-        self._app.loaderManager.onViewLoaded += self.onViewLoaded
-        logInfo("ObserverBusinessHandler loading flash libraries swf={}, alias={}".format(SWF.BATTLE, event.alias))
+        if viewSettings.settingsAdded:
+            self._app.as_loadLibrariesS([SWF.BATTLE])
+            self._app.loaderManager.onViewLoaded += self.onViewLoaded
+            logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
     def loadStatisticView(self, view):
         if self._statisticsEnabled:
@@ -86,9 +105,9 @@ class ObserverBusinessHandler(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        view.flashObject.as_observerCreateComponents(_view_settings.getComponents())
+        view.flashObject.as_observerCreateComponents(viewSettings.getComponents())
         view.flashObject.as_observerUpdatePrebattleTimer(settings.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
-        view.flashObject.as_observerHideWgComponents(_view_settings.getHiddenWGComponents())
+        view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
         if self.minimapPlugin.enabled:
             self.minimapPlugin.init(view)
         if self._iconsEnabled or self._statisticsEnabled:

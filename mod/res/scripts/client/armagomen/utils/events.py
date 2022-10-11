@@ -7,8 +7,6 @@ class Events(object):
         self.onArmorChanged = SafeEvent()
         self.onMarkerColorChanged = SafeEvent()
         self.onDispersionAngleChanged = SafeEvent()
-        self.onDisconnected = SafeEvent()
-        self.onConnected = SafeEvent()
         self.onLoginLoaded = SafeEvent()
         self.onHangarLoaded = SafeEvent()
         self.onBattlePageLoaded = SafeEvent()

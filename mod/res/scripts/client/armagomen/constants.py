@@ -38,16 +38,15 @@ URLS = namedtuple("URLS", (
     "PAYPAL_URL",
     "UPDATE_GITHUB_API_URL",
     "PATREON_URL",
-    "CLAN_ABBREV",
     "DISCORD"
 ))("https://donatua.com/@armagomen",
    "https://www.paypal.com/donate/?hosted_button_id=T5D6TZY9DGXBL",
    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
    "https://www.patreon.com/armagomen",
-   "BOFAN",
    "https://discord.gg/Nma5T5snKW")
 
-VEHICLE = namedtuple("VEHICLE", "CUR MAX TEAM PERCENT")("health", "maxHealth", "team", "percent")
+VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
+REGIONS = namedtuple("REGIONS", ("RU", "EU", "ASIA", "NA"))("ru", "eu", "asia", "com")
 
 
 class GLOBAL:
@@ -55,7 +54,7 @@ class GLOBAL:
         pass
 
     ALIGN = "align"
-    ALIGN_LIST = namedtuple("ALIGN_LIST", "left center right")("left", "center", "right")
+    ALIGN_LIST = namedtuple("ALIGN_LIST", ("left", "center", "right"))("left", "center", "right")
     ALPHA = "alpha"
     AVG_COLOR = "avgColor"
     BG_ALPHA = "bgAlpha"
@@ -104,14 +103,14 @@ __Main = namedtuple("MAIN", (
     "HIDE_DOG_TAGS", "MAX_FRAME_RATE", "NAME", "REMOVE_SHADOW_IN_PREBATTLE", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
     "ANONYMOUS_STRING", "CHANGE_ANONYMOUS_NAME", "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND",
     "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT", "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT",
-    "HIDE_BTN_COUNTERS"))
+    "HIDE_BTN_COUNTERS", "PREMIUM_TIME"))
 MAIN = __Main(
     "autoClearCache", "fps_enableFPSLimiter", "hideBadges", "hideChatInRandom", "hideClanAbbrev",
     "hide_dog_tags", "fps_maxFrameRate", "main", "removeShadowInPrebattle", "showFriendsAndClanInEars",
     "anonymousEnableShow", "anonymousString", "anonymousNameChange", "useKeyPairs", "ignore_commanders_voice",
     "disable_score_sound", "DEBUG_MODE", "auto_crew_training", "do_not_buy_directives_for_currency_automatically",
     "hide_hint_panel", "hide_field_mail", "auto_return_crew", "disable_stun_sound", "hide_main_chat_in_hangar",
-    "hide_button_counters_on_top_panel")
+    "hide_button_counters_on_top_panel", "premium_time")
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "B_SILVER", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
@@ -122,8 +121,8 @@ COLORS = namedtuple("COLORS", (
     "deadColor")
 
 MAIN_GUN = namedtuple("MAIN_GUN", (
-    "NAME", "COLOR", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE", "INFO"))(
-    "main_gun", "mainGunColor", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2,
+    "NAME", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE", "INFO"))(
+    "main_gun", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2,
     "mainGun")
 
 MINIMAP = namedtuple("MINIMAP", (
@@ -140,9 +139,8 @@ CLOCK = namedtuple("CLOCK", (
     "clock", "battle", "hangar", "format", 1.0, "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>",
     "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>")
 
-PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME", "PREMIUM_FORMAT", "DEFAULT_FORMAT_PREMIUM"))(
-    "premium_time", "premium_format", "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d "
-                                      "Days. %(hours)02d:%(minutes)02d:%(seconds)02d</font>")
+PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME",))(
+    "premium_time", )
 
 __Sniper = namedtuple("SNIPER", (
     "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "METERS", "ZOOMS", "ZOOM_EXPOSURE",
@@ -468,23 +466,6 @@ class CONFIG_INTERFACE:
         }
     }
 
-
-ALIAS_TO_PATH = {
-    ALIASES.HP_BARS: (".teams_hp", ALIASES.HP_BARS[9:-3]),
-    ALIASES.DAMAGE_LOG: (".damage_log", ALIASES.DAMAGE_LOG[9:-3]),
-    ALIASES.MAIN_GUN: (".main_gun", ALIASES.MAIN_GUN[9:-3]),
-    ALIASES.DEBUG: (".debug_panel", ALIASES.DEBUG[9:-3]),
-    ALIASES.TIMER: (".battle_timer", ALIASES.TIMER[9:-3]),
-    ALIASES.SIXTH_SENSE: (".sixth_sense", ALIASES.SIXTH_SENSE[9:-3]),
-    ALIASES.TEAM_BASES: (".team_bases", ALIASES.TEAM_BASES[9:-3]),
-    ALIASES.ARMOR_CALC: (".armor_calculator", ALIASES.ARMOR_CALC[9:-3]),
-    ALIASES.FLIGHT_TIME: (".flight_time", ALIASES.FLIGHT_TIME[9:-3]),
-    ALIASES.DISPERSION_TIMER: (".dispersion_timer", ALIASES.DISPERSION_TIMER[9:-3]),
-    ALIASES.PANELS: (".players_panels", ALIASES.PANELS[9:-3]),
-    ALIASES.DATE_TIME: (".date_times", ALIASES.DATE_TIME[9:-3]),
-    ALIASES.DISTANCE: (".distance_to_enemy", ALIASES.DISTANCE[9:-3]),
-    ALIASES.OWN_HEALTH: (".own_health", ALIASES.OWN_HEALTH[9:-3])
-}
 
 ALIAS_TO_CONFIG_NAME = {
     ALIASES.HP_BARS: HP_BARS.NAME,

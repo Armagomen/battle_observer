@@ -7,7 +7,7 @@ from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL,
     DISPERSION, EFFECTS, FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS,
     MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STRATEGIC,
-    TEAM_BASES, VEHICLE_TYPES, PREMIUM, DISTANCE, OWN_HEALTH, STATISTICS,
+    TEAM_BASES, VEHICLE_TYPES, DISTANCE, OWN_HEALTH, STATISTICS,
 )
 from constants import ATTACK_REASON, ATTACK_REASONS, SHELL_TYPES_LIST
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -36,8 +36,7 @@ class DefaultSettings(object):
             MAIN.HIDE_DOG_TAGS: False,
             MAIN.DISABLE_SCORE_SOUND: False,
             MAIN.DEBUG: False,
-            PREMIUM.PREMIUM_TIME: True,
-            PREMIUM.PREMIUM_FORMAT: PREMIUM.DEFAULT_FORMAT_PREMIUM,
+            MAIN.PREMIUM_TIME: True,
             MAIN.CREW_TRAINING: True,
             MAIN.DIRECTIVES: True,
             MAIN.HIDE_HINT: False,
@@ -58,9 +57,7 @@ class DefaultSettings(object):
                 GLOBAL.ENABLED: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
                 GLOBAL.X: -240,
-                GLOBAL.Y: GLOBAL.ZERO,
-                "reverse_x": True,
-                "reverse_y": True
+                GLOBAL.Y: GLOBAL.ZERO
             },
             CLOCK.IN_BATTLE: {
                 GLOBAL.ENABLED: False,
@@ -209,9 +206,6 @@ class DefaultSettings(object):
             ARMOR_CALC.ON_ALLY: False,
         }
         self.colors = {
-            MAIN_GUN.NAME: {
-                MAIN_GUN.COLOR: COLORS.S_YELLOW
-            },
             COLORS.GLOBAL: {
                 COLORS.ALLY_MAME: COLORS.GREEN,
                 COLORS.ENEMY_MAME: COLORS.RED,

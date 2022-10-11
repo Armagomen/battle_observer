@@ -1,68 +1,56 @@
-__version__ = "1.39.3"
+from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
+    cleanupObserverUpdates
 
-from debug_utils import LOG_CURRENT_EXCEPTION
 
 loadError = False
-errorMessage = ""
-
-try:
-    from armagomen.battle_observer.core.updater import Updater
-
-    updater = Updater(__version__)
-except Exception:
-    LOG_CURRENT_EXCEPTION()
+viewSettings = None
+componentsLoader = None
+hangarSettings = None
 
 
-def importApi():
+def startLoadingMod(modVersion):
+    global loadError
+    errorMessage = ""
+
     try:
-        from gui.modsListApi import g_modsListApi
-        from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-    except Exception:
+        from armagomen.battle_observer.components import ComponentsLoader
+        from armagomen.battle_observer.core.view_settings import ViewSettings
+        from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
+        from armagomen.battle_observer.settings.loader import SettingsLoader
+        from sys import version
+    except Exception as err:
+        from debug_utils import LOG_CURRENT_EXCEPTION
         LOG_CURRENT_EXCEPTION()
-        return None, None, None
-    else:
-        return g_modsListApi, vxSettingsApi, vxSettingsApiEvents
-
-
-g_modsListApi, vxSettingsApi, vxSettingsApiEvents = importApi()
-
-try:
-    from armagomen.battle_observer.components import ComponentsLoader
-    from armagomen.battle_observer.core.view_settings import ViewSettings
-    from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
-    from armagomen.battle_observer.settings.loader import SettingsLoader
-    from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion
-    from sys import version as pythonVersion
-except Exception as err:
-    LOG_CURRENT_EXCEPTION()
-    loadError = True
-    errorMessage = repr(err)
-else:
-    if isFileValid(__version__):
-        logInfo('Launched at python v{}'.format(pythonVersion))
-        logInfo('MOD START LOADING: v{} - {}'.format(__version__, gameVersion))
-        _view_settings = ViewSettings()
-        componentsLoader = ComponentsLoader()
-        settings_loader = SettingsLoader()
-        if g_modsListApi is not None and vxSettingsApi is not None and vxSettingsApiEvents is not None:
-            hangar_settings = SettingsInterface(g_modsListApi, vxSettingsApi, vxSettingsApiEvents,
-                                                settings_loader, __version__)
-    else:
         loadError = True
-        errorMessage = 'ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please ' \
-                       'install mod from official source: https://github.com/Armagomen/battle_observer/releases/latest'.format(__version__)
-        logError(errorMessage)
+        errorMessage = repr(err)
+    else:
+        if isFileValid(modVersion):
+            global viewSettings, componentsLoader, hangarSettings
+            logInfo('Launched at python v{}'.format(version))
+            logInfo('MOD START LOADING: v{} - {}'.format(modVersion, gameVersion))
+            viewSettings = ViewSettings()
+            componentsLoader = ComponentsLoader()
+            settings_loader = SettingsLoader()
+            hangarSettings = SettingsInterface(settings_loader, modVersion)
+        else:
+            loadError = True
+            URL = 'https://github.com/Armagomen/battle_observer/releases/latest'
+            errorMessage = 'ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please ' \
+                           'install mod from official source: {}'.format(modVersion, URL)
+            logError(errorMessage)
+    return errorMessage
 
 
-def init():
+def onInit(modVersion):
+    errorMessage = startLoadingMod(modVersion)
     if loadError:
         from armagomen.battle_observer.core.loading_error import LoadingError
         return LoadingError(errorMessage)
 
 
-def fini():
-    if loadError:
-        return
+def onFini(modVersion):
     clearClientCache()
+    cleanupObserverUpdates()
     cleanupUpdates()
-    logInfo('MOD SHUTTING DOWN: v{} - {}'.format(__version__, gameVersion))
+    if not loadError:
+        logInfo('MOD SHUTTING DOWN: v{} - {}'.format(modVersion, gameVersion))

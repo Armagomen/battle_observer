@@ -28,7 +28,10 @@ class SettingsLoader(object):
             self.createLoadJSON(self.configName)
             self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
         self.readConfig()
-        self.configsList = [x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x))]
+
+    @property
+    def configsList(self):
+        return sorted(x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x)))
 
     def readOtherConfig(self, configID):
         self.configName = self.configsList[configID]
@@ -47,16 +50,15 @@ class SettingsLoader(object):
     @staticmethod
     def isNotEqualLen(data1, data2):
         """
-        Returns True if the length of 2 dictionaries is not identical,
-        or an error occurs when comparing lengths.
-        And the settings_core file needs to be rewritten
+        Returns True if the lengths of the 2 dictionaries are not identical,
+        or an error occurs when comparing the lengths, and the settings file needs to be rewritten.
         """
         if isinstance(data1, dict) and isinstance(data2, dict):
             return len(data1) != len(data2)
         return type(data1) != type(data2)
 
     def updateData(self, external_cfg, internal_cfg, file_update=False):
-        """recursively updates words from settings_core files"""
+        """Recursively updates words from settings_core files"""
         file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
         for key in internal_cfg:
             if isinstance(internal_cfg[key], dict):
@@ -79,7 +81,7 @@ class SettingsLoader(object):
         return file_update
 
     def readConfig(self):
-        """Read settings_core file from JSON"""
+        """Read settings"""
         logInfo("LOADING USER CONFIGURATION: {}".format(self.configName.upper()))
         direct_path = os.path.join(configsPath, self.configName)
         listdir = os.listdir(direct_path)
@@ -92,6 +94,7 @@ class SettingsLoader(object):
         settings.onUserConfigUpdateComplete()
 
     def loadConfigPart(self, part_name, direct_path, listdir, internal_cfg):
+        """Read settings part file from JSON"""
         file_name = JSON.format(part_name)
         file_path = os.path.join(direct_path, file_name)
         if file_name not in listdir:

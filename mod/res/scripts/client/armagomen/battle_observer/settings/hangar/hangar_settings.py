@@ -25,6 +25,17 @@ def LOCKED_MESSAGE():
         return pattern.format("The function is not available, XVM is installed.")
 
 
+def importApi():
+    try:
+        from gui.modsListApi import g_modsListApi
+        from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
+    except Exception:
+        LOG_CURRENT_EXCEPTION()
+        return None, None, None
+    else:
+        return g_modsListApi, vxSettingsApi, vxSettingsApiEvents
+
+
 class Getter(object):
     __slots__ = ()
 
@@ -178,10 +189,13 @@ class CreateElement(object):
 
 class SettingsInterface(CreateElement):
 
-    def __init__(self, modsListApi, vxSettingsApi, vxSettingsApiEvents, settingsLoader, version):
+    def __init__(self, settingsLoader, version):
+        g_modsListApi, vxSettingsApi, vxSettingsApiEvents = importApi()
+        if g_modsListApi is None or vxSettingsApi is None or vxSettingsApiEvents is None:
+            return
         super(SettingsInterface, self).__init__()
         self.sLoader = settingsLoader
-        self.modsListApi = modsListApi
+        self.modsListApi = g_modsListApi
         self.apiEvents = vxSettingsApiEvents
         self.inited = set()
         self.vxSettingsApi = vxSettingsApi
@@ -202,7 +216,7 @@ class SettingsInterface(CreateElement):
             ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings
 
     def addModificationToModList(self):
-        """register settings_core window in modsListApi"""
+        """register settings window in modsListApi"""
         kwargs = {
             'id': MOD_NAME, 'name': localization['service']['name'],
             'description': localization['service']['description'],
@@ -225,7 +239,7 @@ class SettingsInterface(CreateElement):
                 self.inited.add(blockID)
 
     def load_window(self):
-        """Loading settings_core window"""
+        """Loading settings window"""
         self.vxSettingsApi.loadWindow(MOD_NAME)
 
     def onUserConfigUpdateComplete(self):
@@ -260,7 +274,7 @@ class SettingsInterface(CreateElement):
                 self.inited.add(blockID)
 
     def onSettingsChanged(self, modID, blockID, data):
-        """Saves made by the user settings_core in the settings_core file."""
+        """Saves made by the user settings in the settings file."""
         if self.newConfigLoadingInProcess or MOD_NAME != modID:
             return
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
@@ -317,7 +331,7 @@ class SettingsInterface(CreateElement):
                 yield item
 
     def getTemplate(self, blockID):
-        """create templates, do not change..."""
+        """Create templates, do not change..."""
         settings_block = getattr(settings, blockID, {})
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfigID)]
