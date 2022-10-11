@@ -157,7 +157,7 @@ class ViewSettings(object):
 
     @staticmethod
     def checkPageName(page):
-        return page.__class__.__name__ in ("StrongholdPage", "EpicBattlePage", "EpicRandomPage", "ClassicPage", )
+        return page.__class__.__name__ in ("StrongholdPage", "EpicBattlePage", "EpicRandomPage", "ClassicPage")
 
     def new_SharedPage_init(self, base, page, *args, **kwargs):
         self.clear()
