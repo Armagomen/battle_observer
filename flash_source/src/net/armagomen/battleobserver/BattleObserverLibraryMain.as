@@ -131,9 +131,9 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype.as_createStatisticComponent = function(statsEnabled:Boolean, iconsEnabled:Boolean, data:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number):void
+			BaseBattlePage.prototype.as_createStatisticComponent = function(statsEnabled:Boolean, iconsEnabled:Boolean, data:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number, isComp7Page:Boolean):void
 			{
-				this.statisticsBO = new StatisticsAndIcons(this, statsEnabled, iconsEnabled, data, cutWidth, fullWidth, typeColors, iconMultiplier);
+				this.statisticsBO = new StatisticsAndIcons(this, statsEnabled, iconsEnabled, data, cutWidth, fullWidth, typeColors, iconMultiplier, isComp7Page);
 			}
 			
 			BaseBattlePage.prototype.as_createMimimapCentered = function():void
