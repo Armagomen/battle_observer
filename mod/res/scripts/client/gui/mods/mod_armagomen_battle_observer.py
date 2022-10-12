@@ -5,7 +5,7 @@ __credits__ = ["Armagomen"]
 __license__ = "CC BY-NC-SA 4.0"
 __email__ = "armagomen@gmail.com"
 __status__ = "Production"
-__http__ = "https://donatua.com/@armagomen"
+__http__ = "https://github.com/Armagomen/battle_observer/releases"
 
 import logging
 
