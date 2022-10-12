@@ -42,9 +42,6 @@ def registerBattleObserverPackages():
             config.registerScaleformBattlePackages(guiType, SWF.BATTLE_PACKAGES)
 
 
-registerBattleObserverPackages()
-
-
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
@@ -53,6 +50,7 @@ class ViewSettings(object):
         self.__components = set()
         self.__hiddenComponents = set()
         self.settingsAdded = False
+        registerBattleObserverPackages()
         g_currentVehicle.onChanged += self.onVehicleChanged
         overrideMethod(SharedPage)(self.new_SharedPage_init)
 

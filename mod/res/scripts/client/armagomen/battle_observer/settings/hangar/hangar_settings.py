@@ -4,7 +4,6 @@ from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
-from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
 from helpers import getClientLanguage
@@ -29,7 +28,10 @@ def importApi():
     try:
         from gui.modsListApi import g_modsListApi
         from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-    except Exception:
+    except Exception as error:
+        from armagomen.battle_observer.core.loading_error import LoadingError
+        from debug_utils import LOG_CURRENT_EXCEPTION
+        LoadingError(repr(error))
         LOG_CURRENT_EXCEPTION()
         return None, None, None
     else:

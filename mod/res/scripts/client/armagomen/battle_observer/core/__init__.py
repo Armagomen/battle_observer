@@ -1,7 +1,6 @@
 from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
     cleanupObserverUpdates
 
-
 loadError = False
 viewSettings = None
 componentsLoader = None
@@ -14,10 +13,13 @@ def startLoadingMod(modVersion):
 
     try:
         from armagomen.battle_observer.components import ComponentsLoader
+        from armagomen.battle_observer.core.updater import Updater
         from armagomen.battle_observer.core.view_settings import ViewSettings
         from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
         from armagomen.battle_observer.settings.loader import SettingsLoader
         from sys import version
+
+        Updater(modVersion)
     except Exception as err:
         from debug_utils import LOG_CURRENT_EXCEPTION
         LOG_CURRENT_EXCEPTION()
