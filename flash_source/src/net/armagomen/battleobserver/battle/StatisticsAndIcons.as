@@ -19,14 +19,13 @@ package net.armagomen.battleobserver.battle
 		private var statisticsData:Object           = null;
 		private var statisticsEnabled:Boolean       = false;
 		private var iconsEnabled:Boolean            = false;
-		private var isComp7Page:Boolean             = false;
 		private var iconMultiplier:Number           = -1.25;
 		private var isReplay:Boolean                = false;
 		private var cutWidth:Number                 = 60.0;
 		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
-		public function StatisticsAndIcons(battlePage:*, statisticsEnabled:Boolean, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number, isComp7Page:Boolean)
+		public function StatisticsAndIcons(battlePage:*, statisticsEnabled:Boolean, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
 		{
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
@@ -42,7 +41,6 @@ package net.armagomen.battleobserver.battle
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onCountChange, false, 0, true);
 			this.isReplay = battlePage.getComponent(BATTLE_VIEW_ALIASES.CONSUMABLES_PANEL)._isReplay;
 			this.onChange(null);
-			this.isComp7Page = isComp7Page;
 		}
 		
 		private function onCountChange(eve:Event):void
@@ -143,7 +141,7 @@ package net.armagomen.battleobserver.battle
 					this.updateFullstats(vehicleID, isEnemy);
 				}
 				
-				if (!this.isComp7Page && this.battleLoading && this.battleLoading.visible)
+				if (this.battleLoading && this.battleLoading.visible)
 				{
 					this.updateBattleloading(vehicleID, isEnemy);
 				}

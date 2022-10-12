@@ -4,7 +4,6 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIASES
 from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
-from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -95,8 +94,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         iconMultiplier = settings.statistics[STATISTICS.ICON_BLACKOUT]
         view.flashObject.as_createStatisticComponent(self._statisticsEnabled, self._iconsEnabled, statisticsItemsData,
-                                                     cutWidth, fullWidth, typeColors, iconMultiplier,
-                                                     view.settings.alias == VIEW_ALIAS.COMP7_BATTLE_PAGE)
+                                                     cutWidth, fullWidth, typeColors, iconMultiplier)
 
     def onViewLoaded(self, view, *args):
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", view.settings.alias)
