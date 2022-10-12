@@ -73,7 +73,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved or self.isLowHealth else self.gunLeft
         self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON] if achieved else GLOBAL.EMPTY_LINE
         if not achieved and self.isLowHealth:
-            self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON] + I18N_CRITERIA[criteria]
+            self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON] + I18N_CRITERIA.get(criteria)
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
 
