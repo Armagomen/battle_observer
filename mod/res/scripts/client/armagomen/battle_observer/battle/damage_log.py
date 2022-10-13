@@ -18,7 +18,7 @@ _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE = {
     BATTLE_LOG_SHELL_TYPES.SMOKE: SHELL_TYPES.SMOKE
 }
 
-LogData = namedtuple('LogData', 'kills id_list vehicles')
+LogData = namedtuple('LogData', 'kills id_list vehicles name')
 
 
 class DamageLog(DamageLogsMeta):
@@ -71,8 +71,8 @@ class DamageLog(DamageLogsMeta):
         if feedback:
             feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
             if self.extended_log_enabled:
-                self.input_log = LogData(set(), list(), dict())
-                self.damage_log = LogData(set(), list(), dict())
+                self.input_log = LogData(set(), list(), dict(), DAMAGE_LOG.IN_LOG)
+                self.damage_log = LogData(set(), list(), dict(), DAMAGE_LOG.D_LOG)
                 arena = self._arenaVisitor.getArenaSubscription()
                 if arena is not None:
                     arena.onVehicleUpdated += self.onVehicleUpdated
@@ -97,7 +97,7 @@ class DamageLog(DamageLogsMeta):
         super(DamageLog, self).onExitBattlePage()
 
     def updateAvgDamage(self):
-        """sets the average damage to the selected tank"""
+        """Sets the average damage to the selected tank"""
         if self._player is not None and not DAMAGE_LOG.AVG_DAMAGE_DATA:
             max_health = self._player.vehicle.typeDescriptor.maxHealth
             DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, max_health)
@@ -105,7 +105,7 @@ class DamageLog(DamageLogsMeta):
         self.top_log[DAMAGE_LOG.AVG_ASSIST] = DAMAGE_LOG.AVG_ASSIST_DATA
 
     def onLogsAltMode(self, isKeyDown):
-        """hot key event"""
+        """Hot key event"""
         if self.settings.log_damage_extended[GLOBAL.ENABLED]:
             self.updateExtendedLog(self.damage_log, self.settings.log_damage_extended, altMode=isKeyDown)
         if self.settings.log_input_extended[GLOBAL.ENABLED]:
@@ -130,14 +130,14 @@ class DamageLog(DamageLogsMeta):
             return event.getCount()
         return extra.getDamage()
 
-    def isSwitchToVehicle(self):
+    def isPostmortemSwitched(self):
         observedVehID = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
         playerVehicleID = self._arenaDP.getPlayerVehicleID()
         return playerVehicleID != observedVehID
 
     def __onPlayerFeedbackReceived(self, events):
         """shared.feedback player events"""
-        if self.isSwitchToVehicle():
+        if self.isPostmortemSwitched():
             return
         for event in events:
             self.parseEvent(event)
@@ -258,4 +258,4 @@ class DamageLog(DamageLogsMeta):
         if not log_data.id_list:
             return
         result = DAMAGE_LOG.NEW_LINE.join(self.getLogLines(log_data, settings, altMode))
-        self.as_updateLogS(DAMAGE_LOG.D_LOG if log_data is self.damage_log else DAMAGE_LOG.IN_LOG, result)
+        self.as_updateLogS(log_data.name, result)
