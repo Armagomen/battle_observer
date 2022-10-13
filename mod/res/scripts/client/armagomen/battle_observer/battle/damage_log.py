@@ -130,8 +130,15 @@ class DamageLog(DamageLogsMeta):
             return event.getCount()
         return extra.getDamage()
 
+    def isSwitchToVehicle(self):
+        observedVehID = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
+        playerVehicleID = self._arenaDP.getPlayerVehicleID()
+        return playerVehicleID != observedVehID
+
     def __onPlayerFeedbackReceived(self, events):
         """shared.feedback player events"""
+        if self.isSwitchToVehicle():
+            return
         for event in events:
             self.parseEvent(event)
 
