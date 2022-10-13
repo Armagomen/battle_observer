@@ -95,7 +95,6 @@ package net.armagomen.battleobserver.battle
 				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
 				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.FULL);
 				this.panels.as_setPanelMode(oldMode);
-				this.panels.parent.updateDamageLogPosition();
 			}
 		}
 		
@@ -143,7 +142,14 @@ package net.armagomen.battleobserver.battle
 				
 				if (this.battleLoading && this.battleLoading.visible)
 				{
-					this.updateBattleloading(vehicleID, isEnemy);
+					try 
+					{
+						this.updateBattleloading(vehicleID, isEnemy);
+					}
+					catch (err:Error)
+					{
+						
+					}
 				}
 			}
 		}
@@ -157,10 +163,10 @@ package net.armagomen.battleobserver.battle
 			}
 			if (this.iconsEnabled && holder.data)
 			{
-				var tColor:ColorTransform = holder.statsItem.vehicleIcon.transform.colorTransform;
+				var tColor:ColorTransform = holder.statsItem._vehicleIcon.transform.colorTransform;
 				tColor.color = this.iconColors[holder.data.vehicleType];
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				holder.statsItem.vehicleIcon.transform.colorTransform = tColor;
+				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsEnabled && this.statisticsData && this.statisticsData[vehicleID])
 			{
@@ -210,14 +216,14 @@ package net.armagomen.battleobserver.battle
 		
 		private function getFullStatsHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
 		{
-			var tableCtrl:* = this.fullStats._tableCtrl;
+			var tableCtrl:* = this.fullStats.tableCtrl;
 			if (!tableCtrl)
 			{
 				return null;
 			}
-			if (isEnemy && tableCtrl._enemyRenderers)
+			if (isEnemy && tableCtrl.enemyRenderers)
 			{
-				for each (var enemy:* in tableCtrl._enemyRenderers)
+				for each (var enemy:* in tableCtrl.enemyRenderers)
 				{
 					if (enemy.data && enemy.data.vehicleID == vehicleID)
 					{
@@ -225,9 +231,9 @@ package net.armagomen.battleobserver.battle
 					}
 				}
 			}
-			else if (tableCtrl._allyRenderers)
+			else if (tableCtrl.allyRenderers)
 			{
-				for each (var ally:* in tableCtrl._allyRenderers)
+				for each (var ally:* in tableCtrl.allyRenderers)
 				{
 					if (ally.data && ally.data.vehicleID == vehicleID)
 					{
@@ -268,5 +274,4 @@ package net.armagomen.battleobserver.battle
 			return null;
 		}
 	}
-
 }

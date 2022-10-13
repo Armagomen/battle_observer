@@ -3,7 +3,7 @@ from collections import defaultdict
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.constants import VEHICLE, PANELS, COLORS, VEHICLE_TYPES
-from armagomen.utils.common import getEntity
+from armagomen.utils.common import getEntity, logDebug
 from armagomen.utils.keys_listener import g_keysListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -84,7 +84,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                                  })
 
     def onAddedToStorage(self, vehicleID, isEnemy):
-        """called from flash after creation in as_AddVehIdToListS"""
+        """Called from flash after creation in as_AddVehIdToListS"""
         vInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
         if vInfoVO.isObserver():
             return
@@ -94,6 +94,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
             self.as_addDamageS(vehicleID, self.settings[PANELS.DAMAGES_SETTINGS])
+        logDebug("PlayersPanels onAddedToStorage: id={} enemy={}", vehicleID, isEnemy)
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies.union(aliveEnemies):

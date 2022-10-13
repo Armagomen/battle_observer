@@ -1,5 +1,5 @@
 from armagomen.constants import SWF, ALIASES
-from armagomen.utils.common import logError, logWarning, logDebug, callback, logInfo
+from armagomen.utils.common import logError, logDebug, callback, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -9,14 +9,8 @@ from gui.shared import EVENT_BUS_SCOPE
 
 
 def getViewSettings():
-    view_settings = []
-    try:
-        from armagomen.battle_observer.lobby.date_times import DateTimes
-        view_settings.append(ComponentSettings(ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE))
-    except Exception as err:
-        logWarning("{}, {}, {}".format(__package__, ALIASES.DATE_TIME, repr(err)))
-    logDebug("{}.getViewSettings: {}", __package__, view_settings)
-    return tuple(view_settings)
+    from armagomen.battle_observer.lobby.date_times import DateTimes
+    return (ComponentSettings(ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),)
 
 
 def getBusinessHandlers():

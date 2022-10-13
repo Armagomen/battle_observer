@@ -45,19 +45,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		override public function setCompVisible(visible:Boolean):void
-		{
-			super.setCompVisible(visible);
-			if (visible && this.playersPanel)
-			{
-				var oldMode:int = int(this.playersPanel.state);
-				this.playersPanel.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
-				this.playersPanel.as_setPanelMode(PLAYERS_PANEL_STATE.FULL);
-				this.playersPanel.as_setPanelMode(oldMode);
-				this.playersPanel.parent.updateDamageLogPosition();
-			}
-		}
-		
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
@@ -71,12 +58,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		private function onChange(eve:Event):void
 		{
-			if (this.isReplay){
-				this.as_clearStorage();
-				for each (var itemL:* in this.playersPanel.listLeft._items)
-				{
-					this.as_AddVehIdToList(itemL.vehicleData.vehicleID, false);
-				}
+			this.as_clearStorage();
+			for each (var itemL:* in this.playersPanel.listLeft._items)
+			{
+				this.as_AddVehIdToList(itemL.vehicleData.vehicleID, false);
 			}
 			for each (var itemR:* in this.playersPanel.listRight._items)
 			{
@@ -94,6 +79,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 					this.storage[vehicleID] = new ListItem(enemy, getShadowSettings());
 					this.onAddedToStorage(vehicleID, enemy);
 					listitem.addChild(this.storage[vehicleID]);
+				}
+				else
+				{
+					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: playersPanel list item holder is null: " + vehicleID.toString());
 				}
 			}
 		}
@@ -187,6 +176,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				{
 					return holder.getListItem();
 				}
+				DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: playersPanel list item holder is not found: " + vehicleID.toString());
 			}
 			return null;
 		}
