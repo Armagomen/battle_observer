@@ -46,7 +46,7 @@ URLS = namedtuple("URLS", (
    "https://discord.gg/Nma5T5snKW")
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT"))("health", "maxHealth", "team", "percent")
-REGIONS = namedtuple("REGIONS", ("RU", "EU", "ASIA", "NA"))("ru", "eu", "asia", "com")
+REGIONS = namedtuple("REGIONS", ("EU", "ASIA", "NA"))("eu", "asia", "com")
 
 
 class GLOBAL:

@@ -69,6 +69,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def createHealthBar(self, vehicleID, vInfoVO, isEnemy):
         maxHealth = vInfoVO.vehicleType.maxHealth
         newHealth = getattr(getEntity(vehicleID), VEHICLE.CUR, maxHealth)
+        if newHealth > maxHealth:
+            maxHealth = newHealth
         if self.settings[PANELS.BAR_CLASS_COLOR]:
             color = self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][vInfoVO.vehicleType.classTag]
         else:
@@ -104,6 +106,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):
         if self.hpBarsEnable:
+            if newHealth > maxHealth:
+                maxHealth = newHealth
             scale = round(getHealthPercent(newHealth, maxHealth), 2)
             self.as_updateHealthBarS(vehicleID, scale,
                                      self.settings[PANELS.HP_TEMPLATE] % {
