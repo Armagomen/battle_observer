@@ -179,8 +179,11 @@ class ViewSettings(object):
             new_aliases.append(ALIASES.TEAM_BASES)
         elif ALIASES.TIMER in self.__components and BATTLE_VIEW_ALIASES.BATTLE_TIMER in new_aliases:
             new_aliases.append(ALIASES.TIMER)
-        elif ALIASES.OWN_HEALTH in self.__components and BATTLE_VIEW_ALIASES.DAMAGE_PANEL in new_aliases:
-            new_aliases.append(ALIASES.OWN_HEALTH)
+        elif BATTLE_VIEW_ALIASES.DAMAGE_PANEL in new_aliases:
+            if ALIASES.OWN_HEALTH in self.__components:
+                new_aliases.append(ALIASES.OWN_HEALTH)
+            if ALIASES.DAMAGE_LOG in self.__components:
+                new_aliases.append(ALIASES.DAMAGE_LOG)
         elif ALIASES.DEBUG in self.__components and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
             new_aliases.remove(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
             new_aliases.append(ALIASES.DEBUG)

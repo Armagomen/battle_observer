@@ -6,6 +6,7 @@ from armagomen.utils.common import logDebug, logWarning, percentToRGB, getPercen
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES, SHELL_TYPES
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
+from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
 
 _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE = {
     BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING: SHELL_TYPES.ARMOR_PIERCING,
@@ -21,7 +22,7 @@ _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE = {
 LogData = namedtuple('LogData', 'kills id_list vehicles name')
 
 
-class DamageLog(DamageLogsMeta):
+class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
 
     def __init__(self):
         super(DamageLog, self).__init__()
@@ -30,6 +31,7 @@ class DamageLog(DamageLogsMeta):
         self.top_log = None
         self.top_log_enabled = False
         self.extended_log_enabled = False
+        self.__maxHealth = GLOBAL.ZERO
         self.vehicle_colors = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][VEHICLE_TYPES.UNKNOWN],
                                           **self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS])
         self.vehicle_icons = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_ICON][VEHICLE_TYPES.UNKNOWN],
@@ -50,6 +52,10 @@ class DamageLog(DamageLogsMeta):
         if self.extended_log_enabled:
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_global[DAMAGE_LOG.HOT_KEY])
 
+    def updateVehicleParams(self, vehicle, _):
+        if self.__maxHealth != vehicle.descriptor.maxHealth:
+            self.__maxHealth = vehicle.descriptor.maxHealth
+
     def isLogEnabled(self, eventType):
         if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
             return self.settings.log_damage_extended[GLOBAL.ENABLED]
@@ -59,9 +65,9 @@ class DamageLog(DamageLogsMeta):
 
     def getLogDataAndSettings(self, eventType):
         if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-            return self.damage_log, self.settings.log_damage_extended
+            return self.damage_log, self.settings.log_damage_extended, True
         elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
-            return self.input_log, self.settings.log_input_extended
+            return self.input_log, self.settings.log_input_extended, False
         logWarning(DAMAGE_LOG.WARNING_MESSAGE)
         raise ValueError("eventType %s NOT FOUND" % eventType)
 
@@ -158,7 +164,7 @@ class DamageLog(DamageLogsMeta):
         if vehicleInfoVO:
             vehicleType = vehicleInfoVO.vehicleType
             if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
-                log_data, settings = self.getLogDataAndSettings(FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
+                log_data, settings, _ = self.getLogDataAndSettings(FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
                 vehicle = log_data.vehicles.get(vehicleID)
                 if vehicle and vehicle.get(DAMAGE_LOG.VEHICLE_CLASS) is None:
                     self.createVehicle(vehicleInfoVO, vehicle, update=True)
@@ -173,7 +179,7 @@ class DamageLog(DamageLogsMeta):
         else:
             eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
             target = targetID
-        log_data, settings = self.getLogDataAndSettings(eventID)
+        log_data, settings, _ = self.getLogDataAndSettings(eventID)
         log_data.kills.add(target)
         self.updateExtendedLog(log_data, settings)
 
@@ -201,15 +207,14 @@ class DamageLog(DamageLogsMeta):
 
     def addToExtendedLog(self, e_type, target_id, extra):
         """add to log item"""
-        is_player = e_type == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
-        log_data, settings = self.getLogDataAndSettings(e_type)
+        log_data, settings, is_player = self.getLogDataAndSettings(e_type)
         if target_id not in log_data.id_list:
             log_data.id_list.append(target_id)
         shell_name, shell_icon_name, gold = self.checkPlayerShell(extra) if is_player else self.checkShell(extra)
         logDebug("Shell type: {}, shell icon: {}, gold: {}, player: {}", shell_name, shell_icon_name, gold, is_player)
         vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         vehicleInfoVO = self._arenaDP.getVehicleInfo(target_id)
-        maxHealth = vehicleInfoVO.vehicleType.maxHealth if is_player else self._player.vehicle.typeDescriptor.maxHealth
+        maxHealth = vehicleInfoVO.vehicleType.maxHealth if is_player else self.__maxHealth
         if not vehicle:
             self.createVehicle(vehicleInfoVO, vehicle, logLen=len(log_data.id_list))
         self.updateVehicleData(extra, gold, settings, shell_icon_name, shell_name, vehicle, maxHealth)

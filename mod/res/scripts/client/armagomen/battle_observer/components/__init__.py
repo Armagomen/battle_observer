@@ -24,12 +24,11 @@ class ComponentsLoader(object):
             'vehicle_battle_boosters': None,
             'wg_logs_fixes': None,
         }
-        self.start()
 
-    def start(self):
         for moduleName in self.modules:
             try:
-                self.modules[moduleName] = __import__("{}.{}".format(__package__, moduleName))
-            except ImportError:
+                imported = __import__("{}.{}".format(__package__, moduleName))
+            except Exception:
                 LOG_CURRENT_EXCEPTION()
-                continue
+            else:
+                self.modules[moduleName] = imported
