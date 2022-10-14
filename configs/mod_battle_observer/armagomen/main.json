@@ -20,7 +20,6 @@
   "hide_hint_panel": true, 
   "hide_main_chat_in_hangar": true, 
   "ignore_commanders_voice": true, 
-  "premium_format": "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d Дн. %(hours)02d:%(minutes)02d:%(seconds)02d</font>", 
   "premium_time": true, 
   "removeShadowInPrebattle": false, 
   "showFriendsAndClanInEars": true, 

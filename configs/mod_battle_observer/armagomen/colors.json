@@ -14,8 +14,5 @@
     "deadColor": "#858585", 
     "enemy": "#F30900", 
     "enemyColorBlind": "#6F6CD3"
-  }, 
-  "main_gun": {
-    "mainGunColor": "#E0E06D"
   }
 }
