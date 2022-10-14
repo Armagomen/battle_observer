@@ -1,4 +1,4 @@
-from debug_utils import LOG_CURRENT_EXCEPTION, CRITICAL_ERROR
+from debug_utils import LOG_CURRENT_EXCEPTION
 
 
 class ComponentsLoader(object):
@@ -30,6 +30,6 @@ class ComponentsLoader(object):
         for moduleName in self.modules:
             try:
                 self.modules[moduleName] = __import__("{}.{}".format(__package__, moduleName))
-            except ImportError as error:
+            except ImportError:
                 LOG_CURRENT_EXCEPTION()
-                CRITICAL_ERROR(error.message)
+                continue

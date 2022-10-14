@@ -28,6 +28,7 @@ class SettingsLoader(object):
             self.createLoadJSON(self.configName)
             self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
         self.readConfig()
+        print "SettingsLoader"
 
     @property
     def configsList(self):
