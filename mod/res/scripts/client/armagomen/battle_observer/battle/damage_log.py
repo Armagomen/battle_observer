@@ -56,6 +56,12 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         if self.__maxHealth != vehicle.descriptor.maxHealth:
             self.__maxHealth = vehicle.descriptor.maxHealth
 
+    def __onVehicleControlling(self, vehicle):
+        if self.isPostmortemSwitched():
+            return
+        if self.__maxHealth != vehicle.maxHealth:
+            self.__maxHealth = vehicle.maxHealth
+
     def isLogEnabled(self, eventType):
         if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
             return self.settings.log_damage_extended[GLOBAL.ENABLED]
@@ -69,7 +75,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
             return self.input_log, self.settings.log_input_extended, False
         logWarning(DAMAGE_LOG.WARNING_MESSAGE)
-        raise ValueError("eventType %s NOT FOUND" % eventType)
+        raise ValueError("eventType=%s NOT FOUND" % eventType)
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
@@ -88,6 +94,9 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
                     self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
                 self.updateAvgDamage()
                 self.updateTopLog()
+        ctrl = self.sessionProvider.shared.vehicleState
+        if ctrl is not None:
+            ctrl.onVehicleControlling += self.__onVehicleControlling
 
     def onExitBattlePage(self):
         feedback = self.sessionProvider.shared.feedback
@@ -100,6 +109,9 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
                     arena.onVehicleKilled -= self.onVehicleKilled
             if self.top_log_enabled:
                 self.top_log.clear()
+        ctrl = self.sessionProvider.shared.vehicleState
+        if ctrl is not None:
+            ctrl.onVehicleControlling -= self.__onVehicleControlling
         super(DamageLog, self).onExitBattlePage()
 
     def updateAvgDamage(self):
