@@ -1,13 +1,13 @@
 # coding=utf-8
 from collections import namedtuple
 
-from armagomen.constants import getRandomLogo
+from armagomen.constants import getLogo
 from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
-from wg_async import wg_async, wg_await, AsyncReturn
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
 from helpers import getClientLanguage
+from wg_async import wg_async, wg_await, AsyncReturn
 
 language = getClientLanguage()
 if language == 'uk':
@@ -33,7 +33,7 @@ class UpdaterDialogs(DialogBase):
     @wg_async
     def showUpdateError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle(getRandomLogo() + "\nERROR DOWNLOAD UPDATE")
+        builder.setFormattedTitle(getLogo() + "\nERROR DOWNLOAD UPDATE")
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
         result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
@@ -70,7 +70,7 @@ class LoadingErrorDialog(DialogBase):
     @wg_async
     def showLoadingError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle(getRandomLogo())
+        builder.setFormattedTitle(getLogo())
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
         result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))

@@ -273,7 +273,7 @@ def convertDictToNamedtuple(dictionary):
 COLOR = namedtuple("COLOR", ("PURPLE", "GREEN", "MULTIPLIER", "TEMPLATE"))(0.8333, 0.3333, 255, "#{:02X}{:02X}{:02X}")
 
 
-def percentToRGB(percent, saturation=0.5, brightness=1.0):
+def percentToRGB(percent, saturation=0.5, brightness=1.0, **kwargs):
     """Percent is float number in range 0 - 2.4 purple, or 1.0 green."""
     normalized_percent = min(COLOR.PURPLE, percent * COLOR.GREEN)
     tuple_values = hsv_to_rgb(normalized_percent, saturation, brightness)

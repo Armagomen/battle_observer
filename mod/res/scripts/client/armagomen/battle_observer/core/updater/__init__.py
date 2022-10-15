@@ -5,14 +5,14 @@ from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.constants import GLOBAL, URLS, getRandomLogo
+from armagomen.constants import GLOBAL, URLS, getLogo
 from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, urlResponse, getUpdatePath
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.events import g_events
-from wg_async import wg_async, wg_await
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from web.cache.web_downloader import WebDownloader
+from wg_async import wg_async, wg_await
 
 WAITING_UPDATE = 'updating'
 
@@ -50,7 +50,7 @@ class DownloadThread(object):
         if os.path.isfile(path):
             self.extractZipArchive(path)
             logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
-            self.dialogs.showUpdateFinished(getRandomLogo() + self.i18n['titleOK'],
+            self.dialogs.showUpdateFinished(getLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
         else:
             url = self.URLS['last']
@@ -86,7 +86,7 @@ class DownloadThread(object):
                 zipArchive.write(data)
             logInfo(LOG_MESSAGES.FINISHED.format(path))
             self.extractZipArchive(path)
-            self.dialogs.showUpdateFinished(getRandomLogo() + self.i18n['titleOK'],
+            self.dialogs.showUpdateFinished(getLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
         else:
             self.downloadError(_url)
@@ -147,7 +147,7 @@ class Updater(DownloadThread):
     @wg_async
     def showDialog(self, view):
         self.dialogs.setView(view)
-        title = getRandomLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
+        title = getLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, gitMessage)
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))

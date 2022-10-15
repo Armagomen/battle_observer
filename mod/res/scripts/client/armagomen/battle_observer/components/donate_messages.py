@@ -2,7 +2,7 @@
 import datetime
 import random
 
-from armagomen.constants import URLS, IMG, getRandomLogo
+from armagomen.constants import URLS, IMG, getLogo
 from armagomen.utils.common import logInfo
 from constants import AUTH_REALM
 from gui.SystemMessages import pushMessage, SM_TYPE
@@ -49,7 +49,7 @@ class Donate(object):
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, paypal=URLS.PAYPAL_URL,
                                           patreon=URLS.PATREON_URL, msg=self.lastMessage,
-                                          logo=getRandomLogo(big=False), donat_img=IMG.DONAT_UA,
+                                          logo=getLogo(big=False), donat_img=IMG.DONAT_UA,
                                           patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
     @property

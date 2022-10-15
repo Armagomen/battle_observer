@@ -1,4 +1,3 @@
-import random
 from collections import namedtuple
 
 from account_helpers.settings_core.settings_constants import GAME
@@ -19,11 +18,10 @@ SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_N
     ("armagomen.battle_observer.lobby",), 'as_observerCreateComponents')
 
 
-def getRandomLogo(big=True):
-    number = random.randint(1, 4)
+def getLogo(big=True):
     if big:
-        return "<img src='{}/logo/big/logo{}.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR, number)
-    return "<img src='{}/logo/small/logo{}.png' width='220' height='22' vspace='10'>".format(IMAGE_DIR, number)
+        return "<img src='{}/logo/big/logo.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
+    return "<img src='{}/logo/small/logo.png' width='220' height='14' vspace='10'>".format(IMAGE_DIR)
 
 
 IMG = namedtuple("IMG", "DONAT_UA PATREON PAYPAL QR")(

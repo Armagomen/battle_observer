@@ -1,11 +1,10 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import MAIN, CREW_XP, getRandomLogo
+from armagomen.constants import MAIN, CREW_XP, getLogo
 from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
-from wg_async import wg_async, wg_await
 from frameworks.wulf import WindowLayer
 from gui import SystemMessages
 from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
@@ -16,6 +15,7 @@ from gui.veh_post_progression.models.progression import PostProgressionCompletio
 from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 from skeletons.gui.shared import IItemsCache
+from wg_async import wg_async, wg_await
 
 
 class CrewProcessor(object):
@@ -40,7 +40,7 @@ class CrewProcessor(object):
         if app is not None and app.containerManager is not None:
             view = app.containerManager.getView(WindowLayer.VIEW)
             dialog.setView(view)
-        title = getRandomLogo() + "\n" + vehicle.userName
+        title = getLogo() + "\n" + vehicle.userName
         message = self.getLocalizedMessage(value, description)
         dialogResult = yield wg_await(dialog.showCrewDialog(title, message, vehicle.userName))
         if dialogResult:
