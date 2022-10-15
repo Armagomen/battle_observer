@@ -20,18 +20,17 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         if getClientLanguage() in ('ru', 'uk', 'be'):
             self.messages = (
-                "Доброго вечора ми з України.\nСлава Україні",
-                "Підтримай розробку мода, все буде Україна.\nСлава Україні",
-                "Батько наш - Бандера,\nУкраїна - мати,\nМи за Україну будем воювати!\nСлава Україні",
-                "Ой у лузі червона калина похилилася,\nЧогось наша славна Україна зажурилася.\n"
-                "А ми тую червону калину підіймемо,\nА ми нашу славну Україну, гей, гей, розвеселимо!\nСлава Україні",
-                "В ці складні часи мені дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть.\nСлава Україні"
+                "Доброго вечора ми з України.<br>Слава Україні",
+                "Підтримай розробку мода, все буде Україна.<br>Слава Україні",
+                "Батько наш - Бандера,<br>Україна - мати,<br>Ми за Україну будем воювати!<br>Слава Україні",
+                "В ці складні часи мені дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть."
+                "<br>Слава Україні"
             )
         else:
             self.messages = (
-                "Good evening, we are from Ukraine. Support the development of the mod.\nGlory to Ukraine",
-                "Support the development of the mod, everything will be Ukraine.\nGlory to Ukraine",
-                "In these difficult times, I really need your support, even your 10 euro will help.\nGlory to Ukraine",
+                "Good evening, we are from Ukraine. Support the development of the mod.<br>Glory to Ukraine",
+                "Support the development of the mod, everything will be Ukraine.<br>Glory to Ukraine",
+                "In these difficult times, I really need your support, even your 10 euro will help.<br>Glory to Ukraine"
             )
 
     def getRandomMessage(self):
@@ -42,10 +41,10 @@ class Donate(object):
 
     def getDonateMessage(self):
         self.lastMessage = self.getRandomMessage()
-        return "{logo}<p><font color='#ffff66'>{msg}</font></p>\n" \
+        return "{logo}<p><font color='#ffff66'>{msg}</font></p><br>" \
                "<p><textformat leading='2'>" \
-               "{donat_img} <a href='event:{ua}'>DonatUA</a>\n" \
-               "{paypal_img} <a href='event:{paypal}'>PayPal</a>\n" \
+               "{donat_img} <a href='event:{ua}'>DonatUA</a><br>" \
+               "{paypal_img} <a href='event:{paypal}'>PayPal</a><br>" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
                "</textformat></p>".format(ua=URLS.DONATE_UA_URL, paypal=URLS.PAYPAL_URL,
                                           patreon=URLS.PATREON_URL, msg=self.lastMessage,
