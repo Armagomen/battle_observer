@@ -20,15 +20,15 @@ SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_N
 
 def getLogo(big=True):
     if big:
-        return "<img src='{}/logo/big/logo.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
-    return "<img src='{}/logo/small/logo.png' width='220' height='14' vspace='10'>".format(IMAGE_DIR)
+        return "<img src='{}/logo/big.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
+    return "<img src='{}/logo/small.png' width='220' height='14' vspace='16'>".format(IMAGE_DIR)
 
 
 IMG = namedtuple("IMG", "DONAT_UA PATREON PAYPAL QR")(
-    "<img src='{}/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate-qr.png' width='212' height='212' vspace='0'>".format(IMAGE_DIR)
+    "<img src='{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/donate-qr.png' width='212' height='212' vspace='0'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
