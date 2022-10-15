@@ -45,10 +45,9 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.flashObject.as_clearStorage()
         if self.hpBarsEnable and not self.settings[PANELS.BAR_CLASS_COLOR]:
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
-        if self.damagesEnable:
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None:
-                arena.onVehicleHealthChanged -= self.onPlayersDamaged
+        arena = self._arenaVisitor.getArenaSubscription()
+        if self.damagesEnable and arena is not None:
+            arena.onVehicleHealthChanged -= self.onPlayersDamaged
         super(PlayersPanels, self)._dispose()
 
     def onSettingsApplied(self, diff):

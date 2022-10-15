@@ -160,14 +160,15 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         for event in events:
             self.parseEvent(event)
 
+    def getAVGColor(self, percent):
+        return percentToRGB(percent, **self.settings.log_total[GLOBAL.AVG_COLOR])
+
     def updateTopLog(self):
         """update global sums in log"""
         percentDamage = getPercent(self.top_log[DAMAGE_LOG.PLAYER_DAMAGE], DAMAGE_LOG.AVG_DAMAGE_DATA)
         percentAssist = getPercent(self.top_log[DAMAGE_LOG.ASSIST_DAMAGE], DAMAGE_LOG.AVG_ASSIST_DATA)
-        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = percentToRGB(percentDamage, **self.settings.log_total[
-            GLOBAL.AVG_COLOR])
-        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = percentToRGB(percentAssist, **self.settings.log_total[
-            GLOBAL.AVG_COLOR])
+        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.getAVGColor(percentDamage)
+        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = self.getAVGColor(percentAssist)
         self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     def onVehicleUpdated(self, vehicleID, *args, **kwargs):
@@ -244,7 +245,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         vehicle[DAMAGE_LOG.SHELL_ICON] = settings[DAMAGE_LOG.SHELL_ICONS][shell_icon_name]
         vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
-        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = percentToRGB(percent, **settings[GLOBAL.AVG_COLOR])
+        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.getAVGColor(percent)
 
     def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=1):
         if not update:
