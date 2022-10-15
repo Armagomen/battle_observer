@@ -4,7 +4,6 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIASES
 from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
-from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -112,9 +111,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        if view.settings.alias != VIEW_ALIAS.COMP7_BATTLE_PAGE:
-            if self.minimapPlugin.enabled:
-                self.minimapPlugin.init(view)
+        if self.minimapPlugin.enabled:
+            self.minimapPlugin.init(view)
         if self._iconsEnabled or self._statisticsEnabled:
             self.loadStatisticView(view)
         callback(2.0, self.delayLoading, view)
