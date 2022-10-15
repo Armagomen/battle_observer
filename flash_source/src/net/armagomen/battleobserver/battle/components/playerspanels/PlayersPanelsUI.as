@@ -12,7 +12,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var playersPanel:* = null;
 		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
-		public var clear:Function;
 		private var isReplay:Boolean = false;
 		
 		public function PlayersPanelsUI(battlePage:*)
@@ -24,7 +23,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_clearStorage():void
 		{
-			this.clear();
 			for each (var item:ListItem in this.storage)
 			{
 				if (item && item.parent)

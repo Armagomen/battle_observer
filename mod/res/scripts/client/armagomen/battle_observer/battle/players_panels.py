@@ -51,9 +51,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 arena.onVehicleHealthChanged -= self.onPlayersDamaged
         super(PlayersPanels, self)._dispose()
 
-    def clear(self):
-        self.playersDamage.clear()
-
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:
             barColor = self.getBarColor(True, diff[GRAPHICS.COLOR_BLIND])
