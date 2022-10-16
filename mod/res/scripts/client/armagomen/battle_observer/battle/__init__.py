@@ -52,7 +52,8 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandlerBattle(PackageBusinessHandler):
-    __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
+    __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases',
+                 '__components')
 
     def __init__(self):
         from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
@@ -64,6 +65,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self._iconsEnabled = viewSettings.isIconsEnabled()
         self._statLoadTry = 0
         self._statisticsEnabled = False
+        self.__components = None
 
     def init(self):
         super(ObserverBusinessHandlerBattle, self).init()
@@ -78,7 +80,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        if viewSettings.settingsAdded:
+        self.__components = viewSettings.setComponents()
+        if self.__components:
             self._app.as_loadLibrariesS([SWF.BATTLE])
             self._app.loaderManager.onViewLoaded += self.onViewLoaded
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
@@ -96,9 +99,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         view.flashObject.as_createStatisticComponent(self._statisticsEnabled, self._iconsEnabled, statisticsItemsData,
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
-    @staticmethod
-    def delayLoading(view):
-        view.flashObject.as_observerCreateComponents(viewSettings.getComponents())
+    def delayLoading(self, view):
+        view.flashObject.as_observerCreateComponents(self.__components)
         view.flashObject.as_observerUpdatePrebattleTimer(settings.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
 

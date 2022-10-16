@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
-from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo, getPlayer
+from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo, getPlayer, logDebug
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
@@ -50,10 +50,19 @@ class ViewSettings(object):
         self.isSPG = False
         self.__components = set()
         self.__hiddenComponents = set()
-        self.settingsAdded = False
         registerBattleObserverPackages()
         g_currentVehicle.onChanged += self.onVehicleChanged
-        overrideMethod(SharedPage)(self.new_SharedPage_init)
+        overrideMethod(SharedPage, "_startBattleSession")(self.startBattleSession)
+
+    def startBattleSession(self, base, page):
+        logDebug("_startBattleSession: {}", page.__class__.__name__)
+        if not self.__components:
+            return
+        logDebug("_startBattleSession: {}", self.__components)
+        componentsConfig = page._SharedPage__componentsConfig
+        newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
+        componentsConfig._ComponentsConfig__config = newConfig
+        base(page)
 
     def onVehicleChanged(self):
         self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
@@ -123,12 +132,13 @@ class ViewSettings(object):
             return False
 
     def setComponents(self):
+        self.clear()
         if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
             self.checkComponents()
             self.setHiddenComponents()
+        return self.__components
 
     def clear(self):
-        self.settingsAdded = False
         self.__components.clear()
         self.__hiddenComponents.clear()
 
@@ -153,24 +163,6 @@ class ViewSettings(object):
                 self.__hiddenComponents.add(wg_alias)
             else:
                 self.__hiddenComponents.discard(wg_alias)
-
-    @staticmethod
-    def checkPageName(page):
-        return page.__class__.__name__ in ("StrongholdPage", "EpicBattlePage", "EpicRandomPage", "ClassicPage",
-                                           "Comp7BattlePage")
-
-    def new_SharedPage_init(self, base, page, *args, **kwargs):
-        self.clear()
-        base(page, *args, **kwargs)
-        if self.checkPageName(page):
-            self.setComponents()
-            if not self.__components:
-                self.__hiddenComponents.clear()
-                return
-            componentsConfig = page._SharedPage__componentsConfig
-            newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
-            componentsConfig._ComponentsConfig__config = newConfig
-            self.settingsAdded = True
 
     def addReplaceAlias(self, aliases):
         new_aliases = list(aliases)
