@@ -24,7 +24,6 @@ class DefaultSettings(object):
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.CHANGE_ANONYMOUS_NAME: False,
             MAIN.ANONYMOUS_STRING: "Anonymous",
-            MAIN.REMOVE_SHADOW_IN_PREBATTLE: False,
             MAIN.HIDE_BADGES: False,
             MAIN.HIDE_CLAN_ABBREV: False,
             MAIN.ENABLE_FPS_LIMITER: False,
