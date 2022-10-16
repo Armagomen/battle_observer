@@ -2,8 +2,9 @@ from armagomen.battle_observer.components.statistics.statistic_data_loader impor
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIASES
-from armagomen.utils.common import logError, logInfo, logDebug, callback
+from armagomen.utils.common import logError, logInfo, logDebug, callback, overrideMethod
 from armagomen.utils.events import g_events
+from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -51,9 +52,21 @@ def getContextMenuHandlers():
     return ()
 
 
+@overrideMethod(SharedPage, "_startBattleSession")
+def _startBattleSession(base, page):
+    logDebug("_startBattleSession: {}", page.__class__.__name__)
+    components = viewSettings.getComponents()
+    if not components:
+        return base(page)
+    logDebug("_startBattleSession: {}", components)
+    componentsConfig = page._SharedPage__componentsConfig
+    newConfig = tuple((i, viewSettings.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
+    componentsConfig._ComponentsConfig__config = newConfig
+    base(page)
+
+
 class ObserverBusinessHandlerBattle(PackageBusinessHandler):
-    __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases',
-                 '__components')
+    __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
 
     def __init__(self):
         from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
@@ -65,7 +78,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self._iconsEnabled = viewSettings.isIconsEnabled()
         self._statLoadTry = 0
         self._statisticsEnabled = False
-        self.__components = None
 
     def init(self):
         super(ObserverBusinessHandlerBattle, self).init()
@@ -80,8 +92,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        self.__components = viewSettings.setComponents()
-        if self.__components:
+        components = viewSettings.setComponents()
+        if components:
             self._app.as_loadLibrariesS([SWF.BATTLE])
             self._app.loaderManager.onViewLoaded += self.onViewLoaded
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
@@ -99,8 +111,9 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         view.flashObject.as_createStatisticComponent(self._statisticsEnabled, self._iconsEnabled, statisticsItemsData,
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
-    def delayLoading(self, view):
-        view.flashObject.as_observerCreateComponents(self.__components)
+    @staticmethod
+    def delayLoading(view):
+        view.flashObject.as_observerCreateComponents(viewSettings.getComponents())
         view.flashObject.as_observerUpdatePrebattleTimer(settings.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
 

@@ -1,11 +1,10 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
-from armagomen.utils.common import overrideMethod, xvmInstalled, logInfo, getPlayer, logDebug
+from armagomen.utils.common import xvmInstalled, logInfo, getPlayer
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
-from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
@@ -52,17 +51,6 @@ class ViewSettings(object):
         self.__hiddenComponents = set()
         registerBattleObserverPackages()
         g_currentVehicle.onChanged += self.onVehicleChanged
-        overrideMethod(SharedPage, "_startBattleSession")(self.startBattleSession)
-
-    def startBattleSession(self, base, page):
-        logDebug("_startBattleSession: {}", page.__class__.__name__)
-        if not self.__components:
-            return
-        logDebug("_startBattleSession: {}", self.__components)
-        componentsConfig = page._SharedPage__componentsConfig
-        newConfig = tuple((i, self.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
-        componentsConfig._ComponentsConfig__config = newConfig
-        base(page)
 
     def onVehicleChanged(self):
         self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
