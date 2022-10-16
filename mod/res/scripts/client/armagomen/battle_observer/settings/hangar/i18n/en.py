@@ -50,7 +50,6 @@ localization = {
         "fps_enableFPSLimiter": "Enable FPS Limiter",
         "fps_enableFPSLimiter_tooltip": RESTART_TOOLTIP,
         "fps_maxFrameRate": "Maximum Frame Rate",
-        "removeShadowInPrebattle": "Remove the blackout timer at the beginning of the battle",
         "smallDoubleCarousel": "Use small icons in the tank carousel.",
         "carouselRows": "number of rows of multi-row tank carousel",
         "anonymousEnableShow": "Mark as team-killer players with an anonymizer.",

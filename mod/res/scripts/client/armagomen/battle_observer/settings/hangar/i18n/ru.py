@@ -44,7 +44,6 @@ localization = {
         "autoClearCache": "Очищать кэш игры после выхода.",
         "autoClearCache_tooltip": "Очистка временных файлов игры в папке AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "\nПапки модификаций и настройки которые сохраняются там же, останутся.",
-        "removeShadowInPrebattle": "Убрать затемнение таймера в начале боя",
         "hideBadges": "Отключить отображение нашивок в бою",
         "hideBadges_tooltip": "в ушах, окне по tab, на экране загрузки.",
         "hideClanAbbrev": "Отключить отображение клана",

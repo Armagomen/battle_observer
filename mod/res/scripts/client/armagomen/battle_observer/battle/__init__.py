@@ -1,7 +1,7 @@
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, MAIN, STATISTICS, VEHICLE_TYPES, ALIASES
+from armagomen.constants import SWF, STATISTICS, VEHICLE_TYPES, ALIASES
 from armagomen.utils.common import logError, logInfo, logDebug, callback, overrideMethod
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
@@ -97,6 +97,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             self._app.as_loadLibrariesS([SWF.BATTLE])
             self._app.loaderManager.onViewLoaded += self.onViewLoaded
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
+            logDebug("View components added to loading: {}", components)
 
     def loadStatisticView(self, view):
         if self._statisticsEnabled:
@@ -114,7 +115,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     @staticmethod
     def delayLoading(view):
         view.flashObject.as_observerCreateComponents(viewSettings.getComponents())
-        view.flashObject.as_observerUpdatePrebattleTimer(settings.main[MAIN.REMOVE_SHADOW_IN_PREBATTLE])
         view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
 
     def onViewLoaded(self, view, *args):

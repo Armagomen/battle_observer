@@ -120,17 +120,6 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype.as_observerUpdatePrebattleTimer = function(shadow:Boolean):void
-			{
-				var prebattleTimer:* = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
-				if (prebattleTimer)
-				{
-					this.addChild(prebattleTimer);
-					prebattleTimer.background.shadow.visible = !shadow;
-					prebattleTimer.background.shadow.alpha = int(!shadow);
-				}
-			}
-			
 			BaseBattlePage.prototype.as_createStatisticComponent = function(statsEnabled:Boolean, iconsEnabled:Boolean, data:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number):void
 			{
 				this.statisticsBO = new StatisticsAndIcons(this, statsEnabled, iconsEnabled, data, cutWidth, fullWidth, typeColors, iconMultiplier);

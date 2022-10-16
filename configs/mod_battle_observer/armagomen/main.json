@@ -20,8 +20,7 @@
   "hide_hint_panel": true, 
   "hide_main_chat_in_hangar": true, 
   "ignore_commanders_voice": true, 
-  "premium_time": true, 
-  "removeShadowInPrebattle": false, 
+  "premium_time": true,
   "showFriendsAndClanInEars": true, 
   "useKeyPairs": false
 }
