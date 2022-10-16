@@ -131,3 +131,4 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if self._iconsEnabled or self._statisticsEnabled:
             self.loadStatisticView(view)
         callback(1.0, self.delayLoading, view)
+        callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition)

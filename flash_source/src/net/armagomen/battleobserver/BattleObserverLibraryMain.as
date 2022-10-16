@@ -148,6 +148,10 @@ package net.armagomen.battleobserver
 						component.alpha = 0;
 					}
 				}
+			}
+			
+			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function():void
+			{
 				var damageLogPanel:* = this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
 				if (damageLogPanel){
 					damageLogPanel.updateContainersPosition()
