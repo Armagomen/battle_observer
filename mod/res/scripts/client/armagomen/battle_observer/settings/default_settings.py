@@ -20,7 +20,6 @@ class DefaultSettings(object):
         self.onUserConfigUpdateComplete = SafeEvent()
 
         self.main = {
-            MAIN.HIDE_CHAT: False,
             MAIN.SHOW_FRIENDS: False,
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.CHANGE_ANONYMOUS_NAME: False,

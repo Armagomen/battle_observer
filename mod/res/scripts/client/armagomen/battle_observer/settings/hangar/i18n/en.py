@@ -42,9 +42,6 @@ localization = {
         "DEBUG_MODE": "DEBUG_MODE",
         "hideBadges": "Disable chevrons/ribbons: in ears, on tab window, on boot screen.",
         "hideClanAbbrev": "Disable clan display: in ears, on tab window, on boot screen.",
-        "hideChatInRandom": "Disable chat in random battles",
-        "hideChatInRandom_tooltip": "Completely disables the chat in random battles. "
-                                    "\n Removes the chat form and everything associated with it.",
         "showFriendsAndClanInEars": "Mark clan friends and yourself in the team lists.",
         "autoClearCache": "Clear the game cache on startup.",
         "autoClearCache_tooltip": "Cleaning the temporary files of the game in the folder "

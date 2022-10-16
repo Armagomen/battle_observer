@@ -97,13 +97,13 @@ SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA",
         "PurchaseForGold", "GameGreeting"))
 
 __Main = namedtuple("MAIN", (
-    "AUTO_CLEAR_CACHE", "ENABLE_FPS_LIMITER", "HIDE_BADGES", "HIDE_CHAT", "HIDE_CLAN_ABBREV",
+    "AUTO_CLEAR_CACHE", "ENABLE_FPS_LIMITER", "HIDE_BADGES", "HIDE_CLAN_ABBREV",
     "HIDE_DOG_TAGS", "MAX_FRAME_RATE", "NAME", "REMOVE_SHADOW_IN_PREBATTLE", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
     "ANONYMOUS_STRING", "CHANGE_ANONYMOUS_NAME", "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND",
     "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT", "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT",
     "HIDE_BTN_COUNTERS", "PREMIUM_TIME"))
 MAIN = __Main(
-    "autoClearCache", "fps_enableFPSLimiter", "hideBadges", "hideChatInRandom", "hideClanAbbrev",
+    "autoClearCache", "fps_enableFPSLimiter", "hideBadges", "hideClanAbbrev",
     "hide_dog_tags", "fps_maxFrameRate", "main", "removeShadowInPrebattle", "showFriendsAndClanInEars",
     "anonymousEnableShow", "anonymousString", "anonymousNameChange", "useKeyPairs", "ignore_commanders_voice",
     "disable_score_sound", "DEBUG_MODE", "auto_crew_training", "do_not_buy_directives_for_currency_automatically",

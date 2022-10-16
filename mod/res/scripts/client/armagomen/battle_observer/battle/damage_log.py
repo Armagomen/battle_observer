@@ -273,7 +273,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         Final log processing and flash output,
         also works when the alt mode is activated by hot key.
         """
-        if not log_data.id_list:
+        if log_data is None or not log_data.id_list:
             return
         result = DAMAGE_LOG.NEW_LINE.join(self.getLogLines(log_data, settings, altMode))
         self.as_updateLogS(log_data.name, result)

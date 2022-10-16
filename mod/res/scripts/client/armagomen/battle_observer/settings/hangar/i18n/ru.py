@@ -52,9 +52,6 @@ localization = {
         "fps_enableFPSLimiter": "Включить ограничитель FPS",
         "fps_enableFPSLimiter_tooltip": RESTART_TOOLTIP,
         "fps_maxFrameRate": "Максимальный FPS (ограничитель)",
-        "hideChatInRandom": "Отключить чат в случайных боях",
-        "hideChatInRandom_tooltip": "Полностью отключает чат в случайных боях.\nУбирает форму чата и все "
-                                    "что с ней связано.",
         "anonymousEnableShow": "Отмечать как team-killer (голубым) игроков со скрытым именем",
         "anonymousEnableShow_tooltip": "Только в том случае если отключена статистика игроков, параметр не будет "
                                        "учитываться если включена статистика.",

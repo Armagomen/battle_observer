@@ -3,7 +3,6 @@ import math
 from CurrentVehicle import g_currentVehicle
 from PlayerEvents import g_playerEvents
 from VehicleGunRotator import VehicleGunRotator
-from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
 from armagomen.utils.common import overrideMethod, setMaxFrameRate, logDebug, callback, logError
@@ -17,7 +16,6 @@ from gui.battle_control.controllers import msgs_ctrl
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
-from messenger.gui.Scaleform.view.battle.messenger_view import BattleMessengerView
 
 
 @overrideMethod(Hangar, "__onCurrentVehicleChanged")
@@ -54,22 +52,6 @@ def hasDogTag(base, *args, **kwargs):
 def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
     base(rotator, *args, **kwargs)
     g_events.onDispersionAngleChanged(rotator)
-
-
-# disable battle chat
-@overrideMethod(BattleMessengerView, "_populate")
-def messanger_populate(base, messanger):
-    base(messanger)
-    if settings.main[MAIN.HIDE_CHAT] and viewSettings.isRandomBattle():
-        callback(2.0, messanger._dispose)
-
-
-@overrideMethod(BattleMessengerView, "_dispose")
-def messanger_dispose(base, *args):
-    try:
-        base(*args)
-    except AttributeError:
-        pass
 
 
 # disable battle hints

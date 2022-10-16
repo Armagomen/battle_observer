@@ -130,4 +130,4 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             self.minimapPlugin.init(view)
         if self._iconsEnabled or self._statisticsEnabled:
             self.loadStatisticView(view)
-        callback(2.0, self.delayLoading, view)
+        callback(1.0, self.delayLoading, view)
