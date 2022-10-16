@@ -1,7 +1,8 @@
+from armagomen.battle_observer.core.view_settings import ViewSettings, registerBattleObserverPackages
 from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
     cleanupObserverUpdates
 
-viewSettings = None
+viewSettings = ViewSettings()
 componentsLoader = None
 hangarSettings = None
 
@@ -13,7 +14,6 @@ def startLoadingMod(modVersion):
         Updater(modVersion)
 
         from armagomen.battle_observer.components import ComponentsLoader
-        from armagomen.battle_observer.core.view_settings import ViewSettings
         from armagomen.battle_observer.settings.loader import SettingsLoader
         from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
         from sys import version
@@ -23,9 +23,9 @@ def startLoadingMod(modVersion):
         errorMessage = repr(err)
     else:
         if isFileValid(modVersion):
-            global viewSettings, componentsLoader, hangarSettings
+            global componentsLoader, hangarSettings
             logInfo('Launched at python v{}'.format(version))
-            viewSettings = ViewSettings()
+            registerBattleObserverPackages()
             componentsLoader = ComponentsLoader()
             settings_loader = SettingsLoader()
             hangarSettings = SettingsInterface(settings_loader, modVersion)

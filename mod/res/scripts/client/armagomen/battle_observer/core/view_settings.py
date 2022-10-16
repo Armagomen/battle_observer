@@ -49,7 +49,6 @@ class ViewSettings(object):
         self.isSPG = False
         self.__components = set()
         self.__hiddenComponents = set()
-        registerBattleObserverPackages()
         g_currentVehicle.onChanged += self.onVehicleChanged
 
     def onVehicleChanged(self):
