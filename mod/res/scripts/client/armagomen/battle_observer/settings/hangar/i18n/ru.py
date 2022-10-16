@@ -211,7 +211,7 @@ localization = {
     },
     "log_global": {
         "header": "Общие настройки логов",
-        "logsAltmode_hotkey": "Переключение логов в альтернативный режим",
+        "logsAltMode_hotkey": "Переключение логов в альтернативный режим",
         "wg_log_hide_assist": "Скрыть урон по разведданным",
         "wg_log_hide_assist_tooltip": "Убирает урон по разведданным из детального лога WG",
         "wg_log_hide_block": "Скрыть заблокированный урон",

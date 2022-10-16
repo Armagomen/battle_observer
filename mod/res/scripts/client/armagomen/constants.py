@@ -174,7 +174,7 @@ class DAMAGE_LOG:
     IN_LOG = "in_log"
     EXTENDED_DAMAGE = {FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER}
     GLOBAL = "log_global"
-    HOT_KEY = "logsAltmode_hotkey"
+    HOT_KEY = "logsAltMode_hotkey"
     ICONS = "icons"
     ICON_NAME = "iconName"
     INDEX = "index"

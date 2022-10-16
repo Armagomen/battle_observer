@@ -29,7 +29,7 @@
     "thunderStrike": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>", 
     "world_collision": "<img src='img://gui/maps/icons/library/efficiency/48x48/ram.png' width='24' height='24' vspace='-13'>"
   }, 
-  "logsAltmode_hotkey": [
+  "logsAltMode_hotkey": [
     [
       184, 
       56

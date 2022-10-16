@@ -207,7 +207,7 @@ localization = {
     },
     "log_global": {
         "header": "GENERAL LOG SETTINGS",
-        "logsAltmode_hotkey": "Key switch logs in the alternate mode",
+        "logsAltMode_hotkey": "Key switch logs in the alternate mode",
         "wg_log_hide_assist": "Hide damage intelligence",
         "wg_log_hide_assist_tooltip": "Removes the damage from intelligence detailed log WG",
         "wg_log_hide_block": "Hide blocked damage",
