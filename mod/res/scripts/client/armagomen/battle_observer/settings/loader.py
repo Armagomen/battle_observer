@@ -1,7 +1,7 @@
 import os
 
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import LOAD_LIST
+from armagomen.constants import LOAD_LIST, DISPERSION
 from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, configsPath
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
@@ -73,6 +73,8 @@ class SettingsLoader(object):
                         if old_param_type == int and new_param_type == float:
                             internal_cfg[key] = int(round(new_param))
                         elif old_param_type == float and new_param_type == int:
+                            if DISPERSION.CIRCLE_SCALE_CONFIG in key:
+                                new_param = min(max(new_param * 0.01, 0.3), 1)
                             internal_cfg[key] = float(new_param)
                     else:
                         internal_cfg[key] = new_param

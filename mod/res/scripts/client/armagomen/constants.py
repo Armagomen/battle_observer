@@ -277,7 +277,7 @@ __Dispersion = namedtuple("DISPERSION", (
     "TIMER_REGULAR_TEMPLATE", "TIMER_ALIGN"))
 DISPERSION = __Dispersion(
     "dispersion_circle", "circle_extraServerLap", "circle_replaceOriginalCircle", "circle_scale", "useServerAim",
-    "circle_enabled", 80, 5.0, 0.8, 16.0, -1.0, "timer_enabled", "timer_position_x", "timer_position_y",
+    "circle_enabled", 0.80, 5.0, 0.8, 16.0, -1.0, "timer_enabled", "timer_position_x", "timer_position_y",
     "timer_color", "timer_done_color", "timer_done_template", "timer_regular_template", "timer_align")
 
 DISPERSION_TIME = namedtuple("DISPERSION_TIME", ("TIMER", "PERCENT"))("timer", "percent")

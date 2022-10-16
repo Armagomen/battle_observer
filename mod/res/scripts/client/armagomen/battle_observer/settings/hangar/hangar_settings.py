@@ -4,6 +4,7 @@ from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
+from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
 from helpers import getClientLanguage
@@ -172,10 +173,10 @@ class CreateElement(object):
         elif val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
-            if DISPERSION.CIRCLE_SCALE_CONFIG in key:
-                return self.createSlider(blockID, key, GLOBAL.ONE, 100, GLOBAL.ONE, value)
             return self.createStepper(blockID, key, -2000, 2000, GLOBAL.ONE, value)
         elif val_type == float:
+            if DISPERSION.CIRCLE_SCALE_CONFIG in key:
+                return self.createSlider(blockID, key, 0.3, 1.0, 0.01, value)
             if STATISTICS.ICON_BLACKOUT in key:
                 return self.createStepper(blockID, key, -2.0, 2.0, 0.01, value)
             elif GLOBAL.ZERO <= value <= GLOBAL.F_ONE:

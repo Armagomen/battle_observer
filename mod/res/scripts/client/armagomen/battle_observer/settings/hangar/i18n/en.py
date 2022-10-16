@@ -112,7 +112,7 @@ localization = {
         "circle_extraServerLap": "Display server scatter circle.",
         "circle_extraServerLap_tooltip": "Adds a second circle of server crosshair.",
         "circle_replaceOriginalCircle": "Replace Original Circle.",
-        "circle_scale": "Circle size multiplier, 1 - 100 %",
+        "circle_scale": "Circle size multiplier, 1-100% (0.3-1.0)",
         "circle_scale_tooltip": "It is not recommended to set the value below 65.",
         "timer_enabled": "Turn on the reduction timer.",
         "timer_position_x": "Timer position X",

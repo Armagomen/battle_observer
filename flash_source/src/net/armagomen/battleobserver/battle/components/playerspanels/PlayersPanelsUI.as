@@ -12,13 +12,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var playersPanel:* = null;
 		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
-		private var isReplay:Boolean = false;
 		
 		public function PlayersPanelsUI(battlePage:*)
 		{
 			super();
 			this.playersPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-			this.isReplay = battlePage.getComponent(BATTLE_VIEW_ALIASES.CONSUMABLES_PANEL)._isReplay;
 		}
 		
 		public function as_clearStorage():void
