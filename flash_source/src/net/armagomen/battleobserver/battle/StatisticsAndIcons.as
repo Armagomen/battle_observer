@@ -20,7 +20,6 @@ package net.armagomen.battleobserver.battle
 		private var statisticsEnabled:Boolean       = false;
 		private var iconsEnabled:Boolean            = false;
 		private var iconMultiplier:Number           = -1.25;
-		private var isReplay:Boolean                = false;
 		private var cutWidth:Number                 = 60.0;
 		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
@@ -39,7 +38,6 @@ package net.armagomen.battleobserver.battle
 			this.fullWidth = fullWidth;
 			this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onCountChange, false, 0, true);
-			this.isReplay = battlePage.getComponent(BATTLE_VIEW_ALIASES.CONSUMABLES_PANEL)._isReplay;
 			this.onChange(null);
 		}
 		
@@ -65,10 +63,6 @@ package net.armagomen.battleobserver.battle
 		
 		private function onChange(eve:Event = null):void
 		{
-			if (eve && !this.isReplay)
-			{
-				return;
-			}
 			for each (var itemL:* in this.panels.listLeft._items)
 			{
 				if (!itemL._listItem.vehicleIcon.hasEventListener(Event.RENDER))
@@ -87,14 +81,6 @@ package net.armagomen.battleobserver.battle
 					itemR._listItem.playerNameCutTF.width = this.cutWidth;
 					itemR._listItem.setPlayerNameFullWidth(this.fullWidth);
 				}
-			}
-			
-			if (this.statisticsEnabled)
-			{
-				var oldMode:int = int(this.panels.state);
-				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
-				this.panels.as_setPanelMode(PLAYERS_PANEL_STATE.FULL);
-				this.panels.as_setPanelMode(oldMode);
 			}
 		}
 		
