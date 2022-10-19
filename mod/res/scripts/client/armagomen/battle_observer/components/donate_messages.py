@@ -5,7 +5,7 @@ import random
 from armagomen.constants import URLS, IMG, getLogo
 from armagomen.utils.common import logInfo
 from constants import AUTH_REALM
-from gui.SystemMessages import pushMessage, SM_TYPE
+from gui.SystemMessages import SM_TYPE, pushMessage
 from gui.shared.ClanCache import g_clanCache
 from gui.shared.personality import ServicesLocator
 from helpers import getClientLanguage
@@ -20,17 +20,19 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         if getClientLanguage() in ('ru', 'uk', 'be'):
             self.messages = (
-                "Доброго вечора ми з України.<br>Слава Україні",
-                "Підтримай розробку мода, все буде Україна.<br>Слава Україні",
-                "Батько наш - Бандера,<br>Україна - мати,<br>Ми за Україну будем воювати!<br>Слава Україні",
+                "Доброго вечора ми з України.<br><br>Слава Україні",
+                "Підтримай розробку мода, все буде Україна.<br><br>Слава Україні",
+                "Батько наш - Бандера,<br>Україна - мати,<br>Ми за Україну будем воювати!<br><br>Слава Україні",
                 "В ці складні часи мені дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть."
-                "<br>Слава Україні"
+                "<br><br>Слава Україні", "Не забувайте підтримувати розробку.<br><br>Слава Україні",
+                "Гарного дня.<br><br>Слава Україні"
             )
         else:
             self.messages = (
-                "Good evening, we are from Ukraine. Support the development of the mod.<br>Glory to Ukraine",
-                "Support the development of the mod, everything will be Ukraine.<br>Glory to Ukraine",
-                "In these difficult times, I really need your support, even your 10 euro will help.<br>Glory to Ukraine"
+                "Good evening, we are from Ukraine. Support the development of the mod.<br><br>Glory to Ukraine",
+                "Support the development of the mod, everything will be Ukraine.<br><br>Glory to Ukraine",
+                "In these difficult times, I really need your support, even your 10 euro will help."
+                "<br><br>Glory to Ukraine"
             )
 
     def getRandomMessage(self):
@@ -54,7 +56,7 @@ class Donate(object):
     @property
     def showMessage(self):
         clanAbbrev = g_clanCache.clanAbbrev
-        return clanAbbrev is None or "WG" not in g_clanCache.clanAbbrev
+        return clanAbbrev is None or "WG" not in clanAbbrev
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:

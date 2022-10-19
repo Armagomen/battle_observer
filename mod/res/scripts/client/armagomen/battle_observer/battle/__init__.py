@@ -112,10 +112,14 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         view.flashObject.as_createStatisticComponent(self._statisticsEnabled, self._iconsEnabled, statisticsItemsData,
                                                      cutWidth, fullWidth, typeColors, iconMultiplier)
 
-    @staticmethod
-    def delayLoading(view):
+    def delayLoading(self, view):
         view.flashObject.as_observerCreateComponents(viewSettings.getComponents())
         view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
+        if self.minimapPlugin.enabled:
+            self.minimapPlugin.init(view)
+        if self._iconsEnabled or self._statisticsEnabled:
+            self.loadStatisticView(view)
+        callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition)
 
     def onViewLoaded(self, view, *args):
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", view.settings.alias)
@@ -126,9 +130,4 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "battle_page {}, has ho attribute {}"
             return logError(to_format_str, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        if self.minimapPlugin.enabled:
-            self.minimapPlugin.init(view)
-        if self._iconsEnabled or self._statisticsEnabled:
-            self.loadStatisticView(view)
         callback(1.0, self.delayLoading, view)
-        callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition)
