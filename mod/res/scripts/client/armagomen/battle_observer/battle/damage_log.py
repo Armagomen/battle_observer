@@ -52,7 +52,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         if self.extended_log_enabled:
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_global[DAMAGE_LOG.HOT_KEY])
 
-    def updateVehicleParams(self, vehicle, _):
+    def updateVehicleParams(self, vehicle, *args):
         if self.__maxHealth != vehicle.descriptor.maxHealth:
             self.__maxHealth = vehicle.descriptor.maxHealth
 

@@ -23,7 +23,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.isPostmortem = False
         self.__maxHealth = GLOBAL.ZERO
 
-    def updateVehicleParams(self, vehicle, _):
+    def updateVehicleParams(self, vehicle, *args):
         if self.__maxHealth != vehicle.descriptor.maxHealth:
             self.__maxHealth = vehicle.descriptor.maxHealth
             self._updateHealth(self.__maxHealth)
