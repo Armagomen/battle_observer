@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
-from armagomen.utils.common import xvmInstalled, logInfo, getPlayer
+from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
@@ -118,15 +118,16 @@ class ViewSettings(object):
             return False
 
     def setComponents(self):
-        self.clear()
         if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
             self.checkComponents()
             self.setHiddenComponents()
+        logDebug("viewSettings setComponents: components={}", self.__components)
         return self.__components
 
     def clear(self):
         self.__components.clear()
         self.__hiddenComponents.clear()
+        logDebug("clear viewSettings components")
 
     def checkComponents(self):
         for alias in ALIASES:
@@ -175,7 +176,9 @@ class ViewSettings(object):
                 new_aliases.append(ALIASES.MAIN_GUN)
         elif ALIASES.SIXTH_SENSE in self.__components and BATTLE_VIEW_ALIASES.SIXTH_SENSE in new_aliases:
             new_aliases.remove(BATTLE_VIEW_ALIASES.SIXTH_SENSE)
-        return tuple(new_aliases)
+        result = tuple(new_aliases)
+        logDebug("viewSettings, replace aliases: old={} new={}", aliases, result)
+        return result
 
     def getHiddenWGComponents(self):
         return self.__hiddenComponents

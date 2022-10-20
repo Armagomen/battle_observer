@@ -89,6 +89,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self.minimapPlugin.fini()
         self.minimapPlugin = None
         self._statLoadTry = 0
+        viewSettings.clear()
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
@@ -97,7 +98,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             self._app.as_loadLibrariesS([SWF.BATTLE])
             self._app.loaderManager.onViewLoaded += self.onViewLoaded
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
-            logDebug("View components added to loading: {}", components)
 
     def loadStatisticView(self, view):
         if self._statisticsEnabled:
