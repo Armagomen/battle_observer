@@ -30,7 +30,7 @@ package net.armagomen.battleobserver
 	
 	public class BattleObserverLibraryMain extends AbstractView
 	{
-		private var mapZoom:minimapZoom = null;
+		private var mapZoom:minimapZoom             = null;
 		private var statisticsBO:StatisticsAndIcons = null;
 		
 		public function BattleObserverLibraryMain()
@@ -132,7 +132,8 @@ package net.armagomen.battleobserver
 			
 			BaseBattlePage.prototype.as_zoomMimimapCentered = function(enable:Boolean):void
 			{
-				if (this.mapZoom){
+				if (this.mapZoom)
+				{
 					this.mapZoom.minimapCentered(enable);
 				}
 			}
@@ -153,14 +154,22 @@ package net.armagomen.battleobserver
 			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function():void
 			{
 				var damageLogPanel:* = this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
-				if (damageLogPanel){
+				if (damageLogPanel)
+				{
 					damageLogPanel.updateContainersPosition()
-					this.updateDamageLogPosition()
+					try
+					{
+						this.updateDamageLogPosition();
+					}
+					catch (err:Error)
+					{
+						this.updateDamageLogPosition(this.epicRandomPlayersPanel.state);
+					}
 				}
 			}
 		}
 		
-		override protected function onBeforeDispose():void 
+		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
 			this.mapZoom = null;
