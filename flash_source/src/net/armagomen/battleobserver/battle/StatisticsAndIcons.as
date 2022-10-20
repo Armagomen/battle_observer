@@ -17,14 +17,13 @@ package net.armagomen.battleobserver.battle
 		
 		private var iconColors:Object               = {};
 		private var statisticsData:Object           = null;
-		private var statisticsEnabled:Boolean       = false;
 		private var iconsEnabled:Boolean            = false;
 		private var iconMultiplier:Number           = -1.25;
 		private var cutWidth:Number                 = 60.0;
 		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
-		public function StatisticsAndIcons(battlePage:*, statisticsEnabled:Boolean, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
+		public function StatisticsAndIcons(battlePage:*, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
 		{
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
@@ -32,7 +31,6 @@ package net.armagomen.battleobserver.battle
 			this.setIconColors(typeColors);
 			this.iconMultiplier = iconMultiplier;
 			this.statisticsData = statsData;
-			this.statisticsEnabled = statisticsEnabled;
 			this.iconsEnabled = iconsEnabled;
 			this.cutWidth = cutWidth;
 			this.fullWidth = fullWidth;
@@ -100,7 +98,7 @@ package net.armagomen.battleobserver.battle
 					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
 				var vehicleID:int = holder.vehicleData.vehicleID;
-				if (this.statisticsEnabled && this.statisticsData && this.statisticsData[vehicleID])
+				if (this.statisticsData && this.statisticsData[vehicleID])
 				{
 					if (this.statisticsData[vehicleID].vehicleTextColor)
 					{
@@ -154,7 +152,7 @@ package net.armagomen.battleobserver.battle
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled && this.statisticsData && this.statisticsData[vehicleID])
+			if (this.statisticsData && this.statisticsData[vehicleID])
 			{
 				if (this.statisticsData[vehicleID].fullName)
 				{
@@ -187,7 +185,7 @@ package net.armagomen.battleobserver.battle
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsEnabled && this.statisticsData && this.statisticsData[vehicleID])
+			if (this.statisticsData && this.statisticsData[vehicleID])
 			{
 				if (this.statisticsData[vehicleID].fullName)
 				{

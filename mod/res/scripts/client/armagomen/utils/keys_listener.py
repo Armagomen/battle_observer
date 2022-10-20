@@ -7,25 +7,25 @@ from armagomen.constants import MAIN
 from gui import InputHandler
 
 KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
-KEY_ALIAS_CONTROL = {KEY_LCONTROL, KEY_RCONTROL}
-KEY_ALIAS_ALT = {KEY_LALT, KEY_RALT}
-KEY_ALIAS_SHIFT = {KEY_LSHIFT, KEY_RSHIFT}
+KEY_ALIAS_CONTROL = (KEY_LCONTROL, KEY_RCONTROL)
+KEY_ALIAS_ALT = (KEY_LALT, KEY_RALT)
+KEY_ALIAS_SHIFT = (KEY_LSHIFT, KEY_RSHIFT)
 
 
 class KeysListener(object):
 
     def __init__(self):
-        self.keysMap = list()
+        self.keysMap = set()
         self.pressedKeys = set()
         self.usableKeys = set()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
 
     def registerComponent(self, keyFunction, keyList=None):
-        self.keysMap.append(KeysData(self.normalizeKey(keyList) if keyList else KEY_ALIAS_ALT, keyFunction))
+        self.keysMap.add(KeysData(self.normalizeKey(keyList) if keyList else KEY_ALIAS_ALT, keyFunction))
 
     def clear(self):
-        self.keysMap = list()
+        self.keysMap.clear()
         self.usableKeys.clear()
         self.pressedKeys.clear()
 
@@ -70,7 +70,7 @@ class KeysListener(object):
                 elif key in KEY_ALIAS_SHIFT:
                     keys.update(KEY_ALIAS_SHIFT)
         self.usableKeys.update(keys)
-        return keys
+        return tuple(keys)
 
 
 g_keysListener = KeysListener()

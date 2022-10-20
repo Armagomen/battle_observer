@@ -56,13 +56,12 @@ def getContextMenuHandlers():
 def _startBattleSession(base, page):
     logDebug("_startBattleSession: {}", page.__class__.__name__)
     components = viewSettings.getComponents()
-    if not components:
-        return base(page)
-    logDebug("_startBattleSession: {}", components)
-    componentsConfig = page._SharedPage__componentsConfig
-    newConfig = tuple((i, viewSettings.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
-    componentsConfig._ComponentsConfig__config = newConfig
-    base(page)
+    if components:
+        logDebug("_startBattleSession: {}", components)
+        componentsConfig = page._SharedPage__componentsConfig
+        newConfig = tuple((i, viewSettings.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
+        componentsConfig._ComponentsConfig__config = newConfig
+    return base(page)
 
 
 class ObserverBusinessHandlerBattle(PackageBusinessHandler):
@@ -99,35 +98,36 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             self._app.loaderManager.onViewLoaded += self.onViewLoaded
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
-    def loadStatisticView(self, view):
-        if self._statisticsEnabled:
-            if not self.statistics.loaded and self._statLoadTry < 20:
-                self._statLoadTry += 1
-                return callback(0.5, self.loadStatisticView, view)
+    def loadStatisticView(self, flashObject):
+        if self._statisticsEnabled and not self.statistics.loaded and self._statLoadTry < 20:
+            self._statLoadTry += 1
+            return callback(0.5, self.loadStatisticView, flashObject)
         statisticsItemsData = self.statistics.itemsWTRData if self._statisticsEnabled else {}
         cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         iconMultiplier = settings.statistics[STATISTICS.ICON_BLACKOUT]
-        view.flashObject.as_createStatisticComponent(self._statisticsEnabled, self._iconsEnabled, statisticsItemsData,
-                                                     cutWidth, fullWidth, typeColors, iconMultiplier)
+        flashObject.as_createStatisticComponent(self._iconsEnabled, statisticsItemsData, cutWidth, fullWidth,
+                                                typeColors, iconMultiplier)
 
-    def delayLoading(self, view):
-        view.flashObject.as_observerCreateComponents(viewSettings.getComponents())
-        view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
+    def delayLoading(self, flashObject):
+        flashObject.as_observerCreateComponents(viewSettings.getComponents())
+        flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
         if self.minimapPlugin.enabled:
-            self.minimapPlugin.init(view)
+            self.minimapPlugin.init(flashObject)
         if self._iconsEnabled or self._statisticsEnabled:
-            self.loadStatisticView(view)
-        callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.notEpicRandomBattle())
+            self.loadStatisticView(flashObject)
+        callback(20.0, flashObject.as_observerUpdateDamageLogPosition, viewSettings.notEpicRandomBattle())
 
     def onViewLoaded(self, view, *args):
-        logDebug("ObserverBusinessHandler/onViewLoaded: {}", view.settings.alias)
-        if view.settings is None or view.settings.alias not in self.viewAliases:
+        alias = view.getAlias()
+        if alias not in self.viewAliases:
             return
+        logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         g_events.onBattlePageLoaded(view)
-        if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
-            to_format_str = "battle_page {}, has ho attribute {}"
-            return logError(to_format_str, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        callback(1.0, self.delayLoading, view)
+        flashObject = view.flashObject
+        if not hasattr(flashObject, SWF.ATTRIBUTE_NAME):
+            to_format_str = "{} {}, has ho attribute {}"
+            return logError(to_format_str, alias, repr(flashObject), SWF.ATTRIBUTE_NAME)
+        callback(1.0, self.delayLoading, flashObject)

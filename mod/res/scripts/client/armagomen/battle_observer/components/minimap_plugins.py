@@ -6,7 +6,6 @@ from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod, xvmInstalled
 from armagomen.utils.keys_listener import g_keysListener
 from constants import VISIBILITY
-from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
 from gui.battle_control import avatar_getter
@@ -22,10 +21,10 @@ class MinimapZoomPlugin(object):
         self.isComp7Page = False
         self.enabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not xvmInstalled
 
-    def init(self, view):
-        self.__battleView_as = view.flashObject
+    def init(self, flashObject):
+        self.__battleView_as = flashObject
         self.__battleView_as.as_createMimimapCentered()
-        self.isComp7Page = view.settings.alias == VIEW_ALIAS.COMP7_BATTLE_PAGE
+        self.isComp7Page = self.sessionProvider.arenaVisitor.gui.isComp7Battle()
         g_keysListener.registerComponent(self.onKeyPressed, keyList=settings.minimap[MINIMAP.ZOOM_KEY])
 
     def fini(self):

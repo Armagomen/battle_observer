@@ -45,11 +45,10 @@ class ObserverBusinessHandlerLobby(PackageBusinessHandler):
             logError("hangar_page {}, has ho attribute {}", view.settings.alias, SWF.ATTRIBUTE_NAME)
 
     def _onViewLoaded(self, view, *args):
-        if view.settings is None:
-            return
-        if view.settings.alias == VIEW_ALIAS.LOGIN:
+        alias = view.getAlias()
+        if alias == VIEW_ALIAS.LOGIN:
             callback(1.0, g_events.onLoginLoaded, view)
-            logDebug("onViewLoaded, alias={}", view.settings.alias)
-        elif view.settings.alias == VIEW_ALIAS.LOBBY_HANGAR:
+            logDebug("onViewLoaded, alias={}", alias)
+        elif alias == VIEW_ALIAS.LOBBY_HANGAR:
             callback(1.0, self.load, view)
-            logDebug("onViewLoaded, alias={}", view.settings.alias)
+            logDebug("onViewLoaded, alias={}", alias)
