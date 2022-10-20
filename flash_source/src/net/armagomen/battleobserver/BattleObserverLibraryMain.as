@@ -151,17 +151,17 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function():void
+			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function(notEpicRandomBattle:Boolean):void
 			{
 				var damageLogPanel:* = this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
 				if (damageLogPanel)
 				{
 					damageLogPanel.updateContainersPosition()
-					try
+					if (notEpicRandomBattle)
 					{
 						this.updateDamageLogPosition();
 					}
-					catch (err:Error)
+					else
 					{
 						this.updateDamageLogPosition(this.epicRandomPlayersPanel.state);
 					}

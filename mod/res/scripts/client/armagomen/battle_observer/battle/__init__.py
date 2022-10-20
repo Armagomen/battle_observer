@@ -119,7 +119,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             self.minimapPlugin.init(view)
         if self._iconsEnabled or self._statisticsEnabled:
             self.loadStatisticView(view)
-        callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition)
+        callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.notEpicRandomBattle())
 
     def onViewLoaded(self, view, *args):
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", view.settings.alias)
