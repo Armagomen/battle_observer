@@ -45,15 +45,9 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
     def _populate(self):
         super(DamageLog, self)._populate()
         self.top_log = defaultdict(int, **self.settings.log_total[DAMAGE_LOG.ICONS])
-        self.as_startUpdateS({DAMAGE_LOG.D_LOG: self.settings.log_damage_extended[GLOBAL.SETTINGS],
-                              DAMAGE_LOG.IN_LOG: self.settings.log_input_extended[GLOBAL.SETTINGS],
-                              DAMAGE_LOG.MAIN_LOG: self.settings.log_total[GLOBAL.SETTINGS]},
-                             {DAMAGE_LOG.D_LOG: self.settings.log_damage_extended[GLOBAL.ENABLED],
-                              DAMAGE_LOG.IN_LOG: self.settings.log_input_extended[GLOBAL.ENABLED],
-                              DAMAGE_LOG.MAIN_LOG: self.settings.log_total[GLOBAL.ENABLED]})
+        self.as_startUpdateS(self.settings.log_total, self.settings.log_extended)
         self.top_log_enabled = self.settings.log_total[GLOBAL.ENABLED]
-        self.extended_log_enabled = (self.settings.log_damage_extended[GLOBAL.ENABLED] or
-                                     self.settings.log_input_extended[GLOBAL.ENABLED])
+        self.extended_log_enabled = self.settings.log_extended[GLOBAL.ENABLED]
         if self.extended_log_enabled:
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_global[DAMAGE_LOG.HOT_KEY])
 
@@ -68,17 +62,14 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
             self.__maxHealth = vehicle.maxHealth
 
     def isLogEnabled(self, eventType):
-        if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-            return self.settings.log_damage_extended[GLOBAL.ENABLED]
-        elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
-            return self.settings.log_input_extended[GLOBAL.ENABLED]
-        return False
+        event = eventType in (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
+        return event and self.settings.log_extended[GLOBAL.ENABLED]
 
     def getLogDataAndSettings(self, eventType):
         if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-            return self.damage_log, self.settings.log_damage_extended, True
+            return self.damage_log, self.settings.log_extended, True
         elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
-            return self.input_log, self.settings.log_input_extended, False
+            return self.input_log, self.settings.log_extended, False
         raise ValueError(DAMAGE_LOG.WARNING_MESSAGE.format(eventType))
 
     def onEnterBattlePage(self):
@@ -128,10 +119,9 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
 
     def onLogsAltMode(self, isKeyDown):
         """Hot key event"""
-        if self.settings.log_damage_extended[GLOBAL.ENABLED]:
-            self.updateExtendedLog(self.damage_log, self.settings.log_damage_extended, altMode=isKeyDown)
-        if self.settings.log_input_extended[GLOBAL.ENABLED]:
-            self.updateExtendedLog(self.input_log, self.settings.log_input_extended, altMode=isKeyDown)
+        if self.settings.log_extended[GLOBAL.ENABLED]:
+            self.updateExtendedLog(self.damage_log, self.settings.log_extended, altMode=isKeyDown)
+            self.updateExtendedLog(self.input_log, self.settings.log_extended, altMode=isKeyDown)
 
     def parseEvent(self, event):
         """wg Feedback event parser"""

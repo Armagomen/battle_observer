@@ -226,18 +226,9 @@ localization = {
         "settings*align": "Alignment text:",
         "mainLogScale": "Scaling functions."
     },
-    "log_damage_extended": {
-        "header": "A DETAILED LOG OF THE DAMAGE",
-        "settings*x": "Position detailed log Horizontal",
-        "settings*x_tooltip": "Relative to the players list.",
-        "settings*y": "Position detailed log Vertical",
-        "settings*y_tooltip": "Relative to the players list.",
-        "settings*align": "Alignment text:",
-        "reverse": "Expand log"
-    },
-    "log_input_extended": {
+    "log_extended": {
         "header": "DETAILED LOG OF THE DAMAGE RECEIVED",
-        "log_input_extended_shellColor*normal": "configure macro %(shellColor)s - Silver",
+        "log_extended_shellColor*normal": "configure macro %(shellColor)s - Silver",
         "settings*x": "Position detailed log Horizontal",
         "settings*x_tooltip": "Relatively damage panel.",
         "settings*y": "Position detailed log Vertical",

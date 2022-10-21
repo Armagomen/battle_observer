@@ -258,62 +258,29 @@ class DefaultSettings(object):
             },
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-        self.log_damage_extended = {
+        self.log_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
             GLOBAL.SETTINGS: {
                 GLOBAL.X: 10,
-                GLOBAL.Y: GLOBAL.ZERO,
-                GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
-            },
-            DAMAGE_LOG.KILLED_ICON: "<img src='{dir}/destruction.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
-            DAMAGE_LOG.LOG_MODE[GLOBAL.FIRST]: [
-                "<textformat leading='-8' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
-                "<font size='12'>%(index)02d:</font><tab>",
-                "<font color='#E0E06D'>%(totalDamage)s</font><tab>",
-                "%(attackReason)s<tab>",
-                "<font color='%(tankClassColor)s'>%(classIcon)s</font><tab>",
-                "%(tankName)s%(killedIcon)s",
-                "</font></textformat>"
-            ],
-            DAMAGE_LOG.LOG_MODE[GLOBAL.LAST]: [
-                "<textformat leading='-8' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
-                "<font size='12'>%(shots)d:</font><tab>",
-                "<font color='#E0E06D'>%(lastDamage)s</font><tab>",
-                "%(attackReason)s<tab>",
-                "<font color='%(tankClassColor)s'>%(classIcon)s</font><tab>",
-                "%(userName).12s %(killedIcon)s",
-                "</font></textformat>"
-            ],
-            DAMAGE_LOG.SHELL_COLOR: {
-                DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
-                DAMAGE_LOG.GOLD: COLORS.GOLD
-            },
-            GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
-        }
-        self.log_input_extended = {
-            GLOBAL.ENABLED: False,
-            DAMAGE_LOG.REVERSE: False,
-            GLOBAL.SETTINGS: {
-                GLOBAL.X: 10,
-                GLOBAL.Y: -20,
+                GLOBAL.Y: 0,
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
             },
             DAMAGE_LOG.KILLED_ICON: "<img src='{dir}/destruction.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
             DAMAGE_LOG.LOG_MODE[GLOBAL.FIRST]: [
                 "<textformat leading='-8' tabstops='[20, 55, 80, 100, 125]'><font face='$TitleFont' size='15'>",
                 "<font size='12'>%(index)02d:</font><tab>",
-                "<font color='#E0E06D'>%(totalDamage)s</font><tab>",
+                "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
                 "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
                 "%(attackReason)s<tab>",
                 "<font color='%(tankClassColor)s'>%(classIcon)s</font><tab>",
-                "%(tankName)s%(killedIcon)s",
+                "%(tankName)s %(killedIcon)s",
                 "</font></textformat>"
             ],
             DAMAGE_LOG.LOG_MODE[GLOBAL.LAST]: [
                 "<textformat leading='-8' tabstops='[20, 55, 80, 100, 125]'><font face='$TitleFont' size='15'>",
                 "<font size='12'>%(shots)d:</font><tab>",
-                "<font color='#E0E06D'>%(lastDamage)s</font><tab>",
+                "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
                 "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
                 "%(attackReason)s<tab>",
                 "<font color='%(tankClassColor)s'>%(classIcon)s</font><tab>",
@@ -478,8 +445,8 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
-        _logs = namedtuple('Logs', ('log_total', 'log_damage_extended', 'log_input_extended', 'log_global'))
-        self.damage_log = _logs(self.log_total, self.log_damage_extended, self.log_input_extended, self.log_global)
+        _logs = namedtuple('Logs', ('log_total', 'log_extended', 'log_global'))
+        self.damage_log = _logs(self.log_total, self.log_extended, self.log_global)
         self.statistics = {
             GLOBAL.ENABLED: False,
             STATISTICS.STATISTIC_ENABLED: False,

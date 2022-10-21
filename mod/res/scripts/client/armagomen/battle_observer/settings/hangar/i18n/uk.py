@@ -231,20 +231,7 @@ localization = {
         "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа",
         "mainLogScale": "Масштабування лога"
     },
-    "log_damage_extended": {
-        "header": "Налаштування розширеного лога ефективності гравця",
-        "settings*x": "Позиція детального лога по горизонталі",
-        "settings*x_tooltip": "Від місця WG лога.",
-        "settings*y": "Позиція детального лога по вертикалі",
-        "settings*y_tooltip": "Від місця WG лога.",
-        "settings*align": "Вирівнювання:",
-        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа",
-        "reverse": "Розвернути лог",
-        "reverse_tooltip": "Додавати новий рядок на початок лога.",
-        "shellColor*gold": "Колір преміум снарядів",
-        "shellColor*normal": "Колір звичайних снарядів"
-    },
-    "log_input_extended": {
+    "log_extended": {
         "header": "Налаштування розширеного лога отриманих пошкоджень",
         "settings*x": "Позиція детального лога по горизонталі",
         "settings*x_tooltip": "Від місця WG лога.",

@@ -86,9 +86,7 @@ class ViewSettings(object):
         if alias is ALIASES.HP_BARS and self.notEpicBattle():
             return settings.hp_bars[GLOBAL.ENABLED]
         elif alias is ALIASES.DAMAGE_LOG:
-            return (settings.log_total[GLOBAL.ENABLED] or
-                    settings.log_damage_extended[GLOBAL.ENABLED] or
-                    settings.log_input_extended[GLOBAL.ENABLED])
+            return settings.log_total[GLOBAL.ENABLED] or settings.log_extended[GLOBAL.ENABLED]
         elif alias is ALIASES.MAIN_GUN and self.isRandomBattle():
             return settings.main_gun[GLOBAL.ENABLED]
         elif alias is ALIASES.DEBUG:

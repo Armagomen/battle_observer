@@ -231,20 +231,7 @@ localization = {
         "settings*align_tooltip": "Выравнивание:\nleft - влево\ncenter - по центру\nright - вправо",
         "mainLogScale": "Масштабирование лога."
     },
-    "log_damage_extended": {
-        "header": "РАСШИРЕННЫЙ лог эффективности игрока.",
-        "settings*x": "Позиция детального лога по Горизонтали.",
-        "settings*x_tooltip": "Относительно левого списка игроков.",
-        "settings*y": "Позиция детального лога по Вертикали.",
-        "settings*y_tooltip": "Относительно левого списка игроков.",
-        "settings*align": "Выравнивание:",
-        "settings*align_tooltip": "Выравнивание:\nleft - влево\ncenter - по центру\nright - вправо",
-        "reverse": "Развернуть лог.",
-        "reverse_tooltip": "Добавлять новую строку на верх лога.",
-        "shellColor*gold": "Цвет типа снарядов - Золото",
-        "shellColor*normal": "Цвет типа снарядов - Серебро"
-    },
-    "log_input_extended": {
+    "log_extended": {
         "header": "РАСШИРЕННЫЙ лог полученного урона.",
         "settings*x": "Позиция детального лога по Горизонтали",
         "settings*x_tooltip": "Относительно дамаг панели.",

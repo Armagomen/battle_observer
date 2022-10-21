@@ -12,8 +12,7 @@ validated = {}
 
 @overrideMethod(DamageLogPanel, "_setSettings")
 def setSettings(base, panel, vis, cb):
-    return base(panel, vis or settings.log_damage_extended[GLOBAL.ENABLED] or settings.log_input_extended[
-        GLOBAL.ENABLED], cb)
+    return base(panel, vis or settings.log_extended[GLOBAL.ENABLED], cb)
 
 
 @overrideMethod(_LogViewComponent, "addToLog")
