@@ -12,7 +12,6 @@
   "fps_enableFPSLimiter": false, 
   "fps_maxFrameRate": 200, 
   "hideBadges": true, 
-  "hideChatInRandom": false, 
   "hideClanAbbrev": false, 
   "hide_button_counters_on_top_panel": true, 
   "hide_dog_tags": true, 
@@ -20,7 +19,7 @@
   "hide_hint_panel": true, 
   "hide_main_chat_in_hangar": true, 
   "ignore_commanders_voice": true, 
-  "premium_time": true,
+  "premium_time": true, 
   "showFriendsAndClanInEars": true, 
   "useKeyPairs": false
 }

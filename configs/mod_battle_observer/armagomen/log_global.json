@@ -26,12 +26,12 @@
     "shot": "<img src='img://gui/maps/icons/library/efficiency/48x48/damage.png' width='24' height='24' vspace='-13'>", 
     "smoke": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>", 
     "spawned_bot_explosion": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>", 
+    "super_shell": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>", 
     "thunderStrike": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>", 
     "world_collision": "<img src='img://gui/maps/icons/library/efficiency/48x48/ram.png' width='24' height='24' vspace='-13'>"
   }, 
   "logsAltMode_hotkey": [
     [
-      184, 
       56
     ]
   ], 
