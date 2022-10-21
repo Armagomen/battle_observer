@@ -3,7 +3,7 @@ from collections import defaultdict
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.constants import VEHICLE, PANELS, COLORS, VEHICLE_TYPES
-from armagomen.utils.common import getEntity, logDebug
+from armagomen.utils.common import logDebug
 from armagomen.utils.keys_listener import g_keysListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -64,22 +64,14 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def createHealthBar(self, vehicleID, vInfoVO, isEnemy):
         maxHealth = vInfoVO.vehicleType.maxHealth
-        newHealth = getattr(getEntity(vehicleID), VEHICLE.CUR, maxHealth)
-        if newHealth > maxHealth:
-            maxHealth = newHealth
         if self.settings[PANELS.BAR_CLASS_COLOR]:
             color = self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][vInfoVO.vehicleType.classTag]
         else:
             color = self.getBarColor(isEnemy)
-        self.as_addHealthBarS(vehicleID, color, self.colors[COLORS.GLOBAL],
-                              self.settings[PANELS.BAR_SETTINGS], not self.settings[PANELS.ON_KEY_DOWN])
-        scale = round(getHealthPercent(newHealth, maxHealth), 2)
-        self.as_updateHealthBarS(vehicleID, scale,
-                                 self.settings[PANELS.HP_TEMPLATE] % {
-                                     VEHICLE.CUR: newHealth,
-                                     VEHICLE.MAX: maxHealth,
-                                     VEHICLE.PERCENT: scale * 100
-                                 })
+        visible = not self.settings[PANELS.ON_KEY_DOWN]
+        vehicleData = {VEHICLE.CUR: maxHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: 100}
+        self.as_addHealthBarS(vehicleID, color, self.colors[COLORS.GLOBAL], self.settings[PANELS.BAR_SETTINGS], visible)
+        self.as_updateHealthBarS(vehicleID, 1.0, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
 
     def onAddedToStorage(self, vehicleID, isEnemy):
         """Called from flash after creation in as_AddVehIdToListS"""
@@ -105,15 +97,10 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if newHealth > maxHealth:
                 maxHealth = newHealth
             scale = round(getHealthPercent(newHealth, maxHealth), 2)
-            self.as_updateHealthBarS(vehicleID, scale,
-                                     self.settings[PANELS.HP_TEMPLATE] % {
-                                         VEHICLE.CUR: newHealth,
-                                         VEHICLE.MAX: maxHealth,
-                                         VEHICLE.PERCENT: scale * 100
-                                     })
+            vehicleData = {VEHICLE.CUR: newHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: scale * 100}
+            self.as_updateHealthBarS(vehicleID, scale, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
 
     def onPlayersDamaged(self, targetID, attackerID, damage):
         self.playersDamage[attackerID] += damage
-        self.as_updateDamageS(attackerID, self.settings[PANELS.DAMAGES_TEMPLATE] % {
-            PANELS.DAMAGE: self.playersDamage[attackerID]
-        })
+        damageText = self.settings[PANELS.DAMAGES_TEMPLATE] % {PANELS.DAMAGE: self.playersDamage[attackerID]}
+        self.as_updateDamageS(attackerID, damageText)
