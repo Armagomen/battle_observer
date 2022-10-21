@@ -28,6 +28,10 @@ def getI18nShellName(shellType):
     return i18n.makeString(_SHELL_TYPES_TO_STR[shellType])
 
 
+def isShellGold(shell):
+    return "PREMIUM" in shell.iconName
+
+
 class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
 
     def __init__(self):
@@ -192,7 +196,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
     def checkPlayerShell(self):
         shell = self._player.getVehicleDescriptor().shot.shell
         shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(shell))
-        return shell_name, shell.isGold
+        return shell_name, isShellGold(shell)
 
     @staticmethod
     def checkShell(extra):
