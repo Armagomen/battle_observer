@@ -14,7 +14,7 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 
 
 class MinimapZoomPlugin(object):
-    arenaVisitor = dependency.descriptor(IBattleSessionProvider).arenaVisitor
+    sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
         self.__battleView_as = None
@@ -24,7 +24,7 @@ class MinimapZoomPlugin(object):
     def init(self, flashObject):
         self.__battleView_as = flashObject
         self.__battleView_as.as_createMimimapCentered()
-        self.isComp7Page = self.arenaVisitor.gui.isComp7Battle()
+        self.isComp7Page = self.sessionProvider.arenaVisitor.gui.isComp7Battle()
         g_keysListener.registerComponent(self.onKeyPressed, keyList=settings.minimap[MINIMAP.ZOOM_KEY])
 
     def fini(self):
@@ -32,7 +32,7 @@ class MinimapZoomPlugin(object):
 
     def onKeyPressed(self, isKeyDown):
         """hot key event"""
-        if self.isComp7Page and self.arenaVisitor.isArenaNotStarted():
+        if self.isComp7Page and self.sessionProvider.arenaVisitor.isArenaNotStarted():
             return
         self.__battleView_as.as_zoomMimimapCentered(isKeyDown)
         avatar_getter.setForcedGuiControlMode(isKeyDown, enableAiming=False)

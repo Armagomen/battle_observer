@@ -2,24 +2,29 @@ from collections import defaultdict, namedtuple
 
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
-from armagomen.utils.common import logDebug, logWarning, percentToRGB, getPercent
+from armagomen.utils.common import logDebug, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
-from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES, SHELL_TYPES
+from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
+from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
+from helpers import i18n
 
-_BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE = {
-    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING: SHELL_TYPES.ARMOR_PIERCING,
-    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING_HE: SHELL_TYPES.ARMOR_PIERCING_HE,
-    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING_CR: SHELL_TYPES.ARMOR_PIERCING_CR,
-    BATTLE_LOG_SHELL_TYPES.HOLLOW_CHARGE: SHELL_TYPES.HOLLOW_CHARGE,
-    BATTLE_LOG_SHELL_TYPES.HE_MODERN: SHELL_TYPES.HIGH_EXPLOSIVE,
-    BATTLE_LOG_SHELL_TYPES.HE_LEGACY_STUN: 'HIGH_EXPLOSIVE_SPG_STUN',
-    BATTLE_LOG_SHELL_TYPES.HE_LEGACY_NO_STUN: 'HIGH_EXPLOSIVE_SPG',
-    BATTLE_LOG_SHELL_TYPES.SMOKE: SHELL_TYPES.SMOKE
+_SHELL_TYPES_TO_STR = {
+    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING: INGAME_GUI.DAMAGELOG_SHELLTYPE_ARMOR_PIERCING,
+    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING_HE: INGAME_GUI.DAMAGELOG_SHELLTYPE_ARMOR_PIERCING_HE,
+    BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING_CR: INGAME_GUI.DAMAGELOG_SHELLTYPE_ARMOR_PIERCING_CR,
+    BATTLE_LOG_SHELL_TYPES.HOLLOW_CHARGE: INGAME_GUI.DAMAGELOG_SHELLTYPE_HOLLOW_CHARGE,
+    BATTLE_LOG_SHELL_TYPES.HE_MODERN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE,
+    BATTLE_LOG_SHELL_TYPES.HE_LEGACY_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE,
+    BATTLE_LOG_SHELL_TYPES.HE_LEGACY_NO_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE
 }
 
 LogData = namedtuple('LogData', 'kills id_list vehicles name')
+
+
+def getI18nShellName(shellType):
+    return i18n.makeString(_SHELL_TYPES_TO_STR[shellType])
 
 
 class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
@@ -74,8 +79,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
             return self.damage_log, self.settings.log_damage_extended, True
         elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
             return self.input_log, self.settings.log_input_extended, False
-        logWarning(DAMAGE_LOG.WARNING_MESSAGE)
-        raise ValueError("eventType=%s NOT FOUND" % eventType)
+        raise ValueError(DAMAGE_LOG.WARNING_MESSAGE.format(eventType))
 
     def onEnterBattlePage(self):
         super(DamageLog, self).onEnterBattlePage()
@@ -197,43 +201,33 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         self.updateExtendedLog(log_data, settings)
 
     def checkPlayerShell(self, extra):
-        shell_name = DAMAGE_LOG.UNDEFINED
-        shell_icon_name = DAMAGE_LOG.UNDEFINED
-        gold = extra.isShellGold()
-        if self._player is not None and extra.isShot():
-            shell = self._player.getVehicleDescriptor().shot.shell
-            shell_name = shell.kind
-            shell_icon_name = shell.iconName
-            gold = shell_icon_name in DAMAGE_LOG.PREMIUM_SHELLS or gold
-        return shell_name, shell_icon_name, gold
+        shell = self._player.getVehicleDescriptor().shot.shell
+        shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(shell))
+        return shell_name, extra.isShellGold()
 
     @staticmethod
     def checkShell(extra):
-        shell_name = _BATTLE_LOG_SHELL_TYPES_TO_SHELL_TYPE.get(extra.getShellType(), DAMAGE_LOG.UNDEFINED)
-        shell_icon_name = shell_name
-        gold = extra.isShellGold()
-        if gold:
-            gold_name = shell_name + DAMAGE_LOG.PREMIUM
-            if gold_name in DAMAGE_LOG.PREMIUM_SHELLS:
-                shell_icon_name = gold_name
-        return shell_name, shell_icon_name, gold
+        return getI18nShellName(extra.getShellType()), extra.isShellGold()
 
     def addToExtendedLog(self, e_type, target_id, extra):
         """add to log item"""
         log_data, settings, is_player = self.getLogDataAndSettings(e_type)
         if target_id not in log_data.id_list:
             log_data.id_list.append(target_id)
-        shell_name, shell_icon_name, gold = self.checkPlayerShell(extra) if is_player else self.checkShell(extra)
-        logDebug("Shell type: {}, shell icon: {}, gold: {}, player: {}", shell_name, shell_icon_name, gold, is_player)
+        if extra.isShot():
+            shell_name, gold = self.checkPlayerShell(extra) if is_player else self.checkShell(extra)
+        else:
+            shell_name, gold = GLOBAL.EMPTY_LINE, False
+        logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, is_player)
         vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         vehicleInfoVO = self._arenaDP.getVehicleInfo(target_id)
         maxHealth = vehicleInfoVO.vehicleType.maxHealth if is_player else self.__maxHealth
         if not vehicle:
             self.createVehicle(vehicleInfoVO, vehicle, logLen=len(log_data.id_list))
-        self.updateVehicleData(extra, gold, settings, shell_icon_name, shell_name, vehicle, maxHealth)
+        self.updateVehicleData(extra, gold, settings, shell_name, vehicle, maxHealth)
         self.updateExtendedLog(log_data, settings)
 
-    def updateVehicleData(self, extra, gold, settings, shell_icon_name, shell_name, vehicle, maxHealth):
+    def updateVehicleData(self, extra, gold, settings, shell_name, vehicle, maxHealth):
         vehicle[DAMAGE_LOG.DAMAGE_LIST].append(extra.getDamage())
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
@@ -241,8 +235,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         vehicle[DAMAGE_LOG.LAST_DAMAGE] = vehicle[DAMAGE_LOG.DAMAGE_LIST][GLOBAL.LAST]
         vehicle[DAMAGE_LOG.ATTACK_REASON] = self.settings.log_global[DAMAGE_LOG.ATTACK_REASON][
             ATTACK_REASONS[extra.getAttackReasonID()]]
-        vehicle[DAMAGE_LOG.SHELL_TYPE] = settings[DAMAGE_LOG.SHELL_TYPES][shell_name]
-        vehicle[DAMAGE_LOG.SHELL_ICON] = settings[DAMAGE_LOG.SHELL_ICONS][shell_icon_name]
+        vehicle[DAMAGE_LOG.SHELL_TYPE] = shell_name
         vehicle[DAMAGE_LOG.SHELL_COLOR] = settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
         vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.getAVGColor(percent)

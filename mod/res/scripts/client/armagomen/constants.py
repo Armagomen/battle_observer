@@ -60,7 +60,7 @@ class GLOBAL:
     BLUR_Y = "blurY"
     COLOR = "color"
     COMMA_SEP = ", "
-    CONFIG_ERROR = "Incorrect macros in config file."
+    CONFIG_ERROR = "macros not found"
     CUSTOM_COLOR = "customColor"
     C_INTERFACE_SPLITTER = "*"
     DOT = "."
@@ -223,9 +223,9 @@ class DAMAGE_LOG:
     WG_POS = "wg_log_pos_fix"
     UNDEFINED = "UNDEFINED"
     PREMIUM = "_PREMIUM"
-    PREMIUM_SHELLS = ("ARMOR_PIERCING_CR_PREMIUM", "ARMOR_PIERCING_PREMIUM", "NO_HIGH_EXPLOSIVE_MODERN_PREMIUM",
-                      "HIGH_EXPLOSIVE_PREMIUM", "HIGH_EXPLOSIVE_MODERN_PREMIUM", "HOLLOW_CHARGE_PREMIUM")
-    WARNING_MESSAGE = "incorrect event parameter for the damage log"
+    # PREMIUM_SHELLS = ("ARMOR_PIERCING_CR_PREMIUM", "ARMOR_PIERCING_PREMIUM", "NO_HIGH_EXPLOSIVE_MODERN_PREMIUM",
+    #                   "HIGH_EXPLOSIVE_PREMIUM", "HIGH_EXPLOSIVE_MODERN_PREMIUM", "HOLLOW_CHARGE_PREMIUM")
+    WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
 
 
 ARCADE = namedtuple("ARCADE", (
