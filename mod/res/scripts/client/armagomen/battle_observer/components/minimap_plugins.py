@@ -1,9 +1,8 @@
 from math import degrees
 
-from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, MINIMAP
-from armagomen.utils.common import overrideMethod, xvmInstalled
+from armagomen.utils.common import overrideMethod, xvmInstalled, logError
 from armagomen.utils.keys_listener import g_keysListener
 from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
@@ -92,9 +91,14 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 @overrideMethod(MinimapComponent, "_setupPlugins")
 def _setupPlugins(base, plugin, arenaVisitor):
     _plugins = base(plugin, arenaVisitor)
-    if not arenaVisitor.gui.isComp7Battle() and settings.minimap[GLOBAL.ENABLED] and viewSettings.notEpicBattle() \
-            and not xvmInstalled:
-        if settings.minimap[MINIMAP.DEATH_PERMANENT]:
-            _plugins['vehicles'] = ArenaVehiclesPlugin
-        _plugins['personal'] = PersonalEntriesPlugin
-    return _plugins
+    try:
+        gui = arenaVisitor.gui
+        allowedMode = gui.isRandomBattle() or gui.isEpicRandomBattle() or gui.isRankedBattle()
+        if not xvmInstalled and allowedMode and settings.minimap[GLOBAL.ENABLED]:
+            if settings.minimap[MINIMAP.DEATH_PERMANENT]:
+                _plugins['vehicles'] = ArenaVehiclesPlugin
+            _plugins['personal'] = PersonalEntriesPlugin
+    except Exception as err:
+        logError(repr(err))
+    finally:
+        return _plugins
