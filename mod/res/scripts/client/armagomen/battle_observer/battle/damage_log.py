@@ -176,12 +176,10 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
 
     def updateTopLog(self):
         """update global sums in log"""
-        damageMacros = _EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY]
-        assistDamage = _EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY]
-        percentDamage = getPercent(self.top_log[damageMacros], DAMAGE_LOG.AVG_DAMAGE_DATA)
-        percentAssist = getPercent(self.top_log[assistDamage], DAMAGE_LOG.AVG_ASSIST_DATA)
-        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.getAVGColor(percentDamage)
-        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = self.getAVGColor(percentAssist)
+        damage = self.top_log[_EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY]]
+        assist = self.top_log[_EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY]]
+        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.getAVGColor(getPercent(damage, DAMAGE_LOG.AVG_DAMAGE_DATA))
+        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = self.getAVGColor(getPercent(assist, DAMAGE_LOG.AVG_ASSIST_DATA))
         self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     def onVehicleUpdated(self, vehicleID, *args, **kwargs):
