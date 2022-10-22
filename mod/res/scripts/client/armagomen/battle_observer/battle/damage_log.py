@@ -1,7 +1,7 @@
 from collections import defaultdict, namedtuple
 
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
-from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES
+from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES, COLORS
 from armagomen.utils.common import logDebug, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
@@ -19,8 +19,16 @@ _SHELL_TYPES_TO_STR = {
     BATTLE_LOG_SHELL_TYPES.HE_LEGACY_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE,
     BATTLE_LOG_SHELL_TYPES.HE_LEGACY_NO_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE
 }
-
 EXTENDED_FEEDBACK = (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
+
+_EVENT_TO_TOP_LOG_MACROS = {
+    FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: "playerDamage",
+    FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR: "blockedDamage",
+    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: "assistDamage",
+    FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY: "spottedTanks",
+    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: "stun"
+}
+
 LogData = namedtuple('LogData', ('kills', 'id_list', 'vehicles', 'name', 'is_player'))
 
 
@@ -29,7 +37,7 @@ def getI18nShellName(shellType):
 
 
 def isShellGold(shell):
-    return "PREMIUM" in shell.iconName
+    return DAMAGE_LOG.PREMIUM in shell.iconName
 
 
 class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
@@ -68,6 +76,9 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
 
     def isExtendedLogEnabled(self, eventType):
         return self.__isExtended and eventType in EXTENDED_FEEDBACK
+
+    def isTopLogEnabled(self, eventType):
+        return self.top_log_enabled and eventType in _EVENT_TO_TOP_LOG_MACROS
 
     def getLogData(self, eventType):
         if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
@@ -130,14 +141,17 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         """wg Feedback event parser"""
         e_type = event.getType()
         extra = event.getExtra()
-        if self.top_log_enabled and e_type in DAMAGE_LOG.TOP_MACROS_NAME:
-            if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
-                self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
-                self.top_log[DAMAGE_LOG.ASSIST_STUN] = GLOBAL.ZERO
-            self.top_log[DAMAGE_LOG.TOP_MACROS_NAME[e_type]] += self.unpackTopLogValue(e_type, event, extra)
-            self.updateTopLog()
+        if self.isTopLogEnabled(e_type):
+            self.addToTopLog(e_type, event, extra)
         if self.isExtendedLogEnabled(e_type):
             self.addToExtendedLog(e_type, event.getTargetID(), extra)
+
+    def addToTopLog(self, e_type, event, extra):
+        if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
+            self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
+            self.top_log[_EVENT_TO_TOP_LOG_MACROS[e_type]] = GLOBAL.ZERO
+        self.top_log[_EVENT_TO_TOP_LOG_MACROS[e_type]] += self.unpackTopLogValue(e_type, event, extra)
+        self.updateTopLog()
 
     @staticmethod
     def unpackTopLogValue(e_type, event, extra):
@@ -151,19 +165,21 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         return playerVehicleID != observedVehID
 
     def __onPlayerFeedbackReceived(self, events):
-        """shared.feedback player events"""
+        """Shared feedback player events"""
         if self.isPostmortemSwitched():
             return
         for event in events:
             self.parseEvent(event)
 
     def getAVGColor(self, percent):
-        return percentToRGB(percent, **self.settings.log_total[GLOBAL.AVG_COLOR])
+        return percentToRGB(percent, **self.settings.log_total[GLOBAL.AVG_COLOR]) if percent else COLORS.NORMAL_TEXT
 
     def updateTopLog(self):
         """update global sums in log"""
-        percentDamage = getPercent(self.top_log[DAMAGE_LOG.PLAYER_DAMAGE], DAMAGE_LOG.AVG_DAMAGE_DATA)
-        percentAssist = getPercent(self.top_log[DAMAGE_LOG.ASSIST_DAMAGE], DAMAGE_LOG.AVG_ASSIST_DATA)
+        damageMacros = _EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY]
+        assistDamage = _EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY]
+        percentDamage = getPercent(self.top_log[damageMacros], DAMAGE_LOG.AVG_DAMAGE_DATA)
+        percentAssist = getPercent(self.top_log[assistDamage], DAMAGE_LOG.AVG_ASSIST_DATA)
         self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.getAVGColor(percentDamage)
         self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = self.getAVGColor(percentAssist)
         self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
@@ -257,7 +273,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
     def updateExtendedLog(self, log_data, altMode=False):
         """
         Final log processing and flash output,
-        also works when the alt mode is activated by hot key.
+        also works when the alt mode activated by hot key.
         """
         if log_data is None or not log_data.id_list:
             return

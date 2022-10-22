@@ -68,7 +68,9 @@ class ViewSettings(object):
         return not self.gui.isEpicRandomBattle()
 
     def isStatisticsModuleEnabled(self):
-        return settings.statistics[GLOBAL.ENABLED] and self.notEpicBattle() and self.notEpicRandomBattle()
+        if self.gui.isComp7Battle() or self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
+            return False
+        return settings.statistics[GLOBAL.ENABLED]
 
     def isWTREnabled(self):
         if xvmInstalled:

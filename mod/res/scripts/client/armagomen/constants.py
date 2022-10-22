@@ -4,7 +4,6 @@ from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
     SHOT_RESULT_TO_ALT_COLOR
-from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 MOD_NAME = "BATTLE_OBSERVER"
@@ -156,14 +155,11 @@ class DAMAGE_LOG:
 
     NAME = "damage_log"
     ALL_DAMAGES = "allDamages"
-    ASSIST_DAMAGE = "assistDamage"
-    ASSIST_STUN = "stun"
     ATTACK_REASON = "attackReason"
     AVG_DAMAGE = "tankAvgDamage"
     AVG_ASSIST = "tankAvgAssist"
     AVG_DAMAGE_DATA = GLOBAL.ZERO
     AVG_ASSIST_DATA = GLOBAL.ZERO
-    BLOCKED_DAMAGE = "blockedDamage"
     CLASS_COLOR = "tankClassColor"
     CLASS_ICON = "classIcon"
     DAMAGE_AVG_COLOR = "tankDamageAvgColor"
@@ -171,7 +167,6 @@ class DAMAGE_LOG:
     DAMAGE_LIST = "damageList"
     D_LOG = "d_log"
     IN_LOG = "in_log"
-    EXTENDED_DAMAGE = {FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER}
     GLOBAL = "log_global"
     HOT_KEY = "logsAltMode_hotkey"
     ICONS = "icons"
@@ -185,7 +180,6 @@ class DAMAGE_LOG:
     MAIN_LOG = "main"
     NEW_LINE, COMMA, LIST_SEPARATOR = ("\n", ", ", " <font color='#FFFF00'>|</font> ")
     PERCENT_AVG_COLOR = "percentDamageAvgColor"
-    PLAYER_DAMAGE = "playerDamage"
     RANDOM_MIN_AVG, FRONT_LINE_MIN_AVG = (1200.0, 4000.0)
     EXTENDED = "log_extended"
     REVERSE = "reverse"
@@ -197,18 +191,10 @@ class DAMAGE_LOG:
     SHELL_TYPES = "shellTypes"
     SHELL_ICONS = "shellIcons"
     SHOTS = "shots"
-    SPOTTED_TANKS = "spottedTanks"
     STUN_ICON = "stunIcon"
     TANK_LEVEL = "TankLevel"
     TANK_NAME = "tankName"
     TEMPLATE_MAIN_DMG = "templateMainDMG"
-    TOP_MACROS_NAME = {
-        FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: PLAYER_DAMAGE,
-        FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR: BLOCKED_DAMAGE,
-        FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: ASSIST_DAMAGE,
-        FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY: SPOTTED_TANKS,
-        FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ASSIST_STUN
-    }
     TOP_LOG = "log_total"
     TOTAL_DAMAGE = "totalDamage"
     UNKNOWN_TAG = "unknown"
@@ -222,8 +208,6 @@ class DAMAGE_LOG:
     WG_POS = "wg_log_pos_fix"
     UNDEFINED = "UNDEFINED"
     PREMIUM = "_PREMIUM"
-    # PREMIUM_SHELLS = ("ARMOR_PIERCING_CR_PREMIUM", "ARMOR_PIERCING_PREMIUM", "NO_HIGH_EXPLOSIVE_MODERN_PREMIUM",
-    #                   "HIGH_EXPLOSIVE_PREMIUM", "HIGH_EXPLOSIVE_MODERN_PREMIUM", "HOLLOW_CHARGE_PREMIUM")
     WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
 
 
