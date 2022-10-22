@@ -22,7 +22,6 @@ class StatisticsDataLoader(object):
         self.loaded = False
         self._load_try = 0
         self.__wtrData = WTRStatistics()
-        callback(0.0, self.setCachedStatisticData)
 
     def request(self, databaseIDS):
         result = urlResponse(self.STAT_URL.format(ids=self.SEPARATOR.join(databaseIDS), key=self.API_KEY,
@@ -36,9 +35,9 @@ class StatisticsDataLoader(object):
     def delayedLoad(self):
         if self._load_try < 20:
             self._load_try += 1
-            callback(0.5, self.setCachedStatisticData)
+            callback(0.5, self.getStatisticsDataFromServer)
 
-    def setCachedStatisticData(self):
+    def getStatisticsDataFromServer(self):
         if not self.enabled:
             return logError("Statistics are not available in your region={}. Only in {}", AUTH_REALM, REGIONS)
         arenaDP = self.sessionProvider.getArenaDP()

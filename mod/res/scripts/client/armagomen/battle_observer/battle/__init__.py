@@ -73,16 +73,15 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         listeners = [(alias, self.eventListener) for alias in self.viewAliases]
         super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = MinimapZoomPlugin()
-        self.statistics = None
-        self._iconsEnabled = viewSettings.isIconsEnabled()
+        self.statistics = StatisticsDataLoader()
+        self._iconsEnabled = False
         self._statLoadTry = 0
         self._statisticsEnabled = False
 
     def init(self):
         super(ObserverBusinessHandlerBattle, self).init()
-        if viewSettings.isWTREnabled():
-            self.statistics = StatisticsDataLoader()
-            self._statisticsEnabled = self.statistics.enabled
+        self._statisticsEnabled = viewSettings.isWTREnabled() and self.statistics.enabled
+        self._iconsEnabled = viewSettings.isIconsEnabled()
 
     def fini(self):
         self.minimapPlugin.fini()
@@ -92,22 +91,23 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
+        self._app.loaderManager.onViewLoaded += self.onViewLoaded
         components = viewSettings.setComponents()
-        if components:
+        if components or self._statisticsEnabled or self._iconsEnabled or self.minimapPlugin.enabled:
+            if self._statisticsEnabled:
+                self.statistics.getStatisticsDataFromServer()
             self._app.as_loadLibrariesS([SWF.BATTLE])
-            self._app.loaderManager.onViewLoaded += self.onViewLoaded
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
     def loadStatisticView(self, flashObject):
         if self._statisticsEnabled and not self.statistics.loaded and self._statLoadTry < 20:
             self._statLoadTry += 1
-            return callback(0.5, self.loadStatisticView, flashObject)
-        statisticsItemsData = self.statistics.itemsWTRData if self._statisticsEnabled else {}
+            return callback(1.0, self.loadStatisticView, flashObject)
         cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
         iconMultiplier = settings.statistics[STATISTICS.ICON_BLACKOUT]
-        flashObject.as_createStatisticComponent(self._iconsEnabled, statisticsItemsData, cutWidth, fullWidth,
+        flashObject.as_createStatisticComponent(self._iconsEnabled, self.statistics.itemsWTRData, cutWidth, fullWidth,
                                                 typeColors, iconMultiplier)
 
     def delayLoading(self, flashObject):
