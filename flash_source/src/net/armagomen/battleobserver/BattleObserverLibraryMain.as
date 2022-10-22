@@ -151,19 +151,19 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function(notEpicRandomBattle:Boolean):void
+			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function(isEpicRandomBattle:Boolean):void
 			{
 				var damageLogPanel:* = this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
 				if (damageLogPanel)
 				{
 					damageLogPanel.updateContainersPosition()
-					if (notEpicRandomBattle)
+					if (isEpicRandomBattle)
 					{
-						this.updateDamageLogPosition();
+						this.updateDamageLogPosition(this.epicRandomPlayersPanel.state);
 					}
 					else
 					{
-						this.updateDamageLogPosition(this.epicRandomPlayersPanel.state);
+						this.updateDamageLogPosition();
 					}
 				}
 			}

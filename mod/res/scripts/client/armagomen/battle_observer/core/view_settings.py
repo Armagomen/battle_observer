@@ -9,20 +9,19 @@ from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
-BATTLES_RANGE = {
+BATTLES_RANGE = (
+    ARENA_GUI_TYPE.COMP7,
     ARENA_GUI_TYPE.EPIC_BATTLE,
     ARENA_GUI_TYPE.EPIC_RANDOM,
     ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
     ARENA_GUI_TYPE.FORT_BATTLE_2,
-    ARENA_GUI_TYPE.FUN_RANDOM,
     ARENA_GUI_TYPE.MAPBOX,
     ARENA_GUI_TYPE.RANDOM,
     ARENA_GUI_TYPE.RANKED,
     ARENA_GUI_TYPE.SORTIE_2,
     ARENA_GUI_TYPE.TRAINING,
     ARENA_GUI_TYPE.UNKNOWN,
-    ARENA_GUI_TYPE.COMP7
-}
+)
 
 ALIASES_TO_HIDE = (
     (ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
@@ -61,9 +60,6 @@ class ViewSettings(object):
     def isRandomBattle(self):
         return self.gui.isRandomBattle() or self.gui.isMapbox()
 
-    def notEpicBattle(self):
-        return not self.gui.isInEpicRange()
-
     def notEpicRandomBattle(self):
         return not self.gui.isEpicRandomBattle()
 
@@ -84,8 +80,25 @@ class ViewSettings(object):
             return False
         return self.isStatisticsModuleEnabled() and settings.statistics[STATISTICS.ICON_ENABLED]
 
+    def isPlayersPanelsLoading(self):
+        if xvmInstalled or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle():
+            if xvmInstalled:
+                logInfo("PlayersPanels module is disabled, XVM is installed")
+            return False
+        return settings.players_panels[GLOBAL.ENABLED]
+
+    def isFlightTimeLoading(self):
+        if settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
+            return settings.flight_time[GLOBAL.ENABLED] and self.isSPG
+        return settings.flight_time[GLOBAL.ENABLED]
+
+    def isDistanceToEnemyLoading(self):
+        if self.isSPG or self.gui.isInEpicRange():
+            return False
+        return settings.distance_to_enemy[GLOBAL.ENABLED]
+
     def getSetting(self, alias):
-        if alias is ALIASES.HP_BARS and self.notEpicBattle():
+        if alias is ALIASES.HP_BARS and not self.gui.isInEpicRange():
             return settings.hp_bars[GLOBAL.ENABLED]
         elif alias is ALIASES.DAMAGE_LOG:
             return settings.log_total[GLOBAL.ENABLED] or settings.log_extended[GLOBAL.ENABLED]
@@ -102,17 +115,15 @@ class ViewSettings(object):
         elif alias is ALIASES.ARMOR_CALC:
             return settings.armor_calculator[GLOBAL.ENABLED]
         elif alias is ALIASES.FLIGHT_TIME:
-            if settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
-                return settings.flight_time[GLOBAL.ENABLED] and self.isSPG
-            return settings.flight_time[GLOBAL.ENABLED]
+            return self.isFlightTimeLoading()
         elif alias is ALIASES.DISPERSION_TIMER:
             return settings.dispersion_circle[GLOBAL.ENABLED] and settings.dispersion_circle[DISPERSION.TIMER_ENABLED]
-        elif alias is ALIASES.PANELS and not xvmInstalled and self.notEpicBattle() and self.notEpicRandomBattle():
-            return settings.players_panels[GLOBAL.ENABLED]
+        elif alias is ALIASES.PANELS:
+            return self.isPlayersPanelsLoading()
         elif alias is ALIASES.DATE_TIME:
             return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
-        elif alias is ALIASES.DISTANCE and not self.isSPG and self.notEpicBattle():
-            return settings.distance_to_enemy[GLOBAL.ENABLED]
+        elif alias is ALIASES.DISTANCE:
+            return self.isDistanceToEnemyLoading()
         elif alias is ALIASES.OWN_HEALTH:
             return settings.own_health[GLOBAL.ENABLED]
         return False

@@ -1,4 +1,3 @@
-from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, STATISTICS, VEHICLE_TYPES, ALIASES
@@ -69,6 +68,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
 
     def __init__(self):
         from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
+        from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
         self.viewAliases = viewSettings.getViewAliases()
         listeners = [(alias, self.eventListener) for alias in self.viewAliases]
         super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
@@ -117,7 +117,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             self.minimapPlugin.init(flashObject)
         if self._iconsEnabled or self._statisticsEnabled:
             self.loadStatisticView(flashObject)
-        callback(20.0, flashObject.as_observerUpdateDamageLogPosition, viewSettings.notEpicRandomBattle())
+        callback(20.0, flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
 
     def onViewLoaded(self, view, *args):
         alias = view.getAlias()
