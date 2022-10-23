@@ -1,6 +1,6 @@
 from collections import defaultdict, namedtuple
 
-from armagomen.battle_observer.core import viewSettings
+from armagomen.battle_observer.core import cachedVehicleData
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES, COLORS
 from armagomen.utils.common import logDebug, percentToRGB, getPercent
@@ -127,8 +127,8 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
 
     def updateAvgDamage(self):
         """Sets the average damage to the selected tank"""
-        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = viewSettings.logAvgData.damage
-        self.top_log[DAMAGE_LOG.AVG_ASSIST] = viewSettings.logAvgData.assist
+        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = cachedVehicleData.efficiencyAvgData.damage
+        self.top_log[DAMAGE_LOG.AVG_ASSIST] = cachedVehicleData.efficiencyAvgData.assist
 
     def onLogsAltMode(self, isKeyDown):
         """Hot key event"""
@@ -175,8 +175,10 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         """update global sums in log"""
         damage = self.top_log[_EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY]]
         assist = self.top_log[_EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY]]
-        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.getAVGColor(getPercent(damage, viewSettings.logAvgData.damage))
-        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = self.getAVGColor(getPercent(assist, viewSettings.logAvgData.assist))
+        avgDamage = cachedVehicleData.efficiencyAvgData.damage
+        avgAssist = cachedVehicleData.efficiencyAvgData.assist
+        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.getAVGColor(getPercent(damage, avgDamage))
+        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = self.getAVGColor(getPercent(assist, avgAssist))
         self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     def onVehicleUpdated(self, vehicleID, *args, **kwargs):

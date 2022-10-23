@@ -1,8 +1,10 @@
+from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCachedData
 from armagomen.battle_observer.core.view_settings import ViewSettings, registerBattleObserverPackages
 from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
     cleanupObserverUpdates
 
-viewSettings = ViewSettings()
+cachedVehicleData = CurrentVehicleCachedData()
+viewSettings = ViewSettings(cachedVehicleData)
 componentsLoader = None
 hangarSettings = None
 
@@ -40,6 +42,7 @@ def startLoadingMod(modVersion):
 
 def onInit(modVersion):
     logInfo('MOD START LOADING: v{} - {}'.format(modVersion, gameVersion))
+    cachedVehicleData.init()
     errorMessage = startLoadingMod(modVersion)
     if errorMessage:
         from armagomen.battle_observer.core.loading_error import LoadingError
@@ -47,6 +50,7 @@ def onInit(modVersion):
 
 
 def onFini(modVersion):
+    cachedVehicleData.fini()
     clearClientCache()
     cleanupObserverUpdates()
     cleanupUpdates()

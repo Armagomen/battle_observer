@@ -1,11 +1,7 @@
-import math
-from collections import namedtuple
-
-from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
-from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug, logError
-from constants import ARENA_GUI_TYPE, ROLE_TYPE
+from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
+from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
@@ -54,42 +50,13 @@ def registerBattleObserverPackages():
         g_overrideScaleFormViewsConfig.battlePackages[guiType].extend(SWF.BATTLE_PACKAGES)
 
 
-TopLogAVG = namedtuple("TopLogAVG", ("damage", "assist"))
-
-
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
-    def __init__(self):
-        self.isSPG = False
+    def __init__(self, cachedVehicleData):
+        self.vehicleData = cachedVehicleData
         self.__components = set()
         self.__hiddenComponents = set()
-        self.__logsAVGData = TopLogAVG(GLOBAL.ZERO, GLOBAL.ZERO)
-        g_currentVehicle.onChanged += self.onVehicleChanged
-
-    def onVehicleChanged(self):
-        self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
-        damage = 0
-        assist = 0
-        try:
-            dossier = g_currentVehicle.getDossier()
-            if dossier:
-                random = dossier.getRandomStats()
-                d_damage = random.getAvgDamage()
-                d_assist = random.getDamageAssistedEfficiency()
-                if d_damage is not None:
-                    damage = int(math.floor(d_damage))
-                if d_assist is not None:
-                    assist = int(math.floor(d_assist))
-        except Exception as error:
-            logError(repr(error))
-        finally:
-            self.__logsAVGData = TopLogAVG(damage, assist)
-            logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
-
-    @property
-    def logAvgData(self):
-        return self.__logsAVGData
 
     @property
     def gui(self):
@@ -124,11 +91,11 @@ class ViewSettings(object):
 
     def isFlightTimeEnabled(self):
         if settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
-            return settings.flight_time[GLOBAL.ENABLED] and self.isSPG
+            return settings.flight_time[GLOBAL.ENABLED] and self.vehicleData.isSPG
         return settings.flight_time[GLOBAL.ENABLED]
 
     def isDistanceToEnemyEnabled(self):
-        if self.isSPG or self.gui.isInEpicRange():
+        if self.vehicleData.isSPG or self.gui.isInEpicRange():
             return False
         return settings.distance_to_enemy[GLOBAL.ENABLED]
 
