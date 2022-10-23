@@ -88,9 +88,6 @@ class ViewSettings(object):
     def isRandomBattle(self):
         return self.gui.isRandomBattle() or self.gui.isMapbox()
 
-    def notEpicRandomBattle(self):
-        return not self.gui.isEpicRandomBattle()
-
     def isStatisticsModuleEnabled(self):
         if self.gui.isComp7Battle() or self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
             return False
