@@ -8,7 +8,9 @@ from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.Scaleform.daapi.view.meta.LobbyHeaderMeta import LobbyHeaderMeta
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
+from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
+from gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
@@ -64,6 +66,12 @@ def createPlugins(base, *args, **kwargs):
 def playStunSoundIfNeed(base, *args, **kwargs):
     if not settings.main[MAIN.STUN_SOUND]:
         return base(*args, **kwargs)
+
+
+@overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
+def _onVehicleStateUpdated(base, eq, state, value):
+    if not settings.main[MAIN.STUN_SOUND] and state != VEHICLE_VIEW_STATE.STUN:
+        return base(eq, state, value)
 
 
 # hide shared chat button
