@@ -71,11 +71,11 @@ class ViewSettings(object):
                     damage = int(math.floor(d_damage))
                 if d_assist is not None:
                     assist = int(math.floor(d_assist))
-                logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
         except Exception as error:
             logError(repr(error))
         finally:
             self.__logsAVGData = TopLogAVG(damage, assist)
+            logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
 
     @property
     def logAvgData(self):
@@ -108,19 +108,19 @@ class ViewSettings(object):
             return False
         return self.isStatisticsModuleEnabled() and settings.statistics[STATISTICS.ICON_ENABLED]
 
-    def isPlayersPanelsLoading(self):
+    def isPlayersPanelsEnabled(self):
         if xvmInstalled or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle():
             if xvmInstalled:
                 logInfo("PlayersPanels module is disabled, XVM is installed")
             return False
         return settings.players_panels[GLOBAL.ENABLED]
 
-    def isFlightTimeLoading(self):
+    def isFlightTimeEnabled(self):
         if settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
             return settings.flight_time[GLOBAL.ENABLED] and self.isSPG
         return settings.flight_time[GLOBAL.ENABLED]
 
-    def isDistanceToEnemyLoading(self):
+    def isDistanceToEnemyEnabled(self):
         if self.isSPG or self.gui.isInEpicRange():
             return False
         return settings.distance_to_enemy[GLOBAL.ENABLED]
@@ -143,15 +143,15 @@ class ViewSettings(object):
         elif alias is ALIASES.ARMOR_CALC:
             return settings.armor_calculator[GLOBAL.ENABLED]
         elif alias is ALIASES.FLIGHT_TIME:
-            return self.isFlightTimeLoading()
+            return self.isFlightTimeEnabled()
         elif alias is ALIASES.DISPERSION_TIMER:
             return settings.dispersion_circle[GLOBAL.ENABLED] and settings.dispersion_circle[DISPERSION.TIMER_ENABLED]
         elif alias is ALIASES.PANELS:
-            return self.isPlayersPanelsLoading()
+            return self.isPlayersPanelsEnabled()
         elif alias is ALIASES.DATE_TIME:
             return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is ALIASES.DISTANCE:
-            return self.isDistanceToEnemyLoading()
+            return self.isDistanceToEnemyEnabled()
         elif alias is ALIASES.OWN_HEALTH:
             return settings.own_health[GLOBAL.ENABLED]
         return False
