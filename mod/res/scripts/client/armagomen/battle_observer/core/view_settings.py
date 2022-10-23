@@ -1,7 +1,10 @@
+import math
+from collections import namedtuple
+
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
-from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
+from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug, logError
 from constants import ARENA_GUI_TYPE, ROLE_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
@@ -42,6 +45,9 @@ def registerBattleObserverPackages():
         g_overrideScaleFormViewsConfig.battlePackages[guiType].extend(SWF.BATTLE_PACKAGES)
 
 
+TopLogAVG = namedtuple("TopLogAVG", ("damage", "assist"))
+
+
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
@@ -49,10 +55,31 @@ class ViewSettings(object):
         self.isSPG = False
         self.__components = set()
         self.__hiddenComponents = set()
+        self.__logsAVGData = TopLogAVG(GLOBAL.ZERO, GLOBAL.ZERO)
         g_currentVehicle.onChanged += self.onVehicleChanged
 
     def onVehicleChanged(self):
         self.isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
+        damage = 0
+        assist = 0
+        try:
+            dossier = g_currentVehicle.getDossier()
+            if dossier:
+                d_damage = dossier.getRandomStats().getAvgDamage()
+                d_assist = dossier.getRandomStats().getDamageAssistedEfficiencyWithStan()
+                if d_damage is not None:
+                    damage = int(math.floor(d_damage))
+                if d_assist is not None:
+                    assist = int(math.floor(d_assist))
+                logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
+        except Exception as error:
+            logError(repr(error))
+        finally:
+            self.__logsAVGData = TopLogAVG(damage, assist)
+
+    @property
+    def logAvgData(self):
+        return self.__logsAVGData
 
     @property
     def gui(self):

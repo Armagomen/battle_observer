@@ -1,5 +1,6 @@
 from collections import defaultdict, namedtuple
 
+from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES, COLORS
 from armagomen.utils.common import logDebug, percentToRGB, getPercent
@@ -69,7 +70,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
             self.__maxHealth = vehicle.descriptor.maxHealth
 
     def __onVehicleControlling(self, vehicle):
-        if self.isPostmortemSwitched():
+        if self.isPostmortemSwitchedToAnotherVehicle():
             return
         if self.__maxHealth != vehicle.maxHealth:
             self.__maxHealth = vehicle.maxHealth
@@ -126,11 +127,8 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
 
     def updateAvgDamage(self):
         """Sets the average damage to the selected tank"""
-        if self._player is not None and not DAMAGE_LOG.AVG_DAMAGE_DATA:
-            max_health = self._player.vehicle.typeDescriptor.maxHealth
-            DAMAGE_LOG.AVG_DAMAGE_DATA = max(DAMAGE_LOG.RANDOM_MIN_AVG, max_health)
-        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = DAMAGE_LOG.AVG_DAMAGE_DATA
-        self.top_log[DAMAGE_LOG.AVG_ASSIST] = DAMAGE_LOG.AVG_ASSIST_DATA
+        self.top_log[DAMAGE_LOG.AVG_DAMAGE] = viewSettings.logAvgData.damage
+        self.top_log[DAMAGE_LOG.AVG_ASSIST] = viewSettings.logAvgData.assist
 
     def onLogsAltMode(self, isKeyDown):
         """Hot key event"""
@@ -159,14 +157,13 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
             return event.getCount()
         return extra.getDamage()
 
-    def isPostmortemSwitched(self):
+    def isPostmortemSwitchedToAnotherVehicle(self):
         observedVehID = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
-        playerVehicleID = self._arenaDP.getPlayerVehicleID()
-        return playerVehicleID != observedVehID
+        return self._player.playerVehicleID != observedVehID
 
     def __onPlayerFeedbackReceived(self, events):
         """Shared feedback player events"""
-        if self.isPostmortemSwitched():
+        if self.isPostmortemSwitchedToAnotherVehicle():
             return
         for event in events:
             self.parseEvent(event)
@@ -178,8 +175,8 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         """update global sums in log"""
         damage = self.top_log[_EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY]]
         assist = self.top_log[_EVENT_TO_TOP_LOG_MACROS[FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY]]
-        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.getAVGColor(getPercent(damage, DAMAGE_LOG.AVG_DAMAGE_DATA))
-        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = self.getAVGColor(getPercent(assist, DAMAGE_LOG.AVG_ASSIST_DATA))
+        self.top_log[DAMAGE_LOG.DAMAGE_AVG_COLOR] = self.getAVGColor(getPercent(damage, viewSettings.logAvgData.damage))
+        self.top_log[DAMAGE_LOG.ASSIST_AVG_COLOR] = self.getAVGColor(getPercent(assist, viewSettings.logAvgData.assist))
         self.as_updateDamageS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     def onVehicleUpdated(self, vehicleID, *args, **kwargs):

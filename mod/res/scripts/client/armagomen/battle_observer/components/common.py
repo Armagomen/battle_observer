@@ -1,11 +1,7 @@
-import math
-
-from CurrentVehicle import g_currentVehicle
-from PlayerEvents import g_playerEvents
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import MAIN, GLOBAL, DAMAGE_LOG
-from armagomen.utils.common import overrideMethod, setMaxFrameRate, logDebug, callback, logError
+from armagomen.constants import MAIN
+from armagomen.utils.common import overrideMethod, setMaxFrameRate, callback
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
@@ -104,25 +100,4 @@ def onModSettingsChanged(_settings, blockID):
             msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
 
 
-def onArenaCreated():
-    if settings.log_total[GLOBAL.ENABLED]:
-        DAMAGE_LOG.AVG_DAMAGE_DATA = GLOBAL.ZERO
-        DAMAGE_LOG.AVG_ASSIST_DATA = GLOBAL.ZERO
-        try:
-            dossier = g_currentVehicle.getDossier()
-            if dossier:
-                damage = dossier.getRandomStats().getAvgDamage()
-                assist = dossier.getRandomStats().getDamageAssistedEfficiencyWithStan()
-                if damage is not None:
-                    damage = int(math.floor(damage))
-                    DAMAGE_LOG.AVG_DAMAGE_DATA = damage
-                if assist is not None:
-                    assist = int(math.floor(assist))
-                    DAMAGE_LOG.AVG_ASSIST_DATA = assist
-                logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
-        except Exception as error:
-            logError(repr(error))
-
-
-g_playerEvents.onArenaCreated += onArenaCreated
 settings.onModSettingsChanged += onModSettingsChanged

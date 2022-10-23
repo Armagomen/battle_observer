@@ -158,8 +158,6 @@ class DAMAGE_LOG:
     ATTACK_REASON = "attackReason"
     AVG_DAMAGE = "tankAvgDamage"
     AVG_ASSIST = "tankAvgAssist"
-    AVG_DAMAGE_DATA = GLOBAL.ZERO
-    AVG_ASSIST_DATA = GLOBAL.ZERO
     CLASS_COLOR = "tankClassColor"
     CLASS_ICON = "classIcon"
     DAMAGE_AVG_COLOR = "tankDamageAvgColor"
