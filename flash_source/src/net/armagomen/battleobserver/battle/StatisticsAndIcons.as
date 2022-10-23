@@ -14,6 +14,7 @@ package net.armagomen.battleobserver.battle
 		private var battleLoading:*                 = null;
 		private var fullStats:*                     = null;
 		private var panels:*                        = null;
+		private var alis:String						= null;
 		
 		private var iconColors:Object               = {};
 		private var statisticsData:Object           = null;
@@ -22,12 +23,14 @@ package net.armagomen.battleobserver.battle
 		private var cutWidth:Number                 = 60.0;
 		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
+		private static const COMP_7_BATTLE:String	= "comp7BattlePage";
 		
 		public function StatisticsAndIcons(battlePage:*, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
 		{
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
 			this.panels = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
+			this.alis = battlePage.getAlias();
 			this.setIconColors(typeColors);
 			this.iconMultiplier = iconMultiplier;
 			this.statisticsData = statsData;
@@ -126,14 +129,7 @@ package net.armagomen.battleobserver.battle
 				
 				if (this.battleLoading && this.battleLoading.visible)
 				{
-					try 
-					{
-						this.updateBattleloading(vehicleID, isEnemy);
-					}
-					catch (err:Error)
-					{
-						
-					}
+					this.updateBattleloading(vehicleID, isEnemy);
 				}
 			}
 		}
@@ -178,7 +174,7 @@ package net.armagomen.battleobserver.battle
 			{
 				return;
 			}
-			if (this.iconsEnabled && holder.model)
+			if (this.alis != COMP_7_BATTLE && this.iconsEnabled && holder.model)
 			{
 				var tColor:ColorTransform = holder._vehicleIcon.transform.colorTransform;
 				tColor.color = this.iconColors[holder.model.vehicleType];
@@ -191,7 +187,7 @@ package net.armagomen.battleobserver.battle
 				{
 					holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
 				}
-				if (this.statisticsData[vehicleID].vehicleTextColor)
+				if (this.alis != COMP_7_BATTLE && this.statisticsData[vehicleID].vehicleTextColor)
 				{
 					holder._vehicleField.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
 				}

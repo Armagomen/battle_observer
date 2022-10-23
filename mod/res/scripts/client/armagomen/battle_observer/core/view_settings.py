@@ -65,8 +65,9 @@ class ViewSettings(object):
         try:
             dossier = g_currentVehicle.getDossier()
             if dossier:
-                d_damage = dossier.getRandomStats().getAvgDamage()
-                d_assist = dossier.getRandomStats().getDamageAssistedEfficiencyWithStan()
+                random = dossier.getRandomStats()
+                d_damage = random.getAvgDamage()
+                d_assist = random.getDamageAssistedEfficiency()
                 if d_damage is not None:
                     damage = int(math.floor(d_damage))
                 if d_assist is not None:
@@ -89,7 +90,7 @@ class ViewSettings(object):
         return self.gui.isRandomBattle() or self.gui.isMapbox()
 
     def isStatisticsModuleEnabled(self):
-        if self.gui.isComp7Battle() or self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
+        if self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
             return False
         return settings.statistics[GLOBAL.ENABLED]
 
