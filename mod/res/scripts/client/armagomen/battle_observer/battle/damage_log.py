@@ -8,7 +8,6 @@ from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
-from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
 from helpers import i18n
 
 _SHELL_TYPES_TO_STR = {
@@ -42,7 +41,7 @@ def isShellGold(shell):
     return DAMAGE_LOG.PREMIUM in shell.iconName
 
 
-class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
+class DamageLog(DamageLogsMeta):
 
     def __init__(self):
         super(DamageLog, self).__init__()
@@ -50,7 +49,6 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         self.__input_log = None
         self.__isExtended = False
         self.__isKeyDown = GLOBAL.ZERO
-        self.__maxHealth = GLOBAL.ZERO
         self.top_log = None
         self.top_log_enabled = False
         self.vehicle_colors = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][VEHICLE_TYPES.UNKNOWN],
@@ -73,16 +71,6 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         if self.__isExtended:
             self.as_createExtendedLogsS(self.settings.log_extended[GLOBAL.SETTINGS])
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
-
-    def updateVehicleParams(self, vehicle, *args):
-        if self.__maxHealth != vehicle.descriptor.maxHealth:
-            self.__maxHealth = vehicle.descriptor.maxHealth
-
-    def __onVehicleControlling(self, vehicle):
-        if self.isPostmortemSwitchedToAnotherVehicle():
-            return
-        if self.__maxHealth != vehicle.maxHealth:
-            self.__maxHealth = vehicle.maxHealth
 
     def isExtendedLogEventEnabled(self, eventType):
         return self.__isExtended and eventType in EXTENDED_FEEDBACK
@@ -111,9 +99,6 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
                     arena.onVehicleKilled += self.onVehicleKilled
             if self.top_log_enabled:
                 self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
-        ctrl = self.sessionProvider.shared.vehicleState
-        if ctrl is not None:
-            ctrl.onVehicleControlling += self.__onVehicleControlling
 
     def onExitBattlePage(self):
         feedback = self.sessionProvider.shared.feedback
@@ -126,9 +111,6 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
                     arena.onVehicleKilled -= self.onVehicleKilled
             if self.top_log_enabled:
                 self.top_log.clear()
-        ctrl = self.sessionProvider.shared.vehicleState
-        if ctrl is not None:
-            ctrl.onVehicleControlling -= self.__onVehicleControlling
         super(DamageLog, self).onExitBattlePage()
 
     def onLogsAltMode(self, isKeyDown):
@@ -160,7 +142,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         if e_type in AVG_COLOR_EVENTS:
             value = self.top_log[_EVENT_TO_TOP_LOG_MACROS[e_type]]
             macros, avgValue = self.eventToEfficiencyAvgData(e_type)
-            self.top_log[macros] = self.getAVGColor(getPercent(value * 0.8, avgValue))
+            self.top_log[macros] = self.getAVGColor(getPercent(value, avgValue))
         self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     @staticmethod
@@ -225,11 +207,14 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         if extra.isShot():
             shell_name, gold = self.checkPlayerShell() if log_data.is_player else self.checkShell(extra)
         else:
-            shell_name, gold = GLOBAL.EMPTY_LINE, False
+            shell_name, gold = DAMAGE_LOG.NOT_SHELL, False
         logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, log_data.is_player)
         vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         vehicleInfoVO = self._arenaDP.getVehicleInfo(target_id)
-        maxHealth = vehicleInfoVO.vehicleType.maxHealth if log_data.is_player else self.__maxHealth
+        if log_data.is_player:
+            maxHealth = vehicleInfoVO.vehicleType.maxHealth
+        else:
+            maxHealth = self._arenaDP.getVehicleInfo().vehicleType.maxHealth
         if not vehicle:
             self.createVehicle(vehicleInfoVO, vehicle, logLen=len(log_data.id_list))
         self.updateVehicleData(extra, gold, shell_name, vehicle, maxHealth)
@@ -246,7 +231,7 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         vehicle[DAMAGE_LOG.SHELL_TYPE] = shell_name
         vehicle[DAMAGE_LOG.SHELL_COLOR] = self.settings.log_extended[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
-        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.getAVGColor(percent)
+        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.getAVGColor(1.0 - percent)
 
     def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=1):
         if not update:

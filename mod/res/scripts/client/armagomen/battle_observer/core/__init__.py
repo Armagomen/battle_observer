@@ -4,7 +4,7 @@ from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates
     cleanupObserverUpdates
 
 cachedVehicleData = CurrentVehicleCachedData()
-viewSettings = ViewSettings(cachedVehicleData)
+viewSettings = ViewSettings()
 componentsLoader = None
 hangarSettings = None
 

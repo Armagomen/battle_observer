@@ -7,6 +7,7 @@ from armagomen.utils.common import logError, logDebug
 from constants import ROLE_TYPE
 
 EfficiencyAVGData = namedtuple("EfficiencyAVGData", ("damage", "assist"))
+DEBUG_STRING = "set vehicle cache: name={} avgDamage={}, avgAssist={}, isSPG={}"
 
 
 class CurrentVehicleCachedData(object):
@@ -40,7 +41,7 @@ class CurrentVehicleCachedData(object):
             logError(repr(error))
         finally:
             self.__EfficiencyAVGData = EfficiencyAVGData(damage, assist)
-        logDebug("set vehicle efficiency {} avgDamage={}, avgAssist={}", g_currentVehicle.item.userName, damage, assist)
+        logDebug(DEBUG_STRING, g_currentVehicle.item.userName, damage, assist, self.__isSPG)
 
     @property
     def efficiencyAvgData(self):

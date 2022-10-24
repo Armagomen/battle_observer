@@ -201,6 +201,7 @@ class DAMAGE_LOG:
     WG_CRITICS = "wg_log_hide_critics"
     WG_POS = "wg_log_pos_fix"
     UNDEFINED = "UNDEFINED"
+    NOT_SHELL = "--"
     PREMIUM = "_PREMIUM"
     WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
 

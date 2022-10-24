@@ -53,14 +53,16 @@ def registerBattleObserverPackages():
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
-    def __init__(self, cachedVehicleData):
-        self.vehicleData = cachedVehicleData
+    def __init__(self):
         self.__components = set()
         self.__hiddenComponents = set()
 
     @property
     def gui(self):
         return self.sessionProvider.arenaVisitor.gui
+
+    def isSPG(self):
+        return self.sessionProvider.getArenaDP().getVehicleInfo().isSPG()
 
     def isRandomBattle(self):
         return self.gui.isRandomBattle() or self.gui.isMapbox()
@@ -91,11 +93,11 @@ class ViewSettings(object):
 
     def isFlightTimeEnabled(self):
         if settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
-            return settings.flight_time[GLOBAL.ENABLED] and self.vehicleData.isSPG
+            return settings.flight_time[GLOBAL.ENABLED] and self.isSPG()
         return settings.flight_time[GLOBAL.ENABLED]
 
     def isDistanceToEnemyEnabled(self):
-        if self.vehicleData.isSPG or self.gui.isInEpicRange():
+        if self.isSPG() or self.gui.isInEpicRange():
             return False
         return settings.distance_to_enemy[GLOBAL.ENABLED]
 
@@ -174,8 +176,6 @@ class ViewSettings(object):
         elif BATTLE_VIEW_ALIASES.DAMAGE_PANEL in new_aliases:
             if ALIASES.OWN_HEALTH in self.__components:
                 new_aliases.append(ALIASES.OWN_HEALTH)
-            if ALIASES.DAMAGE_LOG in self.__components:
-                new_aliases.append(ALIASES.DAMAGE_LOG)
         elif ALIASES.DEBUG in self.__components and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
             new_aliases.remove(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
             new_aliases.append(ALIASES.DEBUG)
