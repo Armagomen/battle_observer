@@ -205,9 +205,8 @@ localization = {
                             "module bypassing main armor. Caterpillar no damage, wheel no damage, and so on.</li>"
                             "<li>%(color)s - color (see color setting).</li>"
     },
-    "log_global": {
-        "header": "GENERAL LOG SETTINGS",
-        "logsAltMode_hotkey": "Key switch logs in the alternate mode",
+    "wg_logs": {
+        "header": "WG LOG SETTINGS",
         "wg_log_hide_assist": "Hide damage intelligence",
         "wg_log_hide_assist_tooltip": "Removes the damage from intelligence detailed log WG",
         "wg_log_hide_block": "Hide blocked damage",
@@ -227,8 +226,9 @@ localization = {
         "mainLogScale": "Scaling functions."
     },
     "log_extended": {
-        "header": "DETAILED LOG OF THE DAMAGE RECEIVED",
+        "header": "DETAILED LOG OF THE DAMAGE",
         "log_extended_shellColor*normal": "configure macro %(shellColor)s - Silver",
+        "logsAltMode_hotkey": "Key switch logs in the alternate mode",
         "settings*x": "Position detailed log Horizontal",
         "settings*x_tooltip": "Relatively damage panel.",
         "settings*y": "Position detailed log Vertical",

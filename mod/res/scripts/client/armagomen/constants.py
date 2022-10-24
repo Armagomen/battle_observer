@@ -165,7 +165,7 @@ class DAMAGE_LOG:
     DAMAGE_LIST = "damageList"
     D_LOG = "d_log"
     IN_LOG = "in_log"
-    GLOBAL = "log_global"
+    GLOBAL = "wg_logs"
     HOT_KEY = "logsAltMode_hotkey"
     ICONS = "icons"
     ICON_NAME = "iconName"

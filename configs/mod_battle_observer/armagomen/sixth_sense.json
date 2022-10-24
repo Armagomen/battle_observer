@@ -12,7 +12,7 @@
   "playTickSound": true, 
   "showTimer": true, 
   "timer": {
-    "TimerTemplate": "<font size='34' color='#fafafa'><b>%(timeLeft)d</b></font>", 
+    "TimerTemplate": "<font size='40' color='#fafafa'><b>%(timeLeft)d</b></font>", 
     "alpha": 1.0, 
     "x": -1, 
     "y": 125

@@ -17,7 +17,9 @@ def setSettings(base, panel, vis, cb):
 
 @overrideMethod(_LogViewComponent, "addToLog")
 def addToLog(base, component, event):
-    return base(component, [e for e in event if not validated.get(e.getType(), False)])
+    if settings.wg_logs[GLOBAL.ENABLED]:
+        return base(component, [e for e in event if not validated.get(e.getType(), False)])
+    return base(component, event)
 
 
 def onModSettingsChanged(config, blockID):

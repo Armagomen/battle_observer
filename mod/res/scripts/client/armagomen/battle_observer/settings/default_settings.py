@@ -221,22 +221,13 @@ class DefaultSettings(object):
                 COLORS.C_PURPLE: COLORS.BLIND
             }
         }
-        self.log_global = {
+        self.wg_logs = {
+            GLOBAL.ENABLED: False,
             DAMAGE_LOG.WG_POS: False,
             DAMAGE_LOG.WG_CRITICS: False,
             DAMAGE_LOG.WG_BLOCKED: False,
             DAMAGE_LOG.WG_ASSIST: False,
-            DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
-            DAMAGE_LOG.ATTACK_REASON: defaultdict(lambda: "", {
-                ATTACK_REASON.SHOT: "<img src='{dir}/damage.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
-                ATTACK_REASON.FIRE: "<img src='{dir}/fire.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
-                ATTACK_REASON.RAM: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
-                ATTACK_REASON.WORLD_COLLISION: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS)
-            })
         }
-        additional = {reason: "<img src='{dir}/module.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS) for reason
-                      in ATTACK_REASONS if reason not in self.log_global[DAMAGE_LOG.ATTACK_REASON]}
-        self.log_global[DAMAGE_LOG.ATTACK_REASON].update(additional)
         self.log_total = {
             GLOBAL.ENABLED: False,
             GLOBAL.SETTINGS: {
@@ -262,7 +253,7 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
             GLOBAL.SETTINGS: {
-                GLOBAL.X: 10,
+                GLOBAL.X: 0,
                 GLOBAL.Y: 0,
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
             },
@@ -291,8 +282,20 @@ class DefaultSettings(object):
                 DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
+            DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
+            DAMAGE_LOG.ATTACK_REASON: defaultdict(lambda: "", {
+                ATTACK_REASON.SHOT: "<img src='{dir}/damage.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
+                ATTACK_REASON.FIRE: "<img src='{dir}/fire.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
+                ATTACK_REASON.RAM: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
+                ATTACK_REASON.WORLD_COLLISION: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS)
+            }),
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
+        additional = {reason: "<img src='{dir}/module.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS) for reason
+                      in ATTACK_REASONS if reason not in self.log_extended[DAMAGE_LOG.ATTACK_REASON]}
+        self.log_extended[DAMAGE_LOG.ATTACK_REASON].update(additional)
+        _logs = namedtuple('Logs', ('log_total', 'log_extended'))
+        self.damage_log = _logs(self.log_total, self.log_extended)
         self.hp_bars = {
             GLOBAL.ENABLED: True,
             HP_BARS.STYLE: HP_BARS.STYLES.league,
@@ -445,8 +448,6 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
-        _logs = namedtuple('Logs', ('log_total', 'log_extended', 'log_global'))
-        self.damage_log = _logs(self.log_total, self.log_extended, self.log_global)
         self.statistics = {
             GLOBAL.ENABLED: False,
             STATISTICS.STATISTIC_ENABLED: False,
