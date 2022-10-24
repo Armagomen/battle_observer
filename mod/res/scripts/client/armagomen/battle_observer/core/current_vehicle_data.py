@@ -38,7 +38,7 @@ class CurrentVehicleCachedData(object):
             logError(repr(error))
         finally:
             self.__EfficiencyAVGData = EfficiencyAVGData(damage, assist)
-            logDebug("set vehicle efficiency (avgDamage: {}, avgAssist: {})", damage, assist)
+        logDebug("set vehicle efficiency {} avgDamage={}, avgAssist={}", g_currentVehicle.item.userName, damage, assist)
 
     @property
     def efficiencyAvgData(self):
