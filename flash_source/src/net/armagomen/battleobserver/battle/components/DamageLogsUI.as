@@ -13,7 +13,7 @@ package net.armagomen.battleobserver.battle.components
 		private var damageLogPanel:*         = null;
 		private var d_log:TextExt            = null;
 		private var in_log:TextExt           = null;
-		private var mainlog:TextExt          = null;
+		private var top_log:TextExt          = null;
 		private const IN_LOG:String          = "in_log";
 		private const D_LOG:String           = "d_log";
 		
@@ -29,44 +29,39 @@ package net.armagomen.battleobserver.battle.components
 			this.removeChildren();
 			this.d_log = null;
 			this.in_log = null;
-			this.mainlog = null;
+			this.top_log = null;
 		}
 		
-		public function as_startUpdate(logTotal:Object, logExtended:Object):void
+		public function as_createTopLog(settings:Object):void
 		{
-			if (logTotal.enabled)
+			this.top_log_inCenter = settings.inCenter;
+			this.x = !this.top_log_inCenter ? 0 : Math.ceil(App.appWidth >> 1);
+			this.top_log = new TextExt(settings.x, settings.y, Filters.largeText, settings.align, getShadowSettings(), this);
+		}
+		
+		public function as_createExtendedLogs(settings:Object):void
+		{
+			if (this.damageLogPanel)
 			{
-				this.top_log_inCenter = logTotal.settings.inCenter;
-				this.x = !this.top_log_inCenter ? 0 : Math.ceil(App.appWidth >> 1);
-				this.mainlog = new TextExt(logTotal.settings.x, logTotal.settings.y, Filters.largeText, logTotal.settings.align, getShadowSettings(), this);
-			}
-			if (logExtended.enabled)
-			{
-				if (this.damageLogPanel)
-				{
-					var topContainer:* = this.damageLogPanel._detailsTopContainer;
-					this.d_log = new TextExt(logExtended.settings.x + 35, logExtended.settings.y, null, logExtended.settings.align, getShadowSettings(), topContainer);
-					var bottomContainer:* = this.damageLogPanel._detailsBottomContainer;
-					this.in_log = new TextExt(logExtended.settings.x + 20, -45 + logExtended.settings.y, null, logExtended.settings.align, getShadowSettings(), bottomContainer);
-				}
+				var topContainer:* = this.damageLogPanel._detailsTopContainer;
+				this.d_log = new TextExt(settings.x + 35, settings.y, null, settings.align, getShadowSettings(), topContainer);
+				var bottomContainer:* = this.damageLogPanel._detailsBottomContainer;
+				this.in_log = new TextExt(settings.x + 20, -45 + settings.y, null, settings.align, getShadowSettings(), bottomContainer);
 			}
 		}
 		
 		public function as_updateDamage(text:String):void
 		{
-			if (this.mainlog)
-			{
-				this.mainlog.htmlText = text;
-			}
+			this.top_log.htmlText = text;
 		}
 		
 		public function as_updateLog(target:String, text:String):void
 		{
-			if (target == D_LOG && this.d_log)
+			if (target == D_LOG)
 			{
 				this.d_log.htmlText = text;
 			}
-			else if (target == IN_LOG && this.in_log)
+			else if (target == IN_LOG)
 			{
 				this.in_log.htmlText = text;
 			}
@@ -74,7 +69,7 @@ package net.armagomen.battleobserver.battle.components
 		
 		override public function onResizeHandle(event:Event):void
 		{
-			if (this.mainlog && this.top_log_inCenter)
+			if (this.top_log && this.top_log_inCenter)
 			{
 				this.x = Math.ceil(App.appWidth >> 1);
 			}

@@ -11,3 +11,9 @@ class DamageLogsMeta(BaseModMeta):
 
     def as_updateDamageS(self, text):
         return self.flashObject.as_updateDamage(text) if self._isDAAPIInited() else None
+
+    def as_createTopLogS(self, settings):
+        return self.flashObject.as_createTopLog(settings) if self._isDAAPIInited() else None
+
+    def as_createExtendedLogsS(self, settings):
+        return self.flashObject.as_createExtendedLogs(settings) if self._isDAAPIInited() else None

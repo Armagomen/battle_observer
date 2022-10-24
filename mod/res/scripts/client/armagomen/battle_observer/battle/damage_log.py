@@ -60,10 +60,12 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
     def _populate(self):
         super(DamageLog, self)._populate()
         self.top_log = defaultdict(int, **self.settings.log_total[DAMAGE_LOG.ICONS])
-        self.as_startUpdateS(self.settings.log_total, self.settings.log_extended)
         self.top_log_enabled = self.settings.log_total[GLOBAL.ENABLED]
+        if self.top_log_enabled:
+            self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
         self.__isExtended = self.settings.log_extended[GLOBAL.ENABLED]
         if self.__isExtended:
+            self.as_createExtendedLogsS(self.settings.log_extended[GLOBAL.SETTINGS])
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
 
     def updateVehicleParams(self, vehicle, *args):
@@ -76,10 +78,10 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         if self.__maxHealth != vehicle.maxHealth:
             self.__maxHealth = vehicle.maxHealth
 
-    def isExtendedLogEnabled(self, eventType):
+    def isExtendedLogEventEnabled(self, eventType):
         return self.__isExtended and eventType in EXTENDED_FEEDBACK
 
-    def isTopLogEnabled(self, eventType):
+    def isTopLogEventEnabled(self, eventType):
         return self.top_log_enabled and eventType in _EVENT_TO_TOP_LOG_MACROS
 
     def getLogData(self, eventType):
@@ -141,9 +143,9 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         """wg Feedback event parser"""
         e_type = event.getType()
         extra = event.getExtra()
-        if self.isTopLogEnabled(e_type):
+        if self.isTopLogEventEnabled(e_type):
             self.addToTopLog(e_type, event, extra)
-        if self.isExtendedLogEnabled(e_type):
+        if self.isExtendedLogEventEnabled(e_type):
             self.addToExtendedLog(e_type, event.getTargetID(), extra)
 
     def addToTopLog(self, e_type, event, extra):
