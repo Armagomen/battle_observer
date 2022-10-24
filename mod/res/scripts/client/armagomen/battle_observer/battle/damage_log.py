@@ -47,8 +47,9 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         super(DamageLog, self).__init__()
         self.__damage_log = None
         self.__input_log = None
-        self.__maxHealth = GLOBAL.ZERO
         self.__isExtended = False
+        self.__isKeyDown = GLOBAL.ZERO
+        self.__maxHealth = GLOBAL.ZERO
         self.top_log = None
         self.top_log_enabled = False
         self.vehicle_colors = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][VEHICLE_TYPES.UNKNOWN],
@@ -132,8 +133,9 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
 
     def onLogsAltMode(self, isKeyDown):
         """Hot key event"""
-        self.updateExtendedLog(self.__damage_log, altMode=isKeyDown)
-        self.updateExtendedLog(self.__input_log, altMode=isKeyDown)
+        self.__isKeyDown = int(isKeyDown)
+        self.updateExtendedLog(self.__damage_log)
+        self.updateExtendedLog(self.__input_log)
 
     def parseEvent(self, event):
         """wg Feedback event parser"""
@@ -259,20 +261,20 @@ class DamageLog(DamageLogsMeta, IPrebattleSetupsListener):
         vehicle[DAMAGE_LOG.CLASS_ICON] = self.vehicle_icons[vehicleInfoVO.vehicleType.classTag]
         vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[vehicleInfoVO.vehicleType.classTag]
 
-    def getLogLines(self, log_data, altMode):
+    def getLogLines(self, log_data):
         settings = self.settings.log_extended
-        template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[int(altMode)]])
+        template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[self.__isKeyDown]])
         for vehicleID in reversed(log_data.id_list) if settings[DAMAGE_LOG.REVERSE] else log_data.id_list:
             if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
                 log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = settings[DAMAGE_LOG.KILLED_ICON]
             yield template % log_data.vehicles[vehicleID]
 
-    def updateExtendedLog(self, log_data, altMode=False):
+    def updateExtendedLog(self, log_data):
         """
         Final log processing and flash output,
         also works when the alt mode activated by hot key.
         """
         if log_data is None or not log_data.id_list:
             return
-        result = DAMAGE_LOG.NEW_LINE.join(self.getLogLines(log_data, altMode))
+        result = DAMAGE_LOG.NEW_LINE.join(self.getLogLines(log_data))
         self.as_updateLogS(log_data.name, result)
