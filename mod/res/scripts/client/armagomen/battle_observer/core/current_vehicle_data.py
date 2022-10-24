@@ -2,6 +2,7 @@ import math
 from collections import namedtuple
 
 from CurrentVehicle import g_currentVehicle
+from PlayerEvents import g_playerEvents
 from armagomen.utils.common import logError, logDebug
 from constants import ROLE_TYPE
 
@@ -15,16 +16,17 @@ class CurrentVehicleCachedData(object):
         self.__EfficiencyAVGData = EfficiencyAVGData(0, 0)
 
     def init(self):
-        g_currentVehicle.onChanged += self.onVehicleChanged
+        g_playerEvents.onArenaCreated += self.onArenaCreated
 
     def fini(self):
-        g_currentVehicle.onChanged -= self.onVehicleChanged
+        g_playerEvents.onArenaCreated -= self.onArenaCreated
 
-    def onVehicleChanged(self):
-        self.__isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
+    def onArenaCreated(self):
+        self.__isSPG = False
         damage = 0
         assist = 0
         try:
+            self.__isSPG = g_currentVehicle.item.role == ROLE_TYPE.SPG
             dossier = g_currentVehicle.getDossier()
             if dossier:
                 random = dossier.getRandomStats()
