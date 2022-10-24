@@ -50,12 +50,12 @@ package net.armagomen.battleobserver.battle.components
 			}
 		}
 		
-		public function as_updateDamage(text:String):void
+		public function as_updateTopLog(text:String):void
 		{
 			this.top_log.htmlText = text;
 		}
 		
-		public function as_updateLog(target:String, text:String):void
+		public function as_updateExtendedLog(target:String, text:String):void
 		{
 			if (target == D_LOG)
 			{
