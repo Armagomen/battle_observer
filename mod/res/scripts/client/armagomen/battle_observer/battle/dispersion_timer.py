@@ -6,6 +6,7 @@ from armagomen.constants import DISPERSION, GLOBAL, POSTMORTEM, DISPERSION_TIME
 from armagomen.utils.common import logDebug
 from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
+from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 
 
 class DispersionTimer(DispersionTimerMeta):
@@ -40,7 +41,10 @@ class DispersionTimer(DispersionTimerMeta):
         if self.isPostmortem:
             return
         dispersionAngle = gunRotator.dispersionAngle
-        aimingTime = self._player.vehicleTypeDescriptor.gun.aimingTime
+        typeDescriptor = getVehicleTypeDescriptor()
+        if typeDescriptor is None:
+            return self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
+        aimingTime = typeDescriptor.gun.aimingTime
         if self.min_angle > dispersionAngle:
             self.min_angle = dispersionAngle
             logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)

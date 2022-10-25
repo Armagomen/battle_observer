@@ -6,7 +6,7 @@ from armagomen.constants import GLOBAL, DISTANCE, POSTMORTEM
 from armagomen.utils.common import logDebug
 from armagomen.utils.timers import CyclicTimerEvent
 from constants import ARENA_PERIOD, ARENA_PERIOD_NAMES
-from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler
+from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler, getPlayerTeam
 
 
 class Distance(DistanceMeta):
@@ -73,7 +73,7 @@ class Distance(DistanceMeta):
     def onMinimapVehicleAdded(self, vProxy, vInfo, _):
         if self.isPostmortem:
             return
-        if self._player.team != vInfo.team and vProxy.isAlive():
+        if getPlayerTeam() != vInfo.team and vProxy.isAlive():
             self.vehicles[vInfo.vehicleID] = vProxy
 
     def removeVehicle(self, vehicleID, *args, **kwargs):
@@ -84,7 +84,7 @@ class Distance(DistanceMeta):
         distance = None
         vehicleName = None
         for entity in self.vehicles.itervalues():
-            dist = getDistanceToTarget(entity, avatar=self._player)
+            dist = getDistanceToTarget(entity)
             if distance is None or dist < distance:
                 distance = dist
                 vehicleName = entity.typeDescriptor.type.shortUserString

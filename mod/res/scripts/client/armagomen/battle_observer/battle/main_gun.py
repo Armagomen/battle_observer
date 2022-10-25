@@ -82,7 +82,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.playersDamage[attackerID] += damage
             if self.playersDamage[attackerID] > self.maxDamage:
                 self.maxDamage = self.playersDamage[attackerID]
-            self.playerDamage = self.playersDamage[self._player.playerVehicleID]
+            self.playerDamage = self.playersDamage[self.playerVehicleID]
             self.dealtMoreDamage = self.maxDamage > self.playerDamage > self.gunScore
-            if attackerID == self._player.playerVehicleID or self.dealtMoreDamage:
+            if attackerID == self.playerVehicleID or self.dealtMoreDamage:
                 self.updateMainGun(criteria=CRITERIA.PLAYER_DAMAGE if not self.dealtMoreDamage else CRITERIA.DEALT_MORE)

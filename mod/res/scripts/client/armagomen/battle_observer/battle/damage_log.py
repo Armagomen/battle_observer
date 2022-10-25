@@ -7,6 +7,7 @@ from armagomen.utils.common import logDebug, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
+from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from helpers import i18n
 
@@ -187,10 +188,13 @@ class DamageLog(DamageLogsMeta):
                 log_data.kills.add(targetID)
             self.updateExtendedLog(log_data)
 
-    def checkPlayerShell(self):
-        shell = self._player.getVehicleDescriptor().shot.shell
-        shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(shell))
-        return shell_name, isShellGold(shell)
+    @staticmethod
+    def checkPlayerShell():
+        typeDescriptor = getVehicleTypeDescriptor()
+        if typeDescriptor is None:
+            return DAMAGE_LOG.NOT_SHELL, False
+        shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(typeDescriptor.shot.shell))
+        return shell_name, isShellGold(typeDescriptor.shot.shell)
 
     @staticmethod
     def checkShell(extra):

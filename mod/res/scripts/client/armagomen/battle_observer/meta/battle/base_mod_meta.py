@@ -2,7 +2,7 @@ from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import ALIAS_TO_CONFIG_NAME, COLORS, GLOBAL
-from armagomen.utils.common import logInfo, getPlayer, logDebug
+from armagomen.utils.common import logInfo, logDebug
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from gui.shared.personality import ServicesLocator
 from helpers import dependency
@@ -17,7 +17,6 @@ class BaseModMeta(BaseDAAPIComponent):
         super(BaseModMeta, self).__init__()
         self._arenaDP = self.sessionProvider.getArenaDP()
         self._arenaVisitor = self.sessionProvider.arenaVisitor
-        self._player = None
         self.settings = None
         self.colors = settings.colors
         self.vehicle_types = settings.vehicle_types
@@ -50,7 +49,6 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        self._player = getPlayer()
         self.setSettings()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage

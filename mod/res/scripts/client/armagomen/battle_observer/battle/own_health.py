@@ -4,7 +4,7 @@ from collections import defaultdict
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
-from armagomen.utils.common import percentToRGB
+from armagomen.utils.common import percentToRGB, getPlayer
 from constants import ARENA_PERIOD
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, getHealthPercent
 from gui.battle_control import avatar_getter
@@ -76,7 +76,10 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
 
     def onCameraChanged(self, ctrlMode, *_, **__):
         self.isPostmortem = ctrlMode in POSTMORTEM.MODES
-        self.as_setComponentVisible(not self.isPostmortem and self._player.arena.period == ARENA_PERIOD.BATTLE)
+        player = getPlayer()
+        if player is None:
+            self.isPostmortem = True
+        self.as_setComponentVisible(not self.isPostmortem and player.arena.period == ARENA_PERIOD.BATTLE)
 
     def _updateHealth(self, health):
         if self.isPostmortem or health > self.__maxHealth or self.__maxHealth <= GLOBAL.ZERO:
