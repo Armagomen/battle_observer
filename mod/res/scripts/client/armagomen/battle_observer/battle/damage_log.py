@@ -218,10 +218,10 @@ class DamageLog(DamageLogsMeta):
             maxHealth = self._arenaDP.getVehicleInfo().vehicleType.maxHealth
         if not vehicle:
             self.createVehicle(vehicleInfoVO, vehicle, logLen=len(log_data.id_list))
-        self.updateVehicleData(extra, gold, shell_name, vehicle, maxHealth)
+        self.updateVehicleData(extra, gold, shell_name, vehicle, maxHealth, log_data.is_player)
         self.updateExtendedLog(log_data)
 
-    def updateVehicleData(self, extra, gold, shell_name, vehicle, maxHealth):
+    def updateVehicleData(self, extra, gold, shell_name, vehicle, maxHealth, isPlayer):
         vehicle[DAMAGE_LOG.DAMAGE_LIST].append(extra.getDamage())
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
@@ -232,7 +232,9 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.SHELL_TYPE] = shell_name
         vehicle[DAMAGE_LOG.SHELL_COLOR] = self.settings.log_extended[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
-        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.getAVGColor(1.0 - percent)
+        if not isPlayer:
+            percent = 1.0 - percent
+        vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.getAVGColor(percent)
 
     def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=1):
         if not update:
