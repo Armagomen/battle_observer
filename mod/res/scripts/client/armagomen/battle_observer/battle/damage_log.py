@@ -180,13 +180,11 @@ class DamageLog(DamageLogsMeta):
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
         if self.playerVehicleID in (targetID, attackerID):
             if self.playerVehicleID == targetID:
-                eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
-                target = attackerID
+                log_data = self.getLogData(FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
+                log_data.kills.add(attackerID)
             else:
-                eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
-                target = targetID
-            log_data = self.getLogData(eventID)
-            log_data.kills.add(target)
+                log_data = self.getLogData(FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY)
+                log_data.kills.add(targetID)
             self.updateExtendedLog(log_data)
 
     def checkPlayerShell(self):
