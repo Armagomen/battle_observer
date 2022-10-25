@@ -153,7 +153,7 @@ class DamageLog(DamageLogsMeta):
 
     def isPostmortemSwitchedToAnotherVehicle(self):
         observedVehID = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
-        return self._player.playerVehicleID != observedVehID
+        return self.playerVehicleID != observedVehID
 
     def __onPlayerFeedbackReceived(self, events):
         """Shared feedback player events"""
@@ -178,17 +178,16 @@ class DamageLog(DamageLogsMeta):
                     self.updateExtendedLog(log_data)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
-        if self._player is None or self._player.playerVehicleID not in (targetID, attackerID):
-            return
-        if self._player.playerVehicleID == targetID:
-            eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
-            target = attackerID
-        else:
-            eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
-            target = targetID
-        log_data = self.getLogData(eventID)
-        log_data.kills.add(target)
-        self.updateExtendedLog(log_data)
+        if self.playerVehicleID in (targetID, attackerID):
+            if self.playerVehicleID == targetID:
+                eventID = FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER
+                target = attackerID
+            else:
+                eventID = FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY
+                target = targetID
+            log_data = self.getLogData(eventID)
+            log_data.kills.add(target)
+            self.updateExtendedLog(log_data)
 
     def checkPlayerShell(self):
         shell = self._player.getVehicleDescriptor().shot.shell

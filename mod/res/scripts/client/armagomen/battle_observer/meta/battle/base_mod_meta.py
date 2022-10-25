@@ -63,6 +63,10 @@ class BaseModMeta(BaseDAAPIComponent):
         super(BaseModMeta, self)._dispose()
         logDebug("battle module '{}' destroyed", self.getAlias())
 
+    @property
+    def playerVehicleID(self):
+        return self._arenaDP.getPlayerVehicleID()
+
     def onEnterBattlePage(self):
         self.as_setComponentVisible(True)
 
