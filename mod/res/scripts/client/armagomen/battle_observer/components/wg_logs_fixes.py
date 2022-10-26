@@ -10,9 +10,9 @@ BASE_WG_LOGS = (DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog,
 validated = {}
 
 
-@overrideMethod(DamageLogPanel, "_setSettings")
-def setSettings(base, panel, vis, cb):
-    return base(panel, vis or settings.log_extended[GLOBAL.ENABLED], cb)
+# @overrideMethod(DamageLogPanel, "_setSettings")
+# def setSettings(base, panel, vis, cb):
+#     return base(panel, vis or settings.log_extended[GLOBAL.ENABLED], cb)
 
 
 @overrideMethod(_LogViewComponent, "addToLog")

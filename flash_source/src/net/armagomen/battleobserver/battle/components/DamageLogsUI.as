@@ -43,10 +43,8 @@ package net.armagomen.battleobserver.battle.components
 		{
 			if (this.damageLogPanel)
 			{
-				var topContainer:* = this.damageLogPanel._detailsTopContainer;
-				this.d_log = new TextExt(settings.x + 35, settings.y, null, settings.align, getShadowSettings(), topContainer);
-				var bottomContainer:* = this.damageLogPanel._detailsBottomContainer;
-				this.in_log = new TextExt(settings.x + 20, -45 + settings.y, null, settings.align, getShadowSettings(), bottomContainer);
+				this.d_log = new TextExt(settings.x + 35, settings.y, null, settings.align, getShadowSettings(), this.damageLogPanel._detailsTopContainer);
+				this.in_log = new TextExt(settings.x + 20, settings.y, null, settings.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer);
 			}
 		}
 		
