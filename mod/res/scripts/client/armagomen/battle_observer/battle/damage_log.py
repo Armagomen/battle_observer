@@ -64,8 +64,7 @@ class DamageLog(DamageLogsMeta):
         self.top_log_enabled = self.settings.log_total[GLOBAL.ENABLED]
         if self.top_log_enabled:
             self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
-            self.top_log["tankAvgDamage"] = cachedVehicleData.efficiencyAvgData.damage
-            self.top_log["tankAvgAssist"] = cachedVehicleData.efficiencyAvgData.assist
+            self.top_log["tankAvgDamage"], self.top_log["tankAvgAssist"] = cachedVehicleData.efficiencyAvgData
             if not cachedVehicleData.isSPG:
                 self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
         self.__isExtended = self.settings.log_extended[GLOBAL.ENABLED]
@@ -143,6 +142,8 @@ class DamageLog(DamageLogsMeta):
         if e_type in AVG_COLOR_EVENTS:
             value = self.top_log[_EVENT_TO_TOP_LOG_MACROS[e_type]]
             macros, avgValue = self.eventToEfficiencyAvgData(e_type)
+            if not avgValue:
+                avgValue = self._arenaDP.getVehicleInfo().vehicleType.maxHealth
             self.top_log[macros] = self.getAVGColor(getPercent(value, avgValue))
         self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
