@@ -116,7 +116,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if self.minimapPlugin.enabled:
             self.minimapPlugin.init(flashObject)
         if self._iconsEnabled or self._statisticsEnabled:
-            self.loadStatisticView(flashObject)
+            callback(1.0, self.loadStatisticView, flashObject)
         callback(20.0, flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
 
     def onViewLoaded(self, view, *args):

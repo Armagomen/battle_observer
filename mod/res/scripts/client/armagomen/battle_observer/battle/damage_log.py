@@ -234,7 +234,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.SHELL_COLOR] = self.settings.log_extended[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
         if not isPlayer:
-            percent = 1.0 - percent
+            percent = (1.0 - percent) * 0.7
         vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.getAVGColor(percent)
 
     def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=1):

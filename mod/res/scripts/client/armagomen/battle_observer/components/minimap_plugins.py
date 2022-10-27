@@ -1,5 +1,6 @@
 from math import degrees
 
+from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod, xvmInstalled, logError
@@ -17,16 +18,24 @@ class MinimapZoomPlugin(object):
 
     def __init__(self):
         self.__battleView_as = None
+        self.__started = False
         self.isComp7Page = False
         self.enabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not xvmInstalled
 
     def init(self, flashObject):
         self.__battleView_as = flashObject
+        g_playerEvents.onAvatarReady += self.onAvatarReady
+
+    def onAvatarReady(self):
+        if self.__started:
+            return
         self.__battleView_as.as_createMimimapCentered()
         self.isComp7Page = self.sessionProvider.arenaVisitor.gui.isComp7Battle()
         g_keysListener.registerComponent(self.onKeyPressed, keyList=settings.minimap[MINIMAP.ZOOM_KEY])
+        self.__started = True
 
     def fini(self):
+        g_playerEvents.onAvatarReady -= self.onAvatarReady
         self.__battleView_as = None
 
     def onKeyPressed(self, isKeyDown):
