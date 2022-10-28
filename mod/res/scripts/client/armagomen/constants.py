@@ -96,18 +96,15 @@ SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA",
         "PurchaseForGold", "GameGreeting"))
 
 __Main = namedtuple("MAIN", (
-    "AUTO_CLEAR_CACHE", "HIDE_BADGES", "HIDE_CLAN_ABBREV",
-    "HIDE_DOG_TAGS", "NAME", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
-    "ANONYMOUS_STRING", "CHANGE_ANONYMOUS_NAME", "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND",
-    "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT", "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT",
-    "HIDE_BTN_COUNTERS", "PREMIUM_TIME"))
+    "AUTO_CLEAR_CACHE", "HIDE_BADGES", "HIDE_CLAN_ABBREV", "HIDE_DOG_TAGS", "NAME", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
+    "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND", "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT",
+    "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT", "HIDE_BTN_COUNTERS", "PREMIUM_TIME"))
 MAIN = __Main(
-    "autoClearCache", "hideBadges", "hideClanAbbrev",
-    "hide_dog_tags", "main", "showFriendsAndClanInEars",
-    "anonymousEnableShow", "anonymousString", "anonymousNameChange", "useKeyPairs", "ignore_commanders_voice",
-    "disable_score_sound", "DEBUG_MODE", "auto_crew_training", "do_not_buy_directives_for_currency_automatically",
-    "hide_hint_panel", "hide_field_mail", "auto_return_crew", "disable_stun_sound", "hide_main_chat_in_hangar",
-    "hide_button_counters_on_top_panel", "premium_time")
+    "autoClearCache", "hideBadges", "hideClanAbbrev", "hide_dog_tags", "main", "showFriendsAndClanInEars",
+    "anonymousEnableShow", "useKeyPairs", "ignore_commanders_voice", "disable_score_sound", "DEBUG_MODE",
+    "auto_crew_training", "do_not_buy_directives_for_currency_automatically", "hide_hint_panel", "hide_field_mail",
+    "auto_return_crew", "disable_stun_sound", "hide_main_chat_in_hangar", "hide_button_counters_on_top_panel",
+    "premium_time")
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "B_SILVER", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
@@ -397,9 +394,6 @@ class CONFIG_INTERFACE:
             PANELS.DAMAGES_ENABLED: (
                 PANELS.DAMAGES_HOT_KEY, 'players_damages_settings*x', 'players_damages_settings*y'
             ),
-        },
-        MAIN.NAME: {
-            MAIN.SHOW_ANONYMOUS: (MAIN.CHANGE_ANONYMOUS_NAME,)
         },
         HP_BARS.NAME: {
             'outline*enabled': ('outline*color',),

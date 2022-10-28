@@ -1,9 +1,7 @@
 {
   "DEBUG_MODE": false, 
   "anonymousEnableShow": true, 
-  "anonymousNameChange": true, 
-  "anonymousString": "Anonymous", 
-  "autoClearCache": false, 
+  "autoClearCache": false,
   "auto_crew_training": true, 
   "auto_return_crew": true, 
   "disable_score_sound": true, 

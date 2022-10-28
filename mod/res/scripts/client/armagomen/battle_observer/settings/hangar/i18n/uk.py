@@ -40,9 +40,9 @@ localization = {
     "main": {
         "header": "Налаштування без категорії",
         "DEBUG_MODE": "DEBUG_MODE",
-        "anonymousEnableShow": "Позначити гравців з прихованим іменем як 'team killer' (голубим кольором)",
-        "anonymousEnableShow_tooltip": "Працює лише у випадку, якщо статистика гравців вимкнена.",
-        "anonymousNameChange": "Змінити імена гравців з прихованим іменем на Anonymous",
+        "anonymousEnableShow": "Позначити гравців з прихованим іменем",
+        "anonymousEnableShow_tooltip": "Працює лише у випадку, якщо статистика гравців вимкнена.\n Заміняє нік на "
+                                       "Anonymous та відмічає як team-killer",
         "autoClearCache": "Очищувати кеш гри після виходу",
         "autoClearCache_tooltip": "Очищення тимчасових файлів гри у папці: AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "\nПапки модифікацій та налаштування, які зберігаються у тому ж місці, залишаться.",
