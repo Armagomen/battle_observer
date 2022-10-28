@@ -5,8 +5,7 @@ from armagomen.battle_observer.meta.battle.dispersion_timer_meta import Dispersi
 from armagomen.constants import DISPERSION, GLOBAL, POSTMORTEM, DISPERSION_TIME
 from armagomen.utils.common import logDebug
 from armagomen.utils.events import g_events
-from gui.battle_control import avatar_getter
-from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
+from gui.battle_control.avatar_getter import getInputHandler
 
 
 class DispersionTimer(DispersionTimerMeta):
@@ -40,11 +39,11 @@ class DispersionTimer(DispersionTimerMeta):
     def updateDispersion(self, gunRotator):
         if self.isPostmortem:
             return
-        dispersionAngle = gunRotator.dispersionAngle
-        typeDescriptor = getVehicleTypeDescriptor()
-        if typeDescriptor is None:
+        vehicleTypeDescriptor = gunRotator._avatar.vehicleTypeDescriptor
+        if vehicleTypeDescriptor is None:
             return self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
-        aimingTime = typeDescriptor.gun.aimingTime
+        aimingTime = vehicleTypeDescriptor.gun.aimingTime
+        dispersionAngle = gunRotator.dispersionAngle
         if self.min_angle > dispersionAngle:
             self.min_angle = dispersionAngle
             logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
@@ -56,13 +55,13 @@ class DispersionTimer(DispersionTimerMeta):
 
     def onEnterBattlePage(self):
         super(DispersionTimer, self).onEnterBattlePage()
-        handler = avatar_getter.getInputHandler()
+        handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onDispersionAngleChanged += self.updateDispersion
 
     def onExitBattlePage(self):
-        handler = avatar_getter.getInputHandler()
+        handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         g_events.onDispersionAngleChanged -= self.updateDispersion

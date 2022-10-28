@@ -50,11 +50,6 @@ def distanceToEntityVehicle(entityID):
     return 0.0
 
 
-def setMaxFrameRate(fps):
-    BigWorld.wg_setMaxFrameRate(fps + 1)
-    BigWorld.savePreferences()
-
-
 def callback(delay, callMethod, *args, **kwargs):
     return BigWorld.callback(delay, partial(callMethod, *args, **kwargs) if args or kwargs else callMethod)
 

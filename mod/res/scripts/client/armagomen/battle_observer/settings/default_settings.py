@@ -26,8 +26,6 @@ class DefaultSettings(object):
             MAIN.ANONYMOUS_STRING: "Anonymous",
             MAIN.HIDE_BADGES: False,
             MAIN.HIDE_CLAN_ABBREV: False,
-            MAIN.ENABLE_FPS_LIMITER: False,
-            MAIN.MAX_FRAME_RATE: 200,
             MAIN.AUTO_CLEAR_CACHE: False,
             MAIN.USE_KEY_PAIRS: False,
             MAIN.IGNORE_COMMANDERS: False,

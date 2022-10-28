@@ -1,7 +1,7 @@
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
-from armagomen.utils.common import overrideMethod, setMaxFrameRate, callback
+from armagomen.utils.common import overrideMethod, callback
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
@@ -100,8 +100,6 @@ BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUN
 
 def onModSettingsChanged(_settings, blockID):
     if blockID == MAIN.NAME:
-        if _settings[MAIN.ENABLE_FPS_LIMITER]:
-            setMaxFrameRate(_settings[MAIN.MAX_FRAME_RATE])
         if _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
             msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
         elif not _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:

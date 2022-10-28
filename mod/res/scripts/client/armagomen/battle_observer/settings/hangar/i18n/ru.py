@@ -48,9 +48,6 @@ localization = {
         "hideBadges_tooltip": "в ушах, окне по tab, на экране загрузки.",
         "hideClanAbbrev": "Отключить отображение клана",
         "hideClanAbbrev_tooltip": "в ушах, окне по tab, на экране загрузки.",
-        "fps_enableFPSLimiter": "Включить ограничитель FPS",
-        "fps_enableFPSLimiter_tooltip": RESTART_TOOLTIP,
-        "fps_maxFrameRate": "Максимальный FPS (ограничитель)",
         "anonymousEnableShow": "Отмечать как team-killer (голубым) игроков со скрытым именем",
         "anonymousEnableShow_tooltip": "Только в том случае если отключена статистика игроков, параметр не будет "
                                        "учитываться если включена статистика.",

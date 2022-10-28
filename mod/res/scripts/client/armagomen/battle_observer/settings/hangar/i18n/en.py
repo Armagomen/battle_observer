@@ -47,9 +47,6 @@ localization = {
         "autoClearCache_tooltip": "Cleaning the temporary files of the game in the folder "
                                   "AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "\nFolders that are modified there are not affected.",
-        "fps_enableFPSLimiter": "Enable FPS Limiter",
-        "fps_enableFPSLimiter_tooltip": RESTART_TOOLTIP,
-        "fps_maxFrameRate": "Maximum Frame Rate",
         "smallDoubleCarousel": "Use small icons in the tank carousel.",
         "carouselRows": "number of rows of multi-row tank carousel",
         "anonymousEnableShow": "Mark as team-killer players with an anonymizer.",
