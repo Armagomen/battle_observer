@@ -403,8 +403,8 @@ localization = {
         "name": "Battle Observer - v{0}",
         "description": "Відкрити налаштування мода Battle Observer",
         "windowTitle": "Налаштування мода Battle Observer - v{0}",
-        "buttonOK": "Добре",
-        "buttonCancel": "Відміна",
+        "buttonOK": "Гаразд",
+        "buttonCancel": "Скасувати",
         "buttonApply": "Застосувати",
         "enableButtonTooltip": "{HEADER}ВКЛ/ВИКЛ{/HEADER}{BODY}Увімкнути/Вимкнути модуль{/BODY}"
     },
