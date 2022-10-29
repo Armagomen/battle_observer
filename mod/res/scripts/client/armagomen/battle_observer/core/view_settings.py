@@ -167,29 +167,25 @@ class ViewSettings(object):
                 self.__hiddenComponents.discard(wg_alias)
 
     def addReplaceAlias(self, aliases):
-        new_aliases = list(aliases)
-        if ALIASES.TEAM_BASES in self.__components and BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in new_aliases:
-            new_aliases.remove(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)
-            new_aliases.append(ALIASES.TEAM_BASES)
-        elif ALIASES.TIMER in self.__components and BATTLE_VIEW_ALIASES.BATTLE_TIMER in new_aliases:
-            new_aliases.append(ALIASES.TIMER)
-        elif BATTLE_VIEW_ALIASES.DAMAGE_PANEL in new_aliases:
-            if ALIASES.OWN_HEALTH in self.__components:
-                new_aliases.append(ALIASES.OWN_HEALTH)
-        elif ALIASES.DEBUG in self.__components and BATTLE_VIEW_ALIASES.DEBUG_PANEL in new_aliases:
-            new_aliases.remove(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
-            new_aliases.append(ALIASES.DEBUG)
-        elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in new_aliases:
+        wg_aliases = list(aliases)
+        if BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in wg_aliases and ALIASES.TEAM_BASES in self.__components:
+            wg_aliases.remove(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)
+            wg_aliases.append(ALIASES.TEAM_BASES)
+        elif BATTLE_VIEW_ALIASES.BATTLE_TIMER in wg_aliases and ALIASES.TIMER in self.__components:
+            wg_aliases.append(ALIASES.TIMER)
+        elif BATTLE_VIEW_ALIASES.DAMAGE_PANEL in wg_aliases and ALIASES.OWN_HEALTH in self.__components:
+            wg_aliases.append(ALIASES.OWN_HEALTH)
+        elif BATTLE_VIEW_ALIASES.DEBUG_PANEL in wg_aliases and ALIASES.DEBUG in self.__components:
+            wg_aliases.remove(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
+            wg_aliases.append(ALIASES.DEBUG)
+        elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in wg_aliases:
             if ALIASES.HP_BARS in self.__components:
-                new_aliases.remove(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR)
-                new_aliases.append(ALIASES.HP_BARS)
-            if ALIASES.PANELS in self.__components:
-                new_aliases.append(ALIASES.PANELS)
+                wg_aliases.append(ALIASES.HP_BARS)
             if ALIASES.MAIN_GUN in self.__components:
-                new_aliases.append(ALIASES.MAIN_GUN)
-        elif ALIASES.SIXTH_SENSE in self.__components and BATTLE_VIEW_ALIASES.SIXTH_SENSE in new_aliases:
-            new_aliases.remove(BATTLE_VIEW_ALIASES.SIXTH_SENSE)
-        result = tuple(new_aliases)
+                wg_aliases.append(ALIASES.MAIN_GUN)
+        elif BATTLE_VIEW_ALIASES.PLAYERS_PANEL in wg_aliases and ALIASES.PANELS in self.__components:
+            wg_aliases.append(ALIASES.PANELS)
+        result = tuple(wg_aliases)
         logDebug("viewSettings, replace aliases: old={} new={}", aliases, result)
         return result
 
