@@ -7,10 +7,9 @@ from armagomen.utils.common import logDebug
 from armagomen.utils.keys_listener import g_keysListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
-from gui.battle_control.controllers.period_ctrl import IAbstractPeriodView
 
 
-class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener, IAbstractPeriodView):
+class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def __init__(self):
         super(PlayersPanels, self).__init__()

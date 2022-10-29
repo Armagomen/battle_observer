@@ -183,8 +183,8 @@ class ViewSettings(object):
                 wg_aliases.append(ALIASES.HP_BARS)
             if ALIASES.MAIN_GUN in self.__components:
                 wg_aliases.append(ALIASES.MAIN_GUN)
-        elif BATTLE_VIEW_ALIASES.PLAYERS_PANEL in wg_aliases and ALIASES.PANELS in self.__components:
-            wg_aliases.append(ALIASES.PANELS)
+            if ALIASES.PANELS in self.__components:
+                wg_aliases.append(ALIASES.PANELS)
         result = tuple(wg_aliases)
         logDebug("viewSettings, replace aliases: old={} new={}", aliases, result)
         return result
