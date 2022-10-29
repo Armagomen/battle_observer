@@ -34,7 +34,7 @@ _EVENT_TO_TOP_LOG_AVG_MACROS = {
     FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: ("tankAvgDamage", "tankDamageAvgColor"),
     FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR: ("tankAvgBlocked", "tankBlockedAvgColor"),
     FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: ("tankAvgAssist", "tankAssistAvgColor"),
-    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ("tankAvgStun", "tankAvgStunColor")
+    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ("tankAvgStun", "tankStunAvgColor")
 }
 
 LogData = namedtuple('LogData', ('kills', 'id_list', 'vehicles', 'name', 'is_player'))
@@ -56,7 +56,7 @@ class DamageLog(DamageLogsMeta):
         self.__input_log = None
         self.__isExtended = False
         self.__isKeyDown = GLOBAL.ZERO
-        self.top_log = None
+        self.top_log = defaultdict(int)
         self.top_log_enabled = False
         self.vehicle_colors = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][VEHICLE_TYPES.UNKNOWN],
                                           **self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS])
@@ -67,16 +67,15 @@ class DamageLog(DamageLogsMeta):
         super(DamageLog, self)._populate()
         self.top_log_enabled = self.settings.log_total[GLOBAL.ENABLED]
         if self.top_log_enabled:
-            self.top_log = defaultdict(int, tankDamageAvgColor=COLORS.NORMAL_TEXT,
-                                       tankAssistAvgColor=COLORS.NORMAL_TEXT,
-                                       tankBlockedAvgColor=COLORS.NORMAL_TEXT,
-                                       tankAvgStunColor=COLORS.NORMAL_TEXT,
-                                       tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
-                                       tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
-                                       tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
-                                       tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked,
-                                       stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE,
-                                       **self.settings.log_total[DAMAGE_LOG.ICONS])
+            self.top_log.update(self.settings.log_total[DAMAGE_LOG.ICONS],
+                                tankDamageAvgColor=COLORS.NORMAL_TEXT,
+                                tankAssistAvgColor=COLORS.NORMAL_TEXT,
+                                tankBlockedAvgColor=COLORS.NORMAL_TEXT,
+                                tankStunAvgColor=COLORS.NORMAL_TEXT,
+                                tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
+                                tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
+                                tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
+                                tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
             self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
         self.__isExtended = self.settings.log_extended[GLOBAL.ENABLED]
         if self.__isExtended:
@@ -109,6 +108,7 @@ class DamageLog(DamageLogsMeta):
                     arena.onVehicleUpdated += self.onVehicleUpdated
                     arena.onVehicleKilled += self.onVehicleKilled
             if self.top_log_enabled:
+                self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
                 self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     def onExitBattlePage(self):
@@ -138,12 +138,6 @@ class DamageLog(DamageLogsMeta):
             self.addToTopLog(e_type, event, extra)
         if self.isExtendedLogEventEnabled(e_type):
             self.addToExtendedLog(e_type, event.getTargetID(), extra)
-
-    @staticmethod
-    def eventToEfficiencyAvgData(e_type):
-        if e_type == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-            return "tankDamageAvgColor", cachedVehicleData.efficiencyAvgData.damage
-        return "tankAssistAvgColor", cachedVehicleData.efficiencyAvgData.assist
 
     def addToTopLog(self, e_type, event, extra):
         macros = _EVENT_TO_TOP_LOG_MACROS[e_type]

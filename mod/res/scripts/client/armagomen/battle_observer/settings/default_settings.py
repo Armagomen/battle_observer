@@ -231,10 +231,15 @@ class DefaultSettings(object):
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.right,
                 DAMAGE_LOG.IN_CENTER: True
             },
-            DAMAGE_LOG.TEMPLATE_MAIN_DMG: ("<textformat leading='-3'>%(damageIcon)s"
-                                           "<font color='%(tankDamageAvgColor)s'>%(playerDamage)s</font>"
-                                           "%(blockedIcon)s%(blockedDamage)s%(assistIcon)s%(assistDamage)s"
-                                           "%(spottedIcon)s%(spottedTanks)s%(stunIcon)s%(stun)s</textformat>"),
+            DAMAGE_LOG.TEMPLATE_MAIN_DMG: (
+                "<textformat leading='-3'>"
+                "%(damageIcon)s<font color='%(tankDamageAvgColor)s'>%(playerDamage)s</font>"
+                "%(blockedIcon)s<font color='%(tankBlockedAvgColor)s'>%(blockedDamage)s</font>"
+                "%(assistIcon)s<font color='%(tankAssistAvgColor)s'>%(assistDamage)s</font>"
+                "%(spottedIcon)s%(spottedTanks)s"
+                "%(stunIcon)s<font color='%(tankStunAvgColor)s'>%(stun)s</font>"
+                "</textformat>"
+            ),
             DAMAGE_LOG.ICONS: {
                 "assistIcon": "<img src='{dir}/help.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS),
                 "blockedIcon": "<img src='{dir}/armor.png' {size} vspace='-9'>".format(**GLOBAL.IMG_PARAMS),
