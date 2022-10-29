@@ -21,7 +21,6 @@ _SHELL_TYPES_TO_STR = {
     BATTLE_LOG_SHELL_TYPES.HE_LEGACY_NO_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE
 }
 EXTENDED_FEEDBACK = (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
-AVG_COLOR_EVENTS = (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY)
 
 _EVENT_TO_TOP_LOG_MACROS = {
     FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: "playerDamage",
@@ -29,6 +28,13 @@ _EVENT_TO_TOP_LOG_MACROS = {
     FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: "assistDamage",
     FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY: "spottedTanks",
     FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: "stun"
+}
+
+_EVENT_TO_TOP_LOG_AVG_MACROS = {
+    FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: ("tankAvgDamage", "tankDamageAvgColor"),
+    FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR: ("tankAvgBlocked", "tankBlockedAvgColor"),
+    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: ("tankAvgAssist", "tankAssistAvgColor"),
+    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ("tankAvgStun", "tankAvgStunColor")
 }
 
 LogData = namedtuple('LogData', ('kills', 'id_list', 'vehicles', 'name', 'is_player'))
@@ -59,14 +65,19 @@ class DamageLog(DamageLogsMeta):
 
     def _populate(self):
         super(DamageLog, self)._populate()
-        self.top_log = defaultdict(int, tankDamageAvgColor=COLORS.NORMAL_TEXT, tankAssistAvgColor=COLORS.NORMAL_TEXT,
-                                   **self.settings.log_total[DAMAGE_LOG.ICONS])
         self.top_log_enabled = self.settings.log_total[GLOBAL.ENABLED]
         if self.top_log_enabled:
+            self.top_log = defaultdict(int, tankDamageAvgColor=COLORS.NORMAL_TEXT,
+                                       tankAssistAvgColor=COLORS.NORMAL_TEXT,
+                                       tankBlockedAvgColor=COLORS.NORMAL_TEXT,
+                                       tankAvgStunColor=COLORS.NORMAL_TEXT,
+                                       tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
+                                       tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
+                                       tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
+                                       tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked,
+                                       stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE,
+                                       **self.settings.log_total[DAMAGE_LOG.ICONS])
             self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
-            self.top_log["tankAvgDamage"], self.top_log["tankAvgAssist"] = cachedVehicleData.efficiencyAvgData
-            if not cachedVehicleData.isSPG:
-                self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
         self.__isExtended = self.settings.log_extended[GLOBAL.ENABLED]
         if self.__isExtended:
             self.as_createExtendedLogsS(self.settings.log_extended[GLOBAL.SETTINGS])
@@ -135,16 +146,16 @@ class DamageLog(DamageLogsMeta):
         return "tankAssistAvgColor", cachedVehicleData.efficiencyAvgData.assist
 
     def addToTopLog(self, e_type, event, extra):
+        macros = _EVENT_TO_TOP_LOG_MACROS[e_type]
         if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
             self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
-            self.top_log[_EVENT_TO_TOP_LOG_MACROS[e_type]] = GLOBAL.ZERO
-        self.top_log[_EVENT_TO_TOP_LOG_MACROS[e_type]] += self.unpackTopLogValue(e_type, event, extra)
-        if e_type in AVG_COLOR_EVENTS:
-            value = self.top_log[_EVENT_TO_TOP_LOG_MACROS[e_type]]
-            macros, avgValue = self.eventToEfficiencyAvgData(e_type)
-            if not avgValue:
-                avgValue = self._arenaDP.getVehicleInfo().vehicleType.maxHealth
-            self.top_log[macros] = self.getAVGColor(getPercent(value, avgValue))
+            self.top_log[macros] = GLOBAL.ZERO
+        self.top_log[macros] += self.unpackTopLogValue(e_type, event, extra)
+        if e_type in _EVENT_TO_TOP_LOG_AVG_MACROS:
+            avgValueMacros, avgColorMacros = _EVENT_TO_TOP_LOG_AVG_MACROS[e_type]
+            value = self.top_log[macros]
+            avgValue = self.top_log[avgValueMacros]
+            self.top_log[avgColorMacros] = self.getAVGColor(getPercent(value, avgValue))
         self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     @staticmethod
@@ -218,7 +229,7 @@ class DamageLog(DamageLogsMeta):
         else:
             maxHealth = self._arenaDP.getVehicleInfo().vehicleType.maxHealth
         if not vehicle:
-            self.createVehicle(vehicleInfoVO, vehicle, logLen=len(log_data.id_list))
+            self.createVehicle(vehicleInfoVO, vehicle, index=len(log_data.id_list))
         self.updateVehicleData(extra, gold, shell_name, vehicle, maxHealth, log_data.is_player)
         self.updateExtendedLog(log_data)
 
@@ -234,12 +245,12 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.SHELL_COLOR] = self.settings.log_extended[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)
         if not isPlayer:
-            percent = (1.0 - percent) * 0.7
+            percent = max((1.0 - percent) * 0.7, 0.01)
         vehicle[DAMAGE_LOG.PERCENT_AVG_COLOR] = self.getAVGColor(percent)
 
-    def createVehicle(self, vehicleInfoVO, vehicle, update=False, logLen=1):
+    def createVehicle(self, vehicleInfoVO, vehicle, update=False, index=1):
         if not update:
-            vehicle[DAMAGE_LOG.INDEX] = logLen
+            vehicle[DAMAGE_LOG.INDEX] = index
             vehicle[DAMAGE_LOG.DAMAGE_LIST] = list()
             vehicle[DAMAGE_LOG.KILLED_ICON] = GLOBAL.EMPTY_LINE
             vehicle[DAMAGE_LOG.USER_NAME] = vehicleInfoVO.player.name

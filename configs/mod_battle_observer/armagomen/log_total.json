@@ -17,5 +17,5 @@
     "x": -255, 
     "y": 0
   }, 
-  "templateMainDMG": "<textformat leading='-3'>%(damageIcon)s<font color='%(tankDamageAvgColor)s'>%(playerDamage)s</font>%(blockedIcon)s%(blockedDamage)s%(assistIcon)s<font color='%(tankAssistAvgColor)s'>%(assistDamage)s</font>%(spottedIcon)s%(spottedTanks)s%(stunIcon)s%(stun)s</textformat>"
+  "templateMainDMG": "<textformat leading='-3'>%(damageIcon)s<font color='%(tankDamageAvgColor)s'>%(playerDamage)s</font>%(blockedIcon)s<font color='%(tankBlockedAvgColor)s'>%(blockedDamage)s</font>%(assistIcon)s<font color='%(tankAssistAvgColor)s'>%(assistDamage)s</font>%(spottedIcon)s%(spottedTanks)s%(stunIcon)s<font color='%(tankAvgStunColor)s'>%(stun)s</font></textformat>"
 }

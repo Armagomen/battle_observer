@@ -1,5 +1,5 @@
 {
-  "enabled": true, 
+  "enabled": false, 
   "icon_blackout": -1.25, 
   "icon_enabled": true, 
   "panels_cut_width": 60, 
