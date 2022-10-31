@@ -4,7 +4,9 @@ from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
+from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
+from gui.battle_control.battle_constants import BATTLE_CTRL_ID
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -162,28 +164,25 @@ class ViewSettings(object):
             else:
                 self.__hiddenComponents.discard(wg_alias)
 
-    def addReplaceAlias(self, aliases):
-        wg_aliases = list(aliases)
-        if BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL in wg_aliases and ALIASES.TEAM_BASES in self.__components:
-            wg_aliases.remove(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)
-            wg_aliases.append(ALIASES.TEAM_BASES)
-        elif BATTLE_VIEW_ALIASES.BATTLE_TIMER in wg_aliases and ALIASES.TIMER in self.__components:
-            wg_aliases.append(ALIASES.TIMER)
-        elif BATTLE_VIEW_ALIASES.DAMAGE_PANEL in wg_aliases and ALIASES.OWN_HEALTH in self.__components:
-            wg_aliases.append(ALIASES.OWN_HEALTH)
-        elif BATTLE_VIEW_ALIASES.DEBUG_PANEL in wg_aliases and ALIASES.DEBUG in self.__components:
-            wg_aliases.remove(BATTLE_VIEW_ALIASES.DEBUG_PANEL)
-            wg_aliases.append(ALIASES.DEBUG)
-        elif BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR in wg_aliases:
-            if ALIASES.HP_BARS in self.__components:
-                wg_aliases.append(ALIASES.HP_BARS)
-            if ALIASES.MAIN_GUN in self.__components:
-                wg_aliases.append(ALIASES.MAIN_GUN)
-            if ALIASES.PANELS in self.__components:
-                wg_aliases.append(ALIASES.PANELS)
-        result = tuple(wg_aliases)
-        logDebug("viewSettings, replace aliases: old={} new={}", aliases, result)
-        return result
+    def getComponentsConfig(self):
+        config = ComponentsConfig()
+        for alias in self.__components:
+            if alias is ALIASES.TEAM_BASES:
+                config += ComponentsConfig(config=((BATTLE_CTRL_ID.TEAM_BASES, (ALIASES.TEAM_BASES,)),))
+            elif alias is ALIASES.HP_BARS:
+                config += ComponentsConfig(config=((BATTLE_CTRL_ID.BATTLE_FIELD_CTRL, (ALIASES.HP_BARS,)),))
+            elif alias is ALIASES.PANELS:
+                config += ComponentsConfig(config=((BATTLE_CTRL_ID.BATTLE_FIELD_CTRL, (ALIASES.PANELS,)),))
+            elif alias is ALIASES.MAIN_GUN:
+                config += ComponentsConfig(config=((BATTLE_CTRL_ID.BATTLE_FIELD_CTRL, (ALIASES.MAIN_GUN,)),))
+            elif alias is ALIASES.DEBUG:
+                config += ComponentsConfig(config=((BATTLE_CTRL_ID.DEBUG, (ALIASES.DEBUG,)),))
+            elif alias is ALIASES.OWN_HEALTH:
+                config += ComponentsConfig(config=((BATTLE_CTRL_ID.PREBATTLE_SETUPS_CTRL, (ALIASES.OWN_HEALTH,)),))
+            elif alias is ALIASES.TIMER:
+                config += ComponentsConfig(config=((BATTLE_CTRL_ID.ARENA_PERIOD, (ALIASES.TIMER,)),))
+        logDebug("viewSettings, replace aliases: {}", config)
+        return config
 
     def getHiddenWGComponents(self):
         return self.__hiddenComponents

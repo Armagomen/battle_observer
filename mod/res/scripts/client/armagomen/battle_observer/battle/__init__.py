@@ -7,6 +7,7 @@ from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
+from gui.battle_control.battle_constants import VIEW_COMPONENT_RULE
 from gui.shared import EVENT_BUS_SCOPE
 
 __all__ = ()
@@ -56,10 +57,10 @@ def _startBattleSession(base, page):
     logDebug("_startBattleSession: {}", page.__class__.__name__)
     components = viewSettings.getComponents()
     if components:
-        logDebug("_startBattleSession: {}", components)
-        componentsConfig = page._SharedPage__componentsConfig
-        newConfig = tuple((i, viewSettings.addReplaceAlias(aliases)) for i, aliases in componentsConfig.getConfig())
-        componentsConfig._ComponentsConfig__config = newConfig
+        config = viewSettings.getComponentsConfig()
+        if page.sessionProvider.registerViewComponents(*config.getConfig()):
+            for alias, objFactory in config.getViewsConfig():
+                page.sessionProvider.addViewComponent(alias, objFactory(), rule=VIEW_COMPONENT_RULE.NONE)
     return base(page)
 
 
