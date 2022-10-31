@@ -1,13 +1,11 @@
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import SWF, STATISTICS, VEHICLE_TYPES, ALIASES
-from armagomen.utils.common import logError, logInfo, logDebug, callback, overrideMethod
+from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
-from gui.Scaleform.daapi.view.battle.shared.page import SharedPage
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
-from gui.battle_control.battle_constants import VIEW_COMPONENT_RULE
 from gui.shared import EVENT_BUS_SCOPE
 
 __all__ = ()
@@ -52,18 +50,6 @@ def getContextMenuHandlers():
     return ()
 
 
-@overrideMethod(SharedPage, "_startBattleSession")
-def _startBattleSession(base, page):
-    logDebug("_startBattleSession: {}", page.__class__.__name__)
-    components = viewSettings.getComponents()
-    if components:
-        config = viewSettings.getComponentsConfig()
-        if page.sessionProvider.registerViewComponents(*config.getConfig()):
-            for alias, objFactory in config.getViewsConfig():
-                page.sessionProvider.addViewComponent(alias, objFactory(), rule=VIEW_COMPONENT_RULE.NONE)
-    return base(page)
-
-
 class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
 
@@ -97,6 +83,9 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if components or self._statisticsEnabled or self._iconsEnabled or self.minimapPlugin.enabled:
             if self._statisticsEnabled:
                 self.statistics.getStatisticsDataFromServer()
+            if components:
+                config = viewSettings.getComponentsConfig()
+                viewSettings.sessionProvider.registerViewComponents(*config.getConfig())
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
