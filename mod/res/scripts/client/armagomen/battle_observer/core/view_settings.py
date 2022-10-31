@@ -182,6 +182,8 @@ class ViewSettings(object):
                 config += ComponentsConfig(config=((BATTLE_CTRL_ID.PREBATTLE_SETUPS_CTRL, (ALIASES.OWN_HEALTH,)),))
             elif alias is ALIASES.TIMER:
                 config += ComponentsConfig(config=((BATTLE_CTRL_ID.ARENA_PERIOD, (ALIASES.TIMER,)),))
+            elif alias is ALIASES.DATE_TIME:
+                config += ComponentsConfig(config=((BATTLE_CTRL_ID.ARENA_PERIOD, (ALIASES.DATE_TIME,)),))
         config = config.getConfig()
         logDebug("viewSettings, getComponentsConfig: {}", config)
         return config
