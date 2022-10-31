@@ -84,8 +84,9 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             if self._statisticsEnabled:
                 self.statistics.getStatisticsDataFromServer()
             if components:
-                config = viewSettings.getComponentsConfig()
-                viewSettings.sessionProvider.registerViewComponents(*config.getConfig())
+                configs = viewSettings.getComponentsConfig()
+                if configs:
+                    viewSettings.sessionProvider.registerViewComponents(*configs)
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 

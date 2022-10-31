@@ -182,7 +182,8 @@ class ViewSettings(object):
                 config += ComponentsConfig(config=((BATTLE_CTRL_ID.PREBATTLE_SETUPS_CTRL, (ALIASES.OWN_HEALTH,)),))
             elif alias is ALIASES.TIMER:
                 config += ComponentsConfig(config=((BATTLE_CTRL_ID.ARENA_PERIOD, (ALIASES.TIMER,)),))
-        logDebug("viewSettings, getComponentsConfig: {}", config.getConfig())
+        config = config.getConfig()
+        logDebug("viewSettings, getComponentsConfig: {}", config)
         return config
 
     def getHiddenWGComponents(self):
