@@ -147,6 +147,7 @@ package net.armagomen.battleobserver
 					{
 						component.visible = false;
 						component.alpha = 0;
+						this.removeChild(component);
 					}
 				}
 			}

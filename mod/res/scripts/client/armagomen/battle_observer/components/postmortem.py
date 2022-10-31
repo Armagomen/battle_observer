@@ -25,8 +25,9 @@ def enablePostMortem(base, mode, **kwargs):
         kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, settings.arcade_camera[ARCADE.START_DEAD_DIST])
     kwargs[POSTMORTEM.CAM_MATRIX] = mode.camera.camera.matrix
     kwargs[POSTMORTEM.DURATION] = 1.0
-    if not ((mode._isPostmortemDelayEnabled() or bool(kwargs.get('respawn', False)))
-            and bool(kwargs.get('bPostmortemDelay'))):
+    respawn = bool(kwargs.get('respawn', False))
+    bPostmortemDelay = bool(kwargs.get('bPostmortemDelay', False))
+    if not ((mode._isPostmortemDelayEnabled() or respawn) and bPostmortemDelay):
         mode._PostMortemControlMode__postmortemDelay = PostmortemDelay()
 
         def setDelayDisabled():

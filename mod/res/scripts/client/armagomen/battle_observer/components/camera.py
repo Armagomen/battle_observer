@@ -1,10 +1,11 @@
 import math
 
 from Avatar import PlayerAvatar
-from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera, MinMax
+from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
+from AvatarInputHandler.DynamicCameras.arcade_camera_helper import MinMax
 from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.settings.default_settings import settings
@@ -12,7 +13,7 @@ from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
 from armagomen.utils.common import overrideMethod, logError, isReplay, callback
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 
-settingsCache = {"needReloadArcadeConfig": False, "needReloadStrategicConfig": False, SNIPER.DYN_ZOOM: False}
+settingsCache = {"needReloadConfig": False, SNIPER.DYN_ZOOM: False}
 
 
 @overrideMethod(SniperCamera, "_readConfigs")
@@ -96,10 +97,8 @@ def showTracer(base, avatar, shooterID, *args):
 
 
 def onModSettingsChanged(config, blockID):
-    if blockID == ARCADE.NAME:
-        settingsCache["needReloadArcadeConfig"] = True
-    elif blockID == STRATEGIC.NAME:
-        settingsCache["needReloadStrategicConfig"] = True
+    if blockID in (ARCADE.NAME, STRATEGIC.NAME):
+        settingsCache["needReloadConfig"] = True
     elif blockID == SNIPER.NAME:
         settingsCache[SNIPER.DYN_ZOOM] = config[GLOBAL.ENABLED] and not isReplay() and \
                                          config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
@@ -112,7 +111,7 @@ settings.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(StrategicCamera, "_readConfigs")
 @overrideMethod(ArtyCamera, "_readConfigs")
 def reload_configs(base, camera, dataSection):
-    if settingsCache["needReloadArcadeConfig"] or settingsCache["needReloadStrategicConfig"]:
+    if settingsCache["needReloadConfig"]:
         camera._baseCfg.clear()
         camera._userCfg.clear()
         camera._cfg.clear()
@@ -133,7 +132,7 @@ def arcade_readConfigs(base, camera, *args, **kwargs):
             cfg = camera._userCfg
             cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
             cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
-    settingsCache["needReloadArcadeConfig"] = False
+    settingsCache["needReloadConfig"] = False
 
 
 @overrideMethod(StrategicCamera, "_readBaseCfg")
@@ -144,4 +143,4 @@ def arty_readConfigs(base, camera, *args, **kwargs):
         cfg = camera._baseCfg
         cfg[STRATEGIC.DIST_RANGE] = (settings.strategic_camera[STRATEGIC.MIN], settings.strategic_camera[STRATEGIC.MAX])
         cfg[STRATEGIC.SCROLL_SENSITIVITY] = settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
-    settingsCache["needReloadStrategicConfig"] = False
+    settingsCache["needReloadConfig"] = False

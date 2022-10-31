@@ -6,7 +6,7 @@ from PlayerEvents import g_playerEvents
 from armagomen.utils.common import logError, logDebug
 
 EfficiencyAVGData = namedtuple("EfficiencyAVGData", ("damage", "assist", "stun", "blocked"))
-DEBUG_STRING = "set vehicle cache: name={} avgDamage={}, avgAssist={}, stun={}, blocked={}"
+DEBUG_STRING = "set vehicle cache: name={}, avgDamage={}, avgAssist={}, stun={}, blocked={}"
 
 
 class CurrentVehicleCachedData(object):
