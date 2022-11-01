@@ -65,11 +65,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self._statLoadTry = 0
         self._statisticsEnabled = False
 
-    def init(self):
-        super(ObserverBusinessHandlerBattle, self).init()
-        self._statisticsEnabled = viewSettings.isWTREnabled() and self.statistics.enabled
-        self._iconsEnabled = viewSettings.isIconsEnabled()
-
     def fini(self):
         self.minimapPlugin.fini()
         self.minimapPlugin = None
@@ -79,6 +74,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
 
     def eventListener(self, event):
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
+        self._statisticsEnabled = viewSettings.isWTREnabled() and self.statistics.enabled
+        self._iconsEnabled = viewSettings.isIconsEnabled()
         components = viewSettings.setComponents()
         if components or self._statisticsEnabled or self._iconsEnabled or self.minimapPlugin.enabled:
             if self._statisticsEnabled:
@@ -106,8 +103,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
         if self.minimapPlugin.enabled:
             self.minimapPlugin.init(flashObject)
-        if self._iconsEnabled or self._statisticsEnabled:
-            callback(1.0, self.loadStatisticView, flashObject)
         callback(20.0, flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
 
     def onViewLoaded(self, view, *args):
@@ -122,3 +117,5 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             to_format_str = "{} {}, has ho attribute {}"
             return logError(to_format_str, alias, repr(flashObject), SWF.ATTRIBUTE_NAME)
         callback(1.0, self.delayLoading, flashObject)
+        if self._iconsEnabled or self._statisticsEnabled:
+            callback(2.0, self.loadStatisticView, flashObject)

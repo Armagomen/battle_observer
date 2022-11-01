@@ -26,7 +26,7 @@ class PremiumTime(object):
 
     def _getPremiumLabelText(self, timeDelta):
         delta = float(getTimeDeltaFromNow(makeLocalServerTime(timeDelta)))
-        template = TEMPLATES.DAYS if timeDelta > ONE_DAY else TEMPLATES.HOURS
+        template = TEMPLATES.DAYS if delta > ONE_DAY else TEMPLATES.HOURS
         self.macros["days"], delta = divmod(delta, ONE_DAY)
         self.macros["hours"], delta = divmod(delta, ONE_HOUR)
         self.macros["min"], self.macros["sec"] = divmod(delta, ONE_MINUTE)
