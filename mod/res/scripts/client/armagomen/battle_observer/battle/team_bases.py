@@ -1,7 +1,7 @@
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
 from armagomen.constants import TEAM_BASES
 from armagomen.utils.common import callback
-from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import getSettingItem
+from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
 from gui.battle_control.controllers import team_bases_ctrl
 from helpers import time_utils
 
@@ -19,7 +19,7 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
         super(TeamBases, self).onExitBattlePage()
 
     def addCapturingTeamBase(self, clientID, playerTeam, points, rate, timeLeft, invadersCnt, capturingStopped):
-        item = getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())
+        item = _getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())
         self.basesDict[clientID] = item
         self.as_addTeamBaseS(item.getColor(), points, self.getInvadersCount(invadersCnt),
                              time_utils.getTimeLeftFormat(timeLeft), item.getCapturingString(points))
@@ -34,7 +34,7 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
         if item:
             self.as_updateCaptureTextS(item.getColor(), item.getCapturedString())
         else:
-            item = getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())
+            item = _getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())
             self.basesDict[clientID] = item
             self.as_addTeamBaseS(item.getColor(), TEAM_BASES.HUNDRED, self.getInvadersCount(invadersCnt),
                                  time_utils.getTimeLeftFormat(timeLeft), item.getCapturedString())
