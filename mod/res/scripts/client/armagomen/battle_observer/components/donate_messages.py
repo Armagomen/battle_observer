@@ -75,7 +75,6 @@ class Donate(object):
                 self.timeDelta = currentTime + datetime.timedelta(minutes=60)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
-                pushMessage(self.getClanMessage(), type=SM_TYPE.Warning)
                 if g_clanCache.clanAbbrev is None and AUTH_REALM == "EU":
                     pushMessage(self.getClanMessage(), type=SM_TYPE.Warning)
 
