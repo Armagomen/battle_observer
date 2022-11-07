@@ -2,13 +2,16 @@
 import datetime
 import random
 
-from armagomen.constants import URLS, IMG, getLogo
-from armagomen.utils.common import logInfo
+from armagomen.constants import IMG, getLogo, URLS, CLAN_ABBREV
+from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod
 from constants import AUTH_REALM
 from gui.SystemMessages import SM_TYPE, pushMessage
+from gui.shared import event_dispatcher
 from gui.shared.ClanCache import g_clanCache
 from gui.shared.personality import ServicesLocator
 from helpers import getClientLanguage
+from notification.NotificationListView import NotificationListView
+from notification.NotificationPopUpViewer import NotificationPopUpViewer
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 
@@ -27,6 +30,8 @@ class Donate(object):
                 "<br><br>Слава Україні", "Не забувайте про підтримку розвитку.<br><br>Слава Україні",
                 "Гарного дня.<br><br>Слава Україні"
             )
+            self.clanMessage = "{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>. " \
+                               "Ніяких зобов'язань. Граєш та отримуєш бонуси (бустери, камуфляжі, та інше).</font></p>"
         else:
             self.messages = (
                 "Good evening, we are from Ukraine. Support the development of the mod.<br><br>Glory to Ukraine",
@@ -34,6 +39,8 @@ class Donate(object):
                 "In these difficult times, I really need your support, even your 10 euro will help."
                 "<br><br>Glory to Ukraine"
             )
+            self.clanMessage = "{}<p><font color='#ffff66'>Join our clan <a href='event:{}'>[{}]</a>. " \
+                               "No obligations. You play and get bonuses (boosters, camouflages, etc.).</font></p>"
 
     def getRandomMessage(self):
         message = random.choice(self.messages)
@@ -53,6 +60,9 @@ class Donate(object):
                                           logo=getLogo(big=False), donat_img=IMG.DONAT_UA,
                                           patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
+    def getClanMessage(self):
+        return self.clanMessage.format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
+
     @property
     def showMessage(self):
         clanAbbrev = g_clanCache.clanAbbrev
@@ -65,7 +75,20 @@ class Donate(object):
                 self.timeDelta = currentTime + datetime.timedelta(minutes=60)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
+                pushMessage(self.getClanMessage(), type=SM_TYPE.Warning)
+                if g_clanCache.clanAbbrev is None and AUTH_REALM == "EU":
+                    pushMessage(self.getClanMessage(), type=SM_TYPE.Warning)
 
 
 if AUTH_REALM != "RU":
     Donate()
+
+
+@overrideMethod(NotificationListView, "onClickAction")
+@overrideMethod(NotificationPopUpViewer, "onClickAction")
+def clickAction(base, view, typeID, entityID, action):
+    if action in URLS:
+        return openWebBrowser(action)
+    if action == CLAN_ABBREV:
+        return event_dispatcher.showClanProfileWindow(500223690, action)
+    return base(view, typeID, entityID, action)
