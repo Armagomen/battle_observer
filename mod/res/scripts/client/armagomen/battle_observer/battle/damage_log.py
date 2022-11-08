@@ -72,7 +72,7 @@ class DamageLog(DamageLogsMeta):
                                 tankAssistAvgColor=COLORS.NORMAL_TEXT,
                                 tankBlockedAvgColor=COLORS.NORMAL_TEXT,
                                 tankStunAvgColor=COLORS.NORMAL_TEXT)
-            if self.sessionProvider.arenaVisitor.gui.isRandomBattle():
+            if self.gui.isRandomBattle():
                 self.top_log.update(tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
                                     tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
                                     tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,

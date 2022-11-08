@@ -46,7 +46,7 @@ def hasDogTag(base, *args, **kwargs):
 
 
 # update gun dispersion
-@overrideMethod(VehicleGunRotator, "__updateGunMarker")
+@overrideMethod(VehicleGunRotator, "updateRotationAndGunMarker")
 def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
     base(rotator, *args, **kwargs)
     g_events.onDispersionAngleChanged(rotator)

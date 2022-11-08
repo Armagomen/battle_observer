@@ -25,6 +25,10 @@ class BaseModMeta(BaseDAAPIComponent):
         settings_name = ALIAS_TO_CONFIG_NAME.get(self.getAlias(), GLOBAL.EMPTY_LINE)
         self.settings = getattr(settings, settings_name, None) or settings
 
+    @property
+    def gui(self):
+        return self.sessionProvider.arenaVisitor.gui
+
     @staticmethod
     def getShadowSettings():
         return settings.shadow_settings
