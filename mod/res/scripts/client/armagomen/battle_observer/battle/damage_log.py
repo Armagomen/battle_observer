@@ -71,11 +71,12 @@ class DamageLog(DamageLogsMeta):
                                 tankDamageAvgColor=COLORS.NORMAL_TEXT,
                                 tankAssistAvgColor=COLORS.NORMAL_TEXT,
                                 tankBlockedAvgColor=COLORS.NORMAL_TEXT,
-                                tankStunAvgColor=COLORS.NORMAL_TEXT,
-                                tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
-                                tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
-                                tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
-                                tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
+                                tankStunAvgColor=COLORS.NORMAL_TEXT)
+            if self.sessionProvider.arenaVisitor.gui.isRandomBattle():
+                self.top_log.update(tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
+                                    tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
+                                    tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
+                                    tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
             self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
         self.__isExtended = self.settings.log_extended[GLOBAL.ENABLED]
         if self.__isExtended:

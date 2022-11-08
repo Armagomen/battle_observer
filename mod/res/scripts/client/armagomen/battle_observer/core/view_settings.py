@@ -140,6 +140,10 @@ class ViewSettings(object):
         return self.__components
 
     def clear(self):
+        for alias in self.__components:
+            _GAME_UI.discard(alias)
+            _SPECTATOR_UI.discard(alias)
+            _NEVER_HIDE.discard(alias)
         self.__components.clear()
         self.__hiddenComponents.clear()
         logDebug("clear viewSettings components")
@@ -152,12 +156,6 @@ class ViewSettings(object):
                 _SPECTATOR_UI.add(alias)
                 if alias is ALIASES.SIXTH_SENSE:
                     _NEVER_HIDE.add(alias)
-            else:
-                _GAME_UI.discard(alias)
-                _SPECTATOR_UI.discard(alias)
-                self.__components.discard(alias)
-                if alias is ALIASES.SIXTH_SENSE:
-                    _NEVER_HIDE.discard(alias)
 
     def setHiddenComponents(self):
         for alias, wg_alias in ALIASES_TO_HIDE:
