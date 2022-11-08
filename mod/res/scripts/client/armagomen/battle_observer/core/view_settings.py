@@ -135,6 +135,7 @@ class ViewSettings(object):
         if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
             self.checkComponents()
             self.setHiddenComponents()
+            self.sessionProvider.registerViewComponents(*self.getComponentsConfig())
         logDebug("viewSettings setComponents: components={}", self.__components)
         return self.__components
 
