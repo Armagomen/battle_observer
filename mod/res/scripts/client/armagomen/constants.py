@@ -324,8 +324,8 @@ class PANELS:
     DAMAGE = "damage"
 
 
-SAVE_SHOOT = namedtuple("SAVE_SHOOT", ("NAME", "MSG", "TEMPLATE", "DESTROYED_BLOCK", "VEHICLE", "TEAM", "HOT_KEY"))(
-    "save_shoot", "msg", "Shot blocked.", "block_on_destroyed", "Vehicle", "team", "shoot_hotkey")
+SAVE_SHOOT = namedtuple("SAVE_SHOOT", ("NAME", "DESTROYED_BLOCK", "VEHICLE", "TEAM", "HOT_KEY"))(
+    "save_shoot", "block_on_destroyed", "Vehicle", "team", "shoot_hotkey")
 
 ANOTHER = namedtuple("ANOTHER", (
     "CONFIG_SELECT", "SHADOW_SETTINGS", "FRIEND_LIST", "ACCOUNT_DBID", "USERS", "DBID", "BADGES", "IS_TEAM_KILLER",

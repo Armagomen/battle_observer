@@ -423,8 +423,7 @@ class DefaultSettings(object):
         }
         self.save_shoot = {
             GLOBAL.ENABLED: False,
-            SAVE_SHOOT.DESTROYED_BLOCK: True,
-            SAVE_SHOOT.MSG: SAVE_SHOOT.TEMPLATE
+            SAVE_SHOOT.DESTROYED_BLOCK: True
         }
         self.minimap = {
             GLOBAL.ENABLED: False,

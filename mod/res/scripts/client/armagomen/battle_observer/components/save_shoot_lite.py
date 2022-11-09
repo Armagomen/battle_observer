@@ -1,3 +1,4 @@
+# coding=utf-8
 from Avatar import PlayerAvatar
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.settings.default_settings import settings
@@ -7,12 +8,23 @@ from armagomen.utils.keys_listener import g_keysListener
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from gui.shared.personality import ServicesLocator
+from helpers import getClientLanguage, dependency
 from messenger.MessengerEntry import g_instance
+from skeletons.gui.battle_session import IBattleSessionProvider
 
 __all__ = ["save_shoot_lite"]
 
+lang = getClientLanguage()
+if lang == 'uk':
+    LOCKED_MESSAGE = 'Постріл в {} заблоковано'
+elif lang in ('ru', 'be'):
+    LOCKED_MESSAGE = 'Выстрел в {} заблокирован'
+else:
+    LOCKED_MESSAGE = 'Shot at {} blocked'
+
 
 class SaveShootLite(object):
+    sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
         settings.onModSettingsChanged += self.onModSettingsChanged
@@ -21,24 +33,24 @@ class SaveShootLite(object):
         self.enabled = False
         self.unlockShoot = False
         self.destroyedBlock = False
-        self.msg = None
         self.vehicleErrorComponent = None
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
     def shoot(self, base, avatar, isRepeat=False):
         if not self.enabled or self.unlockShoot or not self.is_targetAllyOrDeath(avatar):
             return base(avatar, isRepeat=isRepeat)
-        if isRepeat or not self.msg:
+        if isRepeat:
             return
-        g_instance.gui.addClientMessage(self.msg)
+        vehicleInfoVO = self.sessionProvider.getArenaDP().getVehicleInfo(avatar.target.id)
+        message = LOCKED_MESSAGE.format(vehicleInfoVO.vehicleType.shortName)
+        g_instance.gui.addClientMessage(message)
         if self.vehicleErrorComponent is not None:
-            self.vehicleErrorComponent.as_showYellowMessageS(None, self.msg)
+            self.vehicleErrorComponent.as_showYellowMessageS(None, message)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == SAVE_SHOOT.NAME:
             self.enabled = config[GLOBAL.ENABLED] and not isReplay()
             self.destroyedBlock = config[SAVE_SHOOT.DESTROYED_BLOCK]
-            self.msg = config[SAVE_SHOOT.MSG]
 
     def onEnterBattlePage(self):
         if self.enabled:
