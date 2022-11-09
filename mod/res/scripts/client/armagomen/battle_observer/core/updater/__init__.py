@@ -132,7 +132,7 @@ class Updater(DownloadThread):
 
     @staticmethod
     def tupleVersion(version):
-        return tuple(map(int, version.split(GLOBAL.DOT)))
+        return tuple(map(int, version.split('.')))
 
     def subscribe(self):
         result = self.request_last_version()

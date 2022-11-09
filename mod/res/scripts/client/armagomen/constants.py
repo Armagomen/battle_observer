@@ -63,7 +63,6 @@ class GLOBAL:
     CONFIG_ERROR = "macros not found"
     CUSTOM_COLOR = "customColor"
     C_INTERFACE_SPLITTER = "*"
-    DOT = "."
     EMPTY_LINE = ""
     ENABLED = "enabled"
     FIRST, LAST = (0, -1)
@@ -179,9 +178,6 @@ class DAMAGE_LOG:
     NORMAL, GOLD = SHELL
     SHELL_COLOR = "shellColor"
     SHELL_TYPE = "shellType"
-    SHELL_ICON = "shellIcon"
-    SHELL_TYPES = "shellTypes"
-    SHELL_ICONS = "shellIcons"
     SHOTS = "shots"
     STUN_ICON = "stunIcon"
     TANK_LEVEL = "TankLevel"
@@ -189,18 +185,14 @@ class DAMAGE_LOG:
     TEMPLATE_MAIN_DMG = "templateMainDMG"
     TOP_LOG = "log_total"
     TOTAL_DAMAGE = "totalDamage"
-    UNKNOWN_TAG = "unknown"
     USER_NAME = "userName"
     VEHICLE_CLASS = "vehicleClass"
-    VEHICLE_CLASS_COLORS = "vehicleClassColors"
-    VEHICLE_CLASS_ICON = "vehicleClassIcon"
     WG_ASSIST = "wg_log_hide_assist"
     WG_BLOCKED = "wg_log_hide_block"
     WG_CRITICS = "wg_log_hide_critics"
     WG_POS = "wg_log_pos_fix"
     UNDEFINED = "UNDEFINED"
     NOT_SHELL = "--"
-    PREMIUM = "_PREMIUM"
     WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
 
 
