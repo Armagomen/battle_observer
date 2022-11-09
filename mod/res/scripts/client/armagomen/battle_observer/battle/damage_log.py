@@ -21,6 +21,7 @@ _SHELL_TYPES_TO_STR = {
     BATTLE_LOG_SHELL_TYPES.HE_LEGACY_NO_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE
 }
 EXTENDED_FEEDBACK = (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
+PREMIUM_SHELL_END = "_PREMIUM"
 
 _EVENT_TO_TOP_LOG_MACROS = {
     FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: "playerDamage",
@@ -45,7 +46,7 @@ def getI18nShellName(shellType):
 
 
 def isShellGold(shell):
-    return DAMAGE_LOG.PREMIUM in shell.iconName
+    return shell.iconName.endswith(PREMIUM_SHELL_END)
 
 
 class DamageLog(DamageLogsMeta):
@@ -71,11 +72,12 @@ class DamageLog(DamageLogsMeta):
                                 tankDamageAvgColor=COLORS.NORMAL_TEXT,
                                 tankAssistAvgColor=COLORS.NORMAL_TEXT,
                                 tankBlockedAvgColor=COLORS.NORMAL_TEXT,
-                                tankStunAvgColor=COLORS.NORMAL_TEXT,
-                                tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
-                                tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
-                                tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
-                                tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
+                                tankStunAvgColor=COLORS.NORMAL_TEXT)
+            if self.gui.isRandomBattle():
+                self.top_log.update(tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
+                                    tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
+                                    tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
+                                    tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
             self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
         self.__isExtended = self.settings.log_extended[GLOBAL.ENABLED]
         if self.__isExtended:

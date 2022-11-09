@@ -25,6 +25,10 @@ class BaseModMeta(BaseDAAPIComponent):
         settings_name = ALIAS_TO_CONFIG_NAME.get(self.getAlias(), GLOBAL.EMPTY_LINE)
         self.settings = getattr(settings, settings_name, None) or settings
 
+    @property
+    def gui(self):
+        return self.sessionProvider.arenaVisitor.gui
+
     @staticmethod
     def getShadowSettings():
         return settings.shadow_settings
@@ -42,7 +46,9 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @staticmethod
     def doLog(*args):
-        logInfo("\n".join(str(arg) + ":" + str(dir(arg)) for arg in args))
+        for arg in args:
+            info = "{}:{} - {}".format(arg.__name__, arg, dir(arg))
+            logInfo(info)
 
     def isColorBlind(self):
         return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))

@@ -6,7 +6,8 @@ from armagomen.constants import GLOBAL, DISTANCE, POSTMORTEM
 from armagomen.utils.common import logDebug
 from armagomen.utils.timers import CyclicTimerEvent
 from constants import ARENA_PERIOD, ARENA_PERIOD_NAMES
-from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler, getPlayerTeam
+from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler
+from gui.battle_control.battle_constants import PLAYER_GUI_PROPS
 
 
 class Distance(DistanceMeta):
@@ -48,11 +49,8 @@ class Distance(DistanceMeta):
             handler.onCameraChanged += self.onCameraChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
-            feedback.onMinimapVehicleAdded += self.onMinimapVehicleAdded
-            feedback.onMinimapVehicleRemoved += self.removeVehicle
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled += self.removeVehicle
+            feedback.onVehicleMarkerAdded += self.onVehicleMarkerAdded
+            feedback.onVehicleMarkerRemoved += self.onVehicleMarkerRemoved
 
     def onExitBattlePage(self):
         if self.timeEvent is not None:
@@ -63,20 +61,17 @@ class Distance(DistanceMeta):
             handler.onCameraChanged -= self.onCameraChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
-            feedback.onMinimapVehicleAdded -= self.onMinimapVehicleAdded
-            feedback.onMinimapVehicleRemoved -= self.removeVehicle
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleKilled -= self.removeVehicle
+            feedback.onVehicleMarkerAdded -= self.onVehicleMarkerAdded
+            feedback.onVehicleMarkerRemoved -= self.onVehicleMarkerRemoved
         super(Distance, self).onExitBattlePage()
 
-    def onMinimapVehicleAdded(self, vProxy, vInfo, _):
+    def onVehicleMarkerAdded(self, vProxy, vInfo, guiProps):
         if self.isPostmortem:
             return
-        if getPlayerTeam() != vInfo.team and vProxy.isAlive():
+        if guiProps == PLAYER_GUI_PROPS.enemy and vProxy.isAlive():
             self.vehicles[vInfo.vehicleID] = vProxy
 
-    def removeVehicle(self, vehicleID, *args, **kwargs):
+    def onVehicleMarkerRemoved(self, vehicleID):
         if vehicleID in self.vehicles:
             self.vehicles.pop(vehicleID)
 

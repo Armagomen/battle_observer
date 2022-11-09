@@ -135,10 +135,15 @@ class ViewSettings(object):
         if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
             self.checkComponents()
             self.setHiddenComponents()
+            self.sessionProvider.registerViewComponents(*self.getComponentsConfig())
         logDebug("viewSettings setComponents: components={}", self.__components)
         return self.__components
 
     def clear(self):
+        for alias in self.__components:
+            _GAME_UI.discard(alias)
+            _SPECTATOR_UI.discard(alias)
+            _NEVER_HIDE.discard(alias)
         self.__components.clear()
         self.__hiddenComponents.clear()
         logDebug("clear viewSettings components")
@@ -151,12 +156,6 @@ class ViewSettings(object):
                 _SPECTATOR_UI.add(alias)
                 if alias is ALIASES.SIXTH_SENSE:
                     _NEVER_HIDE.add(alias)
-            else:
-                _GAME_UI.discard(alias)
-                _SPECTATOR_UI.discard(alias)
-                self.__components.discard(alias)
-                if alias is ALIASES.SIXTH_SENSE:
-                    _NEVER_HIDE.discard(alias)
 
     def setHiddenComponents(self):
         for alias, wg_alias in ALIASES_TO_HIDE:

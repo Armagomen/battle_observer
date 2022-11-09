@@ -51,7 +51,14 @@
 			if (this.bar.scaleX != newScale)
 			{
 				var scale:Number = Math.max(0, newScale);
-				this.animation.continueTo(scale, this.visible ? this.animationTime : 0.01);
+				if (this.animationTime > 0)
+				{
+					this.animation.continueTo(scale, this.visible ? this.animationTime : 0.01);
+				}
+				else
+				{
+					this.bar.scaleX = scale;
+				}
 			}
 		}
 		

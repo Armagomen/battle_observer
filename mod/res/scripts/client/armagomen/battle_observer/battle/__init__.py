@@ -80,8 +80,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if components or self._statisticsEnabled or self._iconsEnabled or self.minimapPlugin.enabled:
             if self._statisticsEnabled:
                 self.statistics.getStatisticsDataFromServer()
-            if components:
-                viewSettings.sessionProvider.registerViewComponents(*viewSettings.getComponentsConfig())
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 

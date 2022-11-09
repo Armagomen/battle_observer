@@ -1,10 +1,8 @@
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SERVICE_CHANNEL, GLOBAL, URLS
-from armagomen.utils.common import openWebBrowser, overrideMethod
+from armagomen.constants import SERVICE_CHANNEL, GLOBAL
+from armagomen.utils.common import overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
-from notification.NotificationListView import NotificationListView
-from notification.NotificationPopUpViewer import NotificationPopUpViewer
 
 channel_filter = set()
 
@@ -51,11 +49,3 @@ def onModSettingsChanged(config, blockID):
 
 
 settings.onModSettingsChanged += onModSettingsChanged
-
-
-@overrideMethod(NotificationListView, "onClickAction")
-@overrideMethod(NotificationPopUpViewer, "onClickAction")
-def clickAction(base, view, typeID, entityID, action):
-    if action in URLS:
-        return openWebBrowser(action)
-    return base(view, typeID, entityID, action)

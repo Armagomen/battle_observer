@@ -46,7 +46,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 						}
 						var fps:Object       = settings.debugGraphics.fpsBar;
 						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
-						this.fpsBar = new ProgressBar(fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0.1);
+						this.fpsBar = new ProgressBar(fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0);
 						this.addChild(this.fpsBar);
 					}
 					
@@ -54,7 +54,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 					{
 						var ping:Object       = settings.debugGraphics.pingBar;
 						var pingfilters:Array = [Filters.handleGlowFilter(ping.glowFilter)];
-						this.pingBar = new ProgressBar(ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0.1);
+						this.pingBar = new ProgressBar(ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0);
 						this.addChild(this.pingBar);
 					}
 				}

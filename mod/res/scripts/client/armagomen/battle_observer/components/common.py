@@ -6,7 +6,7 @@ from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
-from gui.Scaleform.daapi.view.meta.LobbyHeaderMeta import LobbyHeaderMeta
+from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
@@ -46,7 +46,7 @@ def hasDogTag(base, *args, **kwargs):
 
 
 # update gun dispersion
-@overrideMethod(VehicleGunRotator, "__updateGunMarker")
+@overrideMethod(VehicleGunRotator, "updateRotationAndGunMarker")
 def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
     base(rotator, *args, **kwargs)
     g_events.onDispersionAngleChanged(rotator)
@@ -70,8 +70,9 @@ def playStunSoundIfNeed(base, *args, **kwargs):
 
 @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
 def _onVehicleStateUpdated(base, eq, state, value):
-    if not settings.main[MAIN.STUN_SOUND] and state != VEHICLE_VIEW_STATE.STUN:
-        return base(eq, state, value)
+    if state == VEHICLE_VIEW_STATE.STUN and settings.main[MAIN.STUN_SOUND]:
+        return
+    return base(eq, state, value)
 
 
 # hide shared chat button
@@ -88,14 +89,11 @@ def handleLazyChannelCtlInited(base, entry, event):
 
 
 # hide button counters in lobby header
-@overrideMethod(LobbyHeaderMeta, "as_removeButtonCounterS")
-@overrideMethod(LobbyHeaderMeta, "as_setButtonCounterS")
+@overrideMethod(LobbyHeader, "as_removeButtonCounterS")
+@overrideMethod(LobbyHeader, "as_setButtonCounterS")
 def buttonCounterS(base, *args, **kwargs):
     if not settings.main[MAIN.HIDE_BTN_COUNTERS]:
         return base(*args, **kwargs)
-
-
-BASE_NOTIFICATIONS = (msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND)
 
 
 def onModSettingsChanged(_settings, blockID):
@@ -103,7 +101,8 @@ def onModSettingsChanged(_settings, blockID):
         if _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
             msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
         elif not _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
-            msgs_ctrl._ALLY_KILLED_SOUND, msgs_ctrl._ENEMY_KILLED_SOUND = BASE_NOTIFICATIONS
+            msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
+            msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
 
 
 settings.onModSettingsChanged += onModSettingsChanged

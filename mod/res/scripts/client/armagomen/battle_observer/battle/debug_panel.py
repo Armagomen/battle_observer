@@ -3,11 +3,11 @@ from collections import defaultdict
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.meta.battle.debug_panel_meta import DebugPanelMeta
 from armagomen.constants import DEBUG_PANEL, GLOBAL, COLORS
-from gui.battle_control.controllers import debug_ctrl
+from gui.battle_control.controllers.debug_ctrl import IDebugPanel
 from gui.shared.personality import ServicesLocator
 
 
-class DebugPanel(DebugPanelMeta, debug_ctrl.IDebugPanel):
+class DebugPanel(DebugPanelMeta, IDebugPanel):
 
     def __init__(self):
         super(DebugPanel, self).__init__()
