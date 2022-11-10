@@ -12,32 +12,26 @@ class ArmorCalculator(ArmorCalcMeta):
         super(ArmorCalculator, self).__init__()
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
 
-    def onBattleSessionStart(self):
-        super(ArmorCalculator, self).onBattleSessionStart()
+    def _populate(self):
+        super(ArmorCalculator, self)._populate()
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
 
-    def onBattleSessionStop(self):
+    def _dispose(self):
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         g_events.onArmorChanged -= self.onArmorChanged
         g_events.onMarkerColorChanged -= self.onMarkerColorChanged
-        super(ArmorCalculator, self).onBattleSessionStop()
-
-    def _populate(self):
-        super(ArmorCalculator, self)._populate()
-        ctrl = self.sessionProvider.shared.crosshair
-        if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
-
-    def _dispose(self):
-        ctrl = self.sessionProvider.shared.crosshair
-        if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):

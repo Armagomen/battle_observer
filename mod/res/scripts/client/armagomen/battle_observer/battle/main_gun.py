@@ -32,22 +32,19 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.maxDamage = GLOBAL.ZERO
         self.dealtMoreDamage = False
 
-    def onBattleSessionStart(self):
-        super(MainGun, self).onBattleSessionStart()
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleHealthChanged += self.onPlayersDamaged
-
-    def onBattleSessionStop(self):
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleHealthChanged -= self.onPlayersDamaged
-        super(MainGun, self).onBattleSessionStop()
-
     def _populate(self):
         super(MainGun, self)._populate()
         self.macros.update(mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
                            mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleHealthChanged += self.onPlayersDamaged
+
+    def _dispose(self):
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleHealthChanged -= self.onPlayersDamaged
+        super(MainGun, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
         if enemiesHP < self.gunLeft and not self.isLowHealth:

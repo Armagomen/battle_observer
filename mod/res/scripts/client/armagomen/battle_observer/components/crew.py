@@ -2,7 +2,7 @@ from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import MAIN, CREW_XP, getLogo
-from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles
+from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles, logDebug
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
 from frameworks.wulf import WindowLayer
@@ -54,16 +54,19 @@ class CrewProcessor(object):
             logInfo("The accelerated crew training is %s for '%s'" % (value, vehicle.userName))
 
     @staticmethod
-    def isPPFullXP(vehicle):
+    def isPostProgressionFullXP(vehicle):
         iterator = vehicle.postProgression.iterOrderedSteps()
-        return vehicle.xp >= sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
+        currentXP = vehicle.xp
+        needToProgress = sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
+        logDebug("isPPFullXP - {}: {}/{}", vehicle.userName, currentXP, needToProgress)
+        return currentXP >= needToProgress
 
     def isAccelerateTraining(self, vehicle):
         if not vehicle.postProgressionAvailability(unlockOnly=True).result:
             return True, CREW_XP.NOT_AVAILABLE
         elif vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL:
             return True, CREW_XP.IS_FULL_COMPLETE
-        elif self.isPPFullXP(vehicle):
+        elif self.isPostProgressionFullXP(vehicle):
             return True, CREW_XP.IS_FULL_XP
         else:
             return False, CREW_XP.NED_TURN_OFF

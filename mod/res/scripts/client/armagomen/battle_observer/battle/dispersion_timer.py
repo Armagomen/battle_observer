@@ -23,11 +23,19 @@ class DispersionTimer(DispersionTimerMeta):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
+        handler = getInputHandler()
+        if handler is not None and hasattr(handler, "onCameraChanged"):
+            handler.onCameraChanged += self.onCameraChanged
+        g_events.onDispersionAngleChanged += self.updateDispersion
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
+        handler = getInputHandler()
+        if handler is not None and hasattr(handler, "onCameraChanged"):
+            handler.onCameraChanged -= self.onCameraChanged
+        g_events.onDispersionAngleChanged -= self.updateDispersion
         super(DispersionTimer, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
@@ -52,17 +60,3 @@ class DispersionTimer(DispersionTimerMeta):
         self.macro[DISPERSION_TIME.PERCENT] = percent
         template = DISPERSION.TIMER_REGULAR_TEMPLATE if percent < 100 else DISPERSION.TIMER_DONE_TEMPLATE
         self.as_updateTimerTextS(self.settings[template] % self.macro)
-
-    def onBattleSessionStart(self):
-        super(DispersionTimer, self).onBattleSessionStart()
-        handler = getInputHandler()
-        if handler is not None and hasattr(handler, "onCameraChanged"):
-            handler.onCameraChanged += self.onCameraChanged
-        g_events.onDispersionAngleChanged += self.updateDispersion
-
-    def onBattleSessionStop(self):
-        handler = getInputHandler()
-        if handler is not None and hasattr(handler, "onCameraChanged"):
-            handler.onCameraChanged -= self.onCameraChanged
-        g_events.onDispersionAngleChanged -= self.updateDispersion
-        super(DispersionTimer, self).onBattleSessionStop()

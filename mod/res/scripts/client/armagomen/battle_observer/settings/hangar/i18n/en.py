@@ -60,15 +60,13 @@ localization = {
                                            "Chuck Norris and so on with the standard / from the voiceover mod. ",
         "disable_score_sound": "Disable score change sound",
         "premium_time": "Display exact premium time.",
-        "auto_crew_training": "Uncheck / Tick Accelerated Crew Training Automatically.",
-        "auto_crew_training_tooltip": "If the 'Field Upgrade' is available for the tank and is not pumped, the "
-                                      "checkbox for the crew will be unchecked automatically, as soon as the level "
-                                      "of progression is at its maximum, you will be prompted to turn it back on.",
+        "auto_crew_training": "Automatic switching of 'Accelerated crew training'",
+        "auto_crew_training_tooltip": "Monitors whether 'Field Upgrade' is upgraded/available and enables or disables"
+                                      " 'Expedited Crew Training' accordingly.",
         "do_not_buy_directives_for_currency_automatically": "Do not replenish directives for currency (automatically)",
         "do_not_buy_directives_for_currency_automatically_tooltip":
-            "Prevent automatic replenishment of instructions for game currency if they are not in stock. "
-            "It will also turn on automatic replenishment from the warehouse if they are there and you forgot to "
-            "tick the box.",
+            "Prevent automatic replenishment of instructions for game currency if they are not in stock. It will also "
+            "turn on automatic replenishment from the warehouse if they are there and you forgot to tick the box.",
         "hide_hint_panel": "Disable hints in battle",
         "hide_field_mail": "Disable field mail",
         "auto_return_crew": "Automatic crew return",

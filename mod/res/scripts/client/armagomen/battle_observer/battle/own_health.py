@@ -37,6 +37,10 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
+        ctrl = self.sessionProvider.shared.vehicleState
+        if ctrl is not None:
+            ctrl.onVehicleControlling += self.__onVehicleControlling
+            ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
 
     def onArenaPeriod(self, period, *args):
         self.as_setComponentVisible(period == ARENA_PERIOD.BATTLE)
@@ -49,19 +53,11 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         g_playerEvents.onArenaPeriodChange -= self.onArenaPeriod
-        super(OwnHealth, self)._dispose()
-
-    def onBattleSessionStart(self):
-        ctrl = self.sessionProvider.shared.vehicleState
-        if ctrl is not None:
-            ctrl.onVehicleControlling += self.__onVehicleControlling
-            ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
-
-    def onBattleSessionStop(self):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling -= self.__onVehicleControlling
             ctrl.onVehicleStateUpdated -= self.__onVehicleStateUpdated
+        super(OwnHealth, self)._dispose()
 
     def __onVehicleControlling(self, vehicle):
         if self.isPostmortem:

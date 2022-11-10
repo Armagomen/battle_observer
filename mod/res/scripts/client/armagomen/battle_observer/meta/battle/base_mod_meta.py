@@ -55,26 +55,16 @@ class BaseModMeta(BaseDAAPIComponent):
     def _populate(self):
         super(BaseModMeta, self)._populate()
         self.setSettings()
-        self.sessionProvider.onBattleSessionStart += self.onBattleSessionStart
-        self.sessionProvider.onBattleSessionStop += self.onBattleSessionStop
         self.as_onAfterPopulateS()
         logDebug("battle module '{}' loaded", self.getAlias())
 
     def _dispose(self):
-        self.sessionProvider.onBattleSessionStart -= self.onBattleSessionStart
-        self.sessionProvider.onBattleSessionStop -= self.onBattleSessionStop
         super(BaseModMeta, self)._dispose()
         logDebug("battle module '{}' destroyed", self.getAlias())
 
     @property
     def playerVehicleID(self):
         return self._arenaDP.getPlayerVehicleID()
-
-    def onBattleSessionStart(self):
-        pass
-
-    def onBattleSessionStop(self):
-        pass
 
     def as_setComponentVisible(self, param):
         return self.flashObject.setCompVisible(param) if self._isDAAPIInited() else None
