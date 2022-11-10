@@ -42,8 +42,8 @@ class Distance(DistanceMeta):
             self.timeEvent = None
         logDebug("Distance: onArenaPeriodChange: {}", ARENA_PERIOD_NAMES[period])
 
-    def onEnterBattlePage(self):
-        super(Distance, self).onEnterBattlePage()
+    def onBattleSessionStart(self):
+        super(Distance, self).onBattleSessionStart()
         handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -52,7 +52,7 @@ class Distance(DistanceMeta):
             feedback.onVehicleMarkerAdded += self.onVehicleMarkerAdded
             feedback.onVehicleMarkerRemoved += self.onVehicleMarkerRemoved
 
-    def onExitBattlePage(self):
+    def onBattleSessionStop(self):
         if self.timeEvent is not None:
             self.timeEvent.stop()
             self.timeEvent = None
@@ -63,7 +63,7 @@ class Distance(DistanceMeta):
         if feedback is not None:
             feedback.onVehicleMarkerAdded -= self.onVehicleMarkerAdded
             feedback.onVehicleMarkerRemoved -= self.onVehicleMarkerRemoved
-        super(Distance, self).onExitBattlePage()
+        super(Distance, self).onBattleSessionStop()
 
     def onVehicleMarkerAdded(self, vProxy, vInfo, guiProps):
         if self.isPostmortem:

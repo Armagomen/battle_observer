@@ -53,16 +53,16 @@ class DispersionTimer(DispersionTimerMeta):
         template = DISPERSION.TIMER_REGULAR_TEMPLATE if percent < 100 else DISPERSION.TIMER_DONE_TEMPLATE
         self.as_updateTimerTextS(self.settings[template] % self.macro)
 
-    def onEnterBattlePage(self):
-        super(DispersionTimer, self).onEnterBattlePage()
+    def onBattleSessionStart(self):
+        super(DispersionTimer, self).onBattleSessionStart()
         handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onDispersionAngleChanged += self.updateDispersion
 
-    def onExitBattlePage(self):
+    def onBattleSessionStop(self):
         handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         g_events.onDispersionAngleChanged -= self.updateDispersion
-        super(DispersionTimer, self).onExitBattlePage()
+        super(DispersionTimer, self).onBattleSessionStop()

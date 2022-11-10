@@ -97,8 +97,8 @@ class DamageLog(DamageLogsMeta):
             return self.__input_log
         raise ValueError(DAMAGE_LOG.WARNING_MESSAGE.format(eventType))
 
-    def onEnterBattlePage(self):
-        super(DamageLog, self).onEnterBattlePage()
+    def onBattleSessionStart(self):
+        super(DamageLog, self).onBattleSessionStart()
         feedback = self.sessionProvider.shared.feedback
         if feedback:
             feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
@@ -113,7 +113,7 @@ class DamageLog(DamageLogsMeta):
                 self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
                 self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
-    def onExitBattlePage(self):
+    def onBattleSessionStop(self):
         feedback = self.sessionProvider.shared.feedback
         if feedback:
             feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
@@ -124,7 +124,7 @@ class DamageLog(DamageLogsMeta):
                     arena.onVehicleKilled -= self.onVehicleKilled
             if self.top_log_enabled:
                 self.top_log.clear()
-        super(DamageLog, self).onExitBattlePage()
+        super(DamageLog, self).onBattleSessionStop()
 
     def onLogsAltMode(self, isKeyDown):
         """Hot key event"""

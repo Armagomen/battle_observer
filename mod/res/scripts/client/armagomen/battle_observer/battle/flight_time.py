@@ -26,21 +26,21 @@ class FlightTime(FlightTimeMeta):
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         super(FlightTime, self)._dispose()
 
-    def onEnterBattlePage(self):
-        super(FlightTime, self).onEnterBattlePage()
+    def onBattleSessionStart(self):
+        super(FlightTime, self).onBattleSessionStart()
         if self.shared.crosshair:
             self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
 
-    def onExitBattlePage(self):
+    def onBattleSessionStop(self):
         if self.shared.crosshair:
             self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
-        super(FlightTime, self).onExitBattlePage()
+        super(FlightTime, self).onBattleSessionStop()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         if ctrlMode in POSTMORTEM.MODES:

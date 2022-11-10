@@ -14,9 +14,9 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
         super(TeamBases, self).__init__()
         self.basesDict = {}
 
-    def onExitBattlePage(self):
+    def onBattleSessionStop(self):
         self.removeTeamsBases()
-        super(TeamBases, self).onExitBattlePage()
+        super(TeamBases, self).onBattleSessionStop()
 
     def addCapturingTeamBase(self, clientID, playerTeam, points, rate, timeLeft, invadersCnt, capturingStopped):
         item = getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())

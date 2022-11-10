@@ -94,12 +94,14 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         flashObject.as_createStatisticComponent(self._iconsEnabled, self.statistics.itemsWTRData, cutWidth, fullWidth,
                                                 typeColors, iconMultiplier)
 
-    def delayLoading(self, flashObject):
-        flashObject.as_observerCreateComponents(viewSettings.getComponents())
-        flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
+    def delayLoading(self, view):
+        components = viewSettings.getComponents()
+        view._blToggling.update(components)
+        view.flashObject.as_observerCreateComponents(components)
+        view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
         if self.minimapPlugin.enabled:
-            self.minimapPlugin.init(flashObject)
-        callback(20.0, flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
+            self.minimapPlugin.init(view.flashObject)
+        callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
 
     def onViewLoaded(self, view, *args):
         alias = view.getAlias()
@@ -108,10 +110,9 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
         g_events.onBattlePageLoaded(view)
-        flashObject = view.flashObject
-        if not hasattr(flashObject, SWF.ATTRIBUTE_NAME):
+        if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{} {}, has ho attribute {}"
-            return logError(to_format_str, alias, repr(flashObject), SWF.ATTRIBUTE_NAME)
-        callback(1.0, self.delayLoading, flashObject)
+            return logError(to_format_str, alias, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
+        callback(1.0, self.delayLoading, view)
         if self._iconsEnabled or self._statisticsEnabled:
-            callback(2.0, self.loadStatisticView, flashObject)
+            callback(2.0, self.loadStatisticView, view.flashObject)

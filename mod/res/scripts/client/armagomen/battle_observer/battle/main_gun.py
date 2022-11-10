@@ -32,17 +32,17 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.maxDamage = GLOBAL.ZERO
         self.dealtMoreDamage = False
 
-    def onEnterBattlePage(self):
-        super(MainGun, self).onEnterBattlePage()
+    def onBattleSessionStart(self):
+        super(MainGun, self).onBattleSessionStart()
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged += self.onPlayersDamaged
 
-    def onExitBattlePage(self):
+    def onBattleSessionStop(self):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged -= self.onPlayersDamaged
-        super(MainGun, self).onExitBattlePage()
+        super(MainGun, self).onBattleSessionStop()
 
     def _populate(self):
         super(MainGun, self)._populate()

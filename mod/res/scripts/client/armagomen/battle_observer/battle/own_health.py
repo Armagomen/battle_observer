@@ -51,13 +51,13 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         g_playerEvents.onArenaPeriodChange -= self.onArenaPeriod
         super(OwnHealth, self)._dispose()
 
-    def onEnterBattlePage(self):
+    def onBattleSessionStart(self):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling += self.__onVehicleControlling
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
 
-    def onExitBattlePage(self):
+    def onBattleSessionStop(self):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling -= self.__onVehicleControlling

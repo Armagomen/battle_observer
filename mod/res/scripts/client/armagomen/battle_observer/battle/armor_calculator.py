@@ -12,21 +12,21 @@ class ArmorCalculator(ArmorCalcMeta):
         super(ArmorCalculator, self).__init__()
         self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
 
-    def onEnterBattlePage(self):
-        super(ArmorCalculator, self).onEnterBattlePage()
+    def onBattleSessionStart(self):
+        super(ArmorCalculator, self).onBattleSessionStart()
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
 
-    def onExitBattlePage(self):
+    def onBattleSessionStop(self):
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
         g_events.onArmorChanged -= self.onArmorChanged
         g_events.onMarkerColorChanged -= self.onMarkerColorChanged
-        super(ArmorCalculator, self).onExitBattlePage()
+        super(ArmorCalculator, self).onBattleSessionStop()
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()

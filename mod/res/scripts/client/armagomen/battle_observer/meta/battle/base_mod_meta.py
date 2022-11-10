@@ -1,4 +1,3 @@
-from PlayerEvents import g_playerEvents
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import ALIAS_TO_CONFIG_NAME, COLORS, GLOBAL
@@ -56,14 +55,14 @@ class BaseModMeta(BaseDAAPIComponent):
     def _populate(self):
         super(BaseModMeta, self)._populate()
         self.setSettings()
-        g_playerEvents.onAvatarReady += self.onEnterBattlePage
-        g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
+        self.sessionProvider.onBattleSessionStart += self.onBattleSessionStart
+        self.sessionProvider.onBattleSessionStop += self.onBattleSessionStop
         self.as_onAfterPopulateS()
         logDebug("battle module '{}' loaded", self.getAlias())
 
     def _dispose(self):
-        g_playerEvents.onAvatarReady -= self.onEnterBattlePage
-        g_playerEvents.onAvatarBecomeNonPlayer -= self.onExitBattlePage
+        self.sessionProvider.onBattleSessionStart -= self.onBattleSessionStart
+        self.sessionProvider.onBattleSessionStop -= self.onBattleSessionStop
         super(BaseModMeta, self)._dispose()
         logDebug("battle module '{}' destroyed", self.getAlias())
 
@@ -71,11 +70,11 @@ class BaseModMeta(BaseDAAPIComponent):
     def playerVehicleID(self):
         return self._arenaDP.getPlayerVehicleID()
 
-    def onEnterBattlePage(self):
-        self.as_setComponentVisible(True)
+    def onBattleSessionStart(self):
+        pass
 
-    def onExitBattlePage(self):
-        self.as_setComponentVisible(False)
+    def onBattleSessionStop(self):
+        pass
 
     def as_setComponentVisible(self, param):
         return self.flashObject.setCompVisible(param) if self._isDAAPIInited() else None
