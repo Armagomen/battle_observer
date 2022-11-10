@@ -79,6 +79,7 @@ localization = {
         "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
         "hide_button_counters_on_top_panel": "Disable tooltips on buttons in the hangar header",
         "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
+        "save_shot": "Block shooting at allies and destroyed."
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",
@@ -314,12 +315,6 @@ localization = {
         "template": "A string template with values. Macro: %(flightTime).1f , %(distance).1f",
         "wgDistDisable": "Hide base distance in sight.",
         "align": "Text align."
-    },
-    "save_shoot": {
-        "header": "SAVE SHOOT LITE",
-        "block_on_destroyed": "Block the shot on the destroyed.",
-        "msg": "A message about a successful lock is visible only to you.",
-        "msg_tooltip": "This message is displayed only if the shot is blocked by an ally."
     },
     "minimap": {
         "header": "MINIMAP",

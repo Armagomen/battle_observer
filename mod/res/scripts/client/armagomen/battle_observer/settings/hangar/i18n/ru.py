@@ -83,6 +83,7 @@ localization = {
         "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
         "hide_button_counters_on_top_panel": "Отключить подсказки на кнопках в шапке ангара.",
         "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
+        "save_shot": "Блокировать стрельбу по союзникам и уничтоженным."
     },
     "statistics": {
         "header": "Статистика игроков WTR(WGR) | Иконки танков",
@@ -325,12 +326,6 @@ localization = {
         "template": "Шаблон строки. Макросы: %(flightTime).1f , %(distance).1f",
         "wgDistDisable": "Скрыть базовую дистанцию в прицеле.",
         "align": "Выравнивание текста."
-    },
-    "save_shoot": {
-        "header": "Блокировка выстрелов по союзникам и уничтоженным (save shoot lite).",
-        "block_on_destroyed": "Заблокировать выстрел по уничтоженным.",
-        "msg": "Сообщение о успешной блокировке, видно только вам.",
-        "msg_tooltip": "Данное сообщение отображается только в случае блокировки выстрела по союзнику."
     },
     "minimap": {
         "header": "Мини-Карта.",

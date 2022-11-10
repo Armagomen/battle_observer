@@ -2,7 +2,7 @@
 from Avatar import PlayerAvatar
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, SAVE_SHOOT
+from armagomen.constants import VEHICLE, MAIN
 from armagomen.utils.common import overrideMethod, isReplay
 from armagomen.utils.keys_listener import g_keysListener
 from frameworks.wulf import WindowLayer
@@ -32,7 +32,6 @@ class SaveShootLite(object):
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         self.enabled = False
         self.unlockShoot = False
-        self.destroyedBlock = False
         self.vehicleErrorComponent = None
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
@@ -48,9 +47,8 @@ class SaveShootLite(object):
             self.vehicleErrorComponent.as_showYellowMessageS(None, message)
 
     def onModSettingsChanged(self, config, blockID):
-        if blockID == SAVE_SHOOT.NAME:
-            self.enabled = config[GLOBAL.ENABLED] and not isReplay()
-            self.destroyedBlock = config[SAVE_SHOOT.DESTROYED_BLOCK]
+        if blockID == MAIN.NAME:
+            self.enabled = config[MAIN.SAVE_SHOT] and not isReplay()
 
     def onEnterBattlePage(self):
         if self.enabled:
@@ -67,12 +65,10 @@ class SaveShootLite(object):
         self.unlockShoot = False
         self.vehicleErrorComponent = None
 
-    def is_targetAllyOrDeath(self, avatar):
-        if avatar.target is not None and avatar.target.__class__.__name__ == SAVE_SHOOT.VEHICLE:
-            if avatar.target.isAlive():
-                return avatar.target.publicInfo[SAVE_SHOOT.TEAM] == avatar.team
-            else:
-                return self.destroyedBlock
+    @staticmethod
+    def is_targetAllyOrDeath(avatar):
+        if avatar.target is not None and avatar.target.__class__.__name__ == VEHICLE.VEHICLE:
+            return not avatar.target.isAlive() or avatar.target.publicInfo[VEHICLE.TEAM] == avatar.team
         return False
 
     def keyEvent(self, isKeyDown):
