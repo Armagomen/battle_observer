@@ -26,23 +26,19 @@ class SixthSense(SixthSenseMeta):
             if self.settings[SIXTH_SENSE.PLAY_TICK_SOUND]:
                 soundID = self._arenaVisitor.type.getCountdownTimerSound()
             self._timer = SixthSenseTimer(self.handleTimer, self.hide, soundID=soundID)
-
-    def onEnterBattlePage(self):
-        super(SixthSense, self).onEnterBattlePage()
         g_playerEvents.onRoundFinished += self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
 
-    def onExitBattlePage(self):
-        self.hide()
+    def _dispose(self):
         if self._timer is not None:
             self._timer.destroy()
         g_playerEvents.onRoundFinished -= self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated -= self._onVehicleStateUpdated
-        super(SixthSense, self).onExitBattlePage()
+        super(SixthSense, self)._dispose()
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:

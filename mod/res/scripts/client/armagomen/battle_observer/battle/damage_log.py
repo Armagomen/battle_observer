@@ -83,22 +83,6 @@ class DamageLog(DamageLogsMeta):
         if self.__isExtended:
             self.as_createExtendedLogsS(self.settings.log_extended[GLOBAL.SETTINGS])
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
-
-    def isExtendedLogEventEnabled(self, eventType):
-        return self.__isExtended and eventType in EXTENDED_FEEDBACK
-
-    def isTopLogEventEnabled(self, eventType):
-        return self.top_log_enabled and eventType in _EVENT_TO_TOP_LOG_MACROS
-
-    def getLogData(self, eventType):
-        if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-            return self.__damage_log
-        elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
-            return self.__input_log
-        raise ValueError(DAMAGE_LOG.WARNING_MESSAGE.format(eventType))
-
-    def onEnterBattlePage(self):
-        super(DamageLog, self).onEnterBattlePage()
         feedback = self.sessionProvider.shared.feedback
         if feedback:
             feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
@@ -113,7 +97,20 @@ class DamageLog(DamageLogsMeta):
                 self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
                 self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
-    def onExitBattlePage(self):
+    def isExtendedLogEventEnabled(self, eventType):
+        return self.__isExtended and eventType in EXTENDED_FEEDBACK
+
+    def isTopLogEventEnabled(self, eventType):
+        return self.top_log_enabled and eventType in _EVENT_TO_TOP_LOG_MACROS
+
+    def getLogData(self, eventType):
+        if eventType == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
+            return self.__damage_log
+        elif eventType == FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER:
+            return self.__input_log
+        raise ValueError(DAMAGE_LOG.WARNING_MESSAGE.format(eventType))
+
+    def _dispose(self):
         feedback = self.sessionProvider.shared.feedback
         if feedback:
             feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
@@ -124,7 +121,7 @@ class DamageLog(DamageLogsMeta):
                     arena.onVehicleKilled -= self.onVehicleKilled
             if self.top_log_enabled:
                 self.top_log.clear()
-        super(DamageLog, self).onExitBattlePage()
+        super(DamageLog, self)._dispose()
 
     def onLogsAltMode(self, isKeyDown):
         """Hot key event"""

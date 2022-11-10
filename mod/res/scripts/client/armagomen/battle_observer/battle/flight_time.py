@@ -11,7 +11,6 @@ class FlightTime(FlightTimeMeta):
 
     def __init__(self):
         super(FlightTime, self).__init__()
-        self.shared = self.sessionProvider.shared
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, flightTime=GLOBAL.ZERO, distance=GLOBAL.ZERO)
 
     def _populate(self):
@@ -19,28 +18,20 @@ class FlightTime(FlightTimeMeta):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
+            ctrl.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
+        handler = avatar_getter.getInputHandler()
+        if handler is not None and hasattr(handler, "onCameraChanged"):
+            handler.onCameraChanged += self.onCameraChanged
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
-        super(FlightTime, self)._dispose()
-
-    def onEnterBattlePage(self):
-        super(FlightTime, self).onEnterBattlePage()
-        if self.shared.crosshair:
-            self.shared.crosshair.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
-        handler = avatar_getter.getInputHandler()
-        if handler is not None and hasattr(handler, "onCameraChanged"):
-            handler.onCameraChanged += self.onCameraChanged
-
-    def onExitBattlePage(self):
-        if self.shared.crosshair:
-            self.shared.crosshair.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
+            ctrl.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
-        super(FlightTime, self).onExitBattlePage()
+        super(FlightTime, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         if ctrlMode in POSTMORTEM.MODES:

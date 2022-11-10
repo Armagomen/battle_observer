@@ -25,25 +25,6 @@ class Distance(DistanceMeta):
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
         g_playerEvents.onArenaPeriodChange += self.onArenaPeriodChange
-
-    def _dispose(self):
-        ctrl = self.sessionProvider.shared.crosshair
-        if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
-        g_playerEvents.onArenaPeriodChange -= self.onArenaPeriodChange
-        super(Distance, self)._dispose()
-
-    def onArenaPeriodChange(self, period, *args):
-        if period == ARENA_PERIOD.BATTLE and self.timeEvent is None:
-            self.timeEvent = CyclicTimerEvent(0.5, self.updateDistance)
-            self.timeEvent.start()
-        elif self.timeEvent is not None:
-            self.timeEvent.stop()
-            self.timeEvent = None
-        logDebug("Distance: onArenaPeriodChange: {}", ARENA_PERIOD_NAMES[period])
-
-    def onEnterBattlePage(self):
-        super(Distance, self).onEnterBattlePage()
         handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -52,7 +33,11 @@ class Distance(DistanceMeta):
             feedback.onVehicleMarkerAdded += self.onVehicleMarkerAdded
             feedback.onVehicleMarkerRemoved += self.onVehicleMarkerRemoved
 
-    def onExitBattlePage(self):
+    def _dispose(self):
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
+        g_playerEvents.onArenaPeriodChange -= self.onArenaPeriodChange
         if self.timeEvent is not None:
             self.timeEvent.stop()
             self.timeEvent = None
@@ -63,7 +48,16 @@ class Distance(DistanceMeta):
         if feedback is not None:
             feedback.onVehicleMarkerAdded -= self.onVehicleMarkerAdded
             feedback.onVehicleMarkerRemoved -= self.onVehicleMarkerRemoved
-        super(Distance, self).onExitBattlePage()
+        super(Distance, self)._dispose()
+
+    def onArenaPeriodChange(self, period, *args):
+        if period == ARENA_PERIOD.BATTLE and self.timeEvent is None:
+            self.timeEvent = CyclicTimerEvent(0.5, self.updateDistance)
+            self.timeEvent.start()
+        elif self.timeEvent is not None:
+            self.timeEvent.stop()
+            self.timeEvent = None
+        logDebug("Distance: onArenaPeriodChange: {}", ARENA_PERIOD_NAMES[period])
 
     def onVehicleMarkerAdded(self, vProxy, vInfo, guiProps):
         if self.isPostmortem:

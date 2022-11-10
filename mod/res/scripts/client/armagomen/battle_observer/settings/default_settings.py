@@ -5,7 +5,7 @@ import Keys
 from Event import SafeEvent
 from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS,
-    FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, MINIMAP, PANELS, SAVE_SHOOT, SERVICE_CHANNEL, SIXTH_SENSE,
+    FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
     SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES, DISTANCE, OWN_HEALTH, STATISTICS,
 )
 from constants import ATTACK_REASON, ATTACK_REASONS
@@ -19,25 +19,26 @@ class DefaultSettings(object):
         self.onUserConfigUpdateComplete = SafeEvent()
 
         self.main = {
-            MAIN.SHOW_FRIENDS: False,
-            MAIN.SHOW_ANONYMOUS: False,
-            MAIN.HIDE_BADGES: False,
-            MAIN.HIDE_CLAN_ABBREV: False,
             MAIN.AUTO_CLEAR_CACHE: False,
-            MAIN.USE_KEY_PAIRS: False,
-            MAIN.IGNORE_COMMANDERS: False,
-            MAIN.HIDE_DOG_TAGS: False,
-            MAIN.DISABLE_SCORE_SOUND: False,
-            MAIN.DEBUG: False,
-            MAIN.PREMIUM_TIME: True,
-            MAIN.CREW_TRAINING: True,
-            MAIN.DIRECTIVES: True,
-            MAIN.HIDE_HINT: False,
-            MAIN.FIELD_MAIL: False,
             MAIN.CREW_RETURN: False,
-            MAIN.STUN_SOUND: False,
+            MAIN.CREW_TRAINING: False,
+            MAIN.DEBUG: False,
+            MAIN.DIRECTIVES: False,
+            MAIN.DISABLE_SCORE_SOUND: False,
+            MAIN.FIELD_MAIL: False,
+            MAIN.HIDE_BADGES: False,
+            MAIN.HIDE_BTN_COUNTERS: True,
+            MAIN.HIDE_CLAN_ABBREV: False,
+            MAIN.HIDE_DOG_TAGS: False,
+            MAIN.HIDE_HINT: False,
             MAIN.HIDE_MAIN_CHAT: False,
-            MAIN.HIDE_BTN_COUNTERS: False
+            MAIN.IGNORE_COMMANDERS: False,
+            MAIN.PREMIUM_TIME: True,
+            MAIN.SAVE_SHOT: False,
+            MAIN.SHOW_ANONYMOUS: False,
+            MAIN.SHOW_FRIENDS: False,
+            MAIN.STUN_SOUND: False,
+            MAIN.USE_KEY_PAIRS: True,
         }
         self.tank_carousel = {
             GLOBAL.ENABLED: False,
@@ -420,11 +421,6 @@ class DefaultSettings(object):
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             OWN_HEALTH.TEMPLATE: "%(health)s/%(maxHealth)s (%(percent)s%%)",
             GLOBAL.AVG_COLOR: {"saturation": 1.0, "brightness": 1.0}
-        }
-        self.save_shoot = {
-            GLOBAL.ENABLED: False,
-            SAVE_SHOOT.DESTROYED_BLOCK: True,
-            SAVE_SHOOT.MSG: SAVE_SHOOT.TEMPLATE
         }
         self.minimap = {
             GLOBAL.ENABLED: False,

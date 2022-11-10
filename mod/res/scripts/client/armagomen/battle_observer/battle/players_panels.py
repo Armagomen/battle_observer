@@ -35,12 +35,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS,
                                              keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
 
-    def onExitBattlePage(self):
-        pass
-
-    def onEnterBattlePage(self):
-        pass
-
     def _dispose(self):
         self.flashObject.as_clearStorage()
         if self.hpBarsEnable and not self.settings[PANELS.BAR_CLASS_COLOR]:
