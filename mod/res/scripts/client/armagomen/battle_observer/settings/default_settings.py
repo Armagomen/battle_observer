@@ -21,13 +21,13 @@ class DefaultSettings(object):
         self.main = {
             MAIN.AUTO_CLEAR_CACHE: False,
             MAIN.CREW_RETURN: False,
-            MAIN.CREW_TRAINING: True,
+            MAIN.CREW_TRAINING: False,
             MAIN.DEBUG: False,
-            MAIN.DIRECTIVES: True,
+            MAIN.DIRECTIVES: False,
             MAIN.DISABLE_SCORE_SOUND: False,
             MAIN.FIELD_MAIL: False,
             MAIN.HIDE_BADGES: False,
-            MAIN.HIDE_BTN_COUNTERS: False,
+            MAIN.HIDE_BTN_COUNTERS: True,
             MAIN.HIDE_CLAN_ABBREV: False,
             MAIN.HIDE_DOG_TAGS: False,
             MAIN.HIDE_HINT: False,
@@ -38,7 +38,7 @@ class DefaultSettings(object):
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
-            MAIN.USE_KEY_PAIRS: False,
+            MAIN.USE_KEY_PAIRS: True,
         }
         self.tank_carousel = {
             GLOBAL.ENABLED: False,
