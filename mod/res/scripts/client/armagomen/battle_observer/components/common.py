@@ -82,8 +82,10 @@ def handleLazyChannelCtlInited(base, entry, event):
         ctx = event.ctx
         controller = ctx.get('controller')
         if controller is not None:
+            channel = controller.getChannel()
             controller.deactivate()
             ctx.clear()
+            entry._LobbyEntry__carouselHandler.removeChannel(channel)
             return
     return base(entry, event)
 
