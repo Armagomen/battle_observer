@@ -17,7 +17,7 @@ class ComponentsLoader(object):
             'postmortem': None,
             'premium_time': None,
             'replace_vehicle_info': None,
-            'save_shoot_lite': None,
+            'save_shot_lite': None,
             'service_channel_filter': None,
             'shot_result_plugin': None,
             'tank_carousel': None,
