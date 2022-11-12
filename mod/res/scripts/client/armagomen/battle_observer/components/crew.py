@@ -24,7 +24,7 @@ class CrewProcessor(object):
     def __init__(self):
         self.invID = None
         self.inProcess = False
-        g_events.onVehicleChanged += self.updateCrew
+        g_events.onVehicleChangedDelayed += self.updateCrew
         overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
     @staticmethod

@@ -423,4 +423,9 @@ localization = {
         "isFullComplete": "You have pumped the field upgrade to the highest possible level.",
         "needTurnOff": "You do not have field upgrades, it is recommended to disable accelerated crew training."
     },
+    "avg_efficiency_in_hangar": {
+        "header": "Tuning the tank stats widget in the garage",
+        "x": "Horizontal text position",
+        "y": "Vertical text position",
+    }
 }

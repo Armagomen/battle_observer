@@ -1,0 +1,35 @@
+from armagomen.battle_observer.core import cachedVehicleData
+from armagomen.battle_observer.meta.lobby.avg_data_meta import AvgDataMeta
+from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.constants import AVG_EFFICIENCY_HANGAR
+from armagomen.utils.events import g_events
+
+
+class AvgData(AvgDataMeta):
+
+    def _populate(self):
+        super(AvgData, self)._populate()
+        g_events.onAVGDataUpdated += self.updateAvgData
+        settings.onModSettingsChanged += self.onModSettingsChanged
+        self.as_startUpdateS(settings.avg_efficiency_in_hangar)
+        self.updateAvgData(cachedVehicleData.efficiencyAvgData)
+
+    def _dispose(self):
+        super(AvgData, self)._dispose()
+        g_events.onAVGDataUpdated -= self.updateAvgData
+        settings.onModSettingsChanged -= self.onModSettingsChanged
+
+    def onModSettingsChanged(self, config, blockID):
+        if blockID == AVG_EFFICIENCY_HANGAR.NAME:
+            self.as_startUpdateS(config)
+            self.updateAvgData(cachedVehicleData.efficiencyAvgData)
+
+    def updateAvgData(self, data):
+        params = data._asdict()
+        params.update(settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.ICONS])
+        text = "{damageIcon}{damage} {assistIcon}{assist} {blockedIcon}{blocked}"
+        if data.stun:
+            text += " {stunIcon}{stun}"
+        if data.marksOnGunValue:
+            text += "  {marksOnGunIcon}{marksOnGunValue}%"
+        self.as_setDataS(text.format(**params))

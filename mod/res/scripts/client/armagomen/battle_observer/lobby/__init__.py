@@ -1,4 +1,4 @@
-from armagomen.constants import SWF, ALIASES
+from armagomen.constants import SWF, LOBBY_ALIASES
 from armagomen.utils.common import logError, logDebug, callback, logInfo
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -10,7 +10,9 @@ from gui.shared import EVENT_BUS_SCOPE
 
 def getViewSettings():
     from armagomen.battle_observer.lobby.date_times import DateTimes
-    return (ComponentSettings(ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),)
+    from armagomen.battle_observer.lobby.avg_data import AvgData
+    return (ComponentSettings(LOBBY_ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(LOBBY_ALIASES.AVG_DATA, AvgData, ScopeTemplates.DEFAULT_SCOPE),)
 
 
 def getBusinessHandlers():
@@ -40,7 +42,7 @@ class ObserverBusinessHandlerLobby(PackageBusinessHandler):
     def load(view):
         g_events.onHangarLoaded(view)
         if hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
-            view.flashObject.as_observerCreateComponents([ALIASES.DATE_TIME])
+            view.flashObject.as_observerCreateComponents(LOBBY_ALIASES)
         else:
             logError("hangar_page {}, has ho attribute {}", view.settings.alias, SWF.ATTRIBUTE_NAME)
 

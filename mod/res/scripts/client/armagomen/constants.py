@@ -74,6 +74,7 @@ class GLOBAL:
     IMG = "img"
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
+    IMG_PARAMS_HANGAR = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='30' height='30'"}
     INNER = "inner"
     KNOCKOUT = "knockout"
     ONE, TWO = (1, 2)
@@ -279,6 +280,10 @@ ALIASES = namedtuple("ALIASES", (
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
     "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI")
 
+LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME", "AVG_DATA"))(
+    "Observer_DateTimes_UI", "Observer_AvgData_UI"
+)
+
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
     "distance_to_enemy", "template", "align", "distance", "name")
 
@@ -337,15 +342,16 @@ CREW_XP = namedtuple("CREW_XP", (
     "NAME", "NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF", "ENABLE", "DISABLE"))(
     "crewDialog", "notAvailable", "isFullXp", "isFullComplete", "needTurnOff", "enable", "disable")
 
+AVG_EFFICIENCY_HANGAR = namedtuple("AVG_EFFICIENCY_HANGAR", ("NAME", "ICONS"))("avg_efficiency_in_hangar", "icons")
+
 # Settings Loader List
 LOAD_LIST = (
     MAIN.NAME, HP_BARS.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
     DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED, SIXTH_SENSE.NAME, ANOTHER.SHADOW_SETTINGS,
-    CAROUSEL.NAME, CLOCK.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, STATISTICS.NAME
+    CAROUSEL.NAME, CLOCK.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, STATISTICS.NAME, AVG_EFFICIENCY_HANGAR.NAME
 )
-
 
 class CONFIG_INTERFACE:
     def __init__(self):
@@ -357,7 +363,7 @@ class CONFIG_INTERFACE:
         DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
         DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED, MAIN_GUN.NAME, TEAM_BASES.NAME, VEHICLE_TYPES.NAME, PANELS.PANELS_NAME,
         SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME, MINIMAP.NAME, ANOTHER.SHADOW_SETTINGS,
-        SIXTH_SENSE.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME
+        SIXTH_SENSE.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME, AVG_EFFICIENCY_HANGAR.NAME
     )
     HANDLER_VALUES = {
         SNIPER.NAME: {
