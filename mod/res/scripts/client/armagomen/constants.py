@@ -342,7 +342,9 @@ CREW_XP = namedtuple("CREW_XP", (
     "NAME", "NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF", "ENABLE", "DISABLE"))(
     "crewDialog", "notAvailable", "isFullXp", "isFullComplete", "needTurnOff", "enable", "disable")
 
-AVG_EFFICIENCY_HANGAR = namedtuple("AVG_EFFICIENCY_HANGAR", ("NAME", "ICONS"))("avg_efficiency_in_hangar", "icons")
+AVG_EFFICIENCY_HANGAR = namedtuple("AVG_EFFICIENCY_HANGAR", (
+    "NAME", "ICONS", "DAMAGE", "ASSIST", "BLOCKED", "STUN", "MARKS_ON_GUN"
+))("avg_efficiency_in_hangar", "icons", "avg_damage", "avg_assist", "avg_blocked", "avg_stun", "gun_marks")
 
 # Settings Loader List
 LOAD_LIST = (

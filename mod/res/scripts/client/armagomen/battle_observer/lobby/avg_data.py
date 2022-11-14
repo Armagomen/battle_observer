@@ -27,9 +27,15 @@ class AvgData(AvgDataMeta):
     def updateAvgData(self, data):
         params = data._asdict()
         params.update(settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.ICONS])
-        text = "{damageIcon}{damage} {assistIcon}{assist} {blockedIcon}{blocked}"
-        if data.stun:
-            text += " {stunIcon}{stun}"
-        if data.marksOnGunValue:
-            text += "  {marksOnGunIcon}{marksOnGunValue}%"
-        self.as_setDataS(text.format(**params))
+        text = []
+        if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.DAMAGE]:
+            text.append("{damageIcon}{damage}")
+        if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.ASSIST]:
+            text.append("{assistIcon}{assist}")
+        if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.BLOCKED]:
+            text.append("{blockedIcon}{blocked}")
+        if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
+            text.append("{stunIcon}{stun}")
+        if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksOnGunValue:
+            text.append(" {marksOnGunIcon}{marksOnGunValue}%")
+        self.as_setDataS(" ".join(text).format(**params))

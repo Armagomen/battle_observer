@@ -427,5 +427,10 @@ localization = {
         "header": "Tuning the tank stats widget in the garage",
         "x": "Horizontal text position",
         "y": "Vertical text position",
+        "avg_damage": "Display average damage dealt",
+        "avg_assist": "Display average damage done with your assistance",
+        "avg_blocked": "Display average armor blocked damage",
+        "avg_stun": "Display average damage to targets whose crews you have stunned (SPG)",
+        "gun_marks": "Display gun mark percentage",
     }
 }
