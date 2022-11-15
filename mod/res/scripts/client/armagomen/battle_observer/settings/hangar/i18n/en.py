@@ -423,4 +423,14 @@ localization = {
         "isFullComplete": "You have pumped the field upgrade to the highest possible level.",
         "needTurnOff": "You do not have field upgrades, it is recommended to disable accelerated crew training."
     },
+    "avg_efficiency_in_hangar": {
+        "header": "Tuning the tank stats widget in the garage",
+        "x": "Horizontal widget position",
+        "y": "Vertical widget position",
+        "avg_damage": "Display average damage dealt",
+        "avg_assist": "Display average damage done with your assistance",
+        "avg_blocked": "Display average armor blocked damage",
+        "avg_stun": "Display average damage to targets whose crews you have stunned (SPG)",
+        "gun_marks": "Display gun mark percentage",
+    }
 }

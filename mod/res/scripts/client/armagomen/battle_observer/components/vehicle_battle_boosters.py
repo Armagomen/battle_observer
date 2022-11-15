@@ -36,4 +36,4 @@ def onVehicleChanged():
                 LOG_CURRENT_EXCEPTION()
 
 
-g_events.onVehicleChanged += onVehicleChanged
+g_events.onVehicleChangedDelayed += onVehicleChanged

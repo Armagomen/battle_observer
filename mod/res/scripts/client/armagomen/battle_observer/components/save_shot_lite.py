@@ -12,15 +12,13 @@ from helpers import getClientLanguage, dependency
 from messenger.MessengerEntry import g_instance
 from skeletons.gui.battle_session import IBattleSessionProvider
 
-__all__ = ["save_shoot_lite"]
-
 lang = getClientLanguage()
 if lang == 'uk':
-    LOCKED_MESSAGE = 'Постріл в {} заблоковано'
+    LOCKED_MESSAGE = 'Save Shot: Постріл у {} заблокований'
 elif lang in ('ru', 'be'):
-    LOCKED_MESSAGE = 'Выстрел в {} заблокирован'
+    LOCKED_MESSAGE = 'Save Shot: Выстрел в {} заблокирован'
 else:
-    LOCKED_MESSAGE = 'Shot at {} blocked'
+    LOCKED_MESSAGE = 'Save Shot: Shot in {} blocked'
 
 
 class SaveShootLite(object):
@@ -36,7 +34,7 @@ class SaveShootLite(object):
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
     def shoot(self, base, avatar, isRepeat=False):
-        if not self.enabled or self.unlockShoot or not self.is_targetAllyOrDeath(avatar):
+        if not self.enabled or self.unlockShoot or avatar.autoAimVehicle or not self.is_targetAllyOrDeath(avatar):
             return base(avatar, isRepeat=isRepeat)
         if isRepeat:
             return

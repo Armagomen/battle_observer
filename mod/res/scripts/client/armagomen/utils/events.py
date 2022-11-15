@@ -13,6 +13,8 @@ class Events(object):
         self.updateVehicleData = SafeEvent()
         self.onComponentVisible = SafeEvent()
         self.onVehicleChanged = SafeEvent()
+        self.onVehicleChangedDelayed = SafeEvent()
+        self.onAVGDataUpdated = SafeEvent()
 
 
 g_events = Events()

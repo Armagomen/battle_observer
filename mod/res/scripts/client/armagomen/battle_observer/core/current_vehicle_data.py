@@ -1,51 +1,46 @@
-import math
 from collections import namedtuple
 
 from CurrentVehicle import g_currentVehicle
-from PlayerEvents import g_playerEvents
-from armagomen.utils.common import logError, logDebug
+from armagomen.utils.common import logDebug
+from armagomen.utils.events import g_events
+from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
+from helpers import dependency
+from skeletons.gui.shared import IItemsCache
 
-EfficiencyAVGData = namedtuple("EfficiencyAVGData", ("damage", "assist", "stun", "blocked"))
-DEBUG_STRING = "set vehicle cache: name={}, avgDamage={}, avgAssist={}, stun={}, blocked={}"
+EfficiencyAVGData = namedtuple("EfficiencyAVGData", (
+    "damage", "assist", "stun", "blocked", "marksOnGunValue", "marksOnGunIcon", "name"))
 
 
 class CurrentVehicleCachedData(object):
+    itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
-        self.__EfficiencyAVGData = EfficiencyAVGData(0, 0, 0, 0)
+        self.__EfficiencyAVGData = EfficiencyAVGData(0, 0, 0, 0, 0, "", "Undefined")
 
     def init(self):
-        g_playerEvents.onArenaCreated += self.onArenaCreated
+        g_events.onVehicleChanged += self.onVehicleChanged
 
     def fini(self):
-        g_playerEvents.onArenaCreated -= self.onArenaCreated
+        g_events.onVehicleChanged -= self.onVehicleChanged
 
-    def onArenaCreated(self):
-        damage = 0
-        assist = 0
-        stun = 0
-        blocked = 0
-        try:
-            dossier = g_currentVehicle.getDossier()
-            if dossier:
-                random = dossier.getRandomStats()
-                d_damage = random.getAvgDamage()
-                d_assist = random.getDamageAssistedEfficiency()
-                d_stun = random.getAvgDamageAssistedStun()
-                d_blocked = random.getAvgDamageBlocked()
-                if d_damage is not None:
-                    damage = int(math.floor(d_damage))
-                if d_assist is not None:
-                    assist = int(math.floor(d_assist))
-                if d_stun is not None:
-                    stun = int(math.floor(d_stun))
-                if d_blocked is not None:
-                    blocked = int(math.floor(d_blocked))
-        except Exception as error:
-            logError(repr(error))
-        finally:
-            self.__EfficiencyAVGData = EfficiencyAVGData(damage, assist, stun, blocked)
-        logDebug(DEBUG_STRING, g_currentVehicle.item.userName, *self.__EfficiencyAVGData)
+    def onVehicleChanged(self):
+        if g_currentVehicle.isPresent():
+            self.setAvgData(g_currentVehicle.intCD, g_currentVehicle.item.userName)
+
+    def setAvgData(self, intCD, name):
+        dossier = self.itemsCache.items.getVehicleDossier(intCD)
+        random = dossier.getRandomStats()
+        marksOnGun = random.getAchievement(MARK_ON_GUN_RECORD)
+        icon = marksOnGun.getIcons()['95x85'][3:]
+        marksOnGunIcon = "<img src='img://gui/{}' width='22' height='20' vspace='-10'>".format(icon)
+        self.__EfficiencyAVGData = EfficiencyAVGData(
+            int(random.getAvgDamage() or 0),
+            int(random.getDamageAssistedEfficiency() or 0),
+            int(random.getAvgDamageAssistedStun() or 0),
+            int(random.getAvgDamageBlocked() or 0),
+            round(marksOnGun.getDamageRating(), 2), marksOnGunIcon, name)
+        logDebug(self.__EfficiencyAVGData)
+        g_events.onAVGDataUpdated(self.__EfficiencyAVGData)
 
     @property
     def efficiencyAvgData(self):

@@ -150,6 +150,11 @@ package net.armagomen.battleobserver
 						this.removeChild(component);
 					}
 				}
+				var prebattleTimer:* = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
+				if (prebattleTimer)
+				{
+					this.addChild(prebattleTimer);
+				}
 			}
 			
 			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function(isEpicRandomBattle:Boolean):void
