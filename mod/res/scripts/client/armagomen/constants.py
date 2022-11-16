@@ -7,10 +7,7 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 MOD_NAME = "BATTLE_OBSERVER"
-
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
-
-HEADERS = [('User-Agent', MOD_NAME)]
 CLAN_ABBREV = "BO_UA"
 
 SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_NAME")(
@@ -355,6 +352,7 @@ LOAD_LIST = (
     CAROUSEL.NAME, CLOCK.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, STATISTICS.NAME, AVG_EFFICIENCY_HANGAR.NAME
 )
 
+
 class CONFIG_INTERFACE:
     def __init__(self):
         pass
@@ -369,10 +367,7 @@ class CONFIG_INTERFACE:
     )
     HANDLER_VALUES = {
         SNIPER.NAME: {
-            'dynamic_zoom*enabled': (
-                'dynamic_zoom*steps_only',
-                'dynamic_zoom*zoomXMeters'
-            ),
+            'dynamic_zoom*enabled': ('dynamic_zoom*steps_only', 'dynamic_zoom*zoomXMeters'),
             'zoomSteps*enabled': ('zoomSteps*steps',),
             SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY)
         },
