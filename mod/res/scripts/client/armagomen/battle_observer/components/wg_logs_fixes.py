@@ -23,7 +23,7 @@ def addToLog(base, component, event):
 
 
 def onModSettingsChanged(config, blockID):
-    if blockID == DAMAGE_LOG.GLOBAL:
+    if blockID == DAMAGE_LOG.WG_LOGS_FIX:
         validated.update(validateSettings(config))
         DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog, \
         DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog = \
