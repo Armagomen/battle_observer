@@ -416,8 +416,8 @@ localization = {
         "align": "Text align.",
     },
     "crewDialog": {
-        "enable": "Enable accelerated crew training?",
-        "disable": "Disable accelerated crew training?",
+        "enable": "\nEnable accelerated crew training?",
+        "disable": "\nDisable accelerated crew training?",
         "notAvailable": "Field upgrades are not available for this vehicle.",
         "isFullXp": "You have accumulated the necessary amount of experience to fully upgrade the field upgrade.",
         "isFullComplete": "You have pumped the field upgrade to the highest possible level.",

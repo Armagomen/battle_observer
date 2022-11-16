@@ -1,7 +1,7 @@
 # coding=utf-8
 from collections import namedtuple
 
-from armagomen.constants import getLogo
+from armagomen.constants import getLogo, GLOBAL
 from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
@@ -33,7 +33,7 @@ class UpdaterDialogs(DialogBase):
     @wg_async
     def showUpdateError(self, message):
         builder = WarningDialogBuilder()
-        builder.setFormattedTitle(getLogo() + "\nERROR DOWNLOAD UPDATE")
+        builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), "ERROR DOWNLOAD UPDATE")))
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
         result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))

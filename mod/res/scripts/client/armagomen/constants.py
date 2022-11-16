@@ -87,6 +87,7 @@ class GLOBAL:
     X = "x"
     Y = "y"
     ZERO = FIRST
+    NEW_LINE = "\n"
 
 
 SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
@@ -153,14 +154,20 @@ class DAMAGE_LOG:
         pass
 
     NAME = "damage_log"
+    TOP_LOG = "log_total"
+    WG_LOGS_FIX = "wg_logs"
+
+    MAIN_LOG = "main"
+    EXTENDED = "log_extended"
+    D_LOG = "d_log"
+    IN_LOG = "in_log"
+
     ALL_DAMAGES = "allDamages"
     ATTACK_REASON = "attackReason"
     CLASS_COLOR = "tankClassColor"
     CLASS_ICON = "classIcon"
     DAMAGE_LIST = "damageList"
-    D_LOG = "d_log"
-    IN_LOG = "in_log"
-    WG_LOGS_FIX = "wg_logs"
+
     HOT_KEY = "logsAltMode_hotkey"
     ICONS = "icons"
     ICON_NAME = "iconName"
@@ -168,16 +175,11 @@ class DAMAGE_LOG:
     IN_CENTER = "inCenter"
     KILLED_ICON = "killedIcon"
     LAST_DAMAGE = "lastDamage"
-    LOG_MAX_LEN = 13
     LOG_MODE = ("extendedLog", "extendedLogALTMODE")
-    MAIN_LOG = "main"
-    NEW_LINE, COMMA, LIST_SEPARATOR = ("\n", ", ", " <font color='#FFFF00'>|</font> ")
+    NOT_SHELL = "--"
     PERCENT_AVG_COLOR = "percentDamageAvgColor"
-    RANDOM_MIN_AVG, FRONT_LINE_MIN_AVG = (1200.0, 4000.0)
-    EXTENDED = "log_extended"
     REVERSE = "reverse"
     SHELL = ("normal", "gold")
-    NORMAL, GOLD = SHELL
     SHELL_COLOR = "shellColor"
     SHELL_TYPE = "shellType"
     SHOTS = "shots"
@@ -185,17 +187,15 @@ class DAMAGE_LOG:
     TANK_LEVEL = "TankLevel"
     TANK_NAME = "tankName"
     TEMPLATE_MAIN_DMG = "templateMainDMG"
-    TOP_LOG = "log_total"
     TOTAL_DAMAGE = "totalDamage"
     USER_NAME = "userName"
     VEHICLE_CLASS = "vehicleClass"
+    WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
     WG_ASSIST = "wg_log_hide_assist"
     WG_BLOCKED = "wg_log_hide_block"
     WG_CRITICS = "wg_log_hide_critics"
     WG_POS = "wg_log_pos_fix"
-    UNDEFINED = "UNDEFINED"
-    NOT_SHELL = "--"
-    WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
+    NORMAL, GOLD = SHELL
 
 
 ARCADE = namedtuple("ARCADE", (

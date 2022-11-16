@@ -1,7 +1,7 @@
 import os
 
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import LOAD_LIST, DISPERSION
+from armagomen.constants import LOAD_LIST, DISPERSION, GLOBAL
 from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, configsPath
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
@@ -117,5 +117,5 @@ class SettingsLoader(object):
         if self.errorMessages:
             dialog = LoadingErrorDialog()
             dialog.setView(view)
-            dialog.showLoadingError("\n".join(self.errorMessages))
+            dialog.showLoadingError(GLOBAL.NEW_LINE.join(self.errorMessages))
             self.errorMessages = []

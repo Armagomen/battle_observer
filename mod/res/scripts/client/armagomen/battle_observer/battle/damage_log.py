@@ -230,7 +230,7 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.DAMAGE_LIST].append(extra.getDamage())
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
-        vehicle[DAMAGE_LOG.ALL_DAMAGES] = DAMAGE_LOG.COMMA.join(str(x) for x in vehicle[DAMAGE_LOG.DAMAGE_LIST])
+        vehicle[DAMAGE_LOG.ALL_DAMAGES] = GLOBAL.COMMA_SEP.join(str(x) for x in vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.LAST_DAMAGE] = vehicle[DAMAGE_LOG.DAMAGE_LIST][GLOBAL.LAST]
         vehicle[DAMAGE_LOG.ATTACK_REASON] = self.settings.log_extended[DAMAGE_LOG.ATTACK_REASON][
             ATTACK_REASONS[extra.getAttackReasonID()]]
@@ -269,5 +269,5 @@ class DamageLog(DamageLogsMeta):
         """
         if log_data is None or not log_data.id_list:
             return
-        result = DAMAGE_LOG.NEW_LINE.join(self.getLogLines(log_data))
+        result = GLOBAL.NEW_LINE.join(self.getLogLines(log_data))
         self.as_updateExtendedLogS(log_data.name, result)
