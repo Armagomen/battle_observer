@@ -1,6 +1,7 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
 	import flash.display.Sprite;
+	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
@@ -63,16 +64,16 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			{
 				this.healthBar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha, barWidth, settings.players_bars_bar.height);
 			}
-			this.healthBar.addTextField(textX, settings.players_bars_text.y, autoSize, null, shadowSettings);
+			this.healthBar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText15, shadowSettings);
 			this.healthBar.setVisible(startVisible);
 			this.addChild(this.healthBar);
 		}
 		
-		public function updateHealth(scale:Number, text:String):void
+		public function updateHealth(percent:Number, text:String):void
 		{
 			if (this.healthBar)
 			{
-				this.healthBar.setNewScale(scale);
+				this.healthBar.setNewScale(percent * 0.01);
 				this.healthBar.setText(text);
 			}
 		}

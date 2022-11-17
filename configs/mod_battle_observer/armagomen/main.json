@@ -8,7 +8,7 @@
   "disable_stun_sound": true, 
   "do_not_buy_directives_for_currency_automatically": true, 
   "hideBadges": true, 
-  "hideClanAbbrev": false, 
+  "hideClanAbbrev": true, 
   "hide_button_counters_on_top_panel": true, 
   "hide_dog_tags": true, 
   "hide_field_mail": true, 
@@ -16,6 +16,7 @@
   "hide_main_chat_in_hangar": true, 
   "ignore_commanders_voice": true, 
   "premium_time": true, 
+  "save_shot": true, 
   "showFriendsAndClanInEars": true, 
   "useKeyPairs": false
 }

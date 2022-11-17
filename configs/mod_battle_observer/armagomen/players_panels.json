@@ -8,7 +8,7 @@
       56
     ]
   ], 
-  "players_bars_hp_text": "<font face='$FieldFont' color='#FAFAFA' size='15'>%(health)s</font>", 
+  "players_bars_hp_text": "%(health)s", 
   "players_bars_on_key_pressed": false, 
   "players_bars_settings": {
     "players_bars_bar": {

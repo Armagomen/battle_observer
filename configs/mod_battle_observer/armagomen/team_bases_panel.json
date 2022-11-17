@@ -1,5 +1,5 @@
 {
-  "enabled": false, 
+  "enabled": true, 
   "height": 24, 
   "outline": {
     "color": "#FAFAFA", 
@@ -15,5 +15,5 @@
     "y": 0
   }, 
   "width": 400, 
-  "y": -120
+  "y": 40
 }
