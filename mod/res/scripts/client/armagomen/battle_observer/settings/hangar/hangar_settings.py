@@ -1,28 +1,16 @@
 # coding=utf-8
 from Keys import KEY_LALT, KEY_RALT
-from armagomen.battle_observer.settings.hangar.i18n import localization
+from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
     ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from gui.shared.utils.functions import makeTooltip
-from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 37
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
-
-
-def LOCKED_MESSAGE():
-    pattern = "<font color='#ff3d3d'> {}</font>"
-    language = getClientLanguage()
-    if language in ('ru', 'be'):
-        return pattern.format("Функция недоступна, установлен XVM.")
-    elif language == "uk":
-        return pattern.format("Функція недоступна, тому що встановлений XVM.")
-    else:
-        return pattern.format("The function is not available, XVM is installed.")
 
 
 def importApi():
@@ -156,7 +144,7 @@ class CreateElement(object):
         name = localization.get(blockID, {}).get("header", blockID)
         warning = xvmInstalled and blockID in LOCKED_BLOCKS
         if warning:
-            name += LOCKED_MESSAGE()
+            name = " ".join((name, "<font color='#ff3d3d'>{}</font>".format(LOCKED_MESSAGE)))
         return {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
             'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True) and not warning,
