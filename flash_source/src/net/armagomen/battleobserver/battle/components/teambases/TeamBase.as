@@ -34,7 +34,7 @@
 		
 		public function updateBase(points:int, invadersCnt:int, time:String, text:String):void
 		{
-			var scale:Number = Math.min(1.0, (points + invadersCnt) * 0.01);
+			var scale:Number = Math.min(1.0, points * 0.01);
 			this.animation.continueTo(scale, scale > this.progressBar.scaleX ? 1.0 : 0.01);
 			this.status.htmlText = text;
 			this.timer.text = time;

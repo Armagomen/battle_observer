@@ -110,8 +110,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		public function as_updateHealth(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
 		{
-			this.hpBars.setBarScale(false, totalAlliesHP > 0 ? alliesHP / totalAlliesHP : 1);
-			this.hpBars.setBarScale(true, totalEnemiesHP > 0 ? enemiesHP / totalEnemiesHP : 1);
+			this.hpBars.setBarScale(false, totalAlliesHP > 0 ? Math.min(alliesHP / totalAlliesHP, 1.0) : 1.0);
+			this.hpBars.setBarScale(true, totalEnemiesHP > 0 ? Math.min(enemiesHP / totalEnemiesHP, 1.0) : 1.0);
 			this.greenText.text = alliesHP.toString();
 			this.redText.text = enemiesHP.toString();
 		}

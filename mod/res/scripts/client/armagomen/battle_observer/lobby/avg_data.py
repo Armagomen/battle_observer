@@ -36,6 +36,6 @@ class AvgData(AvgDataMeta):
             text.append("{blockedIcon}{blocked}")
         if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
             text.append("{stunIcon}{stun}")
-        if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksOnGunValue:
+        if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:
             text.append(" {marksOnGunIcon}{marksOnGunValue}%")
         self.as_setDataS(" ".join(text).format(**params))
