@@ -99,7 +99,6 @@ localization = {
     "dispersion_circle": {
         "header": "Real circle scatter guns (reduction)",
         "circle_enabled": "Improved crosshair.",
-        "circle_use_lock_prediction": "The server crosshair sticks on target lock.",
         "circle_extraServerLap": "Display server scatter circle.",
         "circle_extraServerLap_tooltip": "Adds a second circle of server crosshair.",
         "circle_replaceOriginalCircle": "Replace Original Circle.",
@@ -122,7 +121,6 @@ localization = {
         "header": "Customize effects",
         "noShockWave": "Remove camera shaking when hit by tank.",
         "noFlashBang": "Remove red flash when taking damage.",
-        "noLightEffect": "Remove flash and flame after firing.",
         "noBinoculars": "Remove the blackout in sniper mode.",
         "noSniperDynamic": "Disable dynamic camera in sniper mode."
     },
@@ -416,8 +414,8 @@ localization = {
         "align": "Text align.",
     },
     "crewDialog": {
-        "enable": "Enable accelerated crew training?",
-        "disable": "Disable accelerated crew training?",
+        "enable": "\nEnable accelerated crew training?",
+        "disable": "\nDisable accelerated crew training?",
         "notAvailable": "Field upgrades are not available for this vehicle.",
         "isFullXp": "You have accumulated the necessary amount of experience to fully upgrade the field upgrade.",
         "isFullComplete": "You have pumped the field upgrade to the highest possible level.",

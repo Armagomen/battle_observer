@@ -7,10 +7,7 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 MOD_NAME = "BATTLE_OBSERVER"
-
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
-
-HEADERS = [('User-Agent', MOD_NAME)]
 CLAN_ABBREV = "BO_UA"
 
 SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_NAME")(
@@ -87,6 +84,7 @@ class GLOBAL:
     X = "x"
     Y = "y"
     ZERO = FIRST
+    NEW_LINE = "\n"
 
 
 SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
@@ -153,14 +151,20 @@ class DAMAGE_LOG:
         pass
 
     NAME = "damage_log"
+    TOP_LOG = "log_total"
+    WG_LOGS_FIX = "wg_logs"
+
+    MAIN_LOG = "main"
+    EXTENDED = "log_extended"
+    D_LOG = "d_log"
+    IN_LOG = "in_log"
+
     ALL_DAMAGES = "allDamages"
     ATTACK_REASON = "attackReason"
     CLASS_COLOR = "tankClassColor"
     CLASS_ICON = "classIcon"
     DAMAGE_LIST = "damageList"
-    D_LOG = "d_log"
-    IN_LOG = "in_log"
-    GLOBAL = "wg_logs"
+
     HOT_KEY = "logsAltMode_hotkey"
     ICONS = "icons"
     ICON_NAME = "iconName"
@@ -168,16 +172,11 @@ class DAMAGE_LOG:
     IN_CENTER = "inCenter"
     KILLED_ICON = "killedIcon"
     LAST_DAMAGE = "lastDamage"
-    LOG_MAX_LEN = 13
     LOG_MODE = ("extendedLog", "extendedLogALTMODE")
-    MAIN_LOG = "main"
-    NEW_LINE, COMMA, LIST_SEPARATOR = ("\n", ", ", " <font color='#FFFF00'>|</font> ")
+    NOT_SHELL = "--"
     PERCENT_AVG_COLOR = "percentDamageAvgColor"
-    RANDOM_MIN_AVG, FRONT_LINE_MIN_AVG = (1200.0, 4000.0)
-    EXTENDED = "log_extended"
     REVERSE = "reverse"
     SHELL = ("normal", "gold")
-    NORMAL, GOLD = SHELL
     SHELL_COLOR = "shellColor"
     SHELL_TYPE = "shellType"
     SHOTS = "shots"
@@ -185,17 +184,15 @@ class DAMAGE_LOG:
     TANK_LEVEL = "TankLevel"
     TANK_NAME = "tankName"
     TEMPLATE_MAIN_DMG = "templateMainDMG"
-    TOP_LOG = "log_total"
     TOTAL_DAMAGE = "totalDamage"
     USER_NAME = "userName"
     VEHICLE_CLASS = "vehicleClass"
+    WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
     WG_ASSIST = "wg_log_hide_assist"
     WG_BLOCKED = "wg_log_hide_block"
     WG_CRITICS = "wg_log_hide_critics"
     WG_POS = "wg_log_pos_fix"
-    UNDEFINED = "UNDEFINED"
-    NOT_SHELL = "--"
-    WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
+    NORMAL, GOLD = SHELL
 
 
 ARCADE = namedtuple("ARCADE", (
@@ -351,9 +348,10 @@ LOAD_LIST = (
     MAIN.NAME, HP_BARS.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
     VEHICLE_TYPES.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME,
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
-    DAMAGE_LOG.GLOBAL, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED, SIXTH_SENSE.NAME, ANOTHER.SHADOW_SETTINGS,
+    DAMAGE_LOG.WG_LOGS_FIX, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED, SIXTH_SENSE.NAME, ANOTHER.SHADOW_SETTINGS,
     CAROUSEL.NAME, CLOCK.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, STATISTICS.NAME, AVG_EFFICIENCY_HANGAR.NAME
 )
+
 
 class CONFIG_INTERFACE:
     def __init__(self):
@@ -362,17 +360,14 @@ class CONFIG_INTERFACE:
     DONATE_BUTTONS = ('donate_button_ua', 'donate_button_paypal', 'donate_button_patreon', 'discord_button')
     BLOCK_IDS = (
         ANOTHER.CONFIG_SELECT, MAIN.NAME, STATISTICS.NAME, DISPERSION.NAME, CAROUSEL.NAME, EFFECTS.NAME,
-        DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.GLOBAL,
+        DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME, DAMAGE_LOG.WG_LOGS_FIX,
         DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED, MAIN_GUN.NAME, TEAM_BASES.NAME, VEHICLE_TYPES.NAME, PANELS.PANELS_NAME,
         SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME, MINIMAP.NAME, ANOTHER.SHADOW_SETTINGS,
         SIXTH_SENSE.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME, AVG_EFFICIENCY_HANGAR.NAME
     )
     HANDLER_VALUES = {
         SNIPER.NAME: {
-            'dynamic_zoom*enabled': (
-                'dynamic_zoom*steps_only',
-                'dynamic_zoom*zoomXMeters'
-            ),
+            'dynamic_zoom*enabled': ('dynamic_zoom*steps_only', 'dynamic_zoom*zoomXMeters'),
             'zoomSteps*enabled': ('zoomSteps*steps',),
             SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY)
         },

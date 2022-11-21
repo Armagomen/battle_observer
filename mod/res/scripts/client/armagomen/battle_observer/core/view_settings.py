@@ -2,8 +2,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
 from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
 from constants import ARENA_GUI_TYPE
-from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
-from gui.Scaleform.daapi.view.battle.epic.page import _GAME_UI, _SPECTATOR_UI, _NEVER_HIDE
+from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, PageStates, _STATE_TO_UI
 from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
@@ -24,15 +23,6 @@ BATTLES_RANGE = (
     ARENA_GUI_TYPE.UNKNOWN,
 )
 
-VIEW_ALIASES = (
-    VIEW_ALIAS.CLASSIC_BATTLE_PAGE,
-    VIEW_ALIAS.COMP7_BATTLE_PAGE,
-    VIEW_ALIAS.EPIC_BATTLE_PAGE,
-    VIEW_ALIAS.EPIC_RANDOM_PAGE,
-    VIEW_ALIAS.RANKED_BATTLE_PAGE,
-    VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE
-)
-
 ALIASES_TO_HIDE = (
     (ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
     (ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
@@ -40,6 +30,8 @@ ALIASES_TO_HIDE = (
     (ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER),
     (ALIASES.TEAM_BASES, BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)
 )
+
+NEVER_HIDE_FL = (ALIASES.DEBUG, ALIASES.TIMER, ALIASES.DATE_TIME, ALIASES.SIXTH_SENSE)
 
 
 def registerBattleObserverPackages():
@@ -113,7 +105,7 @@ class ViewSettings(object):
             return settings.battle_timer[GLOBAL.ENABLED]
         elif alias is ALIASES.SIXTH_SENSE:
             return settings.sixth_sense[GLOBAL.ENABLED]
-        elif alias is ALIASES.TEAM_BASES:
+        elif alias is ALIASES.TEAM_BASES and not self.gui.isInEpicRange():
             return settings.team_bases_panel[GLOBAL.ENABLED]
         elif alias is ALIASES.ARMOR_CALC:
             return settings.armor_calculator[GLOBAL.ENABLED]
@@ -133,36 +125,40 @@ class ViewSettings(object):
 
     def setComponents(self):
         if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
-            self.checkComponents()
-            self.setHiddenComponents()
+            self.__components = {alias for alias in ALIASES if self.getSetting(alias)}
+            if self.gui.isEpicBattle():
+                self.addInToEpicUI(True)
+            self.__hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self.__components)
             self.sessionProvider.registerViewComponents(*self.getComponentsConfig())
         logDebug("viewSettings setComponents: components={}", self.__components)
         return self.__components
 
     def clear(self):
-        for alias in self.__components:
-            _GAME_UI.discard(alias)
-            _SPECTATOR_UI.discard(alias)
-            _NEVER_HIDE.discard(alias)
+        if self.gui.isEpicBattle():
+            self.addInToEpicUI(False)
         self.__components.clear()
         self.__hiddenComponents.clear()
         logDebug("clear viewSettings components")
 
-    def checkComponents(self):
-        for alias in ALIASES:
-            if self.getSetting(alias):
-                self.__components.add(alias)
-                _GAME_UI.add(alias)
-                _SPECTATOR_UI.add(alias)
-                if alias is ALIASES.SIXTH_SENSE:
-                    _NEVER_HIDE.add(alias)
-
-    def setHiddenComponents(self):
-        for alias, wg_alias in ALIASES_TO_HIDE:
-            if alias in self.__components:
-                self.__hiddenComponents.add(wg_alias)
+    def addInToEpicUI(self, add):
+        for alias in self.__components:
+            if not add:
+                _NEVER_HIDE.discard(alias)
+                _STATE_TO_UI[PageStates.COUNTDOWN].discard(alias)
+                _STATE_TO_UI[PageStates.RESPAWN].discard(alias)
+                _STATE_TO_UI[PageStates.GAME].discard(alias)
+                _STATE_TO_UI[PageStates.SPECTATOR_FREE].discard(alias)
+                _STATE_TO_UI[PageStates.SPECTATOR_DEATHCAM].discard(alias)
+                _STATE_TO_UI[PageStates.SPECTATOR_FOLLOW].discard(alias)
             else:
-                self.__hiddenComponents.discard(wg_alias)
+                _STATE_TO_UI[PageStates.COUNTDOWN].add(alias)
+                _STATE_TO_UI[PageStates.RESPAWN].add(alias)
+                _STATE_TO_UI[PageStates.GAME].add(alias)
+                _STATE_TO_UI[PageStates.SPECTATOR_FREE].add(alias)
+                _STATE_TO_UI[PageStates.SPECTATOR_DEATHCAM].add(alias)
+                _STATE_TO_UI[PageStates.SPECTATOR_FOLLOW].add(alias)
+                if alias in NEVER_HIDE_FL:
+                    _NEVER_HIDE.add(alias)
 
     def getComponentsConfig(self):
         config = ComponentsConfig()
@@ -187,18 +183,10 @@ class ViewSettings(object):
         logDebug("viewSettings, getComponentsConfig: {}", config)
         return config
 
-    def getHiddenWGComponents(self):
+    @property
+    def hiddenComponents(self):
         return self.__hiddenComponents
 
-    @staticmethod
-    def getViewAliases():
-        return VIEW_ALIASES
-
-    def getComponents(self):
+    @property
+    def components(self):
         return self.__components
-
-    def removeComponent(self, alias):
-        self.__components.discard(alias)
-        for bo_alias, wg_alias in ALIASES_TO_HIDE:
-            if alias == bo_alias:
-                self.__hiddenComponents.discard(wg_alias)

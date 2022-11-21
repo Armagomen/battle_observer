@@ -8,7 +8,7 @@
   "timer_color": "#f5ff8f", 
   "timer_done_color": "#a6ffa6", 
   "timer_done_template": "<font color='%(color_done)s'>%(percent)d%%</font>", 
-  "timer_enabled": true, 
+  "timer_enabled": false, 
   "timer_position_x": 130, 
   "timer_position_y": 0, 
   "timer_regular_template": "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>"

@@ -54,7 +54,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		private function onChange(eve:Event):void
 		{
-			this.as_clearStorage();
 			for each (var itemL:* in this.playersPanel.listLeft._items)
 			{
 				this.as_AddVehIdToList(itemL.vehicleData.vehicleID, false);
@@ -67,27 +66,27 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
 		{
-			if (!this.storage[vehicleID])
+			var listitem:* = this.getWGListitem(vehicleID, enemy);
+			if (listitem)
 			{
-				var listitem:* = this.getWGListitem(vehicleID, enemy);
-				if (listitem)
+				if (!this.storage[vehicleID])
 				{
 					this.storage[vehicleID] = new ListItem(enemy, getShadowSettings());
 					this.onAddedToStorage(vehicleID, enemy);
-					listitem.addChild(this.storage[vehicleID]);
 				}
-				else
-				{
-					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: playersPanel list item holder is null: " + vehicleID.toString());
-				}
+				listitem.addChild(this.storage[vehicleID]);
+			}
+			else
+			{
+				DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: playersPanel list item holder is null: " + vehicleID.toString());
 			}
 		}
 		
-		public function as_updateHealthBar(vehicleID:int, scale:Number, text:String):void
+		public function as_updateHealthBar(vehicleID:int, percent:Number, text:String):void
 		{
 			if (this.storage[vehicleID])
 			{
-				this.storage[vehicleID].updateHealth(scale, text);
+				this.storage[vehicleID].updateHealth(percent, text);
 			}
 		}
 		

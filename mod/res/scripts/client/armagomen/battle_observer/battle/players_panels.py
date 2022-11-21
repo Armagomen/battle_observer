@@ -5,7 +5,7 @@ from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPan
 from armagomen.constants import VEHICLE, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import logDebug
 from armagomen.utils.keys_listener import g_keysListener
-from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent
+from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealthPercent
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
 
@@ -65,7 +65,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         visible = not self.settings[PANELS.ON_KEY_DOWN]
         vehicleData = {VEHICLE.CUR: maxHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: 100}
         self.as_addHealthBarS(vehicleID, color, self.colors[COLORS.GLOBAL], self.settings[PANELS.BAR_SETTINGS], visible)
-        self.as_updateHealthBarS(vehicleID, 1.0, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
+        self.as_updateHealthBarS(vehicleID, 100, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
 
     def onAddedToStorage(self, vehicleID, isEnemy):
         """Called from flash after creation in as_AddVehIdToListS"""
@@ -90,9 +90,9 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if self.hpBarsEnable:
             if newHealth > maxHealth:
                 maxHealth = newHealth
-            scale = round(getHealthPercent(newHealth, maxHealth), 2)
-            vehicleData = {VEHICLE.CUR: newHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: scale * 100}
-            self.as_updateHealthBarS(vehicleID, scale, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
+            healthPercent = normalizeHealthPercent(newHealth, maxHealth)
+            vehicleData = {VEHICLE.CUR: newHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: healthPercent}
+            self.as_updateHealthBarS(vehicleID, healthPercent, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
 
     def onPlayersDamaged(self, targetID, attackerID, damage):
         self.playersDamage[attackerID] += damage

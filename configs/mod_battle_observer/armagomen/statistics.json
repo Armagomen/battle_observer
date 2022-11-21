@@ -1,9 +1,9 @@
 {
-  "enabled": false, 
+  "enabled": true, 
   "icon_blackout": -1.25, 
   "icon_enabled": true, 
-  "panels_cut_width": 60, 
-  "panels_full_width": 160, 
+  "panels_cut_width": 65, 
+  "panels_full_width": 165, 
   "statistics_change_vehicle_name_color": true, 
   "statistics_colors": {
     "bad": "#FE7903", 

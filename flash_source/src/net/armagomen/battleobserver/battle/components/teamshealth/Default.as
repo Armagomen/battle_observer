@@ -33,9 +33,9 @@
 			this.enemyBar.updateColor(enabled ? this.colors.enemyColorBlind : this.colors.enemy);
 		}
 		
-		public function setBarScale(isEnemy:Boolean, newScale:Number):void
+		public function setBarScale(isEnemy:Boolean, percent:Number):void
 		{
-			(isEnemy ? this.enemyBar : this.allyBar).setNewScale(newScale);
+			(isEnemy ? this.enemyBar : this.allyBar).setNewScale(percent);
 		}
 		
 		public function remove():void

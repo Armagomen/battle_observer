@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import MAIN, CREW_XP, getLogo
+from armagomen.constants import MAIN, CREW_XP, getLogo, GLOBAL
 from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles, logDebug
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
@@ -30,7 +30,7 @@ class CrewProcessor(object):
     @staticmethod
     def getLocalizedMessage(value, description):
         dialog = localization[CREW_XP.NAME]
-        return dialog[description] + "\n\n" + dialog[CREW_XP.ENABLE if value else CREW_XP.DISABLE]
+        return GLOBAL.NEW_LINE.join((dialog[description], dialog[CREW_XP.ENABLE if value else CREW_XP.DISABLE]))
 
     @wg_async
     def showDialog(self, vehicle, value, description):
@@ -40,7 +40,7 @@ class CrewProcessor(object):
         if app is not None and app.containerManager is not None:
             view = app.containerManager.getView(WindowLayer.VIEW)
             dialog.setView(view)
-        title = getLogo() + "\n" + vehicle.userName
+        title = GLOBAL.NEW_LINE.join((getLogo(), vehicle.userName))
         message = self.getLocalizedMessage(value, description)
         dialogResult = yield wg_await(dialog.showCrewDialog(title, message, vehicle.userName))
         if dialogResult:
