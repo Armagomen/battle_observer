@@ -101,7 +101,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
         if self.minimapPlugin.enabled:
             self.minimapPlugin.init(view.flashObject)
-        callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
+        if not viewSettings.gui.isEpicBattle():
+            callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
 
     def onViewLoaded(self, view, *args):
         alias = view.getAlias()

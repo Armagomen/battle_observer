@@ -79,7 +79,7 @@ class DamageLog(DamageLogsMeta):
                                     tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
                                     tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
             self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
-        self.__isExtended = self.settings.log_extended[GLOBAL.ENABLED]
+        self.__isExtended = self.settings.log_extended[GLOBAL.ENABLED] and not self.gui.self.gui.isEpicBattle()
         if self.__isExtended:
             self.as_createExtendedLogsS(self.settings.log_extended[GLOBAL.SETTINGS])
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
