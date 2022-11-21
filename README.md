@@ -1,3 +1,5 @@
+* [DOWNLOAD THE LATEST RELEASE](https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip)
+
 ### Официальные ресурсы
 * [Тема обсуждения на форуме](https://koreanrandom.com/forum/topic/32939-)
 * [Канал на YouTube](https://www.youtube.com/channel/UCIksyJfDn5bOoig4iO7BKEA)

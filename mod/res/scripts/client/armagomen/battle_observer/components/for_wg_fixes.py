@@ -3,6 +3,7 @@ from BigWorld import getFPS, statLagDetected, statPing
 from BattleReplay import g_replayCtrl as replayCtrl
 from armagomen.utils.common import overrideMethod
 from avatar_components.avatar_chat_key_handling import AvatarChatKeyHandling, _logger
+from chat_commands_consts import _PERSONAL_MESSAGE_MUTE_DURATION
 from gui.Scaleform.daapi.view.battle.shared.markers2d.vehicle_plugins import VehicleMarkerPlugin, MarkerState
 from gui.Scaleform.genConsts.BATTLE_MARKER_STATES import BATTLE_MARKER_STATES
 from gui.battle_control.controllers import debug_ctrl
@@ -45,8 +46,7 @@ def setViewComponents(base, controller):
 # fix AttributeError: 'NoneType' object has no attribute 'translation' in AvatarChatKeyHandling
 @overrideMethod(AvatarChatKeyHandling, "__playSoundNotificationOnCommandReceived")
 def playSoundNotificationOnCommandReceived(base, self, cmd, markerType, useSoundNotification=False,
-                                           notificationName=None, enableVoice=True,
-                                           _PERSONAL_MESSAGE_MUTE_DURATION=None):
+                                           notificationName=None, enableVoice=True):
     if cmd.isEpicGlobalMessage():
         if self.soundNotifications:
             self.soundNotifications.play(EPIC_SOUND.BF_EB_GLOBAL_MESSAGE)
