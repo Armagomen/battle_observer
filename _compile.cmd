@@ -10,7 +10,7 @@ REM set ModsDir=C:\Games\World_of_Tanks_CT\mods
 "python.exe" bo_compile_all.py -f -q -d scripts mod\res\scripts
 
 set ModFile=%ModsDir%\%WotVer%\armagomen.battleObserver_%ModVer%.wotmod
-set ZipArh=..\BattleObserver_%ModVer%_WOT_%WotVer%.zip
+set ZipArh=..\BattleObserver_WOT_EU.zip
 set ToExclude=-x!*.db -x!*.log -x!res_mods -x!logs -x!other -x!protanki
 DEL %ModsDir%\%WotVer%\armagomen.battleObserver*
 DEL %ModsDir%\%WotVer%\temp*
