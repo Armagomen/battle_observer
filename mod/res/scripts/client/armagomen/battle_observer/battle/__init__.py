@@ -1,14 +1,26 @@
+from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
+from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, STATISTICS, VEHICLE_TYPES, ALIASES
-from armagomen.utils.common import logError, logInfo, logDebug, callback
+from armagomen.constants import SWF, STATISTICS, VEHICLE_TYPES, ALIASES, GLOBAL, MINIMAP
+from armagomen.utils.common import logError, logInfo, logDebug, callback, xvmInstalled
 from armagomen.utils.events import g_events
+from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
 __all__ = ()
+
+VIEW_ALIASES = (
+    VIEW_ALIAS.CLASSIC_BATTLE_PAGE,
+    VIEW_ALIAS.COMP7_BATTLE_PAGE,
+    VIEW_ALIAS.EPIC_BATTLE_PAGE,
+    VIEW_ALIAS.EPIC_RANDOM_PAGE,
+    VIEW_ALIAS.RANKED_BATTLE_PAGE,
+    VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE
+)
 
 
 def getViewSettings():
@@ -51,23 +63,21 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandlerBattle(PackageBusinessHandler):
-    __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics', 'viewAliases')
+    __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics')
 
     def __init__(self):
-        from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
-        from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
-        self.viewAliases = viewSettings.getViewAliases()
-        listeners = [(alias, self.eventListener) for alias in self.viewAliases]
+        listeners = [(alias, self.eventListener) for alias in VIEW_ALIASES]
         super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
-        self.minimapPlugin = MinimapZoomPlugin()
+        self.minimapPlugin = None
         self.statistics = StatisticsDataLoader()
         self._iconsEnabled = False
         self._statLoadTry = 0
         self._statisticsEnabled = False
 
     def fini(self):
-        self.minimapPlugin.fini()
-        self.minimapPlugin = None
+        if self.minimapPlugin is not None:
+            self.minimapPlugin.fini()
+            self.minimapPlugin = None
         self._statLoadTry = 0
         viewSettings.clear()
         super(ObserverBusinessHandlerBattle, self).fini()
@@ -76,8 +86,11 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
         self._statisticsEnabled = viewSettings.isWTREnabled() and self.statistics.enabled
         self._iconsEnabled = viewSettings.isIconsEnabled()
+        baseMapEnabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not xvmInstalled
+        if baseMapEnabled and not viewSettings.gui.isEpicBattle():
+            self.minimapPlugin = MinimapZoomPlugin()
         components = viewSettings.setComponents()
-        if components or self._statisticsEnabled or self._iconsEnabled or self.minimapPlugin.enabled:
+        if components or self._statisticsEnabled or self._iconsEnabled or self.minimapPlugin is not None:
             if self._statisticsEnabled:
                 self.statistics.getStatisticsDataFromServer()
             self._app.as_loadLibrariesS([SWF.BATTLE])
@@ -94,19 +107,18 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         flashObject.as_createStatisticComponent(self._iconsEnabled, self.statistics.itemsWTRData, cutWidth, fullWidth,
                                                 typeColors, iconMultiplier)
 
-    def delayLoading(self, view):
-        components = viewSettings.getComponents()
+    def delayLoading(self, view, components, hiddenComponents):
         view._blToggling.update(components)
         view.flashObject.as_observerCreateComponents(components)
-        view.flashObject.as_observerHideWgComponents(viewSettings.getHiddenWGComponents())
-        if self.minimapPlugin.enabled:
+        view.flashObject.as_observerHideWgComponents(hiddenComponents)
+        if self.minimapPlugin is not None:
             self.minimapPlugin.init(view.flashObject)
         if not viewSettings.gui.isEpicBattle():
             callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
 
     def onViewLoaded(self, view, *args):
         alias = view.getAlias()
-        if alias not in self.viewAliases:
+        if alias not in VIEW_ALIASES:
             return
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
@@ -114,6 +126,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{} {}, has ho attribute {}"
             return logError(to_format_str, alias, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        callback(1.0, self.delayLoading, view)
+        callback(1.0, self.delayLoading, view, viewSettings.components, viewSettings.hiddenComponents)
         if self._iconsEnabled or self._statisticsEnabled:
             callback(2.0, self.loadStatisticView, view.flashObject)

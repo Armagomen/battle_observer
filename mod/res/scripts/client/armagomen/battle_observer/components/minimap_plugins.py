@@ -20,7 +20,6 @@ class MinimapZoomPlugin(object):
         self.__battleView_as = None
         self.__started = False
         self.isComp7Page = False
-        self.enabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not xvmInstalled
 
     def init(self, flashObject):
         self.__battleView_as = flashObject
