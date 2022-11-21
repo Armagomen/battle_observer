@@ -1,13 +1,12 @@
 package net.armagomen.battleobserver.battle.wgcomponents
 {
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.views.minimap.Minimap;
 	
 	public class minimapZoom
 	{
 		private var oldSize:Number  = 2.0;
 		private var oldScale:Number = 1.0;
-		private var minimap:Minimap = null;
+		private var minimap:*       = null;
 		private var page:*          = null;
 		
 		public function minimapZoom(page:*)
@@ -23,7 +22,7 @@ package net.armagomen.battleobserver.battle.wgcomponents
 		{
 			if (this.minimap)
 			{
-				if (enabled)
+				if (enabled && !this.page.as_isComponentVisible(BATTLE_VIEW_ALIASES.FULL_STATS))
 				{
 					this.oldSize = this.minimap.currentSizeIndex;
 					this.oldScale = this.minimap.scaleX;

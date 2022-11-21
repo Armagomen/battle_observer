@@ -113,7 +113,7 @@ class ViewSettings(object):
             return settings.battle_timer[GLOBAL.ENABLED]
         elif alias is ALIASES.SIXTH_SENSE:
             return settings.sixth_sense[GLOBAL.ENABLED]
-        elif alias is ALIASES.TEAM_BASES:
+        elif alias is ALIASES.TEAM_BASES and not self.gui.isInEpicRange():
             return settings.team_bases_panel[GLOBAL.ENABLED]
         elif alias is ALIASES.ARMOR_CALC:
             return settings.armor_calculator[GLOBAL.ENABLED]
