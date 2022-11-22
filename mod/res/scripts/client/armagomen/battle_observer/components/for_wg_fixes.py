@@ -51,24 +51,20 @@ def playSoundNotificationOnCommandReceived(base, self, cmd, markerType, useSound
         if self.soundNotifications:
             self.soundNotifications.play(EPIC_SOUND.BF_EB_GLOBAL_MESSAGE)
     else:
-        commandNotificationData = self._AvatarChatKeyHandling__getMatrixProvider(cmd, markerType)
-        matrixProvider = commandNotificationData.matrixProvider
+        matrixProvider = self._AvatarChatKeyHandling__getMatrixProvider(cmd, markerType).matrixProvider
         if matrixProvider is None:
             return
         if notificationName is None:
             notificationName = cmd.getSoundEventName(useSoundNotification)
-        if enableVoice is True:
-            if cmd.isReceiver():
-                if self._AvatarChatKeyHandling__arePrivateVoiceOverBlocked is False:
-                    self._AvatarChatKeyHandling__arePrivateVoiceOverBlocked = True
-                    self._AvatarChatKeyHandling__callbackDelayer.delayCallback(
-                        _PERSONAL_MESSAGE_MUTE_DURATION, self._AvatarChatKeyHandling__onPrivateVoiceOverBlockedReset)
-                else:
-                    enableVoice = False
-                    _logger.info(
-                        'Voice was blocked for the receiver of a private message due to flood prevention system!')
-        cmdSenderVehicleID = self._AvatarChatKeyHandling__getVehicleIDForCmdSender(cmd)
-        sentByPlayer = True if cmdSenderVehicleID == self.playerVehicleID else False
+        if enableVoice and cmd.isReceiver():
+            if not self._AvatarChatKeyHandling__arePrivateVoiceOverBlocked:
+                self._AvatarChatKeyHandling__arePrivateVoiceOverBlocked = True
+                self._AvatarChatKeyHandling__callbackDelayer.delayCallback(
+                    _PERSONAL_MESSAGE_MUTE_DURATION, self._AvatarChatKeyHandling__onPrivateVoiceOverBlockedReset)
+            else:
+                enableVoice = False
+                _logger.info('Voice was blocked for the receiver of a private message due to flood prevention system!')
+        sentByPlayer = self._AvatarChatKeyHandling__getVehicleIDForCmdSender(cmd) == self.playerVehicleID
         self._AvatarChatKeyHandling__playSoundNotification(notificationName, matrixProvider.translation, enableVoice,
                                                            sentByPlayer)
 
