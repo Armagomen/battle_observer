@@ -111,12 +111,12 @@ localization = {
         "timer_done_color": "Timer / message color (full reduction).",
         "timer_align": "Text align."
     },
-    "tank_carousel": {
-        "header": "TANK CAROUSEL SETUP",
-        "carouselRows": "Number of rows of multi-row tank carousel.",
-        "carouselRows_toltip": "It works only if the multi-row carousel is enable in the client.",
-        "smallDoubleCarousel": "Forcibly use small icons in tank carousel."
-    },
+    # "tank_carousel": {
+    #     "header": "TANK CAROUSEL SETUP",
+    #     "carouselRows": "Number of rows of multi-row tank carousel.",
+    #     "carouselRows_toltip": "It works only if the multi-row carousel is enable in the client.",
+    #     "smallDoubleCarousel": "Forcibly use small icons in tank carousel."
+    # },
     "effects": {
         "header": "Customize effects",
         "noShockWave": "Remove camera shaking when hit by tank.",

@@ -20,7 +20,7 @@ class ComponentsLoader(object):
             'save_shot_lite': None,
             'service_channel_filter': None,
             'shot_result_plugin': None,
-            'tank_carousel': None,
+            # 'tank_carousel': None,
             'vehicle_battle_boosters': None,
             'wg_logs_fixes': None,
         }

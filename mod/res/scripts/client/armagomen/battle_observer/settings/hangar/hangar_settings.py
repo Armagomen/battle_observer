@@ -221,8 +221,10 @@ class SettingsInterface(CreateElement):
             if blockID in self.inited:
                 continue
             try:
-                self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID),
-                                          dict(), lambda *args: None, button_handler=self.onButtonPress)
+                template = self.getTemplate(blockID)
+                if template is not None:
+                    self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: template, dict(), lambda *args: None,
+                                              button_handler=self.onButtonPress)
             except Exception as err:
                 logWarning('SettingsInterface addModsToVX: {}'.format(repr(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
@@ -258,7 +260,9 @@ class SettingsInterface(CreateElement):
     def updateMod(self, blockID):
         if blockID not in self.inited:
             try:
-                self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: self.getTemplate(blockID))
+                template = self.getTemplate(blockID)
+                if template is not None:
+                    self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: template)
             except Exception:
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
@@ -335,4 +339,4 @@ class SettingsInterface(CreateElement):
             middleIndex = (len(columns) + int(len(columns) % 2 != 0)) / 2
             column1 = columns[:middleIndex]
             column2 = columns[middleIndex:]
-        return self.createBlock(blockID, settings_block, column1, column2)
+        return self.createBlock(blockID, settings_block, column1, column2) if column1 or column2 else None
