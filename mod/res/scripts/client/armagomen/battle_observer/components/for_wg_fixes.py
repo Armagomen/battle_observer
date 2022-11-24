@@ -1,6 +1,7 @@
-from BigWorld import getFPS, statLagDetected, statPing
+import BigWorld
 
-from BattleReplay import g_replayCtrl as replayCtrl
+from BattleReplay import g_replayCtrl, isServerSideReplay
+from DogTagComponent import DogTagComponent
 from armagomen.utils.common import overrideMethod
 from avatar_components.avatar_chat_key_handling import AvatarChatKeyHandling, _logger
 from chat_commands_consts import _PERSONAL_MESSAGE_MUTE_DURATION
@@ -18,20 +19,20 @@ def setViewComponents(base, controller, *args):
 
 
 @overrideMethod(debug_ctrl.DebugController, "_update")
-def setViewComponents(base, controller):
-    if replayCtrl.isPlaying and not replayCtrl.isBattleSimulation and replayCtrl.fps > 0 or replayCtrl.isServerSideReplay:
-        fps = getFPS()[1]
-        fpsReplay = int(replayCtrl.fps)
-        ping = replayCtrl.ping
-        isLaggingNow = replayCtrl.isLaggingNow
+def updateDebug(base, controller):
+    if g_replayCtrl.isPlaying and not g_replayCtrl.isBattleSimulation and g_replayCtrl.fps > 0 or isServerSideReplay():
+        fps = BigWorld.getFPS()[1]
+        fpsReplay = int(g_replayCtrl.fps)
+        ping = g_replayCtrl.ping
+        isLaggingNow = g_replayCtrl.isLaggingNow
     else:
         fpsReplay = -1
-        isLaggingNow = statLagDetected()
-        ping = statPing()
-        fps = getFPS()[1]
+        isLaggingNow = BigWorld.statLagDetected()
+        ping = BigWorld.statPing()
+        fps = BigWorld.getFPS()[1]
         controller.statsCollector.update()
-        if replayCtrl.isRecording:
-            replayCtrl.setFpsPingLag(fps, ping, isLaggingNow)
+        if g_replayCtrl.isRecording:
+            g_replayCtrl.setFpsPingLag(fps, ping, isLaggingNow)
     try:
         ping = int(ping)
         fps = int(fps)
@@ -41,6 +42,17 @@ def setViewComponents(base, controller):
     if controller._debugPanelUI is not None:
         for control in controller._debugPanelUI:
             control.updateDebugInfo(ping, fps, isLaggingNow, fpsReplay=fpsReplay)
+
+
+@overrideMethod(DogTagComponent, "_isObserving")
+def _isObserving(base, *args):
+    if isServerSideReplay():
+        return True
+    else:
+        vehicle = getattr(BigWorld.player(), "vehicle", None)
+        if vehicle is not None:
+            return not vehicle.isPlayerVehicle
+    return False
 
 
 # fix AttributeError: 'NoneType' object has no attribute 'translation' in AvatarChatKeyHandling
