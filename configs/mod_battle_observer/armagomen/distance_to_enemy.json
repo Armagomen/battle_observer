@@ -1,7 +1,0 @@
-{
-  "align": "center", 
-  "enabled": false, 
-  "template": "<font color='#f5ff8f' size='18'>%(distance).1f до %(name)s</font>", 
-  "x": 0, 
-  "y": -150
-}

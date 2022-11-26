@@ -2,9 +2,10 @@ import BigWorld
 
 from BattleReplay import g_replayCtrl, isServerSideReplay
 from DogTagComponent import DogTagComponent
-from armagomen.utils.common import overrideMethod
+from armagomen.utils.common import overrideMethod, callback
 from avatar_components.avatar_chat_key_handling import AvatarChatKeyHandling, _logger
 from chat_commands_consts import _PERSONAL_MESSAGE_MUTE_DURATION
+from gui.Scaleform.daapi.view.battle.epic.page import EpicBattlePage
 from gui.Scaleform.daapi.view.battle.shared.markers2d.vehicle_plugins import VehicleMarkerPlugin, MarkerState
 from gui.Scaleform.genConsts.BATTLE_MARKER_STATES import BATTLE_MARKER_STATES
 from gui.battle_control.controllers import debug_ctrl
@@ -114,3 +115,8 @@ def _updateStatusMarkerState(base, self, vehicleID, isShown, handle, statusID, d
     elif self._VehicleMarkerPlugin__canUpdateStatus(handle):
         self._invokeMarker(handle, 'hideStatusMarker', statusID, currentlyActiveStatusID, animated,
                            currentlyActiveIsSourceVehicle)
+
+
+@overrideMethod(EpicBattlePage, "__onRespawnVisibility")
+def _onRespawnVisibility(base, *args, **kwargs):
+    callback(1.0, base, *args, **kwargs)
