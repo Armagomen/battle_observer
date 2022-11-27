@@ -47,6 +47,5 @@ class LoadingError(object):
     def __show(self, view):
         if not self.isDisplayed:
             dialog = LoadingErrorDialog()
-            dialog.setView(view)
             dialog.showLoadingError(self.message)
             self.isDisplayed = True

@@ -3,10 +3,12 @@ from collections import namedtuple
 
 from armagomen.constants import getLogo, GLOBAL
 from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
+from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
-from helpers import getClientLanguage
+from helpers import getClientLanguage, dependency
+from skeletons.gui.app_loader import IAppLoader
 from wg_async import wg_async, wg_await, AsyncReturn
 
 language = getClientLanguage()
@@ -20,12 +22,14 @@ buttons = namedtuple("BUTTONS", "restart auto handle cancel close apply ignore")
 
 
 class DialogBase(object):
+    appLoader = dependency.descriptor(IAppLoader)
 
-    def __init__(self):
-        self.view = None
-
-    def setView(self, view):
-        self.view = view
+    @property
+    def view(self):
+        app = self.appLoader.getApp()
+        if app is not None and app.containerManager is not None:
+            return app.containerManager.getView(WindowLayer.VIEW)
+        return None
 
 
 class UpdaterDialogs(DialogBase):

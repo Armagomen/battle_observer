@@ -116,6 +116,5 @@ class SettingsLoader(object):
     def onHangarLoaded(self, view):
         if self.errorMessages:
             dialog = LoadingErrorDialog()
-            dialog.setView(view)
             dialog.showLoadingError(GLOBAL.NEW_LINE.join(self.errorMessages))
             self.errorMessages = []
