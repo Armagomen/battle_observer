@@ -146,7 +146,6 @@ class Updater(DownloadThread):
 
     @wg_async
     def showDialog(self, view):
-        self.dialogs.setView(view)
         title = getLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
         gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, gitMessage)

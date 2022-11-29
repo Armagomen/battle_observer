@@ -25,8 +25,6 @@ class AvgData(AvgDataMeta):
             self.updateAvgData(cachedVehicleData.efficiencyAvgData)
 
     def updateAvgData(self, data):
-        params = data._asdict()
-        params.update(settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.ICONS])
         text = []
         if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.DAMAGE]:
             text.append("{damageIcon}{damage}")
@@ -38,4 +36,8 @@ class AvgData(AvgDataMeta):
             text.append("{stunIcon}{stun}")
         if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:
             text.append(" {marksOnGunIcon}{marksOnGunValue}%")
-        self.as_setDataS(" ".join(text).format(**params))
+        if text:
+            params = data._asdict()
+            params.update(settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.ICONS])
+            return self.as_setDataS(" ".join(text).format(**params))
+        self.as_setDataS("")

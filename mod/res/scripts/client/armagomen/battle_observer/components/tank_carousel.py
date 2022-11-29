@@ -1,25 +1,9 @@
-from account_helpers.settings_core.options import CarouselTypeSetting, DoubleCarouselTypeSetting
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CAROUSEL
 from armagomen.utils.common import overrideMethod
+from gui.Scaleform.daapi.view.lobby.hangar.carousels import TankCarousel
+from gui.Scaleform.genConsts.HANGAR_ALIASES import HANGAR_ALIASES
 from gui.shared.personality import ServicesLocator
-
-
-@overrideMethod(CarouselTypeSetting, "getRowCount")
-def getRowCount(base, *args, **kwargs):
-    return settings.tank_carousel[CAROUSEL.ROWS] if settings.tank_carousel[GLOBAL.ENABLED] else base(*args, **kwargs)
-
-
-@overrideMethod(DoubleCarouselTypeSetting, "getDefaultValue")
-def getDefaultValue(base, *args):
-    if settings.tank_carousel[CAROUSEL.SMALL] and settings.tank_carousel[GLOBAL.ENABLED]:
-        return DoubleCarouselTypeSetting.DOUBLE_CAROUSEL_TYPES.index(DoubleCarouselTypeSetting.OPTIONS.SMALL)
-    return base(*args)
-
-
-@overrideMethod(DoubleCarouselTypeSetting, "enableSmallCarousel")
-def enableSmallCarousel(base, *args):
-    return settings.tank_carousel[CAROUSEL.SMALL] and settings.tank_carousel[GLOBAL.ENABLED] or base(*args)
 
 
 def onModSettingsChanged(config, blockID):
@@ -28,3 +12,17 @@ def onModSettingsChanged(config, blockID):
 
 
 settings.onModSettingsChanged += onModSettingsChanged
+
+
+@overrideMethod(TankCarousel, "as_rowCountS")
+def as_rowCountS(base, carousel, rowCount):
+    if settings.tank_carousel[GLOBAL.ENABLED] and carousel.getAlias() == HANGAR_ALIASES.TANK_CAROUSEL:
+        return base(carousel, settings.tank_carousel[CAROUSEL.ROWS])
+    return base(carousel, rowCount)
+
+
+@overrideMethod(TankCarousel, "as_setSmallDoubleCarouselS")
+def as_setSmallDoubleCarouselS(base, carousel, small):
+    if settings.tank_carousel[GLOBAL.ENABLED] and carousel.getAlias() == HANGAR_ALIASES.TANK_CAROUSEL:
+        return base(carousel, settings.tank_carousel[CAROUSEL.SMALL] or small)
+    return base(carousel, small)

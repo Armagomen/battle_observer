@@ -13,18 +13,19 @@
 	 */
 	public dynamic class TeamBase extends Sprite
 	{
-		private var progressBar:Shape      = new Shape();
+		private var progressBar:Shape                      = new Shape();
 		private var status:TextExt;
 		private var timer:TextExt;
 		private var invaders:TextExt;
-		private var basesFormat:TextFormat = new TextFormat("$TitleFont", 16, 0xFAFAFA);
-		private var animation:Tween        = null;
+		private var basesFormat:TextFormat                 = new TextFormat("$TitleFont", 16, 0xFAFAFA);
+		private var animation:Tween                        = null;
 		[Embed(source = "players.png")]
 		private var Players:Class;
 		[Embed(source = "timer.png")]
 		private var Time:Class;
 		
-		private var colorBlind:Boolean     = false;
+		private var colorBlind:Boolean                     = false;
+		private static const HUNDREDTH_OF_A_PERCENT:Number = 0.01;
 		
 		public function TeamBase(colorBlind:Boolean)
 		{
@@ -34,8 +35,8 @@
 		
 		public function updateBase(points:int, invadersCnt:int, time:String, text:String):void
 		{
-			var scale:Number = Math.min(1.0, points * 0.01);
-			this.animation.continueTo(scale, scale > this.progressBar.scaleX ? 1.0 : 0.01);
+			var scale:Number = Math.min(1.0, (points < 100 ? points + invadersCnt : points) * HUNDREDTH_OF_A_PERCENT);
+			this.animation.continueTo(scale, scale > this.progressBar.scaleX ? 1.0 : HUNDREDTH_OF_A_PERCENT);
 			this.status.htmlText = text;
 			this.timer.text = time;
 			this.invaders.text = invadersCnt.toString();
@@ -110,7 +111,7 @@
 			this.progressBar.graphics.beginFill(progressBarColor, Math.max(0.05, colors.alpha));
 			this.progressBar.graphics.drawRect(0, 0, settings.width, settings.height);
 			this.progressBar.graphics.endFill();
-			this.progressBar.scaleX = 0;
+			this.progressBar.scaleX = HUNDREDTH_OF_A_PERCENT;
 			baseMain.addChild(this.progressBar);
 			baseMain.addChild(PlayersIcon(iconWidth));
 			baseMain.addChild(TimeIcon(iconWidth, settings.width));

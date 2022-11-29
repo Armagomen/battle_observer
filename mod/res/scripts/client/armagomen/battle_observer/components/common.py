@@ -1,3 +1,4 @@
+from CurrentVehicle import g_currentVehicle
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN
@@ -21,7 +22,7 @@ from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 def changeVehicle(base, *args, **kwargs):
     base(*args, **kwargs)
     g_events.onVehicleChanged()
-    callback(1.0, g_events.onVehicleChangedDelayed)
+    callback(1.0, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
 
 
 # disable field mail tips

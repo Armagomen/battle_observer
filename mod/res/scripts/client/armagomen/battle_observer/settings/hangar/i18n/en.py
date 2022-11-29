@@ -114,7 +114,7 @@ localization = {
     "tank_carousel": {
         "header": "TANK CAROUSEL SETUP",
         "carouselRows": "Number of rows of multi-row tank carousel.",
-        "carouselRows_toltip": "It works only if the multi-row carousel is enable in the client.",
+        "carouselRows_toltip": "Only works if there is no event that changes the standard carousel.",
         "smallDoubleCarousel": "Forcibly use small icons in tank carousel."
     },
     "effects": {

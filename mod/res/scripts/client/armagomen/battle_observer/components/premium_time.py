@@ -14,7 +14,7 @@ TEMPLATES = namedtuple("TEMPLATES", ("DAYS", "HOURS", "MINUTES"))(
     "<font face='$TitleFont' size='16' color='#FAFAFA'>%(hours)d {}. %(min)02d:%(sec)02d</font>".format(
         backport.text(R.strings.menu.header.account.premium.hours())),
     "<font face='$TitleFont' size='16' color='#FAFAFA'>{}. %(sec)02d</font>".format(
-        backport.text(R.strings.menu.headerButtons.battle.types.ranked.availability.min())
+        backport.text(R.strings.menu.headerButtons.battle.types.ranked.availability.min()).replace(")s", ")02d")
     )
 )
 
