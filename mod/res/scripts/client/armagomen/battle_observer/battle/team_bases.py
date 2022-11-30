@@ -2,13 +2,13 @@ from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
 from armagomen.constants import TEAM_BASES
 from armagomen.utils.common import callback
 from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
-from gui.battle_control.controllers import team_bases_ctrl
+from gui.battle_control.controllers.team_bases_ctrl import ITeamBasesListener
 from helpers import time_utils
 
 _MAX_INVADERS_COUNT = 3
 
 
-class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
+class TeamBases(TeamBasesMeta, ITeamBasesListener):
 
     def __init__(self):
         super(TeamBases, self).__init__()
@@ -72,4 +72,4 @@ class TeamBases(TeamBasesMeta, team_bases_ctrl.ITeamBasesListener):
 
     @staticmethod
     def getInvadersCount(count):
-        return count if count <= _MAX_INVADERS_COUNT else _MAX_INVADERS_COUNT
+        return min(count, _MAX_INVADERS_COUNT)
