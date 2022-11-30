@@ -19,7 +19,7 @@ class CrewProcessor(object):
     itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
-        self.invID = None
+        self.intCD = None
         self.inProcess = False
         g_events.onVehicleChangedDelayed += self.updateCrew
         overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
@@ -65,23 +65,21 @@ class CrewProcessor(object):
             return False, CREW_XP.NED_TURN_OFF
 
     def accelerateCrewTraining(self, vehicle):
-        if vehicle is None or vehicle.userName in ignored_vehicles or not vehicle.isElite or \
-                vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
+        if vehicle.userName in ignored_vehicles or not vehicle.isElite:
             return
         acceleration, description = self.isAccelerateTraining(vehicle)
         if vehicle.isXPToTman != acceleration and not self.inProcess:
             self.showDialog(vehicle, acceleration, description)
 
     def updateCrew(self, vehicle):
-        if settings.main[MAIN.CREW_RETURN]:
-            self.returnCrew(vehicle)
+        if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
+            return
+        if settings.main[MAIN.CREW_RETURN] and self.intCD != vehicle.intCD:
+            if not vehicle.isCrewFull:
+                self._processReturnCrew(vehicle)
+            self.intCD = vehicle.intCD
         if settings.main[MAIN.CREW_TRAINING]:
             self.accelerateCrewTraining(vehicle)
-
-    def returnCrew(self, vehicle):
-        if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked or vehicle.isCrewFull:
-            return
-        self._processReturnCrew(vehicle)
 
     @decorators.adisp_process('crewReturning')
     def _processReturnCrew(self, vehicle):
