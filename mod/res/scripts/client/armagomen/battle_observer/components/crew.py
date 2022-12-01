@@ -75,7 +75,7 @@ class CrewProcessor(object):
         if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
             return
         if settings.main[MAIN.CREW_RETURN] and self.intCD != vehicle.intCD:
-            if not vehicle.isCrewFull:
+            if vehicle.hasCrew and not vehicle.isCrewFull:
                 self._processReturnCrew(vehicle)
             self.intCD = vehicle.intCD
         if settings.main[MAIN.CREW_TRAINING]:
