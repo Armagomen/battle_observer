@@ -20,7 +20,7 @@ class CrewProcessor(object):
 
     def __init__(self):
         self.intCD = None
-        self.inProcess = False
+        self.isDialogVisible = False
         g_events.onVehicleChangedDelayed += self.updateCrew
         overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
@@ -31,14 +31,13 @@ class CrewProcessor(object):
 
     @wg_async
     def showDialog(self, vehicle, value, description):
-        self.inProcess = True
-        dialog = CrewDialog()
+        self.isDialogVisible = True
         title = GLOBAL.NEW_LINE.join((getLogo(), vehicle.userName))
         message = self.getLocalizedMessage(value, description)
-        dialogResult = yield wg_await(dialog.showCrewDialog(title, message, vehicle.userName))
+        dialogResult = yield wg_await(CrewDialog().showCrewDialog(title, message, vehicle.userName))
         if dialogResult:
             self.accelerateCrewXp(vehicle, value)
-        self.inProcess = False
+        self.isDialogVisible = False
 
     @decorators.adisp_process('updateTankmen')
     def accelerateCrewXp(self, vehicle, value):
@@ -68,7 +67,7 @@ class CrewProcessor(object):
         if vehicle.userName in ignored_vehicles or not vehicle.isElite:
             return
         acceleration, description = self.isAccelerateTraining(vehicle)
-        if vehicle.isXPToTman != acceleration and not self.inProcess:
+        if vehicle.isXPToTman != acceleration and not self.isDialogVisible:
             self.showDialog(vehicle, acceleration, description)
 
     def updateCrew(self, vehicle):
