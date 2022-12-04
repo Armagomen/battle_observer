@@ -15,8 +15,8 @@
 			super();
 			this.colors = colors;
 			
-			this.allyBar = new ProgressBar(-50, 4, -barWidth, 22, Math.max(0.2, colors.alpha), Math.max(0.2, colors.bgAlpha), null, colors.ally);
-			this.enemyBar = new ProgressBar(50, 4, barWidth, 22, Math.max(0.2, colors.alpha), Math.max(0.2, colors.bgAlpha), null, colorBlind ? colors.enemyColorBlind : colors.enemy);
+			this.allyBar = new ProgressBar(-50, 4, -barWidth, 22, Math.max(0.2, colors.alpha), Math.max(0.2, colors.bgAlpha), null, colors.ally, null, 0.5);
+			this.enemyBar = new ProgressBar(50, 4, barWidth, 22, Math.max(0.2, colors.alpha), Math.max(0.2, colors.bgAlpha), null, colorBlind ? colors.enemyColorBlind : colors.enemy, null, 0.5);
 			
 			if (outline.enabled)
 			{

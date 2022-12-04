@@ -59,7 +59,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				barX = -barX;
 				textX = -textX;
 			}
-			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colorParams.alpha, colorParams.bgAlpha, null, color, colorParams.bgColor, 0.6);
+			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colorParams.alpha, colorParams.bgAlpha, null, color, colorParams.bgColor, 0.4);
 			if (settings.players_bars_bar.outline.enabled)
 			{
 				this.healthBar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha, barWidth, settings.players_bars_bar.height);

@@ -6,9 +6,9 @@
 	
 	public class League extends Sprite
 	{
-		private var allyBar:Shape         = new Shape();
-		private var enemyBar:Shape        = new Shape();
-		private var background:Shape         = new Shape();
+		private var allyBar:Shape           = new Shape();
+		private var enemyBar:Shape          = new Shape();
+		private var background:Shape        = new Shape();
 		private var allyAnimation:Tween     = null;
 		private var enemyAnimation:Tween    = null;
 		private var defCommads:Vector.<int> = new <int>[1, 2, 2, 2, 2];
@@ -32,8 +32,8 @@
 			this.enemyBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Math.max(0.2, colors.alpha));
 			this.enemyBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
 			this.enemyBar.graphics.endFill();
-			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, 1, true);
-			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, 1, true);	
+			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, 0.5);
+			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, 0.5);
 		}
 		
 		public function setColorBlind(enabled:Boolean):void
@@ -46,7 +46,7 @@
 			var bar:Shape = isEnemy ? this.enemyBar : this.allyBar;
 			if (bar.scaleX != newScale)
 			{
-				(isEnemy ? this.enemyAnimation : this.allyAnimation).continueTo(newScale, 1);
+				(isEnemy ? this.enemyAnimation : this.allyAnimation).continueTo(newScale, 0.5);
 			}
 		}
 		

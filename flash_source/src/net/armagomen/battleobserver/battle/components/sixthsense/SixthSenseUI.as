@@ -77,16 +77,17 @@
 			if (this.params.showTimer)
 			{
 				this.timer = new TextExt(this.params.timer.x, this.params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-				this.timerAnimation = new Tween(this.timer, "alpha", 1.0, 0, 1, true);
+				this.timerAnimation = new Tween(this.timer, "alpha", 1.0, 0);
 			}
-			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height, 1, true);
-			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 1, true);
+			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height);
+			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
 			this.hideAnimation.addEventListener(TweenEvent.MOTION_FINISH, this.afterAnimation, false, 0, true);
 		}
 		
 		public function as_show():void
 		{
-			if (this.hideAnimation.isPlaying){
+			if (this.hideAnimation.isPlaying)
+			{
 				this.hideAnimation.rewind();
 				this.hideAnimation2.rewind();
 			}
@@ -97,7 +98,8 @@
 		
 		public function as_hide():void
 		{
-			if (!this.hideAnimation.isPlaying){
+			if (!this.hideAnimation.isPlaying)
+			{
 				this.hideAnimation.start();
 				this.hideAnimation2.start();
 			}
@@ -125,7 +127,7 @@
 			this.addLoadedImageAndTimer(this.loader.content as Bitmap);
 			this.loader.unload();
 		}
-			
+		
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;

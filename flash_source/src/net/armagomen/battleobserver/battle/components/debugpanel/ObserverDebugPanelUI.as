@@ -6,7 +6,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-
 	
 	public class ObserverDebugPanelUI extends ObserverBattleDisplayable
 	{
@@ -26,7 +25,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			super();
 		}
 		
-		override protected function onPopulate():void 
+		override protected function onPopulate():void
 		{
 			super.onPopulate();
 			if (this.debugText == null)
@@ -62,20 +61,22 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			}
 		}
 		
-		override protected function onBeforeDispose():void 
+		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
 			if (this.graphEnabled)
+			{
+				if (this.fpsBarEnabled)
 				{
-					if (this.fpsBarEnabled){
-						this.fpsBar.remove();
-						this.fpsBar = null;
-					}
-					if (this.pingBarEnabled){
-						this.pingBar.remove();
-						this.pingBar = null;
-					}
+					this.fpsBar.remove();
+					this.fpsBar = null;
 				}
+				if (this.pingBarEnabled)
+				{
+					this.pingBar.remove();
+					this.pingBar = null;
+				}
+			}
 			this.debugText = null;
 		}
 		

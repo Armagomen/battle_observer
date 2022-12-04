@@ -123,7 +123,7 @@
 			this.x = App.appWidth * 0.5 - baseMain.width * 0.5;
 			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;
 			
-			this.animation = new Tween(this.progressBar, "scaleX", this.progressBar.scaleX, 1.0, 1.0, true);
+			this.animation = new Tween(this.progressBar, "scaleX", this.progressBar.scaleX, 1.0);
 		}
 	}
 }

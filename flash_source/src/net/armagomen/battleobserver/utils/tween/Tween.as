@@ -31,9 +31,8 @@ package net.armagomen.battleobserver.utils.tween
 		public var prop:String        = "";
 		private var _duration:Number  = NaN;
 		public var obj:Object         = null;
-		public var useSeconds:Boolean = false;
 		
-		public function Tween(obj:Object, prop:String, begin:Number, finish:Number, duration:Number, useSeconds:Boolean = false)
+		public function Tween(obj:Object, prop:String, begin:Number, finish:Number, duration:Number = 1.0)
 		{
 			super();
 			if (!arguments.length)
@@ -45,7 +44,6 @@ package net.armagomen.battleobserver.utils.tween
 			this.begin = begin;
 			this.position = begin;
 			this.duration = duration;
-			this.useSeconds = useSeconds;
 			this.finish = finish;
 			this._timer = new Timer(100);
 		}
@@ -77,10 +75,7 @@ package net.armagomen.battleobserver.utils.tween
 		
 		private function fixTime():void
 		{
-			if (this.useSeconds)
-			{
-				this._startTime = getTimer() - this._time * 1000;
-			}
+			this._startTime = getTimer() - this._time * 1000;
 		}
 		
 		public function get finish():Number
@@ -113,11 +108,8 @@ package net.armagomen.battleobserver.utils.tween
 				}
 				else
 				{
-					if (this.useSeconds)
-					{
-						this._time = this._duration;
-						this.update();
-					}
+					this._time = this._duration;
+					this.update();
 					this.stop();
 					this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_FINISH, this._time, this._position));
 				}
@@ -193,14 +185,7 @@ package net.armagomen.battleobserver.utils.tween
 		
 		public function nextFrame():void
 		{
-			if (this.useSeconds)
-			{
-				this.time = (getTimer() - this._startTime) / 1000;
-			}
-			else
-			{
-				this.time = this._time + 1;
-			}
+			this.time = (getTimer() - this._startTime) / 1000;
 		}
 		
 		protected function timerHandler(timerEvent:TimerEvent):void
@@ -236,14 +221,6 @@ package net.armagomen.battleobserver.utils.tween
 			this.rewind();
 			this.startEnterFrame();
 			this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_START, this._time, this._position));
-		}
-		
-		public function prevFrame():void
-		{
-			if (!this.useSeconds)
-			{
-				this.time = this._time - 1;
-			}
 		}
 	}
 }
