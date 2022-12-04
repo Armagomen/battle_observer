@@ -53,6 +53,8 @@ localization = {
         "anonymousEnableShow_tooltip": "Only if player statistics is disabled, the parameter will "
                                        "not be taken into account if statistics are enabled.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
+        "useKeyPairs_tooltip": "Once enabled, the left and right keys will work as one, regardless of which one you "
+                               "chose in the module settings.",
         "hide_dog_tags": "Disable display of tokens.",
         "ignore_commanders_voice": "Ignore commander voiceover.",
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
