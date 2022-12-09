@@ -70,11 +70,23 @@ class CrewProcessor(object):
         if vehicle.isXPToTman != acceleration and not self.isDialogVisible:
             self.showDialog(vehicle, acceleration, description)
 
+    def isCrewAvailable(self, vehicle):
+        lastCrewIDs = vehicle.lastCrew
+        if lastCrewIDs is None:
+            return False
+        for lastTankmenInvID in lastCrewIDs:
+            actualLastTankman = self.itemsCache.items.getTankman(lastTankmenInvID)
+            if actualLastTankman is not None and actualLastTankman.isInTank:
+                lastTankmanVehicle = self.itemsCache.items.getVehicle(actualLastTankman.vehicleInvID)
+                if lastTankmanVehicle and lastTankmanVehicle.isLocked:
+                    return False
+        return True
+
     def updateCrew(self, vehicle):
         if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
             return
         if settings.main[MAIN.CREW_RETURN] and self.intCD != vehicle.intCD:
-            if not vehicle.isCrewFull:
+            if not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
                 self._processReturnCrew(vehicle)
             self.intCD = vehicle.intCD
         if settings.main[MAIN.CREW_TRAINING]:
