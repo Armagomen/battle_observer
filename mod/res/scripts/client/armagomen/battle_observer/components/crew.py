@@ -78,7 +78,7 @@ class CrewProcessor(object):
             actualLastTankman = self.itemsCache.items.getTankman(lastTankmenInvID)
             if actualLastTankman is not None and actualLastTankman.isInTank:
                 lastTankmanVehicle = self.itemsCache.items.getVehicle(actualLastTankman.vehicleInvID)
-                if lastTankmanVehicle and lastTankmanVehicle.isLocked:
+                if lastTankmanVehicle and lastTankmanVehicle.isCrewLocked:
                     return False
         return True
 
