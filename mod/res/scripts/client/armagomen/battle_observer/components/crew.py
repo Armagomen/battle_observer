@@ -1,11 +1,13 @@
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.constants import MAIN, CREW_XP, getLogo, GLOBAL
-from armagomen.utils.common import logInfo, overrideMethod, logError, ignored_vehicles, logDebug
+from armagomen.utils.common import logInfo, overrideMethod, logError, logDebug, openIgnoredVehicles, \
+    updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
 from gui import SystemMessages
 from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
+from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.gui_items.processors.tankman import TankmanReturn
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
@@ -13,6 +15,8 @@ from gui.veh_post_progression.models.progression import PostProgressionCompletio
 from helpers import dependency
 from skeletons.gui.shared import IItemsCache
 from wg_async import wg_async, wg_await
+
+ignored_vehicles = openIgnoredVehicles()
 
 
 class CrewProcessor(object):
@@ -34,9 +38,12 @@ class CrewProcessor(object):
         self.isDialogVisible = True
         title = GLOBAL.NEW_LINE.join((getLogo(), vehicle.userName))
         message = self.getLocalizedMessage(value, description)
-        dialogResult = yield wg_await(CrewDialog().showCrewDialog(title, message, vehicle.userName))
-        if dialogResult:
+        dialogResult = yield wg_await(CrewDialog().showCrewDialog(title, message))
+        if dialogResult.result == DialogButtons.SUBMIT:
             self.accelerateCrewXp(vehicle, value)
+        elif dialogResult.result == DialogButtons.PURCHASE:
+            ignored_vehicles.add(vehicle.userName)
+            updateIgnoredVehicles(ignored_vehicles)
         self.isDialogVisible = False
 
     @decorators.adisp_process('updateTankmen')
@@ -78,7 +85,7 @@ class CrewProcessor(object):
             actualLastTankman = self.itemsCache.items.getTankman(lastTankmenInvID)
             if actualLastTankman is not None and actualLastTankman.isInTank:
                 lastTankmanVehicle = self.itemsCache.items.getVehicle(actualLastTankman.vehicleInvID)
-                if lastTankmanVehicle and lastTankmanVehicle.isCrewLocked:
+                if lastTankmanVehicle and lastTankmanVehicle.isLocked:
                     return False
         return True
 

@@ -2,7 +2,7 @@
 from collections import namedtuple
 
 from armagomen.constants import getLogo, GLOBAL
-from armagomen.utils.common import restartGame, openWebBrowser, addVehicleToCache
+from armagomen.utils.common import restartGame, openWebBrowser
 from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
@@ -84,7 +84,7 @@ class LoadingErrorDialog(DialogBase):
 class CrewDialog(DialogBase):
 
     @wg_async
-    def showCrewDialog(self, title, message, vehicle_name):
+    def showCrewDialog(self, title, message):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(title)
         builder.setFormattedMessage(message)
@@ -92,6 +92,4 @@ class CrewDialog(DialogBase):
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.ignore)
         result = yield wg_await(dialogs.show(builder.build(self.view)))
-        if result.result == DialogButtons.PURCHASE:
-            addVehicleToCache(vehicle_name)
-        raise AsyncReturn(result.result == DialogButtons.SUBMIT)
+        raise AsyncReturn(result)

@@ -23,7 +23,7 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         if getClientLanguage() in ('ru', 'uk', 'be'):
             self.messages = (
-                "Доброго вечора ми з України.<br><br>Слава Україні",
+                "Добрий день everybody ми з України.<br><br>Слава Україні",
                 "Підтримай розробку мода, все буде Україна.<br><br>Слава Україні",
                 "Батько наш - Бандера,<br>Україна - мати,<br>Ми за Україну будем воювати!<br><br>Слава Україні",
                 "В ці складні часи мені дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть."

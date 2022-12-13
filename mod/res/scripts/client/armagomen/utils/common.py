@@ -216,13 +216,9 @@ def openIgnoredVehicles():
     return set(openJsonFile(path).get("vehicles"))
 
 
-ignored_vehicles = openIgnoredVehicles()
-
-
-def addVehicleToCache(vehicle):
-    ignored_vehicles.add(vehicle)
+def updateIgnoredVehicles(vehicles):
     path = os.path.join(getObserverCachePath(), "crew_ignored.json")
-    writeJsonFile(path, {"vehicles": sorted(ignored_vehicles)})
+    writeJsonFile(path, {"vehicles": sorted(vehicles)})
 
 
 def overrideMethod(wg_class, method_name="__init__"):
