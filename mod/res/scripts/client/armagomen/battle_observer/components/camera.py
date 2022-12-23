@@ -1,11 +1,11 @@
 import math
+from collections import namedtuple
 
 from Avatar import PlayerAvatar
 from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
-from AvatarInputHandler.DynamicCameras.arcade_camera_helper import MinMax
 from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.settings.default_settings import settings
@@ -14,6 +14,7 @@ from armagomen.utils.common import overrideMethod, logError, isReplay, callback
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 
 settingsCache = {"needReloadConfig": False, SNIPER.DYN_ZOOM: False}
+MinMax = namedtuple('MinMax', ('min', 'max'))
 
 
 @overrideMethod(SniperCamera, "_readConfigs")
@@ -133,6 +134,14 @@ def arcade_readConfigs(base, camera, *args, **kwargs):
             cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
             cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
     settingsCache["needReloadConfig"] = False
+
+
+@overrideMethod(ArcadeCamera, "__updateProperties")
+def arcade__updateProperties(base, camera, state=None):
+    if settings.arcade_camera[GLOBAL.ENABLED] and state is not None:
+        state.distRange = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
+        state.scrollSensitivity = settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
+    return base(camera, state=state)
 
 
 @overrideMethod(StrategicCamera, "_readBaseCfg")
