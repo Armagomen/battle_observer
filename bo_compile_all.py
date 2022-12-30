@@ -10,11 +10,11 @@ packages -- for now, you'll have to deal with packages separately.)
 
 See module py_compile for details of the actual byte-compilation.
 """
+import imp
 import os
-import sys
 import py_compile
 import struct
-import imp
+import sys
 
 __all__ = ["compile_dir","compile_file","compile_path"]
 
@@ -99,12 +99,12 @@ def compile_file(fullname, ddir=None, force=0, rx=None, quiet=0):
                 if dfile is not None:
                     dfile = dfile.replace(os.sep, '/')
                 ok = py_compile.compile(fullname.replace(os.sep, '/'), None, dfile, True)
-            except py_compile.PyCompileError,err:
+            except py_compile.PyCompileError as err:
                 if quiet:
                     print 'Compiling', fullname, '...'
                 print err.msg
                 success = 0
-            except IOError, e:
+            except IOError as e:
                 print "Sorry", e
                 success = 0
             else:
@@ -155,29 +155,20 @@ def main():
     import getopt
     try:
         opts, args = getopt.getopt(sys.argv[1:], 'lfqd:x:i:')
-    except getopt.error, msg:
+    except getopt.error as msg:
         print msg
-        print "usage: python compileall.py [-l] [-f] [-q] [-d destdir] " \
-              "[-x regexp] [-i list] [directory|file ...]"
-        print
-        print "arguments: zero or more file and directory names to compile; " \
-              "if no arguments given, "
+        print "usage: python compileall.py [-l] [-f] [-q] [-d destdir] [-x regexp] [-i list] [directory|file ...]"
+        print "arguments: zero or more file and directory names to compile; if no arguments given, "
         print "           defaults to the equivalent of -l sys.path"
-        print
         print "options:"
         print "-l: don't recurse into subdirectories"
         print "-f: force rebuild even if timestamps are up-to-date"
         print "-q: output only error messages"
-        print "-d destdir: directory to prepend to file paths for use in " \
-              "compile-time tracebacks and in"
-        print "            runtime tracebacks in cases where the source " \
-              "file is unavailable"
-        print "-x regexp: skip files matching the regular expression regexp; " \
-              "the regexp is searched for"
-        print "           in the full path of each file considered for " \
-              "compilation"
-        print "-i file: add all the files and directories listed in file to " \
-              "the list considered for"
+        print "-d destdir: directory to prepend to file paths for use in compile-time tracebacks and in"
+        print "            runtime tracebacks in cases where the source file is unavailable"
+        print "-x regexp: skip files matching the regular expression regexp; the regexp is searched for"
+        print "           in the full path of each file considered for compilation"
+        print "-i file: add all the files and directories listed in file to the list considered for"
         print '         compilation; if "-", names are read from stdin'
 
         sys.exit(2)

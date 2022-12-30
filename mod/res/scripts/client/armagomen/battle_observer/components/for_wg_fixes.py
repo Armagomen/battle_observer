@@ -3,20 +3,18 @@ import BigWorld
 from BattleReplay import g_replayCtrl, isServerSideReplay
 from DogTagComponent import DogTagComponent
 from armagomen.utils.common import overrideMethod
-from gui.battle_control.controllers import debug_ctrl
-
-debug_ctrl._UPDATE_INTERVAL = 0.5
+from gui.battle_control.controllers.debug_ctrl import DebugController
 
 
-@overrideMethod(debug_ctrl.DebugController, "setViewComponents")
+@overrideMethod(DebugController, "setViewComponents")
 def setViewComponents(base, controller, *args):
     controller._debugPanelUI = args
 
 
-@overrideMethod(debug_ctrl.DebugController, "_update")
+@overrideMethod(DebugController, "_update")
 def updateDebug(base, controller):
+    fps = BigWorld.getFPS()[1]
     if g_replayCtrl.isPlaying and not g_replayCtrl.isBattleSimulation and g_replayCtrl.fps > 0 or isServerSideReplay():
-        fps = BigWorld.getFPS()[1]
         fpsReplay = int(g_replayCtrl.fps)
         ping = g_replayCtrl.ping
         isLaggingNow = g_replayCtrl.isLaggingNow
@@ -24,7 +22,6 @@ def updateDebug(base, controller):
         fpsReplay = -1
         isLaggingNow = BigWorld.statLagDetected()
         ping = BigWorld.statPing()
-        fps = BigWorld.getFPS()[1]
         controller.statsCollector.update()
         if g_replayCtrl.isRecording:
             g_replayCtrl.setFpsPingLag(fps, ping, isLaggingNow)
@@ -32,7 +29,7 @@ def updateDebug(base, controller):
         ping = int(ping)
         fps = int(fps)
     except (ValueError, OverflowError):
-        return
+        fps = ping = 0
 
     if controller._debugPanelUI is not None:
         for control in controller._debugPanelUI:
