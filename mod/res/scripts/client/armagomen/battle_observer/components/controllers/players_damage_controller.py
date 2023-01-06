@@ -16,6 +16,7 @@ class PlayersDamageController(object):
     def init(self):
         if self.inited:
             return
+        self.inited = True
         self.playersDamage.clear()
         arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
         if arena is not None:
@@ -31,6 +32,9 @@ class PlayersDamageController(object):
     def onVehicleHealthChanged(self, targetID, attackerID, damage):
         self.playersDamage[attackerID] += damage
         self.onPlayersDamaged(attackerID, self.playersDamage[attackerID])
+
+    def getPlayerDamage(self, vehicleID):
+        return self.playersDamage[vehicleID]
 
 
 damage_controller = PlayersDamageController()

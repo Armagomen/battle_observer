@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
@@ -16,14 +14,11 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         super(PlayersPanels, self).__init__()
         self.hpBarsEnable = False
         self.damagesEnable = False
-        self.damagesText = None
-        self.playersDamage = defaultdict(int)
 
     def _populate(self):
         super(PlayersPanels, self)._populate()
         self.hpBarsEnable = self.settings[PANELS.BARS_ENABLED]
         self.damagesEnable = self.settings[PANELS.DAMAGES_ENABLED]
-        self.damagesText = self.settings[PANELS.DAMAGES_TEMPLATE]
         if self.hpBarsEnable:
             if not self.settings[PANELS.BAR_CLASS_COLOR]:
                 self.settingsCore.onSettingsApplied += self.onSettingsApplied
