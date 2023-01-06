@@ -2,6 +2,7 @@
 from collections import defaultdict
 from math import ceil
 
+from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -25,23 +26,19 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.gunLeft = GLOBAL.ZERO
         self.isLowHealth = False
         self.totalEnemiesHP = GLOBAL.ZERO
-        self.playersDamage = defaultdict(int)
         self.playerDamage = GLOBAL.ZERO
-        self.maxDamage = GLOBAL.ZERO
-        self.dealtMoreDamage = False
+        self.playersDamage = defaultdict(int)
 
     def _populate(self):
         super(MainGun, self)._populate()
         self.macros.update(mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
                            mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleHealthChanged += self.onPlayersDamaged
+        damage_controller.init()
+        damage_controller.onPlayersDamaged += self.onPlayersDamaged
 
     def _dispose(self):
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onVehicleHealthChanged -= self.onPlayersDamaged
+        damage_controller.onPlayersDamaged -= self.onPlayersDamaged
+        damage_controller.fini()
         super(MainGun, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
@@ -55,7 +52,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def updateMainGun(self):
         if not self.isLowHealth:
-            self.gunLeft = (self.maxDamage if self.dealtMoreDamage else self.gunScore) - self.playerDamage
+            self.gunLeft = self.gunScore - self.playerDamage
         self.updateMacrosDict()
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
@@ -68,12 +65,11 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
 
-    def onPlayersDamaged(self, targetID, attackerID, damage):
+    def onPlayersDamaged(self, attackerID, damage):
         if self._arenaDP.isAlly(attackerID) and not self.isLowHealth:
-            self.playersDamage[attackerID] += damage
-            if self.playersDamage[attackerID] > self.maxDamage:
-                self.maxDamage = self.playersDamage[attackerID]
-            self.playerDamage = self.playersDamage[self.playerVehicleID]
-            self.dealtMoreDamage = self.maxDamage > self.playerDamage > self.gunScore
-            if attackerID == self.playerVehicleID or self.dealtMoreDamage:
+            if damage > self.gunScore and attackerID != self.playerVehicleID:
+                self.gunScore = damage
+                self.updateMainGun()
+            if attackerID == self.playerVehicleID:
+                self.playerDamage = damage
                 self.updateMainGun()

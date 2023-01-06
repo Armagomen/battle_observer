@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from account_helpers.settings_core.settings_constants import GRAPHICS
+from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.constants import VEHICLE, PANELS, COLORS, VEHICLE_TYPES
 from armagomen.utils.common import logDebug
@@ -29,9 +30,9 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if self.settings[PANELS.ON_KEY_DOWN]:
                 g_keysListener.registerComponent(self.as_setHealthBarsVisibleS,
                                                  keyList=self.settings[PANELS.BAR_HOT_KEY])
-        arena = self._arenaVisitor.getArenaSubscription()
-        if self.damagesEnable and arena is not None:
-            arena.onVehicleHealthChanged += self.onPlayersDamaged
+        if self.damagesEnable:
+            damage_controller.init()
+            damage_controller.onPlayersDamaged += self.onPlayersDamaged
             g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS,
                                              keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
 
@@ -39,9 +40,9 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.flashObject.as_clearStorage()
         if self.hpBarsEnable and not self.settings[PANELS.BAR_CLASS_COLOR]:
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
-        arena = self._arenaVisitor.getArenaSubscription()
-        if self.damagesEnable and arena is not None:
-            arena.onVehicleHealthChanged -= self.onPlayersDamaged
+        if self.damagesEnable:
+            damage_controller.fini()
+            damage_controller.onPlayersDamaged -= self.onPlayersDamaged
         super(PlayersPanels, self)._dispose()
 
     def onSettingsApplied(self, diff):
@@ -94,7 +95,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             vehicleData = {VEHICLE.CUR: newHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: healthPercent}
             self.as_updateHealthBarS(vehicleID, healthPercent, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
 
-    def onPlayersDamaged(self, targetID, attackerID, damage):
-        self.playersDamage[attackerID] += damage
-        damageText = self.settings[PANELS.DAMAGES_TEMPLATE] % {PANELS.DAMAGE: self.playersDamage[attackerID]}
+    def onPlayersDamaged(self, attackerID, damage):
+        damageText = self.settings[PANELS.DAMAGES_TEMPLATE] % {PANELS.DAMAGE: damage}
         self.as_updateDamageS(attackerID, damageText)
