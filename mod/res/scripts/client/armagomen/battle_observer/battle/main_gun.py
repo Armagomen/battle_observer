@@ -34,10 +34,10 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.macros.update(mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
                            mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
         damage_controller.init()
-        damage_controller.onPlayersDamaged += self.onPlayersDamaged
+        damage_controller.onPlayerDamaged += self.onPlayerDamaged
 
     def _dispose(self):
-        damage_controller.onPlayersDamaged -= self.onPlayersDamaged
+        damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         damage_controller.fini()
         super(MainGun, self)._dispose()
 
@@ -65,7 +65,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
 
-    def onPlayersDamaged(self, attackerID, damage):
+    def onPlayerDamaged(self, attackerID, damage):
         if self._arenaDP.isAlly(attackerID) and not self.isLowHealth:
             if damage > self.gunScore and attackerID != self.playerVehicleID:
                 self.gunScore = damage

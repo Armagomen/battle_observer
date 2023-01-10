@@ -27,7 +27,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                                                  keyList=self.settings[PANELS.BAR_HOT_KEY])
         if self.damagesEnable:
             damage_controller.init()
-            damage_controller.onPlayersDamaged += self.onPlayersDamaged
+            damage_controller.onPlayerDamaged += self.onPlayerDamaged
             g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS,
                                              keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
 
@@ -37,7 +37,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
         if self.damagesEnable:
             damage_controller.fini()
-            damage_controller.onPlayersDamaged -= self.onPlayersDamaged
+            damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         super(PlayersPanels, self)._dispose()
 
     def onSettingsApplied(self, diff):
@@ -90,6 +90,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             vehicleData = {VEHICLE.CUR: newHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: healthPercent}
             self.as_updateHealthBarS(vehicleID, healthPercent, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
 
-    def onPlayersDamaged(self, attackerID, damage):
+    def onPlayerDamaged(self, attackerID, damage):
         damageText = self.settings[PANELS.DAMAGES_TEMPLATE] % {PANELS.DAMAGE: damage}
         self.as_updateDamageS(attackerID, damageText)
