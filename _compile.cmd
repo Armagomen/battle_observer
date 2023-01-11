@@ -1,6 +1,6 @@
 @Echo off
-set ModVersion=1.40.10
-set GameVersion=1.19.0.2
+set ModVersion=1.40.11
+set GameVersion=1.19.1.0
 set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods
 
 REM set GameVersion="1.18.1.0 Common Test"
