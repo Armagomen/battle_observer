@@ -77,7 +77,7 @@
 			if (this.params.showTimer)
 			{
 				this.timer = new TextExt(this.params.timer.x, this.params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-				this.timerAnimation = new Tween(this.timer, "alpha", 1.0, 0);
+				this.timerAnimation = new Tween(this.timer, "alpha", this.params.timer.alpha, 0);
 			}
 			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
