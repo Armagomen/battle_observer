@@ -45,10 +45,6 @@ def getI18nShellName(shellType):
     return i18n.makeString(_SHELL_TYPES_TO_STR[shellType])
 
 
-def isShellGold(shell):
-    return shell.iconName.endswith(PREMIUM_SHELL_END)
-
-
 class DamageLog(DamageLogsMeta):
 
     def __init__(self):
@@ -58,6 +54,7 @@ class DamageLog(DamageLogsMeta):
         self._is_extended_log_enabled = False
         self._is_key_down = GLOBAL.ZERO
         self._is_top_log_enabled = False
+        self._playerShell = (DAMAGE_LOG.NOT_SHELL, False)
         self.top_log = defaultdict(int)
         self.vehicle_colors = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][VEHICLE_TYPES.UNKNOWN],
                                           **self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS])
@@ -93,6 +90,9 @@ class DamageLog(DamageLogsMeta):
                 if arena is not None:
                     arena.onVehicleUpdated += self.onVehicleUpdated
                     arena.onVehicleKilled += self.onVehicleKilled
+                ammoCtrl = self.sessionProvider.shared.ammo
+                if ammoCtrl is not None:
+                    ammoCtrl.onGunReloadTimeSet += self._onGunReloadTimeSet
             if self._is_top_log_enabled:
                 self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
                 self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
@@ -119,9 +119,21 @@ class DamageLog(DamageLogsMeta):
                 if arena is not None:
                     arena.onVehicleUpdated -= self.onVehicleUpdated
                     arena.onVehicleKilled -= self.onVehicleKilled
+                ammoCtrl = self.sessionProvider.shared.ammo
+                if ammoCtrl is not None:
+                    ammoCtrl.onGunReloadTimeSet -= self._onGunReloadTimeSet
             if self._is_top_log_enabled:
                 self.top_log.clear()
         super(DamageLog, self)._dispose()
+
+    def _onGunReloadTimeSet(self, currShellCD, state, skipAutoLoader):
+        if state.isReloadingFinished():
+            typeDescriptor = getVehicleTypeDescriptor()
+            if typeDescriptor is None:
+                self._playerShell = (DAMAGE_LOG.NOT_SHELL, False)
+            shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(typeDescriptor.shot.shell))
+            is_shell_gold = typeDescriptor.shot.shell.iconName.endswith(PREMIUM_SHELL_END)
+            self._playerShell = (shell_name, is_shell_gold)
 
     def onLogsAltMode(self, isKeyDown):
         """Hot key event"""
@@ -194,14 +206,6 @@ class DamageLog(DamageLogsMeta):
             self.updateExtendedLog(log_data)
 
     @staticmethod
-    def checkPlayerShell():
-        typeDescriptor = getVehicleTypeDescriptor()
-        if typeDescriptor is None:
-            return DAMAGE_LOG.NOT_SHELL, False
-        shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(typeDescriptor.shot.shell))
-        return shell_name, isShellGold(typeDescriptor.shot.shell)
-
-    @staticmethod
     def checkShell(extra):
         return getI18nShellName(extra.getShellType()), extra.isShellGold()
 
@@ -211,7 +215,7 @@ class DamageLog(DamageLogsMeta):
         if target_id not in log_data.id_list:
             log_data.id_list.append(target_id)
         if extra.isShot():
-            shell_name, gold = self.checkPlayerShell() if log_data.is_player else self.checkShell(extra)
+            shell_name, gold = self._playerShell if log_data.is_player else self.checkShell(extra)
         else:
             shell_name, gold = DAMAGE_LOG.NOT_SHELL, False
         logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, log_data.is_player)

@@ -55,7 +55,6 @@
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			App.utils.data.cleanupDynamicObject(this.params);
 			if (!this.params.use_default_icon)
 			{
 				this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
@@ -75,7 +74,7 @@
 			this._container.removeChildren();
 			this.timer = null;
 			this._container = null;
-		
+			App.utils.data.cleanupDynamicObject(this.params);
 		}
 		
 		private function addLoadedImageAndTimer(image:Bitmap, isDefault:Boolean):void
