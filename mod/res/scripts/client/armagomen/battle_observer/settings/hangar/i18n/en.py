@@ -395,7 +395,10 @@ localization = {
         "header": "Sixth sense.",
         "showTimer": "Show timer.",
         "lampShowTime": "Timer sec.",
-        "playTickSound": "Play tick sound."
+        "playTickSound": "Play tick sound.",
+        "use_default_icon": "Use a built -in image.",
+        "use_default_icon_tooltip": "Image embedded in mod will be used, the user -settings and the user settings "
+                                    "will be ignored.",
     },
     "distance_to_enemy": {
         "header": "Distance to the closest spotted enemy.",

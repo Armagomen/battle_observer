@@ -79,21 +79,22 @@ class DefaultSettings(object):
         self.sixth_sense = {
             GLOBAL.ENABLED: False,
             SIXTH_SENSE.SHOW_TIMER: True,
-            SIXTH_SENSE.PLAY_TICK_SOUND: False,
-            SIXTH_SENSE.TIME: 12,
+            SIXTH_SENSE.PLAY_TICK_SOUND: True,
+            SIXTH_SENSE.DEFAULT: False,
+            SIXTH_SENSE.TIME: 9,
             SIXTH_SENSE.TIMER: {
                 GLOBAL.X: -1,
-                GLOBAL.Y: 125,
-                SIXTH_SENSE.TEMPLATE: "<font size='34' color='#fafafa'><b>%(timeLeft)d</b></font>",
-                GLOBAL.ALPHA: 0.9
+                GLOBAL.Y: 190,
+                SIXTH_SENSE.TEMPLATE: "%(timeLeft)d",
+                GLOBAL.ALPHA: 1.0
             },
             SIXTH_SENSE.IMAGE: {
                 GLOBAL.SMOOTHING: True,
                 GLOBAL.X: GLOBAL.ZERO,
-                GLOBAL.Y: 100,
-                GLOBAL.ALPHA: 0.85,
+                GLOBAL.Y: 130,
+                GLOBAL.ALPHA: 1.0,
                 GLOBAL.SCALE: 0.6,
-                GLOBAL.IMG: "mods/configs/mod_battle_observer/armagomen/SixthSenseIcon.png"
+                GLOBAL.IMG: "mods/configs/mod_battle_observer/armagomen/icon/luka.png"
             }
         }
         self.dispersion_circle = {

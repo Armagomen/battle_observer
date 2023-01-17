@@ -20,14 +20,14 @@
 		private var timerAnimation:Tween;
 		private var hideAnimation:Tween;
 		private var hideAnimation2:Tween;
+		public var useDefaultIcon:Function;
 		
-		[Embed(source = "SixthSenseIcon.png")]
+		[Embed(source = "luka.png")]
 		private var DefaultIcon:Class;
 		
 		public function SixthSenseUI()
 		{
 			super();
-			this.loader = new Loader();
 			this.x = App.appWidth >> 1;
 			this._container = new Sprite()
 			this._container.name = "image";
@@ -39,17 +39,29 @@
 		{
 			super.onPopulate();
 			this.params = this.getSettings();
-			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
-			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
-			this.loader.load(new URLRequest('../../../' + this.params.image.img));
+			if (this.params.use_default_icon)
+			{
+				this.addLoadedImageAndTimer(new DefaultIcon() as Bitmap, true);
+			}
+			else
+			{
+				this.loader = new Loader();
+				this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
+				this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+				this.loader.load(new URLRequest('../../../' + this.params.image.img));
+			}
 		}
 		
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
 			App.utils.data.cleanupDynamicObject(this.params);
-			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
-			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			if (!this.params.use_default_icon)
+			{
+				this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
+				this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+				this.loader = null;
+			}
 			if (this.timerAnimation)
 			{
 				this.timerAnimation.stop();
@@ -63,20 +75,38 @@
 			this._container.removeChildren();
 			this.timer = null;
 			this._container = null;
-			this.loader = null;
+		
 		}
 		
-		private function addLoadedImageAndTimer(image:Bitmap):void
+		private function addLoadedImageAndTimer(image:Bitmap, isDefault:Boolean):void
 		{
-			image.smoothing = this.params.image.smoothing;
-			image.alpha = this.params.image.alpha;
-			image.scaleX = image.scaleY = this.params.image.scale;
-			image.x = this.params.image.x - image.width * 0.5;
-			image.y = this.params.image.y;
+			this.useDefaultIcon(isDefault);
+			if (isDefault)
+			{
+				image.smoothing = true;
+				image.scaleX = image.scaleY = 0.6;
+				image.x -= image.width * 0.5;
+				image.y = 130;
+			}
+			else
+			{
+				image.smoothing = this.params.image.smoothing;
+				image.alpha = this.params.image.alpha;
+				image.scaleX = image.scaleY = this.params.image.scale;
+				image.x = this.params.image.x - image.width * 0.5;
+				image.y = this.params.image.y;
+			}
 			this._container.addChild(image);
 			if (this.params.showTimer)
 			{
-				this.timer = new TextExt(this.params.timer.x, this.params.timer.y, Filters.largeText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+				if (isDefault)
+				{
+					this.timer = new TextExt(-1, 190, Filters.sixthSense, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+				}
+				else
+				{
+					this.timer = new TextExt(this.params.timer.x, this.params.timer.y, Filters.sixthSense, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+				}
 				this.timerAnimation = new Tween(this.timer, "alpha", this.params.timer.alpha, 0);
 			}
 			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height);
@@ -110,21 +140,21 @@
 			this._container.visible = false;
 		}
 		
-		public function as_updateTimer(str:String):void
+		public function as_updateTimer(text:String):void
 		{
+			this.timer.htmlText = text;
 			this.timerAnimation.start();
-			this.timer.htmlText = str;
 		}
 		
 		private function onLoadError(e:IOErrorEvent):void
 		{
 			this.loader.close();
-			this.addLoadedImageAndTimer(new DefaultIcon() as Bitmap);
+			this.addLoadedImageAndTimer(new DefaultIcon() as Bitmap, true);
 		}
 		
 		private function imageLoaded(e:Event):void
 		{
-			this.addLoadedImageAndTimer(this.loader.content as Bitmap);
+			this.addLoadedImageAndTimer(this.loader.content as Bitmap, false);
 			this.loader.unload();
 		}
 		

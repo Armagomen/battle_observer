@@ -9,6 +9,7 @@ package net.armagomen.battleobserver.utils
 		public static const glowScore:GlowFilter = new GlowFilter(0, 0.9, 4, 4, 2, BitmapFilterQuality.LOW, false, false);
 		public static const middleText:TextFormat = new TextFormat("$TitleFont", 18, 0xFAFAFA);
 		public static const largeText:TextFormat = new TextFormat("$TitleFont", 20, 0xFAFAFA);
+		public static const sixthSense:TextFormat = new TextFormat("$TitleFont", 36, 0xFAFAFA, true);
 		public static const normalText:TextFormat = new TextFormat("$FieldFont", 16, 0xFAFAFA);
 		public static const normalText15:TextFormat = new TextFormat("$FieldFont", 15, 0xFAFAFA);
 		public static const normalBold:TextFormat = new TextFormat("$TitleFont", 16, 0xFAFAFA);

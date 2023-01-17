@@ -47,9 +47,9 @@ class SixthSenseTimer(Timer):
             sound.play()
 
     def timeTicking(self, seconds):
+        self._callback = None
         if seconds <= CONSTANTS.ZERO:
             return self._func_hide()
-        self._callback = None
         self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE))
         self._func_update(seconds)
         if self.__soundID is not None:

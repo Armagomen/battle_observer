@@ -17,10 +17,12 @@ class SixthSense(SixthSenseMeta):
         super(SixthSense, self).__init__()
         self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, lampTime=GLOBAL.ZERO)
         self._timer = None
+        self.__isDefaultIcon = False
 
     def _populate(self):
         super(SixthSense, self)._populate()
         self.macro[SIXTH_SENSE.M_TIME] = self.settings[SIXTH_SENSE.TIME]
+        self.__isDefaultIcon = self.settings[SIXTH_SENSE.DEFAULT]
         if self.settings[SIXTH_SENSE.SHOW_TIMER]:
             soundID = None
             if self.settings[SIXTH_SENSE.PLAY_TICK_SOUND]:
@@ -40,6 +42,9 @@ class SixthSense(SixthSenseMeta):
             ctrl.onVehicleStateUpdated -= self._onVehicleStateUpdated
         super(SixthSense, self)._dispose()
 
+    def useDefaultIcon(self, value):
+        self.__isDefaultIcon = value
+
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             self.show() if value else self.hide()
@@ -50,8 +55,11 @@ class SixthSense(SixthSenseMeta):
         self.hide()
 
     def handleTimer(self, timeLeft):
-        self.macro[SIXTH_SENSE.M_TIME_LEFT] = timeLeft
-        self.as_updateTimerS(self.settings[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE] % self.macro)
+        if self.__isDefaultIcon:
+            self.as_updateTimerS(str(timeLeft))
+        else:
+            self.macro[SIXTH_SENSE.M_TIME_LEFT] = timeLeft
+            self.as_updateTimerS(self.settings[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE] % self.macro)
 
     def show(self):
         self.as_showS()
