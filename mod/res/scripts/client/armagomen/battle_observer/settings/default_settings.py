@@ -80,7 +80,8 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             SIXTH_SENSE.SHOW_TIMER: True,
             SIXTH_SENSE.PLAY_TICK_SOUND: True,
-            SIXTH_SENSE.DEFAULT: False,
+            SIXTH_SENSE.DEFAULT: True,
+            SIXTH_SENSE.ICON_NAME: SIXTH_SENSE.ICONS[2],
             SIXTH_SENSE.TIME: 9,
             SIXTH_SENSE.TIMER: {
                 GLOBAL.X: -1,
@@ -94,7 +95,7 @@ class DefaultSettings(object):
                 GLOBAL.Y: 130,
                 GLOBAL.ALPHA: 1.0,
                 GLOBAL.SCALE: 0.6,
-                GLOBAL.IMG: "mods/configs/mod_battle_observer/armagomen/icon/luka.png"
+                GLOBAL.IMG: "mods/configs/mod_battle_observer/armagomen/*.png"
             }
         }
         self.dispersion_circle = {

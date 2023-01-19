@@ -2,7 +2,7 @@
 from Keys import KEY_LALT, KEY_RALT
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
-    ANOTHER, URLS, STATISTICS, PANELS, MINIMAP
+    ANOTHER, URLS, STATISTICS, PANELS, MINIMAP, SIXTH_SENSE
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
@@ -109,6 +109,13 @@ class CreateElement(object):
             result.update({'options': [{'label': x} for x in options]})
         return result
 
+    def createDropDownWithPreview(self, blockID, varName, options, value):
+        result = self.createControl(blockID, varName, value, cType='Dropdown')
+        if result is not None:
+            image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}.png' width='14' height='14'>"
+            result.update({'options': [{'label': image.format(x) + x} for x in options], GLOBAL.WIDTH: 200})
+        return result
+
     def createRadioButtonGroup(self, blockID, varName, options, value):
         result = self.createDropDown(blockID, varName, options, value)
         if result is not None:
@@ -158,6 +165,9 @@ class CreateElement(object):
             return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
         elif val_type == str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
             return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
+        elif val_type == str and blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
+            return self.createDropDownWithPreview(blockID, key,
+                                                  *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
         elif val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
@@ -285,6 +295,8 @@ class SettingsInterface(CreateElement):
                         value = GLOBAL.ALIGN_LIST[value]
                     elif key == HP_BARS.STYLE and not isinstance(value, str):
                         value = HP_BARS.STYLES[value]
+                    elif key == SIXTH_SENSE.ICON_NAME and not isinstance(value, str):
+                        value = SIXTH_SENSE.ICONS[value]
                     elif key == "zoomSteps*steps":
                         steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
                         value = [val for val in steps if val >= 2.0]

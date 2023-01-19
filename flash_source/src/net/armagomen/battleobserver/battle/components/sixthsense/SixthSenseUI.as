@@ -20,9 +20,9 @@
 		private var timerAnimation:Tween;
 		private var hideAnimation:Tween;
 		private var hideAnimation2:Tween;
-		public var useDefaultIcon:Function;
+		private var isDefault:Boolean = false;
 		
-		[Embed(source = "luka.png")]
+		[Embed(source = "boris.png")]
 		private var DefaultIcon:Class;
 		
 		public function SixthSenseUI()
@@ -39,15 +39,16 @@
 		{
 			super.onPopulate();
 			this.params = this.getSettings();
-			if (this.params.use_default_icon)
+			this.isDefault = this.params.default_icon;
+			this.loader = new Loader();
+			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
+			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			if (this.isDefault)
 			{
-				this.addLoadedImageAndTimer(new DefaultIcon() as Bitmap, true);
+				this.loader.load(new URLRequest('../maps/icons/battle_observer/sixth_sense/' + this.params.default_icon_name + ".png"));
 			}
 			else
 			{
-				this.loader = new Loader();
-				this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
-				this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
 				this.loader.load(new URLRequest('../../../' + this.params.image.img));
 			}
 		}
@@ -55,12 +56,9 @@
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			if (!this.params.use_default_icon)
-			{
-				this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
-				this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
-				this.loader = null;
-			}
+			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
+			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			this.loader = null;
 			if (this.timerAnimation)
 			{
 				this.timerAnimation.stop();
@@ -77,14 +75,14 @@
 			App.utils.data.cleanupDynamicObject(this.params);
 		}
 		
-		private function addLoadedImageAndTimer(image:Bitmap, isDefault:Boolean):void
+		private function addLoadedImageAndTimer(image:Bitmap):void
 		{
-			this.useDefaultIcon(isDefault);
-			if (isDefault)
+			if (this.isDefault)
 			{
+				image.width = 180;
+				image.height = 180;
 				image.smoothing = true;
-				image.scaleX = image.scaleY = 0.6;
-				image.x -= image.width * 0.5;
+				image.x = -90;
 				image.y = 130;
 			}
 			else
@@ -98,9 +96,9 @@
 			this._container.addChild(image);
 			if (this.params.showTimer)
 			{
-				if (isDefault)
+				if (this.isDefault)
 				{
-					this.timer = new TextExt(-1, 190, Filters.sixthSense, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+					this.timer = new TextExt(0, 270, Filters.sixthSense, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
 				}
 				else
 				{
@@ -148,12 +146,12 @@
 		private function onLoadError(e:IOErrorEvent):void
 		{
 			this.loader.close();
-			this.addLoadedImageAndTimer(new DefaultIcon() as Bitmap, true);
+			this.addLoadedImageAndTimer(new DefaultIcon() as Bitmap);
 		}
 		
 		private function imageLoaded(e:Event):void
 		{
-			this.addLoadedImageAndTimer(this.loader.content as Bitmap, false);
+			this.addLoadedImageAndTimer(this.loader.content as Bitmap);
 			this.loader.unload();
 		}
 		

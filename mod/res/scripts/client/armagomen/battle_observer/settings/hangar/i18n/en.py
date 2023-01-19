@@ -396,9 +396,10 @@ localization = {
         "showTimer": "Show timer.",
         "lampShowTime": "Timer sec.",
         "playTickSound": "Play tick sound.",
-        "use_default_icon": "Use a built -in image.",
-        "use_default_icon_tooltip": "Image embedded in mod will be used, the user -settings and the user settings "
-                                    "will be ignored.",
+        "default_icon": "Use embedded image.",
+        "default_icon_name": "Select an embedded image.",
+        "default_icon_tooltip": "The image built into the mod will be used, text and user position settings "
+                                "will be ignored.",
     },
     "distance_to_enemy": {
         "header": "Distance to the closest spotted enemy.",
