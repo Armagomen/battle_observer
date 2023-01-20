@@ -40,8 +40,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 				this.addChild(this.hpBars);
 				this.greenText = new TextExt(-textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
 				this.redText = new TextExt(textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
-				this.greenDiff = new TextExt(-55, 2, Filters.normalBold, TextFieldAutoSize.RIGHT, shadowSettings, this);
-				this.redDiff = new TextExt(55, 2, Filters.normalBold, TextFieldAutoSize.LEFT, shadowSettings, this);
+				this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, shadowSettings, this);
+				this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, shadowSettings, this);
 				this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
 				this.addChild(this.score);
 				if (settings.markers.enabled)

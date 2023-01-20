@@ -98,7 +98,7 @@
 			{
 				if (this.isDefault)
 				{
-					this.timer = new TextExt(0, 280, Filters.sixthSense, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+					this.timer = new TextExt(0, 290, Filters.normalBold, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
 				}
 				else
 				{

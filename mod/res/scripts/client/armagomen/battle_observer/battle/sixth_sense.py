@@ -6,9 +6,18 @@ from armagomen.constants import GLOBAL, SIXTH_SENSE
 from armagomen.utils.common import callback
 from armagomen.utils.timers import SixthSenseTimer
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
+from helpers import getClientLanguage
 
 _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
                    VEHICLE_VIEW_STATE.DESTROYED, VEHICLE_VIEW_STATE.CREW_DEACTIVATED}
+
+language = getClientLanguage()
+if language == "uk":
+    DEFAULT_MESSAGE = "Мене помітили: {} сек."
+elif language in ("ru", "be"):
+    DEFAULT_MESSAGE = "Меня заметили: {} сек."
+else:
+    DEFAULT_MESSAGE = "I was spotted: {} sec."
 
 
 class SixthSense(SixthSenseMeta):
@@ -51,7 +60,7 @@ class SixthSense(SixthSenseMeta):
 
     def handleTimer(self, timeLeft):
         if self.settings[SIXTH_SENSE.DEFAULT]:
-            self.as_updateTimerS(str(timeLeft))
+            self.as_updateTimerS(DEFAULT_MESSAGE.format(timeLeft))
         else:
             self.macro[SIXTH_SENSE.M_TIME_LEFT] = timeLeft
             self.as_updateTimerS(self.settings[SIXTH_SENSE.TIMER][SIXTH_SENSE.TEMPLATE] % self.macro)
