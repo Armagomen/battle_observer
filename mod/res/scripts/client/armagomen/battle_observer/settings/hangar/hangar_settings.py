@@ -109,11 +109,11 @@ class CreateElement(object):
             result.update({'options': [{'label': x} for x in options]})
         return result
 
-    def createDropDownWithPreview(self, blockID, varName, options, value):
+    def createSixthSenseDropDown(self, blockID, varName, options, value):
         result = self.createControl(blockID, varName, value, cType='Dropdown')
         if result is not None:
-            image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}.png' width='14' height='14'>"
-            result.update({'options': [{'label': image.format(x) + x} for x in options], GLOBAL.WIDTH: 200})
+            image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}.png' width='190' height='190'>"
+            result.update({'options': [{'label': x, 'tooltip': makeTooltip(body=image.format(x))} for x in options]})
         return result
 
     def createRadioButtonGroup(self, blockID, varName, options, value):
@@ -166,8 +166,7 @@ class CreateElement(object):
         elif val_type == str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
             return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
         elif val_type == str and blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
-            return self.createDropDownWithPreview(blockID, key,
-                                                  *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
+            return self.createSixthSenseDropDown(blockID, key, *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
         elif val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
