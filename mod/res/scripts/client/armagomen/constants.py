@@ -237,8 +237,8 @@ SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
     "DEFAULT", "ICON_NAME", "ICONS"))(
     "sixth_sense", "showTimer", "playTickSound", "lampShowTime", "timer", "TimerTemplate", "image", "lampTime",
     "timeLeft", "default_icon", "default_icon_name", (
-        "azov", "boris", "luka", "moscow_ship", "potato", "rick_morty", "skull", "ua_armed_forces", "ua_flag",
-        "ua_herb", "zelensky")
+        "azov", "boris", "luka", "moscow_ship", "potato", "rick_bender", "rick_morty", "rick_morty_fu", "skull",
+        "ua_armed_forces", "ua_flag", "ua_gur", "ua_herb", "zelensky")
 )
 
 __Dispersion = namedtuple("DISPERSION", (
