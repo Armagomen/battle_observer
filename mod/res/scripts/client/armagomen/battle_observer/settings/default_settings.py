@@ -81,7 +81,7 @@ class DefaultSettings(object):
             SIXTH_SENSE.SHOW_TIMER: True,
             SIXTH_SENSE.PLAY_TICK_SOUND: True,
             SIXTH_SENSE.DEFAULT: True,
-            SIXTH_SENSE.ICON_NAME: SIXTH_SENSE.ICONS[1],
+            SIXTH_SENSE.ICON_NAME: "boris",
             SIXTH_SENSE.TIME: 9,
             SIXTH_SENSE.TIMER: {
                 GLOBAL.X: -1,

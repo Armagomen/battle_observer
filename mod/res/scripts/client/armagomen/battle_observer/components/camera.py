@@ -19,6 +19,9 @@ MinMax = namedtuple('MinMax', ('min', 'max'))
 
 @overrideMethod(SniperCamera, "_readConfigs")
 def sniper_readConfigs(base, camera, data):
+    camera._baseCfg.clear()
+    camera._userCfg.clear()
+    camera._cfg.clear()
     base(camera, data)
     if not settings.zoom[GLOBAL.ENABLED] or isReplay():
         return
