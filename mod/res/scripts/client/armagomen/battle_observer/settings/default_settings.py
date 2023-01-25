@@ -1,4 +1,3 @@
-# coding=utf-8
 from collections import defaultdict, namedtuple
 
 import Keys
@@ -78,25 +77,11 @@ class DefaultSettings(object):
         }
         self.sixth_sense = {
             GLOBAL.ENABLED: False,
-            SIXTH_SENSE.SHOW_TIMER: True,
             SIXTH_SENSE.PLAY_TICK_SOUND: True,
             SIXTH_SENSE.DEFAULT: True,
             SIXTH_SENSE.ICON_NAME: "boris",
             SIXTH_SENSE.TIME: 9,
-            SIXTH_SENSE.TIMER: {
-                GLOBAL.X: -1,
-                GLOBAL.Y: 190,
-                SIXTH_SENSE.TEMPLATE: "%(timeLeft)d",
-                GLOBAL.ALPHA: 1.0
-            },
-            SIXTH_SENSE.IMAGE: {
-                GLOBAL.SMOOTHING: True,
-                GLOBAL.X: GLOBAL.ZERO,
-                GLOBAL.Y: 130,
-                GLOBAL.ALPHA: 1.0,
-                GLOBAL.SCALE: 0.6,
-                GLOBAL.IMG: "mods/configs/mod_battle_observer/armagomen/*.png"
-            }
+            SIXTH_SENSE.USER_ICON: "mods/configs/mod_battle_observer/__icon__path__200x200.png"
         }
         self.dispersion_circle = {
             GLOBAL.ENABLED: False,

@@ -393,13 +393,11 @@ localization = {
     },
     "sixth_sense": {
         "header": "Sixth sense.",
-        "showTimer": "Show timer.",
         "lampShowTime": "Timer sec.",
         "playTickSound": "Play tick sound.",
         "default_icon": "Use embedded image.",
         "default_icon_name": "Select an embedded image.",
-        "default_icon_tooltip": "The image built into the mod will be used, text and user position settings "
-                                "will be ignored.",
+        "default_icon_tooltip": "The image built into the mod will be used instead of the custom one.",
     },
     "distance_to_enemy": {
         "header": "Distance to the closest spotted enemy.",

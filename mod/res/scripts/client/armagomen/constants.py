@@ -233,10 +233,8 @@ VEHICLE_TYPES = namedtuple("VEHICLE_TYPES", ("NAME", "CLASS_COLORS", "CLASS_ICON
     "<font face='BattleObserver' size='20'>{}</font>")
 
 SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
-    "NAME", "SHOW_TIMER", "PLAY_TICK_SOUND", "TIME", "TIMER", "TEMPLATE", "IMAGE", "M_TIME", "M_TIME_LEFT",
-    "DEFAULT", "ICON_NAME", "ICONS"))(
-    "sixth_sense", "showTimer", "playTickSound", "lampShowTime", "timer", "TimerTemplate", "image", "lampTime",
-    "timeLeft", "default_icon", "default_icon_name", (
+    "NAME", "PLAY_TICK_SOUND", "TIME", "DEFAULT", "ICON_NAME", "USER_ICON", "ICONS"))(
+    "sixth_sense", "playTickSound", "lampShowTime", "default_icon", "default_icon_name", "user_icon", (
         "boris", "luka", "moscow_ship", "potato", "rick_bender", "rick_morty", "rick_morty_fu", "skull",
         "ua_armed_forces", "ua_flag", "ua_gur", "ua_herb", "zelensky")
 )
@@ -410,7 +408,6 @@ class CONFIG_INTERFACE:
             'battle*enabled': ('battle*format', 'battle*x', 'battle*y')
         },
         SIXTH_SENSE.NAME: {
-            SIXTH_SENSE.SHOW_TIMER: (SIXTH_SENSE.PLAY_TICK_SOUND,),
             SIXTH_SENSE.DEFAULT: (SIXTH_SENSE.ICON_NAME,)
         },
         DISPERSION.NAME: {
