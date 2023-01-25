@@ -1,7 +1,7 @@
 import os
 
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import LOAD_LIST, DISPERSION, GLOBAL
+from armagomen.constants import LOAD_LIST, DISPERSION, GLOBAL, SIXTH_SENSE
 from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, configsPath
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
@@ -77,6 +77,9 @@ class SettingsLoader(object):
                                 new_param = min(max(new_param * 0.01, 0.3), 1)
                             internal_cfg[key] = float(new_param)
                     else:
+                        if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
+                            new_param = SIXTH_SENSE.ICONS[0]
+                            file_update = True
                         internal_cfg[key] = new_param
                 else:
                     file_update = True

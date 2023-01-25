@@ -1,4 +1,3 @@
-# coding=utf-8
 from Keys import KEY_LALT, KEY_RALT
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
@@ -167,7 +166,8 @@ class CreateElement(object):
         elif val_type == str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
             return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
         elif val_type == str and blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
-            return self.createSixthSenseDropDown(blockID, key, *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
+            return self.createSixthSenseDropDown(blockID, key,
+                                                 *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
         elif val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
