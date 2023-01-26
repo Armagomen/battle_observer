@@ -44,9 +44,9 @@ def getDistanceTo(targetPos):
 
 
 def distanceToEntityVehicle(entityID):
-    entityVehicle = getEntity(entityID)
-    if entityVehicle is not None:
-        return getDistanceTo(entityVehicle.position)
+    entity_vehicle = getEntity(entityID)
+    if entity_vehicle is not None:
+        return getDistanceTo(entity_vehicle.position)
     return 0.0
 
 
@@ -76,8 +76,8 @@ def logWarning(message):
 
 
 def getPreferencesDir():
-    preferencesFilePath = unicode_from_utf8(BigWorld.wg_getPreferencesFilePath())[1]
-    return os.path.normpath(os.path.dirname(preferencesFilePath))
+    preferences_file_path = unicode_from_utf8(BigWorld.wg_getPreferencesFilePath())[1]
+    return os.path.normpath(os.path.dirname(preferences_file_path))
 
 
 preferencesDir = getPreferencesDir()
@@ -274,10 +274,10 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0, **kwargs):
 
 def urlResponse(url):
     response = openUrl(url, 20.0)
-    responseData = response.getData()
-    if responseData is not None:
-        return encodeData(json.loads(responseData, encoding="utf-8-sig"))
-    return responseData
+    response_data = response.getData()
+    if response_data is not None:
+        return encodeData(json.loads(response_data, encoding="utf-8-sig"))
+    return response_data
 
 
 def parseColorToHex(color, asInt=False):
@@ -292,5 +292,5 @@ def getPercent(param_a, param_b):
 
 
 def isFileValid(version):
-    FILE_NAME = "armagomen.battleObserver_{}.wotmod"
-    return FILE_NAME.format(version) in os.listdir(os.path.join(modsPath, gameVersion))
+    file_name = "armagomen.battleObserver_{}.wotmod"
+    return file_name.format(version) in os.listdir(os.path.join(modsPath, gameVersion))

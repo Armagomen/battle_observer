@@ -234,9 +234,11 @@ VEHICLE_TYPES = namedtuple("VEHICLE_TYPES", ("NAME", "CLASS_COLORS", "CLASS_ICON
 
 SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
     "NAME", "PLAY_TICK_SOUND", "TIME", "DEFAULT", "ICON_NAME", "USER_ICON", "ICONS"))(
-    "sixth_sense", "playTickSound", "lampShowTime", "default_icon", "default_icon_name", "user_icon", (
-        "boris", "luka", "moscow_ship", "potato", "rick_bender", "rick_morty", "rick_morty_fu", "skull",
-        "ua_armed_forces", "ua_flag", "ua_gur", "ua_herb", "zelensky")
+    "sixth_sense", "playTickSound", "lampShowTime", "default_icon", "default_icon_name", "user_icon",
+    (
+        "boris", "eye_of_sauron", "lamp_1", "lamp_2", "luka", "moscow_ship", "potato", "rick_bender", "rick_morty",
+        "rick_morty_fu", "skull", "ua_armed_forces", "ua_flag", "ua_gur", "ua_herb", "zelensky"
+    )
 )
 
 __Dispersion = namedtuple("DISPERSION", (
