@@ -1,5 +1,7 @@
 from collections import namedtuple
 
+import ResMgr
+
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
@@ -7,7 +9,7 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 MOD_NAME = "BATTLE_OBSERVER"
-IMAGE_DIR = "img://gui/maps/icons/battle_observer"
+IMAGE_DIR = "gui/maps/icons/battle_observer"
 CLAN_ABBREV = "BO_UA"
 
 SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_NAME")(
@@ -17,15 +19,21 @@ SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_N
 
 def getLogo(big=True):
     if big:
-        return "<img src='{}/logo/big.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
-    return "<img src='{}/logo/small.png' width='220' height='14' vspace='16'>".format(IMAGE_DIR)
+        return "<img src='img://{}/logo/big.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
+    return "<img src='img://{}/logo/small.png' width='220' height='14' vspace='16'>".format(IMAGE_DIR)
+
+
+def sixthSenseIconsNamesList():
+    directory = IMAGE_DIR + "/sixth_sense/"
+    folder = ResMgr.openSection(directory)
+    return sorted(folder.keys())
 
 
 IMG = namedtuple("IMG", "DONAT_UA PATREON PAYPAL QR")(
-    "<img src='{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/donate-qr.png' width='212' height='212' vspace='0'>".format(IMAGE_DIR)
+    "<img src='img://{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='img://{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='img://{}/donate/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='img://{}/donate/donate-qr.png' width='212' height='212' vspace='0'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
@@ -235,10 +243,7 @@ VEHICLE_TYPES = namedtuple("VEHICLE_TYPES", ("NAME", "CLASS_COLORS", "CLASS_ICON
 SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
     "NAME", "PLAY_TICK_SOUND", "TIME", "DEFAULT", "ICON_NAME", "USER_ICON", "ICONS"))(
     "sixth_sense", "playTickSound", "lampShowTime", "default_icon", "default_icon_name", "user_icon",
-    (
-        "boris", "eye_of_sauron", "lamp_1", "lamp_2", "luka", "moscow_ship", "potato", "rick_bender", "rick_morty",
-        "rick_morty_fu", "skull", "ua_armed_forces", "ua_flag", "ua_gur", "ua_herb", "zelensky"
-    )
+    sixthSenseIconsNamesList()
 )
 
 __Dispersion = namedtuple("DISPERSION", (
