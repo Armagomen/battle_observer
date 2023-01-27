@@ -47,7 +47,8 @@ class SixthSenseTimer(Timer):
         self.__soundID = soundID
 
     def handleTimer(self, seconds):
-        pass
+        self.stop()
+        raise NotImplementedError
 
     def hide(self):
         self.stop()
