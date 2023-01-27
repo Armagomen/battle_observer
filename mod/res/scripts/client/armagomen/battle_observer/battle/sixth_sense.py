@@ -1,3 +1,4 @@
+# coding=utf-8
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
 from armagomen.constants import SIXTH_SENSE
@@ -17,24 +18,22 @@ else:
     DEFAULT_MESSAGE = "I was spotted: {} sec."
 
 
-class SixthSense(SixthSenseMeta):
+class SixthSense(SixthSenseMeta, SixthSenseTimer):
 
     def __init__(self):
         super(SixthSense, self).__init__()
-        self._timer = SixthSenseTimer(self.handleTimer, self.hide)
 
     def _populate(self):
         super(SixthSense, self)._populate()
         if self.settings[SIXTH_SENSE.PLAY_TICK_SOUND]:
-            self._timer.setSound(self._arenaVisitor.type.getCountdownTimerSound())
-
+            self.setSound(self._arenaVisitor.type.getCountdownTimerSound())
         g_playerEvents.onRoundFinished += self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
 
     def _dispose(self):
-        self._timer.destroy()
+        self.destroyTimer()
         g_playerEvents.onRoundFinished -= self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
@@ -55,8 +54,8 @@ class SixthSense(SixthSenseMeta):
 
     def show(self):
         self.as_showS()
-        self._timer.start(self.settings[SIXTH_SENSE.TIME])
+        self.start(self.settings[SIXTH_SENSE.TIME])
 
     def hide(self):
-        self._timer.stop()
+        super(SixthSense, self).hide()
         self.as_hideS()

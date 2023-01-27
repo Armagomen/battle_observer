@@ -26,12 +26,9 @@ class Timer(object):
 
 
 class SixthSenseTimer(Timer):
-    __slots__ = ("_callback", "_func_hide", "_func_update", "_play_sound", "__sounds", "__soundID")
 
-    def __init__(self, update, hide):
+    def __init__(self):
         super(SixthSenseTimer, self).__init__()
-        self._func_update = update
-        self._func_hide = hide
         self.__sounds = dict()
         self.__soundID = None
 
@@ -49,12 +46,18 @@ class SixthSenseTimer(Timer):
     def setSound(self, soundID):
         self.__soundID = soundID
 
+    def handleTimer(self, seconds):
+        pass
+
+    def hide(self):
+        self.stop()
+
     def timeTicking(self, seconds):
         self._callback = None
         if seconds <= CONSTANTS.ZERO:
-            return self._func_hide()
+            return self.hide()
         self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE))
-        self._func_update(seconds)
+        self.handleTimer(seconds)
         if self.__soundID is not None:
             self.callWWISE(self.__soundID)
 
@@ -62,7 +65,7 @@ class SixthSenseTimer(Timer):
         super(SixthSenseTimer, self).start()
         self.timeTicking(seconds)
 
-    def destroy(self):
+    def destroyTimer(self):
         for sound in self.__sounds.values():
             sound.stop()
         self.__sounds.clear()
@@ -70,7 +73,7 @@ class SixthSenseTimer(Timer):
 
 
 class CyclicTimerEvent(Timer):
-    __slots__ = ("_interval", "_callback", "_func_hide", "_function")
+    __slots__ = ("_interval", "_callback", "_function")
 
     def __init__(self, updateInterval, function):
         super(CyclicTimerEvent, self).__init__()
