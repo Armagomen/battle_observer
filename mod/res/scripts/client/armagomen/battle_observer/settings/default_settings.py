@@ -346,8 +346,8 @@ class DefaultSettings(object):
                 GLOBAL.Y: GLOBAL.ZERO,
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
             },
-            MAIN_GUN.GUN_ICON: "<img src='{}/achievement/32x32/mainGun.png' width='26' height='25'"
-                               " vspace='-7'>".format(GLOBAL.ICONS_DIR),
+            MAIN_GUN.GUN_ICON: "<img src='{}/battle_observer/main_gun.png' width='22' height='22' vspace='-4'>".format(
+                GLOBAL.ICONS_DIR),
             MAIN_GUN.DONE_ICON: "<img src='{}/library/done.png' width='24' height='24'"
                                 " vspace='-8'>".format(GLOBAL.ICONS_DIR),
             MAIN_GUN.FAILURE_ICON: "<img src='{}/library/icon_alert_32x32.png' width='22' height='22'"

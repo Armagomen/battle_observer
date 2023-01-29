@@ -32,6 +32,9 @@ class Distance(DistanceMeta):
         if feedback is not None:
             feedback.onVehicleMarkerAdded += self.onVehicleMarkerAdded
             feedback.onVehicleMarkerRemoved += self.onVehicleMarkerRemoved
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled += self.onVehicleMarkerRemoved
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -48,6 +51,9 @@ class Distance(DistanceMeta):
         if feedback is not None:
             feedback.onVehicleMarkerAdded -= self.onVehicleMarkerAdded
             feedback.onVehicleMarkerRemoved -= self.onVehicleMarkerRemoved
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled -= self.onVehicleMarkerRemoved
         super(Distance, self)._dispose()
 
     def onArenaPeriodChange(self, period, *args):
@@ -65,7 +71,7 @@ class Distance(DistanceMeta):
         if guiProps == PLAYER_GUI_PROPS.enemy and vProxy.isAlive():
             self.vehicles[vInfo.vehicleID] = vProxy
 
-    def onVehicleMarkerRemoved(self, vehicleID):
+    def onVehicleMarkerRemoved(self, vehicleID, *args, **kwargs):
         if vehicleID in self.vehicles:
             self.vehicles.pop(vehicleID)
 
