@@ -62,6 +62,10 @@ class BaseModMeta(BaseDAAPIComponent):
         super(BaseModMeta, self)._dispose()
         logDebug("battle module '{}' destroyed", self.getAlias())
 
+    def isPostmortemSwitchedToAnotherVehicle(self):
+        observedVehID = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
+        return self.playerVehicleID != observedVehID
+
     @property
     def playerVehicleID(self):
         return self._arenaDP.getPlayerVehicleID()

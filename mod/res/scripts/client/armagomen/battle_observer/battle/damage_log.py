@@ -169,10 +169,6 @@ class DamageLog(DamageLogsMeta):
             return event.getCount()
         return extra.getDamage()
 
-    def isPostmortemSwitchedToAnotherVehicle(self):
-        observedVehID = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
-        return self.playerVehicleID != observedVehID
-
     def __onPlayerFeedbackReceived(self, events):
         """Shared feedback player events"""
         if self.isPostmortemSwitchedToAnotherVehicle():

@@ -5,6 +5,7 @@ from math import ceil
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL
+from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from helpers import getClientLanguage
 
@@ -35,10 +36,16 @@ class MainGun(MainGunMeta, IBattleFieldListener):
                            mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
         damage_controller.init()
         damage_controller.onPlayerDamaged += self.onPlayerDamaged
+        feedback = self.sessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onPlayerFeedbackReceived += self.onPlayerFeedbackReceived
 
     def _dispose(self):
         damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         damage_controller.fini()
+        feedback = self.sessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onPlayerFeedbackReceived -= self.onPlayerFeedbackReceived
         super(MainGun, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
@@ -53,11 +60,10 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def updateMainGun(self):
         if not self.isLowHealth:
             self.gunLeft = self.gunScore - self.playerDamage
-        self.updateMacrosDict()
+        self.updateMacrosDict(self.gunLeft <= GLOBAL.ZERO)
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
-    def updateMacrosDict(self):
-        achieved = self.gunLeft <= GLOBAL.ZERO
+    def updateMacrosDict(self, achieved):
         self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved or self.isLowHealth else self.gunLeft
         self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON] if achieved else GLOBAL.EMPTY_LINE
         if not achieved and self.isLowHealth:
@@ -70,6 +76,12 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             if damage > self.gunScore and attackerID != self.playerVehicleID:
                 self.gunScore = damage
                 self.updateMainGun()
-            if attackerID == self.playerVehicleID:
-                self.playerDamage = damage
-                self.updateMainGun()
+
+    def onPlayerFeedbackReceived(self, events):
+        if self.isPostmortemSwitchedToAnotherVehicle():
+            return
+        if not self.isLowHealth:
+            for event in events:
+                if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
+                    self.playerDamage += event.getExtra().getDamage()
+                    self.updateMainGun()
