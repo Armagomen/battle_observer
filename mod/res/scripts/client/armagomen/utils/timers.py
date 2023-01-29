@@ -62,8 +62,8 @@ class SixthSenseTimer(Timer):
         if self.__soundID is not None:
             self.callWWISE(self.__soundID)
 
-    def start(self, seconds):
-        super(SixthSenseTimer, self).start()
+    def show(self, seconds):
+        self.start()
         self.timeTicking(seconds)
 
     def destroyTimer(self):

@@ -21,7 +21,7 @@
 		private var hideAnimation:Tween;
 		private var hideAnimation2:Tween;
 		
-		[Embed(source = "boris.png")]
+		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
 		
 		public function SixthSenseUI()

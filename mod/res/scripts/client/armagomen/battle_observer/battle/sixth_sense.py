@@ -42,7 +42,7 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
-            self.show() if value else self.hide()
+            self.show(self.settings[SIXTH_SENSE.TIME]) if value else self.hide()
         elif state in _STATES_TO_HIDE:
             self.hide()
 
@@ -52,9 +52,9 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
     def handleTimer(self, timeLeft):
         self.as_updateTimerS(DEFAULT_MESSAGE.format(timeLeft))
 
-    def show(self):
+    def show(self, seconds):
+        super(SixthSense, self).show(seconds)
         self.as_showS()
-        self.start(self.settings[SIXTH_SENSE.TIME])
 
     def hide(self):
         super(SixthSense, self).hide()
