@@ -7,15 +7,6 @@ from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
-from helpers import getClientLanguage
-
-language = getClientLanguage()
-if language == 'uk':
-    I18N_LOW_HEALTH = "Низьке здоров'я ворога"
-elif language in ('ru', 'be'):
-    I18N_LOW_HEALTH = "Низкое здоровье врага"
-else:
-    I18N_LOW_HEALTH = "Low enemy health"
 
 
 class MainGun(MainGunMeta, IBattleFieldListener):
@@ -58,16 +49,15 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
 
     def updateMainGun(self):
-        if not self.isLowHealth:
-            self.gunLeft = self.gunScore - self.playerDamage
+        self.gunLeft = self.gunScore - self.playerDamage
         self.updateMacrosDict(self.gunLeft <= GLOBAL.ZERO)
         self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
 
     def updateMacrosDict(self, achieved):
-        self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved or self.isLowHealth else self.gunLeft
+        self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else self.gunLeft
         self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON] if achieved else GLOBAL.EMPTY_LINE
         if not achieved and self.isLowHealth:
-            self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON] + I18N_LOW_HEALTH
+            self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON]
         else:
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
 
@@ -80,8 +70,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def onPlayerFeedbackReceived(self, events):
         if self.isPostmortemSwitchedToAnotherVehicle():
             return
-        if not self.isLowHealth:
-            for event in events:
-                if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-                    self.playerDamage += event.getExtra().getDamage()
-                    self.updateMainGun()
+        for event in events:
+            if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
+                self.playerDamage += event.getExtra().getDamage()
+                self.updateMainGun()
