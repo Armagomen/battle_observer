@@ -1,4 +1,3 @@
-# coding=utf-8
 from collections import defaultdict
 from math import ceil
 
@@ -62,10 +61,9 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
 
     def onPlayerDamaged(self, attackerID, damage):
-        if self._arenaDP.isAlly(attackerID) and not self.isLowHealth:
-            if damage > self.gunScore and attackerID != self.playerVehicleID:
-                self.gunScore = damage
-                self.updateMainGun()
+        if self._arenaDP.isAlly(attackerID) and attackerID != self.playerVehicleID and damage > self.gunScore:
+            self.gunScore = damage
+            self.updateMainGun()
 
     def onPlayerFeedbackReceived(self, events):
         if self.isPostmortemSwitchedToAnotherVehicle():
