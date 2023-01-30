@@ -5,11 +5,23 @@ from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, S
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
-from gui.shared.utils.functions import makeTooltip
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 37
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
+
+
+def makeTooltip(header=None, body=None, note=None, attention=None):
+    res_str = ''
+    if header is not None:
+        res_str += '{HEADER}%s{/HEADER}' % header
+    if body is not None:
+        res_str += '{BODY}%s{/BODY}' % body
+    if note is not None:
+        res_str += '{NOTE}%s{/NOTE}' % note
+    if attention is not None:
+        res_str += '{ATTENTION}%s{/ATTENTION}' % attention
+    return res_str
 
 
 def importApi():
@@ -21,9 +33,9 @@ def importApi():
         from debug_utils import LOG_CURRENT_EXCEPTION
         LoadingError(repr(error))
         LOG_CURRENT_EXCEPTION()
-        return None, None, None
     else:
         return g_modsListApi, vxSettingsApi, vxSettingsApiEvents
+    return None
 
 
 class Getter(object):
@@ -102,17 +114,17 @@ class CreateElement(object):
                 result.update({GLOBAL.WIDTH: 250, 'btnName': varName})
         return result
 
-    def createDropDown(self, blockID, varName, options, value):
+    def createDropDown(self, blockID, varName, values, value):
         result = self.createControl(blockID, varName, value, cType='Dropdown')
         if result is not None:
-            result.update({'options': [{'label': x} for x in options]})
+            result.update({'options': [{'label': x} for x in values]})
         return result
 
-    def createSixthSenseDropDown(self, blockID, varName, options, value):
-        result = self.createControl(blockID, varName, value, cType='Dropdown')
+    def createSixthSenseDropDown(self, blockID, varName, icons, icon):
+        result = self.createControl(blockID, varName, icon, cType='Dropdown')
         if result is not None:
             image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}' width='190' height='190'>"
-            result.update({'options': [{'label': x[:-4], 'tooltip': makeTooltip(body=image.format(x))} for x in options],
+            result.update({'options': [{'label': x[:-4], 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
                            GLOBAL.WIDTH: 150})
         return result
 
@@ -147,15 +159,15 @@ class CreateElement(object):
         return result
 
     @staticmethod
-    def createBlock(blockID, settings, column1, column2):
+    def createBlock(blockID, params, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
         warning = xvmInstalled and blockID in LOCKED_BLOCKS
         if warning:
             name = " ".join((name, "<font color='#ff3d3d'>{}</font>".format(LOCKED_MESSAGE)))
         return {
             'modDisplayName': "<font color='#FFFFFF'>{}</font>".format(name),
-            'settingsVersion': settingsVersion, GLOBAL.ENABLED: settings.get(GLOBAL.ENABLED, True) and not warning,
-            'showToggleButton': GLOBAL.ENABLED in settings and not warning, 'inBattle': False,
+            'settingsVersion': settingsVersion, GLOBAL.ENABLED: params.get(GLOBAL.ENABLED, True) and not warning,
+            'showToggleButton': GLOBAL.ENABLED in params and not warning, 'inBattle': False,
             'position': CONFIG_INTERFACE.BLOCK_IDS.index(blockID), 'column1': column1, 'column2': column2
         }
 
@@ -191,22 +203,20 @@ class CreateElement(object):
 class SettingsInterface(CreateElement):
 
     def __init__(self, settingsLoader, version):
-        g_modsListApi, vxSettingsApi, vxSettingsApiEvents = importApi()
-        if g_modsListApi is None or vxSettingsApi is None or vxSettingsApiEvents is None:
+        api = importApi()
+        if api is None:
             return
+        self.modsListApi, self.vxSettingsApi, self.apiEvents = api
         super(SettingsInterface, self).__init__()
         self.sLoader = settingsLoader
-        self.modsListApi = g_modsListApi
-        self.apiEvents = vxSettingsApiEvents
         self.inited = set()
-        self.vxSettingsApi = vxSettingsApi
         self.currentConfigID = self.newConfigID = self.sLoader.configsList.index(self.sLoader.configName)
         self.newConfigLoadingInProcess = False
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
-        vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                   useKeyPairs=settings.main[MAIN.USE_KEY_PAIRS])
-        vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
+        self.vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
+                                        useKeyPairs=settings.main[MAIN.USE_KEY_PAIRS])
+        self.vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
         settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
 
@@ -289,8 +299,8 @@ class SettingsInterface(CreateElement):
         else:
             settings_block = getattr(settings, blockID)
             for key, value in data.iteritems():
-                updatedConfigLink, paramName = self.getter.getLinkToParam(settings_block, key)
-                if paramName in updatedConfigLink:
+                updated_config_link, param_name = self.getter.getLinkToParam(settings_block, key)
+                if param_name in updated_config_link:
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
                     elif key == HP_BARS.STYLE and not isinstance(value, str):
@@ -300,7 +310,7 @@ class SettingsInterface(CreateElement):
                     elif key == "zoomSteps*steps":
                         steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
                         value = [val for val in steps if val >= 2.0]
-                    updatedConfigLink[paramName] = value
+                    updated_config_link[param_name] = value
             self.sLoader.updateConfigFile(blockID, settings_block)
             settings.onModSettingsChanged(settings_block, blockID)
 
@@ -316,9 +326,9 @@ class SettingsInterface(CreateElement):
             self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
 
     def setHandlerValue(self, blockID, values, value):
-        getObject = self.vxSettingsApi.getDAAPIObject
+        get_object = self.vxSettingsApi.getDAAPIObject
         for varName in values:
-            obj = getObject(blockID, varName)
+            obj = get_object(blockID, varName)
             if obj is not None:
                 obj.alpha = 0.4 if not value else GLOBAL.F_ONE
                 obj.mouseEnabled = value
@@ -348,7 +358,7 @@ class SettingsInterface(CreateElement):
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
             columns = tuple(self.items(blockID, settings_block))
-            middleIndex = (len(columns) + int(len(columns) % 2 != 0)) / 2
-            column1 = columns[:middleIndex]
-            column2 = columns[middleIndex:]
+            middle_index = (len(columns) + int(len(columns) % 2 != 0)) / 2
+            column1 = columns[:middle_index]
+            column2 = columns[middle_index:]
         return self.createBlock(blockID, settings_block, column1, column2) if column1 or column2 else None

@@ -33,7 +33,8 @@ LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
 
 
 class DownloadThread(object):
-    URLS = {"last": None, "full": "https://github.com/Armagomen/battle_observer/releases/latest"}
+    URLS = {"auto": "https://github.com/Armagomen/battle_observer/releases/latest/download/AutoUpdate.zip",
+            "full": "https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip"}
 
     def __init__(self):
         self.version = None
@@ -53,7 +54,7 @@ class DownloadThread(object):
             self.dialogs.showUpdateFinished(getLogo() + self.i18n['titleOK'],
                                             self.i18n['messageOK'].format(mod_version))
         else:
-            url = self.URLS['last']
+            url = self.URLS['auto']
             self.downloader = WebDownloader(GLOBAL.ONE)
             if url:
                 logInfo(LOG_MESSAGES.STARTED.format(mod_version, url))
@@ -121,7 +122,7 @@ class Updater(DownloadThread):
                     filename = asset.get('name', '')
                     download_url = asset.get('browser_download_url')
                     if filename == 'AutoUpdate.zip':
-                        self.URLS['last'] = download_url
+                        self.URLS['auto'] = download_url
                     elif filename.startswith('BattleObserver_'):
                         self.URLS['full'] = download_url
                 result = True
@@ -147,8 +148,8 @@ class Updater(DownloadThread):
     @wg_async
     def showDialog(self, view):
         title = getLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
-        gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
-        message = self.i18n['messageNEW'].format(self.modPath, gitMessage)
+        git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
+        message = self.i18n['messageNEW'].format(self.modPath, git_message)
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
         if result:
             self.startDownload()

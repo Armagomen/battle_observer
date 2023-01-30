@@ -90,9 +90,9 @@ class DamageLog(DamageLogsMeta):
                 if arena is not None:
                     arena.onVehicleUpdated += self.onVehicleUpdated
                     arena.onVehicleKilled += self.onVehicleKilled
-                ammoCtrl = self.sessionProvider.shared.ammo
-                if ammoCtrl is not None:
-                    ammoCtrl.onGunReloadTimeSet += self._onGunReloadTimeSet
+                ammo_ctrl = self.sessionProvider.shared.ammo
+                if ammo_ctrl is not None:
+                    ammo_ctrl.onGunReloadTimeSet += self._onGunReloadTimeSet
             if self._is_top_log_enabled:
                 self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
                 self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
@@ -119,20 +119,20 @@ class DamageLog(DamageLogsMeta):
                 if arena is not None:
                     arena.onVehicleUpdated -= self.onVehicleUpdated
                     arena.onVehicleKilled -= self.onVehicleKilled
-                ammoCtrl = self.sessionProvider.shared.ammo
-                if ammoCtrl is not None:
-                    ammoCtrl.onGunReloadTimeSet -= self._onGunReloadTimeSet
+                ammo_ctrl = self.sessionProvider.shared.ammo
+                if ammo_ctrl is not None:
+                    ammo_ctrl.onGunReloadTimeSet -= self._onGunReloadTimeSet
             if self._is_top_log_enabled:
                 self.top_log.clear()
         super(DamageLog, self)._dispose()
 
     def _onGunReloadTimeSet(self, currShellCD, state, skipAutoLoader):
         if state.isReloadingFinished():
-            typeDescriptor = getVehicleTypeDescriptor()
-            if typeDescriptor is None:
+            type_descriptor = getVehicleTypeDescriptor()
+            if type_descriptor is None:
                 self._playerShell = (DAMAGE_LOG.NOT_SHELL, False)
-            shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(typeDescriptor.shot.shell))
-            is_shell_gold = typeDescriptor.shot.shell.iconName.endswith(PREMIUM_SHELL_END)
+            shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(type_descriptor.shot.shell))
+            is_shell_gold = type_descriptor.shot.shell.iconName.endswith(PREMIUM_SHELL_END)
             self._playerShell = (shell_name, is_shell_gold)
 
     def onLogsAltMode(self, isKeyDown):
@@ -157,10 +157,10 @@ class DamageLog(DamageLogsMeta):
             self.top_log[macros] = GLOBAL.ZERO
         self.top_log[macros] += self.unpackTopLogValue(e_type, event, extra)
         if e_type in _EVENT_TO_TOP_LOG_AVG_MACROS:
-            avgValueMacros, avgColorMacros = _EVENT_TO_TOP_LOG_AVG_MACROS[e_type]
+            avg_value_macros, avg_color_macros = _EVENT_TO_TOP_LOG_AVG_MACROS[e_type]
             value = self.top_log[macros]
-            avgValue = self.top_log[avgValueMacros]
-            self.top_log[avgColorMacros] = self.getAVGColor(getPercent(value, avgValue))
+            avg_value = self.top_log[avg_value_macros]
+            self.top_log[avg_color_macros] = self.getAVGColor(getPercent(value, avg_value))
         self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
 
     @staticmethod
@@ -181,14 +181,14 @@ class DamageLog(DamageLogsMeta):
 
     def onVehicleUpdated(self, vehicleID, *args, **kwargs):
         """update log item in GM-mode"""
-        vehicleInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
-        if vehicleInfoVO:
-            vehicleType = vehicleInfoVO.vehicleType
-            if vehicleType and vehicleType.maxHealth and vehicleType.classTag:
+        vehicle_info_vo = self._arenaDP.getVehicleInfo(vehicleID)
+        if vehicle_info_vo:
+            vehicle_type = vehicle_info_vo.vehicleType
+            if vehicle_type and vehicle_type.maxHealth and vehicle_type.classTag:
                 log_data = self.getLogData(FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
                 vehicle = log_data.vehicles.get(vehicleID)
                 if vehicle and vehicle.get(DAMAGE_LOG.VEHICLE_CLASS) is None:
-                    self.createVehicle(vehicleInfoVO, vehicle, update=True)
+                    self.createVehicle(vehicle_info_vo, vehicle, update=True)
                     self.updateExtendedLog(log_data)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
@@ -216,14 +216,14 @@ class DamageLog(DamageLogsMeta):
             shell_name, gold = DAMAGE_LOG.NOT_SHELL, False
         logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, log_data.is_player)
         vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
-        vehicleInfoVO = self._arenaDP.getVehicleInfo(target_id)
+        vehicle_info_vo = self._arenaDP.getVehicleInfo(target_id)
         if log_data.is_player:
-            maxHealth = vehicleInfoVO.vehicleType.maxHealth
+            max_health = vehicle_info_vo.vehicleType.maxHealth
         else:
-            maxHealth = self._arenaDP.getVehicleInfo().vehicleType.maxHealth
+            max_health = self._arenaDP.getVehicleInfo().vehicleType.maxHealth
         if not vehicle:
-            self.createVehicle(vehicleInfoVO, vehicle, index=len(log_data.id_list))
-        self.updateVehicleData(extra, gold, shell_name, vehicle, maxHealth, log_data.is_player)
+            self.createVehicle(vehicle_info_vo, vehicle, index=len(log_data.id_list))
+        self.updateVehicleData(extra, gold, shell_name, vehicle, max_health, log_data.is_player)
         self.updateExtendedLog(log_data)
 
     def updateVehicleData(self, extra, gold, shell_name, vehicle, maxHealth, isPlayer):
