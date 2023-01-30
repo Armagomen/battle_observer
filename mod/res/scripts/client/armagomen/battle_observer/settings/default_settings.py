@@ -348,8 +348,8 @@ class DefaultSettings(object):
             },
             MAIN_GUN.GUN_ICON: "<img src='{}/battle_observer/main_gun.png' width='24' height='22' vspace='-5'>".format(
                 GLOBAL.ICONS_DIR),
-            MAIN_GUN.DONE_ICON: "<img src='{}/library/done.png' width='24' height='24'"
-                                " vspace='-8'>".format(GLOBAL.ICONS_DIR),
+            MAIN_GUN.DONE_ICON: "<img src='{}/battle_observer/done.png' width='22' height='22' vspace='-5'>".format(
+                GLOBAL.ICONS_DIR),
             MAIN_GUN.FAILURE_ICON: "<img src='{}/battle_observer/warning.png' width='25' height='22' vspace='-5'>"
                                    "".format(GLOBAL.ICONS_DIR)
         }
