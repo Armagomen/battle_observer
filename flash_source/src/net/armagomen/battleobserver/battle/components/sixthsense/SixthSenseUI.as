@@ -72,13 +72,13 @@
 		
 		private function addLoadedImageAndTimer(image:Bitmap):void
 		{
-			image.width = 180;
-			image.height = 180;
+			image.width = 160;
+			image.height = 160;
 			image.smoothing = true;
-			image.x = -90;
-			image.y = 130;
+			image.x = -80;
+			image.y = 135;
 			this._container.addChild(image);
-			this.timer = new TextExt(0, 290, Filters.normalBold, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
+			this.timer = new TextExt(0, 275, Filters.normalBold, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
 			this.timerAnimation = new Tween(this.timer, "alpha", 1.0, 0.5);
 			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);

@@ -49,7 +49,7 @@ package net.armagomen.battleobserver
 						this.addChild(teamHealthUI);
 						break;
 					case "Observer_DamageLog_UI": 
-						var damageLog:DamageLogsUI = new DamageLogsUI(this);
+						var damageLog:DamageLogsUI = new DamageLogsUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL));
 						this.registerComponent(damageLog, alias);
 						this.addChild(damageLog);
 						break;
@@ -76,12 +76,12 @@ package net.armagomen.battleobserver
 					case "Observer_SixthSense_UI": 
 						var sixthSense:SixthSenseUI = new SixthSenseUI();
 						this.registerComponent(sixthSense, alias);
-						this.addChild(sixthSense);
+						this.addChildAt(sixthSense, this.getChildIndex(this.getComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE)));
 						break;
 					case "Observer_TeamBases_UI": 
 						var teamBases:TeamBasesUI = new TeamBasesUI();
 						this.registerComponent(teamBases, alias);
-						this.addChild(teamBases);
+						this.addChildAt(teamBases, this.getChildIndex(this.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)));
 						break;
 					case "Observer_ArmorCalculator_UI": 
 						var armorCalculator:ArmorCalculatorUI = new ArmorCalculatorUI();

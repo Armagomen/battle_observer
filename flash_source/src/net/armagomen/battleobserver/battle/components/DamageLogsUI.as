@@ -14,13 +14,12 @@ package net.armagomen.battleobserver.battle.components
 		private var d_log:TextExt            = null;
 		private var in_log:TextExt           = null;
 		private var top_log:TextExt          = null;
-		private const IN_LOG:String          = "in_log";
 		private const D_LOG:String           = "d_log";
 		
-		public function DamageLogsUI(battlePage:*)
+		public function DamageLogsUI(dlPanel:*)
 		{
 			super();
-			this.damageLogPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
+			this.damageLogPanel = dlPanel;
 		}
 		
 		override protected function onBeforeDispose():void 
@@ -44,7 +43,7 @@ package net.armagomen.battleobserver.battle.components
 			if (this.damageLogPanel)
 			{
 				this.d_log = new TextExt(settings.x + 35, settings.y, null, settings.align, getShadowSettings(), this.damageLogPanel._detailsTopContainer);
-				this.in_log = new TextExt(settings.x + 20, settings.y, null, settings.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer);
+				this.in_log = new TextExt(settings.x + 20, settings.y - 20, null, settings.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer);
 			}
 		}
 		
@@ -59,7 +58,7 @@ package net.armagomen.battleobserver.battle.components
 			{
 				this.d_log.htmlText = text;
 			}
-			else if (target == IN_LOG)
+			else
 			{
 				this.in_log.htmlText = text;
 			}
