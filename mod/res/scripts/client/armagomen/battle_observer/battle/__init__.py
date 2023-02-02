@@ -97,7 +97,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
     def loadStatisticView(self, flashObject):
-        if self._statisticsEnabled and not self.statistics.loaded and self._statLoadTry < 20:
+        if self._statisticsEnabled and not self.statistics.loaded and self._statLoadTry < 30:
             self._statLoadTry += 1
             return callback(1.0, self.loadStatisticView, flashObject)
         cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]

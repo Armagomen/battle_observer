@@ -1,3 +1,5 @@
+import json
+import json
 import os
 import re
 from collections import namedtuple
@@ -6,11 +8,13 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer.core.updater.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS, getLogo
-from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, urlResponse, getUpdatePath
+from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, getUpdatePath, fetchURL, \
+    logDebug
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.events import g_events
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
+from uilogging.core.core_constants import HTTP_OK_STATUS
 from web.cache.web_downloader import WebDownloader
 from wg_async import wg_async, wg_await
 
@@ -106,44 +110,39 @@ class Updater(DownloadThread):
         super(Updater, self).__init__()
         self.version = version
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
-        self.subscribe()
+        fetchURL(URLS.UPDATE_GITHUB_API_URL, self.request_last_version)
 
-    def request_last_version(self):
-        result = False
-        response = urlResponse(URLS.UPDATE_GITHUB_API_URL)
-        if response:
-            self.updateData.update(response)
-            new_version = response.get('tag_name', self.version)
+    def request_last_version(self, response):
+        if response.responseCode == HTTP_OK_STATUS:
+            response_data = json.loads(response.body)
+            self.updateData.update(response_data)
+            new_version = response_data.get('tag_name', self.version)
             local_ver = self.tupleVersion(self.version)
             server_ver = self.tupleVersion(new_version)
             if local_ver < server_ver:
-                assets = response.get('assets')
+                assets = response_data.get('assets')
                 for asset in assets:
                     filename = asset.get('name', '')
                     download_url = asset.get('browser_download_url')
                     if filename == 'AutoUpdate.zip':
                         self.URLS['auto'] = download_url
-                    elif filename.startswith('BattleObserver_'):
+                    elif filename == 'BattleObserver_WOT_EU.zip':
                         self.URLS['full'] = download_url
-                result = True
+                self.subscribe()
                 logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
-        return result
+        logDebug("contentType={}, responseCode={} body={}", response.contentType, response.responseCode, response.body)
 
     @staticmethod
     def tupleVersion(version):
         return tuple(map(int, version.split('.')))
 
     def subscribe(self):
-        result = self.request_last_version()
-        if result:
-            if self.inLogin:
-                g_events.onLoginLoaded += self.showDialog
-            else:
-                g_events.onHangarLoaded += self.showDialog
+        if self.inLogin:
+            g_events.onLoginLoaded += self.showDialog
         else:
-            self.dialogs = None
+            g_events.onHangarLoaded += self.showDialog
 
     @wg_async
     def showDialog(self, view):

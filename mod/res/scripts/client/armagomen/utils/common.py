@@ -273,7 +273,7 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0, **kwargs):
 
 
 def urlResponse(url):
-    response = openUrl(url, 20.0)
+    response = openUrl(url, 10.0)
     response_data = response.getData()
     if response_data is not None:
         return encodeData(json.loads(response_data, encoding="utf-8-sig"))
@@ -294,3 +294,7 @@ def getPercent(param_a, param_b):
 def isFileValid(version):
     file_name = "armagomen.battleObserver_{}.wotmod"
     return file_name.format(version) in os.listdir(os.path.join(modsPath, gameVersion))
+
+
+def fetchURL(url, callback_function):
+    BigWorld.fetchURL(url, callback_function, {"User-Agent": "Battle-Observer-App"}, 30, 'GET')
