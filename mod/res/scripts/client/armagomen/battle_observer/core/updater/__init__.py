@@ -21,9 +21,10 @@ from wg_async import wg_async, wg_await
 WAITING_UPDATE = 'updating'
 
 __NAMES = (
-    "UPDATE_CHECKED", "NEW_VERSION", "STARTED", "NEW_FILE", "ALREADY_DOWNLOADED", "FINISHED", "FAILED"
+    "CHECK", "UPDATE_CHECKED", "NEW_VERSION", "STARTED", "NEW_FILE", "ALREADY_DOWNLOADED", "FINISHED", "FAILED"
 )
 __MESSAGES = (
+    "Checking for an available update.",
     "The update check is completed, you have the current version.",
     "An update {} is detected, the client will be restarted at the end of the download.",
     "DownloadThread: update started {} at {}",
@@ -111,6 +112,7 @@ class Updater(DownloadThread):
         self.version = version
         self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         fetchURL(URLS.UPDATE_GITHUB_API_URL, self.request_last_version)
+        logInfo(LOG_MESSAGES.CHECK)
 
     def request_last_version(self, response):
         if response.responseCode == HTTP_OK_STATUS:

@@ -7,9 +7,9 @@ __email__ = "armagomen@gmail.com"
 __status__ = "Production"
 __http__ = "https://github.com/Armagomen/battle_observer/releases"
 
-from constants import AUTH_REALM
+from realm import CURRENT_REALM
 
-if AUTH_REALM != "RU":
+if CURRENT_REALM != "RU":
     import logging
 
     from armagomen.battle_observer.core import onInit, onFini
@@ -20,7 +20,7 @@ if AUTH_REALM != "RU":
 
 
     def init():
-        onInit(__version__)
+        onInit(__version__, CURRENT_REALM)
 
 
     def fini():

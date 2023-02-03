@@ -2,7 +2,6 @@ from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCa
 from armagomen.battle_observer.core.view_settings import ViewSettings, registerBattleObserverPackages
 from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
     cleanupObserverUpdates
-from constants import AUTH_REALM
 
 cachedVehicleData = CurrentVehicleCachedData()
 viewSettings = ViewSettings()
@@ -10,8 +9,10 @@ componentsLoader = None
 hangarSettings = None
 
 
-def startLoadingMod(modVersion):
+def startLoadingMod(modVersion, current_realm):
     errorMessage = ""
+    if current_realm == "RU":
+        return "not supported region"
     try:
         from armagomen.battle_observer.core.updater import Updater
         Updater(modVersion)
@@ -27,7 +28,7 @@ def startLoadingMod(modVersion):
     else:
         if isFileValid(modVersion):
             global componentsLoader, hangarSettings
-            logInfo('Launched at python v{} region={}'.format(version, AUTH_REALM))
+            logInfo('Launched at python v{} region={}'.format(version, current_realm))
             registerBattleObserverPackages()
             componentsLoader = ComponentsLoader()
             settings_loader = SettingsLoader()
@@ -41,10 +42,10 @@ def startLoadingMod(modVersion):
     return errorMessage
 
 
-def onInit(modVersion):
+def onInit(modVersion, current_realm):
     logInfo('MOD START LOADING: v{} - {}'.format(modVersion, gameVersion))
     cachedVehicleData.init()
-    errorMessage = startLoadingMod(modVersion)
+    errorMessage = startLoadingMod(modVersion, current_realm)
     if errorMessage:
         from armagomen.battle_observer.core.loading_error import LoadingError
         return LoadingError(errorMessage)

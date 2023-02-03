@@ -78,8 +78,7 @@ class Donate(object):
                     pushMessage(self.getClanMessage(), type=SM_TYPE.Warning)
 
 
-if AUTH_REALM != "RU":
-    Donate()
+Donate()
 
 
 @overrideMethod(NotificationListView, "onClickAction")
