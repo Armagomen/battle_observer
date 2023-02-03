@@ -65,7 +65,9 @@ class Donate(object):
     @property
     def showMessage(self):
         clanAbbrev = g_clanCache.clanAbbrev
-        return clanAbbrev is None or "WG" not in clanAbbrev
+        if clanAbbrev is not None:
+            return "WG" not in clanAbbrev
+        return True
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
