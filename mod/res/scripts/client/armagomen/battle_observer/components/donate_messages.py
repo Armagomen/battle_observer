@@ -65,9 +65,7 @@ class Donate(object):
     @property
     def showMessage(self):
         clanAbbrev = g_clanCache.clanAbbrev
-        if clanAbbrev is not None:
-            return "WG" not in clanAbbrev
-        return True
+        return clanAbbrev is None or "WG" not in clanAbbrev
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
@@ -78,6 +76,10 @@ class Donate(object):
                 logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
                 if g_clanCache.clanAbbrev is None and AUTH_REALM == "EU":
                     pushMessage(self.getClanMessage(), type=SM_TYPE.Warning)
+
+
+if AUTH_REALM != "RU":
+    Donate()
 
 
 @overrideMethod(NotificationListView, "onClickAction")
