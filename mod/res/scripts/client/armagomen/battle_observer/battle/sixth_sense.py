@@ -11,11 +11,11 @@ _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
 
 language = getClientLanguage()
 if language == "uk":
-    DEFAULT_MESSAGE = "Мене помітили: {} сек."
+    DEFAULT_MESSAGE = "Виявили: {} сек."
 elif language in ("ru", "be"):
-    DEFAULT_MESSAGE = "Меня заметили: {} сек."
+    DEFAULT_MESSAGE = "Обнаружили: {} сек."
 else:
-    DEFAULT_MESSAGE = "I was spotted: {} sec."
+    DEFAULT_MESSAGE = "Detected: {} sec."
 
 
 class SixthSense(SixthSenseMeta, SixthSenseTimer):

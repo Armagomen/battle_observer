@@ -17,7 +17,6 @@
 		private var params:Object;
 		private var timer:TextExt;
 		private var _container:Sprite;
-		private var timerAnimation:Tween;
 		private var hideAnimation:Tween;
 		private var hideAnimation2:Tween;
 		
@@ -57,8 +56,6 @@
 			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
 			this.loader = null;
-			this.timerAnimation.stop();
-			this.timerAnimation = null;
 			this.hideAnimation.stop();
 			this.hideAnimation2.stop();
 			this.hideAnimation.removeEventListener(TweenEvent.MOTION_FINISH, this.afterAnimation);
@@ -78,8 +75,7 @@
 			image.x = -80;
 			image.y = 135;
 			this._container.addChild(image);
-			this.timer = new TextExt(0, 275, Filters.normalBold, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
-			this.timerAnimation = new Tween(this.timer, "alpha", 1.0, 0.5);
+			this.timer = new TextExt(0, 278, Filters.middleText, TextFieldAutoSize.CENTER, getShadowSettings(), this._container);
 			this.hideAnimation = new Tween(this._container, "y", this._container.y, -this._container.height);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
 			this.hideAnimation.addEventListener(TweenEvent.MOTION_FINISH, this.afterAnimation, false, 0, true);
@@ -114,7 +110,6 @@
 		public function as_updateTimer(text:String):void
 		{
 			this.timer.htmlText = text;
-			this.timerAnimation.start();
 		}
 		
 		private function onLoadError(e:IOErrorEvent):void

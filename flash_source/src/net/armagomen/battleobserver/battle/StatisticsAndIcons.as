@@ -42,6 +42,11 @@ package net.armagomen.battleobserver.battle
 			this.onChange(null);
 		}
 		
+		public function update_wtrdata(statsData:Object):void
+		{
+			this.statisticsData = statsData;
+		}
+		
 		private function onCountChange(eve:Event):void
 		{
 			for each (var itemR:* in this.panels.listRight._items)

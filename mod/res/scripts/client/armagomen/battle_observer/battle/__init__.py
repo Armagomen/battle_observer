@@ -63,7 +63,7 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandlerBattle(PackageBusinessHandler):
-    __slots__ = ('_iconsEnabled', '_statLoadTry', '_statisticsEnabled', 'minimapPlugin', 'statistics')
+    __slots__ = ('_iconsEnabled', '_statisticsEnabled', 'minimapPlugin', 'statistics')
 
     def __init__(self):
         listeners = [(alias, self.eventListener) for alias in VIEW_ALIASES]
@@ -71,20 +71,19 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self.minimapPlugin = None
         self.statistics = StatisticsDataLoader()
         self._iconsEnabled = False
-        self._statLoadTry = 0
         self._statisticsEnabled = False
 
     def fini(self):
         if self.minimapPlugin is not None:
             self.minimapPlugin.fini()
             self.minimapPlugin = None
-        self._statLoadTry = 0
+        self.statistics = None
         viewSettings.clear()
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
-        self._statisticsEnabled = viewSettings.isWTREnabled() and self.statistics.enabled
+        self._statisticsEnabled = viewSettings.isWTREnabled()
         self._iconsEnabled = viewSettings.isIconsEnabled()
         baseMapEnabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not xvmInstalled
         if baseMapEnabled and not viewSettings.gui.isEpicBattle():
@@ -97,9 +96,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
     def loadStatisticView(self, flashObject):
-        if self._statisticsEnabled and not self.statistics.loaded and self._statLoadTry < 30:
-            self._statLoadTry += 1
-            return callback(1.0, self.loadStatisticView, flashObject)
+        if self._statisticsEnabled and not self.statistics.loaded:
+            self.statistics.setCallback(flashObject.as_updateStatisticData)
         cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]
         fullWidth = settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
         typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
@@ -126,6 +124,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{} {}, has ho attribute {}"
             return logError(to_format_str, alias, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        callback(1.0, self.delayLoading, view, viewSettings.components, viewSettings.hiddenComponents)
+        callback(0.2, self.delayLoading, view, viewSettings.components, viewSettings.hiddenComponents)
         if self._iconsEnabled or self._statisticsEnabled:
-            callback(2.0, self.loadStatisticView, view.flashObject)
+            callback(0.5, self.loadStatisticView, view.flashObject)

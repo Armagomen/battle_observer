@@ -24,6 +24,7 @@ class StatisticsDataLoader(object):
         self.loaded = False
         self._load_try = 0
         self.__wtrData = WTRStatistics()
+        self.as_updateStatisticData = None
 
     def onDataResponse(self, response):
         if response.responseCode == HTTP_OK_STATUS:
@@ -31,14 +32,18 @@ class StatisticsDataLoader(object):
             data = response_data.get("data", {})
             loaded_data = {int(key): value for key, value in data.iteritems() if value}
             self.__wtrData.updateAllItems(self.sessionProvider.getArenaDP(), loaded_data)
-            logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data")
-            logDebug("StatisticsDataLoader: request result: data={}", loaded_data)
+            logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
             self.loaded = True
+            if self.as_updateStatisticData is not None:
+                self.as_updateStatisticData(self.__wtrData.itemsData)
         else:
             self.delayedLoad()
 
+    def setCallback(self, as_updateStatisticData):
+        self.as_updateStatisticData = as_updateStatisticData
+
     def delayedLoad(self):
-        if self._load_try < 20:
+        if self._load_try < 10:
             self._load_try += 1
             callback(1.0, self.getStatisticsDataFromServer)
 

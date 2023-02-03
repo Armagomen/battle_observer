@@ -125,6 +125,14 @@ package net.armagomen.battleobserver
 				this.statisticsBO = new StatisticsAndIcons(this, iconsEnabled, statsData, cutWidth, fullWidth, typeColors, iconMultiplier);
 			}
 			
+			BaseBattlePage.prototype.as_updateStatisticData = function(statsData:Object):void
+			{
+				if (this.statisticsBO)
+				{
+					this.statisticsBO.update_wtrdata(statsData);
+				}
+			}
+			
 			BaseBattlePage.prototype.as_createMimimapCentered = function():void
 			{
 				this.mapZoom = new minimapZoom(this);

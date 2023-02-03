@@ -47,7 +47,7 @@ class WTRStatistics(object):
         if battles >= self.K:
             magnitude = int(floor(log(battles, self.K)))
             return '%.1f%s' % (battles / self.K ** magnitude, self.UNITS[magnitude])
-        return battles
+        return str(battles)
 
     def __getColor(self, wtr):
         result = "very_bad"
