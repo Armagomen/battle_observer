@@ -18,25 +18,25 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 class Donate(object):
 
     def __init__(self):
-        self.timeDelta = datetime.datetime.now()
+        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=10)
         self.lastMessage = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         if getClientLanguage() in ('ru', 'uk', 'be'):
             self.messages = (
-                "Добрий день everybody ми з України.<br><br>Слава Україні",
-                "Підтримай розробку мода, все буде Україна.<br><br>Слава Україні",
-                "Батько наш - Бандера,<br>Україна - мати,<br>Ми за Україну будем воювати!<br><br>Слава Україні",
+                "Добрий день everybody, Слава Україні",
+                "Підтримай розробку мода, все буде Україна.<br>Слава Україні",
+                "Батько наш - Бандера,<br>Україна - мати,<br>Ми за Україну будем воювати!<br>Слава Україні",
                 "В ці складні часи нам дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть."
-                "<br><br>Слава Україні", "Гарного дня.<br><br>Слава Україні"
+                "<br>Слава Україні", "Підтримай Український контент.<br>Слава Україні"
             )
             self.clanMessage = "{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>. " \
                                "Ніяких зобов'язань. Граєш та отримуєш бонуси (бустери, камуфляжі, та інше).</font></p>"
         else:
             self.messages = (
-                "Good evening, we are from Ukraine. Support the development of the mod.<br><br>Glory to Ukraine",
-                "Support the development of the mod, everything will be Ukraine.<br><br>Glory to Ukraine",
+                "Good evening, we are from Ukraine. Support the development of the mod.<br>Glory to Ukraine",
+                "Support the development of the mod, everything will be Ukraine.<br>Glory to Ukraine",
                 "In these difficult times, I really need your support, even your 10 euro will help."
-                "<br><br>Glory to Ukraine"
+                "<br>Glory to Ukraine"
             )
             self.clanMessage = "{}<p><font color='#ffff66'>Join our clan <a href='event:{}'>[{}]</a>. " \
                                "No obligations. You play and get bonuses (boosters, camouflages, etc.).</font></p>"
