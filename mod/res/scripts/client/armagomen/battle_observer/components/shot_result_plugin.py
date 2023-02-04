@@ -19,10 +19,8 @@ _LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
 
 
 class ShotResultResolver(object):
-    __slots__ = ("resolver", "__player")
 
     def __init__(self):
-        self.resolver = _CrosshairShotResults
         self.__player = None
 
     def setPlayer(self):
@@ -39,14 +37,14 @@ class ShotResultResolver(object):
         entity = collision.entity
         if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive() or self.isAlly(entity):
             return UNDEFINED_RESULT
-        cDetails = self.resolver._getAllCollisionDetails(hitPoint, direction, entity)
-        if cDetails is None:
+        c_details = _CrosshairShotResults._getAllCollisionDetails(hitPoint, direction, entity)
+        if c_details is None:
             return UNDEFINED_RESULT
         shot = self.__player.getVehicleDescriptor().shot
         shell = shot.shell
         isHE = shell.kind == SHELLS.HIGH_EXPLOSIVE
         full_piercing_power = self.getFullPiercingPower(hitPoint, isHE, piercingMultiplier, shell, shot)
-        armor, piercing_power, ricochet, no_damage = self.computeArmor(cDetails, shell, full_piercing_power, isHE)
+        armor, piercing_power, ricochet, no_damage = self.computeArmor(c_details, shell, full_piercing_power, isHE)
         if no_damage or ricochet:
             shot_result = SHOT_RESULT.NOT_PIERCED
         else:
@@ -82,19 +80,19 @@ class ShotResultResolver(object):
         no_damage = True
         is_jet = False
         jet_start_dist = GLOBAL.ZERO
-        shell_extra_data = self.resolver._SHELL_EXTRA_DATA[shell.kind]
+        shell_extra_data = _CrosshairShotResults._SHELL_EXTRA_DATA[shell.kind]
         for detail in cDetails:
             mat_info = detail.matInfo
             if mat_info is None:
                 continue
             hit_angle_cos = detail.hitAngleCos
-            computed_armor += self.resolver._computePenetrationArmor(shell, hit_angle_cos, mat_info)
+            computed_armor += _CrosshairShotResults._computePenetrationArmor(shell, hit_angle_cos, mat_info)
             if is_jet:
                 jetDist = detail.dist - jet_start_dist
                 if jetDist > GLOBAL.ZERO:
                     piercing_power *= 1.0 - jetDist * shell_extra_data.jetLossPPByDist
             else:
-                ricochet = self.resolver._shouldRicochet(shell, hit_angle_cos, mat_info)
+                ricochet = _CrosshairShotResults._shouldRicochet(shell, hit_angle_cos, mat_info)
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
