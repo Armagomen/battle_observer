@@ -3,7 +3,7 @@ from DestructibleEntity import DestructibleEntity
 from Vehicle import Vehicle
 from aih_constants import SHOT_RESULT
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import VEHICLE, GLOBAL, ARMOR_CALC
+from armagomen.constants import GLOBAL, ARMOR_CALC
 from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES as SHELLS
@@ -14,6 +14,7 @@ from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCT
 UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
 _MIN_PIERCING_DIST = 100.0
 _MAX_PIERCING_DIST = 500.0
+_JET_FACTOR = 0.001
 _LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
 
 
@@ -29,7 +30,7 @@ class ShotResultResolver(object):
 
     def isAlly(self, entity):
         if not settings.armor_calculator[ARMOR_CALC.ON_ALLY]:
-            return entity.publicInfo[VEHICLE.TEAM] == self.__player.team
+            return entity.publicInfo.team == self.__player.team
         return False
 
     def getShotResult(self, collision, hitPoint, direction, piercingMultiplier):
@@ -84,7 +85,7 @@ class ShotResultResolver(object):
                 piercingPower = max(piercingPower, GLOBAL.ZERO)
             elif shellExtraData.jetLossPPByDist > GLOBAL.ZERO:
                 isJet = True
-                jetStartDist += detail.dist + matInfo.armor * 0.001
+                jetStartDist += detail.dist + matInfo.armor * _JET_FACTOR
         return computedArmor, piercingPower, ricochet, noDamage
 
     @staticmethod

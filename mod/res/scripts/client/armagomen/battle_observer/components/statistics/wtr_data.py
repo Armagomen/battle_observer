@@ -19,22 +19,24 @@ class WTRStatistics(object):
         self.wtr_ranges = ((3028, "bad"), (4592, "normal"), (6439, "good"), (8666, "very_good"), (10454, "unique"))
         self.itemsData = {}
 
-    def getPattern(self, isEnemy, data):
-        logDebug("isEnemy: {}, data:{}", isEnemy, data)
+    def getPattern(self, isEnemy, itemData):
+        logDebug("isEnemy: {}, data:{}", isEnemy, itemData)
         if isEnemy:
-            return self.settings[STATISTICS.FULL_RIGHT] % data, self.settings[STATISTICS.CUT_RIGHT] % data
+            return self.settings[STATISTICS.FULL_RIGHT] % itemData, self.settings[STATISTICS.CUT_RIGHT] % itemData
         else:
-            return self.settings[STATISTICS.FULL_LEFT] % data, self.settings[STATISTICS.CUT_LEFT] % data
+            return self.settings[STATISTICS.FULL_LEFT] % itemData, self.settings[STATISTICS.CUT_LEFT] % itemData
 
     def updateAllItems(self, arenaDP, loadedData):
-        allyTeam = avatar_getter.getPlayerTeam()
-        for accountDBID in loadedData:
-            vehicleID = arenaDP.getVehIDByAccDBID(accountDBID)
-            vehInfo = arenaDP.getVehicleInfo(vehicleID)
-            itemData = self.buildItemData(vehInfo.player.clanAbbrev, loadedData[accountDBID])
-            full, cut = self.getPattern(vehInfo.team != allyTeam, itemData)
-            textColor = itemData[self.COLOR_WTR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
-            self.itemsData[vehicleID] = {"fullName": full, "cutName": cut, "vehicleTextColor": textColor}
+        player_team = avatar_getter.getPlayerTeam()
+        for accountDBID, value in loadedData.iteritems():
+            if not value:
+                continue
+            vehicle_id = arenaDP.getVehIDByAccDBID(int(accountDBID))
+            veh_info = arenaDP.getVehicleInfo(vehicle_id)
+            item_data = self.buildItemData(veh_info.player.clanAbbrev, value)
+            full, cut = self.getPattern(veh_info.team != player_team, item_data)
+            text_color = item_data[self.COLOR_WTR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
+            self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]
@@ -60,7 +62,7 @@ class WTRStatistics(object):
 
     def buildItemData(self, clanTag, data):
         wtr = int(data.get("global_rating", 0))
-        winRate, battles = self.__getWinRateAndBattlesCount(data)
-        return {"WTR": wtr, self.COLOR_WTR: self.__getColor(wtr), "winRate": winRate,
+        win_rate, battles = self.__getWinRateAndBattlesCount(data)
+        return {"WTR": wtr, self.COLOR_WTR: self.__getColor(wtr), "winRate": win_rate,
                 "battles": battles, "nickname": data.get("nickname"),
                 "clanTag": "[{}]".format(clanTag) if clanTag else ""}
