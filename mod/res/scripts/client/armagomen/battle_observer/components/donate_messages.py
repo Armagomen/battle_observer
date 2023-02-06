@@ -25,18 +25,14 @@ class Donate(object):
             self.messages = (
                 "Добрий день everybody, Слава Україні",
                 "Підтримай розробку мода, все буде Україна.<br>Слава Україні",
-                "Батько наш - Бандера,<br>Україна - мати,<br>Ми за Україну будем воювати!<br>Слава Україні",
-                "В ці складні часи нам дуже потрібна ваша підтримка, навіть ваші 10 гривень допоможуть."
-                "<br>Слава Україні", "Підтримай Український контент.<br>Слава Україні"
+                "Підтримай Український контент.<br>Слава Україні"
             )
             self.clanMessage = "{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>. " \
                                "Ніяких зобов'язань. Граєш та отримуєш бонуси (бустери, камуфляжі, та інше).</font></p>"
         else:
             self.messages = (
-                "Good evening, we are from Ukraine. Support the development of the mod.<br>Glory to Ukraine",
-                "Support the development of the mod, everything will be Ukraine.<br>Glory to Ukraine",
-                "In these difficult times, I really need your support, even your 10 euro will help."
-                "<br>Glory to Ukraine"
+                "Support the development of the mod.<br>Glory to Ukraine",
+                "Support the development of the mod, everything will be Ukraine.<br>Glory to Ukraine"
             )
             self.clanMessage = "{}<p><font color='#ffff66'>Join our clan <a href='event:{}'>[{}]</a>. " \
                                "No obligations. You play and get bonuses (boosters, camouflages, etc.).</font></p>"

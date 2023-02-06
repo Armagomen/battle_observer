@@ -163,6 +163,11 @@ package net.armagomen.battleobserver
 				{
 					this.addChild(prebattleTimer);
 				}
+				var damageIndicator:* = this.getComponent(BATTLE_VIEW_ALIASES.DAMAGE_INDICATOR);
+				if (damageIndicator)
+				{
+					this.addChild(damageIndicator);
+				}
 			}
 			
 			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function(isEpicRandomBattle:Boolean):void
