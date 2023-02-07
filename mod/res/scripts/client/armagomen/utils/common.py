@@ -105,9 +105,32 @@ def getCurrentModsPath():
 
 
 modsPath, gameVersion = getCurrentModsPath()
-configsPath = os.path.join(modsPath, "configs", "mod_battle_observer")
+configsPath = os.path.join(modsPath, "configs")
 if not os.path.exists(configsPath):
     os.makedirs(configsPath)
+
+
+def getConfigRecursive(configs_path):
+    for dir_name in os.listdir(configs_path):
+        full_path = os.path.join(configs_path, dir_name)
+        if os.path.isdir(full_path):
+            if dir_name == "mod_battle_observer":
+                configs_path = full_path
+                break
+            else:
+                return getConfigRecursive(full_path)
+    return configs_path
+
+
+def getConfigPath(configs_path):
+    config_path = getConfigRecursive(configs_path)
+    if config_path == configs_path:
+        config_path = os.path.join(configsPath, "mod_battle_observer")
+        os.makedirs(config_path)
+    return config_path
+
+
+currentConfigPath = getConfigPath(configsPath)
 
 
 def cleanupUpdates():

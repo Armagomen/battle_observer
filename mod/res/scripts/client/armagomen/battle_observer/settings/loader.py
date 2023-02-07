@@ -2,7 +2,7 @@ import os
 
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import LOAD_LIST, DISPERSION, GLOBAL, SIXTH_SENSE
-from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, configsPath
+from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, currentConfigPath
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 
@@ -16,12 +16,12 @@ class SettingsLoader(object):
     def __init__(self):
         self.errorMessages = []
         g_events.onHangarLoaded += self.onHangarLoaded
-        load_json = os.path.join(configsPath, 'load.json')
+        load_json = os.path.join(currentConfigPath, 'load.json')
         if os.path.exists(load_json):
             self.configName = openJsonFile(load_json).get('loadConfig')
         else:
             self.configName = 'ERROR_CreatedAutomatically_ERROR'
-            configPath = os.path.join(configsPath, self.configName)
+            configPath = os.path.join(currentConfigPath, self.configName)
             if not os.path.exists(configPath):
                 self.errorMessages.append('CONFIGURATION DIRS IS NOT FOUND, CREATE NEW')
                 os.makedirs(configPath)
@@ -31,7 +31,7 @@ class SettingsLoader(object):
 
     @property
     def configsList(self):
-        return sorted(x for x in os.listdir(configsPath) if os.path.isdir(os.path.join(configsPath, x)))
+        return sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
 
     def readOtherConfig(self, configID):
         self.configName = self.configsList[configID]
@@ -40,11 +40,11 @@ class SettingsLoader(object):
 
     @staticmethod
     def createLoadJSON(configName):
-        path = os.path.join(configsPath, 'load.json')
+        path = os.path.join(currentConfigPath, 'load.json')
         writeJsonFile(path, {'loadConfig': configName})
 
     def updateConfigFile(self, fileName, _settings):
-        path = os.path.join(configsPath, self.configName, JSON.format(fileName))
+        path = os.path.join(currentConfigPath, self.configName, JSON.format(fileName))
         writeJsonFile(path, _settings)
 
     @staticmethod
@@ -88,7 +88,7 @@ class SettingsLoader(object):
     def readConfig(self):
         """Read settings"""
         logInfo("LOADING USER CONFIGURATION: {}".format(self.configName.upper()))
-        direct_path = os.path.join(configsPath, self.configName)
+        direct_path = os.path.join(currentConfigPath, self.configName)
         listdir = os.listdir(direct_path)
         for part_name in LOAD_LIST:
             internal_cfg = getattr(settings, part_name)

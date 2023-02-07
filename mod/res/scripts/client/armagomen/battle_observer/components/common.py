@@ -12,6 +12,7 @@ from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
 from gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
+from gui.battle_control.controllers.team_bases_ctrl import BattleTeamsBasesController
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
@@ -107,6 +108,12 @@ def onModSettingsChanged(_settings, blockID):
         elif not _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
             msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
             msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
+
+
+@overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
+def muteCaptureSound(base, *args):
+    if not settings.main[MAIN.MUTE_BASES_SOUND]:
+        return base(*args)
 
 
 settings.onModSettingsChanged += onModSettingsChanged

@@ -38,6 +38,7 @@ class DefaultSettings(object):
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
             MAIN.USE_KEY_PAIRS: True,
+            MAIN.MUTE_BASES_SOUND: False,
         }
         self.tank_carousel = {
             GLOBAL.ENABLED: False,
@@ -80,7 +81,7 @@ class DefaultSettings(object):
             SIXTH_SENSE.PLAY_TICK_SOUND: True,
             SIXTH_SENSE.DEFAULT: True,
             SIXTH_SENSE.ICON_NAME: SIXTH_SENSE.ICONS[GLOBAL.ZERO],
-            SIXTH_SENSE.TIME: 9,
+            SIXTH_SENSE.TIME: 10,
             SIXTH_SENSE.USER_ICON: "mods/configs/mod_battle_observer/__icon__path__200x200.png"
         }
         self.dispersion_circle = {
@@ -110,18 +111,18 @@ class DefaultSettings(object):
                 GLOBAL.ENABLED: False,
                 DEBUG_PANEL.PING_BAR: {
                     GLOBAL.ENABLED: False,
-                    GLOBAL.X: 83,
+                    GLOBAL.X: 75,
                     GLOBAL.Y: 27,
-                    GLOBAL.WIDTH: 75,
+                    GLOBAL.WIDTH: 70,
                     GLOBAL.HEIGHT: 4,
-                    GLOBAL.ALPHA: 0.95,
+                    GLOBAL.ALPHA: 1.0,
                     GLOBAL.BG_ALPHA: 0.5,
                     GLOBAL.COLOR: COLORS.NORMAL_TEXT,
                     GLOBAL.GLOW_FILTER: {
                         GLOBAL.COLOR: COLORS.GREEN,
                         GLOBAL.ALPHA: 1.0,
-                        GLOBAL.BLUR_X: 4,
-                        GLOBAL.BLUR_Y: 4,
+                        GLOBAL.BLUR_X: 2,
+                        GLOBAL.BLUR_Y: 2,
                         GLOBAL.INNER: False,
                         GLOBAL.KNOCKOUT: False,
                         GLOBAL.STRENGTH: 2
@@ -133,14 +134,14 @@ class DefaultSettings(object):
                     GLOBAL.Y: 27,
                     GLOBAL.WIDTH: 70,
                     GLOBAL.HEIGHT: 4,
-                    GLOBAL.ALPHA: 0.95,
+                    GLOBAL.ALPHA: 1.0,
                     GLOBAL.BG_ALPHA: 0.5,
                     GLOBAL.COLOR: COLORS.NORMAL_TEXT,
                     GLOBAL.GLOW_FILTER: {
                         GLOBAL.COLOR: COLORS.GREEN,
                         GLOBAL.ALPHA: 1.0,
-                        GLOBAL.BLUR_X: 4,
-                        GLOBAL.BLUR_Y: 4,
+                        GLOBAL.BLUR_X: 2,
+                        GLOBAL.BLUR_Y: 2,
                         GLOBAL.INNER: False,
                         GLOBAL.KNOCKOUT: False,
                         GLOBAL.STRENGTH: 2
@@ -198,8 +199,6 @@ class DefaultSettings(object):
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 30},
             ARMOR_CALC.TEMPLATE: ARMOR_CALC.DEFAULT_TEMPLATE,
             ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE,
-            ARMOR_CALC.RICOCHET: ARMOR_CALC.RICOCHET_MESSAGE,
-            ARMOR_CALC.NO_DAMAGE: ARMOR_CALC.NO_DAMAGE_MESSAGE,
             ARMOR_CALC.ON_ALLY: False,
         }
         self.colors = {
@@ -209,8 +208,8 @@ class DefaultSettings(object):
                 COLORS.ENEMY_BLIND_MAME: COLORS.BLIND,
                 COLORS.C_BG: COLORS.BLACK,
                 COLORS.DEAD_COLOR: COLORS.B_SILVER,
-                GLOBAL.ALPHA: 0.4,
-                GLOBAL.BG_ALPHA: 0.4
+                GLOBAL.ALPHA: 0.5,
+                GLOBAL.BG_ALPHA: 0.5
             },
             ARMOR_CALC.NAME: {
                 COLORS.C_GREEN: COLORS.GREEN,
@@ -301,7 +300,7 @@ class DefaultSettings(object):
         _logs = namedtuple('Logs', ('log_total', 'log_extended'))
         self.damage_log = _logs(self.log_total, self.log_extended)
         self.hp_bars = {
-            GLOBAL.ENABLED: True,
+            GLOBAL.ENABLED: False,
             HP_BARS.STYLE: HP_BARS.STYLES.league,
             HP_BARS.WIDTH: 200,
             HP_BARS.DIFF: True,
@@ -374,11 +373,11 @@ class DefaultSettings(object):
         self.players_panels = {
             GLOBAL.ENABLED: False,
             PANELS.SPOTTED_FIX: True,
-            PANELS.DAMAGES_ENABLED: True,
+            PANELS.DAMAGES_ENABLED: False,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.DAMAGES_TEMPLATE: "<font color='#FFFF00'>%(damage)s</font>",
             PANELS.DAMAGES_SETTINGS: {GLOBAL.X: -50, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left},
-            PANELS.BARS_ENABLED: True,
+            PANELS.BARS_ENABLED: False,
             PANELS.BAR_CLASS_COLOR: False,
             PANELS.ON_KEY_DOWN: False,
             PANELS.BAR_HOT_KEY: [[Keys.KEY_LALT]],

@@ -1,9 +1,22 @@
+# coding=utf-8
 from collections import defaultdict
 
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.constants import ARMOR_CALC, GLOBAL, POSTMORTEM, COLORS
 from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
+from helpers import getClientLanguage
+
+language = getClientLanguage()
+if language == "uk":
+    NO_DAMAGE = "Критичне влучання, без шкоди."
+    RICOCHET = "Рикошет."
+elif language in ("ru", "be"):
+    NO_DAMAGE = "Крит, без урона."
+    RICOCHET = "Рикошет."
+else:
+    NO_DAMAGE = "Critical hit, no damage."
+    RICOCHET = "Ricochet."
 
 
 class ArmorCalculator(ArmorCalcMeta):
@@ -45,8 +58,8 @@ class ArmorCalculator(ArmorCalcMeta):
     def onArmorChanged(self, armor, piercingPower, caliber, ricochet, noDamage):
         if armor is None:
             return self.as_armorCalcS(GLOBAL.EMPTY_LINE)
-        self.calcMacro[ARMOR_CALC.RICOCHET] = self.settings[ARMOR_CALC.RICOCHET] if ricochet else GLOBAL.EMPTY_LINE
-        self.calcMacro[ARMOR_CALC.NO_DAMAGE] = self.settings[ARMOR_CALC.NO_DAMAGE] if noDamage else GLOBAL.EMPTY_LINE
+        self.calcMacro[ARMOR_CALC.RICOCHET] = RICOCHET if ricochet else GLOBAL.EMPTY_LINE
+        self.calcMacro[ARMOR_CALC.NO_DAMAGE] = NO_DAMAGE if noDamage else GLOBAL.EMPTY_LINE
         self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = armor
         self.calcMacro[ARMOR_CALC.PIERCING_POWER] = piercingPower
         self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = piercingPower - armor

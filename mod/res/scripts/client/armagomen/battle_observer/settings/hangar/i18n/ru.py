@@ -83,7 +83,8 @@ localization = {
         "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
         "hide_button_counters_on_top_panel": "Отключить подсказки на кнопках в шапке ангара.",
         "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
-        "save_shot": "Блокировать стрельбу по союзникам и уничтоженным."
+        "save_shot": "Блокировать стрельбу по союзникам и уничтоженным.",
+        "mute_team_base_sound": "Отключить сирену захвата базы."
     },
     "statistics": {
         "header": "Статистика игроков WTR(WGR) | Иконки танков",

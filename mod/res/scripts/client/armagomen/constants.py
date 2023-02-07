@@ -106,13 +106,14 @@ SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA",
 __Main = namedtuple("MAIN", (
     "AUTO_CLEAR_CACHE", "HIDE_BADGES", "HIDE_CLAN_ABBREV", "HIDE_DOG_TAGS", "NAME", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
     "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND", "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT",
-    "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT", "HIDE_BTN_COUNTERS", "PREMIUM_TIME", "SAVE_SHOT"))
+    "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT", "HIDE_BTN_COUNTERS", "PREMIUM_TIME", "SAVE_SHOT",
+    "MUTE_BASES_SOUND"))
 MAIN = __Main(
     "autoClearCache", "hideBadges", "hideClanAbbrev", "hide_dog_tags", "main", "showFriendsAndClanInEars",
     "anonymousEnableShow", "useKeyPairs", "ignore_commanders_voice", "disable_score_sound", "DEBUG_MODE",
     "auto_crew_training", "do_not_buy_directives_for_currency_automatically", "hide_hint_panel", "hide_field_mail",
     "auto_return_crew", "disable_stun_sound", "hide_main_chat_in_hangar", "hide_button_counters_on_top_panel",
-    "premium_time", "save_shot")
+    "premium_time", "save_shot", "mute_team_base_sound")
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "B_SILVER", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
@@ -218,11 +219,10 @@ __MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "MACROS_COUNTED_ARMOR",
     "MACROS_PIERCING_RESERVE", "MACROS_MESSAGE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE",
-    "MESSAGES_TEMPLATE", "RICOCHET_MESSAGE", "NO_DAMAGE_MESSAGE", "DEFAULT_TEMPLATE", "ON_ALLY"))(
+    "MESSAGES_TEMPLATE", "DEFAULT_TEMPLATE", "ON_ALLY"))(
     "piercingPower", "armor_calculator", "position", "messages", "template", "color", "countedArmor",
-    "piercingReserve", "message", "caliber", "ricochet", "noDamage", __MESSAGES_TEMPLATE, "Ricochet",
-    "critical shot, no damage", "<p align='center'>%(ricochet)s%(noDamage)s\n"
-                                "<font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
+    "piercingReserve", "message", "caliber", "ricochet", "noDamage", __MESSAGES_TEMPLATE,
+    "<p align='center'>%(ricochet)s%(noDamage)s\n<font color='%(color)s'>%(countedArmor)d</font></p>",
     "display_on_allies")
 
 MARKERS = namedtuple("MARKERS", ("NAME", "HOT_KEY", "CLASS_COLOR", "TYPE_ICON", "ICON"))(

@@ -79,7 +79,8 @@ localization = {
         "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
         "hide_button_counters_on_top_panel": "Disable tooltips on buttons in the hangar header",
         "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
-        "save_shot": "Block shooting at allies and destroyed."
+        "save_shot": "Block shooting at allies and destroyed.",
+        "mute_team_base_sound": "Mute base capture siren."
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",
