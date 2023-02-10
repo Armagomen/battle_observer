@@ -110,22 +110,21 @@ configsPath = os.path.join(modsPath, "configs")
 if not os.path.exists(configsPath):
     os.makedirs(configsPath)
 
-currentConfigPath = None
-
 
 def setCurrentConfigPath(configs_path):
-    global currentConfigPath
+    config_path = None
     for dir_name in os.listdir(configs_path):
         full_path = os.path.join(configs_path, dir_name)
         if os.path.isdir(full_path):
             if dir_name == CONFIG_DIR:
-                currentConfigPath = full_path
+                config_path = full_path
                 break
             else:
-                setCurrentConfigPath(full_path)
+                config_path = setCurrentConfigPath(full_path)
+    return config_path
 
 
-setCurrentConfigPath(configsPath)
+currentConfigPath = setCurrentConfigPath(configsPath)
 
 if currentConfigPath is None:
     currentConfigPath = os.path.join(configsPath, CONFIG_DIR)

@@ -45,38 +45,31 @@ package net.armagomen.battleobserver
 					{
 					case "Observer_TeamsHP_UI": 
 						var teamHealthUI:TeamsHealthUI = new TeamsHealthUI();
-						this.registerComponent(teamHealthUI, alias);
-						this.addChild(teamHealthUI);
+						this.registerComponent(this.addChild(teamHealthUI), alias);
 						break;
 					case "Observer_DamageLog_UI": 
 						var damageLog:DamageLogsUI = new DamageLogsUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL));
-						this.registerComponent(damageLog, alias);
-						this.addChild(damageLog);
+						this.registerComponent(this.addChild(damageLog), alias);
 						break;
 					case "Observer_MainGun_UI": 
 						var mainGun:MainGunUI = new MainGunUI();
-						this.registerComponent(mainGun, alias);
-						this.addChild(mainGun);
+						this.registerComponent(this.addChild(mainGun), alias);
 						break;
 					case "Observer_DebugPanel_UI": 
 						var debugPanel:ObserverDebugPanelUI = new ObserverDebugPanelUI();
-						this.registerComponent(debugPanel, alias);
-						this.addChild(debugPanel);
+						this.registerComponent(this.addChild(debugPanel), alias);
 						break;
 					case "Observer_DateTimes_UI": 
 						var dateTime:ObserverDateTimesUI = new ObserverDateTimesUI();
-						this.registerComponent(dateTime, alias);
-						this.addChild(dateTime);
+						this.registerComponent(this.addChild(dateTime), alias);
 						break;
 					case "Observer_BattleTimer_UI": 
 						var battleTimer:ObserverBattleTimerUI = new ObserverBattleTimerUI();
-						this.registerComponent(battleTimer, alias);
-						this.addChild(battleTimer);
+						this.registerComponent(this.addChild(battleTimer), alias);
 						break;
 					case "Observer_SixthSense_UI": 
 						var sixthSense:SixthSenseUI = new SixthSenseUI();
-						this.registerComponent(sixthSense, alias);
-						this.addChildAt(sixthSense, this.getChildIndex(this.getComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE)));
+						this.registerComponent(this.addChild(sixthSense), alias);
 						break;
 					case "Observer_TeamBases_UI": 
 						var teamBases:TeamBasesUI = new TeamBasesUI();
@@ -85,28 +78,23 @@ package net.armagomen.battleobserver
 						break;
 					case "Observer_ArmorCalculator_UI": 
 						var armorCalculator:ArmorCalculatorUI = new ArmorCalculatorUI();
-						this.registerComponent(armorCalculator, alias);
-						this.addChild(armorCalculator);
+						this.registerComponent(this.addChild(armorCalculator), alias);
 						break;
 					case "Observer_FlightTime_UI": 
 						var flightTime:FlightTimeUI = new FlightTimeUI();
-						this.registerComponent(flightTime, alias);
-						this.addChild(flightTime);
+						this.registerComponent(this.addChild(flightTime), alias);
 						break;
 					case "Observer_DispersionTimer_UI": 
 						var dispersionTimer:DispersionTimerUI = new DispersionTimerUI();
-						this.registerComponent(dispersionTimer, alias);
-						this.addChild(dispersionTimer);
+						this.registerComponent(this.addChild(dispersionTimer), alias);
 						break;
 					case "Observer_Distance_UI": 
 						var distance:DistanceUI = new DistanceUI();
-						this.registerComponent(distance, alias);
-						this.addChild(distance);
+						this.registerComponent(this.addChild(distance), alias);
 						break;
 					case "Observer_OwnHealth_UI": 
 						var ownHealth:OwnHealthUI = new OwnHealthUI();
-						this.registerComponent(ownHealth, alias);
-						this.addChild(ownHealth);
+						this.registerComponent(this.addChild(ownHealth), alias);
 						break;
 					case "Observer_PlayersPanels_UI": 
 						var playersPanel:PlayersPanelsUI = new PlayersPanelsUI(this);
