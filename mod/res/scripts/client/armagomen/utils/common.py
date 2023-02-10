@@ -20,6 +20,7 @@ from helpers.http import openUrl
 
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
+CONFIG_DIR = "mod_battle_observer"
 encoding = 'utf-8'
 
 
@@ -109,28 +110,28 @@ configsPath = os.path.join(modsPath, "configs")
 if not os.path.exists(configsPath):
     os.makedirs(configsPath)
 
+currentConfigPath = None
 
-def getConfigRecursive(configs_path):
+
+def setConfigRecursive(configs_path):
+    global currentConfigPath
     for dir_name in os.listdir(configs_path):
         full_path = os.path.join(configs_path, dir_name)
         if os.path.isdir(full_path):
-            if dir_name == "mod_battle_observer":
-                configs_path = full_path
+            if dir_name == CONFIG_DIR:
+                currentConfigPath = full_path
                 break
             else:
-                return getConfigRecursive(full_path)
-    return configs_path
+                setConfigRecursive(full_path)
 
 
-def getConfigPath(configs_path):
-    config_path = getConfigRecursive(configs_path)
-    if config_path == configs_path:
-        config_path = os.path.join(configsPath, "mod_battle_observer")
-        os.makedirs(config_path)
-    return config_path
+setConfigRecursive(configsPath)
 
+if currentConfigPath is None:
+    currentConfigPath = os.path.join(configsPath, CONFIG_DIR)
+    os.makedirs(currentConfigPath)
 
-currentConfigPath = getConfigPath(configsPath)
+logInfo(currentConfigPath)
 
 
 def cleanupUpdates():
