@@ -113,7 +113,7 @@ if not os.path.exists(configsPath):
 currentConfigPath = None
 
 
-def setConfigRecursive(configs_path):
+def setCurrentConfigPath(configs_path):
     global currentConfigPath
     for dir_name in os.listdir(configs_path):
         full_path = os.path.join(configs_path, dir_name)
@@ -122,10 +122,10 @@ def setConfigRecursive(configs_path):
                 currentConfigPath = full_path
                 break
             else:
-                setConfigRecursive(full_path)
+                setCurrentConfigPath(full_path)
 
 
-setConfigRecursive(configsPath)
+setCurrentConfigPath(configsPath)
 
 if currentConfigPath is None:
     currentConfigPath = os.path.join(configsPath, CONFIG_DIR)
