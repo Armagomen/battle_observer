@@ -15,23 +15,23 @@ class SettingsLoader(object):
 
     def __init__(self):
         self.errorMessages = []
+        self.configsList = sorted(
+            x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x))
+        )
         g_events.onHangarLoaded += self.onHangarLoaded
         load_json = os.path.join(currentConfigPath, 'load.json')
         if os.path.exists(load_json):
             self.configName = openJsonFile(load_json).get('loadConfig')
         else:
-            self.configName = 'ERROR_CreatedAutomatically_ERROR'
-            configPath = os.path.join(currentConfigPath, self.configName)
-            if not os.path.exists(configPath):
-                self.errorMessages.append('CONFIGURATION DIRS IS NOT FOUND, CREATE NEW')
-                os.makedirs(configPath)
+            self.configName = 'ERROR_DEFAULT'
+            config_path = os.path.join(currentConfigPath, self.configName)
+            if not os.path.exists(config_path):
+                self.errorMessages.append('CONFIGURATION FOLDER IS NOT FOUND, CREATE NEW')
+                os.makedirs(config_path)
             self.createLoadJSON(self.configName)
             self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
+            self.configsList.append(self.configName)
         self.readConfig()
-
-    @property
-    def configsList(self):
-        return sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
 
     def readOtherConfig(self, configID):
         self.configName = self.configsList[configID]
