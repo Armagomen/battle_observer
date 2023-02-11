@@ -128,7 +128,8 @@ currentConfigPath = setCurrentConfigPath(configsPath)
 
 if currentConfigPath is None:
     currentConfigPath = os.path.join(configsPath, CONFIG_DIR)
-    os.makedirs(currentConfigPath)
+    if not os.path.exists(currentConfigPath):
+        os.makedirs(currentConfigPath)
 
 logInfo(currentConfigPath)
 
