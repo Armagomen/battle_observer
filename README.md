@@ -2,8 +2,9 @@
 
 ### Офіційні ресурси
 
-* [Тема на форумі](https://koreanrandom.com/forum/topic/32939-)
-* [Канал на YouTube](https://www.youtube.com/channel/UCIksyJfDn5bOoig4iO7BKEA)
+* [Korean Random Forum](https://koreanrandom.com/forum/topic/32939-)
+* [WG Forum](https://forum.worldoftanks.eu/index.php?/topic/790600-battle-observer/)
+* [Канал на YouTube](https://youtube.com/channel/UCIksyJfDn5bOoig4iO7BKEA)
 * [DISCORD](https://discord.gg/Nma5T5snKW)
 
 ### Інформація
