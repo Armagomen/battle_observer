@@ -19,6 +19,7 @@
 		private var barColor:uint        = 0;
 		private var customColor:Boolean  = false;
 		private var animationTime:Number = 1.0;
+		private var barEnabled:Boolean   = true;
 		
 		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", time:Number = 1.0)
 		{
@@ -30,25 +31,33 @@
 			this.animationTime = time;
 			this.x = x;
 			this.y = y;
-			this.barColor = Utils.colorConvert(color);
-			this.background.graphics.beginFill(Utils.colorConvert(bgColor), Math.max(0.1, bgAlpha));
-			this.background.graphics.drawRect(0, 0, width, height);
-			this.background.graphics.endFill();
-			this.addChild(this.background);
-			this.bar.graphics.beginFill(this.barColor, Math.max(0.1, alpha));
-			this.bar.graphics.drawRect(0, 0, width, height);
-			this.bar.graphics.endFill();
-			if (filters != null)
+			if (width == 0 || height == 0)
 			{
-				this.bar.filters = filters;
+				this.barEnabled = false;
 			}
-			this.addChild(this.bar);
-			this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime);
+			else
+			{
+				this.barColor = Utils.colorConvert(color);
+				this.background.graphics.beginFill(Utils.colorConvert(bgColor), Math.max(0.1, bgAlpha));
+				this.background.graphics.drawRect(0, 0, width, height);
+				this.background.graphics.endFill();
+				this.addChild(this.background);
+				this.bar.graphics.beginFill(this.barColor, Math.max(0.1, alpha));
+				this.bar.graphics.drawRect(0, 0, width, height);
+				this.bar.graphics.endFill();
+				if (filters != null)
+				{
+					this.bar.filters = filters;
+				}
+				this.addChild(this.bar);
+				this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime);
+			}
+		
 		}
 		
 		public function setNewScale(newScale:Number):void
 		{
-			if (this.bar.scaleX != newScale)
+			if (this.barEnabled && this.bar.scaleX != newScale)
 			{
 				var scale:Number = Math.max(0, newScale);
 				if (this.animationTime > 0)
@@ -74,27 +83,40 @@
 		
 		public function setOutline(customColor:Boolean = false, color:String = "#000000", alpha:Number = 1.0, width:Number = 0, height:Number = 0):void
 		{
-			this.customColor = customColor;
-			this.outline.graphics.lineStyle(1, customColor ? Utils.colorConvert(color) : this.barColor, Math.max(0.2, alpha), true, LineScaleMode.NONE);
-			this.outline.graphics.drawRect(-1, -1, width + 1, height + 1);
-			this.addChild(this.outline);
+			if (this.barEnabled)
+			{
+				this.customColor = customColor;
+				this.outline.graphics.lineStyle(1, customColor ? Utils.colorConvert(color) : this.barColor, Math.max(0.2, alpha), true, LineScaleMode.NONE);
+				this.outline.graphics.drawRect(-1, -1, width + 1, height + 1);
+				this.addChild(this.outline);
+			}
 		}
 		
 		public function setVisible(vis:Boolean):void
 		{
-			var active:Boolean = vis && this.bar.scaleX > 0;
-			if (this.visible != active)
+			if (this.barEnabled)
 			{
-				this.visible = active;
+				var active:Boolean = vis && this.bar.scaleX > 0;
+				if (this.visible != active)
+				{
+					this.visible = active;
+				}
+			}
+			else
+			{
+				this.visible = vis;
 			}
 		}
 		
 		public function updateColor(hpColor:String):void
 		{
-			Utils.updateColor(this.bar, hpColor);
-			if (!this.customColor)
+			if (this.barEnabled)
 			{
-				Utils.updateColor(this.outline, hpColor);
+				Utils.updateColor(this.bar, hpColor);
+				if (!this.customColor)
+				{
+					Utils.updateColor(this.outline, hpColor);
+				}
 			}
 		}
 		
