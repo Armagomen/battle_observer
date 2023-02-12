@@ -53,15 +53,15 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         return self.colors[COLORS.GLOBAL][COLORS.ALLY_MAME]
 
     def createHealthBar(self, vehicleID, vInfoVO, isEnemy):
-        maxHealth = vInfoVO.vehicleType.maxHealth
+        max_health = vInfoVO.vehicleType.maxHealth
         if self.settings[PANELS.BAR_CLASS_COLOR]:
             color = self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][vInfoVO.vehicleType.classTag]
         else:
             color = self.getBarColor(isEnemy)
         visible = not self.settings[PANELS.ON_KEY_DOWN]
-        vehicleData = {VEHICLE.CUR: maxHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: 100}
+        vehicle_data = {VEHICLE.CUR: max_health, VEHICLE.MAX: max_health, VEHICLE.PERCENT: 100}
         self.as_addHealthBarS(vehicleID, color, self.colors[COLORS.GLOBAL], self.settings[PANELS.BAR_SETTINGS], visible)
-        self.as_updateHealthBarS(vehicleID, 100, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
+        self.as_updateHealthBarS(vehicleID, 100, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onAddedToStorage(self, vehicleID, isEnemy):
         """Called from flash after creation in as_AddVehIdToListS"""
@@ -86,10 +86,10 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if self.hpBarsEnable:
             if newHealth > maxHealth:
                 maxHealth = newHealth
-            healthPercent = normalizeHealthPercent(newHealth, maxHealth)
-            vehicleData = {VEHICLE.CUR: newHealth, VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: healthPercent}
-            self.as_updateHealthBarS(vehicleID, healthPercent, self.settings[PANELS.HP_TEMPLATE] % vehicleData)
+            health_percent = normalizeHealthPercent(newHealth, maxHealth)
+            vehicle_data = {VEHICLE.CUR: max(0, newHealth), VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: health_percent}
+            self.as_updateHealthBarS(vehicleID, health_percent, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onPlayerDamaged(self, attackerID, damage):
-        damageText = self.settings[PANELS.DAMAGES_TEMPLATE] % {PANELS.DAMAGE: damage}
-        self.as_updateDamageS(attackerID, damageText)
+        damage_text = self.settings[PANELS.DAMAGES_TEMPLATE] % {PANELS.DAMAGE: damage}
+        self.as_updateDamageS(attackerID, damage_text)

@@ -60,6 +60,7 @@ class DamageLog(DamageLogsMeta):
                                           **self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS])
         self.vehicle_icons = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_ICON][VEHICLE_TYPES.UNKNOWN],
                                          **self.vehicle_types[VEHICLE_TYPES.CLASS_ICON])
+        self.last_shell = defaultdict(lambda: (DAMAGE_LOG.NOT_SHELL, False))
 
     def _populate(self):
         super(DamageLog, self)._populate()
@@ -201,17 +202,20 @@ class DamageLog(DamageLogsMeta):
                 log_data.kills.add(targetID)
             self.updateExtendedLog(log_data)
 
-    @staticmethod
-    def checkShell(extra):
-        return getI18nShellName(extra.getShellType()), extra.isShellGold()
+    def checkShell(self, extra, target_id):
+        shell_type = extra.getShellType()
+        is_gold = extra.isShellGold()
+        if shell_type is not None:
+            self.last_shell[target_id] = (getI18nShellName(shell_type), is_gold)
+        return self.last_shell[target_id]
 
     def addToExtendedLog(self, e_type, target_id, extra):
         """add to log item"""
         log_data = self.getLogData(e_type)
         if target_id not in log_data.id_list:
             log_data.id_list.append(target_id)
-        if extra.isShot():
-            shell_name, gold = self._playerShell if log_data.is_player else self.checkShell(extra)
+        if extra.isShot() or extra.isFire():
+            shell_name, gold = self._playerShell if log_data.is_player else self.checkShell(extra, target_id)
         else:
             shell_name, gold = DAMAGE_LOG.NOT_SHELL, False
         logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, log_data.is_player)

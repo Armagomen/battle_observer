@@ -71,7 +71,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function updateHealth(percent:Number, text:String):void
 		{
-			if (this.healthBar)
+			if (this.healthBar && percent > 0)
 			{
 				this.healthBar.setNewScale(percent * 0.01);
 				this.healthBar.setText(text);

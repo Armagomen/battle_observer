@@ -127,8 +127,11 @@
 			this.background = null;
 			this.outline = null;
 			this.uiText = null;
-			this.animation.stop();
-			this.animation = null;
+			if (this.animation)
+			{
+				this.animation.stop();
+				this.animation = null;
+			}
 		}
 	}
 }
