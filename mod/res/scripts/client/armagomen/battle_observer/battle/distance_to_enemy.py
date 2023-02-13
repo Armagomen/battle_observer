@@ -77,15 +77,15 @@ class Distance(DistanceMeta):
 
     def updateDistance(self):
         distance = None
-        vehicleName = None
+        vehicle_name = None
         for entity in self.vehicles.itervalues():
             dist = getDistanceToTarget(entity)
             if distance is None or dist < distance:
                 distance = dist
-                vehicleName = entity.typeDescriptor.type.shortUserString
+                vehicle_name = entity.typeDescriptor.type.shortUserString
         if distance is None:
             return self.as_setDistanceS(GLOBAL.EMPTY_LINE)
-        self.macrosDict[DISTANCE.TANK_NAME] = vehicleName
+        self.macrosDict[DISTANCE.TANK_NAME] = vehicle_name
         self.macrosDict[DISTANCE.DIST] = distance
         self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
 

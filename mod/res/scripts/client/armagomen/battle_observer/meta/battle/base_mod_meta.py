@@ -63,8 +63,11 @@ class BaseModMeta(BaseDAAPIComponent):
         logDebug("battle module '{}' destroyed", self.getAlias())
 
     def isPostmortemSwitchedToAnotherVehicle(self):
-        observedVehID = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
-        return self.playerVehicleID != observedVehID
+        vehicle = self.sessionProvider.shared.vehicleState.getControllingVehicle()
+        if vehicle is not None:
+            return not vehicle.isPlayerVehicle
+        observed_veh_id = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
+        return 0 < observed_veh_id != self.playerVehicleID
 
     @property
     def playerVehicleID(self):
