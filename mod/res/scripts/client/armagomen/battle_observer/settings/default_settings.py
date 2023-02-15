@@ -104,8 +104,8 @@ class DefaultSettings(object):
             DEBUG_PANEL.TEXT: {
                 GLOBAL.X: 5,
                 GLOBAL.Y: GLOBAL.ZERO,
-                DEBUG_PANEL.TEMPLATE: ("<textformat tabstops='[75]'>FPS <font color='#E0E06D'><b>%(FPS)d</b></font>"
-                                       "<tab>PING <font color='%(PingLagColor)s'><b>%(PING)d</b></font></textformat>")
+                DEBUG_PANEL.TEMPLATE: "<textformat tabstops='[80]'>FPS <font color='%(fpsColor)s'><b>%(FPS)d</b></font>"
+                                      "<tab>PING <font color='%(pingColor)s'><b>%(PING)d</b></font></textformat>"
             },
             DEBUG_PANEL.GRAPHICS: {
                 GLOBAL.ENABLED: False,
