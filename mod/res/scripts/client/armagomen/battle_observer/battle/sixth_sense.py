@@ -17,11 +17,15 @@ elif language in ("ru", "be"):
 else:
     DEFAULT_MESSAGE = "Detected: {} sec."
 
+RADIO = 'improvedRadioCommunication'
+RADIO_DURATION = 2
+
 
 class SixthSense(SixthSenseMeta, SixthSenseTimer):
 
     def __init__(self):
         super(SixthSense, self).__init__()
+        self.radio_installed = False
 
     def _populate(self):
         super(SixthSense, self)._populate()
@@ -31,6 +35,9 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
+        optional_devices = self.sessionProvider.shared.optionalDevices
+        if optional_devices is not None:
+            optional_devices.onDescriptorDevicesChanged += self.onDevicesChanged
 
     def _dispose(self):
         self.destroyTimer()
@@ -38,11 +45,20 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated -= self._onVehicleStateUpdated
+        optional_devices = self.sessionProvider.shared.optionalDevices
+        if optional_devices is not None:
+            optional_devices.onDescriptorDevicesChanged -= self.onDevicesChanged
         super(SixthSense, self)._dispose()
+
+    def onDevicesChanged(self, devices):
+        self.radio_installed = RADIO in (device.groupName for device in devices if device is not None)
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY and value:
-            self.show(self.settings[SIXTH_SENSE.TIME])
+            time = self.settings[SIXTH_SENSE.TIME]
+            if self.radio_installed:
+                time -= RADIO_DURATION
+            self.show(time)
         elif state in _STATES_TO_HIDE:
             self.hide()
 
