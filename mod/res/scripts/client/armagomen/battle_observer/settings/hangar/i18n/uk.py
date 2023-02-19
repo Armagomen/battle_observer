@@ -40,10 +40,10 @@ localization = {
     "main": {
         "header": "Налаштування без категорії",
         "DEBUG_MODE": "DEBUG_MODE",
-        "anonymousEnableShow": "Позначити гравців з прихованим іменем",
+        "anonymousEnableShow": "Позначити гравців з прихованим нікнеймом",
         "anonymousEnableShow_tooltip":
             "Працює лише у випадку, якщо статистика гравців вимкнена. Заміняє нік та відмічає як team-killer",
-        "autoClearCache": "Очищувати кеш гри після виходу",
+        "autoClearCache": "Видаляти кеш після виходу з гри",
         "autoClearCache_tooltip": "Очищення тимчасових файлів гри у папці: AppData/Roaming/Wargaming.net/WorldOfTanks."
                                   "Налаштування модифікацій, які зберігаються у тому ж місці, залишаться.",
         "auto_crew_training": "Автоматичне перемикання 'Пришвидшеного навчання екіпажу'",
@@ -236,11 +236,11 @@ localization = {
         "bottom_enabled": "Детальна історія отриманої шкоди",
     },
     "main_gun": {
-        "header": "Налаштування - Основний калібр",
+        "header": "Налаштування медалі Основний калібр",
         "settings*x": "Позиція по горизонталі (від центру екрана)",
         "settings*y": "Позиція по вертикалі (від верхнього краю)",
-        "settings*align": "Вирівнювання:",
-        "settings*align_tooltip": "Вирівнювання:\nleft - зліва\ncenter - по центру\nright - справа"
+        "settings*align": "Вирівнювання тексту в полі:",
+        "settings*align_tooltip": "left - зліва\ncenter - по центру\nright - справа"
     },
     "team_bases_panel": {
         "header": "Налаштування індикатора захоплення бази",
@@ -252,12 +252,12 @@ localization = {
     },
     "vehicle_types": {
         "header": "Налаштування кольорів класів техніки",
-        "vehicleClassColors*AT-SPG": "ПТ-САУ",
-        "vehicleClassColors*SPG": "САУ",
+        "vehicleClassColors*AT-SPG": "ПТ-САУ (Протитанкові САУ)",
+        "vehicleClassColors*SPG": "САУ (Артилерія)",
         "vehicleClassColors*heavyTank": "Важкий танк",
         "vehicleClassColors*lightTank": "Легкий танк",
         "vehicleClassColors*mediumTank": "Середній танк",
-        "vehicleClassColors*unknown": "Невідомо (ГК)"
+        "vehicleClassColors*unknown": "Невідомо (Глобальна мапа)"
     },
     "players_panels": {
         "header": "Налаштування панелей зі списком гравців",

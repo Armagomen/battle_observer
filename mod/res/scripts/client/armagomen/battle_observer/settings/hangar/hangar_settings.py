@@ -125,7 +125,7 @@ class CreateElement(object):
         if result is not None:
             image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}' width='190' height='190'>"
             result.update({'options': [{'label': x[:-4], 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
-                           GLOBAL.WIDTH: 150})
+                           GLOBAL.WIDTH: 190})
         return result
 
     def createRadioButtonGroup(self, blockID, varName, options, value):
