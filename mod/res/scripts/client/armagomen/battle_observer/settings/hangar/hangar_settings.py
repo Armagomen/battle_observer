@@ -66,7 +66,7 @@ class Getter(object):
                 yield key_path
 
     def keyValueGetter(self, settings_block):
-        for key in sorted(self.getKeyPath(settings_block)):
+        for key in self.getKeyPath(settings_block):
             key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
             if GLOBAL.ENABLED != key:
                 dic, param = self.getLinkToParam(settings_block, key)
@@ -357,7 +357,7 @@ class SettingsInterface(CreateElement):
                        self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
-            columns = tuple(self.items(blockID, settings_block))
+            columns = sorted(self.items(blockID, settings_block), key=lambda x: x["text"])
             middle_index = (len(columns) + int(len(columns) % 2 != 0)) / 2
             column1 = columns[:middle_index]
             column2 = columns[middle_index:]

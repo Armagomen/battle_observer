@@ -305,7 +305,6 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             HP_BARS.STYLE: HP_BARS.STYLES.league,
             HP_BARS.WIDTH: 200,
-            HP_BARS.DIFF: True,
             HP_BARS.ALIVE: False,
             GLOBAL.OUTLINE: {
                 GLOBAL.ENABLED: True,

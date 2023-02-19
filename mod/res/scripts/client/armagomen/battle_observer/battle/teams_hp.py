@@ -92,8 +92,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
         self.as_updateHealthS(alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP)
-        if self.settings[HP_BARS.DIFF]:
-            self.as_differenceS(alliesHP - enemiesHP)
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         if self.showAliveCount:

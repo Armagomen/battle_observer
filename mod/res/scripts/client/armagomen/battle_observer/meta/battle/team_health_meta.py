@@ -10,9 +10,6 @@ class TeamHealthMeta(BaseModMeta):
         return self.flashObject.as_updateHealth(alliesHP, enemiesHP, totalAlliesHP,
                                                 totalEnemiesHP) if self._isDAAPIInited() else None
 
-    def as_differenceS(self, diff):
-        return self.flashObject.as_difference(diff) if self._isDAAPIInited() else None
-
     def as_updateScoreS(self, ally, enemy):
         return self.flashObject.as_updateScore(ally, enemy) if self._isDAAPIInited() else None
 

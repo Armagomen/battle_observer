@@ -174,7 +174,6 @@ localization = {
     "hp_bars": {
         "header": "Здоровье команд - Team Health",
         "barsWidth": "Ширина полос",
-        "differenceHP": "Показывать разницу между общим здоровьем команд",
         "showAliveCount": "Показывать на панели счета живых",
         "style": "Стиль панели",
         "outline*enabled": "Включить контур в стиле normal",

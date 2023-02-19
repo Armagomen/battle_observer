@@ -169,7 +169,6 @@ localization = {
     "hp_bars": {
         "header": "TOTAL HP PANEL",
         "barsWidth": "Width of strips HP",
-        "differenceHP": "Show the difference between the overall health of teams",
         "showAliveCount": "Show survivors on the panel",
         "style": "Style panel HP",
         "outline*enabled": "enabled outline in normal style",

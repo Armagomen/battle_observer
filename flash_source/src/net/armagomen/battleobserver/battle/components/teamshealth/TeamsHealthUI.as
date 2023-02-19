@@ -89,7 +89,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.score.setColorBlind(enabled);
 		}
 		
-		public function as_difference(param:int):void
+		private function difference(param:int):void
 		{
 			if (param < 0)
 			{
@@ -114,6 +114,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.hpBars.setBarScale(true, totalEnemiesHP > 0 ? Math.min(enemiesHP / totalEnemiesHP, 1.0) : 1.0);
 			this.greenText.text = alliesHP.toString();
 			this.redText.text = enemiesHP.toString();
+			this.difference(alliesHP - enemiesHP);
 		}
 		
 		public function as_updateScore(ally:int, enemy:int):void

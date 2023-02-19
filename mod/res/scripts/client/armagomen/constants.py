@@ -133,8 +133,8 @@ MINIMAP = namedtuple("MINIMAP", (
     "minimap", "permanentMinimapDeath", "showDeathNames", "zoom", "real_view_radius",
     "yaw_limits", "zoom_hotkey")
 
-HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "WIDTH", "DIFF", "ALIVE", "STYLES"))(
-    "hp_bars", "style", "barsWidth", "differenceHP", "showAliveCount",
+HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "WIDTH", "ALIVE", "STYLES"))(
+    "hp_bars", "style", "barsWidth", "showAliveCount",
     namedtuple("HpStyles", ("normal", "league"))("normal", "league"))
 
 CLOCK = namedtuple("CLOCK", (
