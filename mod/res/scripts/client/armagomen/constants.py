@@ -337,9 +337,9 @@ class PANELS:
 
 
 ANOTHER = namedtuple("ANOTHER", (
-    "CONFIG_SELECT", "SHADOW_SETTINGS", "FRIEND_LIST", "ACCOUNT_DBID", "USERS", "DBID", "BADGES", "IS_TEAM_KILLER",
+    "CONFIG_SELECT", "SHADOW_SETTINGS", "ACCOUNT_DBID", "USERS", "DBID", "BADGES", "IS_TEAM_KILLER",
     "NAME", "FAKE_NAME", "CLAN_DBID", "CLAN_ABBR"))(
-    "configSelect", "shadow_settings", "friendList", "accountDBID", "users", "databaseID", "badges", "isTeamKiller",
+    "configSelect", "shadow_settings", "accountDBID", "users", "databaseID", "badges", "isTeamKiller",
     "name", "fakeName", "clanDBID", "clanAbbrev")
 
 BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )

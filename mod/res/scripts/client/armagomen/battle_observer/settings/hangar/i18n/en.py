@@ -312,7 +312,6 @@ localization = {
         "y_tooltip": "Position from the center of the screen.",
         "spgOnly": "Display flight time only for artillery.",
         "template": "A string template with values. Macro: %(flightTime).1f , %(distance).1f",
-        "wgDistDisable": "Hide base distance in sight.",
         "align": "Text align."
     },
     "minimap": {

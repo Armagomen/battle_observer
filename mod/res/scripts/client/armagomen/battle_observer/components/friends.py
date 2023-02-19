@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
@@ -7,15 +9,16 @@ from gui.battle_control.arena_info.arena_vos import VehicleTypeInfoVO
 from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategories
 from messenger.storage import storage_getter
 
-_cache = {ANOTHER.FRIEND_LIST: set(), ANOTHER.ACCOUNT_DBID: GLOBAL.ZERO}
+Cache = namedtuple("Cache", "friends databaseID")
+_cache = Cache(set(), GLOBAL.ZERO)
 
 
 def onGuiCacheSyncCompleted(ctx):
     users = storage_getter(ANOTHER.USERS)().getList(_ContactsCategories().getCriteria())
-    for user in users:
-        if not user.isIgnored():
-            _cache[ANOTHER.FRIEND_LIST].add(user._userID)
-    _cache[ANOTHER.ACCOUNT_DBID] = ctx.get(ANOTHER.DBID, GLOBAL.ZERO)
+    friends = set(user for user in users if not user.isIgnored())
+    database_id = ctx.get(ANOTHER.DBID, GLOBAL.ZERO)
+    global _cache
+    _cache = Cache(friends, database_id)
 
 
 g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
@@ -25,11 +28,9 @@ g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
 def new_VehicleArenaInfoVO(init, vTypeVo, *args, **kwargs):
     if not viewSettings.gui.isInEpicRange() and settings.main[MAIN.SHOW_FRIENDS]:
         init(vTypeVo, *args, **kwargs)
-        if kwargs and _cache[ANOTHER.ACCOUNT_DBID] > GLOBAL.ZERO:
-            if not vTypeVo.isPremiumIGR and ANOTHER.ACCOUNT_DBID in kwargs:
-                friends = _cache[ANOTHER.FRIEND_LIST]
-                isPlayer = _cache[ANOTHER.ACCOUNT_DBID] == kwargs[ANOTHER.ACCOUNT_DBID]
-                vTypeVo.isPremiumIGR = kwargs[ANOTHER.ACCOUNT_DBID] in friends or isPlayer
+        if kwargs and _cache.databaseID > GLOBAL.ZERO and not vTypeVo.isPremiumIGR and ANOTHER.ACCOUNT_DBID in kwargs:
+            isPlayer = _cache.databaseID == kwargs[ANOTHER.ACCOUNT_DBID]
+            vTypeVo.isPremiumIGR = kwargs[ANOTHER.ACCOUNT_DBID] in _cache.friends or isPlayer
     else:
         return init(vTypeVo, *args, **kwargs)
 
