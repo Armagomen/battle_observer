@@ -168,6 +168,9 @@ class DAMAGE_LOG:
     D_LOG = "d_log"
     IN_LOG = "in_log"
 
+    D_LOG_ENABLED = "top_enabled"
+    IN_LOG_ENABLED = "bottom_enabled"
+
     ALL_DAMAGES = "allDamages"
     ATTACK_REASON = "attackReason"
     CLASS_COLOR = "tankClassColor"

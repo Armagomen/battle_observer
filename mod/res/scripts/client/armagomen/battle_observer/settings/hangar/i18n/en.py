@@ -231,7 +231,11 @@ localization = {
         "settings*y_tooltip": "Relatively damage panel.",
         "settings*align": "Alignment text:",
         "reverse": "Expand log",
-        "shellColor*gold": "configure macro %(shellColor)s - gold"
+        "reverse_tooltip": "Add a new line to the beginning of the story",
+        "shellColor*gold": "Color of premium shells",
+        "shellColor*normal": "Color of normal shells",
+        "top_enabled": "Detailed history of damage inflicted",
+        "bottom_enabled": "Detailed history of damage received",
     },
     "main_gun": {
         "header": "MAIN GUN",

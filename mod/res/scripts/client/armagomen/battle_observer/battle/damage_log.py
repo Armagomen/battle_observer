@@ -79,7 +79,10 @@ class DamageLog(DamageLogsMeta):
             self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
         self._is_extended_log_enabled = self.settings.log_extended[GLOBAL.ENABLED] and not self.gui.isEpicBattle()
         if self._is_extended_log_enabled:
-            self.as_createExtendedLogsS(self.settings.log_extended[GLOBAL.SETTINGS])
+            position = self.settings.log_extended[GLOBAL.SETTINGS]
+            top_enabled = self.settings.log_extended[DAMAGE_LOG.D_LOG_ENABLED]
+            bottom_enabled = self.settings.log_extended[DAMAGE_LOG.IN_LOG_ENABLED]
+            self.as_createExtendedLogsS(position, top_enabled, bottom_enabled)
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:

@@ -38,12 +38,12 @@ package net.armagomen.battleobserver.battle.components
 			this.top_log = new TextExt(settings.x, settings.y, Filters.largeText, settings.align, getShadowSettings(), this);
 		}
 		
-		public function as_createExtendedLogs(settings:Object):void
+		public function as_createExtendedLogs(position:Object, top_enabled:Boolean, bottom_enabled:Boolean):void
 		{
 			if (this.damageLogPanel)
 			{
-				this.d_log = new TextExt(settings.x + 35, settings.y, null, settings.align, getShadowSettings(), this.damageLogPanel._detailsTopContainer);
-				this.in_log = new TextExt(settings.x + 20, settings.y - 20, null, settings.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer);
+				this.d_log = new TextExt(position.x + 35, position.y, null, position.align, getShadowSettings(), this.damageLogPanel._detailsTopContainer, top_enabled);
+				this.in_log = new TextExt(position.x + 20, position.y - 20, null, position.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer, bottom_enabled);
 			}
 		}
 		

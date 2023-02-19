@@ -7,7 +7,7 @@
 
 	public class TextExt extends TextField
 	{
-		public function TextExt(x:Number, y:Number, style:TextFormat, align:String, shadowSettings:Object, ui:*)
+		public function TextExt(x:Number, y:Number, style:TextFormat, align:String, shadowSettings:Object, ui:*, enabled:Boolean=true)
 		{
 			super();
 			if (style == null){
@@ -22,6 +22,7 @@
 			this.filters = [new GlowFilter(Utils.colorConvert(shadowSettings.color), shadowSettings.alpha, shadowSettings.blurX, shadowSettings.blurY, shadowSettings.strength, BitmapFilterQuality.LOW, shadowSettings.inner, shadowSettings.knockout)];
 			this.selectable = false;
 			this.multiline = true;
+			this.visible = enabled;
 			ui.addChild(this);
 		}
 	}
