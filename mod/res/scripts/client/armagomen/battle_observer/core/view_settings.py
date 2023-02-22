@@ -173,7 +173,7 @@ class ViewSettings(object):
 
     def getComponentsConfig(self):
         config = ComponentsConfig()
-        for alias in self.__components:
+        for alias in self.__components.intersection(ALIAS_TO_CTRL.iterkeys()):
             config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
         config = config.getConfig()
         logDebug("viewSettings, getComponentsConfig: {}", config)
