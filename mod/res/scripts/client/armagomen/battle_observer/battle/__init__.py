@@ -2,7 +2,7 @@ from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlug
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, STATISTICS, VEHICLE_TYPES, ALIASES, GLOBAL, MINIMAP
+from armagomen.constants import SWF, STATISTICS, VEHICLE_TYPES, BATTLE_ALIASES, GLOBAL, MINIMAP
 from armagomen.utils.common import logError, logInfo, logDebug, callback, xvmInstalled
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -38,20 +38,20 @@ def getViewSettings():
     from armagomen.battle_observer.battle.sixth_sense import SixthSense
     from armagomen.battle_observer.battle.team_bases import TeamBases
     from armagomen.battle_observer.battle.teams_hp import TeamsHP
-    return (ComponentSettings(ALIASES.ARMOR_CALC, ArmorCalculator, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.TIMER, BattleTimer, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.DAMAGE_LOG, DamageLog, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.DEBUG, DebugPanel, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.DISPERSION_TIMER, DispersionTimer, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.DISTANCE, Distance, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.FLIGHT_TIME, FlightTime, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.MAIN_GUN, MainGun, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.OWN_HEALTH, OwnHealth, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.PANELS, PlayersPanels, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.SIXTH_SENSE, SixthSense, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.TEAM_BASES, TeamBases, ScopeTemplates.DEFAULT_SCOPE),
-            ComponentSettings(ALIASES.HP_BARS, TeamsHP, ScopeTemplates.DEFAULT_SCOPE))
+    return (ComponentSettings(BATTLE_ALIASES.ARMOR_CALC, ArmorCalculator, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.TIMER, BattleTimer, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.DAMAGE_LOG, DamageLog, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.DEBUG, DebugPanel, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.DISPERSION_TIMER, DispersionTimer, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.DISTANCE, Distance, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.FLIGHT_TIME, FlightTime, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.MAIN_GUN, MainGun, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.OWN_HEALTH, OwnHealth, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.PANELS, PlayersPanels, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.SIXTH_SENSE, SixthSense, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.TEAM_BASES, TeamBases, ScopeTemplates.DEFAULT_SCOPE),
+            ComponentSettings(BATTLE_ALIASES.HP_BARS, TeamsHP, ScopeTemplates.DEFAULT_SCOPE))
 
 
 def getBusinessHandlers():

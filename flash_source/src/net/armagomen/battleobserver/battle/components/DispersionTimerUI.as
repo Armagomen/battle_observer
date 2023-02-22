@@ -19,7 +19,7 @@ package net.armagomen.battleobserver.battle.components
 			if (this.dispersionTime == null)
 			{
 				var settings:Object = this.getSettings();
-				this.dispersionTime = new TextExt(settings.timer_position_x, settings.timer_position_y, Filters.middleText, settings.timer_align, this.getShadowSettings(), this);
+				this.dispersionTime = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, this.getShadowSettings(), this);
 			}
 		}
 		

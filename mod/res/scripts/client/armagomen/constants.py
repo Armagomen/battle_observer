@@ -256,12 +256,8 @@ DISPERSION = __Dispersion(
     "dispersion_circle", "extraServerLap", "scale", "useServerAim", 0.80, 5.0, 0.8, 16.0, -1.0
 )
 
-__DispersionTimer = namedtuple("dispersion_timer", (
-    "NAME", "TIMER_POSITION_X", "TIMER_POSITION_Y", "TIMER_COLOR", "TIMER_DONE_COLOR", "TIMER_DONE_TEMPLATE",
-    "TIMER_REGULAR_TEMPLATE", "TIMER_ALIGN"))
-DISPERSION_TIMER = __DispersionTimer(
-    "dispersion_timer", "x", "y", "color", "done_color", "done_template", "regular_template", "align"
-)
+__DispersionTimer = namedtuple("dispersion_timer", ("NAME", "DONE_COLOR", "DONE_TEMPLATE", "REGULAR_TEMPLATE"))
+DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "done_color", "done_template", "regular_template")
 
 DISPERSION_TIME = namedtuple("DISPERSION_TIME", ("TIMER", "PERCENT"))("timer", "percent")
 
@@ -285,7 +281,7 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
     "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE", "BASE_FONT", "FONT_SIZE", "HUNDRED"))(
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
-ALIASES = namedtuple("ALIASES", (
+BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
     "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC",
     "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "PANELS"))(
     "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_DebugPanel_UI",
@@ -293,16 +289,12 @@ ALIASES = namedtuple("ALIASES", (
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
     "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI")
 
-LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME", "AVG_DATA"))(
-    "Observer_DateTimes_UI", "Observer_AvgData_UI"
-)
+LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME", "AVG_DATA"))("Observer_DateTimes_UI", "Observer_AvgData_UI")
 
-DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "ALIGN", "DIST", "TANK_NAME"))(
-    "distance_to_enemy", "template", "align", "distance", "name")
+DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "DIST", "TANK_NAME"))("distance_to_enemy", "template",
+                                                                             "distance", "name")
 
-OWN_HEALTH = namedtuple("OWN_HEALTH", (
-    "NAME", "TEMPLATE", "ALIGN", "COLOR"))(
-    "own_health", "template", "align", "color")
+OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE"))("own_health", "template")
 
 STATISTICS = namedtuple("STATISTICS", (
     "NAME", "STATISTIC_ENABLED", "CHANGE_VEHICLE_COLOR",
@@ -434,18 +426,18 @@ class CONFIG_INTERFACE:
 
 
 ALIAS_TO_CONFIG_NAME = {
-    ALIASES.HP_BARS: HP_BARS.NAME,
-    ALIASES.DAMAGE_LOG: DAMAGE_LOG.NAME,
-    ALIASES.MAIN_GUN: MAIN_GUN.NAME,
-    ALIASES.DEBUG: DEBUG_PANEL.NAME,
-    ALIASES.TIMER: BATTLE_TIMER.NAME,
-    ALIASES.SIXTH_SENSE: SIXTH_SENSE.NAME,
-    ALIASES.TEAM_BASES: TEAM_BASES.NAME,
-    ALIASES.ARMOR_CALC: ARMOR_CALC.NAME,
-    ALIASES.FLIGHT_TIME: FLIGHT_TIME.NAME,
-    ALIASES.DISPERSION_TIMER: DISPERSION_TIMER.NAME,
-    ALIASES.PANELS: PANELS.PANELS_NAME,
-    ALIASES.DATE_TIME: CLOCK.NAME,
-    ALIASES.DISTANCE: DISTANCE.NAME,
-    ALIASES.OWN_HEALTH: OWN_HEALTH.NAME
+    BATTLE_ALIASES.HP_BARS: HP_BARS.NAME,
+    BATTLE_ALIASES.DAMAGE_LOG: DAMAGE_LOG.NAME,
+    BATTLE_ALIASES.MAIN_GUN: MAIN_GUN.NAME,
+    BATTLE_ALIASES.DEBUG: DEBUG_PANEL.NAME,
+    BATTLE_ALIASES.TIMER: BATTLE_TIMER.NAME,
+    BATTLE_ALIASES.SIXTH_SENSE: SIXTH_SENSE.NAME,
+    BATTLE_ALIASES.TEAM_BASES: TEAM_BASES.NAME,
+    BATTLE_ALIASES.ARMOR_CALC: ARMOR_CALC.NAME,
+    BATTLE_ALIASES.FLIGHT_TIME: FLIGHT_TIME.NAME,
+    BATTLE_ALIASES.DISPERSION_TIMER: DISPERSION_TIMER.NAME,
+    BATTLE_ALIASES.PANELS: PANELS.PANELS_NAME,
+    BATTLE_ALIASES.DATE_TIME: CLOCK.NAME,
+    BATTLE_ALIASES.DISTANCE: DISTANCE.NAME,
+    BATTLE_ALIASES.OWN_HEALTH: OWN_HEALTH.NAME
 }

@@ -92,13 +92,13 @@ class DefaultSettings(object):
         }
         self.dispersion_timer = {
             GLOBAL.ENABLED: False,
-            DISPERSION_TIMER.TIMER_POSITION_X: 110,
-            DISPERSION_TIMER.TIMER_POSITION_Y: GLOBAL.ZERO,
-            DISPERSION_TIMER.TIMER_ALIGN: GLOBAL.ALIGN_LIST.left,
-            DISPERSION_TIMER.TIMER_COLOR: "#f5ff8f",
-            DISPERSION_TIMER.TIMER_DONE_COLOR: "#a6ffa6",
-            DISPERSION_TIMER.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
-            DISPERSION_TIMER.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
+            GLOBAL.X: 110,
+            GLOBAL.Y: GLOBAL.ZERO,
+            GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left,
+            GLOBAL.COLOR: "#f5ff8f",
+            DISPERSION_TIMER.DONE_COLOR: "#a6ffa6",
+            DISPERSION_TIMER.REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
+            DISPERSION_TIMER.DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
         }
         self.debug_panel = {
             GLOBAL.ENABLED: False,

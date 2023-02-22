@@ -1,5 +1,5 @@
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, CLOCK, ALIASES, STATISTICS, FLIGHT_TIME, SWF
+from armagomen.constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, SWF
 from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, PageStates, _STATE_TO_UI
@@ -24,14 +24,25 @@ BATTLES_RANGE = (
 )
 
 ALIASES_TO_HIDE = (
-    (ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
-    (ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
-    (ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
-    (ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER),
-    (ALIASES.TEAM_BASES, BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)
+    (BATTLE_ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
+    (BATTLE_ALIASES.HP_BARS, BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR),
+    (BATTLE_ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
+    (BATTLE_ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER),
+    (BATTLE_ALIASES.TEAM_BASES, BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)
 )
 
-NEVER_HIDE_FL = (ALIASES.DEBUG, ALIASES.TIMER, ALIASES.DATE_TIME, ALIASES.SIXTH_SENSE)
+ALIAS_TO_CTRL = {
+    BATTLE_ALIASES.TEAM_BASES: BATTLE_CTRL_ID.TEAM_BASES,
+    BATTLE_ALIASES.HP_BARS: BATTLE_CTRL_ID.BATTLE_FIELD_CTRL,
+    BATTLE_ALIASES.PANELS: BATTLE_CTRL_ID.BATTLE_FIELD_CTRL,
+    BATTLE_ALIASES.MAIN_GUN: BATTLE_CTRL_ID.BATTLE_FIELD_CTRL,
+    BATTLE_ALIASES.DEBUG: BATTLE_CTRL_ID.DEBUG,
+    BATTLE_ALIASES.OWN_HEALTH: BATTLE_CTRL_ID.PREBATTLE_SETUPS_CTRL,
+    BATTLE_ALIASES.TIMER: BATTLE_CTRL_ID.ARENA_PERIOD,
+    BATTLE_ALIASES.DATE_TIME: BATTLE_CTRL_ID.ARENA_PERIOD,
+}
+
+NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE_TIME, BATTLE_ALIASES.SIXTH_SENSE)
 
 
 def registerBattleObserverPackages():
@@ -93,39 +104,39 @@ class ViewSettings(object):
         return settings.distance_to_enemy[GLOBAL.ENABLED]
 
     def getSetting(self, alias):
-        if alias is ALIASES.HP_BARS and not self.gui.isInEpicRange():
+        if alias is BATTLE_ALIASES.HP_BARS and not self.gui.isInEpicRange():
             return settings.hp_bars[GLOBAL.ENABLED]
-        elif alias is ALIASES.DAMAGE_LOG:
+        elif alias is BATTLE_ALIASES.DAMAGE_LOG:
             return settings.log_total[GLOBAL.ENABLED] or settings.log_extended[GLOBAL.ENABLED]
-        elif alias is ALIASES.MAIN_GUN and self.isRandomBattle():
+        elif alias is BATTLE_ALIASES.MAIN_GUN and self.isRandomBattle():
             return settings.main_gun[GLOBAL.ENABLED]
-        elif alias is ALIASES.DEBUG:
+        elif alias is BATTLE_ALIASES.DEBUG:
             return settings.debug_panel[GLOBAL.ENABLED]
-        elif alias is ALIASES.TIMER:
+        elif alias is BATTLE_ALIASES.TIMER:
             return settings.battle_timer[GLOBAL.ENABLED]
-        elif alias is ALIASES.SIXTH_SENSE:
+        elif alias is BATTLE_ALIASES.SIXTH_SENSE:
             return settings.sixth_sense[GLOBAL.ENABLED]
-        elif alias is ALIASES.TEAM_BASES and not self.gui.isInEpicRange():
+        elif alias is BATTLE_ALIASES.TEAM_BASES and not self.gui.isInEpicRange():
             return settings.team_bases_panel[GLOBAL.ENABLED]
-        elif alias is ALIASES.ARMOR_CALC:
+        elif alias is BATTLE_ALIASES.ARMOR_CALC:
             return settings.armor_calculator[GLOBAL.ENABLED]
-        elif alias is ALIASES.FLIGHT_TIME:
+        elif alias is BATTLE_ALIASES.FLIGHT_TIME:
             return self.isFlightTimeEnabled()
-        elif alias is ALIASES.DISPERSION_TIMER:
+        elif alias is BATTLE_ALIASES.DISPERSION_TIMER:
             return settings.dispersion_timer[GLOBAL.ENABLED]
-        elif alias is ALIASES.PANELS:
+        elif alias is BATTLE_ALIASES.PANELS:
             return self.isPlayersPanelsEnabled()
-        elif alias is ALIASES.DATE_TIME:
+        elif alias is BATTLE_ALIASES.DATE_TIME:
             return settings.clock[GLOBAL.ENABLED] and settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
-        elif alias is ALIASES.DISTANCE:
+        elif alias is BATTLE_ALIASES.DISTANCE:
             return self.isDistanceToEnemyEnabled()
-        elif alias is ALIASES.OWN_HEALTH:
+        elif alias is BATTLE_ALIASES.OWN_HEALTH:
             return settings.own_health[GLOBAL.ENABLED]
         return False
 
     def setComponents(self):
         if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
-            self.__components = {alias for alias in ALIASES if self.getSetting(alias)}
+            self.__components = {alias for alias in BATTLE_ALIASES if self.getSetting(alias)}
             if self.gui.isEpicBattle():
                 self.addInToEpicUI(True)
             self.__hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self.__components)
@@ -163,22 +174,7 @@ class ViewSettings(object):
     def getComponentsConfig(self):
         config = ComponentsConfig()
         for alias in self.__components:
-            if alias is ALIASES.TEAM_BASES:
-                config += ComponentsConfig(config=((BATTLE_CTRL_ID.TEAM_BASES, (ALIASES.TEAM_BASES,)),))
-            elif alias is ALIASES.HP_BARS:
-                config += ComponentsConfig(config=((BATTLE_CTRL_ID.BATTLE_FIELD_CTRL, (ALIASES.HP_BARS,)),))
-            elif alias is ALIASES.PANELS:
-                config += ComponentsConfig(config=((BATTLE_CTRL_ID.BATTLE_FIELD_CTRL, (ALIASES.PANELS,)),))
-            elif alias is ALIASES.MAIN_GUN:
-                config += ComponentsConfig(config=((BATTLE_CTRL_ID.BATTLE_FIELD_CTRL, (ALIASES.MAIN_GUN,)),))
-            elif alias is ALIASES.DEBUG:
-                config += ComponentsConfig(config=((BATTLE_CTRL_ID.DEBUG, (ALIASES.DEBUG,)),))
-            elif alias is ALIASES.OWN_HEALTH:
-                config += ComponentsConfig(config=((BATTLE_CTRL_ID.PREBATTLE_SETUPS_CTRL, (ALIASES.OWN_HEALTH,)),))
-            elif alias is ALIASES.TIMER:
-                config += ComponentsConfig(config=((BATTLE_CTRL_ID.ARENA_PERIOD, (ALIASES.TIMER,)),))
-            elif alias is ALIASES.DATE_TIME:
-                config += ComponentsConfig(config=((BATTLE_CTRL_ID.ARENA_PERIOD, (ALIASES.DATE_TIME,)),))
+            config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
         config = config.getConfig()
         logDebug("viewSettings, getComponentsConfig: {}", config)
         return config
