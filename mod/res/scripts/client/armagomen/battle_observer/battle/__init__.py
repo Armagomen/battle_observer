@@ -105,15 +105,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         flashObject.as_createStatisticComponent(self._iconsEnabled, self.statistics.itemsWTRData, cutWidth, fullWidth,
                                                 typeColors, iconMultiplier)
 
-    def delayLoading(self, view, components, hiddenComponents):
-        view._blToggling.update(components)
-        view.flashObject.as_observerCreateComponents(components)
-        view.flashObject.as_observerHideWgComponents(hiddenComponents)
-        if self.minimapPlugin is not None:
-            self.minimapPlugin.init(view.flashObject)
-        if not viewSettings.gui.isEpicBattle():
-            callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
-
     def onViewLoaded(self, view, *args):
         alias = view.getAlias()
         if alias not in VIEW_ALIASES:
@@ -124,6 +115,12 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{} {}, has ho attribute {}"
             return logError(to_format_str, alias, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        callback(0.2, self.delayLoading, view, viewSettings.components, viewSettings.hiddenComponents)
+        view._blToggling.update(viewSettings.components)
+        view.flashObject.as_observerCreateComponents(viewSettings.components)
+        view.flashObject.as_observerHideWgComponents(viewSettings.hiddenComponents)
+        if self.minimapPlugin is not None:
+            self.minimapPlugin.init(view.flashObject)
+        if not viewSettings.gui.isEpicBattle():
+            callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
         if self._iconsEnabled or self._statisticsEnabled:
-            callback(0.5, self.loadStatisticView, view.flashObject)
+            self.loadStatisticView(view.flashObject)

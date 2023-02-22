@@ -151,7 +151,7 @@ __Sniper = namedtuple("SNIPER", (
     "DISABLE_LATENCY", "SKIP_CLIP", "CLIP", "MIN_ZOOM"))
 SNIPER = __Sniper(
     "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zoomXMeters", "zooms",
-    "zoomExposure", "increasedZoom", [float(x) for x in xrange(2, 26, 2)], 0.1, 60, 730.0,
+    "zoomExposure", "increasedZoom", [float(x) for x in xrange(2, 26, 2)], 0.1, 60, 570.0,
     "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip", 2.0)
 
 

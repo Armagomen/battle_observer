@@ -13,7 +13,8 @@ from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
 from armagomen.utils.common import overrideMethod, logError, isReplay, callback
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 
-settingsCache = {"needReloadConfig": False, SNIPER.DYN_ZOOM: False}
+RELOAD = "reloadConfig"
+settingsCache = {RELOAD: False, SNIPER.DYN_ZOOM: False, SNIPER.METERS: 23.0}
 MinMax = namedtuple('MinMax', ('min', 'max'))
 
 
@@ -27,20 +28,20 @@ def sniper_readConfigs(base, camera, data):
         return
     if settings.effects[EFFECTS.NO_SNIPER_DYNAMIC] and camera.isCameraDynamic():
         camera.enableDynamicCamera(False)
+    if settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
+        steps = [step for step in settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] if step >= SNIPER.MIN_ZOOM]
+        if len(steps) > 3:
+            steps.sort()
+            configs = (camera._cfg, camera._userCfg, camera._baseCfg)
+            for cfg in configs:
+                cfg[SNIPER.INCREASED_ZOOM] = True
+                cfg[SNIPER.ZOOMS] = steps
+            exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
+            while len(steps) > len(exposure):
+                exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
     if settingsCache[SNIPER.DYN_ZOOM]:
         camera.setSniperZoomSettings(-1)
-    if not settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
-        return
-    steps = [step for step in settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] if step >= SNIPER.MIN_ZOOM]
-    if len(steps) > 3:
-        steps.sort()
-        configs = (camera._cfg, camera._userCfg, camera._baseCfg)
-        for cfg in configs:
-            cfg[SNIPER.INCREASED_ZOOM] = True
-            cfg[SNIPER.ZOOMS] = steps
-        exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
-        while len(steps) > len(exposure):
-            exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
+        settingsCache[SNIPER.METERS] = math.ceil(SNIPER.MAX_DIST / camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
@@ -53,7 +54,7 @@ def getSimilarStep(zoom, steps):
 
 
 def getZoom(distance, steps):
-    zoom = min(math.ceil(distance / settings.zoom[SNIPER.DYN_ZOOM][SNIPER.METERS]), steps[GLOBAL.LAST])
+    zoom = min(math.ceil(distance / settingsCache[SNIPER.METERS]), steps[GLOBAL.LAST])
     if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
         zoom = getSimilarStep(zoom, steps)
     if zoom < SNIPER.MIN_ZOOM:
@@ -66,7 +67,9 @@ def enable(base, camera, targetPos, saveZoom):
     if settingsCache[SNIPER.DYN_ZOOM]:
         saveZoom = True
         ownPosition = getOwnVehiclePosition()
-        distance = (targetPos - ownPosition).length if ownPosition is not None else 0.0
+        distance = (targetPos - ownPosition).length if ownPosition is not None else GLOBAL.ZERO
+        if distance > SNIPER.MAX_DIST:
+            distance = GLOBAL.ZERO
         camera._cfg[SNIPER.ZOOM] = getZoom(distance, camera._cfg[SNIPER.ZOOMS])
     return base(camera, targetPos, saveZoom)
 
@@ -102,7 +105,7 @@ def showTracer(base, avatar, shooterID, *args):
 
 def onModSettingsChanged(config, blockID):
     if blockID in (ARCADE.NAME, STRATEGIC.NAME):
-        settingsCache["needReloadConfig"] = True
+        settingsCache[RELOAD] = True
     elif blockID == SNIPER.NAME:
         settingsCache[SNIPER.DYN_ZOOM] = config[GLOBAL.ENABLED] and not isReplay() and \
                                          config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
@@ -115,7 +118,7 @@ settings.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(StrategicCamera, "_readConfigs")
 @overrideMethod(ArtyCamera, "_readConfigs")
 def reload_configs(base, camera, dataSection):
-    if settingsCache["needReloadConfig"]:
+    if settingsCache[RELOAD]:
         camera._baseCfg.clear()
         camera._userCfg.clear()
         camera._cfg.clear()
@@ -136,7 +139,7 @@ def arcade_readConfigs(base, camera, *args, **kwargs):
             cfg = camera._userCfg
             cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
             cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
-    settingsCache["needReloadConfig"] = False
+    settingsCache[RELOAD] = False
 
 
 @overrideMethod(ArcadeCamera, "__updateProperties")
@@ -155,4 +158,4 @@ def arty_readConfigs(base, camera, *args, **kwargs):
         cfg = camera._baseCfg
         cfg[STRATEGIC.DIST_RANGE] = (settings.strategic_camera[STRATEGIC.MIN], settings.strategic_camera[STRATEGIC.MAX])
         cfg[STRATEGIC.SCROLL_SENSITIVITY] = settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
-    settingsCache["needReloadConfig"] = False
+    settingsCache[RELOAD] = False

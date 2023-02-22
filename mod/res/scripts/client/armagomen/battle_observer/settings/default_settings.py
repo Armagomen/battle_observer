@@ -174,7 +174,7 @@ class DefaultSettings(object):
             SNIPER.DYN_ZOOM: {
                 GLOBAL.ENABLED: False,
                 SNIPER.STEPS_ONLY: True,
-                SNIPER.METERS: 20.0
+                # SNIPER.METERS: 20.0
             },
             SNIPER.ZOOM_STEPS: {
                 GLOBAL.ENABLED: False,

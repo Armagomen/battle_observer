@@ -41,6 +41,10 @@ package net.armagomen.battleobserver
 			{
 				for each (var alias:String in aliases)
 				{
+					if (this.isFlashComponentRegisteredS(alias))
+					{
+						continue;
+					}
 					switch (alias)
 					{
 					case "Observer_TeamsHP_UI": 
