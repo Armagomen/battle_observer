@@ -100,19 +100,22 @@ localization = {
         "panels_cut_width": "Player Name Field Width - Small Ears"
     },
     "dispersion_circle": {
-        "header": "Real circle scatter guns (reduction)",
-        "circle_enabled": "Improved crosshair.",
-        "circle_extraServerLap": "Display server scatter circle.",
-        "circle_extraServerLap_tooltip": "Adds a second circle of server crosshair.",
-        "circle_replaceOriginalCircle": "Replace Original Circle.",
-        "circle_scale": "Circle size multiplier, 30-100% (0.3-1.0)",
-        "circle_scale_tooltip": "It is not recommended to set the value below 65.",
-        "timer_enabled": "Turn on the reduction timer.",
-        "timer_position_x": "Timer position X",
-        "timer_position_y": "Timer position Y",
-        "timer_color": "Timer color, not yet converged.",
-        "timer_done_color": "Timer / message color (full reduction).",
-        "timer_align": "Text align."
+        "header": "Setting the collapsing circle, server sight",
+        "extraServerLap": "Enable server scope (extra lap)",
+        "extraServerLap_tooltip": "Enabling the feature will create an extra server lapping circle.",
+        "scale": "Circle size multiplier 30-100% (0.3-1.0)",
+        "scale_tooltip": "This parameter affects what the additional summation circle will be in the result."
+                         "If the value is 0.3 (30%), then the circle will be the minimum possible, "
+                         "and at 1.0 (100%) - the maximum, i.e. without changes."
+                         "It is not recommended to set a value lower than 65%."
+    },
+    "dispersion_timer": {
+        "header": "Setting the build timer",
+        "x": "Horizontal position",
+        "y": "Vertical position",
+        "color": "Color: Not aggregated",
+        "done_color": "Color: Done",
+        "align": "Text alignment"
     },
     "tank_carousel": {
         "header": "TANK CAROUSEL SETUP",

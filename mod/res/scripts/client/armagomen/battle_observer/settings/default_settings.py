@@ -6,6 +6,7 @@ from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS,
     FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
     SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES, DISTANCE, OWN_HEALTH, STATISTICS, AVG_EFFICIENCY_HANGAR,
+    DISPERSION_TIMER
 )
 from constants import ATTACK_REASON, ATTACK_REASONS
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -86,18 +87,18 @@ class DefaultSettings(object):
         }
         self.dispersion_circle = {
             GLOBAL.ENABLED: False,
-            DISPERSION.ENABLED: False,
             DISPERSION.CIRCLE_EXTRA_LAP: False,
-            DISPERSION.CIRCLE_REPLACE: False,
             DISPERSION.CIRCLE_SCALE_CONFIG: DISPERSION.SCALE,
-            DISPERSION.TIMER_ENABLED: False,
-            DISPERSION.TIMER_POSITION_X: 110,
-            DISPERSION.TIMER_POSITION_Y: GLOBAL.ZERO,
-            DISPERSION.TIMER_ALIGN: GLOBAL.ALIGN_LIST.left,
-            DISPERSION.TIMER_COLOR: "#f5ff8f",
-            DISPERSION.TIMER_DONE_COLOR: "#a6ffa6",
-            DISPERSION.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
-            DISPERSION.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
+        }
+        self.dispersion_timer = {
+            GLOBAL.ENABLED: False,
+            DISPERSION_TIMER.TIMER_POSITION_X: 110,
+            DISPERSION_TIMER.TIMER_POSITION_Y: GLOBAL.ZERO,
+            DISPERSION_TIMER.TIMER_ALIGN: GLOBAL.ALIGN_LIST.left,
+            DISPERSION_TIMER.TIMER_COLOR: "#f5ff8f",
+            DISPERSION_TIMER.TIMER_DONE_COLOR: "#a6ffa6",
+            DISPERSION_TIMER.TIMER_REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
+            DISPERSION_TIMER.TIMER_DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
         }
         self.debug_panel = {
             GLOBAL.ENABLED: False,

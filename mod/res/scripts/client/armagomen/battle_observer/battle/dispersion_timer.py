@@ -2,7 +2,7 @@ from collections import defaultdict
 from math import log, ceil
 
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
-from armagomen.constants import DISPERSION, GLOBAL, POSTMORTEM, DISPERSION_TIME
+from armagomen.constants import GLOBAL, POSTMORTEM, DISPERSION_TIME, DISPERSION_TIMER
 from armagomen.utils.common import logDebug
 from armagomen.utils.events import g_events
 from gui.battle_control.avatar_getter import getInputHandler
@@ -18,8 +18,8 @@ class DispersionTimer(DispersionTimerMeta):
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
-        self.macro.update(color=self.settings[DISPERSION.TIMER_COLOR],
-                          color_done=self.settings[DISPERSION.TIMER_DONE_COLOR])
+        self.macro.update(color=self.settings[DISPERSION_TIMER.TIMER_COLOR],
+                          color_done=self.settings[DISPERSION_TIMER.TIMER_DONE_COLOR])
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -58,5 +58,5 @@ class DispersionTimer(DispersionTimerMeta):
         self.macro[DISPERSION_TIME.TIMER] = round(aimingTime, GLOBAL.TWO) * log(dispersionAngle / self.min_angle)
         percent = int(ceil(self.min_angle / dispersionAngle * 100))
         self.macro[DISPERSION_TIME.PERCENT] = percent
-        template = DISPERSION.TIMER_REGULAR_TEMPLATE if percent < 100 else DISPERSION.TIMER_DONE_TEMPLATE
+        template = DISPERSION_TIMER.TIMER_REGULAR_TEMPLATE if percent < 100 else DISPERSION_TIMER.TIMER_DONE_TEMPLATE
         self.as_updateTimerTextS(self.settings[template] % self.macro)

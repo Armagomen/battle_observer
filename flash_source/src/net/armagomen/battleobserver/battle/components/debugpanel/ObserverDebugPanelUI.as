@@ -15,10 +15,9 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var graphEnabled:Boolean   = false;
 		private var fpsBarEnabled:Boolean  = false;
 		private var pingBarEnabled:Boolean = false;
-		private var maxFps:int             = 200;
+		private var maxFps:int             = 30;
 		
-		public var isVerticalSync:Function;
-		public var getRefreshRate:Function;
+		private const MAX_PING:int         = 200;
 		
 		public function ObserverDebugPanelUI()
 		{
@@ -39,10 +38,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 					
 					if (this.fpsBarEnabled)
 					{
-						if (this.isVerticalSync())
-						{
-							this.maxFps = this.getRefreshRate();
-						}
 						var fps:Object       = settings.debugGraphics.fpsBar;
 						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
 						this.fpsBar = new ProgressBar(fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0);
@@ -89,11 +84,15 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				{
 					if (this.fpsBarEnabled)
 					{
+						if (fps > this.maxFps)
+						{
+							this.maxFps = fps;
+						}
 						fpsBar.setNewScale(fps / this.maxFps);
 					}
 					if (this.pingBarEnabled)
 					{
-						pingBar.setNewScale(1.0 - ping / 200);
+						pingBar.setNewScale(1.0 - ping / this.MAX_PING);
 					}
 				}
 			}

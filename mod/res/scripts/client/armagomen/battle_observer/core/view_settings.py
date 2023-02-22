@@ -1,5 +1,5 @@
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, CLOCK, ALIASES, DISPERSION, STATISTICS, FLIGHT_TIME, SWF
+from armagomen.constants import GLOBAL, CLOCK, ALIASES, STATISTICS, FLIGHT_TIME, SWF
 from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, PageStates, _STATE_TO_UI
@@ -112,7 +112,7 @@ class ViewSettings(object):
         elif alias is ALIASES.FLIGHT_TIME:
             return self.isFlightTimeEnabled()
         elif alias is ALIASES.DISPERSION_TIMER:
-            return settings.dispersion_circle[GLOBAL.ENABLED] and settings.dispersion_circle[DISPERSION.TIMER_ENABLED]
+            return settings.dispersion_timer[GLOBAL.ENABLED]
         elif alias is ALIASES.PANELS:
             return self.isPlayersPanelsEnabled()
         elif alias is ALIASES.DATE_TIME:
