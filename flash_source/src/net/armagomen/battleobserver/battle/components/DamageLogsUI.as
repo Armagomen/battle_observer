@@ -14,7 +14,7 @@ package net.armagomen.battleobserver.battle.components
 		private var d_log:TextExt            = null;
 		private var in_log:TextExt           = null;
 		private var top_log:TextExt          = null;
-		private const D_LOG:String           = "d_log";
+		private const DAMAGE_DONE:int        = 0;
 		
 		public function DamageLogsUI(dlPanel:*)
 		{
@@ -22,7 +22,7 @@ package net.armagomen.battleobserver.battle.components
 			this.damageLogPanel = dlPanel;
 		}
 		
-		override protected function onBeforeDispose():void 
+		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
 			this.removeChildren();
@@ -52,9 +52,9 @@ package net.armagomen.battleobserver.battle.components
 			this.top_log.htmlText = text;
 		}
 		
-		public function as_updateExtendedLog(target:String, text:String):void
+		public function as_updateExtendedLog(log_id:int, text:String):void
 		{
-			if (target == D_LOG)
+			if (log_id == this.DAMAGE_DONE)
 			{
 				this.d_log.htmlText = text;
 			}

@@ -28,6 +28,9 @@ class BaseModMeta(BaseDAAPIComponent):
     def gui(self):
         return self.sessionProvider.arenaVisitor.gui
 
+    def isSPG(self):
+        return self.sessionProvider.getArenaDP().getVehicleInfo().isSPG()
+
     @staticmethod
     def getShadowSettings():
         return settings.shadow_settings

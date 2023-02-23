@@ -257,8 +257,8 @@ class DefaultSettings(object):
         self.log_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
-            DAMAGE_LOG.D_LOG_ENABLED: True,
-            DAMAGE_LOG.IN_LOG_ENABLED: True,
+            DAMAGE_LOG.D_DONE_ENABLED: True,
+            DAMAGE_LOG.D_RECEIVED_ENABLED: True,
             GLOBAL.SETTINGS: {
                 GLOBAL.X: 0,
                 GLOBAL.Y: 0,

@@ -4,7 +4,7 @@ import random
 
 from armagomen.constants import IMG, getLogo, URLS, CLAN_ABBREV
 from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod
-from constants import AUTH_REALM
+# from constants import AUTH_REALM
 from gui.SystemMessages import SM_TYPE, pushMessage
 from gui.shared import event_dispatcher
 from gui.shared.ClanCache import g_clanCache
@@ -70,8 +70,8 @@ class Donate(object):
                 self.timeDelta = currentTime + datetime.timedelta(minutes=60)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
-                if g_clanCache.clanAbbrev is None and AUTH_REALM == "EU":
-                    pushMessage(self.getClanMessage(), type=SM_TYPE.Warning)
+                # if g_clanCache.clanAbbrev is None and AUTH_REALM == "EU":
+                #     pushMessage(self.getClanMessage(), type=SM_TYPE.Warning)
 
 
 Donate()

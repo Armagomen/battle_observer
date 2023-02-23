@@ -163,13 +163,11 @@ class DAMAGE_LOG:
     TOP_LOG = "log_total"
     WG_LOGS_FIX = "wg_logs"
 
-    MAIN_LOG = "main"
     EXTENDED = "log_extended"
-    D_LOG = "d_log"
-    IN_LOG = "in_log"
+    D_DONE, D_RECEIVED = (0, 1)
 
-    D_LOG_ENABLED = "top_enabled"
-    IN_LOG_ENABLED = "bottom_enabled"
+    D_DONE_ENABLED = "top_enabled"
+    D_RECEIVED_ENABLED = "bottom_enabled"
 
     ALL_DAMAGES = "allDamages"
     ATTACK_REASON = "attackReason"
