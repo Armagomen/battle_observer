@@ -101,6 +101,7 @@ localization = {
     },
     "dispersion_circle": {
         "header": "Setting the collapsing circle, server sight",
+        "replaceOriginalCircle": "Replace Original Circle.",
         "extraServerLap": "Enable server scope (extra lap)",
         "extraServerLap_tooltip": "Enabling the feature will create an extra server lapping circle.",
         "scale": "Circle size multiplier 30-100% (0.3-1.0)",

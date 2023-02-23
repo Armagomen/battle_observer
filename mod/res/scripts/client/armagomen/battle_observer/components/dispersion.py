@@ -59,17 +59,21 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
 class _GunMarkersDecorator(gun_marker_ctrl._GunMarkersDecorator):
 
-    def __init__(self, clientMarker, serverMarker, extraServerLap):
+    def __init__(self, clientMarker, serverMarker, replaceOriginalCircle, extraServerLap):
         super(_GunMarkersDecorator, self).__init__(clientMarker, serverMarker)
         self.__extraServerLap = extraServerLap
+        self.__replaceOriginalCircle = replaceOriginalCircle
 
     def update(self, markerType, position, direction, size, relaxTime, collData):
-        if markerType == CLIENT:
-            self.__updateClient(position, direction, size, relaxTime, collData)
-            if not self.__extraServerLap:
+        if self.__replaceOriginalCircle:
+            super(_GunMarkersDecorator, self).update(markerType, position, direction, size, relaxTime, collData)
+        else:
+            if markerType == CLIENT:
+                self.__updateClient(position, direction, size, relaxTime, collData)
+                if not self.__extraServerLap:
+                    self.__updateServer(position, direction, size, relaxTime, collData)
+            elif markerType == SERVER and self.__extraServerLap:
                 self.__updateServer(position, direction, size, relaxTime, collData)
-        elif markerType == SERVER and self.__extraServerLap:
-            self.__updateServer(position, direction, size, relaxTime, collData)
 
     def __updateClient(self, position, direction, size, relaxTime, collData):
         self.__clientState = (position, direction, collData)
@@ -114,6 +118,8 @@ class DispersionCircle(object):
 
     def __init__(self):
         self.enabled = False
+        self.hooksEnable = False
+        self.replaceWGCircle = False
         self.extraServerLap = False
         settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
@@ -129,7 +135,7 @@ class DispersionCircle(object):
 
     def createOverrideComponents(self, base, *args):
         player = getPlayer()
-        if not self.enabled or player is None:
+        if not self.hooksEnable or player is None:
             return base(*args)
         player.base.setDevelopmentFeature(GLOBAL.ZERO, 'server_marker', True, '')
         if base.__name__ == self.CREATE:
@@ -137,17 +143,17 @@ class DispersionCircle(object):
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
 
     def useDefaultGunMarkers(self, base, *args, **kwargs):
-        return not self.enabled or base(*args, **kwargs)
+        return not self.hooksEnable or base(*args, **kwargs)
 
     def useGunMarker(self, base, *args, **kwargs):
-        return self.enabled or base(*args, **kwargs)
+        return self.hooksEnable or base(*args, **kwargs)
 
     def applySettings(self, base, *args, **kwargs):
-        return None if self.enabled else base(*args, **kwargs)
+        return None if self.hooksEnable else base(*args, **kwargs)
 
     def setShotPosition(self, base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
         base(rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
-        if not self.enabled:
+        if not self.hooksEnable:
             return
         ePos, mDir, mSize, imSize, collData = \
             rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
@@ -155,17 +161,19 @@ class DispersionCircle(object):
         # rotator._VehicleGunRotator__lastShotPoint = ePos
 
     def onServerGunMarkerStateChanged(self, base, *args, **kwargs):
-        return base(*args, **kwargs) if not self.enabled else None
+        return base(*args, **kwargs) if not self.hooksEnable else None
 
     def setGunMarkerColor(self, base, cr_panel, markerType, color):
-        if self.enabled and markerType == CLIENT:
+        if self.hooksEnable and markerType == CLIENT:
             base(cr_panel, SERVER, color)
         return base(cr_panel, markerType, color)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION.NAME:
-            self.extraServerLap = config[DISPERSION.CIRCLE_EXTRA_LAP]
             self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
+            self.extraServerLap = config[DISPERSION.CIRCLE_EXTRA_LAP]
+            self.replaceWGCircle = False if self.extraServerLap else config[DISPERSION.CIRCLE_REPLACE]
+            self.hooksEnable = self.enabled and (not self.replaceWGCircle or self.extraServerLap)
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if not self.enabled:
@@ -173,12 +181,18 @@ class DispersionCircle(object):
         bo_factory = BOGunMarkersDPFactory()
         wg_factory = gun_marker_ctrl._GunMarkersDPFactory()
         if isStrategic:
-            client = gun_marker_ctrl._SPGGunMarkerController(CLIENT, wg_factory.getClientSPGProvider())
+            if self.replaceWGCircle:
+                client = SPGController(CLIENT, bo_factory.getClientSPGProvider())
+            else:
+                client = gun_marker_ctrl._SPGGunMarkerController(CLIENT, wg_factory.getClientSPGProvider())
             server = SPGController(SERVER, bo_factory.getServerSPGProvider())
         else:
-            client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, wg_factory.getClientProvider())
+            if self.replaceWGCircle:
+                client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
+            else:
+                client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, wg_factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
-        return _GunMarkersDecorator(client, server, self.extraServerLap)
+        return _GunMarkersDecorator(client, server, self.replaceWGCircle, self.extraServerLap)
 
 
 dispersion_circle = DispersionCircle()

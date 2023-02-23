@@ -251,9 +251,9 @@ SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
 
 __Dispersion = namedtuple("DISPERSION", (
     "NAME", "CIRCLE_EXTRA_LAP", "CIRCLE_SCALE_CONFIG", "CIRCLE_SERVER", "SCALE", "MAX_TIME", "SPG_GM_SCALE",
-    "GUN_MARKER_MIN_SIZE", "MINUS_ONE_F"))
+    "GUN_MARKER_MIN_SIZE", "MINUS_ONE_F", "CIRCLE_REPLACE"))
 DISPERSION = __Dispersion(
-    "dispersion_circle", "extraServerLap", "scale", "useServerAim", 0.80, 5.0, 0.8, 16.0, -1.0
+    "dispersion_circle", "extraServerLap", "scale", "useServerAim", 0.80, 5.0, 0.8, 16.0, -1.0, "replaceOriginalCircle"
 )
 
 __DispersionTimer = namedtuple("dispersion_timer", ("NAME", "DONE_COLOR", "DONE_TEMPLATE", "REGULAR_TEMPLATE"))

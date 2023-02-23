@@ -88,6 +88,7 @@ class DefaultSettings(object):
         self.dispersion_circle = {
             GLOBAL.ENABLED: False,
             DISPERSION.CIRCLE_EXTRA_LAP: False,
+            DISPERSION.CIRCLE_REPLACE: False,
             DISPERSION.CIRCLE_SCALE_CONFIG: DISPERSION.SCALE,
         }
         self.dispersion_timer = {
