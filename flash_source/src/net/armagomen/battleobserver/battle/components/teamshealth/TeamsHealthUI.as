@@ -27,28 +27,25 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			if (this.hpBars == null)
+			var settings:Object = this.getSettings();
+			this.colors = this.getColors().global;
+			this.x = App.appWidth >> 1;
+			var shadowSettings:Object = getShadowSettings();
+			var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
+			this.hpBars = this.createHpBars(settings, barWidth);
+			var isLeague:Boolean = settings.style == "league";
+			var textXpos:Number  = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
+			this.addChild(this.hpBars);
+			this.greenText = new TextExt(-textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
+			this.redText = new TextExt(textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
+			this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, shadowSettings, this);
+			this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, shadowSettings, this);
+			this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
+			this.addChild(this.score);
+			if (settings.markers.enabled)
 			{
-				var settings:Object = this.getSettings();
-				this.colors = this.getColors().global;
-				this.x = App.appWidth >> 1;
-				var shadowSettings:Object = getShadowSettings();
-				var barWidth:Number       = Math.max(settings.barsWidth, 150.0);
-				this.hpBars = this.createHpBars(settings, barWidth);
-				var isLeague:Boolean = this.hpBars as League;
-				var textXpos:Number  = !isLeague ? 50 + (barWidth / 2) : 20 + barWidth;
-				this.addChild(this.hpBars);
-				this.greenText = new TextExt(-textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.LEFT, shadowSettings, this);
-				this.redText = new TextExt(textXpos, 1, Filters.middleText, !isLeague ? TextFieldAutoSize.CENTER : TextFieldAutoSize.RIGHT, shadowSettings, this);
-				this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, shadowSettings, this);
-				this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, shadowSettings, this);
-				this.score = new Score(shadowSettings, this.isColorBlind(), this.colors, settings.style);
-				this.addChild(this.score);
-				if (settings.markers.enabled)
-				{
-					this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
-					this.addChild(this.markers);
-				}
+				this.markers = new Markers(settings.markers, shadowSettings, this.getAlpha());
+				this.addChild(this.markers);
 			}
 		}
 		

@@ -23,6 +23,7 @@
 			this.selectable = false;
 			this.multiline = true;
 			this.visible = enabled;
+			this.htmlText = "";
 			ui.addChild(this);
 		}
 	}

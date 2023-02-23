@@ -19,11 +19,8 @@
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
-			if (this.battleTimer == null)
-			{
-				this.x = App.appWidth;
-				this.battleTimer = new TextExt(-8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this.getShadowSettings(), this);
-			}
+			this.x = App.appWidth;
+			this.battleTimer = new TextExt(-8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this.getShadowSettings(), this);
 		}
 		
 		override protected function onBeforeDispose():void 

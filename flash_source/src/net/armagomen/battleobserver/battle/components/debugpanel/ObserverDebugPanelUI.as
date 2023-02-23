@@ -27,33 +27,30 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			if (this.debugText == null)
+			var settings:Object = this.getSettings();
+			this.graphEnabled = Boolean(settings.debugGraphics.enabled);
+			if (this.graphEnabled)
 			{
-				var settings:Object = this.getSettings();
-				this.graphEnabled = Boolean(settings.debugGraphics.enabled);
-				if (this.graphEnabled)
+				this.fpsBarEnabled = Boolean(settings.debugGraphics.fpsBar.enabled);
+				this.pingBarEnabled = Boolean(settings.debugGraphics.pingBar.enabled);
+				
+				if (this.fpsBarEnabled)
 				{
-					this.fpsBarEnabled = Boolean(settings.debugGraphics.fpsBar.enabled);
-					this.pingBarEnabled = Boolean(settings.debugGraphics.pingBar.enabled);
-					
-					if (this.fpsBarEnabled)
-					{
-						var fps:Object       = settings.debugGraphics.fpsBar;
-						var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
-						this.fpsBar = new ProgressBar(fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0);
-						this.addChild(this.fpsBar);
-					}
-					
-					if (this.pingBarEnabled)
-					{
-						var ping:Object       = settings.debugGraphics.pingBar;
-						var pingfilters:Array = [Filters.handleGlowFilter(ping.glowFilter)];
-						this.pingBar = new ProgressBar(ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0);
-						this.addChild(this.pingBar);
-					}
+					var fps:Object       = settings.debugGraphics.fpsBar;
+					var fpsfilters:Array = [Filters.handleGlowFilter(fps.glowFilter)];
+					this.fpsBar = new ProgressBar(fps.x, fps.y, fps.width, fps.height, fps.alpha, fps.bgAlpha, fpsfilters, fps.color, null, 0);
+					this.addChild(this.fpsBar);
 				}
-				this.debugText = new TextExt(settings.debugText.x, settings.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, this.getShadowSettings(), this);
+				
+				if (this.pingBarEnabled)
+				{
+					var ping:Object       = settings.debugGraphics.pingBar;
+					var pingfilters:Array = [Filters.handleGlowFilter(ping.glowFilter)];
+					this.pingBar = new ProgressBar(ping.x, ping.y, ping.width, ping.height, ping.alpha, ping.bgAlpha, pingfilters, ping.color, null, 0);
+					this.addChild(this.pingBar);
+				}
 			}
+			this.debugText = new TextExt(settings.debugText.x, settings.debugText.y, Filters.largeText, TextFieldAutoSize.LEFT, this.getShadowSettings(), this);
 		}
 		
 		override protected function onBeforeDispose():void

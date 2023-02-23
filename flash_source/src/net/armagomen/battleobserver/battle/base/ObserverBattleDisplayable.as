@@ -15,6 +15,7 @@ package net.armagomen.battleobserver.battle.base
 		public function ObserverBattleDisplayable()
 		{
 			super();
+			this.addEventListener(Event.RESIZE, this.onResizeHandle);
 		}
 		
 		override protected function configUI():void
@@ -27,13 +28,12 @@ package net.armagomen.battleobserver.battle.base
 			this.buttonMode = false;
 		}
 		
+		
 		override protected function onPopulate():void
 		{
+			this.removeChildren();
 			super.onPopulate();
-			this.addEventListener(Event.RESIZE, this.onResizeHandle);
 		}
-		
-		public function as_onAfterPopulate():void {}
 		
 		override protected function onBeforeDispose():void 
 		{

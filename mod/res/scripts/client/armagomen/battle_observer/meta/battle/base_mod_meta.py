@@ -58,7 +58,6 @@ class BaseModMeta(BaseDAAPIComponent):
     def _populate(self):
         super(BaseModMeta, self)._populate()
         self.setSettings()
-        self.as_onAfterPopulateS()
         logDebug("battle module '{}' loaded", self.getAlias())
 
     def _dispose(self):
@@ -87,6 +86,3 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def as_onCrosshairPositionChangedS(self, x, y):
         return self.flashObject.as_onCrosshairPositionChanged(x, y) if self._isDAAPIInited() else None
-
-    def as_onAfterPopulateS(self):
-        return self.flashObject.as_onAfterPopulate() if self._isDAAPIInited() else None

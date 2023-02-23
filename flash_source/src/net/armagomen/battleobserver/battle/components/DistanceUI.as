@@ -16,11 +16,8 @@ package net.armagomen.battleobserver.battle.components
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
-			if (this.distance == null)
-			{
-				var settings:Object = this.getSettings();
-				this.distance = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, this.getShadowSettings(), this);
-			}
+			var settings:Object = this.getSettings();
+			this.distance = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, this.getShadowSettings(), this);
 		}
 		
 		override protected function onBeforeDispose():void 

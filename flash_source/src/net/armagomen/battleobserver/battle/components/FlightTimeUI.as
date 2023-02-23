@@ -16,11 +16,8 @@ package net.armagomen.battleobserver.battle.components
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
-			if (this.flightTime == null)
-			{
-				var settings:Object = this.getSettings();
-				this.flightTime = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, getShadowSettings(), this);
-			}
+			var settings:Object = this.getSettings();
+			this.flightTime = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, getShadowSettings(), this);
 		}
 		
 		override protected function onBeforeDispose():void 

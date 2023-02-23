@@ -81,8 +81,8 @@ class DamageLog(DamageLogsMeta):
             self.as_createExtendedLogsS(position, top_enabled, bottom_enabled)
             g_keysListener.registerComponent(self.onLogsAltMode,
                                              keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
-            self._damage_received = LogData(set(), list(), dict(), DAMAGE_LOG.D_RECEIVED)
             self._damage_done = LogData(set(), list(), dict(), DAMAGE_LOG.D_DONE)
+            self._damage_received = LogData(set(), list(), dict(), DAMAGE_LOG.D_RECEIVED)
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onVehicleUpdated += self.onVehicleUpdated

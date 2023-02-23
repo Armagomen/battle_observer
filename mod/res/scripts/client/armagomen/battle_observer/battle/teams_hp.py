@@ -77,10 +77,9 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def _populate(self):
         super(TeamsHP, self)._populate()
-        gui = self._arenaVisitor.gui
-        isNormalMode = gui.isRandomBattle() or gui.isRankedBattle() or gui.isTrainingBattle()
-        self.showAliveCount = self.settings[HP_BARS.ALIVE] and isNormalMode
-        if self.settings[MARKERS.NAME][GLOBAL.ENABLED] and isNormalMode:
+        is_normal_mode = self.gui.isRandomBattle() or self.gui.isRankedBattle() or self.gui.isTrainingBattle()
+        self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
+        if self.settings[MARKERS.NAME][GLOBAL.ENABLED] and is_normal_mode:
             self.markers = CorrelationMarkers(self._arenaDP, self.settingsCore, self.settings[MARKERS.NAME],
                                               self.vehicle_types, self.colors, self.as_markersS)
         self.settingsCore.onSettingsApplied += self.onSettingsApplied

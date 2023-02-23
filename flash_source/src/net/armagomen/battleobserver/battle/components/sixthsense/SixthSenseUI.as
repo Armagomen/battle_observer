@@ -27,21 +27,21 @@
 		public function SixthSenseUI()
 		{
 			super();
-			this.x = App.appWidth >> 1;
-			this._container = new Sprite()
-			this._container.x = -80;
-			this._container.y = this.POSITION;
-			this._container.visible = false;
-			this.addChild(_container);
+			this.loader = new Loader();
+			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
+			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
 		}
 		
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
 			this.params = this.getSettings();
-			this.loader = new Loader();
-			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
-			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			this.x = App.appWidth >> 1;
+			this._container = new Sprite()
+			this._container.x = -80;
+			this._container.y = this.POSITION;
+			this._container.visible = false;
+			this.addChild(_container);
 			if (this.params.default_icon)
 			{
 				this.loader.load(new URLRequest('../maps/icons/battle_observer/sixth_sense/' + this.params.default_icon_name));

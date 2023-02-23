@@ -17,6 +17,10 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		{
 			super();
 			this.playersPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
+			if (this.playersPanel)
+			{
+				this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
+			}
 		}
 		
 		public function as_clearStorage():void
@@ -30,15 +34,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				}
 			}
 			App.utils.data.cleanupDynamicObject(this.storage);
-		}
-		
-		override protected function onPopulate():void
-		{
-			super.onPopulate();
-			if (this.playersPanel)
-			{
-				this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
-			}
 		}
 		
 		override protected function onBeforeDispose():void

@@ -17,13 +17,10 @@ package net.armagomen.battleobserver.battle.components.maingun
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
-			if (this.mainGun == null)
-			{
-				var settings:Object = this.getSettings().settings;
-				this.x = (App.appWidth >> 1) + settings.x;
-				this.y = settings.y;
-				this.mainGun = new TextExt(0, 0, Filters.largeText, settings.align, getShadowSettings(), this);
-			}
+			var settings:Object = this.getSettings().settings;
+			this.x = (App.appWidth >> 1) + settings.x;
+			this.y = settings.y;
+			this.mainGun = new TextExt(0, 0, Filters.largeText, settings.align, getShadowSettings(), this);
 		}
 		
 		override protected function onBeforeDispose():void 

@@ -11,10 +11,8 @@ package net.armagomen.battleobserver.battle.components
 	{
 		private var top_log_inCenter:Boolean = true;
 		private var damageLogPanel:*         = null;
-		private var d_log:TextExt            = null;
-		private var in_log:TextExt           = null;
 		private var top_log:TextExt          = null;
-		private const DAMAGE_DONE:int        = 0;
+		private var logs:Vector.<TextExt>    = null;
 		
 		public function DamageLogsUI(dlPanel:*)
 		{
@@ -25,10 +23,8 @@ package net.armagomen.battleobserver.battle.components
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			this.removeChildren();
-			this.d_log = null;
-			this.in_log = null;
 			this.top_log = null;
+			this.logs = null;
 		}
 		
 		public function as_createTopLog(settings:Object):void
@@ -42,8 +38,14 @@ package net.armagomen.battleobserver.battle.components
 		{
 			if (this.damageLogPanel)
 			{
-				this.d_log = new TextExt(position.x + 35, position.y, null, position.align, getShadowSettings(), this.damageLogPanel._detailsTopContainer, top_enabled);
-				this.in_log = new TextExt(position.x + 20, position.y - 20, null, position.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer, bottom_enabled);
+				if (this.logs)
+				{
+					this.damageLogPanel._detailsTopContainer.removeChild(this.logs[0])
+					this.damageLogPanel._detailsBottomContainer.removeChild(this.logs[1])
+				}
+				this.logs = new Vector.<TextExt>(2, true);
+				this.logs[0] = new TextExt(position.x + 35, position.y, null, position.align, getShadowSettings(), this.damageLogPanel._detailsTopContainer, top_enabled);
+				this.logs[1] = new TextExt(position.x + 20, position.y - 20, null, position.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer, bottom_enabled);
 			}
 		}
 		
@@ -54,13 +56,9 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_updateExtendedLog(log_id:int, text:String):void
 		{
-			if (log_id == this.DAMAGE_DONE)
+			if (this.logs)
 			{
-				this.d_log.htmlText = text;
-			}
-			else
-			{
-				this.in_log.htmlText = text;
+				this.logs[log_id].htmlText = text;
 			}
 		}
 		
