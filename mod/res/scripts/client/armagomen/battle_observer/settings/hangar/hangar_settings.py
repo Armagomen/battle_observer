@@ -128,6 +128,14 @@ class CreateElement(object):
                            GLOBAL.WIDTH: 190})
         return result
 
+    def createBarStyleDropDown(self, blockID, varName, icons, icon):
+        result = self.createControl(blockID, varName, icon, cType='Dropdown')
+        if result is not None:
+            image = "<img src='img://gui/maps/icons/battle_observer/style/{}.jpg' width='300' height='24'>"
+            result.update({'options': [{'label': x, 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
+                           GLOBAL.WIDTH: 190})
+        return result
+
     def createRadioButtonGroup(self, blockID, varName, options, value):
         result = self.createDropDown(blockID, varName, options, value)
         if result is not None:
@@ -176,7 +184,7 @@ class CreateElement(object):
         if val_type == str and GLOBAL.ALIGN in key:
             return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
         elif val_type == str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
-            return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
+            return self.createBarStyleDropDown(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
         elif val_type == str and blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
             return self.createSixthSenseDropDown(blockID, key,
                                                  *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
