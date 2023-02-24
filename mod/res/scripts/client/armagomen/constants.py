@@ -257,8 +257,6 @@ DISPERSION = __Dispersion(
 __DispersionTimer = namedtuple("dispersion_timer", ("NAME", "DONE_COLOR", "DONE_TEMPLATE", "REGULAR_TEMPLATE"))
 DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "done_color", "done_template", "regular_template")
 
-DISPERSION_TIME = namedtuple("DISPERSION_TIME", ("TIMER", "PERCENT"))("timer", "percent")
-
 DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
     "NAME", "TEXT", "TEMPLATE", "GRAPHICS", "PING_BAR", "FPS_BAR", "FPS_COLOR", "PING_COLOR", "LAG_COLOR", "PING",
     "FPS"))("debug_panel", "debugText", "text", "debugGraphics", "pingBar", "fpsBar", "fpsColor", "pingColor",

@@ -111,11 +111,11 @@ localization = {
                          "It is not recommended to set a value lower than 65%."
     },
     "dispersion_timer": {
-        "header": "Setting the build timer",
+        "header": "Setting the reduction timer",
         "x": "Horizontal position",
         "y": "Vertical position",
-        "color": "Color: Not aggregated",
-        "done_color": "Color: Done",
+        "color": "Color: Not reduced",
+        "done_color": "Color: Reduced",
         "align": "Text alignment"
     },
     "tank_carousel": {
