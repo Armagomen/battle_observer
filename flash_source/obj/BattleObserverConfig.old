@@ -5,7 +5,6 @@
   <target-player>32.0</target-player>
   <benchmark>false</benchmark>
   <static-link-runtime-shared-libraries>true</static-link-runtime-shared-libraries>
-  <use-network>false</use-network>
   <compiler>
     <define append="true">
       <name>CONFIG::debug</name>
@@ -31,8 +30,6 @@
       <name>CONFIG::desktop</name>
       <value>false</value>
     </define>
-    <accessible>true</accessible>
-    <strict>false</strict>
     <optimize>true</optimize>
     <omit-trace-statements>true</omit-trace-statements>
     <verbose-stacktraces>false</verbose-stacktraces>

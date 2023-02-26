@@ -14,7 +14,7 @@ package net.armagomen.battleobserver.battle
 		private var battleLoading:*                 = null;
 		private var fullStats:*                     = null;
 		private var panels:*                        = null;
-		private var alis:String						= null;
+		private var isComp7Battle:Boolean			= false;
 		
 		private var iconColors:Object               = {};
 		private var statisticsData:Object           = null;
@@ -23,14 +23,13 @@ package net.armagomen.battleobserver.battle
 		private var cutWidth:Number                 = 60.0;
 		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
-		private static const COMP_7_BATTLE:String	= "comp7BattlePage";
 		
 		public function StatisticsAndIcons(battlePage:*, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
 		{
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
 			this.panels = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-			this.alis = battlePage.getAlias();
+			this.isComp7Battle = battlePage.getAlias() == "comp7BattlePage";
 			this.setIconColors(typeColors);
 			this.iconMultiplier = iconMultiplier;
 			this.statisticsData = statsData;
@@ -40,6 +39,17 @@ package net.armagomen.battleobserver.battle
 			this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onCountChange, false, 0, true);
 			this.onChange(null);
+		}
+		
+		public function onDispose():void
+		{
+			if (this.panels.hasEventListener(Event.CHANGE)){
+				this.panels.removeEventListener(Event.CHANGE, this.onChange);
+				this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onCountChange);
+			}
+			this.battleLoading = null;
+			this.fullStats = null;
+			this.panels = null;
 		}
 		
 		public function update_wtrdata(statsData:Object):void
@@ -179,7 +189,7 @@ package net.armagomen.battleobserver.battle
 			{
 				return;
 			}
-			if (this.alis != COMP_7_BATTLE && this.iconsEnabled && holder.model)
+			if (!this.isComp7Battle && this.iconsEnabled && holder.model)
 			{
 				var tColor:ColorTransform = holder._vehicleIcon.transform.colorTransform;
 				tColor.color = this.iconColors[holder.model.vehicleType];
@@ -192,7 +202,7 @@ package net.armagomen.battleobserver.battle
 				{
 					holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
 				}
-				if (this.alis != COMP_7_BATTLE && this.statisticsData[vehicleID].vehicleTextColor)
+				if (!this.isComp7Battle && this.statisticsData[vehicleID].vehicleTextColor)
 				{
 					holder._vehicleField.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
 				}

@@ -173,6 +173,7 @@ package net.armagomen.battleobserver
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
+			this.statisticsBO.onDispose();
 			this.mapZoom = null;
 			this.statisticsBO = null;
 		}
