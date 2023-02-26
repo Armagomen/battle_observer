@@ -45,7 +45,7 @@ package net.armagomen.battleobserver.battle.components
 				}
 				this.logs = new Vector.<TextExt>(2, true);
 				this.logs[0] = new TextExt(position.x + 35, position.y, null, position.align, getShadowSettings(), this.damageLogPanel._detailsTopContainer, top_enabled);
-				this.logs[1] = new TextExt(position.x + 20, position.y - 20, null, position.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer, bottom_enabled);
+				this.logs[1] = new TextExt(position.x + 20, position.y, null, position.align, getShadowSettings(), this.damageLogPanel._detailsBottomContainer, bottom_enabled);
 			}
 		}
 		

@@ -25,6 +25,7 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.wgcomponents.minimapZoom;
 	import net.armagomen.battleobserver.font.BattleObserver;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
+	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.gui.battle.views.BaseBattlePage;
 	import net.wg.infrastructure.base.AbstractView;
 	
@@ -159,18 +160,12 @@ package net.armagomen.battleobserver
 			
 			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function(isEpicRandomBattle:Boolean):void
 			{
-				var damageLogPanel:* = this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
-				if (damageLogPanel)
+				var playersPanel:* = this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
+				if (playersPanel)
 				{
-					damageLogPanel.updateContainersPosition()
-					if (isEpicRandomBattle)
-					{
-						this.updateDamageLogPosition(this.epicRandomPlayersPanel.state);
-					}
-					else
-					{
-						this.updateDamageLogPosition();
-					}
+					var state:int = playersPanel.state;
+					playersPanel.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
+					playersPanel.as_setPanelMode(state);
 				}
 			}
 		}

@@ -115,6 +115,9 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{} {}, has ho attribute {}"
             return logError(to_format_str, alias, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
+        callback(0.2, self._loadView, view)
+
+    def _loadView(self, view):
         view._blToggling.update(viewSettings.components)
         view.flashObject.as_observerCreateComponents(viewSettings.components)
         view.flashObject.as_observerHideWgComponents(viewSettings.hiddenComponents)

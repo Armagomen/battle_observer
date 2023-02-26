@@ -337,8 +337,6 @@ ANOTHER = namedtuple("ANOTHER", (
     "configSelect", "shadow_settings", "accountDBID", "users", "databaseID", "badges", "isTeamKiller",
     "name", "fakeName", "clanDBID", "clanAbbrev")
 
-BATTLE_LOADING = namedtuple("BATTLE_LOADING", ("NAME",))("battle_loading", )
-
 CREW_XP = namedtuple("CREW_XP", (
     "NAME", "NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF", "ENABLE", "DISABLE"))(
     "crewDialog", "notAvailable", "isFullXp", "isFullComplete", "needTurnOff", "enable", "disable")
