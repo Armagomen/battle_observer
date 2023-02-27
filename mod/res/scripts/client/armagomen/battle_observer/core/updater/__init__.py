@@ -1,15 +1,13 @@
-import json
-import json
 import os
 import re
 from collections import namedtuple
+from json import loads
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.constants import GLOBAL, URLS, getLogo
-from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, getUpdatePath, fetchURL, \
-    logDebug
+from armagomen.constants import GLOBAL, URLS
+from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, getUpdatePath, fetchURL, logDebug
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.events import g_events
 from gui.Scaleform.Waiting import Waiting
@@ -21,25 +19,25 @@ from wg_async import wg_async, wg_await
 WAITING_UPDATE = 'updating'
 
 __NAMES = (
-    "CHECK", "UPDATE_CHECKED", "NEW_VERSION", "STARTED", "NEW_FILE", "ALREADY_DOWNLOADED", "FINISHED", "FAILED"
+    'CHECK', 'UPDATE_CHECKED', 'NEW_VERSION', 'STARTED', 'NEW_FILE', 'ALREADY_DOWNLOADED', 'FINISHED', 'FAILED'
 )
 __MESSAGES = (
-    "Checking for an available update.",
-    "The update check is completed, you have the current version.",
-    "An update {} is detected, the client will be restarted at the end of the download.",
-    "DownloadThread: update started {} at {}",
-    "DownloadThread: added new file {}",
-    "DownloadThread: update is already downloaded to: {}",
-    "DownloadThread: downloading update finished to: {}",
-    "DownloadThread: update download failed: {}"
+    'Checking for an available update.',
+    'The update check is completed, you have the current version.',
+    'An update {} is detected, the client will be restarted at the end of the download.',
+    'DownloadThread: update started {} at {}',
+    'DownloadThread: added new file {}',
+    'DownloadThread: update is already downloaded to: {}',
+    'DownloadThread: downloading update finished to: {}',
+    'DownloadThread: update download failed: {}'
 )
 
 LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
 
 
 class DownloadThread(object):
-    URLS = {"auto": "https://github.com/Armagomen/battle_observer/releases/latest/download/AutoUpdate.zip",
-            "full": "https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip"}
+    URLS = {'auto': 'https://github.com/Armagomen/battle_observer/releases/latest/download/AutoUpdate.zip',
+            'full': 'https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip'}
 
     def __init__(self):
         self.version = None
@@ -56,8 +54,7 @@ class DownloadThread(object):
         if os.path.isfile(path):
             self.extractZipArchive(path)
             logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
-            self.dialogs.showUpdateFinished(getLogo() + self.i18n['titleOK'],
-                                            self.i18n['messageOK'].format(mod_version))
+            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(mod_version))
         else:
             url = self.URLS['auto']
             self.downloader = WebDownloader(GLOBAL.ONE)
@@ -92,8 +89,7 @@ class DownloadThread(object):
                 zipArchive.write(data)
             logInfo(LOG_MESSAGES.FINISHED.format(path))
             self.extractZipArchive(path)
-            self.dialogs.showUpdateFinished(getLogo() + self.i18n['titleOK'],
-                                            self.i18n['messageOK'].format(mod_version))
+            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(mod_version))
         else:
             self.downloadError(_url)
 
@@ -116,7 +112,7 @@ class Updater(DownloadThread):
 
     def request_last_version(self, response):
         if response.responseCode == HTTP_OK_STATUS:
-            response_data = json.loads(response.body)
+            response_data = loads(response.body)
             self.updateData.update(response_data)
             new_version = response_data.get('tag_name', self.version)
             local_ver = self.tupleVersion(self.version)
@@ -134,7 +130,7 @@ class Updater(DownloadThread):
                 logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
-        logDebug("contentType={}, responseCode={} body={}", response.contentType, response.responseCode, response.body)
+        logDebug('contentType={}, responseCode={} body={}', response.contentType, response.responseCode, response.body)
 
     @staticmethod
     def tupleVersion(version):
@@ -148,8 +144,8 @@ class Updater(DownloadThread):
 
     @wg_async
     def showDialog(self, view):
-        title = getLogo() + self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
-        git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get("body", GLOBAL.EMPTY_LINE))
+        title = self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
+        git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, git_message)
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
         if result:

@@ -2,7 +2,7 @@
 from helpers import getClientLanguage
 
 ru = {
-    "titleOK": "\nОбновление - ГОТОВО",
+    "titleOK": "Обновление - ГОТОВО",
     "messageOK": "Нажмите ПЕРЕЗАГРУЗКА, для завершения процесса Обновления. v{0}",
     "messageNEW":
         "<font size='15'>"
@@ -13,11 +13,11 @@ ru = {
         "\n<font size='20' color='#FFFF00'><b>Список изменений</b></font>\n"
         "<p align='left'>{1}</p>"
         "</font>",
-    "titleNEW": "\n<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>"
+    "titleNEW": "<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>"
 }
 
 en = {
-    "titleOK": "\nUpdate - Press RESTART",
+    "titleOK": "Update - Press RESTART",
     "messageOK": "Click RESTART to complete the Upgrade process. v{0}",
     "messageNEW":
         "<font size='15'>"
@@ -28,22 +28,22 @@ en = {
         "\n<font size='20 'color='#FFFF00'><b>Changelog</b></font>\n"
         "<p align='left'>{1}</p>"
         "</font>",
-    "titleNEW": "\n<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
+    "titleNEW": "<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
 }
 
 uk = {
-    "titleOK": "\nОновлення готове",
-    "messageOK": "Нажміть ПЕРЕЗАВАНТАЖЕННЯ для завершення процесу оновлення. v{0}",
+    "titleOK": "Оновлення готове",
+    "messageOK": "Натисніть ПЕРЕЗАВАНТАЖЕННЯ для завершення процесу оновлення. v{0}",
     "messageNEW":
         "<font size='15'>"
-        "<font size='20' color='#FFFF00'><b>Выберіть варіант завантаження.</b></font>\n"
+        "<font size='20' color='#FFFF00'><b>Оберіть варіант завантаження.</b></font>\n"
         "<p align='left'><font color='#00FF00'><b>Автоматично</b></font> - завантажить і розпакує архів "
         "оновлення в папку. {0}\n<font color='#FFFF00'><b>Вручну</b></font> - відкриє в браузері посилання на "
-        "цей же архів, але витягувати пакет і копіювати *.wotmod файли потрібно буде в ручному режимі.</p>"
+        "цей же архів, але витягувати пакет і копіювати *.wotmod файл потрібно буде в ручному режимі.</p>"
         "\n<font size='20' color='#FFFF00'><b>Список змін</b></font>\n"
         "<p align='left'>{1}</p>"
         "</font>",
-    "titleNEW": "\n<font size='20'>Доступне оновлення <font color='#FFFF00'>v{0}</font></font>"
+    "titleNEW": "<font size='20'>Доступне оновлення <font color='#FFFF00'>v{0}</font></font>"
 }
 
 

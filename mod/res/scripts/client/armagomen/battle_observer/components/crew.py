@@ -1,6 +1,6 @@
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import MAIN, CREW_XP, getLogo, GLOBAL
+from armagomen.constants import MAIN, CREW_XP, GLOBAL
 from armagomen.utils.common import logInfo, overrideMethod, logError, logDebug, openIgnoredVehicles, \
     updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
@@ -36,12 +36,11 @@ class CrewProcessor(object):
     @wg_async
     def showDialog(self, vehicle, value, description):
         self.isDialogVisible = True
-        title = GLOBAL.NEW_LINE.join((getLogo(), vehicle.userName))
         message = self.getLocalizedMessage(value, description)
-        dialogResult = yield wg_await(CrewDialog().showCrewDialog(title, message))
-        if dialogResult.result == DialogButtons.SUBMIT:
+        dialog_result = yield wg_await(CrewDialog().showCrewDialog(vehicle.userName, message))
+        if dialog_result.result == DialogButtons.SUBMIT:
             self.accelerateCrewXp(vehicle, value)
-        elif dialogResult.result == DialogButtons.PURCHASE:
+        elif dialog_result.result == DialogButtons.PURCHASE:
             ignored_vehicles.add(vehicle.userName)
             updateIgnoredVehicles(ignored_vehicles)
         self.isDialogVisible = False

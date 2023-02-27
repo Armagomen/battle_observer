@@ -46,7 +46,7 @@ class UpdaterDialogs(DialogBase):
     @wg_async
     def showUpdateFinished(self, title, message):
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle(title)
+        builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), title)))
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=buttons.restart)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
@@ -58,7 +58,7 @@ class UpdaterDialogs(DialogBase):
     @wg_async
     def showNewVersionAvailable(self, title, message, handleURL):
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle(title)
+        builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), title)))
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=buttons.auto)
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.handle)
@@ -84,9 +84,9 @@ class LoadingErrorDialog(DialogBase):
 class CrewDialog(DialogBase):
 
     @wg_async
-    def showCrewDialog(self, title, message):
+    def showCrewDialog(self, vehicle_name, message):
         builder = InfoDialogBuilder()
-        builder.setFormattedTitle(title)
+        builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), vehicle_name)))
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=buttons.apply)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
