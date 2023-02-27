@@ -158,7 +158,7 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function(isEpicRandomBattle:Boolean):void
+			BaseBattlePage.prototype.as_observerUpdateDamageLogPosition = function():void
 			{
 				var playersPanel:* = this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 				if (playersPanel)

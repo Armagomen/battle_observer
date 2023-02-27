@@ -1,5 +1,5 @@
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, SWF
+from armagomen.constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, SWF, MINIMAP, VEHICLE_TYPES
 from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, PageStates, _STATE_TO_UI
@@ -73,6 +73,20 @@ class ViewSettings(object):
         if self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
             return False
         return settings.statistics[GLOBAL.ENABLED]
+
+    @staticmethod
+    def getStatisticsSettings():
+        return (
+            settings.statistics[STATISTICS.PANELS_CUT_WIDTH],
+            settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
+            settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS],
+            settings.statistics[STATISTICS.ICON_BLACKOUT]
+        )
+
+    def isMinimapEnabled(self):
+        if xvmInstalled or self.gui.isEpicBattle():
+            return False
+        return settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM]
 
     def isWTREnabled(self):
         if xvmInstalled:

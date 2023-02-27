@@ -1,9 +1,8 @@
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
-from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SWF, STATISTICS, VEHICLE_TYPES, BATTLE_ALIASES, GLOBAL, MINIMAP
-from armagomen.utils.common import logError, logInfo, logDebug, callback, xvmInstalled
+from armagomen.constants import SWF, BATTLE_ALIASES
+from armagomen.utils.common import logError, logInfo, logDebug, callback
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -85,8 +84,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self._app.loaderManager.onViewLoaded += self.onViewLoaded
         self._statisticsEnabled = viewSettings.isWTREnabled()
         self._iconsEnabled = viewSettings.isIconsEnabled()
-        baseMapEnabled = settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM] and not xvmInstalled
-        if baseMapEnabled and not viewSettings.gui.isEpicBattle():
+        if viewSettings.isMinimapEnabled():
             self.minimapPlugin = MinimapZoomPlugin()
         components = viewSettings.setComponents()
         if components or self._statisticsEnabled or self._iconsEnabled or self.minimapPlugin is not None:
@@ -98,12 +96,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     def loadStatisticView(self, flashObject):
         if self._statisticsEnabled and not self.statistics.loaded:
             self.statistics.setCallback(flashObject.as_updateStatisticData)
-        cutWidth = settings.statistics[STATISTICS.PANELS_CUT_WIDTH]
-        fullWidth = settings.statistics[STATISTICS.PANELS_FULL_WIDTH]
-        typeColors = settings.vehicle_types[VEHICLE_TYPES.CLASS_COLORS]
-        iconMultiplier = settings.statistics[STATISTICS.ICON_BLACKOUT]
-        flashObject.as_createStatisticComponent(self._iconsEnabled, self.statistics.itemsWTRData, cutWidth, fullWidth,
-                                                typeColors, iconMultiplier)
+        flashObject.as_createStatisticComponent(self._iconsEnabled, self.statistics.itemsWTRData,
+                                                *viewSettings.getStatisticsSettings())
 
     def onViewLoaded(self, view, *args):
         alias = view.getAlias()
@@ -116,6 +110,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             to_format_str = "{} {}, has ho attribute {}"
             return logError(to_format_str, alias, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
         callback(0.2, self._loadView, view)
+        callback(40.0, view.flashObject.as_observerUpdateDamageLogPosition)
 
     def _loadView(self, view):
         view._blToggling.update(viewSettings.components)
@@ -123,7 +118,5 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         view.flashObject.as_observerHideWgComponents(viewSettings.hiddenComponents)
         if self.minimapPlugin is not None:
             self.minimapPlugin.init(view.flashObject)
-        if not viewSettings.gui.isEpicBattle():
-            callback(20.0, view.flashObject.as_observerUpdateDamageLogPosition, viewSettings.gui.isEpicRandomBattle())
         if self._iconsEnabled or self._statisticsEnabled:
             self.loadStatisticView(view.flashObject)
