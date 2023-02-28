@@ -1,7 +1,7 @@
 from Keys import KEY_LALT, KEY_RALT
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
-    ANOTHER, URLS, STATISTICS, PANELS, MINIMAP, SIXTH_SENSE
+    ANOTHER, URLS, STATISTICS, PANELS, MINIMAP, SIXTH_SENSE, DEBUG_PANEL
 from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
@@ -128,10 +128,18 @@ class CreateElement(object):
                            GLOBAL.WIDTH: 190})
         return result
 
+    def createDebugStyleDropDown(self, blockID, varName, icons, icon):
+        result = self.createControl(blockID, varName, icon, cType='Dropdown')
+        if result is not None:
+            image = "<img src='img://gui/maps/icons/battle_observer/style/debug/{}.jpg' width='240' height='52'>"
+            result.update({'options': [{'label': x, 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
+                           GLOBAL.WIDTH: 190})
+        return result
+
     def createBarStyleDropDown(self, blockID, varName, icons, icon):
         result = self.createControl(blockID, varName, icon, cType='Dropdown')
         if result is not None:
-            image = "<img src='img://gui/maps/icons/battle_observer/style/{}.jpg' width='300' height='24'>"
+            image = "<img src='img://gui/maps/icons/battle_observer/style/health/{}.jpg' width='300' height='24'>"
             result.update({'options': [{'label': x, 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
                            GLOBAL.WIDTH: 190})
         return result
@@ -185,6 +193,9 @@ class CreateElement(object):
             return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
         elif val_type == str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
             return self.createBarStyleDropDown(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
+        elif val_type == str and blockID == DEBUG_PANEL.NAME and DEBUG_PANEL.STYLE == key:
+            return self.createDebugStyleDropDown(blockID, key,
+                                                 *self.getter.getCollectionIndex(value, DEBUG_PANEL.STYLES))
         elif val_type == str and blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
             return self.createSixthSenseDropDown(blockID, key,
                                                  *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
@@ -311,9 +322,11 @@ class SettingsInterface(CreateElement):
                 if param_name in updated_config_link:
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
-                    elif key == HP_BARS.STYLE and not isinstance(value, str):
+                    elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not isinstance(value, str):
                         value = HP_BARS.STYLES[value]
-                    elif key == SIXTH_SENSE.ICON_NAME and not isinstance(value, str):
+                    elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, str):
+                        value = DEBUG_PANEL.STYLES[value]
+                    elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, str):
                         value = SIXTH_SENSE.ICONS[value]
                     elif key == "zoomSteps*steps":
                         steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]

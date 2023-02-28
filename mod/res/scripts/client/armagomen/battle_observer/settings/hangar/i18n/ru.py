@@ -135,23 +135,11 @@ localization = {
         "noSniperDynamic": "Отключить динамическую камеру в снайперском режиме."
     },
     "debug_panel": {
-        "header": "Панель PING/FPS",
-        "debugText*text": "Тестовое поле для форматирования PING/FPS",
-        "debugText*text_tooltip": "Макросы для PING/FPS"
-                                  "\n%(PING)s <tab>Пинг"
-                                  "\n%(FPS)s <tab>Текущий фпс"
-                                  "\n%(pingColor)s <tab>цвет PING/LAG."
-                                  "\n%(fpsColor)s <tab>цвет FPS",
-        "debugText*x": "Позиция окна по оси X",
-        "debugText*y": "Позиция окна по оси Y",
-        "debugGraphics*enabled": "Показывать графические полосы PING/FPS",
-        "colors*fpsColor": "Цвет макроса %(fpsColor)s",
-        "colors*pingColor": "Цвет макроса %(pingLagColor)s - Нет лагов",
-        "colors*pingLagColor": "Цвет макроса %(pingLagColor)s - Есть лаги",
-        "debugGraphics*fpsBar*color": "Цвет полосы FPS",
-        "debugGraphics*fpsBar*enabled": "Включить графику для FPS",
-        "debugGraphics*pingBar*color": "Цвет полосы PING",
-        "debugGraphics*pingBar*enabled": "Включить графику для PING"
+        "header": "Настройка панели FPS и PING",
+        "fpsColor": "Цвет показателя FPS",
+        "pingColor": "Цвет показателя PING",
+        "pingLagColor": "Цвет показателя LAG - Лаги присутствуют",
+        "style": "Стиль панели",
     },
     "battle_timer": {
         "header": "Таймер боя.",

@@ -3,8 +3,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import flash.events.Event;
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.battle.components.teamshealth.Default;
-	import net.armagomen.battleobserver.battle.components.teamshealth.League;
+	//import net.armagomen.battleobserver.battle.components.teamshealth.Default;
+	//import net.armagomen.battleobserver.battle.components.teamshealth.League;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	

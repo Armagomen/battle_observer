@@ -132,19 +132,10 @@ localization = {
     },
     "debug_panel": {
         "header": "Налаштування панелі FPS та PING",
-        "debugText*text": "Текстове поле форматування панелі FPS та PING",
-        "debugText*text_tooltip": "\n".join(("Макроси для панелі FPS та PING:", "%(PING)s - PING", "%(FPS)s - FPS",
-                                             "%(fpsColor)s - колір FPS", "%(pingColor)s - колір PING/LAG")),
-        "debugText*x": "Позиція панелі по горизонталі",
-        "debugText*y": "Позиція панелі по вертикалі",
-        "debugGraphics*enabled": "Відображати графічний індикатор FPS та PING",
-        "colors*fpsColor": "Колір макроса %(fpsColor)s",
-        "colors*pingColor": "Колір макроса %(pingColor)s - Лаги відсутні",
-        "colors*pingLagColor": "Колір макроса %(pingColor)s - Лаги присутні",
-        "debugGraphics*fpsBar*color": "Колір графічного індикатору FPS",
-        "debugGraphics*fpsBar*enabled": "Відображати графічний індикатор для FPS",
-        "debugGraphics*pingBar*color": "Колір графічного індикатору PING",
-        "debugGraphics*pingBar*enabled": "Відображати графічний індикатор для PING"
+        "fpsColor": "Колір показника FPS",
+        "pingColor": "Колір показника PING",
+        "pingLagColor": "Колір показника LAG - Лаги присутні",
+        "style": "Стиль панелі",
     },
     "battle_timer": {
         "header": "Налаштування таймера бою",

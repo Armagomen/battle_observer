@@ -132,23 +132,11 @@ localization = {
         "noSniperDynamic": "Disable dynamic camera in sniper mode."
     },
     "debug_panel": {
-        "header": "PANEL PING/FPS",
-        "debugText*text": "text box to format the PING / FPS",
-        "debugText*text_tooltip": "HTML - YES\nmacros debug panel\n%(PING)s<tab>-Ping"
-                                  "\n%(PING)s <tab>Ping"
-                                  "\n%(FPS)s <tab>Current FPS"
-                                  "\n%(pingColor)s <tab>PING/LAG color."
-                                  "\n%(fpsColor)s <tab>FPS color",
-        "debugText*x": "window Position on the X-axis",
-        "debugText*y": "window Position on the Y-axis",
-        "debugGraphics*enabled": "Show fps/ping graphics bars",
-        "colors*fpsColor": "Color macro %(fpsColor)s",
-        "colors*pingColor": "Color macro %(pingLagColor)s - No lags",
-        "colors*pingLagColor": "Color macro %(pingLagColor)s - Lag",
-        "debugGraphics*fpsBar*color": "FPS Bar Color",
-        "debugGraphics*fpsBar*enabled": "Enable graphics for FPS",
-        "debugGraphics*pingBar*color": "PING Bar Color",
-        "debugGraphics*pingBar*enabled": "Enable Graphics for PING"
+        "header": "FPS and PING panel settings",
+        "fpsColor": "FPS Color",
+        "pingColor": "PING Color",
+        "pingLagColor": "LAG color - Lags present",
+        "style": "Panel style",
     },
     "battle_timer": {
         "header": "TIMER",

@@ -103,58 +103,10 @@ class DefaultSettings(object):
         }
         self.debug_panel = {
             GLOBAL.ENABLED: False,
-            DEBUG_PANEL.TEXT: {
-                GLOBAL.X: 5,
-                GLOBAL.Y: GLOBAL.ZERO,
-                DEBUG_PANEL.TEMPLATE: "<textformat tabstops='[80]'>FPS <font color='%(fpsColor)s'><b>%(FPS)d</b></font>"
-                                      "<tab>PING <font color='%(pingColor)s'><b>%(PING)d</b></font></textformat>"
-            },
-            DEBUG_PANEL.GRAPHICS: {
-                GLOBAL.ENABLED: False,
-                DEBUG_PANEL.PING_BAR: {
-                    GLOBAL.ENABLED: False,
-                    GLOBAL.X: 75,
-                    GLOBAL.Y: 27,
-                    GLOBAL.WIDTH: 70,
-                    GLOBAL.HEIGHT: 4,
-                    GLOBAL.ALPHA: 1.0,
-                    GLOBAL.BG_ALPHA: 0.5,
-                    GLOBAL.COLOR: COLORS.NORMAL_TEXT,
-                    GLOBAL.GLOW_FILTER: {
-                        GLOBAL.COLOR: COLORS.GREEN,
-                        GLOBAL.ALPHA: 1.0,
-                        GLOBAL.BLUR_X: 2,
-                        GLOBAL.BLUR_Y: 2,
-                        GLOBAL.INNER: False,
-                        GLOBAL.KNOCKOUT: False,
-                        GLOBAL.STRENGTH: 2
-                    }
-                },
-                DEBUG_PANEL.FPS_BAR: {
-                    GLOBAL.ENABLED: False,
-                    GLOBAL.X: 3,
-                    GLOBAL.Y: 27,
-                    GLOBAL.WIDTH: 70,
-                    GLOBAL.HEIGHT: 4,
-                    GLOBAL.ALPHA: 1.0,
-                    GLOBAL.BG_ALPHA: 0.5,
-                    GLOBAL.COLOR: COLORS.NORMAL_TEXT,
-                    GLOBAL.GLOW_FILTER: {
-                        GLOBAL.COLOR: COLORS.GREEN,
-                        GLOBAL.ALPHA: 1.0,
-                        GLOBAL.BLUR_X: 2,
-                        GLOBAL.BLUR_Y: 2,
-                        GLOBAL.INNER: False,
-                        GLOBAL.KNOCKOUT: False,
-                        GLOBAL.STRENGTH: 2
-                    }
-                }
-            },
-            COLORS.NAME: {
-                DEBUG_PANEL.FPS_COLOR: COLORS.S_YELLOW,
-                DEBUG_PANEL.PING_COLOR: COLORS.S_YELLOW,
-                DEBUG_PANEL.LAG_COLOR: COLORS.RED
-            }
+            DEBUG_PANEL.STYLE: DEBUG_PANEL.STYLES.minimal,
+            DEBUG_PANEL.FPS_COLOR: "#B3FE95",
+            DEBUG_PANEL.PING_COLOR: "#B3FE95",
+            DEBUG_PANEL.LAG_COLOR: "#FD9675"
         }
         self.battle_timer = {
             GLOBAL.ENABLED: False,

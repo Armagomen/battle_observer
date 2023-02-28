@@ -10,6 +10,7 @@ package net.armagomen.battleobserver.utils
 		public static const middleText:TextFormat = new TextFormat("$TitleFont", 18, 0xFFFFFF);
 		public static const largeText:TextFormat = new TextFormat("$TitleFont", 20, 0xFFFFFF);
 		public static const normalText:TextFormat = new TextFormat("$FieldFont", 16, 0xFFFFFF);
+		public static const normalTextBold:TextFormat = new TextFormat("$FieldFont", 16, 0xFFFFFF, true);
 		public static const normalText15:TextFormat = new TextFormat("$FieldFont", 15, 0xFFFFFF);
 		public static const scoreformat:TextFormat = new TextFormat("$TitleFont", 24,0xFFFFFF, true);
 		public static const markersFormat:TextFormat = new TextFormat("BattleObserver", 23, 0xFFFFFF);

@@ -83,27 +83,29 @@ class ViewSettings(object):
             settings.statistics[STATISTICS.ICON_BLACKOUT]
         )
 
+    @staticmethod
+    def xvmInstalled(module):
+        if xvmInstalled:
+            logInfo("{} module is disabled, XVM is installed".format(module))
+        return xvmInstalled
+
     def isMinimapEnabled(self):
-        if xvmInstalled or self.gui.isEpicBattle():
+        if self.xvmInstalled("Minimap") or self.gui.isEpicBattle():
             return False
         return settings.minimap[GLOBAL.ENABLED] and settings.minimap[MINIMAP.ZOOM]
 
     def isWTREnabled(self):
-        if xvmInstalled:
-            logInfo("Statistics module is disabled, XVM is installed")
+        if self.xvmInstalled("Statistics"):
             return False
         return self.isStatisticsModuleEnabled() and settings.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
-        if xvmInstalled:
-            logInfo("Icons module is disabled, XVM is installed")
+        if self.xvmInstalled("Icons"):
             return False
         return self.isStatisticsModuleEnabled() and settings.statistics[STATISTICS.ICON_ENABLED]
 
     def isPlayersPanelsEnabled(self):
-        if xvmInstalled or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle():
-            if xvmInstalled:
-                logInfo("PlayersPanels module is disabled, XVM is installed")
+        if self.xvmInstalled("PlayersPanels") or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle():
             return False
         return settings.players_panels[GLOBAL.ENABLED]
 

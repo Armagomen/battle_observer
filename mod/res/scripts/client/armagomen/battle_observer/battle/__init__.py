@@ -109,7 +109,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{} {}, has ho attribute {}"
             return logError(to_format_str, alias, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        callback(0.2, self._loadView, view)
+        callback(0.1, self._loadView, view)
         callback(40.0, view.flashObject.as_observerUpdateDamageLogPosition)
 
     def _loadView(self, view):
