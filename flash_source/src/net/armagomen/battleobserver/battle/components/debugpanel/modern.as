@@ -9,8 +9,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	
 	public class modern extends Sprite
 	{
-		[Embed(source = "ping_img/0.png")]
-		private var zero:Class;
 		[Embed(source = "ping_img/1.png")]
 		private var one:Class;
 		[Embed(source = "ping_img/2.png")]
@@ -53,41 +51,38 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		
 		private function createBitmapVector():void
 		{
-			this.icons = new Vector.<Bitmap>(11, true);
-			
-			var icon0:Bitmap = new zero();
-			this.icons[0] = icon0;
-			this.lastVisibleIcon = icon0;
+			this.icons = new Vector.<Bitmap>(10, true);
 			
 			var icon1:Bitmap = new one();
-			this.icons[1] = icon1;
+			this.icons[0] = icon1;
+			this.lastVisibleIcon = icon1;
 			
 			var icon2:Bitmap = new two();
-			this.icons[2] = icon2;
+			this.icons[1] = icon2;
 			
 			var icon3:Bitmap = new three();
-			this.icons[3] = icon3;
+			this.icons[2] = icon3;
 			
 			var icon4:Bitmap = new four();
-			this.icons[4] = icon4;
+			this.icons[3] = icon4;
 			
 			var icon5:Bitmap = new five();
-			this.icons[5] = icon5;
+			this.icons[4] = icon5;
 			
 			var icon6:Bitmap = new sixth();
-			this.icons[6] = icon6;
+			this.icons[5] = icon6;
 			
 			var icon7:Bitmap = new seven();
-			this.icons[7] = icon7;
+			this.icons[6] = icon7;
 			
 			var icon8:Bitmap = new eight();
-			this.icons[8] = icon8;
+			this.icons[7] = icon8;
 			
 			var icon9:Bitmap = new nine();
-			this.icons[9] = icon9;
+			this.icons[8] = icon9;
 			
 			var icon10:Bitmap = new ten();
-			this.icons[10] = icon10;
+			this.icons[9] = icon10;
 			
 			for each (var icon:Bitmap in this.icons)
 			{
@@ -106,12 +101,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			this.debugText.htmlText = StringUtil.substitute(this.template, this.fpsColor, fps, this.pingColor, ping, lag ? this.lagColor : this.pingColor);
 			this.lastVisibleIcon.visible = false;
 			
-			if (ping < 10)
-			{
-				this.icons[10].visible = true;
-				this.lastVisibleIcon = this.icons[10];
-			}
-			else if (ping < 20)
+			if (ping < 15)
 			{
 				this.icons[9].visible = true;
 				this.lastVisibleIcon = this.icons[9];
@@ -126,12 +116,12 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				this.icons[7].visible = true;
 				this.lastVisibleIcon = this.icons[7];
 			}
-			else if (ping < 50)
+			else if (ping < 60)
 			{
 				this.icons[6].visible = true;
 				this.lastVisibleIcon = this.icons[6];
 			}
-			else if (ping < 70)
+			else if (ping < 80)
 			{
 				this.icons[5].visible = true;
 				this.lastVisibleIcon = this.icons[5];
@@ -141,12 +131,12 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				this.icons[4].visible = true;
 				this.lastVisibleIcon = this.icons[4];
 			}
-			else if (ping < 150)
+			else if (ping < 200)
 			{
 				this.icons[3].visible = true;
 				this.lastVisibleIcon = this.icons[3];
 			}
-			else if (ping < 200)
+			else if (ping < 400)
 			{
 				this.icons[2].visible = true;
 				this.lastVisibleIcon = this.icons[2];

@@ -370,7 +370,7 @@ class CONFIG_INTERFACE:
     )
     HANDLER_VALUES = {
         SNIPER.NAME: {
-            'dynamic_zoom*enabled': ('dynamic_zoom*steps_only', 'dynamic_zoom*zoomXMeters'),
+            'dynamic_zoom*enabled': ('dynamic_zoom*steps_only',),
             'zoomSteps*enabled': ('zoomSteps*steps',),
             SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY)
         },
