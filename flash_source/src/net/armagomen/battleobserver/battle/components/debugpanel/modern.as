@@ -3,6 +3,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	import mx.utils.StringUtil;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
@@ -10,28 +11,28 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	public class modern extends Sprite
 	{
 		[Embed(source = "ping_img/1.png")]
-		private var one:Class;
+		private var _1:Class;
 		[Embed(source = "ping_img/2.png")]
-		private var two:Class;
+		private var _2:Class;
 		[Embed(source = "ping_img/3.png")]
-		private var three:Class;
+		private var _3:Class;
 		[Embed(source = "ping_img/4.png")]
-		private var four:Class;
+		private var _4:Class;
 		[Embed(source = "ping_img/5.png")]
-		private var five:Class;
+		private var _5:Class;
 		[Embed(source = "ping_img/6.png")]
-		private var sixth:Class;
+		private var _6:Class;
 		[Embed(source = "ping_img/7.png")]
-		private var seven:Class;
+		private var _7:Class;
 		[Embed(source = "ping_img/8.png")]
-		private var eight:Class;
+		private var _8:Class;
 		[Embed(source = "ping_img/9.png")]
-		private var nine:Class;
+		private var _9:Class;
 		[Embed(source = "ping_img/10.png")]
-		private var ten:Class;
+		private var _10:Class;
 		
 		private var debugText:TextExt      = null;
-		private const template:String      = "<textformat tabstops='[76, 160]'>FPS: <font color='{0}'>{1}</font><tab>PING: <font color='{2}'>{3}</font><tab><font color='{4}'>LAG</font></textformat>";
+		private const template:String      = "FPS: <font color='{0}'>{1}</font>\tPING: <font color='{2}'>{3}</font>\t<font color='{4}'>LAG</font>";
 		
 		private var fpsColor:String        = "#B3FE95";
 		private var pingColor:String       = "#B3FE95";
@@ -42,7 +43,9 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		public function modern(shadow_settings:Object, colors:Object)
 		{
 			super();
-			this.debugText = new TextExt(20, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			var middleText:TextFormat = Filters.middleText;
+			middleText.tabStops = [76, 160];
+			this.debugText = new TextExt(20, 0, middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
 			this.fpsColor = colors.fpsColor;
 			this.pingColor = colors.pingColor;
 			this.lagColor = colors.pingLagColor;
@@ -51,37 +54,8 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		
 		private function createBitmapVector():void
 		{
-			this.icons = new Vector.<Bitmap>(10, true);
-			
-			var icon1:Bitmap = new one();
-			this.icons[0] = icon1;
-			
-			var icon2:Bitmap = new two();
-			this.icons[1] = icon2;
-			
-			var icon3:Bitmap = new three();
-			this.icons[2] = icon3;
-			
-			var icon4:Bitmap = new four();
-			this.icons[3] = icon4;
-			
-			var icon5:Bitmap = new five();
-			this.icons[4] = icon5;
-			
-			var icon6:Bitmap = new sixth();
-			this.icons[5] = icon6;
-			
-			var icon7:Bitmap = new seven();
-			this.icons[6] = icon7;
-			
-			var icon8:Bitmap = new eight();
-			this.icons[7] = icon8;
-			
-			var icon9:Bitmap = new nine();
-			this.icons[8] = icon9;
-			
-			var icon10:Bitmap = new ten();
-			this.icons[9] = icon10;
+			this.icons = new <Bitmap>[new _1(), new _2(), new _3(), new _4(), new _5(), new _6(), new _7(), new _8(), new _9(), new _10()];
+			this.icons.fixed = true;
 			
 			for each (var icon:Bitmap in this.icons)
 			{
@@ -91,6 +65,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				icon.width = 210;
 				icon.height = 7;
 				icon.smoothing = true;
+				icon.alpha = 0.8;
 				this.addChild(icon);
 			}
 		}
@@ -111,27 +86,27 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			{
 				icon = this.icons[7];
 			}
-			else if (ping < 60)
+			else if (ping < 50)
 			{
 				icon = this.icons[6];
 			}
-			else if (ping < 80)
+			else if (ping < 60)
 			{
 				icon = this.icons[5];
 			}
-			else if (ping < 100)
+			else if (ping < 80)
 			{
 				icon = this.icons[4];
 			}
-			else if (ping < 200)
+			else if (ping < 100)
 			{
 				icon = this.icons[3];
 			}
-			else if (ping < 400)
+			else if (ping < 200)
 			{
 				icon = this.icons[2];
 			}
-			else if (ping < 800)
+			else if (ping < 400)
 			{
 				icon = this.icons[1];
 			}
