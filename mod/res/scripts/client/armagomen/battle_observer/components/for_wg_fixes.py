@@ -14,8 +14,8 @@ def setViewComponents(base, controller, *args):
 @overrideMethod(DebugController, "_update")
 def updateDebug(base, controller):
     fps = BigWorld.getFPS()[1]
-    if g_replayCtrl.isPlaying and not g_replayCtrl.isBattleSimulation and g_replayCtrl.fps > 0 or isServerSideReplay():
-        fpsReplay = int(g_replayCtrl.fps)
+    if g_replayCtrl.isPlaying:
+        fpsReplay = g_replayCtrl.fps
         ping = g_replayCtrl.ping
         isLaggingNow = g_replayCtrl.isLaggingNow
     else:
@@ -25,6 +25,7 @@ def updateDebug(base, controller):
         controller.statsCollector.update()
         if g_replayCtrl.isRecording:
             g_replayCtrl.setFpsPingLag(fps, ping, isLaggingNow)
+
     try:
         ping = int(ping)
         fps = int(fps)

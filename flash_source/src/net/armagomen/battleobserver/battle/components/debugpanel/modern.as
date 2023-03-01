@@ -1,11 +1,11 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
-	import flash.display.Sprite;
 	import flash.display.Bitmap;
-	import mx.utils.StringUtil;
-	import net.armagomen.battleobserver.utils.TextExt;
-	import net.armagomen.battleobserver.utils.Filters;
+	import flash.display.Sprite;
 	import flash.text.TextFieldAutoSize;
+	import mx.utils.StringUtil;
+	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.TextExt;
 	
 	public class modern extends Sprite
 	{
@@ -55,7 +55,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			
 			var icon1:Bitmap = new one();
 			this.icons[0] = icon1;
-			this.lastVisibleIcon = icon1;
 			
 			var icon2:Bitmap = new two();
 			this.icons[1] = icon2;
@@ -86,11 +85,11 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			
 			for each (var icon:Bitmap in this.icons)
 			{
+				icon.visible = false;
 				icon.x = 15;
 				icon.y = 25;
 				icon.width = 210;
 				icon.height = 7;
-				icon.visible = false;
 				icon.smoothing = true;
 				this.addChild(icon);
 			}
@@ -99,59 +98,57 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		public function update(ping:int, fps:int, lag:Boolean):void
 		{
 			this.debugText.htmlText = StringUtil.substitute(this.template, this.fpsColor, fps, this.pingColor, ping, lag ? this.lagColor : this.pingColor);
-			this.lastVisibleIcon.visible = false;
-			
+			var icon:Bitmap = null;
 			if (ping < 15)
 			{
-				this.icons[9].visible = true;
-				this.lastVisibleIcon = this.icons[9];
+				icon = this.icons[9];
 			}
 			else if (ping < 30)
 			{
-				this.icons[8].visible = true;
-				this.lastVisibleIcon = this.icons[8];
+				icon = this.icons[8];
 			}
 			else if (ping < 40)
 			{
-				this.icons[7].visible = true;
-				this.lastVisibleIcon = this.icons[7];
+				icon = this.icons[7];
 			}
 			else if (ping < 60)
 			{
-				this.icons[6].visible = true;
-				this.lastVisibleIcon = this.icons[6];
+				icon = this.icons[6];
 			}
 			else if (ping < 80)
 			{
-				this.icons[5].visible = true;
-				this.lastVisibleIcon = this.icons[5];
+				icon = this.icons[5];
 			}
 			else if (ping < 100)
 			{
-				this.icons[4].visible = true;
-				this.lastVisibleIcon = this.icons[4];
+				icon = this.icons[4];
 			}
 			else if (ping < 200)
 			{
-				this.icons[3].visible = true;
-				this.lastVisibleIcon = this.icons[3];
+				icon = this.icons[3];
 			}
 			else if (ping < 400)
 			{
-				this.icons[2].visible = true;
-				this.lastVisibleIcon = this.icons[2];
+				icon = this.icons[2];
 			}
 			else if (ping < 800)
 			{
-				this.icons[1].visible = true;
-				this.lastVisibleIcon = this.icons[1];
+				icon = this.icons[1];
 			}
 			else
 			{
-				this.icons[0].visible = true;
-				this.lastVisibleIcon = this.icons[0];
+				icon = this.icons[0];
+			}
+			
+			if (this.lastVisibleIcon !== icon)
+			{
+				if (this.lastVisibleIcon)
+				{
+					this.lastVisibleIcon.visible = false;
+				}
+				icon.visible = true;
+				this.lastVisibleIcon = icon;
 			}
 		}
 	}
-
 }

@@ -1,12 +1,6 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
-	import flash.display.Sprite;
-	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.utils.Filters;
-	import net.armagomen.battleobserver.utils.ProgressBar;
-	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
 	public class ObserverDebugPanelUI extends ObserverBattleDisplayable
 	{
@@ -33,7 +27,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				this.debugPanel = new minimal(shadowSettings, settings);
 			}
 			this.addChild(this.debugPanel);
-		
 		}
 		
 		override protected function onBeforeDispose():void
@@ -44,7 +37,10 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		
 		public function as_update(ping:int, fps:int, lag:Boolean):void
 		{
-			this.debugPanel.update(ping, fps, lag);
+			if (this.debugPanel)
+			{
+				this.debugPanel.update(ping, fps, lag);
+			}
 		}
 	}
 }
