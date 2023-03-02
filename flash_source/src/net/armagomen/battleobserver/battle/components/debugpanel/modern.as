@@ -44,7 +44,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		{
 			super();
 			var middleText:TextFormat = Filters.middleText;
-			middleText.tabStops = [76, 160];
+			middleText.tabStops = [76, 164];
 			this.debugText = new TextExt(20, 0, middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
 			this.fpsColor = colors.fpsColor;
 			this.pingColor = colors.pingColor;
