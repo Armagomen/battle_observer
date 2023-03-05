@@ -2,7 +2,7 @@
 import datetime
 import random
 
-from armagomen.constants import IMG, getLogo, URLS, CLAN_ABBREV
+from armagomen.constants import IMG, getLogo, URLS
 from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod
 from constants import AUTH_REALM
 from gui.SystemMessages import SM_TYPE, pushMessage
@@ -13,6 +13,8 @@ from helpers import getClientLanguage
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
 from skeletons.gui.app_loader import GuiGlobalSpaceID
+
+CLAN_ABBREV = "BO_UA"
 
 
 class Donate(object):
@@ -58,10 +60,9 @@ class Donate(object):
             return
         message = "{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>. " \
                   "Граєш та отримуєш бонуси (бустери, камуфляжі, та інше). " \
-                  "\nУмови на вступ мати 1000 боїв, грати 3 рази на тиждень. " \
-                  "\nУ разі якщо ви не будете з'являтися онлайн протягом тижня вас буде виключено з " \
-                  "клану.</font></p>".format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
-
+                  "\nУмови на вступ: мати 1000 боїв, грати 2-3 рази на тиждень. " \
+                  "\nУ разі якщо ви не будете з'являтися онлайн протягом двох тижнів вас буде виключено з клану. " \
+                  "Місць в клані на всіх не вистачає.</font></p>".format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
         pushMessage(message, type=SM_TYPE.Warning)
 
     @property

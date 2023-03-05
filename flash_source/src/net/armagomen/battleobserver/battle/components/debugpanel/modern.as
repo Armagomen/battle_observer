@@ -44,7 +44,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		{
 			super();
 			var middleText:TextFormat = Filters.middleText;
-			middleText.tabStops = [76, 164];
+			middleText.tabStops = [78, 165];
 			this.debugText = new TextExt(20, 0, middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
 			this.fpsColor = colors.fpsColor;
 			this.pingColor = colors.pingColor;
@@ -65,7 +65,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				icon.width = 210;
 				icon.height = 7;
 				icon.smoothing = true;
-				icon.alpha = 0.8;
+				icon.alpha = 0.9;
 				this.addChild(icon);
 			}
 		}
@@ -94,7 +94,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			{
 				icon = this.icons[5];
 			}
-			else if (ping < 80)
+			else if (ping < 70)
 			{
 				icon = this.icons[4];
 			}
@@ -106,7 +106,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			{
 				icon = this.icons[2];
 			}
-			else if (ping < 400)
+			else if (ping < 300)
 			{
 				icon = this.icons[1];
 			}

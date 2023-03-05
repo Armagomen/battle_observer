@@ -1,5 +1,5 @@
 @Echo off
-set ModVersion=1.40.27
+set ModVersion=1.40.28
 set GameVersion=1.20.0.0
 set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
 set OutputDir=..\output_data\mods\%GameVersion%
