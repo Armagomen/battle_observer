@@ -64,7 +64,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     __slots__ = ('_iconsEnabled', '_statisticsEnabled', 'minimapPlugin', 'statistics')
 
     def __init__(self):
-        listeners = [(alias, self.eventListener) for alias in VIEW_ALIASES]
+        listeners = tuple((alias, self.eventListener) for alias in VIEW_ALIASES)
         super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = None
         self.statistics = StatisticsDataLoader()
