@@ -2,7 +2,7 @@ from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlug
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
 from armagomen.constants import SWF, BATTLE_ALIASES
-from armagomen.utils.common import logError, logInfo, logDebug, callback
+from armagomen.utils.common import logError, logInfo, logDebug, callback, xvmInstalled
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -99,24 +99,22 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         flashObject.as_createStatisticComponent(self._iconsEnabled, self.statistics.itemsWTRData,
                                                 *viewSettings.getStatisticsSettings())
 
-    def onViewLoaded(self, view, *args):
-        alias = view.getAlias()
-        if alias not in VIEW_ALIASES:
-            return
+    def onViewLoaded(self, pyView, *args):
+        alias = pyView.getAlias()
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
-        g_events.onBattlePageLoaded(view)
-        if not hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
-            to_format_str = "{} {}, has ho attribute {}"
-            return logError(to_format_str, alias, repr(view.flashObject), SWF.ATTRIBUTE_NAME)
-        callback(0.1, self._loadView, view)
-        callback(40.0, view.flashObject.as_observerUpdateDamageLogPosition)
+        g_events.onBattlePageLoaded(pyView)
+        if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
+            to_format_str = "{}:flashObject, has ho attribute {}"
+            return logError(to_format_str, alias, SWF.ATTRIBUTE_NAME)
+        callback(1.0 if xvmInstalled else 0, self._loadView, pyView)
+        callback(40.0, pyView.flashObject.as_observerUpdateDamageLogPosition)
 
-    def _loadView(self, view):
-        view._blToggling.update(viewSettings.components)
-        view.flashObject.as_observerCreateComponents(viewSettings.components)
-        view.flashObject.as_observerHideWgComponents(viewSettings.hiddenComponents)
+    def _loadView(self, pyView):
+        pyView._blToggling.update(viewSettings.components)
+        pyView.flashObject.as_observerCreateComponents(viewSettings.components)
+        pyView.flashObject.as_observerHideWgComponents(viewSettings.hiddenComponents)
         if self.minimapPlugin is not None:
-            self.minimapPlugin.init(view.flashObject)
+            self.minimapPlugin.init(pyView.flashObject)
         if self._iconsEnabled or self._statisticsEnabled:
-            self.loadStatisticView(view.flashObject)
+            self.loadStatisticView(pyView.flashObject)
