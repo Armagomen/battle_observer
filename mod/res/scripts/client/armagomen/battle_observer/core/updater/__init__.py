@@ -34,10 +34,11 @@ __MESSAGES = (
 
 LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
 
+AUTO_URL = "https://github.com/Armagomen/battle_observer/releases/latest/download/AutoUpdate.zip"
+FULL_URL = "https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip"
+
 
 class DownloadThread(object):
-    URLS = {'auto': 'https://github.com/Armagomen/battle_observer/releases/latest/download/AutoUpdate.zip',
-            'full': 'https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip'}
 
     def __init__(self):
         self.version = None
@@ -56,14 +57,13 @@ class DownloadThread(object):
             logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
             self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(mod_version))
         else:
-            url = self.URLS['auto']
             self.downloader = WebDownloader(GLOBAL.ONE)
-            if url:
-                logInfo(LOG_MESSAGES.STARTED.format(mod_version, url))
-                self.downloader.download(url, self.onDownloaded)
+            if AUTO_URL:
+                logInfo(LOG_MESSAGES.STARTED.format(mod_version, AUTO_URL))
+                self.downloader.download(AUTO_URL, self.onDownloaded)
             else:
                 self.closeDownloader()
-                self.downloadError(url)
+                self.downloadError(AUTO_URL)
 
     def closeDownloader(self):
         if self.downloader is not None:
@@ -114,17 +114,7 @@ class Updater(DownloadThread):
             response_data = loads(response.body)
             self.updateData.update(response_data)
             new_version = response_data.get('tag_name', self.version)
-            local_ver = self.tupleVersion(self.version)
-            server_ver = self.tupleVersion(new_version)
-            if local_ver < server_ver:
-                assets = response_data.get('assets')
-                for asset in assets:
-                    filename = asset.get('name', '')
-                    download_url = asset.get('browser_download_url')
-                    if filename == 'AutoUpdate.zip':
-                        self.URLS['auto'] = download_url
-                    elif filename == 'BattleObserver_WOT_EU.zip':
-                        self.URLS['full'] = download_url
+            if self.tupleVersion(self.version) < self.tupleVersion(new_version):
                 logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
                 self.showUpdateDialog()
             else:
@@ -147,6 +137,6 @@ class Updater(DownloadThread):
         title = self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, git_message)
-        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
+        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, FULL_URL))
         if result:
             self.startDownload()
