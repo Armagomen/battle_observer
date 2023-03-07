@@ -3,7 +3,6 @@ from armagomen.battle_observer.components.statistics.statistic_data_loader impor
 from armagomen.battle_observer.core import viewSettings
 from armagomen.constants import SWF, BATTLE_ALIASES
 from armagomen.utils.common import logError, logInfo, logDebug, callback, xvmInstalled
-from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -103,7 +102,6 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         alias = pyView.getAlias()
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.onViewLoaded
-        g_events.onBattlePageLoaded(pyView)
         if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{}:flashObject, has ho attribute {}"
             return logError(to_format_str, alias, SWF.ATTRIBUTE_NAME)

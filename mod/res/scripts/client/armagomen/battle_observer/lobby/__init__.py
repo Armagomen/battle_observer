@@ -1,6 +1,5 @@
 from armagomen.constants import SWF, LOBBY_ALIASES
-from armagomen.utils.common import logError, logDebug, callback, logInfo
-from armagomen.utils.events import g_events
+from armagomen.utils.common import logError, callback, logInfo, xvmInstalled
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -27,30 +26,21 @@ class ObserverBusinessHandlerLobby(PackageBusinessHandler):
     __slots__ = ('_listeners', '_scope', '_app', '_appNS', '__loaded')
 
     def __init__(self):
-        listeners = [(VIEW_ALIAS.LOBBY_HANGAR, self.eventListener), (VIEW_ALIAS.LOGIN, self.eventListener)]
+        listeners = [(VIEW_ALIAS.LOBBY_HANGAR, self.eventListener)]
         super(ObserverBusinessHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
         self.__loaded = False
 
     def eventListener(self, event):
         self._app.loaderManager.onViewLoaded += self._onViewLoaded
-        if event.alias == VIEW_ALIAS.LOBBY_HANGAR and not self.__loaded:
-            self._app.as_loadLibrariesS([SWF.LOBBY])
-            logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.LOBBY, event.alias))
-            self.__loaded = True
+        self._app.as_loadLibrariesS([SWF.LOBBY])
+        logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.LOBBY, event.alias))
 
     @staticmethod
-    def load(view):
-        g_events.onHangarLoaded(view)
-        if hasattr(view.flashObject, SWF.ATTRIBUTE_NAME):
-            view.flashObject.as_observerCreateComponents(LOBBY_ALIASES)
-        else:
-            logError("hangar_page {}, has ho attribute {}", view.settings.alias, SWF.ATTRIBUTE_NAME)
+    def load(pyView):
+        if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
+            return logError("{}:flashObject, has ho attribute {}", pyView.getAlias(), SWF.ATTRIBUTE_NAME)
+        pyView.flashObject.as_observerCreateComponents(LOBBY_ALIASES)
 
-    def _onViewLoaded(self, view, *args):
-        alias = view.getAlias()
-        if alias == VIEW_ALIAS.LOGIN:
-            callback(1.0, g_events.onLoginLoaded, view)
-            logDebug("onViewLoaded, alias={}", alias)
-        elif alias == VIEW_ALIAS.LOBBY_HANGAR:
-            callback(1.0, self.load, view)
-            logDebug("onViewLoaded, alias={}", alias)
+    def _onViewLoaded(self, pyView, *args):
+        self._app.loaderManager.onViewLoaded -= self._onViewLoaded
+        callback(1.0 if xvmInstalled else 0, self.load, pyView)

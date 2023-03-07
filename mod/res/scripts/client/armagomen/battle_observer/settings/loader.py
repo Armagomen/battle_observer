@@ -4,7 +4,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import LOAD_LIST, DISPERSION, GLOBAL, SIXTH_SENSE
 from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, currentConfigPath
 from armagomen.utils.dialogs import LoadingErrorDialog
-from armagomen.utils.events import g_events
+from gui.shared.personality import ServicesLocator
 
 JSON = "{}.json"
 READ_MESSAGE = "SettingsLoader/loadConfigPart: {}: {}"
@@ -18,7 +18,6 @@ class SettingsLoader(object):
         self.configsList = sorted(
             x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x))
         )
-        g_events.onHangarLoaded += self.onHangarLoaded
         load_json = os.path.join(currentConfigPath, 'load.json')
         if os.path.exists(load_json):
             self.configName = openJsonFile(load_json).get('loadConfig')
@@ -97,6 +96,8 @@ class SettingsLoader(object):
             self.loadConfigPart(part_name, direct_path, listdir, internal_cfg)
         logInfo("LOADING '{}' CONFIGURATION COMPLETED".format(self.configName.upper()))
         settings.onUserConfigUpdateComplete()
+        if self.errorMessages:
+            ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
     def loadConfigPart(self, part_name, direct_path, listdir, internal_cfg):
         """Read settings part file from JSON"""
@@ -107,7 +108,7 @@ class SettingsLoader(object):
         try:
             file_data = openJsonFile(file_path)
         except Exception as error:
-            message = READ_MESSAGE.format(file_path, repr(error))
+            message = READ_MESSAGE.format(file_path, error.message or repr(error))
             self.errorMessages.append(message)
             return logWarning(message)
         else:
@@ -116,8 +117,9 @@ class SettingsLoader(object):
             logDebug(READ_MESSAGE, self.configName, file_name)
             settings.onModSettingsChanged(internal_cfg, part_name)
 
-    def onHangarLoaded(self, view):
+    def onGUISpaceEntered(self, spaceID):
         if self.errorMessages:
             dialog = LoadingErrorDialog()
             dialog.showLoadingError(GLOBAL.NEW_LINE.join(self.errorMessages))
             self.errorMessages = []
+            ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered

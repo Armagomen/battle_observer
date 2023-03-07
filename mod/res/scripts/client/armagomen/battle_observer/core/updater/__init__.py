@@ -7,11 +7,11 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer.core.updater.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS
-from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, getUpdatePath, fetchURL, logDebug
+from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, getUpdatePath, fetchURL, logDebug, callback
 from armagomen.utils.dialogs import UpdaterDialogs
-from armagomen.utils.events import g_events
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
+from skeletons.gui.app_loader import GuiGlobalSpaceID
 from uilogging.core.core_constants import HTTP_OK_STATUS
 from web.cache.web_downloader import WebDownloader
 from wg_async import wg_async, wg_await
@@ -106,7 +106,9 @@ class Updater(DownloadThread):
     def __init__(self, version):
         super(Updater, self).__init__()
         self.version = version
-        self.inLogin = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+        self.loginServerSelection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+        self.updateAvailable = None
+        ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         fetchURL(URLS.UPDATE_GITHUB_API_URL, self.request_last_version)
         logInfo(LOG_MESSAGES.CHECK)
 
@@ -126,31 +128,28 @@ class Updater(DownloadThread):
                         self.URLS['auto'] = download_url
                     elif filename == 'BattleObserver_WOT_EU.zip':
                         self.URLS['full'] = download_url
-                self.subscribe()
                 logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
+            self.updateAvailable = local_ver < server_ver
+        else:
+            callback(120.0, fetchURL, URLS.UPDATE_GITHUB_API_URL, self.request_last_version)
         logDebug('contentType={}, responseCode={} body={}', response.contentType, response.responseCode, response.body)
 
     @staticmethod
     def tupleVersion(version):
         return tuple(map(int, version.split('.')))
 
-    def subscribe(self):
-        if self.inLogin:
-            g_events.onLoginLoaded += self.showDialog
-        else:
-            g_events.onHangarLoaded += self.showDialog
-
     @wg_async
-    def showDialog(self, view):
+    def onGUISpaceEntered(self, spaceID):
+        if self.updateAvailable is None or GuiGlobalSpaceID.LOGIN == spaceID and not self.loginServerSelection:
+            return
+        ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
+        if not self.updateAvailable:
+            return
         title = self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, git_message)
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, self.URLS['full']))
         if result:
             self.startDownload()
-        if self.inLogin:
-            g_events.onLoginLoaded -= self.showDialog
-        else:
-            g_events.onHangarLoaded -= self.showDialog
