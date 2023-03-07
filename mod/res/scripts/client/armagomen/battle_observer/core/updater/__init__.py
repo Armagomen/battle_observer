@@ -34,9 +34,6 @@ __MESSAGES = (
 
 LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
 
-AUTO_URL = "https://github.com/Armagomen/battle_observer/releases/latest/download/AutoUpdate.zip"
-FULL_URL = "https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip"
-
 
 class DownloadThread(object):
 
@@ -57,13 +54,9 @@ class DownloadThread(object):
             logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
             self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(mod_version))
         else:
+            logInfo(LOG_MESSAGES.STARTED.format(mod_version, URLS.AUTO_UPDATE))
             self.downloader = WebDownloader(GLOBAL.ONE)
-            if AUTO_URL:
-                logInfo(LOG_MESSAGES.STARTED.format(mod_version, AUTO_URL))
-                self.downloader.download(AUTO_URL, self.onDownloaded)
-            else:
-                self.closeDownloader()
-                self.downloadError(AUTO_URL)
+            self.downloader.download(URLS.AUTO_UPDATE, self.onDownloaded)
 
     def closeDownloader(self):
         if self.downloader is not None:
@@ -137,6 +130,6 @@ class Updater(DownloadThread):
         title = self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, git_message)
-        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, FULL_URL))
+        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, URLS.HANDLE_UPDATE))
         if result:
             self.startDownload()
