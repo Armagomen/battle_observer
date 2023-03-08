@@ -81,7 +81,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
         if self.settings[MARKERS.NAME][GLOBAL.ENABLED] and is_normal_mode:
             self.markers = CorrelationMarkers(self._arenaDP, self.settingsCore, self.settings[MARKERS.NAME],
-                                              self.vehicle_types, self.colors, self.as_markersS)
+                                              self.vehicle_types, self.getColors(), self.as_markersS)
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
 
     def _dispose(self):

@@ -4,7 +4,7 @@ from collections import defaultdict
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
-from armagomen.utils.common import percentToRGB, getPlayer
+from armagomen.utils.common import percentToRGB
 from constants import ARENA_PERIOD
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, getHealthPercent
 from gui.battle_control import avatar_getter
@@ -20,7 +20,8 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             VEHICLE.MAX: GLOBAL.ZERO,
             VEHICLE.PERCENT: GLOBAL.ZERO
         })
-        self.isPostmortem = False
+        self.isAliveMode = True
+        self.isBattlePeriod = False
         self.__maxHealth = GLOBAL.ZERO
 
     def updateVehicleParams(self, vehicle, *args):
@@ -43,7 +44,8 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
 
     def onArenaPeriod(self, period, *args):
-        self.as_setComponentVisible(period == ARENA_PERIOD.BATTLE)
+        self.isBattlePeriod = period == ARENA_PERIOD.BATTLE
+        self.as_setComponentVisible(self.isBattlePeriod and self.isAliveMode)
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -60,7 +62,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         super(OwnHealth, self)._dispose()
 
     def __onVehicleControlling(self, vehicle):
-        if self.isPostmortem:
+        if not self.isAliveMode:
             return self.as_setComponentVisible(False)
         if self.__maxHealth != vehicle.maxHealth:
             self.__maxHealth = vehicle.maxHealth
@@ -71,14 +73,13 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             self._updateHealth(value)
 
     def onCameraChanged(self, ctrlMode, *_, **__):
-        self.isPostmortem = ctrlMode in POSTMORTEM.MODES
-        player = getPlayer()
-        if player is None:
-            self.isPostmortem = True
-        self.as_setComponentVisible(not self.isPostmortem and player.arena.period == ARENA_PERIOD.BATTLE)
+        self.isAliveMode = ctrlMode not in POSTMORTEM.MODES
+        self.as_setComponentVisible(self.isBattlePeriod and self.isAliveMode)
 
     def _updateHealth(self, health):
-        if self.isPostmortem or health > self.__maxHealth or self.__maxHealth <= GLOBAL.ZERO:
+        if health > self.__maxHealth:
+            self.__maxHealth = health
+        if self.__maxHealth <= GLOBAL.ZERO:
             return
         health = normalizeHealth(health)
         if self.macrosDict[VEHICLE.CUR] == health and self.macrosDict[VEHICLE.MAX] == self.__maxHealth:

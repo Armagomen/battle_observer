@@ -17,11 +17,11 @@ class BaseModMeta(BaseDAAPIComponent):
         self._arenaDP = self.sessionProvider.getArenaDP()
         self._arenaVisitor = self.sessionProvider.arenaVisitor
         self.settings = None
-        self.colors = settings.colors
         self.vehicle_types = settings.vehicle_types
 
-    def setSettings(self):
-        settings_name = ALIAS_TO_CONFIG_NAME.get(self.getAlias(), GLOBAL.EMPTY_LINE)
+    def setAlias(self, alias):
+        super(BaseModMeta, self).setAlias(alias)
+        settings_name = ALIAS_TO_CONFIG_NAME.get(alias, GLOBAL.EMPTY_LINE)
         self.settings = getattr(settings, settings_name, None) or settings
 
     @property
@@ -36,28 +36,25 @@ class BaseModMeta(BaseDAAPIComponent):
         return settings.shadow_settings
 
     def getSettings(self):
-        if self.settings is None:
-            self.setSettings()
         return self.settings
 
-    def getColors(self):
-        return self.colors
-
-    def getAlpha(self):
-        return round(min(1.0, self.colors[COLORS.GLOBAL][GLOBAL.ALPHA] * 1.4), 2)
+    @staticmethod
+    def getColors():
+        return settings.colors
 
     @staticmethod
-    def doLog(*args):
+    def getAlpha():
+        return round(min(1.0, settings.colors[COLORS.GLOBAL][GLOBAL.ALPHA] * 1.4), 2)
+
+    def doLog(self, *args):
         for arg in args:
-            info = "{} - {}".format(arg, dir(arg))
-            logInfo(info)
+            logInfo("{}:{} - {}".format(self.getAlias(), arg, dir(arg)))
 
     def isColorBlind(self):
         return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        self.setSettings()
         logDebug("battle module '{}' loaded", self.getAlias())
 
     def _dispose(self):

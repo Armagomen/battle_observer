@@ -48,7 +48,7 @@ class ArmorCalculator(ArmorCalcMeta):
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):
-        self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.colors[ARMOR_CALC.NAME].get(color, COLORS.C_RED)
+        self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.getColors()[ARMOR_CALC.NAME].get(color, COLORS.C_RED)
         self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.settings[ARMOR_CALC.MESSAGES].get(color, GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):

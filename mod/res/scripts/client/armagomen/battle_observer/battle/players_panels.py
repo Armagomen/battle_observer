@@ -46,11 +46,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_colorBlindBarsS(barColor)
 
     def getBarColor(self, isEnemy, isColorBlind=None):
+        colors = self.getColors()[COLORS.GLOBAL]
         if isEnemy:
             if isColorBlind is None:
                 isColorBlind = self.isColorBlind()
-            return self.colors[COLORS.GLOBAL][COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME]
-        return self.colors[COLORS.GLOBAL][COLORS.ALLY_MAME]
+            return colors[COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME]
+        return colors[COLORS.ALLY_MAME]
 
     def createHealthBar(self, vehicleID, vInfoVO, isEnemy):
         max_health = vInfoVO.vehicleType.maxHealth
@@ -60,7 +61,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             color = self.getBarColor(isEnemy)
         visible = not self.settings[PANELS.ON_KEY_DOWN]
         vehicle_data = {VEHICLE.CUR: max_health, VEHICLE.MAX: max_health, VEHICLE.PERCENT: 100}
-        self.as_addHealthBarS(vehicleID, color, self.colors[COLORS.GLOBAL], self.settings[PANELS.BAR_SETTINGS], visible)
+        colors = self.getColors()
+        self.as_addHealthBarS(vehicleID, color, colors[COLORS.GLOBAL], self.settings[PANELS.BAR_SETTINGS], visible)
         self.as_updateHealthBarS(vehicleID, 100, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onAddedToStorage(self, vehicleID, isEnemy):
