@@ -15,7 +15,7 @@ if CURRENT_REALM != "RU":
     from armagomen.battle_observer.core import onInit, onFini
     from helpers.statistics import StatisticsCollector
 
-    logging.disable(logging.ERROR)
+    logging.disable(logging.WARNING)
     StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
 
 
