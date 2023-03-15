@@ -5,7 +5,6 @@ from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates
 
 cachedVehicleData = CurrentVehicleCachedData()
 viewSettings = ViewSettings()
-componentsLoader = None
 hangarSettings = None
 
 
@@ -17,7 +16,7 @@ def startLoadingMod(modVersion, current_realm):
         from armagomen.battle_observer.core.updater import Updater
         Updater(modVersion)
 
-        from armagomen.battle_observer.components import ComponentsLoader
+        from armagomen.battle_observer.components import loadComponents
         from armagomen.battle_observer.settings.loader import SettingsLoader
         from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
         from sys import version
@@ -27,10 +26,10 @@ def startLoadingMod(modVersion, current_realm):
         errorMessage = repr(err)
     else:
         if isFileValid(modVersion):
-            global componentsLoader, hangarSettings
+            global hangarSettings
             logInfo('Launched at python v{} region={}'.format(version, current_realm))
             registerBattleObserverPackages()
-            componentsLoader = ComponentsLoader()
+            loadComponents()
             settings_loader = SettingsLoader()
             hangarSettings = SettingsInterface(settings_loader, modVersion)
         else:
