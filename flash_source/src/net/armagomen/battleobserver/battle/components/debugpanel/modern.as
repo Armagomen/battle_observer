@@ -3,10 +3,9 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.text.TextFieldAutoSize;
-	import flash.text.TextFormat;
-	import mx.utils.StringUtil;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
+	import net.armagomen.battleobserver.utils.Utils;
 	
 	public class modern extends Sprite
 	{
@@ -31,24 +30,36 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		[Embed(source = "ping_img/10.png")]
 		private var _10:Class;
 		
-		private var debugText:TextExt      = null;
-		private const template:String      = "FPS: <font color='{0}'>{1}</font>\tPING: <font color='{2}'>{3}</font>\t<font color='{4}'>LAG</font>";
+		private var FPS:TextExt            = null;
+		private var PING:TextExt           = null;
+		private var LAG:TextExt            = null;
+		private var PATTERN:TextExt        = null;
 		
-		private var fpsColor:String        = "#B3FE95";
-		private var pingColor:String       = "#B3FE95";
-		private var lagColor:String        = "#FD9675";
+		private var fpsColor:uint          = Utils.colorConvert("#B3FE95");
+		private var pingColor:uint         = Utils.colorConvert("#B3FE95");
+		private var lagColor:uint          = Utils.colorConvert("#FD9675");
 		private var icons:Vector.<Bitmap>  = null;
 		private var lastVisibleIcon:Bitmap = null;
 		
 		public function modern(shadow_settings:Object, colors:Object)
 		{
 			super();
-			var middleText:TextFormat = Filters.middleText;
-			middleText.tabStops = [78, 165];
-			this.debugText = new TextExt(20, 0, middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
-			this.fpsColor = colors.fpsColor;
-			this.pingColor = colors.pingColor;
-			this.lagColor = colors.pingLagColor;
+			this.LAG = new TextExt(185, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.LAG.text = "LAG";
+			this.PATTERN = new TextExt(20, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.PATTERN.htmlText = "<textformat tabstops='[78]'>FPS:\tPING:</textformat>";
+			
+			this.FPS = new TextExt(60, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.PING = new TextExt(146, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			
+			this.fpsColor = Utils.colorConvert(colors.fpsColor);
+			this.pingColor = Utils.colorConvert(colors.pingColor);
+			this.lagColor = Utils.colorConvert(colors.pingLagColor);
+			
+			this.FPS.textColor = this.fpsColor;
+			this.PING.textColor = this.pingColor;
+			this.LAG.textColor = this.pingColor;
+			
 			this.createBitmapVector();
 		}
 		
@@ -72,7 +83,13 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		
 		public function update(ping:int, fps:int, lag:Boolean):void
 		{
-			this.debugText.htmlText = StringUtil.substitute(this.template, this.fpsColor, fps, this.pingColor, ping, lag ? this.lagColor : this.pingColor);
+			this.FPS.text = fps.toString();
+			this.PING.text = ping.toString();
+			var color:uint = lag ? this.lagColor : this.pingColor;
+			if (this.LAG.textColor != color)
+			{
+				this.LAG.textColor = color;
+			}
 			var icon:Bitmap = null;
 			if (ping < 15)
 			{
