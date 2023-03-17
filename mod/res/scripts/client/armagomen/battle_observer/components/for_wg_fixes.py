@@ -3,15 +3,17 @@ import BigWorld
 from BattleReplay import g_replayCtrl, isServerSideReplay
 from DogTagComponent import DogTagComponent
 from armagomen.utils.common import overrideMethod
-from gui.battle_control.controllers.debug_ctrl import DebugController
+from gui.battle_control.controllers import debug_ctrl
+
+debug_ctrl._UPDATE_INTERVAL = 0.3
 
 
-@overrideMethod(DebugController, "setViewComponents")
+@overrideMethod(debug_ctrl.DebugController, "setViewComponents")
 def setViewComponents(base, controller, *args):
     controller._debugPanelUI = args
 
 
-@overrideMethod(DebugController, "_update")
+@overrideMethod(debug_ctrl.DebugController, "_update")
 def updateDebug(base, controller):
     fps = BigWorld.getFPS()[1]
     if g_replayCtrl.isPlaying:
