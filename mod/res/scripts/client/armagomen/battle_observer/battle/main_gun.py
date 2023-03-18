@@ -1,4 +1,3 @@
-from collections import defaultdict
 from math import ceil
 
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
@@ -17,7 +16,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.isLowHealth = False
         self.totalEnemiesHP = GLOBAL.ZERO
         self.playerDamage = GLOBAL.ZERO
-        self.playersDamage = defaultdict(int)
 
     def _populate(self):
         super(MainGun, self)._populate()
@@ -49,7 +47,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.as_gunDataS(self.gunLeft, self.isLowHealth)
 
     def onPlayerDamaged(self, attackerID, damage):
-        if self._arenaDP.isAlly(attackerID) and attackerID != self.playerVehicleID and damage > self.gunScore:
+        if damage > self.gunScore and self._arenaDP.isAlly(attackerID) and attackerID != self.playerVehicleID:
             self.gunScore = damage
             self.updateMainGun()
 
