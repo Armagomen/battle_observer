@@ -12,7 +12,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def __init__(self):
         super(MainGun, self).__init__()
-        self.macros = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
         self.gunScore = GLOBAL.ZERO
         self.gunLeft = GLOBAL.ZERO
         self.isLowHealth = False
@@ -22,8 +21,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def _populate(self):
         super(MainGun, self)._populate()
-        self.macros.update(mainGunIcon=self.settings[MAIN_GUN.GUN_ICON],
-                           mainGunDoneIcon=GLOBAL.EMPTY_LINE, mainGunFailureIcon=GLOBAL.EMPTY_LINE)
         damage_controller.init()
         damage_controller.onPlayerDamaged += self.onPlayerDamaged
         feedback = self.sessionProvider.shared.feedback
@@ -49,16 +46,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def updateMainGun(self):
         self.gunLeft = self.gunScore - self.playerDamage
-        self.updateMacrosDict(self.gunLeft <= GLOBAL.ZERO)
-        self.as_mainGunTextS(self.settings[MAIN_GUN.TEMPLATE] % self.macros)
-
-    def updateMacrosDict(self, achieved):
-        self.macros[MAIN_GUN.INFO] = GLOBAL.EMPTY_LINE if achieved else self.gunLeft
-        self.macros[MAIN_GUN.DONE_ICON] = self.settings[MAIN_GUN.DONE_ICON] if achieved else GLOBAL.EMPTY_LINE
-        if not achieved and self.isLowHealth:
-            self.macros[MAIN_GUN.FAILURE_ICON] = self.settings[MAIN_GUN.FAILURE_ICON]
-        else:
-            self.macros[MAIN_GUN.FAILURE_ICON] = GLOBAL.EMPTY_LINE
+        self.as_gunDataS(self.gunLeft, self.isLowHealth)
 
     def onPlayerDamaged(self, attackerID, damage):
         if self._arenaDP.isAlly(attackerID) and attackerID != self.playerVehicleID and damage > self.gunScore:

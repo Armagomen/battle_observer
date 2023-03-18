@@ -126,10 +126,7 @@ COLORS = namedtuple("COLORS", (
     "#FFC900", "green", "orange", "red", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind",
     "deadColor")
 
-MAIN_GUN = namedtuple("MAIN_GUN", (
-    "NAME", "TEMPLATE", "GUN_ICON", "DONE_ICON", "FAILURE_ICON", "MIN_GUN_DAMAGE", "DAMAGE_RATE", "INFO"))(
-    "main_gun", "template", "mainGunIcon", "mainGunDoneIcon", "mainGunFailureIcon", 1000, 0.2,
-    "mainGun")
+MAIN_GUN = namedtuple("MAIN_GUN", ("NAME", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))("main_gun", 1000, 0.2)
 
 MINIMAP = namedtuple("MINIMAP", (
     "NAME", "DEATH_PERMANENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW", "ZOOM_KEY"))(

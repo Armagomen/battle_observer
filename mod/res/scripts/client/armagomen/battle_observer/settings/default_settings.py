@@ -4,7 +4,7 @@ import Keys
 from Event import SafeEvent
 from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS,
-    FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MAIN_GUN, MARKERS, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
+    FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MARKERS, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
     SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES, DISTANCE, OWN_HEALTH, STATISTICS, AVG_EFFICIENCY_HANGAR,
     DISPERSION_TIMER
 )
@@ -292,18 +292,8 @@ class DefaultSettings(object):
         }
         self.main_gun = {
             GLOBAL.ENABLED: False,
-            MAIN_GUN.TEMPLATE: "%(mainGunIcon)s%(mainGunDoneIcon)s%(mainGunFailureIcon)s%(mainGun)s",
-            GLOBAL.SETTINGS: {
-                GLOBAL.X: 255,
-                GLOBAL.Y: GLOBAL.ZERO,
-                GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
-            },
-            MAIN_GUN.GUN_ICON: "<img src='{}/battle_observer/main_gun.png' width='24' height='22' vspace='-5'>".format(
-                GLOBAL.ICONS_DIR),
-            MAIN_GUN.DONE_ICON: "<img src='{}/battle_observer/done.png' width='22' height='22' vspace='-5'>".format(
-                GLOBAL.ICONS_DIR),
-            MAIN_GUN.FAILURE_ICON: "<img src='{}/battle_observer/warning.png' width='25' height='22' vspace='-5'> "
-                                   "".format(GLOBAL.ICONS_DIR)
+            GLOBAL.X: 255,
+            GLOBAL.Y: GLOBAL.ZERO
         }
         self.vehicle_types = {
             VEHICLE_TYPES.CLASS_COLORS: {

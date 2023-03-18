@@ -230,9 +230,8 @@ localization = {
     },
     "main_gun": {
         "header": "MAIN GUN",
-        "settings*x": "the horizontal Position of (center of screen)",
-        "settings*y": "the vertical Position (upper edge)",
-        "settings*align": "Alignment text:"
+        "x": "the horizontal Position of (center of screen)",
+        "y": "the vertical Position (upper edge)"
     },
     "team_bases_panel": {
         "header": "TEAM BASES PANEL",
