@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
@@ -9,16 +7,14 @@ from gui.battle_control.arena_info.arena_vos import VehicleTypeInfoVO
 from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategories
 from messenger.storage import storage_getter
 
-Cache = namedtuple("Cache", "friends databaseID")
-_cache = Cache(set(), GLOBAL.ZERO)
+_cache = set()
 
 
 def onGuiCacheSyncCompleted(ctx):
+    _cache.clear()
     users = storage_getter(ANOTHER.USERS)().getList(_ContactsCategories().getCriteria())
-    friends = set(user for user in users if not user.isIgnored())
-    database_id = ctx.get(ANOTHER.DBID, GLOBAL.ZERO)
-    global _cache
-    _cache = Cache(friends, database_id)
+    _cache.update(user for user in users if not user.isIgnored())
+    _cache.add(ctx.get(ANOTHER.DBID, GLOBAL.ZERO))
 
 
 g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
@@ -28,8 +24,8 @@ g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
 def new_VehicleArenaInfoVO(init, vTypeVo, *args, **kwargs):
     if not viewSettings.gui.isInEpicRange() and settings.main[MAIN.SHOW_FRIENDS]:
         init(vTypeVo, *args, **kwargs)
-        if kwargs and _cache.databaseID > GLOBAL.ZERO and not vTypeVo.isPremiumIGR and ANOTHER.ACCOUNT_DBID in kwargs:
-            vTypeVo.isPremiumIGR = kwargs[ANOTHER.ACCOUNT_DBID] in _cache.friends
+        if kwargs.get(ANOTHER.ACCOUNT_DBID) and not vTypeVo.isPremiumIGR:
+            vTypeVo.isPremiumIGR = kwargs[ANOTHER.ACCOUNT_DBID] in _cache
     else:
         return init(vTypeVo, *args, **kwargs)
 

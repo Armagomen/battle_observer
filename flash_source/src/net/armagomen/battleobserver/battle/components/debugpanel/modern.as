@@ -35,7 +35,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var LAG:TextExt            = null;
 		private var PATTERN:TextExt        = null;
 		
-		private var fpsColor:uint          = Utils.colorConvert("#B3FE95");
 		private var pingColor:uint         = Utils.colorConvert("#B3FE95");
 		private var lagColor:uint          = Utils.colorConvert("#FD9675");
 		private var icons:Vector.<Bitmap>  = null;
@@ -49,14 +48,13 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			this.PATTERN = new TextExt(20, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
 			this.PATTERN.htmlText = "<textformat tabstops='[78]'>FPS:\tPING:</textformat>";
 			
-			this.FPS = new TextExt(60, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
-			this.PING = new TextExt(146, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.FPS = new TextExt(58, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.PING = new TextExt(144, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
 			
-			this.fpsColor = Utils.colorConvert(colors.fpsColor);
 			this.pingColor = Utils.colorConvert(colors.pingColor);
 			this.lagColor = Utils.colorConvert(colors.pingLagColor);
 			
-			this.FPS.textColor = this.fpsColor;
+			this.FPS.textColor = Utils.colorConvert(colors.fpsColor);
 			this.PING.textColor = this.pingColor;
 			this.LAG.textColor = this.pingColor;
 			
@@ -75,8 +73,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 				icon.y = 25;
 				icon.width = 210;
 				icon.height = 7;
-				icon.smoothing = true;
-				icon.alpha = 0.9;
+				icon.alpha = 0.75;
 				this.addChild(icon);
 			}
 		}

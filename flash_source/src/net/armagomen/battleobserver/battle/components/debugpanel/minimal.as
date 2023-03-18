@@ -8,7 +8,6 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	
 	public class minimal extends Sprite
 	{
-		private var fpsColor:uint   = Utils.colorConvert("#B3FE95");
 		private var pingColor:uint  = Utils.colorConvert("#B3FE95");
 		private var lagColor:uint   = Utils.colorConvert("#FD9675");
 		
@@ -23,10 +22,9 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			this.PATTERN.htmlText = "<textformat tabstops='[80]'>FPS:\tPING:</textformat>";
 			this.FPS = new TextExt(46, 0, Filters.largeText, TextFieldAutoSize.LEFT, shadow_settings, this);
 			this.PING = new TextExt(136, 0, Filters.largeText, TextFieldAutoSize.LEFT, shadow_settings, this);
-			this.fpsColor = Utils.colorConvert(colors.fpsColor);
 			this.pingColor = Utils.colorConvert(colors.pingColor);
 			this.lagColor = Utils.colorConvert(colors.pingLagColor);
-			this.FPS.textColor = this.fpsColor;
+			this.FPS.textColor = Utils.colorConvert(colors.fpsColor);
 			this.PING.textColor = this.pingColor;
 		}
 		
