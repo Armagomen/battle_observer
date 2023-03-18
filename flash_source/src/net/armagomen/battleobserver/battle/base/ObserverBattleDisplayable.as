@@ -1,7 +1,7 @@
 package net.armagomen.battleobserver.battle.base
 {
-	import net.wg.gui.battle.components.BattleDisplayable;
 	import flash.events.Event;
+	import net.wg.gui.battle.components.BattleDisplayable;
 	
 	public class ObserverBattleDisplayable extends BattleDisplayable
 	{
@@ -28,7 +28,6 @@ package net.armagomen.battleobserver.battle.base
 			this.buttonMode = false;
 		}
 		
-		
 		override protected function onPopulate():void
 		{
 			this.removeChildren();
@@ -53,12 +52,6 @@ package net.armagomen.battleobserver.battle.base
 		{
 			this.x = x;
 			this.y = y;
-		}
-		
-		public function as_isComponentVisible(alias:String):Boolean
-		{
-			var page:* = this.parent;
-			return page.as_isComponentVisible(alias);
 		}
 	}
 }

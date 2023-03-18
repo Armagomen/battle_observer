@@ -26,7 +26,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 g_keysListener.registerComponent(self.as_setHealthBarsVisibleS,
                                                  keyList=self.settings[PANELS.BAR_HOT_KEY])
         if self.damagesEnable:
-            damage_controller.init()
             damage_controller.onPlayerDamaged += self.onPlayerDamaged
             g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS,
                                              keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
@@ -36,7 +35,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if self.hpBarsEnable and not self.settings[PANELS.BAR_CLASS_COLOR]:
             self.settingsCore.onSettingsApplied -= self.onSettingsApplied
         if self.damagesEnable:
-            damage_controller.fini()
             damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         super(PlayersPanels, self)._dispose()
 

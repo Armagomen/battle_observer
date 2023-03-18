@@ -19,7 +19,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def _populate(self):
         super(MainGun, self)._populate()
-        damage_controller.init()
         damage_controller.onPlayerDamaged += self.onPlayerDamaged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
@@ -27,7 +26,6 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def _dispose(self):
         damage_controller.onPlayerDamaged -= self.onPlayerDamaged
-        damage_controller.fini()
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived -= self.onPlayerFeedbackReceived
