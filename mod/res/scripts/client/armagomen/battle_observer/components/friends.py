@@ -13,7 +13,7 @@ _cache = set()
 def onGuiCacheSyncCompleted(ctx):
     _cache.clear()
     users = storage_getter(ANOTHER.USERS)().getList(_ContactsCategories().getCriteria())
-    _cache.update(user for user in users if not user.isIgnored())
+    _cache.update(user._userID for user in users if not user.isIgnored())
     _cache.add(ctx.get(ANOTHER.DBID, GLOBAL.ZERO))
 
 
