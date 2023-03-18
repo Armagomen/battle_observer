@@ -131,8 +131,6 @@ if currentConfigPath is None:
     if not os.path.exists(currentConfigPath):
         os.makedirs(currentConfigPath)
 
-logInfo(currentConfigPath)
-
 
 def cleanupUpdates():
     path = os.path.join(cwd, "updates")
