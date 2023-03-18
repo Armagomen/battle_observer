@@ -22,12 +22,9 @@ g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
 
 @overrideMethod(VehicleTypeInfoVO)
 def new_VehicleArenaInfoVO(init, vTypeVo, *args, **kwargs):
+    init(vTypeVo, *args, **kwargs)
     if not isReplay() and not viewSettings.gui.isInEpicRange() and settings.main[MAIN.SHOW_FRIENDS]:
-        init(vTypeVo, *args, **kwargs)
-        if kwargs.get(ANOTHER.ACCOUNT_DBID) and not vTypeVo.isPremiumIGR:
-            vTypeVo.isPremiumIGR = kwargs[ANOTHER.ACCOUNT_DBID] in _cache
-    else:
-        return init(vTypeVo, *args, **kwargs)
+        vTypeVo.isPremiumIGR |= kwargs.get(ANOTHER.ACCOUNT_DBID) in _cache
 
 
 @overrideMethod(VehicleTypeInfoVO, "update")
