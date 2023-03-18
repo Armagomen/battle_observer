@@ -11,12 +11,12 @@ class PlayersDamageController(object):
 
     def __init__(self):
         self.onPlayerDamaged = SafeEvent()
-        self.playersDamage = defaultdict(int)
+        self.__damages = defaultdict(int)
         g_playerEvents.onAvatarBecomePlayer += self.start
         g_playerEvents.onAvatarBecomeNonPlayer += self.stop
 
     def start(self):
-        self.playersDamage.clear()
+        self.__damages.clear()
         arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleHealthChanged += self.onVehicleHealthChanged
@@ -27,11 +27,11 @@ class PlayersDamageController(object):
             arena.onVehicleHealthChanged -= self.onVehicleHealthChanged
 
     def onVehicleHealthChanged(self, targetID, attackerID, damage):
-        self.playersDamage[attackerID] += damage
-        self.onPlayerDamaged(attackerID, self.playersDamage[attackerID])
+        self.__damages[attackerID] += damage
+        self.onPlayerDamaged(attackerID, self.__damages[attackerID])
 
     def getPlayerDamage(self, vehicleID):
-        return self.playersDamage[vehicleID]
+        return self.__damages[vehicleID]
 
 
 damage_controller = PlayersDamageController()
