@@ -29,8 +29,7 @@ def new_VehicleArenaInfoVO(init, vTypeVo, *args, **kwargs):
     if not viewSettings.gui.isInEpicRange() and settings.main[MAIN.SHOW_FRIENDS]:
         init(vTypeVo, *args, **kwargs)
         if kwargs and _cache.databaseID > GLOBAL.ZERO and not vTypeVo.isPremiumIGR and ANOTHER.ACCOUNT_DBID in kwargs:
-            isPlayer = _cache.databaseID == kwargs[ANOTHER.ACCOUNT_DBID]
-            vTypeVo.isPremiumIGR = kwargs[ANOTHER.ACCOUNT_DBID] in _cache.friends or isPlayer
+            vTypeVo.isPremiumIGR = kwargs[ANOTHER.ACCOUNT_DBID] in _cache.friends
     else:
         return init(vTypeVo, *args, **kwargs)
 
