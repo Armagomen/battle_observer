@@ -96,14 +96,13 @@ class DamageLog(DamageLogsMeta):
                             tankDamageAvgColor=COLORS.NORMAL_TEXT,
                             tankAssistAvgColor=COLORS.NORMAL_TEXT,
                             tankBlockedAvgColor=COLORS.NORMAL_TEXT,
-                            tankStunAvgColor=COLORS.NORMAL_TEXT)
+                            tankStunAvgColor=COLORS.NORMAL_TEXT,
+                            tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
+                            tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
+                            tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
+                            tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
         if not self.isSPG():
             self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
-        if self.gui.isRandomBattle():
-            self.top_log.update(tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
-                                tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
-                                tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
-                                tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
 
     def isExtendedLogEventEnabled(self, eventType):
         return self._is_extended_log_enabled and eventType in EXTENDED_FEEDBACK
