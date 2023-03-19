@@ -3,14 +3,14 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import ALIAS_TO_CONFIG_NAME, COLORS, GLOBAL
 from armagomen.utils.common import logInfo, logDebug
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
-from gui.shared.personality import ServicesLocator
 from helpers import dependency
+from skeletons.account_helpers.settings_core import ISettingsCore
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 
 class BaseModMeta(BaseDAAPIComponent):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
-    settingsCore = ServicesLocator.settingsCore
+    settingsCore = dependency.descriptor(ISettingsCore)
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
@@ -26,10 +26,10 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @property
     def gui(self):
-        return self.sessionProvider.arenaVisitor.gui
+        return self._arenaVisitor.gui
 
     def isSPG(self):
-        return self.sessionProvider.getArenaDP().getVehicleInfo().isSPG()
+        return self._arenaDP.getVehicleInfo().isSPG()
 
     @staticmethod
     def getShadowSettings():
