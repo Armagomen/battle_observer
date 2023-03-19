@@ -13,7 +13,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         super(MainGun, self).__init__()
         self.gunScore = GLOBAL.ZERO
         self.gunLeft = GLOBAL.ZERO
-        self.isLowHealth = False
+        self._warning = False
         self.totalEnemiesHP = GLOBAL.ZERO
         self.playerDamage = GLOBAL.ZERO
 
@@ -23,17 +23,28 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived += self.onPlayerFeedbackReceived
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled += self.onVehicleKilled
 
     def _dispose(self):
         damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived -= self.onPlayerFeedbackReceived
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onVehicleKilled -= self.onVehicleKilled
         super(MainGun, self)._dispose()
 
+    def onVehicleKilled(self, targetID, *args, **kwargs):
+        if self.playerVehicleID == targetID:
+            self._warning = True
+            self.updateMainGun()
+
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
-        if enemiesHP < self.gunLeft and not self.isLowHealth:
-            self.isLowHealth = True
+        if enemiesHP < self.gunLeft and not self._warning:
+            self._warning = True
             self.updateMainGun()
         if self.totalEnemiesHP != totalEnemiesHP:
             self.totalEnemiesHP = totalEnemiesHP
@@ -42,7 +53,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def updateMainGun(self):
         self.gunLeft = self.gunScore - self.playerDamage
-        self.as_gunDataS(self.gunLeft, self.isLowHealth)
+        self.as_gunDataS(self.gunLeft, self._warning)
 
     def onPlayerDamaged(self, attackerID, damage):
         if damage > self.gunScore and self._arenaDP.isAlly(attackerID) and attackerID != self.playerVehicleID:

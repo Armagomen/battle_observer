@@ -1,3 +1,4 @@
+from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
@@ -71,12 +72,17 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self._iconsEnabled = False
         self._statisticsEnabled = False
 
+    def init(self):
+        super(ObserverBusinessHandlerBattle, self).init()
+        damage_controller.start()
+
     def fini(self):
         if self.minimapPlugin is not None:
             self.minimapPlugin.fini()
             self.minimapPlugin = None
         self.statistics = None
         viewSettings.clear()
+        damage_controller.stop()
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):

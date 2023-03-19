@@ -72,8 +72,9 @@ package net.armagomen.battleobserver.battle.components.maingun
 		
 		public function as_gunData(value:int, warning:Boolean):void
 		{
-			this.icons[2].visible = warning && value > 0;
-			if (value > 0)
+			var notAchived:Boolean = value > 0;
+			this.icons[2].visible = warning && notAchived;
+			if (notAchived)
 			{
 				this.mainGun.text = value.toString();
 			}

@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from Event import SafeEvent
-from PlayerEvents import g_playerEvents
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -12,8 +11,6 @@ class PlayersDamageController(object):
     def __init__(self):
         self.onPlayerDamaged = SafeEvent()
         self.__damages = defaultdict(int)
-        g_playerEvents.onAvatarBecomePlayer += self.start
-        g_playerEvents.onAvatarBecomeNonPlayer += self.stop
 
     def start(self):
         self.__damages.clear()
