@@ -231,7 +231,8 @@ localization = {
     "main_gun": {
         "header": "MAIN GUN",
         "x": "the horizontal Position of (center of screen)",
-        "y": "the vertical Position (upper edge)"
+        "y": "the vertical Position (upper edge)",
+        "progress_bar": "Progress bar"
     },
     "team_bases_panel": {
         "header": "TEAM BASES PANEL",

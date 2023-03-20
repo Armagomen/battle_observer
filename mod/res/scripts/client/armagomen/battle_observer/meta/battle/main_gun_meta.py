@@ -6,5 +6,5 @@ class MainGunMeta(BaseModMeta):
     def __init__(self):
         super(MainGunMeta, self).__init__()
 
-    def as_gunDataS(self, value, warning):
-        return self.flashObject.as_gunData(value, warning) if self._isDAAPIInited() else None
+    def as_gunDataS(self, value, max_value, warning):
+        return self.flashObject.as_gunData(value, max_value, warning) if self._isDAAPIInited() else None

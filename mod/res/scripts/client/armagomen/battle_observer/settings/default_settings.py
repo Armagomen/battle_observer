@@ -293,7 +293,8 @@ class DefaultSettings(object):
         self.main_gun = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: 255,
-            GLOBAL.Y: GLOBAL.ZERO
+            GLOBAL.Y: GLOBAL.ZERO,
+            "progress_bar": False
         }
         self.vehicle_types = {
             VEHICLE_TYPES.CLASS_COLORS: {

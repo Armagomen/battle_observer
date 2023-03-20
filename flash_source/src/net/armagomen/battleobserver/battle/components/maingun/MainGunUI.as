@@ -7,6 +7,7 @@ package net.armagomen.battleobserver.battle.components.maingun
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
+	import net.armagomen.battleobserver.utils.ProgressBar;
 	
 	public class MainGunUI extends ObserverBattleDisplayable
 	{
@@ -21,6 +22,7 @@ package net.armagomen.battleobserver.battle.components.maingun
 		
 		private var icons:Vector.<Bitmap> = null;
 		private var mainGun:TextExt       = null;
+		private var progress:ProgressBar;
 		
 		public function MainGunUI()
 		{
@@ -61,17 +63,31 @@ package net.armagomen.battleobserver.battle.components.maingun
 			var settings:Object = this.getSettings();
 			this.x = (App.appWidth >> 1) + settings.x;
 			this.y = settings.y;
-			this.mainGun = new TextExt(28, 0, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+			if (settings.progress_bar)
+			{
+				var colors:Object = this.getColors().global;
+				this.mainGun = new TextExt(48, -2, Filters.middleText, TextFieldAutoSize.CENTER, getShadowSettings(), this);
+				this.progress = new ProgressBar(29, 22, 40, 4, 0.9, 0.4, null, colors.ally, colors.bgColor, 0.2);
+				this.progress.setOutline(true, colors.ally, 0.9, 40, 4);
+				this.progress.setNewScale(0);
+				this.addChild(this.progress);
+			}
+			else
+			{
+				this.mainGun = new TextExt(28, 0, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+			}
 		}
 		
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
 			this.mainGun = null;
+			this.progress = null;
 		}
 		
-		public function as_gunData(value:int, warning:Boolean):void
+		public function as_gunData(value:int, max_value:int, warning:Boolean):void
 		{
+			
 			var notAchived:Boolean = value > 0;
 			this.icons[2].visible = warning && notAchived;
 			if (notAchived)
@@ -82,6 +98,10 @@ package net.armagomen.battleobserver.battle.components.maingun
 			{
 				this.mainGun.text = "+" + Math.abs(value).toString();
 				this.icons[1].visible = true;
+			}
+			if (this.progress)
+			{
+				this.progress.setNewScale(1.0 - (notAchived ? value : 0) / max_value)
 			}
 		}
 		
