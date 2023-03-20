@@ -18,6 +18,8 @@
 			this.width = 1;
 			this.defaultTextFormat = style;
 			this.antiAliasType = AntiAliasType.ADVANCED;
+			this.thickness = 200;
+			this.sharpness = 200;
 			this.autoSize = align;
 			this.filters = [new GlowFilter(Utils.colorConvert(shadowSettings.color), shadowSettings.alpha, shadowSettings.blurX, shadowSettings.blurY, shadowSettings.strength, BitmapFilterQuality.LOW, shadowSettings.inner, shadowSettings.knockout)];
 			this.selectable = false;
