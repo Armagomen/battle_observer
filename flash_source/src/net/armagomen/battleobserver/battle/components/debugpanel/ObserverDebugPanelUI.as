@@ -16,15 +16,13 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		{
 			super.onPopulate();
 			var settings:Object       = this.getSettings();
-			var shadowSettings:Object = this.getShadowSettings()
-			
 			if (settings.style == "modern")
 			{
-				this.debugPanel = new modern(shadowSettings, settings);
+				this.debugPanel = new modern(settings);
 			}
 			else
 			{
-				this.debugPanel = new minimal(shadowSettings, settings);
+				this.debugPanel = new minimal(settings);
 			}
 			this.addChild(this.debugPanel);
 		}

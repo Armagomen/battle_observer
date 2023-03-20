@@ -66,7 +66,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			{
 				if (!this.storage[vehicleID])
 				{
-					this.storage[vehicleID] = new ListItem(enemy, getShadowSettings());
+					this.storage[vehicleID] = new ListItem(enemy);
 					this.onAddedToStorage(vehicleID, enemy);
 				}
 				listitem.addChild(this.storage[vehicleID]);

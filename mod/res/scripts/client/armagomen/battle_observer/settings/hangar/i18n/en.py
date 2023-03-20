@@ -317,27 +317,6 @@ localization = {
         "yaw_limits": "Show Hover Angles on all vehicles where they are",
         "zoom_hotkey": "Hot key for zoom."
     },
-    "shadow_settings": {
-        "header": "SETTING SHADOWS TEXT (Glow)",
-        "inner": "Determines whether the glow is an internal glow.",
-        "knockout": "Determines whether a knockout effect is applied to an object.",
-        "blurX": "The degree of blurring horizontally.",
-        "blurY": "The amount of vertical blur.",
-        "alpha": "The alpha transparency value of the color.",
-        "color": "Glow color.",
-        "strength": "The degree of indentation or application.",
-        "blurY_tooltip": "Values that are powers of 2 (i.e. 2, 4, 8, 16, and 32)"
-                         " are optimized and run faster than others.",
-        "blurX_tooltip": "Values that are powers of 2 (i.e. 2, 4, 8, 16, and 32)"
-                         " are optimized and run faster than others.",
-        "inner_tooltip": "The value 'On' indicates that the glow is internal."
-                         " The value 'Off' sets the external glow (glow around the outer contour of the object).",
-        "knockout_tooltip": "The value 'Enabled' makes the object's fill transparent and makes the background color"
-                            " of the document visible. The default is 'Off' (no knockout effect).",
-        "strength_tooltip": "The higher the value, the more saturated the color of the shadow and the stronger the "
-                            "contrast between the glow and the background. "
-                            "Valid values are from 0 to 255. The default is 2."
-    },
     "colors": {
         "header": "Global color settings.",
         "armor_calculator*green": "Reduced Armor: 100% Penetration",

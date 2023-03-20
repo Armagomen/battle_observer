@@ -31,10 +31,6 @@ class BaseModMeta(BaseDAAPIComponent):
     def isSPG(self):
         return self._arenaDP.getVehicleInfo().isSPG()
 
-    @staticmethod
-    def getShadowSettings():
-        return settings.shadow_settings
-
     def getSettings(self):
         return self.settings
 

@@ -13,17 +13,17 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		private var allyM:TextExt;
 		private var enemyM:TextExt;
 		
-		public function Markers(settings:Object, shadowSettings:Object, alpha:Number)
+		public function Markers(settings:Object, alpha:Number)
 		{
 			super();
 			Filters.markersFormat.letterSpacing = 0.9;
 			this.y = settings.y;
 			
-			this.allyM = new TextExt(-settings.x, 0, Filters.markersFormat, TextFieldAutoSize.RIGHT, shadowSettings, this);
+			this.allyM = new TextExt(-settings.x, 0, Filters.markersFormat, TextFieldAutoSize.RIGHT, this);
 			this.allyM.embedFonts = true;
 			this.allyM.alpha = alpha;
 			
-			this.enemyM = new TextExt(settings.x, 0, Filters.markersFormat, TextFieldAutoSize.LEFT, shadowSettings, this);
+			this.enemyM = new TextExt(settings.x, 0, Filters.markersFormat, TextFieldAutoSize.LEFT, this);
 			this.enemyM.embedFonts = true;
 			this.enemyM.alpha = alpha;
 		}

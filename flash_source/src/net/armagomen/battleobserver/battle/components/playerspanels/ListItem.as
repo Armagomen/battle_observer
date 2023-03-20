@@ -10,13 +10,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var healthBar:ProgressBar = null;
 		private var damage:TextExt        = null;
 		public var isEnemy:Boolean       = false;
-		private var shadowSettings:Object = null;
 		
-		public function ListItem(enemy:Boolean, shadowSettings:Object)
+		public function ListItem(enemy:Boolean)
 		{
 			super();
 			this.isEnemy = enemy;
-			this.shadowSettings = shadowSettings;
 			this.x = enemy ? -381 : 380;
 		}
 		
@@ -37,7 +35,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				{
 					autoSize = params.align == "left" ? "right" : "left";
 				}
-				this.damage = new TextExt(this.isEnemy ? -params.x : params.x, params.y, null, autoSize, this.shadowSettings, this);
+				this.damage = new TextExt(this.isEnemy ? -params.x : params.x, params.y, null, autoSize, this);
 				this.damage.visible = false;
 			}
 		}
@@ -64,7 +62,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			{
 				this.healthBar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha, barWidth, settings.players_bars_bar.height);
 			}
-			this.healthBar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText15, shadowSettings);
+			this.healthBar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText15);
 			this.healthBar.setVisible(startVisible);
 			this.addChild(this.healthBar);
 		}

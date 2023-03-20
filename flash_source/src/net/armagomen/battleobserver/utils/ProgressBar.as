@@ -76,9 +76,9 @@
 			this.uiText.htmlText = text;
 		}
 		
-		public function addTextField(x:Number, y:Number, align:String, format:TextFormat, shdowSettings:Object):void
+		public function addTextField(x:Number, y:Number, align:String, format:TextFormat):void
 		{
-			this.uiText = new TextExt(x, y, format, align, shdowSettings, this);
+			this.uiText = new TextExt(x, y, format, align, this);
 		}
 		
 		public function setOutline(customColor:Boolean = false, color:String = "#000000", alpha:Number = 1.0, width:Number = 0, height:Number = 0):void

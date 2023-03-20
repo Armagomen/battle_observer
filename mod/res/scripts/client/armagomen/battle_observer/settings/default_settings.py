@@ -377,15 +377,6 @@ class DefaultSettings(object):
             MINIMAP.ZOOM: False,
             MINIMAP.ZOOM_KEY: [[29]]
         }
-        self.shadow_settings = {
-            GLOBAL.COLOR: COLORS.BLACK,
-            GLOBAL.ALPHA: 0.6,
-            GLOBAL.BLUR_X: 2,
-            GLOBAL.BLUR_Y: 2,
-            GLOBAL.INNER: False,
-            GLOBAL.KNOCKOUT: False,
-            GLOBAL.STRENGTH: 5
-        }
         self.service_channel_filter = {
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)

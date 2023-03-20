@@ -1,4 +1,3 @@
-from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.utils.common import logDebug
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 
@@ -7,10 +6,6 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
-
-    @staticmethod
-    def getShadowSettings():
-        return settings.shadow_settings
 
     def _populate(self):
         super(BaseModMeta, self)._populate()

@@ -15,13 +15,13 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var FPS:TextExt     = null;
 		private var PING:TextExt    = null;
 		
-		public function minimal(shadow_settings:Object, colors:Object)
+		public function minimal(colors:Object)
 		{
 			super();
-			this.PATTERN = new TextExt(5, 0, Filters.largeText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.PATTERN = new TextExt(5, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
 			this.PATTERN.htmlText = "<textformat tabstops='[80]'>FPS:\tPING:</textformat>";
-			this.FPS = new TextExt(46, 0, Filters.largeText, TextFieldAutoSize.LEFT, shadow_settings, this);
-			this.PING = new TextExt(136, 0, Filters.largeText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.FPS = new TextExt(46, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+			this.PING = new TextExt(136, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
 			this.pingColor = Utils.colorConvert(colors.pingColor);
 			this.lagColor = Utils.colorConvert(colors.pingLagColor);
 			this.FPS.textColor = Utils.colorConvert(colors.fpsColor);

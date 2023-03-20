@@ -20,7 +20,7 @@
 		{
 			super.onPopulate();
 			this.x = App.appWidth;
-			this.battleTimer = new TextExt(-8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this.getShadowSettings(), this);
+			this.battleTimer = new TextExt(-8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this);
 		}
 		
 		override protected function onBeforeDispose():void 

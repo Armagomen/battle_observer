@@ -40,16 +40,16 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		private var icons:Vector.<Bitmap>  = null;
 		private var lastVisibleIcon:Bitmap = null;
 		
-		public function modern(shadow_settings:Object, colors:Object)
+		public function modern(colors:Object)
 		{
 			super();
-			this.LAG = new TextExt(185, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.LAG = new TextExt(185, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
 			this.LAG.text = "LAG";
-			this.PATTERN = new TextExt(20, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.PATTERN = new TextExt(20, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
 			this.PATTERN.htmlText = "<textformat tabstops='[78]'>FPS:\tPING:</textformat>";
 			
-			this.FPS = new TextExt(58, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
-			this.PING = new TextExt(144, 0, Filters.middleText, TextFieldAutoSize.LEFT, shadow_settings, this);
+			this.FPS = new TextExt(58, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
+			this.PING = new TextExt(144, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
 			
 			this.pingColor = Utils.colorConvert(colors.pingColor);
 			this.lagColor = Utils.colorConvert(colors.pingLagColor);

@@ -11,7 +11,6 @@
 	{
 		private var dateTime:TextExt;
 		private var config:Object;
-		public var getShadowSettings:Function;
 		
 		public function ObserverDateTimesUI()
 		{
@@ -53,7 +52,7 @@
 				this.config = settings;
 				this.x = settings.x < 0 ? parent.width + settings.x : settings.x
 				this.y = settings.y < 0 ? parent.height + settings.y : settings.y
-				this.dateTime = new TextExt("time", 0, 0, Filters.largeText, TextFieldAutoSize.LEFT, getShadowSettings(), this);
+				this.dateTime = new TextExt("time", 0, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
 			}
 		}
 		

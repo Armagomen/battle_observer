@@ -17,7 +17,7 @@ package net.armagomen.battleobserver.battle.components
 		{
 			super.onPopulate();
 			var settings:Object = this.getSettings();
-			this.dispersionTime = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, this.getShadowSettings(), this);
+			this.dispersionTime = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, this);
 		}
 		
 		override protected function onBeforeDispose():void 

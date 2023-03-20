@@ -27,7 +27,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		private var ememyColor:String;
 		private var enemyColorBlind:String;
 		
-		public function Score(shadowSettings:Object, colorBlind:Boolean, colors:Object, style:String) 
+		public function Score(colorBlind:Boolean, colors:Object, style:String) 
 		{
 			super();
 			
@@ -61,9 +61,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.arrowRed.graphics.endFill();
 			this.arrowRed.visible = false;
 			
-			this.greenScore = new TextExt(-25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, shadowSettings, this);
+			this.greenScore = new TextExt(-25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, this);
 			this.greenScore.antiAliasType = AntiAliasType.NORMAL;
-			this.redScore = new TextExt(25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, shadowSettings, this);
+			this.redScore = new TextExt(25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, this);
 			this.redScore.antiAliasType = AntiAliasType.NORMAL;
 			
 			this.addChild(this.arrowDots);

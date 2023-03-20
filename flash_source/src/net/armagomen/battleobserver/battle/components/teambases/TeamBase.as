@@ -47,10 +47,10 @@
 			this.status.htmlText = captureText;
 		}
 		
-		public function create(bases:Object, shadowSettings:Object, colors:Object, team:String):void
+		public function create(bases:Object, colors:Object, team:String):void
 		{
 			this.basesFormat = new TextFormat(bases.text_settings.font, bases.text_settings.size, Utils.colorConvert(bases.text_settings.color), bases.text_settings.bold, bases.text_settings.italic, bases.text_settings.underline);
-			this.createBase(bases, shadowSettings, colors, team);
+			this.createBase(bases, colors, team);
 		}
 		
 		public function remove():void
@@ -88,7 +88,7 @@
 			return icon;
 		}
 		
-		private function createBase(settings:Object, shadowSettings:Object, colors:Object, team:String):void
+		private function createBase(settings:Object, colors:Object, team:String):void
 		{
 			var progressBarColor:uint = Utils.colorConvert(team == "green" ? colors.ally : this.colorBlind ? colors.enemyColorBlind : colors.enemy);
 			
@@ -116,9 +116,9 @@
 			baseMain.addChild(PlayersIcon(iconWidth));
 			baseMain.addChild(TimeIcon(iconWidth, settings.width));
 			
-			this.status = new TextExt(settings.width * 0.5, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, shadowSettings, baseMain);
-			this.timer = new TextExt(settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, shadowSettings, baseMain);
-			this.invaders = new TextExt(iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, shadowSettings, baseMain);
+			this.status = new TextExt(settings.width * 0.5, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.CENTER, baseMain);
+			this.timer = new TextExt(settings.width - iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.RIGHT, baseMain);
+			this.invaders = new TextExt(iconWidth, settings.text_settings.y, this.basesFormat, TextFieldAutoSize.LEFT, baseMain);
 			
 			this.x = App.appWidth * 0.5 - baseMain.width * 0.5;
 			this.y = settings.y >= 0 ? settings.y : App.appHeight + settings.y;
