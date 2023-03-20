@@ -1,6 +1,5 @@
 ﻿package net.armagomen.battleobserver.utils
 {
-	import flash.filters.BitmapFilterQuality;
 	import flash.filters.GlowFilter;
 	import flash.text.*;
 	import net.armagomen.battleobserver.utils.Filters;
@@ -19,7 +18,7 @@
 			this.defaultTextFormat = style;
 			this.antiAliasType = AntiAliasType.ADVANCED;
 			this.autoSize = align;
-			this.filters = [new GlowFilter(0, 0.6, 2, 2, 6)];
+			this.filters = [new GlowFilter(0, 0.7, 2, 2, 5)];
 			this.selectable = false;
 			this.multiline = true;
 			this.visible = enabled;
