@@ -160,11 +160,8 @@ localization = {
     },
     "hp_bars": {
         "header": "TOTAL HP PANEL",
-        "barsWidth": "Width of strips HP",
         "showAliveCount": "Show survivors on the panel",
         "style": "Style panel HP",
-        "outline*enabled": "enabled outline in normal style",
-        "outline*color": "outline color.",
         "markers*enabled": "MARKERS UNDER PANEL",
         "markers*markersClassColor": "Paint icons by color of the class.",
         "markers*x": "Horizontal position from the center.",

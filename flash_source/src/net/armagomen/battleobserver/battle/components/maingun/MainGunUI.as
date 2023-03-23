@@ -66,9 +66,9 @@ package net.armagomen.battleobserver.battle.components.maingun
 			if (settings.progress_bar)
 			{
 				var colors:Object = this.getColors().global;
-				this.mainGun = new TextExt(48, -1, Filters.middleText, TextFieldAutoSize.CENTER, this);
-				this.progress = new ProgressBar(29, 21, 40, 5, 0.9, 0.4, null, colors.ally, colors.bgColor, 0.2);
-				this.progress.setOutline(true, colors.ally, 0.9, 40, 5);
+				this.mainGun = new TextExt(50, 0, Filters.middleText, TextFieldAutoSize.CENTER, this);
+				this.progress = new ProgressBar(30, 24, 42, 4, 0.9, 0.6, null, colors.ally, colors.bgColor, 0.2);
+				//this.progress.setOutline(true, colors.ally, 0.9, 40, 5);
 				this.progress.setNewScale(0);
 				this.addChild(this.progress);
 			}
@@ -85,6 +85,13 @@ package net.armagomen.battleobserver.battle.components.maingun
 			this.progress = null;
 		}
 		
+		private function setDoneVisible(value:Boolean):void
+		{
+			if (this.icons[1].visible != value){
+				this.icons[1].visible = value
+			}
+		}
+		
 		public function as_gunData(value:int, max_value:int, warning:Boolean):void
 		{
 			
@@ -97,8 +104,8 @@ package net.armagomen.battleobserver.battle.components.maingun
 			else
 			{
 				this.mainGun.text = "+" + Math.abs(value).toString();
-				this.icons[1].visible = true;
 			}
+			this.setDoneVisible(!notAchived);
 			if (this.progress)
 			{
 				this.progress.setNewScale(1.0 - (notAchived ? value : 0) / max_value)

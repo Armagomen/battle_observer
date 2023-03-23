@@ -38,7 +38,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         super(MainGun, self)._dispose()
 
     def onVehicleKilled(self, targetID, *args, **kwargs):
-        if self.playerVehicleID == targetID:
+        if self.playerVehicleID == targetID and not self._warning:
             self._warning = True
             self.updateMainGun()
 

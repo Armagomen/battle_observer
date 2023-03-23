@@ -257,12 +257,7 @@ class DefaultSettings(object):
         self.hp_bars = {
             GLOBAL.ENABLED: False,
             HP_BARS.STYLE: HP_BARS.STYLES.league,
-            HP_BARS.WIDTH: 200,
             HP_BARS.ALIVE: False,
-            GLOBAL.OUTLINE: {
-                GLOBAL.ENABLED: True,
-                GLOBAL.COLOR: COLORS.NORMAL_TEXT
-            },
             MARKERS.NAME: {
                 GLOBAL.ENABLED: False,
                 MARKERS.HOT_KEY: [Keys.KEY_NUMPAD0],

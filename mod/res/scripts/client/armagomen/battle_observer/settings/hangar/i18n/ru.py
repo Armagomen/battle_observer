@@ -163,11 +163,8 @@ localization = {
     },
     "hp_bars": {
         "header": "Здоровье команд - Team Health",
-        "barsWidth": "Ширина полос",
         "showAliveCount": "Показывать на панели счета живых",
         "style": "Стиль панели",
-        "outline*enabled": "Включить контур в стиле normal",
-        "outline*color": "Цвет контура.",
         "markers*enabled": "Карусель маркеров техники.",
         "markers*x": "Расстояние по Горизонтали от центра.",
         "markers*x_tooltip": "Зеркально сдвигает значки от центра на заданное кол-во пикселей.",
