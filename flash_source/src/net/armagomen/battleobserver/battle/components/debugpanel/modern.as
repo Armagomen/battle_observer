@@ -6,8 +6,9 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
+	import net.armagomen.battleobserver.battle.interfaces.IDebugPanel;
 	
-	public class modern extends Sprite
+	public class modern extends Sprite implements IDebugPanel
 	{
 		[Embed(source = "ping_img/1.png")]
 		private var _1:Class;

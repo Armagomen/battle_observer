@@ -1,11 +1,13 @@
 package net.armagomen.battleobserver.battle.components.teamshealth
 {
+	import flash.display.DisplayObject;
 	import flash.events.Event;
+	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	
 	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
-		private var hpBars:* = null;
+		private var hpBars:ITeamHealth;
 		private var score:Score;
 		private var markers:Markers;
 		
@@ -21,7 +23,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.x = App.appWidth >> 1;
 			this.hpBars = this.createHpBars(settings.style);
 			this.score = new Score(this.isColorBlind(), this.getColors().global, settings.style);
-			this.addChild(this.hpBars);
+			this.addChild(this.hpBars as DisplayObject);
 			this.addChild(this.score);
 			if (settings.markers.enabled)
 			{
@@ -45,7 +47,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			}
 		}
 		
-		private function createHpBars(style:String):*
+		private function createHpBars(style:String):ITeamHealth
 		{
 			switch (style)
 			{

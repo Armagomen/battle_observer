@@ -2,11 +2,12 @@
 {
 	import flash.display.*;
 	import flash.text.TextFieldAutoSize;
+	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
-	public class Default extends Sprite
+	public class Default extends Sprite implements ITeamHealth
 	{
 		private var greenText:TextExt;
 		private var redText:TextExt;

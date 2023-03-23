@@ -1,11 +1,13 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
+	import flash.display.DisplayObject;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
+	import net.armagomen.battleobserver.battle.interfaces.IDebugPanel;
 	
 	public class ObserverDebugPanelUI extends ObserverBattleDisplayable
 	{
 		
-		private var debugPanel:* = null;
+		private var debugPanel:IDebugPanel;
 		
 		public function ObserverDebugPanelUI()
 		{
@@ -24,7 +26,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			{
 				this.debugPanel = new minimal(settings);
 			}
-			this.addChild(this.debugPanel);
+			this.addChild(this.debugPanel as DisplayObject);
 		}
 		
 		override protected function onBeforeDispose():void

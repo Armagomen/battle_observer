@@ -38,12 +38,12 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         super(MainGun, self)._dispose()
 
     def onVehicleKilled(self, targetID, *args, **kwargs):
-        if self.playerVehicleID == targetID and not self._warning:
+        if self.playerVehicleID == targetID:
             self._warning = True
             self.updateMainGun()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
-        if enemiesHP < self.gunLeft and not self._warning:
+        if not self._warning and enemiesHP < self.gunLeft:
             self._warning = True
             self.updateMainGun()
         if self.totalEnemiesHP != totalEnemiesHP:
