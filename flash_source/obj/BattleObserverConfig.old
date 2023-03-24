@@ -30,6 +30,7 @@
       <name>CONFIG::desktop</name>
       <value>false</value>
     </define>
+    <strict>false</strict>
     <optimize>true</optimize>
     <omit-trace-statements>true</omit-trace-statements>
     <verbose-stacktraces>false</verbose-stacktraces>

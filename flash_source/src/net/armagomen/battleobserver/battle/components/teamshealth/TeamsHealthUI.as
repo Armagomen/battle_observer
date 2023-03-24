@@ -1,6 +1,5 @@
 package net.armagomen.battleobserver.battle.components.teamshealth
 {
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
@@ -23,7 +22,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.x = App.appWidth >> 1;
 			this.hpBars = this.createHpBars(settings.style);
 			this.score = new Score(this.isColorBlind(), this.getColors().global, settings.style);
-			this.addChild(this.hpBars as Sprite);
+			this.addChild(this.hpBars);
 			this.addChild(this.score);
 			if (settings.markers.enabled)
 			{

@@ -1,6 +1,5 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
-	import flash.display.Sprite;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.interfaces.IDebugPanel;
 	
@@ -26,7 +25,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			{
 				this.debugPanel = new Minimal(settings);
 			}
-			this.addChild(this.debugPanel as Sprite);
+			this.addChild(this.debugPanel);
 		}
 		
 		override protected function onBeforeDispose():void
