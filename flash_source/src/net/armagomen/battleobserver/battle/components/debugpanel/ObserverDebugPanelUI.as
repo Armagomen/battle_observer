@@ -1,6 +1,6 @@
 package net.armagomen.battleobserver.battle.components.debugpanel
 {
-	import flash.display.DisplayObject;
+	import flash.display.Sprite;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.interfaces.IDebugPanel;
 	
@@ -17,16 +17,16 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			var settings:Object       = this.getSettings();
+			var settings:Object = this.getSettings();
 			if (settings.style == "modern")
 			{
-				this.debugPanel = new modern(settings);
+				this.debugPanel = new Modern(settings);
 			}
 			else
 			{
-				this.debugPanel = new minimal(settings);
+				this.debugPanel = new Minimal(settings);
 			}
-			this.addChild(this.debugPanel as DisplayObject);
+			this.addChild(this.debugPanel as Sprite);
 		}
 		
 		override protected function onBeforeDispose():void

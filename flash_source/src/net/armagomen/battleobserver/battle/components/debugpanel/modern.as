@@ -8,7 +8,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.armagomen.battleobserver.battle.interfaces.IDebugPanel;
 	
-	public class modern extends Sprite implements IDebugPanel
+	public class Modern extends Sprite implements IDebugPanel
 	{
 		[Embed(source = "ping_img/1.png")]
 		private var _1:Class;
@@ -31,33 +31,33 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		[Embed(source = "ping_img/10.png")]
 		private var _10:Class;
 		
-		private var FPS:TextExt            = null;
-		private var PING:TextExt           = null;
-		private var LAG:TextExt            = null;
-		private var PATTERN:TextExt        = null;
+		private var fps:TextExt            = null;
+		private var ping:TextExt           = null;
+		private var lag:TextExt            = null;
+		private var statical:TextExt       = null;
 		
 		private var pingColor:uint         = Utils.colorConvert("#B3FE95");
 		private var lagColor:uint          = Utils.colorConvert("#FD9675");
 		private var icons:Vector.<Bitmap>  = null;
 		private var lastVisibleIcon:Bitmap = null;
 		
-		public function modern(colors:Object)
+		public function Modern(settings:Object)
 		{
 			super();
-			this.LAG = new TextExt(185, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
-			this.LAG.text = "LAG";
-			this.PATTERN = new TextExt(20, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
-			this.PATTERN.htmlText = "<textformat tabstops='[78]'>FPS:\tPING:</textformat>";
+			this.lag = new TextExt(185, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
+			this.lag.text = "LAG";
+			this.statical = new TextExt(20, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
+			this.statical.htmlText = "<textformat tabstops='[78]'>FPS:\tPING:</textformat>";
 			
-			this.FPS = new TextExt(58, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
-			this.PING = new TextExt(144, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
+			this.fps = new TextExt(58, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
+			this.ping = new TextExt(144, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
 			
-			this.pingColor = Utils.colorConvert(colors.pingColor);
-			this.lagColor = Utils.colorConvert(colors.pingLagColor);
+			this.pingColor = Utils.colorConvert(settings.pingColor);
+			this.lagColor = Utils.colorConvert(settings.pingLagColor);
 			
-			this.FPS.textColor = Utils.colorConvert(colors.fpsColor);
-			this.PING.textColor = this.pingColor;
-			this.LAG.textColor = this.pingColor;
+			this.fps.textColor = Utils.colorConvert(settings.fpsColor);
+			this.ping.textColor = this.pingColor;
+			this.lag.textColor = this.pingColor;
 			
 			this.createBitmapVector();
 		}
@@ -81,12 +81,12 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		
 		public function update(ping:int, fps:int, lag:Boolean):void
 		{
-			this.FPS.text = fps.toString();
-			this.PING.text = ping.toString();
+			this.fps.text = fps.toString();
+			this.ping.text = ping.toString();
 			var color:uint = lag ? this.lagColor : this.pingColor;
-			if (this.LAG.textColor != color)
+			if (this.lag.textColor != color)
 			{
-				this.LAG.textColor = color;
+				this.lag.textColor = color;
 			}
 			var icon:Bitmap = null;
 			if (ping < 15)

@@ -7,38 +7,38 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.armagomen.battleobserver.battle.interfaces.IDebugPanel;
 	
-	public class minimal extends Sprite implements IDebugPanel
+	public class Minimal extends Sprite implements IDebugPanel
 	{
-		private var pingColor:uint  = Utils.colorConvert("#B3FE95");
-		private var lagColor:uint   = Utils.colorConvert("#FD9675");
+		private var pingColor:uint   = Utils.colorConvert("#B3FE95");
+		private var lagColor:uint    = Utils.colorConvert("#FD9675");
 		
-		private var PATTERN:TextExt = null;
-		private var FPS:TextExt     = null;
-		private var PING:TextExt    = null;
+		private var statical:TextExt = null;
+		private var fps:TextExt      = null;
+		private var ping:TextExt     = null;
 		
-		public function minimal(colors:Object)
+		public function Minimal(settings:Object)
 		{
 			super();
-			this.PATTERN = new TextExt(5, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
-			this.PATTERN.htmlText = "<textformat tabstops='[80]'>FPS:\tPING:</textformat>";
-			this.FPS = new TextExt(46, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
-			this.PING = new TextExt(136, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
-			this.pingColor = Utils.colorConvert(colors.pingColor);
-			this.lagColor = Utils.colorConvert(colors.pingLagColor);
-			this.FPS.textColor = Utils.colorConvert(colors.fpsColor);
-			this.PING.textColor = this.pingColor;
+			this.pingColor = Utils.colorConvert(settings.pingColor);
+			this.lagColor = Utils.colorConvert(settings.pingLagColor);
+			this.statical = new TextExt(5, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+			this.statical.htmlText = "<textformat tabstops='[80]'>FPS:\tPING:</textformat>";
+			this.fps = new TextExt(46, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+			this.fps.textColor = Utils.colorConvert(settings.fpsColor);
+			this.ping = new TextExt(136, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+			this.ping.textColor = this.pingColor;
 		}
 		
 		public function update(ping:int, fps:int, lag:Boolean):void
 		{
-			this.PING.text = ping.toString();
-			this.FPS.text = fps.toString();
+			this.ping.text = ping.toString();
+			this.fps.text = fps.toString();
 			
 			var color:uint = lag ? this.lagColor : this.pingColor;
 			
-			if (this.PING.textColor != color)
+			if (this.ping.textColor != color)
 			{
-				this.PING.textColor = color
+				this.ping.textColor = color
 			}
 		}
 	}
