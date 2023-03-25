@@ -17,8 +17,8 @@ package net.armagomen.battleobserver.battle.components
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
-			var settings:Object = this.getSettings();
-			this.armorCalc = new TextExt(settings.position.x, settings.position.y, Filters.armorText, TextFieldAutoSize.CENTER, this);
+			var settings:Object = this.getSettings().position;
+			this.armorCalc = new TextExt(settings.x, settings.y, Filters.armorText, TextFieldAutoSize.CENTER, this);
 		}
 		
 		override protected function onBeforeDispose():void 
@@ -34,6 +34,5 @@ package net.armagomen.battleobserver.battle.components
 				this.armorCalc.htmlText = text;
 			}
 		}
-	
 	}
 }

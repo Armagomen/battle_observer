@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
-from armagomen.constants import VEHICLE, PANELS, COLORS, VEHICLE_TYPES
+from armagomen.constants import VEHICLE, PANELS, COLORS
 from armagomen.utils.common import logDebug
 from armagomen.utils.keys_listener import g_keysListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealthPercent
@@ -54,13 +54,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def createHealthBar(self, vehicleID, vInfoVO, isEnemy):
         max_health = vInfoVO.vehicleType.maxHealth
         if self.settings[PANELS.BAR_CLASS_COLOR]:
-            color = self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][vInfoVO.vehicleType.classTag]
+            color = self.getVehicleClassColor(vInfoVO.vehicleType.classTag)
         else:
             color = self.getBarColor(isEnemy)
         visible = not self.settings[PANELS.ON_KEY_DOWN]
         vehicle_data = {VEHICLE.CUR: max_health, VEHICLE.MAX: max_health, VEHICLE.PERCENT: 100}
-        colors = self.getColors()
-        self.as_addHealthBarS(vehicleID, color, colors[COLORS.GLOBAL], self.settings[PANELS.BAR_SETTINGS], visible)
+        self.as_addHealthBarS(vehicleID, color, self.settings[PANELS.BAR_SETTINGS], visible)
         self.as_updateHealthBarS(vehicleID, 100, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onAddedToStorage(self, vehicleID, isEnemy):

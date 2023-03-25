@@ -15,7 +15,6 @@ class WTRStatistics(object):
 
     def __init__(self):
         self.settings = settings.statistics
-        self.vehicle_types = settings.vehicle_types
         self.wtr_ranges = ((3030, "bad"), (4590, "normal"), (6440, "good"), (8670, "very_good"), (10450, "unique"))
         self.itemsData = {}
 

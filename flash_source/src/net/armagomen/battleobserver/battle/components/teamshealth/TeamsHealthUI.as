@@ -34,7 +34,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			this.removeChildren();
 			this.hpBars.remove();
 			this.hpBars = null;
 			this.score.removeChildren();

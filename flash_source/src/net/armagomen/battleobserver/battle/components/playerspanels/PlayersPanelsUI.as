@@ -93,11 +93,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		public function as_addHealthBar(vehicleID:int, color:String, colorParams:Object, settings:Object, startVisible:Boolean):void
+		public function as_addHealthBar(vehicleID:int, color:String, settings:Object, visible:Boolean):void
 		{
 			if (this.storage[vehicleID])
 			{
-				this.storage[vehicleID].addHealth(color, colorParams, settings, startVisible);
+				this.storage[vehicleID].addHealth(color, this.getColors().global, settings, visible);
 			}
 		}
 		

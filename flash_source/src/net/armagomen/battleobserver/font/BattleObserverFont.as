@@ -13,8 +13,8 @@ package net.armagomen.battleobserver.font
 {
 	import flash.display.Sprite;
 	import flash.text.Font;
-
-	public class BattleObserver extends Sprite
+	
+	public class BattleObserverFont extends Sprite
 	{
 		/*
 		   Common unicode ranges:
@@ -31,18 +31,25 @@ package net.armagomen.battleobserver.font
 		   Armenian    : U+0530-U+058F,U+FB13-U+FB17
 		   Arabic      : U+0600-U+06FF,U+FB50-U+FDFF,U+FE70-U+FEFF
 		   Hebrew      : U+05B0-U+05FF,U+FB1D-U+FB4F,U+2000-U+206f,U+20A0-U+20CF,U+2100-U+2183
-
+		
 		   About 'embedAsCFF' attribute:
 		   - is Flex 4 only (comment out to target Flex 2-3)
 		   - is 'true' by default, meaning the font is embedded for the new TextLayout engine only
 		   - you must set explicitely to 'false' for use in regular TextFields
-
+		
 		   More information:
 		   http://help.adobe.com/en_US/Flex/4.0/UsingSDK/WS2db454920e96a9e51e63e3d11c0bf69084-7f5f.html
 		 */
-
-		[Embed(source = 'BattleObserver.ttf', fontFamily = 'BattleObserver', fontName = 'BattleObserver', mimeType = 'application/x-font-truetype', fontStyle = 'normal', fontWeight = 'normal', embedAsCFF = 'false', advancedAntiAliasing = 'true')]
+		
+		[Embed(source = 'BattleObserverFont.ttf', fontFamily = 'BattleObserver', fontName = 'BattleObserver', mimeType = 'application/x-font-truetype', fontStyle = 'normal', fontWeight = 'normal', embedAsCFF = 'false', advancedAntiAliasing = 'true')]
 		public static const fontClass:Class;
+		
+		public function BattleObserverFont()
+		{
+			Font.registerFont(fontClass);
+		
+		}
+	
 	}
 
 }

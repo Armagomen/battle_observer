@@ -1,6 +1,6 @@
 from account_helpers.settings_core.settings_constants import GAME, GRAPHICS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
-from armagomen.constants import MARKERS, GLOBAL, HP_BARS, VEHICLE_TYPES, COLORS
+from armagomen.constants import MARKERS, GLOBAL, HP_BARS, COLORS
 from armagomen.utils.keys_listener import g_keysListener
 from gui.battle_control.arena_info.vos_collections import FragCorrelationSortKey
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -8,12 +8,12 @@ from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListene
 
 class CorrelationMarkers(object):
 
-    def __init__(self, arenaDP, settingsCore, settings, vehicleTypes, colors, as_markersS):
+    def __init__(self, arenaDP, settingsCore, settings, getVehicleClassColor, colors, as_markersS):
         self._arenaDP = arenaDP
         self.as_markersS = as_markersS
         self.settings = settings
         self.settingsCore = settingsCore
-        self.vehicleTypes = vehicleTypes
+        self.getVehicleClassColor = getVehicleClassColor
         self.colors = colors
         self.__allyTeam = self._arenaDP.getNumberOfTeam()
         self.__enemyTeam = self._arenaDP.getNumberOfTeam(enemy=True)
@@ -35,7 +35,7 @@ class CorrelationMarkers(object):
     def getIcon(self, vInfoVO):
         isAlive = vInfoVO.isAlive()
         if self.vehicleTypeColor and isAlive:
-            color = self.vehicleTypes[VEHICLE_TYPES.CLASS_COLORS][vInfoVO.vehicleType.classTag]
+            color = self.getVehicleClassColor(vInfoVO.vehicleType.classTag)
         else:
             color = self.color[vInfoVO.team][isAlive]
         return MARKERS.ICON.format(color, MARKERS.TYPE_ICON[vInfoVO.vehicleType.classTag])
@@ -81,7 +81,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
         if self.settings[MARKERS.NAME][GLOBAL.ENABLED] and is_normal_mode:
             self.markers = CorrelationMarkers(self._arenaDP, self.settingsCore, self.settings[MARKERS.NAME],
-                                              self.vehicle_types, self.getColors(), self.as_markersS)
+                                              self.getVehicleClassColor, self.getColors(), self.as_markersS)
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
 
     def _dispose(self):

@@ -10,14 +10,12 @@ package net.armagomen.battleobserver.battle.components
 	public class DamageLogsUI extends ObserverBattleDisplayable
 	{
 		private var top_log_inCenter:Boolean = true;
-		private var damageLogPanel:*         = null;
 		private var top_log:TextExt          = null;
 		private var logs:Vector.<TextExt>    = null;
 		
-		public function DamageLogsUI(dlPanel:*)
+		public function DamageLogsUI()
 		{
 			super();
-			this.damageLogPanel = dlPanel;
 		}
 		
 		override protected function onBeforeDispose():void
@@ -36,15 +34,16 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_createExtendedLogs(position:Object, top_enabled:Boolean, bottom_enabled:Boolean):void
 		{
-			if (this.damageLogPanel)
+			var damageLogPanel:* = parent.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
+			if (damageLogPanel)
 			{
 				if (this.logs)
 				{
-					this.damageLogPanel._detailsTopContainer.removeChild(this.logs[0])
-					this.damageLogPanel._detailsBottomContainer.removeChild(this.logs[1])
+					damageLogPanel._detailsTopContainer.removeChild(this.logs[0])
+					damageLogPanel._detailsBottomContainer.removeChild(this.logs[1])
 				}
-				var top:TextExt = new TextExt(position.x + 35, position.y, null, position.align, this.damageLogPanel._detailsTopContainer, top_enabled);
-				var bottom:TextExt = new TextExt(position.x + 20, position.y, null, position.align, this.damageLogPanel._detailsBottomContainer, bottom_enabled);
+				var top:TextExt = new TextExt(position.x + 35, position.y, null, position.align, damageLogPanel._detailsTopContainer, top_enabled);
+				var bottom:TextExt = new TextExt(position.x + 20, position.y, null, position.align, damageLogPanel._detailsBottomContainer, bottom_enabled);
 				this.logs = new <TextExt>[top, bottom];
 				this.logs.fixed = true;
 			}

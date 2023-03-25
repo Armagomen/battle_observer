@@ -243,14 +243,14 @@ localization = {
         "outline*enabled": "Включить контур",
         "outline*color": "Цвет контура"
     },
-    "vehicle_types": {
+    "vehicle_types_colors": {
         "header": "Цвета классов техники",
-        "vehicleClassColors*AT-SPG": "Противотанковая САУ - ПТ-САУ",
-        "vehicleClassColors*SPG": "Противотанковая САУ - Артиллерия",
-        "vehicleClassColors*heavyTank": "Тяжёлый Танк",
-        "vehicleClassColors*lightTank": "Лёгкий Танк",
-        "vehicleClassColors*mediumTank": "Средний Танк",
-        "vehicleClassColors*unknown": "Неизвестно (ГК)"
+        "AT-SPG": "Противотанковая САУ - ПТ-САУ",
+        "SPG": "Противотанковая САУ - Артиллерия",
+        "heavyTank": "Тяжёлый Танк",
+        "lightTank": "Лёгкий Танк",
+        "mediumTank": "Средний Танк",
+        "unknown": "Неизвестно (ГК)"
     },
     "players_panels": {
         "header": "Панели со списком игроков (уши).",

@@ -3,13 +3,14 @@
 	import flash.filters.GlowFilter;
 	import flash.text.*;
 	import net.armagomen.battleobserver.utils.Filters;
-
+	
 	public class TextExt extends TextField
 	{
-		public function TextExt(x:Number, y:Number, style:TextFormat, align:String, ui:*, enabled:Boolean=true)
+		public function TextExt(x:Number, y:Number, style:TextFormat, align:String, ui:*, enabled:Boolean = true)
 		{
 			super();
-			if (style == null){
+			if (style == null)
+			{
 				style = Filters.normalText;
 			}
 			this.x = x;

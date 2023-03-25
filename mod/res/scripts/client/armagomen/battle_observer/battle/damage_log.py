@@ -2,13 +2,14 @@ from collections import defaultdict, namedtuple
 
 from armagomen.battle_observer.core import cachedVehicleData
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
-from armagomen.constants import DAMAGE_LOG, GLOBAL, VEHICLE_TYPES, COLORS
+from armagomen.constants import DAMAGE_LOG, GLOBAL, COLORS
 from armagomen.utils.common import logDebug, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
 from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
+from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from helpers import i18n
 
 _SHELL_TYPES_TO_STR = {
@@ -45,6 +46,20 @@ def getI18nShellName(shellType):
     return i18n.makeString(_SHELL_TYPES_TO_STR[shellType])
 
 
+__ICON_SYMBOL = "<font face='BattleObserver' size='18'>{}</font>"
+VEHICLE_TYPE_TO_CLASS_ICON = {VEHICLE_CLASS_NAME.AT_SPG: __ICON_SYMBOL.format("J"),
+                              VEHICLE_CLASS_NAME.SPG: __ICON_SYMBOL.format("S"),
+                              VEHICLE_CLASS_NAME.HEAVY_TANK: __ICON_SYMBOL.format("H"),
+                              VEHICLE_CLASS_NAME.LIGHT_TANK: __ICON_SYMBOL.format("L"),
+                              VEHICLE_CLASS_NAME.MEDIUM_TANK: __ICON_SYMBOL.format("M")}
+
+
+def getVehicleClassIcon(classTag):
+    if classTag:
+        return VEHICLE_TYPE_TO_CLASS_ICON[classTag]
+    return __ICON_SYMBOL.format("U")
+
+
 class DamageLog(DamageLogsMeta):
 
     def __init__(self):
@@ -56,10 +71,6 @@ class DamageLog(DamageLogsMeta):
         self._is_top_log_enabled = False
         self._playerShell = (DAMAGE_LOG.NOT_SHELL, False)
         self.top_log = defaultdict(int)
-        self.vehicle_colors = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS][VEHICLE_TYPES.UNKNOWN],
-                                          **self.vehicle_types[VEHICLE_TYPES.CLASS_COLORS])
-        self.vehicle_icons = defaultdict(lambda: self.vehicle_types[VEHICLE_TYPES.CLASS_ICON][VEHICLE_TYPES.UNKNOWN],
-                                         **self.vehicle_types[VEHICLE_TYPES.CLASS_ICON])
         self.last_shell = defaultdict(lambda: (DAMAGE_LOG.NOT_SHELL, False))
 
     def _populate(self):
@@ -262,8 +273,8 @@ class DamageLog(DamageLogsMeta):
         vehicle[DAMAGE_LOG.TANK_NAME] = vehicleInfoVO.vehicleType.shortName
         vehicle[DAMAGE_LOG.ICON_NAME] = vehicleInfoVO.vehicleType.iconName
         vehicle[DAMAGE_LOG.TANK_LEVEL] = vehicleInfoVO.vehicleType.level
-        vehicle[DAMAGE_LOG.CLASS_ICON] = self.vehicle_icons[vehicleInfoVO.vehicleType.classTag]
-        vehicle[DAMAGE_LOG.CLASS_COLOR] = self.vehicle_colors[vehicleInfoVO.vehicleType.classTag]
+        vehicle[DAMAGE_LOG.CLASS_ICON] = getVehicleClassIcon(vehicleInfoVO.vehicleType.classTag)
+        vehicle[DAMAGE_LOG.CLASS_COLOR] = self.getVehicleClassColor(vehicleInfoVO.vehicleType.classTag)
 
     def getLogLines(self, log_data):
         settings = self.settings.log_extended

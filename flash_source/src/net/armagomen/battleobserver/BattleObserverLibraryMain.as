@@ -23,7 +23,7 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
 	import net.armagomen.battleobserver.battle.wgcomponents.minimapZoom;
-	import net.armagomen.battleobserver.font.BattleObserver;
+	import net.armagomen.battleobserver.font.BattleObserverFont;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.gui.battle.views.BaseBattlePage;
@@ -33,11 +33,11 @@ package net.armagomen.battleobserver
 	{
 		private var mapZoom:minimapZoom             = null;
 		private var statisticsBO:StatisticsAndIcons = null;
+		private var __font:BattleObserverFont = new BattleObserverFont();
 		
 		public function BattleObserverLibraryMain()
 		{
 			super();
-			Font.registerFont(BattleObserver.fontClass);
 			BaseBattlePage.prototype.as_observerCreateComponents = function(aliases:Array):void
 			{
 				for each (var alias:String in aliases)
@@ -53,7 +53,7 @@ package net.armagomen.battleobserver
 						this.registerComponent(this.addChild(teamHealthUI), alias);
 						break;
 					case "Observer_DamageLog_UI": 
-						var damageLog:DamageLogsUI = new DamageLogsUI(this.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL));
+						var damageLog:DamageLogsUI = new DamageLogsUI();
 						this.registerComponent(this.addChild(damageLog), alias);
 						break;
 					case "Observer_MainGun_UI": 
@@ -78,8 +78,7 @@ package net.armagomen.battleobserver
 						break;
 					case "Observer_TeamBases_UI": 
 						var teamBases:TeamBasesUI = new TeamBasesUI();
-						this.registerComponent(teamBases, alias);
-						this.addChildAt(teamBases, this.getChildIndex(this.getComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL)));
+						this.registerComponent(this.addChild(teamBases), alias);
 						break;
 					case "Observer_ArmorCalculator_UI": 
 						var armorCalculator:ArmorCalculatorUI = new ArmorCalculatorUI();

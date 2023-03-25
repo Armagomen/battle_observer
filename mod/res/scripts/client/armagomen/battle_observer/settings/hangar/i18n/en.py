@@ -239,14 +239,14 @@ localization = {
         "outline*enabled": "Enable border.",
         "outline*color": "Border color."
     },
-    "vehicle_types": {
+    "vehicle_types_colors": {
         "header": "COLOR OF CLASS ENGINE'S",
-        "vehicleClassColors*AT-SPG": "AT-SPG",
-        "vehicleClassColors*SPG": "Artillery",
-        "vehicleClassColors*heavyTank": "Heavy Tank",
-        "vehicleClassColors*lightTank": "Light Tank",
-        "vehicleClassColors*mediumTank": "Medium Tank",
-        "vehicleClassColors*unknown": "Unknown (GM)"
+        "AT-SPG": "AT-SPG",
+        "SPG": "Artillery",
+        "heavyTank": "Heavy Tank",
+        "lightTank": "Light Tank",
+        "mediumTank": "Medium Tank",
+        "unknown": "Unknown (GM)"
     },
     "players_panels": {
         "header": "Panels with a list of players (ears).",
