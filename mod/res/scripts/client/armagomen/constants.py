@@ -6,7 +6,6 @@ from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
     SHOT_RESULT_TO_ALT_COLOR
-from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "gui/maps/icons/battle_observer"
@@ -230,11 +229,6 @@ ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "piercingReserve", "message", "caliber", "ricochet", "noDamage", __MESSAGES_TEMPLATE,
     "<p align='center'>%(ricochet)s%(noDamage)s\n<font color='%(color)s'>%(countedArmor)d</font></p>",
     "display_on_allies")
-
-MARKERS = namedtuple("MARKERS", ("NAME", "HOT_KEY", "CLASS_COLOR", "TYPE_ICON", "ICON"))(
-    "markers", "showMarkers_hotkey", "markersClassColor", {
-        VEHICLE_CLASS_NAME.HEAVY_TANK: "H", VEHICLE_CLASS_NAME.MEDIUM_TANK: "M", VEHICLE_CLASS_NAME.AT_SPG: "J",
-        VEHICLE_CLASS_NAME.SPG: "S", VEHICLE_CLASS_NAME.LIGHT_TANK: "L", "unknown": "U"}, "<font color='{}'>{}</font>")
 
 CAROUSEL = namedtuple("CAROUSEL", ("NAME", "SMALL", "ROWS", "SETTINGS"))(
     "tank_carousel", "smallDoubleCarousel", "carouselRows", {GAME.CAROUSEL_TYPE: None, GAME.DOUBLE_CAROUSEL_TYPE: None})

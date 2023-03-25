@@ -161,14 +161,7 @@ localization = {
     "hp_bars": {
         "header": "TOTAL HP PANEL",
         "showAliveCount": "Show survivors on the panel",
-        "style": "Style panel HP",
-        "markers*enabled": "MARKERS UNDER PANEL",
-        "markers*markersClassColor": "Paint icons by color of the class.",
-        "markers*x": "Horizontal position from the center.",
-        "markers*x_tooltip": "The position of the markers horizontally from the center of the screen.",
-        "markers*y": "Vertical position from the top.",
-        "markers*y_tooltip": "The position of the markers vertically from the top of the screen.",
-        "markers*showMarkers_hotkey": "Key to enable/disable Markers."
+        "style": "Style panel HP"
     },
     "armor_calculator": {
         "header": "Penetration indicator - CALCULATOR GIVEN ARMOR",

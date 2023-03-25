@@ -1,70 +1,7 @@
-from account_helpers.settings_core.settings_constants import GAME, GRAPHICS
+from account_helpers.settings_core.settings_constants import GAME, GRAPHICS, ScorePanelStorageKeys
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
-from armagomen.constants import MARKERS, GLOBAL, HP_BARS, COLORS
-from armagomen.utils.keys_listener import g_keysListener
-from gui.battle_control.arena_info.vos_collections import FragCorrelationSortKey
+from armagomen.constants import HP_BARS
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
-
-
-class CorrelationMarkers(object):
-
-    def __init__(self, arenaDP, settingsCore, settings, getVehicleClassColor, colors, as_markersS):
-        self._arenaDP = arenaDP
-        self.as_markersS = as_markersS
-        self.settings = settings
-        self.settingsCore = settingsCore
-        self.getVehicleClassColor = getVehicleClassColor
-        self.colors = colors
-        self.__allyTeam = self._arenaDP.getNumberOfTeam()
-        self.__enemyTeam = self._arenaDP.getNumberOfTeam(enemy=True)
-        self.vehicleTypeColor = settings[MARKERS.CLASS_COLOR]
-        self.color = self.updateMarkersColorDict()
-        self.enabled = self.settingsCore.getSetting(GAME.SHOW_VEHICLES_COUNTER)
-        g_keysListener.registerComponent(self.keyEvent, keyList=self.settings[MARKERS.HOT_KEY])
-
-    def updateMarkersColorDict(self, isBlind=None):
-        if isBlind is None:
-            isBlind = self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND)
-        dead_color = self.colors[COLORS.GLOBAL][COLORS.DEAD_COLOR]
-        blind = COLORS.ENEMY_BLIND_MAME if isBlind else COLORS.ENEMY_MAME
-        return {
-            self.__allyTeam: {False: dead_color, True: self.colors[COLORS.GLOBAL][COLORS.ALLY_MAME]},
-            self.__enemyTeam: {False: dead_color, True: self.colors[COLORS.GLOBAL][blind]}
-        }
-
-    def getIcon(self, vInfoVO):
-        isAlive = vInfoVO.isAlive()
-        if self.vehicleTypeColor and isAlive:
-            color = self.getVehicleClassColor(vInfoVO.vehicleType.classTag)
-        else:
-            color = self.color[vInfoVO.team][isAlive]
-        return MARKERS.ICON.format(color, MARKERS.TYPE_ICON[vInfoVO.vehicleType.classTag])
-
-    def update(self):
-        if self.enabled:
-            left, right = [], []
-            for vInfo in sorted(self._arenaDP.getVehiclesInfoIterator(), key=FragCorrelationSortKey):
-                if not vInfo.vehicleType.isObserver:
-                    if vInfo.team == self.__allyTeam:
-                        left.append(self.getIcon(vInfo))
-                    else:
-                        right.append(self.getIcon(vInfo))
-            result = GLOBAL.EMPTY_LINE.join(reversed(left)), GLOBAL.EMPTY_LINE.join(right)
-        else:
-            result = GLOBAL.EMPTY_LINE, GLOBAL.EMPTY_LINE
-        self.as_markersS(*result)
-
-    def keyEvent(self, isKeyDown):
-        if isKeyDown:
-            self.settingsCore.applySettings({GAME.SHOW_VEHICLES_COUNTER: not self.enabled})
-
-    def onSettingsApplied(self, diff):
-        if GRAPHICS.COLOR_BLIND in diff:
-            self.color = self.updateMarkersColorDict(bool(diff[GRAPHICS.COLOR_BLIND]))
-            self.update()
-        if GAME.SHOW_VEHICLES_COUNTER in diff:
-            self.enabled = bool(diff[GAME.SHOW_VEHICLES_COUNTER])
-            self.update()
 
 
 class TeamsHP(TeamHealthMeta, IBattleFieldListener):
@@ -72,21 +9,16 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def __init__(self):
         super(TeamsHP, self).__init__()
         self.showAliveCount = False
-        self.markers = None
         self.observers = set(vInfo.vehicleID for vInfo in self._arenaDP.getVehiclesInfoIterator() if vInfo.isObserver())
 
     def _populate(self):
         super(TeamsHP, self)._populate()
         is_normal_mode = self.gui.isRandomBattle() or self.gui.isRankedBattle() or self.gui.isTrainingBattle()
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
-        if self.settings[MARKERS.NAME][GLOBAL.ENABLED] and is_normal_mode:
-            self.markers = CorrelationMarkers(self._arenaDP, self.settingsCore, self.settings[MARKERS.NAME],
-                                              self.getVehicleClassColor, self.getColors(), self.as_markersS)
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
 
     def _dispose(self):
         self.settingsCore.onSettingsApplied -= self.onSettingsApplied
-        self.markers = None
         super(TeamsHP, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
@@ -100,11 +32,14 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
                 deadEnemies = deadEnemies.difference(self.observers)
                 deadAllies = deadAllies.difference(self.observers)
             self.as_updateScoreS(len(deadEnemies), len(deadAllies))
-        if self.markers is not None:
-            self.markers.update()
 
     def onSettingsApplied(self, diff):
-        if self.markers is not None:
-            self.markers.onSettingsApplied(diff)
         if GRAPHICS.COLOR_BLIND in diff:
             self.as_colorBlindS(bool(diff[GRAPHICS.COLOR_BLIND]))
+        showTiers = diff.get(ScorePanelStorageKeys.ENABLE_TIER_GROUPING)
+        if showTiers is None:
+            showTiers = bool(self.settingsCore.getSetting(ScorePanelStorageKeys.ENABLE_TIER_GROUPING))
+        if GAME.SHOW_VEHICLES_COUNTER in diff or showTiers:
+            if showTiers:
+                self.settingsCore.applySetting(ScorePanelStorageKeys.ENABLE_TIER_GROUPING, False)
+            self.as_updateCorrelationBarS()

@@ -4,7 +4,7 @@ import Keys
 from Event import SafeEvent
 from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS,
-    FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MARKERS, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
+    FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
     SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS, DISTANCE, OWN_HEALTH, STATISTICS, AVG_EFFICIENCY_HANGAR,
     DISPERSION_TIMER
 )
@@ -257,14 +257,7 @@ class DefaultSettings(object):
         self.hp_bars = {
             GLOBAL.ENABLED: False,
             HP_BARS.STYLE: HP_BARS.STYLES.league,
-            HP_BARS.ALIVE: False,
-            MARKERS.NAME: {
-                GLOBAL.ENABLED: False,
-                MARKERS.HOT_KEY: [Keys.KEY_NUMPAD0],
-                MARKERS.CLASS_COLOR: False,
-                GLOBAL.X: 5,
-                GLOBAL.Y: 31
-            }
+            HP_BARS.ALIVE: False
         }
         self.team_bases_panel = {
             GLOBAL.ENABLED: False,
@@ -292,11 +285,11 @@ class DefaultSettings(object):
             "progress_bar": False
         }
         self.vehicle_types_colors = {
-            VEHICLE_CLASS_NAME.HEAVY_TANK: "#FF9933",
-            VEHICLE_CLASS_NAME.MEDIUM_TANK: "#FFCC00",
-            VEHICLE_CLASS_NAME.AT_SPG: "#3399CC",
-            VEHICLE_CLASS_NAME.SPG: "#FF3300",
-            VEHICLE_CLASS_NAME.LIGHT_TANK: "#66FF00",
+            VEHICLE_CLASS_NAME.HEAVY_TANK: "#F9B200",
+            VEHICLE_CLASS_NAME.MEDIUM_TANK: "#FDEF6C",
+            VEHICLE_CLASS_NAME.AT_SPG: "#0094EC",
+            VEHICLE_CLASS_NAME.SPG: "#A90400",
+            VEHICLE_CLASS_NAME.LIGHT_TANK: "#37BC00",
             VEHICLE_TYPES_COLORS.UNKNOWN: COLORS.NORMAL_TEXT
         }
         self.players_panels = {

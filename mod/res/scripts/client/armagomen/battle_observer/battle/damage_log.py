@@ -22,7 +22,7 @@ _SHELL_TYPES_TO_STR = {
     BATTLE_LOG_SHELL_TYPES.HE_LEGACY_NO_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE
 }
 EXTENDED_FEEDBACK = (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
-PREMIUM_SHELL_END = "_PREMIUM"
+PREMIUM_SHELL_END = "PREMIUM"
 
 _EVENT_TO_TOP_LOG_MACROS = {
     FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: "playerDamage",
@@ -47,11 +47,13 @@ def getI18nShellName(shellType):
 
 
 __ICON_SYMBOL = "<font face='BattleObserver' size='18'>{}</font>"
-VEHICLE_TYPE_TO_CLASS_ICON = {VEHICLE_CLASS_NAME.AT_SPG: __ICON_SYMBOL.format("J"),
-                              VEHICLE_CLASS_NAME.SPG: __ICON_SYMBOL.format("S"),
-                              VEHICLE_CLASS_NAME.HEAVY_TANK: __ICON_SYMBOL.format("H"),
-                              VEHICLE_CLASS_NAME.LIGHT_TANK: __ICON_SYMBOL.format("L"),
-                              VEHICLE_CLASS_NAME.MEDIUM_TANK: __ICON_SYMBOL.format("M")}
+VEHICLE_TYPE_TO_CLASS_ICON = {
+    VEHICLE_CLASS_NAME.AT_SPG: __ICON_SYMBOL.format("J"),
+    VEHICLE_CLASS_NAME.SPG: __ICON_SYMBOL.format("S"),
+    VEHICLE_CLASS_NAME.HEAVY_TANK: __ICON_SYMBOL.format("H"),
+    VEHICLE_CLASS_NAME.LIGHT_TANK: __ICON_SYMBOL.format("L"),
+    VEHICLE_CLASS_NAME.MEDIUM_TANK: __ICON_SYMBOL.format("M")
+}
 
 
 def getVehicleClassIcon(classTag):
@@ -90,8 +92,7 @@ class DamageLog(DamageLogsMeta):
             top_enabled = self.settings.log_extended[DAMAGE_LOG.D_DONE_ENABLED]
             bottom_enabled = self.settings.log_extended[DAMAGE_LOG.D_RECEIVED_ENABLED]
             self.as_createExtendedLogsS(position, top_enabled, bottom_enabled)
-            g_keysListener.registerComponent(self.onLogsAltMode,
-                                             keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
+            g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
             self._damage_done = LogData(set(), list(), dict(), DAMAGE_LOG.D_DONE)
             self._damage_received = LogData(set(), list(), dict(), DAMAGE_LOG.D_RECEIVED)
             arena = self._arenaVisitor.getArenaSubscription()
@@ -149,8 +150,9 @@ class DamageLog(DamageLogsMeta):
             type_descriptor = getVehicleTypeDescriptor()
             if type_descriptor is None:
                 self._playerShell = (DAMAGE_LOG.NOT_SHELL, False)
-            shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(type_descriptor.shot.shell))
-            is_shell_gold = type_descriptor.shot.shell.iconName.endswith(PREMIUM_SHELL_END)
+            shell = type_descriptor.shot.shell
+            shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(shell))
+            is_shell_gold = shell.isGold or PREMIUM_SHELL_END in shell.iconName
             self._playerShell = (shell_name, is_shell_gold)
 
     def onLogsAltMode(self, isKeyDown):
@@ -270,18 +272,18 @@ class DamageLog(DamageLogsMeta):
             vehicle[DAMAGE_LOG.KILLED_ICON] = GLOBAL.EMPTY_LINE
             vehicle[DAMAGE_LOG.USER_NAME] = vehicleInfoVO.player.name
         vehicle[DAMAGE_LOG.VEHICLE_CLASS] = vehicleInfoVO.vehicleType.classTag
-        vehicle[DAMAGE_LOG.TANK_NAME] = vehicleInfoVO.vehicleType.shortName
+        vehicle[DAMAGE_LOG.TANK_NAME] = vehicleInfoVO.vehicleType.shortNameWithPrefix
         vehicle[DAMAGE_LOG.ICON_NAME] = vehicleInfoVO.vehicleType.iconName
         vehicle[DAMAGE_LOG.TANK_LEVEL] = vehicleInfoVO.vehicleType.level
         vehicle[DAMAGE_LOG.CLASS_ICON] = getVehicleClassIcon(vehicleInfoVO.vehicleType.classTag)
         vehicle[DAMAGE_LOG.CLASS_COLOR] = self.getVehicleClassColor(vehicleInfoVO.vehicleType.classTag)
 
     def getLogLines(self, log_data):
-        settings = self.settings.log_extended
-        template = GLOBAL.EMPTY_LINE.join(settings[DAMAGE_LOG.LOG_MODE[self._is_key_down]])
-        for vehicleID in reversed(log_data.id_list) if settings[DAMAGE_LOG.REVERSE] else log_data.id_list:
+        extended = self.settings.log_extended
+        template = GLOBAL.EMPTY_LINE.join(extended[DAMAGE_LOG.LOG_MODE[self._is_key_down]])
+        for vehicleID in reversed(log_data.id_list) if extended[DAMAGE_LOG.REVERSE] else log_data.id_list:
             if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
-                log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = settings[DAMAGE_LOG.KILLED_ICON]
+                log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = extended[DAMAGE_LOG.KILLED_ICON]
             yield template % log_data.vehicles[vehicleID]
 
     def updateExtendedLog(self, log_data):
