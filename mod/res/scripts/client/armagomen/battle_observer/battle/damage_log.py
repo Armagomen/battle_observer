@@ -25,18 +25,11 @@ EXTENDED_FEEDBACK = (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_I
 PREMIUM_SHELL_END = "PREMIUM"
 
 _EVENT_TO_TOP_LOG_MACROS = {
-    FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: "playerDamage",
-    FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR: "blockedDamage",
-    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: "assistDamage",
-    FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY: "spottedTanks",
-    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: "stun"
-}
-
-_EVENT_TO_TOP_LOG_AVG_MACROS = {
-    FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: ("tankAvgDamage", "tankDamageAvgColor"),
-    FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR: ("tankAvgBlocked", "tankBlockedAvgColor"),
-    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: ("tankAvgAssist", "tankAssistAvgColor"),
-    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ("tankAvgStun", "tankStunAvgColor")
+    FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: ("tankAvgDamage", "tankDamageAvgColor", "playerDamage"),
+    FEEDBACK_EVENT_ID.PLAYER_USED_ARMOR: ("tankAvgBlocked", "tankBlockedAvgColor", "blockedDamage"),
+    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: ("tankAvgAssist", "tankAssistAvgColor", "assistDamage"),
+    FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ("tankAvgStun", "tankStunAvgColor", "stun"),
+    FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY: (None, None, "spottedTanks")
 }
 
 LogData = namedtuple('LogData', ('kills', 'id_list', 'vehicles', 'log_id'))
@@ -171,14 +164,13 @@ class DamageLog(DamageLogsMeta):
             self.addToExtendedLog(e_type, event.getTargetID(), extra)
 
     def addToTopLog(self, e_type, event, extra):
-        macros = _EVENT_TO_TOP_LOG_MACROS[e_type]
+        avg_value_macros, avg_color_macros, value_macros = _EVENT_TO_TOP_LOG_MACROS[e_type]
         if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
             self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
-            self.top_log[macros] = GLOBAL.ZERO
-        self.top_log[macros] += self.unpackTopLogValue(e_type, event, extra)
-        if e_type in _EVENT_TO_TOP_LOG_AVG_MACROS:
-            avg_value_macros, avg_color_macros = _EVENT_TO_TOP_LOG_AVG_MACROS[e_type]
-            value = self.top_log[macros]
+            self.top_log[value_macros] = GLOBAL.ZERO
+        self.top_log[value_macros] += self.unpackTopLogValue(e_type, event, extra)
+        if avg_value_macros is not None:
+            value = self.top_log[value_macros]
             avg_value = self.top_log[avg_value_macros]
             self.top_log[avg_color_macros] = self.getAVGColor(getPercent(value, avg_value))
         self.as_updateTopLogS(self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG] % self.top_log)
