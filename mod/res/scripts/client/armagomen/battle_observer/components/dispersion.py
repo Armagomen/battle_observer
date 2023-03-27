@@ -59,21 +59,10 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
 class _GunMarkersDecorator(gun_marker_ctrl._GunMarkersDecorator):
 
-    def __init__(self, clientMarker, serverMarker, replaceOriginalCircle, extraServerLap):
-        super(_GunMarkersDecorator, self).__init__(clientMarker, serverMarker)
-        self.__extraServerLap = extraServerLap
-        self.__replaceOriginalCircle = replaceOriginalCircle
-
     def update(self, markerType, position, direction, size, relaxTime, collData):
-        if self.__replaceOriginalCircle:
-            super(_GunMarkersDecorator, self).update(markerType, position, direction, size, relaxTime, collData)
-        else:
-            if markerType == CLIENT:
-                self.__updateClient(position, direction, size, relaxTime, collData)
-                if not self.__extraServerLap:
-                    self.__updateServer(position, direction, size, relaxTime, collData)
-            elif markerType == SERVER and self.__extraServerLap:
-                self.__updateServer(position, direction, size, relaxTime, collData)
+        if markerType == CLIENT:
+            self.__updateClient(position, direction, size, relaxTime, collData)
+            self.__updateServer(position, direction, size, relaxTime, collData)
 
     def __updateClient(self, position, direction, size, relaxTime, collData):
         self.__clientState = (position, direction, collData)
@@ -192,7 +181,10 @@ class DispersionCircle(object):
             else:
                 client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, wg_factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
-        return _GunMarkersDecorator(client, server, self.replaceWGCircle, self.extraServerLap)
+        if self.replaceWGCircle or self.extraServerLap:
+            return gun_marker_ctrl._GunMarkersDecorator(client, server)
+        else:
+            return _GunMarkersDecorator(client, server)
 
 
 dispersion_circle = DispersionCircle()

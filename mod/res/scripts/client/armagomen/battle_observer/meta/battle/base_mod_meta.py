@@ -39,13 +39,11 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @staticmethod
     def getVehicleClassColors():
-        return settings.vehicle_types_colors
+        return settings.colors[VEHICLE_TYPES_COLORS.NAME]
 
     @staticmethod
     def getVehicleClassColor(classTag):
-        if not classTag:
-            classTag = VEHICLE_TYPES_COLORS.UNKNOWN
-        return settings.vehicle_types_colors[classTag]
+        return settings.colors[VEHICLE_TYPES_COLORS.NAME][classTag or VEHICLE_TYPES_COLORS.UNKNOWN]
 
     @staticmethod
     def getAlpha():

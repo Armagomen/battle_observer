@@ -264,7 +264,7 @@ class DamageLog(DamageLogsMeta):
             vehicle[DAMAGE_LOG.KILLED_ICON] = GLOBAL.EMPTY_LINE
             vehicle[DAMAGE_LOG.USER_NAME] = vehicleInfoVO.player.name
         vehicle[DAMAGE_LOG.VEHICLE_CLASS] = vehicleInfoVO.vehicleType.classTag
-        vehicle[DAMAGE_LOG.TANK_NAME] = vehicleInfoVO.vehicleType.shortNameWithPrefix
+        vehicle[DAMAGE_LOG.TANK_NAME] = vehicleInfoVO.vehicleType.guiName
         vehicle[DAMAGE_LOG.ICON_NAME] = vehicleInfoVO.vehicleType.iconName
         vehicle[DAMAGE_LOG.TANK_LEVEL] = vehicleInfoVO.vehicleType.level
         vehicle[DAMAGE_LOG.CLASS_ICON] = getVehicleClassIcon(vehicleInfoVO.vehicleType.classTag)

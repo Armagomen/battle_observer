@@ -232,15 +232,6 @@ localization = {
         "outline*enabled": "Enable border.",
         "outline*color": "Border color."
     },
-    "vehicle_types_colors": {
-        "header": "COLOR OF CLASS ENGINE'S",
-        "AT-SPG": "AT-SPG",
-        "SPG": "Artillery",
-        "heavyTank": "Heavy Tank",
-        "lightTank": "Light Tank",
-        "mediumTank": "Medium Tank",
-        "unknown": "Unknown (GM)"
-    },
     "players_panels": {
         "header": "Panels with a list of players (ears).",
         "players_damages_enabled": "Damage to players on team rosters.",
@@ -323,6 +314,12 @@ localization = {
         "global*bgAlpha": "Background transparency of panels",
         "global*bgAlpha_tooltip": "0 - completely transparent. \n 1 - not transparent.",
         "global*deadColor": "Destroyed",
+        "vehicle_types_colors*AT-SPG": "AT-SPG",
+        "vehicle_types_colors*SPG": "Artillery",
+        "vehicle_types_colors*heavyTank": "Heavy Tank",
+        "vehicle_types_colors*lightTank": "Light Tank",
+        "vehicle_types_colors*mediumTank": "Medium Tank",
+        "vehicle_types_colors*unknown": "Unknown (GM)"
     },
     "service_channel_filter": {
         "header": "MESSAGE FILTER IN THE SYSTEM CHANNEL - (hides messages of selected categories)",

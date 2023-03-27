@@ -2,7 +2,7 @@ from armagomen.battle_observer.components.controllers.players_damage_controller 
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.core import viewSettings
-from armagomen.constants import SWF, BATTLE_ALIASES
+from armagomen.constants import SWF, BATTLE_ALIASES, CURRENT_REALM
 from armagomen.utils.common import logError, logInfo, logDebug, callback, xvmInstalled
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
@@ -11,15 +11,6 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
 __all__ = ()
-
-VIEW_ALIASES = (
-    VIEW_ALIAS.CLASSIC_BATTLE_PAGE,
-    VIEW_ALIAS.COMP7_BATTLE_PAGE,
-    VIEW_ALIAS.EPIC_BATTLE_PAGE,
-    VIEW_ALIAS.EPIC_RANDOM_PAGE,
-    VIEW_ALIAS.RANKED_BATTLE_PAGE,
-    VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,
-)
 
 
 def getViewSettings():
@@ -65,7 +56,11 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
     __slots__ = ('_iconsEnabled', '_statisticsEnabled', 'minimapPlugin', 'statistics')
 
     def __init__(self):
-        listeners = tuple((alias, self.eventListener) for alias in VIEW_ALIASES)
+        aliases = (
+            VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.COMP7_BATTLE_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE,
+            VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE, VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,
+        ) if CURRENT_REALM != "RU" else tuple()
+        listeners = tuple((alias, self.eventListener) for alias in aliases)
         super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self.minimapPlugin = None
         self.statistics = StatisticsDataLoader()
@@ -116,8 +111,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
 
     def _loadView(self, pyView):
         pyView._blToggling.update(viewSettings.components)
-        pyView.flashObject.as_observerCreateComponents(viewSettings.components)
-        pyView.flashObject.as_observerHideWgComponents(viewSettings.hiddenComponents)
+        pyView.flashObject.as_observerCreateComponents(viewSettings.components, CURRENT_REALM)
+        pyView.flashObject.as_observerHideWgComponents(viewSettings.hiddenComponents, CURRENT_REALM)
         if self.minimapPlugin is not None:
             self.minimapPlugin.init(pyView.flashObject)
         if self._iconsEnabled or self._statisticsEnabled:

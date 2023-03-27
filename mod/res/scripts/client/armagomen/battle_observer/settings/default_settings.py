@@ -170,6 +170,14 @@ class DefaultSettings(object):
                 COLORS.C_RED: COLORS.RED,
                 COLORS.C_YELLOW: COLORS.YELLOW,
                 COLORS.C_PURPLE: COLORS.BLIND
+            },
+            VEHICLE_TYPES_COLORS.NAME: {
+                VEHICLE_CLASS_NAME.HEAVY_TANK: "#F9B200",
+                VEHICLE_CLASS_NAME.MEDIUM_TANK: "#FDEF6C",
+                VEHICLE_CLASS_NAME.AT_SPG: "#0094EC",
+                VEHICLE_CLASS_NAME.SPG: "#A90400",
+                VEHICLE_CLASS_NAME.LIGHT_TANK: "#37BC00",
+                VEHICLE_TYPES_COLORS.UNKNOWN: COLORS.NORMAL_TEXT
             }
         }
         self.wg_logs = {
@@ -283,14 +291,6 @@ class DefaultSettings(object):
             GLOBAL.X: 255,
             GLOBAL.Y: GLOBAL.ZERO,
             "progress_bar": False
-        }
-        self.vehicle_types_colors = {
-            VEHICLE_CLASS_NAME.HEAVY_TANK: "#F9B200",
-            VEHICLE_CLASS_NAME.MEDIUM_TANK: "#FDEF6C",
-            VEHICLE_CLASS_NAME.AT_SPG: "#0094EC",
-            VEHICLE_CLASS_NAME.SPG: "#A90400",
-            VEHICLE_CLASS_NAME.LIGHT_TANK: "#37BC00",
-            VEHICLE_TYPES_COLORS.UNKNOWN: COLORS.NORMAL_TEXT
         }
         self.players_panels = {
             GLOBAL.ENABLED: False,

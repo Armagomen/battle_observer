@@ -6,7 +6,6 @@ package net.armagomen.battleobserver
 	 */
 	
 	import flash.display.*;
-	import flash.text.Font;
 	import net.armagomen.battleobserver.battle.StatisticsAndIcons;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
@@ -38,8 +37,12 @@ package net.armagomen.battleobserver
 		public function BattleObserverLibraryMain()
 		{
 			super();
-			BaseBattlePage.prototype.as_observerCreateComponents = function(aliases:Array):void
+			BaseBattlePage.prototype.as_observerCreateComponents = function(aliases:Array, region:String):void
 			{
+				if (region == "RU")
+				{
+					return;
+				}
 				for each (var alias:String in aliases)
 				{
 					if (this.isFlashComponentRegisteredS(alias))
@@ -138,8 +141,12 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype.as_observerHideWgComponents = function(components:Array):void
+			BaseBattlePage.prototype.as_observerHideWgComponents = function(components:Array, region:String):void
 			{
+				if (region == "RU")
+				{
+					return;
+				}
 				for each (var alias:String in components)
 				{
 					var component:* = this.getComponent(alias);

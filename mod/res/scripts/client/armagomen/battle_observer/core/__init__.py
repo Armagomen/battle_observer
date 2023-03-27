@@ -29,7 +29,7 @@ def startLoadingMod(modVersion, current_realm):
             global hangarSettings
             logInfo('Launched at python v{} region={}'.format(version, current_realm))
             registerBattleObserverPackages()
-            loadComponents()
+            loadComponents(current_realm)
             settings_loader = SettingsLoader()
             hangarSettings = SettingsInterface(settings_loader, modVersion)
         else:

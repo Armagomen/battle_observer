@@ -305,7 +305,7 @@ localization = {
         "zoom": "Увімкнути збільшення міні-мапи в центр",
         "permanentMinimapDeath": "Відображати знищених на мапі",
         "showDeathNames": "Відображати назви знищених танків",
-        "real_view_radius": "Прибрати обмеження кругу огляду більше 445м",
+        "real_view_radius": "Дозволити коло огляду більше ніж 445м",
         "yaw_limits": "Відображати кути горизонтального наведення на всій техніці, де можливо",
         "zoom_hotkey": "Клавіша для збільшення мапи"
     },
@@ -325,6 +325,12 @@ localization = {
         "global*bgAlpha": "Прозорість фона панелей",
         "global*bgAlpha_tooltip": "0 - прозорий.\n1 - не прозорий.",
         "global*deadColor": "Глобальний колір, знищено",
+        "vehicle_types_colors*AT-SPG": "ПТ-САУ (Протитанкові САУ)",
+        "vehicle_types_colors*SPG": "САУ (Артилерія)",
+        "vehicle_types_colors*heavyTank": "Важкий танк",
+        "vehicle_types_colors*lightTank": "Легкий танк",
+        "vehicle_types_colors*mediumTank": "Середній танк",
+        "vehicle_types_colors*unknown": "Невідомо (Глобальна мапа)"
     },
     "service_channel_filter": {
         "header": "Налаштування фільтра повідомлень у системному каналі",

@@ -236,15 +236,6 @@ localization = {
         "outline*enabled": "Включить контур",
         "outline*color": "Цвет контура"
     },
-    "vehicle_types_colors": {
-        "header": "Цвета классов техники",
-        "AT-SPG": "Противотанковая САУ - ПТ-САУ",
-        "SPG": "Противотанковая САУ - Артиллерия",
-        "heavyTank": "Тяжёлый Танк",
-        "lightTank": "Лёгкий Танк",
-        "mediumTank": "Средний Танк",
-        "unknown": "Неизвестно (ГК)"
-    },
     "players_panels": {
         "header": "Панели со списком игроков (уши).",
         "players_damages_enabled": "Урон игроков в списках команд",
@@ -329,6 +320,12 @@ localization = {
         "global*bgAlpha": "Прозрачность фона панелей",
         "global*bgAlpha_tooltip": "0 - прозрачно полностью.\n1 - не прозрачно.",
         "global*deadColor": "Глобальный цвет: уничтоженный",
+        "vehicle_types_colors*AT-SPG": "Противотанковая САУ - ПТ-САУ",
+        "vehicle_types_colors*SPG": "Противотанковая САУ - Артиллерия",
+        "vehicle_types_colors*heavyTank": "Тяжёлый Танк",
+        "vehicle_types_colors*lightTank": "Лёгкий Танк",
+        "vehicle_types_colors*mediumTank": "Средний Танк",
+        "vehicle_types_colors*unknown": "Неизвестно (ГК)"
     },
     "service_channel_filter": {
         "header": "Фильтр сообщений в системном канале - (скрывает сообщения выбранных категорий).",

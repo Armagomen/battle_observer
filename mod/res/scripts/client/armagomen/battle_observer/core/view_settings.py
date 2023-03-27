@@ -1,5 +1,6 @@
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, SWF, MINIMAP
+from armagomen.constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, SWF, MINIMAP, \
+    VEHICLE_TYPES_COLORS
 from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, PageStates, _STATE_TO_UI
@@ -80,7 +81,7 @@ class ViewSettings(object):
         return (
             settings.statistics[STATISTICS.PANELS_CUT_WIDTH],
             settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
-            settings.vehicle_types_colors,
+            settings.colors[VEHICLE_TYPES_COLORS.NAME],
             settings.statistics[STATISTICS.ICON_BLACKOUT]
         )
 
