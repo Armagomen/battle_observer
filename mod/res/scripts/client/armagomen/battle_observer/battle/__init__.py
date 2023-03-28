@@ -53,7 +53,7 @@ def getContextMenuHandlers():
 
 
 class ObserverBusinessHandlerBattle(PackageBusinessHandler):
-    __slots__ = ('_iconsEnabled', '_statisticsEnabled', 'minimapPlugin', 'statistics')
+    __slots__ = ('_iconsEnabled', '_statisticsEnabled', '_minimapPlugin', '_statistics')
 
     def __init__(self):
         aliases = (
@@ -62,8 +62,8 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         ) if CURRENT_REALM != "RU" else tuple()
         listeners = tuple((alias, self.eventListener) for alias in aliases)
         super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
-        self.minimapPlugin = None
-        self.statistics = StatisticsDataLoader()
+        self._minimapPlugin = None
+        self._statistics = StatisticsDataLoader()
         self._iconsEnabled = False
         self._statisticsEnabled = False
 
@@ -72,48 +72,48 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         damage_controller.start()
 
     def fini(self):
-        if self.minimapPlugin is not None:
-            self.minimapPlugin.fini()
-            self.minimapPlugin = None
-        self.statistics = None
+        if self._minimapPlugin is not None:
+            self._minimapPlugin.fini()
+            self._minimapPlugin = None
+        self._statistics = None
         viewSettings.clear()
         damage_controller.stop()
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        self._app.loaderManager.onViewLoaded += self.onViewLoaded
+        self._app.loaderManager.onViewLoaded += self.__onViewLoaded
         self._statisticsEnabled = viewSettings.isWTREnabled()
         self._iconsEnabled = viewSettings.isIconsEnabled()
         if viewSettings.isMinimapEnabled():
-            self.minimapPlugin = MinimapZoomPlugin()
+            self._minimapPlugin = MinimapZoomPlugin()
         components = viewSettings.setComponents()
-        if components or self._statisticsEnabled or self._iconsEnabled or self.minimapPlugin is not None:
+        if components or self._statisticsEnabled or self._iconsEnabled or self._minimapPlugin is not None:
             if self._statisticsEnabled:
-                self.statistics.getStatisticsDataFromServer()
+                self._statistics.getStatisticsDataFromServer()
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
-    def loadStatisticView(self, flashObject):
-        if self._statisticsEnabled and not self.statistics.loaded:
-            self.statistics.setCallback(flashObject.as_updateStatisticData)
-        flashObject.as_createStatisticComponent(self._iconsEnabled, self.statistics.itemsWTRData,
+    def __loadStatisticView(self, flashObject):
+        if self._statisticsEnabled and not self._statistics.loaded:
+            self._statistics.setCallback(flashObject.as_updateStatisticData)
+        flashObject.as_createStatisticComponent(self._iconsEnabled, self._statistics.itemsWTRData,
                                                 *viewSettings.getStatisticsSettings())
 
-    def onViewLoaded(self, pyView, *args):
+    def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
-        self._app.loaderManager.onViewLoaded -= self.onViewLoaded
+        self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
         if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{}:flashObject, has ho attribute {}"
             return logError(to_format_str, alias, SWF.ATTRIBUTE_NAME)
-        callback(1.0 if xvmInstalled else 0, self._loadView, pyView)
+        callback(2.0 if xvmInstalled else 0, self._loadView, pyView)
         callback(40.0, pyView.flashObject.as_observerUpdateDamageLogPosition)
 
     def _loadView(self, pyView):
         pyView._blToggling.update(viewSettings.components)
         pyView.flashObject.as_observerCreateComponents(viewSettings.components, CURRENT_REALM)
         pyView.flashObject.as_observerHideWgComponents(viewSettings.hiddenComponents, CURRENT_REALM)
-        if self.minimapPlugin is not None:
-            self.minimapPlugin.init(pyView.flashObject)
+        if self._minimapPlugin is not None:
+            self._minimapPlugin.init(pyView.flashObject)
         if self._iconsEnabled or self._statisticsEnabled:
-            self.loadStatisticView(pyView.flashObject)
+            self.__loadStatisticView(pyView.flashObject)
