@@ -47,18 +47,15 @@ class DispersionTimer(DispersionTimerMeta):
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
     def updateDispersion(self, gunRotator):
-        if self.isPostmortem:
-            return
-        vehicleTypeDescriptor = gunRotator._avatar.vehicleTypeDescriptor
-        if vehicleTypeDescriptor is None:
+        type_descriptor = gunRotator._avatar.vehicleTypeDescriptor
+        if type_descriptor is None or self.isPostmortem:
             return self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
-        aimingTime = vehicleTypeDescriptor.gun.aimingTime
-        dispersionAngle = gunRotator.dispersionAngle
-        if self.min_angle > dispersionAngle:
-            self.min_angle = dispersionAngle
+        aiming_angle = gunRotator.dispersionAngle
+        if self.min_angle > aiming_angle:
+            self.min_angle = aiming_angle
             logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
-        self.macro[TIMER] = round(aimingTime, GLOBAL.TWO) * log(dispersionAngle / self.min_angle)
-        percent = int(ceil(self.min_angle / dispersionAngle * 100))
-        self.macro[PERCENT] = percent
+        percent = int(ceil(self.min_angle / aiming_angle * 100))
         template = DISPERSION_TIMER.REGULAR_TEMPLATE if percent < 100 else DISPERSION_TIMER.DONE_TEMPLATE
+        self.macro[TIMER] = round(type_descriptor.gun.aimingTime * log(aiming_angle / self.min_angle), GLOBAL.TWO)
+        self.macro[PERCENT] = percent
         self.as_updateTimerTextS(self.settings[template] % self.macro)
