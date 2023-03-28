@@ -42,4 +42,4 @@ class ObserverBusinessHandlerLobby(PackageBusinessHandler):
         self._app.loaderManager.onViewLoaded -= self._onViewLoaded
         if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
             return logError("{}:flashObject, has ho attribute {}", pyView.getAlias(), SWF.ATTRIBUTE_NAME)
-        callback(1.0 if xvmInstalled else 0, pyView.flashObject.as_observerCreateComponents, LOBBY_ALIASES)
+        callback(1.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)

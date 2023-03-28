@@ -32,7 +32,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		public function as_updateCorrelationBar():void
 		{
-			var correlation:* = parent.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+			var correlation:FragCorrelationBar = parent.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 			if (!this.removed){
 				correlation.removeChild(correlation.getChildAt(0));
 				correlation.removeChild(correlation.greenBackground);
@@ -51,10 +51,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			correlation._enemyVehicleMarkersList._isHPBarEnabled = true;
 			correlation._allyVehicleMarkersList.sort(correlation._allyVehicleMarkersList._vehicleIDs);
 			correlation._enemyVehicleMarkersList.sort(correlation._enemyVehicleMarkersList._vehicleIDs);
-			
 			correlation.y = 10;
-			this.parent.teamBasesPanelUI.y = 60;
-			this.parent.updatePositionForQuestProgress();
 		}
 		
 		override protected function onBeforeDispose():void

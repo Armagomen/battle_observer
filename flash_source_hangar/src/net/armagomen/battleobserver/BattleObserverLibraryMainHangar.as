@@ -14,7 +14,7 @@ package net.armagomen.battleobserver
 		public function BattleObserverLibraryMainHangar()
 		{
 			super();
-			Hangar.prototype.as_observerCreateComponents = function(aliases:Array):void
+			Hangar.prototype.as_BattleObserverCreate = function(aliases:Array):void
 			{
 				for each (var alias:String in aliases) 
 				{
