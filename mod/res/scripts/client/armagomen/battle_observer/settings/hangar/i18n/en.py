@@ -313,7 +313,6 @@ localization = {
         "global*alpha_tooltip": "0 - completely transparent. \n 1 - not transparent.",
         "global*bgAlpha": "Background transparency of panels",
         "global*bgAlpha_tooltip": "0 - completely transparent. \n 1 - not transparent.",
-        "global*deadColor": "Destroyed",
         "vehicle_types_colors*AT-SPG": "AT-SPG",
         "vehicle_types_colors*SPG": "Artillery",
         "vehicle_types_colors*heavyTank": "Heavy Tank",

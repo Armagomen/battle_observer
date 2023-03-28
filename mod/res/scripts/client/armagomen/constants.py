@@ -121,12 +121,11 @@ MAIN = __Main(
     "premium_time", "save_shot", "mute_team_base_sound")
 
 COLORS = namedtuple("COLORS", (
-    "NAME", "BLACK", "BLIND", "B_SILVER", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
+    "NAME", "BLACK", "BLIND", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
     "C_GREEN", "C_ORANGE", "C_RED", "C_YELLOW", "C_PURPLE", "C_BG", "GLOBAL", "ALLY_MAME", "ENEMY_MAME",
-    "ENEMY_BLIND_MAME", "DEAD_COLOR"))(
-    "colors", "#000000", "#6F6CD3", "#858585", "#FFD700", "#5ACB00", "#FAFAFA", "#FF9900", "#F30900", "#E0E06D",
-    "#FFC900", "green", "orange", "red", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind",
-    "deadColor")
+    "ENEMY_BLIND_MAME"))(
+    "colors", "#000000", "#6F6CD3", "#FFD700", "#5ACB00", "#FAFAFA", "#FF9900", "#F30900", "#E0E06D",
+    "#FFC900", "green", "orange", "red", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind")
 
 MAIN_GUN = namedtuple("MAIN_GUN", ("NAME", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))("main_gun", 1000, 0.2)
 

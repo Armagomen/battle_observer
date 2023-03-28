@@ -319,7 +319,6 @@ localization = {
         "global*alpha_tooltip": "0 - прозрачно полностью.\n1 - не прозрачно.",
         "global*bgAlpha": "Прозрачность фона панелей",
         "global*bgAlpha_tooltip": "0 - прозрачно полностью.\n1 - не прозрачно.",
-        "global*deadColor": "Глобальный цвет: уничтоженный",
         "vehicle_types_colors*AT-SPG": "Противотанковая САУ - ПТ-САУ",
         "vehicle_types_colors*SPG": "Противотанковая САУ - Артиллерия",
         "vehicle_types_colors*heavyTank": "Тяжёлый Танк",

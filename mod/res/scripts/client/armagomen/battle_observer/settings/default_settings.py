@@ -160,7 +160,6 @@ class DefaultSettings(object):
                 COLORS.ENEMY_MAME: COLORS.RED,
                 COLORS.ENEMY_BLIND_MAME: COLORS.BLIND,
                 COLORS.C_BG: COLORS.BLACK,
-                COLORS.DEAD_COLOR: COLORS.B_SILVER,
                 GLOBAL.ALPHA: 0.5,
                 GLOBAL.BG_ALPHA: 0.5
             },
