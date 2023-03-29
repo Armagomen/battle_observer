@@ -1,4 +1,4 @@
-package net.armagomen.battleobserver.battle.components.teamshealth 
+package net.armagomen.battleobserver.battle.components.teamshealth
 {
 	import flash.display.*;
 	import flash.display.Sprite;
@@ -9,11 +9,12 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.gui.battle.components.*;
+	
 	/**
 	 * ...
 	 * @author ...
 	 */
-	public class Score extends Sprite 
+	public class Score extends Sprite
 	{
 		private var allyArrowVector:Vector.<Number>  = new <Number>[-5, 7, 0, 7, 5, 15, 0, 23, -5, 23, 0, 15, -5, 7];
 		private var enemyArrowVector:Vector.<Number> = new <Number>[5, 7, 0, 7, -5, 15, 0, 23, 5, 23, 0, 15, 5, 7];
@@ -27,7 +28,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		private var ememyColor:String;
 		private var enemyColorBlind:String;
 		
-		public function Score(colorBlind:Boolean, colors:Object, style:String) 
+		public function Score(colorBlind:Boolean, colors:Object, style:String)
 		{
 			super();
 			
@@ -61,9 +62,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.arrowRed.graphics.endFill();
 			this.arrowRed.visible = false;
 			
-			this.greenScore = new TextExt(-25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, this);
+			this.greenScore = new TextExt(-26, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, this);
 			this.greenScore.antiAliasType = AntiAliasType.NORMAL;
-			this.redScore = new TextExt(25, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, this);
+			this.redScore = new TextExt(26, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, this);
 			this.redScore.antiAliasType = AntiAliasType.NORMAL;
 			
 			this.addChild(this.arrowDots);

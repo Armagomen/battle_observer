@@ -9,7 +9,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
 		private var hpBars:ITeamHealth;
-		private var score:Score;
 		private var removed:Boolean = false;
 		
 		public function TeamsHealthUI()
@@ -23,10 +22,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.removed = false;
 			var settings:Object = this.getSettings();
 			this.x = App.appWidth >> 1;
-			this.hpBars = this.createHpBars(settings.style);
-			this.score = new Score(this.isColorBlind(), this.getColors().global, settings.style);
-			this.addChild(this.hpBars);
-			this.addChild(this.score);
+			this.hpBars = this.addChild(this.createHpBars(settings.style));
 			this.as_updateCorrelationBar();
 		}
 		
@@ -59,8 +55,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			super.onBeforeDispose();
 			this.hpBars.remove();
 			this.hpBars = null;
-			this.score.removeChildren();
-			this.score = null;
+			this.removed = false;
 		}
 		
 		private function createHpBars(style:String):ITeamHealth
@@ -77,7 +72,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		public function as_colorBlind(enabled:Boolean):void
 		{
 			this.hpBars.setColorBlind(enabled);
-			this.score.setColorBlind(enabled);
 		}
 		
 		public function as_updateHealth(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
@@ -87,7 +81,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		public function as_updateScore(ally:int, enemy:int):void
 		{
-			this.score.updateScore(ally, enemy);
+			this.hpBars.updateScore(ally, enemy);
 		}
 		
 		override public function onResizeHandle(event:Event):void

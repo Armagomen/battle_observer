@@ -189,7 +189,7 @@ class DefaultSettings(object):
         self.log_total = {
             GLOBAL.ENABLED: False,
             GLOBAL.SETTINGS: {
-                GLOBAL.X: -255,
+                GLOBAL.X: -260,
                 GLOBAL.Y: GLOBAL.ZERO,
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.right,
                 DAMAGE_LOG.IN_CENTER: True
@@ -287,7 +287,7 @@ class DefaultSettings(object):
         }
         self.main_gun = {
             GLOBAL.ENABLED: False,
-            GLOBAL.X: 255,
+            GLOBAL.X: 260,
             GLOBAL.Y: GLOBAL.ZERO,
             "progress_bar": False
         }

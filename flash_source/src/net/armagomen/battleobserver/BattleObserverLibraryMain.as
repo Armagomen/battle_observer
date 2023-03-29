@@ -52,7 +52,7 @@ package net.armagomen.battleobserver
 						{
 						case "Observer_TeamsHP_UI": 
 							var teamHealthUI:TeamsHealthUI = new TeamsHealthUI();
-							this.registerComponent(this.addChild(teamHealthUI), alias);
+							this.registerComponent(this.addChildAt(teamHealthUI, 0), alias);
 							break;
 						case "Observer_DamageLog_UI": 
 							var damageLog:DamageLogsUI = new DamageLogsUI();

@@ -16,11 +16,13 @@
 		private var allyBar:ProgressBar;
 		private var enemyBar:ProgressBar;
 		private var colors:Object;
+		private var score:Score;
 		
 		public function Default(colorBlind:Boolean, colors:Object)
 		{
 			super();
 			this.colors = colors;
+
 			var alpha:Number   = Math.max(0.2, colors.alpha);
 			var bgAlpha:Number = Math.max(0.2, colors.bgAlpha);
 			
@@ -35,12 +37,21 @@
 			this.redText = new TextExt(150, 1, Filters.middleText, TextFieldAutoSize.CENTER, this);
 			this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, this);
 			this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, this);
+			
+			this.score = new Score(colorBlind, colors, "normal");
+			this.addChild(score);
 		
 		}
 		
 		public function setColorBlind(enabled:Boolean):void
 		{
 			this.enemyBar.updateColor(enabled ? this.colors.enemyColorBlind : this.colors.enemy);
+			this.score.setColorBlind(enabled);
+		}
+		
+		public function updateScore(ally:int, enemy:int):void
+		{
+			this.score.updateScore(ally, enemy);
 		}
 		
 		public function setBarScale(isEnemy:Boolean, percent:Number):void
@@ -59,6 +70,8 @@
 			this.redText = null;
 			this.greenDiff = null;
 			this.redDiff = null;
+			this.score.removeChildren();
+			this.score = null;
 		}
 		
 		public function update(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void

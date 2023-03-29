@@ -21,6 +21,7 @@
 		private var enemyAnimation:Tween    = null;
 		private var defCommads:Vector.<int> = new <int>[1, 2, 2, 2, 2];
 		private var colors:Object;
+		private var score:Score;
 		
 		public function League(colorBlind:Boolean, colors:Object)
 		{
@@ -47,12 +48,21 @@
 			this.redText = new TextExt(220, 1, Filters.middleText, TextFieldAutoSize.RIGHT, this);
 			this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, this);
 			this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, this);
+			
+			this.score = new Score(colorBlind, colors, "league");
+			this.addChild(score);
 		
 		}
 		
 		public function setColorBlind(enabled:Boolean):void
 		{
 			Utils.updateColor(this.enemyBar, enabled ? this.colors.enemyColorBlind : this.colors.enemy);
+			this.score.setColorBlind(enabled);
+		}
+		
+		public function updateScore(ally:int, enemy:int):void
+		{
+			this.score.updateScore(ally, enemy);
 		}
 		
 		public function setBarScale(isEnemy:Boolean, newScale:Number):void
@@ -78,6 +88,8 @@
 			this.redText = null;
 			this.greenDiff = null;
 			this.redDiff = null;
+			this.score.removeChildren();
+			this.score = null;
 			App.utils.data.cleanupDynamicObject(this.colors);
 		}
 		
