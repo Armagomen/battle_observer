@@ -2,6 +2,7 @@
 {
 	import flash.display.*;
 	import flash.text.TextFieldAutoSize;
+	import net.armagomen.battleobserver.battle.components.teamshealth.score.Score;
 	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.TextExt;
@@ -49,7 +50,7 @@
 			this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, this);
 			this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, this);
 			
-			this.score = new Score(colorBlind, colors, "league");
+			this.score = new Score(colorBlind);
 			this.addChild(score);
 		
 		}

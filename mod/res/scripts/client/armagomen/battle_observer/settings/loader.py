@@ -71,12 +71,13 @@ class SettingsLoader(object):
                     new_param_type = type(new_param)
                     if new_param_type != old_param_type:
                         file_update = True
-                        internal_cfg[key] = old_param_type(new_param)
+                        print key, new_param, old_param_type, new_param_type
+                        new_param = old_param_type(new_param)
                     else:
                         if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
                             new_param = SIXTH_SENSE.ICONS[0]
                             file_update = True
-                        internal_cfg[key] = new_param
+                    internal_cfg[key] = new_param
                 else:
                     file_update = True
         return file_update

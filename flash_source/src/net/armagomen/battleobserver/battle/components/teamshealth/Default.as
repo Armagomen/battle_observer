@@ -2,6 +2,7 @@
 {
 	import flash.display.*;
 	import flash.text.TextFieldAutoSize;
+	import net.armagomen.battleobserver.battle.components.teamshealth.score.Score;
 	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
 	import net.armagomen.battleobserver.utils.Filters;
 	import net.armagomen.battleobserver.utils.ProgressBar;
@@ -28,8 +29,8 @@
 			
 			this.allyBar = new ProgressBar(-50, 4, -200, 22, alpha, bgAlpha, null, colors.ally, null, 0.5);
 			this.enemyBar = new ProgressBar(50, 4, 200, 22, alpha, bgAlpha, null, colorBlind ? colors.enemyColorBlind : colors.enemy, null, 0.5);
-			this.allyBar.setOutline(true, colors.ally, alpha, -200, 22);
-			this.enemyBar.setOutline(true, colorBlind ? colors.enemyColorBlind : colors.enemy, alpha, 200, 22);
+			this.allyBar.setOutline(colors.ally, alpha, -200, 22);
+			this.enemyBar.setOutline(colorBlind ? colors.enemyColorBlind : colors.enemy, alpha, 200, 22);
 			this.addChild(this.allyBar);
 			this.addChild(this.enemyBar);
 			
@@ -38,7 +39,7 @@
 			this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, this);
 			this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, this);
 			
-			this.score = new Score(colorBlind, colors, "normal");
+			this.score = new Score(colorBlind);
 			this.addChild(score);
 		
 		}

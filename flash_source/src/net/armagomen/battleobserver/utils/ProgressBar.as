@@ -81,12 +81,11 @@
 			this.uiText = new TextExt(x, y, format, align, this);
 		}
 		
-		public function setOutline(customColor:Boolean = false, color:String = "#000000", alpha:Number = 1.0, width:Number = 0, height:Number = 0):void
+		public function setOutline(color:String = "#000000", alpha:Number = 1.0, width:Number = 0, height:Number = 0):void
 		{
 			if (this.barEnabled)
 			{
-				this.customColor = customColor;
-				this.outline.graphics.lineStyle(1, customColor ? Utils.colorConvert(color) : this.barColor, Math.max(0.2, alpha), true, LineScaleMode.NONE);
+				this.outline.graphics.lineStyle(1, this.barColor, Math.max(0.2, alpha), true, LineScaleMode.NONE);
 				this.outline.graphics.drawRect(-1, -1, width + 1, height + 1);
 				this.addChild(this.outline);
 			}
@@ -108,14 +107,14 @@
 			}
 		}
 		
-		public function updateColor(hpColor:String):void
+		public function updateColor(color:String):void
 		{
 			if (this.barEnabled)
 			{
-				Utils.updateColor(this.bar, hpColor);
-				if (!this.customColor)
+				Utils.updateColor(this.bar, color);
+				if (this.outline)
 				{
-					Utils.updateColor(this.outline, hpColor);
+					Utils.updateColor(this.outline, color);
 				}
 			}
 		}

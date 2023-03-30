@@ -21,7 +21,7 @@ package net.armagomen.battleobserver.battle.components
 			var colors:Object = this.getColors();
 			var healthCenter:Number = settings.width / 2;
 			this.own_health = new ProgressBar(settings.x - healthCenter, settings.y, settings.width, settings.height, settings.alpha, settings.alpha * 0.7, null, colors.global.ally, null, 0.2);
-			this.own_health.setOutline(false, colors.global.ally, settings.alpha, settings.width, settings.height);
+			this.own_health.setOutline(colors.global.ally, settings.alpha, settings.width, settings.height);
 			this.own_health.addTextField(healthCenter, -2, "center", Filters.normalText);
 			this.addChild(this.own_health);
 		}

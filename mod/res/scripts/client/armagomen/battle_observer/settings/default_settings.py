@@ -1,4 +1,4 @@
-from collections import defaultdict, namedtuple
+from collections import namedtuple
 
 import Keys
 from Event import SafeEvent
@@ -248,12 +248,12 @@ class DefaultSettings(object):
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
-            DAMAGE_LOG.ATTACK_REASON: defaultdict(lambda: "", {
+            DAMAGE_LOG.ATTACK_REASON: {
                 ATTACK_REASON.SHOT: "<img src='{dir}/damage.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.FIRE: "<img src='{dir}/fire.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.RAM: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
                 ATTACK_REASON.WORLD_COLLISION: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS)
-            }),
+            },
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
         additional = {reason: "<img src='{dir}/module.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS) for reason
@@ -310,12 +310,7 @@ class DefaultSettings(object):
                     GLOBAL.Y: 2,
                     GLOBAL.WIDTH: 70,
                     GLOBAL.HEIGHT: 22,
-                    GLOBAL.OUTLINE: {
-                        GLOBAL.ENABLED: True,
-                        GLOBAL.COLOR: COLORS.NORMAL_TEXT,
-                        GLOBAL.CUSTOM_COLOR: False,
-                        GLOBAL.ALPHA: 0.5
-                    }
+                    GLOBAL.OUTLINE: True,
                 }
             }
         }

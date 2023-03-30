@@ -52,7 +52,7 @@ package net.armagomen.battleobserver
 						{
 						case "Observer_TeamsHP_UI": 
 							var teamHealthUI:TeamsHealthUI = new TeamsHealthUI();
-							this.registerComponent(this.addChildAt(teamHealthUI, 0), alias);
+							this.registerComponent(this.addChildAt(teamHealthUI, 4), alias);
 							break;
 						case "Observer_DamageLog_UI": 
 							var damageLog:DamageLogsUI = new DamageLogsUI();
@@ -159,6 +159,13 @@ package net.armagomen.battleobserver
 					if (prebattleTimer)
 					{
 						this.addChild(prebattleTimer);
+					}
+					
+					var q_progress:* = this.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
+					var t_health:* = this.getComponent("Observer_TeamsHP_UI");
+					
+					if (q_progress && t_health){
+						this.addChildAt(q_progress, this.getChildIndex(t_health) - 1);
 					}
 				}
 			}

@@ -47,10 +47,10 @@ package net.armagomen.battleobserver.battle.components.maingun
 			gun_icon.height = 26;
 			_icons.addChild(gun_icon);
 			
-			done_icon.width = 24;
-			done_icon.height = 24;
-			done_icon.x = 2;
-			done_icon.y = 2;
+			done_icon.width = 32;
+			done_icon.height = 32;
+			done_icon.x = -1;
+			done_icon.y = -2;
 			done_icon.visible = false;
 			_icons.addChild(done_icon);
 			
@@ -68,7 +68,6 @@ package net.armagomen.battleobserver.battle.components.maingun
 				var colors:Object = this.getColors().global;
 				this.mainGun = new TextExt(50, 0, Filters.middleText, TextFieldAutoSize.CENTER, this);
 				this.progress = new ProgressBar(30, 24, 42, 4, 0.9, 0.6, null, colors.ally, colors.bgColor, 0.2);
-				//this.progress.setOutline(true, colors.ally, 0.9, 40, 5);
 				this.progress.setNewScale(0);
 				this.addChild(this.progress);
 			}

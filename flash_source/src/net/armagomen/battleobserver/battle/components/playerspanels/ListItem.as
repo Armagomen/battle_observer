@@ -58,9 +58,9 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				textX = -textX;
 			}
 			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colorParams.alpha, colorParams.bgAlpha, null, color, colorParams.bgColor, 0.4);
-			if (settings.players_bars_bar.outline.enabled)
+			if (settings.players_bars_bar.outline)
 			{
-				this.healthBar.setOutline(settings.players_bars_bar.outline.customColor, settings.players_bars_bar.outline.color, settings.players_bars_bar.outline.alpha, barWidth, settings.players_bars_bar.height);
+				this.healthBar.setOutline(color, colorParams.alpha, barWidth, settings.players_bars_bar.height);
 			}
 			this.healthBar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText15);
 			this.healthBar.setVisible(startVisible);
