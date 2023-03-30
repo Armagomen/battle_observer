@@ -1,7 +1,7 @@
 import os
 
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import LOAD_LIST, DISPERSION, GLOBAL, SIXTH_SENSE
+from armagomen.constants import LOAD_LIST, GLOBAL, SIXTH_SENSE
 from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, currentConfigPath
 from armagomen.utils.dialogs import LoadingErrorDialog
 from gui.shared.personality import ServicesLocator
@@ -52,29 +52,26 @@ class SettingsLoader(object):
         Returns True if the lengths of the 2 dictionaries are not identical,
         or an error occurs when comparing the lengths, and the settings file needs to be rewritten.
         """
-        if isinstance(data1, dict) and isinstance(data2, dict):
+        type_1 = type(data1)
+        type_2 = type(data2)
+        if type_1 == type_2 == dict:
             return len(data1) != len(data2)
-        return type(data1) != type(data2)
+        return type_1 != type_2
 
     def updateData(self, external_cfg, internal_cfg, file_update=False):
         """Recursively updates words from settings_core files"""
         file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
         for key in internal_cfg:
-            if isinstance(internal_cfg[key], dict):
+            old_param_type = type(internal_cfg[key])
+            if old_param_type == dict:
                 file_update |= self.updateData(external_cfg.get(key, {}), internal_cfg[key], file_update)
             else:
-                old_param_type = type(internal_cfg[key])
                 new_param = external_cfg.get(key)
                 if new_param is not None:
                     new_param_type = type(new_param)
                     if new_param_type != old_param_type:
                         file_update = True
-                        if old_param_type == int and new_param_type == float:
-                            internal_cfg[key] = int(round(new_param))
-                        elif old_param_type == float and new_param_type == int:
-                            if DISPERSION.CIRCLE_SCALE_CONFIG in key:
-                                new_param = min(max(new_param * 0.01, 0.3), 1)
-                            internal_cfg[key] = float(new_param)
+                        internal_cfg[key] = old_param_type(new_param)
                     else:
                         if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
                             new_param = SIXTH_SENSE.ICONS[0]
