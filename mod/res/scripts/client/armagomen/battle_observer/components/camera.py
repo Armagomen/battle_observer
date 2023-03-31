@@ -11,11 +11,12 @@ from aih_constants import CTRL_MODE_NAME
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
 from armagomen.utils.common import overrideMethod, logError, isReplay, callback
+from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 
-RELOAD = "reloadConfig"
-settingsCache = {RELOAD: False, SNIPER.DYN_ZOOM: False, SNIPER.METERS: 23.0}
+settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: 23.0}
 MinMax = namedtuple('MinMax', ('min', 'max'))
+camCache = {"ArcadeCamera": False, "ArcadeCameraEpic": False, "ArtyCamera": False, "StrategicCamera": False}
 
 
 @overrideMethod(SniperCamera, "_readConfigs")
@@ -105,7 +106,8 @@ def showTracer(base, avatar, shooterID, *args):
 
 def onModSettingsChanged(config, blockID):
     if blockID in (ARCADE.NAME, STRATEGIC.NAME):
-        settingsCache[RELOAD] = True
+        for cam in camCache:
+            camCache[cam] = True
     elif blockID == SNIPER.NAME:
         settingsCache[SNIPER.DYN_ZOOM] = config[GLOBAL.ENABLED] and not isReplay() and \
                                          config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
@@ -118,11 +120,16 @@ settings.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(StrategicCamera, "_readConfigs")
 @overrideMethod(ArtyCamera, "_readConfigs")
 def reload_configs(base, camera, dataSection):
-    if settingsCache[RELOAD]:
-        camera._baseCfg.clear()
-        camera._userCfg.clear()
-        camera._cfg.clear()
-    base(camera, dataSection)
+    try:
+        if camCache[camera.__class__.__name__]:
+            camera._baseCfg.clear()
+            camera._userCfg.clear()
+            camera._cfg.clear()
+            camCache[camera.__class__.__name__] = False
+    except Exception:
+        LOG_CURRENT_EXCEPTION()
+    finally:
+        return base(camera, dataSection)
 
 
 @overrideMethod(ArcadeCamera, "_readBaseCfg")
@@ -139,15 +146,18 @@ def arcade_readConfigs(base, camera, *args, **kwargs):
             cfg = camera._userCfg
             cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
             cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
-    settingsCache[RELOAD] = False
 
 
 @overrideMethod(ArcadeCamera, "__updateProperties")
 def arcade__updateProperties(base, camera, state=None):
-    if settings.arcade_camera[GLOBAL.ENABLED] and state is not None:
-        state.distRange = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
-        state.scrollSensitivity = settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
-    return base(camera, state=state)
+    try:
+        if settings.arcade_camera[GLOBAL.ENABLED] and state is not None:
+            state.distRange = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
+            state.scrollSensitivity = settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
+    except Exception:
+        LOG_CURRENT_EXCEPTION()
+    finally:
+        return base(camera, state=state)
 
 
 @overrideMethod(StrategicCamera, "_readBaseCfg")
@@ -158,4 +168,3 @@ def arty_readConfigs(base, camera, *args, **kwargs):
         cfg = camera._baseCfg
         cfg[STRATEGIC.DIST_RANGE] = (settings.strategic_camera[STRATEGIC.MIN], settings.strategic_camera[STRATEGIC.MAX])
         cfg[STRATEGIC.SCROLL_SENSITIVITY] = settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
-    settingsCache[RELOAD] = False

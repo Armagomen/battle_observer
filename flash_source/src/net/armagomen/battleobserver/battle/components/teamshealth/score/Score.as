@@ -33,7 +33,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 			this.arrows = new <Bitmap>[new arrowGreen(), new arrowRed(), new arrowRedCB()];
 			this.isColorBlind = colorBlind;
 			this.arrowDots = new Shape();
-			
 			for each (var item:Bitmap in this.arrows)
 			{
 				item.width = item.height = 32;
@@ -42,7 +41,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 				item.visible = false;
 				this.addChild(item);
 			}
-			
 			this.arrowDots.name = "arrowDots";
 			this.arrowDots.filters = [Filters.glowScore];
 			this.arrowDots.graphics.beginFill(0xFAFAFA, 1);
@@ -56,7 +54,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 			this.greenScore.antiAliasType = AntiAliasType.NORMAL;
 			this.redScore = new TextExt(26, -3, Filters.scoreformat, TextFieldAutoSize.CENTER, this);
 			this.redScore.antiAliasType = AntiAliasType.NORMAL;
-		
 		}
 		
 		public function updateScore(ally:int, enemy:int):void
@@ -78,5 +75,4 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 			}
 		}
 	}
-
 }
