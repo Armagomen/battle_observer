@@ -57,7 +57,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				barX = -barX;
 				textX = -textX;
 			}
-			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, null, color, colorParams.bgColor, 0.2);
+			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, color, colorParams.bgColor, 0.2);
 			if (settings.players_bars_bar.outline)
 			{
 				this.healthBar.setOutline(barWidth, settings.players_bars_bar.height);

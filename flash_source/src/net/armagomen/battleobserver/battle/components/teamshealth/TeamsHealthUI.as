@@ -1,5 +1,6 @@
 package net.armagomen.battleobserver.battle.components.teamshealth
 {
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
@@ -22,13 +23,15 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.removed = false;
 			var settings:Object = this.getSettings();
 			this.x = App.appWidth >> 1;
-			this.hpBars = this.addChild(this.createHpBars(settings.style));
+			this.hpBars = this.createHpBars(settings.style);
+			this.addChild(this.hpBars as Sprite);
 			this.as_updateCorrelationBar();
 		}
 		
 		public function as_updateCorrelationBar():void
 		{
-			var correlation:FragCorrelationBar = parent.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+			var page:* = parent;
+			var correlation:* = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 			if (!this.removed){
 				correlation.removeChild(correlation.getChildAt(0));
 				correlation.removeChild(correlation.greenBackground);

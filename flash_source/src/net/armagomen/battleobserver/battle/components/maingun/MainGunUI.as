@@ -65,7 +65,7 @@ package net.armagomen.battleobserver.battle.components.maingun
 			{
 				var colors:Object = this.getColors().global;
 				this.mainGun = new TextExt(50, 0, Constants.middleText, TextFieldAutoSize.CENTER, this);
-				this.progress = new ProgressBar(30, 24, 42, 4, 0.9, 0.6, null, colors.ally, colors.bgColor, 0.2);
+				this.progress = new ProgressBar(30, 24, 42, 4, colors.ally, colors.bgColor, 0.2);
 				this.progress.setNewScale(0);
 				this.addChild(this.progress);
 			}

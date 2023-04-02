@@ -380,8 +380,7 @@ localization = {
         "x_tooltip": "Положення від центру екрана",
         "y": "Позиция тексту по вертикалі",
         "y_tooltip": "Положення від центру екрана",
-        "template": "Шаблон строки. Макроси: %(cur_health)s, %(max_health)s, %(per_health)s",
-        "align": "Вирівнювання тексту"
+        "template": "Шаблон строки. Макроси: %(health)s, %(maxHealth)s, %(percent)s",
     },
     "crewDialog": {
         "enable": "\nУвімкнути пришвидшене навчання екіпажу?",

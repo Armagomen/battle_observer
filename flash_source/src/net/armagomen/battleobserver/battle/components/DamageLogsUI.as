@@ -34,7 +34,8 @@ package net.armagomen.battleobserver.battle.components
 		
 		public function as_createExtendedLogs(position:Object, top_enabled:Boolean, bottom_enabled:Boolean):void
 		{
-			var damageLogPanel:* = parent.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
+			var page:* = parent;
+			var damageLogPanel:* = page.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
 			if (damageLogPanel)
 			{
 				if (this.logs)

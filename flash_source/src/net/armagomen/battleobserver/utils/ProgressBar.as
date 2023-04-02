@@ -21,7 +21,7 @@
 		private var animationTime:Number = 1.0;
 		private var barEnabled:Boolean   = true;
 		
-		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, filters:Array, color:String, bgColor:String = "#000000", time:Number = 1.0)
+		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, color:String, bgColor:String = "#000000", time:Number = 1.0)
 		{
 			super();
 			if (bgColor == null)
@@ -45,10 +45,6 @@
 				this.bar.graphics.beginFill(this.barColor, Constants.ALPHA);
 				this.bar.graphics.drawRect(0, 0, width, height);
 				this.bar.graphics.endFill();
-				if (filters != null)
-				{
-					this.bar.filters = filters;
-				}
 				this.addChild(this.bar);
 				this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime);
 			}

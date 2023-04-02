@@ -31,9 +31,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
 
     def _populate(self):
         super(OwnHealth, self)._populate()
-        ctrl = self.sessionProvider.shared.crosshair
-        if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
@@ -44,16 +41,15 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
-            self.as_setComponentVisible(arena.period == ARENA_PERIOD.BATTLE and self.getVehicleInfo().isAlive())
+            self.isBattlePeriod = arena.period == ARENA_PERIOD.BATTLE
+            self.isAliveMode = self.getVehicleInfo().isAlive()
+            self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
 
     def onArenaPeriod(self, period, *args):
         self.isBattlePeriod = period == ARENA_PERIOD.BATTLE
-        self.as_setComponentVisible(self.isBattlePeriod and self.isAliveMode)
+        self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
 
     def _dispose(self):
-        ctrl = self.sessionProvider.shared.crosshair
-        if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
@@ -65,8 +61,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         super(OwnHealth, self)._dispose()
 
     def __onVehicleControlling(self, vehicle):
-        if not self.isAliveMode:
-            return self.as_setComponentVisible(False)
         if self.__maxHealth != vehicle.maxHealth:
             self.__maxHealth = vehicle.maxHealth
         self._updateHealth(vehicle.health)
@@ -77,7 +71,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
 
     def onCameraChanged(self, ctrlMode, *_, **__):
         self.isAliveMode = ctrlMode not in POSTMORTEM.MODES
-        self.as_setComponentVisible(self.isBattlePeriod and self.isAliveMode)
+        self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
 
     def getAVGColor(self, percent=1.0):
         return percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR])
@@ -88,10 +82,10 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if self.__maxHealth <= GLOBAL.ZERO:
             return
         health = normalizeHealth(health)
-        if self.macrosDict[VEHICLE.CUR] == health and self.macrosDict[VEHICLE.MAX] == self.__maxHealth:
-            return
-        percent = getHealthPercent(health, self.__maxHealth)
-        self.macrosDict[VEHICLE.CUR] = health
-        self.macrosDict[VEHICLE.MAX] = self.__maxHealth
-        self.macrosDict[VEHICLE.PERCENT] = int(math.ceil(percent * 100))
-        self.as_setOwnHealthS(percent, self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict, self.getAVGColor(percent))
+        if self.macrosDict[VEHICLE.CUR] != health or self.macrosDict[VEHICLE.MAX] != self.__maxHealth:
+            percent = getHealthPercent(health, self.__maxHealth)
+            self.macrosDict[VEHICLE.CUR] = health
+            self.macrosDict[VEHICLE.MAX] = self.__maxHealth
+            self.macrosDict[VEHICLE.PERCENT] = int(math.ceil(percent * 100))
+            self.as_setOwnHealthS(percent, self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict,
+                                  self.getAVGColor(percent))

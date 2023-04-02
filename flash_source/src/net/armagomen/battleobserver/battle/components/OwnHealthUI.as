@@ -1,6 +1,7 @@
 package net.armagomen.battleobserver.battle.components
 {
 	import flash.events.Event;
+	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.ProgressBar;
@@ -18,12 +19,12 @@ package net.armagomen.battleobserver.battle.components
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
+			this.onResizeHandle(null);
 			var settings:Object = this.getSettings();
 			var colors:Object = this.getColors().global;
-			var healthCenter:Number = settings.width / 2;
-			this.own_health = new ProgressBar(settings.x - healthCenter, settings.y, settings.width, settings.height, null, this.getAVGColor(), colors.bgColor, 0.2);
-			this.own_health.setOutline(settings.width, settings.height);
-			this.own_health.addTextField(healthCenter, -2, "center", Constants.normalText);
+			this.own_health = new ProgressBar(settings.x - 90, settings.y, 180, 22, this.getAVGColor(), colors.bgColor, 0.2);
+			this.own_health.setOutline(180, 22);
+			this.own_health.addTextField(90, -3, TextFieldAutoSize.CENTER, Constants.middleText);
 			this.addChild(this.own_health);
 		}
 		
@@ -39,6 +40,17 @@ package net.armagomen.battleobserver.battle.components
 			this.own_health.setNewScale(scale);
 			this.own_health.setText(text);
 			this.own_health.updateColor(color);
+		}
+		
+		public function as_BarVisible(vis:Boolean):void
+		{
+			this.own_health.visible = vis;
+		}
+		
+		override public function onResizeHandle(event:Event):void 
+		{
+			this.x = App.appWidth >> 1;
+			this.y = App.appHeight >> 1;
 		}
 	}
 }

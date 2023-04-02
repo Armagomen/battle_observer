@@ -360,11 +360,10 @@ localization = {
     "own_health": {
         "header": "Player vehicle health.",
         "x": "Horizontal text position",
-        "x_tooltip": "Position from the center of the screen. Text align ---|center|---",
+        "x_tooltip": "Position from the center of the screen.",
         "y": "Vertical text position",
         "y_tooltip": "Position from the center of the screen.",
-        "template": "String pattern. Macros: %(cur_health)s, %(max_health)s, %(per_health)s",
-        "align": "Text align.",
+        "template": "String pattern. Macros: %(health)s, %(maxHealth)s, %(percent)s",
     },
     "crewDialog": {
         "enable": "\nEnable accelerated crew training?",

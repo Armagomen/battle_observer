@@ -10,8 +10,6 @@
 	
 	public class Default extends Sprite implements ITeamHealth
 	{
-		private var greenText:TextExt;
-		private var redText:TextExt;
 		private var greenDiff:TextExt;
 		private var redDiff:TextExt;
 		private var allyBar:ProgressBar;
@@ -24,21 +22,18 @@
 			super();
 			this.colors = colors;
 			
-			this.allyBar = new ProgressBar(-50, 4, -200, 22, null, colors.ally, colors.bgColor, 0.5);
-			this.enemyBar = new ProgressBar(50, 4, 200, 22, null, colorBlind ? colors.enemyColorBlind : colors.enemy, colors.bgColor, 0.5);
+			this.allyBar = new ProgressBar(-50, 4, -200, 22, colors.ally, colors.bgColor, 0.5);
 			this.allyBar.setOutline(-200, 22);
+			this.allyBar.addTextField(-100, -3, TextFieldAutoSize.CENTER, Constants.middleText);
+			this.enemyBar = new ProgressBar(50, 4, 200, 22, colorBlind ? colors.enemyColorBlind : colors.enemy, colors.bgColor, 0.5);
 			this.enemyBar.setOutline(200, 22);
+			this.enemyBar.addTextField(100, -3, TextFieldAutoSize.CENTER, Constants.middleText);
+			this.score = new Score(colorBlind);
 			this.addChild(this.allyBar);
 			this.addChild(this.enemyBar);
-			
-			this.greenText = new TextExt(-150, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
-			this.redText = new TextExt(150, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
+			this.addChild(score);
 			this.greenDiff = new TextExt(-55, 4, Constants.diff, TextFieldAutoSize.RIGHT, this);
 			this.redDiff = new TextExt(55, 4, Constants.diff, TextFieldAutoSize.LEFT, this);
-			
-			this.score = new Score(colorBlind);
-			this.addChild(score);
-		
 		}
 		
 		public function setColorBlind(enabled:Boolean):void
@@ -64,8 +59,6 @@
 			this.allyBar = null;
 			this.enemyBar.remove();
 			this.enemyBar = null;
-			this.greenText = null;
-			this.redText = null;
 			this.greenDiff = null;
 			this.redDiff = null;
 			this.score.removeChildren();
@@ -76,8 +69,8 @@
 		{
 			this.setBarScale(false, totalAlliesHP > 0 ? Math.min(alliesHP / totalAlliesHP, 1.0) : 1.0);
 			this.setBarScale(true, totalEnemiesHP > 0 ? Math.min(enemiesHP / totalEnemiesHP, 1.0) : 1.0);
-			this.greenText.text = alliesHP.toString();
-			this.redText.text = enemiesHP.toString();
+			this.allyBar.setText(alliesHP.toString());
+			this.enemyBar.setText(enemiesHP.toString());
 			this.difference(alliesHP - enemiesHP);
 		}
 		

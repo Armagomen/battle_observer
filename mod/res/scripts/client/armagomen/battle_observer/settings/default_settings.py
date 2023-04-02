@@ -326,13 +326,9 @@ class DefaultSettings(object):
         self.own_health = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: GLOBAL.ZERO,
-            GLOBAL.Y: 120,
-            GLOBAL.WIDTH: 140,
-            GLOBAL.HEIGHT: 20,
-            GLOBAL.ALPHA: 0.4,
-            GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
+            GLOBAL.Y: 350,
             OWN_HEALTH.TEMPLATE: "%(health)s/%(maxHealth)s (%(percent)s%%)",
-            GLOBAL.AVG_COLOR: {"saturation": 1.0, "brightness": 1.0}
+            GLOBAL.AVG_COLOR: {"saturation": 0.7, "brightness": 0.9}
         }
         self.minimap = {
             GLOBAL.ENABLED: False,
