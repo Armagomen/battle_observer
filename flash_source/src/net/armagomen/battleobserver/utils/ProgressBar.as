@@ -21,7 +21,7 @@
 		private var animationTime:Number = 1.0;
 		private var barEnabled:Boolean   = true;
 		
-		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, alpha:Number, bgAlpha:Number, filters:Array, color:String, bgColor:String = "#000000", time:Number = 1.0)
+		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, filters:Array, color:String, bgColor:String = "#000000", time:Number = 1.0)
 		{
 			super();
 			if (bgColor == null)
@@ -38,11 +38,11 @@
 			else
 			{
 				this.barColor = Utils.colorConvert(color);
-				this.background.graphics.beginFill(Utils.colorConvert(bgColor), Math.max(0.1, bgAlpha));
+				this.background.graphics.beginFill(Utils.colorConvert(bgColor), Constants.BG_ALPHA);
 				this.background.graphics.drawRect(0, 0, width, height);
 				this.background.graphics.endFill();
 				this.addChild(this.background);
-				this.bar.graphics.beginFill(this.barColor, Math.max(0.1, alpha));
+				this.bar.graphics.beginFill(this.barColor, Constants.ALPHA);
 				this.bar.graphics.drawRect(0, 0, width, height);
 				this.bar.graphics.endFill();
 				if (filters != null)
@@ -52,7 +52,6 @@
 				this.addChild(this.bar);
 				this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime);
 			}
-		
 		}
 		
 		public function setNewScale(newScale:Number):void
@@ -81,11 +80,11 @@
 			this.uiText = new TextExt(x, y, format, align, this);
 		}
 		
-		public function setOutline(color:String = "#000000", alpha:Number = 1.0, width:Number = 0, height:Number = 0):void
+		public function setOutline(width:Number = 0, height:Number = 0):void
 		{
 			if (this.barEnabled)
 			{
-				this.outline.graphics.lineStyle(1, this.barColor, Math.max(0.2, alpha), true, LineScaleMode.NONE);
+				this.outline.graphics.lineStyle(1, this.barColor, Constants.ALPHA, true, LineScaleMode.NONE);
 				this.outline.graphics.drawRect(-1, -1, width + 1, height + 1);
 				this.addChild(this.outline);
 			}

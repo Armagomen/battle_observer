@@ -5,7 +5,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 	import flash.events.*;
 	import flash.filters.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.gui.battle.components.*;
 	
@@ -42,7 +42,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 				this.addChild(item);
 			}
 			this.arrowDots.name = "arrowDots";
-			this.arrowDots.filters = [Filters.glowScore];
+			this.arrowDots.filters = [Constants.glowScore];
 			this.arrowDots.graphics.beginFill(0xFAFAFA, 1);
 			this.arrowDots.graphics.drawCircle(0, 10, 3);
 			this.arrowDots.graphics.drawCircle(0, 21, 3);
@@ -50,9 +50,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 			this.arrowDots.visible = false;
 			this.addChild(this.arrowDots);
 			
-			this.greenScore = new TextExt(-16, -3, Filters.scoreformat, TextFieldAutoSize.RIGHT, this);
+			this.greenScore = new TextExt(-16, -3, Constants.scoreformat, TextFieldAutoSize.RIGHT, this);
 			this.greenScore.antiAliasType = AntiAliasType.NORMAL;
-			this.redScore = new TextExt(16, -3, Filters.scoreformat, TextFieldAutoSize.LEFT, this);
+			this.redScore = new TextExt(16, -3, Constants.scoreformat, TextFieldAutoSize.LEFT, this);
 			this.redScore.antiAliasType = AntiAliasType.NORMAL;
 		}
 		

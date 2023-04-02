@@ -64,7 +64,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def onAddedToStorage(self, vehicleID, isEnemy):
         """Called from flash after creation in as_AddVehIdToListS"""
-        vInfoVO = self._arenaDP.getVehicleInfo(vehicleID)
+        vInfoVO = self.getVehicleInfo(vehicleID)
         if vInfoVO.isObserver():
             return
         if self.hpBarsEnable and vInfoVO.isAlive():

@@ -6,7 +6,7 @@
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.tween.Tween;
 	import net.armagomen.battleobserver.utils.tween.TweenEvent;
@@ -75,7 +75,7 @@
 			image.height = 150;
 			image.smoothing = true;
 			this._container.addChild(image);
-			this.timer = new TextExt(image.width >> 1, image.height - 20, Filters.middleText, TextFieldAutoSize.CENTER, this._container);
+			this.timer = new TextExt(image.width >> 1, image.height - 20, Constants.middleText, TextFieldAutoSize.CENTER, this._container);
 			this.hideAnimation = new Tween(this._container, "y", this.POSITION, -285);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
 			this.hideAnimation.addEventListener(TweenEvent.MOTION_FINISH, this.afterAnimation, false, 0, true);

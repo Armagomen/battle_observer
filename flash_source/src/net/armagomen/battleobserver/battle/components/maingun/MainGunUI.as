@@ -5,7 +5,7 @@ package net.armagomen.battleobserver.battle.components.maingun
 	import flash.events.Event;
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	
@@ -47,10 +47,8 @@ package net.armagomen.battleobserver.battle.components.maingun
 			gun_icon.height = 26;
 			_icons.addChild(gun_icon);
 			
-			done_icon.width = 32;
-			done_icon.height = 32;
-			done_icon.x = -1;
-			done_icon.y = -2;
+			done_icon.width = 26;
+			done_icon.height = 26;
 			done_icon.visible = false;
 			_icons.addChild(done_icon);
 			
@@ -66,14 +64,14 @@ package net.armagomen.battleobserver.battle.components.maingun
 			if (settings.progress_bar)
 			{
 				var colors:Object = this.getColors().global;
-				this.mainGun = new TextExt(50, 0, Filters.middleText, TextFieldAutoSize.CENTER, this);
+				this.mainGun = new TextExt(50, 0, Constants.middleText, TextFieldAutoSize.CENTER, this);
 				this.progress = new ProgressBar(30, 24, 42, 4, 0.9, 0.6, null, colors.ally, colors.bgColor, 0.2);
 				this.progress.setNewScale(0);
 				this.addChild(this.progress);
 			}
 			else
 			{
-				this.mainGun = new TextExt(28, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+				this.mainGun = new TextExt(28, 0, Constants.largeText, TextFieldAutoSize.LEFT, this);
 			}
 		}
 		

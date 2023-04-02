@@ -4,7 +4,7 @@
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.components.teamshealth.score.Score;
 	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.armagomen.battleobserver.utils.tween.Tween;
@@ -33,22 +33,22 @@
 			this.colors = colors;
 			var barsWidth:Number = 250;
 			var barHeight:Number = 31;
-			this.background.graphics.beginFill(Utils.colorConvert(colors.bgColor), Math.max(0.2, colors.bgAlpha));
+			this.background.graphics.beginFill(Utils.colorConvert(colors.bgColor), Constants.BG_ALPHA);
 			this.background.graphics.drawPath(defCommads, new <Number>[-barsWidth, 0, barsWidth, 0, barsWidth - 20, barHeight, -barsWidth + 20, barHeight, -barsWidth, 0]);
 			this.background.graphics.endFill();
-			this.allyBar.graphics.beginFill(Utils.colorConvert(colors.ally), Math.max(0.2, colors.alpha));
+			this.allyBar.graphics.beginFill(Utils.colorConvert(colors.ally), Constants.ALPHA);
 			this.allyBar.graphics.drawPath(defCommads, new <Number>[0, 0, -barsWidth, 0, -barsWidth + 20, barHeight, 0, barHeight, 0, 0]);
 			this.allyBar.graphics.endFill();
-			this.enemyBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Math.max(0.2, colors.alpha));
+			this.enemyBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Constants.ALPHA);
 			this.enemyBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
 			this.enemyBar.graphics.endFill();
 			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, 0.5);
 			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, 0.5);
 			
-			this.greenText = new TextExt(-220, 1, Filters.middleText, TextFieldAutoSize.LEFT, this);
-			this.redText = new TextExt(220, 1, Filters.middleText, TextFieldAutoSize.RIGHT, this);
-			this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, this);
-			this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, this);
+			this.greenText = new TextExt(-220, 1, Constants.middleText, TextFieldAutoSize.LEFT, this);
+			this.redText = new TextExt(220, 1, Constants.middleText, TextFieldAutoSize.RIGHT, this);
+			this.greenDiff = new TextExt(-55, 4, Constants.diff, TextFieldAutoSize.RIGHT, this);
+			this.redDiff = new TextExt(55, 4, Constants.diff, TextFieldAutoSize.LEFT, this);
 			
 			this.score = new Score(colorBlind);
 			this.addChild(score);

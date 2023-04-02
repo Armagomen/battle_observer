@@ -3,7 +3,7 @@ package net.armagomen.battleobserver.battle.components
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
@@ -29,7 +29,7 @@ package net.armagomen.battleobserver.battle.components
 		{
 			this.top_log_inCenter = settings.inCenter;
 			this.x = !this.top_log_inCenter ? 0 : Math.ceil(App.appWidth >> 1);
-			this.top_log = new TextExt(settings.x, settings.y, Filters.largeText, settings.align, this);
+			this.top_log = new TextExt(settings.x, settings.y, Constants.largeText, settings.align, this);
 		}
 		
 		public function as_createExtendedLogs(position:Object, top_enabled:Boolean, bottom_enabled:Boolean):void

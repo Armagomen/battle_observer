@@ -4,7 +4,7 @@
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.components.teamshealth.score.Score;
 	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
@@ -23,21 +23,18 @@
 		{
 			super();
 			this.colors = colors;
-
-			var alpha:Number   = Math.max(0.2, colors.alpha);
-			var bgAlpha:Number = Math.max(0.2, colors.bgAlpha);
 			
-			this.allyBar = new ProgressBar(-50, 4, -200, 22, alpha, bgAlpha, null, colors.ally, null, 0.5);
-			this.enemyBar = new ProgressBar(50, 4, 200, 22, alpha, bgAlpha, null, colorBlind ? colors.enemyColorBlind : colors.enemy, null, 0.5);
-			this.allyBar.setOutline(colors.ally, alpha, -200, 22);
-			this.enemyBar.setOutline(colorBlind ? colors.enemyColorBlind : colors.enemy, alpha, 200, 22);
+			this.allyBar = new ProgressBar(-50, 4, -200, 22, null, colors.ally, colors.bgColor, 0.5);
+			this.enemyBar = new ProgressBar(50, 4, 200, 22, null, colorBlind ? colors.enemyColorBlind : colors.enemy, colors.bgColor, 0.5);
+			this.allyBar.setOutline(-200, 22);
+			this.enemyBar.setOutline(200, 22);
 			this.addChild(this.allyBar);
 			this.addChild(this.enemyBar);
 			
-			this.greenText = new TextExt(-150, 1, Filters.middleText, TextFieldAutoSize.CENTER, this);
-			this.redText = new TextExt(150, 1, Filters.middleText, TextFieldAutoSize.CENTER, this);
-			this.greenDiff = new TextExt(-55, 2, Filters.normalText, TextFieldAutoSize.RIGHT, this);
-			this.redDiff = new TextExt(55, 2, Filters.normalText, TextFieldAutoSize.LEFT, this);
+			this.greenText = new TextExt(-150, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
+			this.redText = new TextExt(150, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
+			this.greenDiff = new TextExt(-55, 4, Constants.diff, TextFieldAutoSize.RIGHT, this);
+			this.redDiff = new TextExt(55, 4, Constants.diff, TextFieldAutoSize.LEFT, this);
 			
 			this.score = new Score(colorBlind);
 			this.addChild(score);

@@ -13,7 +13,7 @@ class BattleTimer(BattleTimerMeta, IAbstractPeriodView):
     def __init__(self):
         super(BattleTimer, self).__init__()
         self.timerColors = None
-        self.timer = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timerColor=COLORS.NORMAL_TEXT,
+        self.timer = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timerColor=COLORS.WHITE,
                                  timer=BATTLE_TIMER.START_STRING)
 
     def _populate(self):

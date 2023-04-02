@@ -2,7 +2,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 {
 	import flash.display.Sprite;
 	import flash.text.TextFieldAutoSize;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.armagomen.battleobserver.battle.interfaces.IDebugPanel;
@@ -21,11 +21,11 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			super();
 			this.pingColor = Utils.colorConvert(settings.pingColor);
 			this.lagColor = Utils.colorConvert(settings.pingLagColor);
-			this.statical = new TextExt(5, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+			this.statical = new TextExt(5, 0, Constants.largeText, TextFieldAutoSize.LEFT, this);
 			this.statical.htmlText = "<textformat tabstops='[80]'>FPS:\tPING:</textformat>";
-			this.fps = new TextExt(46, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+			this.fps = new TextExt(46, 0, Constants.largeText, TextFieldAutoSize.LEFT, this);
 			this.fps.textColor = Utils.colorConvert(settings.fpsColor);
-			this.ping = new TextExt(136, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+			this.ping = new TextExt(136, 0, Constants.largeText, TextFieldAutoSize.LEFT, this);
 			this.ping.textColor = this.pingColor;
 		}
 		

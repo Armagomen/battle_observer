@@ -2,7 +2,7 @@
 {
 	import flash.filters.GlowFilter;
 	import flash.text.*;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	
 	public class TextExt extends TextField
 	{
@@ -11,7 +11,7 @@
 			super();
 			if (style == null)
 			{
-				style = Filters.normalText;
+				style = Constants.normalText;
 			}
 			this.x = x;
 			this.y = y;
@@ -19,7 +19,7 @@
 			this.defaultTextFormat = style;
 			this.antiAliasType = AntiAliasType.ADVANCED;
 			this.autoSize = align;
-			this.filters = [new GlowFilter(0, 0.7, 2, 2, 5)];
+			this.filters = [new GlowFilter(0, 0.6, 2, 2, 4)];
 			this.selectable = false;
 			this.multiline = true;
 			this.visible = enabled;

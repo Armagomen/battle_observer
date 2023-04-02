@@ -3,7 +3,7 @@
 	import flash.events.Event;
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
@@ -20,7 +20,7 @@
 		{
 			super.onPopulate();
 			this.x = App.appWidth;
-			this.battleTimer = new TextExt(-8, 0, Filters.largeText, TextFieldAutoSize.RIGHT, this);
+			this.battleTimer = new TextExt(-8, 0, Constants.largeText, TextFieldAutoSize.RIGHT, this);
 		}
 		
 		override protected function onBeforeDispose():void 

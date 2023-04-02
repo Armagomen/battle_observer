@@ -42,6 +42,9 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if ctrl is not None:
             ctrl.onVehicleControlling += self.__onVehicleControlling
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            self.as_setComponentVisible(arena.period == ARENA_PERIOD.BATTLE and self.getVehicleInfo().isAlive())
 
     def onArenaPeriod(self, period, *args):
         self.isBattlePeriod = period == ARENA_PERIOD.BATTLE
@@ -76,6 +79,9 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.isAliveMode = ctrlMode not in POSTMORTEM.MODES
         self.as_setComponentVisible(self.isBattlePeriod and self.isAliveMode)
 
+    def getAVGColor(self, percent=1.0):
+        return percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR])
+
     def _updateHealth(self, health):
         if health > self.__maxHealth:
             self.__maxHealth = health
@@ -85,8 +91,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if self.macrosDict[VEHICLE.CUR] == health and self.macrosDict[VEHICLE.MAX] == self.__maxHealth:
             return
         percent = getHealthPercent(health, self.__maxHealth)
-        color = percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR])
         self.macrosDict[VEHICLE.CUR] = health
         self.macrosDict[VEHICLE.MAX] = self.__maxHealth
         self.macrosDict[VEHICLE.PERCENT] = int(math.ceil(percent * 100))
-        self.as_setOwnHealthS(percent, self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict, color)
+        self.as_setOwnHealthS(percent, self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict, self.getAVGColor(percent))

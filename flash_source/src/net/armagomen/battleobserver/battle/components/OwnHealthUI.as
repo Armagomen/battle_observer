@@ -2,12 +2,13 @@ package net.armagomen.battleobserver.battle.components
 {
 	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	
 	public class OwnHealthUI extends ObserverBattleDisplayable
 	{
 		private var own_health:ProgressBar;
+		public var getAVGColor:Function;
 		
 		public function OwnHealthUI()
 		{
@@ -18,11 +19,11 @@ package net.armagomen.battleobserver.battle.components
 		{
 			super.onPopulate();
 			var settings:Object = this.getSettings();
-			var colors:Object = this.getColors();
+			var colors:Object = this.getColors().global;
 			var healthCenter:Number = settings.width / 2;
-			this.own_health = new ProgressBar(settings.x - healthCenter, settings.y, settings.width, settings.height, settings.alpha, settings.alpha * 0.7, null, colors.global.ally, null, 0.2);
-			this.own_health.setOutline(colors.global.ally, settings.alpha, settings.width, settings.height);
-			this.own_health.addTextField(healthCenter, -2, "center", Filters.normalText);
+			this.own_health = new ProgressBar(settings.x - healthCenter, settings.y, settings.width, settings.height, null, this.getAVGColor(), colors.bgColor, 0.2);
+			this.own_health.setOutline(settings.width, settings.height);
+			this.own_health.addTextField(healthCenter, -2, "center", Constants.normalText);
 			this.addChild(this.own_health);
 		}
 		

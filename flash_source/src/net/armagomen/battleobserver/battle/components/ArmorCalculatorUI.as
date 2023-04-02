@@ -2,7 +2,7 @@ package net.armagomen.battleobserver.battle.components
 {
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
 	public class ArmorCalculatorUI extends ObserverBattleDisplayable
@@ -18,7 +18,7 @@ package net.armagomen.battleobserver.battle.components
 		{
 			super.onPopulate();
 			var settings:Object = this.getSettings().position;
-			this.armorCalc = new TextExt(settings.x, settings.y, Filters.armorText, TextFieldAutoSize.CENTER, this);
+			this.armorCalc = new TextExt(settings.x, settings.y, Constants.armorText, TextFieldAutoSize.CENTER, this);
 		}
 		
 		override protected function onBeforeDispose():void 

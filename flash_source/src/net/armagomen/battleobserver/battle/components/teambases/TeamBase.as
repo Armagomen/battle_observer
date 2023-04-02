@@ -1,11 +1,12 @@
 ﻿package net.armagomen.battleobserver.battle.components.teambases
 {
-	import net.armagomen.battleobserver.utils.tween.Tween;
+	import Math;
 	import flash.display.*;
 	import flash.text.*;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
-	import Math;
+	import net.armagomen.battleobserver.utils.tween.Tween;
 	
 	/**
 	 * ...
@@ -97,18 +98,12 @@
 			var iconWidth:Number = settings.height + 2;
 			
 			baseMain.y = 1;
-			baseMain.graphics.beginFill(Utils.colorConvert(colors.bgColor), Math.max(0.05, colors.bgAlpha));
+			baseMain.graphics.beginFill(Utils.colorConvert(colors.bgColor), Constants.BG_ALPHA);
 			baseMain.graphics.drawRect(0, 0, settings.width, settings.height);
 			baseMain.graphics.endFill();
-			
-			if (settings.outline.enabled)
-			{
-				baseMain.graphics.lineStyle(1, Utils.colorConvert(settings.outline.color), Math.max(0.05, colors.bgAlpha), true, LineScaleMode.NONE);
-				baseMain.graphics.drawRect(-1, -1, settings.width + 1, settings.height + 1);
-			}
-			
-			this.progressBar.name = this.name;
-			this.progressBar.graphics.beginFill(progressBarColor, Math.max(0.05, colors.alpha));
+			baseMain.graphics.lineStyle(1, progressBarColor, Constants.ALPHA, true, LineScaleMode.NONE);
+			baseMain.graphics.drawRect(-1, -1, settings.width + 1, settings.height + 1);
+			this.progressBar.graphics.beginFill(progressBarColor, Constants.ALPHA);
 			this.progressBar.graphics.drawRect(0, 0, settings.width, settings.height);
 			this.progressBar.graphics.endFill();
 			this.progressBar.scaleX = HUNDREDTH_OF_A_PERCENT;

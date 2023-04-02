@@ -66,7 +66,6 @@ class GLOBAL:
     ALIGN_LIST = namedtuple("ALIGN_LIST", ("left", "center", "right"))("left", "center", "right")
     ALPHA = "alpha"
     AVG_COLOR = "avgColor"
-    BG_ALPHA = "bgAlpha"
     BLUR_X = "blurX"
     BLUR_Y = "blurY"
     COLOR = "color"
@@ -121,11 +120,11 @@ MAIN = __Main(
     "premium_time", "save_shot", "mute_team_base_sound")
 
 COLORS = namedtuple("COLORS", (
-    "NAME", "BLACK", "BLIND", "GOLD", "GREEN", "NORMAL_TEXT", "ORANGE", "RED", "S_YELLOW", "YELLOW",
+    "NAME", "BLACK", "BLIND", "GOLD", "GREEN", "WHITE", "ORANGE", "RED", "S_YELLOW", "YELLOW",
     "C_GREEN", "C_ORANGE", "C_RED", "C_YELLOW", "C_PURPLE", "C_BG", "GLOBAL", "ALLY_MAME", "ENEMY_MAME",
     "ENEMY_BLIND_MAME"))(
-    "colors", "#000000", "#6F6CD3", "#FFD700", "#5ACB00", "#FAFAFA", "#FF9900", "#F30900", "#E0E06D",
-    "#FFC900", "green", "orange", "red", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind")
+    "colors", "#000000", "#6F6CD3", "#FFD700", "#5ACB00", "#FFFFFF", "#FF9900", "#F30900", "#E0E06D", "#FFC900",
+    "green", "orange", "red", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind")
 
 MAIN_GUN = namedtuple("MAIN_GUN", ("NAME", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))("main_gun", 1000, 0.2)
 
@@ -142,9 +141,6 @@ CLOCK = namedtuple("CLOCK", (
     "NAME", "IN_BATTLE", "IN_LOBBY", "FORMAT", "UPDATE_INTERVAL", "DEFAULT_FORMAT_BATTLE", "DEFAULT_FORMAT_HANGAR"))(
     "clock", "battle", "hangar", "format", 1.0, "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>",
     "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>")
-
-PREMIUM = namedtuple("PREMIUM", ("PREMIUM_TIME",))(
-    "premium_time", )
 
 __Sniper = namedtuple("SNIPER", (
     "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "METERS", "ZOOMS", "ZOOM_EXPOSURE",

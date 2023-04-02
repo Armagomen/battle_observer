@@ -1,6 +1,6 @@
 package net.armagomen.battleobserver.battle.components
 {
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	
@@ -17,7 +17,7 @@ package net.armagomen.battleobserver.battle.components
 		{
 			super.onPopulate();
 			var settings:Object = this.getSettings();
-			this.dispersionTime = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, this);
+			this.dispersionTime = new TextExt(settings.x, settings.y, Constants.middleText, settings.align, this);
 		}
 		
 		override protected function onBeforeDispose():void 

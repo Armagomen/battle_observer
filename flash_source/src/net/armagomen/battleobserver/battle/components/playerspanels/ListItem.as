@@ -1,7 +1,7 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
 	import flash.display.Sprite;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.ProgressBar;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
@@ -57,12 +57,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				barX = -barX;
 				textX = -textX;
 			}
-			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, colorParams.alpha, colorParams.bgAlpha, null, color, colorParams.bgColor, 0.4);
+			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, null, color, colorParams.bgColor, 0.2);
 			if (settings.players_bars_bar.outline)
 			{
-				this.healthBar.setOutline(color, colorParams.alpha, barWidth, settings.players_bars_bar.height);
+				this.healthBar.setOutline(barWidth, settings.players_bars_bar.height);
 			}
-			this.healthBar.addTextField(textX, settings.players_bars_text.y, autoSize, Filters.normalText15);
+			this.healthBar.addTextField(textX, settings.players_bars_text.y, autoSize, Constants.normalText15);
 			this.healthBar.setVisible(startVisible);
 			this.addChild(this.healthBar);
 		}

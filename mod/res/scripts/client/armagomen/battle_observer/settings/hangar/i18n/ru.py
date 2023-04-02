@@ -231,10 +231,7 @@ localization = {
     "team_bases_panel": {
         "header": "Индикация захвата базы",
         "y": "Позиция полосы захвата по вертикали",
-        "scale": "Масштабирование полос захвата",
-        "boBases": "Включить полосы захвата из мода",
-        "outline*enabled": "Включить контур",
-        "outline*color": "Цвет контура"
+        "width": "Ширина полосы в пикселях",
     },
     "players_panels": {
         "header": "Панели со списком игроков (уши).",
@@ -312,10 +309,6 @@ localization = {
         "global*bgColor": "Цвет фона панелей",
         "global*enemyColorBlind": "Глобальный цвет: противник - цветовая слепота",
         "global*enemy": "Глобальный цвет: противник",
-        "global*alpha": "Прозрачность панелей",
-        "global*alpha_tooltip": "0 - прозрачно полностью.\n1 - не прозрачно.",
-        "global*bgAlpha": "Прозрачность фона панелей",
-        "global*bgAlpha_tooltip": "0 - прозрачно полностью.\n1 - не прозрачно.",
         "vehicle_types_colors*AT-SPG": "Противотанковая САУ - ПТ-САУ",
         "vehicle_types_colors*SPG": "Противотанковая САУ - Артиллерия",
         "vehicle_types_colors*heavyTank": "Тяжёлый Танк",

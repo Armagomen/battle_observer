@@ -227,10 +227,7 @@ localization = {
     "team_bases_panel": {
         "header": "TEAM BASES PANEL",
         "y": "The vertical position of the capture",
-        "scale": "Scaling capture bars.",
-        "boBases": "Enable the capture bars from the mod.",
-        "outline*enabled": "Enable border.",
-        "outline*color": "Border color."
+        "width": "Bar width in pixels.",
     },
     "players_panels": {
         "header": "Panels with a list of players (ears).",
@@ -306,10 +303,6 @@ localization = {
         "global*bgColor": "Panel background color",
         "global*enemyColorBlind": "Global color: enemy is color blind",
         "global*enemy": "Global color: enemy",
-        "global*alpha": "Panels transparency",
-        "global*alpha_tooltip": "0 - completely transparent. \n 1 - not transparent.",
-        "global*bgAlpha": "Background transparency of panels",
-        "global*bgAlpha_tooltip": "0 - completely transparent. \n 1 - not transparent.",
         "vehicle_types_colors*AT-SPG": "AT-SPG",
         "vehicle_types_colors*SPG": "Artillery",
         "vehicle_types_colors*heavyTank": "Heavy Tank",

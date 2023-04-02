@@ -3,7 +3,7 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.text.TextFieldAutoSize;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.armagomen.battleobserver.battle.interfaces.IDebugPanel;
@@ -44,13 +44,13 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 		public function Modern(settings:Object)
 		{
 			super();
-			this.lag = new TextExt(185, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
+			this.lag = new TextExt(185, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			this.lag.text = "LAG";
-			this.statical = new TextExt(20, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
+			this.statical = new TextExt(20, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			this.statical.htmlText = "<textformat tabstops='[78]'>FPS:\tPING:</textformat>";
 			
-			this.fps = new TextExt(58, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
-			this.ping = new TextExt(144, 0, Filters.middleText, TextFieldAutoSize.LEFT, this);
+			this.fps = new TextExt(58, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
+			this.ping = new TextExt(144, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			
 			this.pingColor = Utils.colorConvert(settings.pingColor);
 			this.lagColor = Utils.colorConvert(settings.pingLagColor);

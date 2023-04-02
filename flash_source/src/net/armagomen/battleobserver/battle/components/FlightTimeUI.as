@@ -1,7 +1,7 @@
 package net.armagomen.battleobserver.battle.components
 {
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battleobserver.utils.Filters;
+	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	
 	public class FlightTimeUI extends ObserverBattleDisplayable
@@ -17,7 +17,7 @@ package net.armagomen.battleobserver.battle.components
 		{
 			super.onPopulate();
 			var settings:Object = this.getSettings();
-			this.flightTime = new TextExt(settings.x, settings.y, Filters.middleText, settings.align, this);
+			this.flightTime = new TextExt(settings.x, settings.y, Constants.middleText, settings.align, this);
 		}
 		
 		override protected function onBeforeDispose():void 

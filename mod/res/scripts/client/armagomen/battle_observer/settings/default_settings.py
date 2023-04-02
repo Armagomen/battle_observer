@@ -160,8 +160,6 @@ class DefaultSettings(object):
                 COLORS.ENEMY_MAME: COLORS.RED,
                 COLORS.ENEMY_BLIND_MAME: COLORS.BLIND,
                 COLORS.C_BG: COLORS.BLACK,
-                GLOBAL.ALPHA: 0.5,
-                GLOBAL.BG_ALPHA: 0.5
             },
             ARMOR_CALC.NAME: {
                 COLORS.C_GREEN: COLORS.GREEN,
@@ -176,7 +174,7 @@ class DefaultSettings(object):
                 VEHICLE_CLASS_NAME.AT_SPG: "#0094EC",
                 VEHICLE_CLASS_NAME.SPG: "#A90400",
                 VEHICLE_CLASS_NAME.LIGHT_TANK: "#37BC00",
-                VEHICLE_TYPES_COLORS.UNKNOWN: COLORS.NORMAL_TEXT
+                VEHICLE_TYPES_COLORS.UNKNOWN: COLORS.WHITE
             }
         }
         self.wg_logs = {
@@ -244,7 +242,7 @@ class DefaultSettings(object):
                 "</font></textformat>"
             ],
             DAMAGE_LOG.SHELL_COLOR: {
-                DAMAGE_LOG.NORMAL: COLORS.NORMAL_TEXT,
+                DAMAGE_LOG.NORMAL: COLORS.WHITE,
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
@@ -268,17 +266,13 @@ class DefaultSettings(object):
         }
         self.team_bases_panel = {
             GLOBAL.ENABLED: False,
-            GLOBAL.Y: 100,
+            GLOBAL.Y: 45,
             GLOBAL.WIDTH: 400,
             GLOBAL.HEIGHT: 24,
-            GLOBAL.OUTLINE: {
-                GLOBAL.ENABLED: True,
-                GLOBAL.COLOR: COLORS.NORMAL_TEXT
-            },
             TEAM_BASES.TEXT_SETTINGS: {
                 TEAM_BASES.FONT: TEAM_BASES.BASE_FONT,
                 TEAM_BASES.SIZE: TEAM_BASES.FONT_SIZE,
-                GLOBAL.COLOR: COLORS.NORMAL_TEXT,
+                GLOBAL.COLOR: COLORS.WHITE,
                 TEAM_BASES.BOLD: False,
                 TEAM_BASES.ITALIC: False,
                 TEAM_BASES.UNDERLINE: False,

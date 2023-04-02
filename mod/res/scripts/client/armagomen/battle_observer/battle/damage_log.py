@@ -98,10 +98,10 @@ class DamageLog(DamageLogsMeta):
 
     def update_top_log_start_params(self):
         self.top_log.update(self.settings.log_total[DAMAGE_LOG.ICONS],
-                            tankDamageAvgColor=COLORS.NORMAL_TEXT,
-                            tankAssistAvgColor=COLORS.NORMAL_TEXT,
-                            tankBlockedAvgColor=COLORS.NORMAL_TEXT,
-                            tankStunAvgColor=COLORS.NORMAL_TEXT,
+                            tankDamageAvgColor=COLORS.WHITE,
+                            tankAssistAvgColor=COLORS.WHITE,
+                            tankBlockedAvgColor=COLORS.WHITE,
+                            tankStunAvgColor=COLORS.WHITE,
                             tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
                             tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
                             tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
@@ -189,11 +189,11 @@ class DamageLog(DamageLogsMeta):
             self.parseEvent(event)
 
     def getAVGColor(self, percent):
-        return percentToRGB(percent, **self.settings.log_total[GLOBAL.AVG_COLOR]) if percent else COLORS.NORMAL_TEXT
+        return percentToRGB(percent, **self.settings.log_total[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE
 
     def onVehicleUpdated(self, vehicleID, *args, **kwargs):
         """update log item in GM-mode"""
-        vehicle_info_vo = self._arenaDP.getVehicleInfo(vehicleID)
+        vehicle_info_vo = self.getVehicleInfo(vehicleID)
         if vehicle_info_vo:
             vehicle_type = vehicle_info_vo.vehicleType
             if vehicle_type and vehicle_type.maxHealth and vehicle_type.classTag:
@@ -232,11 +232,11 @@ class DamageLog(DamageLogsMeta):
             shell_name, gold = DAMAGE_LOG.NOT_SHELL, False
         logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, is_player)
         vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
-        vehicle_info_vo = self._arenaDP.getVehicleInfo(target_id)
+        vehicle_info_vo = self.getVehicleInfo(target_id)
         if is_player:
             max_health = vehicle_info_vo.vehicleType.maxHealth
         else:
-            max_health = self._arenaDP.getVehicleInfo().vehicleType.maxHealth
+            max_health = self.getVehicleInfo().vehicleType.maxHealth
         if not vehicle:
             self.createVehicle(vehicle_info_vo, vehicle, index=len(log_data.id_list))
         self.updateVehicleData(extra, gold, shell_name, vehicle, max_health, is_player)
