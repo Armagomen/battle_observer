@@ -31,7 +31,7 @@
 			super.onPopulate();
 			var hangar:* = parent;
 			var ammoPanel:* = hangar.ammunitionPanel;
-			this.avgData = new TextExt(ammoPanel.width >> 1, ammoPanel.height, Filters.mediumText, TextFieldAutoSize.CENTER, ammoPanel);
+			this.avgData = new TextExt(ammoPanel.width >> 1, ammoPanel.height - 2, Filters.mediumText, TextFieldAutoSize.CENTER, ammoPanel);
 		}
 		
 		override protected function onDispose():void
