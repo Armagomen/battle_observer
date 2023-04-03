@@ -20,8 +20,6 @@ class DispersionTimer(DispersionTimerMeta):
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
-        self.macro.update(color=self.settings[GLOBAL.COLOR],
-                          color_done=self.settings[DISPERSION_TIMER.DONE_COLOR])
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -55,7 +53,11 @@ class DispersionTimer(DispersionTimerMeta):
             self.min_angle = aiming_angle
             logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
         percent = int(ceil(self.min_angle / aiming_angle * 100))
-        template = DISPERSION_TIMER.REGULAR_TEMPLATE if percent < 100 else DISPERSION_TIMER.DONE_TEMPLATE
-        self.macro[TIMER] = round(type_descriptor.gun.aimingTime * log(aiming_angle / self.min_angle), GLOBAL.TWO)
+        if percent < 100:
+            self.macro[TIMER] = round(type_descriptor.gun.aimingTime * log(aiming_angle / self.min_angle), GLOBAL.TWO)
+            self.macro[GLOBAL.COLOR] = self.settings[GLOBAL.COLOR]
+        else:
+            self.macro[TIMER] = GLOBAL.ZERO
+            self.macro[GLOBAL.COLOR] = self.settings[DISPERSION_TIMER.DONE_COLOR]
         self.macro[PERCENT] = percent
-        self.as_updateTimerTextS(self.settings[template] % self.macro)
+        self.as_updateTimerTextS(self.settings[DISPERSION_TIMER.TEMPLATE] % self.macro)

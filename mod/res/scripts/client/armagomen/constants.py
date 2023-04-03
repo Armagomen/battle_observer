@@ -245,8 +245,8 @@ DISPERSION = __Dispersion(
     "dispersion_circle", "extraServerLap", "scale", "useServerAim", 0.70, 5.0, 0.8, 16.0, -1.0, "replaceOriginalCircle"
 )
 
-__DispersionTimer = namedtuple("dispersion_timer", ("NAME", "DONE_COLOR", "DONE_TEMPLATE", "REGULAR_TEMPLATE"))
-DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "done_color", "done_template", "regular_template")
+__DispersionTimer = namedtuple("dispersion_timer", ("NAME", "DONE_COLOR", "TEMPLATE"))
+DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "done_color", "template")
 
 DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
     "NAME", "FPS_COLOR", "PING_COLOR", "LAG_COLOR", "STYLES", "STYLE"))(

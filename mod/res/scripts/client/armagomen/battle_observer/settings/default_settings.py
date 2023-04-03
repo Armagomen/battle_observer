@@ -98,8 +98,7 @@ class DefaultSettings(object):
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left,
             GLOBAL.COLOR: "#f5ff8f",
             DISPERSION_TIMER.DONE_COLOR: "#a6ffa6",
-            DISPERSION_TIMER.REGULAR_TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
-            DISPERSION_TIMER.DONE_TEMPLATE: "<font color='%(color_done)s'>reduced - %(percent)d%%</font>"
+            DISPERSION_TIMER.TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>"
         }
         self.debug_panel = {
             GLOBAL.ENABLED: False,
