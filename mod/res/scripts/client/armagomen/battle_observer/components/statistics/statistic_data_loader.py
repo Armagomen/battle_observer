@@ -21,7 +21,6 @@ class StatisticsDataLoader(object):
 
     def __init__(self):
         self.enabled = region is not None
-        self.loaded = False
         self._load_try = 0
         self.__wtrData = WTRStatistics()
         self.__callback = None
@@ -32,37 +31,30 @@ class StatisticsDataLoader(object):
             data = response_data.get("data", {})
             self.__wtrData.updateAllItems(self.sessionProvider.getArenaDP(), data)
             logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
-            self.loaded = True
             if self.__callback is not None:
                 self.__callback(self.__wtrData.itemsData)
         else:
-            self.delayedLoad()
+            self.delayedLoad(response.body)
 
     def setCallback(self, callback_method):
         self.__callback = callback_method
 
-    def delayedLoad(self):
+    def delayedLoad(self, reason):
         if self._load_try < 10:
             self._load_try += 1
+            logError("StatisticsDataLoader: try loading statistic data - {}/{}", self._load_try, reason)
             callback(1.0, self.getStatisticsDataFromServer)
 
     def getStatisticsDataFromServer(self):
-        if self.loaded:
-            return
         if not self.enabled:
             return logError("Statistics are not available in your region={}. Only in {}", AUTH_REALM, REGIONS)
         arenaDP = self.sessionProvider.getArenaDP()
         if arenaDP is None:
-            logError("StatisticsDataLoader/setCachedStatisticData: arenaDP is None")
-            return self.delayedLoad()
+            return self.delayedLoad("arenaDP is None")
         users = [str(vInfo.player.accountDBID) for vInfo in arenaDP.getVehiclesInfoIterator() if
                  vInfo.player.accountDBID]
         if not users:
-            return self.delayedLoad()
+            return self.delayedLoad("users list is empty")
         logDebug("StatisticsDataLoader/setCachedStatisticData: START request data: ids={}, len={} ", users, len(users))
         url = self.STAT_URL.format(ids=self.SEPARATOR.join(users), key=self.API_KEY, url=self.URL, fields=self.FIELDS)
         fetchURL(url, self.onDataResponse)
-
-    @property
-    def itemsWTRData(self):
-        return self.__wtrData.itemsData

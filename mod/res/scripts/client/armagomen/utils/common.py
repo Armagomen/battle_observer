@@ -17,6 +17,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
 from helpers.http import openUrl
+from uilogging.core.core_constants import HTTP_DEFAULT_TIMEOUT
 
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
@@ -319,4 +320,4 @@ def isFileValid(version):
 
 
 def fetchURL(url, callback_function):
-    BigWorld.fetchURL(url, callback_function, {"User-Agent": "Battle-Observer-App"}, 30, 'GET')
+    BigWorld.fetchURL(url, callback_function, {"User-Agent": "Battle-Observer-App"}, HTTP_DEFAULT_TIMEOUT, 'GET')

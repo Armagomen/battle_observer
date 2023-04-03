@@ -24,7 +24,7 @@ package net.armagomen.battleobserver.battle
 		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		
-		public function StatisticsAndIcons(battlePage:*, iconsEnabled:Boolean, statsData:Object, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
+		public function StatisticsAndIcons(battlePage:*, iconsEnabled:Boolean, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
 		{
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
@@ -32,7 +32,6 @@ package net.armagomen.battleobserver.battle
 			this.isComp7Battle = battlePage.getAlias() == "comp7BattlePage";
 			this.setIconColors(typeColors);
 			this.iconMultiplier = iconMultiplier;
-			this.statisticsData = statsData;
 			this.iconsEnabled = iconsEnabled;
 			this.cutWidth = cutWidth;
 			this.fullWidth = fullWidth;

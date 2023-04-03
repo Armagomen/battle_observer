@@ -14,7 +14,7 @@ from armagomen.utils.common import overrideMethod, logError, isReplay, callback
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 
-settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: 23.0}
+settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: 20.0}
 MinMax = namedtuple('MinMax', ('min', 'max'))
 camCache = {"ArcadeCamera": False, "ArcadeCameraEpic": False, "ArtyCamera": False, "StrategicCamera": False}
 
