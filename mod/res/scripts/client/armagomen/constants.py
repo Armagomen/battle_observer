@@ -83,7 +83,7 @@ class GLOBAL:
     IMG = "img"
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
-    IMG_PARAMS_HANGAR = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='30' height='30'"}
+    IMG_PARAMS_HANGAR = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'"}
     INNER = "inner"
     KNOCKOUT = "knockout"
     ONE, TWO = (1, 2)
@@ -333,8 +333,8 @@ CREW_XP = namedtuple("CREW_XP", (
     "crewDialog", "notAvailable", "isFullXp", "isFullComplete", "needTurnOff", "enable", "disable")
 
 AVG_EFFICIENCY_HANGAR = namedtuple("AVG_EFFICIENCY_HANGAR", (
-    "NAME", "ICONS", "DAMAGE", "ASSIST", "BLOCKED", "STUN", "MARKS_ON_GUN"
-))("avg_efficiency_in_hangar", "icons", "avg_damage", "avg_assist", "avg_blocked", "avg_stun", "gun_marks")
+    "NAME", "DAMAGE", "ASSIST", "BLOCKED", "STUN", "MARKS_ON_GUN"
+))("avg_efficiency_in_hangar", "avg_damage", "avg_assist", "avg_blocked", "avg_stun", "gun_marks")
 
 # Settings Loader List
 LOAD_LIST = (

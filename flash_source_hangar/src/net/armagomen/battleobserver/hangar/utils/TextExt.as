@@ -5,10 +5,9 @@
 	
 	public class TextExt extends TextField
 	{
-		public function TextExt(name:String, x:Number, y:Number, style:TextFormat, align:String, ui:*)
+		public function TextExt(x:Number, y:Number, style:TextFormat, align:String, ui:*)
 		{
 			super();
-			this.name = name;
 			this.x = x;
 			this.y = y;
 			this.width = 1;

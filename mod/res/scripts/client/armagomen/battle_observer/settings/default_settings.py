@@ -48,14 +48,6 @@ class DefaultSettings(object):
         }
         self.avg_efficiency_in_hangar = {
             GLOBAL.ENABLED: False,
-            GLOBAL.X: 140,
-            GLOBAL.Y: 0,
-            "icons": {
-                "assistIcon": "<img src='{dir}/help.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS_HANGAR),
-                "blockedIcon": "<img src='{dir}/armor.png' {size} vspace='-9'>".format(**GLOBAL.IMG_PARAMS_HANGAR),
-                "damageIcon": "<img src='{dir}/damage.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS_HANGAR),
-                "stunIcon": "<img src='{dir}/stun.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS_HANGAR)
-            },
             AVG_EFFICIENCY_HANGAR.DAMAGE: True,
             AVG_EFFICIENCY_HANGAR.ASSIST: True,
             AVG_EFFICIENCY_HANGAR.BLOCKED: True,
