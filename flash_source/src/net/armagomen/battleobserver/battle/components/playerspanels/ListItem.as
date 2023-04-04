@@ -15,7 +15,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		{
 			super();
 			this.isEnemy = enemy;
-			this.x = enemy ? -381 : 380;
+			this.x = enemy ? -376 : 375;
 		}
 		
 		public function updateDamage(text:String):void

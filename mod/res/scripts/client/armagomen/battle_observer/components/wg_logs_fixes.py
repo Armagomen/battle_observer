@@ -2,6 +2,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import DAMAGE_LOG, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
+
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE as _ETYPE
 
 BASE_WG_LOGS = (DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog,
@@ -26,7 +27,7 @@ def onModSettingsChanged(config, blockID):
     if blockID == DAMAGE_LOG.WG_LOGS_FIX:
         validated.update(validateSettings(config))
         DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog, \
-        DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog = \
+            DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog = \
             reversed(BASE_WG_LOGS) if config[DAMAGE_LOG.WG_POS] else BASE_WG_LOGS
 
 

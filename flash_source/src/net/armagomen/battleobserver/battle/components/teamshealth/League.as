@@ -31,16 +31,14 @@
 			this.addChild(allyBar);
 			this.addChild(enemyBar);
 			this.colors = colors;
-			var barsWidth:Number = 250;
-			var barHeight:Number = 31;
 			this.background.graphics.beginFill(Utils.colorConvert(colors.bgColor), Constants.BG_ALPHA);
-			this.background.graphics.drawPath(defCommads, new <Number>[-barsWidth, 0, barsWidth, 0, barsWidth - 20, barHeight, -barsWidth + 20, barHeight, -barsWidth, 0]);
+			this.background.graphics.drawPath(defCommads, new <Number>[-250, 0, 250, 0, 230, 31, -230, 31, -250, 0]);
 			this.background.graphics.endFill();
 			this.allyBar.graphics.beginFill(Utils.colorConvert(colors.ally), Constants.ALPHA);
-			this.allyBar.graphics.drawPath(defCommads, new <Number>[0, 0, -barsWidth, 0, -barsWidth + 20, barHeight, 0, barHeight, 0, 0]);
+			this.allyBar.graphics.drawPath(defCommads, new <Number>[0, 0, -250, 0, -230, 31, 0, 31, 0, 0]);
 			this.allyBar.graphics.endFill();
 			this.enemyBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Constants.ALPHA);
-			this.enemyBar.graphics.drawPath(defCommads, new <Number>[0, 0, barsWidth, 0, barsWidth - 20, barHeight, 0, barHeight, 0, 0]);
+			this.enemyBar.graphics.drawPath(defCommads, new <Number>[0, 0, 250, 0, 230, 31, 0, 31, 0, 0]);
 			this.enemyBar.graphics.endFill();
 			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, 0.5);
 			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, 0.5);
@@ -121,7 +119,5 @@
 			this.redText.text = enemiesHP.toString();
 			this.difference(alliesHP - enemiesHP);
 		}
-	
 	}
-
 }

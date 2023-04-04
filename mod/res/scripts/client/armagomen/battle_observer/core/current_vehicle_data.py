@@ -15,17 +15,14 @@ class CurrentVehicleCachedData(object):
     itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
-        self.__EfficiencyAVGData = EfficiencyAVGData(0, 0, 0, 0, 0, "", "Undefined", False)
-
-    def init(self):
-        g_events.onVehicleChanged += self.onVehicleChanged
-
-    def fini(self):
-        g_events.onVehicleChanged -= self.onVehicleChanged
+        self.__default = EfficiencyAVGData(0, 0, 0, 0, 0, "", "Undefined", False)
+        self.__EfficiencyAVGData = None
 
     def onVehicleChanged(self):
         if g_currentVehicle.isPresent():
             self.setAvgData(g_currentVehicle.intCD, g_currentVehicle.item.userName, g_currentVehicle.item.level)
+        else:
+            self.__EfficiencyAVGData = None
 
     def setAvgData(self, intCD, name, level):
         dossier = self.itemsCache.items.getVehicleDossier(intCD)
@@ -44,4 +41,4 @@ class CurrentVehicleCachedData(object):
 
     @property
     def efficiencyAvgData(self):
-        return self.__EfficiencyAVGData
+        return self.__EfficiencyAVGData or self.__default

@@ -363,7 +363,6 @@ localization = {
         "x_tooltip": "Position from the center of the screen.",
         "y": "Vertical text position",
         "y_tooltip": "Position from the center of the screen.",
-        "template": "String pattern. Macros: %(health)s, %(maxHealth)s, %(percent)s",
     },
     "crewDialog": {
         "enable": "\nEnable accelerated crew training?",

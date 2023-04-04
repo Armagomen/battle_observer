@@ -43,7 +43,6 @@ def startLoadingMod(modVersion, current_realm):
 
 def onInit(modVersion, current_realm):
     logInfo('MOD START LOADING: v{} - {}'.format(modVersion, gameVersion))
-    cachedVehicleData.init()
     errorMessage = startLoadingMod(modVersion, current_realm)
     if errorMessage:
         from armagomen.battle_observer.core.loading_error import LoadingError
@@ -51,7 +50,6 @@ def onInit(modVersion, current_realm):
 
 
 def onFini(modVersion):
-    cachedVehicleData.fini()
     clearClientCache()
     cleanupObserverUpdates()
     cleanupUpdates()

@@ -25,6 +25,7 @@ def loadComponents(current_realm):
         'tank_carousel',
         'vehicle_battle_boosters',
         'wg_logs_fixes',
+        'hangar_efficiency'
     ) if current_realm != 'RU' else tuple()
     for moduleName in load:
         try:

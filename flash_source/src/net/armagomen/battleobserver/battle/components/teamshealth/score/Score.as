@@ -1,13 +1,9 @@
 package net.armagomen.battleobserver.battle.components.teamshealth.score
 {
 	import flash.display.*;
-	import flash.display.Sprite;
-	import flash.events.*;
 	import flash.filters.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.utils.Constants;
-	import net.armagomen.battleobserver.utils.TextExt;
-	import net.wg.gui.battle.components.*;
+	import net.armagomen.battleobserver.utils.*;
 	
 	/**
 	 * ...
@@ -42,7 +38,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 				this.addChild(item);
 			}
 			this.arrowDots.name = "arrowDots";
-			this.arrowDots.filters = [Constants.glowScore];
+			this.arrowDots.filters = [new GlowFilter(0, 0.6, 2, 2, 4)];
 			this.arrowDots.graphics.beginFill(0xFAFAFA, 1);
 			this.arrowDots.graphics.drawCircle(0, 10, 3);
 			this.arrowDots.graphics.drawCircle(0, 21, 3);

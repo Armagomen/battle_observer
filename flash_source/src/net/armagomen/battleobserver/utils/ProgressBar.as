@@ -46,7 +46,10 @@
 				this.bar.graphics.drawRect(0, 0, width, height);
 				this.bar.graphics.endFill();
 				this.addChild(this.bar);
-				this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime);
+				if (this.animationTime > 0)
+				{
+					this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime);
+				}
 			}
 		}
 		

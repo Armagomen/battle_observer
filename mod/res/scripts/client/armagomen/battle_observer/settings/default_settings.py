@@ -5,7 +5,7 @@ from Event import SafeEvent
 from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS,
     FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
-    SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS, DISTANCE, OWN_HEALTH, STATISTICS, AVG_EFFICIENCY_HANGAR,
+    SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS, DISTANCE, STATISTICS, AVG_EFFICIENCY_HANGAR,
     DISPERSION_TIMER
 )
 from constants import ATTACK_REASON, ATTACK_REASONS
@@ -318,7 +318,6 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: 350,
-            OWN_HEALTH.TEMPLATE: "%(health)s/%(maxHealth)s (%(percent)s%%)",
             GLOBAL.AVG_COLOR: {"saturation": 0.7, "brightness": 0.9}
         }
         self.minimap = {

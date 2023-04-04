@@ -1,9 +1,8 @@
 import math
-from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
-from armagomen.constants import GLOBAL, OWN_HEALTH, POSTMORTEM, VEHICLE
+from armagomen.constants import GLOBAL, POSTMORTEM
 from armagomen.utils.common import percentToRGB
 from constants import ARENA_PERIOD
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, getHealthPercent
@@ -11,15 +10,12 @@ from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
 
+TEMPLATE = "{}|{} - {}%"
+
 
 class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
     def __init__(self):
         super(OwnHealth, self).__init__()
-        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, **{
-            VEHICLE.CUR: GLOBAL.ZERO,
-            VEHICLE.MAX: GLOBAL.ZERO,
-            VEHICLE.PERCENT: GLOBAL.ZERO
-        })
         self.isAliveMode = True
         self.isBattlePeriod = False
         self.__maxHealth = GLOBAL.ZERO
@@ -82,10 +78,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if self.__maxHealth <= GLOBAL.ZERO:
             return
         health = normalizeHealth(health)
-        if self.macrosDict[VEHICLE.CUR] != health or self.macrosDict[VEHICLE.MAX] != self.__maxHealth:
-            percent = getHealthPercent(health, self.__maxHealth)
-            self.macrosDict[VEHICLE.CUR] = health
-            self.macrosDict[VEHICLE.MAX] = self.__maxHealth
-            self.macrosDict[VEHICLE.PERCENT] = int(math.ceil(percent * 100))
-            self.as_setOwnHealthS(percent, self.settings[OWN_HEALTH.TEMPLATE] % self.macrosDict,
-                                  self.getAVGColor(percent))
+        percent = getHealthPercent(health, self.__maxHealth)
+        int_percent = int(math.ceil(percent * 100))
+        self.as_setOwnHealthS(percent, TEMPLATE.format(health, self.__maxHealth, int_percent),
+                              self.getAVGColor(percent))

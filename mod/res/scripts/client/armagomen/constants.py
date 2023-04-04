@@ -276,12 +276,12 @@ BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
     "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI")
 
-LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME", "AVG_DATA"))("Observer_DateTimes_UI", "Observer_AvgData_UI")
+LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME",))("Observer_DateTimes_UI", )
 
 DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "DIST", "TANK_NAME"))("distance_to_enemy", "template",
                                                                              "distance", "name")
 
-OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME", "TEMPLATE"))("own_health", "template")
+OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME",))("own_health", )
 
 STATISTICS = namedtuple("STATISTICS", (
     "NAME", "STATISTIC_ENABLED", "CHANGE_VEHICLE_COLOR",
