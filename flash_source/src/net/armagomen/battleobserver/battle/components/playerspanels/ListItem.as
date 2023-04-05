@@ -11,7 +11,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var damage:TextExt        = null;
 		public var isEnemy:Boolean        = false;
 		
-		public function ListItem(enemy:Boolean, width:Number)
+		public function ListItem(enemy:Boolean, width:int)
 		{
 			super();
 			this.isEnemy = enemy;
@@ -71,7 +71,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		{
 			if (this.healthBar)
 			{
-				this.healthBar.setNewScale(percent * 0.01);
+				this.healthBar.setNewScale(percent * Constants.HUNDREDTH);
 				this.healthBar.setText(text);
 			}
 		}

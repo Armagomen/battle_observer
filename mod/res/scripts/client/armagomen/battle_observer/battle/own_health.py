@@ -1,4 +1,4 @@
-import math
+# coding=utf-8
 
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
@@ -17,7 +17,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.isAliveMode = True
         self.isBattlePeriod = False
         self.__maxHealth = GLOBAL.ZERO
-        self.__template = "{}|{} - {}%"
+        self.__template = "{:d} • {:.2%}"
 
     def updateVehicleParams(self, vehicle, *args):
         if self.__maxHealth != vehicle.descriptor.maxHealth:
@@ -76,7 +76,6 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             self.__maxHealth = health
         if self.__maxHealth <= GLOBAL.ZERO:
             return
-        health = normalizeHealth(health)
         percent = getHealthPercent(health, self.__maxHealth)
-        text = self.__template.format(health, self.__maxHealth, int(math.ceil(percent * 100)))
+        text = self.__template.format(normalizeHealth(health), percent)
         self.as_setOwnHealthS(percent, text, self.getAVGColor(percent))

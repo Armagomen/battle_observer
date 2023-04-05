@@ -60,7 +60,7 @@
 				var scale:Number = Math.max(0, newScale);
 				if (this.animationTime > 0)
 				{
-					this.animation.continueTo(scale, this.visible ? this.animationTime : 0.01);
+					this.animation.continueTo(scale, this.visible ? this.animationTime : Constants.HUNDREDTH);
 				}
 				else
 				{

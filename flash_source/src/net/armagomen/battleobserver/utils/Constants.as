@@ -14,6 +14,7 @@ package net.armagomen.battleobserver.utils
 		
 		public static const ALPHA:Number            = 0.6;
 		public static const BG_ALPHA:Number         = 0.35;
+		public static const HUNDREDTH:Number        = 0.01;
 		
 		public function Constants()
 		{
