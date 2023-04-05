@@ -9,13 +9,13 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 	{
 		private var healthBar:ProgressBar = null;
 		private var damage:TextExt        = null;
-		public var isEnemy:Boolean       = false;
+		public var isEnemy:Boolean        = false;
 		
-		public function ListItem(enemy:Boolean)
+		public function ListItem(enemy:Boolean, width:Number)
 		{
 			super();
 			this.isEnemy = enemy;
-			this.x = enemy ? -376 : 375;
+			this.x = enemy ? -width : width;
 		}
 		
 		public function updateDamage(text:String):void

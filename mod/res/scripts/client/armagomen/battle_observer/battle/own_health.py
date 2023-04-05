@@ -10,8 +10,6 @@ from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
 
-TEMPLATE = "{}|{} - {}%"
-
 
 class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
     def __init__(self):
@@ -19,6 +17,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.isAliveMode = True
         self.isBattlePeriod = False
         self.__maxHealth = GLOBAL.ZERO
+        self.__template = "{}|{} - {}%"
 
     def updateVehicleParams(self, vehicle, *args):
         if self.__maxHealth != vehicle.descriptor.maxHealth:
@@ -79,6 +78,5 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             return
         health = normalizeHealth(health)
         percent = getHealthPercent(health, self.__maxHealth)
-        int_percent = int(math.ceil(percent * 100))
-        self.as_setOwnHealthS(percent, TEMPLATE.format(health, self.__maxHealth, int_percent),
-                              self.getAVGColor(percent))
+        text = self.__template.format(health, self.__maxHealth, int(math.ceil(percent * 100)))
+        self.as_setOwnHealthS(percent, text, self.getAVGColor(percent))
