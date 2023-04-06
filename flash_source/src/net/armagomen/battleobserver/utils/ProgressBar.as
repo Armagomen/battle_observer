@@ -12,12 +12,10 @@
 	public class ProgressBar extends Sprite
 	{
 		private var bar:Shape            = new Shape();
-		private var background:Shape     = new Shape();
 		private var outline:Shape        = new Shape();
 		private var uiText:TextExt       = null;
 		private var animation:Tween      = null;
 		private var barColor:uint        = 0;
-		private var customColor:Boolean  = false;
 		private var animationTime:Number = 1.0;
 		private var barEnabled:Boolean   = true;
 		
@@ -38,10 +36,9 @@
 			else
 			{
 				this.barColor = Utils.colorConvert(color);
-				this.background.graphics.beginFill(Utils.colorConvert(bgColor), Constants.BG_ALPHA);
-				this.background.graphics.drawRect(0, 0, width, height);
-				this.background.graphics.endFill();
-				this.addChild(this.background);
+				this.graphics.beginFill(Utils.colorConvert(bgColor), Constants.BG_ALPHA);
+				this.graphics.drawRect(0, 0, width, height);
+				this.graphics.endFill();
 				this.bar.graphics.beginFill(this.barColor, Constants.ALPHA);
 				this.bar.graphics.drawRect(0, 0, width, height);
 				this.bar.graphics.endFill();
@@ -121,7 +118,6 @@
 		{
 			this.removeChildren();
 			this.bar = null;
-			this.background = null;
 			this.outline = null;
 			this.uiText = null;
 			if (this.animation)

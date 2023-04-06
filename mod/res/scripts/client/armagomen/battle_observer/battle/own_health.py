@@ -17,7 +17,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.isAliveMode = True
         self.isBattlePeriod = False
         self.__maxHealth = GLOBAL.ZERO
-        self.__template = "{:d} • {:.2%}"
+        self.__template = "{} • {:.2%}"
 
     def updateVehicleParams(self, vehicle, *args):
         if self.__maxHealth != vehicle.descriptor.maxHealth:
@@ -77,5 +77,5 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         if self.__maxHealth <= GLOBAL.ZERO:
             return
         percent = getHealthPercent(health, self.__maxHealth)
-        text = self.__template.format(normalizeHealth(health), percent)
+        text = self.__template.format(int(normalizeHealth(health)), percent)
         self.as_setOwnHealthS(percent, text, self.getAVGColor(percent))
