@@ -194,7 +194,7 @@ class DAMAGE_LOG:
     TOTAL_DAMAGE = "totalDamage"
     USER_NAME = "userName"
     VEHICLE_CLASS = "vehicleClass"
-    WARNING_MESSAGE = "incorrect event parameter for in damage log module {}"
+    WARNING_MESSAGE = "log_extended: incorrect event parameter in getLogData module {}"
     WG_ASSIST = "wg_log_hide_assist"
     WG_BLOCKED = "wg_log_hide_block"
     WG_CRITICS = "wg_log_hide_critics"
