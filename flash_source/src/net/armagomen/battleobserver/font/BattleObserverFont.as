@@ -11,10 +11,9 @@
  */
 package net.armagomen.battleobserver.font
 {
-	import flash.display.Sprite;
 	import flash.text.Font;
 	
-	public class BattleObserverFont extends Sprite
+	public class BattleObserverFont
 	{
 		/*
 		   Common unicode ranges:

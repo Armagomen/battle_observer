@@ -2,14 +2,13 @@ from collections import defaultdict, namedtuple
 
 from armagomen.battle_observer.core import cachedVehicleData
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
-from armagomen.constants import DAMAGE_LOG, GLOBAL, COLORS
+from armagomen.constants import DAMAGE_LOG, GLOBAL, COLORS, IMAGE_DIR
 from armagomen.utils.common import logDebug, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
 from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
-from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 from helpers import i18n
 
 _SHELL_TYPES_TO_STR = {
@@ -39,20 +38,10 @@ def getI18nShellName(shellType):
     return i18n.makeString(_SHELL_TYPES_TO_STR[shellType])
 
 
-__ICON_SYMBOL = "<font face='BattleObserver' size='18'>{}</font>"
-VEHICLE_TYPE_TO_CLASS_ICON = {
-    VEHICLE_CLASS_NAME.AT_SPG: __ICON_SYMBOL.format("J"),
-    VEHICLE_CLASS_NAME.SPG: __ICON_SYMBOL.format("S"),
-    VEHICLE_CLASS_NAME.HEAVY_TANK: __ICON_SYMBOL.format("H"),
-    VEHICLE_CLASS_NAME.LIGHT_TANK: __ICON_SYMBOL.format("L"),
-    VEHICLE_CLASS_NAME.MEDIUM_TANK: __ICON_SYMBOL.format("M")
-}
-
-
 def getVehicleClassIcon(classTag):
-    if classTag:
-        return VEHICLE_TYPE_TO_CLASS_ICON[classTag]
-    return __ICON_SYMBOL.format("U")
+    if not classTag:
+        return GLOBAL.EMPTY_LINE
+    return "<img src='img://{}/vehicle_types/{}.png' width='20' height='20' vspace='-6'>".format(IMAGE_DIR, classTag)
 
 
 class DamageLog(DamageLogsMeta):

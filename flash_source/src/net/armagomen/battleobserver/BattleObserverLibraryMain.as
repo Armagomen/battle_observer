@@ -22,7 +22,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
 	import net.armagomen.battleobserver.battle.wgcomponents.minimapZoom;
-	import net.armagomen.battleobserver.font.BattleObserverFont;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
@@ -33,7 +32,6 @@ package net.armagomen.battleobserver
 	{
 		private var mapZoom:minimapZoom             = null;
 		private var statisticsBO:StatisticsAndIcons = null;
-		private var __font:BattleObserverFont       = new BattleObserverFont();
 		
 		public function BattleObserverLibraryMain()
 		{
