@@ -8,14 +8,11 @@ from gui.impl import backport
 from gui.impl.gen import R
 from helpers.time_utils import getTimeDeltaFromNow, makeLocalServerTime, ONE_DAY, ONE_HOUR, ONE_MINUTE
 
-TEMPLATES = namedtuple("TEMPLATES", ("DAYS", "HOURS", "MINUTES"))(
+TEMPLATES = namedtuple("TEMPLATES", ("DAYS", "HOURS"))(
     "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d {}. %(hours)02d:%(min)02d:%(sec)02d</font>".format(
         backport.text(R.strings.menu.header.account.premium.days())),
     "<font face='$TitleFont' size='16' color='#FAFAFA'>%(hours)d {}. %(min)02d:%(sec)02d</font>".format(
-        backport.text(R.strings.menu.header.account.premium.hours())),
-    "<font face='$TitleFont' size='16' color='#FAFAFA'>{}. %(sec)02d</font>".format(
-        backport.text(R.strings.menu.headerButtons.battle.types.ranked.availability.min()).replace(")s", ")02d")
-    )
+        backport.text(R.strings.menu.header.account.premium.hours()))
 )
 
 
@@ -31,10 +28,8 @@ class PremiumTime(object):
         delta = float(getTimeDeltaFromNow(makeLocalServerTime(timeDelta)))
         if delta > ONE_DAY:
             template = TEMPLATES.DAYS
-        elif delta > ONE_HOUR:
-            template = TEMPLATES.HOURS
         else:
-            template = TEMPLATES.MINUTES
+            template = TEMPLATES.HOURS
         self.macros["days"], delta = divmod(delta, ONE_DAY)
         self.macros["hours"], delta = divmod(delta, ONE_HOUR)
         self.macros["min"], self.macros["sec"] = divmod(delta, ONE_MINUTE)
