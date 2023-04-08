@@ -1,10 +1,8 @@
 package net.armagomen.battleobserver.battle.components.teamshealth
 {
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.interfaces.ITeamHealth;
-	import net.wg.gui.battle.random.views.fragCorrelationBar.FragCorrelationBar;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
 	public class TeamsHealthUI extends ObserverBattleDisplayable
@@ -23,16 +21,24 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.removed = false;
 			var settings:Object = this.getSettings();
 			this.x = App.appWidth >> 1;
-			this.hpBars = this.createHpBars(settings.style);
-			this.addChild(this.hpBars as Sprite);
+			
+			if (settings.style == "league")
+			{
+				this.hpBars = this.addChild(new League(this.isColorBlind(), this.getColors().global)) as ITeamHealth;
+			}
+			else
+			{
+				this.hpBars = this.addChild(new Default(this.isColorBlind(), this.getColors().global)) as ITeamHealth;
+			}
 			this.as_updateCorrelationBar();
 		}
 		
 		public function as_updateCorrelationBar():void
 		{
-			var page:* = parent;
+			var page:*        = parent;
 			var correlation:* = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-			if (!this.removed){
+			if (!this.removed)
+			{
 				correlation.removeChild(correlation.getChildAt(0));
 				correlation.removeChild(correlation.greenBackground);
 				correlation.removeChild(correlation.redBackground);
@@ -44,8 +50,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 				correlation.removeChild(correlation.enemyTeamHealthBar);
 				this.removed = true;
 			}
-			correlation._allyVehicleMarkersList._markerStartPosition = -30;
-			correlation._enemyVehicleMarkersList._markerStartPosition = 0;
+			correlation._allyVehicleMarkersList._markerStartPosition = -31;
+			correlation._enemyVehicleMarkersList._markerStartPosition = 1;
 			correlation._allyVehicleMarkersList._isHPBarEnabled = true;
 			correlation._enemyVehicleMarkersList._isHPBarEnabled = true;
 			correlation._allyVehicleMarkersList.sort(correlation._allyVehicleMarkersList._vehicleIDs);
@@ -59,17 +65,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.hpBars.remove();
 			this.hpBars = null;
 			this.removed = false;
-		}
-		
-		private function createHpBars(style:String):ITeamHealth
-		{
-			switch (style)
-			{
-			case "league": 
-				return new League(this.isColorBlind(), this.getColors().global);
-			default: 
-				return new Default(this.isColorBlind(), this.getColors().global);
-			}
 		}
 		
 		public function as_colorBlind(enabled:Boolean):void
