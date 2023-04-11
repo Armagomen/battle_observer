@@ -40,9 +40,9 @@ CreateAppDir=yes
 AppendDefaultDirName=no
 ShowLanguageDialog=yes
 Uninstallable=yes
-DisableDirPage=no
+//DisableDirPage=no
 UsePreviousAppDir=yes
-AlwaysShowComponentsList=yes
+//AlwaysShowComponentsList=yes
 
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 

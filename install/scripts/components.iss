@@ -6,12 +6,10 @@
 Name: "armagomen"; Description: {cm:types_armagomen};
 Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
-//
 [Components]
-Name: debug_panel; Description: {cm:debug_panel}; Types: "armagomen";
-//Name: debug_panel/minimal; Description: {cm:debug_panel};
-//Name: debug_panel/modern; Description: {cm:debug_panel};
-
+Name: debug_panel; Description: {cm:debug_panel}; Flags: checkablealone disablenouninstallwarning; 
+Name: debug_panel/minimal; Description: minimal; Flags: exclusive disablenouninstallwarning;
+Name: debug_panel/modern; Description: modern; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: disablenouninstallwarning; Types: "armagomen";
@@ -21,9 +19,11 @@ Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning; Types: "
 Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
-Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen user";
 Name: flight_time; Description: {cm:flight_time}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hp_bars; Description: {cm:hp_bars}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hp_bars; Description: {cm:hp_bars}; Flags: checkablealone disablenouninstallwarning;
+Name: hp_bars/normal; Description: normal; Flags: exclusive disablenouninstallwarning;
+Name: hp_bars/league; Description: league; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
 Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: main; Description: {cm:main}; Flags: disablenouninstallwarning; Types: "armagomen";
@@ -39,11 +39,11 @@ Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenounin
 Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning;
 Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning; Types: "armagomen";
 
-
 [Files]
 Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
 Source: "{#configs}\load.json"; DestDir: "{#configs_dir}"; Flags: ignoreversion;
-Source: "{#configs}\armagomen\debug_panel.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: debug_panel;
+Source: "{#configs}\armagomen\debug_panel_minimal.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"debug_panel.json"; Flags: ignoreversion; Components: debug_panel/minimal;
+Source: "{#configs}\armagomen\debug_panel_modern.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"debug_panel.json"; Flags: ignoreversion; Components: debug_panel/modern;
 Source: "{#configs}\armagomen\sixth_sense.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: sixth_sense;
 Source: "{#configs}\armagomen\arcade_camera.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: arcade_camera;
 Source: "{#configs}\armagomen\armor_calculator.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: armor_calculator;
@@ -55,7 +55,8 @@ Source: "{#configs}\armagomen\dispersion_timer.json"; DestDir: "{#configs_dir}\a
 Source: "{#configs}\armagomen\distance_to_enemy.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: distance_to_enemy;
 Source: "{#configs}\armagomen\effects.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: effects;
 Source: "{#configs}\armagomen\flight_time.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: flight_time;
-Source: "{#configs}\armagomen\hp_bars.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: hp_bars;
+Source: "{#configs}\armagomen\hp_bars_normal.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"hp_bars.json"; Flags: ignoreversion; Components: hp_bars/normal;
+Source: "{#configs}\armagomen\hp_bars_league.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"hp_bars.json"; Flags: ignoreversion; Components: hp_bars/league;
 Source: "{#configs}\armagomen\log_extended.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: log_extended;
 Source: "{#configs}\armagomen\log_total.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: log_total;
 Source: "{#configs}\armagomen\main.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: main;
@@ -70,4 +71,3 @@ Source: "{#configs}\armagomen\tank_carousel.json"; DestDir: "{#configs_dir}\arma
 Source: "{#configs}\armagomen\team_bases_panel.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: team_bases_panel;
 Source: "{#configs}\armagomen\wg_logs.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: wg_logs;
 Source: "{#configs}\armagomen\zoom.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: zoom;
-
