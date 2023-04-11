@@ -4,7 +4,7 @@
 #define MyAppName "mod_Battle_Observer"
 #define MyAppVersion "1.40.32"
 #define MyAppPublisher "Armagomen, Inc."
-#define MyAppURL "https://github.com/Armagomen/battle_observer/releases"
+#define MyAppURL "https://github.com/Armagomen/battle_observer"
 #define MyDonateURL "https://donatua.com/to/armagomen"
 #define WOT_VERSION_PATTERN "1.20.0.*"
 #define APP_DIR_UNINST MyAppName + "_uninst"
@@ -23,8 +23,8 @@ VersionInfoVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
-AppSupportURL={#MyAppURL}
-AppUpdatesURL={#MyAppURL}
+AppSupportURL=https://discord.gg/Nma5T5snKW
+AppUpdatesURL={#MyAppURL}+/releases/latest/
 DefaultGroupName=Mod Battle Observer
 DisableProgramGroupPage=yes
 InfoBeforeFile=..\EULA_EN.txt
