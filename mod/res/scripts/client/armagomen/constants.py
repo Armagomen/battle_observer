@@ -49,7 +49,7 @@ URLS = namedtuple("URLS", (
    "https://www.patreon.com/armagomen",
    "https://discord.gg/Nma5T5snKW",
    "https://github.com/Armagomen/battle_observer/releases/latest/download/AutoUpdate.zip",
-   "https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip")
+   "https://github.com/Armagomen/battle_observer/releases/latest/download/mod_Battle_Observer_v.{}.exe")
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")

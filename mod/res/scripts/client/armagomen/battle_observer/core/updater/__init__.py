@@ -109,7 +109,7 @@ class Updater(DownloadThread):
             new_version = response_data.get('tag_name', self.version)
             if self.tupleVersion(self.version) < self.tupleVersion(new_version):
                 logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
-                self.showUpdateDialog()
+                self.showUpdateDialog(new_version)
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
         logDebug('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode,
@@ -126,10 +126,10 @@ class Updater(DownloadThread):
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
     @wg_async
-    def showUpdateDialog(self):
-        title = self.i18n['titleNEW'].format(self.updateData.get('tag_name', self.version))
+    def showUpdateDialog(self, ver):
+        title = self.i18n['titleNEW'].format(self.updateData.get('tag_name', ver))
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, git_message)
-        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, URLS.HANDLE_UPDATE))
+        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, URLS.HANDLE_UPDATE.format(ver)))
         if result:
             self.startDownload()
