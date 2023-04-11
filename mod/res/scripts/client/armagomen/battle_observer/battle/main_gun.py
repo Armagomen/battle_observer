@@ -56,7 +56,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self.as_gunDataS(self.gunLeft, self.gunScore, self._warning)
 
     def onPlayerDamaged(self, attackerID, damage):
-        if damage > self.gunScore and self._arenaDP.isAlly(attackerID) and attackerID != self.playerVehicleID:
+        if damage > self.gunScore and attackerID != self.playerVehicleID:
             self.gunScore = damage
             self.updateMainGun()
 
