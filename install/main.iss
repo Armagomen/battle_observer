@@ -49,6 +49,15 @@ UninstallFilesDir={app}\{#APP_DIR_UNINST}
 [Run]
 Filename: {#MyDonateURL}; Description: "{cm:open_website}"; Flags: postinstall nowait shellexec;
 
+[InstallDelete]
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\me.poliroid.modslistapi*.wotmod"
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\polarfox.vxSettingsApi*.wotmod"
+Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*.*"
+
+[UninstallDelete]
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
+
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
 Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"
