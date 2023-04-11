@@ -1,38 +1,43 @@
-#define configs "..\..\output_data\mods\configs\mod_battle_observer"
 #define configs_dir "{app}\mods\configs\mod_battle_observer"
-#define mod_source "..\..\output_data\mods\" + WOT_VERSION
+#define mod_source "..\..\output_data\mods"
+#define configs "..\..\output_data\configs\mod_battle_observer"
 
 [Types]
-Name: "custom"; Description: "Вибіркове встановлення";Flags: iscustom;
+Name: "armagomen"; Description: {cm:types_armagomen};
+Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
+//
 [Components]
-Name: debug_panel; Description: {cm:debug_panel}; Flags: disablenouninstallwarning; Types: custom;
-Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning; Types: custom;
-Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: custom;
-Name: armor_calculator; Description: {cm:armor_calculator}; Flags: disablenouninstallwarning; Types: custom;
-Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning; Types: custom;
-Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: custom;
-Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning; Types: custom;
-Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: disablenouninstallwarning; Types: custom;
-Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: custom;
-Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning; Types: custom;
-Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: custom;
-Name: flight_time; Description: {cm:flight_time}; Flags: disablenouninstallwarning; Types: custom;
-Name: hp_bars; Description: {cm:hp_bars}; Flags: disablenouninstallwarning; Types: custom;
-Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning; Types: custom;
-Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: custom;
-Name: main; Description: {cm:main}; Flags: disablenouninstallwarning; Types: custom;
-Name: main_gun; Description: {cm:main_gun}; Flags: disablenouninstallwarning; Types: custom;
-Name: minimap; Description: {cm:minimap}; Flags: disablenouninstallwarning; Types: custom;
-Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning; Types: custom;
-Name: players_panels; Description: {cm:players_panels}; Flags: disablenouninstallwarning; Types: custom;
-Name: service_channel_filter; Description: {cm:service_channel_filter}; Flags: disablenouninstallwarning; Types: custom;
-Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning; Types: custom;
-Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenouninstallwarning; Types: custom;
-Name: tank_carousel; Description: {cm:tank_carousel}; Flags: disablenouninstallwarning; Types: custom;
-Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning; Types: custom;
-Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning; Types: custom;
-Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning; Types: custom;
+Name: debug_panel; Description: {cm:debug_panel}; Types: "armagomen";
+//Name: debug_panel/minimal; Description: {cm:debug_panel};
+//Name: debug_panel/modern; Description: {cm:debug_panel};
+
+Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: armor_calculator; Description: {cm:armor_calculator}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
+Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: flight_time; Description: {cm:flight_time}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hp_bars; Description: {cm:hp_bars}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main; Description: {cm:main}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main_gun; Description: {cm:main_gun}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: minimap; Description: {cm:minimap}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning;
+Name: players_panels; Description: {cm:players_panels}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: service_channel_filter; Description: {cm:service_channel_filter}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: tank_carousel; Description: {cm:tank_carousel}; Flags: disablenouninstallwarning;
+Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning;
+Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning; Types: "armagomen";
 
 
 [Files]

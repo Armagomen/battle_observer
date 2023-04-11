@@ -5,9 +5,8 @@
 #define MyAppVersion "1.40.32"
 #define MyAppPublisher "Armagomen, Inc."
 #define MyAppURL "https://github.com/Armagomen/battle_observer/releases"
-#define WOT_VERSION "1.20.0.1"
-#define WOT_VERSION_PATTERN WOT_VERSION + "*"
-#define APP_DONATE "https://donatua.com/to/armagomen"
+#define MyDonateURL "https://donatua.com/to/armagomen"
+#define WOT_VERSION_PATTERN "1.20.0.*"
 #define APP_DIR_UNINST MyAppName + "_uninst"
 #define OPENWGUTILS_DIR_SRC    "dll"
 #define OPENWGUTILS_DIR_UNINST APP_DIR_UNINST
@@ -20,6 +19,7 @@
 AppId={{E4911938-A29D-4904-8878-99DEEBDE03D6}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+VersionInfoVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -42,11 +42,12 @@ ShowLanguageDialog=yes
 Uninstallable=yes
 DisableDirPage=no
 UsePreviousAppDir=yes
+AlwaysShowComponentsList=yes
 
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 
 [Run]
-Filename: {#APP_DONATE}; Description: "{cm:open_website}"; Flags: postinstall nowait shellexec;
+Filename: {#MyDonateURL}; Description: "{cm:open_website}"; Flags: postinstall nowait shellexec;
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"
