@@ -16,7 +16,9 @@ Name: armor_calculator; Description: {cm:armor_calculator}; Flags: disablenounin
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: checkablealone disablenouninstallwarning; Types: "armagomen";
+Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
+Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Flags: exclusive disablenouninstallwarning;
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen user";
@@ -50,7 +52,8 @@ Source: "{#configs}\armagomen\armor_calculator.json"; DestDir: "{#configs_dir}\a
 Source: "{#configs}\armagomen\avg_efficiency_in_hangar.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: avg_efficiency_in_hangar;
 Source: "{#configs}\armagomen\battle_timer.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: battle_timer;
 Source: "{#configs}\armagomen\clock.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: clock;
-Source: "{#configs}\armagomen\dispersion_circle.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: dispersion_circle;
+Source: "{#configs}\armagomen\dispersion_circle_replace.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"dispersion_circle.json"; Flags: ignoreversion; Components: dispersion_circle/replace;
+Source: "{#configs}\armagomen\dispersion_circle_server.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"dispersion_circle.json"; Flags: ignoreversion; Components: dispersion_circle/server;
 Source: "{#configs}\armagomen\dispersion_timer.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: dispersion_timer;
 Source: "{#configs}\armagomen\distance_to_enemy.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: distance_to_enemy;
 Source: "{#configs}\armagomen\effects.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: effects;

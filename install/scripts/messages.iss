@@ -1,56 +1,58 @@
-[CustomMessages]
-uk.openwg_browse=Огляд...
-uk.openwg_client_not_found=Клієнт гри не виявлено у вказаній папці.
-uk.openwg_unknown=Невідомо
-uk.openwg_branch_release=Реліз
-uk.openwg_branch_ct=Загальний тест
-uk.openwg_branch_st=Супер тест
-uk.openwg_branch_sb=Пісочниця
+п»ї[CustomMessages]
+uk.openwg_browse=РћРіР»СЏРґ...
+uk.openwg_client_not_found=РљР»С–С”РЅС‚ РіСЂРё РЅРµ РІРёСЏРІР»РµРЅРѕ Сѓ РІРєР°Р·Р°РЅС–Р№ РїР°РїС†С–.
+uk.openwg_unknown=РќРµРІС–РґРѕРјРѕ
+uk.openwg_branch_release=Р РµР»С–Р·
+uk.openwg_branch_ct=Р—Р°РіР°Р»СЊРЅРёР№ С‚РµСЃС‚
+uk.openwg_branch_st=РЎСѓРїРµСЂ С‚РµСЃС‚
+uk.openwg_branch_sb=РџС–СЃРѕС‡РЅРёС†СЏ
 
 
 en.version_not_match=This client is not supported.%n%nThis installer only supports WoT v{#WOT_VERSION_PATTERN}
 en.client_started=The selected client is running.%n%nDo you want to terminate the selected client?
 
-ru.version_not_match=Выбранный клиент не поддерживается.%n%nЭтот установщик поддерживает только WoT v{#WOT_VERSION_PATTERN}
-ru.client_started=Выбранный клиент запущен.%n%nЖелаете ли вы закрыть выбранный клиент?
+ru.version_not_match=Р’С‹Р±СЂР°РЅРЅС‹Р№ РєР»РёРµРЅС‚ РЅРµ РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ.%n%nР­С‚РѕС‚ СѓСЃС‚Р°РЅРѕРІС‰РёРє РїРѕРґРґРµСЂР¶РёРІР°РµС‚ С‚РѕР»СЊРєРѕ WoT v{#WOT_VERSION_PATTERN}
+ru.client_started=Р’С‹Р±СЂР°РЅРЅС‹Р№ РєР»РёРµРЅС‚ Р·Р°РїСѓС‰РµРЅ.%n%nР–РµР»Р°РµС‚Рµ Р»Рё РІС‹ Р·Р°РєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Р№ РєР»РёРµРЅС‚?
 
-uk.version_not_match=Клієнт не підтримується.%n%nЦей установник підтримує лише WoT v{#WOT_VERSION_PATTERN}
-uk.client_started=Клієнт запущено.%n%nЧи бажаєте ви закрити клієнт?
+uk.version_not_match=РљР»С–С”РЅС‚ РЅРµ РїС–РґС‚СЂРёРјСѓС”С‚СЊСЃСЏ.%n%nР¦РµР№ СѓСЃС‚Р°РЅРѕРІРЅРёРє РїС–РґС‚СЂРёРјСѓС” Р»РёС€Рµ WoT v{#WOT_VERSION_PATTERN}
+uk.client_started=РљР»С–С”РЅС‚ Р·Р°РїСѓС‰РµРЅРѕ.%n%nР§Рё Р±Р°Р¶Р°С”С‚Рµ РІРё Р·Р°РєСЂРёС‚Рё РєР»С–С”РЅС‚?
 
-uk.open_website=Підтримати розробника донатом.
+uk.open_website=РџС–РґС‚СЂРёРјР°С‚Рё СЂРѕР·СЂРѕР±РЅРёРєР° РґРѕРЅР°С‚РѕРј.
 en.open_website=Support the developer with a donation.
 ru.open_website=Support the developer with a donation.
 
 
 en.types_armagomen=Everything is like armagomen
 en.types_user=Custom installation
-uk.types_armagomen=Все як у armagomen
-uk.types_user=Вибіркове встановлення
+uk.types_armagomen=Р’СЃРµ СЏРє Сѓ armagomen
+uk.types_user=Р’РёР±С–СЂРєРѕРІРµ РІСЃС‚Р°РЅРѕРІР»РµРЅРЅСЏ
 
-uk.debug_panel=Змінена панель FPS/PING
-uk.sixth_sense=Шосте відчуття з таймером 
-uk.arcade_camera=Командирська камера
-uk.armor_calculator=Калькулятор наведеної броні
-uk.avg_efficiency_in_hangar=Показники ефективності танка у гаражі
-uk.battle_timer=Змінений таймер бою
-uk.clock=Годинник у гаражі та бою
-uk.dispersion_circle=Налаштування кола зведення (зменшення та серверний приціл)
-uk.dispersion_timer=Таймер зведення 
-uk.distance_to_enemy=Дистанція до найближчого виявленого ворога
-uk.effects=Налаштування ефектів
-uk.flight_time=Час польоту снаряду
-uk.hp_bars=Панель міцності команд
-uk.log_extended=Розширені логи шкоди
-uk.log_total=Лог ефективності сумарний
-uk.main=Додаткові налаштування
-uk.main_gun=Основний калібр
-uk.minimap=Міні-мапа
-uk.own_health=Міцність танка гравця
-uk.players_panels=Панелі зи списком команд (вуха)
-uk.service_channel_filter=Фільтр системного каналу
-uk.statistics=Статистика WRT та іконки танків
-uk.strategic_camera=Артилерійська камера
-uk.tank_carousel=Карусель танків
-uk.team_bases_panel=Панель захоплення бази
-uk.wg_logs=Налаштування логів від WG
-uk.zoom=Налаштування режиму снайпера
+uk.debug_panel=Р—РјС–РЅРµРЅР° РїР°РЅРµР»СЊ FPS/PING
+uk.sixth_sense=РЁРѕСЃС‚Рµ РІС–РґС‡СѓС‚С‚СЏ Р· С‚Р°Р№РјРµСЂРѕРј 
+uk.arcade_camera=РљРѕРјР°РЅРґРёСЂСЃСЊРєР° РєР°РјРµСЂР°
+uk.armor_calculator=РљР°Р»СЊРєСѓР»СЏС‚РѕСЂ РЅР°РІРµРґРµРЅРѕС— Р±СЂРѕРЅС–
+uk.avg_efficiency_in_hangar=РџРѕРєР°Р·РЅРёРєРё РµС„РµРєС‚РёРІРЅРѕСЃС‚С– С‚Р°РЅРєР° Сѓ РіР°СЂР°Р¶С–
+uk.battle_timer=Р—РјС–РЅРµРЅРёР№ С‚Р°Р№РјРµСЂ Р±РѕСЋ
+uk.clock=Р“РѕРґРёРЅРЅРёРє Сѓ РіР°СЂР°Р¶С– С‚Р° Р±РѕСЋ
+uk.dispersion_circle=РќР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ РєРѕР»Р° Р·РІРµРґРµРЅРЅСЏ (Р·РјРµРЅС€РµРЅРЅСЏ С‚Р° СЃРµСЂРІРµСЂРЅРёР№ РїСЂРёС†С–Р»)
+uk.dispersion_circle_replace=Р—Р°РјС–РЅРёС‚Рё РѕСЂРёРіС–РЅР°Р»СЊРЅРµ РєРѕР»Рѕ Р·РІРµРґРµРЅРЅСЏ Р·РјРµРЅСЊС€РµРЅРёРј
+uk.dispersion_circle_server=Р”РѕРґР°С‚Рё Р·РјРµРЅС€РµРЅРёРµ СЃРµСЂРІРµСЂРЅРёРµ РєРѕР»Рѕ Р·РІРµРґРµРЅРЅСЏ
+uk.dispersion_timer=РўР°Р№РјРµСЂ Р·РІРµРґРµРЅРЅСЏ 
+uk.distance_to_enemy=Р”РёСЃС‚Р°РЅС†С–СЏ РґРѕ РЅР°Р№Р±Р»РёР¶С‡РѕРіРѕ РІРёСЏРІР»РµРЅРѕРіРѕ РІРѕСЂРѕРіР°
+uk.effects=РќР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ РµС„РµРєС‚С–РІ
+uk.flight_time=Р§Р°СЃ РїРѕР»СЊРѕС‚Сѓ СЃРЅР°СЂСЏРґСѓ
+uk.hp_bars=РџР°РЅРµР»СЊ РјС–С†РЅРѕСЃС‚С– РєРѕРјР°РЅРґ
+uk.log_extended=Р РѕР·С€РёСЂРµРЅС– Р»РѕРіРё С€РєРѕРґРё
+uk.log_total=Р›РѕРі РµС„РµРєС‚РёРІРЅРѕСЃС‚С– СЃСѓРјР°СЂРЅРёР№
+uk.main=Р”РѕРґР°С‚РєРѕРІС– РЅР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ
+uk.main_gun=РћСЃРЅРѕРІРЅРёР№ РєР°Р»С–Р±СЂ
+uk.minimap=РњС–РЅС–-РјР°РїР°
+uk.own_health=РњС–С†РЅС–СЃС‚СЊ С‚Р°РЅРєР° РіСЂР°РІС†СЏ
+uk.players_panels=РџР°РЅРµР»С– Р·Рё СЃРїРёСЃРєРѕРј РєРѕРјР°РЅРґ (РІСѓС…Р°)
+uk.service_channel_filter=Р¤С–Р»СЊС‚СЂ СЃРёСЃС‚РµРјРЅРѕРіРѕ РєР°РЅР°Р»Сѓ
+uk.statistics=РЎС‚Р°С‚РёСЃС‚РёРєР° WRT С‚Р° С–РєРѕРЅРєРё С‚Р°РЅРєС–РІ
+uk.strategic_camera=РђСЂС‚РёР»РµСЂС–Р№СЃСЊРєР° РєР°РјРµСЂР°
+uk.tank_carousel=РљР°СЂСѓСЃРµР»СЊ С‚Р°РЅРєС–РІ
+uk.team_bases_panel=РџР°РЅРµР»СЊ Р·Р°С…РѕРїР»РµРЅРЅСЏ Р±Р°Р·Рё
+uk.wg_logs=РќР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ Р»РѕРіС–РІ РІС–Рґ WG
+uk.zoom=РќР°Р»Р°С€С‚СѓРІР°РЅРЅСЏ СЂРµР¶РёРјСѓ СЃРЅР°Р№РїРµСЂР°
