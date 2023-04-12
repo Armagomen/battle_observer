@@ -3,7 +3,7 @@ from time import strftime
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import CLOCK, GLOBAL
-from armagomen.utils.common import checkDecoder
+from armagomen.utils.common import checkDecoder, logDebug
 from armagomen.utils.timers import CyclicTimerEvent
 
 
@@ -25,6 +25,7 @@ class DateTimes(DateTimesMeta):
 
     def updateDecoder(self):
         self.coding = checkDecoder(strftime(self.config[CLOCK.FORMAT]))
+        logDebug("DateTimes: coding={}", self.coding)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == CLOCK.NAME:
@@ -41,6 +42,4 @@ class DateTimes(DateTimesMeta):
 
     def updateTimeData(self):
         _time = strftime(self.config[CLOCK.FORMAT])
-        if self.coding is not None:
-            _time = _time.encode(encoding=self.coding, errors="ignore").decode(errors="ignore")
-        self.as_setDateTimeS(_time)
+        self.as_setDateTimeS(unicode(_time, self.coding))
