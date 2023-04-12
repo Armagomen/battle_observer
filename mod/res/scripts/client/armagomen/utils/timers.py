@@ -47,14 +47,14 @@ class SixthSenseTimer(Timer):
         self.__soundID = soundID
 
     def handleTimer(self, seconds):
-        self.stop()
+        self.cancelCallback()
         raise NotImplementedError
 
     def hide(self):
-        self.stop()
+        self.cancelCallback()
 
     def timeTicking(self, seconds):
-        self._callback = None
+        self.cancelCallback()
         if seconds <= CONSTANTS.ZERO:
             return self.hide()
         self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE))
@@ -63,7 +63,6 @@ class SixthSenseTimer(Timer):
             self.callWWISE(self.__soundID)
 
     def show(self, seconds):
-        self.start()
         self.timeTicking(seconds)
 
     def destroyTimer(self):

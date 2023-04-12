@@ -274,10 +274,14 @@ def overrideMethod(wg_class, method_name="__init__"):
 
 
 def checkDecoder(_string):
+    coding = None
     for char in _string:
         if char not in printable:
-            return locale.getpreferredencoding()
-    return None
+            coding = locale.getpreferredencoding()
+            break
+    if coding == "cp65001":
+        coding = "UTF-8"
+    return coding
 
 
 def convertDictToNamedtuple(dictionary):
