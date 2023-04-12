@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "height": 24,
+  "text_settings": {
+    "bold": false,
+    "color": "#FAFAFA",
+    "font": "$TitleFont",
+    "italic": false,
+    "size": 16,
+    "underline": false,
+    "y": 0
+  },
+  "width": 400,
+  "y": 45
+}

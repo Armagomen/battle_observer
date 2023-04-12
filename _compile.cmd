@@ -2,7 +2,7 @@
 set ModVersion=1.40.32
 set GameVersion=1.20.0.1
 set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
-set OutputDir=..\output_data\mods\
+set OutputDir=..\output_data
 
 REM set GameVersion="1.18.1.0 Common Test"
 REM set GameInstalled_ModsDir=C:\Games\World_of_Tanks_CT\mods

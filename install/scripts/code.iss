@@ -1,6 +1,7 @@
-[Files]
-//Source: "img\splashscreen.png"; Flags: dontcopy noencryption deleteafterinstall
-//Source: "img\splashscreen_uninst.png"; DestDir: "{app}\{#APP_DIR_UNINST}"; Flags: noencryption;
+//[Files]
+//Source: img\splashscreen.png; Flags: dontcopy noencryption deleteafterinstall
+//Source: img\splashscreen_uninst.png; DestDir: "{app}\{#APP_DIR_UNINST}"; Flags: noencryption;
+//Source: dll\isgsg.dll; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
 
 [Code]
 

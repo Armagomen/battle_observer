@@ -19,5 +19,5 @@ class DateTimes(DateTimesMeta, IAbstractPeriodView):
     def setTotalTime(self, totalTime):
         _time = strftime(self.settings[CLOCK.IN_BATTLE][CLOCK.FORMAT])
         if self.coding is not None:
-            _time = _time.encode(encoding=self.coding, errors="ignore").decode()
+            _time = _time.encode(encoding=self.coding, errors="ignore").decode(errors="ignore")
         self.as_setDateTimeS(_time)

@@ -1,4 +1,3 @@
-# coding=utf-8
 from time import strftime
 
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
@@ -43,5 +42,5 @@ class DateTimes(DateTimesMeta):
     def updateTimeData(self):
         _time = strftime(self.config[CLOCK.FORMAT])
         if self.coding is not None:
-            _time = _time.encode(encoding=self.coding, errors="ignore").decode()
+            _time = _time.encode(encoding=self.coding, errors="ignore").decode(errors="ignore")
         self.as_setDateTimeS(_time)

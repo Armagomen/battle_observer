@@ -17,9 +17,8 @@ ru.client_started=Выбранный клиент запущен.%n%nЖелае�
 uk.version_not_match=Клієнт не підтримується.%n%nЦей установник підтримує лише WoT v{#WOT_VERSION_PATTERN}
 uk.client_started=Клієнт запущено.%n%nЧи бажаєте ви закрити клієнт?
 
-uk.open_website=Підтримати розробника донатом.
-en.open_website=Support the developer with a donation.
-ru.open_website=Support the developer with a donation.
+uk.open_donate=Підтримати розробника донатом.
+en.open_donate=Support the developer with a donation.
 
 
 en.types_armagomen=Everything is like armagomen
@@ -56,3 +55,4 @@ uk.tank_carousel=Карусель танків
 uk.team_bases_panel=Панель захоплення бази
 uk.wg_logs=Налаштування логів від WG
 uk.zoom=Налаштування режиму снайпера
+uk.colors=Налаштовані кольори модулів

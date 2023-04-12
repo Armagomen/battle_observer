@@ -1,0 +1,23 @@
+{
+  "armor_calculator": {
+    "green": "#64B700",
+    "orange": "#FF9900",
+    "purple": "#6F6CD3",
+    "red": "#F30900",
+    "yellow": "#FFC900"
+  },
+  "global": {
+    "ally": "#64B700",
+    "bgColor": "#000000",
+    "enemy": "#F30900",
+    "enemyColorBlind": "#6F6CD3"
+  },
+  "vehicle_types_colors": {
+    "AT-SPG": "#0094EC",
+    "SPG": "#A90400",
+    "heavyTank": "#F9B200",
+    "lightTank": "#37BC00",
+    "mediumTank": "#FDEF6C",
+    "unknown": "#FAFAFA"
+  }
+}

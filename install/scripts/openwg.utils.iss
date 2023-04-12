@@ -3,7 +3,7 @@
 
 // directory with OpenWG.Utils installation files, relative to the main .iss file
 #ifndef OPENWGUTILS_DIR_SRC
-#define OPENWGUTILS_DIR_SRC "."
+#define OPENWGUTILS_DIR_SRC "dll"
 #endif
 
 // directory with OpenWG.Utils uninstallation files, relative to the application installation folder
@@ -79,115 +79,212 @@ begin
 end;
 
 
-// JSON/ContainsKeyW
-function JSON_ContainsKeyW_I(JSON: String; Path: String): Boolean;
-external 'JSON_ContainsKeyW@files:openwg.utils.dll cdecl setuponly';
+// JSON/FileOpen
+function JSON_OpenFileW_I(Path: String; AllowCreation: Boolean): Integer;
+external 'JSON_OpenFileW@files:openwg.utils.dll cdecl setuponly';
 
-function JSON_ContainsKeyW_U(JSON: String; Path: String): Boolean;
-external 'JSON_ContainsKeyW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+function JSON_OpenFileW_U(Path: String; AllowCreation: Boolean): Integer;
+external 'JSON_OpenFileW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
 
-function JSON_ContainsKeyW(JSON: String; Path: String): Boolean;
+function JSON_OpenFile(Path: String; AllowCreation: Boolean): Integer;
 begin
     if IsUninstaller() then
-        Result := JSON_ContainsKeyW_U(JSON, Path)
+        Result := JSON_OpenFileW_U(Path, AllowCreation)
     else
-        Result := JSON_ContainsKeyW_I(JSON, Path)
+        Result := JSON_OpenFileW_I(Path, AllowCreation)
 end;
 
 
-// JSON/GetValueW
-procedure JSON_GetValueW_I(JSON: String; Path: String; Buffer: String; BufferSize: Integer);
-external 'JSON_GetValueW@files:openwg.utils.dll cdecl setuponly';
+// Json/FileClose
+function JSON_Close_I(Handle: Integer): Boolean;
+external 'JSON_Close@files:openwg.utils.dll cdecl setuponly';
 
-procedure JSON_GetValueW_U(JSON: String; Path: String; Buffer: String; BufferSize: Integer);
-external 'JSON_GetValueW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+function JSON_Close_U(Handle: Integer): Boolean;
+external 'JSON_Close@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
 
-procedure JSON_GetValueW(JSON: String; Path: String; Buffer: String; BufferSize: Integer);
+function JSON_Close(Handle: Integer): Boolean;
 begin
     if IsUninstaller() then
-        JSON_GetValueW_U(JSON, Path, Buffer, BufferSize)
+        Result := JSON_Close_U(Handle)
     else
-        JSON_GetValueW_I(JSON, Path, Buffer, BufferSize)
+        Result := JSON_Close_I(Handle)
 end;
 
 
-// JSON/SetValueBoolW
-procedure JSON_SetValueBoolW_I(FileFullName: String; ValuePath: String; Value: Boolean);
-external 'JSON_SetValueBoolW@files:openwg.utils.dll cdecl setuponly';
+// Json/SetBool
+function JSON_SetBoolW_I(Handle: Integer; Path: String; Value: Boolean): Boolean;
+external 'JSON_SetBoolW@files:openwg.utils.dll cdecl setuponly';
 
-procedure JSON_SetValueBoolW_U(FileFullName: String; ValuePath: String; Value: Boolean);
-external 'JSON_SetValueBoolW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+function JSON_SetBoolW_U(Handle: Integer; Path: String; Value: Boolean): Boolean;
+external 'JSON_SetBoolW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
 
-procedure JSON_SetValueBoolW(FileFullName: String; ValuePath: String; Value: Boolean);
+function JSON_SetBool(Handle: Integer; Path: String; Value: Boolean): Boolean;
 begin
     if IsUninstaller() then
-        JSON_SetValueBoolW_U(FileFullName, ValuePath, Value)
+        Result := JSON_SetBoolW_U(Handle, Path, Value)
     else
-        JSON_SetValueBoolW_I(FileFullName, ValuePath, Value)
+        Result := JSON_SetBoolW_I(Handle, Path, Value)
 end;
 
 
-// JSON/SetValueObjW
-procedure JSON_SetValueObjW_I(FileFullName: String; Value: String; isAdd: Boolean);
-external 'JSON_SetValueObjW@files:openwg.utils.dll cdecl setuponly';
+// Json/SetDouble
+function JSON_SetDoubleW_I(Handle: Integer; Path: String; Value: Double): Boolean;
+external 'JSON_SetDoubleW@files:openwg.utils.dll cdecl setuponly';
 
-procedure JSON_SetValueObjW_U(FileFullName: String; Value: String; isAdd: Boolean);
-external 'JSON_SetValueObjW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+function JSON_SetDoubleW_U(Handle: Integer; Path: String; Value: Double): Boolean;
+external 'JSON_SetDoubleW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
 
-procedure JSON_SetValueObjW(FileFullName: String; Value: String; isAdd: Boolean);
+function JSON_SetDouble(Handle: Integer; Path: String; Value: Double): Boolean;
 begin
     if IsUninstaller() then
-        JSON_SetValueObjW_U(FileFullName, Value, isAdd)
+        Result := JSON_SetDoubleW_U(Handle, Path, Value)
     else
-        JSON_SetValueObjW_I(FileFullName, Value, isAdd)
+        Result := JSON_SetDoubleW_I(Handle, Path, Value)
 end;
 
 
-// JSON/GetNamesAndValuesW
-procedure JSON_GetNamesAndValuesW_I(FileFullName: String; Path: String; BufNames: String; BufValues: String; BufferSize: Integer);
-external 'JSON_GetNamesAndValuesW@files:openwg.utils.dll cdecl setuponly';
+// Json/SetInteger
+function JSON_SetIntegerW_I(Handle: Integer; Path: String; Value: Integer): Boolean;
+external 'JSON_SetIntegerW@files:openwg.utils.dll cdecl setuponly';
 
-procedure JSON_GetNamesAndValuesW_U(FileFullName: String; Path: String; BufNames: String; BufValues: String; BufferSize: Integer);
-external 'JSON_GetNamesAndValuesW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+function JSON_SetIntegerW_U(Handle: Integer; Path: String; Value: Integer): Boolean;
+external 'JSON_SetIntegerW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
 
-procedure JSON_GetNamesAndValuesW(FileFullName: String; Path: String; BufNames: String; BufValues: String; BufferSize: Integer);
+function JSON_SetInteger(Handle: Integer; Path: String; Value: Integer): Boolean;
 begin
     if IsUninstaller() then
-        JSON_GetNamesAndValuesW_U(FileFullName, Path, BufNames, BufValues, BufferSize)
+        Result := JSON_SetIntegerW_U(Handle, Path, Value)
     else
-        JSON_GetNamesAndValuesW_I(FileFullName, Path, BufNames, BufValues, BufferSize)
+        Result := JSON_SetIntegerW_I(Handle, Path, Value)
 end;
 
 
-// JSON/GetNamesAndValuesW_S
-procedure JSON_GetNamesAndValuesW_S_I(StrJSON: String; BufNames: String; BufValues: String; BufferSize: Integer);
-external 'JSON_GetNamesAndValuesW_S@files:openwg.utils.dll cdecl setuponly';
+// Json/SetString
+function JSON_SetStringW_I(Handle: Integer; Path: String; Value: String): Boolean;
+external 'JSON_SetStringW@files:openwg.utils.dll cdecl setuponly';
 
-procedure JSON_GetNamesAndValuesW_S_U(StrJSON: String; BufNames: String; BufValues: String; BufferSize: Integer);
-external 'JSON_GetNamesAndValuesW_S@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+function JSON_SetStringW_U(Handle: Integer; Path: String; Value: String): Boolean;
+external 'JSON_SetStringW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
 
-procedure JSON_GetNamesAndValuesW_S(StrJSON: String; BufNames: String; BufValues: String; BufferSize: Integer);
+function JSON_SetString(Handle: Integer; Path: String; Value: String): Boolean;
 begin
     if IsUninstaller() then
-        JSON_GetNamesAndValuesW_S_U(StrJSON, BufNames, BufValues, BufferSize)
+        Result := JSON_SetStringW_U(Handle, Path, Value)
     else
-        JSON_GetNamesAndValuesW_S_I(StrJSON, BufNames, BufValues, BufferSize)
+        Result := JSON_SetStringW_I(Handle, Path, Value)
 end;
 
 
-// JSON/GetArrayValueW_S_I
-procedure JSON_GetArrayValueW_S_I(StrJSON: String; BufValues: String; BufferSize: Integer);
-external 'JSON_GetArrayValueW_S@files:openwg.utils.dll cdecl setuponly';
+// JSON_OLD/ContainsKeyW
+function JSON_OLD_ContainsKeyW_I(JSON: String; Path: String): Boolean;
+external 'JSON_OLD_ContainsKeyW@files:openwg.utils.dll cdecl setuponly';
 
-procedure JSON_GetArrayValueW_S_U(StrJSON: String; BufValues: String; BufferSize: Integer);
-external 'JSON_GetArrayValueW_S@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+function JSON_OLD_ContainsKeyW_U(JSON: String; Path: String): Boolean;
+external 'JSON_OLD_ContainsKeyW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
 
-procedure JSON_GetArrayValueW_S(StrJSON: String; BufValues: String; BufferSize: Integer);
+function JSON_OLD_ContainsKeyW(JSON: String; Path: String): Boolean;
 begin
     if IsUninstaller() then
-        JSON_GetArrayValueW_S_U(StrJSON, BufValues, BufferSize)
+        Result := JSON_OLD_ContainsKeyW_U(JSON, Path)
     else
-        JSON_GetArrayValueW_S_I(StrJSON, BufValues, BufferSize)
+        Result := JSON_OLD_ContainsKeyW_I(JSON, Path)
+end;
+
+
+// JSON_OLD/GetValueW
+procedure JSON_OLD_GetValueW_I(JSON: String; Path: String; Buffer: String; BufferSize: Integer);
+external 'JSON_OLD_GetValueW@files:openwg.utils.dll cdecl setuponly';
+
+procedure JSON_OLD_GetValueW_U(JSON: String; Path: String; Buffer: String; BufferSize: Integer);
+external 'JSON_OLD_GetValueW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+procedure JSON_OLD_GetValueW(JSON: String; Path: String; Buffer: String; BufferSize: Integer);
+begin
+    if IsUninstaller() then
+        JSON_OLD_GetValueW_U(JSON, Path, Buffer, BufferSize)
+    else
+        JSON_OLD_GetValueW_I(JSON, Path, Buffer, BufferSize)
+end;
+
+
+// JSON_OLD/SetValueBoolW
+procedure JSON_OLD_SetValueBoolW_I(FileFullName: String; ValuePath: String; Value: Boolean);
+external 'JSON_OLD_SetValueBoolW@files:openwg.utils.dll cdecl setuponly';
+
+procedure JSON_OLD_SetValueBoolW_U(FileFullName: String; ValuePath: String; Value: Boolean);
+external 'JSON_OLD_SetValueBoolW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+procedure JSON_OLD_SetValueBoolW(FileFullName: String; ValuePath: String; Value: Boolean);
+begin
+    if IsUninstaller() then
+        JSON_OLD_SetValueBoolW_U(FileFullName, ValuePath, Value)
+    else
+        JSON_OLD_SetValueBoolW_I(FileFullName, ValuePath, Value)
+end;
+
+
+// JSON_OLD/SetValueObjW
+procedure JSON_OLD_SetValueObjW_I(FileFullName: String; Value: String; isAdd: Boolean);
+external 'JSON_OLD_SetValueObjW@files:openwg.utils.dll cdecl setuponly';
+
+procedure JSON_OLD_SetValueObjW_U(FileFullName: String; Value: String; isAdd: Boolean);
+external 'JSON_OLD_SetValueObjW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+//value isAdd - True add value to the array, False replace the whole array
+procedure JSON_OLD_SetValueObjW(FileFullName: String; Value: String; isAdd: Boolean);
+begin
+    if IsUninstaller() then
+        JSON_OLD_SetValueObjW_U(FileFullName, Value, isAdd)
+    else
+        JSON_OLD_SetValueObjW_I(FileFullName, Value, isAdd)
+end;
+
+
+// JSON_OLD/GetNamesAndValuesW
+procedure JSON_OLD_GetNamesAndValuesW_I(FileFullName: String; Path: String; BufNames: String; BufValues: String; BufferSize: Integer);
+external 'JSON_OLD_GetNamesAndValuesW@files:openwg.utils.dll cdecl setuponly';
+
+procedure JSON_OLD_GetNamesAndValuesW_U(FileFullName: String; Path: String; BufNames: String; BufValues: String; BufferSize: Integer);
+external 'JSON_OLD_GetNamesAndValuesW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+procedure JSON_OLD_GetNamesAndValuesW(FileFullName: String; Path: String; BufNames: String; BufValues: String; BufferSize: Integer);
+begin
+    if IsUninstaller() then
+        JSON_OLD_GetNamesAndValuesW_U(FileFullName, Path, BufNames, BufValues, BufferSize)
+    else
+        JSON_OLD_GetNamesAndValuesW_I(FileFullName, Path, BufNames, BufValues, BufferSize)
+end;
+
+
+// JSON_OLD/GetNamesAndValuesW_S
+procedure JSON_OLD_GetNamesAndValuesW_S_I(StrJSON: String; BufNames: String; BufValues: String; BufferSize: Integer);
+external 'JSON_OLD_GetNamesAndValuesW_S@files:openwg.utils.dll cdecl setuponly';
+
+procedure JSON_OLD_GetNamesAndValuesW_S_U(StrJSON: String; BufNames: String; BufValues: String; BufferSize: Integer);
+external 'JSON_OLD_GetNamesAndValuesW_S@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+procedure JSON_OLD_GetNamesAndValuesW_S(StrJSON: String; BufNames: String; BufValues: String; BufferSize: Integer);
+begin
+    if IsUninstaller() then
+        JSON_OLD_GetNamesAndValuesW_S_U(StrJSON, BufNames, BufValues, BufferSize)
+    else
+        JSON_OLD_GetNamesAndValuesW_S_I(StrJSON, BufNames, BufValues, BufferSize)
+end;
+
+
+// JSON_OLD/GetArrayValueW_S_I
+procedure JSON_OLD_GetArrayValueW_S_I(StrJSON: String; BufValues: String; BufferSize: Integer);
+external 'JSON_OLD_GetArrayValueW_S@files:openwg.utils.dll cdecl setuponly';
+
+procedure JSON_OLD_GetArrayValueW_S_U(StrJSON: String; BufValues: String; BufferSize: Integer);
+external 'JSON_OLD_GetArrayValueW_S@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+procedure JSON_OLD_GetArrayValueW_S(StrJSON: String; BufValues: String; BufferSize: Integer);
+begin
+    if IsUninstaller() then
+        JSON_OLD_GetArrayValueW_S_U(StrJSON, BufValues, BufferSize)
+    else
+        JSON_OLD_GetArrayValueW_S_I(StrJSON, BufValues, BufferSize)
 end;
 
 

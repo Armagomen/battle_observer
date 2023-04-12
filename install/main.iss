@@ -5,7 +5,6 @@
 #define MyAppVersion "1.40.32"
 #define MyAppPublisher "Armagomen, Inc."
 #define MyAppURL "https://github.com/Armagomen/battle_observer"
-#define MyDonateURL "https://donatua.com/to/armagomen"
 #define WOT_VERSION_PATTERN "1.20.0.*"
 #define APP_DIR_UNINST MyAppName + "_uninst"
 #define OPENWGUTILS_DIR_SRC    "dll"
@@ -40,14 +39,12 @@ CreateAppDir=yes
 AppendDefaultDirName=no
 ShowLanguageDialog=yes
 Uninstallable=yes
-//DisableDirPage=no
 UsePreviousAppDir=yes
-//AlwaysShowComponentsList=yes
 
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 
 [Run]
-Filename: {#MyDonateURL}; Description: "{cm:open_website}"; Flags: postinstall nowait shellexec;
+Filename: "https://donatua.com/to/armagomen"; Description: "{cm:open_donate}"; Flags: postinstall nowait shellexec;
 
 [InstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"

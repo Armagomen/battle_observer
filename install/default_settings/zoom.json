@@ -1,0 +1,22 @@
+{
+  "disable_cam_after_shot": false,
+  "disable_cam_after_shot_latency": 0.5,
+  "disable_cam_after_shot_skip_clip": true,
+  "dynamic_zoom": {
+    "enabled": true,
+    "steps_only": true
+  },
+  "enabled": true,
+  "zoomSteps": {
+    "enabled": false,
+    "steps": [
+      2.0,
+      4.0,
+      6.0,
+      8.0,
+      10.0,
+      12.0,
+      16.0
+    ]
+  }
+}

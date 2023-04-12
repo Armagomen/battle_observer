@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "permanentMinimapDeath": false,
+  "real_view_radius": true,
+  "showDeathNames": false,
+  "yaw_limits": true,
+  "zoom": true,
+  "zoom_hotkey": [
+    [
+      29
+    ]
+  ]
+}
