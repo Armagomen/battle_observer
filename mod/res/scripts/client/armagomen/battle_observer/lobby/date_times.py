@@ -43,5 +43,5 @@ class DateTimes(DateTimesMeta):
     def updateTimeData(self):
         _time = strftime(self.config[CLOCK.FORMAT])
         if self.coding is not None:
-            _time = _time.encode(encoding=self.coding, errors="ignore")
+            _time = _time.encode(encoding=self.coding, errors="ignore").decode()
         self.as_setDateTimeS(_time)
