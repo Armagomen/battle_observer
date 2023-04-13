@@ -22,14 +22,17 @@ class SettingsLoader(object):
         if os.path.exists(load_json):
             self.configName = openJsonFile(load_json).get('loadConfig')
         else:
-            self.configName = 'ERROR_DEFAULT'
-            config_path = os.path.join(currentConfigPath, self.configName)
-            if not os.path.exists(config_path):
-                self.errorMessages.append('CONFIGURATION FOLDER IS NOT FOUND, CREATE NEW')
-                os.makedirs(config_path)
+            if self.configsList:
+                self.configName = self.configsList[0]
+            else:
+                self.configName = 'default'
             self.createLoadJSON(self.configName)
-            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED')
+            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
             self.configsList.append(self.configName)
+        config_path = os.path.join(currentConfigPath, self.configName)
+        if not os.path.exists(config_path):
+            self.errorMessages.append('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
+            os.makedirs(config_path)
         self.readConfig()
 
     def readOtherConfig(self, configID):
