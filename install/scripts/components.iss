@@ -1,4 +1,4 @@
-#define configs_dir "{app}\mods\configs\mod_battle_observer"
+﻿#define configs_dir "{app}\mods\configs\mod_battle_observer"
 #define mod_source "..\..\output_data"
 #define configs "default_settings"
 
