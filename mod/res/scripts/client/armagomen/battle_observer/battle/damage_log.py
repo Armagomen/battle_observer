@@ -261,7 +261,7 @@ class DamageLog(DamageLogsMeta):
 
     def getLogLines(self, log_data):
         extended = self.settings.log_extended
-        template = GLOBAL.EMPTY_LINE.join(extended[DAMAGE_LOG.LOG_MODE[self._is_key_down]])
+        template = GLOBAL.EMPTY_LINE.join(extended[DAMAGE_LOG.TEMPLATES][self._is_key_down])
         for vehicleID in reversed(log_data.id_list) if extended[DAMAGE_LOG.REVERSE] else log_data.id_list:
             if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
                 log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = extended[DAMAGE_LOG.KILLED_ICON]

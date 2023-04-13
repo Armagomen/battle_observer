@@ -179,7 +179,7 @@ class DAMAGE_LOG:
     IN_CENTER = "inCenter"
     KILLED_ICON = "killedIcon"
     LAST_DAMAGE = "lastDamage"
-    LOG_MODE = ("extendedLog", "extendedLogALTMODE")
+    TEMPLATES = "templates"
     NOT_SHELL = "--"
     PERCENT_AVG_COLOR = "percentDamageAvgColor"
     REVERSE = "reverse"

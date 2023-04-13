@@ -62,8 +62,8 @@ end;
 //  Result := True;
 //end;
 
-
-procedure InitializeWizard();
+<event('InitializeWizard')>
+procedure ClientFind();
 begin
   WotList := WotList_Create(WizardForm.DirEdit.Parent,
       WizardForm.DirEdit.Left,

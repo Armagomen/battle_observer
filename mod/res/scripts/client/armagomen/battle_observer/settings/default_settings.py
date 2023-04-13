@@ -212,23 +212,25 @@ class DefaultSettings(object):
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
             },
             DAMAGE_LOG.KILLED_ICON: "<img src='{dir}/destruction.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
-            DAMAGE_LOG.LOG_MODE[GLOBAL.FIRST]: [
-                "<textformat leading='-6' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
-                "<font size='12'>%(index)02d:</font><tab>",
-                "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
-                "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
-                "%(attackReason)s<tab>",
-                "%(classIcon)s %(tankName)s %(killedIcon)s",
-                "</font></textformat>"
-            ],
-            DAMAGE_LOG.LOG_MODE[GLOBAL.LAST]: [
-                "<textformat leading='-6' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
-                "<font size='12'>%(shots)d:</font><tab>",
-                "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
-                "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
-                "%(attackReason)s<tab>",
-                "%(classIcon)s %(userName).12s %(killedIcon)s",
-                "</font></textformat>"
+            DAMAGE_LOG.TEMPLATES: [
+                [
+                    "<textformat leading='-6' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
+                    "<font size='12'>%(index)02d:</font><tab>",
+                    "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
+                    "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
+                    "%(attackReason)s<tab>",
+                    "%(classIcon)s %(tankName)s %(killedIcon)s",
+                    "</font></textformat>"
+                ],
+                [
+                    "<textformat leading='-6' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
+                    "<font size='12'>%(shots)d:</font><tab>",
+                    "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
+                    "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
+                    "%(attackReason)s<tab>",
+                    "%(classIcon)s %(userName).12s %(killedIcon)s",
+                    "</font></textformat>"
+                ]
             ],
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.WHITE,
