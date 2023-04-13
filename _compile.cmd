@@ -1,5 +1,10 @@
 @Echo off
-set ModVersion=1.40.33
+
+set "ModVersion="
+for /f "tokens=3 delims=<>" %%a in (
+    'find /i "<version>" ^< ".\mod\meta.xml"'
+) do set "ModVersion=%%a"
+
 set GameVersion=1.20.0.1
 set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
 set OutputDir=..\output_data
