@@ -21,5 +21,7 @@ DEL %AutoUpdate%
 
 Xcopy %ModFile% %GameInstalled_ModsDir% /e /i /d
 
+"%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" .\install\main.iss
+
 DEL /s /q *.pyc
 exit
