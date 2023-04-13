@@ -1,5 +1,5 @@
 @Echo off
-set ModVersion=1.40.32
+set ModVersion=1.40.33
 set GameVersion=1.20.0.1
 set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
 set OutputDir=..\output_data
@@ -21,7 +21,7 @@ DEL %AutoUpdate%
 
 Xcopy %ModFile% %GameInstalled_ModsDir% /e /i /d
 
-"%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" .\install\main.iss
+"%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" /DMyAppVersion=%ModVersion% .\install\main.iss
 
 DEL /s /q *.pyc
 exit

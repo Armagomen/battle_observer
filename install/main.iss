@@ -1,5 +1,4 @@
 ﻿#define MyAppName "Battle Observer"
-#define MyAppVersion "1.40.32"
 #define MyAppPublisher "Armagomen, Inc."
 #define MyAppURL "https://github.com/Armagomen/battle_observer"
 #define MyAppUpdatesURL MyAppURL+"/releases/latest/"
@@ -12,6 +11,9 @@
 #include "scripts\openwg.utils.iss"
 #include "scripts\code.iss"
 
+#ifndef MyAppVersion
+  #define MyAppVersion "0.0.0.0"
+#endif
 
 [Setup]
 AppId={{E4911938-A29D-4904-8878-99DEEBDE03D6}
