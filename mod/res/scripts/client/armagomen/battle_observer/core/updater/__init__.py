@@ -7,7 +7,7 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen.battle_observer.core.updater.i18n import getI18n
 from armagomen.constants import GLOBAL, URLS
-from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, getUpdatePath, fetchURL, logDebug
+from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, fetchURL, logDebug
 from armagomen.utils.dialogs import UpdaterDialogs
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
@@ -33,6 +33,8 @@ __MESSAGES = (
 )
 
 LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
+WOTMOD = "{0}/armagomen.battleObserver_{0}.wotmod"
+EXE_FILE = "{0}/mod_battle_observer_v{0}.exe"
 
 
 class DownloadThread(object):
@@ -45,18 +47,12 @@ class DownloadThread(object):
         self.downloader = None
         self.modPath = os.path.join(modsPath, gameVersion)
 
-    def startDownload(self):
+    def startDownload(self, mod_version):
         Waiting.show(WAITING_UPDATE)
-        mod_version = self.updateData.get('tag_name', self.version)
-        path = os.path.join(getUpdatePath(), mod_version + ".zip")
-        if os.path.isfile(path):
-            self.extractZipArchive(path)
-            logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
-            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(mod_version))
-        else:
-            logInfo(LOG_MESSAGES.STARTED.format(mod_version, URLS.AUTO_UPDATE))
-            self.downloader = WebDownloader(GLOBAL.ONE)
-            self.downloader.download(URLS.AUTO_UPDATE, self.onDownloaded)
+        url = URLS.UPDATE + WOTMOD.format(mod_version)
+        logInfo(LOG_MESSAGES.STARTED.format(mod_version, url))
+        self.downloader = WebDownloader(GLOBAL.ONE)
+        self.downloader.download(url, self.onDownloaded)
 
     def closeDownloader(self):
         if self.downloader is not None:
@@ -70,25 +66,22 @@ class DownloadThread(object):
                 if newFile not in old_files:
                     archive.extract(newFile, self.modPath)
                     logInfo(LOG_MESSAGES.NEW_FILE.format(newFile))
-        if Waiting.isOpened(WAITING_UPDATE):
-            Waiting.hide(WAITING_UPDATE)
 
     def onDownloaded(self, _url, data):
         self.closeDownloader()
         if data is not None:
             mod_version = self.updateData.get('tag_name', self.version)
-            path = os.path.join(getUpdatePath(), mod_version + ".zip")
-            with open(path, "wb") as zipArchive:
-                zipArchive.write(data)
+            path = os.path.join(self.modPath, WOTMOD.format(mod_version))
+            with open(path, "wb") as mod_file:
+                mod_file.write(data)
             logInfo(LOG_MESSAGES.FINISHED.format(path))
-            self.extractZipArchive(path)
             self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(mod_version))
         else:
             self.downloadError(_url)
-
-    def downloadError(self, url):
         if Waiting.isOpened(WAITING_UPDATE):
             Waiting.hide(WAITING_UPDATE)
+
+    def downloadError(self, url):
         message = LOG_MESSAGES.FAILED.format(url)
         logError(message)
         self.dialogs.showUpdateError(message)
@@ -130,6 +123,7 @@ class Updater(DownloadThread):
         title = self.i18n['titleNEW'].format(self.updateData.get('tag_name', ver))
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, git_message)
-        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, URLS.HANDLE_UPDATE.format(ver)))
+        handle_url = URLS.UPDATE + EXE_FILE.format(ver)
+        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, handle_url))
         if result:
-            self.startDownload()
+            self.startDownload(ver)

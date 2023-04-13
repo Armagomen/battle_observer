@@ -41,15 +41,13 @@ URLS = namedtuple("URLS", (
     "UPDATE_GITHUB_API_URL",
     "PATREON_URL",
     "DISCORD",
-    "AUTO_UPDATE",
-    "HANDLE_UPDATE"
+    "UPDATE"
 ))("https://donatua.com/@armagomen",
    "https://www.paypal.com/donate/?hosted_button_id=VJCUNYNBXBEG8",
    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
    "https://www.patreon.com/armagomen",
    "https://discord.gg/Nma5T5snKW",
-   "https://github.com/Armagomen/battle_observer/releases/latest/download/AutoUpdate.zip",
-   "https://github.com/Armagomen/battle_observer/releases/latest/download/mod_Battle_Observer_v.{}.exe")
+   "https://github.com/Armagomen/battle_observer/releases/download/", )
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")
