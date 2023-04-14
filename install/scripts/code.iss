@@ -1,7 +1,6 @@
-//[Files]
-//Source: img\splashscreen.png; Flags: dontcopy noencryption deleteafterinstall
-//Source: img\splashscreen_uninst.png; DestDir: "{app}\{#APP_DIR_UNINST}"; Flags: noencryption;
-//Source: dll\isgsg.dll; DestDir: {tmp}; Flags: ignoreversion dontcopy nocompression
+[Files]
+Source: img\splashscreen.png; Flags: dontcopy noencryption deleteafterinstall
+Source: dll\isgsg.dll; Flags: ignoreversion dontcopy nocompression deleteafterinstall
 
 [Code]
 
@@ -47,20 +46,17 @@ end;
 // Initialize
 //
 
+procedure ShowSplashScreen(p1:HWND;p2:AnsiString;p3,p4,p5,p6,p7:integer;p8:boolean;p9:Cardinal;p10:integer); external 'ShowSplashScreen@files:isgsg.dll stdcall delayload';
 
-//function InitializeSetup: Boolean;
-//begin
-//  ExtractTemporaryFile('splashscreen.png');
-//  SPLASHSCREEN_ShowSplashScreenW(ExpandConstant('{tmp}\splashscreen.png'), 3);
-//  Result := True;
-//end;
+<event('InitializeWizard')>
+procedure SplashScreen();
+begin
+  ExtractTemporaryFile('splashscreen.png');
+  ExtractTemporaryFile('isgsg.dll');
+  ShowSplashScreen(WizardForm.Handle,ExpandConstant('{tmp}')+'\splashscreen.png',500,2000,500,0,255,False,$FFFFFF,3);
+end;
 
 
-//function InitializeUninstall: Boolean;
-//begin
-//  SPLASHSCREEN_ShowSplashScreenW(ExpandConstant('{app}\{#APP_DIR_UNINST}\splashscreen_uninst.png'), 3);
-//  Result := True;
-//end;
 
 <event('InitializeWizard')>
 procedure ClientFind();
