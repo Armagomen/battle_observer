@@ -76,3 +76,12 @@ Source: "{#configs}\team_bases_panel.json"; DestDir: "{#configs_dir}\armagomen";
 Source: "{#configs}\wg_logs.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: wg_logs;
 Source: "{#configs}\zoom.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: zoom;
 Source: "{#configs}\colors.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: colors;
+
+[InstallDelete]
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\me.poliroid.modslistapi*.wotmod"
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\polarfox.vxSettingsApi*.wotmod"
+Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*.*"
+
+[UninstallDelete]
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"

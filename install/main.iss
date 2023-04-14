@@ -10,9 +10,10 @@
 
 #include "scripts\openwg.utils.iss"
 #include "scripts\code.iss"
+#include "scripts\splash.iss"
 
 #ifndef MyAppVersion
-  #define MyAppVersion "0.0.0.0"
+  #define MyAppVersion "1.0.0.0"
 #endif
 
 [Setup]
@@ -43,15 +44,6 @@ UninstallFilesDir={app}\{#APP_DIR_UNINST}
 
 [Run]
 Filename: "https://donatua.com/to/armagomen"; Description: "{cm:open_donate}"; Flags: postinstall nowait shellexec;
-
-[InstallDelete]
-Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
-Type: files; Name: "{app}\{code:PH_Folder_Mods}\me.poliroid.modslistapi*.wotmod"
-Type: files; Name: "{app}\{code:PH_Folder_Mods}\polarfox.vxSettingsApi*.wotmod"
-Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*.*"
-
-[UninstallDelete]
-Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile: "..\EULA_EN.txt"; 
