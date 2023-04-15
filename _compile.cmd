@@ -16,12 +16,15 @@ REM set GameInstalled_ModsDir=C:\Games\World_of_Tanks_CT\mods
 "python.exe" bo_compile_all.py -f -d scripts %sources%\res\scripts
 
 set ModFile=%OutputDir%\armagomen.battleObserver_%ModVersion%.wotmod
+set AutoUpdate=..\AutoUpdate.zip
 
+DEL ..\mod_battle_observer_*
 DEL %OutputDir%\armagomen.battleObserver*
 DEL %GameInstalled_ModsDir%\armagomen.battleObserver*
 DEL %AutoUpdate%
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py %ModFile% %sources%\*
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile%
 
 Xcopy %OutputDir% %GameInstalled_ModsDir% /e /i /d
 
