@@ -10,11 +10,8 @@ class LoadingError(object):
     getSetting = ServicesLocator.settingsCore.getSetting
 
     def __init__(self, errorMessage):
-        language = getClientLanguage()
-        if language == 'uk':
+        if getClientLanguage() == 'uk':
             self.message = "Повідомлення про помилку: {}".format(errorMessage)
-        elif language in ('ru', 'be'):
-            self.message = "Сообщение об ошибке: {}".format(errorMessage)
         else:
             self.message = "Error message: {}".format(errorMessage)
         ServicesLocator.appLoader.onGUISpaceEntered += self.__show

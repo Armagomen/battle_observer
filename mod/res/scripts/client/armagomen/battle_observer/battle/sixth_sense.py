@@ -9,11 +9,8 @@ from helpers import getClientLanguage
 _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
                    VEHICLE_VIEW_STATE.DESTROYED, VEHICLE_VIEW_STATE.CREW_DEACTIVATED}
 
-language = getClientLanguage()
-if language == "uk":
+if getClientLanguage() == "uk":
     DEFAULT_MESSAGE = "Виявили: {} сек."
-elif language in ("ru", "be"):
-    DEFAULT_MESSAGE = "Обнаружили: {} сек."
 else:
     DEFAULT_MESSAGE = "Detected: {} sec."
 

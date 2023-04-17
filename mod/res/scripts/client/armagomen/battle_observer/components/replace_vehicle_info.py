@@ -12,7 +12,7 @@ from helpers import getClientLanguage
 language = getClientLanguage()
 BOT_START_SWITCH = ":"
 
-localization = {"uk": "Анонімний", "ru": "Анонимный", "be": "Ананімны"}
+localization = {"uk": "Анонімний", "be": "Ананімны"}
 ANONYMOUS_TRANSLATE = defaultdict(lambda: "Anonymous", **localization)
 
 

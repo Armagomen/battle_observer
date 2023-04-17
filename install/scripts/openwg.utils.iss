@@ -20,21 +20,6 @@
 Source: "{#OPENWGUTILS_DIR_SRC}\openwg.utils.x86_32.dll"; DestName: openwg.utils.dll; Flags: ignoreversion dontcopy noencryption;
 Source: "{#OPENWGUTILS_DIR_SRC}\openwg.utils.x86_32.dll"; DestDir: {app}\{#OPENWGUTILS_DIR_UNINST}; DestName: openwg.utils.dll; Flags: ignoreversion noencryption;
 
-[CustomMessages]
-en.openwg_browse=Browse...
-ru.openwg_browse=Обзор...
-en.openwg_client_not_found=The game client was not detected in the specified folder.
-ru.openwg_client_not_found=В указанной папке клиент игры не был обнаружен.
-en.openwg_unknown=Unknown
-ru.openwg_unknown=Неизвестно
-en.openwg_branch_release=Release
-ru.openwg_branch_release=Релиз
-en.openwg_branch_ct=Common Test
-ru.openwg_branch_ct=Общий тест
-en.openwg_branch_st=Super Test
-ru.openwg_branch_st=Супертест
-en.openwg_branch_sb=Sandbox
-ru.openwg_branch_sb=Песочница
 
 [Code]
 

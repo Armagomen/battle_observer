@@ -23,7 +23,7 @@ class Donate(object):
         self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=10)
         self.lastMessage = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
-        support_language = getClientLanguage() in ('ru', 'uk', 'be')
+        support_language = getClientLanguage() in ('uk', 'be')
         self.show_clanMessage = support_language and AUTH_REALM == "EU"
         if support_language:
             self.messages = (

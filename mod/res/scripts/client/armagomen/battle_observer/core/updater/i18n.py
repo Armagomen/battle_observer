@@ -1,21 +1,6 @@
 # coding=utf-8
 from helpers import getClientLanguage
 
-ru = {
-    "titleOK": "Обновление - ГОТОВО",
-    "messageOK": "Нажмите ПЕРЕЗАГРУЗКА, для завершения процесса Обновления. v{0}",
-    "messageNEW":
-        "<font size='15'>"
-        "<font size='20' color='#FFFF00'><b>Выберите вариант загрузки.</b></font>\n"
-        "<p align='left'><font color='#00FF00'><b>Автоматически</b></font> - загрузит и распакует архив "
-        "обновления в папку. {0}\n<font color='#FFFF00'><b>Вручную</b></font> - откроет в браузере ссылку на"
-        " этот-же архив но извлекать пакет и копировать *.wotmod файл/ы прийдется в ручном режиме.</p>"
-        "\n<font size='20' color='#FFFF00'><b>Список изменений</b></font>\n"
-        "<p align='left'>{1}</p>"
-        "</font>",
-    "titleNEW": "<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>"
-}
-
 en = {
     "titleOK": "Update - Press RESTART",
     "messageOK": "Click RESTART to complete the Upgrade process. v{0}",
@@ -47,13 +32,8 @@ uk = {
 }
 
 
-language = getClientLanguage()
-
-
 def getI18n():
-    if language == 'uk':
+    if getClientLanguage() == 'uk':
         return uk
-    elif language in ('ru', 'be'):
-        return ru
     else:
         return en

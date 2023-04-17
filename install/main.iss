@@ -5,7 +5,7 @@
 #define WOT_VERSION_PATTERN "1.*"
 #define APP_FILE_PATTERN "mod_battle_observer_v"
 #define APP_DIR_UNINST "battle_observer_uninst"
-#define OPENWGUTILS_DIR_SRC    "dll"
+#define OPENWGUTILS_DIR_SRC "dll"
 #define OPENWGUTILS_DIR_UNINST APP_DIR_UNINST
 
 #include "scripts\openwg.utils.iss"
@@ -31,7 +31,8 @@ DisableProgramGroupPage=yes
 OutputDir=..\..\
 OutputBaseFilename={#APP_FILE_PATTERN}{#MyAppVersion}
 DefaultDirName=C:\
-SetupIconFile=img\game.ico
+SetupIconFile=img\BattleObserver_icon.ico
+UninstallDisplayIcon={app}\{#APP_DIR_UNINST}\BattleObserver_icon.ico
 WizardStyle=modern
 DirExistsWarning=no
 CreateAppDir=yes
@@ -47,7 +48,6 @@ Filename: "https://donatua.com/to/armagomen"; Description: "{cm:open_donate}"; F
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile: "..\EULA_EN.txt"; 
-Name: "ru"; MessagesFile: "compiler:Languages\Russian.isl"; LicenseFile: "..\EULA_EN.txt";
 Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"; LicenseFile: "..\EULA_UK.txt";
 
 [Icons]

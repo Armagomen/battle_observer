@@ -7,12 +7,8 @@ from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
 from helpers import getClientLanguage
 
-language = getClientLanguage()
-if language == "uk":
+if getClientLanguage() == "uk":
     NO_DAMAGE = "Критичне влучання, без шкоди."
-    RICOCHET = "Рикошет."
-elif language in ("ru", "be"):
-    NO_DAMAGE = "Крит, без урона."
     RICOCHET = "Рикошет."
 else:
     NO_DAMAGE = "Critical hit, no damage."

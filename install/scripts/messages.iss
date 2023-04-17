@@ -1,5 +1,13 @@
 ﻿[CustomMessages]
 // open wg utils
+en.openwg_browse=Browse...
+en.openwg_client_not_found=The game client was not detected in the specified folder.
+en.openwg_unknown=Unknown
+en.openwg_branch_release=Release
+en.openwg_branch_ct=Common Test
+en.openwg_branch_st=Super Test
+en.openwg_branch_sb=Sandbox
+
 uk.openwg_browse=Огляд...
 uk.openwg_client_not_found=Клієнт гри не виявлено у вказаній папці.
 uk.openwg_unknown=Невідомо
@@ -11,16 +19,12 @@ uk.openwg_branch_sb=Пісочниця
 en.version_not_match=This client is not supported.%n%nThis installer only supports WoT v{#WOT_VERSION_PATTERN}
 en.client_started=The selected client is running.%n%nDo you want to terminate the selected client?
 
-ru.version_not_match=Выбранный клиент не поддерживается.%n%nЭтот установщик поддерживает только WoT v{#WOT_VERSION_PATTERN}
-ru.client_started=Выбранный клиент запущен.%n%nЖелаете ли вы закрыть выбранный клиент?
-
 uk.version_not_match=Клієнт не підтримується.%n%nЦей установник підтримує лише WoT v{#WOT_VERSION_PATTERN}
 uk.client_started=Клієнт запущено.%n%nЧи бажаєте ви закрити клієнт?
 
 // run
 en.open_donate=Support the developer with a donation.
 uk.open_donate=Підтримати розробника донатом.
-ru.open_donate=Поддержать разработчика донатом.
 
 // components
 // en
@@ -92,38 +96,3 @@ uk.team_bases_panel=Панель захоплення бази
 uk.wg_logs=Налаштування логів від WG
 uk.zoom=Налаштування режиму снайпера
 uk.colors=Налаштовані кольори модулів
-
-//ru
-ru.types_armagomen=Все как в armagomen
-ru.types_user=Пользовательская
-
-ru.debug_panel=Изменена панель FPS/PING
-ru.sixth_sense=Шестое ощущение с таймером
-ru.arcade_camera=Командирская камера
-ru.armor_calculator=Калькулятор приведенной брони
-ru.avg_efficiency_in_hangar=Показатели эффективности танка в гараже
-ru.battle_timer=Изменен таймер боя
-ru.clock=Часы в гараже и бою
-ru.dispersion_circle=Настройка круга сводки (уменьшение и серверный прицел)
-ru.dispersion_circle_replace=Заменить оригинальный круг сводки уменьшенным
-ru.dispersion_circle_server=Добавить уменьшение серверные круги возведения
-ru.dispersion_timer=Таймер сводки
-ru.distance_to_enemy=Дистанция до ближайшего обнаруженного врага
-ru.effects=Настройка эффектов
-ru.flight_time=Время полета снаряда
-ru.hp_bars=Панель прочности команд
-ru.log_extended=Расширенные логи вреда
-ru.log_total=Лог эффективности суммарный
-ru.main=Дополнительные настройки
-ru.main_gun=Основной калибр
-ru.minimap=Мини-карта
-ru.own_health=Прочность танка игрока
-ru.players_panels=Панели со списком команд (уши)
-ru.service_channel_filter=Фильтр системного канала
-ru.statistics=Статистика WRT и иконки танков
-ru.strategic_camera=Артиллерийская камера
-ru.tank_carousel=Карусель танков
-ru.team_bases_panel=Панель захвата базы
-ru.wg_logs=Настройка логов от WG
-ru.zoom=Настройка режима снайпера
-ru.colors=Настроенные цвета модулей

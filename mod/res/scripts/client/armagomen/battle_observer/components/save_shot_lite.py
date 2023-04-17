@@ -12,11 +12,8 @@ from helpers import getClientLanguage, dependency
 from messenger.MessengerEntry import g_instance
 from skeletons.gui.battle_session import IBattleSessionProvider
 
-lang = getClientLanguage()
-if lang == 'uk':
+if getClientLanguage() == 'uk':
     LOCKED_MESSAGE = 'Save Shot: Постріл у {} заблокований'
-elif lang in ('ru', 'be'):
-    LOCKED_MESSAGE = 'Save Shot: Выстрел в {} заблокирован'
 else:
     LOCKED_MESSAGE = 'Save Shot: Shot in {} blocked'
 

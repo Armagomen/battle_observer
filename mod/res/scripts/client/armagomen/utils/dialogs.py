@@ -11,11 +11,8 @@ from helpers import getClientLanguage, dependency
 from skeletons.gui.app_loader import IAppLoader
 from wg_async import wg_async, wg_await, AsyncReturn
 
-language = getClientLanguage()
-if language == 'uk':
+if getClientLanguage() == 'uk':
     labels = ("ПЕРЕЗАВАНТАЖЕННЯ", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати", "Ігнорувати цей танк")
-elif language in ('ru', 'be'):
-    labels = ("ПЕРЕЗАГРУЗКА", "Автоматически", "Вручную", "Отмена", "Закрыть", "Применить", "Игнорировать этот танк")
 else:
     labels = ("RESTART", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank")
 buttons = namedtuple("BUTTONS", "restart auto handle cancel close apply ignore")(*labels)
