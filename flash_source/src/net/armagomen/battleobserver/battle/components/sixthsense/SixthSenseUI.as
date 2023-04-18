@@ -9,7 +9,6 @@
 	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.tween.Tween;
-	import net.armagomen.battleobserver.utils.tween.TweenEvent;
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
@@ -40,7 +39,6 @@
 			this._container = new Sprite()
 			this._container.x = -80;
 			this._container.y = this.POSITION;
-			this._container.visible = false;
 			this.addChild(_container);
 			if (this.params.default_icon)
 			{
@@ -60,7 +58,6 @@
 			this.loader = null;
 			this.hideAnimation.stop();
 			this.hideAnimation2.stop();
-			this.hideAnimation.removeEventListener(TweenEvent.MOTION_FINISH, this.afterAnimation);
 			this.hideAnimation = null;
 			this.hideAnimation2 = null;
 			this._container.removeChildren();
@@ -76,37 +73,26 @@
 			image.smoothing = true;
 			this._container.addChild(image);
 			this.timer = new TextExt(image.width >> 1, image.height - 20, Constants.middleText, TextFieldAutoSize.CENTER, this._container);
-			this.hideAnimation = new Tween(this._container, "y", this.POSITION, -285);
+			this.hideAnimation = new Tween(this._container, "y", this.POSITION, -150);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
-			this.hideAnimation.addEventListener(TweenEvent.MOTION_FINISH, this.afterAnimation, false, 0, true);
+			this._container.alpha = 0;
 		}
 		
 		public function as_show():void
 		{
 			if (this.hideAnimation.isPlaying)
 			{
-				this.hideAnimation.rewind();
-				this.hideAnimation2.rewind();
 				this.hideAnimation.stop();
 				this.hideAnimation2.stop();
 			}
 			this._container.y = this.POSITION;
 			this._container.alpha = 1.0;
-			this._container.visible = true;
 		}
 		
 		public function as_hide():void
 		{
-			if (!this.hideAnimation.isPlaying)
-			{
-				this.hideAnimation.start();
-				this.hideAnimation2.start();
-			}
-		}
-		
-		private function afterAnimation(event:TweenEvent):void
-		{
-			this._container.visible = false;
+			this.hideAnimation.start();
+			this.hideAnimation2.start();
 		}
 		
 		public function as_updateTimer(text:String):void

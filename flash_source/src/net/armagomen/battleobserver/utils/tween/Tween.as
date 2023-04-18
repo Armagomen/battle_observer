@@ -1,13 +1,11 @@
 package net.armagomen.battleobserver.utils.tween
 {
-	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	import flash.utils.getTimer;
-	
-	import scaleform.clik.motion.Tween
+	import scaleform.clik.motion.Tween;
 	
 	[Event(name = "motionStop", type = "net.armagomen.battleobserver.utils.tween.TweenEvent")]
 	[Event(name = "motionStart", type = "net.armagomen.battleobserver.utils.tween.TweenEvent")]

@@ -27,7 +27,7 @@ Name: hp_bars/normal; Description: normal; Flags: exclusive disablenouninstallwa
 Name: hp_bars/league; Description: league; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
 Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main; Description: {cm:main}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main; Description: {cm:main}; Flags: disablenouninstallwarning; Types: "armagomen user";
 Name: main_gun; Description: {cm:main_gun}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: minimap; Description: {cm:minimap}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning;
@@ -80,7 +80,7 @@ Source: "settings\colors.json"; DestDir: "{#configs_dir}\armagomen"; Flags: igno
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\me.poliroid.modslistapi*.wotmod"
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\polarfox.vxSettingsApi*.wotmod"
-Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*.*"
+Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*"
 
 [UninstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"

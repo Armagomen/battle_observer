@@ -32,7 +32,6 @@ OutputDir=..\..\
 OutputBaseFilename={#APP_FILE_PATTERN}{#MyAppVersion}
 DefaultDirName=C:\
 SetupIconFile=img\BattleObserver_icon.ico
-UninstallDisplayIcon={app}\{#APP_DIR_UNINST}\BattleObserver_icon.ico
 WizardStyle=modern
 DirExistsWarning=no
 CreateAppDir=yes
@@ -43,6 +42,7 @@ UsePreviousAppDir=yes
 
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 
+
 [Run]
 Filename: "https://donatua.com/to/armagomen"; Description: "{cm:open_donate}"; Flags: postinstall nowait shellexec;
 
@@ -51,7 +51,7 @@ Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile: "..\EULA_EN.txt";
 Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"; LicenseFile: "..\EULA_UK.txt";
 
 [Icons]
-Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"
+Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; IconFilename: "{uninstallexe}";
 
 #include "scripts\messages.iss"
 #include "scripts\components.iss"
