@@ -1,6 +1,6 @@
 # coding=utf-8
 
-timeFormat_tooltip = "\n".join((
+timeFormat_tooltip = "<br>".join((
     "Directive Meaning",
     "%a - Locale’s abbreviated weekday name.",
     "%A - Locale’s full weekday name.",
@@ -46,7 +46,7 @@ localization = {
         "autoClearCache": "Clear the game cache on startup.",
         "autoClearCache_tooltip": "Cleaning the temporary files of the game in the folder "
                                   "AppData/Roaming/Wargaming.net/WorldOfTanks."
-                                  "\nFolders that are modified there are not affected.",
+                                  "<br>Folders that are modified there are not affected.",
         "smallDoubleCarousel": "Use small icons in the tank carousel.",
         "carouselRows": "number of rows of multi-row tank carousel",
         "anonymousEnableShow": "Mark as team-killer players with an anonymizer.",
@@ -92,8 +92,8 @@ localization = {
                                       " Available macro names: WTR, colorWTR, winRate, nickname, battles, clanTag",
         "icon_enabled": "Repaint tank icons in the colors of vehicle classes",
         "icon_enabled_tooltip": "This function repaints any vehicle icons in the ears, taboo window, on the loading "
-                                "screen in the color of vehicle classes.\n"
-                                "Filter strength affects brightness.\nRecommended filter strength -1.25",
+                                "screen in the color of vehicle classes.<br>"
+                                "Filter strength affects brightness.<br>Recommended filter strength -1.25",
         "icon_blackout": "Filter strength (brightness)",
 
         "panels_full_width": "Player Name Field Width - Big Ears",
@@ -141,7 +141,7 @@ localization = {
     "battle_timer": {
         "header": "TIMER",
         "timerTemplate": "Field to format the timer",
-        "timerTemplate_tooltip": "Available macros:\n %(timer)s\n %(timerColor)s\nHTML - YES",
+        "timerTemplate_tooltip": "Available macros:<br> %(timer)s<br> %(timerColor)s<br>HTML - YES",
         "timerColorEndBattle": "Color macro %(timerColor)s if there are less than 2 mim",
         "timerColor": "Color macro %(timerColor)s"
     },
@@ -169,9 +169,9 @@ localization = {
         "position*y": "Position the main text box of the calculator Vertically",
         "template": "Template Main text field",
         "display_on_allies": "Display on allies",
-        "template_tooltip": "Macro format:% (name) data type s:d:f.\n"
-                            "s-string, d-decimal, f-floating point\n\n"
-                            "List of available macros:\n"
+        "template_tooltip": "Macro format:% (name) data type s:d:f.<br>"
+                            "s-string, d-decimal, f-floating point<br><br>"
+                            "List of available macros:<br>"
                             "<li>%(countedArmor)d - Counted armor.</li>"
                             "<li>%(piercingPower)d - Distance-based projectile penetration.</li>"
                             "<li>%(piercingReserve)d - Penetration reserve after piercing armor.</li>"
@@ -192,7 +192,7 @@ localization = {
         "wg_log_hide_critics_tooltip": "Removes critical hits from the detailed log WG",
         "wg_log_pos_fix": "Put logs into the right places.",
         "wg_log_pos_fix_tooltip": "Switches positions of caused damage and received damage logs."
-                                  "\nIf enabled - received is at the bottom, caused is at the top."
+                                  "<br>If enabled - received is at the bottom, caused is at the top."
     },
     "log_total": {
         "header": "TOTAL LOG OF THE EFFECTIVENESS OF THE PLAYER",
@@ -252,7 +252,7 @@ localization = {
         "dynamic_zoom*enabled": "Automatic selection of the zoom ratio when switching to sniper mode.",
         "dynamic_zoom*steps_only": "Move only in fixed steps.",
         "dynamic_zoom*enabled_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
-        "dynamic_zoom*zoomXMeters_tooltip": "(dynamic_zoom = distance / Sensitivity of approach)\n"
+        "dynamic_zoom*zoomXMeters_tooltip": "(dynamic_zoom = distance / Sensitivity of approach)<br>"
                                             "The default is every 17 meters + 1 (the smaller the number, the more zoom",
         "zoomSteps*enabled": "Enable Steps of zoom.",
         "zoomSteps*steps": "Steps of zoom.",
@@ -365,8 +365,8 @@ localization = {
         "y_tooltip": "Position from the center of the screen.",
     },
     "crewDialog": {
-        "enable": "\nEnable accelerated crew training?",
-        "disable": "\nDisable accelerated crew training?",
+        "enable": "<br>Enable accelerated crew training?",
+        "disable": "<br>Disable accelerated crew training?",
         "notAvailable": "Field upgrades are not available for this vehicle.",
         "isFullXp": "You have accumulated the necessary amount of experience to fully upgrade the field upgrade.",
         "isFullComplete": "You have pumped the field upgrade to the highest possible level.",
