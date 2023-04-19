@@ -83,7 +83,30 @@ uk.flight_time=Час польоту снаряду
 uk.hp_bars=Панель міцності команд
 uk.log_extended=Розширені логи шкоди
 uk.log_total=Лог ефективності сумарний
-uk.main=Додаткові налаштування
+
+
+uk.main=main.json
+uk.anti_anonymous=anti_anonymous
+uk.auto_crew_training=auto_crew_training
+uk.auto_return_crew=auto_return_crew
+uk.clear_cache_automatically=clear_cache_automatically
+uk.disable_score_sound=disable_score_sound
+uk.disable_stun_sound=disable_stun_sound
+uk.directives_only_from_storage=directives_only_from_storage
+uk.hide_badges=hide_badges
+uk.hide_button_counters_on_top_panel=hide_button_counters_on_top_panel
+uk.hide_clan_abbrev=hide_clan_abbrev
+uk.hide_dog_tags=hide_dog_tags
+uk.hide_field_mail=hide_field_mail
+uk.hide_hint_panel=hide_hint_panel
+uk.hide_main_chat_in_hangar=hide_main_chat_in_hangar
+uk.ignore_commanders_voice=ignore_commanders_voice
+uk.mute_team_base_sound=mute_team_base_sound
+uk.premium_time=premium_time
+uk.save_shot=save_shot
+uk.show_friends=show_friends
+
+
 uk.main_gun=Основний калібр
 uk.minimap=Міні-мапа
 uk.own_health=Міцність танка гравця

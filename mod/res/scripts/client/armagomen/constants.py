@@ -113,7 +113,7 @@ __Main = namedtuple("MAIN", (
 MAIN = __Main(
     "clear_cache_automatically", "hide_badges", "hide_clan_abbrev", "hide_dog_tags", "main", "show_friends",
     "anti_anonymous", "useKeyPairs", "ignore_commanders_voice", "disable_score_sound", "DEBUG_MODE",
-    "auto_crew_training", "do_not_buy_directives_for_currency_automatically", "hide_hint_panel", "hide_field_mail",
+    "auto_crew_training", "directives_only_from_storage", "hide_hint_panel", "hide_field_mail",
     "auto_return_crew", "disable_stun_sound", "hide_main_chat_in_hangar", "hide_button_counters_on_top_panel",
     "premium_time", "save_shot", "mute_team_base_sound")
 

@@ -6,28 +6,55 @@ Name: "armagomen"; Description: {cm:types_armagomen};
 Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
 [Components]
+Name: main; Description: {cm:main}; Flags: fixed disablenouninstallwarning; 
+Name: main/anti_anonymous; Description: {cm:anti_anonymous}; Flags: disablenouninstallwarning;
+Name: main/auto_crew_training; Description: {cm:auto_crew_training}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/auto_return_crew; Description: {cm:auto_return_crew}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/clear_cache_automatically; Description: {cm:clear_cache_automatically}; Flags: disablenouninstallwarning;
+Name: main/disable_score_sound; Description: {cm:disable_score_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/disable_stun_sound; Description: {cm:disable_stun_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/directives_only_from_storage; Description: {cm:directives_only_from_storage}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/hide_badges; Description: {cm:hide_badges}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/hide_dog_tags; Description: {cm:hide_dog_tags}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/premium_time; Description: {cm:premium_time}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/save_shot; Description: {cm:save_shot}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: main/show_friends; Description: {cm:show_friends}; Flags: disablenouninstallwarning; Types: "armagomen";
+
+Name: hp_bars; Description: {cm:hp_bars}; Flags: checkablealone disablenouninstallwarning;
+Name: hp_bars/normal; Description: normal; Flags: exclusive disablenouninstallwarning;
+Name: hp_bars/league; Description: league; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
+
 Name: debug_panel; Description: {cm:debug_panel}; Flags: checkablealone disablenouninstallwarning; 
 Name: debug_panel/minimal; Description: minimal; Flags: exclusive disablenouninstallwarning;
 Name: debug_panel/modern; Description: modern; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
+
+Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: checkablealone disablenouninstallwarning;
+Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
+Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Flags: exclusive disablenouninstallwarning;
+
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: checkablealone disablenouninstallwarning;
-Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
-Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Flags: exclusive disablenouninstallwarning;
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen user";
 Name: flight_time; Description: {cm:flight_time}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hp_bars; Description: {cm:hp_bars}; Flags: checkablealone disablenouninstallwarning;
-Name: hp_bars/normal; Description: normal; Flags: exclusive disablenouninstallwarning;
-Name: hp_bars/league; Description: league; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
+
+
 Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main; Description: {cm:main}; Flags: disablenouninstallwarning; Types: "armagomen user";
+
+
 Name: main_gun; Description: {cm:main_gun}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: minimap; Description: {cm:minimap}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning;
@@ -84,3 +111,25 @@ Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*"
 
 [UninstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
+
+[Code]
+procedure ComponentsOnClickCheck(Sender: TObject);
+begin
+    if WizardIsComponentSelected('debug_panel') then
+    begin
+      if WizardIsComponentSelected('debug_panel/minimal') then 
+      begin
+        Log('debug_panel/minimal checked');
+      end
+        else begin
+        Log('debug_panel/minimal unchecked');
+      end;
+    end;
+end;
+
+//<event('InitializeWizard')>
+procedure _OnClickCheck();
+begin
+  WizardForm.ComponentsList.OnClickCheck := @ComponentsOnClickCheck;
+end;
+

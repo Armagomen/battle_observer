@@ -65,8 +65,8 @@ localization = {
         "auto_crew_training": "Automatic switching of 'Accelerated crew training'",
         "auto_crew_training_tooltip": "Monitors whether 'Field Upgrade' is upgraded/available and enables or disables"
                                       " 'Expedited Crew Training' accordingly.",
-        "do_not_buy_directives_for_currency_automatically": "Do not replenish directives for currency (automatically)",
-        "do_not_buy_directives_for_currency_automatically_tooltip":
+        "directives_only_from_storage": "Do not replenish directives for currency (automatically)",
+        "directives_only_from_storage_tooltip":
             "Prevent automatic replenishment of instructions for game currency if they are not in stock. It will also "
             "turn on automatic replenishment from the warehouse if they are there and you forgot to tick the box.",
         "hide_hint_panel": "Disable hints in battle",
