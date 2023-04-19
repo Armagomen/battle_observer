@@ -159,7 +159,7 @@ def removeDirs(path, name=None):
 
 
 def clearClientCache(category=None):
-    if not settings.main["autoClearCache"]:
+    if not settings.main["clear_cache_automatically"]:
         return
     dirs = (
         "account_caches", "battle_results", "clan_cache", "custom_data", "dossier_cache", "messenger_cache",

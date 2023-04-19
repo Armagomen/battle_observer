@@ -40,18 +40,18 @@ localization = {
     "main": {
         "header": "GENERAL SETTINGS",
         "DEBUG_MODE": "DEBUG_MODE",
-        "hideBadges": "Disable chevrons/ribbons: in ears, on tab window, on boot screen.",
-        "hideClanAbbrev": "Disable clan display: in ears, on tab window, on boot screen.",
-        "showFriendsAndClanInEars": "Mark clan friends and yourself in the team lists.",
-        "autoClearCache": "Clear the game cache on startup.",
-        "autoClearCache_tooltip": "Cleaning the temporary files of the game in the folder "
-                                  "AppData/Roaming/Wargaming.net/WorldOfTanks."
-                                  "<br>Folders that are modified there are not affected.",
+        "hide_badges": "Disable chevrons/ribbons: in ears, on tab window, on boot screen.",
+        "hide_clan_abbrev": "Disable clan display: in ears, on tab window, on boot screen.",
+        "show_friends": "Mark clan friends and yourself in the team lists.",
+        "clear_cache_automatically": "Clear the game cache on startup.",
+        "clear_cache_automatically_tooltip": "Cleaning the temporary files of the game in the folder "
+                                             "AppData/Roaming/Wargaming.net/WorldOfTanks."
+                                             "<br>Folders that are modified there are not affected.",
         "smallDoubleCarousel": "Use small icons in the tank carousel.",
         "carouselRows": "number of rows of multi-row tank carousel",
-        "anonymousEnableShow": "Mark as team-killer players with an anonymizer.",
-        "anonymousEnableShow_tooltip": "Only if player statistics is disabled, the parameter will "
-                                       "not be taken into account if statistics are enabled.",
+        "anti_anonymous": "Mark as team-killer players with an anonymizer.",
+        "anti_anonymous_tooltip": "Only if player statistics is disabled, the parameter will "
+                                  "not be taken into account if statistics are enabled.",
         "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "useKeyPairs_tooltip": "Once enabled, the left and right keys will work as one, regardless of which one you "
                                "chose in the module settings.",

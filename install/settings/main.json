@@ -1,14 +1,14 @@
 {
   "DEBUG_MODE": false,
-  "anonymousEnableShow": false,
-  "autoClearCache": false,
+  "anti_anonymous": false,
+  "clear_cache_automatically": false,
   "auto_crew_training": true,
   "auto_return_crew": true,
   "disable_score_sound": true,
   "disable_stun_sound": true,
   "do_not_buy_directives_for_currency_automatically": true,
-  "hideBadges": true,
-  "hideClanAbbrev": true,
+  "hide_badges": true,
+  "hide_clan_abbrev": true,
   "hide_button_counters_on_top_panel": true,
   "hide_dog_tags": true,
   "hide_field_mail": true,
@@ -18,6 +18,6 @@
   "mute_team_base_sound": true,
   "premium_time": true,
   "save_shot": true,
-  "showFriendsAndClanInEars": false,
+  "show_friends": false,
   "useKeyPairs": true
 }
