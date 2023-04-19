@@ -30,9 +30,8 @@ def new_VehicleArenaInfoVO(init, vTypeVo, *args, **kwargs):
 @overrideMethod(VehicleTypeInfoVO, "update")
 def new_VehicleTypeInfoVO_update(update, vTypeVo, *args, **kwargs):
     if not isReplay() and not viewSettings.gui.isInEpicRange() and settings.main[MAIN.SHOW_FRIENDS]:
-        isPremiumIGR = getattr(vTypeVo, "isPremiumIGR", False)
         result = update(vTypeVo, *args, **kwargs)
-        if kwargs.get('vehicleType') is not None and hasattr(vTypeVo, "isPremiumIGR") and isPremiumIGR:
-            vTypeVo.isPremiumIGR = isPremiumIGR
+        if hasattr(vTypeVo, "isPremiumIGR"):
+            vTypeVo.isPremiumIGR |= kwargs.get(ANOTHER.ACCOUNT_DBID) in _cache
         return result
     return update(vTypeVo, *args, **kwargs)
