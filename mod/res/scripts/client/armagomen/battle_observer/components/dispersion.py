@@ -140,9 +140,8 @@ class DispersionCircle(object):
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION.NAME:
             self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
-            server_aim = config[DISPERSION.CIRCLE_EXTRA_LAP]
-            self.replaceWGCircle = False if server_aim else config[DISPERSION.CIRCLE_REPLACE]
-            self.hooksEnable = self.enabled and server_aim
+            self.replaceWGCircle = config[DISPERSION.CIRCLE_REPLACE]
+            self.hooksEnable = self.enabled and config[DISPERSION.CIRCLE_EXTRA_LAP]
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if not self.enabled:
