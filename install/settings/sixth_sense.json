@@ -1,8 +1,8 @@
 {
   "default_icon": true,
   "default_icon_name": "dog_patron.png",
-  "enabled": true,
+  "enabled": false,
   "lampShowTime": 9,
-  "playTickSound": true,
+  "playTickSound": false,
   "user_icon": "mods/configs/mod_battle_observer/__icon__path__200x200.png"
 }

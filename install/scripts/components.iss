@@ -49,7 +49,45 @@ Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Ty
 Name: dispersion_circle/server; Description: {cm:dispersion_circle_server};
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Types: "armagomen";
 
-Name: sixth_sense; Description: {cm:sixth_sense}; Types: "armagomen";
+//sixth_sense
+Name: sixth_sense; Description: {cm:sixth_sense}; Flags: checkablealone;
+Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: "armagomen";
+Name: sixth_sense/bavovnatko; Description: {cm:bavovnatko}; Flags: exclusive;
+Name: sixth_sense/boris; Description: {cm:boris}; Flags: exclusive;
+Name: sixth_sense/dog_patron; Description: {cm:dog_patron}; Flags: exclusive; Types: "armagomen";
+Name: sixth_sense/eye_of_sauron; Description: {cm:eye_of_sauron}; Flags: exclusive;
+Name: sixth_sense/feygin_arestovych; Description: {cm:feygin_arestovych}; Flags: exclusive;
+Name: sixth_sense/flash; Description: {cm:flash}; Flags: exclusive;
+Name: sixth_sense/himars; Description: {cm:himars}; Flags: exclusive;
+Name: sixth_sense/kv_dart; Description: {cm:kv_dart}; Flags: exclusive;
+Name: sixth_sense/lamp_1; Description: {cm:lamp_1}; Flags: exclusive;
+Name: sixth_sense/lamp_2; Description: {cm:lamp_2}; Flags: exclusive;
+Name: sixth_sense/lamp_3; Description: {cm:lamp_3}; Flags: exclusive;
+Name: sixth_sense/luka; Description: {cm:luka}; Flags: exclusive;
+Name: sixth_sense/medal_ship_censoured; Description: {cm:medal_ship_censoured}; Flags: exclusive;
+Name: sixth_sense/moscow_ship; Description: {cm:moscow_ship}; Flags: exclusive;
+Name: sixth_sense/moscow_ship_2; Description: {cm:moscow_ship_2}; Flags: exclusive;
+Name: sixth_sense/potato; Description: {cm:potato}; Flags: exclusive;
+Name: sixth_sense/red_bloody_hand; Description: {cm:red_bloody_hand}; Flags: exclusive;
+Name: sixth_sense/rick_bender; Description: {cm:rick_bender}; Flags: exclusive;
+Name: sixth_sense/rick_morty; Description: {cm:rick_morty}; Flags: exclusive;
+Name: sixth_sense/rick_morty_2; Description: {cm:rick_morty_2}; Flags: exclusive;
+Name: sixth_sense/rick_morty_fu; Description: {cm:rick_morty_fu}; Flags: exclusive;
+Name: sixth_sense/rick_morty_portal; Description: {cm:rick_morty_portal}; Flags: exclusive;
+Name: sixth_sense/skull; Description: {cm:skull}; Flags: exclusive;
+Name: sixth_sense/spark; Description: {cm:spark}; Flags: exclusive;
+Name: sixth_sense/sun_scream; Description: {cm:sun_scream}; Flags: exclusive;
+Name: sixth_sense/supernova; Description: {cm:supernova}; Flags: exclusive;
+Name: sixth_sense/ua_armed_forces; Description: {cm:ua_armed_forces}; Flags: exclusive;
+Name: sixth_sense/ua_flag; Description: {cm:ua_flag}; Flags: exclusive;
+Name: sixth_sense/ua_flag_herb; Description: {cm:ua_flag_herb}; Flags: exclusive;
+Name: sixth_sense/ua_gur; Description: {cm:ua_gur}; Flags: exclusive;
+Name: sixth_sense/ua_herb; Description: {cm:ua_herb}; Flags: exclusive;
+Name: sixth_sense/water_fire; Description: {cm:water_fire}; Flags: exclusive;
+Name: sixth_sense/what_again; Description: {cm:what_again}; Flags: exclusive;
+Name: sixth_sense/zelensky; Description: {cm:zelensky}; Flags: exclusive;
+
+
 Name: arcade_camera; Description: {cm:arcade_camera}; Types: "armagomen";
 Name: armor_calculator; Description: {cm:armor_calculator}; Types: "armagomen";
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Types: "armagomen";
@@ -114,6 +152,7 @@ Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*"
 
 [UninstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
+Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*"
 
 [Code]
 
@@ -213,9 +252,56 @@ begin
   end;
 end;
 
+procedure ChangeSixthSenseJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\sixth_sense.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle sixth_sense.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('sixth_sense'));
+    JSON_SetBool(Handle,'/playTickSound', WizardIsComponentSelected('sixth_sense/playTickSound'));
+    if WizardIsComponentSelected('sixth_sense/bavovnatko') then JSON_SetString(Handle,'/default_icon_name', 'bavovnatko.png');
+    if WizardIsComponentSelected('sixth_sense/boris') then JSON_SetString(Handle,'/default_icon_name', 'boris.png');
+    if WizardIsComponentSelected('sixth_sense/dog_patron') then JSON_SetString(Handle,'/default_icon_name', 'dog_patron.png');
+    if WizardIsComponentSelected('sixth_sense/eye_of_sauron') then JSON_SetString(Handle,'/default_icon_name', 'eye_of_sauron.png');
+    if WizardIsComponentSelected('sixth_sense/feygin_arestovych') then JSON_SetString(Handle,'/default_icon_name', 'feygin_arestovych.png');
+    if WizardIsComponentSelected('sixth_sense/flash') then JSON_SetString(Handle,'/default_icon_name', 'flash.png');
+    if WizardIsComponentSelected('sixth_sense/himars') then JSON_SetString(Handle,'/default_icon_name', 'himars.png');
+    if WizardIsComponentSelected('sixth_sense/kv_dart') then JSON_SetString(Handle,'/default_icon_name', 'kv_dart.png');
+    if WizardIsComponentSelected('sixth_sense/lamp_1') then JSON_SetString(Handle,'/default_icon_name', 'lamp_1.png');
+    if WizardIsComponentSelected('sixth_sense/lamp_2') then JSON_SetString(Handle,'/default_icon_name', 'lamp_2.png');
+    if WizardIsComponentSelected('sixth_sense/lamp_3') then JSON_SetString(Handle,'/default_icon_name', 'lamp_3.png');
+    if WizardIsComponentSelected('sixth_sense/luka') then JSON_SetString(Handle,'/default_icon_name', 'luka.png');
+    if WizardIsComponentSelected('sixth_sense/medal_ship_censoured') then JSON_SetString(Handle,'/default_icon_name', 'medal_ship_censoured.png');
+    if WizardIsComponentSelected('sixth_sense/moscow_ship') then JSON_SetString(Handle,'/default_icon_name', 'moscow_ship.png');
+    if WizardIsComponentSelected('sixth_sense/moscow_ship_2') then JSON_SetString(Handle,'/default_icon_name', 'moscow_ship_2.png');
+    if WizardIsComponentSelected('sixth_sense/potato') then JSON_SetString(Handle,'/default_icon_name', 'potato.png');
+    if WizardIsComponentSelected('sixth_sense/red_bloody_hand') then JSON_SetString(Handle,'/default_icon_name', 'red_bloody_hand.png');
+    if WizardIsComponentSelected('sixth_sense/rick_bender') then JSON_SetString(Handle,'/default_icon_name', 'rick_bender.png');
+    if WizardIsComponentSelected('sixth_sense/rick_morty') then JSON_SetString(Handle,'/default_icon_name', 'rick_morty.png');
+    if WizardIsComponentSelected('sixth_sense/rick_morty_2') then JSON_SetString(Handle,'/default_icon_name', 'rick_morty_2.png');
+    if WizardIsComponentSelected('sixth_sense/rick_morty_fu') then JSON_SetString(Handle,'/default_icon_name', 'rick_morty_fu.png');
+    if WizardIsComponentSelected('sixth_sense/rick_morty_portal') then JSON_SetString(Handle,'/default_icon_name', 'rick_morty_portal.png');
+    if WizardIsComponentSelected('sixth_sense/skull') then JSON_SetString(Handle,'/default_icon_name', 'skull.png');
+    if WizardIsComponentSelected('sixth_sense/spark') then JSON_SetString(Handle,'/default_icon_name', 'spark.png');
+    if WizardIsComponentSelected('sixth_sense/sun_scream') then JSON_SetString(Handle,'/default_icon_name', 'sun_scream.png');
+    if WizardIsComponentSelected('sixth_sense/supernova') then JSON_SetString(Handle,'/default_icon_name', 'supernova.png');
+    if WizardIsComponentSelected('sixth_sense/ua_armed_forces') then JSON_SetString(Handle,'/default_icon_name', 'ua_armed_forces.png');
+    if WizardIsComponentSelected('sixth_sense/ua_flag') then JSON_SetString(Handle,'/default_icon_name', 'ua_flag.png');
+    if WizardIsComponentSelected('sixth_sense/ua_flag_herb') then JSON_SetString(Handle,'/default_icon_name', 'ua_flag_herb.png');
+    if WizardIsComponentSelected('sixth_sense/ua_gur') then JSON_SetString(Handle,'/default_icon_name', 'ua_gur.png');
+    if WizardIsComponentSelected('sixth_sense/ua_herb') then JSON_SetString(Handle,'/default_icon_name', 'ua_herb.png');
+    if WizardIsComponentSelected('sixth_sense/water_fire') then JSON_SetString(Handle,'/default_icon_name', 'water_fire.png');
+    if WizardIsComponentSelected('sixth_sense/what_again') then JSON_SetString(Handle,'/default_icon_name', 'what_again.png');
+    if WizardIsComponentSelected('sixth_sense/zelensky') then JSON_SetString(Handle,'/default_icon_name', 'zelensky.png');
+    JSON_Close(Handle);
+  end;
+end;
+
 <event('CurStepChanged')>
 procedure StepChanged(CurStep: TSetupStep);
-
 begin
   if CurStep = ssPostInstall then
     begin
@@ -224,6 +310,7 @@ begin
       ChangeHpBarsJsonValues();
       ChangeDebugPanelJsonValues();
       ChangeDispersioCircleJsonValues();
+      ChangeSixthSenseJsonValues();
     end;
 end;
 
