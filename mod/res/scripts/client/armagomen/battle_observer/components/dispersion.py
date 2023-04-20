@@ -17,7 +17,6 @@ from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 CLIENT = gun_marker_ctrl._MARKER_TYPE.CLIENT
 SERVER = gun_marker_ctrl._MARKER_TYPE.SERVER
 
-
 DEV_FACTORIES_COLLECTION = (
     gm_factory._DevControlMarkersFactory,
     gm_factory._OptionalMarkersFactory,
@@ -36,17 +35,18 @@ aih_constants.GUN_MARKER_MIN_SIZE = DISPERSION.GUN_MARKER_MIN_SIZE
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
+    __scaleConfig = float(settings.dispersion_circle[DISPERSION.CIRCLE_SCALE_CONFIG])
 
     def __updateScreenRatio(self):
-        self.__screenRatio = screenResolution()[0] * 0.5 * settings.dispersion_circle[DISPERSION.CIRCLE_SCALE_CONFIG]
+        self.__screenRatio = screenResolution()[0] * 0.5 * self.__scaleConfig
 
 
 class SPGController(gun_marker_ctrl._SPGGunMarkerController):
+    __scaleConfig = float(settings.dispersion_circle[DISPERSION.CIRCLE_SCALE_CONFIG])
 
     def _updateDispersionData(self):
-        scale = settings.dispersion_circle[DISPERSION.CIRCLE_SCALE_CONFIG]
-        self._size *= scale
-        dispersionAngle = self._gunRotator.dispersionAngle * scale
+        self._size *= self.__scaleConfig
+        dispersionAngle = self._gunRotator.dispersionAngle * self.__scaleConfig
         isServerAim = self._gunMarkerType == SERVER
         if g_replayCtrl.isPlaying and g_replayCtrl.isClientReady:
             d, s = g_replayCtrl.getSPGGunMarkerParams()
