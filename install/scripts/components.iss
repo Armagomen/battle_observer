@@ -7,70 +7,70 @@ Name: "user"; Description: {cm:types_user}; Flags: iscustom;
 
 [Components]
 // main.json
-Name: anti_anonymous; Description: {cm:anti_anonymous}; Flags: disablenouninstallwarning;
-Name: auto_crew_training; Description: {cm:auto_crew_training}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: auto_return_crew; Description: {cm:auto_return_crew}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: clear_cache_automatically; Description: {cm:clear_cache_automatically}; Flags: disablenouninstallwarning;
-Name: disable_score_sound; Description: {cm:disable_score_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: disable_stun_sound; Description: {cm:disable_stun_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: directives_only_from_storage; Description: {cm:directives_only_from_storage}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hide_badges; Description: {cm:hide_badges}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hide_dog_tags; Description: {cm:hide_dog_tags}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hide_field_mail; Description: {cm:hide_field_mail}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hide_hint_panel; Description: {cm:hide_hint_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: mute_team_base_sound; Description: {cm:mute_team_base_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: premium_time; Description: {cm:premium_time}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: save_shot; Description: {cm:save_shot}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: show_friends; Description: {cm:show_friends}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: anti_anonymous; Description: {cm:anti_anonymous};
+Name: auto_crew_training; Description: {cm:auto_crew_training};  Types: "armagomen";
+Name: auto_return_crew; Description: {cm:auto_return_crew}; Types: "armagomen";
+Name: clear_cache_automatically; Description: {cm:clear_cache_automatically};
+Name: disable_score_sound; Description: {cm:disable_score_sound}; Types: "armagomen";
+Name: disable_stun_sound; Description: {cm:disable_stun_sound}; Types: "armagomen";
+Name: directives_only_from_storage; Description: {cm:directives_only_from_storage}; Types: "armagomen";
+Name: hide_badges; Description: {cm:hide_badges}; Types: "armagomen";
+Name: hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Types: "armagomen";
+Name: hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Types: "armagomen";
+Name: hide_dog_tags; Description: {cm:hide_dog_tags}; Types: "armagomen";
+Name: hide_field_mail; Description: {cm:hide_field_mail}; Types: "armagomen";
+Name: hide_hint_panel; Description: {cm:hide_hint_panel}; Types: "armagomen";
+Name: hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Types: "armagomen";
+Name: ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: "armagomen";
+Name: mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: "armagomen";
+Name: premium_time; Description: {cm:premium_time}; Types: "armagomen";
+Name: save_shot; Description: {cm:save_shot}; Types: "armagomen";
+Name: show_friends; Description: {cm:show_friends}; Types: "armagomen";
 
 //clock
-Name: clock; Description: {cm:clock}; Flags: dontinheritcheck checkablealone disablenouninstallwarning; 
-Name: clock/hangar; Description: {cm:clock_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: clock/battle; Description: {cm:clock_battle}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: clock; Description: {cm:clock}; Flags: checkablealone unchecked; 
+Name: clock/hangar; Description: {cm:clock_hangar};  Types: "armagomen";
+Name: clock/battle; Description: {cm:clock_battle};  Types: "armagomen";
 
 //hp_bars
-Name: hp_bars; Description: {cm:hp_bars}; Flags: checkablealone disablenouninstallwarning;
-Name: hp_bars/alive_count; Description: {cm:alive_count}; Flags: dontinheritcheck disablenouninstallwarning;
-Name: hp_bars/normal; Description: {cm:hp_normal}; Flags: exclusive disablenouninstallwarning;
-Name: hp_bars/league; Description: {cm:hp_league}; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
+Name: hp_bars; Description: {cm:hp_bars}; Flags: checkablealone;
+Name: hp_bars/alive_count; Description: {cm:alive_count}; Flags: dontinheritcheck;
+Name: hp_bars/normal; Description: {cm:hp_normal}; Flags: exclusive;
+Name: hp_bars/league; Description: {cm:hp_league}; Flags: exclusive; Types: "armagomen";
 
 //debug_panel
-Name: debug_panel; Description: {cm:debug_panel}; Flags: checkablealone disablenouninstallwarning; 
-Name: debug_panel/minimal; Description: minimal; Flags: exclusive disablenouninstallwarning;
-Name: debug_panel/modern; Description: modern; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
+Name: debug_panel; Description: {cm:debug_panel}; Flags: checkablealone; 
+Name: debug_panel/minimal; Description: minimal; Flags: exclusive;
+Name: debug_panel/modern; Description: modern; Flags: exclusive; Types: "armagomen";
 
 //dispersion_circle
-Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: checkablealone disablenouninstallwarning;
-Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Flags: disablenouninstallwarning;
-Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: checkablealone;
+Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Types: "armagomen";
+Name: dispersion_circle/server; Description: {cm:dispersion_circle_server};
+Name: dispersion_timer; Description: {cm:dispersion_timer}; Types: "armagomen";
 
-Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: armor_calculator; Description: {cm:armor_calculator}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
-Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen user";
-Name: flight_time; Description: {cm:flight_time}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main_gun; Description: {cm:main_gun}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: minimap; Description: {cm:minimap}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning;
-Name: players_panels; Description: {cm:players_panels}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: service_channel_filter; Description: {cm:service_channel_filter}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: tank_carousel; Description: {cm:tank_carousel}; Flags: disablenouninstallwarning;
-Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning;
-Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: colors; Description: {cm:colors}; Flags: fixed disablenouninstallwarning; Types: "armagomen user";
+Name: sixth_sense; Description: {cm:sixth_sense}; Types: "armagomen";
+Name: arcade_camera; Description: {cm:arcade_camera}; Types: "armagomen";
+Name: armor_calculator; Description: {cm:armor_calculator}; Types: "armagomen";
+Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Types: "armagomen";
+Name: battle_timer; Description: {cm:battle_timer}; Types: "armagomen";
+Name: distance_to_enemy; Description: {cm:distance_to_enemy};
+Name: effects; Description: {cm:effects}; Types: "armagomen user";
+Name: flight_time; Description: {cm:flight_time}; Types: "armagomen";
+Name: log_extended; Description: {cm:log_extended}; Types: "armagomen";
+Name: log_total; Description: {cm:log_total}; Types: "armagomen";
+Name: main_gun; Description: {cm:main_gun}; Types: "armagomen";
+Name: minimap; Description: {cm:minimap}; Types: "armagomen";
+Name: own_health; Description: {cm:own_health};
+Name: players_panels; Description: {cm:players_panels}; Types: "armagomen";
+Name: service_channel_filter; Description: {cm:service_channel_filter}; Types: "armagomen";
+Name: statistics; Description: {cm:statistics}; Types: "armagomen";
+Name: strategic_camera; Description: {cm:strategic_camera}; Types: "armagomen";
+Name: tank_carousel; Description: {cm:tank_carousel};
+Name: team_bases_panel; Description: {cm:team_bases_panel}; Types: "armagomen";
+Name: wg_logs; Description: {cm:wg_logs};
+Name: zoom; Description: {cm:zoom}; Types: "armagomen";
+Name: colors; Description: {cm:colors}; Flags: fixed; Types: "armagomen user";
 
 [Files]
 Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
