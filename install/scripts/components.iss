@@ -27,31 +27,33 @@ Name: premium_time; Description: {cm:premium_time}; Flags: disablenouninstallwar
 Name: save_shot; Description: {cm:save_shot}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: show_friends; Description: {cm:show_friends}; Flags: disablenouninstallwarning; Types: "armagomen";
 
+//clock
+Name: clock; Description: {cm:clock}; Flags: dontinheritcheck checkablealone disablenouninstallwarning; 
+Name: clock/hangar; Description: {cm:clock_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: clock/battle; Description: {cm:clock_battle}; Flags: disablenouninstallwarning; Types: "armagomen";
 
+//hp_bars
 Name: hp_bars; Description: {cm:hp_bars}; Flags: checkablealone disablenouninstallwarning;
-Name: hp_bars/normal; Description: normal; Flags: exclusive disablenouninstallwarning;
-Name: hp_bars/league; Description: league; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
+Name: hp_bars/alive_count; Description: {cm:alive_count}; Flags: dontinheritcheck disablenouninstallwarning;
+Name: hp_bars/normal; Description: {cm:hp_normal}; Flags: exclusive disablenouninstallwarning;
+Name: hp_bars/league; Description: {cm:hp_league}; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
 
+//debug_panel
 Name: debug_panel; Description: {cm:debug_panel}; Flags: checkablealone disablenouninstallwarning; 
 Name: debug_panel/minimal; Description: minimal; Flags: exclusive disablenouninstallwarning;
 Name: debug_panel/modern; Description: modern; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
 
+//dispersion_circle
 Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: checkablealone disablenouninstallwarning;
-Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Flags: exclusive disablenouninstallwarning; Types: "armagomen";
-Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Flags: exclusive disablenouninstallwarning;
+Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Flags: disablenouninstallwarning;
+Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
-
-//clock
-Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: clock/hangar; Description: {cm:clock_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: clock/battle; Description: {cm:clock_battle}; Flags: disablenouninstallwarning; Types: "armagomen";
-
-Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen user";
 Name: flight_time; Description: {cm:flight_time}; Flags: disablenouninstallwarning; Types: "armagomen";
@@ -74,23 +76,21 @@ Name: colors; Description: {cm:colors}; Flags: fixed disablenouninstallwarning; 
 Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
 Source: "settings\load.json"; DestDir: "{#configs_dir}"; Flags: ignoreversion;
 Source: "settings\main.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+Source: "settings\hp_bars.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: hp_bars;
+Source: "settings\clock.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: clock;
+Source: "settings\debug_panel.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: debug_panel;
+Source: "settings\dispersion_circle.json"; DestDir: "{#configs_dir}\armagomen";  Flags: ignoreversion; Components: dispersion_circle;
+Source: "settings\dispersion_timer.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: dispersion_timer;
 
-Source: "settings\debug_panel_minimal.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"debug_panel.json"; Flags: ignoreversion; Components: debug_panel/minimal; 
-Source: "settings\debug_panel_modern.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"debug_panel.json"; Flags: ignoreversion; Components: debug_panel/modern;
+ 
 Source: "settings\sixth_sense.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: sixth_sense;
 Source: "settings\arcade_camera.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: arcade_camera;
 Source: "settings\armor_calculator.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: armor_calculator;
 Source: "settings\avg_efficiency_in_hangar.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: avg_efficiency_in_hangar;
 Source: "settings\battle_timer.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: battle_timer;
-Source: "settings\clock.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: clock;
-Source: "settings\dispersion_circle_replace.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"dispersion_circle.json"; Flags: ignoreversion; Components: dispersion_circle/replace;
-Source: "settings\dispersion_circle_server.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"dispersion_circle.json"; Flags: ignoreversion; Components: dispersion_circle/server;
-Source: "settings\dispersion_timer.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: dispersion_timer;
 Source: "settings\distance_to_enemy.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: distance_to_enemy;
 Source: "settings\effects.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: effects;
 Source: "settings\flight_time.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: flight_time;
-Source: "settings\hp_bars_normal.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"hp_bars.json"; Flags: ignoreversion; Components: hp_bars/normal;
-Source: "settings\hp_bars_league.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"hp_bars.json"; Flags: ignoreversion; Components: hp_bars/league;
 Source: "settings\log_extended.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: log_extended;
 Source: "settings\log_total.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: log_total;
 Source: "settings\main_gun.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: main_gun;
@@ -159,6 +159,52 @@ begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('clock'));
     JSON_SetBool(Handle,'/hangar/enabled', WizardIsComponentSelected('clock/hangar'));
     JSON_SetBool(Handle,'/battle/enabled', WizardIsComponentSelected('clock/battle'));
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeHpBarsJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\hp_bars.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle hp_bars.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('hp_bars'));
+    JSON_SetBool(Handle,'/showAliveCount', WizardIsComponentSelected('hp_bars/alive_count'));
+    if WizardIsComponentSelected('hp_bars/normal') then JSON_SetString(Handle,'/style', 'normal');
+    if WizardIsComponentSelected('hp_bars/league') then JSON_SetString(Handle,'/style', 'league');
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeDebugPanelJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\debug_panel.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle debug_panel.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('debug_panel'));
+    if WizardIsComponentSelected('debug_panel/minimal') then JSON_SetString(Handle,'/style', 'minimal');
+    if WizardIsComponentSelected('debug_panel/modern') then JSON_SetString(Handle,'/style', 'modern');
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeDispersioCircleJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\dispersion_circle.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle dispersion_circle.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('dispersion_circle'));
+    JSON_SetBool(Handle,'/extraServerLap', WizardIsComponentSelected('dispersion_circle/server'));
+    JSON_SetBool(Handle,'/replaceOriginalCircle', WizardIsComponentSelected('dispersion_circle/replace'));
     //JSON_SetDouble(Handle,'/gaw', 1.3);
     //JSON_SetInteger(Handle,'/krya/krya/krya', 42);
     //JSON_SetString(Handle,'/chyk/chyryk', 'aaa');
@@ -175,6 +221,9 @@ begin
     begin
       ChangeMainJsonValues();
       ChangeClockJsonValues();
+      ChangeHpBarsJsonValues();
+      ChangeDebugPanelJsonValues();
+      ChangeDispersioCircleJsonValues();
     end;
 end;
 

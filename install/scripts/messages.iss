@@ -118,24 +118,32 @@ uk.clock=Годинник у гаражі та бою
 uk.clock_hangar=Годинник у гаражі
 uk.clock_battle=Годинник у бою
 
+//hp_bars
+uk.hp_bars=Панель міцності команд
+uk.alive_count=Замінити ранунак на кількість живих
+uk.hp_league=Стиль вг ліга 2018
+uk.hp_normal=Класичний стиль
 
+//debug_panel
 uk.debug_panel=Змінена панель FPS/PING
+
+//dispersion_circle
+uk.dispersion_circle=Налаштування кола зведення (зменшення та серверний приціл)
+uk.dispersion_circle_replace=Зменшити коло зведення на 70%
+uk.dispersion_circle_server=Задіяти серверний приціл та зменшити серверне коло зведення на 70%
+
+
+
 uk.sixth_sense=Шосте відчуття з таймером 
 uk.arcade_camera=Командирська камера
 uk.armor_calculator=Калькулятор наведеної броні
 uk.avg_efficiency_in_hangar=Показники ефективності танка у гаражі
 uk.battle_timer=Змінений таймер бою
-
-
-
-uk.dispersion_circle=Налаштування кола зведення (зменшення та серверний приціл)
-uk.dispersion_circle_replace=Зменшити коло зведення на 70%
-uk.dispersion_circle_server=Задіяти серверний приціл та зменшити серверне коло зведення на 70%
 uk.dispersion_timer=Таймер зведення 
 uk.distance_to_enemy=Дистанція до найближчого виявленого ворога
 uk.effects=Налаштування ефектів
 uk.flight_time=Час польоту снаряду
-uk.hp_bars=Панель міцності команд
+
 uk.log_extended=Розширені логи шкоди
 uk.log_total=Лог ефективності сумарний
 
