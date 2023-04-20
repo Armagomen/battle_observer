@@ -1,4 +1,4 @@
-* [DOWNLOAD THE LATEST RELEASE](https://github.com/Armagomen/battle_observer/releases/latest/download/BattleObserver_WOT_EU.zip)
+* [DOWNLOAD THE LATEST RELEASE](https://github.com/Armagomen/battle_observer/releases/latest/)
 
 ### Офіційні ресурси
 

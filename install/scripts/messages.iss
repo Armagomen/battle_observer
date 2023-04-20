@@ -31,13 +31,39 @@ uk.open_donate=Підтримати розробника донатом.
 en.types_armagomen=Everything is like armagomen
 en.types_user=Custom installation
 
+//main
+en.anti_anonymous=Tag players with a hidden nickname
+en.auto_crew_training=Automatic switching of Accelerated Crew Training
+en.auto_return_crew=Auto return crew
+en.clear_cache_automatically=Clear cache after exiting the game
+en.disable_score_sound=Disable sound when destroying friendly or enemy tank
+en.disable_stun_sound=Disable artillery stun sound
+en.directives_only_from_storage=Save bonds and silver from buying directives
+en.hide_badges=Disable display of badges in battle
+en.hide_button_counters_on_top_panel=Disable counters and tooltips on garage hood buttons
+en.hide_clan_abbrev=Disable display of clan tags in battle
+en.hide_dog_tags=Disable display of tokens in battle
+en.hide_field_mail=Disable field mail
+en.hide_hint_panel=Disable hints in battle
+en.hide_main_chat_in_hangar=Disable main chat in hangar
+en.ignore_commanders_voice=Ignore commanders voice
+en.mute_team_base_sound=Mute base capture siren
+en.premium_time=Display premium account time timer
+en.save_shot=Block shooting on allies and destroyed
+en.show_friends=Show friends, clan players and yourself in team lists
+
+//clock
+en.clock=The clock in the garage and battle
+en.clock_hangar=Clock in the garage
+en.clock_battle=Clock in battle
+
 en.debug_panel=Changed FPS/PING panel
 en.sixth_sense=Sixth sense with timer
 en.arcade_camera=Commander Camera
 en.armor_calculator=Calculator of listed armor
 en.avg_efficiency_in_hangar=Tank efficiency in hangar
 en.battle_timer=Changed battle timer
-en.clock=The clock in the garage and battle
+
 en.dispersion_circle=Dispersion Circle Settings (Reduction and Server Sight)
 en.dispersion_circle_replace=Replace the original dispersion circle with a smaller one
 en.dispersion_circle_server=Add a reduction in the server's summary circle
@@ -48,7 +74,7 @@ en.flight_time=Projectile flight time
 en.hp_bars=Command strength bar
 en.log_extended=Extended damage logs
 en.log_total=Total efficiency log
-en.main=Advanced settings
+
 en.main_gun=Main caliber
 en.minimap=Minimap
 en.own_health=The health of the player's tank
@@ -65,30 +91,6 @@ en.colors=Customized module colors
 // uk
 uk.types_armagomen=Все як у armagomen
 uk.types_user=Вибіркове встановлення
-
-uk.debug_panel=Змінена панель FPS/PING
-uk.sixth_sense=Шосте відчуття з таймером 
-uk.arcade_camera=Командирська камера
-uk.armor_calculator=Калькулятор наведеної броні
-uk.avg_efficiency_in_hangar=Показники ефективності танка у гаражі
-uk.battle_timer=Змінений таймер бою
-
-//clock
-uk.clock=Годинник у гаражі та бою
-uk.clock_hangar=Годинник у гаражі
-uk.clock_battle=Годинник у бою
-
-uk.dispersion_circle=Налаштування кола зведення (зменшення та серверний приціл)
-uk.dispersion_circle_replace=Зменшити коло зведення на 70%
-uk.dispersion_circle_server=Задіяти серверний приціл та зменшити серверне коло зведення на 70%
-uk.dispersion_timer=Таймер зведення 
-uk.distance_to_enemy=Дистанція до найближчого виявленого ворога
-uk.effects=Налаштування ефектів
-uk.flight_time=Час польоту снаряду
-uk.hp_bars=Панель міцності команд
-uk.log_extended=Розширені логи шкоди
-uk.log_total=Лог ефективності сумарний
-
 
 //main
 uk.anti_anonymous=Позначити гравців з прихованим нікнеймом
@@ -111,6 +113,31 @@ uk.premium_time=Відображати таймер часу дії преміу
 uk.save_shot=Блокувати стрілянину по союзниках та знищених
 uk.show_friends=Позначити друзів, гравців клану та себе у списках команд
 
+//clock
+uk.clock=Годинник у гаражі та бою
+uk.clock_hangar=Годинник у гаражі
+uk.clock_battle=Годинник у бою
+
+
+uk.debug_panel=Змінена панель FPS/PING
+uk.sixth_sense=Шосте відчуття з таймером 
+uk.arcade_camera=Командирська камера
+uk.armor_calculator=Калькулятор наведеної броні
+uk.avg_efficiency_in_hangar=Показники ефективності танка у гаражі
+uk.battle_timer=Змінений таймер бою
+
+
+
+uk.dispersion_circle=Налаштування кола зведення (зменшення та серверний приціл)
+uk.dispersion_circle_replace=Зменшити коло зведення на 70%
+uk.dispersion_circle_server=Задіяти серверний приціл та зменшити серверне коло зведення на 70%
+uk.dispersion_timer=Таймер зведення 
+uk.distance_to_enemy=Дистанція до найближчого виявленого ворога
+uk.effects=Налаштування ефектів
+uk.flight_time=Час польоту снаряду
+uk.hp_bars=Панель міцності команд
+uk.log_extended=Розширені логи шкоди
+uk.log_total=Лог ефективності сумарний
 
 uk.main_gun=Основний калібр
 uk.minimap=Міні-мапа
