@@ -28,7 +28,7 @@ Name: save_shot; Description: {cm:save_shot}; Types: "armagomen";
 Name: show_friends; Description: {cm:show_friends}; Types: "armagomen";
 
 //clock
-Name: clock; Description: {cm:clock}; Flags: checkablealone unchecked; 
+Name: clock; Description: {cm:clock}; Flags: checkablealone; 
 Name: clock/hangar; Description: {cm:clock_hangar};  Types: "armagomen";
 Name: clock/battle; Description: {cm:clock_battle};  Types: "armagomen";
 
