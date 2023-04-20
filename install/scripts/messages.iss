@@ -85,26 +85,26 @@ uk.log_extended=Розширені логи шкоди
 uk.log_total=Лог ефективності сумарний
 
 
-uk.main=main.json
-uk.anti_anonymous=anti_anonymous
-uk.auto_crew_training=auto_crew_training
-uk.auto_return_crew=auto_return_crew
-uk.clear_cache_automatically=clear_cache_automatically
-uk.disable_score_sound=disable_score_sound
-uk.disable_stun_sound=disable_stun_sound
-uk.directives_only_from_storage=directives_only_from_storage
-uk.hide_badges=hide_badges
-uk.hide_button_counters_on_top_panel=hide_button_counters_on_top_panel
-uk.hide_clan_abbrev=hide_clan_abbrev
-uk.hide_dog_tags=hide_dog_tags
-uk.hide_field_mail=hide_field_mail
-uk.hide_hint_panel=hide_hint_panel
-uk.hide_main_chat_in_hangar=hide_main_chat_in_hangar
-uk.ignore_commanders_voice=ignore_commanders_voice
-uk.mute_team_base_sound=mute_team_base_sound
-uk.premium_time=premium_time
-uk.save_shot=save_shot
-uk.show_friends=show_friends
+uk.main=Налаштування без категорії
+uk.anti_anonymous=Позначити гравців з прихованим нікнеймом
+uk.auto_crew_training=Автоматичне перемикання Пришвидшеного навчання екіпажу
+uk.auto_return_crew=Автоматичне повернення екіпажу
+uk.clear_cache_automatically=Видаляти кеш після виходу з гри
+uk.disable_score_sound=Вимкнути звук при знищенні союзного чи ворожого танку
+uk.disable_stun_sound=Вимкнути звук оглушення від артилерії
+uk.directives_only_from_storage=Заощаджувати бони та срібло на купівлі настанов
+uk.hide_badges=Вимкнути відображення нашивок у бою
+uk.hide_button_counters_on_top_panel=Вимкнути лічильники та підказки на кнопках у шапці гаражу
+uk.hide_clan_abbrev=Вимкнути відображення клан тегів у бою
+uk.hide_dog_tags=Вимкнути відображення жетонів у бою
+uk.hide_field_mail=Вимкнути польову пошту
+uk.hide_hint_panel=Вимкнути підказки в бою
+uk.hide_main_chat_in_hangar=Вимкнути спільний чат у гаражі
+uk.ignore_commanders_voice=Ігнорувати озвучку командирів
+uk.mute_team_base_sound=Вимкнути сирену захоплення бази
+uk.premium_time=Відображати таймер часу дії преміум-аккаунту
+uk.save_shot=Блокувати стрілянину по союзниках та знищених
+uk.show_friends=Позначити друзів, гравців клану та себе у списках команд
 
 
 uk.main_gun=Основний калібр

@@ -6,26 +6,27 @@ Name: "armagomen"; Description: {cm:types_armagomen};
 Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
 [Components]
-Name: main; Description: {cm:main}; Flags: fixed disablenouninstallwarning; 
-Name: main/anti_anonymous; Description: {cm:anti_anonymous}; Flags: disablenouninstallwarning;
-Name: main/auto_crew_training; Description: {cm:auto_crew_training}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/auto_return_crew; Description: {cm:auto_return_crew}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/clear_cache_automatically; Description: {cm:clear_cache_automatically}; Flags: disablenouninstallwarning;
-Name: main/disable_score_sound; Description: {cm:disable_score_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/disable_stun_sound; Description: {cm:disable_stun_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/directives_only_from_storage; Description: {cm:directives_only_from_storage}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/hide_badges; Description: {cm:hide_badges}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/hide_dog_tags; Description: {cm:hide_dog_tags}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/premium_time; Description: {cm:premium_time}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/save_shot; Description: {cm:save_shot}; Flags: disablenouninstallwarning; Types: "armagomen";
-Name: main/show_friends; Description: {cm:show_friends}; Flags: disablenouninstallwarning; Types: "armagomen";
+// main.json
+Name: anti_anonymous; Description: {cm:anti_anonymous}; Flags: disablenouninstallwarning;
+Name: auto_crew_training; Description: {cm:auto_crew_training}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: auto_return_crew; Description: {cm:auto_return_crew}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: clear_cache_automatically; Description: {cm:clear_cache_automatically}; Flags: disablenouninstallwarning;
+Name: disable_score_sound; Description: {cm:disable_score_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: disable_stun_sound; Description: {cm:disable_stun_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: directives_only_from_storage; Description: {cm:directives_only_from_storage}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hide_badges; Description: {cm:hide_badges}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hide_dog_tags; Description: {cm:hide_dog_tags}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hide_field_mail; Description: {cm:hide_field_mail}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hide_hint_panel; Description: {cm:hide_hint_panel}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: mute_team_base_sound; Description: {cm:mute_team_base_sound}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: premium_time; Description: {cm:premium_time}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: save_shot; Description: {cm:save_shot}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: show_friends; Description: {cm:show_friends}; Flags: disablenouninstallwarning; Types: "armagomen";
+
 
 Name: hp_bars; Description: {cm:hp_bars}; Flags: checkablealone disablenouninstallwarning;
 Name: hp_bars/normal; Description: normal; Flags: exclusive disablenouninstallwarning;
@@ -49,12 +50,8 @@ Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenounin
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen user";
 Name: flight_time; Description: {cm:flight_time}; Flags: disablenouninstallwarning; Types: "armagomen";
-
-
 Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: "armagomen";
-
-
 Name: main_gun; Description: {cm:main_gun}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: minimap; Description: {cm:minimap}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning;
@@ -71,7 +68,9 @@ Name: colors; Description: {cm:colors}; Flags: fixed disablenouninstallwarning; 
 [Files]
 Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
 Source: "settings\load.json"; DestDir: "{#configs_dir}"; Flags: ignoreversion;
-Source: "settings\debug_panel_minimal.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"debug_panel.json"; Flags: ignoreversion; Components: debug_panel/minimal;
+Source: "settings\main.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+
+Source: "settings\debug_panel_minimal.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"debug_panel.json"; Flags: ignoreversion; Components: debug_panel/minimal; 
 Source: "settings\debug_panel_modern.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"debug_panel.json"; Flags: ignoreversion; Components: debug_panel/modern;
 Source: "settings\sixth_sense.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: sixth_sense;
 Source: "settings\arcade_camera.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: arcade_camera;
@@ -89,7 +88,6 @@ Source: "settings\hp_bars_normal.json"; DestDir: "{#configs_dir}\armagomen"; Des
 Source: "settings\hp_bars_league.json"; DestDir: "{#configs_dir}\armagomen"; DestName:"hp_bars.json"; Flags: ignoreversion; Components: hp_bars/league;
 Source: "settings\log_extended.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: log_extended;
 Source: "settings\log_total.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: log_total;
-Source: "settings\main.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: main;
 Source: "settings\main_gun.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: main_gun;
 Source: "settings\minimap.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: minimap;
 Source: "settings\own_health.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: own_health;
@@ -113,23 +111,50 @@ Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen\*"
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
 
 [Code]
-procedure ComponentsOnClickCheck(Sender: TObject);
+
+procedure ChangeMainJsonValues();
+var
+  Handle: Integer;
 begin
-    if WizardIsComponentSelected('debug_panel') then
-    begin
-      if WizardIsComponentSelected('debug_panel/minimal') then 
-      begin
-        Log('debug_panel/minimal checked');
-      end
-        else begin
-        Log('debug_panel/minimal unchecked');
-      end;
-    end;
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\main.json'), False);
+  if Handle <> 0 then
+  begin
+     Log('Handle main.json');
+     JSON_SetBool(Handle,'/anti_anonymous', WizardIsComponentSelected('anti_anonymous'));
+     JSON_SetBool(Handle,'/auto_crew_training', WizardIsComponentSelected('auto_crew_training'));
+     JSON_SetBool(Handle,'/auto_return_crew', WizardIsComponentSelected('auto_return_crew'));
+     JSON_SetBool(Handle,'/clear_cache_automatically', WizardIsComponentSelected('clear_cache_automatically'));
+     JSON_SetBool(Handle,'/directives_only_from_storage', WizardIsComponentSelected('directives_only_from_storage'));
+     JSON_SetBool(Handle,'/disable_score_sound', WizardIsComponentSelected('disable_score_sound'));
+     JSON_SetBool(Handle,'/disable_stun_sound', WizardIsComponentSelected('disable_stun_sound'));
+     JSON_SetBool(Handle,'/hide_badges', WizardIsComponentSelected('hide_badges'));
+     JSON_SetBool(Handle,'/hide_button_counters_on_top_panel', WizardIsComponentSelected('hide_button_counters_on_top_panel'));
+     JSON_SetBool(Handle,'/hide_clan_abbrev', WizardIsComponentSelected('hide_clan_abbrev'));
+     JSON_SetBool(Handle,'/hide_dog_tags', WizardIsComponentSelected('hide_dog_tags'));
+     JSON_SetBool(Handle,'/hide_field_mail', WizardIsComponentSelected('hide_field_mail'));
+     JSON_SetBool(Handle,'/hide_hint_panel', WizardIsComponentSelected('hide_hint_panel'));
+     JSON_SetBool(Handle,'/hide_main_chat_in_hangar', WizardIsComponentSelected('hide_main_chat_in_hangar'));
+     JSON_SetBool(Handle,'/ignore_commanders_voice', WizardIsComponentSelected('ignore_commanders_voice'));
+     JSON_SetBool(Handle,'/mute_team_base_sound', WizardIsComponentSelected('mute_team_base_sound'));
+     JSON_SetBool(Handle,'/premium_time', WizardIsComponentSelected('premium_time'));
+     JSON_SetBool(Handle,'/save_shot', WizardIsComponentSelected('save_shot'));
+     JSON_SetBool(Handle,'/show_friends', WizardIsComponentSelected('show_friends'));
+     //JSON_SetDouble(Handle,'/gaw', 1.3);
+     //JSON_SetInteger(Handle,'/krya/krya/krya', 42);
+     //JSON_SetString(Handle,'/chyk/chyryk', 'aaa');
+     JSON_Close(Handle);                            // save changes to the file and close it, 
+                                                    // after JSON_FileClose() the file handle is not valid anymore
+  end;
 end;
 
-//<event('InitializeWizard')>
-procedure _OnClickCheck();
+
+<event('CurStepChanged')>
+procedure StepChanged(CurStep: TSetupStep);
+
 begin
-  WizardForm.ComponentsList.OnClickCheck := @ComponentsOnClickCheck;
+  if CurStep = ssPostInstall then
+    ChangeMainJsonValues();
+
 end;
+
 
