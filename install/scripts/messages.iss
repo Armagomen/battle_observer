@@ -72,7 +72,12 @@ uk.arcade_camera=Командирська камера
 uk.armor_calculator=Калькулятор наведеної броні
 uk.avg_efficiency_in_hangar=Показники ефективності танка у гаражі
 uk.battle_timer=Змінений таймер бою
+
+//clock
 uk.clock=Годинник у гаражі та бою
+uk.clock_hangar=Годинник у гаражі
+uk.clock_battle=Годинник у бою
+
 uk.dispersion_circle=Налаштування кола зведення (зменшення та серверний приціл)
 uk.dispersion_circle_replace=Зменшити коло зведення на 70%
 uk.dispersion_circle_server=Задіяти серверний приціл та зменшити серверне коло зведення на 70%
@@ -85,7 +90,7 @@ uk.log_extended=Розширені логи шкоди
 uk.log_total=Лог ефективності сумарний
 
 
-uk.main=Налаштування без категорії
+//main
 uk.anti_anonymous=Позначити гравців з прихованим нікнеймом
 uk.auto_crew_training=Автоматичне перемикання Пришвидшеного навчання екіпажу
 uk.auto_return_crew=Автоматичне повернення екіпажу

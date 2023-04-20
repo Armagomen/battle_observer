@@ -45,7 +45,12 @@ Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallw
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
+
+//clock
 Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: clock/hangar; Description: {cm:clock_hangar}; Flags: disablenouninstallwarning; Types: "armagomen";
+Name: clock/battle; Description: {cm:clock_battle}; Flags: disablenouninstallwarning; Types: "armagomen";
+
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning; Types: "armagomen user";
@@ -119,42 +124,58 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\main.json'), False);
   if Handle <> 0 then
   begin
-     Log('Handle main.json');
-     JSON_SetBool(Handle,'/anti_anonymous', WizardIsComponentSelected('anti_anonymous'));
-     JSON_SetBool(Handle,'/auto_crew_training', WizardIsComponentSelected('auto_crew_training'));
-     JSON_SetBool(Handle,'/auto_return_crew', WizardIsComponentSelected('auto_return_crew'));
-     JSON_SetBool(Handle,'/clear_cache_automatically', WizardIsComponentSelected('clear_cache_automatically'));
-     JSON_SetBool(Handle,'/directives_only_from_storage', WizardIsComponentSelected('directives_only_from_storage'));
-     JSON_SetBool(Handle,'/disable_score_sound', WizardIsComponentSelected('disable_score_sound'));
-     JSON_SetBool(Handle,'/disable_stun_sound', WizardIsComponentSelected('disable_stun_sound'));
-     JSON_SetBool(Handle,'/hide_badges', WizardIsComponentSelected('hide_badges'));
-     JSON_SetBool(Handle,'/hide_button_counters_on_top_panel', WizardIsComponentSelected('hide_button_counters_on_top_panel'));
-     JSON_SetBool(Handle,'/hide_clan_abbrev', WizardIsComponentSelected('hide_clan_abbrev'));
-     JSON_SetBool(Handle,'/hide_dog_tags', WizardIsComponentSelected('hide_dog_tags'));
-     JSON_SetBool(Handle,'/hide_field_mail', WizardIsComponentSelected('hide_field_mail'));
-     JSON_SetBool(Handle,'/hide_hint_panel', WizardIsComponentSelected('hide_hint_panel'));
-     JSON_SetBool(Handle,'/hide_main_chat_in_hangar', WizardIsComponentSelected('hide_main_chat_in_hangar'));
-     JSON_SetBool(Handle,'/ignore_commanders_voice', WizardIsComponentSelected('ignore_commanders_voice'));
-     JSON_SetBool(Handle,'/mute_team_base_sound', WizardIsComponentSelected('mute_team_base_sound'));
-     JSON_SetBool(Handle,'/premium_time', WizardIsComponentSelected('premium_time'));
-     JSON_SetBool(Handle,'/save_shot', WizardIsComponentSelected('save_shot'));
-     JSON_SetBool(Handle,'/show_friends', WizardIsComponentSelected('show_friends'));
-     //JSON_SetDouble(Handle,'/gaw', 1.3);
-     //JSON_SetInteger(Handle,'/krya/krya/krya', 42);
-     //JSON_SetString(Handle,'/chyk/chyryk', 'aaa');
-     JSON_Close(Handle);                            // save changes to the file and close it, 
-                                                    // after JSON_FileClose() the file handle is not valid anymore
+    Log('Handle main.json');
+    JSON_SetBool(Handle,'/anti_anonymous', WizardIsComponentSelected('anti_anonymous'));
+    JSON_SetBool(Handle,'/auto_crew_training', WizardIsComponentSelected('auto_crew_training'));
+    JSON_SetBool(Handle,'/auto_return_crew', WizardIsComponentSelected('auto_return_crew'));
+    JSON_SetBool(Handle,'/clear_cache_automatically', WizardIsComponentSelected('clear_cache_automatically'));
+    JSON_SetBool(Handle,'/directives_only_from_storage', WizardIsComponentSelected('directives_only_from_storage'));
+    JSON_SetBool(Handle,'/disable_score_sound', WizardIsComponentSelected('disable_score_sound'));
+    JSON_SetBool(Handle,'/disable_stun_sound', WizardIsComponentSelected('disable_stun_sound'));
+    JSON_SetBool(Handle,'/hide_badges', WizardIsComponentSelected('hide_badges'));
+    JSON_SetBool(Handle,'/hide_button_counters_on_top_panel', WizardIsComponentSelected('hide_button_counters_on_top_panel'));
+    JSON_SetBool(Handle,'/hide_clan_abbrev', WizardIsComponentSelected('hide_clan_abbrev'));
+    JSON_SetBool(Handle,'/hide_dog_tags', WizardIsComponentSelected('hide_dog_tags'));
+    JSON_SetBool(Handle,'/hide_field_mail', WizardIsComponentSelected('hide_field_mail'));
+    JSON_SetBool(Handle,'/hide_hint_panel', WizardIsComponentSelected('hide_hint_panel'));
+    JSON_SetBool(Handle,'/hide_main_chat_in_hangar', WizardIsComponentSelected('hide_main_chat_in_hangar'));
+    JSON_SetBool(Handle,'/ignore_commanders_voice', WizardIsComponentSelected('ignore_commanders_voice'));
+    JSON_SetBool(Handle,'/mute_team_base_sound', WizardIsComponentSelected('mute_team_base_sound'));
+    JSON_SetBool(Handle,'/premium_time', WizardIsComponentSelected('premium_time'));
+    JSON_SetBool(Handle,'/save_shot', WizardIsComponentSelected('save_shot'));
+    JSON_SetBool(Handle,'/show_friends', WizardIsComponentSelected('show_friends'));
+    JSON_Close(Handle);
   end;
 end;
 
+procedure ChangeClockJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\clock.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle clock.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('clock'));
+    JSON_SetBool(Handle,'/hangar/enabled', WizardIsComponentSelected('clock/hangar'));
+    JSON_SetBool(Handle,'/battle/enabled', WizardIsComponentSelected('clock/battle'));
+    //JSON_SetDouble(Handle,'/gaw', 1.3);
+    //JSON_SetInteger(Handle,'/krya/krya/krya', 42);
+    //JSON_SetString(Handle,'/chyk/chyryk', 'aaa');
+    JSON_Close(Handle);
+    // after JSON_FileClose() the file handle is not valid anymore
+  end;
+end;
 
 <event('CurStepChanged')>
 procedure StepChanged(CurStep: TSetupStep);
 
 begin
   if CurStep = ssPostInstall then
-    ChangeMainJsonValues();
-
+    begin
+      ChangeMainJsonValues();
+      ChangeClockJsonValues();
+    end;
 end;
 
 
