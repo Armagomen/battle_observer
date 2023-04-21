@@ -1,6 +1,6 @@
 {
   "display_on_allies": false,
-  "enabled": true,
+  "enabled": false,
   "messages": {
     "green": "<font size='20' color='#66FF33'>Шмаляй, пробиття.</font>",
     "normal": "Слава Україні",

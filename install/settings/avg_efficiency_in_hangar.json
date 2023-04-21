@@ -1,8 +1,8 @@
 {
-  "avg_assist": true,
-  "avg_blocked": true,
-  "avg_damage": true,
-  "avg_stun": true,
-  "enabled": true,
-  "gun_marks": true
+  "avg_assist": false,
+  "avg_blocked": false,
+  "avg_damage": false,
+  "avg_stun": false,
+  "enabled": false,
+  "gun_marks": false
 }

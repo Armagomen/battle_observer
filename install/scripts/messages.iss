@@ -172,28 +172,55 @@ uk.water_fire=Вогонь та вода
 uk.what_again=Шо опять (вовк)
 uk.zelensky=Володимир Зеленський
 
-
-
-
-uk.arcade_camera=Командирська камера
+uk.arcade_camera=Командирська камера - збільшене віддалення
+uk.strategic_camera=Артилерійська камера - збільшене віддалення
 uk.armor_calculator=Калькулятор наведеної броні
-uk.avg_efficiency_in_hangar=Показники ефективності танка у гаражі
+uk.armor_calculator_display_on_allies=Задіяти також на союзниках
+
+//avg_efficiency_in_hangar
+uk.avg_efficiency_in_hangar=Віджет статистики танка у гаражі
+uk.avg_efficiency_in_hangar_damage=Показати середню завдану шкоду
+uk.avg_efficiency_in_hangar_blocked=Показати середню заблоковану бронею шкоду
+uk.avg_efficiency_in_hangar_assist=Показати середню шкоду, завдану з вашою допомогою
+uk.avg_efficiency_in_hangar_stun=Показати середню шкоду цілям, екіпажі яких ви оглушили (САУ)
+uk.avg_efficiency_in_hangar_gun_marks=Показати відсоток відмітної позначки
+
 uk.battle_timer=Змінений таймер бою
 uk.dispersion_timer=Таймер зведення 
 uk.distance_to_enemy=Дистанція до найближчого виявленого ворога
-uk.effects=Налаштування ефектів
+
+//effects
+uk.effects=Налаштування візуальних ефектів
+uk.effects_noSniperDynamic=Вимкнути динамічну камеру в режимі снайпера
+uk.effects_noFlashBang=Прибрати спалах при отриманні пошкоджень
+uk.effects_noBinoculars=Прибрати затемнення у режимі снайпера
+uk.effects_noShockWave=Вимкнути вібрацію камери при влучанні по танку
+
 uk.flight_time=Час польоту снаряду
 
-uk.log_extended=Розширені логи шкоди
-uk.log_total=Лог ефективності сумарний
+//log_extended
+uk.log_extended=Розширена історія шкоди
+uk.log_extended_top=Розширена історія завдвної шкоди
+uk.log_extended_bottom=Розширена історія отриманої шкоди
+uk.log_extended_reverse=Додавати події в історію згори 
 
+uk.log_total=Лог ефективності сумарний
 uk.main_gun=Основний калібр
+
+//minimap
 uk.minimap=Міні-мапа
+uk.minimap_permanent=Відображати знищених на мапі завжди
+uk.minimap_radius=Дозволити коло огляду більше ніж 445м
+uk.minimap_names=Відображати назви знищених танків
+uk.minimap_limits=Відображати кути горизонтального наведення на всій техніці, де можливо
+uk.minimap_zoom=Збільшення мінимапи в центр по натисканню ALT 
+
+
 uk.own_health=Міцність танка гравця
 uk.players_panels=Панелі зи списком команд (вуха)
 uk.service_channel_filter=Фільтр системного каналу
 uk.statistics=Статистика WRT та іконки танків
-uk.strategic_camera=Артилерійська камера
+
 uk.tank_carousel=Карусель танків
 uk.team_bases_panel=Панель захоплення бази
 uk.wg_logs=Налаштування логів від WG

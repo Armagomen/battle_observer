@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "max": 160.0,
   "min": 4.0,
   "scrollSensitivity": 6.0,

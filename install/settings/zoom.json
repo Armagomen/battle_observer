@@ -3,10 +3,10 @@
   "disable_cam_after_shot_latency": 0.5,
   "disable_cam_after_shot_skip_clip": true,
   "dynamic_zoom": {
-    "enabled": true,
-    "steps_only": true
+    "enabled": false,
+    "steps_only": false
   },
-  "enabled": true,
+  "enabled": false,
   "zoomSteps": {
     "enabled": false,
     "steps": [

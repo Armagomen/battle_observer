@@ -1,10 +1,10 @@
 {
-  "enabled": true,
+  "enabled": false,
   "permanentMinimapDeath": false,
-  "real_view_radius": true,
+  "real_view_radius": false,
   "showDeathNames": false,
-  "yaw_limits": true,
-  "zoom": true,
+  "yaw_limits": false,
+  "zoom": false,
   "zoom_hotkey": [
     [
       29
