@@ -83,7 +83,7 @@ localization = {
         "mute_team_base_sound": "Вимкнути сирену захоплення бази."
     },
     "statistics": {
-        "header": "Налаштування статистики гравців та іконки танків",
+        "header": "Налаштування статистики гравців та іконок танків",
         "statistics_enabled": "Увімкнути статистику гравців за рейтингом WTR",
         "statistics_change_vehicle_name_color": "Змінити колір назви танку у списках на колір статистики гравця",
         "statistics_enabled_tooltip": "Статистика буде відображатися на екрані завантаження, у вухах, у вікні по "
@@ -182,13 +182,13 @@ localization = {
     },
     "wg_logs": {
         "header": "Налаштування історії подій WG",
-        "wg_log_hide_assist": "Приховати пошкодження по розвідданим",
+        "wg_log_hide_assist": "Приховати шкоду, завдану з вашою допомогою",
         "wg_log_hide_assist_tooltip": "Приховує пошкодження по розвідданим із детальної історії подій",
-        "wg_log_hide_block": "Приховати заблоковане пошкодження",
+        "wg_log_hide_block": "Приховати заблоковану шкоду",
         "wg_log_hide_block_tooltip": "Приховує заблоковане пошкодження із детальної історії подій",
-        "wg_log_hide_critics": "Приховати критичні попадання",
+        "wg_log_hide_critics": "Приховати критичні влучання без шкоди",
         "wg_log_hide_critics_tooltip": "Приховує критичні попадання із детальної історії подій",
-        "wg_log_pos_fix": "Поставити логи гри на правильні місця",
+        "wg_log_pos_fix": "Поставити історію на правильні місця (як в старих модах)",
         "wg_log_pos_fix_tooltip": "Міняє місцями історію подій отриманого й нанесеного/отриманого пошкодження."
     },
     "log_total": {
@@ -324,22 +324,22 @@ localization = {
         "header": "Налаштування фільтра повідомлень у системному каналі",
         "sys_keys*CustomizationForCredits": "Налаштування техніки за кредити",
         "sys_keys*CustomizationForGold": "Налаштування техніки за золото",
-        "sys_keys*DismantlingForCredits": "Демонтаж обладнання за кредити",
-        "sys_keys*DismantlingForCrystal": "Демонтаж обладнання за бони",
-        "sys_keys*DismantlingForGold": "Демонтаж обладнання за золото",
-        "sys_keys*GameGreeting": "Вітання",
+        "sys_keys*DismantlingForCredits": "Демонтування обладнання за кредити",
+        "sys_keys*DismantlingForCrystal": "Демонтування обладнання за бони",
+        "sys_keys*DismantlingForGold": "Демонтування обладнання за золото",
+        "sys_keys*GameGreeting": "Привітання гри",
         "sys_keys*Information": "Інформаційні повідомлення",
         "sys_keys*MultipleSelling": "Продаж кількох предметів",
         "sys_keys*PowerLevel": "Дослідження модулів і техніки",
-        "sys_keys*PurchaseForCredits": "Покупки за кредити",
-        "sys_keys*PurchaseForCrystal": "Покупки за бони",
-        "sys_keys*PurchaseForGold": "Покупки за золото",
+        "sys_keys*PurchaseForCredits": "Купівля за кредити",
+        "sys_keys*PurchaseForCrystal": "Купівля за бони",
+        "sys_keys*PurchaseForGold": "Купівля за золото",
         "sys_keys*Remove": "Видалення предмету",
         "sys_keys*Repair": "Ремонт",
         "sys_keys*Restore": "Відновлення",
-        "sys_keys*Selling": "Продажа одного предмету",
+        "sys_keys*Selling": "Продаж одного предмету",
         "sys_keys*autoMaintenance": "Автоматичне обслуговування техніки",
-        "sys_keys*customizationChanged": "Налаштування змінено"
+        "sys_keys*customizationChanged": "Змінення налаштунвань"
     },
     "service": {
         "name": "Battle Observer - v{0}",

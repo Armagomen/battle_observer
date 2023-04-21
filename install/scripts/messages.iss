@@ -27,67 +27,6 @@ en.open_donate=Support the developer with a donation.
 uk.open_donate=Підтримати розробника донатом.
 
 // components
-// en
-en.types_armagomen=Everything is like armagomen
-en.types_user=Custom installation
-
-//main
-en.anti_anonymous=Tag players with a hidden nickname
-en.auto_crew_training=Automatic switching of Accelerated Crew Training
-en.auto_return_crew=Auto return crew
-en.clear_cache_automatically=Clear cache after exiting the game
-en.disable_score_sound=Disable sound when destroying friendly or enemy tank
-en.disable_stun_sound=Disable artillery stun sound
-en.directives_only_from_storage=Save bonds and silver from buying directives
-en.hide_badges=Disable display of badges in battle
-en.hide_button_counters_on_top_panel=Disable counters and tooltips on garage hood buttons
-en.hide_clan_abbrev=Disable display of clan tags in battle
-en.hide_dog_tags=Disable display of tokens in battle
-en.hide_field_mail=Disable field mail
-en.hide_hint_panel=Disable hints in battle
-en.hide_main_chat_in_hangar=Disable main chat in hangar
-en.ignore_commanders_voice=Ignore commanders voice
-en.mute_team_base_sound=Mute base capture siren
-en.premium_time=Display premium account time timer
-en.save_shot=Block shooting on allies and destroyed
-en.show_friends=Show friends, clan players and yourself in team lists
-
-//clock
-en.clock=The clock in the garage and battle
-en.clock_hangar=Clock in the garage
-en.clock_battle=Clock in battle
-
-en.debug_panel=Changed FPS/PING panel
-en.sixth_sense=Sixth sense with timer
-en.arcade_camera=Commander Camera
-en.armor_calculator=Calculator of listed armor
-en.avg_efficiency_in_hangar=Tank efficiency in hangar
-en.battle_timer=Changed battle timer
-
-en.dispersion_circle=Dispersion Circle Settings (Reduction and Server Sight)
-en.dispersion_circle_replace=Replace the original dispersion circle with a smaller one
-en.dispersion_circle_server=Add a reduction in the server's summary circle
-en.dispersion_timer=Dispersion timer
-en.distance_to_enemy=Distance to the nearest detected enemy
-en.effects=Effect settings
-en.flight_time=Projectile flight time
-en.hp_bars=Command strength bar
-en.log_extended=Extended damage logs
-en.log_total=Total efficiency log
-
-en.main_gun=Main caliber
-en.minimap=Minimap
-en.own_health=The health of the player's tank
-en.players_panels=Panels with a list of commands (ears)
-en.service_channel_filter=System channel filter
-en.statistics=WRT statistics and tank icons
-en.strategic_camera=Artillery Camera
-en.tank_carousel=Tank carousel
-en.team_bases_panel=Base capture panel
-en.wg_logs=Log settings from WG
-en.zoom=Sniper mode settings
-en.colors=Customized module colors
-
 // uk
 uk.types_armagomen=Все як у armagomen
 uk.types_user=Вибіркове встановлення
@@ -215,14 +154,59 @@ uk.minimap_names=Відображати назви знищених танків
 uk.minimap_limits=Відображати кути горизонтального наведення на всій техніці, де можливо
 uk.minimap_zoom=Збільшення мінимапи в центр по натисканню ALT 
 
-
 uk.own_health=Міцність танка гравця
+
+//players_panels
 uk.players_panels=Панелі зи списком команд (вуха)
-uk.service_channel_filter=Фільтр системного каналу
-uk.statistics=Статистика WRT та іконки танків
+uk.players_panels_spotted=Пересунути та збільнити ліхтарики засвіту
+uk.players_panels_bars=Панелі міцності гравців
+uk.players_panels_bars_class=Покрасити панелі в кольори класів техніки
+uk.players_panels_on_key=Показувати панелі тільки при натисканні ALT
+uk.players_panels_damages=Шкода гравців у вухах при натисканні ALT
+
+//service_channel_filter
+uk.service_channel_filter=Налаштування фільтра повідомлень у системному каналі
+uk.service_channel_CustomizationForCredits=Налаштування техніки за кредити
+uk.service_channel_CustomizationForGold=Налаштування техніки за золото
+uk.service_channel_DismantlingForCredits=Демонтування обладнання за кредити
+uk.service_channel_DismantlingForCrystal=Демонтування обладнання за бони
+uk.service_channel_DismantlingForGold=Демонтування обладнання за золото
+uk.service_channel_GameGreeting=Привітання гри
+uk.service_channel_Information=Інформаційні повідомлення
+uk.service_channel_MultipleSelling=Продаж кількох предметів
+uk.service_channel_PowerLevel=Дослідження модулів і техніки
+uk.service_channel_PurchaseForCredits=Купівля за кредити
+uk.service_channel_PurchaseForCrystal=Купівля за бони
+uk.service_channel_PurchaseForGold=Купівля за золото
+uk.service_channel_Remove=Видалення предмету
+uk.service_channel_Repair=Ремонт
+uk.service_channel_Restore=Відновлення
+uk.service_channel_Selling=Продаж одного предмету
+uk.service_channel_autoMaintenance=Автоматичне обслуговування техніки
+uk.service_channel_customizationChanged=Змінення налаштунвань
+
+//statistics
+uk.statistics=Налаштування статистики гравців та іконок танків
+uk.statistics_icons=Перефарбувати іконки танків у кольори класів техніки
+uk.statistics_names_color=Змінити колір назви танку у списках на колір статистики гравця
+uk.statistics_enabled=Увімкнути статистику гравців за рейтингом WTR
 
 uk.tank_carousel=Карусель танків
 uk.team_bases_panel=Панель захоплення бази
-uk.wg_logs=Налаштування логів від WG
+
+//wg_logs
+uk.wg_logs=Налаштування історії подій від WG
+uk.wg_logs_assist=Приховати шкоду, завдану з вашою допомогою
+uk.wg_logs_block=Приховати заблоковану шкоду
+uk.wg_logs_critics=Приховати критичні влучання без шкоди
+uk.wg_logs_pos_fix=Поставити історію на правильні місця (як в старих модах)
+
+//sniper camera
 uk.zoom=Налаштування режиму снайпера
-uk.colors=Налаштовані кольори модулів
+uk.zoom_disable_cam=Вимкнути режим снайперу одразу після постріла
+uk.zoom_dynamic_zoom=Обирати кратність наближення автоматично
+uk.zoom_steps_only=Тільки по фіксованим шагам
+uk.zoom_zoomSteps=Замінити кратність зумів на (2, 4, 6, 8, 10, 12, 16, 20, 25)
+
+
+

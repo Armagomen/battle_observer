@@ -1,7 +1,7 @@
 {
-  "enabled": true,
-  "wg_log_hide_assist": true,
-  "wg_log_hide_block": true,
-  "wg_log_hide_critics": true,
-  "wg_log_pos_fix": true
+  "enabled": false,
+  "wg_log_hide_assist": false,
+  "wg_log_hide_block": false,
+  "wg_log_hide_critics": false,
+  "wg_log_pos_fix": false
 }

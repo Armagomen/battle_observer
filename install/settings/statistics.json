@@ -1,10 +1,10 @@
 {
-  "enabled": true,
+  "enabled": false,
   "icon_blackout": -1.25,
-  "icon_enabled": true,
+  "icon_enabled": false,
   "panels_cut_width": 65,
   "panels_full_width": 165,
-  "statistics_change_vehicle_name_color": true,
+  "statistics_change_vehicle_name_color": false,
   "statistics_colors": {
     "bad": "#FE7903",
     "good": "#60FF00",
@@ -13,7 +13,7 @@
     "very_bad": "#FE0E00",
     "very_good": "#02C9B3"
   },
-  "statistics_enabled": true,
+  "statistics_enabled": false,
   "statistics_pattern_cut_left": "<font color='%(colorWTR)s'>%(nickname).9s</font>",
   "statistics_pattern_cut_right": "<font color='%(colorWTR)s'>%(nickname).9s</font>",
   "statistics_pattern_full_left": "<font color='%(colorWTR)s'>%(WTR)d | %(nickname).12s</font>%(clanTag)s",

@@ -94,10 +94,10 @@ Name: strategic_camera; Description: {cm:strategic_camera}; Types: "armagomen";
 
 //sniper camera
 Name: zoom; Description: {cm:zoom};
-Name: zoom/disable_cam_after_shot; Description: disable_cam_after_shot;
-Name: zoom/dynamic_zoom; Description: dynamic_zoom_enabled; Types: "armagomen"; Flags: checkablealone;
-Name: zoom/dynamic_zoom/steps_only; Description: dynamic_zoom_steps_only; Flags: dontinheritcheck;
-Name: zoom/zoomSteps; Description: zoom/zoomSteps; Types: "armagomen";
+Name: zoom/disable_cam_after_shot; Description: {cm:zoom_disable_cam};
+Name: zoom/dynamic_zoom; Description: {cm:zoom_dynamic_zoom}; Types: "armagomen"; Flags: checkablealone;
+Name: zoom/dynamic_zoom/steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck;
+Name: zoom/zoomSteps; Description: {cm:zoom_zoomSteps};
 
 //armor calculator
 Name: armor_calculator; Description: {cm:armor_calculator}; Types: "armagomen"; Flags: checkablealone;
@@ -111,7 +111,6 @@ Name: avg_efficiency_in_hangar/avg_assist; Description: {cm:avg_efficiency_in_ha
 Name: avg_efficiency_in_hangar/avg_stun; Description: {cm:avg_efficiency_in_hangar_stun}; Types: "armagomen"; 
 Name: avg_efficiency_in_hangar/gun_marks; Description: {cm:avg_efficiency_in_hangar_gun_marks}; Types: "armagomen"; 
 
-
 Name: battle_timer; Description: {cm:battle_timer}; Types: "armagomen"; Flags: disablenouninstallwarning;
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 
@@ -123,8 +122,8 @@ Name: effects/noShockWave; Description: {cm:effects_noShockWave}; Types: "armago
 Name: effects/noSniperDynamic; Description: {cm:effects_noSniperDynamic};
 
 Name: flight_time; Description: {cm:flight_time}; Types: "armagomen"; Flags: disablenouninstallwarning;
-
 Name: log_total; Description: {cm:log_total}; Types: "armagomen"; Flags: disablenouninstallwarning;
+
 //log_extended
 Name: log_extended; Description: {cm:log_extended};
 Name: log_extended/top_enabled; Description: {cm:log_extended_top}; Types: "armagomen";
@@ -141,16 +140,53 @@ Name: minimap/showDeathNames; Description: {cm:minimap_names};
 Name: minimap/yaw_limits; Description: {cm:minimap_limits}; Types: "armagomen";
 Name: minimap/zoom; Description: {cm:minimap_zoom}; Types: "armagomen";
 
-
-
 Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning;
-Name: players_panels; Description: {cm:players_panels}; Types: "armagomen"; Flags: disablenouninstallwarning;
-Name: service_channel_filter; Description: {cm:service_channel_filter}; Types: "armagomen"; Flags: disablenouninstallwarning;
-Name: statistics; Description: {cm:statistics}; Types: "armagomen"; Flags: disablenouninstallwarning;
+
+//players_panels
+Name: players_panels; Description: {cm:players_panels};
+Name: players_panels/panels_spotted_fix; Description: {cm:players_panels_spotted}; Types: "armagomen";
+Name: players_panels/players_bars; Description: {cm:players_panels_bars}; Types: "armagomen"; Flags: checkablealone;
+Name: players_panels/players_bars/classColor; Description: {cm:players_panels_bars_class}; Flags: dontinheritcheck;
+Name: players_panels/players_bars/on_key_pressed; Description: {cm:players_panels_on_key}; Flags: dontinheritcheck;
+Name: players_panels/players_damages_enabled; Description: {cm:players_panels_damages}; Types: "armagomen"; 
+
+//service_channel_filter
+Name: service_channel_filter; Description: {cm:service_channel_filter};
+Name: service_channel_filter/CustomizationForCredits; Description: {cm:service_channel_CustomizationForCredits}; Types: "armagomen";
+Name: service_channel_filter/CustomizationForGold; Description: {cm:service_channel_CustomizationForGold};
+Name: service_channel_filter/DismantlingForCredits; Description: {cm:service_channel_DismantlingForCredits}; Types: "armagomen";
+Name: service_channel_filter/DismantlingForCrystal; Description: {cm:service_channel_DismantlingForCrystal};
+Name: service_channel_filter/DismantlingForGold; Description: {cm:service_channel_DismantlingForGold};
+Name: service_channel_filter/GameGreeting; Description: {cm:service_channel_GameGreeting}; Types: "armagomen";
+Name: service_channel_filter/Information; Description: {cm:service_channel_Information}; Types: "armagomen";
+Name: service_channel_filter/MultipleSelling; Description: {cm:service_channel_MultipleSelling}; Types: "armagomen";
+Name: service_channel_filter/PowerLevel; Description: {cm:service_channel_PowerLevel};Types: "armagomen";
+Name: service_channel_filter/PurchaseForCredits; Description: {cm:service_channel_PurchaseForCredits}; Types: "armagomen";
+Name: service_channel_filter/PurchaseForCrystal; Description: {cm:service_channel_PurchaseForCrystal};
+Name: service_channel_filter/PurchaseForGold; Description: {cm:service_channel_PurchaseForGold};
+Name: service_channel_filter/Remove; Description: {cm:service_channel_Remove};
+Name: service_channel_filter/Repair; Description: {cm:service_channel_Repair}; Types: "armagomen";
+Name: service_channel_filter/Restore; Description: {cm:service_channel_Restore};
+Name: service_channel_filter/Selling; Description: {cm:service_channel_Selling}; Types: "armagomen";
+Name: service_channel_filter/autoMaintenance; Description: {cm:service_channel_autoMaintenance}; Types: "armagomen";
+Name: service_channel_filter/customizationChanged; Description: {cm:service_channel_customizationChanged}; Types: "armagomen";
+
+//statistics
+Name: statistics; Description: {cm:statistics};
+Name: statistics/icon_enabled; Description: {cm:statistics_icons}; Types: "armagomen";
+Name: statistics/statistics_change_vehicle_name_color; Description: {cm:statistics_names_color}; Types: "armagomen";
+Name: statistics/statistics_enabled; Description: {cm:statistics_enabled}; Types: "armagomen";
+
+
 Name: tank_carousel; Description: {cm:tank_carousel}; Flags: disablenouninstallwarning;
 Name: team_bases_panel; Description: {cm:team_bases_panel}; Types: "armagomen"; Flags: disablenouninstallwarning;
-Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning;
-Name: colors; Description: {cm:colors}; Flags: fixed disablenouninstallwarning; Types: "armagomen user";
+
+Name: wg_logs; Description: {cm:wg_logs};
+Name: wg_logs/wg_log_hide_assist; Description: {cm:wg_logs_assist};
+Name: wg_logs/wg_log_hide_block; Description: {cm:wg_logs_block};
+Name: wg_logs/wg_log_hide_critics; Description: {cm:wg_logs_critics};
+Name: wg_logs/wg_log_pos_fix; Description: {cm:wg_logs_pos_fix};
+
 
 [Files]
 Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
@@ -168,24 +204,23 @@ Source: "settings\arcade_camera.json"; DestDir: "{#configs_dir}\armagomen"; Flag
 Source: "settings\armor_calculator.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
 Source: "settings\avg_efficiency_in_hangar.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
 Source: "settings\effects.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+Source: "settings\log_extended.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+Source: "settings\minimap.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+Source: "settings\players_panels.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+Source: "settings\service_channel_filter.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+Source: "settings\statistics.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+Source: "settings\colors.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
+Source: "settings\wg_logs.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
 
 Source: "settings\battle_timer.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: battle_timer;
 Source: "settings\distance_to_enemy.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: distance_to_enemy;
 Source: "settings\flight_time.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: flight_time;
 Source: "settings\log_total.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: log_total;
-
-Source: "settings\log_extended.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-
 Source: "settings\main_gun.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: main_gun;
-Source: "settings\minimap.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
 Source: "settings\own_health.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: own_health;
-Source: "settings\players_panels.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: players_panels;
-Source: "settings\service_channel_filter.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: service_channel_filter;
-Source: "settings\statistics.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: statistics;
 Source: "settings\tank_carousel.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: tank_carousel;
 Source: "settings\team_bases_panel.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: team_bases_panel;
-Source: "settings\wg_logs.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: wg_logs;
-Source: "settings\colors.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: colors;
+
 
 [InstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
@@ -353,7 +388,6 @@ begin
   end;
 end;
 
-
 procedure ChangeStrategicCameraJsonValues();
 var
   Handle: Integer;
@@ -448,7 +482,6 @@ begin
   end;
 end;
 
-
 procedure ChangeMinimapLogsJsonValues();
 var
   Handle: Integer;
@@ -463,16 +496,94 @@ begin
     JSON_SetBool(Handle,'/showDeathNames', WizardIsComponentSelected('minimap/showDeathNames'));
     JSON_SetBool(Handle,'/yaw_limits', WizardIsComponentSelected('minimap/yaw_limits'));
     JSON_SetBool(Handle,'/zoom', WizardIsComponentSelected('minimap/zoom'));
-
-    //JSON_SetDouble(Handle,'/gaw', 1.3);
-    //JSON_SetInteger(Handle,'/krya/krya/krya', 42);
-    //JSON_SetString(Handle,'/chyk/chyryk', 'aaa');
     JSON_Close(Handle);
   end;
 end;
 
+procedure ChangePlayersPanelsJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\players_panels.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle players_panels.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('players_panels'));
+    JSON_SetBool(Handle,'/panels_spotted_fix', WizardIsComponentSelected('players_panels/panels_spotted_fix'));
+    JSON_SetBool(Handle,'/players_bars_enabled', WizardIsComponentSelected('players_panels/players_bars'));
+    JSON_SetBool(Handle,'/players_bars_classColor', WizardIsComponentSelected('players_panels/players_bars/classColor'));
+    JSON_SetBool(Handle,'/players_bars_on_key_pressed', WizardIsComponentSelected('players_panels/players_bars/on_key_pressed'));
+    JSON_SetBool(Handle,'/players_damages_enabled', WizardIsComponentSelected('players_panels/players_damages_enabled'));
+    JSON_Close(Handle);
+  end;
+end;
 
+procedure ChangeServiceChannelJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\service_channel_filter.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle service_channel_filter.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('service_channel_filter'));
+    JSON_SetBool(Handle,'/sys_keys/CustomizationForCredits', WizardIsComponentSelected('service_channel_filter/CustomizationForCredits'));
+    JSON_SetBool(Handle,'/sys_keys/CustomizationForGold', WizardIsComponentSelected('service_channel_filter/CustomizationForGold'));
+    JSON_SetBool(Handle,'/sys_keys/DismantlingForCredits', WizardIsComponentSelected('service_channel_filter/DismantlingForCredits'));
+    JSON_SetBool(Handle,'/sys_keys/DismantlingForCrystal', WizardIsComponentSelected('service_channel_filter/DismantlingForCrystal'));
+    JSON_SetBool(Handle,'/sys_keys/DismantlingForGold', WizardIsComponentSelected('service_channel_filter/DismantlingForGold'));
+    JSON_SetBool(Handle,'/sys_keys/GameGreeting', WizardIsComponentSelected('service_channel_filter/GameGreeting'));
+    JSON_SetBool(Handle,'/sys_keys/Information', WizardIsComponentSelected('service_channel_filter/Information'));
+    JSON_SetBool(Handle,'/sys_keys/MultipleSelling', WizardIsComponentSelected('service_channel_filter/MultipleSelling'));
+    JSON_SetBool(Handle,'/sys_keys/PowerLevel', WizardIsComponentSelected('service_channel_filter/PowerLevel'));
+    JSON_SetBool(Handle,'/sys_keys/PurchaseForCredits', WizardIsComponentSelected('service_channel_filter/PurchaseForCredits'));
+    JSON_SetBool(Handle,'/sys_keys/PurchaseForCrystal', WizardIsComponentSelected('service_channel_filter/PurchaseForCrystal'));
+    JSON_SetBool(Handle,'/sys_keys/PurchaseForGold', WizardIsComponentSelected('service_channel_filter/PurchaseForGold'));
+    JSON_SetBool(Handle,'/sys_keys/Remove', WizardIsComponentSelected('service_channel_filter/Remove'));
+    JSON_SetBool(Handle,'/sys_keys/Repair', WizardIsComponentSelected('service_channel_filter/Repair'));
+    JSON_SetBool(Handle,'/sys_keys/Restore', WizardIsComponentSelected('service_channel_filter/Restore'));
+    JSON_SetBool(Handle,'/sys_keys/Selling', WizardIsComponentSelected('service_channel_filter/Selling'));
+    JSON_SetBool(Handle,'/sys_keys/autoMaintenance', WizardIsComponentSelected('service_channel_filter/autoMaintenance'));
+    JSON_SetBool(Handle,'/sys_keys/customizationChanged', WizardIsComponentSelected('service_channel_filter/customizationChanged'));
+    JSON_Close(Handle);
+  end;
+end;
 
+procedure ChangeStatisticsJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\statistics.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle statistics.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('statistics'));
+    JSON_SetBool(Handle,'/icon_enabled', WizardIsComponentSelected('players_panels/icon_enabled'));
+    JSON_SetBool(Handle,'/statistics_change_vehicle_name_color', WizardIsComponentSelected('statistics/statistics_change_vehicle_name_color'));
+    JSON_SetBool(Handle,'/statistics_enabled', WizardIsComponentSelected('statistics/statistics_enabled'));
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeWGLogsJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\wg_logs.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle wg_logs.json');
+    JSON_SetBool(Handle,'/wg_log_hide_assist', WizardIsComponentSelected('wg_logs/wg_log_hide_assist'));
+    JSON_SetBool(Handle,'/wg_log_hide_block', WizardIsComponentSelected('wg_logs/wg_log_hide_block'));
+    JSON_SetBool(Handle,'/wg_log_hide_critics', WizardIsComponentSelected('wg_logs/wg_log_hide_critics'));
+    JSON_SetBool(Handle,'/wg_log_pos_fix', WizardIsComponentSelected('wg_logs/wg_log_pos_fix'));
+    JSON_Close(Handle);
+  end;
+end;
+
+//JSON_SetDouble(Handle,'/gaw', 1.3);
+//JSON_SetInteger(Handle,'/krya/krya/krya', 42);
+//JSON_SetString(Handle,'/chyk/chyryk', 'aaa');
 <event('CurStepChanged')>
 procedure StepChanged(CurStep: TSetupStep);
 begin
@@ -492,6 +603,9 @@ begin
       ChangeEffectsJsonValues();
       ChangeExtendedLogsJsonValues();
       ChangeMinimapLogsJsonValues();
+      ChangePlayersPanelsJsonValues();
+      ChangeServiceChannelJsonValues();
+      ChangeWGLogsJsonValues();
     end;
 end;
 

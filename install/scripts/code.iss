@@ -5,8 +5,8 @@ procedure SetWizardForm();
 begin  
   WizardForm.Width:=700;  
   WizardForm.Height:=500;
-  WizardForm.ComponentsList.Left:=264;
-  WizardForm.ComponentsList.Width:=340;
+  //WizardForm.ComponentsList.Left:=264;
+  //WizardForm.ComponentsList.Width:=340;
 end;
 
 

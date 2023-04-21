@@ -1,23 +1,23 @@
 {
-  "enabled": true,
+  "enabled": false,
   "sys_keys": {
-    "CustomizationForCredits": true,
+    "CustomizationForCredits": false,
     "CustomizationForGold": false,
-    "DismantlingForCredits": true,
+    "DismantlingForCredits": false,
     "DismantlingForCrystal": false,
     "DismantlingForGold": false,
-    "GameGreeting": true,
-    "Information": true,
-    "MultipleSelling": true,
-    "PowerLevel": true,
-    "PurchaseForCredits": true,
+    "GameGreeting": false,
+    "Information": false,
+    "MultipleSelling": false,
+    "PowerLevel": false,
+    "PurchaseForCredits": false,
     "PurchaseForCrystal": false,
     "PurchaseForGold": false,
     "Remove": false,
-    "Repair": true,
+    "Repair": false,
     "Restore": false,
-    "Selling": true,
-    "autoMaintenance": true,
-    "customizationChanged": true
+    "Selling": false,
+    "autoMaintenance": false,
+    "customizationChanged": false
   }
 }
