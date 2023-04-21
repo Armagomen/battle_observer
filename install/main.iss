@@ -19,30 +19,25 @@
 [Setup]
 AppId={{E4911938-A29D-4904-8878-99DEEBDE03D6}
 AppName={#MyAppName}
-AppVersion={#MyAppVersion}
-VersionInfoVersion={#MyAppVersion}
-AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL=https://discord.gg/Nma5T5snKW
 AppUpdatesURL={#MyAppUpdatesURL}
-DefaultGroupName={#MyAppName}
-DisableProgramGroupPage=yes
-OutputDir=..\..\
-OutputBaseFilename={#APP_FILE_PATTERN}{#MyAppVersion}
-DefaultDirName=C:\
-SetupIconFile=img\BattleObserver_icon.ico
-WizardStyle=modern
-DirExistsWarning=no
-CreateAppDir=yes
+AppVerName={#MyAppName} {#MyAppVersion}
+AppVersion={#MyAppVersion}
 AppendDefaultDirName=no
-ShowLanguageDialog=yes
-Uninstallable=yes
-AlwaysShowComponentsList=yes
-UsePreviousAppDir=yes
-WizardResizable=no
+DefaultDirName={sd}\{#MyAppName}
+DefaultGroupName={#MyAppName}
+DirExistsWarning=no
+DisableProgramGroupPage=yes
+OutputBaseFilename={#APP_FILE_PATTERN}{#MyAppVersion}
+OutputDir=..\..\
+SetupIconFile=img\BattleObserver_icon.ico
 ShowComponentSizes=no
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
+VersionInfoVersion={#MyAppVersion}
+WizardResizable=no
+WizardStyle=modern
 
 
 [Run]
