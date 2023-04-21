@@ -38,8 +38,10 @@ CreateAppDir=yes
 AppendDefaultDirName=no
 ShowLanguageDialog=yes
 Uninstallable=yes
+AlwaysShowComponentsList=yes
 UsePreviousAppDir=yes
 WizardResizable=no
+ShowComponentSizes=no
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 
 
