@@ -55,12 +55,11 @@ class SixthSenseTimer(Timer):
 
     def timeTicking(self, seconds):
         self.cancelCallback()
-        if seconds <= CONSTANTS.ZERO:
-            return self.hide()
-        self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE))
+        if seconds > CONSTANTS.ZERO:
+            self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE))
+            if self.__soundID is not None:
+                self.callWWISE(self.__soundID)
         self.handleTimer(seconds)
-        if self.__soundID is not None:
-            self.callWWISE(self.__soundID)
 
     def show(self, seconds):
         self.timeTicking(seconds)

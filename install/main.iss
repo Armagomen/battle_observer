@@ -39,7 +39,7 @@ AppendDefaultDirName=no
 ShowLanguageDialog=yes
 Uninstallable=yes
 UsePreviousAppDir=yes
-
+WizardResizable=no
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 
 

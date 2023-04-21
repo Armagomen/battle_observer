@@ -1,16 +1,18 @@
 [Code]
 
-//
-// Globals
-//
+<event('InitializeWizard')>
+procedure SetWizardForm();  
+begin  
+  WizardForm.Width:=700;  
+  WizardForm.Height:=500;
+  WizardForm.ComponentsList.Left:=264;
+  WizardForm.ComponentsList.Width:=340;
+end;
 
+
+{open wg utils}
 var
   WotList: TNewComboBox;
-
-
-//
-// Checks
-//
 
 function CHECK_IsLesta(): Boolean;
 var
@@ -19,12 +21,6 @@ begin
   Flavour := WotList_Selected_Record(WotList).LauncherFlavour
   Result := Flavour = 4;
 end;
-
-
-
-//
-// Placeholders
-//
 
 function PH_Folder_Mods(s: String): String;
 begin
@@ -35,13 +31,6 @@ function PH_Folder_Resmods(s: String): String;
 begin
   Result := WotList_Selected_Record(WotList).PathResmods;
 end;
-
-
-
-//
-// Initialize
-//
-
 
 <event('InitializeWizard')>
 procedure ClientFind();
@@ -62,11 +51,6 @@ begin
   WizardForm.DirBrowseButton.Visible := False;
 end;
 
-
-
-//
-// CurPageChanged
-//
 
 procedure CurPageChanged_wpSelectDir();
 begin
@@ -93,27 +77,25 @@ begin
 end;
 
 
-procedure CurPageChanged(CurPage: Integer);
+<event('CurPageChanged')> 
+procedure onCurPageChanged(CurPage: Integer);
 begin
   case CurPage of
-    wpSelectDir: CurPageChanged_wpSelectDir();
+    //wpSelectDir: CurPageChanged_wpSelectDir();
     wpSelectComponents: CurPageChanged_wpSelectComponents();
   end
 end;
 
 
 
-//
 // CurUninstallStepChanged
-//
-
 procedure CurUninstallStepChanged_usUninstall();
 begin
   OPENWG_DllUnload();
   OPENWG_DllDelete();
 end;
-
-procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+<event('CurUninstallStepChanged')> 
+procedure onCurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   case CurUninstallStep of
     usUninstall: CurUninstallStepChanged_usUninstall();
@@ -121,25 +103,10 @@ begin
 end;
 
 
-
-//
-// DeinitializeUninstall
-//
-
-procedure DeinitializeUninstall();
-begin
-end;
-
-
-
-//
 // NextButtonClick
-//
-
 function NextButtonClick_wpSelectDir(): Boolean;
 begin
   Result := True;
-
   // check for version
   if not WotList_Selected_VersionMatch(WotList, '{#WOT_VERSION_PATTERN}') then
   begin
@@ -147,7 +114,6 @@ begin
     Result := False;
     Exit;
   end;
-
   // check for running client
   if WotList_Selected_IsStarted(WotList) then
   begin
@@ -158,8 +124,8 @@ begin
   end;
 end;
 
-
-function NextButtonClick(CurPage: Integer): Boolean;
+<event('NextButtonClick')> 
+function onNextButtonClick(CurPage: Integer): Boolean;
 begin
   Result := True;
 

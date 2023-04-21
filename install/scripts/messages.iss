@@ -142,6 +142,7 @@ uk.dog_patron=Пес Патрон
 uk.eye_of_sauron=Око Саурона
 uk.feygin_arestovych=Фейгін та Аристович
 uk.flash=Флеш
+uk.grogu=Grogu з Мандалорця
 uk.himars=Хаймарс
 uk.kv_dart=Дарт квас
 uk.lamp_1=Звичайна збільшена з фоном
