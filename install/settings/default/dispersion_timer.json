@@ -2,7 +2,7 @@
   "align": "left",
   "color": "#f5ff8f",
   "done_color": "#a6ffa6",
-  "enabled": true,
+  "enabled": false,
   "template": "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>",
   "x": 110,
   "y": 0

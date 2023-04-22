@@ -570,7 +570,7 @@ begin
   begin
     Log('Handle log_total.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('log_total'));
-    if not WizardIsComponentSelected('hp_bars') then JSON_SetInteger(Handle,'/settings/x', -350);
+    if not WizardIsComponentSelected('hp_bars') then JSON_SetInteger(Handle,'/settings/x', -360);
     JSON_Close(Handle);
   end;
 end;
@@ -585,7 +585,7 @@ begin
     Log('Handle main_gun.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('main_gun'));
     JSON_SetBool(Handle,'/progress_bar', WizardIsComponentSelected('main_gun/progress_bar'));
-    if not WizardIsComponentSelected('hp_bars') then JSON_SetInteger(Handle,'/x', 350);
+    if not WizardIsComponentSelected('hp_bars') then JSON_SetInteger(Handle,'/x', 360);
     JSON_Close(Handle);
   end;
 end;
@@ -632,6 +632,18 @@ begin
   end;
 end;
 
+procedure ChangeDispersionTimerJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\dispersion_timer.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle dispersion_timer.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('dispersion_timer'));
+    JSON_Close(Handle);
+  end;
+end;
 
 
 //JSON_SetDouble(Handle,'/gaw', 1.3);
@@ -642,31 +654,33 @@ procedure StepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then
     begin
-      ChangeMainJsonValues();
+      ChangeArcadeCameraJsonValues();
+      ChangeArmorCalculatorJsonValues();
+      ChangeBattleTimerJsonValues();
       ChangeClockJsonValues();
-      ChangeHpBarsJsonValues();
       ChangeDebugPanelJsonValues();
       ChangeDispersioCircleJsonValues();
-      ChangeSixthSenseJsonValues();
-      ChangeArcadeCameraJsonValues();
-      ChangeStrategicCameraJsonValues();
-      ChangeArmorCalculatorJsonValues();
-      ChangeZoomJsonValues();
-      ChangeEffiencyJsonValues();
-      ChangeEffectsJsonValues();
-      ChangeExtendedLogsJsonValues();
-      ChangeMinimapLogsJsonValues();
-      ChangePlayersPanelsJsonValues();
-      ChangeServiceChannelJsonValues();
-      ChangeWGLogsJsonValues();
-      ChangeFlightTimeJsonValues();
+      ChangeDispersionTimerJsonValues();
       ChangeDistanceToEnemyJsonValues();
-      ChangeBattleTimerJsonValues();
+      ChangeEffectsJsonValues();
+      ChangeEffiencyJsonValues();
+      ChangeExtendedLogsJsonValues();
+      ChangeFlightTimeJsonValues();
+      ChangeHpBarsJsonValues();
       ChangeLogTotalJsonValues();
       ChangeMainGunJsonValues();
+      ChangeMainJsonValues();
+      ChangeMinimapLogsJsonValues();
       ChangeOwnHealthJsonValues();
+      ChangePlayersPanelsJsonValues();
+      ChangeServiceChannelJsonValues();
+      ChangeSixthSenseJsonValues();
+      ChangeStatisticsJsonValues();
+      ChangeStrategicCameraJsonValues();
       ChangeTankCarouselJsonValues();
       ChangeTeamBasesJsonValues();
+      ChangeWGLogsJsonValues();
+      ChangeZoomJsonValues();
     end;
 end;
 
