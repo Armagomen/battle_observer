@@ -55,7 +55,7 @@ Name: sixth_sense/lamp_1; Description: {cm:lamp_1}; Flags: disablenouninstallwar
 Name: sixth_sense/lamp_2; Description: {cm:lamp_2}; Flags: disablenouninstallwarning exclusive;
 Name: sixth_sense/lamp_3; Description: {cm:lamp_3}; Flags: disablenouninstallwarning exclusive;
 Name: sixth_sense/luka; Description: {cm:luka}; Flags: disablenouninstallwarning exclusive;
-Name: sixth_sense/medal_ship_censoured; Description: {cm:medal_ship_censoured}; Flags: disablenouninstallwarning exclusive;
+Name: sixth_sense/medal_ship_censored; Description: {cm:medal_ship_censored}; Flags: disablenouninstallwarning exclusive;
 Name: sixth_sense/moscow_ship; Description: {cm:moscow_ship}; Flags: disablenouninstallwarning exclusive;
 Name: sixth_sense/moscow_ship_2; Description: {cm:moscow_ship_2}; Flags: disablenouninstallwarning exclusive;
 Name: sixth_sense/potato; Description: {cm:potato}; Flags: disablenouninstallwarning exclusive;
@@ -288,7 +288,7 @@ begin
     if WizardIsComponentSelected('sixth_sense/lamp_2') then JSON_SetString(Handle,'/default_icon_name', 'lamp_2.png');
     if WizardIsComponentSelected('sixth_sense/lamp_3') then JSON_SetString(Handle,'/default_icon_name', 'lamp_3.png');
     if WizardIsComponentSelected('sixth_sense/luka') then JSON_SetString(Handle,'/default_icon_name', 'luka.png');
-    if WizardIsComponentSelected('sixth_sense/medal_ship_censoured') then JSON_SetString(Handle,'/default_icon_name', 'medal_ship_censoured.png');
+    if WizardIsComponentSelected('sixth_sense/medal_ship_censored') then JSON_SetString(Handle,'/default_icon_name', 'medal_ship_censored.png');
     if WizardIsComponentSelected('sixth_sense/moscow_ship') then JSON_SetString(Handle,'/default_icon_name', 'moscow_ship.png');
     if WizardIsComponentSelected('sixth_sense/moscow_ship_2') then JSON_SetString(Handle,'/default_icon_name', 'moscow_ship_2.png');
     if WizardIsComponentSelected('sixth_sense/potato') then JSON_SetString(Handle,'/default_icon_name', 'potato.png');
@@ -497,7 +497,7 @@ begin
   begin
     Log('Handle statistics.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('statistics'));
-    JSON_SetBool(Handle,'/icon_enabled', WizardIsComponentSelected('players_panels/icon_enabled'));
+    JSON_SetBool(Handle,'/icon_enabled', WizardIsComponentSelected('statistics/icon_enabled'));
     JSON_SetBool(Handle,'/statistics_change_vehicle_name_color', WizardIsComponentSelected('statistics/statistics_change_vehicle_name_color'));
     JSON_SetBool(Handle,'/statistics_enabled', WizardIsComponentSelected('statistics/statistics_enabled'));
     JSON_Close(Handle);
