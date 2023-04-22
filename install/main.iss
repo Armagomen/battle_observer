@@ -50,6 +50,7 @@ Name: "uk"; MessagesFile: "compiler:Languages\Ukrainian.isl"; LicenseFile: "..\E
 [Icons]
 Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; IconFilename: "{uninstallexe}";
 
-#include "scripts\messages.iss"
+#include "scripts\messages\uk.iss"
+#include "scripts\messages\en.iss"
 #include "scripts\components.iss"
 

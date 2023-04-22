@@ -1,13 +1,5 @@
 ﻿[CustomMessages]
 // open wg utils
-en.openwg_browse=Browse...
-en.openwg_client_not_found=The game client was not detected in the specified folder.
-en.openwg_unknown=Unknown
-en.openwg_branch_release=Release
-en.openwg_branch_ct=Common Test
-en.openwg_branch_st=Super Test
-en.openwg_branch_sb=Sandbox
-
 uk.openwg_browse=Огляд...
 uk.openwg_client_not_found=Клієнт гри не виявлено у вказаній папці.
 uk.openwg_unknown=Невідомо
@@ -15,15 +7,10 @@ uk.openwg_branch_release=Реліз
 uk.openwg_branch_ct=Загальний тест
 uk.openwg_branch_st=Супер тест
 uk.openwg_branch_sb=Пісочниця
-
-en.version_not_match=This client is not supported.%n%nThis installer only supports WoT v{#WOT_VERSION_PATTERN}
-en.client_started=The selected client is running.%n%nDo you want to terminate the selected client?
-
 uk.version_not_match=Клієнт не підтримується.%n%nЦей установник підтримує лише WoT v{#WOT_VERSION_PATTERN}
 uk.client_started=Клієнт запущено.%n%nЧи бажаєте ви закрити клієнт?
 
 // run
-en.open_donate=Support the developer with a donation.
 uk.open_donate=Підтримати розробника донатом.
 
 // components
@@ -136,6 +123,7 @@ uk.effects_noBinoculars=Прибрати затемнення у режимі с
 uk.effects_noShockWave=Вимкнути вібрацію камери при влучанні по танку
 
 uk.flight_time=Час польоту снаряду
+uk.flight_time_spg=Лише при грі на арті
 
 //log_extended
 uk.log_extended=Розширена історія шкоди
@@ -145,6 +133,7 @@ uk.log_extended_reverse=Додавати події в історію згори
 
 uk.log_total=Лог ефективності сумарний
 uk.main_gun=Основний калібр
+uk.main_gun_progress=Показувати графіку
 
 //minimap
 uk.minimap=Міні-мапа
@@ -192,6 +181,10 @@ uk.statistics_names_color=Змінити колір назви танку у с�
 uk.statistics_enabled=Увімкнути статистику гравців за рейтингом WTR
 
 uk.tank_carousel=Карусель танків
+uk.tank_carousel_small=Примусово використовувати маленькі значки
+uk.tank_carousel_3=3 Рядки
+uk.tank_carousel_4=4 Рядки
+
 uk.team_bases_panel=Панель захоплення бази
 
 //wg_logs

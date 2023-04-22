@@ -3,7 +3,7 @@
     "brightness": 1.0,
     "saturation": 0.5
   },
-  "enabled": true,
+  "enabled": false,
   "icons": {
     "assistIcon": " <img src='img://gui/maps/icons/library/efficiency/48x48/help.png' width='24' height='24' vspace='-10'>",
     "blockedIcon": " <img src='img://gui/maps/icons/library/efficiency/48x48/armor.png' width='24' height='24' vspace='-9'>",

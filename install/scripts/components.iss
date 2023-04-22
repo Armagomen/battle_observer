@@ -6,7 +6,6 @@ Name: "armagomen"; Description: {cm:types_armagomen};
 Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
 [Components]
-// main.json
 Name: main; Description: MAIN CATEGORY;
 Name: main/anti_anonymous; Description: {cm:anti_anonymous};
 Name: main/auto_crew_training; Description: {cm:auto_crew_training}; Types: "armagomen";
@@ -27,30 +26,20 @@ Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: 
 Name: main/premium_time; Description: {cm:premium_time}; Types: "armagomen";
 Name: main/save_shot; Description: {cm:save_shot}; Types: "armagomen";
 Name: main/show_friends; Description: {cm:show_friends}; Types: "armagomen";
-
-//clock
 Name: clock; Description: {cm:clock};
 Name: clock/hangar; Description: {cm:clock_hangar}; Types: "armagomen";
 Name: clock/battle; Description: {cm:clock_battle}; Types: "armagomen";
-
-//hp_bars
 Name: hp_bars; Description: {cm:hp_bars};
 Name: hp_bars/alive_count; Description: {cm:alive_count}; Flags: dontinheritcheck;
 Name: hp_bars/normal; Description: {cm:hp_normal}; Flags: exclusive;
 Name: hp_bars/league; Description: {cm:hp_league}; Flags: exclusive; Types: "armagomen";
-
-//debug_panel
 Name: debug_panel; Description: {cm:debug_panel};  
 Name: debug_panel/minimal; Description: minimal; Flags: exclusive;
 Name: debug_panel/modern; Description: modern; Flags: exclusive; Types: "armagomen";
-
-//dispersion_circle
 Name: dispersion_circle; Description: {cm:dispersion_circle};
 Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Types: "armagomen";
 Name: dispersion_circle/server; Description: {cm:dispersion_circle_server};
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Types: "armagomen";
-
-//sixth_sense
 Name: sixth_sense; Description: {cm:sixth_sense};
 Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: "armagomen";
 Name: sixth_sense/bavovnatko; Description: {cm:bavovnatko}; Flags: exclusive;
@@ -88,69 +77,50 @@ Name: sixth_sense/ua_herb; Description: {cm:ua_herb}; Flags: exclusive;
 Name: sixth_sense/water_fire; Description: {cm:water_fire}; Flags: exclusive;
 Name: sixth_sense/what_again; Description: {cm:what_again}; Flags: exclusive;
 Name: sixth_sense/zelensky; Description: {cm:zelensky}; Flags: exclusive;
-
 Name: arcade_camera; Description: {cm:arcade_camera}; Types: "armagomen";
 Name: strategic_camera; Description: {cm:strategic_camera}; Types: "armagomen";
-
-//sniper camera
 Name: zoom; Description: {cm:zoom};
 Name: zoom/disable_cam_after_shot; Description: {cm:zoom_disable_cam};
 Name: zoom/dynamic_zoom; Description: {cm:zoom_dynamic_zoom}; Types: "armagomen"; Flags: checkablealone;
 Name: zoom/dynamic_zoom/steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck;
 Name: zoom/zoomSteps; Description: {cm:zoom_zoomSteps};
-
-//armor calculator
 Name: armor_calculator; Description: {cm:armor_calculator}; Types: "armagomen"; Flags: checkablealone;
 Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck;
-
-//avg_efficiency_in_hangar
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar};
 Name: avg_efficiency_in_hangar/avg_damage; Description: {cm:avg_efficiency_in_hangar_damage}; Types: "armagomen";
 Name: avg_efficiency_in_hangar/avg_blocked; Description: {cm:avg_efficiency_in_hangar_blocked}; Types: "armagomen";
 Name: avg_efficiency_in_hangar/avg_assist; Description: {cm:avg_efficiency_in_hangar_assist}; Types: "armagomen";
 Name: avg_efficiency_in_hangar/avg_stun; Description: {cm:avg_efficiency_in_hangar_stun}; Types: "armagomen"; 
 Name: avg_efficiency_in_hangar/gun_marks; Description: {cm:avg_efficiency_in_hangar_gun_marks}; Types: "armagomen"; 
-
-Name: battle_timer; Description: {cm:battle_timer}; Types: "armagomen"; Flags: disablenouninstallwarning;
-Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
-
-//effects
+Name: battle_timer; Description: {cm:battle_timer}; Types: "armagomen";
+Name: distance_to_enemy; Description: {cm:distance_to_enemy};
 Name: effects; Description: {cm:effects};
 Name: effects/noBinoculars; Description: {cm:effects_noBinoculars};
 Name: effects/noFlashBang; Description: {cm:effects_noFlashBang}; Types: "armagomen";
 Name: effects/noShockWave; Description: {cm:effects_noShockWave}; Types: "armagomen";
 Name: effects/noSniperDynamic; Description: {cm:effects_noSniperDynamic};
-
-Name: flight_time; Description: {cm:flight_time}; Types: "armagomen"; Flags: disablenouninstallwarning;
-Name: log_total; Description: {cm:log_total}; Types: "armagomen"; Flags: disablenouninstallwarning;
-
-//log_extended
+Name: flight_time; Description: {cm:flight_time}; Types: "armagomen"; Flags: checkablealone;
+Name: flight_time/spgOnly; Description: {cm:flight_time_spg}; Flags: dontinheritcheck;
+Name: log_total; Description: {cm:log_total}; Types: "armagomen";
 Name: log_extended; Description: {cm:log_extended};
 Name: log_extended/top_enabled; Description: {cm:log_extended_top}; Types: "armagomen";
 Name: log_extended/bottom_enabled; Description: {cm:log_extended_bottom}; Types: "armagomen";
 Name: log_extended/reverse; Description: {cm:log_extended_reverse};
-
-Name: main_gun; Description: {cm:main_gun}; Types: "armagomen"; Flags: disablenouninstallwarning;
-
-//minimap
+Name: main_gun; Description: {cm:main_gun}; Types: "armagomen"; Flags: checkablealone;
+Name: main_gun/progress_bar; Description: {cm:main_gun_progress}; Types: "armagomen"; Flags: dontinheritcheck;
 Name: minimap; Description: {cm:minimap};
 Name: minimap/permanentMinimapDeath; Description: {cm:minimap_permanent};
 Name: minimap/real_view_radius; Description: {cm:minimap_radius}; Types: "armagomen";
 Name: minimap/showDeathNames; Description: {cm:minimap_names};
 Name: minimap/yaw_limits; Description: {cm:minimap_limits}; Types: "armagomen";
 Name: minimap/zoom; Description: {cm:minimap_zoom}; Types: "armagomen";
-
 Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning;
-
-//players_panels
 Name: players_panels; Description: {cm:players_panels};
 Name: players_panels/panels_spotted_fix; Description: {cm:players_panels_spotted}; Types: "armagomen";
 Name: players_panels/players_bars; Description: {cm:players_panels_bars}; Types: "armagomen"; Flags: checkablealone;
 Name: players_panels/players_bars/classColor; Description: {cm:players_panels_bars_class}; Flags: dontinheritcheck;
 Name: players_panels/players_bars/on_key_pressed; Description: {cm:players_panels_on_key}; Flags: dontinheritcheck;
 Name: players_panels/players_damages_enabled; Description: {cm:players_panels_damages}; Types: "armagomen"; 
-
-//service_channel_filter
 Name: service_channel_filter; Description: {cm:service_channel_filter};
 Name: service_channel_filter/CustomizationForCredits; Description: {cm:service_channel_CustomizationForCredits}; Types: "armagomen";
 Name: service_channel_filter/CustomizationForGold; Description: {cm:service_channel_CustomizationForGold};
@@ -170,17 +140,15 @@ Name: service_channel_filter/Restore; Description: {cm:service_channel_Restore};
 Name: service_channel_filter/Selling; Description: {cm:service_channel_Selling}; Types: "armagomen";
 Name: service_channel_filter/autoMaintenance; Description: {cm:service_channel_autoMaintenance}; Types: "armagomen";
 Name: service_channel_filter/customizationChanged; Description: {cm:service_channel_customizationChanged}; Types: "armagomen";
-
-//statistics
 Name: statistics; Description: {cm:statistics};
 Name: statistics/icon_enabled; Description: {cm:statistics_icons}; Types: "armagomen";
 Name: statistics/statistics_change_vehicle_name_color; Description: {cm:statistics_names_color}; Types: "armagomen";
 Name: statistics/statistics_enabled; Description: {cm:statistics_enabled}; Types: "armagomen";
-
-
-Name: tank_carousel; Description: {cm:tank_carousel}; Flags: disablenouninstallwarning;
-Name: team_bases_panel; Description: {cm:team_bases_panel}; Types: "armagomen"; Flags: disablenouninstallwarning;
-
+Name: tank_carousel; Description: {cm:tank_carousel};
+Name: tank_carousel/smallDoubleCarousel; Description: {cm:tank_carousel_small}; Flags: dontinheritcheck;
+Name: tank_carousel/3; Description: {cm:tank_carousel_3}; Flags: exclusive;
+Name: tank_carousel/4; Description: {cm:tank_carousel_4}; Flags: exclusive;
+Name: team_bases_panel; Description: {cm:team_bases_panel}; Types: "armagomen";
 Name: wg_logs; Description: {cm:wg_logs};
 Name: wg_logs/wg_log_hide_assist; Description: {cm:wg_logs_assist};
 Name: wg_logs/wg_log_hide_block; Description: {cm:wg_logs_block};
@@ -190,37 +158,8 @@ Name: wg_logs/wg_log_pos_fix; Description: {cm:wg_logs_pos_fix};
 
 [Files]
 Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
-Source: "settings\load.json"; DestDir: "{#configs_dir}"; Flags: ignoreversion;
-Source: "settings\main.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\hp_bars.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\clock.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\debug_panel.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\dispersion_circle.json"; DestDir: "{#configs_dir}\armagomen";  Flags: ignoreversion;
-Source: "settings\dispersion_timer.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\sixth_sense.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\zoom.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\strategic_camera.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\arcade_camera.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\armor_calculator.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\avg_efficiency_in_hangar.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\effects.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\log_extended.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\minimap.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\players_panels.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\service_channel_filter.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\statistics.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\colors.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-Source: "settings\wg_logs.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
-
-Source: "settings\battle_timer.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: battle_timer;
-Source: "settings\distance_to_enemy.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: distance_to_enemy;
-Source: "settings\flight_time.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: flight_time;
-Source: "settings\log_total.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: log_total;
-Source: "settings\main_gun.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: main_gun;
-Source: "settings\own_health.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: own_health;
-Source: "settings\tank_carousel.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: tank_carousel;
-Source: "settings\team_bases_panel.json"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion; Components: team_bases_panel;
-
+Source: "settings\load.json"; DestDir: "{#configs_dir}\"; Flags: ignoreversion;
+Source: "settings\default\*"; DestDir: "{#configs_dir}\armagomen"; Flags: ignoreversion;
 
 [InstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
@@ -573,6 +512,7 @@ begin
   if Handle <> 0 then
   begin
     Log('Handle wg_logs.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('wg_logs'));
     JSON_SetBool(Handle,'/wg_log_hide_assist', WizardIsComponentSelected('wg_logs/wg_log_hide_assist'));
     JSON_SetBool(Handle,'/wg_log_hide_block', WizardIsComponentSelected('wg_logs/wg_log_hide_block'));
     JSON_SetBool(Handle,'/wg_log_hide_critics', WizardIsComponentSelected('wg_logs/wg_log_hide_critics'));
@@ -580,6 +520,119 @@ begin
     JSON_Close(Handle);
   end;
 end;
+
+procedure ChangeFlightTimeJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\flight_time.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle flight_time.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('flight_time'));
+    JSON_SetBool(Handle,'/spgOnly', WizardIsComponentSelected('flight_time/spgOnly'));
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeDistanceToEnemyJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\distance_to_enemy.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle distance_to_enemy.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('distance_to_enemy'));
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeBattleTimerJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\battle_timer.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle battle_timer.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('battle_timer'));
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeLogTotalJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\log_total.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle log_total.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('log_total'));
+    if not WizardIsComponentSelected('hp_bars') then JSON_SetInteger(Handle,'/settings/x', -350);
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeMainGunJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\main_gun.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle main_gun.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('main_gun'));
+    JSON_SetBool(Handle,'/progress_bar', WizardIsComponentSelected('main_gun/progress_bar'));
+    if not WizardIsComponentSelected('hp_bars') then JSON_SetInteger(Handle,'/x', 350);
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeOwnHealthJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\own_health.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle own_health.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('own_health'));
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeTankCarouselJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\tank_carousel.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle tank_carousel.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('tank_carousel'));
+    JSON_SetBool(Handle,'/smallDoubleCarousel', WizardIsComponentSelected('tank_carousel/smallDoubleCarousel'));
+    if WizardIsComponentSelected('tank_carousel/3') then JSON_SetInteger(Handle,'/carouselRows', 3);
+    if WizardIsComponentSelected('tank_carousel/4') then JSON_SetInteger(Handle,'/carouselRows', 4);
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeTeamBasesJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\team_bases_panel.json'), False);
+  if Handle <> 0 then
+  begin
+    Log('Handle team_bases_panel.json');
+    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('team_bases_panel'));
+    JSON_Close(Handle);
+  end;
+end;
+
+
 
 //JSON_SetDouble(Handle,'/gaw', 1.3);
 //JSON_SetInteger(Handle,'/krya/krya/krya', 42);
@@ -606,6 +659,14 @@ begin
       ChangePlayersPanelsJsonValues();
       ChangeServiceChannelJsonValues();
       ChangeWGLogsJsonValues();
+      ChangeFlightTimeJsonValues();
+      ChangeDistanceToEnemyJsonValues();
+      ChangeBattleTimerJsonValues();
+      ChangeLogTotalJsonValues();
+      ChangeMainGunJsonValues();
+      ChangeOwnHealthJsonValues();
+      ChangeTankCarouselJsonValues();
+      ChangeTeamBasesJsonValues();
     end;
 end;
 
