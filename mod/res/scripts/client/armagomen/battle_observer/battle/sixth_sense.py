@@ -23,6 +23,7 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
     def __init__(self):
         super(SixthSense, self).__init__()
         self.radio_installed = False
+        self.reveal = False
 
     def _populate(self):
         super(SixthSense, self)._populate()
@@ -56,11 +57,12 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
             if self.radio_installed:
                 time -= RADIO_DURATION
             self.show(time)
-        elif state in _STATES_TO_HIDE:
+        elif state in _STATES_TO_HIDE and self.reveal:
             self.hide()
 
     def _onRoundFinished(self, *args):
-        self.hide()
+        if self.reveal:
+            self.hide()
 
     def handleTimer(self, timeLeft):
         self.as_updateTimerS(DEFAULT_MESSAGE.format(timeLeft))
@@ -70,7 +72,9 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
     def show(self, seconds):
         super(SixthSense, self).show(seconds)
         self.as_showS()
+        self.reveal = True
 
     def hide(self):
         super(SixthSense, self).hide()
         self.as_hideS()
+        self.reveal = False

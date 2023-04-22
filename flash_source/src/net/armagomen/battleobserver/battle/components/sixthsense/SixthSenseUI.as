@@ -83,7 +83,9 @@
 			if (this.hideAnimation.isPlaying)
 			{
 				this.hideAnimation.stop();
+				this.hideAnimation.rewind();
 				this.hideAnimation2.stop();
+				this.hideAnimation2.rewind();
 			}
 			this._container.y = this.POSITION;
 			this._container.alpha = 1.0;
