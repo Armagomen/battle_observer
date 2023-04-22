@@ -31,4 +31,4 @@ Xcopy %OutputDir% %GameInstalled_ModsDir% /e /i /d
 "%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" /DMyAppVersion=%ModVersion% .\install\main.iss
 
 DEL /s /q *.pyc
-rem exit
+exit

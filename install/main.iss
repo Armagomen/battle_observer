@@ -53,4 +53,5 @@ Name: "{group}\{cm:UninstallProgram,{#MyAppName}}"; Filename: "{uninstallexe}"; 
 #include "scripts\messages\uk.iss"
 #include "scripts\messages\en.iss"
 #include "scripts\components.iss"
+//#include "scripts\preview.iss"
 

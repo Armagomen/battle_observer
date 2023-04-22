@@ -11,6 +11,6 @@ procedure SplashScreen();
 begin
   ExtractTemporaryFile('splashscreen.png');
   ExtractTemporaryFile('isgsg.dll');
-  ShowSplashScreen(WizardForm.Handle,ExpandConstant('{tmp}\splashscreen.png'),500,2000,500,0,255,False,$FFFFFF,4);
+  ShowSplashScreen(WizardForm.Handle,ExpandConstant('{tmp}\splashscreen.png'),500,2000,500,0,255,False,$FFFFFF,3);
 end;
 
