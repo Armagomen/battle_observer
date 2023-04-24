@@ -46,7 +46,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             self._minimapPlugin = MinimapZoomPlugin()
         components = viewSettings.setComponents()
         if components or self._statistics is not None or self.__icons or self._minimapPlugin is not None:
-            self._app.as_loadLibrariesS([SWF.BATTLE])
+            callback(1.0 if xvmInstalled else 0, self._app.as_loadLibrariesS, [SWF.BATTLE])
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
     def __onViewLoaded(self, pyView, *args):
