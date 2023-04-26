@@ -1,4 +1,5 @@
 import json
+from httplib import responses
 
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
 from armagomen.constants import REGIONS
@@ -34,18 +35,20 @@ class StatisticsDataLoader(object):
             if self.__callback is not None:
                 self.__callback(self.__wtrData.itemsData)
         else:
-            self.delayedLoad(response.body)
+            self.delayedLoad(response.responseCode)
 
     def setCallback(self, callback_method):
         self.__callback = callback_method
 
-    def delayedLoad(self, reason):
+    def delayedLoad(self, code):
         if self._load_try < 10:
             self._load_try += 1
-            logError("StatisticsDataLoader: try loading statistic data - {}/{}", self._load_try, reason)
-            callback(1.0, self.getStatisticsDataFromServer)
+            logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, responses.get(code))
+            callback(2.0, self.getStatisticsDataFromServer)
 
     def getStatisticsDataFromServer(self):
+        if self.__callback is None:
+            raise ReferenceError("feedback method is not set")
         if not self.enabled:
             return logError("Statistics are not available in your region={}. Only in {}", AUTH_REALM, REGIONS)
         arenaDP = self.sessionProvider.getArenaDP()

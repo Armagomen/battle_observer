@@ -19,7 +19,7 @@ class WTRStatistics(object):
         self.itemsData = {}
 
     def getPattern(self, isEnemy, itemData):
-        logDebug("isEnemy: {}, data:{}", isEnemy, itemData)
+        logDebug("WTRStatistics: isEnemy={}, data={}", isEnemy, itemData)
         if isEnemy:
             return self.settings[STATISTICS.FULL_RIGHT] % itemData, self.settings[STATISTICS.CUT_RIGHT] % itemData
         else:
