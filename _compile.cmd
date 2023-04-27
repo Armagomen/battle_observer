@@ -24,7 +24,7 @@ DEL %GameInstalled_ModsDir%\armagomen.battleObserver*
 DEL %AutoUpdate%
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py %ModFile% %sources%\*
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %ModFile%
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %OutputDir%\*
 
 Xcopy %OutputDir% %GameInstalled_ModsDir% /e /i /d
 
