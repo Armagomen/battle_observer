@@ -5,6 +5,12 @@ procedure SetWizardForm();
 begin  
   WizardForm.Width:=700;  
   WizardForm.Height:=500;
+  WizardForm.WizardSmallBitmapImage.Width := 60;
+  WizardForm.WizardSmallBitmapImage.Height := 60;
+  WizardForm.WizardSmallBitmapImage.Left := 600;
+
+  WizardForm.PageNameLabel.AutoSize := True;
+  WizardForm.PageDescriptionLabel.AutoSize := True;  
 end;
 
 

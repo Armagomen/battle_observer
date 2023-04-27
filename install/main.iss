@@ -10,7 +10,7 @@
 
 #include "scripts\openwg.utils.iss"
 #include "scripts\code.iss"
-#include "scripts\splash.iss"
+//#include "scripts\splash.iss"
 
 #ifndef MyAppVersion
   #define MyAppVersion "1.0.0.0"
@@ -33,6 +33,8 @@ DisableProgramGroupPage=yes
 OutputBaseFilename={#APP_FILE_PATTERN}{#MyAppVersion}
 OutputDir=..\..\
 SetupIconFile=img\BattleObserver_icon.ico
+WizardSmallImageFile=img\small.bmp
+WizardImageFile=img\big.bmp
 ShowComponentSizes=no
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 VersionInfoVersion={#MyAppVersion}
