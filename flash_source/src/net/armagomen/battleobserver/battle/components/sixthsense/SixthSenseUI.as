@@ -18,7 +18,7 @@
 		private var _container:Sprite;
 		private var hideAnimation:Tween;
 		private var hideAnimation2:Tween;
-		private const POSITION:Number = 135;
+		private const POSITION:Number = 140;
 		
 		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
@@ -37,8 +37,6 @@
 			this.params = this.getSettings();
 			this.x = App.appWidth >> 1;
 			this._container = new Sprite()
-			this._container.x = -80;
-			this._container.y = this.POSITION;
 			this.addChild(_container);
 			if (this.params.default_icon)
 			{
@@ -68,14 +66,16 @@
 		
 		private function addLoadedImageAndTimer(image:Bitmap):void
 		{
-			image.width = 150;
-			image.height = 150;
+			image.width = 120;
+			image.height = 120;
 			image.smoothing = true;
 			this._container.addChild(image);
 			this.timer = new TextExt(image.width >> 1, image.height - 20, Constants.middleText, TextFieldAutoSize.CENTER, this._container);
-			this.hideAnimation = new Tween(this._container, "y", this.POSITION, -150);
+			this.hideAnimation = new Tween(this._container, "y", this.POSITION, -image.height);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
 			this._container.alpha = 0;
+			this._container.x = -image.width >> 1;
+			this._container.y = this.POSITION;
 		}
 		
 		public function as_show():void
