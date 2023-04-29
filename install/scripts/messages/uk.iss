@@ -55,8 +55,8 @@ uk.debug_panel=Змінена панель FPS/PING
 
 //dispersion_circle
 uk.dispersion_circle=Налаштування кола зведення (зменшення та серверний приціл)
-uk.dispersion_circle_replace=Зменшити коло зведення на 70%
-uk.dispersion_circle_server=Задіяти серверний приціл та зменшити серверне коло зведення на 70%
+uk.dispersion_circle_replace=Зменшити коло зведення до 70%
+uk.dispersion_circle_server=Задіяти серверний приціл та зменшити серверне коло зведення до 70%
 
 
 //sixth_sense

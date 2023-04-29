@@ -1,6 +1,6 @@
 {
   "enabled": false,
-  "extraServerLap": false,
-  "replaceOriginalCircle": false,
+  "server_aim": false,
+  "replace": false,
   "scale": 0.7
 }

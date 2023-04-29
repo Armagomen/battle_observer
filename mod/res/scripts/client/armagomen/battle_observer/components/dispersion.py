@@ -1,6 +1,3 @@
-from GUI import screenResolution, WGGunMarkerDataProvider, WGSPGGunMarkerDataProvider
-from Math import MatrixAnimation
-
 import aih_constants
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
@@ -31,18 +28,20 @@ LINKAGES = {
 }
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
-aih_constants.GUN_MARKER_MIN_SIZE = DISPERSION.GUN_MARKER_MIN_SIZE
+aih_constants.GUN_MARKER_MIN_SIZE = 16.0
+aih_constants.SPG_GUN_MARKER_MIN_SIZE = 30.0
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
-    __scaleConfig = float(settings.dispersion_circle[DISPERSION.CIRCLE_SCALE_CONFIG])
+    __scaleConfig = float(settings.dispersion_circle[DISPERSION.SCALE])
 
     def __updateScreenRatio(self):
-        self.__screenRatio = screenResolution()[0] * 0.5 * self.__scaleConfig
+        super(_DefaultGunMarkerController, self).__updateScreenRatio()
+        self.__screenRatio *= self.__scaleConfig
 
 
 class SPGController(gun_marker_ctrl._SPGGunMarkerController):
-    __scaleConfig = float(settings.dispersion_circle[DISPERSION.CIRCLE_SCALE_CONFIG])
+    __scaleConfig = float(settings.dispersion_circle[DISPERSION.SCALE])
 
     def _updateDispersionData(self):
         self._size *= self.__scaleConfig
@@ -50,38 +49,11 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
         isServerAim = self._gunMarkerType == SERVER
         if g_replayCtrl.isPlaying and g_replayCtrl.isClientReady:
             d, s = g_replayCtrl.getSPGGunMarkerParams()
-            if d != DISPERSION.MINUS_ONE_F and s != DISPERSION.MINUS_ONE_F:
+            if d != -1 and s != -1:
                 dispersionAngle = d
         elif g_replayCtrl.isRecording and (g_replayCtrl.isServerAim and isServerAim or not isServerAim):
             g_replayCtrl.setSPGGunMarkerParams(dispersionAngle, GLOBAL.ZERO)
         self._dataProvider.setupConicDispersion(dispersionAngle)
-
-
-class _GunMarkersDPFactory(gun_marker_ctrl._GunMarkersDPFactory):
-
-    @staticmethod
-    def _makeDefaultProvider():
-        scale = settings.dispersion_circle[DISPERSION.CIRCLE_SCALE_CONFIG]
-        limits = (aih_constants.GUN_MARKER_MIN_SIZE * scale, min(screenResolution()))
-        dataProvider = WGGunMarkerDataProvider()
-        dataProvider.positionMatrixProvider = MatrixAnimation()
-        dataProvider.setStartSize(limits[GLOBAL.FIRST])
-        dataProvider.sizeConstraint = limits
-        return dataProvider
-
-    @staticmethod
-    def _makeSPGProvider():
-        scale = settings.dispersion_circle[DISPERSION.CIRCLE_SCALE_CONFIG]
-        dataProvider = WGSPGGunMarkerDataProvider(aih_constants.SPG_GUN_MARKER_ELEMENTS_COUNT,
-                                                  aih_constants.SPG_GUN_MARKER_ELEMENTS_RATE)
-        dataProvider.positionMatrixProvider = MatrixAnimation()
-        dataProvider.maxTime = DISPERSION.MAX_TIME
-        dataProvider.serverTickLength = SERVER_TICK_LENGTH
-        dataProvider.sizeScaleRate = aih_constants.SPG_GUN_MARKER_SCALE_RATE * DISPERSION.SPG_GM_SCALE
-        dataProvider.sizeConstraint = (aih_constants.SPG_GUN_MARKER_MIN_SIZE * scale,
-                                       aih_constants.SPG_GUN_MARKER_MAX_SIZE * scale)
-        dataProvider.setRelaxTime(SERVER_TICK_LENGTH)
-        return dataProvider
 
 
 class DispersionCircle(object):
@@ -106,9 +78,9 @@ class DispersionCircle(object):
     def createOverrideComponents(self, base, *args):
         if not self.hooksEnable:
             return base(*args)
-        player = getPlayer()
-        player.enableServerAim(self.hooksEnable)
         if base.__name__ == self.CREATE:
+            player = getPlayer()
+            player.enableServerAim(True)
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
 
@@ -140,26 +112,25 @@ class DispersionCircle(object):
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION.NAME:
             self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
-            self.replaceWGCircle = config[DISPERSION.CIRCLE_REPLACE]
-            self.hooksEnable = self.enabled and config[DISPERSION.CIRCLE_EXTRA_LAP]
+            self.replaceWGCircle = config[DISPERSION.REPLACE]
+            self.hooksEnable = self.enabled and config[DISPERSION.SERVER]
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if not self.enabled:
             return baseCreateGunMarker(isStrategic)
-        bo_factory = _GunMarkersDPFactory()
-        wg_factory = gun_marker_ctrl._GunMarkersDPFactory()
+        factory = gun_marker_ctrl._GunMarkersDPFactory()
         if isStrategic:
             if self.replaceWGCircle:
-                client = SPGController(CLIENT, bo_factory.getClientSPGProvider())
+                client = SPGController(CLIENT, factory.getClientSPGProvider())
             else:
-                client = gun_marker_ctrl._SPGGunMarkerController(CLIENT, wg_factory.getClientSPGProvider())
-            server = SPGController(SERVER, bo_factory.getServerSPGProvider())
+                client = gun_marker_ctrl._SPGGunMarkerController(CLIENT, factory.getClientSPGProvider())
+            server = SPGController(SERVER, factory.getServerSPGProvider())
         else:
             if self.replaceWGCircle:
-                client = _DefaultGunMarkerController(CLIENT, bo_factory.getClientProvider())
+                client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
             else:
-                client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, wg_factory.getClientProvider())
-            server = _DefaultGunMarkerController(SERVER, bo_factory.getServerProvider())
+                client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, factory.getClientProvider())
+            server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
         return gun_marker_ctrl._GunMarkersDecorator(client, server)
 
 

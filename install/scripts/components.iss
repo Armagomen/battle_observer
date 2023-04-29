@@ -259,8 +259,8 @@ begin
   begin
     Log('Handle dispersion_circle.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('dispersion_circle'));
-    JSON_SetBool(Handle,'/extraServerLap', WizardIsComponentSelected('dispersion_circle/server'));
-    JSON_SetBool(Handle,'/replaceOriginalCircle', WizardIsComponentSelected('dispersion_circle/replace'));
+    JSON_SetBool(Handle,'/server_aim', WizardIsComponentSelected('dispersion_circle/server'));
+    JSON_SetBool(Handle,'/replace', WizardIsComponentSelected('dispersion_circle/replace'));
     JSON_Close(Handle);
   end;
 end;

@@ -14,7 +14,8 @@ from armagomen.utils.common import overrideMethod, logError, isReplay, callback
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 
-settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: 20.0}
+DEFAULT_X_METERS = 20.0
+settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: DEFAULT_X_METERS}
 MinMax = namedtuple('MinMax', ('min', 'max'))
 camCache = {"ArcadeCamera": False, "ArcadeCameraEpic": False, "ArtyCamera": False, "StrategicCamera": False}
 
@@ -42,7 +43,10 @@ def sniper_readConfigs(base, camera, data):
                 exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
     if settingsCache[SNIPER.DYN_ZOOM]:
         camera.setSniperZoomSettings(-1)
-        settingsCache[SNIPER.METERS] = math.ceil(SNIPER.MAX_DIST / camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
+        if settingsCache[SNIPER.STEPS_ONLY]:
+            settingsCache[SNIPER.METERS] = math.ceil(SNIPER.MAX_DIST / camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
+        else:
+            settingsCache[SNIPER.METERS] = DEFAULT_X_METERS
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
@@ -55,7 +59,7 @@ def getSimilarStep(zoom, steps):
 
 
 def getZoom(distance, steps):
-    zoom = min(math.ceil(distance / settingsCache[SNIPER.METERS]), steps[GLOBAL.LAST])
+    zoom = math.ceil(distance / settingsCache[SNIPER.METERS])
     if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
         zoom = getSimilarStep(zoom, steps)
     if zoom < SNIPER.MIN_ZOOM:
@@ -111,6 +115,7 @@ def onModSettingsChanged(config, blockID):
     elif blockID == SNIPER.NAME:
         settingsCache[SNIPER.DYN_ZOOM] = config[GLOBAL.ENABLED] and not isReplay() and \
                                          config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
+        settingsCache[SNIPER.STEPS_ONLY] = config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]
 
 
 settings.onModSettingsChanged += onModSettingsChanged

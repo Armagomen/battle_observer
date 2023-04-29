@@ -101,9 +101,9 @@ localization = {
     },
     "dispersion_circle": {
         "header": "Setting the collapsing circle, server sight",
-        "replaceOriginalCircle": "Replace Original Circle.",
-        "extraServerLap": "Enable server scope (extra lap)",
-        "extraServerLap_tooltip": "Enabling the feature will create an extra server lapping circle.",
+        "replace": "Replace Original Circle.",
+        "server_aim": "Enable server scope (extra lap)",
+        "server_aim_tooltip": "Enabling the feature will create an extra server lapping circle.",
         "scale": "Circle size multiplier 30-100% (0.3-1.0)",
         "scale_tooltip": "This parameter affects what the additional summation circle will be in the result."
                          "If the value is 0.3 (30%), then the circle will be the minimum possible, "
