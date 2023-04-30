@@ -180,7 +180,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\main.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle main.json');
     JSON_SetBool(Handle,'/anti_anonymous', WizardIsComponentSelected('main/anti_anonymous'));
     JSON_SetBool(Handle,'/auto_crew_training', WizardIsComponentSelected('main/auto_crew_training'));
     JSON_SetBool(Handle,'/auto_return_crew', WizardIsComponentSelected('main/auto_return_crew'));
@@ -211,7 +210,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\clock.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle clock.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('clock'));
     JSON_SetBool(Handle,'/hangar/enabled', WizardIsComponentSelected('clock/hangar'));
     JSON_SetBool(Handle,'/battle/enabled', WizardIsComponentSelected('clock/battle'));
@@ -226,7 +224,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\hp_bars.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle hp_bars.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('hp_bars'));
     JSON_SetBool(Handle,'/showAliveCount', WizardIsComponentSelected('hp_bars/alive_count'));
     if WizardIsComponentSelected('hp_bars/normal') then JSON_SetString(Handle,'/style', 'normal');
@@ -242,7 +239,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\debug_panel.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle debug_panel.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('debug_panel'));
     if WizardIsComponentSelected('debug_panel/minimal') then JSON_SetString(Handle,'/style', 'minimal');
     if WizardIsComponentSelected('debug_panel/modern') then JSON_SetString(Handle,'/style', 'modern');
@@ -257,7 +253,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\dispersion_circle.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle dispersion_circle.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('dispersion_circle'));
     JSON_SetBool(Handle,'/server_aim', WizardIsComponentSelected('dispersion_circle/server'));
     JSON_SetBool(Handle,'/replace', WizardIsComponentSelected('dispersion_circle/replace'));
@@ -272,7 +267,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\sixth_sense.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle sixth_sense.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('sixth_sense'));
     JSON_SetBool(Handle,'/playTickSound', WizardIsComponentSelected('sixth_sense/playTickSound'));
     if WizardIsComponentSelected('sixth_sense/bavovnatko') then JSON_SetString(Handle,'/default_icon_name', 'bavovnatko.png');
@@ -321,7 +315,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\arcade_camera.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle arcade_camera.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('arcade_camera'));
     JSON_Close(Handle);
   end;
@@ -334,7 +327,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\strategic_camera.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle strategic_camera.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('strategic_camera'));
     JSON_Close(Handle);
   end;
@@ -347,7 +339,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\armor_calculator.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle armor_calculator.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('armor_calculator'));
     JSON_SetBool(Handle,'/display_on_allies', WizardIsComponentSelected('armor_calculator/display_on_allies'));
     JSON_Close(Handle);
@@ -361,7 +352,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\zoom.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle zoom.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('zoom'));
     JSON_SetBool(Handle,'/disable_cam_after_shot', WizardIsComponentSelected('zoom/disable_cam_after_shot'));
     JSON_SetBool(Handle,'/dynamic_zoom/enabled', WizardIsComponentSelected('zoom/dynamic_zoom'));
@@ -378,7 +368,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\avg_efficiency_in_hangar.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle avg_efficiency_in_hangar.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('avg_efficiency_in_hangar'));
     JSON_SetBool(Handle,'/avg_damage', WizardIsComponentSelected('avg_efficiency_in_hangar/avg_damage'));
     JSON_SetBool(Handle,'/avg_blocked', WizardIsComponentSelected('avg_efficiency_in_hangar/avg_blocked'));
@@ -396,7 +385,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\effects.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle effects.json');
     JSON_SetBool(Handle,'/noBinoculars', WizardIsComponentSelected('effects/noBinoculars'));
     JSON_SetBool(Handle,'/noFlashBang', WizardIsComponentSelected('effects/noFlashBang'));
     JSON_SetBool(Handle,'/noShockWave', WizardIsComponentSelected('effects/noShockWave'));
@@ -412,7 +400,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\log_extended.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle log_extended.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('log_extended'));
     JSON_SetBool(Handle,'/top_enabled', WizardIsComponentSelected('log_extended/top_enabled'));
     JSON_SetBool(Handle,'/bottom_enabled', WizardIsComponentSelected('log_extended/bottom_enabled'));
@@ -428,7 +415,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\minimap.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle minimap.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('minimap'));
     JSON_SetBool(Handle,'/permanentMinimapDeath', WizardIsComponentSelected('minimap/permanentMinimapDeath'));
     JSON_SetBool(Handle,'/real_view_radius', WizardIsComponentSelected('minimap/real_view_radius'));
@@ -446,7 +432,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\players_panels.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle players_panels.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('players_panels'));
     JSON_SetBool(Handle,'/panels_spotted_fix', WizardIsComponentSelected('players_panels/panels_spotted_fix'));
     JSON_SetBool(Handle,'/players_bars_enabled', WizardIsComponentSelected('players_panels/players_bars'));
@@ -464,7 +449,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\service_channel_filter.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle service_channel_filter.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('service_channel_filter'));
     JSON_SetBool(Handle,'/sys_keys/CustomizationForCredits', WizardIsComponentSelected('service_channel_filter/CustomizationForCredits'));
     JSON_SetBool(Handle,'/sys_keys/CustomizationForGold', WizardIsComponentSelected('service_channel_filter/CustomizationForGold'));
@@ -495,7 +479,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\statistics.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle statistics.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('statistics'));
     JSON_SetBool(Handle,'/icon_enabled', WizardIsComponentSelected('statistics/icon_enabled'));
     JSON_SetBool(Handle,'/statistics_change_vehicle_name_color', WizardIsComponentSelected('statistics/statistics_change_vehicle_name_color'));
@@ -511,7 +494,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\wg_logs.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle wg_logs.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('wg_logs'));
     JSON_SetBool(Handle,'/wg_log_hide_assist', WizardIsComponentSelected('wg_logs/wg_log_hide_assist'));
     JSON_SetBool(Handle,'/wg_log_hide_block', WizardIsComponentSelected('wg_logs/wg_log_hide_block'));
@@ -528,7 +510,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\flight_time.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle flight_time.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('flight_time'));
     JSON_SetBool(Handle,'/spgOnly', WizardIsComponentSelected('flight_time/spgOnly'));
     JSON_Close(Handle);
@@ -542,7 +523,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\distance_to_enemy.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle distance_to_enemy.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('distance_to_enemy'));
     JSON_Close(Handle);
   end;
@@ -555,7 +535,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\battle_timer.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle battle_timer.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('battle_timer'));
     JSON_Close(Handle);
   end;
@@ -568,7 +547,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\log_total.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle log_total.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('log_total'));
     if not WizardIsComponentSelected('hp_bars') then JSON_SetInteger(Handle,'/settings/x', -360);
     JSON_Close(Handle);
@@ -582,7 +560,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\main_gun.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle main_gun.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('main_gun'));
     JSON_SetBool(Handle,'/progress_bar', WizardIsComponentSelected('main_gun/progress_bar'));
     if not WizardIsComponentSelected('hp_bars') then JSON_SetInteger(Handle,'/x', 360);
@@ -597,7 +574,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\own_health.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle own_health.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('own_health'));
     JSON_Close(Handle);
   end;
@@ -610,7 +586,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\tank_carousel.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle tank_carousel.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('tank_carousel'));
     JSON_SetBool(Handle,'/smallDoubleCarousel', WizardIsComponentSelected('tank_carousel/smallDoubleCarousel'));
     if WizardIsComponentSelected('tank_carousel/3') then JSON_SetInteger(Handle,'/carouselRows', 3);
@@ -626,7 +601,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\team_bases_panel.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle team_bases_panel.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('team_bases_panel'));
     JSON_Close(Handle);
   end;
@@ -639,7 +613,6 @@ begin
   Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen\dispersion_timer.json'), False);
   if Handle <> 0 then
   begin
-    Log('Handle dispersion_timer.json');
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('dispersion_timer'));
     JSON_Close(Handle);
   end;

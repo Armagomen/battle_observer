@@ -18,7 +18,7 @@
 		private var _container:Sprite;
 		private var hideAnimation:Tween;
 		private var hideAnimation2:Tween;
-		private const POSITION:Number = 140;
+		private const POSITION:Number = 150;
 		
 		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
