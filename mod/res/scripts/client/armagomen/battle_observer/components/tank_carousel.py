@@ -15,14 +15,12 @@ settings.onModSettingsChanged += onModSettingsChanged
 
 
 @overrideMethod(TankCarousel, "as_rowCountS")
-def as_rowCountS(base, carousel, rowCount):
+def as_rowCountS(base, carousel, row_count):
     if settings.tank_carousel[GLOBAL.ENABLED] and carousel.getAlias() == HANGAR_ALIASES.TANK_CAROUSEL:
-        return base(carousel, settings.tank_carousel[CAROUSEL.ROWS])
-    return base(carousel, rowCount)
+        row_count = max(settings.tank_carousel[CAROUSEL.ROWS], row_count)
+    return base(carousel, row_count)
 
 
 @overrideMethod(TankCarousel, "as_setSmallDoubleCarouselS")
 def as_setSmallDoubleCarouselS(base, carousel, small):
-    if settings.tank_carousel[GLOBAL.ENABLED] and carousel.getAlias() == HANGAR_ALIASES.TANK_CAROUSEL:
-        return base(carousel, settings.tank_carousel[CAROUSEL.SMALL] or small)
-    return base(carousel, small)
+    return base(carousel, small or settings.tank_carousel[GLOBAL.ENABLED] and settings.tank_carousel[CAROUSEL.SMALL])

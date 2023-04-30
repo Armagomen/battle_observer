@@ -182,8 +182,8 @@ en.statistics_enabled=Enable player statistics by WTR rating
 
 en.tank_carousel=Tank carousel
 en.tank_carousel_small=Force small icons
-en.tank_carousel_3=3 Rows
-en.tank_carousel_4=4 Rows
+en.tank_carousel_3=3 Rows (does not work during combat pass)
+en.tank_carousel_4=4 Rows (does not work during combat pass)
 
 en.team_bases_panel=Base capture panel
 
