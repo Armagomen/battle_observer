@@ -271,22 +271,6 @@ def overrideMethod(wg_class, method_name="__init__"):
     return outer
 
 
-# # add non-standard encoding name
-# import locale
-# locale.locale_encoding_alias["cp65001"] = encoding
-#
-#
-# def getEncoding():
-#     coding = locale.getpreferredencoding()
-#     if coding in locale.locale_encoding_alias:
-#         return locale.locale_encoding_alias[coding]
-#     return coding
-#
-#
-# ENCODING_LOCALE = getEncoding()
-# logDebug("DECODE_LOCALE: encoding={}", ENCODING_LOCALE)
-
-
 def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
