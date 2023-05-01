@@ -50,9 +50,9 @@ class Donate(object):
                "{donat_img} <a href='event:{ua}'>DonatUA</a><br>" \
                "{paypal_img} <a href='event:{paypal}'>PayPal</a><br>" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
-               "</textformat></p>".format(ua=URLS.DONATE_UA_URL, paypal=URLS.PAYPAL_URL,
+               "</textformat></p>".format(ua=URLS.DONATELLO, paypal=URLS.PAYPAL_URL,
                                           patreon=URLS.PATREON_URL, msg=self.lastMessage,
-                                          logo=getLogo(big=False), donat_img=IMG.DONAT_UA,
+                                          logo=getLogo(big=False), donat_img=IMG.DONATELLO,
                                           patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
     def pushClanMessage(self):

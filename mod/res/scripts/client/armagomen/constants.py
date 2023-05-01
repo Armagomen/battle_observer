@@ -28,21 +28,21 @@ def sixthSenseIconsNamesList():
     return sorted(folder.keys())
 
 
-IMG = namedtuple("IMG", "DONAT_UA PATREON PAYPAL QR")(
-    "<img src='img://{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+IMG = namedtuple("IMG", "DONATELLO PATREON PAYPAL QR")(
+    "<img src='img://{}/donate/donatello.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='img://{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='img://{}/donate/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='img://{}/donate/donate-qr.png' width='212' height='212' vspace='0'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
-    "DONATE_UA_URL",
+    "DONATELLO",
     "PAYPAL_URL",
     "UPDATE_GITHUB_API_URL",
     "PATREON_URL",
     "DISCORD",
     "UPDATE"
-))("https://donatua.com/@armagomen",
+))("https://donatello.to/armagomen",
    "https://www.paypal.com/donate/?hosted_button_id=VJCUNYNBXBEG8",
    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
    "https://www.patreon.com/armagomen",
