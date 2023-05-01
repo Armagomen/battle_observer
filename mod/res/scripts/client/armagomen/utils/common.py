@@ -1,5 +1,4 @@
 import json
-import locale
 import math
 import os
 from collections import namedtuple
@@ -7,7 +6,6 @@ from colorsys import hsv_to_rgb
 from functools import partial
 from io import open as _open
 from shutil import rmtree
-from string import printable
 
 import BigWorld
 import ResMgr
@@ -273,15 +271,20 @@ def overrideMethod(wg_class, method_name="__init__"):
     return outer
 
 
-def checkDecoder(_string):
-    coding = None
-    for char in _string:
-        if char not in printable:
-            coding = locale.getpreferredencoding()
-            break
-    if coding == "cp65001":
-        coding = "UTF-8"
-    return coding
+# # add non-standard encoding name
+# import locale
+# locale.locale_encoding_alias["cp65001"] = encoding
+#
+#
+# def getEncoding():
+#     coding = locale.getpreferredencoding()
+#     if coding in locale.locale_encoding_alias:
+#         return locale.locale_encoding_alias[coding]
+#     return coding
+#
+#
+# ENCODING_LOCALE = getEncoding()
+# logDebug("DECODE_LOCALE: encoding={}", ENCODING_LOCALE)
 
 
 def convertDictToNamedtuple(dictionary):
@@ -316,11 +319,6 @@ def getPercent(param_a, param_b):
     if param_b <= 0:
         return 0.0
     return float(normalizeHealth(param_a)) / param_b
-
-
-def isFileValid(version):
-    file_name = "armagomen.battleObserver_{}.wotmod"
-    return file_name.format(version) in os.listdir(os.path.join(modsPath, gameVersion))
 
 
 def fetchURL(url, callback_function):

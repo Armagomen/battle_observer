@@ -11,7 +11,8 @@ en.version_not_match=This client is not supported.%n%nThis installer only suppor
 en.client_started=The selected client is running.%n%nDo you want to terminate the selected client?
 
 // run
-en.open_donate=Support the developer with a donation.
+en.open_donate=Support the developer with a donation
+en.open_patreon=Support by subscribing to Patreon
 
 // components
 // en

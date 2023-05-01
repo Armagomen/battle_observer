@@ -1,15 +1,14 @@
 from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCachedData
 from armagomen.battle_observer.core.view_settings import ViewSettings, registerBattleObserverPackages
-from armagomen.utils.common import isFileValid, clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
+from armagomen.utils.common import clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
     cleanupObserverUpdates
 
 cachedVehicleData = CurrentVehicleCachedData()
 viewSettings = ViewSettings()
-hangarSettings = None
 
 
 def startLoadingMod(modVersion, current_realm):
-    errorMessage = ""
+    error_message = ""
     if current_realm == "RU":
         return "not supported region"
     try:
@@ -23,22 +22,16 @@ def startLoadingMod(modVersion, current_realm):
     except Exception as err:
         from debug_utils import LOG_CURRENT_EXCEPTION
         LOG_CURRENT_EXCEPTION()
-        errorMessage = repr(err)
+        error_message = repr(err)
     else:
-        if isFileValid(modVersion):
-            global hangarSettings
-            logInfo('Launched at python v{} region={}'.format(version, current_realm))
-            registerBattleObserverPackages()
-            loadComponents(current_realm)
-            settings_loader = SettingsLoader()
-            hangarSettings = SettingsInterface(settings_loader, modVersion)
-        else:
-            URL = 'https://github.com/Armagomen/battle_observer/releases/latest'
-            errorMessage = 'ERROR: file armagomen.battleObserver_{}.wotmod is not valid, mod locked, please ' \
-                           'install mod from official source: {}'.format(modVersion, URL)
-    if errorMessage:
-        logError(errorMessage)
-    return errorMessage
+        logInfo('Launched at python v{} region={}'.format(version, current_realm))
+        registerBattleObserverPackages()
+        loadComponents(current_realm)
+        settings_loader = SettingsLoader()
+        SettingsInterface(settings_loader, modVersion)
+    if error_message:
+        logError(error_message)
+    return error_message
 
 
 def onInit(modVersion, current_realm):

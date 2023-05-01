@@ -6,7 +6,9 @@ from armagomen.utils.common import overrideMethod, callback, cancelCallback
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from gui.impl import backport
 from gui.impl.gen import R
+from helpers import dependency
 from helpers.time_utils import getTimeDeltaFromNow, makeLocalServerTime, ONE_DAY, ONE_HOUR, ONE_MINUTE
+from skeletons.gui.shared import IItemsCache
 
 TEMPLATES = namedtuple("TEMPLATES", ("DAYS", "HOURS"))(
     "<font face='$TitleFont' size='16' color='#FAFAFA'>%(days)d {}. %(hours)02d:%(min)02d:%(sec)02d</font>".format(
@@ -17,6 +19,7 @@ TEMPLATES = namedtuple("TEMPLATES", ("DAYS", "HOURS"))(
 
 
 class PremiumTime(object):
+    itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
         self.callback = None
@@ -37,9 +40,9 @@ class PremiumTime(object):
 
     def startCallback(self, base, header, data):
         self.stopCallback()
-        if settings.main[MAIN.PREMIUM_TIME] and header.itemsCache.items.stats.isPremium:
+        if settings.main[MAIN.PREMIUM_TIME] and self.itemsCache.items.stats.isPremium:
             self.callback = callback(1.0, self.startCallback, base, header, data)
-            data["doLabel"] = self._getPremiumLabelText(header.itemsCache.items.stats.activePremiumExpiryTime)
+            data["doLabel"] = self._getPremiumLabelText(self.itemsCache.items.stats.activePremiumExpiryTime)
         base(header, data)
 
     def stopCallback(self):

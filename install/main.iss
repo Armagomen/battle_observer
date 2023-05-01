@@ -44,6 +44,10 @@ WizardStyle=modern
 
 [Run]
 Filename: "https://donatua.com/to/armagomen"; Description: "{cm:open_donate}"; Flags: postinstall nowait shellexec;
+Filename: "https://www.patreon.com/armagomen"; Description: "{cm:open_patreon}"; Flags: postinstall nowait shellexec;
+Filename: "https://www.paypal.com/donate/?hosted_button_id=VJCUNYNBXBEG8"; Description: "PayPal"; Flags: postinstall nowait shellexec unchecked;
+Filename: "https://discord.gg/Nma5T5snKW"; Description: "DISCORD"; Flags: postinstall nowait shellexec unchecked;
+
 
 [Languages]
 Name: "en"; MessagesFile: "compiler:Default.isl"; LicenseFile: "..\EULA_EN.txt"; 

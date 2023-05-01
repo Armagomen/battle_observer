@@ -1,7 +1,5 @@
 from importlib import import_module
 
-from debug_utils import LOG_CURRENT_EXCEPTION
-
 _modules = {}
 
 
@@ -31,4 +29,5 @@ def loadComponents(current_realm):
         try:
             _modules[moduleName] = import_module("{}.{}".format(__package__, moduleName))
         except Exception:
+            from debug_utils import LOG_CURRENT_EXCEPTION
             LOG_CURRENT_EXCEPTION()

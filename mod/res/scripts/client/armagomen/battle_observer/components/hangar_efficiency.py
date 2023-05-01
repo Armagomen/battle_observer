@@ -37,7 +37,7 @@ def getAvgData():
     if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
         text.append("{stunIcon}{stun}")
     if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:
-        text.append(" {marksOnGunIcon}{marksOnGunValue}%")
+        text.append("{marksOnGunIcon}{marksOnGunValue}%")
     if text:
         params = data._asdict()
         params.update(ICONS)
