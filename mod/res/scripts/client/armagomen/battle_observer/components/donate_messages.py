@@ -14,7 +14,7 @@ from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
-CLAN_ABBREV = "BO_UA"
+CLAN_ABBREV = "BO-UA"
 
 
 class Donate(object):
