@@ -47,13 +47,14 @@ class Donate(object):
         self.lastMessage = self.getRandomMessage()
         return "{logo}<p><font color='#ffff66'>{msg}</font></p><br>" \
                "<p><textformat leading='2'>" \
-               "{donat_img} <a href='event:{ua}'>DonatUA</a><br>" \
+               "{donatello_img} <a href='event:{ua}'>Donatello.to</a><br>" \
+               "{diaka_img} <a href='event:{ua2}'>Diaka.ua</a><br>" \
                "{paypal_img} <a href='event:{paypal}'>PayPal</a><br>" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
-               "</textformat></p>".format(ua=URLS.DONATELLO, paypal=URLS.PAYPAL_URL,
+               "</textformat></p>".format(ua=URLS.DONATELLO, ua2=URLS.DIAKA, paypal=URLS.PAYPAL_URL,
                                           patreon=URLS.PATREON_URL, msg=self.lastMessage,
-                                          logo=getLogo(big=False), donat_img=IMG.DONATELLO,
-                                          patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
+                                          logo=getLogo(big=False), donatello_img=IMG.DONATELLO,
+                                          diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
     def pushClanMessage(self):
         if not self.show_clanMessage or g_clanCache.clanAbbrev is not None:
