@@ -3,6 +3,7 @@
 
 [Types]
 Name: "armagomen"; Description: {cm:types_armagomen};
+Name: "empty"; Description: {cm:types_empty};
 Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
 [Components]

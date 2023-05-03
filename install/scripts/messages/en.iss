@@ -17,6 +17,7 @@ en.open_patreon=Support by subscribing to Patreon
 // components
 // en
 en.types_armagomen=Everything is like armagomen
+en.types_empty=Configure yourself
 en.types_user=Custom installation
 
 //main

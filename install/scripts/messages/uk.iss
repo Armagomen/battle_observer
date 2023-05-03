@@ -17,6 +17,7 @@ uk.open_patreon=Підтримати підпискою на Patreon
 // components
 // uk
 uk.types_armagomen=Все як у armagomen
+uk.types_empty=Налаштувати самостійно
 uk.types_user=Вибіркове встановлення
 
 //main

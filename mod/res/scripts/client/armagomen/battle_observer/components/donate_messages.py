@@ -47,13 +47,14 @@ class Donate(object):
         self.lastMessage = self.getRandomMessage()
         return "{logo}<p><font color='#ffff66'>{msg}</font></p><br>" \
                "<p><textformat leading='2'>" \
-               "{donatello_img} <a href='event:{ua}'>Donatello.to</a><br>" \
-               "{diaka_img} <a href='event:{ua2}'>Diaka.ua</a><br>" \
+               "{donat_img} <a href='event:{ua3}'>donatua.com</a><br>" \
+               "{donatello_img} <a href='event:{ua}'>donatello.to</a><br>" \
+               "{diaka_img} <a href='event:{ua2}'>diaka.ua</a><br>" \
                "{paypal_img} <a href='event:{paypal}'>PayPal</a><br>" \
                "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
-               "</textformat></p>".format(ua=URLS.DONATELLO, ua2=URLS.DIAKA, paypal=URLS.PAYPAL_URL,
-                                          patreon=URLS.PATREON_URL, msg=self.lastMessage,
-                                          logo=getLogo(big=False), donatello_img=IMG.DONATELLO,
+               "</textformat></p>".format(ua=URLS.DONATELLO, ua2=URLS.DIAKA, ua3=URLS.DONAT_UA,
+                                          paypal=URLS.PAYPAL_URL, patreon=URLS.PATREON_URL, msg=self.lastMessage,
+                                          logo=getLogo(big=False), donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
                                           diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
     def pushClanMessage(self):

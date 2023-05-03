@@ -28,7 +28,8 @@ def sixthSenseIconsNamesList():
     return sorted(folder.keys())
 
 
-IMG = namedtuple("IMG", "DONATELLO DIAKA PATREON PAYPAL")(
+IMG = namedtuple("IMG", "DONAT_UA DONATELLO DIAKA PATREON PAYPAL")(
+    "<img src='img://{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='img://{}/donate/donatello.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='img://{}/donate/diaka.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='img://{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
@@ -36,6 +37,7 @@ IMG = namedtuple("IMG", "DONATELLO DIAKA PATREON PAYPAL")(
 )
 
 URLS = namedtuple("URLS", (
+    "DONAT_UA",
     "DONATELLO",
     "DIAKA",
     "PAYPAL_URL",
@@ -43,13 +45,15 @@ URLS = namedtuple("URLS", (
     "PATREON_URL",
     "DISCORD",
     "UPDATE"
-))("https://donatello.to/armagomen",
-   "https://armagomen.diaka.ua/donate",
-   "https://www.paypal.com/donate/?hosted_button_id=VJCUNYNBXBEG8",
-   "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
-   "https://www.patreon.com/armagomen",
-   "https://discord.gg/Nma5T5snKW",
-   "https://github.com/Armagomen/battle_observer/releases/download/", )
+))(
+    "https://donatua.com/to/armagomen",
+    "https://donatello.to/armagomen",
+    "https://armagomen.diaka.ua/donate",
+    "https://www.paypal.com/donate/?hosted_button_id=VJCUNYNBXBEG8",
+    "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
+    "https://www.patreon.com/armagomen",
+    "https://discord.gg/Nma5T5snKW",
+    "https://github.com/Armagomen/battle_observer/releases/download/", )
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")
