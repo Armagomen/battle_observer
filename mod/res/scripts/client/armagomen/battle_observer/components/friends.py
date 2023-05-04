@@ -14,9 +14,6 @@ def onGuiCacheSyncCompleted(ctx):
     _cache.clear()
     users = storage_getter(ANOTHER.USERS)().getList(_ContactsCategories().getCriteria())
     _cache.update(user._userID for user in users if not user.isIgnored())
-    database_id = ctx.get(ANOTHER.DBID)
-    if database_id:
-        _cache.add(database_id)
 
 
 g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
