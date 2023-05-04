@@ -1,14 +1,14 @@
 {
   "battle": {
     "enabled": false,
-    "format": "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>",
+    "format": "<textformat tabstops='[120]'>%d %b %Y<tab>%H:%M:%S</textformat>",
     "x": -270,
     "y": 0
   },
   "enabled": false,
   "hangar": {
     "enabled": false,
-    "format": "<textformat tabstops='[145]'>%d %b %Y<tab>%X</textformat>",
+    "format": "<textformat tabstops='[145]'>%d %b %Y<tab>%H:%M:%S</textformat>",
     "x": -250,
     "y": 0
   }

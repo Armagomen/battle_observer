@@ -143,8 +143,8 @@ HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "ALIVE", "STYLES"))(
 
 CLOCK = namedtuple("CLOCK", (
     "NAME", "IN_BATTLE", "IN_LOBBY", "FORMAT", "UPDATE_INTERVAL", "DEFAULT_FORMAT_BATTLE", "DEFAULT_FORMAT_HANGAR"))(
-    "clock", "battle", "hangar", "format", 1.0, "<textformat tabstops='[120]'>%d %b %Y<tab>%X</textformat>",
-    "<textformat tabstops='[135]'>%d %b %Y<tab>%X</textformat>")
+    "clock", "battle", "hangar", "format", 1.0, "<textformat tabstops='[120]'>%d %b %Y<tab>%H:%M:%S</textformat>",
+    "<textformat tabstops='[135]'>%d %b %Y<tab>%H:%M:%S</textformat>")
 
 __Sniper = namedtuple("SNIPER", (
     "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "METERS", "ZOOMS", "ZOOM_EXPOSURE",

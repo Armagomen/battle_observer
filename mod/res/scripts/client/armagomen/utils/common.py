@@ -307,3 +307,20 @@ def getPercent(param_a, param_b):
 
 def fetchURL(url, callback_function):
     BigWorld.fetchURL(url, callback_function, {"User-Agent": "Battle-Observer-App"}, HTTP_DEFAULT_TIMEOUT, 'GET')
+
+
+import locale
+
+locale.locale_encoding_alias["cp65001"] = encoding
+
+
+def getEncoding():
+    coding = locale.getpreferredencoding()
+    if coding in locale.locale_encoding_alias:
+        return locale.locale_encoding_alias[coding]
+    return coding
+
+
+ENCODING_LOCALE = getEncoding()
+ENCODING_ERRORS = "ignore"
+logDebug("DECODE_LOCALE: encoding={}", ENCODING_LOCALE)

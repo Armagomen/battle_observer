@@ -1,8 +1,10 @@
-from datetime import datetime
+# coding=utf-8
+from time import strftime
 
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import CLOCK, GLOBAL
+from armagomen.utils.common import ENCODING_LOCALE, ENCODING_ERRORS
 from armagomen.utils.timers import CyclicTimerEvent
 
 
@@ -33,4 +35,4 @@ class DateTimes(DateTimesMeta):
         super(DateTimes, self)._dispose()
 
     def updateTimeData(self):
-        self.as_setDateTimeS(datetime.now().strftime(self.config[CLOCK.FORMAT]))
+        self.as_setDateTimeS(unicode(strftime(self.config[CLOCK.FORMAT]), ENCODING_LOCALE, ENCODING_ERRORS))
