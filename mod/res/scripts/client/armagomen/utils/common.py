@@ -1,4 +1,5 @@
 import json
+import locale
 import math
 import os
 from collections import namedtuple
@@ -20,7 +21,7 @@ from uilogging.core.core_constants import HTTP_DEFAULT_TIMEOUT
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
 CONFIG_DIR = "mod_battle_observer"
-encoding = 'utf-8'
+UTF_8 = 'utf-8'
 
 
 def isReplay():
@@ -176,8 +177,8 @@ def encodeData(data):
         return {encodeData(key): encodeData(value) for key, value in data.iteritems()}
     elif isinstance(data, list):
         return [encodeData(element) for element in data]
-    elif isinstance(data, unicode):
-        return data.encode('utf-8')
+    elif isinstance(data, (str, unicode)):
+        return data.encode(UTF_8)
     else:
         return data
 
@@ -185,16 +186,16 @@ def encodeData(data):
 def openJsonFile(path):
     """Gets a dict from JSON."""
     if os.path.exists(path):
-        with _open(path, 'r', encoding=encoding) as dataFile:
+        with _open(path, 'r', encoding=UTF_8) as dataFile:
             try:
-                return encodeData(json.load(dataFile, encoding=encoding))
+                return encodeData(json.load(dataFile, encoding=UTF_8))
             except ValueError:
-                return encodeData(json.loads(dataFile.read(), encoding=encoding))
+                return encodeData(json.loads(dataFile.read(), encoding=UTF_8))
 
 
 def writeJsonFile(path, data):
     """Creates a new json file in a folder or replace old."""
-    with _open(path, 'w', encoding=encoding) as dataFile:
+    with _open(path, 'w', encoding=UTF_8) as dataFile:
         dataFile.write(unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)))
 
 
@@ -290,7 +291,7 @@ def urlResponse(url):
     response = openUrl(url, 10.0)
     response_data = response.getData()
     if response_data is not None:
-        return encodeData(json.loads(response_data, encoding="utf-8-sig"))
+        return encodeData(json.loads(response_data, encoding=UTF_8))
     return response_data
 
 
@@ -309,9 +310,7 @@ def fetchURL(url, callback_function):
     BigWorld.fetchURL(url, callback_function, {"User-Agent": "Battle-Observer-App"}, HTTP_DEFAULT_TIMEOUT, 'GET')
 
 
-import locale
-
-locale.locale_encoding_alias["cp65001"] = encoding
+locale.locale_encoding_alias["cp65001"] = UTF_8
 
 
 def getEncoding():
@@ -323,4 +322,3 @@ def getEncoding():
 
 ENCODING_LOCALE = getEncoding()
 ENCODING_ERRORS = "ignore"
-logDebug("DECODE_LOCALE: encoding={}", ENCODING_LOCALE)
