@@ -5,7 +5,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod, xvmInstalled, logError
 from armagomen.utils.keys_listener import g_keysListener
-from constants import VISIBILITY
+from constants import VISIBILITY, ARENA_PERIOD
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
 from gui.battle_control import avatar_getter
@@ -39,7 +39,7 @@ class MinimapZoomPlugin(object):
 
     def onKeyPressed(self, isKeyDown):
         """hot key event"""
-        if self.isComp7Page and self.sessionProvider.arenaVisitor.isArenaNotStarted():
+        if self.isComp7Page and self.sessionProvider.arenaVisitor.getArenaPeriod() != ARENA_PERIOD.BATTLE:
             return
         self.__battleView_as.as_zoomMimimapCentered(isKeyDown)
         avatar_getter.setForcedGuiControlMode(isKeyDown, enableAiming=False)
