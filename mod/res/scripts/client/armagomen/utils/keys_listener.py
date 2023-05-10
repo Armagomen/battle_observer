@@ -3,7 +3,8 @@ from collections import namedtuple
 from Keys import KEY_LCONTROL, KEY_RCONTROL, KEY_RALT, KEY_LALT, KEY_LSHIFT, KEY_RSHIFT
 from PlayerEvents import g_playerEvents
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import MAIN
+from armagomen.constants import MAIN, MOD_NAME
+from debug_utils import LOG_CURRENT_EXCEPTION
 from gui import InputHandler
 
 KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
@@ -43,7 +44,10 @@ class KeysListener(object):
             return
         for keysData in self.keysMap:
             if event.key in keysData.keys:
-                keysData.keyFunction(False)
+                try:
+                    keysData.keyFunction(False)
+                except Exception:
+                    LOG_CURRENT_EXCEPTION(MOD_NAME)
         self.pressedKeys.discard(event.key)
 
     def onKeyDown(self, event):
@@ -51,7 +55,10 @@ class KeysListener(object):
             return
         for keysData in self.keysMap:
             if event.key in keysData.keys:
-                keysData.keyFunction(True)
+                try:
+                    keysData.keyFunction(True)
+                except Exception:
+                    LOG_CURRENT_EXCEPTION(MOD_NAME)
         self.pressedKeys.add(event.key)
 
     def normalizeKey(self, keyList):
