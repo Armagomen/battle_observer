@@ -20,7 +20,7 @@ CLAN_ABBREV = "BO-UA"
 class Donate(object):
 
     def __init__(self):
-        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=10)
+        self.timeDelta = datetime.datetime.now()
         self.lastMessage = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         support_language = getClientLanguage() in ('uk', 'be')
@@ -36,6 +36,10 @@ class Donate(object):
                 "Support the development of the mod.<br>Glory to Ukraine",
                 "Support the development of the mod, everything will be Ukraine.<br>Glory to Ukraine"
             )
+        self.message_format = dict(ua_url=URLS.DONATELLO, ua2_url=URLS.DIAKA, ua3_url=URLS.DONAT_UA,
+                                   paypal_url=URLS.PAYPAL_URL, patreon_url=URLS.PATREON_URL,
+                                   logo=getLogo(big=False), donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
+                                   diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
 
     def getRandomMessage(self):
         message = random.choice(self.messages)
@@ -45,17 +49,14 @@ class Donate(object):
 
     def getDonateMessage(self):
         self.lastMessage = self.getRandomMessage()
-        return "{logo}<p><font color='#ffff66'>{msg}</font></p><br>" \
-               "<p><textformat leading='2'>" \
-               "{donat_img} <a href='event:{ua3}'>donatua.com</a><br>" \
-               "{donatello_img} <a href='event:{ua}'>donatello.to</a><br>" \
-               "{diaka_img} <a href='event:{ua2}'>diaka.ua</a><br>" \
-               "{paypal_img} <a href='event:{paypal}'>PayPal</a><br>" \
-               "{patreon_img} <a href='event:{patreon}'>Patreon</a>" \
-               "</textformat></p>".format(ua=URLS.DONATELLO, ua2=URLS.DIAKA, ua3=URLS.DONAT_UA,
-                                          paypal=URLS.PAYPAL_URL, patreon=URLS.PATREON_URL, msg=self.lastMessage,
-                                          logo=getLogo(big=False), donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
-                                          diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
+        return ("{logo}<p><font color='#ffff66'>{msg}</font></p><br>"
+                "<p><textformat leading='2'>"
+                "{donat_img} <a href='event:{ua3_url}'>donatua.com</a><br>"
+                "{donatello_img} <a href='event:{ua_url}'>donatello.to</a><br>"
+                # "{diaka_img} <a href='event:{ua2_url}'>diaka.ua</a><br>"
+                # "{paypal_img} <a href='event:{paypal_url}'>PayPal</a><br>"
+                "{patreon_img} <a href='event:{patreon_url}'>Patreon</a>"
+                "</textformat></p>").format(msg=self.lastMessage, **self.message_format)
 
     def pushClanMessage(self):
         if not self.show_clanMessage or g_clanCache.clanAbbrev is not None:
