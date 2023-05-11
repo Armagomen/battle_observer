@@ -377,5 +377,6 @@ localization = {
         "avg_blocked": "Display average armor blocked damage",
         "avg_stun": "Display average damage to targets whose crews you have stunned (SPG)",
         "gun_marks": "Display gun mark percentage",
+        "win_rate": "Show win percentage",
     }
 }

@@ -52,7 +52,8 @@ class DefaultSettings(object):
             AVG_EFFICIENCY_HANGAR.ASSIST: True,
             AVG_EFFICIENCY_HANGAR.BLOCKED: True,
             AVG_EFFICIENCY_HANGAR.STUN: True,
-            AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN: True
+            AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN: True,
+            AVG_EFFICIENCY_HANGAR.WIN_RATE: True,
         }
         self.clock = {
             GLOBAL.ENABLED: False,

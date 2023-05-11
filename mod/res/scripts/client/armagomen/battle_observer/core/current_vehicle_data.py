@@ -7,14 +7,14 @@ from helpers import dependency
 from skeletons.gui.shared import IItemsCache
 
 EfficiencyAVGData = namedtuple("EfficiencyAVGData", (
-    "damage", "assist", "stun", "blocked", "marksOnGunValue", "marksOnGunIcon", "name", "marksAvailable"))
+    "damage", "assist", "stun", "blocked", "marksOnGunValue", "marksOnGunIcon", "name", "marksAvailable", "winRate"))
 
 
 class CurrentVehicleCachedData(object):
     itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
-        self.__default = EfficiencyAVGData(0, 0, 0, 0, 0, "", "Undefined", False)
+        self.__default = EfficiencyAVGData(0, 0, 0, 0, 0.0, "", "Undefined", False, 0.0)
         self.__EfficiencyAVGData = None
 
     def onVehicleChanged(self):
@@ -22,6 +22,11 @@ class CurrentVehicleCachedData(object):
             self.setAvgData(g_currentVehicle.intCD, g_currentVehicle.item.userName, g_currentVehicle.item.level)
         else:
             self.__EfficiencyAVGData = None
+
+    @staticmethod
+    def getWinsEfficiency(random):
+        win_rate = random.getWinsEfficiency()
+        return round(win_rate * 100, 2) if win_rate is not None else 0.0
 
     def setAvgData(self, intCD, name, level):
         dossier = self.itemsCache.items.getVehicleDossier(intCD)
@@ -34,7 +39,8 @@ class CurrentVehicleCachedData(object):
             int(random.getDamageAssistedEfficiency() or 0),
             int(random.getAvgDamageAssistedStun() or 0),
             int(random.getAvgDamageBlocked() or 0),
-            round(marksOnGun.getDamageRating(), 2), marksOnGunIcon, name, level > 4)
+            round(marksOnGun.getDamageRating(), 2), marksOnGunIcon, name, level > 4, self.getWinsEfficiency(random)
+        )
         logDebug(self.__EfficiencyAVGData)
 
     @property

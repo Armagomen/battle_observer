@@ -112,6 +112,7 @@ uk.avg_efficiency_in_hangar_blocked=Показати середню заблок
 uk.avg_efficiency_in_hangar_assist=Показати середню шкоду, завдану з вашою допомогою
 uk.avg_efficiency_in_hangar_stun=Показати середню шкоду цілям, екіпажі яких ви оглушили (САУ)
 uk.avg_efficiency_in_hangar_gun_marks=Показати відсоток відмітної позначки
+uk.avg_efficiency_in_hangar_win_rate=Показати відсоток перемог
 
 uk.battle_timer=Змінений таймер бою
 uk.dispersion_timer=Таймер зведення 

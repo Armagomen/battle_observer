@@ -4,5 +4,6 @@
   "avg_damage": false,
   "avg_stun": false,
   "enabled": false,
-  "gun_marks": false
+  "gun_marks": false,
+  "win_rate": false
 }

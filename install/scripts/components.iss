@@ -91,7 +91,8 @@ Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flag
 Name: avg_efficiency_in_hangar/avg_damage; Description: {cm:avg_efficiency_in_hangar_damage}; Types: "armagomen";
 Name: avg_efficiency_in_hangar/avg_blocked; Description: {cm:avg_efficiency_in_hangar_blocked}; Types: "armagomen";
 Name: avg_efficiency_in_hangar/avg_assist; Description: {cm:avg_efficiency_in_hangar_assist}; Types: "armagomen";
-Name: avg_efficiency_in_hangar/avg_stun; Description: {cm:avg_efficiency_in_hangar_stun}; Types: "armagomen"; 
+Name: avg_efficiency_in_hangar/avg_stun; Description: {cm:avg_efficiency_in_hangar_stun}; Types: "armagomen";
+Name: avg_efficiency_in_hangar/win_rate; Description: {cm:avg_efficiency_in_hangar_win_rate}; Types: "armagomen";
 Name: avg_efficiency_in_hangar/gun_marks; Description: {cm:avg_efficiency_in_hangar_gun_marks}; Types: "armagomen"; 
 Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
@@ -373,6 +374,7 @@ begin
     JSON_SetBool(Handle,'/avg_assist', WizardIsComponentSelected('avg_efficiency_in_hangar/avg_assist'));
     JSON_SetBool(Handle,'/avg_stun', WizardIsComponentSelected('avg_efficiency_in_hangar/avg_stun'));
     JSON_SetBool(Handle,'/gun_marks', WizardIsComponentSelected('avg_efficiency_in_hangar/gun_marks'));
+    JSON_SetBool(Handle,'/win_rate', WizardIsComponentSelected('avg_efficiency_in_hangar/win_rate'));
     JSON_Close(Handle);
   end;
 end;
