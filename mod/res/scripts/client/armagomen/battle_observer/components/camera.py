@@ -126,7 +126,7 @@ settings.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(ArtyCamera, "_readConfigs")
 def reload_configs(base, camera, dataSection):
     try:
-        if camCache[camera.__class__.__name__]:
+        if camCache.get(camera.__class__.__name__):
             camera._baseCfg.clear()
             camera._userCfg.clear()
             camera._cfg.clear()
@@ -142,15 +142,13 @@ def reload_configs(base, camera, dataSection):
 def arcade_readConfigs(base, camera, *args, **kwargs):
     base(camera, *args, **kwargs)
     if settings.arcade_camera[GLOBAL.ENABLED]:
-        baseName = base.__name__
-        if baseName == "_readBaseCfg":
+        if base.__name__ == "_readBaseCfg":
             cfg = camera._baseCfg
             cfg[ARCADE.DIST_RANGE] = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
             cfg[ARCADE.SCROLL_SENSITIVITY] = settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
-        elif baseName == "_readUserCfg":
+        elif base.__name__ == "_readUserCfg":
             cfg = camera._userCfg
             cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
-            cfg[ARCADE.START_ANGLE] = ARCADE.ANGLE
 
 
 @overrideMethod(ArcadeCamera, "__updateProperties")

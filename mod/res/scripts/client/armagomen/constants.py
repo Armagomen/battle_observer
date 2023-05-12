@@ -87,7 +87,8 @@ class GLOBAL:
     IMG = "img"
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
-    IMG_PARAMS_HANGAR = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'"}
+    IMG_PARAMS_HANGAR = {"dir": "img://gui/maps/icons/battle_observer/efficiency",
+                         "size": "width='18' height='18' vspace='-3'"}
     INNER = "inner"
     KNOCKOUT = "knockout"
     ONE, TWO = (1, 2)
@@ -207,8 +208,8 @@ class DAMAGE_LOG:
 
 
 ARCADE = namedtuple("ARCADE", (
-    "NAME", "ANGLE", "DIST_RANGE", "MAX", "MIN", "START_ANGLE", "START_DEAD_DIST", "START_DIST", "SCROLL_SENSITIVITY"))(
-    "arcade_camera", -0.20, "distRange", "max", "min", "startAngle", "startDeadDist", "startDist", "scrollSensitivity")
+    "NAME", "DIST_RANGE", "MAX", "MIN", "START_DEAD_DIST", "START_DIST", "SCROLL_SENSITIVITY"))(
+    "arcade_camera", "distRange", "max", "min", "startDeadDist", "startDist", "scrollSensitivity")
 
 STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
     "strategic_camera", "min", "max", "distRange", "scrollSensitivity")

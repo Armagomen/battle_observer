@@ -33,7 +33,7 @@ class CurrentVehicleCachedData(object):
         random = dossier.getRandomStats()
         marksOnGun = random.getAchievement(MARK_ON_GUN_RECORD)
         icon = marksOnGun.getIcons()['95x85'][3:]
-        marksOnGunIcon = " <img src='img://gui/{}' width='22' height='20' vspace='-10'>".format(icon)
+        marksOnGunIcon = "<img src='img://gui/{}' width='20' height='18' vspace='-8'>".format(icon)
         self.__EfficiencyAVGData = EfficiencyAVGData(
             int(random.getAvgDamage() or 0),
             int(random.getDamageAssistedEfficiency() or 0),

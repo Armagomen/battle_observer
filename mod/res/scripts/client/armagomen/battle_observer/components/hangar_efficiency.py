@@ -18,11 +18,11 @@ def updateStatus(base, panel, data):
 
 
 ICONS = {
-    "assistIcon": "<img src='{dir}/help.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS_HANGAR),
-    "blockedIcon": "<img src='{dir}/armor.png' {size} vspace='-9'>".format(**GLOBAL.IMG_PARAMS_HANGAR),
-    "damageIcon": "<img src='{dir}/damage.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS_HANGAR),
-    "winRateIcon": "<img src='img://gui/maps/icons/library/dossier/wins40x32.png' width='30' height='24' vspace='-8'>",
-    "stunIcon": "<img src='{dir}/stun.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS_HANGAR)
+    "assistIcon": "<img src='{dir}/help.png' {size}>".format(**GLOBAL.IMG_PARAMS_HANGAR),
+    "blockedIcon": "<img src='{dir}/armor.png' {size}>".format(**GLOBAL.IMG_PARAMS_HANGAR),
+    "damageIcon": "<img src='{dir}/damage.png' {size}>".format(**GLOBAL.IMG_PARAMS_HANGAR),
+    "winRateIcon": "<img src='{dir}/wins.png' {size}>".format(**GLOBAL.IMG_PARAMS_HANGAR),
+    "stunIcon": "<img src='{dir}/stun.png' {size}>".format(**GLOBAL.IMG_PARAMS_HANGAR)
 }
 
 
@@ -44,7 +44,7 @@ def getAvgData():
     if text:
         params = data._asdict()
         params.update(ICONS)
-        return "<font face='$TitleFont' size='20' color='#FAFAFA'>{}</font>".format(" ".join(text).format(**params))
+        return "<font face='$TitleFont' size='20' color='#FAFAFA'>{}</font>".format("  ".join(text).format(**params))
     return ""
 
 
