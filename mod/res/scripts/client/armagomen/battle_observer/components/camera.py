@@ -17,7 +17,7 @@ from gui.battle_control.avatar_getter import getOwnVehiclePosition
 DEFAULT_X_METERS = 20.0
 settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: DEFAULT_X_METERS}
 MinMax = namedtuple('MinMax', ('min', 'max'))
-camCache = {"ArcadeCamera": False, "ArcadeCameraEpic": False, "ArtyCamera": False, "StrategicCamera": False}
+camCache = {}
 
 
 @overrideMethod(SniperCamera, "_readConfigs")
@@ -34,8 +34,7 @@ def sniper_readConfigs(base, camera, data):
         steps = [step for step in settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] if step >= SNIPER.MIN_ZOOM]
         if len(steps) > 3:
             steps.sort()
-            configs = (camera._cfg, camera._userCfg, camera._baseCfg)
-            for cfg in configs:
+            for cfg in (camera._cfg, camera._userCfg, camera._baseCfg):
                 cfg[SNIPER.INCREASED_ZOOM] = True
                 cfg[SNIPER.ZOOMS] = steps
             exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
@@ -126,7 +125,7 @@ settings.onModSettingsChanged += onModSettingsChanged
 @overrideMethod(ArtyCamera, "_readConfigs")
 def reload_configs(base, camera, dataSection):
     try:
-        if camCache.get(camera.__class__.__name__):
+        if camCache.setdefault(camera.__class__.__name__, True):
             camera._baseCfg.clear()
             camera._userCfg.clear()
             camera._cfg.clear()
