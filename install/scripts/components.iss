@@ -43,6 +43,7 @@ Name: dispersion_circle/server; Description: {cm:dispersion_circle_server};
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning;
 Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: "armagomen";
+Name: sixth_sense/alf; Description: {cm:alf}; Flags: exclusive;
 Name: sixth_sense/bavovnatko; Description: {cm:bavovnatko}; Flags: exclusive;
 Name: sixth_sense/boris; Description: {cm:boris}; Flags: exclusive;
 Name: sixth_sense/dog_patron; Description: {cm:dog_patron}; Flags: exclusive; Types: "armagomen";
@@ -269,6 +270,7 @@ begin
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('sixth_sense'));
     JSON_SetBool(Handle,'/playTickSound', WizardIsComponentSelected('sixth_sense/playTickSound'));
+    if WizardIsComponentSelected('sixth_sense/alf') then JSON_SetString(Handle,'/default_icon_name', 'alf.png');
     if WizardIsComponentSelected('sixth_sense/bavovnatko') then JSON_SetString(Handle,'/default_icon_name', 'bavovnatko.png');
     if WizardIsComponentSelected('sixth_sense/boris') then JSON_SetString(Handle,'/default_icon_name', 'boris.png');
     if WizardIsComponentSelected('sixth_sense/dog_patron') then JSON_SetString(Handle,'/default_icon_name', 'dog_patron.png');

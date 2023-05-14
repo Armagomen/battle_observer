@@ -62,6 +62,7 @@ en.dispersion_circle_server=Engage server crosshairs and reduce server collation
 
 
 //sixth_sense
+en.alf=ALF
 en.sixth_sense=Sixth sense with timer
 en.playTickSound=Play timer sound
 en.bavovnatko=Bavovnatko

@@ -62,6 +62,7 @@ uk.dispersion_circle_server=Задіяти серверний приціл та 
 
 
 //sixth_sense
+uk.alf=Альф
 uk.sixth_sense=Шосте відчуття з таймером 
 uk.playTickSound=Програвати звук таймера
 uk.bavovnatko=Бавовнятко
