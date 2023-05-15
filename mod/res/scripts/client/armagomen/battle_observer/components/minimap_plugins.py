@@ -1,6 +1,7 @@
 from math import degrees
 
 from PlayerEvents import g_playerEvents
+from armagomen.battle_observer.core.view_settings import BATTLES_RANGE
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod, xvmInstalled, logError
@@ -100,8 +101,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 def _setupPlugins(base, plugin, arenaVisitor):
     _plugins = base(plugin, arenaVisitor)
     try:
-        gui = arenaVisitor.gui
-        allowedMode = gui.isRandomBattle() or gui.isEpicRandomBattle() or gui.isRankedBattle()
+        allowedMode = arenaVisitor.gui.guiType in BATTLES_RANGE
         if not xvmInstalled and allowedMode and settings.minimap[GLOBAL.ENABLED]:
             if settings.minimap[MINIMAP.DEATH_PERMANENT]:
                 _plugins['vehicles'] = ArenaVehiclesPlugin
