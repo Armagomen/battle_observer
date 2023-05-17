@@ -1,12 +1,13 @@
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, SWF, MINIMAP, \
     VEHICLE_TYPES_COLORS
-from armagomen.utils.common import xvmInstalled, logInfo, getPlayer, logDebug
+from armagomen.utils.common import xvmInstalled, logInfo, logDebug
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, PageStates, _STATE_TO_UI
 from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
+from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -47,7 +48,6 @@ NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE
 
 
 def registerBattleObserverPackages():
-    from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
     for guiType in BATTLES_RANGE:
         g_overrideScaleFormViewsConfig.battlePackages[guiType].extend(SWF.BATTLE_PACKAGES)
     g_overrideScaleFormViewsConfig.lobbyPackages.extend(SWF.LOBBY_PACKAGES)
@@ -78,10 +78,8 @@ class ViewSettings(object):
     @staticmethod
     def getStatisticsSettings():
         return (
-            settings.statistics[STATISTICS.PANELS_CUT_WIDTH],
-            settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
-            settings.colors[VEHICLE_TYPES_COLORS.NAME],
-            settings.statistics[STATISTICS.ICON_BLACKOUT]
+            settings.statistics[STATISTICS.PANELS_CUT_WIDTH], settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
+            settings.colors[VEHICLE_TYPES_COLORS.NAME], settings.statistics[STATISTICS.ICON_BLACKOUT]
         )
 
     @staticmethod
@@ -111,9 +109,10 @@ class ViewSettings(object):
         return settings.players_panels[GLOBAL.ENABLED]
 
     def isFlightTimeEnabled(self):
+        enabled = settings.flight_time[GLOBAL.ENABLED]
         if settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
-            return settings.flight_time[GLOBAL.ENABLED] and self.isSPG()
-        return settings.flight_time[GLOBAL.ENABLED]
+            return enabled and self.isSPG()
+        return enabled
 
     def isDistanceToEnemyEnabled(self):
         if self.isSPG() or self.gui.isInEpicRange():
@@ -152,7 +151,7 @@ class ViewSettings(object):
         return False
 
     def setComponents(self):
-        if getattr(getPlayer(), "arenaGuiType", None) in BATTLES_RANGE:
+        if self.gui.guiType in BATTLES_RANGE:
             self.__components = {alias for alias in BATTLE_ALIASES if self.getSetting(alias)}
             if self.gui.isEpicBattle():
                 self.addInToEpicUI(True)
