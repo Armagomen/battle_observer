@@ -6,7 +6,7 @@ from armagomen.constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS,
     FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
     SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS, DISTANCE, STATISTICS, AVG_EFFICIENCY_HANGAR,
-    DISPERSION_TIMER
+    DISPERSION_TIMER, IMAGE_DIR, LOGS_ICONS, EX_LOGS_ICONS
 )
 from constants import ATTACK_REASON, ATTACK_REASONS
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -184,22 +184,21 @@ class DefaultSettings(object):
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.right,
                 DAMAGE_LOG.IN_CENTER: True
             },
-            DAMAGE_LOG.TEMPLATE_MAIN_DMG: (
-                "<textformat leading='-3'>"
-                "%(damageIcon)s<font color='%(tankDamageAvgColor)s'>%(playerDamage)s</font>"
-                "%(blockedIcon)s<font color='%(tankBlockedAvgColor)s'>%(blockedDamage)s</font>"
-                "%(assistIcon)s<font color='%(tankAssistAvgColor)s'>%(assistDamage)s</font>"
-                "%(spottedIcon)s%(spottedTanks)s"
+            DAMAGE_LOG.TEMPLATE_MAIN_DMG: [
+                "%(damageIcon)s<font color='%(tankDamageAvgColor)s'>%(playerDamage)s</font>",
+                "%(blockedIcon)s<font color='%(tankBlockedAvgColor)s'>%(blockedDamage)s</font>",
+                "%(assistIcon)s<font color='%(tankAssistAvgColor)s'>%(assistDamage)s</font>",
+                "%(spottedIcon)s%(spottedTanks)s",
                 "%(stunIcon)s<font color='%(tankStunAvgColor)s'>%(stun)s</font>"
-                "</textformat>"
-            ),
+            ],
             DAMAGE_LOG.ICONS: {
-                "assistIcon": "<img src='{dir}/help.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS),
-                "blockedIcon": "<img src='{dir}/armor.png' {size} vspace='-9'>".format(**GLOBAL.IMG_PARAMS),
-                "damageIcon": "<img src='{dir}/damage.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS),
-                "spottedIcon": "<img src='{dir}/detection.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS),
-                "stunIcon": "<img src='{dir}/stun.png' {size} vspace='-10'>".format(**GLOBAL.IMG_PARAMS)
+                "assistIcon": "<img src='{}/efficiency/help.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
+                "blockedIcon": "<img src='{}/efficiency/armor.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
+                "damageIcon": "<img src='{}/efficiency/damage.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
+                "stunIcon": "<img src='{}/efficiency/stun.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
+                "spottedIcon": "<img src='{}/efficiency/detection.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
             },
+            DAMAGE_LOG.TOP_LOG_SEPARATE: "  ",
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
         self.log_extended = {
@@ -212,10 +211,10 @@ class DefaultSettings(object):
                 GLOBAL.Y: 0,
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
             },
-            DAMAGE_LOG.KILLED_ICON: "<img src='{dir}/destruction.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
+            DAMAGE_LOG.KILLED_ICON: "<img src='{}/efficiency/destruction.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
             DAMAGE_LOG.TEMPLATES: [
                 [
-                    "<textformat leading='-6' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
+                    "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
                     "<font size='12'>%(index)02d:</font><tab>",
                     "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
                     "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
@@ -224,7 +223,7 @@ class DefaultSettings(object):
                     "</font></textformat>"
                 ],
                 [
-                    "<textformat leading='-6' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
+                    "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
                     "<font size='12'>%(shots)d:</font><tab>",
                     "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
                     "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
@@ -239,14 +238,14 @@ class DefaultSettings(object):
             },
             DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
             DAMAGE_LOG.ATTACK_REASON: {
-                ATTACK_REASON.SHOT: "<img src='{dir}/damage.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
-                ATTACK_REASON.FIRE: "<img src='{dir}/fire.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
-                ATTACK_REASON.RAM: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS),
-                ATTACK_REASON.WORLD_COLLISION: "<img src='{dir}/ram.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS)
+                ATTACK_REASON.SHOT: "<img src='{}/efficiency/damage.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+                ATTACK_REASON.FIRE: "<img src='{}/efficiency/fire.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+                ATTACK_REASON.RAM: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+                ATTACK_REASON.WORLD_COLLISION: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
             },
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-        additional = {reason: "<img src='{dir}/module.png' {size} {vspace}>".format(**GLOBAL.IMG_PARAMS) for reason
+        additional = {reason: "<img src='{}/efficiency/module.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS) for reason
                       in ATTACK_REASONS if reason not in self.log_extended[DAMAGE_LOG.ATTACK_REASON]}
         self.log_extended[DAMAGE_LOG.ATTACK_REASON].update(additional)
         _logs = namedtuple('Logs', ('log_total', 'log_extended'))

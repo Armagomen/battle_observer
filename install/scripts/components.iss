@@ -171,7 +171,7 @@ Type: files; Name: "{app}\{code:PH_Folder_Mods}\polarfox.vxSettingsApi*.wotmod"
 
 [UninstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
-Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen*\*"
+Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen_install\*"
 
 [Code]
 procedure ChangeMainJsonValues();

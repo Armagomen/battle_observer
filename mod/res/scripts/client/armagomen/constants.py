@@ -9,7 +9,7 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
 from realm import CURRENT_REALM
 
 MOD_NAME = "BATTLE_OBSERVER"
-IMAGE_DIR = "gui/maps/icons/battle_observer"
+IMAGE_DIR = "img://gui/maps/icons/battle_observer"
 
 SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_NAME")(
     'modBattleObserver.swf', 'modBattleObserverHangar.swf', ("armagomen.battle_observer.battle",),
@@ -18,22 +18,22 @@ SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_N
 
 def getLogo(big=True):
     if big:
-        return "<img src='img://{}/logo/big.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
-    return "<img src='img://{}/logo/small.png' width='220' height='14' vspace='16'>".format(IMAGE_DIR)
+        return "<img src='{}/logo/big.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
+    return "<img src='{}/logo/small.png' width='220' height='14' vspace='16'>".format(IMAGE_DIR)
 
 
 def sixthSenseIconsNamesList():
-    directory = IMAGE_DIR + "/sixth_sense/"
+    directory = "gui/maps/icons/battle_observer/sixth_sense/"
     folder = ResMgr.openSection(directory)
     return sorted(folder.keys())
 
 
 IMG = namedtuple("IMG", "DONAT_UA DONATELLO DIAKA PATREON PAYPAL")(
-    "<img src='img://{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='img://{}/donate/donatello.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='img://{}/donate/diaka.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='img://{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='img://{}/donate/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
+    "<img src='{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/donatello.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/diaka.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
@@ -87,8 +87,6 @@ class GLOBAL:
     IMG = "img"
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
-    IMG_PARAMS_HANGAR = {"dir": "img://gui/maps/icons/battle_observer/efficiency",
-                         "size": "width='18' height='18' vspace='-3'"}
     INNER = "inner"
     KNOCKOUT = "knockout"
     ONE, TWO = (1, 2)
@@ -103,6 +101,10 @@ class GLOBAL:
     ZERO = FIRST
     NEW_LINE = "\n"
 
+
+EFFICIENCY_ICONS_SIZE = "width='18' height='18' vspace='-3'"
+LOGS_ICONS = "width='16' height='16' vspace='-4'"
+EX_LOGS_ICONS = "width='15' height='15' vspace='-4'"
 
 SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
     "service_channel_filter", "sys_keys", "type", "data", "auxData", (
@@ -163,6 +165,8 @@ class DAMAGE_LOG:
 
     NAME = "damage_log"
     TOP_LOG = "log_total"
+    TOP_LOG_SEPARATE = "separate"
+    SEPARATE = " "
     WG_LOGS_FIX = "wg_logs"
 
     EXTENDED = "log_extended"

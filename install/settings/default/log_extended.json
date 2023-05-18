@@ -1,61 +1,41 @@
 {
   "attackReason": {
-    "AdaptationHealthRestore": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "artillery_eq": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "artillery_protection": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "artillery_sector": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "berserker_eq": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "bomber_eq": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "bombers": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "clingBrander": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "corrodingShot": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "death_zone": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "drowning": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "fire": "<img src='img://gui/maps/icons/library/efficiency/48x48/fire.png' width='24' height='24' vspace='-13'>",
-    "fireCircle": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "fort_artillery_eq": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "gas_attack": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "manual": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "minefield_eq": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "none": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "overturn": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "ram_brander": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "ram_cling_brander": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "ramming": "<img src='img://gui/maps/icons/library/efficiency/48x48/ram.png' width='24' height='24' vspace='-13'>",
-    "recovery": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "shot": "<img src='img://gui/maps/icons/library/efficiency/48x48/damage.png' width='24' height='24' vspace='-13'>",
-    "smoke": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "spawned_bot_explosion": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "thunderStrike": "<img src='img://gui/maps/icons/library/efficiency/48x48/module.png' width='24' height='24' vspace='-13'>",
-    "world_collision": "<img src='img://gui/maps/icons/library/efficiency/48x48/ram.png' width='24' height='24' vspace='-13'>"
+    "AdaptationHealthRestore": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "artillery_eq": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "artillery_protection": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "artillery_sector": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "berserker_eq": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "bomber_eq": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "bombers": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "clingBrander": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "corrodingShot": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "death_zone": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "drowning": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "fire": "<img src='img://gui/maps/icons/battle_observer/efficiency/fire.png' width='15' height='15' vspace='-4'>",
+    "fireCircle": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "fort_artillery_eq": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "gas_attack": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "manual": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "minefield_eq": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "none": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "overturn": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "ram_brander": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "ram_cling_brander": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "ramming": "<img src='img://gui/maps/icons/battle_observer/efficiency/ram.png' width='15' height='15' vspace='-4'>",
+    "recovery": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "shot": "<img src='img://gui/maps/icons/battle_observer/efficiency/damage.png' width='15' height='15' vspace='-4'>",
+    "smoke": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "spawned_bot_explosion": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "thunderStrike": "<img src='img://gui/maps/icons/battle_observer/efficiency/module.png' width='15' height='15' vspace='-4'>",
+    "world_collision": "<img src='img://gui/maps/icons/battle_observer/efficiency/ram.png' width='15' height='15' vspace='-4'>"
   },
   "avgColor": {
     "brightness": 1.0,
     "saturation": 0.5
   },
-  "bottom_enabled": false,
-  "enabled": false,
-  "templates": [
-    [
-      "<textformat leading='-6' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
-      "<font size='12'>%(index)02d:</font><tab>",
-      "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
-      "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
-      "%(attackReason)s<tab>",
-      "%(classIcon)s %(tankName)s %(killedIcon)s",
-      "</font></textformat>"
-    ],
-    [
-      "<textformat leading='-6' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
-      "<font size='12'>%(shots)d:</font><tab>",
-      "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
-      "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
-      "%(attackReason)s<tab>",
-      "%(classIcon)s %(userName).12s %(killedIcon)s",
-      "</font></textformat>"
-    ]
-  ],
-  "killedIcon": "<img src='img://gui/maps/icons/library/efficiency/48x48/destruction.png' width='24' height='24' vspace='-13'>",
+  "bottom_enabled": true,
+  "enabled": true,
+  "killedIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/destruction.png' width='15' height='15' vspace='-4'>",
   "logsAltMode_hotkey": [
     [
       56
@@ -71,5 +51,25 @@
     "gold": "#FFD700",
     "normal": "#FAFAFA"
   },
-  "top_enabled": false
+  "templates": [
+    [
+      "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
+      "<font size='12'>%(index)02d:</font><tab>",
+      "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
+      "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
+      "%(attackReason)s<tab>",
+      "%(classIcon)s %(tankName)s %(killedIcon)s",
+      "</font></textformat>"
+    ],
+    [
+      "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
+      "<font size='12'>%(shots)d:</font><tab>",
+      "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
+      "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
+      "%(attackReason)s<tab>",
+      "%(classIcon)s %(userName).12s %(killedIcon)s",
+      "</font></textformat>"
+    ]
+  ],
+  "top_enabled": true
 }
