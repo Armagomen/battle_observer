@@ -5,17 +5,24 @@
   },
   "enabled": true,
   "icons": {
-    "assistIcon": "  <img src='img://gui/maps/icons/battle_observer/efficiency/help.png' width='16' height='16' vspace='-4'>",
-    "blockedIcon": "  <img src='img://gui/maps/icons/battle_observer/efficiency/armor.png' width='16' height='16' vspace='-4'>",
-    "damageIcon": "  <img src='img://gui/maps/icons/battle_observer/efficiency/damage.png' width='16' height='16' vspace='-4'>",
-    "spottedIcon": "  <img src='img://gui/maps/icons/battle_observer/efficiency/detection.png' width='16' height='16' vspace='-4'>",
-    "stunIcon": "  <img src='img://gui/maps/icons/battle_observer/efficiency/stun.png' width='16' height='16' vspace='-4'>"
+    "assistIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/help.png' width='16' height='16' vspace='-4'>",
+    "blockedIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/armor.png' width='16' height='16' vspace='-4'>",
+    "damageIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/damage.png' width='16' height='16' vspace='-4'>",
+    "spottedIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/detection.png' width='16' height='16' vspace='-4'>",
+    "stunIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/stun.png' width='16' height='16' vspace='-4'>"
   },
+  "separate": "  ",
   "settings": {
     "align": "right",
     "inCenter": true,
     "x": -260,
     "y": 0
   },
-  "templateMainDMG": "%(damageIcon)s<font color='%(tankDamageAvgColor)s'>%(playerDamage)s</font>%(blockedIcon)s<font color='%(tankBlockedAvgColor)s'>%(blockedDamage)s</font>%(assistIcon)s<font color='%(tankAssistAvgColor)s'>%(assistDamage)s</font>%(spottedIcon)s%(spottedTanks)s%(stunIcon)s<font color='%(tankStunAvgColor)s'>%(stun)s</font>"
+  "templateMainDMG": [
+    "%(damageIcon)s<font color='%(tankDamageAvgColor)s'>%(playerDamage)s</font>",
+    "%(blockedIcon)s<font color='%(tankBlockedAvgColor)s'>%(blockedDamage)s</font>",
+    "%(assistIcon)s<font color='%(tankAssistAvgColor)s'>%(assistDamage)s</font>",
+    "%(spottedIcon)s%(spottedTanks)s",
+    "%(stunIcon)s<font color='%(tankStunAvgColor)s'>%(stun)s</font>"
+  ]
 }
