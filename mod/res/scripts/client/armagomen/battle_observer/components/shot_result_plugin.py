@@ -121,13 +121,9 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
                 g_events.onMarkerColorChanged(color)
             g_events.onArmorChanged(armor, piercing_power, caliber, ricochet, no_damage)
 
-    def __setEnabled(self, viewID):
-        self.__isEnabled = self.__mapping[viewID] or viewID == CROSSHAIR_VIEW_ID.STRATEGIC
-        if self.__isEnabled:
-            for markerType, shotResult in self.__cache.iteritems():
-                self._parentObj.setGunMarkerColor(markerType, self.__colors[shotResult])
-        else:
-            self.__cache.clear()
+    def __setMapping(self, keys):
+        super(ShotResultIndicatorPlugin, self).__setMapping(keys)
+        self.__mapping[CROSSHAIR_VIEW_ID.STRATEGIC] = True
 
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
@@ -140,8 +136,3 @@ def createPlugins(base, *args):
     if settings.armor_calculator[GLOBAL.ENABLED]:
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
-
-# @overrideMethod(_CrosshairShotResults, "__collectDebugPiercingData")
-# def __collectDebugPiercingData(base, cls, piercingList, penetrationArmor, hitAngleCos, minPPower, maxPPower, piercingPercent, matInfo, result):
-#     base(cls, piercingList, penetrationArmor, hitAngleCos, minPPower, maxPPower, piercingPercent, matInfo, result)
-#     print penetrationArmor, minPPower, maxPPower, piercingPercent, result
