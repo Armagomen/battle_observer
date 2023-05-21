@@ -42,8 +42,8 @@ class ShotResultResolver(object):
         shot = self.__player.getVehicleDescriptor().shot
         shell = shot.shell
         full_piercing_power = self.getFullPiercingPower(hitPoint, piercingMultiplier, shell, shot)
-        armor, piercing_power, ricochet, no_damage = self.computeArmor(c_details, shell, full_piercing_power,
-                                                                       self.isModernMechanics(shell))
+        is_modern = self.isModernMechanics(shell)
+        armor, piercing_power, ricochet, no_damage = self.computeArmor(c_details, shell, full_piercing_power, is_modern)
         if no_damage or ricochet:
             shot_result = SHOT_RESULT.NOT_PIERCED
         else:
@@ -54,6 +54,8 @@ class ShotResultResolver(object):
                 shot_result = SHOT_RESULT.NOT_PIERCED
             else:
                 shot_result = SHOT_RESULT.LITTLE_PIERCED
+        if is_modern:
+            piercing_power = full_piercing_power
         return shot_result, armor, piercing_power, shell.caliber, ricochet, no_damage
 
     def getFullPiercingPower(self, hitPoint, piercingMultiplier, shell, shot):
@@ -73,14 +75,15 @@ class ShotResultResolver(object):
         return shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and \
             shell.type.shieldPenetration
 
-    def computeArmor(self, c_details, shell, full_piercing_power, is_modern_he):
+    @staticmethod
+    def computeArmor(c_details, shell, full_piercing_power, is_modern_he):
         computed_armor = GLOBAL.ZERO
         piercing_power = full_piercing_power
         ricochet = False
         no_damage = True
         is_jet = False
         jet_start_dist = GLOBAL.ZERO
-        jetLossPPByDist = _CrosshairShotResults._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
+        jet_loss = _CrosshairShotResults._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
         for detail in c_details:
             mat_info = detail.matInfo
             if mat_info is None:
@@ -90,7 +93,7 @@ class ShotResultResolver(object):
             if is_jet:
                 jetDist = detail.dist - jet_start_dist
                 if jetDist > GLOBAL.ZERO:
-                    piercing_power *= 1.0 - jetDist * jetLossPPByDist
+                    piercing_power *= 1.0 - jetDist * jet_loss
             else:
                 ricochet = _CrosshairShotResults._shouldRicochet(shell, hit_angle_cos, mat_info)
             if mat_info.vehicleDamageFactor:
@@ -99,7 +102,7 @@ class ShotResultResolver(object):
             elif is_modern_he:
                 piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
                 piercing_power = max(piercing_power, GLOBAL.ZERO)
-            elif jetLossPPByDist > GLOBAL.ZERO:
+            elif jet_loss > GLOBAL.ZERO:
                 is_jet = True
                 jet_start_dist += detail.dist + mat_info.armor * _JET_FACTOR
         return computed_armor, piercing_power, ricochet, no_damage
