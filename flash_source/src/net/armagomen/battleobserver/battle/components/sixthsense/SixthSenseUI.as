@@ -18,7 +18,7 @@
 		private var _container:Sprite;
 		private var hideAnimation:Tween;
 		private var hideAnimation2:Tween;
-		private const POSITION:Number = 150;
+		private var POSITION_Y:Number = App.appHeight >> 3;
 		
 		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
@@ -71,11 +71,11 @@
 			image.smoothing = true;
 			this._container.addChild(image);
 			this.timer = new TextExt(image.width >> 1, image.height - 20, Constants.middleText, TextFieldAutoSize.CENTER, this._container);
-			this.hideAnimation = new Tween(this._container, "y", this.POSITION, -image.height);
+			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -image.height);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
 			this._container.alpha = 0;
 			this._container.x = -image.width >> 1;
-			this._container.y = this.POSITION;
+			this._container.y = this.POSITION_Y;
 		}
 		
 		public function as_show():void
@@ -87,7 +87,7 @@
 				this.hideAnimation2.stop();
 				this.hideAnimation2.rewind();
 			}
-			this._container.y = this.POSITION;
+			this._container.y = this.POSITION_Y;
 			this._container.alpha = 1.0;
 		}
 		
@@ -117,6 +117,7 @@
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
+			this.POSITION_Y = App.appHeight >> 3;
 		}
 	}
 }

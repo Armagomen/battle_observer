@@ -6,7 +6,7 @@ from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, ARMOR_CALC
 from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
-from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES as SHELLS
+from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES as SHELLS, SHELL_TYPES
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
@@ -43,7 +43,8 @@ class ShotResultResolver(object):
         shot = self.__player.getVehicleDescriptor().shot
         shell = shot.shell
         full_piercing_power = self.getFullPiercingPower(hitPoint, piercingMultiplier, shell, shot)
-        armor, piercing_power, ricochet, no_damage = self.computeArmor(c_details, shell, full_piercing_power)
+        armor, piercing_power, ricochet, no_damage = self.computeArmor(c_details, shell, full_piercing_power,
+                                                                       self.isModernMechanics(shell))
         if no_damage or ricochet:
             shot_result = SHOT_RESULT.NOT_PIERCED
         else:
@@ -70,9 +71,10 @@ class ShotResultResolver(object):
 
     @staticmethod
     def isModernMechanics(shell):
-        return shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and shell.type.shieldPenetration
+        return shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and \
+            shell.type.shieldPenetration
 
-    def computeArmor(self, cDetails, shell, full_piercing_power):
+    def computeArmor(self, c_details, shell, full_piercing_power, is_modern_he):
         computed_armor = GLOBAL.ZERO
         piercing_power = full_piercing_power
         ricochet = False
@@ -80,7 +82,7 @@ class ShotResultResolver(object):
         is_jet = False
         jet_start_dist = GLOBAL.ZERO
         jetLossPPByDist = _CrosshairShotResults._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
-        for detail in cDetails:
+        for detail in c_details:
             mat_info = detail.matInfo
             if mat_info is None:
                 continue
@@ -95,7 +97,7 @@ class ShotResultResolver(object):
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
-            elif shell.kind == SHELLS.HIGH_EXPLOSIVE and self.isModernMechanics(shell):
+            elif is_modern_he:
                 piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
                 piercing_power = max(piercing_power, GLOBAL.ZERO)
             elif jetLossPPByDist > GLOBAL.ZERO:
@@ -143,3 +145,8 @@ def createPlugins(base, *args):
     if settings.armor_calculator[GLOBAL.ENABLED]:
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
+
+# @overrideMethod(_CrosshairShotResults, "__collectDebugPiercingData")
+# def __collectDebugPiercingData(base, cls, piercingList, penetrationArmor, hitAngleCos, minPPower, maxPPower, piercingPercent, matInfo, result):
+#     base(cls, piercingList, penetrationArmor, hitAngleCos, minPPower, maxPPower, piercingPercent, matInfo, result)
+#     print penetrationArmor, minPPower, maxPPower, piercingPercent, result
