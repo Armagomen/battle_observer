@@ -22,14 +22,13 @@ class ShotResultResolver(object):
 
     def __init__(self):
         self.__player = None
+        self.__onAlly = bool(settings.armor_calculator[ARMOR_CALC.ON_ALLY])
 
     def setPlayer(self):
         self.__player = getPlayer()
 
     def isAlly(self, entity):
-        if not settings.armor_calculator[ARMOR_CALC.ON_ALLY]:
-            return entity.publicInfo.team == self.__player.team
-        return False
+        return False if self.__onAlly else entity.publicInfo.team == self.__player.team
 
     def getShotResult(self, collision, hitPoint, direction, piercingMultiplier):
         if collision is None or self.__player is None:
@@ -129,10 +128,6 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
                 self._parentObj.setGunMarkerColor(markerType, self.__colors[shotResult])
         else:
             self.__cache.clear()
-
-    def __onGunMarkerStateChanged(self, markerType, position, direction, collision):
-        if self.__isEnabled:
-            self.__updateColor(markerType, position, collision, direction)
 
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
