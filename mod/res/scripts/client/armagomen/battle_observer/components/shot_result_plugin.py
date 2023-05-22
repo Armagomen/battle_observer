@@ -13,9 +13,9 @@ from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCT
 
 UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
 _MIN_PIERCING_DIST = 100.0
-_MAX_PIERCING_DIST = 500.0
 _JET_FACTOR = 0.001
-_LERP_RANGE_PIERCING_DIST = _MAX_PIERCING_DIST - _MIN_PIERCING_DIST
+_LERP_RANGE_PIERCING_DIST = 400.0
+FULL_PP_RANGE = (SHELLS.HIGH_EXPLOSIVE, SHELLS.HOLLOW_CHARGE)
 
 
 class ShotResultResolver(object):
@@ -30,7 +30,7 @@ class ShotResultResolver(object):
     def isAlly(self, entity):
         return False if self.__onAlly else entity.publicInfo.team == self.__player.team
 
-    def getShotResult(self, collision, hitPoint, direction, piercingMultiplier):
+    def getShotResult(self, hitPoint, collision, direction, piercingMultiplier):
         if collision is None or self.__player is None:
             return UNDEFINED_RESULT
         entity = collision.entity
@@ -41,16 +41,16 @@ class ShotResultResolver(object):
             return UNDEFINED_RESULT
         shot = self.__player.getVehicleDescriptor().shot
         shell = shot.shell
-        full_piercing_power = self.getFullPiercingPower(hitPoint, piercingMultiplier, shell, shot)
+        full_piercing_power = self.getFullPiercingPower(hitPoint, piercingMultiplier, shot)
         is_modern = self.isModernMechanics(shell)
         armor, piercing_power, ricochet, no_damage = self.computeArmor(c_details, shell, full_piercing_power, is_modern)
         if no_damage or ricochet:
             shot_result = SHOT_RESULT.NOT_PIERCED
         else:
-            piercing_power_offset = piercing_power * shell.piercingPowerRandomization
-            if armor < piercing_power - piercing_power_offset:
+            offset = piercing_power * shell.piercingPowerRandomization
+            if armor < piercing_power - offset:
                 shot_result = SHOT_RESULT.GREAT_PIERCED
-            elif armor > piercing_power + piercing_power_offset:
+            elif armor > piercing_power + offset:
                 shot_result = SHOT_RESULT.NOT_PIERCED
             else:
                 shot_result = SHOT_RESULT.LITTLE_PIERCED
@@ -58,16 +58,16 @@ class ShotResultResolver(object):
             piercing_power = full_piercing_power
         return shot_result, armor, piercing_power, shell.caliber, ricochet, no_damage
 
-    def getFullPiercingPower(self, hitPoint, piercingMultiplier, shell, shot):
+    def getFullPiercingPower(self, hitPoint, piercingMultiplier, shot):
         p100, p500 = (pp * piercingMultiplier for pp in shot.piercingPower)
-        if shell.kind == SHELLS.HIGH_EXPLOSIVE or shell.kind == SHELLS.HOLLOW_CHARGE:
+        if shot.shell.kind in FULL_PP_RANGE:
             return p100
         else:
             distance = hitPoint.distTo(self.__player.position)
             if distance <= _MIN_PIERCING_DIST:
                 return p100
-            elif distance < _MAX_PIERCING_DIST:
-                return p100 + (p500 - p100) * (distance - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
+            elif distance < shot.maxDistance:
+                return p100 - (p100 - p500) * (distance - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
             return p500
 
     @staticmethod
@@ -76,9 +76,8 @@ class ShotResultResolver(object):
             shell.type.shieldPenetration
 
     @staticmethod
-    def computeArmor(c_details, shell, full_piercing_power, is_modern_he):
+    def computeArmor(c_details, shell, piercing_power, is_modern_he):
         computed_armor = GLOBAL.ZERO
-        piercing_power = full_piercing_power
         ricochet = False
         no_damage = True
         is_jet = False
@@ -101,7 +100,6 @@ class ShotResultResolver(object):
                 break
             elif is_modern_he:
                 piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-                piercing_power = max(piercing_power, GLOBAL.ZERO)
             elif jet_loss > GLOBAL.ZERO:
                 is_jet = True
                 jet_start_dist += detail.dist + mat_info.armor * _JET_FACTOR
@@ -114,9 +112,9 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
         self.__resolver = ShotResultResolver()
 
-    def __updateColor(self, markerType, hitPoint, collide, _dir):
+    def __updateColor(self, markerType, hitPoint, collision, direction):
         shot_result, armor, piercing_power, caliber, ricochet, no_damage = \
-            self.__resolver.getShotResult(collide, hitPoint, _dir, self.__piercingMultiplier)
+            self.__resolver.getShotResult(hitPoint, collision, direction, self.__piercingMultiplier)
         if shot_result in self.__colors:
             color = self.__colors[shot_result]
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):

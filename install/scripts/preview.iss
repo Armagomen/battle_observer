@@ -1,6 +1,6 @@
 ﻿[Files]
 
-Source: img\test.bmp; Flags: dontcopy
+Source: img\small.bmp; Flags: dontcopy
 
 
 
@@ -31,7 +31,7 @@ var
   ImagePath: string;
 begin
     
-    Image := 'test.bmp';
+    Image := 'small.bmp';
     Description := 'This is the description of Main Files';
 
   //case Index of
