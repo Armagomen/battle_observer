@@ -3,6 +3,7 @@ from math import ceil
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from armagomen.constants import MAIN_GUN, GLOBAL
+from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
@@ -16,6 +17,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self._warning = False
         self.totalEnemiesHP = GLOBAL.ZERO
         self.playerDamage = GLOBAL.ZERO
+        self.is_player_vehicle = True
 
     def _populate(self):
         super(MainGun, self)._populate()
@@ -23,15 +25,24 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived += self.onPlayerFeedbackReceived
+        handler = avatar_getter.getInputHandler()
+        if handler is not None and hasattr(handler, "onPostmortemVehicleChanged"):
+            handler.onPostmortemVehicleChanged += self.onPostmortemVehicleChanged
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleKilled += self.onVehicleKilled
+        vehicle = self.sessionProvider.shared.vehicleState.getControllingVehicle()
+        if vehicle is not None:
+            self.is_player_vehicle = vehicle.isPlayerVehicle
 
     def _dispose(self):
         damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived -= self.onPlayerFeedbackReceived
+        handler = avatar_getter.getInputHandler()
+        if handler is not None and hasattr(handler, "onPostmortemVehicleChanged"):
+            handler.onPostmortemVehicleChanged += self.onPostmortemVehicleChanged
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleKilled -= self.onVehicleKilled
@@ -60,10 +71,16 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.gunScore = damage
             self.updateMainGun()
 
+    def onPostmortemVehicleChanged(self, vehicleID):
+        vehicle = self.sessionProvider.shared.vehicleState.getControllingVehicle()
+        if vehicle is not None:
+            self.is_player_vehicle = vehicle.isPlayerVehicle
+        elif vehicleID is not None:
+            self.is_player_vehicle = vehicleID == self.playerVehicleID
+
     def onPlayerFeedbackReceived(self, events):
-        if self.isPostmortemSwitchedToAnotherVehicle():
-            return
-        for event in events:
-            if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-                self.playerDamage += event.getExtra().getDamage()
-                self.updateMainGun()
+        if self.is_player_vehicle:
+            for event in events:
+                if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
+                    self.playerDamage += event.getExtra().getDamage()
+                    self.updateMainGun()
