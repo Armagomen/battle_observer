@@ -18,32 +18,32 @@ _LERP_RANGE_PIERCING_DIST = 400.0
 FULL_PP_RANGE = (SHELLS.HIGH_EXPLOSIVE, SHELLS.HOLLOW_CHARGE)
 
 
-class ShotResultResolver(object):
+class _ShotResult(object):
 
-    def __init__(self):
-        self.__player = None
-        self.__onAlly = bool(settings.armor_calculator[ARMOR_CALC.ON_ALLY])
+    @staticmethod
+    def isAlly(entity, player, onAlly):
+        return False if onAlly else entity.publicInfo.team == player.team
 
-    def setPlayer(self):
-        self.__player = getPlayer()
-
-    def isAlly(self, entity):
-        return False if self.__onAlly else entity.publicInfo.team == self.__player.team
-
-    def getShotResult(self, hitPoint, collision, direction, piercingMultiplier):
-        if collision is None or self.__player is None:
+    @classmethod
+    def getShotResult(cls, hitPoint, collision, direction, piercingMultiplier, onAlly):
+        if collision is None:
             return UNDEFINED_RESULT
         entity = collision.entity
-        if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive() or self.isAlly(entity):
+        if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive():
+            return UNDEFINED_RESULT
+        player = getPlayer()
+        if player is None:
+            return UNDEFINED_RESULT
+        if cls.isAlly(entity, player, onAlly):
             return UNDEFINED_RESULT
         c_details = _CrosshairShotResults._getAllCollisionDetails(hitPoint, direction, entity)
         if c_details is None:
             return UNDEFINED_RESULT
-        shot = self.__player.getVehicleDescriptor().shot
+        shot = player.getVehicleDescriptor().shot
         shell = shot.shell
-        full_piercing_power = self.getFullPiercingPower(hitPoint, piercingMultiplier, shot)
-        is_modern = self.isModernMechanics(shell)
-        armor, piercing_power, ricochet, no_damage = self.computeArmor(c_details, shell, full_piercing_power, is_modern)
+        full_piercing_power = cls.getFullPiercingPower(hitPoint, piercingMultiplier, shot, player)
+        is_modern = cls.isModernMechanics(shell)
+        armor, piercing_power, ricochet, no_damage = cls.computeArmor(c_details, shell, full_piercing_power, is_modern)
         if no_damage or ricochet:
             shot_result = SHOT_RESULT.NOT_PIERCED
         else:
@@ -58,12 +58,13 @@ class ShotResultResolver(object):
             piercing_power = full_piercing_power
         return shot_result, armor, piercing_power, shell.caliber, ricochet, no_damage
 
-    def getFullPiercingPower(self, hitPoint, piercingMultiplier, shot):
+    @staticmethod
+    def getFullPiercingPower(hitPoint, piercingMultiplier, shot, player):
         p100, p500 = (pp * piercingMultiplier for pp in shot.piercingPower)
         if shot.shell.kind in FULL_PP_RANGE:
             return p100
         else:
-            distance = hitPoint.distTo(self.__player.position)
+            distance = hitPoint.distTo(player.position)
             if distance <= _MIN_PIERCING_DIST:
                 return p100
             elif distance < shot.maxDistance:
@@ -87,14 +88,13 @@ class ShotResultResolver(object):
             mat_info = detail.matInfo
             if mat_info is None:
                 continue
-            hit_angle_cos = detail.hitAngleCos
-            computed_armor += _CrosshairShotResults._computePenetrationArmor(shell, hit_angle_cos, mat_info)
+            computed_armor += _CrosshairShotResults._computePenetrationArmor(shell, detail.hitAngleCos, mat_info)
             if is_jet:
                 jetDist = detail.dist - jet_start_dist
                 if jetDist > GLOBAL.ZERO:
                     piercing_power *= 1.0 - jetDist * jet_loss
             else:
-                ricochet = _CrosshairShotResults._shouldRicochet(shell, hit_angle_cos, mat_info)
+                ricochet = _CrosshairShotResults._shouldRicochet(shell, detail.hitAngleCos, mat_info)
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
@@ -110,11 +110,11 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
-        self.__resolver = ShotResultResolver()
+        self.__onAlly = bool(settings.armor_calculator[ARMOR_CALC.ON_ALLY])
 
     def __updateColor(self, markerType, hitPoint, collision, direction):
         shot_result, armor, piercing_power, caliber, ricochet, no_damage = \
-            self.__resolver.getShotResult(hitPoint, collision, direction, self.__piercingMultiplier)
+            _ShotResult.getShotResult(hitPoint, collision, direction, self.__piercingMultiplier, self.__onAlly)
         if shot_result in self.__colors:
             color = self.__colors[shot_result]
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):
@@ -125,10 +125,6 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     def __setMapping(self, keys):
         super(ShotResultIndicatorPlugin, self).__setMapping(keys)
         self.__mapping[CROSSHAIR_VIEW_ID.STRATEGIC] = True
-
-    def start(self):
-        super(ShotResultIndicatorPlugin, self).start()
-        self.__resolver.setPlayer()
 
 
 @overrideMethod(plugins, 'createPlugins')
