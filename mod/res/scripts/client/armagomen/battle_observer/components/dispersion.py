@@ -28,8 +28,17 @@ LINKAGES = {
 }
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
-aih_constants.GUN_MARKER_MIN_SIZE = 16.0
-aih_constants.SPG_GUN_MARKER_MIN_SIZE = 30.0
+aih_constants.GUN_MARKER_MIN_SIZE *= 0.5
+aih_constants.SPG_GUN_MARKER_MIN_SIZE *= 0.5
+
+DEFAULT_SPG_GUN_MARKER_SCALE_RATE = aih_constants.SPG_GUN_MARKER_SCALE_RATE
+
+
+def setSPGMarkerScaleRate(rate, enabled):
+    if enabled:
+        aih_constants.SPG_GUN_MARKER_SCALE_RATE = DEFAULT_SPG_GUN_MARKER_SCALE_RATE * rate
+    else:
+        aih_constants.SPG_GUN_MARKER_SCALE_RATE = DEFAULT_SPG_GUN_MARKER_SCALE_RATE
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
@@ -61,8 +70,8 @@ class DispersionCircle(object):
 
     def __init__(self):
         self.enabled = False
-        self.hooksEnable = False
-        self.replaceWGCircle = False
+        self.server = False
+        self.replace = False
         settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(gm_factory, self.CREATE)(self.createOverrideComponents)
         overrideMethod(gm_factory, "overrideComponents")(self.createOverrideComponents)
@@ -76,57 +85,62 @@ class DispersionCircle(object):
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
 
     def createOverrideComponents(self, base, *args):
-        if not self.hooksEnable:
+        if not self.server:
             return base(*args)
+        player = getPlayer()
+        player.enableServerAim(True)
         if base.__name__ == self.CREATE:
-            player = getPlayer()
-            player.enableServerAim(True)
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
 
     def useDefaultGunMarkers(self, base, *args, **kwargs):
-        return not self.hooksEnable or base(*args, **kwargs)
+        return not self.server or base(*args, **kwargs)
 
     def useGunMarker(self, base, *args, **kwargs):
-        return self.hooksEnable or base(*args, **kwargs)
+        return self.server or base(*args, **kwargs)
 
     def applySettings(self, base, *args, **kwargs):
-        return None if self.hooksEnable else base(*args, **kwargs)
+        return None if self.server else base(*args, **kwargs)
 
     def setShotPosition(self, base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
         base(rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
-        if not self.hooksEnable:
+        if not self.server:
             return
         ePos, mDir, mSize, imSize, collData = \
             rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
         rotator._avatar.inputHandler.updateGunMarker2(ePos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
 
     def onServerGunMarkerStateChanged(self, base, *args, **kwargs):
-        return base(*args, **kwargs) if not self.hooksEnable else None
+        return base(*args, **kwargs) if not self.server else None
 
     def setGunMarkerColor(self, base, cr_panel, markerType, color):
-        if self.hooksEnable and markerType == CLIENT:
+        if self.server and markerType == CLIENT:
             base(cr_panel, SERVER, color)
         return base(cr_panel, markerType, color)
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION.NAME:
             self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
-            self.replaceWGCircle = config[DISPERSION.REPLACE]
-            self.hooksEnable = self.enabled and config[DISPERSION.SERVER]
+            if self.enabled:
+                self.replace = config[DISPERSION.REPLACE]
+                self.server = config[DISPERSION.SERVER]
+            else:
+                self.replace = False
+                self.server = False
+            setSPGMarkerScaleRate(config[DISPERSION.SCALE], self.server or self.replace)
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if not self.enabled:
             return baseCreateGunMarker(isStrategic)
         factory = gun_marker_ctrl._GunMarkersDPFactory()
         if isStrategic:
-            if self.replaceWGCircle:
+            if self.replace:
                 client = SPGController(CLIENT, factory.getClientSPGProvider())
             else:
                 client = gun_marker_ctrl._SPGGunMarkerController(CLIENT, factory.getClientSPGProvider())
             server = SPGController(SERVER, factory.getServerSPGProvider())
         else:
-            if self.replaceWGCircle:
+            if self.replace:
                 client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
             else:
                 client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, factory.getClientProvider())
