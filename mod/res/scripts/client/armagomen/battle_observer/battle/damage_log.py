@@ -7,7 +7,6 @@ from armagomen.utils.common import logDebug, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
-from gui.battle_control import avatar_getter
 from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from helpers import i18n
@@ -58,7 +57,6 @@ class DamageLog(DamageLogsMeta):
         self.top_log = defaultdict(int)
         self.last_shell = defaultdict(lambda: (DAMAGE_LOG.NOT_SHELL, False))
         self.top_log_template = ""
-        self.is_player_vehicle = True
 
     def _populate(self):
         super(DamageLog, self)._populate()
@@ -67,12 +65,6 @@ class DamageLog(DamageLogsMeta):
             return
         feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
         self._is_top_log_enabled = self.settings.log_total[GLOBAL.ENABLED]
-        handler = avatar_getter.getInputHandler()
-        if handler is not None and hasattr(handler, "onPostmortemVehicleChanged"):
-            handler.onPostmortemVehicleChanged += self.onPostmortemVehicleChanged
-        vehicle = self.sessionProvider.shared.vehicleState.getControllingVehicle()
-        if vehicle is not None:
-            self.is_player_vehicle = vehicle.isPlayerVehicle
         if self._is_top_log_enabled:
             self.as_createTopLogS(self.settings.log_total[GLOBAL.SETTINGS])
             self.update_top_log_start_params()
@@ -124,9 +116,6 @@ class DamageLog(DamageLogsMeta):
         raise ValueError(DAMAGE_LOG.WARNING_MESSAGE.format(eventType))
 
     def _dispose(self):
-        handler = avatar_getter.getInputHandler()
-        if handler is not None and hasattr(handler, "onPostmortemVehicleChanged"):
-            handler.onPostmortemVehicleChanged -= self.onPostmortemVehicleChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
@@ -141,13 +130,6 @@ class DamageLog(DamageLogsMeta):
             if self._is_top_log_enabled:
                 self.top_log.clear()
         super(DamageLog, self)._dispose()
-
-    def onPostmortemVehicleChanged(self, vehicleID):
-        vehicle = self.sessionProvider.shared.vehicleState.getControllingVehicle()
-        if vehicle is not None:
-            self.is_player_vehicle = vehicle.isPlayerVehicle
-        elif vehicleID is not None:
-            self.is_player_vehicle = vehicleID == self.playerVehicleID
 
     def _onGunReloadTimeSet(self, currShellCD, state, skipAutoLoader):
         if state.isReloadingFinished():
@@ -196,7 +178,7 @@ class DamageLog(DamageLogsMeta):
 
     def __onPlayerFeedbackReceived(self, events):
         """Shared feedback player events"""
-        if self.is_player_vehicle:
+        if self.isPlayerVehicle:
             for event in events:
                 self.parseEvent(event)
 
