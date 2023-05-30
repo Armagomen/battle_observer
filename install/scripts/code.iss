@@ -112,12 +112,12 @@ function NextButtonClick_wpSelectDir(): Boolean;
 begin
   Result := True;
   // check for version
-  if not WotList_Selected_VersionMatch(WotList, '{#WOT_VERSION_PATTERN}') then
-  begin
-    MsgBox(ExpandConstant('{cm:version_not_match}'), mbError, MB_OK);
-    Result := False;
-    Exit;
-  end;
+  //if not WotList_Selected_VersionMatch(WotList, '{#WOT_VERSION_PATTERN}') then
+  //begin
+  //  MsgBox(ExpandConstant('{cm:version_not_match}'), mbError, MB_OK);
+  //  Result := False;
+  //  Exit;
+  //end;
   // check for running client
   if WotList_Selected_IsStarted(WotList) then
   begin

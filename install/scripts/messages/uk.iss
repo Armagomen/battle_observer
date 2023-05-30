@@ -7,7 +7,7 @@ uk.openwg_branch_release=Реліз
 uk.openwg_branch_ct=Загальний тест
 uk.openwg_branch_st=Супер тест
 uk.openwg_branch_sb=Пісочниця
-uk.version_not_match=Клієнт не підтримується.%n%nЦей установник підтримує лише WoT v{#WOT_VERSION_PATTERN}
+//uk.version_not_match=Клієнт не підтримується.%n%nЦей установник підтримує лише WoT v{#WOT_VERSION_PATTERN}
 uk.client_started=Клієнт запущено.%n%nЧи бажаєте ви закрити клієнт?
 
 // run

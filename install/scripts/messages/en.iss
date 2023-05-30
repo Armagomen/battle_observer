@@ -7,7 +7,7 @@ en.openwg_branch_release=Release
 en.openwg_branch_ct=Common Test
 en.openwg_branch_st=Super Test
 en.openwg_branch_sb=Sandbox
-en.version_not_match=This client is not supported.%n%nThis installer only supports WoT v{#WOT_VERSION_PATTERN}
+//en.version_not_match=This client is not supported.%n%nThis installer only supports WoT v{#WOT_VERSION_PATTERN}
 en.client_started=The selected client is running.%n%nDo you want to terminate the selected client?
 
 // run

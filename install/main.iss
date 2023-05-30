@@ -2,7 +2,7 @@
 #define MyAppPublisher "Armagomen, Inc."
 #define MyAppURL "https://github.com/Armagomen/battle_observer"
 #define MyAppUpdatesURL MyAppURL+"/releases/latest/"
-#define WOT_VERSION_PATTERN "1.2*"
+//#define WOT_VERSION_PATTERN "1.20.*"
 #define APP_FILE_PATTERN "mod_battle_observer_v"
 #define APP_DIR_UNINST "battle_observer_uninst"
 #define OPENWGUTILS_DIR_SRC "dll"
