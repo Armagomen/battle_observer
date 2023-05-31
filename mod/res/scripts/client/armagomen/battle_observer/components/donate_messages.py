@@ -6,8 +6,8 @@ from armagomen.constants import IMG, getLogo, URLS
 from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod
 from constants import AUTH_REALM
 from gui.SystemMessages import SM_TYPE, pushMessage
+from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
-from gui.shared.ClanCache import g_clanCache
 from gui.shared.personality import ServicesLocator
 from helpers import getClientLanguage
 from notification.NotificationListView import NotificationListView
