@@ -20,7 +20,7 @@ CLAN_ABBREV = "BO-UA"
 class Donate(object):
 
     def __init__(self):
-        self.timeDelta = datetime.datetime.now()
+        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=5)
         self.lastMessage = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         support_language = getClientLanguage() in ('uk', 'be')
@@ -28,13 +28,13 @@ class Donate(object):
         if support_language:
             self.messages = (
                 "Добрий день everybody, Слава Україні",
-                "Підтримай розробку мода, все буде Україна.<br>Слава Україні",
-                "Підтримай Український контент.<br>Слава Україні"
+                "Підтримай розробку мода, все буде Україна.\nСлава Україні",
+                "Підтримай Український контент.\nСлава Україні"
             )
         else:
             self.messages = (
-                "Support the development of the mod.<br>Glory to Ukraine",
-                "Support the development of the mod, everything will be Ukraine.<br>Glory to Ukraine"
+                "Support the development of the mod.\nGlory to Ukraine",
+                "Support the development of the mod, everything will be Ukraine.\nGlory to Ukraine"
             )
         self.message_format = dict(ua_url=URLS.DONATELLO, ua2_url=URLS.DIAKA, ua3_url=URLS.DONAT_UA,
                                    paypal_url=URLS.PAYPAL_URL, patreon_url=URLS.PATREON_URL,
@@ -49,23 +49,23 @@ class Donate(object):
 
     def getDonateMessage(self):
         self.lastMessage = self.getRandomMessage()
-        return ("{logo}<p><font color='#ffff66'>{msg}</font></p><br>"
+        return ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
                 "<p><textformat leading='2'>"
-                "{donat_img} <a href='event:{ua3_url}'>donatua.com</a><br>"
-                "{donatello_img} <a href='event:{ua_url}'>donatello.to</a><br>"
-                # "{diaka_img} <a href='event:{ua2_url}'>diaka.ua</a><br>"
-                # "{paypal_img} <a href='event:{paypal_url}'>PayPal</a><br>"
+                "{donat_img} <a href='event:{ua3_url}'>donatua.com</a>\n"
+                "{donatello_img} <a href='event:{ua_url}'>donatello.to</a>\n"
+                # "{diaka_img} <a href='event:{ua2_url}'>diaka.ua</a>\n"
+                # "{paypal_img} <a href='event:{paypal_url}'>PayPal</a>\n"
                 "{patreon_img} <a href='event:{patreon_url}'>Patreon</a>"
                 "</textformat></p>").format(msg=self.lastMessage, **self.message_format)
 
     def pushClanMessage(self):
         if not self.show_clanMessage or g_clanCache.clanAbbrev is not None:
             return
-        message = "{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>. " \
-                  "Граєш та отримуєш бонуси (бустери, камуфляжі, та інше). " \
-                  "\nУмови на вступ: мати 1000 боїв, грати 2-3 рази на тиждень. " \
-                  "\nУ разі якщо ви не будете з'являтися онлайн протягом двох тижнів вас буде виключено з клану. " \
-                  "Місць в клані на всіх не вистачає.</font></p>".format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
+        message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>. "
+                   "Отримуй більше бонусів від гри (бустери, камуфляжі, та інше). "
+                   "\nУмови на вступ: мати 1000 боїв, грати 2-3 рази на тиждень. "
+                   "\nУ разі якщо ви не будете з'являтися онлайн протягом місяця вас буде виключено з клану. "
+                   "Місць в клані на всіх не вистачає.</font></p>").format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
         pushMessage(message, type=SM_TYPE.Warning)
 
     @property
