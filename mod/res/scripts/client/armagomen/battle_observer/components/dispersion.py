@@ -1,6 +1,6 @@
 import aih_constants
 from AvatarInputHandler import gun_marker_ctrl
-from BattleReplay import g_replayCtrl
+from BattleReplay import g_replayCtrl, BattleReplay
 from VehicleGunRotator import VehicleGunRotator
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import GLOBAL, DISPERSION
@@ -83,6 +83,10 @@ class DispersionCircle(object):
         overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPosition)
         overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onServerGunMarkerStateChanged)
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
+        overrideMethod(BattleReplay, "setUseServerAim")(self.replaySetUseServerAim)
+
+    def replaySetUseServerAim(self, base, replay, enabled):
+        return base(replay, False if self.server else enabled)
 
     def createOverrideComponents(self, base, *args):
         if not self.server:
@@ -111,7 +115,7 @@ class DispersionCircle(object):
         rotator._avatar.inputHandler.updateGunMarker2(ePos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
 
     def onServerGunMarkerStateChanged(self, base, *args, **kwargs):
-        return base(*args, **kwargs) if not self.server else None
+        return None if self.server else base(*args, **kwargs)
 
     def setGunMarkerColor(self, base, cr_panel, markerType, color):
         if self.server and markerType == CLIENT:
