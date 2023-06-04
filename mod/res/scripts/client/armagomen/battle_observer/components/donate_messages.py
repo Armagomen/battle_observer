@@ -3,7 +3,7 @@ import datetime
 import random
 
 from armagomen.constants import IMG, getLogo, URLS
-from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod
+from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod, isDonateMessageEnabled
 from constants import AUTH_REALM
 from gui.SystemMessages import SM_TYPE, pushMessage
 from gui.clans.clan_cache import g_clanCache
@@ -22,7 +22,8 @@ class Donate(object):
     def __init__(self):
         self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=5)
         self.lastMessage = None
-        ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
+        if isDonateMessageEnabled():
+            ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         support_language = getClientLanguage() in ('uk', 'be')
         self.show_clanMessage = support_language and AUTH_REALM == "EU"
         if support_language:

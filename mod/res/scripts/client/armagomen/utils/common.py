@@ -323,3 +323,12 @@ def getEncoding():
 
 ENCODING_LOCALE = getEncoding()
 ENCODING_ERRORS = "ignore"
+
+MOD_PACKS = ["Ukrainian_Viking_ModPack"]
+
+
+def isDonateMessageEnabled():
+    for mod_pack in MOD_PACKS:
+        if os.path.exists(os.path.join(cwd, mod_pack)):
+            return False
+    return True
