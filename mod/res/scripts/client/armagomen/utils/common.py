@@ -307,6 +307,7 @@ def getPercent(param_a, param_b):
 
 
 def fetchURL(url, callback_function):
+    logDebug(url)
     BigWorld.fetchURL(url, callback_function, {"User-Agent": "Battle-Observer-App"}, HTTP_DEFAULT_TIMEOUT, 'GET')
 
 

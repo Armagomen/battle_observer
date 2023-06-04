@@ -41,7 +41,7 @@ class WTRStatistics(object):
         random = data["statistics"]["random"]
         battles = int(random["battles"])
         if battles:
-            return float(random["wins"]) / battles * 100, self.__battlesFormat(battles)
+            return round(float(random["wins"]) / battles * 100, 2), self.__battlesFormat(battles)
         return self.DEFAULT_WIN_RATE, str(battles)
 
     def __battlesFormat(self, battles):
