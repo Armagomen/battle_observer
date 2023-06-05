@@ -281,10 +281,9 @@ COLOR = namedtuple("COLOR", ("PURPLE", "GREEN", "MULTIPLIER", "TEMPLATE"))(0.833
 
 def percentToRGB(percent, saturation=0.5, brightness=1.0, **kwargs):
     """Percent is float number in range 0 - 2.4 purple, or 1.0 green."""
-    normalized_percent = min(COLOR.PURPLE, percent * COLOR.GREEN)
-    tuple_values = hsv_to_rgb(normalized_percent, saturation, brightness)
-    # r, g, b = (int(math.ceil(i * COLOR.MULTIPLIER)) for i in tuple_values)
-    return COLOR.TEMPLATE.format(*(int(math.ceil(i * COLOR.MULTIPLIER)) for i in tuple_values))
+    position = min(COLOR.PURPLE, percent * COLOR.GREEN)
+    r, g, b = (int(math.ceil(i * COLOR.MULTIPLIER)) for i in hsv_to_rgb(position, saturation, brightness))
+    return COLOR.TEMPLATE.format(r, g, b)
 
 
 def urlResponse(url):
