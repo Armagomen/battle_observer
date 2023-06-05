@@ -101,19 +101,19 @@ package net.armagomen.battleobserver.battle.components.debugpanel
 			{
 				icon = this.icons[7];
 			}
-			else if (ping < 50)
+			else if (ping < 60)
 			{
 				icon = this.icons[6];
 			}
-			else if (ping < 60)
+			else if (ping < 80)
 			{
 				icon = this.icons[5];
 			}
-			else if (ping < 70)
+			else if (ping < 100)
 			{
 				icon = this.icons[4];
 			}
-			else if (ping < 100)
+			else if (ping < 150)
 			{
 				icon = this.icons[3];
 			}

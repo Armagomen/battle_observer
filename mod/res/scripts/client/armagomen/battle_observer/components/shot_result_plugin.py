@@ -22,7 +22,7 @@ class _ShotResult(object):
 
     @staticmethod
     def isAlly(entity, player, onAlly):
-        return False if onAlly else entity.publicInfo.team == player.team
+        return False if onAlly else entity.publicInfo['team'] == player.team
 
     @classmethod
     def getShotResult(cls, hitPoint, collision, direction, piercingMultiplier, onAlly):
@@ -32,9 +32,7 @@ class _ShotResult(object):
         if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive():
             return UNDEFINED_RESULT
         player = getPlayer()
-        if player is None:
-            return UNDEFINED_RESULT
-        if cls.isAlly(entity, player, onAlly):
+        if player is None or cls.isAlly(entity, player, onAlly):
             return UNDEFINED_RESULT
         c_details = _CrosshairShotResults._getAllCollisionDetails(hitPoint, direction, entity)
         if c_details is None:
