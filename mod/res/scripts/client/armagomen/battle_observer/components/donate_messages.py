@@ -20,7 +20,7 @@ CLAN_ABBREV = "BO-UA"
 class Donate(object):
 
     def __init__(self):
-        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=5)
+        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=3)
         self.lastMessage = None
         if isDonateMessageEnabled():
             ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
@@ -78,7 +78,7 @@ class Donate(object):
         if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=60)
+                self.timeDelta = currentTime + datetime.timedelta(minutes=30)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
                 # self.pushClanMessage()
