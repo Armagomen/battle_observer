@@ -1,7 +1,6 @@
 import BigWorld
 
-from BattleReplay import g_replayCtrl, isServerSideReplay
-from DogTagComponent import DogTagComponent
+from BattleReplay import g_replayCtrl
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.controllers import debug_ctrl
 
@@ -37,14 +36,3 @@ def updateDebug(base, controller):
     if controller._debugPanelUI is not None:
         for control in controller._debugPanelUI:
             control.updateDebugInfo(ping, fps, isLaggingNow, fpsReplay=fpsReplay)
-
-
-@overrideMethod(DogTagComponent, "_isObserving")
-def _isObserving(base, *args):
-    if isServerSideReplay():
-        return True
-    else:
-        vehicle = getattr(BigWorld.player(), "vehicle", None)
-        if vehicle is not None:
-            return not vehicle.isPlayerVehicle
-    return False

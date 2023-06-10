@@ -232,7 +232,7 @@ ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "MESSAGES_TEMPLATE", "DEFAULT_TEMPLATE", "ON_ALLY"))(
     "piercingPower", "armor_calculator", "position", "messages", "template", "color", "countedArmor",
     "piercingReserve", "message", "caliber", "ricochet", "noDamage", __MESSAGES_TEMPLATE,
-    "<p align='center'>%(ricochet)s%(noDamage)s\n<font color='%(color)s'>%(countedArmor)d</font></p>",
+    "<p align='center'>%(ricochet)s%(noDamage)s<br><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
     "display_on_allies")
 
 CAROUSEL = namedtuple("CAROUSEL", ("NAME", "SMALL", "ROWS", "SETTINGS"))(

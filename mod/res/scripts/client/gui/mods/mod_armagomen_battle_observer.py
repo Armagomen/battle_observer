@@ -10,12 +10,9 @@ __http__ = "https://github.com/Armagomen/battle_observer/releases"
 from realm import CURRENT_REALM
 
 if CURRENT_REALM != "RU":
-    import logging
-
     from armagomen.battle_observer.core import onInit, onFini
     from helpers.statistics import StatisticsCollector
 
-    logging.disable(logging.INFO)
     StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
 
 

@@ -1,3 +1,5 @@
+import logging
+
 from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCachedData
 from armagomen.battle_observer.core.view_settings import ViewSettings, registerBattleObserverPackages
 from armagomen.utils.common import clearClientCache, cleanupUpdates, logInfo, logError, gameVersion, \
@@ -24,6 +26,7 @@ def startLoadingMod(modVersion, current_realm):
         LOG_CURRENT_EXCEPTION()
         error_message = repr(err)
     else:
+        logging.disable(logging.WARNING)
         logInfo('Launched at python v{} region={}'.format(version, current_realm))
         registerBattleObserverPackages()
         loadComponents(current_realm)
