@@ -67,6 +67,7 @@ Name: sixth_sense/rick_morty; Description: {cm:rick_morty}; Flags: exclusive;
 Name: sixth_sense/rick_morty_2; Description: {cm:rick_morty_2}; Flags: exclusive;
 Name: sixth_sense/rick_morty_fu; Description: {cm:rick_morty_fu}; Flags: exclusive;
 Name: sixth_sense/rick_morty_portal; Description: {cm:rick_morty_portal}; Flags: exclusive;
+Name: sixth_sense/saxon_ua; Description: {cm:saxon_ua}; Flags: exclusive;
 Name: sixth_sense/skull; Description: {cm:skull}; Flags: exclusive;
 Name: sixth_sense/spark; Description: {cm:spark}; Flags: exclusive;
 Name: sixth_sense/sun_scream; Description: {cm:sun_scream}; Flags: exclusive;
@@ -84,8 +85,8 @@ Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenounin
 Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning;
 Name: zoom/disable_cam_after_shot; Description: {cm:zoom_disable_cam};
 Name: zoom/dynamic_zoom; Description: {cm:zoom_dynamic_zoom}; Flags: checkablealone; Types: "armagomen"; 
-Name: zoom/dynamic_zoom/steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck;
-Name: zoom/zoomSteps; Description: {cm:zoom_zoomSteps};
+Name: zoom/dynamic_zoom/steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck; Types: "armagomen";
+Name: zoom/zoomSteps; Description: {cm:zoom_zoomSteps}; Types: "armagomen";
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: checkablealone disablenouninstallwarning; Types: "armagomen";
 Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck;
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning;
@@ -294,6 +295,7 @@ begin
     if WizardIsComponentSelected('sixth_sense/rick_morty_2') then JSON_SetString(Handle,'/default_icon_name', 'rick_morty_2.png');
     if WizardIsComponentSelected('sixth_sense/rick_morty_fu') then JSON_SetString(Handle,'/default_icon_name', 'rick_morty_fu.png');
     if WizardIsComponentSelected('sixth_sense/rick_morty_portal') then JSON_SetString(Handle,'/default_icon_name', 'rick_morty_portal.png');
+    if WizardIsComponentSelected('sixth_sense/saxon_ua') then JSON_SetString(Handle,'/default_icon_name', 'saxon_ua.png');    
     if WizardIsComponentSelected('sixth_sense/skull') then JSON_SetString(Handle,'/default_icon_name', 'skull.png');
     if WizardIsComponentSelected('sixth_sense/spark') then JSON_SetString(Handle,'/default_icon_name', 'spark.png');
     if WizardIsComponentSelected('sixth_sense/sun_scream') then JSON_SetString(Handle,'/default_icon_name', 'sun_scream.png');

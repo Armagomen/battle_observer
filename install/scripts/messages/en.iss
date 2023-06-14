@@ -88,6 +88,7 @@ en.rick_morty=Rick and Morty
 en.rick_morty_2=Rick and Morty 2
 en.rick_morty_fu=Rick and Morty - Fac
 en.rick_morty_portal=Rick and Morty Portal
+en.saxon_ua=SAXON_UA
 en.skull=Skull on fire
 en.spark=Spark
 en.sun_scream=Screaming Sun
@@ -203,7 +204,7 @@ en.zoom=Sniper mode settings
 en.zoom_disable_cam=Disable sniper mode immediately after shooting
 en.zoom_dynamic_zoom=Select zoom factor automatically
 en.zoom_steps_only=Only by fixed steps
-en.zoom_zoomSteps=Replace zoom multiplicity with (2, 4, 6, 8, 10, 12, 16, 20, 25)
+en.zoom_zoomSteps=Replace zoom multiplicity with (2, 4, 6, 8, 10, 12, 16, 20, 25, 30)
 
 
 

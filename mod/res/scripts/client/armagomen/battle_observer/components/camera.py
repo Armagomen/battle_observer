@@ -15,7 +15,7 @@ from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 
 DEFAULT_X_METERS = 20.0
-settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: DEFAULT_X_METERS}
+settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: DEFAULT_X_METERS, SNIPER.STEPS_ONLY: False}
 MinMax = namedtuple('MinMax', ('min', 'max'))
 camCache = {}
 
@@ -42,10 +42,10 @@ def sniper_readConfigs(base, camera, data):
                 exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
     if settingsCache[SNIPER.DYN_ZOOM]:
         camera.setSniperZoomSettings(-1)
-        if settingsCache[SNIPER.STEPS_ONLY]:
-            settingsCache[SNIPER.METERS] = math.ceil(SNIPER.MAX_DIST / camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
-        else:
-            settingsCache[SNIPER.METERS] = DEFAULT_X_METERS
+        # if settingsCache[SNIPER.STEPS_ONLY]:
+        #     settingsCache[SNIPER.METERS] = math.ceil(SNIPER.MAX_DIST / camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
+        # else:
+        #     settingsCache[SNIPER.METERS] = DEFAULT_X_METERS
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
@@ -53,14 +53,10 @@ def setSystemValue(base, zoomSettings, value):
     return base(zoomSettings, GLOBAL.ZERO if settingsCache[SNIPER.DYN_ZOOM] else value)
 
 
-def getSimilarStep(zoom, steps):
-    return min(steps, key=lambda value: abs(value - zoom))
-
-
 def getZoom(distance, steps):
-    zoom = math.ceil(distance / settingsCache[SNIPER.METERS])
-    if settings.zoom[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]:
-        zoom = getSimilarStep(zoom, steps)
+    zoom = math.floor(distance / DEFAULT_X_METERS)
+    if settingsCache[SNIPER.STEPS_ONLY]:
+        zoom = min(steps, key=lambda value: abs(value - zoom))
     if zoom < SNIPER.MIN_ZOOM:
         return SNIPER.MIN_ZOOM
     return zoom

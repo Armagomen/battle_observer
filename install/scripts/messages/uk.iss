@@ -88,6 +88,7 @@ uk.rick_morty=Рік та Морті
 uk.rick_morty_2=Рік та Морті 2
 uk.rick_morty_fu=Рік та Морті - фак
 uk.rick_morty_portal=Рік та Морті - портал
+uk.saxon_ua=SAXON_UA
 uk.skull=Череп у вогні
 uk.spark=Вспишка
 uk.sun_scream=Кричаще сонце
@@ -203,7 +204,7 @@ uk.zoom=Налаштування режиму снайпера
 uk.zoom_disable_cam=Вимкнути режим снайперу одразу після постріла
 uk.zoom_dynamic_zoom=Обирати кратність наближення автоматично
 uk.zoom_steps_only=Тільки по фіксованим шагам
-uk.zoom_zoomSteps=Замінити кратність зумів на (2, 4, 6, 8, 10, 12, 16, 20, 25)
+uk.zoom_zoomSteps=Замінити кратність зумів на (2, 4, 6, 8, 10, 12, 16, 20, 25, 30)
 
 
 
