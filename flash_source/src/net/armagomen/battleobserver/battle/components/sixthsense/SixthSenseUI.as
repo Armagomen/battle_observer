@@ -18,7 +18,7 @@
 		private var _container:Sprite;
 		private var hideAnimation:Tween;
 		private var hideAnimation2:Tween;
-		private var POSITION_Y:Number = App.appHeight >> 3;
+		private var POSITION_Y:Number = (App.appHeight >> 3) + 10;
 		
 		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
@@ -66,11 +66,11 @@
 		
 		private function addLoadedImageAndTimer(image:Bitmap):void
 		{
-			image.width = 120;
-			image.height = 120;
+			image.width = 100;
+			image.height = 100;
 			image.smoothing = true;
 			this._container.addChild(image);
-			this.timer = new TextExt(image.width >> 1, image.height - 20, Constants.middleText, TextFieldAutoSize.CENTER, this._container);
+			this.timer = new TextExt(image.width >> 1, image.height - 5, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
 			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -image.height);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
 			this._container.alpha = 0;
@@ -117,7 +117,7 @@
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
-			this.POSITION_Y = App.appHeight >> 3;
+			this.POSITION_Y = (App.appHeight >> 3) + 10;
 		}
 	}
 }

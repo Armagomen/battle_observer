@@ -123,9 +123,9 @@ class CreateElement(object):
     def createSixthSenseDropDown(self, blockID, varName, icons, icon):
         result = self.createControl(blockID, varName, icon, cType='Dropdown')
         if result is not None:
-            image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}' width='190' height='190'>"
+            image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}' width='180' height='180'>"
             result.update({'options': [{'label': x[:-4], 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
-                           GLOBAL.WIDTH: 190})
+                           GLOBAL.WIDTH: 180})
         return result
 
     def createDebugStyleDropDown(self, blockID, varName, icons, icon):
