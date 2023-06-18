@@ -257,7 +257,7 @@ class DefaultSettings(object):
         }
         self.team_bases_panel = {
             GLOBAL.ENABLED: False,
-            GLOBAL.Y: 45,
+            GLOBAL.Y: 60,
             GLOBAL.WIDTH: 400,
             GLOBAL.HEIGHT: 24,
             TEAM_BASES.TEXT_SETTINGS: {

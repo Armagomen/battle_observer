@@ -8,7 +8,7 @@ package net.armagomen.battleobserver.battle.components.teambases
 		private var bases:Object = {};
 		private var settings:Object;
 		private var colors:Object;
-		private var yPos:Number = 100;
+		private var yPos:Number = 60;
 		
 		public function TeamBasesUI()
 		{
