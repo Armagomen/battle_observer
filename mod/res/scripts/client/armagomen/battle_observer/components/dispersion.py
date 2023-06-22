@@ -31,12 +31,20 @@ gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 aih_constants.GUN_MARKER_MIN_SIZE *= 0.5
 aih_constants.SPG_GUN_MARKER_MIN_SIZE *= 0.5
 
-dispersion = settings.dispersion_circle
+
+def getSetting(gunMakerType):
+    if gunMakerType == CLIENT:
+        return settings.dispersion_circle[DISPERSION.REPLACE]
+    elif gunMakerType == SERVER:
+        return settings.dispersion_circle[DISPERSION.SERVER]
+    return False
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
-    __scaleConfig = float(dispersion[DISPERSION.SCALE]) if dispersion[DISPERSION.REPLACE] or dispersion[
-        DISPERSION.SERVER] else 1.0
+
+    def __init__(self, gunMakerType, dataProvider, **kwargs):
+        super(_DefaultGunMarkerController, self).__init__(gunMakerType, dataProvider, **kwargs)
+        self.__scaleConfig = float(settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(gunMakerType) else 1.0
 
     def __updateScreenRatio(self):
         super(_DefaultGunMarkerController, self).__updateScreenRatio()
@@ -44,8 +52,10 @@ class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
 
 
 class SPGController(gun_marker_ctrl._SPGGunMarkerController):
-    __scaleConfig = float(dispersion[DISPERSION.SCALE]) if dispersion[DISPERSION.REPLACE] or dispersion[
-        DISPERSION.SERVER] else 1.0
+
+    def __init__(self, gunMakerType, dataProvider, **kwargs):
+        super(SPGController, self).__init__(gunMakerType, dataProvider, **kwargs)
+        self.__scaleConfig = float(settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(gunMakerType) else 1.0
 
     def _updateDispersionData(self):
         self._size *= self.__scaleConfig

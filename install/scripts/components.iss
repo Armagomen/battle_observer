@@ -38,8 +38,8 @@ Name: debug_panel; Description: {cm:debug_panel}; Flags: disablenouninstallwarni
 Name: debug_panel/minimal; Description: minimal; Flags: exclusive;
 Name: debug_panel/modern; Description: modern; Flags: exclusive; Types: "armagomen";
 Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: disablenouninstallwarning;
-Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Types: "armagomen";
-Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; 
+Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; 
+Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Types: "armagomen";
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: "armagomen";
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning;
 Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: "armagomen";
