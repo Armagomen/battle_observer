@@ -70,7 +70,7 @@
 			image.height = 100;
 			image.smoothing = true;
 			this._container.addChild(image);
-			this.timer = new TextExt(image.width >> 1, image.height - 5, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
+			this.timer = new TextExt(image.width >> 1, image.height - 8, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
 			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -image.height);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
 			this._container.alpha = 0;

@@ -27,10 +27,10 @@ package net.armagomen.battleobserver.battle.wgcomponents
 					this.oldSize = this.minimap.currentSizeIndex;
 					this.oldScale = this.minimap.scaleX;
 					this.minimap.setAllowedSizeIndex(5.0);
-					var newScale:Number = (App.appHeight * 0.7) / this.minimap.currentWidth;
+					var newScale:Number = (App.appHeight * 0.65) / this.minimap.currentWidth;
 					this.minimap.scaleX = this.minimap.scaleY = newScale;
-					this.minimap.x = App.appWidth * 0.5 - this.minimap.currentWidth * 0.5 * newScale;
-					this.minimap.y = App.appHeight * 0.5 - this.minimap.currentHeight * 0.5 * newScale;
+					this.minimap.x = (App.appWidth >> 1) - (this.minimap.currentWidth >> 1) * newScale;
+					this.minimap.y = (App.appHeight >> 1) - (this.minimap.currentHeight >> 1) * newScale;
 				}
 				else
 				{

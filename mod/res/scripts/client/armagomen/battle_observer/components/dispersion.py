@@ -31,18 +31,12 @@ gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 aih_constants.GUN_MARKER_MIN_SIZE *= 0.5
 aih_constants.SPG_GUN_MARKER_MIN_SIZE *= 0.5
 
-DEFAULT_SPG_GUN_MARKER_SCALE_RATE = aih_constants.SPG_GUN_MARKER_SCALE_RATE
-
-
-def setSPGMarkerScaleRate(rate, enabled):
-    if enabled:
-        aih_constants.SPG_GUN_MARKER_SCALE_RATE = DEFAULT_SPG_GUN_MARKER_SCALE_RATE * rate
-    else:
-        aih_constants.SPG_GUN_MARKER_SCALE_RATE = DEFAULT_SPG_GUN_MARKER_SCALE_RATE
+dispersion = settings.dispersion_circle
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
-    __scaleConfig = float(settings.dispersion_circle[DISPERSION.SCALE])
+    __scaleConfig = float(dispersion[DISPERSION.SCALE]) if dispersion[DISPERSION.REPLACE] or dispersion[
+        DISPERSION.SERVER] else 1.0
 
     def __updateScreenRatio(self):
         super(_DefaultGunMarkerController, self).__updateScreenRatio()
@@ -50,7 +44,8 @@ class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
 
 
 class SPGController(gun_marker_ctrl._SPGGunMarkerController):
-    __scaleConfig = float(settings.dispersion_circle[DISPERSION.SCALE])
+    __scaleConfig = float(dispersion[DISPERSION.SCALE]) if dispersion[DISPERSION.REPLACE] or dispersion[
+        DISPERSION.SERVER] else 1.0
 
     def _updateDispersionData(self):
         self._size *= self.__scaleConfig
@@ -71,7 +66,6 @@ class DispersionCircle(object):
     def __init__(self):
         self.enabled = False
         self.server = False
-        self.replace = False
         settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(gm_factory, self.CREATE)(self.createOverrideComponents)
         overrideMethod(gm_factory, "overrideComponents")(self.createOverrideComponents)
@@ -126,28 +120,19 @@ class DispersionCircle(object):
         if blockID == DISPERSION.NAME:
             self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
             if self.enabled:
-                self.replace = config[DISPERSION.REPLACE]
                 self.server = config[DISPERSION.SERVER]
             else:
-                self.replace = False
                 self.server = False
-            setSPGMarkerScaleRate(config[DISPERSION.SCALE], self.server or self.replace)
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if not self.enabled:
             return baseCreateGunMarker(isStrategic)
         factory = gun_marker_ctrl._GunMarkersDPFactory()
         if isStrategic:
-            if self.replace:
-                client = SPGController(CLIENT, factory.getClientSPGProvider())
-            else:
-                client = gun_marker_ctrl._SPGGunMarkerController(CLIENT, factory.getClientSPGProvider())
+            client = SPGController(CLIENT, factory.getClientSPGProvider())
             server = SPGController(SERVER, factory.getServerSPGProvider())
         else:
-            if self.replace:
-                client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
-            else:
-                client = gun_marker_ctrl._DefaultGunMarkerController(CLIENT, factory.getClientProvider())
+            client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
         return gun_marker_ctrl._GunMarkersDecorator(client, server)
 
