@@ -11,15 +11,15 @@ from gui.shared import EVENT_BUS_SCOPE
 
 
 class ObserverViewHandlerBattle(PackageBusinessHandler):
-    __slots__ = ('__icons', '_minimapPlugin', '_statistics', "_viewSettings")
+    __slots__ = ('__icons', '_minimapPlugin', '_statistics', "_viewSettings", "_aliases")
 
     def __init__(self):
         self._viewSettings = ViewSettings()
-        aliases = (
+        self._aliases = (
             VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.COMP7_BATTLE_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE,
             VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE, VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,
         ) if CURRENT_REALM != "RU" else tuple()
-        listeners = tuple((alias, self.eventListener) for alias in aliases)
+        listeners = tuple((alias, self.eventListener) for alias in self._aliases)
         super(ObserverViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self._minimapPlugin = None
         self._statistics = None
@@ -52,6 +52,8 @@ class ObserverViewHandlerBattle(PackageBusinessHandler):
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
+        if alias not in self._aliases:
+            return
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
         if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
