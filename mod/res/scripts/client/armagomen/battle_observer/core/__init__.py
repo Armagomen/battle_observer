@@ -2,7 +2,7 @@ import logging
 
 from armagomen._constants import BATTLES_RANGE, SWF
 from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCachedData
-from armagomen.utils.common import clearClientCache, cleanupUpdates, logInfo, gameVersion, cleanupObserverUpdates
+from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache, gameVersion, logInfo
 from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
 
 cachedVehicleData = CurrentVehicleCachedData()

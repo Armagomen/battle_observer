@@ -1,11 +1,11 @@
-from armagomen._constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, MINIMAP, \
-    VEHICLE_TYPES_COLORS, BATTLES_RANGE
+from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS, \
+    VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import xvmInstalled, logInfo, logDebug
-from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, PageStates, _STATE_TO_UI
+from armagomen.utils.common import logDebug, logInfo, xvmInstalled
+from gui.battle_control.battle_constants import BATTLE_CTRL_ID
+from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, _STATE_TO_UI, PageStates
 from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
-from gui.battle_control.battle_constants import BATTLE_CTRL_ID
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -13,18 +13,17 @@ ALIASES_TO_HIDE = (
     (BATTLE_ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
     (BATTLE_ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
     (BATTLE_ALIASES.TEAM_BASES, BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL),
-    (BATTLE_ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER),
+    (BATTLE_ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER)
 )
 
 ALIAS_TO_CTRL = {
-    BATTLE_ALIASES.DATE_TIME: BATTLE_CTRL_ID.ARENA_PERIOD,
-    BATTLE_ALIASES.DEBUG: BATTLE_CTRL_ID.DEBUG,
+    BATTLE_ALIASES.DATE_TIME: BATTLE_CTRL_ID.ARENA_PERIOD, BATTLE_ALIASES.DEBUG: BATTLE_CTRL_ID.DEBUG,
     BATTLE_ALIASES.HP_BARS: BATTLE_CTRL_ID.BATTLE_FIELD_CTRL,
     BATTLE_ALIASES.MAIN_GUN: BATTLE_CTRL_ID.BATTLE_FIELD_CTRL,
     BATTLE_ALIASES.OWN_HEALTH: BATTLE_CTRL_ID.PREBATTLE_SETUPS_CTRL,
     BATTLE_ALIASES.PANELS: BATTLE_CTRL_ID.BATTLE_FIELD_CTRL,
     BATTLE_ALIASES.TEAM_BASES: BATTLE_CTRL_ID.TEAM_BASES,
-    BATTLE_ALIASES.TIMER: BATTLE_CTRL_ID.ARENA_PERIOD,
+    BATTLE_ALIASES.TIMER: BATTLE_CTRL_ID.ARENA_PERIOD
 }
 
 NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE_TIME, BATTLE_ALIASES.SIXTH_SENSE)
@@ -54,10 +53,8 @@ class ViewSettings(object):
 
     @staticmethod
     def statisticsSettings():
-        return (
-            settings.statistics[STATISTICS.PANELS_CUT_WIDTH], settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
-            settings.colors[VEHICLE_TYPES_COLORS.NAME], settings.statistics[STATISTICS.ICON_BLACKOUT]
-        )
+        return (settings.statistics[STATISTICS.PANELS_CUT_WIDTH], settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
+                settings.colors[VEHICLE_TYPES_COLORS.NAME], settings.statistics[STATISTICS.ICON_BLACKOUT])
 
     @staticmethod
     def xvmInstalled(module):
@@ -133,9 +130,8 @@ class ViewSettings(object):
             if self.gui.isEpicBattle():
                 self.addInToEpicUI(True)
             self.__hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self.__components)
-            self.sessionProvider.registerViewComponents(*self.getComponentsConfig())
+            self.sessionProvider.registerViewComponents(*self.__getComponentsConfig())
         logDebug("viewSettings setComponents: components={}", self.__components)
-        return self.__components
 
     def clear(self):
         if self.gui.isEpicBattle():
@@ -164,7 +160,7 @@ class ViewSettings(object):
                 if alias in NEVER_HIDE_FL:
                     _NEVER_HIDE.add(alias)
 
-    def getComponentsConfig(self):
+    def __getComponentsConfig(self):
         config = ComponentsConfig()
         for alias in self.__components.intersection(ALIAS_TO_CTRL.iterkeys()):
             config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
