@@ -39,7 +39,6 @@ class ObserverViewHandlerBattle(PackageBusinessHandler):
         super(ObserverViewHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        self._app.loaderManager.onViewLoaded += self.__onViewLoaded
         if self._viewSettings.isWTREnabled():
             self._statistics = StatisticsDataLoader()
         self.__icons = self._viewSettings.isIconsEnabled()
@@ -47,6 +46,7 @@ class ObserverViewHandlerBattle(PackageBusinessHandler):
             self._minimapPlugin = MinimapZoomPlugin()
         components = self._viewSettings.setComponents()
         if components or self._statistics is not None or self.__icons or self._minimapPlugin is not None:
+            self._app.loaderManager.onViewLoaded += self.__onViewLoaded
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
