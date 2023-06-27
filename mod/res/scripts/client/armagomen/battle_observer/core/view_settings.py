@@ -76,7 +76,7 @@ class ViewSettings(object):
         return settings.statistics[GLOBAL.ENABLED]
 
     @staticmethod
-    def getStatisticsSettings():
+    def statisticsSettings():
         return (
             settings.statistics[STATISTICS.PANELS_CUT_WIDTH], settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
             settings.colors[VEHICLE_TYPES_COLORS.NAME], settings.statistics[STATISTICS.ICON_BLACKOUT]

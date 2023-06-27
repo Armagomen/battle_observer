@@ -1,5 +1,4 @@
 from PlayerEvents import g_playerEvents
-from armagomen.battle_observer.core import viewSettings
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.constants import MAIN, ANOTHER
 from armagomen.utils.common import overrideMethod, isReplay
@@ -20,7 +19,7 @@ g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
 
 
 def showFriends():
-    return settings.main[MAIN.SHOW_FRIENDS] and not isReplay() and not viewSettings.gui.isInEpicRange()
+    return settings.main[MAIN.SHOW_FRIENDS] and not isReplay()
 
 
 @overrideMethod(VehicleTypeInfoVO)

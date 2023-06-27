@@ -1,7 +1,7 @@
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
-from armagomen.battle_observer.core import viewSettings
+from armagomen.battle_observer.core.view_settings import ViewSettings
 from armagomen.constants import SWF, CURRENT_REALM, LOBBY_ALIASES
 from armagomen.utils.common import logError, logInfo, logDebug, callback, xvmInstalled
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -11,9 +11,10 @@ from gui.shared import EVENT_BUS_SCOPE
 
 
 class ObserverBusinessHandlerBattle(PackageBusinessHandler):
-    __slots__ = ('__icons', '_minimapPlugin', '_statistics')
+    __slots__ = ('__icons', '_minimapPlugin', '_statistics', "_viewSettings")
 
     def __init__(self):
+        self._viewSettings = ViewSettings()
         aliases = (
             VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.COMP7_BATTLE_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE,
             VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE, VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,
@@ -33,18 +34,18 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             self._minimapPlugin.fini()
             self._minimapPlugin = None
         self._statistics = None
-        viewSettings.clear()
+        self._viewSettings.clear()
         damage_controller.stop()
         super(ObserverBusinessHandlerBattle, self).fini()
 
     def eventListener(self, event):
         self._app.loaderManager.onViewLoaded += self.__onViewLoaded
-        if viewSettings.isWTREnabled():
+        if self._viewSettings.isWTREnabled():
             self._statistics = StatisticsDataLoader()
-        self.__icons = viewSettings.isIconsEnabled()
-        if viewSettings.isMinimapEnabled():
+        self.__icons = self._viewSettings.isIconsEnabled()
+        if self._viewSettings.isMinimapEnabled():
             self._minimapPlugin = MinimapZoomPlugin()
-        components = viewSettings.setComponents()
+        components = self._viewSettings.setComponents()
         if components or self._statistics is not None or self.__icons or self._minimapPlugin is not None:
             self._app.as_loadLibrariesS([SWF.BATTLE])
             logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
@@ -60,13 +61,13 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         callback(40.0, pyView.flashObject.as_BattleObserverUpdateDamageLogPosition)
 
     def _loadView(self, pyView):
-        pyView._blToggling.update(viewSettings.components)
-        pyView.flashObject.as_BattleObserverCreate(viewSettings.components, CURRENT_REALM)
-        pyView.flashObject.as_BattleObserverHideWg(viewSettings.hiddenComponents, CURRENT_REALM)
+        pyView._blToggling.update(self._viewSettings.components)
+        pyView.flashObject.as_BattleObserverCreate(self._viewSettings.components, CURRENT_REALM)
+        pyView.flashObject.as_BattleObserverHideWg(self._viewSettings.hiddenComponents, CURRENT_REALM)
         if self._minimapPlugin is not None:
             self._minimapPlugin.init(pyView.flashObject)
         if self.__icons or self._statistics is not None:
-            pyView.flashObject.as_BattleObserverCreateStatistic(self.__icons, *viewSettings.getStatisticsSettings())
+            pyView.flashObject.as_BattleObserverCreateStatistic(self.__icons, *self._viewSettings.statisticsSettings())
             if self._statistics is not None:
                 self._statistics.setCallback(pyView.flashObject.as_BattleObserverUpdateStatisticData)
                 self._statistics.getStatisticsDataFromServer()
