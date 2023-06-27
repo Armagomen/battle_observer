@@ -1,5 +1,5 @@
+from armagomen._constants import SERVICE_CHANNEL, GLOBAL
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import SERVICE_CHANNEL, GLOBAL
 from armagomen.utils.common import overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager

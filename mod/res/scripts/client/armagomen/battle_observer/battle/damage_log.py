@@ -1,8 +1,8 @@
 from collections import defaultdict, namedtuple
 
+from armagomen._constants import DAMAGE_LOG, GLOBAL, COLORS, IMAGE_DIR
 from armagomen.battle_observer.core import cachedVehicleData
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
-from armagomen.constants import DAMAGE_LOG, GLOBAL, COLORS, IMAGE_DIR
 from armagomen.utils.common import logDebug, percentToRGB, getPercent
 from armagomen.utils.keys_listener import g_keysListener
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES

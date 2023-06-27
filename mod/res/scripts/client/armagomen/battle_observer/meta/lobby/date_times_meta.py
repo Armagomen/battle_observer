@@ -1,5 +1,5 @@
+from armagomen._constants import GLOBAL
 from armagomen.battle_observer.meta.lobby.base_mod_meta import BaseModMeta
-from armagomen.constants import GLOBAL
 
 
 class DateTimesMeta(BaseModMeta):

@@ -1,7 +1,7 @@
 from collections import namedtuple
 
+from armagomen._constants import MAIN
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import MAIN
 from armagomen.utils.common import overrideMethod, callback, cancelCallback
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from gui.impl import backport

@@ -5,8 +5,8 @@ from json import loads
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
+from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.constants import GLOBAL, URLS
 from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, fetchURL, logDebug, getUpdatePath
 from armagomen.utils.dialogs import UpdaterDialogs
 from gui.Scaleform.Waiting import Waiting

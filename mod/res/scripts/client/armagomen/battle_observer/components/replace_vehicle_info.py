@@ -1,7 +1,7 @@
 # coding=utf-8
 
+from armagomen._constants import MAIN, ANOTHER, GLOBAL
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import MAIN, ANOTHER, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO, PlayerInfoVO
 from helpers import getClientLanguage

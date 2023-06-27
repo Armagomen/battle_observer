@@ -1,6 +1,6 @@
+from armagomen._constants import MAIN, CREW_XP, GLOBAL
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.constants import MAIN, CREW_XP, GLOBAL
 from armagomen.utils.common import logInfo, overrideMethod, logError, logDebug, openIgnoredVehicles, \
     updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog

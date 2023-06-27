@@ -2,7 +2,7 @@
 import datetime
 import random
 
-from armagomen.constants import IMG, getLogo, URLS
+from armagomen._constants import IMG, getLogo, URLS
 from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod, isDonateMessageEnabled
 from constants import AUTH_REALM
 from gui.SystemMessages import SM_TYPE, pushMessage

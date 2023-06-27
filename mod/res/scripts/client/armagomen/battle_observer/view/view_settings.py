@@ -1,30 +1,13 @@
+from armagomen._constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, MINIMAP, \
+    VEHICLE_TYPES_COLORS, BATTLES_RANGE
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, CLOCK, BATTLE_ALIASES, STATISTICS, FLIGHT_TIME, SWF, MINIMAP, \
-    VEHICLE_TYPES_COLORS
 from armagomen.utils.common import xvmInstalled, logInfo, logDebug
-from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, PageStates, _STATE_TO_UI
 from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
-from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
-
-BATTLES_RANGE = (
-    ARENA_GUI_TYPE.COMP7,
-    ARENA_GUI_TYPE.EPIC_BATTLE,
-    ARENA_GUI_TYPE.EPIC_RANDOM,
-    ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
-    ARENA_GUI_TYPE.FORT_BATTLE_2,
-    ARENA_GUI_TYPE.MAPBOX,
-    ARENA_GUI_TYPE.RANDOM,
-    ARENA_GUI_TYPE.RANKED,
-    ARENA_GUI_TYPE.SORTIE_2,
-    ARENA_GUI_TYPE.TRAINING,
-    ARENA_GUI_TYPE.UNKNOWN,
-    ARENA_GUI_TYPE.FUN_RANDOM
-)
 
 ALIASES_TO_HIDE = (
     (BATTLE_ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
@@ -45,12 +28,6 @@ ALIAS_TO_CTRL = {
 }
 
 NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE_TIME, BATTLE_ALIASES.SIXTH_SENSE)
-
-
-def registerBattleObserverPackages():
-    for guiType in BATTLES_RANGE:
-        g_overrideScaleFormViewsConfig.battlePackages[guiType].extend(SWF.BATTLE_PACKAGES)
-    g_overrideScaleFormViewsConfig.lobbyPackages.extend(SWF.LOBBY_PACKAGES)
 
 
 class ViewSettings(object):

@@ -1,8 +1,8 @@
 # coding=utf-8
 
 from PlayerEvents import g_playerEvents
+from armagomen._constants import GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
-from armagomen.constants import GLOBAL, POSTMORTEM
 from armagomen.utils.common import percentToRGB
 from constants import ARENA_PERIOD
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, getHealthPercent

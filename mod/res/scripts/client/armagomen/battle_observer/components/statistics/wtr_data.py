@@ -1,7 +1,7 @@
 from math import floor, log
 
+from armagomen._constants import STATISTICS
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import STATISTICS
 from armagomen.utils.common import logDebug
 from gui.battle_control import avatar_getter
 

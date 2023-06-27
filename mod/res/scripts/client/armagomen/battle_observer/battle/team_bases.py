@@ -1,5 +1,5 @@
+from armagomen._constants import TEAM_BASES
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
-from armagomen.constants import TEAM_BASES
 from armagomen.utils.common import callback
 from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
 from gui.battle_control.controllers.team_bases_ctrl import ITeamBasesListener

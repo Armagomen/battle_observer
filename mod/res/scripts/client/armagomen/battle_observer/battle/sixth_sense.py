@@ -1,7 +1,7 @@
 # coding=utf-8
 from PlayerEvents import g_playerEvents
+from armagomen._constants import SIXTH_SENSE, GLOBAL
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
-from armagomen.constants import SIXTH_SENSE, GLOBAL
 from armagomen.utils.timers import SixthSenseTimer
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from helpers import getClientLanguage

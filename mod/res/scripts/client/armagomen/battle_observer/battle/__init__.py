@@ -1,5 +1,5 @@
-from armagomen.battle_observer.business_handlers import ObserverBusinessHandlerBattle
-from armagomen.constants import BATTLE_ALIASES
+from armagomen._constants import BATTLE_ALIASES
+from armagomen.battle_observer.view import ObserverViewHandlerBattle
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 
 __all__ = ()
@@ -37,7 +37,7 @@ def getViewSettings():
 
 
 def getBusinessHandlers():
-    return ObserverBusinessHandlerBattle(),
+    return ObserverViewHandlerBattle(),
 
 
 def getContextMenuHandlers():

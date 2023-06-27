@@ -1,6 +1,6 @@
 from account_helpers.settings_core.settings_constants import GAME, GRAPHICS, ScorePanelStorageKeys
+from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
-from armagomen.constants import HP_BARS
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 
 

@@ -1,5 +1,5 @@
+from armagomen._constants import GLOBAL, CAROUSEL
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, CAROUSEL
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.lobby.hangar.carousels import TankCarousel
 from gui.Scaleform.genConsts.HANGAR_ALIASES import HANGAR_ALIASES

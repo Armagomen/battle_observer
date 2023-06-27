@@ -1,7 +1,7 @@
 # coding=utf-8
 from collections import namedtuple
 
-from armagomen.constants import getLogo, GLOBAL
+from armagomen._constants import getLogo, GLOBAL
 from armagomen.utils.common import restartGame, openWebBrowser
 from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs

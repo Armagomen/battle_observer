@@ -1,7 +1,7 @@
 import os
 
+from armagomen._constants import LOAD_LIST, GLOBAL, SIXTH_SENSE
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import LOAD_LIST, GLOBAL, SIXTH_SENSE
 from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, currentConfigPath
 from armagomen.utils.dialogs import LoadingErrorDialog
 from gui.shared.personality import ServicesLocator

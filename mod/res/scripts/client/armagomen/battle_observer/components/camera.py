@@ -8,8 +8,8 @@ from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
 from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
+from armagomen._constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
 from armagomen.utils.common import overrideMethod, logError, isReplay, callback
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.battle_control.avatar_getter import getOwnVehiclePosition

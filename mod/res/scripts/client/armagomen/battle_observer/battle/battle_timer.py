@@ -1,7 +1,7 @@
 from collections import defaultdict, namedtuple
 
+from armagomen._constants import BATTLE_TIMER, COLORS, GLOBAL
 from armagomen.battle_observer.meta.battle.battle_timer_meta import BattleTimerMeta
-from armagomen.constants import BATTLE_TIMER, COLORS, GLOBAL
 from gui.battle_control.controllers.period_ctrl import IAbstractPeriodView
 from helpers.time_utils import ONE_MINUTE
 

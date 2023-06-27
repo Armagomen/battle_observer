@@ -2,7 +2,7 @@ from collections import namedtuple
 
 import Keys
 from Event import SafeEvent
-from armagomen.constants import (
+from armagomen._constants import (
     ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS,
     FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
     SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS, DISTANCE, STATISTICS, AVG_EFFICIENCY_HANGAR,

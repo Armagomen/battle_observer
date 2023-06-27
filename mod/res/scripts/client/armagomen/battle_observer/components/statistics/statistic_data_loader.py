@@ -1,8 +1,8 @@
 import json
 from httplib import responses
 
+from armagomen._constants import REGIONS
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
-from armagomen.constants import REGIONS
 from armagomen.utils.common import logDebug, logError, callback, fetchURL
 from constants import AUTH_REALM
 from helpers import dependency

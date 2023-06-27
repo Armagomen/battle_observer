@@ -1,9 +1,8 @@
 from math import degrees
 
 from PlayerEvents import g_playerEvents
-from armagomen.battle_observer.core.view_settings import BATTLES_RANGE
+from armagomen._constants import GLOBAL, MINIMAP, BATTLES_RANGE
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import GLOBAL, MINIMAP
 from armagomen.utils.common import overrideMethod, xvmInstalled, logError
 from armagomen.utils.keys_listener import g_keysListener
 from constants import VISIBILITY, ARENA_PERIOD

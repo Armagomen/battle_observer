@@ -1,7 +1,9 @@
 import logging
 
+from armagomen._constants import BATTLES_RANGE, SWF
 from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCachedData
 from armagomen.utils.common import clearClientCache, cleanupUpdates, logInfo, gameVersion, cleanupObserverUpdates
+from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
 
 cachedVehicleData = CurrentVehicleCachedData()
 
@@ -24,7 +26,6 @@ def onInit(modVersion, current_realm):
         from armagomen.battle_observer.components import loadComponents
         from armagomen.battle_observer.settings.loader import SettingsLoader
         from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
-        from armagomen.battle_observer.core.view_settings import registerBattleObserverPackages
         from sys import version
     except Exception as err:
         from debug_utils import LOG_CURRENT_EXCEPTION
@@ -44,3 +45,9 @@ def onFini(modVersion):
     cleanupObserverUpdates()
     cleanupUpdates()
     logInfo('MOD SHUTTING DOWN: v{} - {}'.format(modVersion, gameVersion))
+
+
+def registerBattleObserverPackages():
+    for guiType in BATTLES_RANGE:
+        g_overrideScaleFormViewsConfig.battlePackages[guiType].extend(SWF.BATTLE_PACKAGES)
+    g_overrideScaleFormViewsConfig.lobbyPackages.extend(SWF.LOBBY_PACKAGES)

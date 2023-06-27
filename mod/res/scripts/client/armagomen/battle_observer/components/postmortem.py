@@ -1,6 +1,6 @@
 from AvatarInputHandler.control_modes import PostMortemControlMode
+from armagomen._constants import POSTMORTEM, ARCADE
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import POSTMORTEM, ARCADE
 from armagomen.utils.common import overrideMethod, callback
 
 

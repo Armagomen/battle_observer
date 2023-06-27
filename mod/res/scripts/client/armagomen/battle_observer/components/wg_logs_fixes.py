@@ -1,8 +1,7 @@
+from armagomen._constants import DAMAGE_LOG, GLOBAL
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import DAMAGE_LOG, GLOBAL
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
-
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE as _ETYPE
 
 BASE_WG_LOGS = (DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog,

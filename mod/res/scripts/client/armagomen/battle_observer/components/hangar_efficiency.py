@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
+from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, IMAGE_DIR, EFFICIENCY_ICONS_SIZE
 from armagomen.battle_observer.core import cachedVehicleData
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import AVG_EFFICIENCY_HANGAR, GLOBAL, IMAGE_DIR, EFFICIENCY_ICONS_SIZE
 from armagomen.utils.common import overrideMethod
 from gui.Scaleform.daapi.view.lobby.hangar.ammunition_panel import AmmunitionPanel
 

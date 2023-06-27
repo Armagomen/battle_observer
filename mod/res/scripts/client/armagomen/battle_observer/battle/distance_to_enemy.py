@@ -1,8 +1,8 @@
 from collections import defaultdict
 
 from PlayerEvents import g_playerEvents
+from armagomen._constants import GLOBAL, DISTANCE, POSTMORTEM
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
-from armagomen.constants import GLOBAL, DISTANCE, POSTMORTEM
 from armagomen.utils.common import logDebug
 from armagomen.utils.timers import CyclicTimerEvent
 from constants import ARENA_PERIOD, ARENA_PERIOD_NAMES

@@ -1,7 +1,7 @@
 from CurrentVehicle import g_currentVehicle
 from VehicleGunRotator import VehicleGunRotator
+from armagomen._constants import MAIN
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import MAIN
 from armagomen.utils.common import overrideMethod, callback
 from armagomen.utils.events import g_events
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins

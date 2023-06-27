@@ -1,8 +1,8 @@
 from collections import defaultdict
 from math import log, ceil
 
+from armagomen._constants import GLOBAL, POSTMORTEM, DISPERSION_TIMER
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
-from armagomen.constants import GLOBAL, POSTMORTEM, DISPERSION_TIMER
 from armagomen.utils.common import logDebug
 from armagomen.utils.events import g_events
 from gui.battle_control.avatar_getter import getInputHandler

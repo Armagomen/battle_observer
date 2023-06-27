@@ -1,8 +1,8 @@
+from armagomen._constants import SWF, CURRENT_REALM, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
-from armagomen.battle_observer.core.view_settings import ViewSettings
-from armagomen.constants import SWF, CURRENT_REALM, LOBBY_ALIASES
+from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import logError, logInfo, logDebug, callback, xvmInstalled
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -10,7 +10,7 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.shared import EVENT_BUS_SCOPE
 
 
-class ObserverBusinessHandlerBattle(PackageBusinessHandler):
+class ObserverViewHandlerBattle(PackageBusinessHandler):
     __slots__ = ('__icons', '_minimapPlugin', '_statistics', "_viewSettings")
 
     def __init__(self):
@@ -20,13 +20,13 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
             VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE, VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,
         ) if CURRENT_REALM != "RU" else tuple()
         listeners = tuple((alias, self.eventListener) for alias in aliases)
-        super(ObserverBusinessHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
+        super(ObserverViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self._minimapPlugin = None
         self._statistics = None
         self.__icons = False
 
     def init(self):
-        super(ObserverBusinessHandlerBattle, self).init()
+        super(ObserverViewHandlerBattle, self).init()
         damage_controller.start()
 
     def fini(self):
@@ -36,7 +36,7 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
         self._statistics = None
         self._viewSettings.clear()
         damage_controller.stop()
-        super(ObserverBusinessHandlerBattle, self).fini()
+        super(ObserverViewHandlerBattle, self).fini()
 
     def eventListener(self, event):
         self._app.loaderManager.onViewLoaded += self.__onViewLoaded
@@ -73,12 +73,12 @@ class ObserverBusinessHandlerBattle(PackageBusinessHandler):
                 self._statistics.getStatisticsDataFromServer()
 
 
-class ObserverBusinessHandlerLobby(PackageBusinessHandler):
+class ObserverViewHandlerLobby(PackageBusinessHandler):
     __slots__ = ('_listeners', '_scope', '_app', '_appNS',)
 
     def __init__(self):
         listeners = ((VIEW_ALIAS.LOBBY_HANGAR, self.eventListener),) if CURRENT_REALM != "RU" else tuple()
-        super(ObserverBusinessHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
+        super(ObserverViewHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def eventListener(self, event):
         self._app.loaderManager.onViewLoaded += self.__onViewLoaded

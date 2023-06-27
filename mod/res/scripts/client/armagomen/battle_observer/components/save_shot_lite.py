@@ -1,8 +1,8 @@
 # coding=utf-8
 from Avatar import PlayerAvatar
 from PlayerEvents import g_playerEvents
+from armagomen._constants import VEHICLE, MAIN
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import VEHICLE, MAIN
 from armagomen.utils.common import overrideMethod, isReplay
 from armagomen.utils.keys_listener import g_keysListener
 from frameworks.wulf import WindowLayer

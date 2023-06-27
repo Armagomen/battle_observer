@@ -2,8 +2,8 @@ from collections import namedtuple
 
 from Keys import KEY_LCONTROL, KEY_RCONTROL, KEY_RALT, KEY_LALT, KEY_LSHIFT, KEY_RSHIFT
 from PlayerEvents import g_playerEvents
+from armagomen._constants import MAIN, MOD_NAME
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.constants import MAIN, MOD_NAME
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui import InputHandler
 
