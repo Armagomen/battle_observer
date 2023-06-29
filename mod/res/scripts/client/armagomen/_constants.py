@@ -5,8 +5,9 @@ import ResMgr
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from constants import ARENA_GUI_TYPE
-from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_DEFAULT_COLOR, \
-    SHOT_RESULT_TO_ALT_COLOR
+from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
+from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
+    SHOT_RESULT_TO_DEFAULT_COLOR
 from realm import CURRENT_REALM
 
 MOD_NAME = "BATTLE_OBSERVER"
@@ -439,11 +440,20 @@ BATTLES_RANGE = (
     ARENA_GUI_TYPE.EPIC_RANDOM,
     ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
     ARENA_GUI_TYPE.FORT_BATTLE_2,
+    ARENA_GUI_TYPE.FUN_RANDOM,
     ARENA_GUI_TYPE.MAPBOX,
     ARENA_GUI_TYPE.RANDOM,
     ARENA_GUI_TYPE.RANKED,
     ARENA_GUI_TYPE.SORTIE_2,
     ARENA_GUI_TYPE.TRAINING,
     ARENA_GUI_TYPE.UNKNOWN,
-    ARENA_GUI_TYPE.FUN_RANDOM
+)
+
+BATTLE_PAGES = (
+    VIEW_ALIAS.CLASSIC_BATTLE_PAGE,
+    VIEW_ALIAS.COMP7_BATTLE_PAGE,
+    VIEW_ALIAS.EPIC_BATTLE_PAGE,
+    VIEW_ALIAS.EPIC_RANDOM_PAGE,
+    VIEW_ALIAS.RANKED_BATTLE_PAGE,
+    VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,
 )

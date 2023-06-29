@@ -1,4 +1,4 @@
-from armagomen._constants import CURRENT_REALM, LOBBY_ALIASES, SWF
+from armagomen._constants import BATTLE_PAGES, CURRENT_REALM, LOBBY_ALIASES, SWF
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
@@ -11,14 +11,11 @@ from gui.shared import EVENT_BUS_SCOPE
 
 
 class ObserverViewHandlerBattle(PackageBusinessHandler):
-    __slots__ = ('_icons', '_minimap', '_statistics', "_viewSettings", "_aliases")
+    __slots__ = ('_icons', '_minimap', '_statistics', "_viewSettings")
 
     def __init__(self):
         self._viewSettings = ViewSettings()
-        self._aliases = (VIEW_ALIAS.CLASSIC_BATTLE_PAGE, VIEW_ALIAS.COMP7_BATTLE_PAGE, VIEW_ALIAS.EPIC_BATTLE_PAGE,
-                         VIEW_ALIAS.EPIC_RANDOM_PAGE, VIEW_ALIAS.RANKED_BATTLE_PAGE,
-                         VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,) if CURRENT_REALM != "RU" else tuple()
-        listeners = tuple((alias, self.eventListener) for alias in self._aliases)
+        listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES) if CURRENT_REALM != "RU" else tuple()
         super(ObserverViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self._minimap = None
         self._statistics = None
@@ -51,7 +48,7 @@ class ObserverViewHandlerBattle(PackageBusinessHandler):
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
-        if alias not in self._aliases:
+        if alias not in BATTLE_PAGES:
             return
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
