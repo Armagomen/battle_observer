@@ -2,13 +2,13 @@
 import datetime
 import random
 
-from armagomen._constants import IMG, getLogo, URLS
-from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod, isDonateMessageEnabled
+from armagomen._constants import getLogo, IMG, URLS
+from armagomen.utils.common import isDonateMessageEnabled, logInfo, openWebBrowser, overrideMethod
 from constants import AUTH_REALM
-from gui.SystemMessages import SM_TYPE, pushMessage
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
 from gui.shared.personality import ServicesLocator
+from gui.SystemMessages import pushMessage, SM_TYPE
 from helpers import getClientLanguage
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
@@ -24,11 +24,10 @@ class Donate(object):
         self.lastMessage = None
         if isDonateMessageEnabled():
             ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
-        support_language = getClientLanguage() in ('uk', 'be')
+        support_language = getClientLanguage() in ('uk', 'be', 'ru')
         self.show_clanMessage = support_language and AUTH_REALM == "EU"
         if support_language:
             self.messages = (
-                "Добрий день everybody, Слава Україні",
                 "Підтримай розробку мода, все буде Україна.\nСлава Україні",
                 "Підтримай Український контент.\nСлава Україні"
             )
@@ -62,11 +61,11 @@ class Donate(object):
     def pushClanMessage(self):
         if not self.show_clanMessage or g_clanCache.clanAbbrev is not None:
             return
-        message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>. "
-                   "Отримуй більше бонусів від гри (бустери, камуфляжі, та інше). "
-                   "\nУмови на вступ: мати 1000 боїв, грати 2-3 рази на тиждень. "
-                   "\nУ разі якщо ви не будете з'являтися онлайн протягом місяця вас буде виключено з клану. "
-                   "Місць в клані на всіх не вистачає.</font></p>").format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
+        message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>, "
+                   "отримаєш більше бонусів від гри (бустери, камуфляжі, та інше)."
+                   "\nУмови на вступ: від 1000 боїв, грати 2-3 рази на тиждень."
+                   "\nУ разі якщо ви не будете з'являтися онлайн протягом місяця вас буде виключено з клану."
+                   "</font></p>").format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
         pushMessage(message, type=SM_TYPE.Warning)
 
     @property
@@ -81,7 +80,7 @@ class Donate(object):
                 self.timeDelta = currentTime + datetime.timedelta(minutes=30)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
-                # self.pushClanMessage()
+                self.pushClanMessage()
 
 
 Donate()

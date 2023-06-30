@@ -1,15 +1,15 @@
 import aih_constants
-from AvatarInputHandler import gun_marker_ctrl
-from BattleReplay import g_replayCtrl, BattleReplay
-from VehicleGunRotator import VehicleGunRotator
-from armagomen._constants import GLOBAL, DISPERSION
+from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import overrideMethod, getPlayer
+from armagomen.utils.common import getPlayer, overrideMethod
+from AvatarInputHandler import gun_marker_ctrl
+from BattleReplay import BattleReplay, g_replayCtrl
 from constants import SERVER_TICK_LENGTH
+from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
-from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
+from VehicleGunRotator import VehicleGunRotator
 
 CLIENT = gun_marker_ctrl._MARKER_TYPE.CLIENT
 SERVER = gun_marker_ctrl._MARKER_TYPE.SERVER
@@ -28,8 +28,8 @@ LINKAGES = {
 }
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
-aih_constants.GUN_MARKER_MIN_SIZE *= 0.5
-aih_constants.SPG_GUN_MARKER_MIN_SIZE *= 0.5
+aih_constants.GUN_MARKER_MIN_SIZE = 14.0
+aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0
 
 
 def getSetting(gunMakerType):
