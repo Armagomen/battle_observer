@@ -20,7 +20,7 @@ CLAN_ABBREV = "BO-UA"
 class Donate(object):
 
     def __init__(self):
-        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=3)
+        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=10)
         self.lastMessage = None
         if isDonateMessageEnabled():
             ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
