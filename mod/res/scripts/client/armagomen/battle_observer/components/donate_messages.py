@@ -29,12 +29,14 @@ class Donate(object):
         if support_language:
             self.messages = (
                 "Підтримай розробку мода, все буде Україна.\nСлава Україні",
-                "Підтримай Український контент.\nСлава Україні"
+                "Шановні Українці не забувайте підтримувати розробку, бо хто як не ви.\nСлава Україні",
+                "Кожен донат пришвидшує розробку та робить цей світ кращим.\nСлава Україні"
             )
         else:
             self.messages = (
-                "Support the development of the mod.\nGlory to Ukraine",
-                "Support the development of the mod, everything will be Ukraine.\nGlory to Ukraine"
+                "Every donation speeds up development and makes this world a better place.",
+                "Please support the development of the mod, thanks for the donation.",
+                "Dear Europeans, do not forget to support the development, because who but you."
             )
         self.message_format = dict(ua_url=URLS.DONATELLO, ua2_url=URLS.DIAKA, ua3_url=URLS.DONAT_UA,
                                    paypal_url=URLS.PAYPAL_URL, patreon_url=URLS.PATREON_URL,
