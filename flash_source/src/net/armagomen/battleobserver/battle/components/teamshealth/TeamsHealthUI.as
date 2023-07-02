@@ -9,6 +9,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	{
 		private var hpBars:ITeamHealth;
 		private var removed:Boolean = false;
+		private var correlation:* = null;
 		
 		public function TeamsHealthUI()
 		{
@@ -30,33 +31,35 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			{
 				this.hpBars = this.addChild(new Default(this.isColorBlind(), this.getColors().global)) as ITeamHealth;
 			}
-			this.as_updateCorrelationBar();
+			var page:*       = parent;
+			this.correlation = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+			this.correlation.y = 20;
+			this.updateCorrelationBar();
 		}
 		
-		public function as_updateCorrelationBar():void
+		private function updateCorrelationBar():void
 		{
-			var page:*        = parent;
-			var correlation:* = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 			if (!this.removed)
 			{
-				correlation.removeChild(correlation.getChildAt(0));
-				correlation.removeChild(correlation.greenBackground);
-				correlation.removeChild(correlation.redBackground);
-				correlation.removeChild(correlation.purpleBackground);
-				correlation.removeChild(correlation.teamFragsSeparatorField);
-				correlation.removeChild(correlation.allyTeamFragsField);
-				correlation.removeChild(correlation.enemyTeamFragsField);
-				correlation.removeChild(correlation.allyTeamHealthBar);
-				correlation.removeChild(correlation.enemyTeamHealthBar);
+				this.correlation.removeChild(this.correlation.getChildAt(0));
+				this.correlation.removeChild(this.correlation.greenBackground);
+				this.correlation.removeChild(this.correlation.redBackground);
+				this.correlation.removeChild(this.correlation.purpleBackground);
+				this.correlation.removeChild(this.correlation.teamFragsSeparatorField);
+				this.correlation.removeChild(this.correlation.allyTeamFragsField);
+				this.correlation.removeChild(this.correlation.enemyTeamFragsField);
+				this.correlation.removeChild(this.correlation.allyTeamHealthBar);
+				this.correlation.removeChild(this.correlation.enemyTeamHealthBar);
 				this.removed = true;
 			}
-			correlation._allyVehicleMarkersList._markerStartPosition = -31;
-			correlation._enemyVehicleMarkersList._markerStartPosition = 1;
-			correlation._allyVehicleMarkersList._isHPBarEnabled = true;
-			correlation._enemyVehicleMarkersList._isHPBarEnabled = true;
-			correlation._allyVehicleMarkersList.sort(correlation._allyVehicleMarkersList._vehicleIDs);
-			correlation._enemyVehicleMarkersList.sort(correlation._enemyVehicleMarkersList._vehicleIDs);
-			correlation.y = 10;
+		}
+		
+		public function as_updateCountersPosition():void
+		{
+			this.correlation.allyVehicleMarkersList._markerStartPosition = -31;
+			this.correlation.enemyVehicleMarkersList._markerStartPosition = 1;
+			this.correlation.allyVehicleMarkersList.sort();
+			this.correlation.enemyVehicleMarkersList.sort();
 		}
 		
 		override protected function onBeforeDispose():void
@@ -65,6 +68,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.hpBars.remove();
 			this.hpBars = null;
 			this.removed = false;
+			this.correlation = null;
 		}
 		
 		public function as_colorBlind(enabled:Boolean):void

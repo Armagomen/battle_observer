@@ -2,6 +2,7 @@ from account_helpers.settings_core.settings_constants import GAME, GRAPHICS, Sco
 from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
+from PlayerEvents import g_playerEvents
 
 
 class TeamsHP(TeamHealthMeta, IBattleFieldListener):
@@ -16,9 +17,20 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         is_normal_mode = self.gui.isRandomBattle() or self.gui.isRankedBattle() or self.gui.isTrainingBattle()
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
+        g_playerEvents.onAvatarReady += self.updateCounters
+
+    def updateCounters(self):
+        counters = bool(self.settingsCore.getSetting(GAME.SHOW_VEHICLES_COUNTER))
+        if counters:
+            self.settingsCore.applySetting(ScorePanelStorageKeys.SHOW_HP_BAR, False)
+            self.settingsCore.applySetting(ScorePanelStorageKeys.SHOW_HP_VALUES, False)
+            self.settingsCore.applySetting(ScorePanelStorageKeys.SHOW_HP_DIFFERENCE, False)
+            self.settingsCore.applySetting(ScorePanelStorageKeys.ENABLE_TIER_GROUPING, False)
+            self.as_updateCountersPositionS()
 
     def _dispose(self):
         self.settingsCore.onSettingsApplied -= self.onSettingsApplied
+        g_playerEvents.onAvatarReady -= self.updateCounters
         super(TeamsHP, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
@@ -36,10 +48,8 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:
             self.as_colorBlindS(bool(diff[GRAPHICS.COLOR_BLIND]))
-        showTiers = diff.get(ScorePanelStorageKeys.ENABLE_TIER_GROUPING)
-        if showTiers is None:
-            showTiers = bool(self.settingsCore.getSetting(ScorePanelStorageKeys.ENABLE_TIER_GROUPING))
-        if GAME.SHOW_VEHICLES_COUNTER in diff or showTiers:
-            if showTiers:
-                self.settingsCore.applySetting(ScorePanelStorageKeys.ENABLE_TIER_GROUPING, False)
-            self.as_updateCorrelationBarS()
+        tier_grouping = diff.get(ScorePanelStorageKeys.ENABLE_TIER_GROUPING)
+        if tier_grouping is None:
+            tier_grouping = bool(self.settingsCore.getSetting(ScorePanelStorageKeys.ENABLE_TIER_GROUPING))
+        if GAME.SHOW_VEHICLES_COUNTER in diff or tier_grouping:
+            self.updateCounters()
