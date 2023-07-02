@@ -1,4 +1,4 @@
-from account_helpers.settings_core.settings_constants import GAME, GRAPHICS, ScorePanelStorageKeys
+from account_helpers.settings_core.settings_constants import GAME, GRAPHICS, ScorePanelStorageKeys as C_BAR
 from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -20,13 +20,9 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         g_playerEvents.onAvatarReady += self.updateCounters
 
     def updateCounters(self):
-        counters = bool(self.settingsCore.getSetting(GAME.SHOW_VEHICLES_COUNTER))
-        if counters:
-            self.settingsCore.applySetting(ScorePanelStorageKeys.SHOW_HP_BAR, False)
-            self.settingsCore.applySetting(ScorePanelStorageKeys.SHOW_HP_VALUES, False)
-            self.settingsCore.applySetting(ScorePanelStorageKeys.SHOW_HP_DIFFERENCE, False)
-            self.settingsCore.applySetting(ScorePanelStorageKeys.ENABLE_TIER_GROUPING, False)
-            self.as_updateCountersPositionS()
+        self.settingsCore.applySetting(C_BAR.SHOW_HP_BAR, False)
+        self.settingsCore.applySetting(C_BAR.ENABLE_TIER_GROUPING, False)
+        self.as_updateCountersPositionS()
 
     def _dispose(self):
         self.settingsCore.onSettingsApplied -= self.onSettingsApplied
@@ -48,8 +44,5 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def onSettingsApplied(self, diff):
         if GRAPHICS.COLOR_BLIND in diff:
             self.as_colorBlindS(bool(diff[GRAPHICS.COLOR_BLIND]))
-        tier_grouping = diff.get(ScorePanelStorageKeys.ENABLE_TIER_GROUPING)
-        if tier_grouping is None:
-            tier_grouping = bool(self.settingsCore.getSetting(ScorePanelStorageKeys.ENABLE_TIER_GROUPING))
-        if GAME.SHOW_VEHICLES_COUNTER in diff or tier_grouping:
+        if GAME.SHOW_VEHICLES_COUNTER in diff or C_BAR.SHOW_HP_BAR in diff or C_BAR.ENABLE_TIER_GROUPING in diff:
             self.updateCounters()

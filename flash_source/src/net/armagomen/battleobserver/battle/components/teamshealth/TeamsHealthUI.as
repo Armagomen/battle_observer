@@ -31,8 +31,11 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			{
 				this.hpBars = this.addChild(new Default(this.isColorBlind(), this.getColors().global)) as ITeamHealth;
 			}
-			var page:*       = parent;
+			var page:* = parent;
 			this.correlation = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+			var background:* = this.correlation.getChildAt(0);
+			background.y = -22;
+			background.alpha = 0.9;
 			this.correlation.y = 20;
 			this.updateCorrelationBar();
 		}
@@ -41,7 +44,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		{
 			if (!this.removed)
 			{
-				this.correlation.removeChild(this.correlation.getChildAt(0));
 				this.correlation.removeChild(this.correlation.greenBackground);
 				this.correlation.removeChild(this.correlation.redBackground);
 				this.correlation.removeChild(this.correlation.purpleBackground);
