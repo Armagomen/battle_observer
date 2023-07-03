@@ -1,13 +1,14 @@
 from collections import defaultdict
-from math import log, ceil
+from math import ceil, log
 
-from armagomen._constants import GLOBAL, POSTMORTEM, DISPERSION_TIMER
+from armagomen._constants import DISPERSION_TIMER, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.utils.common import logDebug
 from armagomen.utils.events import g_events
 from gui.battle_control.avatar_getter import getInputHandler
 
 TIMER, PERCENT = ("timer", "percent")
+MAXIMUM = 100
 
 
 class DispersionTimer(DispersionTimerMeta):
@@ -52,12 +53,9 @@ class DispersionTimer(DispersionTimerMeta):
         if self.min_angle > aiming_angle:
             self.min_angle = aiming_angle
             logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
-        percent = int(ceil(self.min_angle / aiming_angle * 100))
-        if percent < 100:
-            self.macro[TIMER] = round(type_descriptor.gun.aimingTime * log(aiming_angle / self.min_angle), GLOBAL.TWO)
-            self.macro[GLOBAL.COLOR] = self.settings[GLOBAL.COLOR]
-        else:
-            self.macro[TIMER] = GLOBAL.ZERO
-            self.macro[GLOBAL.COLOR] = self.settings[DISPERSION_TIMER.DONE_COLOR]
+        diff = self.min_angle / aiming_angle
+        percent = int(ceil(diff * MAXIMUM))
+        self.macro[TIMER] = round(type_descriptor.gun.aimingTime * abs(log(diff)), GLOBAL.TWO)
+        self.macro[GLOBAL.COLOR] = self.settings[GLOBAL.COLOR if percent < MAXIMUM else DISPERSION_TIMER.DONE_COLOR]
         self.macro[PERCENT] = percent
         self.as_updateTimerTextS(self.settings[DISPERSION_TIMER.TEMPLATE] % self.macro)

@@ -41,7 +41,7 @@ Name: debug_panel/modern; Description: modern; Flags: exclusive; Types: armagome
 Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: disablenouninstallwarning;
 Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Types: saxon_ua;
 Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Types: armagomen;
-Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning; Types: armagomen;
+Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning;
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning;
 Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: armagomen saxon_ua;
 Name: sixth_sense/alf; Description: {cm:alf}; Flags: exclusive;
@@ -104,7 +104,7 @@ Name: effects/noBinoculars; Description: {cm:effects_noBinoculars};
 Name: effects/noFlashBang; Description: {cm:effects_noFlashBang}; Types: armagomen saxon_ua;
 Name: effects/noShockWave; Description: {cm:effects_noShockWave}; Types: armagomen saxon_ua;
 Name: effects/noSniperDynamic; Description: {cm:effects_noSniperDynamic};
-Name: flight_time; Description: {cm:flight_time}; Flags: checkablealone disablenouninstallwarning; Types: armagomen;
+Name: flight_time; Description: {cm:flight_time}; Flags: checkablealone disablenouninstallwarning;
 Name: flight_time/spgOnly; Description: {cm:flight_time_spg}; Flags: dontinheritcheck;
 Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
 Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning;
@@ -160,9 +160,10 @@ Name: wg_logs/wg_log_hide_block; Description: {cm:wg_logs_block};
 Name: wg_logs/wg_log_hide_critics; Description: {cm:wg_logs_critics};
 Name: wg_logs/wg_log_pos_fix; Description: {cm:wg_logs_pos_fix};
 
-
 [Files]
-Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
+Source: "{#mod_source}\armagomen.battleObserver*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
+Source: "{#mod_source}\me.poliroid.modslistapi*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist;
+Source: "{#mod_source}\polarfox.vxSettingsApi*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
 Source: "settings\load.json"; DestDir: "{#configs_dir}\"; Flags: ignoreversion;
 Source: "settings\default\*"; DestDir: "{#configs_dir}\armagomen_install"; Flags: ignoreversion;
 
@@ -173,7 +174,7 @@ Type: files; Name: "{app}\{code:PH_Folder_Mods}\polarfox.vxSettingsApi*.wotmod"
 
 [UninstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
-Type: filesandordirs; Name: "{app}\mods\configs\mod_battle_observer\armagomen_install\*"
+Type: filesandordirs; Name: "{#configs_dir}\armagomen_install\*"
 
 [Code]
 procedure ChangeMainJsonValues();
