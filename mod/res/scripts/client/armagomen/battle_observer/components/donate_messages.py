@@ -28,9 +28,9 @@ class Donate(object):
         self.show_clanMessage = support_language and AUTH_REALM == "EU"
         if support_language:
             self.messages = (
-                "Підтримай розробку мода, все буде Україна.\nСлава Україні",
-                "Шановні Українці не забувайте підтримувати розробку, бо хто як не ви.\nСлава Україні",
-                "Кожен донат пришвидшує розробку та робить цей світ кращим.\nСлава Україні"
+                "Будь ласка, підтримайте розробку мода, дякую за пожертву.",
+                "Шановні Українці, не забувайте підтримувати розробку, бо хто, як не ви.",
+                "Кожна пожертва пришвидшує розробку та робить цей світ кращим."
             )
         else:
             self.messages = (
@@ -81,7 +81,7 @@ class Donate(object):
             if currentTime >= self.timeDelta:
                 self.timeDelta = currentTime + datetime.timedelta(minutes=30)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
-                logInfo("A donation message has been sent to the user. Repeated in 60 minutes.")
+                logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
                 self.pushClanMessage()
 
 
