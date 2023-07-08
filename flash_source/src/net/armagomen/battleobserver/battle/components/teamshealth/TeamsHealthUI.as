@@ -58,8 +58,8 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		public function as_updateCountersPosition():void
 		{
-			this.correlation.allyVehicleMarkersList._markerStartPosition = -31;
-			this.correlation.enemyVehicleMarkersList._markerStartPosition = 1;
+			this.correlation.allyVehicleMarkersList._markerStartPosition = -25;
+			this.correlation.enemyVehicleMarkersList._markerStartPosition = -5;
 			this.correlation.allyVehicleMarkersList.sort();
 			this.correlation.enemyVehicleMarkersList.sort();
 		}

@@ -1,15 +1,15 @@
 {
   "armor_calculator": {
-    "green": "#64B700",
+    "green": "#60CB00",
     "orange": "#FF9900",
     "purple": "#6F6CD3",
-    "red": "#F30900",
+    "red": "#ED070A",
     "yellow": "#FFC900"
   },
   "global": {
-    "ally": "#64B700",
+    "ally": "#60CB00",
     "bgColor": "#000000",
-    "enemy": "#F30900",
+    "enemy": "#ED070A",
     "enemyColorBlind": "#6F6CD3"
   },
   "vehicle_types_colors": {
