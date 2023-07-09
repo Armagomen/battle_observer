@@ -18,7 +18,7 @@ package net.armagomen.battleobserver.battle.components
 		{
 			super.onPopulate();
 			var settings:Object = this.getSettings().position;
-			this.armorCalc = new TextExt(settings.x, settings.y, Constants.armorText, TextFieldAutoSize.CENTER, this);
+			this.armorCalc = new TextExt(settings.x, settings.y, Constants.largeText, TextFieldAutoSize.CENTER, this);
 		}
 		
 		override protected function onBeforeDispose():void 
