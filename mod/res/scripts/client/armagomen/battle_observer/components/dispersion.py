@@ -28,7 +28,7 @@ LINKAGES = {
 }
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
-aih_constants.GUN_MARKER_MIN_SIZE = 14.0
+aih_constants.GUN_MARKER_MIN_SIZE = 10.0
 aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0
 
 
