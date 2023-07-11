@@ -71,13 +71,12 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
 
 class DispersionCircle(object):
-    CREATE = "createComponents"
 
     def __init__(self):
         self.enabled = False
         self.server = False
         settings.onModSettingsChanged += self.onModSettingsChanged
-        overrideMethod(gm_factory, self.CREATE)(self.createOverrideComponents)
+        overrideMethod(gm_factory, "createComponents")(self.createOverrideComponents)
         overrideMethod(gm_factory, "overrideComponents")(self.createOverrideComponents)
         overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
         overrideMethod(gun_marker_ctrl, "useDefaultGunMarkers")(self.useDefaultGunMarkers)
@@ -97,7 +96,7 @@ class DispersionCircle(object):
             return base(*args)
         player = getPlayer()
         player.enableServerAim(True)
-        if base.__name__ == self.CREATE:
+        if len(args) == 2:
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
 
