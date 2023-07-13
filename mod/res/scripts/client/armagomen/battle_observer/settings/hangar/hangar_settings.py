@@ -1,10 +1,10 @@
-from Keys import KEY_LALT, KEY_RALT
-from armagomen._constants import GLOBAL, CONFIG_INTERFACE, HP_BARS, DISPERSION, SNIPER, MOD_NAME, MAIN, \
-    ANOTHER, URLS, STATISTICS, PANELS, MINIMAP, SIXTH_SENSE, DEBUG_PANEL
+from armagomen._constants import ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP, \
+    MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
-from armagomen.utils.common import logWarning, openWebBrowser, logDebug, xvmInstalled, settings
+from armagomen.utils.common import logDebug, logWarning, openWebBrowser, settings, xvmInstalled
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
+from Keys import KEY_LALT, KEY_RALT
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 37
@@ -189,17 +189,19 @@ class CreateElement(object):
 
     def createItem(self, blockID, key, value):
         val_type = type(value)
-        if val_type == str and GLOBAL.ALIGN in key:
-            return self.createRadioButtonGroup(blockID, key, *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
-        elif val_type == str and blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
-            return self.createBarStyleDropDown(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
-        elif val_type == str and blockID == DEBUG_PANEL.NAME and DEBUG_PANEL.STYLE == key:
-            return self.createDebugStyleDropDown(blockID, key,
-                                                 *self.getter.getCollectionIndex(value, DEBUG_PANEL.STYLES))
-        elif val_type == str and blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
-            return self.createSixthSenseDropDown(blockID, key,
-                                                 *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
-        elif val_type == str or val_type == bool:
+        if val_type == str:
+            if GLOBAL.ALIGN in key:
+                return self.createRadioButtonGroup(blockID, key,
+                                                   *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
+            elif blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
+                return self.createBarStyleDropDown(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
+            elif blockID == DEBUG_PANEL.NAME and DEBUG_PANEL.STYLE == key:
+                return self.createDebugStyleDropDown(blockID, key,
+                                                     *self.getter.getCollectionIndex(value, DEBUG_PANEL.STYLES))
+            elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
+                return self.createSixthSenseDropDown(blockID, key,
+                                                     *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
+        if val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
             return self.createStepper(blockID, key, -2000, 2000, GLOBAL.ONE, value)
@@ -331,6 +333,8 @@ class SettingsInterface(CreateElement):
                     elif key == "zoomSteps*steps":
                         steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
                         value = [val for val in steps if val >= 2.0]
+                    if type(value) == int and type(updated_config_link[param_name]) == float:
+                        value = float(value)
                     updated_config_link[param_name] = value
             self.sLoader.updateConfigFile(blockID, settings_block)
             settings.onModSettingsChanged(settings_block, blockID)

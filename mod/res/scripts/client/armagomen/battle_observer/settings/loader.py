@@ -1,8 +1,8 @@
 import os
 
-from armagomen._constants import LOAD_LIST, GLOBAL, SIXTH_SENSE
+from armagomen._constants import GLOBAL, LOAD_LIST, SIXTH_SENSE
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import logWarning, logInfo, writeJsonFile, openJsonFile, logDebug, currentConfigPath
+from armagomen.utils.common import currentConfigPath, logDebug, logInfo, logWarning, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
 from gui.shared.personality import ServicesLocator
 
@@ -65,23 +65,21 @@ class SettingsLoader(object):
         """Recursively updates words from settings_core files"""
         file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
         for key in internal_cfg:
-            old_param_type = type(internal_cfg[key])
+            old_param = internal_cfg[key]
+            old_param_type = type(old_param)
             if old_param_type == dict:
-                file_update |= self.updateData(external_cfg.get(key, {}), internal_cfg[key], file_update)
+                file_update |= self.updateData(external_cfg.get(key, {}), old_param, file_update)
             else:
                 new_param = external_cfg.get(key)
+                new_param_type = type(new_param)
+                file_update |= new_param_type != old_param_type
                 if new_param is not None:
-                    new_param_type = type(new_param)
-                    if new_param_type != old_param_type:
+                    if old_param_type == float and new_param_type == int:
+                        new_param = float(new_param)
+                    if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
+                        new_param = SIXTH_SENSE.ICONS[0]
                         file_update = True
-                        new_param = internal_cfg[key]
-                    else:
-                        if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
-                            new_param = SIXTH_SENSE.ICONS[0]
-                            file_update = True
                     internal_cfg[key] = new_param
-                else:
-                    file_update = True
         return file_update
 
     def readConfig(self):
