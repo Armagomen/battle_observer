@@ -1,14 +1,13 @@
 from collections import namedtuple
 
 import Keys
-from Event import SafeEvent
-from armagomen._constants import (
-    ARCADE, ARMOR_CALC, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, EFFECTS,
-    FLIGHT_TIME, GLOBAL, HP_BARS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
-    SNIPER, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS, DISTANCE, STATISTICS, AVG_EFFICIENCY_HANGAR,
-    DISPERSION_TIMER, IMAGE_DIR, LOGS_ICONS, EX_LOGS_ICONS
-)
+from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS,
+                                  DAMAGE_LOG, DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, DISTANCE, EFFECTS,
+                                  EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP,
+                                  PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, TEAM_BASES,
+                                  VEHICLE_TYPES_COLORS)
 from constants import ATTACK_REASON, ATTACK_REASONS
+from Event import SafeEvent
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 
@@ -128,7 +127,7 @@ class DefaultSettings(object):
         }
         self.arcade_camera = {
             GLOBAL.ENABLED: False,
-            ARCADE.MIN: 4.0,
+            ARCADE.MIN: 2.0,
             ARCADE.MAX: 150.0,
             ARCADE.START_DEAD_DIST: 20.0,
             ARCADE.SCROLL_SENSITIVITY: 4.0,
@@ -219,7 +218,7 @@ class DefaultSettings(object):
                     "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
                     "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
                     "%(attackReason)s<tab>",
-                    "%(classIcon)s %(tankName)s %(killedIcon)s",
+                    "%(classIcon)s%(tankName)s %(killedIcon)s",
                     "</font></textformat>"
                 ],
                 [
@@ -228,7 +227,7 @@ class DefaultSettings(object):
                     "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
                     "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
                     "%(attackReason)s<tab>",
-                    "%(classIcon)s %(userName).12s %(killedIcon)s",
+                    "%(classIcon)s%(userName).12s %(killedIcon)s",
                     "</font></textformat>"
                 ]
             ],

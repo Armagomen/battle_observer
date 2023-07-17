@@ -106,7 +106,7 @@ class GLOBAL:
 
 EFFICIENCY_ICONS_SIZE = "width='18' height='18' vspace='-3'"
 LOGS_ICONS = "width='16' height='16' vspace='-4'"
-EX_LOGS_ICONS = "width='15' height='15' vspace='-4'"
+EX_LOGS_ICONS = "width='14' height='14' vspace='-4'"
 
 SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
     "service_channel_filter", "sys_keys", "type", "data", "auxData", (

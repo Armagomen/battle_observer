@@ -35,7 +35,7 @@
   },
   "bottom_enabled": true,
   "enabled": true,
-  "killedIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/destruction.png' width='15' height='15' vspace='-4'>",
+  "killedIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/destruction.png' width='14' height='14' vspace='-4'>",
   "logsAltMode_hotkey": [
     [
       56
@@ -58,7 +58,7 @@
       "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
       "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
       "%(attackReason)s<tab>",
-      "%(classIcon)s %(tankName)s %(killedIcon)s",
+      "%(classIcon)s%(tankName)s %(killedIcon)s",
       "</font></textformat>"
     ],
     [
@@ -67,7 +67,7 @@
       "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
       "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
       "%(attackReason)s<tab>",
-      "%(classIcon)s %(userName).12s %(killedIcon)s",
+      "%(classIcon)s%(userName).12s %(killedIcon)s",
       "</font></textformat>"
     ]
   ],
