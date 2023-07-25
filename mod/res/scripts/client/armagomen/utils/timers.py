@@ -1,8 +1,8 @@
 from collections import namedtuple
 from functools import partial
 
-from SoundGroups import g_instance
 from armagomen.utils.common import callback, cancelCallback
+from SoundGroups import g_instance
 
 CONSTANTS = namedtuple("CONSTANTS", ("ONE_SECOND", "ZERO", "ONE"))(1.0, 0, 1)
 
@@ -50,9 +50,6 @@ class SixthSenseTimer(Timer):
         self.cancelCallback()
         raise NotImplementedError
 
-    def hide(self):
-        self.cancelCallback()
-
     def timeTicking(self, seconds):
         self.cancelCallback()
         if seconds > CONSTANTS.ZERO:
@@ -60,9 +57,6 @@ class SixthSenseTimer(Timer):
             if self.__soundID is not None:
                 self.callWWISE(self.__soundID)
         self.handleTimer(seconds)
-
-    def show(self, seconds):
-        self.timeTicking(seconds)
 
     def destroyTimer(self):
         for sound in self.__sounds.values():

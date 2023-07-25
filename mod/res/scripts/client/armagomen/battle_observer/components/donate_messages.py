@@ -79,7 +79,7 @@ class Donate(object):
         if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
             currentTime = datetime.datetime.now()
             if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(minutes=30)
+                self.timeDelta = currentTime + datetime.timedelta(hours=1)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
                 # self.pushClanMessage()

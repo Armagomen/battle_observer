@@ -17,6 +17,7 @@
 		private var timer:TextExt;
 		private var _container:Sprite;
 		private var hideAnimation:Tween;
+		private var showAnimation:Tween;
 		private var hideAnimation2:Tween;
 		private var POSITION_Y:Number = (App.appHeight >> 3) + 10;
 		
@@ -56,8 +57,10 @@
 			this.loader = null;
 			this.hideAnimation.stop();
 			this.hideAnimation2.stop();
+			this.showAnimation.stop();
 			this.hideAnimation = null;
 			this.hideAnimation2 = null;
+			this.showAnimation = null;
 			this._container.removeChildren();
 			this.timer = null;
 			this._container = null;
@@ -71,8 +74,9 @@
 			image.smoothing = true;
 			this._container.addChild(image);
 			this.timer = new TextExt(image.width >> 1, image.height - 8, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
-			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -image.height);
-			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0);
+			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -image.height, 0.5);
+			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
+			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
 			this._container.alpha = 0;
 			this._container.x = -image.width >> 1;
 			this._container.y = this.POSITION_Y;
@@ -88,7 +92,7 @@
 				this.hideAnimation2.rewind();
 			}
 			this._container.y = this.POSITION_Y;
-			this._container.alpha = 1.0;
+			this.showAnimation.start();
 		}
 		
 		public function as_hide():void
