@@ -1,7 +1,7 @@
 from collections import namedtuple
 
-from CurrentVehicle import g_currentVehicle
 from armagomen.utils.common import logDebug
+from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
 from helpers import dependency
 from skeletons.gui.shared import IItemsCache
@@ -14,7 +14,8 @@ class CurrentVehicleCachedData(object):
     itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
-        self.__default = EfficiencyAVGData(0, 0, 0, 0, 0.0, "", "Undefined", False, 0.0)
+        default = 2500
+        self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, "", "Undefined", False, 0.0)
         self.__EfficiencyAVGData = None
 
     def onVehicleChanged(self):
