@@ -161,9 +161,10 @@ package net.armagomen.battleobserver
 					}
 					
 					var q_progress:* = this.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
-					var t_health:* = this.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+					var t_health:*   = this.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 					
-					if (q_progress && t_health){
+					if (q_progress && t_health)
+					{
 						this.addChildAt(q_progress, this.getChildIndex(t_health) - 1);
 					}
 				}
@@ -184,9 +185,12 @@ package net.armagomen.battleobserver
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			this.statisticsBO.onDispose();
 			this.mapZoom = null;
-			this.statisticsBO = null;
+			if (this.statisticsBO)
+			{
+				this.statisticsBO.onDispose();
+				this.statisticsBO = null;
+			}
 		}
 	}
 }

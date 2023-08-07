@@ -9,7 +9,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	{
 		private var hpBars:ITeamHealth;
 		private var removed:Boolean = false;
-		private var correlation:* = null;
+		private var correlation:*   = null;
 		
 		public function TeamsHealthUI()
 		{

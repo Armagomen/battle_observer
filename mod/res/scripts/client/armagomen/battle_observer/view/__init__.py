@@ -55,6 +55,7 @@ class ObserverViewHandlerBattle(PackageBusinessHandler):
         if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{}:flashObject, has ho attribute {}"
             return logError(to_format_str, alias, SWF.ATTRIBUTE_NAME)
+        self._viewSettings.registerComponents()
         callback(2.0 if xvmInstalled else 0, self._loadView, pyView)
         callback(40.0, pyView.flashObject.as_BattleObserverUpdateDamageLogPosition)
 

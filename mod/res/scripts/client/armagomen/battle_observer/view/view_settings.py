@@ -17,7 +17,8 @@ ALIASES_TO_HIDE = (
 )
 
 ALIAS_TO_CTRL = {
-    BATTLE_ALIASES.DATE_TIME: BATTLE_CTRL_ID.ARENA_PERIOD, BATTLE_ALIASES.DEBUG: BATTLE_CTRL_ID.DEBUG,
+    BATTLE_ALIASES.DATE_TIME: BATTLE_CTRL_ID.ARENA_PERIOD,
+    BATTLE_ALIASES.DEBUG: BATTLE_CTRL_ID.DEBUG,
     BATTLE_ALIASES.HP_BARS: BATTLE_CTRL_ID.BATTLE_FIELD_CTRL,
     BATTLE_ALIASES.MAIN_GUN: BATTLE_CTRL_ID.BATTLE_FIELD_CTRL,
     BATTLE_ALIASES.OWN_HEALTH: BATTLE_CTRL_ID.PREBATTLE_SETUPS_CTRL,
@@ -130,7 +131,6 @@ class ViewSettings(object):
             if self.gui.isEpicBattle():
                 self.addInToEpicUI(True)
             self.__hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self.__components)
-            self.sessionProvider.registerViewComponents(*self.__getComponentsConfig())
         logDebug("viewSettings setComponents: components={}", self.__components)
 
     def clear(self):
@@ -160,13 +160,13 @@ class ViewSettings(object):
                 if alias in NEVER_HIDE_FL:
                     _NEVER_HIDE.add(alias)
 
-    def __getComponentsConfig(self):
+    def registerComponents(self):
         config = ComponentsConfig()
         for alias in self.__components.intersection(ALIAS_TO_CTRL.iterkeys()):
             config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
         config = config.getConfig()
-        logDebug("viewSettings, getComponentsConfig: {}", config)
-        return config
+        logDebug("viewSettings, registerComponents: {}", config)
+        self.sessionProvider.registerViewComponents(*config)
 
     @property
     def hiddenComponents(self):
