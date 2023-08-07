@@ -1,14 +1,14 @@
 # coding=utf-8
 
-from PlayerEvents import g_playerEvents
 from armagomen._constants import GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.utils.common import percentToRGB
 from constants import ARENA_PERIOD
-from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth, getHealthPercent
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
+from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent, normalizeHealth
+from PlayerEvents import g_playerEvents
 
 
 class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
@@ -29,7 +29,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
-        g_playerEvents.onArenaPeriodChange += self.onArenaPeriod
+        g_playerEvents.onArenaPeriodChange += self.onArenaPeriodChange
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling += self.__onVehicleControlling
@@ -40,7 +40,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             self.isAliveMode = self.getVehicleInfo().isAlive()
             self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
 
-    def onArenaPeriod(self, period, *args):
+    def onArenaPeriodChange(self, period, *args):
         self.isBattlePeriod = period == ARENA_PERIOD.BATTLE
         self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
 
@@ -48,7 +48,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
-        g_playerEvents.onArenaPeriodChange -= self.onArenaPeriod
+        g_playerEvents.onArenaPeriodChange -= self.onArenaPeriodChange
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling -= self.__onVehicleControlling

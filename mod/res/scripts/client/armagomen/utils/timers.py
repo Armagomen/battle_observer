@@ -74,7 +74,6 @@ class CyclicTimerEvent(Timer):
         self._function = function
 
     def update(self):
-        self._callback = None
         self._callback = callback(self._interval, self.update)
         self._function()
 
