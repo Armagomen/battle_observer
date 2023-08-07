@@ -32,6 +32,7 @@ NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE
 
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
+    __slots__ = ('_components', '_hiddenComponents')
 
     def __init__(self):
         self._components = set()
