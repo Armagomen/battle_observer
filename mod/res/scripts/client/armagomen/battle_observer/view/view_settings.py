@@ -34,8 +34,8 @@ class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
-        self.__components = set()
-        self.__hiddenComponents = set()
+        self._components = set()
+        self._hiddenComponents = set()
 
     @property
     def gui(self):
@@ -53,7 +53,7 @@ class ViewSettings(object):
         return settings.statistics[GLOBAL.ENABLED]
 
     @staticmethod
-    def statisticsSettings():
+    def getStatisticsSettings():
         return (settings.statistics[STATISTICS.PANELS_CUT_WIDTH], settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
                 settings.colors[VEHICLE_TYPES_COLORS.NAME], settings.statistics[STATISTICS.ICON_BLACKOUT])
 
@@ -127,21 +127,21 @@ class ViewSettings(object):
 
     def setComponents(self):
         if self.gui.guiType in BATTLES_RANGE:
-            self.__components = {alias for alias in BATTLE_ALIASES if self.getSetting(alias)}
+            self._components = {alias for alias in BATTLE_ALIASES if self.getSetting(alias)}
             if self.gui.isEpicBattle():
                 self.addInToEpicUI(True)
-            self.__hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self.__components)
-        logDebug("viewSettings setComponents: components={}", self.__components)
+            self._hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self._components)
+        logDebug("viewSettings setComponents: components={}", self._components)
 
-    def clear(self):
+    def _clear(self):
         if self.gui.isEpicBattle():
             self.addInToEpicUI(False)
-        self.__components.clear()
-        self.__hiddenComponents.clear()
+        self._components.clear()
+        self._hiddenComponents.clear()
         logDebug("clear viewSettings components")
 
     def addInToEpicUI(self, add):
-        for alias in self.__components:
+        for alias in self._components:
             if not add:
                 _NEVER_HIDE.discard(alias)
                 _STATE_TO_UI[PageStates.COUNTDOWN].discard(alias)
@@ -162,16 +162,8 @@ class ViewSettings(object):
 
     def registerComponents(self):
         config = ComponentsConfig()
-        for alias in self.__components.intersection(ALIAS_TO_CTRL.iterkeys()):
+        for alias in self._components.intersection(ALIAS_TO_CTRL.iterkeys()):
             config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
         config = config.getConfig()
         logDebug("viewSettings, registerComponents: {}", config)
         self.sessionProvider.registerViewComponents(*config)
-
-    @property
-    def hiddenComponents(self):
-        return self.__hiddenComponents
-
-    @property
-    def components(self):
-        return self.__components
