@@ -11,7 +11,6 @@ from gui.shared import EVENT_BUS_SCOPE
 
 
 class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
-    __slots__ = ('_icons', '_minimap', '_statistics')
 
     def __init__(self):
         listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES) if CURRENT_REALM != "RU" else tuple()
