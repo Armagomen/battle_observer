@@ -1,9 +1,10 @@
 import logging
 
-from armagomen._constants import BATTLES_RANGE, SWF
+from armagomen._constants import BATTLES_RANGE
 from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCachedData
 from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache, gameVersion, logInfo
 from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
+from gui.Scaleform.required_libraries_config import BATTLE_REQUIRED_LIBRARIES, LOBBY_REQUIRED_LIBRARIES
 
 cachedVehicleData = CurrentVehicleCachedData()
 
@@ -48,6 +49,8 @@ def onFini(modVersion):
 
 
 def registerBattleObserverPackages():
+    BATTLE_REQUIRED_LIBRARIES.append('modBattleObserver.swf')
+    LOBBY_REQUIRED_LIBRARIES.append('modBattleObserverHangar.swf')
     for guiType in BATTLES_RANGE:
-        g_overrideScaleFormViewsConfig.battlePackages[guiType].extend(SWF.BATTLE_PACKAGES)
-    g_overrideScaleFormViewsConfig.lobbyPackages.extend(SWF.LOBBY_PACKAGES)
+        g_overrideScaleFormViewsConfig.battlePackages[guiType].append("armagomen.battle_observer.battle")
+    g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")

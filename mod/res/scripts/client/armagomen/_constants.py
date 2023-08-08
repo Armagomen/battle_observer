@@ -13,10 +13,6 @@ from realm import CURRENT_REALM
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
 
-SWF = namedtuple("SWF", "BATTLE LOBBY BATTLE_PACKAGES LOBBY_PACKAGES ATTRIBUTE_NAME")(
-    'modBattleObserver.swf', 'modBattleObserverHangar.swf', ("armagomen.battle_observer.battle",),
-    ("armagomen.battle_observer.lobby",), 'as_BattleObserverCreate')
-
 
 def getLogo(big=True):
     if big:

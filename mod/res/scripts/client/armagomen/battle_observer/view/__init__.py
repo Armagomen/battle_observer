@@ -1,4 +1,4 @@
-from armagomen._constants import BATTLE_PAGES, CURRENT_REALM, LOBBY_ALIASES, SWF
+from armagomen._constants import BATTLE_PAGES, CURRENT_REALM, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
@@ -8,6 +8,8 @@ from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.shared import EVENT_BUS_SCOPE
+
+ATTRIBUTE_NAME = 'as_BattleObserverCreate'
 
 
 class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
@@ -42,7 +44,6 @@ class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         if self._components or self._statistics is not None or self._icons or self._minimap is not None:
             self._app.loaderManager.onViewLoaded += self.__onViewLoaded
             self.registerComponents()
-            self._app.as_loadLibrariesS([SWF.BATTLE])
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
@@ -50,10 +51,10 @@ class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             return
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
-        logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, alias))
-        if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
+        logInfo("{}: loading libraries alias={}".format(self.__class__.__name__, alias))
+        if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
             to_format_str = "{}:flashObject, has ho attribute {}"
-            return logError(to_format_str, alias, SWF.ATTRIBUTE_NAME)
+            return logError(to_format_str, alias, ATTRIBUTE_NAME)
         pyView._blToggling.update(self._components)
         callback(2.0 if xvmInstalled else 0, self._loadView, pyView)
         callback(40.0, pyView.flashObject.as_BattleObserverUpdateDamageLogPosition)
@@ -79,13 +80,12 @@ class ObserverViewHandlerLobby(PackageBusinessHandler):
 
     def eventListener(self, event):
         self._app.loaderManager.onViewLoaded += self.__onViewLoaded
-        self._app.as_loadLibrariesS([SWF.LOBBY])
-        logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.LOBBY, event.alias))
 
     def __onViewLoaded(self, pyView, *args):
         if pyView.getAlias() != VIEW_ALIAS.LOBBY_HANGAR:
             return
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
-        if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
-            return logError("{}:flashObject, has ho attribute {}", pyView.getAlias(), SWF.ATTRIBUTE_NAME)
+        logInfo("{}: loading libraries, alias={}".format(self.__class__.__name__, pyView.getAlias()))
+        if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
+            return logError("{}:flashObject, has ho attribute {}", pyView.getAlias(), ATTRIBUTE_NAME)
         callback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
