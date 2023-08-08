@@ -1,6 +1,7 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battleobserver.battle.components.playerspanels.ListItem;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
@@ -47,7 +48,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		private function onChange(eve:Event):void
+		private function reloadLists():void
 		{
 			this.as_clearStorage();
 			for each (var itemL:* in this.playersPanel.listLeft._items)
@@ -58,6 +59,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			{
 				this.as_AddVehIdToList(itemR.vehicleData.vehicleID, true);
 			}
+		}
+		
+		private function onChange(eve:Event):void
+		{
+			setTimeout(this.reloadLists, 1000);
 		}
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void

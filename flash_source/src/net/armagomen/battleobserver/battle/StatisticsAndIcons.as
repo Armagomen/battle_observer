@@ -1,6 +1,7 @@
 package net.armagomen.battleobserver.battle
 {
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 	import flash.geom.ColorTransform;
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battleobserver.utils.Utils;
@@ -37,7 +38,7 @@ package net.armagomen.battleobserver.battle
 			this.fullWidth = fullWidth;
 			this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onCountChange, false, 0, true);
-			this.onChange(null);
+			this.updateItems();
 		}
 		
 		public function onDispose():void
@@ -76,7 +77,7 @@ package net.armagomen.battleobserver.battle
 			App.utils.data.cleanupDynamicObject(colors);
 		}
 		
-		private function onChange(eve:Event = null):void
+		private function updateItems():void
 		{
 			for each (var itemL:* in this.panels.listLeft._items)
 			{
@@ -97,6 +98,11 @@ package net.armagomen.battleobserver.battle
 					itemR._listItem.setPlayerNameFullWidth(this.fullWidth);
 				}
 			}
+		}
+		
+		private function onChange(eve:Event):void
+		{
+			setTimeout(this.updateItems, 1000);
 		}
 		
 		private function onRenderPanels(eve:Event):void

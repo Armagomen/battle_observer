@@ -41,8 +41,8 @@ class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             self._minimap = MinimapZoomPlugin()
         if self._components or self._statistics is not None or self._icons or self._minimap is not None:
             self._app.loaderManager.onViewLoaded += self.__onViewLoaded
+            self.registerComponents()
             self._app.as_loadLibrariesS([SWF.BATTLE])
-            logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, event.alias))
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
@@ -50,11 +50,11 @@ class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             return
         logDebug("ObserverBusinessHandler/onViewLoaded: {}", alias)
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
+        logInfo("{}: loading libraries swf={}, alias={}".format(self.__class__.__name__, SWF.BATTLE, alias))
         if not hasattr(pyView.flashObject, SWF.ATTRIBUTE_NAME):
             to_format_str = "{}:flashObject, has ho attribute {}"
             return logError(to_format_str, alias, SWF.ATTRIBUTE_NAME)
         pyView._blToggling.update(self._components)
-        self.registerComponents()
         callback(2.0 if xvmInstalled else 0, self._loadView, pyView)
         callback(40.0, pyView.flashObject.as_BattleObserverUpdateDamageLogPosition)
 

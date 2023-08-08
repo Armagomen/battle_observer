@@ -8,7 +8,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
 		private var hpBars:ITeamHealth;
-		private var removed:Boolean = false;
 		private var correlation:*   = null;
 		
 		public function TeamsHealthUI()
@@ -19,7 +18,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			this.removed = false;
 			var settings:Object = this.getSettings();
 			this.x = App.appWidth >> 1;
 			
@@ -42,18 +40,14 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		
 		private function updateCorrelationBar():void
 		{
-			if (!this.removed)
-			{
-				this.correlation.removeChild(this.correlation.greenBackground);
-				this.correlation.removeChild(this.correlation.redBackground);
-				this.correlation.removeChild(this.correlation.purpleBackground);
-				this.correlation.removeChild(this.correlation.teamFragsSeparatorField);
-				this.correlation.removeChild(this.correlation.allyTeamFragsField);
-				this.correlation.removeChild(this.correlation.enemyTeamFragsField);
-				this.correlation.removeChild(this.correlation.allyTeamHealthBar);
-				this.correlation.removeChild(this.correlation.enemyTeamHealthBar);
-				this.removed = true;
-			}
+			this.correlation.removeChild(this.correlation.greenBackground);
+			this.correlation.removeChild(this.correlation.redBackground);
+			this.correlation.removeChild(this.correlation.purpleBackground);
+			this.correlation.removeChild(this.correlation.teamFragsSeparatorField);
+			this.correlation.removeChild(this.correlation.allyTeamFragsField);
+			this.correlation.removeChild(this.correlation.enemyTeamFragsField);
+			this.correlation.removeChild(this.correlation.allyTeamHealthBar);
+			this.correlation.removeChild(this.correlation.enemyTeamHealthBar);
 		}
 		
 		public function as_updateCountersPosition():void
@@ -69,7 +63,6 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			super.onBeforeDispose();
 			this.hpBars.remove();
 			this.hpBars = null;
-			this.removed = false;
 			this.correlation = null;
 		}
 		
