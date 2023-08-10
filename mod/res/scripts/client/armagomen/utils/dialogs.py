@@ -2,14 +2,14 @@
 from collections import namedtuple
 
 from armagomen._constants import getLogo, GLOBAL
-from armagomen.utils.common import restartGame, openWebBrowser
+from armagomen.utils.common import openWebBrowser, restartGame
 from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs
-from gui.impl.dialogs.builders import WarningDialogBuilder, InfoDialogBuilder
+from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
-from helpers import getClientLanguage, dependency
+from helpers import dependency, getClientLanguage
 from skeletons.gui.app_loader import IAppLoader
-from wg_async import wg_async, wg_await, AsyncReturn
+from wg_async import AsyncReturn, wg_async, wg_await
 
 if getClientLanguage() == 'uk':
     labels = ("ПЕРЕЗАВАНТАЖЕННЯ", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати", "Ігнорувати цей танк")

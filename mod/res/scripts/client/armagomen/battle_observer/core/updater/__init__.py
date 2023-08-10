@@ -7,7 +7,7 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.utils.common import logInfo, logError, modsPath, gameVersion, fetchURL, logDebug, getUpdatePath
+from armagomen.utils.common import fetchURL, gameVersion, getUpdatePath, logDebug, logError, logInfo, modsPath
 from armagomen.utils.dialogs import UpdaterDialogs
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
@@ -46,16 +46,17 @@ class DownloadThread(object):
         self.downloader = None
         self.modPath = os.path.join(modsPath, gameVersion)
 
-    def startDownload(self, mod_version):
-        path = os.path.join(getUpdatePath(), mod_version + ".zip")
+    def startDownload(self, version):
+        path = os.path.join(getUpdatePath(), version + ".zip")
         if os.path.isfile(path):
             self.extractZipArchive(path)
             logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
-            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(mod_version))
+            git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
+            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
         else:
             Waiting.show(WAITING_UPDATE)
-            url = URLS.UPDATE + ZIP.format(mod_version)
-            logInfo(LOG_MESSAGES.STARTED.format(mod_version, url))
+            url = URLS.UPDATE + ZIP.format(version)
+            logInfo(LOG_MESSAGES.STARTED.format(version, url))
             self.downloader = WebDownloader(GLOBAL.ONE)
             self.downloader.download(url, self.onDownloaded)
 
@@ -74,13 +75,14 @@ class DownloadThread(object):
 
     def onDownloaded(self, _url, data):
         if data is not None:
-            mod_version = self.updateData.get('tag_name', self.version)
-            path = os.path.join(getUpdatePath(), mod_version + ".zip")
+            version = self.updateData.get('tag_name', self.version)
+            path = os.path.join(getUpdatePath(), version + ".zip")
             with open(path, "wb") as zipArchive:
                 zipArchive.write(data)
             logInfo(LOG_MESSAGES.FINISHED.format(path))
             self.extractZipArchive(path)
-            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(mod_version))
+            git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
+            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
         else:
             self.downloadError(_url)
         if Waiting.isOpened(WAITING_UPDATE):
@@ -108,7 +110,7 @@ class Updater(DownloadThread):
             new_version = response_data.get('tag_name', self.version)
             if self.tupleVersion(self.version) < self.tupleVersion(new_version):
                 logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
-                self.showUpdateDialog(new_version)
+                self.startDownload(new_version)
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
         logDebug('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode,

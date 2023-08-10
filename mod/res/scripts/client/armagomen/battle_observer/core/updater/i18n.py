@@ -3,7 +3,7 @@ from helpers import getClientLanguage
 
 en = {
     "titleOK": "Update - Press RESTART",
-    "messageOK": "Click RESTART to complete the Upgrade process. v{0}",
+    "messageOK": "Click RESTART to complete the Upgrade process. v{0}\n",
     "messageNEW":
         "<font size='15'>"
         "<font size='20' color='#FFFF00'><b>Choose a download option.</b></font>\n"
@@ -18,7 +18,7 @@ en = {
 
 uk = {
     "titleOK": "Оновлення готове",
-    "messageOK": "Натисніть ПЕРЕЗАВАНТАЖЕННЯ для завершення процесу оновлення. v{0}",
+    "messageOK": "Натисніть ПЕРЕЗАВАНТАЖЕННЯ для завершення процесу оновлення. v{0}\n",
     "messageNEW":
         "<font size='15'>"
         "<font size='20' color='#FFFF00'><b>Оберіть варіант завантаження.</b></font>\n"

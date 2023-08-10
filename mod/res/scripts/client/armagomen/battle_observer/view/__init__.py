@@ -10,21 +10,21 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.shared import EVENT_BUS_SCOPE
 
 ATTRIBUTE_NAME = 'as_BattleObserverCreate'
-DEBUG_MSG = "{}/__onViewLoaded: alias={}"
-INFO_MSG = "{}: alias={}"
+DEBUG_MSG = "app.loaderManager.onViewLoaded: {}, alias={}"
+INFO_MSG = "loading view {}: alias={}"
 
 
-class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
+class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def __init__(self):
         listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES) if CURRENT_REALM != "RU" else tuple()
-        super(ObserverViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
+        super(ViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self._minimap = None
         self._statistics = None
         self._icons = False
 
     def init(self):
-        super(ObserverViewHandlerBattle, self).init()
+        super(ViewHandlerBattle, self).init()
         self.setComponents()
         damage_controller.start()
 
@@ -35,7 +35,7 @@ class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         self._statistics = None
         self._clear()
         damage_controller.stop()
-        super(ObserverViewHandlerBattle, self).fini()
+        super(ViewHandlerBattle, self).fini()
 
     def eventListener(self, event):
         if self.isWTREnabled():
@@ -73,12 +73,12 @@ class ObserverViewHandlerBattle(PackageBusinessHandler, ViewSettings):
                 self._statistics.getStatisticsDataFromServer()
 
 
-class ObserverViewHandlerLobby(PackageBusinessHandler):
+class ViewHandlerLobby(PackageBusinessHandler):
     __slots__ = ('_listeners', '_scope', '_app', '_appNS',)
 
     def __init__(self):
         listeners = ((VIEW_ALIAS.LOBBY_HANGAR, self.eventListener),) if CURRENT_REALM != "RU" else tuple()
-        super(ObserverViewHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
+        super(ViewHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def eventListener(self, event):
         self._app.loaderManager.onViewLoaded += self.__onViewLoaded
