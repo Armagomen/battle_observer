@@ -3,7 +3,7 @@ import datetime
 import random
 
 from armagomen._constants import getLogo, IMG, URLS
-from armagomen.utils.common import isDonateMessageEnabled, logInfo, openWebBrowser, overrideMethod
+from armagomen.utils.common import callback, isDonateMessageEnabled, logInfo, openWebBrowser, overrideMethod
 from constants import AUTH_REALM
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
@@ -16,11 +16,21 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 CLAN_ABBREV = "BO-UA"
 
+PATTERN = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
+           "<p><textformat leading='2'>"
+           "{donat_img} <a href='event:{ua3_url}'>donatua.com</a>\n"
+           "{donatello_img} <a href='event:{ua_url}'>donatello.to</a>\n"
+           # "{diaka_img} <a href='event:{ua2_url}'>diaka.ua</a>\n"
+           # "{paypal_img} <a href='event:{paypal_url}'>PayPal</a>\n"
+           "{patreon_img} <a href='event:{patreon_url}'>Patreon</a>"
+           "</textformat></p>")
+
 
 class Donate(object):
 
     def __init__(self):
         self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=10)
+        self.timeDeltaHappy = datetime.datetime.now()
         self.lastMessage = None
         if isDonateMessageEnabled():
             ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
@@ -42,6 +52,9 @@ class Donate(object):
                                    paypal_url=URLS.PAYPAL_URL, patreon_url=URLS.PATREON_URL,
                                    logo=getLogo(big=False), donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
                                    diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
+        self.important_date = {
+            "17/8/1987": "З днем народження ARMAGOMEN - {} рочків!!!" if support_language else "Happy birthday ARMAGOMEN - {} years!!!",
+        }
 
     def getRandomMessage(self):
         message = random.choice(self.messages)
@@ -51,14 +64,7 @@ class Donate(object):
 
     def getDonateMessage(self):
         self.lastMessage = self.getRandomMessage()
-        return ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
-                "<p><textformat leading='2'>"
-                "{donat_img} <a href='event:{ua3_url}'>donatua.com</a>\n"
-                "{donatello_img} <a href='event:{ua_url}'>donatello.to</a>\n"
-                # "{diaka_img} <a href='event:{ua2_url}'>diaka.ua</a>\n"
-                # "{paypal_img} <a href='event:{paypal_url}'>PayPal</a>\n"
-                "{patreon_img} <a href='event:{patreon_url}'>Patreon</a>"
-                "</textformat></p>").format(msg=self.lastMessage, **self.message_format)
+        return PATTERN.format(msg=self.lastMessage, **self.message_format)
 
     def pushClanMessage(self):
         if not self.show_clanMessage or g_clanCache.clanAbbrev is not None:
@@ -82,7 +88,21 @@ class Donate(object):
                 self.timeDelta = currentTime + datetime.timedelta(hours=1)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
-                # self.pushClanMessage()
+                # self.pushClanMessage()\
+            if currentTime >= self.timeDeltaHappy:
+                self.timeDeltaHappy = currentTime + datetime.timedelta(minutes=10)
+                self.pushHappy(currentTime.year, currentTime.day, currentTime.month)
+
+    def pushHappy(self, year, day, month):
+        message = None
+        for date in self.important_date:
+            b_day, b_month, b_year = (int(x) for x in date.split("/"))
+            if day == b_day and b_month == month:
+                years = (year - b_year) - int((month, day) < (b_month, b_day))
+                message = self.important_date[date].format(years)
+        if message:
+            message = PATTERN.format(msg=message, **self.message_format)
+            callback(5.0, pushMessage, message, type=SM_TYPE.Warning)
 
 
 Donate()
