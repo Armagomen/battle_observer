@@ -25,13 +25,26 @@ PATTERN = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
            "{patreon_img} <a href='event:{patreon_url}'>Patreon</a>"
            "</textformat></p>")
 
+PATTERN_BD = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
+              "<p><textformat leading='2'>"
+              "{donatello_img} <a href='event:{url}'>Congratulate</a>\n"
+              "</textformat></p>")
+
+DATE_USER_BD = {
+    "17/8/1987": ("Armagomen", URLS.DONATELLO),
+    "8/4/1992": ("Soul4Life", URLS.SOUL4LIFE),
+    "16/11/1999": ("Pragen_UA", URLS.PRAGEN_UA)
+}
+
 
 class Donate(object):
 
     def __init__(self):
-        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=10)
-        self.timeDeltaHappy = datetime.datetime.now()
+        now = datetime.datetime.now()
+        self.timeDelta = now + datetime.timedelta(minutes=10)
+        self.timeDeltaHappy = now
         self.lastMessage = None
+        self.birthday_today = self.checkBirthday(now)
         if isDonateMessageEnabled():
             ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         support_language = getClientLanguage() in ('uk', 'be', 'ru')
@@ -42,19 +55,18 @@ class Donate(object):
                 "Шановні Українці, не забувайте підтримувати розробку, бо хто, як не ви.",
                 "Кожна пожертва пришвидшує розробку та робить цей світ кращим."
             )
+            self.birthday_pattern = "З днем народження {} - {} рочків!!!"
         else:
             self.messages = (
                 "Every donation speeds up development and makes this world a better place.",
                 "Please support the development of the mod, thanks for the donation.",
                 "Dear Europeans, do not forget to support the development, because who but you."
             )
+            self.birthday_pattern = "Happy birthday {} - {} years!!!"
         self.message_format = dict(ua_url=URLS.DONATELLO, ua2_url=URLS.DIAKA, ua3_url=URLS.DONAT_UA,
                                    paypal_url=URLS.PAYPAL_URL, patreon_url=URLS.PATREON_URL,
                                    logo=getLogo(big=False), donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
                                    diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
-        self.important_date = {
-            "17/8/1987": "З днем народження ARMAGOMEN - {} рочків!!!" if support_language else "Happy birthday ARMAGOMEN - {} years!!!",
-        }
 
     def getRandomMessage(self):
         message = random.choice(self.messages)
@@ -89,20 +101,22 @@ class Donate(object):
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
                 # self.pushClanMessage()\
-            if currentTime >= self.timeDeltaHappy:
-                self.timeDeltaHappy = currentTime + datetime.timedelta(minutes=10)
-                self.pushHappy(currentTime.year, currentTime.day, currentTime.month)
+            if self.birthday_today is not None and currentTime >= self.timeDeltaHappy:
+                self.timeDeltaHappy = currentTime + datetime.timedelta(minutes=30)
+                callback(5.0, pushMessage, self.birthday_today, type=SM_TYPE.Warning)
 
-    def pushHappy(self, year, day, month):
+    def checkBirthday(self, now):
         message = None
-        for date in self.important_date:
+        donate = None
+        for date in DATE_USER_BD:
             b_day, b_month, b_year = (int(x) for x in date.split("/"))
-            if day == b_day and b_month == month:
-                years = (year - b_year) - int((month, day) < (b_month, b_day))
-                message = self.important_date[date].format(years)
+            if now.day == b_day and b_month == now.month:
+                years = (now.year - b_year) - int((now.month, now.day) < (b_month, b_day))
+                message = self.birthday_pattern.format(DATE_USER_BD[date][0], years)
+                donate = DATE_USER_BD[date][1]
         if message:
-            message = PATTERN.format(msg=message, **self.message_format)
-            callback(5.0, pushMessage, message, type=SM_TYPE.Warning)
+            message = PATTERN_BD.format(msg=message, url=donate, **self.message_format)
+        return message
 
 
 Donate()
