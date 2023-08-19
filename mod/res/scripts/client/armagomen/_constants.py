@@ -45,6 +45,8 @@ URLS = namedtuple("URLS", (
     "UPDATE",
     "SOUL4LIFE",
     "PRAGEN_UA",
+    "VIKING",
+    "SAXON"
 ))(
     "https://donatua.com/to/armagomen",
     "https://donatello.to/armagomen",
@@ -55,7 +57,10 @@ URLS = namedtuple("URLS", (
     "https://discord.gg/Nma5T5snKW",
     "https://github.com/Armagomen/battle_observer/releases/download/",
     "https://donatello.to/Soul4Life",
-    "https://donatello.to/Pragen", )
+    "https://donatello.to/Pragen",
+    "https://denys-zubtsov.diaka.ua/donate",
+    "https://donatello.to/SaXon_UA",
+)
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")

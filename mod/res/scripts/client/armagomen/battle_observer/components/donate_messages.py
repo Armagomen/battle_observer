@@ -26,14 +26,14 @@ PATTERN = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
            "</textformat></p>")
 
 PATTERN_BD = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
-              "<p><textformat leading='2'>"
-              "{donatello_img} <a href='event:{url}'>Congratulate</a>\n"
-              "</textformat></p>")
+              "<p><textformat leading='2'>{donatello_img} <a href='event:{url}'>Congratulate</a></textformat></p>")
 
 DATE_USER_BD = {
     "17/8/1987": ("Armagomen", URLS.DONATELLO),
     "8/4/1992": ("Soul4Life", URLS.SOUL4LIFE),
-    "16/11/1999": ("Pragen_UA", URLS.PRAGEN_UA)
+    "16/11/1999": ("Pragen UA", URLS.PRAGEN_UA),
+    "16/9/1987": ("Ukrainian Viking", URLS.VIKING),
+    "1/3/1996": ("SaXon UA WOT", URLS.SAXON),
 }
 
 
@@ -55,14 +55,14 @@ class Donate(object):
                 "Шановні Українці, не забувайте підтримувати розробку, бо хто, як не ви.",
                 "Кожна пожертва пришвидшує розробку та робить цей світ кращим."
             )
-            self.birthday_pattern = "З днем народження {} - {} рочків!!!"
+            self.birthday_pattern = "Сьогодні свій день народження святкує {} - нафармив вже {}, вітаємо."
         else:
             self.messages = (
                 "Every donation speeds up development and makes this world a better place.",
                 "Please support the development of the mod, thanks for the donation.",
                 "Dear Europeans, do not forget to support the development, because who but you."
             )
-            self.birthday_pattern = "Happy birthday {} - {} years!!!"
+            self.birthday_pattern = "Today {} is celebrating his birthday - he has already gained {}, congratulations."
         self.message_format = dict(ua_url=URLS.DONATELLO, ua2_url=URLS.DIAKA, ua3_url=URLS.DONAT_UA,
                                    paypal_url=URLS.PAYPAL_URL, patreon_url=URLS.PATREON_URL,
                                    logo=getLogo(big=False), donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
