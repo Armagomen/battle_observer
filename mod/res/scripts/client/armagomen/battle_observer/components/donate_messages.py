@@ -45,8 +45,7 @@ class Donate(object):
         self.timeDeltaHappy = now
         self.lastMessage = None
         self.birthday_today = self.checkBirthday(now)
-        if isDonateMessageEnabled():
-            ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
+        ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         support_language = getClientLanguage() in ('uk', 'be', 'ru')
         self.show_clanMessage = support_language and AUTH_REALM == "EU"
         if support_language:
@@ -96,7 +95,7 @@ class Donate(object):
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
             currentTime = datetime.datetime.now()
-            if currentTime >= self.timeDelta:
+            if isDonateMessageEnabled() and currentTime >= self.timeDelta:
                 self.timeDelta = currentTime + datetime.timedelta(hours=1)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
