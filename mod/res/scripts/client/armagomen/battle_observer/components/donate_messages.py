@@ -22,6 +22,7 @@ PATTERN = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
            "{donatello_img} <a href='event:{ua_url}'>donatello.to</a>\n"
            # "{diaka_img} <a href='event:{ua2_url}'>diaka.ua</a>\n"
            # "{paypal_img} <a href='event:{paypal_url}'>PayPal</a>\n"
+           "{coffee_img} <a href='event:{coffee_url}'>Buy Me a Coffee</a>\n"
            "{patreon_img} <a href='event:{patreon_url}'>Patreon</a>"
            "</textformat></p>")
 
@@ -62,10 +63,11 @@ class Donate(object):
                 "Dear Europeans, do not forget to support the development, because who but you."
             )
             self.birthday_pattern = "Today {} is celebrating his birthday - he has already gained {}, congratulations."
-        self.message_format = dict(ua_url=URLS.DONATELLO, ua2_url=URLS.DIAKA, ua3_url=URLS.DONAT_UA,
-                                   paypal_url=URLS.PAYPAL_URL, patreon_url=URLS.PATREON_URL,
-                                   logo=getLogo(big=False), donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
-                                   diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL)
+        self.message_format = dict(
+            logo=getLogo(big=False),
+            ua_url=URLS.DONATELLO, ua2_url=URLS.DIAKA, ua3_url=URLS.DONAT_UA, paypal_url=URLS.PAYPAL_URL,
+            patreon_url=URLS.PATREON_URL, coffee_url=URLS.COFFEE, donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
+            diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL, coffee_img=IMG.COFFEE)
 
     def getRandomMessage(self):
         message = random.choice(self.messages)

@@ -26,7 +26,8 @@ def sixthSenseIconsNamesList():
     return sorted(folder.keys())
 
 
-IMG = namedtuple("IMG", "DONAT_UA DONATELLO DIAKA PATREON PAYPAL")(
+IMG = namedtuple("IMG", "COFFEE DONAT_UA DONATELLO DIAKA PATREON PAYPAL")(
+    "<img src='{}/donate/coffee.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='{}/donate/donatello.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
     "<img src='{}/donate/diaka.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
@@ -35,6 +36,7 @@ IMG = namedtuple("IMG", "DONAT_UA DONATELLO DIAKA PATREON PAYPAL")(
 )
 
 URLS = namedtuple("URLS", (
+    "COFFEE",
     "DONAT_UA",
     "DONATELLO",
     "DIAKA",
@@ -48,6 +50,7 @@ URLS = namedtuple("URLS", (
     "VIKING",
     "SAXON"
 ))(
+    "https://www.buymeacoffee.com/armagomen",
     "https://donatua.com/to/armagomen",
     "https://donatello.to/armagomen",
     "https://armagomen.diaka.ua/donate",
