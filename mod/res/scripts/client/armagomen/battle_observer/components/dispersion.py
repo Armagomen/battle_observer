@@ -13,6 +13,8 @@ from VehicleGunRotator import VehicleGunRotator
 
 CLIENT = gun_marker_ctrl._MARKER_TYPE.CLIENT
 SERVER = gun_marker_ctrl._MARKER_TYPE.SERVER
+DUAL_ACC = gun_marker_ctrl._MARKER_TYPE.DUAL_ACC
+EMPTY = gun_marker_ctrl._MARKER_TYPE.UNDEFINED
 
 DEV_FACTORIES_COLLECTION = (
     gm_factory._DevControlMarkersFactory,
@@ -68,6 +70,14 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
         elif g_replayCtrl.isRecording and (g_replayCtrl.isServerAim and isServerAim or not isServerAim):
             g_replayCtrl.setSPGGunMarkerParams(dispersionAngle, GLOBAL.ZERO)
         self._dataProvider.setupConicDispersion(dispersionAngle)
+
+class _DualAccMarkerController(_DefaultGunMarkerController):
+
+    def _replayReader(self, replayCtrl):
+        return replayCtrl.getDualAccMarkerSize
+
+    def _replayWriter(self, replayCtrl):
+        return replayCtrl.setDualAccMarkerSize
 
 
 class DispersionCircle(object):
@@ -140,10 +150,12 @@ class DispersionCircle(object):
         if isStrategic:
             client = SPGController(CLIENT, factory.getClientSPGProvider())
             server = SPGController(SERVER, factory.getServerSPGProvider())
+            dualAcc = gun_marker_ctrl._EmptyGunMarkerController(EMPTY, None)
         else:
             client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
-        return gun_marker_ctrl._GunMarkersDecorator(client, server)
+            dualAcc = _DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
+        return gun_marker_ctrl._GunMarkersDecorator(client, server, dualAcc)
 
 
 dispersion_circle = DispersionCircle()
