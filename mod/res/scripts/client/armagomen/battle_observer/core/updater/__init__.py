@@ -110,7 +110,7 @@ class Updater(DownloadThread):
             new_version = response_data.get('tag_name', self.version)
             if self.tupleVersion(self.version) < self.tupleVersion(new_version):
                 logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
-                self.startDownload(new_version)
+                self.showUpdateDialog(new_version)
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
         logDebug('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode,
