@@ -71,14 +71,6 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
             g_replayCtrl.setSPGGunMarkerParams(dispersionAngle, GLOBAL.ZERO)
         self._dataProvider.setupConicDispersion(dispersionAngle)
 
-class _DualAccMarkerController(_DefaultGunMarkerController):
-
-    def _replayReader(self, replayCtrl):
-        return replayCtrl.getDualAccMarkerSize
-
-    def _replayWriter(self, replayCtrl):
-        return replayCtrl.setDualAccMarkerSize
-
 
 class DispersionCircle(object):
 
@@ -154,7 +146,7 @@ class DispersionCircle(object):
         else:
             client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
-            dualAcc = _DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
+            dualAcc = gun_marker_ctrl._DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
         return gun_marker_ctrl._GunMarkersDecorator(client, server, dualAcc)
 
 
