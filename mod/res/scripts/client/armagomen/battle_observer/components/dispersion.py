@@ -115,9 +115,10 @@ class DispersionCircle(object):
         base(rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
         if not self.server:
             return
-        ePos, mDir, mSize, imSize, collData = \
-            rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
-        rotator._avatar.inputHandler.updateGunMarker2(ePos, mDir, (mSize, imSize), SERVER_TICK_LENGTH, collData)
+        m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
+        endPos, direction, diameter, idealDiameter, dualAccDiameter, dualAccIdealDiameter, collData = m_position
+        size = (diameter, idealDiameter)
+        rotator._avatar.inputHandler.updateServerGunMarker(endPos, direction, size, SERVER_TICK_LENGTH, collData)
 
     def onServerGunMarkerStateChanged(self, base, *args, **kwargs):
         return None if self.server else base(*args, **kwargs)
@@ -142,12 +143,12 @@ class DispersionCircle(object):
         if isStrategic:
             client = SPGController(CLIENT, factory.getClientSPGProvider())
             server = SPGController(SERVER, factory.getServerSPGProvider())
-            dualAcc = gun_marker_ctrl._EmptyGunMarkerController(EMPTY, None)
+            dual = gun_marker_ctrl._EmptyGunMarkerController(EMPTY, None)
         else:
             client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
-            dualAcc = gun_marker_ctrl._DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
-        return gun_marker_ctrl._GunMarkersDecorator(client, server, dualAcc)
+            dual = gun_marker_ctrl._DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
+        return gun_marker_ctrl._GunMarkersDecorator(client, server, dual)
 
 
 dispersion_circle = DispersionCircle()
