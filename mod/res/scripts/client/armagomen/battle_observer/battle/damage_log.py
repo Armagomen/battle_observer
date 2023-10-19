@@ -131,7 +131,7 @@ class DamageLog(DamageLogsMeta):
                 self.top_log.clear()
         super(DamageLog, self)._dispose()
 
-    def _onGunReloadTimeSet(self, currShellCD, state, skipAutoLoader):
+    def _onGunReloadTimeSet(self, _, state, *args, **kwargs):
         if state.isReloadingFinished():
             type_descriptor = getVehicleTypeDescriptor()
             if type_descriptor is None:
