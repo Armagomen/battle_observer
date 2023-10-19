@@ -63,6 +63,18 @@ def createPlugins(base, *args, **kwargs):
         result.clear()
     return result
 
+# fix for halloween event
+try:
+    from halloween.gui.scaleform.daapi.view.battle.hint_panel import plugins as hwPlugins
+
+    @overrideMethod(hwPlugins, 'updatePlugins')
+    def updatePlugins(_, plugins):
+        plugins.pop('prebattleHints', None)
+        if hwPlugins.HWHelpPlugin.isSuitable():
+            plugins['halloweenHelpHint'] = hwPlugins.HWHelpPlugin
+        return plugins
+except ImportError:
+    pass
 
 # disable battle artillery_stun_effect sound
 @overrideMethod(TimersPanel, "__playStunSoundIfNeed")
