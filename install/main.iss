@@ -17,6 +17,7 @@
 #endif
 
 [Setup]
+AppCopyright=Copyright (C) 2023 Armagomen UA.
 AppId={{E4911938-A29D-4904-8878-99DEEBDE03D6}
 AppName={#MyAppName}
 AppPublisher={#MyAppPublisher}
@@ -40,6 +41,8 @@ UninstallFilesDir={app}\{#APP_DIR_UNINST}
 VersionInfoVersion={#MyAppVersion}
 WizardResizable=no
 WizardStyle=modern
+
+
 
 
 [Run]  
