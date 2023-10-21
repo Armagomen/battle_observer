@@ -1,13 +1,8 @@
-from CurrentVehicle import g_currentVehicle
-from VehicleGunRotator import VehicleGunRotator
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import overrideMethod, callback
+from armagomen.utils.common import callback, overrideMethod
 from armagomen.utils.events import g_events
-from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
-from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
-from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
-from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
+from CurrentVehicle import g_currentVehicle
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
@@ -15,7 +10,12 @@ from gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _Equi
 from gui.battle_control.controllers.team_bases_ctrl import BattleTeamsBasesController
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
+from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
+from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
+from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
+from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
+from VehicleGunRotator import VehicleGunRotator
 
 
 @overrideMethod(Hangar, "__onCurrentVehicleChanged")
@@ -62,19 +62,6 @@ def createPlugins(base, *args, **kwargs):
     if settings.main[MAIN.HIDE_HINT]:
         result.clear()
     return result
-
-# fix for halloween event
-try:
-    from halloween.gui.scaleform.daapi.view.battle.hint_panel import plugins as hwPlugins
-
-    @overrideMethod(hwPlugins, 'updatePlugins')
-    def updatePlugins(_, plugins):
-        plugins.pop('prebattleHints', None)
-        if hwPlugins.HWHelpPlugin.isSuitable():
-            plugins['halloweenHelpHint'] = hwPlugins.HWHelpPlugin
-        return plugins
-except ImportError:
-    pass
 
 # disable battle artillery_stun_effect sound
 @overrideMethod(TimersPanel, "__playStunSoundIfNeed")

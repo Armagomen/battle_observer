@@ -1,7 +1,7 @@
 import BigWorld
 
-from BattleReplay import g_replayCtrl
 from armagomen.utils.common import overrideMethod
+from BattleReplay import g_replayCtrl
 from gui.battle_control.controllers import debug_ctrl
 
 debug_ctrl._UPDATE_INTERVAL = 0.3
@@ -36,3 +36,18 @@ def updateDebug(base, controller):
     if controller._debugPanelUI is not None:
         for control in controller._debugPanelUI:
             control.updateDebugInfo(ping, fps, isLaggingNow, fpsReplay=fpsReplay)
+
+
+# fix for halloween event
+try:
+    from halloween.gui.scaleform.daapi.view.battle.hint_panel import plugins as hwPlugins
+
+
+    @overrideMethod(hwPlugins, 'updatePlugins')
+    def updatePlugins(_, plugins):
+        plugins.pop('prebattleHints', None)
+        if hwPlugins.HWHelpPlugin.isSuitable():
+            plugins['halloweenHelpHint'] = hwPlugins.HWHelpPlugin
+        return plugins
+except ImportError:
+    pass

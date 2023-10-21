@@ -1,11 +1,11 @@
 from collections import namedtuple
 
-from Keys import KEY_LCONTROL, KEY_RCONTROL, KEY_RALT, KEY_LALT, KEY_LSHIFT, KEY_RSHIFT
-from PlayerEvents import g_playerEvents
 from armagomen._constants import MAIN, MOD_NAME
 from armagomen.battle_observer.settings.default_settings import settings
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui import InputHandler
+from Keys import KEY_LALT, KEY_LCONTROL, KEY_LSHIFT, KEY_RALT, KEY_RCONTROL, KEY_RSHIFT
+from PlayerEvents import g_playerEvents
 
 KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
 KEY_ALIAS_CONTROL = (KEY_LCONTROL, KEY_RCONTROL)
@@ -51,7 +51,7 @@ class KeysListener(object):
         self.pressedKeys.discard(event.key)
 
     def onKeyDown(self, event):
-        if event.isModifierDown() or event.key not in self.usableKeys or event.key in self.pressedKeys:
+        if event.key not in self.usableKeys or event.key in self.pressedKeys:
             return
         for keysData in self.keysMap:
             if event.key in keysData.keys:
