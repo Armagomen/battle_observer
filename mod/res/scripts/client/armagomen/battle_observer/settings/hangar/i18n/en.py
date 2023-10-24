@@ -78,7 +78,9 @@ localization = {
         "hide_button_counters_on_top_panel": "Disable tooltips on buttons in the hangar header",
         "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
         "save_shot": "Block shooting at allies and destroyed.",
-        "mute_team_base_sound": "Mute base capture siren."
+        "mute_team_base_sound": "Mute base capture siren.",
+        "hide_hangar_prestige_widget": "Hide elite levels widget in hangar.",
+        "hide_profile_prestige_widget": "Hide elite levels widget in vehicle statistics in profile."
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",

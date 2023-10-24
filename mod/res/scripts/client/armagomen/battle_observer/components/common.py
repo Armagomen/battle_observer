@@ -14,6 +14,7 @@ from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_pl
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
+from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 from VehicleGunRotator import VehicleGunRotator
 
@@ -100,6 +101,25 @@ def buttonCounterS(base, *args, **kwargs):
         return base(*args, **kwargs)
 
 
+@overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
+def muteCaptureSound(base, *args):
+    if not settings.main[MAIN.MUTE_BASES_SOUND]:
+        return base(*args)
+
+
+@overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')
+def as_setPrestigeWidgetVisibleS(base, self, value):
+    if settings.main[MAIN.HIDE_HANGAR_PRESTIGE_WIDGET]:
+        value = False
+    return base(self, value)
+
+@overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')
+def as_setPrestigeVisibleS(base, self, value):
+    if settings.main[MAIN.HIDE_PROFILE_PRESTIGE_WIDGET]:
+        value = False
+    return base(self, value)
+
+
 def onModSettingsChanged(_settings, blockID):
     if blockID == MAIN.NAME:
         if _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
@@ -107,12 +127,7 @@ def onModSettingsChanged(_settings, blockID):
         elif not _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
             msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
             msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
-
-
-@overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
-def muteCaptureSound(base, *args):
-    if not settings.main[MAIN.MUTE_BASES_SOUND]:
-        return base(*args)
-
+        if g_currentVehicle.intCD:
+            g_currentVehicle.onChanged()
 
 settings.onModSettingsChanged += onModSettingsChanged

@@ -39,6 +39,8 @@ class DefaultSettings(object):
             MAIN.STUN_SOUND: False,
             MAIN.USE_KEY_PAIRS: True,
             MAIN.MUTE_BASES_SOUND: False,
+            MAIN.HIDE_HANGAR_PRESTIGE_WIDGET: False,
+            MAIN.HIDE_PROFILE_PRESTIGE_WIDGET: False
         }
         self.tank_carousel = {
             GLOBAL.ENABLED: False,
