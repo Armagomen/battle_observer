@@ -1,6 +1,6 @@
-__version__ = "1.41.04"
+__version__ = "1.41.05"
 __author__ = "Armagomen"
-__copyright__ = "Copyright 2014-2022, Armagomen"
+__copyright__ = "Copyright 2014-2024, Armagomen"
 __credits__ = ["Armagomen"]
 __license__ = "CC BY-NC-SA 4.0"
 __email__ = "armagomen@gmail.com"

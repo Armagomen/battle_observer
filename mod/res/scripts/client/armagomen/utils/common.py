@@ -11,8 +11,8 @@ from shutil import rmtree
 import BigWorld
 import ResMgr
 
-from BattleReplay import isPlaying, isLoading
 from armagomen.battle_observer.settings.default_settings import settings
+from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
 from helpers.http import openUrl
@@ -323,7 +323,7 @@ def getEncoding():
 ENCODING_LOCALE = getEncoding()
 ENCODING_ERRORS = "ignore"
 
-MOD_PACKS = ["Ukrainian_Viking_ModPack"]
+MOD_PACKS = []
 
 
 def isDonateMessageEnabled():
