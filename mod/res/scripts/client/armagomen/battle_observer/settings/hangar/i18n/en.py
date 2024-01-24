@@ -32,9 +32,7 @@ localization = {
     "configSelect": {
         "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
         "selector": "Config",
-        "donate_button_ua": "DONATE UA - Гривна",
-        "donate_button_paypal": "DONATE PayPal",
-        "donate_button_patreon": "Subscribe on Patreon",
+        "donate_button_ua": "MONO BANK",
         "discord_button": "Discord support & chat"
     },
     "main": {

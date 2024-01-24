@@ -377,9 +377,7 @@ class SettingsInterface(CreateElement):
         settings_block = getattr(settings, blockID, {})
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfigID)]
-            column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATELLO, 'Button'),
-                       self.createControl(blockID, 'donate_button_paypal', URLS.PAYPAL_URL, 'Button'),
-                       self.createControl(blockID, 'donate_button_patreon', URLS.PATREON_URL, 'Button'),
+            column2 = [self.createControl(blockID, 'donate_button_ua', URLS.MONO, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
             columns = sorted(self.items(blockID, settings_block), key=lambda x: x["varName"])

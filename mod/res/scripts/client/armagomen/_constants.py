@@ -26,43 +26,20 @@ def sixthSenseIconsNamesList():
     return sorted(folder.keys())
 
 
-IMG = namedtuple("IMG", "COFFEE DONAT_UA DONATELLO DIAKA PATREON PAYPAL")(
-    "<img src='{}/donate/coffee.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/donatua.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/donatello.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/diaka.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/paypal.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
+IMG = namedtuple("IMG", "MONO")(
+    "<img src='{}/donate/mono.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
-    "COFFEE",
-    "DONAT_UA",
-    "DONATELLO",
-    "DIAKA",
-    "PAYPAL_URL",
     "UPDATE_GITHUB_API_URL",
-    "PATREON_URL",
+    "MONO",
     "DISCORD",
-    "UPDATE",
-    "SOUL4LIFE",
-    "PRAGEN_UA",
-    "VIKING",
-    "SAXON"
+    "UPDATE"
 ))(
-    "https://www.buymeacoffee.com/armagomen",
-    "https://donatua.com/to/armagomen",
-    "https://donatello.to/armagomen",
-    "https://armagomen.diaka.ua/donate",
-    "https://www.paypal.com/donate/?hosted_button_id=VJCUNYNBXBEG8",
     "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
-    "https://www.patreon.com/armagomen",
+    "https://send.monobank.ua/jar/5BZHrPrJwr",
     "https://discord.gg/Nma5T5snKW",
-    "https://github.com/Armagomen/battle_observer/releases/download/",
-    "https://donatello.to/Soul4Life",
-    "https://donatello.to/Pragen",
-    "https://denys-zubtsov.diaka.ua/donate",
-    "https://donatello.to/SaXon_UA",
+    "https://github.com/Armagomen/battle_observer/releases/download/"
 )
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
@@ -365,7 +342,7 @@ class CONFIG_INTERFACE:
     def __init__(self):
         pass
 
-    DONATE_BUTTONS = ('donate_button_ua', 'donate_button_paypal', 'donate_button_patreon', 'discord_button')
+    DONATE_BUTTONS = ('donate_button_ua', 'discord_button')
     BLOCK_IDS = (
         ANOTHER.CONFIG_SELECT, MAIN.NAME, STATISTICS.NAME, DISPERSION.NAME, DISPERSION_TIMER.NAME, CAROUSEL.NAME,
         EFFECTS.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME,

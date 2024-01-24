@@ -3,7 +3,7 @@ import datetime
 import random
 
 from armagomen._constants import getLogo, IMG, URLS
-from armagomen.utils.common import callback, isDonateMessageEnabled, logInfo, openWebBrowser, overrideMethod
+from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod
 from constants import AUTH_REALM
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
@@ -18,34 +18,15 @@ CLAN_ABBREV = "BO-UA"
 
 PATTERN = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
            "<p><textformat leading='2'>"
-           "{donat_img} <a href='event:{ua3_url}'>donatua.com</a>\n"
-           "{donatello_img} <a href='event:{ua_url}'>donatello.to</a>\n"
-           # "{diaka_img} <a href='event:{ua2_url}'>diaka.ua</a>\n"
-           # "{paypal_img} <a href='event:{paypal_url}'>PayPal</a>\n"
-           "{coffee_img} <a href='event:{coffee_url}'>Buy Me a Coffee</a>\n"
-           "{patreon_img} <a href='event:{patreon_url}'>Patreon</a>"
+           "{mono_img} <a href='event:{mono_url}'>MONO</a>"
            "</textformat></p>")
-
-PATTERN_BD = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
-              "<p><textformat leading='2'>{donatello_img} <a href='event:{url}'>Congratulate</a></textformat></p>")
-
-DATE_USER_BD = {
-    "17/8/1987": ("Armagomen", URLS.DONATELLO),
-    "8/4/1992": ("Soul4Life", URLS.SOUL4LIFE),
-    "16/11/1999": ("Pragen UA", URLS.PRAGEN_UA),
-    "16/9/1987": ("Ukrainian Viking", URLS.VIKING),
-    "1/3/1996": ("SaXon UA WOT", URLS.SAXON),
-}
 
 
 class Donate(object):
 
     def __init__(self):
-        now = datetime.datetime.now()
-        self.timeDelta = now + datetime.timedelta(minutes=10)
-        self.timeDeltaHappy = now
+        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=5)
         self.lastMessage = None
-        self.birthday_today = self.checkBirthday(now)
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         support_language = getClientLanguage() in ('uk', 'be', 'ru')
         self.show_clanMessage = support_language and AUTH_REALM == "EU"
@@ -63,11 +44,7 @@ class Donate(object):
                 "Dear Europeans, do not forget to support the development, because who but you."
             )
             self.birthday_pattern = "Today {} is celebrating his birthday - he has already gained {}, congratulations."
-        self.message_format = dict(
-            logo=getLogo(big=False),
-            ua_url=URLS.DONATELLO, ua2_url=URLS.DIAKA, ua3_url=URLS.DONAT_UA, paypal_url=URLS.PAYPAL_URL,
-            patreon_url=URLS.PATREON_URL, coffee_url=URLS.COFFEE, donatello_img=IMG.DONATELLO, donat_img=IMG.DONAT_UA,
-            diaka_img=IMG.DIAKA, patreon_img=IMG.PATREON, paypal_img=IMG.PAYPAL, coffee_img=IMG.COFFEE)
+        self.message_format = dict(logo=getLogo(big=False), mono_url=URLS.MONO, mono_img=IMG.MONO)
 
     def getRandomMessage(self):
         message = random.choice(self.messages)
@@ -97,27 +74,11 @@ class Donate(object):
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
             currentTime = datetime.datetime.now()
-            if isDonateMessageEnabled() and currentTime >= self.timeDelta:
+            if currentTime >= self.timeDelta:
                 self.timeDelta = currentTime + datetime.timedelta(hours=1)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
                 # self.pushClanMessage()\
-            if self.birthday_today is not None and currentTime >= self.timeDeltaHappy:
-                self.timeDeltaHappy = currentTime + datetime.timedelta(minutes=30)
-                callback(5.0, pushMessage, self.birthday_today, type=SM_TYPE.Warning)
-
-    def checkBirthday(self, now):
-        message = None
-        donate = None
-        for date in DATE_USER_BD:
-            b_day, b_month, b_year = (int(x) for x in date.split("/"))
-            if now.day == b_day and b_month == now.month:
-                years = (now.year - b_year) - int((now.month, now.day) < (b_month, b_day))
-                message = self.birthday_pattern.format(DATE_USER_BD[date][0], years)
-                donate = DATE_USER_BD[date][1]
-        if message:
-            message = PATTERN_BD.format(msg=message, url=donate, **self.message_format)
-        return message
 
 
 Donate()

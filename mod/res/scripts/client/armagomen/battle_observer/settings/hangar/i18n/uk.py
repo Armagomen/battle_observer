@@ -32,9 +32,7 @@ localization = {
     "configSelect": {
         "header": "Варіанти налаштувань",
         "selector": "Вибрати налаштування:",
-        "donate_button_ua": "Підтримати розробку",
-        "donate_button_paypal": "Підтримати через PayPal",
-        "donate_button_patreon": "Підтримати через Patreon",
+        "donate_button_ua": "MONO Банка",
         "discord_button": "Discord сервер модифікації"
     },
     "main": {

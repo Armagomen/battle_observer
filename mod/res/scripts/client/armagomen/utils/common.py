@@ -323,11 +323,11 @@ def getEncoding():
 ENCODING_LOCALE = getEncoding()
 ENCODING_ERRORS = "ignore"
 
-MOD_PACKS = []
+# MOD_PACKS = []
 
 
-def isDonateMessageEnabled():
-    for mod_pack in MOD_PACKS:
-        if os.path.exists(os.path.join(cwd, mod_pack)):
-            return False
-    return True
+# def isDonateMessageEnabled():
+#     for mod_pack in MOD_PACKS:
+#         if os.path.exists(os.path.join(cwd, mod_pack)):
+#             return False
+#     return True
