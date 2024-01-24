@@ -31,7 +31,7 @@ RESTART_TOOLTIP = "Для увімкнення/вимкнення необхід
 localization = {
     "configSelect": {
         "header": "Варіанти налаштувань",
-        "selector": "Вибрати налаштування:",
+        "selector": "Обрати налаштування:",
         "donate_button_ua": "MONO Банка",
         "discord_button": "Discord сервер модифікації"
     },
