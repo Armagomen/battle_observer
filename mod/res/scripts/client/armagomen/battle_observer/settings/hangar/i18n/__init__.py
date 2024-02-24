@@ -9,4 +9,4 @@ if language == 'uk':
 else:
     from armagomen.battle_observer.settings.hangar.i18n.en import localization
 
-    LOCKED_MESSAGE = "The function is not available, XVM is installed."
+    LOCKED_MESSAGE = "The function is not available because XVM is installed."
