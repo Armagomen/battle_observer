@@ -12,10 +12,10 @@ from skeletons.gui.app_loader import IAppLoader
 from wg_async import AsyncReturn, wg_async, wg_await
 
 if getClientLanguage() == 'uk':
-    labels = ("ПЕРЕЗАВАНТАЖЕННЯ", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати", "Ігнорувати цей танк")
+    labels = ("ПЕРЕЗАВАНТАЖЕННЯ", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати", "Ігнорувати цей танк", "Так", "Ні")
 else:
-    labels = ("RESTART", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank")
-buttons = namedtuple("BUTTONS", "restart auto handle cancel close apply ignore")(*labels)
+    labels = ("RESTART", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank", "Yes", "No")
+buttons = namedtuple("BUTTONS", "restart auto handle cancel close apply ignore yes no")(*labels)
 
 
 class DialogBase(object):
@@ -30,6 +30,19 @@ class DialogBase(object):
 
 
 class UpdaterDialogs(DialogBase):
+
+    @wg_async
+    def showNewVersionAvailable(self, title, message, handleURL):
+        builder = InfoDialogBuilder()
+        builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), title)))
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=buttons.auto)
+        builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.handle)
+        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
+        result = yield wg_await(dialogs.show(builder.build(self.view)))
+        if result.result == DialogButtons.PURCHASE:
+            openWebBrowser(handleURL)
+        raise AsyncReturn(result.result == DialogButtons.RESEARCH)
 
     @wg_async
     def showUpdateError(self, message):
@@ -51,19 +64,6 @@ class UpdaterDialogs(DialogBase):
         if result:
             restartGame()
         raise AsyncReturn(result)
-
-    @wg_async
-    def showNewVersionAvailable(self, title, message, handleURL):
-        builder = InfoDialogBuilder()
-        builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), title)))
-        builder.setFormattedMessage(message)
-        builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=buttons.auto)
-        builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.handle)
-        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
-        result = yield wg_await(dialogs.show(builder.build(self.view)))
-        if result.result == DialogButtons.PURCHASE:
-            openWebBrowser(handleURL)
-        raise AsyncReturn(result.result == DialogButtons.RESEARCH)
 
 
 class LoadingErrorDialog(DialogBase):
@@ -88,5 +88,17 @@ class CrewDialog(DialogBase):
         builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=buttons.apply)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.ignore)
+        result = yield wg_await(dialogs.show(builder.build(self.view)))
+        raise AsyncReturn(result)
+
+class ExcludedMapsDialog(DialogBase):
+
+    @wg_async
+    def showExcludedMapsDialog(self, header, message):
+        builder = InfoDialogBuilder()
+        builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), header)))
+        builder.setFormattedMessage(message)
+        builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=buttons.yes)
+        builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.no)
         result = yield wg_await(dialogs.show(builder.build(self.view)))
         raise AsyncReturn(result)

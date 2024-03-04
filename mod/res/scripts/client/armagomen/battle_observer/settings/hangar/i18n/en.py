@@ -370,6 +370,10 @@ localization = {
         "isFullComplete": "You have pumped the field upgrade to the highest possible level.",
         "needTurnOff": "You do not have field upgrades, it is recommended to disable accelerated crew training."
     },
+    "excludedMaps": {
+        "header": "Excluded Maps",
+        "message": "You have %s available slots for maps to exclude.\nProceed to the maps exclusion list?"
+    },
     "avg_efficiency_in_hangar": {
         "header": "Tuning the tank stats widget in the garage",
         "avg_damage": "Display average damage dealt",

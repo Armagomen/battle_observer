@@ -2,7 +2,6 @@ from importlib import import_module
 
 _modules = {}
 
-
 def loadComponents(current_realm):
     load = (
         'camera',
@@ -11,6 +10,7 @@ def loadComponents(current_realm):
         'dispersion',
         'donate_messages',
         'effects',
+        'excluded_maps',
         'for_wg_fixes',
         'friends',
         'minimap_plugins',
