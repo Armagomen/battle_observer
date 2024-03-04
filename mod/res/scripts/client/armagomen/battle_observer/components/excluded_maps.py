@@ -37,7 +37,7 @@ class ExcludedMapsProcessor(object):
         self.__isDialogRequested = False
 
     def init(self):
-        self.__isPremium = ServicesLocator.itemsCache.items.stats.isPremium
+        self.__isPremium = ServicesLocator.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS)
         self.__update()
         ServicesLocator.lobbyContext.getServerSettings().onServerSettingsChange += self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify += self.__onPremiumNotify
@@ -110,7 +110,7 @@ class ExcludedMapsProcessor(object):
             totalSlots += premiumSlots
         if isWotPlusAcc:
             totalSlots += wotPlusSlots
-        if usedSlots != totalSlots:
+        if usedSlots < totalSlots:
             if not isInHangarView():
                 app = ServicesLocator.appLoader.getApp()
                 if app is not None and app.loaderManager is not None:
