@@ -11,6 +11,7 @@ class Events(object):
         self.onComponentVisible = SafeEvent()
         self.onVehicleChanged = SafeEvent()
         self.onVehicleChangedDelayed = SafeEvent()
+        self.onHangarLoaded = SafeEvent()
 
 
 g_events = Events()

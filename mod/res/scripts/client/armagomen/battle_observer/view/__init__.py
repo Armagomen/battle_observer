@@ -4,6 +4,7 @@ from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlug
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import callback, logDebug, logError, logInfo, xvmInstalled
+from armagomen.utils.events import g_events
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -86,7 +87,9 @@ class ViewHandlerLobby(PackageBusinessHandler):
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
         logDebug(DEBUG_MSG, self.__class__.__name__, alias)
-        if alias != VIEW_ALIAS.LOBBY_HANGAR:
+        is_hangar = alias == VIEW_ALIAS.LOBBY_HANGAR
+        g_events.onHangarLoaded(is_hangar)
+        if not is_hangar:
             return
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
         logInfo(INFO_MSG.format(self.__class__.__name__, alias))
