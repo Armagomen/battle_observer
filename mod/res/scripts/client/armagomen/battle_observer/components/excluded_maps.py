@@ -1,17 +1,18 @@
+from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen._constants import MAIN, EXCLUDED_MAPS
 from armagomen.utils.dialogs import ExcludedMapsDialog
-from wg_async import wg_async, wg_await
+from constants import PREMIUM_TYPE, PremiumConfigs, RENEWABLE_SUBSCRIPTION_CONFIG
+from gui.impl.pub.dialog_window import DialogButtons
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.entities.View import ViewKey
 from gui.shared.event_dispatcher import showMapsBlacklistView
-from gui.shared.personality import ServicesLocator
-from gui.impl.pub.dialog_window import DialogButtons
-from skeletons.gui.app_loader import GuiGlobalSpaceID
-from skeletons.gui.game_control import IGameSessionController, IWotPlusController
-from constants import PremiumConfigs, PREMIUM_TYPE, RENEWABLE_SUBSCRIPTION_CONFIG
 from helpers import dependency
+from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
+from skeletons.gui.game_control import IGameSessionController, IWotPlusController
+from skeletons.gui.lobby_context import ILobbyContext
+from skeletons.gui.shared import IItemsCache
+from wg_async import wg_async, wg_await
 
 SERVER_SETTINGS_DIFF_KEYS = (
     PremiumConfigs.IS_PREFERRED_MAPS_ENABLED,
@@ -19,38 +20,52 @@ SERVER_SETTINGS_DIFF_KEYS = (
     RENEWABLE_SUBSCRIPTION_CONFIG
 )
 
-def isInHangarView():
-    app = ServicesLocator.appLoader.getApp()
-    if app is not None and app.containerManager is not None:
-        viewKey = ViewKey(VIEW_ALIAS.LOBBY_HANGAR)
-        hangarView = app.containerManager.getViewByKey(viewKey)
-        if hangarView is not None:
-            return True
-    return False
 
 class ExcludedMapsProcessor(object):
     gameSession = dependency.descriptor(IGameSessionController)
     wotPlus = dependency.descriptor(IWotPlusController)
+    appLoader = dependency.descriptor(IAppLoader)
+    itemsCache = dependency.descriptor(IItemsCache)
+    lobbyContext = dependency.descriptor(ILobbyContext)
 
     def __init__(self):
         self.__isPremium = False
         self.__isDialogVisible = False
         self.__isDialogRequested = False
+        self.appLoader.onGUISpaceEntered += self.init
+        self.appLoader.onGUISpaceLeft += self.fini
 
-    def init(self):
-        self.__isPremium = ServicesLocator.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS)
+    @property
+    def _serverSettings(self):
+        return self.lobbyContext.getServerSettings()
+
+    def init(self, spaceID):
+        if spaceID != GuiGlobalSpaceID.LOBBY:
+            return
+        self.__isPremium = self.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS)
         self.__update()
-        ServicesLocator.lobbyContext.getServerSettings().onServerSettingsChange += self.__onServerSettingsChanged
+        self._serverSettings.onServerSettingsChange += self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify += self.__onPremiumNotify
         self.wotPlus.onDataChanged += self.__onWotPlusChanged
 
-    def fini(self):
+    def fini(self, spaceID):
+        if spaceID != GuiGlobalSpaceID.LOBBY:
+            return
         self.__isPremium = False
         self.__isDialogVisible = False
         self.__isDialogRequested = False
-        ServicesLocator.lobbyContext.getServerSettings().onServerSettingsChange -= self.__onServerSettingsChanged
+        self._serverSettings.onServerSettingsChange -= self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
         self.wotPlus.onDataChanged -= self.__onWotPlusChanged
+
+    def isInHangarView(self):
+        app = self.appLoader.getApp()
+        if app is not None and app.containerManager is not None:
+            viewKey = ViewKey(VIEW_ALIAS.LOBBY_HANGAR)
+            hangarView = app.containerManager.getViewByKey(viewKey)
+            if hangarView is not None:
+                return True
+        return False
 
     def __onServerSettingsChanged(self, diff):
         if not any(key in diff for key in SERVER_SETTINGS_DIFF_KEYS):
@@ -71,7 +86,7 @@ class ExcludedMapsProcessor(object):
         alias = view.getAlias()
         if alias != VIEW_ALIAS.LOBBY_HANGAR:
             return
-        app = ServicesLocator.appLoader.getApp()
+        app = self.appLoader.getApp()
         if app is not None and app.loaderManager is not None:
             app.loaderManager.onViewLoaded -= self.__onViewLoaded
         if self.__isDialogRequested:
@@ -96,26 +111,25 @@ class ExcludedMapsProcessor(object):
             return
         if self.__isDialogVisible:
             return
-        serverSettings = ServicesLocator.lobbyContext.getServerSettings()
-        if not serverSettings.isPreferredMapsEnabled():
+        if not self._serverSettings.isPreferredMapsEnabled():
             return
-        mapsConfig = serverSettings.getPreferredMapsConfig()
+        mapsConfig = self._serverSettings.getPreferredMapsConfig()
         defaultSlots = mapsConfig['defaultSlots']
         premiumSlots = mapsConfig['premiumSlots']
-        wotPlusSlots = mapsConfig['wotPlusSlots'] if serverSettings.isWotPlusExcludedMapEnabled() else 0
-        mapsBlacklist = ServicesLocator.itemsCache.items.stats.getMapsBlackList()
+        wotPlusSlots = mapsConfig['wotPlusSlots'] if self._serverSettings.isWotPlusExcludedMapEnabled() else 0
+        mapsBlacklist = self.itemsCache.items.stats.getMapsBlackList()
         maps = [(mapId, selectedTime) for mapId, selectedTime in mapsBlacklist if mapId > 0]
         usedSlots = len(maps)
         totalSlots = defaultSlots
-        isPremiumAcc = ServicesLocator.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS)
+        isPremiumAcc = self.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS)
         isWotPlusAcc = self.wotPlus.isEnabled()
         if isPremiumAcc:
             totalSlots += premiumSlots
         if isWotPlusAcc:
             totalSlots += wotPlusSlots
         if usedSlots < totalSlots:
-            if not isInHangarView():
-                app = ServicesLocator.appLoader.getApp()
+            if not self.isInHangarView():
+                app = self.appLoader.getApp()
                 if app is not None and app.loaderManager is not None:
                     app.loaderManager.onViewLoaded += self.__onViewLoaded
                 self.__isDialogRequested = True
@@ -124,18 +138,5 @@ class ExcludedMapsProcessor(object):
             message = self.__getLocalizedMessage(availableSlots)
             self.__showDialog(message)
 
+
 excluded_maps = ExcludedMapsProcessor()
-
-def __onGUISpaceEntered(spaceID):
-    if spaceID != GuiGlobalSpaceID.LOBBY:
-        return
-    excluded_maps.init()
-
-ServicesLocator.appLoader.onGUISpaceEntered += __onGUISpaceEntered
-
-def __onGUISpaceLeft(spaceID):
-    if spaceID != GuiGlobalSpaceID.LOBBY:
-        return
-    excluded_maps.fini()
-
-ServicesLocator.appLoader.onGUISpaceLeft += __onGUISpaceLeft
