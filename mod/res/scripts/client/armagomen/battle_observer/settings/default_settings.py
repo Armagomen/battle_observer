@@ -25,12 +25,15 @@ class DefaultSettings(object):
             MAIN.DIRECTIVES: False,
             MAIN.DISABLE_SCORE_SOUND: False,
             MAIN.FIELD_MAIL: False,
+            MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION: False,
             MAIN.HIDE_BADGES: False,
             MAIN.HIDE_BTN_COUNTERS: False,
             MAIN.HIDE_CLAN_ABBREV: False,
             MAIN.HIDE_DOG_TAGS: False,
+            MAIN.HIDE_HANGAR_PRESTIGE_WIDGET: False,
             MAIN.HIDE_HINT: False,
             MAIN.HIDE_MAIN_CHAT: False,
+            MAIN.HIDE_PROFILE_PRESTIGE_WIDGET: False,
             MAIN.IGNORE_COMMANDERS: False,
             MAIN.PREMIUM_TIME: False,
             MAIN.SAVE_SHOT: False,
@@ -38,9 +41,7 @@ class DefaultSettings(object):
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
             MAIN.USE_KEY_PAIRS: True,
-            MAIN.MUTE_BASES_SOUND: False,
-            MAIN.HIDE_HANGAR_PRESTIGE_WIDGET: False,
-            MAIN.HIDE_PROFILE_PRESTIGE_WIDGET: False
+            MAIN.MUTE_BASES_SOUND: False
         }
         self.tank_carousel = {
             GLOBAL.ENABLED: False,

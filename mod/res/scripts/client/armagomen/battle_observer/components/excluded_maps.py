@@ -1,6 +1,7 @@
-from armagomen._constants import EXCLUDED_MAPS
-from armagomen.utils.dialogs import ExcludedMapsDialog
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
+from armagomen._constants import MAIN, EXCLUDED_MAPS
+from armagomen.utils.dialogs import ExcludedMapsDialog
 from wg_async import wg_async, wg_await
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.entities.View import ViewKey
@@ -91,6 +92,8 @@ class ExcludedMapsProcessor(object):
         self.__isDialogVisible = False
 
     def __update(self):
+        if not settings.main[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
+            return
         if self.__isDialogVisible:
             return
         serverSettings = ServicesLocator.lobbyContext.getServerSettings()

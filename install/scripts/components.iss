@@ -16,13 +16,16 @@ Name: main/clear_cache_automatically; Description: {cm:clear_cache_automatically
 Name: main/disable_score_sound; Description: {cm:disable_score_sound}; Types: armagomen saxon_ua;
 Name: main/disable_stun_sound; Description: {cm:disable_stun_sound}; Types: armagomen;
 Name: main/directives_only_from_storage; Description: {cm:directives_only_from_storage}; Types: armagomen saxon_ua;
+Name: main/excluded_map_slots_notification; Description: {cm:excluded_map_slots_notification};
 Name: main/hide_badges; Description: {cm:hide_badges}; Types: armagomen saxon_ua;
 Name: main/hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Types: armagomen saxon_ua;
 Name: main/hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Types: armagomen saxon_ua;
 Name: main/hide_dog_tags; Description: {cm:hide_dog_tags}; Types: armagomen saxon_ua;
 Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Types: armagomen saxon_ua;
+Name: main/hide_hangar_prestige_widget; Description: {cm:hide_hangar_prestige_widget};
 Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Types: armagomen saxon_ua;
 Name: main/hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Types: armagomen saxon_ua;
+Name: main/hide_profile_prestige_widget; Description: {cm:hide_profile_prestige_widget};
 Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: armagomen saxon_ua;
 Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: armagomen saxon_ua;
 Name: main/premium_time; Description: {cm:premium_time}; Types: armagomen saxon_ua;
@@ -189,6 +192,7 @@ begin
     JSON_SetBool(Handle,'/auto_return_crew', WizardIsComponentSelected('main/auto_return_crew'));
     JSON_SetBool(Handle,'/clear_cache_automatically', WizardIsComponentSelected('main/clear_cache_automatically'));
     JSON_SetBool(Handle,'/directives_only_from_storage', WizardIsComponentSelected('main/directives_only_from_storage'));
+    JSON_SetBool(Handle,'/excluded_map_slots_notification', WizardIsComponentSelected('main/excluded_map_slots_notification'));
     JSON_SetBool(Handle,'/disable_score_sound', WizardIsComponentSelected('main/disable_score_sound'));
     JSON_SetBool(Handle,'/disable_stun_sound', WizardIsComponentSelected('main/disable_stun_sound'));
     JSON_SetBool(Handle,'/hide_badges', WizardIsComponentSelected('main/hide_badges'));
@@ -196,8 +200,10 @@ begin
     JSON_SetBool(Handle,'/hide_clan_abbrev', WizardIsComponentSelected('main/hide_clan_abbrev'));
     JSON_SetBool(Handle,'/hide_dog_tags', WizardIsComponentSelected('main/hide_dog_tags'));
     JSON_SetBool(Handle,'/hide_field_mail', WizardIsComponentSelected('main/hide_field_mail'));
+    JSON_SetBool(Handle,'/hide_hangar_prestige_widget', WizardIsComponentSelected('main/hide_hangar_prestige_widget'));
     JSON_SetBool(Handle,'/hide_hint_panel', WizardIsComponentSelected('main/hide_hint_panel'));
     JSON_SetBool(Handle,'/hide_main_chat_in_hangar', WizardIsComponentSelected('main/hide_main_chat_in_hangar'));
+    JSON_SetBool(Handle,'/hide_profile_prestige_widget', WizardIsComponentSelected('main/hide_profile_prestige_widget'));
     JSON_SetBool(Handle,'/ignore_commanders_voice', WizardIsComponentSelected('main/ignore_commanders_voice'));
     JSON_SetBool(Handle,'/mute_team_base_sound', WizardIsComponentSelected('main/mute_team_base_sound'));
     JSON_SetBool(Handle,'/premium_time', WizardIsComponentSelected('main/premium_time'));
