@@ -31,7 +31,7 @@ class ExcludedMapsProcessor(object):
     def __init__(self):
         self.__isPremium = False
         self.__isDialogVisible = False
-        self.__isDialogRequested = False
+
         self.appLoader.onGUISpaceEntered += self.init
         self.appLoader.onGUISpaceLeft += self.fini
 
@@ -53,7 +53,6 @@ class ExcludedMapsProcessor(object):
             return
         self.__isPremium = False
         self.__isDialogVisible = False
-        self.__isDialogRequested = False
         self._serverSettings.onServerSettingsChange -= self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
         self.wotPlus.onDataChanged -= self.__onWotPlusChanged
@@ -89,9 +88,7 @@ class ExcludedMapsProcessor(object):
         app = self.appLoader.getApp()
         if app is not None and app.loaderManager is not None:
             app.loaderManager.onViewLoaded -= self.__onViewLoaded
-        if self.__isDialogRequested:
-            self.__update()
-            self.__isDialogRequested = False
+        self.__update()
 
     @staticmethod
     def __getLocalizedMessage(availableSlots):
@@ -132,7 +129,6 @@ class ExcludedMapsProcessor(object):
                 app = self.appLoader.getApp()
                 if app is not None and app.loaderManager is not None:
                     app.loaderManager.onViewLoaded += self.__onViewLoaded
-                self.__isDialogRequested = True
                 return
             availableSlots = totalSlots - usedSlots
             message = self.__getLocalizedMessage(availableSlots)
