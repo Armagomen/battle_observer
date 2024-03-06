@@ -90,11 +90,8 @@ class ViewHandlerLobby(PackageBusinessHandler):
         logDebug(DEBUG_MSG, self.__class__.__name__, alias)
         is_hangar = alias == VIEW_ALIAS.LOBBY_HANGAR
         g_events.onHangarLoaded(is_hangar)
-        if not is_hangar:
-            self.__initialized = False
-            return
-        logInfo(INFO_MSG.format(self.__class__.__name__, alias))
-        if not self.__initialized:
+        if is_hangar and not self.__initialized:
+            logInfo(INFO_MSG.format(self.__class__.__name__, alias))
             self.__initialize(pyView)
 
     def __initialize(self, pyView):
