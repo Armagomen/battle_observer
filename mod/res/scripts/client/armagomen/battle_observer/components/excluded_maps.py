@@ -31,7 +31,7 @@ class ExcludedMapsProcessor(object):
     def __init__(self):
         self.__isHangar = False
         self.__isPremium = False
-        self.__isDialogDeferred = False
+        self.__isDialogDeferred = True
         self.__isDialogVisible = False
         self.appLoader.onGUISpaceEntered += self.init
         self.appLoader.onGUISpaceLeft += self.fini
@@ -54,7 +54,7 @@ class ExcludedMapsProcessor(object):
             return
         self.__isHangar = False
         self.__isPremium = False
-        self.__isDialogDeferred = False
+        self.__isDialogDeferred = True
         self.__isDialogVisible = False
         self._serverSettings.onServerSettingsChange -= self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
