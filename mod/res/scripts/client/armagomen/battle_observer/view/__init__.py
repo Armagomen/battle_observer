@@ -75,9 +75,10 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
 
 class ViewHandlerLobby(PackageBusinessHandler):
-    __slots__ = ('_listeners', '_scope', '_app', '_appNS',)
+    __slots__ = ('__initialized', '_listeners', '_scope', '_app', '_appNS',)
 
     def __init__(self):
+        self.__initialized = False
         listeners = ((VIEW_ALIAS.LOBBY_HANGAR, self.eventListener),) if CURRENT_REALM != "RU" else tuple()
         super(ViewHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
@@ -90,9 +91,14 @@ class ViewHandlerLobby(PackageBusinessHandler):
         is_hangar = alias == VIEW_ALIAS.LOBBY_HANGAR
         g_events.onHangarLoaded(is_hangar)
         if not is_hangar:
+            self.__initialized = False
             return
-        self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
         logInfo(INFO_MSG.format(self.__class__.__name__, alias))
+        if not self.__initialized:
+            self.__initialize(pyView)
+
+    def __initialize(self, pyView):
         if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
-            return logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)
+            return logError("{}:flashObject, has ho attribute {}", pyView.getAlias(), ATTRIBUTE_NAME)
         callback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
+        self.__initialized = True
