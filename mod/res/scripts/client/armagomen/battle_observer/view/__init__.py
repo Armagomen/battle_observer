@@ -18,6 +18,7 @@ INFO_MSG = "loading view {}: alias={}"
 class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def __init__(self):
+        self.__subscribed = False
         listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES) if CURRENT_REALM != "RU" else tuple()
         super(ViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self._minimap = None
@@ -45,7 +46,9 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         if self.isMinimapEnabled():
             self._minimap = MinimapZoomPlugin()
         if self._components or self._statistics is not None or self._icons or self._minimap is not None:
-            self._app.loaderManager.onViewLoaded += self.__onViewLoaded
+            if not self.__subscribed:
+                self._app.loaderManager.onViewLoaded += self.__onViewLoaded
+                self.__subscribed = True
             self.registerComponents()
 
     def __onViewLoaded(self, pyView, *args):
@@ -75,18 +78,18 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
 
 class ViewHandlerLobby(PackageBusinessHandler):
-    __slots__ = ('__initialized', '_listeners', '_scope', '_app', '_appNS',)
+    __slots__ = ('__subscribed', '_listeners', '_scope', '_app', '_appNS',)
 
     def __init__(self):
-        self.__initialized = False
+        self.__subscribed = False
         listeners = ((VIEW_ALIAS.LOBBY_HANGAR, self.eventListener),) if CURRENT_REALM != "RU" else tuple()
         super(ViewHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def eventListener(self, event):
-        if self.__initialized:
+        if self.__subscribed:
             return
         self._app.loaderManager.onViewLoaded += self.__onViewLoaded
-        self.__initialized = True
+        self.__subscribed = True
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
