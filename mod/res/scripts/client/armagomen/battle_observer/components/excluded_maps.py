@@ -1,7 +1,6 @@
 from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.utils.common import logDebug
 from armagomen.utils.dialogs import ExcludedMapsDialog
 from armagomen.utils.events import g_events
 from constants import PREMIUM_TYPE, PremiumConfigs, RENEWABLE_SUBSCRIPTION_CONFIG
