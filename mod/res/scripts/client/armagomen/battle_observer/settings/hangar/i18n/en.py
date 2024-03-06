@@ -78,6 +78,7 @@ localization = {
         "save_shot": "Block shooting at allies and destroyed.",
         "mute_team_base_sound": "Mute base capture siren.",
         "hide_hangar_prestige_widget": "Hide elite levels widget in hangar.",
+        "hide_battle_prestige_widget": "Hide elite levels widget in battle.",
         "hide_profile_prestige_widget": "Hide elite levels widget in vehicle statistics in profile.",
         "excluded_map_slots_notification": "Notify about available excluded map slots."
     },

@@ -1,9 +1,9 @@
 # coding=utf-8
 
-from armagomen._constants import MAIN, ANOTHER, GLOBAL
+from armagomen._constants import ANOTHER, GLOBAL, MAIN
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.utils.common import overrideMethod
-from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO, PlayerInfoVO
+from gui.battle_control.arena_info.arena_vos import PlayerInfoVO, VehicleArenaInfoVO
 from helpers import getClientLanguage
 
 ANONYMOUS_TRANSLATE = "Анонімний" if getClientLanguage() == "uk" else "Anonymous"
@@ -20,6 +20,8 @@ def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
                 kwargs[ANOTHER.NAME] = kwargs[ANOTHER.FAKE_NAME] = ANONYMOUS_TRANSLATE
         if settings.main[MAIN.HIDE_CLAN_ABBREV] and ANOTHER.CLAN_ABBR in kwargs:
             kwargs[ANOTHER.CLAN_ABBR] = GLOBAL.EMPTY_LINE
+        if settings.main[MAIN.HIDE_BATTLE_PRESTIGE_WIDGET]:
+            kwargs["prestigeLevel"] = kwargs["prestigeGradeMarkID"] = GLOBAL.ZERO
     return init(vInfoVo, *args, **kwargs)
 
 

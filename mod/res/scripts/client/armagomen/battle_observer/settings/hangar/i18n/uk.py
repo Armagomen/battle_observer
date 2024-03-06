@@ -77,8 +77,9 @@ localization = {
                                "яку ви вибрали в налаштуваннях модуля.",
         "save_shot": "Блокувати стрілянину по союзниках та знищених.",
         "mute_team_base_sound": "Вимкнути сирену захоплення бази.",
-        "hide_hangar_prestige_widget": "Сховати віджет елітності техніки в ангарі.",
-        "hide_profile_prestige_widget": "Сховати віджет елітності техніки в профілі гравця.",
+        "hide_hangar_prestige_widget": "Приховати віджет елітних рівнів в ангарі.",
+        "hide_battle_prestige_widget": "Приховати віджет елітних рівнів в бою.",
+        "hide_profile_prestige_widget": "Приховати віджет елітних рівнів в профілі гравця.",
         "excluded_map_slots_notification": "Сповіщати про доступні слоти для виключення карт."
     },
     "statistics": {
