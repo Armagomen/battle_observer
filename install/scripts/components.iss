@@ -25,6 +25,7 @@ Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Types: armagomen 
 Name: main/hide_hangar_prestige_widget; Description: {cm:hide_hangar_prestige_widget};
 Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Types: armagomen saxon_ua;
 Name: main/hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Types: armagomen saxon_ua;
+Name: main/hide_hangar_prestige_widget; Description: {cm:hide_hangar_prestige_widget};
 Name: main/hide_profile_prestige_widget; Description: {cm:hide_profile_prestige_widget};
 Name: main/hide_battle_prestige_widget; Description: {cm:hide_battle_prestige_widget};
 Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: armagomen saxon_ua;
@@ -201,9 +202,9 @@ begin
     JSON_SetBool(Handle,'/hide_clan_abbrev', WizardIsComponentSelected('main/hide_clan_abbrev'));
     JSON_SetBool(Handle,'/hide_dog_tags', WizardIsComponentSelected('main/hide_dog_tags'));
     JSON_SetBool(Handle,'/hide_field_mail', WizardIsComponentSelected('main/hide_field_mail'));
-    JSON_SetBool(Handle,'/hide_hangar_prestige_widget', WizardIsComponentSelected('main/hide_hangar_prestige_widget'));
     JSON_SetBool(Handle,'/hide_hint_panel', WizardIsComponentSelected('main/hide_hint_panel'));
     JSON_SetBool(Handle,'/hide_main_chat_in_hangar', WizardIsComponentSelected('main/hide_main_chat_in_hangar'));
+    JSON_SetBool(Handle,'/hide_hangar_prestige_widget', WizardIsComponentSelected('main/hide_hangar_prestige_widget'));
     JSON_SetBool(Handle,'/hide_profile_prestige_widget', WizardIsComponentSelected('main/hide_profile_prestige_widget'));
     JSON_SetBool(Handle,'/hide_battle_prestige_widget', WizardIsComponentSelected('main/hide_battle_prestige_widget'));
     JSON_SetBool(Handle,'/ignore_commanders_voice', WizardIsComponentSelected('main/ignore_commanders_voice'));
