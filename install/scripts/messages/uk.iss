@@ -38,6 +38,7 @@ uk.hide_hangar_prestige_widget=Сховати віджет елітності т
 uk.hide_hint_panel=Вимкнути підказки в бою
 uk.hide_main_chat_in_hangar=Вимкнути спільний чат у гаражі
 uk.hide_profile_prestige_widget=Сховати віджет елітності техніки в профілі гравця
+uk.hide_battle_prestige_widget=Сховати марку елітності техніки в бою
 uk.ignore_commanders_voice=Ігнорувати озвучку командирів
 uk.mute_team_base_sound=Вимкнути сирену захоплення бази
 uk.premium_time=Відображати таймер часу дії преміум-аккаунту
