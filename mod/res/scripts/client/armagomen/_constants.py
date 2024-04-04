@@ -207,7 +207,8 @@ ARCADE = namedtuple("ARCADE", (
 STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
     "strategic_camera", "min", "max", "distRange", "scrollSensitivity")
 POSTMORTEM = namedtuple("POSTMORTEM", ("DURATION", "PARAMS", "CAM_MATRIX", "MODES"))(
-    "transitionDuration", "postmortemParams", "camMatrix", {CTRL_MODE_NAME.POSTMORTEM,
+    "transitionDuration", "postmortemParams", "camMatrix", {CTRL_MODE_NAME.KILL_CAM,
+                                                            CTRL_MODE_NAME.POSTMORTEM,
                                                             CTRL_MODE_NAME.DEATH_FREE_CAM,
                                                             CTRL_MODE_NAME.RESPAWN_DEATH,
                                                             CTRL_MODE_NAME.VEHICLES_SELECTION})
