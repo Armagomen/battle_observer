@@ -146,12 +146,13 @@ def arcade_readConfigs(base, camera, *args, **kwargs):
             cfg[ARCADE.START_DIST] = settings.arcade_camera[ARCADE.START_DEAD_DIST]
 
 
-@overrideMethod(ArcadeCamera, "__updateProperties")
-def arcade__updateProperties(base, camera, state=None):
+@overrideMethod(ArcadeCamera, "_updateProperties")
+def arcade_updateProperties(base, camera, state=None):
     try:
         if settings.arcade_camera[GLOBAL.ENABLED] and state is not None:
-            state.distRange = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
-            state.scrollSensitivity = settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
+            distRange = MinMax(settings.arcade_camera[ARCADE.MIN], settings.arcade_camera[ARCADE.MAX])
+            scrollSensitivity = settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
+            state = state._replace(distRange=distRange, scrollSensitivity=scrollSensitivity)
     except Exception:
         LOG_CURRENT_EXCEPTION()
     finally:
