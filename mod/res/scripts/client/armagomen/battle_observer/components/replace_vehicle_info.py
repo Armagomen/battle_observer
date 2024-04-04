@@ -21,7 +21,7 @@ def new_VehicleArenaInfoVO(init, vInfoVo, *args, **kwargs):
         if settings.main[MAIN.HIDE_CLAN_ABBREV] and ANOTHER.CLAN_ABBR in kwargs:
             kwargs[ANOTHER.CLAN_ABBR] = GLOBAL.EMPTY_LINE
         if settings.main[MAIN.HIDE_BATTLE_PRESTIGE_WIDGET]:
-            kwargs["prestigeLevel"] = kwargs["prestigeGradeMarkID"] = None
+            kwargs[ANOTHER.PRESTIGE_LEVEL] = kwargs[ANOTHER.PRESTIGE_GRADE_MARK_ID] = None
     return init(vInfoVo, *args, **kwargs)
 
 

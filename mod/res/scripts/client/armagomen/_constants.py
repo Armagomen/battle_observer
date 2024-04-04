@@ -318,9 +318,9 @@ class PANELS:
 
 ANOTHER = namedtuple("ANOTHER", (
     "CONFIG_SELECT", "ACCOUNT_DBID", "USERS", "DBID", "BADGES", "OVERRIDDEN_BADGE",
-    "NAME", "FAKE_NAME", "CLAN_ABBR"))(
+    "NAME", "FAKE_NAME", "CLAN_ABBR", "PRESTIGE_LEVEL", "PRESTIGE_GRADE_MARK_ID"))(
     "configSelect", "accountDBID", "users", "databaseID", "badges", "overriddenBadge",
-    "name", "fakeName", "clanAbbrev")
+    "name", "fakeName", "clanAbbrev", "prestigeLevel", "prestigeGradeMarkID")
 
 CREW_XP = namedtuple("CREW_XP", (
     "NAME", "NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF", "ENABLE", "DISABLE"))(
