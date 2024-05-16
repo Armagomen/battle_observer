@@ -4,5 +4,6 @@
   "enabled": false,
   "lampShowTime": 9,
   "playTickSound": false,
+  "enabled_random_messages": true, 
   "user_icon": "mods/configs/mod_battle_observer/__icon__path__200x200.png"
 }
