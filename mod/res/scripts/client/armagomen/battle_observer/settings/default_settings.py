@@ -77,6 +77,7 @@ class DefaultSettings(object):
             GLOBAL.ENABLED: False,
             SIXTH_SENSE.PLAY_TICK_SOUND: True,
             SIXTH_SENSE.DEFAULT: True,
+            SIXTH_SENSE.ENABLED_RANDOM_MESSAGES: True,
             SIXTH_SENSE.ICON_NAME: SIXTH_SENSE.ICONS[GLOBAL.ZERO],
             SIXTH_SENSE.TIME: 10,
             SIXTH_SENSE.USER_ICON: "mods/configs/mod_battle_observer/__icon__path__200x200.png"
