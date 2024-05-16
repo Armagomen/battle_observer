@@ -62,9 +62,11 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
         self.radio_installed = RADIO in (device.groupName for device in devices if device is not None)
 
     def getNewRandomMessage(self):
-        message = choice(MESSAGES)
-        if message == self.__message:
-            message = self.getNewRandomMessage()
+        message = " "
+        if self.settings[SIXTH_SENSE.ENABLED_RANDOM_MESSAGES]:
+            message = choice(MESSAGES)
+            if message == self.__message:
+                message = self.getNewRandomMessage()
         return message
 
     def _onVehicleStateUpdated(self, state, value):
