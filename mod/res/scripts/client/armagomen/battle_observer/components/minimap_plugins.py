@@ -82,18 +82,16 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         if self.__isDestroyImmediately:
             self._setInAoI(entry, True)
         super(ArenaVehiclesPlugin, self).__setDestroyed(vehicleID, entry)
-        self._invoke(entry.getID(), self._showNames)
 
     def __switchToVehicle(self, prevCtrlID):
         if self.__isDestroyImmediately:
             return
         super(ArenaVehiclesPlugin, self).__switchToVehicle(prevCtrlID)
 
-    @property
-    def _showNames(self):
-        if self.__showDestroyEntries and settings.minimap[MINIMAP.SHOW_NAMES]:
-            return 'showVehicleName'
-        return 'hideVehicleName'
+    def _getDisplayedName(self, vInfo):
+        if not vInfo.isAlive() and not settings.minimap[MINIMAP.SHOW_NAMES]:
+            return ''
+        return super(ArenaVehiclesPlugin, self)._getDisplayedName(vInfo)
 
 
 @overrideMethod(MinimapComponent, "_setupPlugins")
