@@ -36,14 +36,12 @@ class Donate(object):
                 "Шановні Українці, не забувайте підтримувати розробку, бо хто, як не ви.",
                 "Кожна пожертва пришвидшує розробку та робить цей світ кращим."
             )
-            self.birthday_pattern = "Сьогодні свій день народження святкує {} - нафармив вже {}, вітаємо."
         else:
             self.messages = (
                 "Every donation speeds up development and makes this world a better place.",
                 "Please support the development of the mod, thanks for the donation.",
                 "Dear Europeans, do not forget to support the development, because who but you."
             )
-            self.birthday_pattern = "Today {} is celebrating his birthday - he has already gained {}, congratulations."
         self.message_format = dict(logo=getLogo(big=False), mono_url=URLS.MONO, mono_img=IMG.MONO)
 
     def getRandomMessage(self):
@@ -56,9 +54,8 @@ class Donate(object):
         self.lastMessage = self.getRandomMessage()
         return PATTERN.format(msg=self.lastMessage, **self.message_format)
 
-    def pushClanMessage(self):
-        if not self.show_clanMessage or g_clanCache.clanAbbrev is not None:
-            return
+    @staticmethod
+    def pushClanMessage():
         message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>, "
                    "отримаєш більше бонусів від гри (бустери, камуфляжі, та інше)."
                    "\nУмови на вступ: від 1000 боїв, грати 2-3 рази на тиждень."
@@ -68,20 +65,21 @@ class Donate(object):
 
     @property
     def showMessage(self):
-        clanAbbrev = g_clanCache.clanAbbrev
-        return clanAbbrev is None or "WG" not in clanAbbrev
+        clan_abbrev = g_clanCache.clanAbbrev
+        return clan_abbrev is None or "WG" not in clan_abbrev
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
-            currentTime = datetime.datetime.now()
-            if currentTime >= self.timeDelta:
-                self.timeDelta = currentTime + datetime.timedelta(hours=1)
+            current_time = datetime.datetime.now()
+            if current_time >= self.timeDelta:
+                self.timeDelta = current_time + datetime.timedelta(hours=1)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
-                logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
-                # self.pushClanMessage()\
+                logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
+                # if self.show_clanMessage and g_clanCache.clanAbbrev is None:
+                #     self.pushClanMessage()
 
 
-Donate()
+dn = Donate()
 
 
 @overrideMethod(NotificationListView, "onClickAction")
