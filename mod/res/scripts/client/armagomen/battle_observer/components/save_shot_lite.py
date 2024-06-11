@@ -1,18 +1,18 @@
 # coding=utf-8
-from Avatar import PlayerAvatar
-from PlayerEvents import g_playerEvents
-from armagomen._constants import VEHICLE, MAIN
+from armagomen._constants import MAIN, VEHICLE
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import overrideMethod, isReplay
+from armagomen.utils.common import isReplay, overrideMethod
 from armagomen.utils.keys_listener import g_keysListener
+from Avatar import PlayerAvatar
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from gui.shared.personality import ServicesLocator
-from helpers import getClientLanguage, dependency
+from helpers import dependency, getClientLanguage
 from messenger.MessengerEntry import g_instance
+from PlayerEvents import g_playerEvents
 from skeletons.gui.battle_session import IBattleSessionProvider
 
-if getClientLanguage() == 'uk':
+if getClientLanguage().lower() in ("uk", "be", "ru"):
     LOCKED_MESSAGE = 'Save Shot: Постріл у {} заблокований'
 else:
     LOCKED_MESSAGE = 'Save Shot: Shot in {} blocked'

@@ -1,8 +1,8 @@
 # coding=utf-8
 from helpers import getClientLanguage
 
-language = getClientLanguage()
-if language in ('uk', 'ru'):
+language = getClientLanguage().lower()
+if language in ('uk', 'be', 'ru'):
     from armagomen.battle_observer.settings.hangar.i18n.uk import localization
 
     LOCKED_MESSAGE = "Функція недоступна, тому що встановлено XVM."

@@ -1,13 +1,13 @@
 # coding=utf-8
 from collections import defaultdict
 
-from armagomen._constants import ARMOR_CALC, GLOBAL, POSTMORTEM, COLORS
+from armagomen._constants import ARMOR_CALC, COLORS, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
 from helpers import getClientLanguage
 
-if getClientLanguage() == "uk":
+if getClientLanguage().lower() in ("uk", "be", "ru"):
     NO_DAMAGE = "Критичне влучання, без шкоди."
     RICOCHET = "Рикошет."
 else:

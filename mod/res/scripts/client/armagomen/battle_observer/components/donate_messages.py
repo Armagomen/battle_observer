@@ -63,20 +63,16 @@ class Donate(object):
                    "</font></p>").format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
         pushMessage(message, type=SM_TYPE.Warning)
 
-    @property
-    def showMessage(self):
-        clan_abbrev = g_clanCache.clanAbbrev
-        return clan_abbrev is None or "WG" not in clan_abbrev
-
     def pushNewMessage(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.LOBBY and self.showMessage:
+        show = g_clanCache.clanAbbrev is None or "WG" not in g_clanCache.clanAbbrev
+        if spaceID == GuiGlobalSpaceID.LOBBY and show:
             current_time = datetime.datetime.now()
             if current_time >= self.timeDelta:
                 self.timeDelta = current_time + datetime.timedelta(hours=1)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
-                # if self.show_clanMessage and g_clanCache.clanAbbrev is None:
-                #     self.pushClanMessage()
+                if self.show_clanMessage and g_clanCache.clanAbbrev is None:
+                    self.pushClanMessage()
 
 
 dn = Donate()

@@ -33,7 +33,7 @@ uk = {
 
 
 def getI18n():
-    if getClientLanguage() == 'uk':
+    if getClientLanguage().lower() in ("uk", "be", "ru"):
         return uk
     else:
         return en
