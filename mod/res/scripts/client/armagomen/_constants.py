@@ -26,18 +26,21 @@ def sixthSenseIconsNamesList():
     return sorted(folder.keys())
 
 
-IMG = namedtuple("IMG", "MONO")(
-    "<img src='{}/donate/mono.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
+IMG = namedtuple("IMG", "MONO PATREON")(
+    "<img src='{}/donate/mono.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
     "UPDATE_GITHUB_API_URL",
     "MONO",
+    "PATREON",
     "DISCORD",
     "UPDATE"
 ))(
     "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
     "https://send.monobank.ua/jar/5BZHrPrJwr",
+    "https://patreon.com/armagomen",
     "https://discord.gg/Nma5T5snKW",
     "https://github.com/Armagomen/battle_observer/releases/download/"
 )

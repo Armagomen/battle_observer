@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import logInfo, logDebug
+from armagomen.utils.common import logDebug, logInfo
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore
@@ -46,7 +46,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @staticmethod
     def getVehicleClassColor(classTag):
-        return settings.colors[VEHICLE_TYPES_COLORS.NAME][classTag or VEHICLE_TYPES_COLORS.UNKNOWN]
+        return settings.colors[VEHICLE_TYPES_COLORS.NAME].get(classTag, VEHICLE_TYPES_COLORS.UNKNOWN)
 
     def doLog(self, *args):
         for arg in args:

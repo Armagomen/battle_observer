@@ -1,6 +1,6 @@
 # coding=utf-8
-import datetime
-import random
+from datetime import datetime, timedelta
+from random import choice
 
 from armagomen._constants import getLogo, IMG, URLS
 from armagomen.utils.common import logInfo, openWebBrowser, overrideMethod
@@ -16,36 +16,41 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 CLAN_ABBREV = "BO-UA"
 
-PATTERN = ("{logo}<p><font color='#ffff66'>{msg}</font></p>\n"
-           "<p><textformat leading='2'>"
-           "{mono_img} <a href='event:{mono_url}'>MONO</a>"
-           "</textformat></p>")
+PATTERN = getLogo(big=False) + ("<p><font color='#ffff66'>{msg}</font></p>\n"
+                                "<p><textformat leading='2'>"
+                                "{img} <a href='event:{url}'>{name}</a>"
+                                "</textformat></p>")
+
+MESSAGES = {
+    "uk": (
+        "Будь ласка, підтримайте розробку мода, дякую за пожертву.",
+        "Шановні, не забувайте підтримувати розробку.",
+        "Кожна пожертва пришвидшує розробку та робить цей світ кращим."
+    ),
+    "en": (
+        "Every donation speeds up development and makes this world a better place.",
+        "Please support the development of the mod, thanks for the donation.",
+    )
+}
+
+LINKS_FORMAT = {
+    "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO"},
+    "en": {"url": URLS.PATREON, "img": IMG.PATREON, "name": "PATREON"},
+}
 
 
 class Donate(object):
 
-    def __init__(self):
-        self.timeDelta = datetime.datetime.now() + datetime.timedelta(minutes=5)
+    def __init__(self, ln):
+        self.messages = MESSAGES[ln]
+        self.message_format = LINKS_FORMAT[ln]
+        self.timeDelta = datetime.now() + timedelta(minutes=5)
         self.lastMessage = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
-        support_language = getClientLanguage() in ('uk', 'be', 'ru')
-        self.show_clanMessage = support_language and AUTH_REALM == "EU"
-        if support_language:
-            self.messages = (
-                "Будь ласка, підтримайте розробку мода, дякую за пожертву.",
-                "Шановні Українці, не забувайте підтримувати розробку, бо хто, як не ви.",
-                "Кожна пожертва пришвидшує розробку та робить цей світ кращим."
-            )
-        else:
-            self.messages = (
-                "Every donation speeds up development and makes this world a better place.",
-                "Please support the development of the mod, thanks for the donation.",
-                "Dear Europeans, do not forget to support the development, because who but you."
-            )
-        self.message_format = dict(logo=getLogo(big=False), mono_url=URLS.MONO, mono_img=IMG.MONO)
+        self.show_clanMessage = ln == "uk"
 
     def getRandomMessage(self):
-        message = random.choice(self.messages)
+        message = choice(self.messages)
         if message is self.lastMessage:
             message = self.getRandomMessage()
         return message
@@ -66,23 +71,25 @@ class Donate(object):
     def pushNewMessage(self, spaceID):
         show = g_clanCache.clanAbbrev is None or "WG" not in g_clanCache.clanAbbrev
         if spaceID == GuiGlobalSpaceID.LOBBY and show:
-            current_time = datetime.datetime.now()
+            current_time = datetime.now()
             if current_time >= self.timeDelta:
-                self.timeDelta = current_time + datetime.timedelta(hours=1)
+                self.timeDelta = current_time + timedelta(hours=1)
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
                 if self.show_clanMessage and g_clanCache.clanAbbrev is None:
                     self.pushClanMessage()
 
 
-dn = Donate()
+if AUTH_REALM == "EU":
+    ln_code = "uk" if getClientLanguage().lower() in ("uk", "be", "ru") else "en"
+    dn = Donate(ln_code)
 
 
-@overrideMethod(NotificationListView, "onClickAction")
-@overrideMethod(NotificationPopUpViewer, "onClickAction")
-def clickAction(base, view, typeID, entityID, action):
-    if action in URLS:
-        return openWebBrowser(action)
-    if action == CLAN_ABBREV:
-        return event_dispatcher.showClanProfileWindow(500223690, action)
-    return base(view, typeID, entityID, action)
+    @overrideMethod(NotificationListView, "onClickAction")
+    @overrideMethod(NotificationPopUpViewer, "onClickAction")
+    def clickAction(base, view, typeID, entityID, action):
+        if action in URLS:
+            return openWebBrowser(action)
+        if action == CLAN_ABBREV:
+            return event_dispatcher.showClanProfileWindow(500223690, action)
+        return base(view, typeID, entityID, action)
