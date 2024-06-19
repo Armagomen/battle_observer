@@ -135,7 +135,7 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype.as_BattleObserverHideWg = function(components:Array, region:String):void
+			BaseBattlePage.prototype.as_BattleObserverHideWg = function(components:Array):void
 			{
 				for each (var alias:String in components)
 				{
