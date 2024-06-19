@@ -22,7 +22,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
 	import net.armagomen.battleobserver.battle.wgcomponents.minimapZoom;
-	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.gui.battle.views.BaseBattlePage;
@@ -138,32 +137,29 @@ package net.armagomen.battleobserver
 			
 			BaseBattlePage.prototype.as_BattleObserverHideWg = function(components:Array, region:String):void
 			{
-				if (Utils.checkRegion(region))
+				for each (var alias:String in components)
 				{
-					for each (var alias:String in components)
+					var component:* = this.getComponent(alias);
+					if (component)
 					{
-						var component:* = this.getComponent(alias);
-						if (component)
-						{
-							component.visible = false;
-							component.alpha = 0;
-							component.removeChildren();
-							this.removeChild(component);
-						}
+						component.visible = false;
+						component.alpha = 0;
+						component.removeChildren();
+						this.removeChild(component);
 					}
-					var prebattleTimer:* = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
-					if (prebattleTimer)
-					{
-						this.addChild(prebattleTimer);
-					}
-					
-					var q_progress:* = this.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
-					var t_health:*   = this.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-					
-					if (q_progress && t_health)
-					{
-						this.addChildAt(q_progress, this.getChildIndex(t_health) - 1);
-					}
+				}
+				var prebattleTimer:* = this.getComponent(BATTLE_VIEW_ALIASES.PREBATTLE_TIMER);
+				if (prebattleTimer)
+				{
+					this.addChild(prebattleTimer);
+				}
+				
+				var q_progress:* = this.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
+				var t_health:*   = this.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+				
+				if (q_progress && t_health)
+				{
+					this.addChildAt(q_progress, this.getChildIndex(t_health) - 1);
 				}
 			}
 			
