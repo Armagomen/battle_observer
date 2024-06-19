@@ -1,5 +1,5 @@
 from armagomen._constants import EXCLUDED_MAPS, MAIN
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.utils.dialogs import ExcludedMapsDialog
 from armagomen.utils.events import g_events
@@ -92,7 +92,7 @@ class ExcludedMapsProcessor(object):
         self.__isDialogVisible = False
 
     def __update(self):
-        if not user.main[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
+        if not user_settings.main[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
             return
         if self.__isDialogVisible:
             return

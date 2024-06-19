@@ -359,4 +359,4 @@ class UserSettings(object):
         }
 
 
-user = UserSettings()
+user_settings = UserSettings()

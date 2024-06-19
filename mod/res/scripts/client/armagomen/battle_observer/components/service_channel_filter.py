@@ -1,5 +1,5 @@
 from armagomen._constants import GLOBAL, SERVICE_CHANNEL
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import overrideMethod
 from chat_shared import SYS_MESSAGE_TYPE
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
@@ -48,4 +48,4 @@ def onModSettingsChanged(config, blockID):
                         channel_filter.add(name)
 
 
-user.onModSettingsChanged += onModSettingsChanged
+user_settings.onModSettingsChanged += onModSettingsChanged

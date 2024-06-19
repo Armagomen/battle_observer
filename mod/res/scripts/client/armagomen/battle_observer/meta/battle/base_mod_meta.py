@@ -1,6 +1,6 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, VEHICLE_TYPES_COLORS
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.logging import logDebug, logInfo
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
@@ -21,7 +21,7 @@ class BaseModMeta(BaseDAAPIComponent):
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
         settings_name = ALIAS_TO_CONFIG_NAME.get(alias, GLOBAL.EMPTY_LINE)
-        self.settings = getattr(user, settings_name, None) or user
+        self.settings = getattr(user_settings, settings_name, None) or user_settings
 
     @property
     def gui(self):
@@ -38,15 +38,15 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @staticmethod
     def getColors():
-        return user.colors
+        return user_settings.colors
 
     @staticmethod
     def getVehicleClassColors():
-        return user.colors[VEHICLE_TYPES_COLORS.NAME]
+        return user_settings.colors[VEHICLE_TYPES_COLORS.NAME]
 
     @staticmethod
     def getVehicleClassColor(classTag):
-        return user.colors[VEHICLE_TYPES_COLORS.NAME].get(classTag, VEHICLE_TYPES_COLORS.UNKNOWN)
+        return user_settings.colors[VEHICLE_TYPES_COLORS.NAME].get(classTag, VEHICLE_TYPES_COLORS.UNKNOWN)
 
     def doLog(self, *args):
         for arg in args:

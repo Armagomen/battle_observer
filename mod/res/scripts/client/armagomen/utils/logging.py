@@ -1,6 +1,6 @@
 import BigWorld
 
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
@@ -15,7 +15,7 @@ def logInfo(message):
 
 
 def logDebug(message, *args, **kwargs):
-    if user.main[DEBUG]:
+    if user_settings.main[DEBUG]:
         BigWorld.logDebug(MOD_NAME, str(message).format(*args, **kwargs), None)
 
 

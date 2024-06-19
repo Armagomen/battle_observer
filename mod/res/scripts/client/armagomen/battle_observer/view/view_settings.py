@@ -1,6 +1,6 @@
 from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS, \
     VEHICLE_TYPES_COLORS
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import xvmInstalled
 from armagomen.utils.logging import logDebug, logInfo
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
@@ -51,12 +51,13 @@ class ViewSettings(object):
     def isStatisticsModuleEnabled(self):
         if self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
             return False
-        return user.statistics[GLOBAL.ENABLED]
+        return user_settings.statistics[GLOBAL.ENABLED]
 
     @staticmethod
     def getStatisticsSettings():
-        return (user.statistics[STATISTICS.PANELS_CUT_WIDTH], user.statistics[STATISTICS.PANELS_FULL_WIDTH],
-                user.colors[VEHICLE_TYPES_COLORS.NAME], user.statistics[STATISTICS.ICON_BLACKOUT])
+        return (
+        user_settings.statistics[STATISTICS.PANELS_CUT_WIDTH], user_settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
+        user_settings.colors[VEHICLE_TYPES_COLORS.NAME], user_settings.statistics[STATISTICS.ICON_BLACKOUT])
 
     @staticmethod
     def xvmInstalled(module):
@@ -67,63 +68,63 @@ class ViewSettings(object):
     def isMinimapEnabled(self):
         if self.xvmInstalled("Minimap") or self.gui.isEpicBattle():
             return False
-        return user.minimap[GLOBAL.ENABLED] and user.minimap[MINIMAP.ZOOM]
+        return user_settings.minimap[GLOBAL.ENABLED] and user_settings.minimap[MINIMAP.ZOOM]
 
     def isWTREnabled(self):
         if self.xvmInstalled("Statistics"):
             return False
-        return self.isStatisticsModuleEnabled() and user.statistics[STATISTICS.STATISTIC_ENABLED]
+        return self.isStatisticsModuleEnabled() and user_settings.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
         if self.xvmInstalled("Icons"):
             return False
-        return self.isStatisticsModuleEnabled() and user.statistics[STATISTICS.ICON_ENABLED]
+        return self.isStatisticsModuleEnabled() and user_settings.statistics[STATISTICS.ICON_ENABLED]
 
     def isPlayersPanelsEnabled(self):
         if self.xvmInstalled("PlayersPanels") or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle():
             return False
-        return user.players_panels[GLOBAL.ENABLED]
+        return user_settings.players_panels[GLOBAL.ENABLED]
 
     def isFlightTimeEnabled(self):
-        enabled = user.flight_time[GLOBAL.ENABLED]
-        if user.flight_time[FLIGHT_TIME.SPG_ONLY]:
+        enabled = user_settings.flight_time[GLOBAL.ENABLED]
+        if user_settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
             return enabled and self.isSPG()
         return enabled
 
     def isDistanceToEnemyEnabled(self):
         if self.isSPG() or self.gui.isInEpicRange():
             return False
-        return user.distance_to_enemy[GLOBAL.ENABLED]
+        return user_settings.distance_to_enemy[GLOBAL.ENABLED]
 
     def getSetting(self, alias):
         if alias is BATTLE_ALIASES.HP_BARS and not self.gui.isInEpicRange():
-            return user.hp_bars[GLOBAL.ENABLED]
+            return user_settings.hp_bars[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.DAMAGE_LOG:
-            return user.log_total[GLOBAL.ENABLED] or user.log_extended[GLOBAL.ENABLED]
+            return user_settings.log_total[GLOBAL.ENABLED] or user_settings.log_extended[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.MAIN_GUN and self.isRandomBattle():
-            return user.main_gun[GLOBAL.ENABLED]
+            return user_settings.main_gun[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.DEBUG:
-            return user.debug_panel[GLOBAL.ENABLED]
+            return user_settings.debug_panel[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.TIMER:
-            return user.battle_timer[GLOBAL.ENABLED]
+            return user_settings.battle_timer[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.SIXTH_SENSE:
-            return user.sixth_sense[GLOBAL.ENABLED]
+            return user_settings.sixth_sense[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.TEAM_BASES and not self.gui.isInEpicRange():
-            return user.team_bases_panel[GLOBAL.ENABLED]
+            return user_settings.team_bases_panel[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.ARMOR_CALC:
-            return user.armor_calculator[GLOBAL.ENABLED]
+            return user_settings.armor_calculator[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.FLIGHT_TIME:
             return self.isFlightTimeEnabled()
         elif alias is BATTLE_ALIASES.DISPERSION_TIMER:
-            return user.dispersion_timer[GLOBAL.ENABLED]
+            return user_settings.dispersion_timer[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.PANELS:
             return self.isPlayersPanelsEnabled()
         elif alias is BATTLE_ALIASES.DATE_TIME:
-            return user.clock[GLOBAL.ENABLED] and user.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
+            return user_settings.clock[GLOBAL.ENABLED] and user_settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.DISTANCE:
             return self.isDistanceToEnemyEnabled()
         elif alias is BATTLE_ALIASES.OWN_HEALTH:
-            return user.own_health[GLOBAL.ENABLED]
+            return user_settings.own_health[GLOBAL.ENABLED]
         return False
 
     def setComponents(self):

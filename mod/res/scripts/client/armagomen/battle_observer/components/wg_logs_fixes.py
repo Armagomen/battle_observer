@@ -1,5 +1,5 @@
 from armagomen._constants import DAMAGE_LOG, GLOBAL
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE as _ETYPE
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
@@ -12,7 +12,7 @@ validated = {}
 
 @overrideMethod(_LogViewComponent, "addToLog")
 def addToLog(base, component, event):
-    if user.wg_logs[GLOBAL.ENABLED]:
+    if user_settings.wg_logs[GLOBAL.ENABLED]:
         return base(component, [e for e in event if not validated.get(e.getType(), False)])
     return base(component, event)
 
@@ -32,4 +32,4 @@ def validateSettings(config):
             _ETYPE.STUN: config[DAMAGE_LOG.WG_ASSIST]}
 
 
-user.onModSettingsChanged += onModSettingsChanged
+user_settings.onModSettingsChanged += onModSettingsChanged

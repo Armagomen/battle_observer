@@ -1,6 +1,6 @@
 from aih_constants import SHOT_RESULT
 from armagomen._constants import ARMOR_CALC, GLOBAL
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
@@ -108,7 +108,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
-        self.__onAlly = bool(user.armor_calculator[ARMOR_CALC.ON_ALLY])
+        self.__onAlly = bool(user_settings.armor_calculator[ARMOR_CALC.ON_ALLY])
 
     def __updateColor(self, markerType, hitPoint, collision, direction):
         shot_result, armor, piercing_power, caliber, ricochet, no_damage = \
@@ -128,6 +128,6 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 @overrideMethod(plugins, 'createPlugins')
 def createPlugins(base, *args):
     _plugins = base(*args)
-    if user.armor_calculator[GLOBAL.ENABLED]:
+    if user_settings.armor_calculator[GLOBAL.ENABLED]:
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins

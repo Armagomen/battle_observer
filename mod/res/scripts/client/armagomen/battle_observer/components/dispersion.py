@@ -1,6 +1,6 @@
 import aih_constants
 from armagomen._constants import DISPERSION, GLOBAL
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import getPlayer, overrideMethod
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import BattleReplay, g_replayCtrl
@@ -36,9 +36,9 @@ aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0
 
 def getSetting(gunMakerType):
     if gunMakerType == CLIENT:
-        return user.dispersion_circle[DISPERSION.REPLACE]
+        return user_settings.dispersion_circle[DISPERSION.REPLACE]
     elif gunMakerType == SERVER:
-        return user.dispersion_circle[DISPERSION.SERVER]
+        return user_settings.dispersion_circle[DISPERSION.SERVER]
     return False
 
 
@@ -46,7 +46,8 @@ class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
 
     def __init__(self, gunMakerType, dataProvider, **kwargs):
         super(_DefaultGunMarkerController, self).__init__(gunMakerType, dataProvider, **kwargs)
-        self.__scaleConfig = float(user.dispersion_circle[DISPERSION.SCALE]) if getSetting(gunMakerType) else 1.0
+        self.__scaleConfig = float(user_settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(
+            gunMakerType) else 1.0
 
     def __updateScreenRatio(self):
         super(_DefaultGunMarkerController, self).__updateScreenRatio()
@@ -57,7 +58,8 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
     def __init__(self, gunMakerType, dataProvider, **kwargs):
         super(SPGController, self).__init__(gunMakerType, dataProvider, **kwargs)
-        self.__scaleConfig = float(user.dispersion_circle[DISPERSION.SCALE]) if getSetting(gunMakerType) else 1.0
+        self.__scaleConfig = float(user_settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(
+            gunMakerType) else 1.0
 
     def _updateDispersionData(self):
         self._size *= self.__scaleConfig
@@ -77,7 +79,7 @@ class DispersionCircle(object):
     def __init__(self):
         self.enabled = False
         self.server = False
-        user.onModSettingsChanged += self.onModSettingsChanged
+        user_settings.onModSettingsChanged += self.onModSettingsChanged
         overrideMethod(gm_factory, "createComponents")(self.createOverrideComponents)
         overrideMethod(gm_factory, "overrideComponents")(self.createOverrideComponents)
         overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)

@@ -1,7 +1,7 @@
 import os
 
 from armagomen._constants import GLOBAL, LOAD_LIST, SIXTH_SENSE
-from armagomen.battle_observer.settings import user
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import currentConfigPath, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.logging import logDebug, logInfo, logWarning
@@ -89,12 +89,12 @@ class SettingsLoader(object):
         direct_path = os.path.join(currentConfigPath, self.configName)
         listdir = os.listdir(direct_path)
         for part_name in LOAD_LIST:
-            internal_cfg = getattr(user, part_name)
+            internal_cfg = getattr(user_settings, part_name)
             if internal_cfg is None:
                 continue
             self.loadConfigPart(part_name, direct_path, listdir, internal_cfg)
         logInfo("LOADING '{}' CONFIGURATION COMPLETED".format(self.configName.upper()))
-        user.onUserConfigUpdateComplete()
+        user_settings.onUserConfigUpdateComplete()
         if self.errorMessages:
             ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
@@ -114,7 +114,7 @@ class SettingsLoader(object):
             if self.updateData(file_data, internal_cfg):
                 writeJsonFile(file_path, internal_cfg)
             logDebug(READ_MESSAGE, self.configName, file_name)
-            user.onModSettingsChanged(internal_cfg, part_name)
+            user_settings.onModSettingsChanged(internal_cfg, part_name)
 
     def onGUISpaceEntered(self, spaceID):
         if self.errorMessages:
