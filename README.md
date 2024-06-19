@@ -3,7 +3,6 @@
 ### Офіційні ресурси
 
 * [Korean Random Forum](https://koreanrandom.com/forum/topic/32939-)
-* [WG Forum](https://forum.worldoftanks.eu/index.php?/topic/790600-battle-observer/)
 * [DISCORD](https://discord.gg/Nma5T5snKW)
 
 ### Інформація
