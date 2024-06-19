@@ -1,5 +1,5 @@
 from armagomen._constants import CREW_XP, GLOBAL, MAIN
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.utils.common import openIgnoredVehicles, overrideMethod, updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
@@ -91,11 +91,11 @@ class CrewProcessor(object):
     def updateCrew(self, vehicle):
         if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
             return
-        if settings.main[MAIN.CREW_RETURN] and self.intCD != vehicle.intCD:
+        if user.main[MAIN.CREW_RETURN] and self.intCD != vehicle.intCD:
             if not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
                 self._processReturnCrew(vehicle)
             self.intCD = vehicle.intCD
-        if settings.main[MAIN.CREW_TRAINING]:
+        if user.main[MAIN.CREW_TRAINING]:
             self.accelerateCrewTraining(vehicle)
 
     @decorators.adisp_process('crewReturning')

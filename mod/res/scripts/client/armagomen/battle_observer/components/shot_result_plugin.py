@@ -1,15 +1,15 @@
-from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
-from DestructibleEntity import DestructibleEntity
-from Vehicle import Vehicle
 from aih_constants import SHOT_RESULT
-from armagomen._constants import GLOBAL, ARMOR_CALC
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen._constants import ARMOR_CALC, GLOBAL
+from armagomen.battle_observer.settings import user
 from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
-from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES as SHELLS, SHELL_TYPES
+from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
+from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES, SHELL_TYPES as SHELLS
+from DestructibleEntity import DestructibleEntity
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+from Vehicle import Vehicle
 
 UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
 _MIN_PIERCING_DIST = 100.0
@@ -108,7 +108,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
-        self.__onAlly = bool(settings.armor_calculator[ARMOR_CALC.ON_ALLY])
+        self.__onAlly = bool(user.armor_calculator[ARMOR_CALC.ON_ALLY])
 
     def __updateColor(self, markerType, hitPoint, collision, direction):
         shot_result, armor, piercing_power, caliber, ricochet, no_damage = \
@@ -128,6 +128,6 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 @overrideMethod(plugins, 'createPlugins')
 def createPlugins(base, *args):
     _plugins = base(*args)
-    if settings.armor_calculator[GLOBAL.ENABLED]:
+    if user.armor_calculator[GLOBAL.ENABLED]:
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins

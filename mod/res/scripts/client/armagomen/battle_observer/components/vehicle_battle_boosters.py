@@ -1,6 +1,6 @@
 from adisp import adisp_process
 from armagomen._constants import MAIN
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logInfo
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
@@ -12,7 +12,7 @@ def changeValue(vehicle, value):
 
 
 def onVehicleChanged(vehicle):
-    if not settings.main[MAIN.DIRECTIVES]:
+    if not user.main[MAIN.DIRECTIVES]:
         return
     if vehicle is None or vehicle.isLocked or vehicle.isInBattle:
         return

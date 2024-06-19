@@ -1,7 +1,7 @@
 from math import floor, log
 
 from armagomen._constants import STATISTICS
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from armagomen.utils.logging import logDebug
 from gui.battle_control import avatar_getter
 
@@ -14,7 +14,7 @@ class WTRStatistics(object):
     UNITS = ['', 'k', 'm', 'g', 't', 'p']
 
     def __init__(self):
-        self.settings = settings.statistics
+        self.settings = user.statistics
         self.wtr_ranges = ((3030, "bad"), (4590, "normal"), (6440, "good"), (8670, "very_good"), (10450, "unique"))
         self.itemsData = {}
 

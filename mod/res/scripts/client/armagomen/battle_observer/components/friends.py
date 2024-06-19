@@ -1,10 +1,10 @@
-from PlayerEvents import g_playerEvents
-from armagomen._constants import MAIN, ANOTHER
-from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import overrideMethod, isReplay
+from armagomen._constants import ANOTHER, MAIN
+from armagomen.battle_observer.settings import user
+from armagomen.utils.common import isReplay, overrideMethod
 from gui.battle_control.arena_info.arena_vos import VehicleTypeInfoVO
 from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategories
 from messenger.storage import storage_getter
+from PlayerEvents import g_playerEvents
 
 _cache = set()
 
@@ -19,7 +19,7 @@ g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
 
 
 def showFriends():
-    return settings.main[MAIN.SHOW_FRIENDS] and not isReplay()
+    return user.main[MAIN.SHOW_FRIENDS] and not isReplay()
 
 
 @overrideMethod(VehicleTypeInfoVO)

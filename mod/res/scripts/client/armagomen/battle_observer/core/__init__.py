@@ -2,7 +2,7 @@ import logging
 
 from armagomen._constants import BATTLES_RANGE
 from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCachedData
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache, gameVersion
 from armagomen.utils.logging import logInfo
 from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
@@ -44,7 +44,7 @@ def onInit(modVersion, current_realm):
 
 
 def onFini(modVersion):
-    if settings.main["clear_cache_automatically"]:
+    if user.main["clear_cache_automatically"]:
         clearClientCache()
     cleanupObserverUpdates()
     cleanupUpdates()

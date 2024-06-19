@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 from armagomen._constants import MAIN, MOD_NAME
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui import InputHandler
 from Keys import KEY_LALT, KEY_LCONTROL, KEY_LSHIFT, KEY_RALT, KEY_RCONTROL, KEY_RSHIFT
@@ -68,7 +68,7 @@ class KeysListener(object):
                 keys.update(key)
             else:
                 keys.add(key)
-        if settings.main[MAIN.USE_KEY_PAIRS]:
+        if user.main[MAIN.USE_KEY_PAIRS]:
             for key in tuple(keys):
                 if key in KEY_ALIAS_CONTROL:
                     keys.update(KEY_ALIAS_CONTROL)

@@ -1,6 +1,6 @@
 from armagomen._constants import ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP, \
     MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
 from armagomen.utils.logging import logDebug, logWarning
@@ -238,10 +238,10 @@ class SettingsInterface(CreateElement):
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         self.vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                        useKeyPairs=settings.main[MAIN.USE_KEY_PAIRS])
+                                        useKeyPairs=user.main[MAIN.USE_KEY_PAIRS])
         self.vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
-        settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
+        user.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
 
     def loadHangarSettings(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOGIN:
@@ -320,7 +320,7 @@ class SettingsInterface(CreateElement):
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
             logDebug("change config '{}' - {}", self.sLoader.configsList[self.newConfigID], blockID)
         else:
-            settings_block = getattr(settings, blockID)
+            settings_block = getattr(user, blockID)
             for key, value in data.iteritems():
                 updated_config_link, param_name = self.getter.getLinkToParam(settings_block, key)
                 if param_name in updated_config_link:
@@ -339,7 +339,7 @@ class SettingsInterface(CreateElement):
                         value = float(value)
                     updated_config_link[param_name] = value
             self.sLoader.updateConfigFile(blockID, settings_block)
-            settings.onModSettingsChanged(settings_block, blockID)
+            user.onModSettingsChanged(settings_block, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -376,7 +376,7 @@ class SettingsInterface(CreateElement):
 
     def getTemplate(self, blockID):
         """Create templates, do not change..."""
-        settings_block = getattr(settings, blockID, {})
+        settings_block = getattr(user, blockID, {})
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfigID)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.MONO, 'Button'),

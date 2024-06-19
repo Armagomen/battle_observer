@@ -1,15 +1,15 @@
-from CurrentVehicle import g_currentVehicle
-from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, IMAGE_DIR, EFFICIENCY_ICONS_SIZE
+from armagomen._constants import AVG_EFFICIENCY_HANGAR, EFFICIENCY_ICONS_SIZE, GLOBAL, IMAGE_DIR
 from armagomen.battle_observer.core import cachedVehicleData
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from armagomen.utils.common import overrideMethod
+from CurrentVehicle import g_currentVehicle
 from gui.Scaleform.daapi.view.lobby.hangar.ammunition_panel import AmmunitionPanel
 
 
 @overrideMethod(AmmunitionPanel, "as_updateVehicleStatusS")
 def updateStatus(base, panel, data):
     cachedVehicleData.onVehicleChanged()
-    if settings.avg_efficiency_in_hangar[GLOBAL.ENABLED]:
+    if user.avg_efficiency_in_hangar[GLOBAL.ENABLED]:
         if data["message"]:
             data["message"] += "\n" + getAvgData()
         else:
@@ -30,17 +30,17 @@ EFFICIENCY_ICONS = {
 def getAvgData():
     data = cachedVehicleData.efficiencyAvgData
     text = []
-    if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.DAMAGE]:
+    if user.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.DAMAGE]:
         text.append("{damageIcon}{damage}")
-    if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.ASSIST]:
+    if user.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.ASSIST]:
         text.append("{assistIcon}{assist}")
-    if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.BLOCKED]:
+    if user.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.BLOCKED]:
         text.append("{blockedIcon}{blocked}")
-    if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
+    if user.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
         text.append("{stunIcon}{stun}")
-    if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.WIN_RATE]:
+    if user.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.WIN_RATE]:
         text.append("{winRateIcon}{winRate}%")
-    if settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:
+    if user.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:
         text.append("{marksOnGunIcon}{marksOnGunValue}%")
     if text:
         params = data._asdict()
@@ -54,4 +54,4 @@ def onModSettingsChanged(config, blockID):
         g_currentVehicle.onChanged()
 
 
-settings.onModSettingsChanged += onModSettingsChanged
+user.onModSettingsChanged += onModSettingsChanged

@@ -1,5 +1,5 @@
 from armagomen._constants import MAIN
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from armagomen.utils.common import callback, overrideMethod
 from armagomen.utils.events import g_events
 from CurrentVehicle import g_currentVehicle
@@ -30,7 +30,7 @@ def changeVehicle(base, *args, **kwargs):
 # disable field mail tips
 @overrideMethod(PromoController, "__tryToShowTeaser")
 def __tryToShowTeaser(base, *args):
-    if not settings.main[MAIN.FIELD_MAIL]:
+    if not user.main[MAIN.FIELD_MAIL]:
         return base(*args)
 
 
@@ -38,7 +38,7 @@ def __tryToShowTeaser(base, *args):
 @overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByTankmen")
 @overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByCommanderSkinID")
 def setSoundMode(base, *args, **kwargs):
-    if settings.main[MAIN.IGNORE_COMMANDERS]:
+    if user.main[MAIN.IGNORE_COMMANDERS]:
         return False
     return base(*args, **kwargs)
 
@@ -46,7 +46,7 @@ def setSoundMode(base, *args, **kwargs):
 # disable dogTag
 @overrideMethod(_ClientArenaVisitor, "hasDogTag")
 def hasDogTag(base, *args, **kwargs):
-    return False if settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
+    return False if user.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
 
 
 # update gun dispersion
@@ -60,20 +60,20 @@ def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
 @overrideMethod(hint_plugins, "createPlugins")
 def createPlugins(base, *args, **kwargs):
     result = base(*args, **kwargs)
-    if settings.main[MAIN.HIDE_HINT]:
+    if user.main[MAIN.HIDE_HINT]:
         result.clear()
     return result
 
 # disable battle artillery_stun_effect sound
 @overrideMethod(TimersPanel, "__playStunSoundIfNeed")
 def playStunSoundIfNeed(base, *args, **kwargs):
-    if not settings.main[MAIN.STUN_SOUND]:
+    if not user.main[MAIN.STUN_SOUND]:
         return base(*args, **kwargs)
 
 
 @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
 def _onVehicleStateUpdated(base, eq, state, value):
-    if state == VEHICLE_VIEW_STATE.STUN and settings.main[MAIN.STUN_SOUND]:
+    if state == VEHICLE_VIEW_STATE.STUN and user.main[MAIN.STUN_SOUND]:
         return
     return base(eq, state, value)
 
@@ -81,7 +81,7 @@ def _onVehicleStateUpdated(base, eq, state, value):
 # hide shared chat button
 @overrideMethod(LobbyEntry, '__handleLazyChannelCtlInited')
 def handleLazyChannelCtlInited(base, entry, event):
-    if settings.main[MAIN.HIDE_MAIN_CHAT]:
+    if user.main[MAIN.HIDE_MAIN_CHAT]:
         ctx = event.ctx
         controller = ctx.get('controller')
         if controller is not None:
@@ -97,26 +97,26 @@ def handleLazyChannelCtlInited(base, entry, event):
 @overrideMethod(LobbyHeader, "as_removeButtonCounterS")
 @overrideMethod(LobbyHeader, "as_setButtonCounterS")
 def buttonCounterS(base, *args, **kwargs):
-    if not settings.main[MAIN.HIDE_BTN_COUNTERS]:
+    if not user.main[MAIN.HIDE_BTN_COUNTERS]:
         return base(*args, **kwargs)
 
 
 @overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
 def muteCaptureSound(base, *args):
-    if not settings.main[MAIN.MUTE_BASES_SOUND]:
+    if not user.main[MAIN.MUTE_BASES_SOUND]:
         return base(*args)
 
 
 @overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')
 def as_setPrestigeWidgetVisibleS(base, self, value):
-    if settings.main[MAIN.HIDE_HANGAR_PRESTIGE_WIDGET]:
+    if user.main[MAIN.HIDE_HANGAR_PRESTIGE_WIDGET]:
         value = False
     return base(self, value)
 
 
 @overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')
 def as_setPrestigeVisibleS(base, self, value):
-    if settings.main[MAIN.HIDE_PROFILE_PRESTIGE_WIDGET]:
+    if user.main[MAIN.HIDE_PROFILE_PRESTIGE_WIDGET]:
         value = False
     return base(self, value)
 
@@ -131,4 +131,5 @@ def onModSettingsChanged(_settings, blockID):
         if g_currentVehicle.intCD:
             g_currentVehicle.onChanged()
 
-settings.onModSettingsChanged += onModSettingsChanged
+
+user.onModSettingsChanged += onModSettingsChanged

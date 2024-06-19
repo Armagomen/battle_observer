@@ -1,6 +1,6 @@
 # coding=utf-8
 from armagomen._constants import MAIN, VEHICLE
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.battle_observer.settings import user
 from armagomen.utils.common import isReplay, overrideMethod
 from armagomen.utils.keys_listener import g_keysListener
 from Avatar import PlayerAvatar
@@ -22,7 +22,7 @@ class SaveShootLite(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
-        settings.onModSettingsChanged += self.onModSettingsChanged
+        user.onModSettingsChanged += self.onModSettingsChanged
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
         self.enabled = False
