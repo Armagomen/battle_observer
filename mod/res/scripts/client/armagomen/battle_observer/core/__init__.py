@@ -20,8 +20,6 @@ def error(error_message):
 
 def onInit(modVersion, current_realm):
     logInfo('MOD START LOADING: v{} - {}'.format(modVersion, gameVersion))
-    if current_realm == "RU":
-        return error("not supported region")
     try:
         from armagomen.battle_observer.core.updater import Updater
         Updater(modVersion)
