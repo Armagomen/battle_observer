@@ -1,10 +1,11 @@
-from armagomen._constants import BATTLE_PAGES, CURRENT_REALM, LOBBY_ALIASES
+from armagomen._constants import BATTLE_PAGES, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.view.view_settings import ViewSettings
-from armagomen.utils.common import callback, logDebug, logError, logInfo, xvmInstalled
+from armagomen.utils.common import callback, xvmInstalled
 from armagomen.utils.events import g_events
+from armagomen.utils.logging import logDebug, logError, logInfo
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -19,7 +20,7 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def __init__(self):
         self.__subscribed = False
-        listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES) if CURRENT_REALM != "RU" else tuple()
+        listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES)
         super(ViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
         self._minimap = None
         self._statistics = None
@@ -66,8 +67,8 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         callback(40.0, pyView.flashObject.as_BattleObserverUpdateDamageLogPosition)
 
     def _loadView(self, flashObject):
-        flashObject.as_BattleObserverCreate(self._components, CURRENT_REALM)
-        flashObject.as_BattleObserverHideWg(self._hiddenComponents, CURRENT_REALM)
+        flashObject.as_BattleObserverCreate(self._components)
+        flashObject.as_BattleObserverHideWg(self._hiddenComponents)
         if self._minimap is not None:
             self._minimap.init(flashObject)
         if self._icons or self._statistics is not None:
@@ -82,7 +83,7 @@ class ViewHandlerLobby(PackageBusinessHandler):
 
     def __init__(self):
         self.__subscribed = False
-        listeners = ((VIEW_ALIAS.LOBBY_HANGAR, self.eventListener),) if CURRENT_REALM != "RU" else tuple()
+        listeners = ((VIEW_ALIAS.LOBBY_HANGAR, self.eventListener),)
         super(ViewHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def eventListener(self, event):

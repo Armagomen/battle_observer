@@ -2,7 +2,9 @@ import logging
 
 from armagomen._constants import BATTLES_RANGE
 from armagomen.battle_observer.core.current_vehicle_data import CurrentVehicleCachedData
-from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache, gameVersion, logInfo
+from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache, gameVersion
+from armagomen.utils.logging import logInfo
 from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
 from gui.Scaleform.required_libraries_config import BATTLE_REQUIRED_LIBRARIES, LOBBY_REQUIRED_LIBRARIES
 
@@ -10,7 +12,7 @@ cachedVehicleData = CurrentVehicleCachedData()
 
 
 def error(error_message):
-    from armagomen.utils.common import logError
+    from armagomen.utils.logging import logError
     from armagomen.battle_observer.core.loading_error import LoadingError
     logError(error_message)
     LoadingError(error_message)
@@ -42,7 +44,8 @@ def onInit(modVersion, current_realm):
 
 
 def onFini(modVersion):
-    clearClientCache()
+    if settings.main["clear_cache_automatically"]:
+        clearClientCache()
     cleanupObserverUpdates()
     cleanupUpdates()
     logInfo('MOD SHUTTING DOWN: v{} - {}'.format(modVersion, gameVersion))

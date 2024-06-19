@@ -1,7 +1,9 @@
 from armagomen._constants import ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP, \
     MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS
+from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
-from armagomen.utils.common import logDebug, logWarning, openWebBrowser, settings, xvmInstalled
+from armagomen.utils.common import openWebBrowser, xvmInstalled
+from armagomen.utils.logging import logDebug, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from Keys import KEY_LALT, KEY_RALT

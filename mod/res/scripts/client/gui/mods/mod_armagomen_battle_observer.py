@@ -7,18 +7,16 @@ __email__ = "armagomen@gmail.com"
 __status__ = "Production"
 __http__ = "https://github.com/Armagomen/battle_observer/releases"
 
+from armagomen.battle_observer.core import onFini, onInit
+from helpers.statistics import StatisticsCollector
 from realm import CURRENT_REALM
 
-if CURRENT_REALM != "RU":
-    from armagomen.battle_observer.core import onInit, onFini
-    from helpers.statistics import StatisticsCollector
-
-    StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
+StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
 
 
-    def init():
-        onInit(__version__, CURRENT_REALM)
+def init():
+    onInit(__version__, CURRENT_REALM)
 
 
-    def fini():
-        onFini(__version__)
+def fini():
+    onFini(__version__)

@@ -1,16 +1,16 @@
 import math
 from collections import namedtuple
 
+from account_helpers.settings_core.options import SniperZoomSetting
+from aih_constants import CTRL_MODE_NAME
+from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
+from armagomen.utils.common import callback, isReplay, overrideMethod
+from armagomen.utils.logging import logError, settings
 from Avatar import PlayerAvatar
 from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
-from account_helpers.settings_core.options import SniperZoomSetting
-from aih_constants import CTRL_MODE_NAME
-from armagomen._constants import ARCADE, GLOBAL, SNIPER, STRATEGIC, EFFECTS
-from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import overrideMethod, logError, isReplay, callback
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
 

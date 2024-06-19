@@ -1,13 +1,13 @@
 from collections import defaultdict
 
-from PlayerEvents import g_playerEvents
-from armagomen._constants import GLOBAL, DISTANCE, POSTMORTEM
+from armagomen._constants import DISTANCE, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
-from armagomen.utils.common import logDebug
+from armagomen.utils.logging import logDebug
 from armagomen.utils.timers import CyclicTimerEvent
 from constants import ARENA_PERIOD, ARENA_PERIOD_NAMES
 from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler
 from gui.battle_control.battle_constants import PLAYER_GUI_PROPS
+from PlayerEvents import g_playerEvents
 
 
 class Distance(DistanceMeta):

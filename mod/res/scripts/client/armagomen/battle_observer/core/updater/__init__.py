@@ -7,8 +7,9 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.utils.common import fetchURL, gameVersion, getUpdatePath, logDebug, logError, logInfo, modsPath
+from armagomen.utils.common import fetchURL, gameVersion, getUpdatePath, modsPath
 from armagomen.utils.dialogs import UpdaterDialogs
+from armagomen.utils.logging import logDebug, logError, logInfo
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID

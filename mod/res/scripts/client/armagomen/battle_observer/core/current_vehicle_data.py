@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from armagomen.utils.common import logDebug
+from armagomen.utils.logging import logDebug
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
 from helpers import dependency

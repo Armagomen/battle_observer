@@ -1,14 +1,15 @@
 from collections import defaultdict, namedtuple
 
-from armagomen._constants import DAMAGE_LOG, GLOBAL, COLORS, IMAGE_DIR
+from armagomen._constants import COLORS, DAMAGE_LOG, GLOBAL, IMAGE_DIR
 from armagomen.battle_observer.core import cachedVehicleData
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
-from armagomen.utils.common import logDebug, percentToRGB, getPercent
+from armagomen.utils.common import getPercent, percentToRGB
 from armagomen.utils.keys_listener import g_keysListener
+from armagomen.utils.logging import logDebug
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
-from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
 from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
+from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
 from helpers import i18n
 
 _SHELL_TYPES_TO_STR = {

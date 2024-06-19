@@ -1,11 +1,11 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen._constants import VEHICLE, PANELS, COLORS
+from armagomen._constants import COLORS, PANELS, VEHICLE
 from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
-from armagomen.utils.common import logDebug
 from armagomen.utils.keys_listener import g_keysListener
-from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealthPercent
+from armagomen.utils.logging import logDebug
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
+from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealthPercent
 
 
 class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):

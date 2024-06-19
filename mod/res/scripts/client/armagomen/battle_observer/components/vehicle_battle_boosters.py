@@ -1,8 +1,8 @@
 from adisp import adisp_process
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import logInfo, logDebug
 from armagomen.utils.events import g_events
+from armagomen.utils.logging import logDebug, logInfo
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
 
 

@@ -2,8 +2,9 @@ import os
 
 from armagomen._constants import GLOBAL, LOAD_LIST, SIXTH_SENSE
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import currentConfigPath, logDebug, logInfo, logWarning, openJsonFile, writeJsonFile
+from armagomen.utils.common import currentConfigPath, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
+from armagomen.utils.logging import logDebug, logInfo, logWarning
 from gui.shared.personality import ServicesLocator
 
 JSON = "{}.json"

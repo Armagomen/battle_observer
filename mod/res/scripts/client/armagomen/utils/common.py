@@ -11,15 +11,13 @@ from shutil import rmtree
 import BigWorld
 import ResMgr
 
-from armagomen.battle_observer.settings.default_settings import settings
+from armagomen.utils.logging import logDebug, logError, logInfo
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
 from helpers.http import openUrl
 from uilogging.core.core_constants import HTTP_DEFAULT_TIMEOUT
 
-MOD_NAME = "BATTLE_OBSERVER"
-DEBUG = "DEBUG_MODE"
 CONFIG_DIR = "mod_battle_observer"
 UTF_8 = 'utf-8'
 
@@ -57,23 +55,6 @@ def callback(delay, callMethod, *args, **kwargs):
 
 def cancelCallback(callbackID):
     return BigWorld.cancelCallback(callbackID)
-
-
-def logError(message, *args, **kwargs):
-    BigWorld.logError(MOD_NAME, str(message).format(*args, **kwargs), None)
-
-
-def logInfo(message):
-    BigWorld.logInfo(MOD_NAME, str(message), None)
-
-
-def logDebug(message, *args, **kwargs):
-    if settings.main[DEBUG]:
-        BigWorld.logDebug(MOD_NAME, str(message).format(*args, **kwargs), None)
-
-
-def logWarning(message):
-    BigWorld.logWarning(MOD_NAME, str(message), None)
 
 
 def getPreferencesDir():
@@ -158,8 +139,6 @@ def removeDirs(path, name=None):
 
 
 def clearClientCache(category=None):
-    if not settings.main["clear_cache_automatically"]:
-        return
     dirs = (
         "account_caches", "battle_results", "clan_cache", "custom_data", "dossier_cache", "messenger_cache",
         "storage_cache", "tutorial_cache", "veh_cmp_cache", "web_cache", "profile"

@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import logDebug, logInfo
+from armagomen.utils.logging import logDebug, logInfo
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore

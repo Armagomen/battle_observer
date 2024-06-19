@@ -1,7 +1,8 @@
 from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS, \
     VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import logDebug, logInfo, xvmInstalled
+from armagomen.utils.common import xvmInstalled
+from armagomen.utils.logging import logDebug, logInfo
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
 from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, _STATE_TO_UI, PageStates
 from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig

@@ -1,13 +1,13 @@
-from armagomen._constants import MAIN, CREW_XP, GLOBAL
+from armagomen._constants import CREW_XP, GLOBAL, MAIN
 from armagomen.battle_observer.settings.default_settings import settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.utils.common import logInfo, overrideMethod, logError, logDebug, openIgnoredVehicles, \
-    updateIgnoredVehicles
+from armagomen.utils.common import openIgnoredVehicles, overrideMethod, updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
+from armagomen.utils.logging import logDebug, logError, logInfo
 from gui import SystemMessages
-from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
 from gui.impl.pub.dialog_window import DialogButtons
+from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
 from gui.shared.gui_items.processors.tankman import TankmanReturn
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators

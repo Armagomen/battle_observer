@@ -1,15 +1,16 @@
 from math import degrees
 
-from PlayerEvents import g_playerEvents
-from armagomen._constants import GLOBAL, MINIMAP, BATTLES_RANGE
+from armagomen._constants import BATTLES_RANGE, GLOBAL, MINIMAP
 from armagomen.battle_observer.settings.default_settings import settings
-from armagomen.utils.common import overrideMethod, xvmInstalled, logError
+from armagomen.utils.common import overrideMethod, xvmInstalled
 from armagomen.utils.keys_listener import g_keysListener
-from constants import VISIBILITY, ARENA_PERIOD
+from armagomen.utils.logging import logError
+from constants import ARENA_PERIOD, VISIBILITY
+from gui.battle_control import avatar_getter
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
-from gui.battle_control import avatar_getter
 from helpers import dependency
+from PlayerEvents import g_playerEvents
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 

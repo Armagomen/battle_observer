@@ -3,8 +3,8 @@ from math import ceil, log
 
 from armagomen._constants import DISPERSION_TIMER, GLOBAL, POSTMORTEM
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
-from armagomen.utils.common import logDebug
 from armagomen.utils.events import g_events
+from armagomen.utils.logging import logDebug
 from gui.battle_control.avatar_getter import getInputHandler
 
 TIMER, PERCENT = ("timer", "percent")

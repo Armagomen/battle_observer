@@ -1,4 +1,4 @@
-from armagomen.utils.common import logDebug
+from armagomen.utils.logging import logDebug
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 
 

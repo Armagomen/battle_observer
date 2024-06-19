@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 from random import choice
 
 from armagomen._constants import getLogo, IMG, URLS
-from armagomen.utils.common import fetchURL, logDebug, logInfo, openWebBrowser, overrideMethod
+from armagomen.utils.common import fetchURL, openWebBrowser, overrideMethod
+from armagomen.utils.logging import logDebug, logInfo
 from constants import AUTH_REALM
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
@@ -59,7 +60,7 @@ class Donate(object):
     def onDataResponse(self, response):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
-            data = response_data.get("data", {})
+            data = response_data.get("data")
             logDebug("Donate/onDataResponse: FINISH request clan data={}", data)
             if data:
                 self.show_clan_invite = data["500223690"]["members_count"] < 99
@@ -75,7 +76,7 @@ class Donate(object):
         return PATTERN.format(msg=self.lastMessage, **self.message_format)
 
     @staticmethod
-    def pushClanMessage():
+    def pushClanInviteMessage():
         message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>, "
                    "отримаєш більше бонусів від гри (бустери, камуфляжі, та інше)."
                    "\nУмови на вступ: від 1000 боїв, грати 2-3 рази на тиждень."
@@ -92,7 +93,7 @@ class Donate(object):
                 pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
                 logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
             if self.show_clan_invite and not g_clanCache.isInClan and self.ln_code == "uk":
-                self.pushClanMessage()
+                self.pushClanInviteMessage()
                 self.show_clan_invite = False
 
 

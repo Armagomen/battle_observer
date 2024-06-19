@@ -3,7 +3,8 @@ from httplib import responses
 
 from armagomen._constants import REGIONS
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
-from armagomen.utils.common import callback, fetchURL, logDebug, logError
+from armagomen.utils.common import callback, fetchURL
+from armagomen.utils.logging import logDebug, logError
 from constants import AUTH_REALM
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
