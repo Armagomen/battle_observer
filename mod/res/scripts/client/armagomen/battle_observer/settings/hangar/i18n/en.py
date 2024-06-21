@@ -80,7 +80,8 @@ localization = {
         "hide_hangar_prestige_widget": "Hide elite levels widget in hangar.",
         "hide_battle_prestige_widget": "Hide elite levels widget in battle.",
         "hide_profile_prestige_widget": "Hide elite levels widget in vehicle statistics in profile.",
-        "excluded_map_slots_notification": "Notify about available excluded map slots."
+        "excluded_map_slots_notification": "Notify about available excluded map slots.",
+        "auto_claim_clan_reward": "Collect clan rewards automatically.",
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",

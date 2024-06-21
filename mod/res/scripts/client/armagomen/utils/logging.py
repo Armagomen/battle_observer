@@ -1,23 +1,24 @@
 import BigWorld
 
-from armagomen.battle_observer.settings import user_settings
-
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
 
 
+def _formatMessage(message, *args, **kwargs):
+    return str(message).format(*args, **kwargs)
+
+
 def logError(message, *args, **kwargs):
-    BigWorld.logError(MOD_NAME, str(message).format(*args, **kwargs), None)
+    BigWorld.logError(MOD_NAME, _formatMessage(message, *args, **kwargs), None)
 
 
-def logInfo(message):
-    BigWorld.logInfo(MOD_NAME, str(message), None)
+def logInfo(message, *args, **kwargs):
+    BigWorld.logInfo(MOD_NAME, _formatMessage(message, *args, **kwargs), None)
 
 
 def logDebug(message, *args, **kwargs):
-    if user_settings.main[DEBUG]:
-        BigWorld.logDebug(MOD_NAME, str(message).format(*args, **kwargs), None)
+    BigWorld.logDebug(MOD_NAME, _formatMessage(message, *args, **kwargs), None)
 
 
-def logWarning(message):
-    BigWorld.logWarning(MOD_NAME, str(message), None)
+def logWarning(message, *args, **kwargs):
+    BigWorld.logWarning(MOD_NAME, _formatMessage(message, *args, **kwargs), None)

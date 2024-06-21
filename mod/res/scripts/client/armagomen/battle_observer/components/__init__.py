@@ -1,8 +1,11 @@
 from importlib import import_module
 
+from debug_utils import LOG_CURRENT_EXCEPTION
+
 _modules = {}
 
-def loadComponents(current_realm):
+
+def loadComponents():
     load = (
         'camera',
         'common',
@@ -23,11 +26,11 @@ def loadComponents(current_realm):
         'tank_carousel',
         'vehicle_battle_boosters',
         'wg_logs_fixes',
-        'hangar_efficiency'
-    ) if current_realm != 'RU' else tuple()
+        'hangar_efficiency',
+        'auto_claim_clan_reward'
+    )
     for moduleName in load:
         try:
             _modules[moduleName] = import_module("{}.{}".format(__package__, moduleName))
         except Exception:
-            from debug_utils import LOG_CURRENT_EXCEPTION
             LOG_CURRENT_EXCEPTION()

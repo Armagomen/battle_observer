@@ -36,7 +36,7 @@ def onInit(modVersion, current_realm):
         logging.disable(logging.WARNING)
         logInfo('Launched at python v{} region={}'.format(version, current_realm))
         registerBattleObserverPackages()
-        loadComponents(current_realm)
+        loadComponents()
         settings_loader = SettingsLoader()
         SettingsInterface(settings_loader, modVersion)
 

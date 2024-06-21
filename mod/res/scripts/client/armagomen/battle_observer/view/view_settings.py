@@ -2,7 +2,7 @@ from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TI
     VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import xvmInstalled
-from armagomen.utils.logging import logDebug, logInfo
+from armagomen.utils.logging import DEBUG, logDebug, logInfo
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
 from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, _STATE_TO_UI, PageStates
 from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
@@ -133,14 +133,16 @@ class ViewSettings(object):
             if self.gui.isEpicBattle():
                 self.addInToEpicUI(True)
             self._hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self._components)
-        logDebug("viewSettings setComponents: components={}", self._components)
+        if user_settings.main[DEBUG]:
+            logDebug("viewSettings setComponents: components={}", self._components)
 
     def _clear(self):
         if self.gui.isEpicBattle():
             self.addInToEpicUI(False)
         self._components.clear()
         self._hiddenComponents.clear()
-        logDebug("clear viewSettings components")
+        if user_settings.main[DEBUG]:
+            logDebug("clear viewSettings components")
 
     def addInToEpicUI(self, add):
         for alias in self._components:
@@ -167,5 +169,6 @@ class ViewSettings(object):
         for alias in self._components.intersection(ALIAS_TO_CTRL.iterkeys()):
             config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
         config = config.getConfig()
-        logDebug("viewSettings, registerComponents: {}", config)
+        if user_settings.main[DEBUG]:
+            logDebug("viewSettings, registerComponents: {}", config)
         self.sessionProvider.registerViewComponents(*config)

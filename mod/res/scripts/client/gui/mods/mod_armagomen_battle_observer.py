@@ -9,12 +9,13 @@ __http__ = "https://github.com/Armagomen/battle_observer/releases"
 
 from armagomen.battle_observer.core import onFini, onInit
 from helpers.statistics import StatisticsCollector
+from realm import CURRENT_REALM
 
 StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
 
 
 def init():
-    onInit(__version__)
+    onInit(__version__, CURRENT_REALM)
 
 
 def fini():

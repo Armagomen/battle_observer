@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.logging import logDebug, logInfo
+from armagomen.utils.logging import DEBUG, logDebug, logInfo
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore
@@ -26,6 +26,10 @@ class BaseModMeta(BaseDAAPIComponent):
     @property
     def gui(self):
         return self._arenaVisitor.gui
+
+    @property
+    def debugMode(self):
+        return user_settings.main[DEBUG]
 
     def isSPG(self):
         return self.getVehicleInfo().isSPG()

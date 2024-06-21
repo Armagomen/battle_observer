@@ -33,6 +33,7 @@ Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: 
 Name: main/premium_time; Description: {cm:premium_time}; Types: armagomen saxon_ua;
 Name: main/save_shot; Description: {cm:save_shot}; Types: armagomen saxon_ua;
 Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen saxon_ua;
+Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward};
 Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning;
 Name: clock/hangar; Description: {cm:clock_hangar}; Types: armagomen;
 Name: clock/battle; Description: {cm:clock_battle}; Types: armagomen;
@@ -212,6 +213,7 @@ begin
     JSON_SetBool(Handle,'/premium_time', WizardIsComponentSelected('main/premium_time'));
     JSON_SetBool(Handle,'/save_shot', WizardIsComponentSelected('main/save_shot'));
     JSON_SetBool(Handle,'/show_friends', WizardIsComponentSelected('main/show_friends'));
+    JSON_SetBool(Handle,'/auto_claim_clan_reward', WizardIsComponentSelected('main/auto_claim_clan_reward'));
     JSON_Close(Handle);
   end;
 end;

@@ -7,9 +7,10 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.core.updater.i18n import getI18n
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import fetchURL, gameVersion, getUpdatePath, modsPath
 from armagomen.utils.dialogs import UpdaterDialogs
-from armagomen.utils.logging import logDebug, logError, logInfo
+from armagomen.utils.logging import DEBUG, logDebug, logError, logInfo
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
@@ -36,6 +37,7 @@ __MESSAGES = (
 LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*__MESSAGES)
 EXE_FILE = "{0}/mod_battle_observer_v{0}.exe"
 ZIP = "{0}/AutoUpdate.zip"
+
 
 class DownloadThread(object):
 
@@ -114,8 +116,9 @@ class Updater(DownloadThread):
                 self.showUpdateDialog(new_version)
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
-        logDebug('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode,
-                 response.body)
+        if user_settings.main[DEBUG]:
+            logDebug('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode,
+                     response.body)
 
     @staticmethod
     def tupleVersion(version):

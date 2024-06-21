@@ -52,7 +52,8 @@ class DispersionTimer(DispersionTimerMeta):
         aiming_angle = gunRotator.dispersionAngle
         if self.min_angle > aiming_angle:
             self.min_angle = aiming_angle
-            logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
+            if self.debugMode:
+                logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
         diff = self.min_angle / aiming_angle
         percent = int(ceil(diff * MAXIMUM))
         self.macro[TIMER] = round(type_descriptor.gun.aimingTime * abs(log(diff)), GLOBAL.TWO)

@@ -3,8 +3,9 @@ from httplib import responses
 
 from armagomen._constants import REGIONS
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
+from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import callback, fetchURL
-from armagomen.utils.logging import logDebug, logError
+from armagomen.utils.logging import DEBUG, logDebug, logError
 from constants import AUTH_REALM
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
@@ -32,7 +33,8 @@ class StatisticsDataLoader(object):
             response_data = json.loads(response.body)
             data = response_data.get("data", {})
             self.__wtrData.updateAllItems(self.sessionProvider.getArenaDP(), data)
-            logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
+            if user_settings.main[DEBUG]:
+                logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
             if self.__callback is not None:
                 self.__callback(self.__wtrData.itemsData)
         else:
@@ -59,6 +61,8 @@ class StatisticsDataLoader(object):
                  vInfo.player.accountDBID]
         if not users:
             return self.delayedLoad("users list is empty")
-        logDebug("StatisticsDataLoader/setCachedStatisticData: START request data: ids={}, len={} ", users, len(users))
+        if user_settings.main[DEBUG]:
+            logDebug("StatisticsDataLoader/getStatisticsDataFromServer: START request data: ids={}, len={} ", users,
+                     len(users))
         url = self.STAT_URL.format(ids=self.SEPARATOR.join(users), key=self.API_KEY, url=self.URL, fields=self.FIELDS)
         fetchURL(url, self.onDataResponse)

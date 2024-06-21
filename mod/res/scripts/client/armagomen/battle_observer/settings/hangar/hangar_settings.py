@@ -3,7 +3,7 @@ from armagomen._constants import ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
-from armagomen.utils.logging import logDebug, logWarning
+from armagomen.utils.logging import logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.shared.personality import ServicesLocator
 from Keys import KEY_LALT, KEY_RALT
@@ -318,7 +318,7 @@ class SettingsInterface(CreateElement):
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
             self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            logDebug("change config '{}' - {}", self.sLoader.configsList[self.newConfigID], blockID)
+            logInfo("change config '{}' - {}", self.sLoader.configsList[self.newConfigID], blockID)
         else:
             settings_block = getattr(user_settings, blockID)
             for key, value in data.iteritems():

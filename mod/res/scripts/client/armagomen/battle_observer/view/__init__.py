@@ -5,7 +5,7 @@ from armagomen.battle_observer.components.statistics.statistic_data_loader impor
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import callback, xvmInstalled
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug, logError, logInfo
+from armagomen.utils.logging import logError, logInfo
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -54,11 +54,10 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
-        logDebug(DEBUG_MSG, self.__class__.__name__, alias)
         if alias not in BATTLE_PAGES:
             return
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
-        logInfo(INFO_MSG.format(self.__class__.__name__, alias))
+        logInfo(INFO_MSG, self.__class__.__name__, alias)
         if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
             to_format_str = "{}:flashObject, has ho attribute {}"
             return logError(to_format_str, alias, ATTRIBUTE_NAME)
@@ -94,11 +93,10 @@ class ViewHandlerLobby(PackageBusinessHandler):
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
-        logDebug(DEBUG_MSG, self.__class__.__name__, alias)
         is_hangar = alias == VIEW_ALIAS.LOBBY_HANGAR
         g_events.onHangarLoaded(is_hangar)
         if is_hangar:
-            logInfo(INFO_MSG.format(self.__class__.__name__, alias))
+            logInfo(INFO_MSG, self.__class__.__name__, alias)
             if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
                 return logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)
             callback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)

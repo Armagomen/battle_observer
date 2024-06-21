@@ -43,6 +43,7 @@ class UserSettings(object):
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
             MAIN.USE_KEY_PAIRS: True,
+            MAIN.AUTO_CLAIM_CLAN_REWARD: False
         }
         self.tank_carousel = {
             GLOBAL.ENABLED: False,

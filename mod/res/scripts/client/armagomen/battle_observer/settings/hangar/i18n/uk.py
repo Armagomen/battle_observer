@@ -80,7 +80,8 @@ localization = {
         "hide_hangar_prestige_widget": "Приховати віджет елітних рівнів в ангарі.",
         "hide_battle_prestige_widget": "Приховати віджет елітних рівнів в бою.",
         "hide_profile_prestige_widget": "Приховати віджет елітних рівнів в профілі гравця.",
-        "excluded_map_slots_notification": "Сповіщати про доступні слоти для виключення карт."
+        "excluded_map_slots_notification": "Сповіщати про доступні слоти для виключення карт.",
+        "auto_claim_clan_reward": "Автоматично забирати кланові нагороди.",
     },
     "statistics": {
         "header": "Налаштування статистики гравців та іконок танків",
