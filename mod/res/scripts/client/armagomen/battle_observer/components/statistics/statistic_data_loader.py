@@ -46,7 +46,8 @@ class StatisticsDataLoader(object):
     def delayedLoad(self, code):
         if self._load_try < 10:
             self._load_try += 1
-            logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, responses.get(code))
+            code = responses.get(code) if isinstance(code, int) else code
+            logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
             callback(2.0, self.getStatisticsDataFromServer)
 
     def getStatisticsDataFromServer(self):

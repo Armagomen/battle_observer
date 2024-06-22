@@ -71,7 +71,7 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             self._minimap.init(flashObject)
         if self._icons or self._statistics is not None:
             flashObject.as_BattleObserverCreateStatistic(self._icons, *self.getStatisticsSettings())
-            if self._statistics is not None:
+            if self._statistics is not None and self._statistics.enabled:
                 self._statistics.setFeedback(flashObject.as_BattleObserverUpdateStatisticData)
                 self._statistics.getStatisticsDataFromServer()
         callback(30.0, flashObject.as_BattleObserverUpdateDamageLogPosition)
