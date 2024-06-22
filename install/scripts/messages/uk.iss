@@ -190,11 +190,6 @@ uk.statistics_icons=Перефарбувати іконки танків у ко
 uk.statistics_names_color=Змінити колір назви танку у списках на колір статистики гравця
 uk.statistics_enabled=Увімкнути статистику гравців за рейтингом WTR
 
-uk.tank_carousel=Карусель танків
-uk.tank_carousel_small=Примусово використовувати маленькі значки
-uk.tank_carousel_3=3 Рядки (не працює під час бойової перепустки)
-uk.tank_carousel_4=4 Рядки (не працює під час бойової перепустки)
-
 uk.team_bases_panel=Панель захоплення бази
 
 //wg_logs

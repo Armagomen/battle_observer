@@ -63,7 +63,6 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             return logError(to_format_str, alias, ATTRIBUTE_NAME)
         pyView._blToggling.update(self._components)
         callback(2.0 if xvmInstalled else 0, self._loadView, pyView.flashObject)
-        callback(40.0, pyView.flashObject.as_BattleObserverUpdateDamageLogPosition)
 
     def _loadView(self, flashObject):
         flashObject.as_BattleObserverCreate(self._components)
@@ -75,6 +74,7 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             if self._statistics is not None:
                 self._statistics.setCallback(flashObject.as_BattleObserverUpdateStatisticData)
                 self._statistics.getStatisticsDataFromServer()
+        callback(30.0, flashObject.as_BattleObserverUpdateDamageLogPosition)
 
 
 class ViewHandlerLobby(PackageBusinessHandler):

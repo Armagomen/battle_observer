@@ -155,10 +155,6 @@ Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning
 Name: statistics/icon_enabled; Description: {cm:statistics_icons}; Types: armagomen saxon_ua;
 Name: statistics/statistics_change_vehicle_name_color; Description: {cm:statistics_names_color};  Types: armagomen saxon_ua;
 Name: statistics/statistics_enabled; Description: {cm:statistics_enabled}; Types: armagomen saxon_ua;
-Name: tank_carousel; Description: {cm:tank_carousel}; Flags: disablenouninstallwarning;
-Name: tank_carousel/smallDoubleCarousel; Description: {cm:tank_carousel_small}; Flags: dontinheritcheck;
-Name: tank_carousel/3; Description: {cm:tank_carousel_3}; Flags: exclusive;
-Name: tank_carousel/4; Description: {cm:tank_carousel_4}; Flags: exclusive;
 Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
 Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning;
 Name: wg_logs/wg_log_hide_assist; Description: {cm:wg_logs_assist};
@@ -597,20 +593,7 @@ begin
   end;
 end;
 
-procedure ChangeTankCarouselJsonValues();
-var
-  Handle: Integer;
-begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\tank_carousel.json'), False);
-  if Handle <> 0 then
-  begin
-    JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('tank_carousel'));
-    JSON_SetBool(Handle,'/smallDoubleCarousel', WizardIsComponentSelected('tank_carousel/smallDoubleCarousel'));
-    if WizardIsComponentSelected('tank_carousel/3') then JSON_SetInteger(Handle,'/carouselRows', 3);
-    if WizardIsComponentSelected('tank_carousel/4') then JSON_SetInteger(Handle,'/carouselRows', 4);
-    JSON_Close(Handle);
-  end;
-end;
+
 
 procedure ChangeTeamBasesJsonValues();
 var
@@ -668,7 +651,6 @@ begin
       ChangeSixthSenseJsonValues();
       ChangeStatisticsJsonValues();
       ChangeStrategicCameraJsonValues();
-      ChangeTankCarouselJsonValues();
       ChangeTeamBasesJsonValues();
       ChangeWGLogsJsonValues();
       ChangeZoomJsonValues();

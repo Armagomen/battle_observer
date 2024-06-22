@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 import Keys
-from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CAROUSEL, CLOCK, COLORS,
+from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CLOCK, COLORS,
                                   DAMAGE_LOG, DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, DISTANCE, EFFECTS,
                                   EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP,
                                   PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, TEAM_BASES,
@@ -44,11 +44,6 @@ class UserSettings(object):
             MAIN.STUN_SOUND: False,
             MAIN.USE_KEY_PAIRS: True,
             MAIN.AUTO_CLAIM_CLAN_REWARD: False
-        }
-        self.tank_carousel = {
-            GLOBAL.ENABLED: False,
-            CAROUSEL.SMALL: False,
-            CAROUSEL.ROWS: 2
         }
         self.avg_efficiency_in_hangar = {
             GLOBAL.ENABLED: False,

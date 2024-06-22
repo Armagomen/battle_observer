@@ -23,7 +23,6 @@ def loadComponents():
         'save_shot_lite',
         'service_channel_filter',
         'shot_result_plugin',
-        'tank_carousel',
         'vehicle_battle_boosters',
         'wg_logs_fixes',
         'hangar_efficiency',
