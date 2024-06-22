@@ -26,7 +26,7 @@ class StatisticsDataLoader(object):
         self.enabled = region is not None
         self._load_try = 0
         self.__wtrData = WTRStatistics()
-        self.__callback = None
+        self.__feedback = None
 
     def onDataResponse(self, response):
         if response.responseCode == HTTP_OK_STATUS:
@@ -35,13 +35,13 @@ class StatisticsDataLoader(object):
             self.__wtrData.updateAllItems(self.sessionProvider.getArenaDP(), data)
             if user_settings.main[DEBUG]:
                 logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
-            if self.__callback is not None:
-                self.__callback(self.__wtrData.itemsData)
+            if self.__feedback is not None:
+                self.__feedback(self.__wtrData.itemsData)
         else:
             self.delayedLoad(response.responseCode)
 
-    def setCallback(self, callback_method):
-        self.__callback = callback_method
+    def setFeedback(self, callback_method):
+        self.__feedback = callback_method
 
     def delayedLoad(self, code):
         if self._load_try < 10:
@@ -50,7 +50,7 @@ class StatisticsDataLoader(object):
             callback(2.0, self.getStatisticsDataFromServer)
 
     def getStatisticsDataFromServer(self):
-        if self.__callback is None:
+        if self.__feedback is None:
             raise ReferenceError("feedback method is not set")
         if not self.enabled:
             return logError("Statistics are not available in your region={}. Only in {}", AUTH_REALM, REGIONS)
