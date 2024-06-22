@@ -49,7 +49,7 @@ class CrewProcessor(object):
     def accelerateCrewXp(self, vehicle, value):
         result = yield VehicleTmenXPAccelerator(vehicle, value, confirmationEnabled=False).request()
         if result.success:
-            logInfo("The accelerated crew training is %s for '%s'" % (value, vehicle.userName))
+            logInfo("The accelerated crew training is {} for '{}'", value, vehicle.userName)
 
     @staticmethod
     def isPostProgressionFullXP(vehicle):
@@ -104,7 +104,7 @@ class CrewProcessor(object):
         result = yield TankmanReturn(vehicle).request()
         if result.userMsg:
             SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType)
-            logInfo("{}: {}".format(vehicle.userName, result.userMsg))
+            logInfo("{}: {}", vehicle.userName, result.userMsg)
 
     def onXPExchangeDataChanged(self, base, dialog, data, *args, **kwargs):
         try:

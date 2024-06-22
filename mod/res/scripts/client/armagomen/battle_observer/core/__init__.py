@@ -19,7 +19,7 @@ def error(error_message):
 
 
 def onInit(modVersion, current_realm):
-    logInfo('MOD START LOADING: v{} - {}'.format(modVersion, gameVersion))
+    logInfo('MOD START LOADING: v{} - {}', modVersion, gameVersion)
     try:
         from armagomen.battle_observer.core.updater import Updater
         Updater(modVersion)
@@ -34,7 +34,7 @@ def onInit(modVersion, current_realm):
         error(repr(err))
     else:
         logging.disable(logging.WARNING)
-        logInfo('Launched at python v{} region={}'.format(version, current_realm))
+        logInfo('Launched at python v{} region={}', version, current_realm)
         registerBattleObserverPackages()
         loadComponents()
         settings_loader = SettingsLoader()
@@ -46,7 +46,7 @@ def onFini(modVersion):
         clearClientCache()
     cleanupObserverUpdates()
     cleanupUpdates()
-    logInfo('MOD SHUTTING DOWN: v{} - {}'.format(modVersion, gameVersion))
+    logInfo('MOD SHUTTING DOWN: v{} - {}', modVersion, gameVersion)
 
 
 def registerBattleObserverPackages():

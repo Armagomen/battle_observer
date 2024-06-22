@@ -53,13 +53,13 @@ class DownloadThread(object):
         path = os.path.join(getUpdatePath(), version + ".zip")
         if os.path.isfile(path):
             self.extractZipArchive(path)
-            logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED.format(path))
+            logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED, path)
             git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
             self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
         else:
             Waiting.show(WAITING_UPDATE)
             url = URLS.UPDATE + ZIP.format(version)
-            logInfo(LOG_MESSAGES.STARTED.format(version, url))
+            logInfo(LOG_MESSAGES.STARTED, version, url)
             self.downloader = WebDownloader(GLOBAL.ONE)
             self.downloader.download(url, self.onDownloaded)
 
@@ -74,7 +74,7 @@ class DownloadThread(object):
             for newFile in archive.namelist():
                 if newFile not in old_files:
                     archive.extract(newFile, self.modPath)
-                    logInfo(LOG_MESSAGES.NEW_FILE.format(newFile))
+                    logInfo(LOG_MESSAGES.NEW_FILE, newFile)
 
     def onDownloaded(self, _url, data):
         if data is not None:
@@ -82,7 +82,7 @@ class DownloadThread(object):
             path = os.path.join(getUpdatePath(), version + ".zip")
             with open(path, "wb") as zipArchive:
                 zipArchive.write(data)
-            logInfo(LOG_MESSAGES.FINISHED.format(path))
+            logInfo(LOG_MESSAGES.FINISHED, path)
             self.extractZipArchive(path)
             git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
             self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
@@ -112,7 +112,7 @@ class Updater(DownloadThread):
             self.updateData.update(response_data)
             new_version = response_data.get('tag_name', self.version)
             if self.tupleVersion(self.version) < self.tupleVersion(new_version):
-                logInfo(LOG_MESSAGES.NEW_VERSION.format(new_version))
+                logInfo(LOG_MESSAGES.NEW_VERSION, new_version)
                 self.showUpdateDialog(new_version)
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)

@@ -128,14 +128,14 @@ def cleanupUpdates():
             continue
         link = os.path.join(path, _link)
         os.unlink(link) if os.path.isfile(link) or os.path.islink(link) else rmtree(link, ignore_errors=True)
-        logInfo("cleanup updates: {}".format(link))
+        logInfo("cleanup updates: {}", link)
 
 
 def removeDirs(path, name=None):
     if os.path.exists(path):
         rmtree(path, ignore_errors=True, onerror=None)
         if name is not None:
-            logInfo('CLEANING CACHE: {0}'.format(name))
+            logInfo('CLEANING CACHE: {}', name)
 
 
 def clearClientCache(category=None):

@@ -25,8 +25,8 @@ def onVehicleChanged(vehicle):
         value = battleBooster.inventoryCount > 0
         if value != isAuto:
             changeValue(vehicle, value)
-            logInfo("VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}".format(
-                value, vehicle.userName, battleBooster.userName))
+            logInfo("VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}",
+                    value, vehicle.userName, battleBooster.userName)
 
 
 g_events.onVehicleChangedDelayed += onVehicleChanged
