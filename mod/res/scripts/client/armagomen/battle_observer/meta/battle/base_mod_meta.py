@@ -61,11 +61,13 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        logDebug("battle module '{}' loaded", self.getAlias())
+        if self.debugMode:
+            logDebug("battle module '{}' loaded", self.getAlias())
 
     def _dispose(self):
         super(BaseModMeta, self)._dispose()
-        logDebug("battle module '{}' destroyed", self.getAlias())
+        if self.debugMode:
+            logDebug("battle module '{}' destroyed", self.getAlias())
 
     @property
     def isPlayerVehicle(self):

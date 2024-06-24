@@ -94,8 +94,8 @@ class ViewHandlerLobby(PackageBusinessHandler):
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
         is_hangar = alias == VIEW_ALIAS.LOBBY_HANGAR
-        g_events.onHangarLoaded(is_hangar)
         if is_hangar:
+            callback(2.0, g_events.onHangarLoaded, is_hangar)
             logInfo(INFO_MSG, self.__class__.__name__, alias)
             if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
                 return logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)

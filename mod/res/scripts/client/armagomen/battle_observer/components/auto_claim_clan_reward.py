@@ -1,6 +1,7 @@
 from adisp import adisp_process
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
+from armagomen.utils.common import callback
 from armagomen.utils.logging import logWarning
 from gui import SystemMessages
 from gui.clans.clan_cache import g_clanCache
@@ -11,27 +12,34 @@ from gui.wgcg.clan_supply.contexts import ClaimRewardsCtx
 from helpers import dependency
 from PlayerEvents import g_playerEvents
 from skeletons.gui.shared import IItemsCache
+from skeletons.gui.shared.utils import IHangarSpace
 from skeletons.gui.web import IWebController
+
+REWARD_STATUS_OK = (QuestStatus.REWARD_AVAILABLE, QuestStatus.REWARD_PENDING)
 
 
 class AutoClaimClanReward:
     __webController = dependency.descriptor(IWebController)
-    itemsCache = dependency.descriptor(IItemsCache)
+    __itemsCache = dependency.descriptor(IItemsCache)
+    hangarSpace = dependency.descriptor(IHangarSpace)
 
     def __init__(self):
-        self.itemsCache.onSyncCompleted += self.updateQuests
+        self.hangarSpace.onSpaceCreate += self.updateQuests
+        self.__itemsCache.onSyncCompleted += self.updateQuests
         g_playerEvents.onBattleResultsReceived += self.updateQuests
         g_clanCache.clanSupplyProvider.onDataReceived += self.__onDataReceived
+        self.__claimed = set()
 
     def updateQuests(self, *args, **kwargs):
         if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
-            quests_obj = g_clanCache.clanSupplyProvider.getQuestsInfo()
-            data = quests_obj.data
-            if quests_obj.isWaitingResponse and data is not None:
+            data = g_clanCache.clanSupplyProvider.getQuestsInfo().data
+            if data is None:
+                g_clanCache.clanSupplyProvider._getData(DataNames.QUESTS_INFO_POST)
+            else:
                 self.parseQuests(data)
 
     @adisp_process
-    def tryToClaimReward(self):
+    def __claimRewards(self):
         response = yield self.__webController.sendRequest(ctx=ClaimRewardsCtx())
         if not response.isSuccess():
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - " + backport.text(
@@ -39,16 +47,19 @@ class AutoClaimClanReward:
             logWarning('Failed to claim rewards. Code: {code}', code=response.getCode())
 
     def parseQuests(self, data):
+        claim = False
         for quest in data.quests:
-            if quest.status != QuestStatus.INCOMPLETE:
-                self.tryToClaimReward()
+            claim |= quest.status in REWARD_STATUS_OK and quest.name not in self.__claimed
+            if claim:
+                self.__claimed.add(quest.name)
+        if claim:
+            self.__claimRewards()
+            callback(20, self.__claimed.clear)
 
     def __onDataReceived(self, dataName, data):
-        if not user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD]:
-            return
-        if dataName not in (DataNames.QUESTS_INFO, DataNames.QUESTS_INFO_POST):
-            return
-        self.parseQuests(data)
+        if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
+            if dataName in (DataNames.QUESTS_INFO, DataNames.QUESTS_INFO_POST):
+                self.parseQuests(data)
 
 
 g_autoClaimClanReward = AutoClaimClanReward()
