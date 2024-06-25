@@ -8,7 +8,8 @@ from gui.clans.clan_cache import g_clanCache
 from gui.clans.data_wrapper.clan_supply import DataNames, QuestStatus
 from gui.impl import backport
 from gui.impl.gen import R
-from gui.wgcg.clan_supply.contexts import ClaimRewardsCtx
+from gui.shared.money import Currency
+from gui.wgcg.clan_supply.contexts import ClaimRewardsCtx, PurchaseProgressionStageCtx
 from helpers import dependency
 from PlayerEvents import g_playerEvents
 from skeletons.gui.shared import IItemsCache
@@ -24,19 +25,31 @@ class AutoClaimClanReward:
     hangarSpace = dependency.descriptor(IHangarSpace)
 
     def __init__(self):
-        self.hangarSpace.onSpaceCreate += self.updateQuests
-        self.__itemsCache.onSyncCompleted += self.updateQuests
-        g_playerEvents.onBattleResultsReceived += self.updateQuests
+        self.hangarSpace.onSpaceCreate += self.update
+        self.__itemsCache.onSyncCompleted += self.update
+        g_playerEvents.onBattleResultsReceived += self.update
         g_clanCache.clanSupplyProvider.onDataReceived += self.__onDataReceived
         self.__claimed = set()
+        self.__currentProgressionLevel = 0
+        self.__settingsProgression = None
 
-    def updateQuests(self, *args, **kwargs):
+    def update(self, *args, **kwargs):
         if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
-            data = g_clanCache.clanSupplyProvider.getQuestsInfo().data
-            if data is None:
-                g_clanCache.clanSupplyProvider._getData(DataNames.QUESTS_INFO_POST)
-            else:
-                self.parseQuests(data)
+            self.updateQuests()
+            self.updateProgression()
+
+    def updateQuests(self):
+        quest_data = g_clanCache.clanSupplyProvider.getQuestsInfo().data
+        if quest_data is None:
+            g_clanCache.clanSupplyProvider._getData(DataNames.QUESTS_INFO_POST)
+        else:
+            self.parseQuests(quest_data)
+
+    def updateProgression(self):
+        if self.__settingsProgression is None:
+            g_clanCache.clanSupplyProvider.getProgressionSettings()
+        else:
+            self.parseProgression(g_clanCache.clanSupplyProvider.getProgressionProgress().data)
 
     @adisp_process
     def __claimRewards(self):
@@ -45,6 +58,12 @@ class AutoClaimClanReward:
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - " + backport.text(
                 R.strings.clan_supply.messages.claimRewards.error()), type=SystemMessages.SM_TYPE.Error)
             logWarning('Failed to claim rewards. Code: {code}', code=response.getCode())
+
+    @adisp_process
+    def __claimProgression(self, stageID, price):
+        response = yield self.__webController.sendRequest(ctx=PurchaseProgressionStageCtx(stageID, price))
+        if not response.isSuccess():
+            logWarning('Failed to claim Progression. Code: {code}', code=response.getCode())
 
     def parseQuests(self, data):
         claim = False
@@ -56,10 +75,22 @@ class AutoClaimClanReward:
             self.__claimRewards()
             callback(20, self.__claimed.clear)
 
+    def parseProgression(self, data):
+        if self.__settingsProgression is None:
+            return callback(5.0, self.updateProgression)
+        self.__currentProgressionLevel = data.last_purchased
+        currency = self.__itemsCache.items.stats.dynamicCurrencies.get(Currency.TOUR_COIN, 0)
+        next_lvl_currency = self.__settingsProgression.points.get(str(self.__currentProgressionLevel + 1))
+        print currency, next_lvl_currency
+
     def __onDataReceived(self, dataName, data):
         if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
             if dataName in (DataNames.QUESTS_INFO, DataNames.QUESTS_INFO_POST):
                 self.parseQuests(data)
+            elif dataName == DataNames.PROGRESSION_PROGRESS:
+                self.parseProgression(data)
+            elif dataName == DataNames.PROGRESSION_SETTINGS:
+                self.__settingsProgression = data
 
 
 g_autoClaimClanReward = AutoClaimClanReward()
