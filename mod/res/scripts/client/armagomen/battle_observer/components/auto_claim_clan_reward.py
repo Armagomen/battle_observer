@@ -11,12 +11,12 @@ from gui.impl.gen import R
 from gui.shared.money import Currency
 from gui.wgcg.clan_supply.contexts import ClaimRewardsCtx, PurchaseProgressionStageCtx
 from helpers import dependency
-from PlayerEvents import g_playerEvents
 from skeletons.gui.shared import IItemsCache
 from skeletons.gui.shared.utils import IHangarSpace
 from skeletons.gui.web import IWebController
 
 REWARD_STATUS_OK = (QuestStatus.REWARD_AVAILABLE, QuestStatus.REWARD_PENDING)
+next_double_up = (3, 8, 13, 18)
 
 
 class AutoClaimClanReward:
@@ -27,10 +27,8 @@ class AutoClaimClanReward:
     def __init__(self):
         self.hangarSpace.onSpaceCreate += self.update
         self.__itemsCache.onSyncCompleted += self.update
-        g_playerEvents.onBattleResultsReceived += self.update
         g_clanCache.clanSupplyProvider.onDataReceived += self.__onDataReceived
         self.__claimed = set()
-        self.__currentProgressionLevel = 0
         self.__settingsProgression = None
 
     def update(self, *args, **kwargs):
@@ -76,12 +74,14 @@ class AutoClaimClanReward:
             callback(20, self.__claimed.clear)
 
     def parseProgression(self, data):
-        if self.__settingsProgression is None:
+        if self.__settingsProgression is None or data is None:
             return callback(5.0, self.updateProgression)
-        self.__currentProgressionLevel = data.last_purchased
         currency = self.__itemsCache.items.stats.dynamicCurrencies.get(Currency.TOUR_COIN, 0)
-        next_lvl_currency = self.__settingsProgression.points.get(str(self.__currentProgressionLevel + 1))
-        print currency, next_lvl_currency
+        last_lvl = data.last_purchased
+        next_lvl = last_lvl + 1 if last_lvl not in next_double_up else last_lvl + 2
+        next_lvl_currency = self.__settingsProgression.points.get(str(next_lvl))
+        if next_lvl_currency is not None and currency >= next_lvl_currency.price:
+            self.__claimProgression(next_lvl, next_lvl_currency.price)
 
     def __onDataReceived(self, dataName, data):
         if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
