@@ -2,11 +2,11 @@ import json
 import locale
 import math
 import os
+import shutil
 from collections import namedtuple
 from colorsys import hsv_to_rgb
 from functools import partial
 from io import open as _open
-from shutil import rmtree
 
 import BigWorld
 import ResMgr
@@ -19,6 +19,7 @@ from helpers.http import openUrl
 from uilogging.core.core_constants import HTTP_DEFAULT_TIMEOUT
 
 CONFIG_DIR = "mod_battle_observer"
+MOD_CACHE = "battle_observer"
 UTF_8 = 'utf-8'
 
 
@@ -113,6 +114,13 @@ if currentConfigPath is None:
         os.makedirs(currentConfigPath)
 
 
+def removeDirs(path):
+    if os.path.exists(path):
+        shutil.rmtree(path, ignore_errors=True, onerror=None)
+        return True
+    return False
+
+
 def cleanupUpdates():
     path = os.path.join(cwd, "updates")
     # Gather directory contents
@@ -127,27 +135,16 @@ def cleanupUpdates():
         if _link in ignored:
             continue
         link = os.path.join(path, _link)
-        os.unlink(link) if os.path.isfile(link) or os.path.islink(link) else rmtree(link, ignore_errors=True)
-        logInfo("cleanup updates: {}", link)
+        os.unlink(link) if os.path.isfile(link) or os.path.islink(link) else removeDirs(link)
+        logInfo("CLEARING THE UPDATE FOLDER: {}", link)
 
 
-def removeDirs(path, name=None):
-    if os.path.exists(path):
-        rmtree(path, ignore_errors=True, onerror=None)
-        if name is not None:
-            logInfo('CLEANING CACHE: {}', name)
-
-
-def clearClientCache(category=None):
-    dirs = (
-        "account_caches", "battle_results", "clan_cache", "custom_data", "dossier_cache", "messenger_cache",
-        "storage_cache", "tutorial_cache", "veh_cmp_cache", "web_cache", "profile"
-    )
-    if category is None:
-        for dirName in dirs:
-            removeDirs(os.path.join(preferencesDir, dirName), dirName)
-    else:
-        removeDirs(os.path.join(preferencesDir, category), category)
+def clearClientCache():
+    exclude_cache_dirs = ["game_loading_cache"]
+    game_cache_dirs = [x for x in os.listdir(preferencesDir) if "_cache" in x and x not in exclude_cache_dirs]
+    for dirName in game_cache_dirs:
+        if removeDirs(os.path.join(preferencesDir, dirName)):
+            logInfo("CLEANING CLIENT CACHE FOLDER: {}", dirName)
 
 
 def encodeData(data):
@@ -179,10 +176,14 @@ def writeJsonFile(path, data):
 
 
 def getObserverCachePath():
-    path = os.path.join(preferencesDir, "battle_observer")
-    if not os.path.exists(path):
-        os.makedirs(path)
-    return path
+    old_path = os.path.join(preferencesDir, MOD_CACHE)
+    new_path = os.path.join(preferencesDir, "mods", MOD_CACHE)
+    if os.path.exists(old_path):
+        shutil.copytree(old_path, new_path)
+        shutil.rmtree(old_path, ignore_errors=True)
+    elif not os.path.exists(new_path):
+        os.makedirs(new_path)
+    return new_path
 
 
 def isXvmInstalled():

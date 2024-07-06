@@ -1,7 +1,5 @@
 from collections import namedtuple
 
-from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.logging import DEBUG, logDebug
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
 from helpers import dependency
@@ -44,8 +42,6 @@ class CurrentVehicleCachedData(object):
             int(blocked) if blocked > 99 else round(blocked, 2),
             round(marksOnGun.getDamageRating(), 2), marksOnGunIcon, name, level > 4, self.getWinsEfficiency(random)
         )
-        if user_settings.main[DEBUG]:
-            logDebug(self.__EfficiencyAVGData)
 
     @property
     def efficiencyAvgData(self):
