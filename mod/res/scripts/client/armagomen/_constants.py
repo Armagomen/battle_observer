@@ -3,6 +3,7 @@ from collections import namedtuple
 import ResMgr
 
 from aih_constants import CTRL_MODE_NAME
+from armagomen.utils.logging import logError
 from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
@@ -423,30 +424,37 @@ ALIAS_TO_CONFIG_NAME = {
     BATTLE_ALIASES.OWN_HEALTH: OWN_HEALTH.NAME
 }
 
-BATTLES_RANGE = (
-    ARENA_GUI_TYPE.WINBACK,
-    ARENA_GUI_TYPE.COMP7,
-    ARENA_GUI_TYPE.TOURNAMENT_COMP7,
-    ARENA_GUI_TYPE.TRAINING_COMP7,
-    ARENA_GUI_TYPE.EPIC_BATTLE,
-    ARENA_GUI_TYPE.EPIC_RANDOM,
-    ARENA_GUI_TYPE.EPIC_RANDOM_TRAINING,
-    ARENA_GUI_TYPE.FORT_BATTLE_2,
-    ARENA_GUI_TYPE.FUN_RANDOM,
-    ARENA_GUI_TYPE.MAPBOX,
-    ARENA_GUI_TYPE.RANDOM,
-    ARENA_GUI_TYPE.RANKED,
-    ARENA_GUI_TYPE.SORTIE_2,
-    ARENA_GUI_TYPE.TRAINING,
-    ARENA_GUI_TYPE.UNKNOWN,
-)
 
-BATTLE_PAGES = (
-    VIEW_ALIAS.CLASSIC_BATTLE_PAGE,
-    VIEW_ALIAS.COMP7_BATTLE_PAGE,
-    VIEW_ALIAS.EPIC_BATTLE_PAGE,
-    VIEW_ALIAS.EPIC_RANDOM_PAGE,
-    VIEW_ALIAS.RANKED_BATTLE_PAGE,
-    VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,
-    VIEW_ALIAS.WINBACK_BATTLE_PAGE
-)
+def create_battles_range():
+    names = (
+        "WINBACK", "COMP7", "TOURNAMENT_COMP7", "EPIC_BATTLE", "EPIC_RANDOM", "EPIC_RANDOM_TRAINING", "FORT_BATTLE_2",
+        "MAPBOX", "RANDOM", "RANKED", "SORTIE_2", "TRAINING", "UNKNOWN"
+    )
+    _range = set()
+    for name in names:
+        _name = getattr(ARENA_GUI_TYPE, name)
+        if _name is not None:
+            _range.add(_name)
+        else:
+            logError("create_battles_ranges::ARENA_GUI_TYPE attribute error:: {}", name)
+    return _range
+
+
+def create_battle_pages():
+    pages = (
+        "CLASSIC_BATTLE_PAGE", "COMP7_BATTLE_PAGE", "EPIC_BATTLE_PAGE", "EPIC_RANDOM_PAGE", "RANKED_BATTLE_PAGE",
+        "STRONGHOLD_BATTLE_PAGE", "WINBACK_BATTLE_PAGE"
+    )
+
+    _range = set()
+    for page in pages:
+        _name = getattr(VIEW_ALIAS, page)
+        if _name is not None:
+            _range.add(_name)
+        else:
+            logError("create_battle_pages::VIEW_ALIAS attribute error:: {}", page)
+    return _range
+
+
+BATTLES_RANGE = create_battles_range()
+BATTLE_PAGES = create_battle_pages()
