@@ -425,36 +425,41 @@ ALIAS_TO_CONFIG_NAME = {
 }
 
 
-def create_battles_range():
-    names = (
-        "WINBACK", "COMP7", "TOURNAMENT_COMP7", "EPIC_BATTLE", "EPIC_RANDOM", "EPIC_RANDOM_TRAINING", "FORT_BATTLE_2",
-        "MAPBOX", "RANDOM", "RANKED", "SORTIE_2", "TRAINING", "UNKNOWN"
-    )
+def create_range(obj, names):
     _range = set()
     for name in names:
-        _name = getattr(ARENA_GUI_TYPE, name)
+        _name = getattr(obj, name)
         if _name is not None:
             _range.add(_name)
         else:
-            logError("create_battles_ranges::ARENA_GUI_TYPE attribute error:: {}", name)
+            logError("create_range::{} attribute error:: {}", obj.__class__.__name__, name)
     return _range
 
 
-def create_battle_pages():
-    pages = (
-        "CLASSIC_BATTLE_PAGE", "COMP7_BATTLE_PAGE", "EPIC_BATTLE_PAGE", "EPIC_RANDOM_PAGE", "RANKED_BATTLE_PAGE",
-        "STRONGHOLD_BATTLE_PAGE", "WINBACK_BATTLE_PAGE"
-    )
+__battle_types = (
+    "COMP7",
+    "EPIC_BATTLE",
+    "EPIC_RANDOM",
+    "EPIC_RANDOM_TRAINING",
+    "FORT_BATTLE_2",
+    "MAPBOX",
+    "RANDOM",
+    "RANKED",
+    "SORTIE_2",
+    "TOURNAMENT_COMP7",
+    "TRAINING",
+    "UNKNOWN",
+    "WINBACK",
+)
+__pages_types = (
+    "CLASSIC_BATTLE_PAGE",
+    "COMP7_BATTLE_PAGE",
+    "EPIC_BATTLE_PAGE",
+    "EPIC_RANDOM_PAGE",
+    "RANKED_BATTLE_PAGE",
+    "STRONGHOLD_BATTLE_PAGE",
+    "WINBACK_BATTLE_PAGE",
+)
 
-    _range = set()
-    for page in pages:
-        _name = getattr(VIEW_ALIAS, page)
-        if _name is not None:
-            _range.add(_name)
-        else:
-            logError("create_battle_pages::VIEW_ALIAS attribute error:: {}", page)
-    return _range
-
-
-BATTLES_RANGE = create_battles_range()
-BATTLE_PAGES = create_battle_pages()
+BATTLES_RANGE = create_range(ARENA_GUI_TYPE, __battle_types)
+BATTLE_PAGES = create_range(VIEW_ALIAS, __pages_types)
