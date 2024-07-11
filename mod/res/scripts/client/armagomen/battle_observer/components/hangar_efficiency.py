@@ -46,7 +46,7 @@ def getAvgData():
         params = data._asdict()
         params.update(EFFICIENCY_ICONS)
         return "<font face='$TitleFont' size='20' color='#FAFAFA'>{}</font>".format("  ".join(text).format(**params))
-    return ""
+    return GLOBAL.EMPTY_LINE
 
 
 def onModSettingsChanged(config, blockID):

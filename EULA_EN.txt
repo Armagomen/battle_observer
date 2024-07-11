@@ -1,40 +1,26 @@
-This Agreement including all attachments thereto for the sake of brevity hereinafter referred as the Agreement.
-All annexes to the Agreement shall form an integral part of and binding the parties.
-Annexes to the Agreement posted on the Site Developer Fashion and includes the right to use fashion and Privacy Policy.
+## Agreement Regarding the Use of the "BATTLE OBSERVER" Modification
 
-ATTENTION! IF YOU DOWNLOAD, COPY SOFTWARE, OR USE IT IN ANY OTHER MANNER AND / OR BEGINS GAMEPLAY WITH SET OF MODIFICATIONS "BATTLE OBSERVER" HEREINAFTER REFFERED AS THE MODIFICATION, YOU CONFIRM YOUR ACCEPTANCE OF THE TERMS OF THIS AGREEMENT.
+1. **Ownership Rights**: All rights not explicitly stated in this Agreement belong to the Project Owner (hereinafter referred to as the Developer).
 
-1. All rights not expressly specified in this Agreement are reserved by the Project Owner hereinafter referred as Developer.
+2. **Confirmation of Authorization**: The User guarantees that they have all necessary authorizations to enter into this Agreement or have obtained the necessary consent from their parents or legal representatives.
 
-2. User guarantees that he is not subject to legal restrictions on use online services, that he has all the necessary powers to enter into this Agreement or has received the necessary permission in the form required by law from his parents or legal representatives.
+3. **Use at Your Own Risk**: The User uses the Modification at their own risk. The Modification is provided "as is," and the Developer does not guarantee seamless operation, compliance with expectations, or absence of conflicts with other mods.
 
-3. User uses Modification at his own risk. The modification is provided on an “as it is”, what means User is not guaranteed that the Modification, as well  the features, services. Services and facilities:
-3.1. Will operate smoothly, continuously, without errors, without conflicts with other mods;
-3.2. Will conforme requirements and expectations of User.
+4. **Prohibited Actions by the User**:
+    - Adding modifications to modpacks without the Developer's consent.
+    - Distributing the modification on third-party resources without referencing the Developer's website.
+    - Modifying the modification's scripts in any way.
 
-4. User is not allowed:
-4.1. Add modification to modpack without Developer’s consent;
-4.2. Distribute the modification to third-party resources without attribution and link to the Developer's site;
-4.3. Modify or modify modification scripts in any way.
+5. **Violation of the Agreement**: If the User violates this Agreement, the Developer has the right to limit the User's access to the modification.
 
-5. If User violates the current Agreement, the Developer has the right, without prior notice, to unilaterally fully or partially restrict the functionality or access of User to the Project, as well refuse User to further provide services in the Project without being responsible for any harm that may be caused to the User by such an action.
+6. **Disagreement with the Agreement**: In case of disagreement with this Agreement, the User must cease participating in the Project, including removing the modification.
 
-6. In case of disagreement of User with the current Agreement, User is obliged to terminate participation in the Project, including uninstall the modification.
+7. **Termination of the Agreement**: Either Party has the right to terminate this Agreement unilaterally at any time (without judicial proceedings).
 
-7. Either of the Parties is entitled to terminate this Agreement at any time(without trial).
-7.1 In the event of termination of this Agreement for any reason, the Licensee shall discontinue use of the modification and delete the Client part of the modification from the PC’s memory. At the same time, the size of the license fee for the use of access to the premium functions received by the Licensee (how many days of the subscription left) is not converted into cash and is not returned to the Licensee under any circumstances.
+8. **Limitation of Liability**:
+    - The Developer is not liable for direct or indirect damages or lost profits incurred by the User or third parties.
+    - The Parties are released from liability for non-performance or partial performance of obligations under this Agreement due to force majeure circumstances.
 
-8. Limitation of Liability. The developer is not responsible for direct or indirect damage, as well lost profits of the User or third parties as a result:
-8.1. Use or inability to use modifications.
-8.2. Force majeure and actions of third parties. The parties are exempt from liability for full or partial failure to fulfill obligations under this Agreement if such failure is the result of force majeure, including riots, prohibitive actions of authorities, natural disasters, fires, catastrophes, failures in telecommunications and electrical networks, actions of malicious programs , server failure, as well unfair actions of third parties aimed at obtaining unauthorized access or disabling the program or hardware complex.
-
-9. Developer Rights and Responsibilities:
-9.1. Developers commit to:
-9.1.1 Provide User with access to premium features if User made a license fee set by the Developer.;
-9.1.2 Provide access to basic and premium features if it is not hindered by clause 8.2.
-
-9.2. The developer has the right to:
-9.2.1. Without prior notice User, modify at its discretion the technical and other characteristics of any part of the modification used by the User, including activated and non-activated commands and modules; change scenarios of modification, and so on;
-9.2.2. At any time, stop, restrict and / or terminate this Agreement unilaterally with modification for any or all users, including if the User does not comply with the terms of this Agreement.
-9.2.3. At any time, change amount of license fee to access premium features.
-9.2.4. Convert basic function to premium and vice versa without prior warning.
+9. **Rights and Obligations of the Developer**:
+    - The Developer undertakes to provide the User with access to premium features.
+    - The Developer has the right to modify the characteristics of the modification and restrict User access.
