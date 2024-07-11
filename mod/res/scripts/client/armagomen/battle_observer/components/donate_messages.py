@@ -27,13 +27,14 @@ PATTERN = getLogo(big=False) + ("<p><font color='#ffff66'>{msg}</font></p>\n"
 
 MESSAGES = {
     "uk": (
-        "Будь ласка, підтримайте розробку мода, дякую за пожертву.",
-        "Шановні, не забувайте підтримувати розробку.",
-        "Кожна пожертва пришвидшує розробку та робить цей світ кращим."
+        "Привіт, друзі! Якщо вам подобається наш контент, будь ласка, розгляньте можливість підтримати нас. Ваші донати допомагають нам створювати ще більше цікавого матеріалу!",
+        "Вітаємо, команда! Наш проект зростає завдяки вам. Якщо ви хочете підтримати нас, перейдіть за посиланням в описі. Кожен донат важливий!",
+        "Друзі, дякуємо вам за те, що залишаєтеся з нами! Якщо ви хочете допомогти розвитку нашого проекту, натисніть посилання. Ваша підтримка цінна для нас!"
     ),
     "en": (
-        "Every donation speeds up development and makes this world a better place.",
-        "Please support the development of the mod, thanks for the donation.",
+        "Hello, friends! If you enjoy our content, please consider supporting us. Your donations help us create even more interesting material!",
+        "Congratulations, team! Our project is growing thanks to all of you. If you'd like to support us, click the link in the description. Every donation matters!",
+        "Friends, thank you for staying with us! If you want to contribute to the development of our project, click the link. Your support means a lot to us!"
     )
 }
 

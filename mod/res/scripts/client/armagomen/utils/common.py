@@ -1,6 +1,5 @@
 import json
 import locale
-import math
 import os
 import shutil
 from collections import namedtuple
@@ -261,8 +260,9 @@ COLOR = namedtuple("COLOR", ("PURPLE", "GREEN", "MULTIPLIER", "TEMPLATE"))(0.833
 
 def percentToRGB(percent, saturation=0.5, brightness=1.0, **kwargs):
     """Percent is float number in range 0 - 2.4 purple, or 1.0 green."""
+    # Adjusted for purple and green positions
     position = min(COLOR.PURPLE, percent * COLOR.GREEN)
-    r, g, b = (int(math.ceil(i * COLOR.MULTIPLIER)) for i in hsv_to_rgb(position, saturation, brightness))
+    r, g, b = (int(i * COLOR.MULTIPLIER) for i in hsv_to_rgb(position, saturation, brightness))
     return COLOR.TEMPLATE.format(r, g, b)
 
 
