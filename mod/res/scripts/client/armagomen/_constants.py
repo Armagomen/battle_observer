@@ -8,7 +8,6 @@ from constants import ARENA_GUI_TYPE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
     SHOT_RESULT_TO_DEFAULT_COLOR
-from realm import CURRENT_REALM
 
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
@@ -340,7 +339,7 @@ LOAD_LIST = (
     SERVICE_CHANNEL.NAME, ARCADE.NAME, STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME,
     DAMAGE_LOG.WG_LOGS_FIX, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED, SIXTH_SENSE.NAME,
     CLOCK.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, STATISTICS.NAME, AVG_EFFICIENCY_HANGAR.NAME
-) if CURRENT_REALM != "RU" else tuple()
+)
 
 
 class CONFIG_INTERFACE:
@@ -355,7 +354,7 @@ class CONFIG_INTERFACE:
         PANELS.PANELS_NAME, SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME,
         MINIMAP.NAME, SIXTH_SENSE.NAME, DISTANCE.NAME, OWN_HEALTH.NAME,
         SERVICE_CHANNEL.NAME, AVG_EFFICIENCY_HANGAR.NAME, COLORS.NAME
-    ) if CURRENT_REALM != "RU" else tuple()
+    )
     HANDLER_VALUES = {
         SNIPER.NAME: {
             'dynamic_zoom*enabled': ('dynamic_zoom*steps_only',),
