@@ -1,8 +1,7 @@
 from collections import namedtuple
 
-from armagomen._constants import MAIN, MOD_NAME
+from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
-from debug_utils import LOG_CURRENT_EXCEPTION
 from gui import InputHandler
 from Keys import KEY_LALT, KEY_LCONTROL, KEY_LSHIFT, KEY_RALT, KEY_RCONTROL, KEY_RSHIFT
 from PlayerEvents import g_playerEvents
@@ -16,17 +15,17 @@ KEY_ALIAS_SHIFT = (KEY_LSHIFT, KEY_RSHIFT)
 class KeysListener(object):
 
     def __init__(self):
-        self.keysMap = set()
+        self.components = set()
         self.pressedKeys = set()
         self.usableKeys = set()
         g_playerEvents.onAvatarReady += self.onEnterBattlePage
         g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
 
     def registerComponent(self, keyFunction, keyList=None):
-        self.keysMap.add(KeysData(self.normalizeKey(keyList) if keyList else KEY_ALIAS_ALT, keyFunction))
+        self.components.add(KeysData(self.normalizeKey(keyList) if keyList else KEY_ALIAS_ALT, keyFunction))
 
     def clear(self):
-        self.keysMap.clear()
+        self.components.clear()
         self.usableKeys.clear()
         self.pressedKeys.clear()
 
@@ -42,23 +41,17 @@ class KeysListener(object):
     def onKeyUp(self, event):
         if event.key not in self.pressedKeys:
             return
-        for keysData in self.keysMap:
-            if event.key in keysData.keys:
-                try:
-                    keysData.keyFunction(False)
-                except Exception:
-                    LOG_CURRENT_EXCEPTION(MOD_NAME)
+        for component in self.components:
+            if event.key in component.keys:
+                component.keyFunction(False)
         self.pressedKeys.discard(event.key)
 
     def onKeyDown(self, event):
         if event.key not in self.usableKeys or event.key in self.pressedKeys:
             return
-        for keysData in self.keysMap:
-            if event.key in keysData.keys:
-                try:
-                    keysData.keyFunction(True)
-                except Exception:
-                    LOG_CURRENT_EXCEPTION(MOD_NAME)
+        for component in self.components:
+            if event.key in component.keys:
+                component.keyFunction(True)
         self.pressedKeys.add(event.key)
 
     def normalizeKey(self, keyList):
