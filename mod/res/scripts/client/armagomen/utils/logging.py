@@ -5,7 +5,10 @@ DEBUG = "DEBUG_MODE"
 
 
 def _formatMessage(message, *args, **kwargs):
-    return str(message).format(*args, **kwargs)
+    message = str(message)
+    if args or kwargs:
+        return message.format(*args, **kwargs)
+    return message
 
 
 def logError(message, *args, **kwargs):

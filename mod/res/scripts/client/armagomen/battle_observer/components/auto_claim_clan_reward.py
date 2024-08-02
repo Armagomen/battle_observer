@@ -33,8 +33,8 @@ class AutoClaimClanReward:
 
     def update(self, *args, **kwargs):
         if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
-            self.updateQuests()
-            self.updateProgression()
+            callback(1, self.updateQuests)
+            callback(2, self.updateProgression)
 
     def updateQuests(self):
         quest_data = g_clanCache.clanSupplyProvider.getQuestsInfo().data
@@ -75,9 +75,9 @@ class AutoClaimClanReward:
 
     def parseProgression(self, data):
         if self.__settingsProgression is None or data is None:
-            return callback(5.0, self.updateProgression)
+            return callback(2.0, self.updateProgression)
         currency = self.__itemsCache.items.stats.dynamicCurrencies.get(Currency.TOUR_COIN, 0)
-        last_lvl = data.last_purchased
+        last_lvl = data.last_purchased or 0
         next_lvl = last_lvl + 1 if last_lvl not in next_double_up else last_lvl + 2
         next_lvl_currency = self.__settingsProgression.points.get(str(next_lvl))
         if next_lvl_currency is not None and currency >= next_lvl_currency.price:
