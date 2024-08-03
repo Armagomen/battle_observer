@@ -101,7 +101,11 @@ class Donate(object):
 
 
 if AUTH_REALM == "EU":
-    dn = Donate()
+    from threading import Thread
+
+    donate = Thread(target=Donate)
+    donate.daemon = True
+    donate.start()
 
 
     @overrideMethod(NotificationListView, "onClickAction")

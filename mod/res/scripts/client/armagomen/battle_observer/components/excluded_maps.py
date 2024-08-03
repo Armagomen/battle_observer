@@ -1,3 +1,5 @@
+from threading import Thread
+
 from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
@@ -121,4 +123,6 @@ class ExcludedMapsProcessor(object):
             self.__showDialog(message)
 
 
-excluded_maps = ExcludedMapsProcessor()
+excluded_maps = Thread(target=ExcludedMapsProcessor)
+excluded_maps.daemon = True
+excluded_maps.start()

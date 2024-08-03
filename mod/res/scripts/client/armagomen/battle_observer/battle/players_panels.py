@@ -1,6 +1,6 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import COLORS, PANELS, VEHICLE
-from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
+from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug

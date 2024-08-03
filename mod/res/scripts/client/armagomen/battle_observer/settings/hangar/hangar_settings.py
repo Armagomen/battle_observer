@@ -3,11 +3,9 @@ from armagomen._constants import ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
-from armagomen.utils.logging import logInfo, logWarning
+from armagomen.utils.logging import logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
-from gui.shared.personality import ServicesLocator
 from Keys import KEY_LALT, KEY_RALT
-from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 settingsVersion = 37
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
@@ -75,10 +73,10 @@ class Getter(object):
                 yield key, dic[param]
 
 
-class CreateElement(object):
+class CreateElement(Getter):
 
     def __init__(self):
-        self.getter = Getter()
+        super(CreateElement, self).__init__()
 
     @staticmethod
     def createLabel(blockID, name):
@@ -193,16 +191,13 @@ class CreateElement(object):
         val_type = type(value)
         if val_type == str:
             if GLOBAL.ALIGN in key:
-                return self.createRadioButtonGroup(blockID, key,
-                                                   *self.getter.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
+                return self.createRadioButtonGroup(blockID, key, *self.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
             elif blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
-                return self.createBarStyleDropDown(blockID, key, *self.getter.getCollectionIndex(value, HP_BARS.STYLES))
+                return self.createBarStyleDropDown(blockID, key, *self.getCollectionIndex(value, HP_BARS.STYLES))
             elif blockID == DEBUG_PANEL.NAME and DEBUG_PANEL.STYLE == key:
-                return self.createDebugStyleDropDown(blockID, key,
-                                                     *self.getter.getCollectionIndex(value, DEBUG_PANEL.STYLES))
+                return self.createDebugStyleDropDown(blockID, key, *self.getCollectionIndex(value, DEBUG_PANEL.STYLES))
             elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
-                return self.createSixthSenseDropDown(blockID, key,
-                                                     *self.getter.getCollectionIndex(value, SIXTH_SENSE.ICONS))
+                return self.createSixthSenseDropDown(blockID, key, *self.getCollectionIndex(value, SIXTH_SENSE.ICONS))
         if val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
@@ -228,26 +223,19 @@ class SettingsInterface(CreateElement):
     def __init__(self, settingsLoader, version):
         api = importApi()
         if api is None:
+            logError("Api Not Loaded")
             return
         self.modsListApi, self.vxSettingsApi, self.apiEvents = api
         super(SettingsInterface, self).__init__()
-        self.sLoader = settingsLoader
+        self.loader = settingsLoader
         self.inited = set()
-        self.currentConfigID = self.newConfigID = self.sLoader.configsList.index(self.sLoader.configName)
+        self.currentConfigID = self.newConfigID = self.loader.configsList.index(self.loader.configName)
         self.newConfigLoadingInProcess = False
+        user_settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
-        self.vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                        useKeyPairs=user_settings.main[MAIN.USE_KEY_PAIRS])
-        self.vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
-        ServicesLocator.appLoader.onGUISpaceEntered += self.loadHangarSettings
-        user_settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
-
-    def loadHangarSettings(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.LOGIN:
-            self.addModificationToModList()
-            self.addModsToVX()
-            ServicesLocator.appLoader.onGUISpaceEntered -= self.loadHangarSettings
+        self.addModificationToModList()
+        self.addModsToVX()
 
     def addModificationToModList(self):
         """register settings window in modsListApi"""
@@ -260,6 +248,8 @@ class SettingsInterface(CreateElement):
         self.modsListApi.addModification(**kwargs)
 
     def addModsToVX(self):
+        self.vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
+                                        useKeyPairs=user_settings.main[MAIN.USE_KEY_PAIRS])
         for blockID in CONFIG_INTERFACE.BLOCK_IDS:
             if blockID in self.inited:
                 continue
@@ -273,6 +263,7 @@ class SettingsInterface(CreateElement):
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
+        self.vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
 
     def load_window(self):
         """Loading settings window"""
@@ -294,7 +285,7 @@ class SettingsInterface(CreateElement):
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.newConfigLoadingInProcess:
                 self.inited.clear()
-                self.sLoader.readOtherConfig(self.newConfigID)
+                self.loader.readOtherConfig(self.newConfigID)
                 self.currentConfigID = self.newConfigID
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
@@ -318,11 +309,11 @@ class SettingsInterface(CreateElement):
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
             self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            logInfo("change config '{}' - {}", self.sLoader.configsList[self.newConfigID], blockID)
+            logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
         else:
             settings_block = getattr(user_settings, blockID)
             for key, value in data.iteritems():
-                updated_config_link, param_name = self.getter.getLinkToParam(settings_block, key)
+                updated_config_link, param_name = self.getLinkToParam(settings_block, key)
                 if param_name in updated_config_link:
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
@@ -338,7 +329,7 @@ class SettingsInterface(CreateElement):
                     if type(value) == int and type(updated_config_link[param_name]) == float:
                         value = float(value)
                     updated_config_link[param_name] = value
-            self.sLoader.updateConfigFile(blockID, settings_block)
+            self.loader.updateConfigFile(blockID, settings_block)
             user_settings.onModSettingsChanged(settings_block, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
@@ -369,7 +360,7 @@ class SettingsInterface(CreateElement):
                 openWebBrowser(value)
 
     def items(self, blockID, settings_block):
-        for key, value in self.getter.keyValueGetter(settings_block):
+        for key, value in self.keyValueGetter(settings_block):
             item = self.createItem(blockID, key, value)
             if item is not None:
                 yield item
@@ -378,7 +369,7 @@ class SettingsInterface(CreateElement):
         """Create templates, do not change..."""
         settings_block = getattr(user_settings, blockID, {})
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.sLoader.configsList, self.currentConfigID)]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.loader.configsList, self.currentConfigID)]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.MONO, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:

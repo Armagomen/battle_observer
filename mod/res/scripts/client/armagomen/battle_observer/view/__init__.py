@@ -1,5 +1,5 @@
 from armagomen._constants import BATTLE_PAGES, LOBBY_ALIASES
-from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
+from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.view.view_settings import ViewSettings

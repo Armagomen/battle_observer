@@ -1,3 +1,5 @@
+from threading import Thread
+
 from armagomen._constants import CREW_XP, GLOBAL, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
@@ -120,4 +122,6 @@ class CrewProcessor(object):
             return base(dialog, data, *args, **kwargs)
 
 
-crew = CrewProcessor()
+crew = Thread(target=CrewProcessor)
+crew.daemon = True
+crew.start()

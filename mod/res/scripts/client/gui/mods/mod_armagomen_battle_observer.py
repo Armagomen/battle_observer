@@ -7,16 +7,20 @@ __email__ = "armagomen@gmail.com"
 __status__ = "Production"
 __http__ = "https://github.com/Armagomen/battle_observer/releases"
 
-from armagomen.battle_observer.core import onFini, onInit
+from threading import Thread
+
+from armagomen.battle_observer.core import Core, onFini
 from helpers.statistics import StatisticsCollector
-from realm import CURRENT_REALM
 
 StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
 
+observer = Thread(target=Core, args=(__version__,), name="Battle_Observer")
+
 
 def init():
-    onInit(__version__, CURRENT_REALM)
+    observer.start()
 
 
 def fini():
+    observer.join()
     onFini(__version__)

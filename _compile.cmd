@@ -20,8 +20,10 @@ set AutoUpdate=..\AutoUpdate.zip
 
 DEL ..\mod_battle_observer_*
 DEL %OutputDir%\armagomen.battleObserver*
-DEL %GameInstalled_ModsDir%\armagomen.battleObserver*
 DEL %AutoUpdate%
+DEL %GameInstalled_ModsDir%\armagomen.battleObserver*
+DEL %GameInstalled_ModsDir%\me.poliroid.modslistapi*
+DEL %GameInstalled_ModsDir%\polarfox.vxSettingsApi*
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py %ModFile% %sources%\*
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 %AutoUpdate% %OutputDir%\*

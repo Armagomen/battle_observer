@@ -29,6 +29,3 @@ class PlayersDamageController(object):
 
     def getPlayerDamage(self, vehicleID):
         return self.__damages[vehicleID]
-
-
-damage_controller = PlayersDamageController()

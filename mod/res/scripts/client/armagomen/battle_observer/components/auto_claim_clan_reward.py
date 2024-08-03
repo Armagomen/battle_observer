@@ -1,3 +1,5 @@
+from threading import Thread
+
 from adisp import adisp_process
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
@@ -33,8 +35,8 @@ class AutoClaimClanReward:
 
     def update(self, *args, **kwargs):
         if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
-            callback(1, self.updateQuests)
-            callback(2, self.updateProgression)
+            callback(1.0, self.updateQuests)
+            callback(1.5, self.updateProgression)
 
     def updateQuests(self):
         quest_data = g_clanCache.clanSupplyProvider.getQuestsInfo().data
@@ -93,4 +95,6 @@ class AutoClaimClanReward:
                 self.__settingsProgression = data
 
 
-g_autoClaimClanReward = AutoClaimClanReward()
+g_autoClaimClanReward = Thread(target=AutoClaimClanReward)
+g_autoClaimClanReward.daemon = True
+g_autoClaimClanReward.start()

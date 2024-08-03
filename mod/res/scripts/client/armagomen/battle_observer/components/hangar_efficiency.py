@@ -1,5 +1,5 @@
 from armagomen._constants import AVG_EFFICIENCY_HANGAR, EFFICIENCY_ICONS_SIZE, GLOBAL, IMAGE_DIR
-from armagomen.battle_observer.core import cachedVehicleData
+from armagomen.battle_observer.components.controllers import cachedVehicleData
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import overrideMethod
 from CurrentVehicle import g_currentVehicle

@@ -8,7 +8,7 @@ from armagomen.utils.logging import logInfo, logWarning
 from gui.shared.personality import ServicesLocator
 
 JSON = "{}.json"
-READ_MESSAGE = "SettingsLoader/loadConfigPart: {}: {}"
+READ_MESSAGE = "loadConfigPart: {}: {}"
 
 
 class SettingsLoader(object):

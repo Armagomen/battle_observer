@@ -1,7 +1,7 @@
 from math import ceil
 
-from armagomen._constants import MAIN_GUN, GLOBAL
-from armagomen.battle_observer.components.controllers.players_damage_controller import damage_controller
+from armagomen._constants import GLOBAL, MAIN_GUN
+from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
