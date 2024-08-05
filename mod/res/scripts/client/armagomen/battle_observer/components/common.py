@@ -109,14 +109,14 @@ def muteCaptureSound(base, *args):
 
 @overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')
 def as_setPrestigeWidgetVisibleS(base, self, value):
-    if user_settings.main[MAIN.HIDE_HANGAR_PRESTIGE_WIDGET]:
+    if user_settings.main[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]:
         value = False
     return base(self, value)
 
 
 @overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')
 def as_setPrestigeVisibleS(base, self, value):
-    if user_settings.main[MAIN.HIDE_PROFILE_PRESTIGE_WIDGET]:
+    if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET]:
         value = False
     return base(self, value)
 

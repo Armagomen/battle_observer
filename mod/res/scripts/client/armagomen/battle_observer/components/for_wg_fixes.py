@@ -4,7 +4,7 @@ from armagomen.utils.common import overrideMethod
 from BattleReplay import g_replayCtrl
 from gui.battle_control.controllers import debug_ctrl
 
-debug_ctrl._UPDATE_INTERVAL = 0.3
+debug_ctrl._UPDATE_INTERVAL = 0.4
 
 
 @overrideMethod(debug_ctrl.DebugController, "setViewComponents")
@@ -30,8 +30,9 @@ def updateDebug(base, controller):
     try:
         ping = int(ping)
         fps = int(fps)
+        fpsReplay = int(fpsReplay)
     except (ValueError, OverflowError):
-        fps = ping = 0
+        fps = ping = fpsReplay = 0
 
     if controller._debugPanelUI is not None:
         for control in controller._debugPanelUI:

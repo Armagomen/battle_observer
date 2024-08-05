@@ -7,6 +7,7 @@ _modules = {}
 
 def loadComponents():
     load = (
+        'auto_claim_clan_reward',
         'camera',
         'common',
         'crew',
@@ -16,6 +17,7 @@ def loadComponents():
         'excluded_maps',
         'for_wg_fixes',
         'friends',
+        'hangar_efficiency',
         'minimap_plugins',
         'postmortem',
         'premium_time',
@@ -25,8 +27,6 @@ def loadComponents():
         'shot_result_plugin',
         'vehicle_battle_boosters',
         'wg_logs_fixes',
-        'hangar_efficiency',
-        'auto_claim_clan_reward'
     )
     for moduleName in load:
         try:
