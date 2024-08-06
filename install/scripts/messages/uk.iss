@@ -67,45 +67,9 @@ uk.dispersion_circle_server=Задіяти серверний приціл та 
 
 
 //sixth_sense
-uk.alf=Альф
-uk.sixth_sense=Шосте відчуття з таймером 
+uk.sixth_sense=Шосте відчуття з таймером, після встановлення оберіть необхідне зображення в налаштуваннях.
 uk.playTickSound=Програвати звук таймера
-uk.bavovnatko=Бавовнятко
-uk.boris=Джонсонюк
-uk.dog_patron=Пес Патрон
-uk.eye_of_sauron=Око Саурона
-uk.feygin_arestovych=Фейгін та Аристович
-uk.flash=Флеш
-uk.grogu=Grogu з Мандалорця
-uk.himars=Хаймарс
-uk.kv_dart=Дарт квас
-uk.lamp_1=Звичайна збільшена з фоном
-uk.lamp_2=Помаранчева лампа
-uk.lamp_3=Зелена лампа
-uk.luka=А я зараз покажу
-uk.medal_ship_censored=Медаль: корабль іди ***
-uk.moscow_ship=корабель усьо
-uk.moscow_ship_2=корабель усьо 2
-uk.potato=Бульбо-війська
-uk.red_bloody_hand=Окривавлена рука bloody
-uk.rick_bender=Рік та Бендер
-uk.rick_morty=Рік та Морті
-uk.rick_morty_2=Рік та Морті 2
-uk.rick_morty_fu=Рік та Морті - фак
-uk.rick_morty_portal=Рік та Морті - портал
-uk.saxon_ua=SAXON_UA
-uk.skull=Череп у вогні
-uk.spark=Вспишка
-uk.sun_scream=Кричаще сонце
-uk.supernova=Скпернова
-uk.ua_armed_forces=ЗСУ
-uk.ua_flag=Прапор України
-uk.ua_flag_herb=Герб з прапором України
-uk.ua_gur=Головне управляння розвідки
-uk.ua_herb=Герб України
-uk.water_fire=Вогонь та вода
-uk.what_again=Шо опять (вовк)
-uk.zelensky=Володимир Зеленський
+
 
 uk.arcade_camera=Командирська камера - збільшене віддалення
 uk.strategic_camera=Артилерійська камера - збільшене віддалення

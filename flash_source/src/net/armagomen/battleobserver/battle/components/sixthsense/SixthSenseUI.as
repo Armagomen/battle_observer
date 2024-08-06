@@ -69,8 +69,8 @@
 		
 		private function addLoadedImageAndTimer(image:Bitmap):void
 		{
-			image.width = 100;
-			image.height = 100;
+			image.width = 110;
+			image.height = 110;
 			image.smoothing = true;
 			this._container.addChild(image);
 			this.timer = new TextExt(image.width >> 1, image.height - 8, Constants.tite16, TextFieldAutoSize.CENTER, this._container);

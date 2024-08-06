@@ -67,45 +67,9 @@ en.dispersion_circle_server=Engage server crosshairs and reduce server collation
 
 
 //sixth_sense
-en.alf=ALF
-en.sixth_sense=Sixth sense with timer
+en.sixth_sense=The sixth sense with a timer, after installation, select the desired image in the settings.
 en.playTickSound=Play timer sound
-en.bavovnatko=Bavovnatko
-en.boris=Dhonsonyuk
-en.dog_patron=Dog Patron
-en.eye_of_sauron=Eye of Sauron
-en.feygin_arestovych=Feygin and Aristovych
-en.flash=Flash
-en.grogu=Grogu from the Mandalorian
-en.himars=Himars
-en.kv_dart=Kvass dart
-en.lamp_1=Normal magnified with background
-en.lamp_2=Orange lamp
-en.lamp_3=Green lamp
-en.luka=And I will show you now
-en.medal_ship_censored=Medal: Ship Go ***
-en.moscow_ship=ship all
-en.moscow_ship_2=ship 2 in total
-en.potato=Potato troops
-en.red_bloody_hand=Bloody hand bloody
-en.rick_bender=Rick and Bender
-en.rick_morty=Rick and Morty
-en.rick_morty_2=Rick and Morty 2
-en.rick_morty_fu=Rick and Morty - Fac
-en.rick_morty_portal=Rick and Morty Portal
-en.saxon_ua=SAXON_UA
-en.skull=Skull on fire
-en.spark=Spark
-en.sun_scream=Screaming Sun
-en.supernova=Skpernova
-en.ua_armed_forces=ZSU
-en.ua_flag=Flag of Ukraine
-en.ua_flag_herb=Coat of arms with the flag of Ukraine
-en.ua_gur=Main intelligence management
-en.ua_herb=The coat of arms of Ukraine
-en.water_fire=Fire and water
-en.what_again=What again (wolf)
-en.zelensky=Volodymyr Zelensky
+
 
 en.arcade_camera=Commander's camera - zoomed out
 en.strategic_camera=Artillery camera - increased distance
