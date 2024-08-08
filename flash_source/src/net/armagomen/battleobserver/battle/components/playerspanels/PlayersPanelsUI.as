@@ -140,7 +140,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				var spottedIndicator:SpottedIndicator = listitem.spottedIndicator;
 				spottedIndicator.scaleX = spottedIndicator.scaleY = 1.5;
 				spottedIndicator.y = -6;
-				spottedIndicator.x = -335;
+				spottedIndicator.x = -355;
 			}
 		}
 		
