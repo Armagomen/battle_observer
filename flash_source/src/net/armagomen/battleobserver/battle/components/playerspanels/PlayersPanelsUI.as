@@ -1,5 +1,7 @@
 package net.armagomen.battleobserver.battle.components.playerspanels
 {
+	import flash.display.Shape;
+	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
@@ -139,8 +141,12 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			{
 				var spottedIndicator:SpottedIndicator = listitem.spottedIndicator;
 				spottedIndicator.scaleX = spottedIndicator.scaleY = 1.5;
-				spottedIndicator.y = -6;
-				spottedIndicator.x = -355;
+				
+				var indicator:Sprite = new Sprite();
+				indicator.addChild(spottedIndicator);
+				listitem.addChild(indicator);
+				indicator.x = -42;
+				indicator.y = -7;
 			}
 		}
 		

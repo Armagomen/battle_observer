@@ -2,7 +2,7 @@ from armagomen._constants import ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERS
     MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
-from armagomen.utils.common import openWebBrowser, xvmInstalled
+from armagomen.utils.common import isReplay, openWebBrowser, xvmInstalled
 from armagomen.utils.logging import logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from Keys import KEY_LALT, KEY_RALT
@@ -221,6 +221,8 @@ class CreateElement(Getter):
 class SettingsInterface(CreateElement):
 
     def __init__(self, settingsLoader, version):
+        if isReplay():
+            return
         api = importApi()
         if api is None:
             logError("Api Not Loaded")
