@@ -145,8 +145,8 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				var indicator:Sprite = new Sprite();
 				indicator.addChild(spottedIndicator);
 				listitem.addChild(indicator);
-				indicator.x = -42;
-				indicator.y = -7;
+				indicator.x = -45;
+				indicator.y = -12;
 			}
 		}
 		
