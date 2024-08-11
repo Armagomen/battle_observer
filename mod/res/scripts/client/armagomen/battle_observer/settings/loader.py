@@ -78,7 +78,7 @@ class SettingsLoader(object):
                     if old_param_type == float and new_param_type == int:
                         new_param = float(new_param)
                     if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
-                        new_param = SIXTH_SENSE.ICONS[0]
+                        new_param = "logo.png"
                         file_update = True
                     internal_cfg[key] = new_param
         return file_update

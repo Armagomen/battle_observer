@@ -29,10 +29,11 @@ def importApi():
         from gui.modsListApi import g_modsListApi
         from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
     except Exception as error:
-        from armagomen.battle_observer.core.loading_error import LoadingError
+        from armagomen.battle_observer.settings.hangar.loading_error import LoadingError
         from debug_utils import LOG_CURRENT_EXCEPTION
         LoadingError(repr(error))
         LOG_CURRENT_EXCEPTION()
+        logError("Settings Api Not Loaded")
     else:
         return g_modsListApi, vxSettingsApi, vxSettingsApiEvents
     return None
@@ -223,7 +224,6 @@ class SettingsInterface(CreateElement):
     def __init__(self, settingsLoader, version):
         api = importApi()
         if api is None:
-            logError("Api Not Loaded")
             return
         self.modsListApi, self.vxSettingsApi, self.apiEvents = api
         super(SettingsInterface, self).__init__()
