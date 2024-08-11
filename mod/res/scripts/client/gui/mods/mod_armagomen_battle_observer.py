@@ -10,11 +10,16 @@ __http__ = "https://github.com/Armagomen/battle_observer/releases"
 from threading import Thread
 
 from armagomen.battle_observer.core import Core, onFini
+from armagomen.battle_observer.core.updater import Updater
 from helpers.statistics import StatisticsCollector
 
 StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
 
-observer = Thread(target=Core, args=(__version__,), name="Battle_Observer")
+__update = Thread(target=Updater, args=(__version__,), name="Battle_Observer_update")
+__update.start()
+__update.join(timeout=60.0)
+
+observer = Thread(target=Core, args=(__version__,), name="Battle_Observer_Core")
 
 
 def init():

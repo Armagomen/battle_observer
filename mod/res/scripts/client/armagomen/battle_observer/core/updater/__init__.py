@@ -102,7 +102,6 @@ class Updater(DownloadThread):
     def __init__(self, version):
         super(Updater, self).__init__()
         self.version = version
-        self.loginServerSelection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
     def responseUpdate(self, response):
@@ -124,7 +123,8 @@ class Updater(DownloadThread):
         return tuple(map(int, version.split('.')))
 
     def onGUISpaceEntered(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.LOGIN and self.loginServerSelection or spaceID == GuiGlobalSpaceID.LOBBY:
+        login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
+        if spaceID == GuiGlobalSpaceID.LOGIN and login_server_selection or spaceID == GuiGlobalSpaceID.LOBBY:
             logInfo(LOG_MESSAGES.CHECK)
             fetchURL(URLS.UPDATE_GITHUB_API_URL, self.responseUpdate)
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered

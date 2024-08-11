@@ -8,10 +8,6 @@ class Core(object):
         try:
             import logging
             from threading import Thread
-            from armagomen.battle_observer.core.updater import Updater
-            update = Thread(target=Updater, args=(modVersion,), name="Battle_Observer_update")
-            update.start()
-            update.join(timeout=60.0)
 
             from armagomen.battle_observer.components import loadComponents
             from armagomen.battle_observer.settings.loader import SettingsLoader
@@ -26,11 +22,12 @@ class Core(object):
             logging.disable(logging.WARNING)
             logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
             self.registerBattleObserverPackages()
-            loadComponents()
-            hangar_settings = Thread(target=SettingsInterface, args=(SettingsLoader(), modVersion),
-                                     name="Battle_Observer_SettingsInterface")
-            hangar_settings.daemon = True
-            hangar_settings.start()
+            self.components = loadComponents()
+            self.settings_loader = SettingsLoader()
+            self.hangar_settings = Thread(target=SettingsInterface, args=(self.settings_loader, modVersion),
+                                          name="Battle_Observer_SettingsInterface")
+            self.hangar_settings.daemon = True
+            self.hangar_settings.start()
 
     @staticmethod
     def error(error_message):
