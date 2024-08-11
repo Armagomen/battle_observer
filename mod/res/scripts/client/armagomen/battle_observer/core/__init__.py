@@ -12,7 +12,7 @@ class Core(object):
         self.registerBattleObserverPackages()
         self.components = loadComponents()
         if not isReplay():
-            from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
+            from armagomen.battle_observer.settings.hangar import SettingsInterface
             hangar_settings = Thread(target=SettingsInterface, args=(settings_loader, modVersion),
                                      name="Battle_Observer_SettingsInterface")
             hangar_settings.daemon = True
