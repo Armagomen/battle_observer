@@ -21,7 +21,7 @@ REWARD_STATUS_OK = (QuestStatus.REWARD_AVAILABLE, QuestStatus.REWARD_PENDING)
 next_double_up = (3, 8, 13, 18)
 
 
-class AutoClaimClanReward:
+class AutoClaimClanReward(object):
     __webController = dependency.descriptor(IWebController)
     __itemsCache = dependency.descriptor(IItemsCache)
     hangarSpace = dependency.descriptor(IHangarSpace)
