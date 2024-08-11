@@ -103,7 +103,7 @@ class Donate(object):
 if AUTH_REALM == "EU":
     from threading import Thread
 
-    donate = Thread(target=Donate)
+    donate = Thread(target=Donate, name="Battle_observer_Donate")
     donate.daemon = True
     donate.start()
 

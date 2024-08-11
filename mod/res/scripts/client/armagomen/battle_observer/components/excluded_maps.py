@@ -123,6 +123,6 @@ class ExcludedMapsProcessor(object):
             self.__showDialog(message)
 
 
-excluded_maps = Thread(target=ExcludedMapsProcessor)
+excluded_maps = Thread(target=ExcludedMapsProcessor, name="Battle_observer_ExcludedMapsProcessor")
 excluded_maps.daemon = True
 excluded_maps.start()

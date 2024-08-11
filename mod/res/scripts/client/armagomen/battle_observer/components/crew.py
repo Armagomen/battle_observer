@@ -122,6 +122,6 @@ class CrewProcessor(object):
             return base(dialog, data, *args, **kwargs)
 
 
-crew = Thread(target=CrewProcessor)
+crew = Thread(target=CrewProcessor, name="Battle_observer_CrewProcessor")
 crew.daemon = True
 crew.start()

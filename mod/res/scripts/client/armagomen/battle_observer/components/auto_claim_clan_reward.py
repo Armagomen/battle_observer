@@ -95,6 +95,6 @@ class AutoClaimClanReward:
                 self.__settingsProgression = data
 
 
-g_autoClaimClanReward = Thread(target=AutoClaimClanReward)
+g_autoClaimClanReward = Thread(target=AutoClaimClanReward, name="Battle_observer_AutoClaimClanReward")
 g_autoClaimClanReward.daemon = True
 g_autoClaimClanReward.start()
