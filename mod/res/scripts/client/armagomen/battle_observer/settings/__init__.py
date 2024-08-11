@@ -6,6 +6,7 @@ from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BAT
                                   EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP,
                                   PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, TEAM_BASES,
                                   VEHICLE_TYPES_COLORS)
+from armagomen.battle_observer.settings.loader import SettingsLoader
 from constants import ATTACK_REASON, ATTACK_REASONS
 from Event import SafeEvent
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -356,3 +357,4 @@ class UserSettings(object):
 
 
 user_settings = UserSettings()
+settings_loader = SettingsLoader(user_settings)

@@ -1,40 +1,22 @@
-from armagomen.utils.logging import logInfo
+import logging
 
 
 class Core(object):
 
-    def __init__(self, modVersion):
-        logInfo('MOD START LOADING: v{}', modVersion)
-        try:
-            import logging
-            from threading import Thread
+    def __init__(self, modVersion, Thread):
+        from armagomen.battle_observer.settings import settings_loader
+        from armagomen.battle_observer.components import loadComponents
+        from armagomen.utils.common import isReplay
 
-            from armagomen.battle_observer.components import loadComponents
-            from armagomen.battle_observer.settings.loader import SettingsLoader
+        logging.disable(logging.WARNING)
+        self.registerBattleObserverPackages()
+        self.components = loadComponents()
+        if not isReplay():
             from armagomen.battle_observer.settings.hangar.hangar_settings import SettingsInterface
-            from sys import version
-            from realm import CURRENT_REALM
-        except Exception as err:
-            from debug_utils import LOG_CURRENT_EXCEPTION
-            LOG_CURRENT_EXCEPTION()
-            self.error(repr(err))
-        else:
-            logging.disable(logging.WARNING)
-            logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
-            self.registerBattleObserverPackages()
-            self.components = loadComponents()
-            self.settings_loader = SettingsLoader()
-            self.hangar_settings = Thread(target=SettingsInterface, args=(self.settings_loader, modVersion),
-                                          name="Battle_Observer_SettingsInterface")
-            self.hangar_settings.daemon = True
-            self.hangar_settings.start()
-
-    @staticmethod
-    def error(error_message):
-        from armagomen.utils.logging import logError
-        from armagomen.battle_observer.core.loading_error import LoadingError
-        logError(error_message)
-        LoadingError(error_message)
+            hangar_settings = Thread(target=SettingsInterface, args=(settings_loader, modVersion),
+                                     name="Battle_Observer_SettingsInterface")
+            hangar_settings.daemon = True
+            hangar_settings.start()
 
     @staticmethod
     def registerBattleObserverPackages():
@@ -48,11 +30,10 @@ class Core(object):
         g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
 
 
-def onFini(modVersion):
+def onFini():
     from armagomen.battle_observer.settings import user_settings
     from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache
     if user_settings.main["clear_cache_automatically"]:
         clearClientCache()
     cleanupObserverUpdates()
     cleanupUpdates()
-    logInfo('MOD SHUTTING DOWN: v{}', modVersion)

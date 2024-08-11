@@ -7,7 +7,7 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.utils.common import fetchURL, gameVersion, getUpdatePath, modsPath
+from armagomen.utils.common import fetchURL, gameVersion, getUpdatePath, isReplay, modsPath
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.logging import logError, logInfo, logWarning
 from gui.Scaleform.Waiting import Waiting
@@ -54,9 +54,12 @@ class DownloadThread(object):
             self.extractZipArchive(path)
             logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED, path)
             git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
+            if not isReplay():
+                self.dialogs.showUpdateFinished(self.i18n['titleOK'],
+                                                self.i18n['messageOK'].format(version) + git_message)
         else:
-            Waiting.show(WAITING_UPDATE)
+            if not isReplay():
+                Waiting.show(WAITING_UPDATE)
             url = URLS.UPDATE + ZIP.format(version)
             logInfo(LOG_MESSAGES.STARTED, version, url)
             self.downloader = WebDownloader(GLOBAL.ONE)
@@ -84,17 +87,20 @@ class DownloadThread(object):
             logInfo(LOG_MESSAGES.FINISHED, path)
             self.extractZipArchive(path)
             git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
+            if not isReplay():
+                self.dialogs.showUpdateFinished(self.i18n['titleOK'],
+                                                self.i18n['messageOK'].format(version) + git_message)
         else:
             self.downloadError(_url)
-        if Waiting.isOpened(WAITING_UPDATE):
+        if not isReplay() and Waiting.isOpened(WAITING_UPDATE):
             Waiting.hide(WAITING_UPDATE)
         self.closeDownloader()
 
     def downloadError(self, url):
         message = LOG_MESSAGES.FAILED.format(url)
         logError(message)
-        self.dialogs.showUpdateError(message)
+        if not isReplay():
+            self.dialogs.showUpdateError(message)
 
 
 class Updater(DownloadThread):
@@ -102,7 +108,10 @@ class Updater(DownloadThread):
     def __init__(self, version):
         super(Updater, self).__init__()
         self.version = version
-        ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        if isReplay():
+            self.check()
+        else:
+            ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
     def responseUpdate(self, response):
         if response.responseCode == HTTP_OK_STATUS:
@@ -111,12 +120,19 @@ class Updater(DownloadThread):
             new_version = response_data.get('tag_name', self.version)
             if self.tupleVersion(self.version) < self.tupleVersion(new_version):
                 logInfo(LOG_MESSAGES.NEW_VERSION, new_version)
-                self.showUpdateDialog(new_version)
+                if not isReplay():
+                    self.showUpdateDialog(new_version)
+                else:
+                    self.startDownload(new_version)
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
         else:
             logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode,
                        response.body)
+
+    def check(self):
+        logInfo(LOG_MESSAGES.CHECK)
+        fetchURL(URLS.UPDATE_GITHUB_API_URL, self.responseUpdate)
 
     @staticmethod
     def tupleVersion(version):
@@ -125,8 +141,7 @@ class Updater(DownloadThread):
     def onGUISpaceEntered(self, spaceID):
         login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         if spaceID == GuiGlobalSpaceID.LOGIN and login_server_selection or spaceID == GuiGlobalSpaceID.LOBBY:
-            logInfo(LOG_MESSAGES.CHECK)
-            fetchURL(URLS.UPDATE_GITHUB_API_URL, self.responseUpdate)
+            self.check()
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
     @wg_async

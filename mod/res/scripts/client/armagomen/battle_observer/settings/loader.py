@@ -1,7 +1,6 @@
 import os
 
 from armagomen._constants import GLOBAL, LOAD_LIST, SIXTH_SENSE
-from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import currentConfigPath, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.logging import logInfo, logWarning
@@ -12,9 +11,10 @@ READ_MESSAGE = "loadConfigPart: {}: {}"
 
 
 class SettingsLoader(object):
-    __slots__ = ('configName', 'configsList', 'errorMessages')
+    __slots__ = ('configName', 'configsList', 'errorMessages', '__settings')
 
-    def __init__(self):
+    def __init__(self, settings):
+        self.__settings = settings
         self.errorMessages = []
         self.configsList = sorted(
             x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x))
@@ -63,7 +63,7 @@ class SettingsLoader(object):
         return type_1 != type_2
 
     def updateData(self, external_cfg, internal_cfg, file_update=False):
-        """Recursively updates words from settings_core files"""
+        """Recursively updates words from user_settings files"""
         file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
         for key in internal_cfg:
             old_param = internal_cfg[key]
@@ -89,12 +89,12 @@ class SettingsLoader(object):
         direct_path = os.path.join(currentConfigPath, self.configName)
         listdir = os.listdir(direct_path)
         for part_name in LOAD_LIST:
-            internal_cfg = getattr(user_settings, part_name)
+            internal_cfg = getattr(self.__settings, part_name)
             if internal_cfg is None:
                 continue
             self.loadConfigPart(part_name, direct_path, listdir, internal_cfg)
         logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
-        user_settings.onUserConfigUpdateComplete()
+        self.__settings.onUserConfigUpdateComplete()
         if self.errorMessages:
             ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
@@ -114,7 +114,7 @@ class SettingsLoader(object):
             if self.updateData(file_data, internal_cfg):
                 writeJsonFile(file_path, internal_cfg)
             logInfo(READ_MESSAGE, self.configName, file_name)
-            user_settings.onModSettingsChanged(internal_cfg, part_name)
+            self.__settings.onModSettingsChanged(internal_cfg, part_name)
 
     def onGUISpaceEntered(self, spaceID):
         if self.errorMessages:
