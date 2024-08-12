@@ -29,6 +29,7 @@ class SaveShootLite(object):
         self.unlockShoot = False
         self.vehicleErrorComponent = None
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
+        self.onModSettingsChanged(user_settings.main, MAIN.NAME)
 
     def shoot(self, base, avatar, isRepeat=False):
         if not self.enabled or self.unlockShoot or avatar.autoAimVehicle or not self.is_targetAllyOrDeath(avatar):

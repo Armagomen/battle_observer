@@ -91,6 +91,7 @@ class DispersionCircle(object):
         overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onServerGunMarkerStateChanged)
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
         overrideMethod(BattleReplay, "setUseServerAim")(self.replaySetUseServerAim)
+        self.onModSettingsChanged(user_settings.dispersion_circle, DISPERSION.NAME)
 
     def replaySetUseServerAim(self, base, replay, enabled):
         return base(replay, False if self.server else enabled)

@@ -64,6 +64,7 @@ def createPlugins(base, *args, **kwargs):
         result.clear()
     return result
 
+
 # disable battle artillery_stun_effect sound
 @overrideMethod(TimersPanel, "__playStunSoundIfNeed")
 def playStunSoundIfNeed(base, *args, **kwargs):
@@ -133,3 +134,4 @@ def onModSettingsChanged(_settings, blockID):
 
 
 user_settings.onModSettingsChanged += onModSettingsChanged
+onModSettingsChanged(user_settings.main, MAIN.NAME)

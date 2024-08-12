@@ -72,3 +72,4 @@ def validateSettings(config):
 
 
 user_settings.onModSettingsChanged += onModSettingsChanged
+onModSettingsChanged(user_settings.wg_logs, DAMAGE_LOG.WG_LOGS_FIX)

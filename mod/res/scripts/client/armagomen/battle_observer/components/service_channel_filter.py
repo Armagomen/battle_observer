@@ -49,3 +49,4 @@ def onModSettingsChanged(config, blockID):
 
 
 user_settings.onModSettingsChanged += onModSettingsChanged
+onModSettingsChanged(user_settings.service_channel_filter, SERVICE_CHANNEL.NAME)

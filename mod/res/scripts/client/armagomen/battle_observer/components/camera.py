@@ -168,5 +168,10 @@ def arty_readConfigs(base, camera, *args, **kwargs):
     if user_settings.strategic_camera[GLOBAL.ENABLED]:
         cfg = camera._baseCfg
         cfg[STRATEGIC.DIST_RANGE] = (
-        user_settings.strategic_camera[STRATEGIC.MIN], user_settings.strategic_camera[STRATEGIC.MAX])
+            user_settings.strategic_camera[STRATEGIC.MIN], user_settings.strategic_camera[STRATEGIC.MAX])
         cfg[STRATEGIC.SCROLL_SENSITIVITY] = user_settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
+
+
+onModSettingsChanged(user_settings.arcade_camera, ARCADE.NAME)
+onModSettingsChanged(user_settings.strategic_camera, STRATEGIC.NAME)
+onModSettingsChanged(user_settings.zoom, SNIPER.NAME)
