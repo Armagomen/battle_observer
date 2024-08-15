@@ -35,7 +35,7 @@ def getTarget():
 
 
 def getEntity(entity_id):
-    return BigWorld.entity(entity_id)
+    return BigWorld.entities.get(entity_id)
 
 
 def getDistanceTo(targetPos):

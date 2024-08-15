@@ -1,6 +1,6 @@
 from armagomen._constants import ARCADE, POSTMORTEM
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import callback, overrideMethod
+from armagomen.utils.common import callback, getEntity, getPlayer, overrideMethod
 from AvatarInputHandler.control_modes import PostMortemControlMode
 
 
@@ -25,9 +25,18 @@ def enablePostMortem(base, mode, **kwargs):
         kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, user_settings.arcade_camera[ARCADE.START_DEAD_DIST])
     kwargs[POSTMORTEM.CAM_MATRIX] = mode.camera.camera.matrix
     kwargs[POSTMORTEM.DURATION] = 1.0
-    respawn = bool(kwargs.get('respawn', False))
+
+    player = getPlayer()
+    if player is None:
+        return base(mode, **kwargs)
+    respawn = mode.guiSessionProvider.dynamic.respawn is not None
     bPostmortemDelay = bool(kwargs.get('bPostmortemDelay', False))
-    if not ((mode._isPostmortemDelayEnabled() or respawn) and bPostmortemDelay):
+    isDelayOrRespawnEnabled = respawn or mode._isPostmortemDelayEnabled()
+    playerVehicle = getEntity(player.playerVehicleID)
+    playerPostmortemViewPointDefined = playerVehicle.isPostmortemViewPointDefined if playerVehicle else False
+    if isDelayOrRespawnEnabled and bPostmortemDelay and not playerPostmortemViewPointDefined:
+        pass
+    else:
         mode._PostMortemControlMode__postmortemDelay = PostmortemDelay()
 
         def setDelayDisabled():

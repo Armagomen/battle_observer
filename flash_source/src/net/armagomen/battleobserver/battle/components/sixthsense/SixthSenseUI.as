@@ -20,6 +20,7 @@
 		private var showAnimation:Tween;
 		private var hideAnimation2:Tween;
 		private var POSITION_Y:Number = (App.appHeight >> 3) + 10;
+		private var _image:Bitmap;
 		
 		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
@@ -38,7 +39,7 @@
 			this.params = this.getSettings();
 			this.x = App.appWidth >> 1;
 			this._container = new Sprite()
-			this.addChild(_container);
+			this.addChild(this._container);
 			if (this.params.default_icon)
 			{
 				this.loader.load(new URLRequest('../maps/icons/battle_observer/sixth_sense/' + this.params.default_icon_name));
@@ -67,19 +68,37 @@
 			App.utils.data.cleanupDynamicObject(this.params);
 		}
 		
-		private function addLoadedImageAndTimer(image:Bitmap):void
+		private function addTimerAndAnimations():void
 		{
-			image.width = 110;
-			image.height = 110;
-			image.smoothing = true;
-			this._container.addChild(image);
-			this.timer = new TextExt(image.width >> 1, image.height - 8, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
-			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -image.height, 0.5);
+			this.timer = new TextExt(0, this._image.height - 4, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
+			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -this._image.height, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
 			this._container.alpha = 0;
-			this._container.x = -image.width >> 1;
 			this._container.y = this.POSITION_Y;
+		}
+		
+		private function updateImageScale():void
+		{
+			var afterScaleWH:Number = Math.min(180.0, Math.ceil(100 * (App.appHeight / 1080.0)));
+			if (afterScaleWH % 2 != 0)
+			{
+				afterScaleWH += 1;
+			}
+			this._image.width = afterScaleWH;
+			this._image.height = afterScaleWH;
+			this._image.smoothing = true;
+			this._image.x = -afterScaleWH >> 1;
+			this._container.addChild(this._image);
+			if (this.timer)
+			{
+				this.timer.y = afterScaleWH - 4;
+			}
+			
+			if (this.hideAnimation)
+			{
+				this.hideAnimation.finish = -afterScaleWH;
+			}
 		}
 		
 		public function as_show():void
@@ -109,12 +128,16 @@
 		private function onLoadError(e:IOErrorEvent):void
 		{
 			this.loader.close();
-			this.addLoadedImageAndTimer(new DefaultIcon() as Bitmap);
+			this._image = new DefaultIcon() as Bitmap;
+			this.updateImageScale();
+			this.addTimerAndAnimations();
 		}
 		
 		private function imageLoaded(e:Event):void
 		{
-			this.addLoadedImageAndTimer(this.loader.content as Bitmap);
+			this._image = this.loader.content as Bitmap;
+			this.updateImageScale();
+			this.addTimerAndAnimations();
 			this.loader.unload();
 		}
 		
@@ -122,6 +145,11 @@
 		{
 			this.x = App.appWidth >> 1;
 			this.POSITION_Y = (App.appHeight >> 3) + 10;
+			if (this._image)
+			{
+				this.updateImageScale();
+			}
+		
 		}
 	}
 }

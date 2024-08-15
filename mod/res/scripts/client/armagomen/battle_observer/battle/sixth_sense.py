@@ -16,8 +16,7 @@ if getClientLanguage().lower() in ("uk", "be", "ru"):
                 "Викрито: <font color='#daff8f'>{}</font> сек.",
                 "Тікай: <font color='#daff8f'>{}</font> сек.",
                 "Ховайся: <font color='#daff8f'>{}</font> сек.",
-                "Роби маневр: <font color='#daff8f'>{}</font> сек.",
-                "Ой, світло дали: <font color='#daff8f'>{}</font> сек.")
+                "Роби маневр: <font color='#daff8f'>{}</font> сек.")
 else:
     MESSAGES = ("Detected: <font color='#daff8f'>{}</font> sec.",
                 "Hide: <font color='#daff8f'>{}</font> sec.",
