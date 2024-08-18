@@ -1,3 +1,4 @@
+import time
 from threading import Thread
 
 from adisp import adisp_process
@@ -13,6 +14,7 @@ from gui.impl.gen import R
 from gui.shared.money import Currency
 from gui.wgcg.clan_supply.contexts import ClaimRewardsCtx, PurchaseProgressionStageCtx
 from helpers import dependency
+from PlayerEvents import g_playerEvents
 from skeletons.gui.shared import IItemsCache
 from skeletons.gui.shared.utils import IHangarSpace
 from skeletons.gui.web import IWebController
@@ -27,29 +29,25 @@ class AutoClaimClanReward(object):
     hangarSpace = dependency.descriptor(IHangarSpace)
 
     def __init__(self):
-        self.hangarSpace.onSpaceCreate += self.update
-        self.__itemsCache.onSyncCompleted += self.update
+        self.hangarSpace.onSpaceCreate += self.updateQuests
         g_clanCache.clanSupplyProvider.onDataReceived += self.__onDataReceived
-        self.__claimed = set()
-        self.__settingsProgression = None
+        g_playerEvents.onBattleResultsReceived += self.updateQuests
+        self.__cachedSettingsData = None
+        self.__ignoreClaimQuests = False
+        self.__callback = None
+        self.__started = False
 
-    def update(self, *args, **kwargs):
+    def updateQuests(self, *args, **kwargs):
+        time.sleep(5.0)
+        if not self.__started:
+            self.__started = True
+            self.hangarSpace.onSpaceCreate -= self.updateQuests
         if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
-            callback(1.0, self.updateQuests)
-            callback(1.5, self.updateProgression)
-
-    def updateQuests(self):
-        quest_data = g_clanCache.clanSupplyProvider.getQuestsInfo().data
-        if quest_data is None:
-            g_clanCache.clanSupplyProvider._getData(DataNames.QUESTS_INFO_POST)
-        else:
-            self.parseQuests(quest_data)
-
-    def updateProgression(self):
-        if self.__settingsProgression is None:
-            g_clanCache.clanSupplyProvider.getProgressionSettings()
-        else:
-            self.parseProgression(g_clanCache.clanSupplyProvider.getProgressionProgress().data)
+            quest_data = g_clanCache.clanSupplyProvider.getQuestsInfo().data
+            if quest_data is None:
+                g_clanCache.clanSupplyProvider._getData(DataNames.QUESTS_INFO_POST)
+            else:
+                self.parseQuests(quest_data.quests)
 
     @adisp_process
     def __claimRewards(self):
@@ -63,36 +61,42 @@ class AutoClaimClanReward(object):
     def __claimProgression(self, stageID, price):
         response = yield self.__webController.sendRequest(ctx=PurchaseProgressionStageCtx(stageID, price))
         if not response.isSuccess():
+            SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - Failed to claim Progression.",
+                                       type=SystemMessages.SM_TYPE.Error)
             logWarning('Failed to claim Progression. Code: {code}', code=response.getCode())
 
-    def parseQuests(self, data):
-        claim = False
-        for quest in data.quests:
-            claim |= quest.status in REWARD_STATUS_OK and quest.name not in self.__claimed
-            if claim:
-                self.__claimed.add(quest.name)
-        if claim:
+    def parseQuests(self, quests):
+        if not self.__ignoreClaimQuests and any(q.status == QuestStatus.REWARD_AVAILABLE for q in quests):
+            self.__ignoreClaimQuests = True
             self.__claimRewards()
-            callback(20, self.__claimed.clear)
+
+            def cancelIgnore():
+                self.__ignoreClaimQuests = False
+
+            callback(10, cancelIgnore)
+
+    @property
+    def currency(self):
+        return self.__itemsCache.items.stats.dynamicCurrencies.get(Currency.TOUR_COIN, 0)
 
     def parseProgression(self, data):
-        if self.__settingsProgression is None or data is None:
-            return callback(2.0, self.updateProgression)
-        currency = self.__itemsCache.items.stats.dynamicCurrencies.get(Currency.TOUR_COIN, 0)
-        last_lvl = data.last_purchased or 0
+        last_lvl = int(data.last_purchased or 0)
         next_lvl = last_lvl + 1 if last_lvl not in next_double_up else last_lvl + 2
-        next_lvl_currency = self.__settingsProgression.points.get(str(next_lvl))
-        if next_lvl_currency is not None and currency >= next_lvl_currency.price:
+        next_lvl_currency = self.__cachedSettingsData.points.get(str(next_lvl))
+        if next_lvl_currency is not None and self.currency >= next_lvl_currency.price:
             self.__claimProgression(next_lvl, next_lvl_currency.price)
 
     def __onDataReceived(self, dataName, data):
         if user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD] and g_clanCache.isInClan:
             if dataName in (DataNames.QUESTS_INFO, DataNames.QUESTS_INFO_POST):
-                self.parseQuests(data)
+                self.parseQuests(data.quests)
+                if self.__cachedSettingsData is None:
+                    g_clanCache.clanSupplyProvider.getProgressionSettings()
             elif dataName == DataNames.PROGRESSION_PROGRESS:
                 self.parseProgression(data)
             elif dataName == DataNames.PROGRESSION_SETTINGS:
-                self.__settingsProgression = data
+                self.__cachedSettingsData = data
+                g_clanCache.clanSupplyProvider.getProgressionProgress()
 
 
 g_autoClaimClanReward = Thread(target=AutoClaimClanReward, name="Battle_observer_AutoClaimClanReward")

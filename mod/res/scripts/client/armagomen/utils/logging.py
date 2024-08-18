@@ -5,7 +5,7 @@ DEBUG = "DEBUG_MODE"
 
 
 def _formatMessage(message, *args, **kwargs):
-    message = str(message)
+    message = unicode(str(message), "utf-8", "ignore")
     if args or kwargs:
         return message.format(*args, **kwargs)
     return message

@@ -6,7 +6,7 @@ from armagomen.utils.common import overrideMethod, xvmInstalled
 from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO
 from helpers import getClientLanguage
 
-ANONYMOUS_TRANSLATE = "Анонімний" if getClientLanguage().lower() in ("uk", "be", "ru") else "Anonymous"
+ANONYMOUS_TRANSLATE = "Анонімний" if getClientLanguage().lower() in ("uk", "be") else "Anonymous"
 
 
 @overrideMethod(VehicleArenaInfoVO)

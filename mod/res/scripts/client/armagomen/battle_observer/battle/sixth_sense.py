@@ -11,7 +11,7 @@ from PlayerEvents import g_playerEvents
 _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
                    VEHICLE_VIEW_STATE.DESTROYED, VEHICLE_VIEW_STATE.CREW_DEACTIVATED}
 
-if getClientLanguage().lower() in ("uk", "be", "ru"):
+if getClientLanguage().lower() in ("uk", "be"):
     MESSAGES = ("Засікли: <font color='#daff8f'>{}</font> сек.",
                 "Викрито: <font color='#daff8f'>{}</font> сек.",
                 "Тікай: <font color='#daff8f'>{}</font> сек.",

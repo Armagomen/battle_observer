@@ -50,7 +50,7 @@ API_URL = ("https://api.worldoftanks.eu/wot/clans/info/?"
 class Donate(object):
 
     def __init__(self):
-        self.ln_code = "uk" if getClientLanguage().lower() in ("uk", "be", "ru") else "en"
+        self.ln_code = "uk" if getClientLanguage().lower() in ("uk", "be") else "en"
         self.messages = MESSAGES[self.ln_code]
         self.message_format = LINKS_FORMAT[self.ln_code]
         self.timeDelta = datetime.now() + timedelta(minutes=5)
@@ -72,7 +72,7 @@ class Donate(object):
         message = choice(self.messages)
         if message is self.lastMessage:
             message = self.getRandomMessage()
-        return message
+        return message.decode('utf-8')
 
     def getDonateMessage(self):
         self.lastMessage = self.getRandomMessage()
