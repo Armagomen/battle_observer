@@ -1,6 +1,3 @@
-import logging
-
-
 class Core(object):
 
     def __init__(self, modVersion, Thread):
@@ -8,7 +5,6 @@ class Core(object):
         from armagomen.battle_observer.components import loadComponents
         from armagomen.utils.common import isReplay
 
-        logging.disable(logging.WARNING)
         self.registerBattleObserverPackages()
         self.components = loadComponents()
         if not isReplay():

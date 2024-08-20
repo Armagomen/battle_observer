@@ -7,6 +7,7 @@ __email__ = "armagomen@gmail.com"
 __status__ = "Production"
 __http__ = "https://github.com/Armagomen/battle_observer/releases"
 
+import logging
 from sys import version
 from threading import Thread
 
@@ -16,6 +17,7 @@ from armagomen.utils.logging import logInfo
 from helpers.statistics import StatisticsCollector
 from realm import CURRENT_REALM
 
+logging.disable(logging.INFO)
 StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
 
 __update = Thread(target=Updater, args=(__version__,), name="Battle_Observer_update")

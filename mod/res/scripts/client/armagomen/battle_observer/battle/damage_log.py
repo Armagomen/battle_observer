@@ -225,7 +225,7 @@ class DamageLog(DamageLogsMeta):
             shell_name, gold = self._playerShell if is_player else self.checkShell(extra, target_id)
         else:
             shell_name, gold = DAMAGE_LOG.NOT_SHELL, False
-        if self.debugMode:
+        if self.debug_mode:
             logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, is_player)
         vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
         vehicle_info_vo = self.getVehicleInfo(target_id)

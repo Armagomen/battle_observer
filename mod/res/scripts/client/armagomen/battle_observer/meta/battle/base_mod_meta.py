@@ -17,6 +17,7 @@ class BaseModMeta(BaseDAAPIComponent):
         self._arenaDP = self.sessionProvider.getArenaDP()
         self._arenaVisitor = self.sessionProvider.arenaVisitor
         self.settings = None
+        self.debug_mode = user_settings.main[DEBUG]
 
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
@@ -26,10 +27,6 @@ class BaseModMeta(BaseDAAPIComponent):
     @property
     def gui(self):
         return self._arenaVisitor.gui
-
-    @property
-    def debugMode(self):
-        return user_settings.main[DEBUG]
 
     def isSPG(self):
         return self.getVehicleInfo().isSPG()
@@ -61,12 +58,12 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        if self.debugMode:
+        if self.debug_mode:
             logDebug("battle module '{}' loaded", self.getAlias())
 
     def _dispose(self):
         super(BaseModMeta, self)._dispose()
-        if self.debugMode:
+        if self.debug_mode:
             logDebug("battle module '{}' destroyed", self.getAlias())
 
     @property
