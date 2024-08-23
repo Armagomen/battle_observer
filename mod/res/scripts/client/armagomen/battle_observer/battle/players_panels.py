@@ -73,8 +73,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
             self.as_addDamageS(vehicleID, self.settings[PANELS.DAMAGES_SETTINGS])
-        if self.debug_mode:
-            logDebug("PlayersPanels onAddedToStorage: id={} enemy={}", vehicleID, isEnemy)
+        logDebug("PlayersPanels onAddedToStorage: id={} enemy={}", vehicleID, isEnemy)
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         for vehicleID in aliveAllies.union(aliveEnemies):

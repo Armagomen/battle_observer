@@ -6,7 +6,7 @@ from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.utils.common import openIgnoredVehicles, overrideMethod, updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import DEBUG, logDebug, logError, logInfo
+from armagomen.utils.logging import logDebug, logError, logInfo
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
 from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
@@ -58,8 +58,7 @@ class CrewProcessor(object):
         iterator = vehicle.postProgression.iterOrderedSteps()
         currentXP = vehicle.xp
         needToProgress = sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
-        if user_settings.main[DEBUG]:
-            logDebug("isPPFullXP - {}: {}/{}", vehicle.userName, currentXP, needToProgress)
+        logDebug("isPPFullXP - {}: {}/{}", vehicle.userName, currentXP, needToProgress)
         return currentXP >= needToProgress
 
     def isAccelerateTraining(self, vehicle):

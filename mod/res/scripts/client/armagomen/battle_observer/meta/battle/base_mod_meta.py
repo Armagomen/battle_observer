@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.logging import DEBUG, logDebug, logInfo
+from armagomen.utils.logging import logDebug, logInfo
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore
@@ -17,7 +17,6 @@ class BaseModMeta(BaseDAAPIComponent):
         self._arenaDP = self.sessionProvider.getArenaDP()
         self._arenaVisitor = self.sessionProvider.arenaVisitor
         self.settings = None
-        self.debug_mode = user_settings.main[DEBUG]
 
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
@@ -58,13 +57,11 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        if self.debug_mode:
-            logDebug("battle module '{}' loaded", self.getAlias())
+        logDebug("battle module '{}' loaded", self.getAlias())
 
     def _dispose(self):
         super(BaseModMeta, self)._dispose()
-        if self.debug_mode:
-            logDebug("battle module '{}' destroyed", self.getAlias())
+        logDebug("battle module '{}' destroyed", self.getAlias())
 
     @property
     def isPlayerVehicle(self):

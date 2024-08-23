@@ -2,7 +2,7 @@ from math import floor, log
 
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.logging import DEBUG, logDebug
+from armagomen.utils.logging import logDebug
 from gui.battle_control import avatar_getter
 
 
@@ -19,8 +19,7 @@ class WTRStatistics(object):
         self.itemsData = {}
 
     def getPattern(self, isEnemy, itemData):
-        if user_settings.main[DEBUG]:
-            logDebug("WTRStatistics: isEnemy={}, data={}", isEnemy, itemData)
+        logDebug("WTRStatistics: isEnemy={}, data={}", isEnemy, itemData)
         if isEnemy:
             return self.settings[STATISTICS.FULL_RIGHT] % itemData, self.settings[STATISTICS.CUT_RIGHT] % itemData
         else:

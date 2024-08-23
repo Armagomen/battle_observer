@@ -1,9 +1,9 @@
 import os
 
-from armagomen._constants import GLOBAL, LOAD_LIST, SIXTH_SENSE
+from armagomen._constants import GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE
 from armagomen.utils.common import currentConfigPath, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
-from armagomen.utils.logging import logInfo, logWarning
+from armagomen.utils.logging import DEBUG, logInfo, logWarning, setDebug
 from gui.shared.personality import ServicesLocator
 
 JSON = "{}.json"
@@ -115,6 +115,9 @@ class SettingsLoader(object):
                 writeJsonFile(file_path, internal_cfg)
             logInfo(READ_MESSAGE, self.configName, file_name)
             self.__settings.onModSettingsChanged(internal_cfg, part_name)
+            if part_name == MAIN.NAME:
+                setDebug(internal_cfg[DEBUG])
+
 
     def onGUISpaceEntered(self, spaceID):
         if self.errorMessages:

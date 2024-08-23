@@ -67,6 +67,7 @@ class AutoClaimClanReward(object):
                 self.__claimRewards()
             elif status == QuestStatus.COMPLETE and all([self.__cachedProgressData, self.__cachedSettingsData]):
                 self.parseProgression(self.__cachedProgressData)
+            logDebug(item)
 
     @adisp_process
     def __claimRewards(self):

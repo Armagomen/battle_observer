@@ -2,10 +2,17 @@ import BigWorld
 
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
+IS_DEBUG = False
+
+
+def setDebug(value):
+    global IS_DEBUG
+    IS_DEBUG = value
 
 
 def _formatMessage(message, *args, **kwargs):
-    message = unicode(str(message), "utf-8", "ignore")
+    if not isinstance(message, basestring):
+        message = str(message)
     if args or kwargs:
         return message.format(*args, **kwargs)
     return message
@@ -20,7 +27,8 @@ def logInfo(message, *args, **kwargs):
 
 
 def logDebug(message, *args, **kwargs):
-    BigWorld.logDebug(MOD_NAME, _formatMessage(message, *args, **kwargs), None)
+    if IS_DEBUG:
+        BigWorld.logDebug(MOD_NAME, _formatMessage(message, *args, **kwargs), None)
 
 
 def logWarning(message, *args, **kwargs):

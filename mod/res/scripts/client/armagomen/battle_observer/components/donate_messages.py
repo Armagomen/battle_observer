@@ -4,9 +4,8 @@ from datetime import datetime, timedelta
 from random import choice
 
 from armagomen._constants import getLogo, IMG, URLS
-from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import fetchURL, openWebBrowser, overrideMethod
-from armagomen.utils.logging import DEBUG, logDebug, logInfo
+from armagomen.utils.logging import logDebug, logInfo
 from constants import AUTH_REALM
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
@@ -63,8 +62,7 @@ class Donate(object):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
             data = response_data.get("data")
-            if user_settings.main[DEBUG]:
-                logDebug("Donate/onDataResponse: FINISH request clan data={}", data)
+            logDebug("Donate/onDataResponse: FINISH request clan data={}", data)
             if data:
                 self.show_clan_invite = data["500223690"]["members_count"] < 99
 
