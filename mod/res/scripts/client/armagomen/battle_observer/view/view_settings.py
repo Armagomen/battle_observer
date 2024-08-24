@@ -58,7 +58,8 @@ class ViewSettings(object):
         return (
             user_settings.statistics[STATISTICS.PANELS_CUT_WIDTH],
             user_settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
-            user_settings.colors[VEHICLE_TYPES_COLORS.NAME], user_settings.statistics[STATISTICS.ICON_BLACKOUT])
+            user_settings.colors[VEHICLE_TYPES_COLORS.NAME], user_settings.statistics[STATISTICS.ICON_BLACKOUT]
+        )
 
     @staticmethod
     def xvmInstalled(module):

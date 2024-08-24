@@ -4,8 +4,7 @@ from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlug
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import callback, xvmInstalled
-from armagomen.utils.events import g_events
-from armagomen.utils.logging import logError, logInfo
+from armagomen.utils.logging import logDebug, logError
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
@@ -19,12 +18,12 @@ INFO_MSG = "loading view {}: alias={}"
 class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def __init__(self):
-        self.__subscribed = False
         listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES)
-        super(ViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
+        self.__subscribed = False
+        self._icons = False
         self._minimap = None
         self._statistics = None
-        self._icons = False
+        super(ViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def init(self):
         super(ViewHandlerBattle, self).init()
@@ -41,23 +40,25 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         super(ViewHandlerBattle, self).fini()
 
     def eventListener(self, event):
+        if self.__subscribed:
+            return
+        self._app.loaderManager.onViewLoaded += self.__onViewLoaded
+        self.__subscribed = True
         if self.isWTREnabled():
             self._statistics = StatisticsDataLoader()
         self._icons = self.isIconsEnabled()
         if self.isMinimapEnabled():
             self._minimap = MinimapZoomPlugin()
-        if self._components or self._statistics is not None or self._icons or self._minimap is not None:
-            if not self.__subscribed:
-                self._app.loaderManager.onViewLoaded += self.__onViewLoaded
-                self.__subscribed = True
-            self.registerComponents()
+        if any(self._components or self._statistics or self._icons or self._minimap):
+            if self._components:
+                self.registerComponents()
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
         if alias not in BATTLE_PAGES:
             return
         self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
-        logInfo(INFO_MSG, self.__class__.__name__, alias)
+        logDebug(INFO_MSG, self.__class__.__name__, alias)
         if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
             to_format_str = "{}:flashObject, has ho attribute {}"
             return logError(to_format_str, alias, ATTRIBUTE_NAME)
@@ -71,9 +72,12 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             self._minimap.init(flashObject)
         if self._icons or self._statistics is not None:
             flashObject.as_BattleObserverCreateStatistic(self._icons, *self.getStatisticsSettings())
-            if self._statistics is not None and self._statistics.enabled:
-                self._statistics.setFeedback(flashObject.as_BattleObserverUpdateStatisticData)
-                self._statistics.getStatisticsDataFromServer()
+            if self._statistics is not None:
+                if not self._statistics.enabled:
+                    self._statistics.regionError()
+                else:
+                    self._statistics.setFeedback(flashObject.as_BattleObserverUpdateStatisticData)
+                    self._statistics.getStatisticsDataFromServer()
         callback(30.0, flashObject.as_BattleObserverUpdateDamageLogPosition)
 
 
@@ -95,8 +99,7 @@ class ViewHandlerLobby(PackageBusinessHandler):
         alias = pyView.getAlias()
         is_hangar = alias == VIEW_ALIAS.LOBBY_HANGAR
         if is_hangar:
-            callback(2.0, g_events.onHangarLoaded, is_hangar)
-            logInfo(INFO_MSG, self.__class__.__name__, alias)
+            logDebug(INFO_MSG, self.__class__.__name__, alias)
             if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
                 return logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)
             callback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)

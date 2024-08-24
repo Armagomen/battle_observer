@@ -4,7 +4,6 @@ from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.utils.dialogs import ExcludedMapsDialog
-from armagomen.utils.events import g_events
 from constants import PREMIUM_TYPE, PremiumConfigs, RENEWABLE_SUBSCRIPTION_CONFIG
 from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.event_dispatcher import showMapsBlacklistView
@@ -30,13 +29,12 @@ class ExcludedMapsProcessor(object):
     lobbyContext = dependency.descriptor(ILobbyContext)
 
     def __init__(self):
-        self.__isHangar = False
+        self.__enabled = user_settings.main[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
         self.__isPremium = False
-        self.__isDialogDeferred = True
         self.__isDialogVisible = False
         self.appLoader.onGUISpaceEntered += self.init
         self.appLoader.onGUISpaceLeft += self.fini
-        g_events.onHangarLoaded += self.onHangarLoaded
+        user_settings.onModSettingsChanged += self.__onModSettingsChanged
 
     @property
     def _serverSettings(self):
@@ -49,23 +47,21 @@ class ExcludedMapsProcessor(object):
         self._serverSettings.onServerSettingsChange += self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify += self.__onPremiumNotify
         self.wotPlus.onDataChanged += self.__onWotPlusChanged
+        self.__update()
 
     def fini(self, spaceID):
         if spaceID != GuiGlobalSpaceID.LOBBY:
             return
-        self.__isHangar = False
         self.__isPremium = False
-        self.__isDialogDeferred = True
         self.__isDialogVisible = False
         self._serverSettings.onServerSettingsChange -= self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
         self.wotPlus.onDataChanged -= self.__onWotPlusChanged
 
-    def onHangarLoaded(self, isHangar):
-        self.__isHangar = isHangar
-        if isHangar and self.__isDialogDeferred:
+    def __onModSettingsChanged(self, data, name):
+        if name == MAIN.NAME:
+            self.__enabled = data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
             self.__update()
-            self.__isDialogDeferred = False
 
     def __onServerSettingsChanged(self, diff):
         if any(key in diff for key in SERVER_SETTINGS_DIFF_KEYS):
@@ -94,14 +90,7 @@ class ExcludedMapsProcessor(object):
         self.__isDialogVisible = False
 
     def __update(self):
-        if not user_settings.main[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
-            return
-        if self.__isDialogVisible:
-            return
-        if not self.__isHangar:
-            self.__isDialogDeferred = True
-            return
-        if not self._serverSettings.isPreferredMapsEnabled():
+        if not self.__enabled or self.__isDialogVisible or not self._serverSettings.isPreferredMapsEnabled():
             return
         mapsConfig = self._serverSettings.getPreferredMapsConfig()
         defaultSlots = mapsConfig['defaultSlots']

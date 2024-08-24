@@ -10,7 +10,7 @@ from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 from uilogging.core.core_constants import HTTP_OK_STATUS
 
-region = REGIONS._asdict().get(AUTH_REALM)
+region = REGIONS.get(AUTH_REALM)
 
 
 class StatisticsDataLoader(object):
@@ -48,11 +48,15 @@ class StatisticsDataLoader(object):
             logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
             callback(2.0, self.getStatisticsDataFromServer)
 
+    @staticmethod
+    def regionError():
+        logError("Statistics are not available in your region={}. Only in {}", AUTH_REALM, REGIONS.keys())
+
     def getStatisticsDataFromServer(self):
+        if not self.enabled:
+            return
         if self.__feedback is None:
             raise ReferenceError("feedback method is not set")
-        if not self.enabled:
-            return logError("Statistics are not available in your region={}. Only in {}", AUTH_REALM, REGIONS)
         arenaDP = self.sessionProvider.getArenaDP()
         if arenaDP is None:
             return self.delayedLoad("arenaDP is None")
