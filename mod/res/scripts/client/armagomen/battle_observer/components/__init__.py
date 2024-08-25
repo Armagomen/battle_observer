@@ -21,7 +21,7 @@ def loadComponents():
         'postmortem',
         'premium_time',
         'replace_vehicle_info',
-        'save_shot_lite',
+        # 'save_shot_lite',
         'service_channel_filter',
         'shot_result_plugin',
         'vehicle_battle_boosters',

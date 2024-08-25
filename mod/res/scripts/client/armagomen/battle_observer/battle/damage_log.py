@@ -120,16 +120,18 @@ class DamageLog(DamageLogsMeta):
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
-            if self._is_extended_log_enabled:
-                arena = self._arenaVisitor.getArenaSubscription()
-                if arena is not None:
-                    arena.onVehicleUpdated -= self.onVehicleUpdated
-                    arena.onVehicleKilled -= self.onVehicleKilled
-                ammo_ctrl = self.sessionProvider.shared.ammo
-                if ammo_ctrl is not None:
-                    ammo_ctrl.onGunReloadTimeSet -= self._onGunReloadTimeSet
-            if self._is_top_log_enabled:
-                self.top_log.clear()
+        if self._is_extended_log_enabled:
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None:
+                arena.onVehicleUpdated -= self.onVehicleUpdated
+                arena.onVehicleKilled -= self.onVehicleKilled
+            ammo_ctrl = self.sessionProvider.shared.ammo
+            if ammo_ctrl is not None:
+                ammo_ctrl.onGunReloadTimeSet -= self._onGunReloadTimeSet
+            self._damage_done = None
+            self._damage_received = None
+        if self._is_top_log_enabled:
+            self.top_log.clear()
         super(DamageLog, self)._dispose()
 
     def _onGunReloadTimeSet(self, _, state, *args, **kwargs):

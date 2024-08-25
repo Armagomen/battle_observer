@@ -31,10 +31,11 @@ class AutoClaimClanReward(object):
         user_settings.onModSettingsChanged += self.onSettingsChanged
         self.__hangarSpace.onSpaceCreate += self.onCreate
         self.__cachedProgressData = None
-        self.__cachedSettingsData = None
         self.__cachedQuestsData = None
-        self.__maximum_level = "21"
+        self.__cachedSettingsData = None
+        self.__claim_started = False
         self.__enabled = user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD]
+        self.__maximum_level = "21"
 
     def onCreate(self):
         self.__hangarSpace.onSpaceCreate -= self.onCreate
@@ -63,7 +64,7 @@ class AutoClaimClanReward(object):
             return
         if item.getType() == WGNC_DATA_PROXY_TYPE.CLAN_SUPPLY_QUEST_UPDATE:
             status = item.getStatus()
-            if status in REWARD_STATUS_OK:
+            if not self.__claim_started and status in REWARD_STATUS_OK:
                 self.__claimRewards()
             elif status == QuestStatus.COMPLETE and all([self.__cachedProgressData, self.__cachedSettingsData]):
                 self.parseProgression(self.__cachedProgressData)
@@ -71,11 +72,14 @@ class AutoClaimClanReward(object):
 
     @adisp_process
     def __claimRewards(self):
+        self.__claim_started = True
         response = yield self.__webController.sendRequest(ctx=ClaimRewardsCtx())
         if not response.isSuccess():
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - " + backport.text(
                 R.strings.clan_supply.messages.claimRewards.error()), type=SystemMessages.SM_TYPE.Error)
             logWarning('Failed to claim rewards. Code: {code}', code=response.getCode())
+        else:
+            self.__claim_started = False
 
     @adisp_process
     def __claimProgression(self, stageID, price):
@@ -86,7 +90,7 @@ class AutoClaimClanReward(object):
             logWarning('Failed to claim Progression. Code: {code}', code=response.getCode())
 
     def parseQuests(self, data):
-        if any(q.status in REWARD_STATUS_OK for q in data.quests):
+        if self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):
             self.__claimRewards()
 
     @property

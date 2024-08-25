@@ -1,14 +1,19 @@
-from Event import SafeEvent
+from Event import Event, SafeEvent
+
+
+class BOEvent(Event):
+
+    def __call__(self, *args, **kwargs):
+        for delegate in self[:]:
+            delegate(*args, **kwargs)
 
 
 class Events(object):
 
     def __init__(self):
-        self.onArmorChanged = SafeEvent()
-        self.onMarkerColorChanged = SafeEvent()
-        self.onDispersionAngleChanged = SafeEvent()
-        self.updateVehicleData = SafeEvent()
-        self.onComponentVisible = SafeEvent()
+        self.onArmorChanged = BOEvent()
+        self.onMarkerColorChanged = BOEvent()
+        self.onDispersionAngleChanged = BOEvent()
         self.onVehicleChanged = SafeEvent()
         self.onVehicleChangedDelayed = SafeEvent()
 
