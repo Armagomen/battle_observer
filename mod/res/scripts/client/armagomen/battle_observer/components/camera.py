@@ -1,19 +1,19 @@
 import math
 from collections import namedtuple
 
+import TriggersManager
 from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import callback, isReplay, overrideMethod
-from armagomen.utils.logging import logError
-from Avatar import PlayerAvatar
+from armagomen.utils.common import callback, getPlayer, isReplay, overrideMethod
 from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera
 from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
 from debug_utils import LOG_CURRENT_EXCEPTION
 from gui.battle_control.avatar_getter import getOwnVehiclePosition
+from PlayerEvents import g_playerEvents
 
 DEFAULT_X_METERS = 20.0
 settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: DEFAULT_X_METERS, SNIPER.STEPS_ONLY: False}
@@ -43,10 +43,6 @@ def sniper_readConfigs(base, camera, data):
                 exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
     if settingsCache[SNIPER.DYN_ZOOM]:
         camera.setSniperZoomSettings(-1)
-        # if settingsCache[SNIPER.STEPS_ONLY]:
-        #     settingsCache[SNIPER.METERS] = math.ceil(SNIPER.MAX_DIST / camera._cfg[SNIPER.ZOOMS][GLOBAL.LAST])
-        # else:
-        #     settingsCache[SNIPER.METERS] = DEFAULT_X_METERS
 
 
 @overrideMethod(SniperZoomSetting, "setSystemValue")
@@ -73,48 +69,6 @@ def enable(base, camera, targetPos, saveZoom):
             distance = GLOBAL.ZERO
         camera._cfg[SNIPER.ZOOM] = getZoom(distance, camera._cfg[SNIPER.ZOOMS])
     return base(camera, targetPos, saveZoom)
-
-
-def changeControlMode(avatar):
-    input_handler = avatar.inputHandler
-    if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
-        v_desc = avatar.getVehicleDescriptor()
-        caliberSkip = v_desc.shot.shell.caliber <= SNIPER.MAX_CALIBER
-        if caliberSkip or user_settings.zoom[SNIPER.SKIP_CLIP] and SNIPER.CLIP in v_desc.gun.tags:
-            return
-        aiming_system = input_handler.ctrl.camera.aimingSystem
-        input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
-                                           prevModeName=input_handler.ctrlModeName,
-                                           preferredPos=aiming_system.getDesiredShotPoint(),
-                                           turretYaw=aiming_system.turretYaw,
-                                           gunPitch=aiming_system.gunPitch,
-                                           aimingMode=input_handler.ctrl._aimingMode,
-                                           closesDist=False)
-
-
-@overrideMethod(PlayerAvatar, "showTracer")
-def showTracer(base, avatar, shooterID, *args):
-    try:
-        if user_settings.zoom[SNIPER.DISABLE_SNIPER] and user_settings.zoom[GLOBAL.ENABLED] and not isReplay():
-            if shooterID == avatar.playerVehicleID:
-                callback(max(user_settings.zoom[SNIPER.DISABLE_LATENCY], 0), changeControlMode, avatar)
-    except Exception as err:
-        logError("I can't get out of sniper mode. Error {}.changeControlMode, {}", __package__, err)
-    finally:
-        return base(avatar, shooterID, *args)
-
-
-def onModSettingsChanged(config, blockID):
-    if blockID in (ARCADE.NAME, STRATEGIC.NAME):
-        for cam in camCache:
-            camCache[cam] = True
-    elif blockID == SNIPER.NAME:
-        settingsCache[SNIPER.DYN_ZOOM] = config[GLOBAL.ENABLED] and not isReplay() and \
-                                         config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
-        settingsCache[SNIPER.STEPS_ONLY] = config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]
-
-
-user_settings.onModSettingsChanged += onModSettingsChanged
 
 
 @overrideMethod(ArcadeCamera, "_readConfigs")
@@ -171,6 +125,65 @@ def arty_readConfigs(base, camera, *args, **kwargs):
             user_settings.strategic_camera[STRATEGIC.MIN], user_settings.strategic_camera[STRATEGIC.MAX])
         cfg[STRATEGIC.SCROLL_SENSITIVITY] = user_settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
 
+
+class AfterShoot(TriggersManager.ITriggerListener):
+
+    def __init__(self):
+        g_playerEvents.onAvatarBecomePlayer += self.onStartScript
+        g_playerEvents.onAvatarBecomeNonPlayer += self.onFinishScript
+        self.enabled = False
+
+    def onStartScript(self):
+        if self.enabled:
+            manager = TriggersManager.g_manager
+            if manager:
+                manager.addListener(self)
+
+    def onFinishScript(self):
+        if self.enabled:
+            manager = TriggersManager.g_manager
+            if manager:
+                manager.delListener(self)
+
+    def onTriggerActivated(self, params):
+        if params.get('type') == TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT:
+            callback(max(user_settings.zoom[SNIPER.DISABLE_LATENCY], 0), self.changeControlMode)
+
+    @staticmethod
+    def changeControlMode():
+        avatar = getPlayer()
+        input_handler = avatar.inputHandler
+        if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
+            v_desc = avatar.getVehicleDescriptor()
+            caliberSkip = v_desc.shot.shell.caliber <= SNIPER.MAX_CALIBER
+            if caliberSkip or user_settings.zoom[SNIPER.SKIP_CLIP] and SNIPER.CLIP in v_desc.gun.tags:
+                return
+            aiming_system = input_handler.ctrl.camera.aimingSystem
+            input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
+                                               prevModeName=input_handler.ctrlModeName,
+                                               preferredPos=aiming_system.getDesiredShotPoint(),
+                                               turretYaw=aiming_system.turretYaw,
+                                               gunPitch=aiming_system.gunPitch,
+                                               aimingMode=input_handler.ctrl._aimingMode,
+                                               closesDist=False)
+
+
+after_shoot = AfterShoot()
+
+
+def onModSettingsChanged(config, blockID):
+    if blockID in (ARCADE.NAME, STRATEGIC.NAME):
+        for cam in camCache:
+            camCache[cam] = True
+    elif blockID == SNIPER.NAME:
+        if not config[GLOBAL.ENABLED] or isReplay():
+            return
+        settingsCache[SNIPER.DYN_ZOOM] = config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
+        settingsCache[SNIPER.STEPS_ONLY] = config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]
+        after_shoot.enabled = config[SNIPER.DISABLE_SNIPER]
+
+
+user_settings.onModSettingsChanged += onModSettingsChanged
 
 onModSettingsChanged(user_settings.arcade_camera, ARCADE.NAME)
 onModSettingsChanged(user_settings.strategic_camera, STRATEGIC.NAME)

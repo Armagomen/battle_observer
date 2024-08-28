@@ -90,7 +90,7 @@ class AutoClaimClanReward(object):
             logWarning('Failed to claim Progression. Code: {code}', code=response.getCode())
 
     def parseQuests(self, data):
-        if self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):
+        if not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):
             self.__claimRewards()
 
     @property
