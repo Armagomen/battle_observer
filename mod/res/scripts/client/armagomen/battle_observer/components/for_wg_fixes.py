@@ -1,12 +1,16 @@
 import BigWorld
 
+import BattleReplay
 from armagomen._constants import DAMAGE_LOG, GLOBAL
+from armagomen.battle_observer.components.controllers import squad_mans
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import overrideMethod
 from BattleReplay import g_replayCtrl
+from constants import ATTACK_REASONS, SPECIAL_VEHICLE_HEALTH
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE as _ETYPE
 from gui.battle_control.controllers import debug_ctrl
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
+from gui.Scaleform.daapi.view.battle.shared.markers2d.vehicle_plugins import VehicleMarkerPlugin
 
 debug_ctrl._UPDATE_INTERVAL = 0.4
 
@@ -73,3 +77,16 @@ def validateSettings(config):
 
 user_settings.onModSettingsChanged += onModSettingsChanged
 onModSettingsChanged(user_settings.wg_logs, DAMAGE_LOG.WG_LOGS_FIX)
+
+
+# squad damage fix
+@overrideMethod(VehicleMarkerPlugin, "_updateVehicleHealth")
+def _updateVehicleHealth(base, plugin, vehicleID, handle, newHealth, aInfo, attackReasonID):
+    if newHealth < 0 and not SPECIAL_VEHICLE_HEALTH.IS_AMMO_BAY_DESTROYED(newHealth):
+        newHealth = 0
+    replayCtrl = BattleReplay.g_replayCtrl
+    if replayCtrl.isPlaying and replayCtrl.isTimeWarpInProgress:
+        plugin._invokeMarker(handle, 'setHealth', newHealth)
+    else:
+        yellow = False if aInfo is None else aInfo.vehicleID in squad_mans.squad
+        plugin._invokeMarker(handle, 'updateHealth', newHealth, yellow, ATTACK_REASONS[attackReasonID])

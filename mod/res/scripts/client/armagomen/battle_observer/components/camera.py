@@ -126,37 +126,48 @@ def arty_readConfigs(base, camera, *args, **kwargs):
         cfg[STRATEGIC.SCROLL_SENSITIVITY] = user_settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
 
 
-class AfterShoot(TriggersManager.ITriggerListener):
+class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
     def __init__(self):
-        g_playerEvents.onAvatarBecomePlayer += self.onStartScript
-        g_playerEvents.onAvatarBecomeNonPlayer += self.onFinishScript
-        self.enabled = False
+        self.latency = 0
+        self.skip_clip = False
+        self.subscribed = False
+        self.avatar = None
+        self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
 
-    def onStartScript(self):
-        if self.enabled:
-            manager = TriggersManager.g_manager
-            if manager:
-                manager.addListener(self)
+    def updateSettings(self, data):
+        enabled = data[SNIPER.DISABLE_SNIPER] and data[GLOBAL.ENABLED]
+        self.latency = float(data[SNIPER.DISABLE_LATENCY])
+        self.skip_clip = data[SNIPER.SKIP_CLIP]
+        if not self.subscribed and enabled:
+            g_playerEvents.onAvatarReady += self.onStart
+            g_playerEvents.onAvatarBecomeNonPlayer += self.onFinish
+            self.subscribed = True
+        elif self.subscribed and not enabled:
+            g_playerEvents.onAvatarReady -= self.onStart
+            g_playerEvents.onAvatarBecomeNonPlayer -= self.onFinish
+            self.subscribed = False
 
-    def onFinishScript(self):
-        if self.enabled:
-            manager = TriggersManager.g_manager
-            if manager:
-                manager.delListener(self)
+    def onStart(self):
+        self.avatar = getPlayer()
+        TriggersManager.g_manager.addListener(self)
+
+    def onFinish(self):
+        self.avatar = None
+        TriggersManager.g_manager.delListener(self)
 
     def onTriggerActivated(self, params):
-        if params.get('type') == TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT:
-            callback(max(user_settings.zoom[SNIPER.DISABLE_LATENCY], 0), self.changeControlMode)
+        if params.get('type') == self.__trigger_type:
+            callback(max(self.latency, 0), self.changeControlMode)
 
-    @staticmethod
-    def changeControlMode():
-        avatar = getPlayer()
-        input_handler = avatar.inputHandler
+    def changeControlMode(self):
+        if self.avatar is None:
+            return
+        input_handler = self.avatar.inputHandler
         if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
-            v_desc = avatar.getVehicleDescriptor()
-            caliberSkip = v_desc.shot.shell.caliber <= SNIPER.MAX_CALIBER
-            if caliberSkip or user_settings.zoom[SNIPER.SKIP_CLIP] and SNIPER.CLIP in v_desc.gun.tags:
+            v_desc = self.avatar.getVehicleDescriptor()
+            caliber_skip = v_desc.shot.shell.caliber <= SNIPER.MAX_CALIBER
+            if caliber_skip or self.skip_clip and SNIPER.CLIP in v_desc.gun.tags:
                 return
             aiming_system = input_handler.ctrl.camera.aimingSystem
             input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
@@ -165,10 +176,11 @@ class AfterShoot(TriggersManager.ITriggerListener):
                                                turretYaw=aiming_system.turretYaw,
                                                gunPitch=aiming_system.gunPitch,
                                                aimingMode=input_handler.ctrl._aimingMode,
-                                               closesDist=False)
+                                               closesDist=False,
+                                               curVehicleID=self.avatar.playerVehicleID)
 
 
-after_shoot = AfterShoot()
+after_shoot = ChangeCameraModeAfterShoot()
 
 
 def onModSettingsChanged(config, blockID):
@@ -180,7 +192,7 @@ def onModSettingsChanged(config, blockID):
             return
         settingsCache[SNIPER.DYN_ZOOM] = config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
         settingsCache[SNIPER.STEPS_ONLY] = config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]
-        after_shoot.enabled = config[SNIPER.DISABLE_SNIPER]
+        after_shoot.updateSettings(config)
 
 
 user_settings.onModSettingsChanged += onModSettingsChanged
