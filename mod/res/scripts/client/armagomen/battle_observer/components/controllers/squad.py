@@ -3,7 +3,7 @@ from PlayerEvents import g_playerEvents
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 
-class SquadMans(object):
+class Squad(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
@@ -19,5 +19,5 @@ class SquadMans(object):
         self.__squad_mans.add(arenaDP.getPlayerVehicleID(forceUpdate=True))
 
     @property
-    def squad(self):
+    def members(self):
         return self.__squad_mans

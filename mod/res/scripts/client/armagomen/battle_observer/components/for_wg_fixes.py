@@ -2,7 +2,7 @@ import BigWorld
 
 import BattleReplay
 from armagomen._constants import DAMAGE_LOG, GLOBAL
-from armagomen.battle_observer.components.controllers import squad_mans
+from armagomen.battle_observer.components.controllers import squad
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import overrideMethod
 from BattleReplay import g_replayCtrl
@@ -88,5 +88,5 @@ def _updateVehicleHealth(base, plugin, vehicleID, handle, newHealth, aInfo, atta
     if replayCtrl.isPlaying and replayCtrl.isTimeWarpInProgress:
         plugin._invokeMarker(handle, 'setHealth', newHealth)
     else:
-        yellow = False if aInfo is None else aInfo.vehicleID in squad_mans.squad
+        yellow = False if aInfo is None else aInfo.vehicleID in squad.members
         plugin._invokeMarker(handle, 'updateHealth', newHealth, yellow, ATTACK_REASONS[attackReasonID])
