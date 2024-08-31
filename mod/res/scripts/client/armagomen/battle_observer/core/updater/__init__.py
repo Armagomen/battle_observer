@@ -1,6 +1,7 @@
 import os
 import re
 from collections import namedtuple
+from datetime import datetime, timedelta
 from json import loads
 from zipfile import ZipFile
 
@@ -107,6 +108,7 @@ class Updater(DownloadThread):
 
     def __init__(self, version):
         super(Updater, self).__init__()
+        self.timeDelta = datetime.now()
         self.version = version
         if isReplay():
             self.check()
@@ -141,8 +143,10 @@ class Updater(DownloadThread):
     def onGUISpaceEntered(self, spaceID):
         login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         if spaceID == GuiGlobalSpaceID.LOGIN and login_server_selection or spaceID == GuiGlobalSpaceID.LOBBY:
-            self.check()
-            ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
+            current_time = datetime.now()
+            if current_time >= self.timeDelta:
+                self.timeDelta = current_time + timedelta(hours=1)
+                self.check()
 
     @wg_async
     def showUpdateDialog(self, ver):
