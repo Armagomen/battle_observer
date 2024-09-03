@@ -1,8 +1,7 @@
 import BigWorld
 
-import BattleReplay
 from armagomen._constants import DAMAGE_LOG, GLOBAL
-from armagomen.battle_observer.components.controllers import squad
+from armagomen.battle_observer.components.controllers import squad_controller
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import overrideMethod
 from BattleReplay import g_replayCtrl
@@ -84,9 +83,9 @@ onModSettingsChanged(user_settings.wg_logs, DAMAGE_LOG.WG_LOGS_FIX)
 def _updateVehicleHealth(base, plugin, vehicleID, handle, newHealth, aInfo, attackReasonID):
     if newHealth < 0 and not SPECIAL_VEHICLE_HEALTH.IS_AMMO_BAY_DESTROYED(newHealth):
         newHealth = 0
-    replayCtrl = BattleReplay.g_replayCtrl
-    if replayCtrl.isPlaying and replayCtrl.isTimeWarpInProgress:
+    if g_replayCtrl.isPlaying and g_replayCtrl.isTimeWarpInProgress:
         plugin._invokeMarker(handle, 'setHealth', newHealth)
     else:
-        yellow = False if aInfo is None else aInfo.vehicleID in squad.members
+        members = squad_controller.members
+        yellow = False if aInfo is None or not members else aInfo.vehicleID in members
         plugin._invokeMarker(handle, 'updateHealth', newHealth, yellow, ATTACK_REASONS[attackReasonID])

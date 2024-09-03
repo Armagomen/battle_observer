@@ -4,4 +4,4 @@ from armagomen.battle_observer.components.controllers.squad import Squad
 
 cachedVehicleData = CurrentVehicleCachedData()
 damage_controller = PlayersDamageController()
-squad = Squad()
+squad_controller = Squad()
