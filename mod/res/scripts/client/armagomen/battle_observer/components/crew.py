@@ -3,13 +3,12 @@ from threading import Thread
 from armagomen._constants import CREW_XP, GLOBAL, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
-from armagomen.utils.common import openIgnoredVehicles, overrideMethod, updateIgnoredVehicles
+from armagomen.utils.common import openIgnoredVehicles, updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug, logError, logInfo
+from armagomen.utils.logging import logDebug, logInfo
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
-from gui.Scaleform.daapi.view.lobby.exchange.ExchangeXPWindow import ExchangeXPWindow
 from gui.shared.gui_items.processors.tankman import TankmanReturn
 from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
 from gui.shared.utils import decorators
@@ -28,7 +27,6 @@ class CrewProcessor(object):
         self.intCD = None
         self.isDialogVisible = False
         g_events.onVehicleChangedDelayed += self.updateCrew
-        overrideMethod(ExchangeXPWindow, "as_vehiclesDataChangedS")(self.onXPExchangeDataChanged)
 
     @staticmethod
     def getLocalizedMessage(value, description):
@@ -106,19 +104,6 @@ class CrewProcessor(object):
         if result.userMsg:
             SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType)
             logInfo("{}: {}", vehicle.userName, result.userMsg)
-
-    def onXPExchangeDataChanged(self, base, dialog, data, *args, **kwargs):
-        try:
-            ID = "id"
-            CANDIDATE = "isSelectCandidate"
-            for vehicleData in data['vehicleList']:
-                vehicle = self.itemsCache.items.getItemByCD(vehicleData[ID])
-                check, _ = self.isAccelerateTraining(vehicle)
-                vehicleData[CANDIDATE] &= check
-        except Exception as error:
-            logError("CrewProcessor onXPExchangeDataChanged: {}", repr(error))
-        finally:
-            return base(dialog, data, *args, **kwargs)
 
 
 crew = Thread(target=CrewProcessor, name="Battle_observer_CrewProcessor")

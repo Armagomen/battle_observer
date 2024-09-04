@@ -1,4 +1,4 @@
-__version__ = "1.41.26"
+__version__ = "1.41.27"
 __author__ = "Armagomen"
 __copyright__ = "Copyright 2014-2024, Armagomen"
 __credits__ = ["Armagomen"]
@@ -21,19 +21,18 @@ logging.disable(logging.INFO)
 StatisticsCollector.noteHangarLoadingState = lambda *args, **kwargs: None
 
 __update = Thread(target=Updater, args=(__version__,), name="Battle_Observer_update")
-__update.start()
-__update.join(timeout=60.0)
-
-observer = Thread(target=Core, args=(__version__, Thread), name="Battle_Observer_Core")
+__observer = Thread(target=Core, args=(__version__, Thread), name="Battle_Observer_Core")
 
 
 def init():
     logInfo('MOD START LOADING: v{}', __version__)
     logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
-    observer.start()
+    __update.start()
+    __observer.start()
 
 
 def fini():
-    observer.join()
+    __observer.join()
+    __update.join()
     onFini()
     logInfo('MOD SHUTTING DOWN: v{}', __version__)

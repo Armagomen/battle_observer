@@ -234,8 +234,8 @@ class SettingsInterface(CreateElement):
         user_settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
-        self.addModificationToModList()
         self.addModsToVX()
+        self.addModificationToModList()
 
     def addModificationToModList(self):
         """register settings window in modsListApi"""
