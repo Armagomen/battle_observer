@@ -5,7 +5,9 @@ from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_
 from armagomen.utils.common import openWebBrowser, xvmInstalled
 from armagomen.utils.logging import logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
+from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
+from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
 settingsVersion = 37
 LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
@@ -220,6 +222,7 @@ class CreateElement(Getter):
 
 
 class SettingsInterface(CreateElement):
+    appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self, settingsLoader, version):
         api = importApi()
@@ -234,15 +237,21 @@ class SettingsInterface(CreateElement):
         user_settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
-        self.addModsToVX()
-        self.addModificationToModList()
+        self.appLoader.onGUISpaceEntered += self.addToAPI
+
+    def addToAPI(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.LOBBY:
+            self.addModsToVX()
+            self.addModificationToModList()
+            self.appLoader.onGUISpaceEntered -= self.addToAPI
+
 
     def addModificationToModList(self):
         """register settings window in modsListApi"""
         kwargs = {
             'name': localization['service']['name'], 'description': localization['service']['description'],
             'icon': 'gui/maps/icons/battle_observer/hangar_settings_image.png',
-            GLOBAL.ENABLED: True, 'login': True, 'lobby': True, 'callback': self.load_window
+            GLOBAL.ENABLED: True, 'login': False, 'lobby': True, 'callback': self.load_window
         }
         self.modsListApi.addModification(MOD_NAME, **kwargs)
 
@@ -310,7 +319,9 @@ class SettingsInterface(CreateElement):
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
             logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
         else:
-            settings_block = getattr(user_settings, blockID)
+            settings_block = getattr(user_settings, blockID, None)
+            if settings_block is None:
+                return
             for key, value in data.iteritems():
                 updated_config_link, param_name = self.getLinkToParam(settings_block, key)
                 if param_name in updated_config_link:
@@ -322,9 +333,12 @@ class SettingsInterface(CreateElement):
                         value = DEBUG_PANEL.STYLES[value]
                     elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, str):
                         value = SIXTH_SENSE.ICONS[value]
-                    elif key == "zoomSteps*steps":
-                        steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
-                        value = [val for val in steps if val >= 2.0]
+                    elif blockID == SNIPER.NAME and SNIPER.STEPS in key:
+                        if value.strip():
+                            steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
+                            value = [val for val in steps if val >= 2.0]
+                        else:
+                            value = SNIPER.DEFAULT_STEPS
                     if type(value) == int and type(updated_config_link[param_name]) == float:
                         value = float(value)
                     updated_config_link[param_name] = value

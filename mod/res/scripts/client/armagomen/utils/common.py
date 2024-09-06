@@ -38,15 +38,15 @@ def getEntity(entity_id):
     return BigWorld.entities.get(entity_id)
 
 
-def getDistanceTo(targetPos):
-    return getPlayer().position.distTo(targetPos)
-
-
-def distanceToEntityVehicle(entityID):
-    entity_vehicle = getEntity(entityID)
-    if entity_vehicle is not None:
-        return getDistanceTo(entity_vehicle.position)
-    return 0.0
+# def getDistanceTo(targetPos):
+#     return getPlayer().position.distTo(targetPos)
+#
+#
+# def distanceToEntityVehicle(entityID):
+#     entity_vehicle = getEntity(entityID)
+#     if entity_vehicle is not None:
+#         return getDistanceTo(entity_vehicle.position)
+#     return 0.0
 
 
 def callback(delay, callMethod, *args, **kwargs):

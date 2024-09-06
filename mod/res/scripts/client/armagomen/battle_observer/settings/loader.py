@@ -1,6 +1,6 @@
 import os
 
-from armagomen._constants import GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE
+from armagomen._constants import GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import currentConfigPath, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.logging import DEBUG, logInfo, logWarning, setDebug
@@ -79,6 +79,9 @@ class SettingsLoader(object):
                         new_param = float(new_param)
                     if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
                         new_param = "logo.png"
+                        file_update = True
+                    if key == SNIPER.ZOOMS and not len(old_param):
+                        new_param = SNIPER.DEFAULT_STEPS
                         file_update = True
                     internal_cfg[key] = new_param
         return file_update

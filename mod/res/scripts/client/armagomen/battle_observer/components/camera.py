@@ -32,9 +32,9 @@ def sniper_readConfigs(base, camera, data):
     if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC] and camera.isCameraDynamic():
         camera.enableDynamicCamera(False)
     if user_settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
-        steps = [step for step in user_settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] if step >= SNIPER.MIN_ZOOM]
+        user_steps = user_settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
+        steps = sorted(x for x in user_steps if x >= SNIPER.MIN_ZOOM)
         if len(steps) > 3:
-            steps.sort()
             for cfg in (camera._cfg, camera._userCfg, camera._baseCfg):
                 cfg[SNIPER.INCREASED_ZOOM] = True
                 cfg[SNIPER.ZOOMS] = steps
