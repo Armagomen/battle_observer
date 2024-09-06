@@ -42,7 +42,6 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function addHealth(color:String, colorParams:Object, settings:Object, startVisible:Boolean):void
 		{
-			
 			var barX:Number     = settings.players_bars_bar.x;
 			var barWidth:Number = settings.players_bars_bar.width;
 			var textX:Number    = settings.players_bars_text.x;

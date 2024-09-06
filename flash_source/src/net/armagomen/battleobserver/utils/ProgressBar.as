@@ -55,9 +55,9 @@
 			if (this.barEnabled && this.bar.scaleX != newScale)
 			{
 				var scale:Number = Math.max(0, newScale);
-				if (this.animationTime > 0)
+				if (this.animationTime > 0 && this.visible)
 				{
-					this.animation.continueTo(scale, this.visible ? this.animationTime : Constants.HUNDREDTH);
+					this.animation.continueTo(scale, this.animationTime);
 				}
 				else
 				{

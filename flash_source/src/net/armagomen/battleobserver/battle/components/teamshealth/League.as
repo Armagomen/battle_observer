@@ -23,6 +23,7 @@
 		private var defCommads:Vector.<int> = new <int>[1, 2, 2, 2, 2];
 		private var colors:Object;
 		private var score:Score;
+		private var duration:Number         = 0.5;
 		
 		public function League(colorBlind:Boolean, colors:Object)
 		{
@@ -40,8 +41,8 @@
 			this.enemyBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Constants.ALPHA);
 			this.enemyBar.graphics.drawPath(defCommads, new <Number>[0, 0, 250, 0, 230, 31, 0, 31, 0, 0]);
 			this.enemyBar.graphics.endFill();
-			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, 0.5);
-			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, 0.5);
+			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, this.duration);
+			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, this.duration);
 			
 			this.greenText = new TextExt(-220, 1, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			this.redText = new TextExt(220, 1, Constants.middleText, TextFieldAutoSize.RIGHT, this);
@@ -66,10 +67,18 @@
 		
 		public function setBarScale(isEnemy:Boolean, newScale:Number):void
 		{
-			var bar:Shape = isEnemy ? this.enemyBar : this.allyBar;
+			var bar:Shape       = isEnemy ? this.enemyBar : this.allyBar;
+			var animation:Tween = isEnemy ? this.enemyAnimation : this.allyAnimation
 			if (bar.scaleX != newScale)
 			{
-				(isEnemy ? this.enemyAnimation : this.allyAnimation).continueTo(newScale, 0.5);
+				if (newScale > bar.scaleX)
+				{
+					animation.rewind(newScale);
+				}
+				else
+				{
+					animation.continueTo(newScale, this.duration);
+				}
 			}
 		}
 		
