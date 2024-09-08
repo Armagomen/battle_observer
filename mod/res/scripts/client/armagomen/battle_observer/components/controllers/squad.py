@@ -1,3 +1,4 @@
+from gui.battle_control import avatar_getter
 from helpers import dependency
 from PlayerEvents import g_playerEvents
 from skeletons.gui.battle_session import IBattleSessionProvider
@@ -25,7 +26,7 @@ class Squad(object):
     def updateSquadMans(self, *args):
         self.__squad_mans.clear()
         arenaDP = self.sessionProvider.getArenaDP()
-        playerVehicleID = arenaDP.getPlayerVehicleID()
+        playerVehicleID = avatar_getter.getPlayerVehicleID()
         playerSquad = arenaDP.getVehicleInfo(playerVehicleID).squadIndex
         if not playerSquad:
             self.__squad_mans.add(playerVehicleID)
