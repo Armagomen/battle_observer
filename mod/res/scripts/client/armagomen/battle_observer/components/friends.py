@@ -37,3 +37,8 @@ def new_VehicleTypeInfoVO_update(update, vTypeVo, *args, **kwargs):
             vTypeVo.isPremiumIGR |= kwargs.get(ANOTHER.ACCOUNT_DBID) in _cache
         return result
     return update(vTypeVo, *args, **kwargs)
+
+
+def fini():
+    global onGuiCacheSyncCompleted
+    g_playerEvents.onGuiCacheSyncCompleted -= onGuiCacheSyncCompleted

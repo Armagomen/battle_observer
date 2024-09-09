@@ -155,3 +155,7 @@ class DispersionCircle(object):
 
 
 dispersion_circle = DispersionCircle()
+
+
+def fini():
+    user_settings.onModSettingsChanged -= dispersion_circle.onModSettingsChanged

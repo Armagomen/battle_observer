@@ -3,10 +3,12 @@ class Core(object):
     def __init__(self, modVersion, Thread):
         from armagomen.battle_observer.settings import settings_loader
         from armagomen.battle_observer.components import loadComponents
+        from armagomen.utils.keys_listener import g_keysListener
         from armagomen.utils.common import isReplay
 
         self.registerBattleObserverPackages()
-        self.components = loadComponents()
+        g_keysListener.init()
+        loadComponents()
         if not isReplay():
             from armagomen.battle_observer.settings.hangar import SettingsInterface
             hangar_settings = Thread(target=SettingsInterface, args=(settings_loader, modVersion),
@@ -33,3 +35,9 @@ def onFini():
         clearClientCache()
     cleanupObserverUpdates()
     cleanupUpdates()
+    from armagomen.battle_observer.components import components
+    for name, component in components.iteritems():
+        if hasattr(component, "fini"):
+            component.fini()
+    from armagomen.utils.keys_listener import g_keysListener
+    g_keysListener.fini()

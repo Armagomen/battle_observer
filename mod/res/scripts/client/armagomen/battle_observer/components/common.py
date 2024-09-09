@@ -135,3 +135,8 @@ def onModSettingsChanged(_settings, blockID):
 
 user_settings.onModSettingsChanged += onModSettingsChanged
 onModSettingsChanged(user_settings.main, MAIN.NAME)
+
+
+def fini():
+    global onModSettingsChanged
+    user_settings.onModSettingsChanged -= onModSettingsChanged

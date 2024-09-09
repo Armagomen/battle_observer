@@ -200,3 +200,8 @@ user_settings.onModSettingsChanged += onModSettingsChanged
 onModSettingsChanged(user_settings.arcade_camera, ARCADE.NAME)
 onModSettingsChanged(user_settings.strategic_camera, STRATEGIC.NAME)
 onModSettingsChanged(user_settings.zoom, SNIPER.NAME)
+
+
+def fini():
+    global onModSettingsChanged
+    user_settings.onModSettingsChanged -= onModSettingsChanged

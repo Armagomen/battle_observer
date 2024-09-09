@@ -18,8 +18,14 @@ class KeysListener(object):
         self.components = set()
         self.pressedKeys = set()
         self.usableKeys = set()
-        g_playerEvents.onAvatarReady += self.onEnterBattlePage
-        g_playerEvents.onAvatarBecomeNonPlayer += self.onExitBattlePage
+
+    def init(self):
+        g_playerEvents.onAvatarReady += self.onAvatarReady
+        g_playerEvents.onAvatarBecomeNonPlayer += self.onAvatarBecomeNonPlayer
+
+    def fini(self):
+        g_playerEvents.onAvatarReady -= self.onAvatarReady
+        g_playerEvents.onAvatarBecomeNonPlayer -= self.onAvatarBecomeNonPlayer
 
     def registerComponent(self, keyFunction, keyList=None):
         self.components.add(KeysData(self.normalizeKey(keyList) if keyList else KEY_ALIAS_ALT, keyFunction))
@@ -29,11 +35,11 @@ class KeysListener(object):
         self.usableKeys.clear()
         self.pressedKeys.clear()
 
-    def onEnterBattlePage(self):
+    def onAvatarReady(self):
         InputHandler.g_instance.onKeyDown += self.onKeyDown
         InputHandler.g_instance.onKeyUp += self.onKeyUp
 
-    def onExitBattlePage(self):
+    def onAvatarBecomeNonPlayer(self):
         InputHandler.g_instance.onKeyDown -= self.onKeyDown
         InputHandler.g_instance.onKeyUp -= self.onKeyUp
         self.clear()

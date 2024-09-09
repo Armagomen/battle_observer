@@ -89,3 +89,8 @@ def _updateVehicleHealth(base, plugin, vehicleID, handle, newHealth, aInfo, atta
         members = squad_controller.members
         yellow = False if aInfo is None or not members else aInfo.vehicleID in members
         plugin._invokeMarker(handle, 'updateHealth', newHealth, yellow, ATTACK_REASONS[attackReasonID])
+
+
+def fini():
+    global onModSettingsChanged
+    user_settings.onModSettingsChanged -= onModSettingsChanged

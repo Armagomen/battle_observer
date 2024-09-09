@@ -168,7 +168,5 @@ en.zoom=Sniper mode settings
 en.zoom_disable_cam=Disable sniper mode immediately after shooting
 en.zoom_dynamic_zoom=Select zoom factor automatically
 en.zoom_steps_only=Only by fixed steps
-en.zoom_zoomSteps=Replace zoom multiplicity with (2, 4, 6, 8, 10, 12, 16, 20, 25, 30)
-
-
+en.zoom_zoomSteps=Replace zoom multiplicity with (2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30)
 
