@@ -11,6 +11,7 @@ from messenger.MessengerEntry import g_instance
 from PlayerEvents import g_playerEvents
 from skeletons.gui.app_loader import IAppLoader
 from skeletons.gui.battle_session import IBattleSessionProvider
+from Vehicle import Vehicle
 
 if getClientLanguage().lower() in ("uk", "be"):
     LOCKED_MESSAGE = 'Save Shot: Постріл у {} заблоковано'
@@ -32,7 +33,7 @@ class SaveShootLite(object):
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
     def shoot(self, base, avatar, isRepeat=False):
-        if not self.enabled or self.unlock or not self.is_targetAllyOrDeath(avatar):
+        if not self.enabled or self.unlock or self.checkTarget(avatar):
             return base(avatar, isRepeat=isRepeat)
         vehicle_info = self.sessionProvider.getArenaDP().getVehicleInfo(avatar.target.id)
         message = LOCKED_MESSAGE.format(vehicle_info.vehicleType.shortName)
@@ -58,10 +59,12 @@ class SaveShootLite(object):
         self.vehicleErrorComponent = None
 
     @staticmethod
-    def is_targetAllyOrDeath(avatar):
-        if avatar.target is not None and avatar.target.__class__.__name__ == VEHICLE.VEHICLE:
-            return not avatar.target.isAlive() or avatar.target.publicInfo[VEHICLE.TEAM] == avatar.team
-        return False
+    def checkTarget(avatar):
+        if avatar.target is not None and isinstance(avatar.target, Vehicle):
+            if avatar.target.isAlive():
+                return avatar.target.publicInfo[VEHICLE.TEAM] != avatar.team
+            return False
+        return True
 
     def keyEvent(self, isKeyDown):
         self.unlock = isKeyDown
