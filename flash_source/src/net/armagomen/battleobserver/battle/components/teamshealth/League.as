@@ -24,6 +24,8 @@
 		private var colors:Object;
 		private var score:Score;
 		private var duration:Number         = 0.5;
+		private var alliesHP:int            = 0;
+		private var enemiesHP:int           = 0;
 		
 		public function League(colorBlind:Boolean, colors:Object)
 		{
@@ -43,15 +45,12 @@
 			this.enemyBar.graphics.endFill();
 			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, this.duration);
 			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, this.duration);
-			
 			this.greenText = new TextExt(-220, 1, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			this.redText = new TextExt(220, 1, Constants.middleText, TextFieldAutoSize.RIGHT, this);
 			this.greenDiff = new TextExt(-55, 4, Constants.diff, TextFieldAutoSize.RIGHT, this);
 			this.redDiff = new TextExt(55, 4, Constants.diff, TextFieldAutoSize.LEFT, this);
-			
 			this.score = new Score(colorBlind);
 			this.addChild(score);
-		
 		}
 		
 		public function setColorBlind(enabled:Boolean):void
@@ -67,19 +66,8 @@
 		
 		public function setBarScale(isEnemy:Boolean, newScale:Number):void
 		{
-			var bar:Shape       = isEnemy ? this.enemyBar : this.allyBar;
 			var animation:Tween = isEnemy ? this.enemyAnimation : this.allyAnimation
-			if (bar.scaleX != newScale)
-			{
-				if (newScale > bar.scaleX)
-				{
-					animation.rewind(newScale);
-				}
-				else
-				{
-					animation.continueTo(newScale, this.duration);
-				}
-			}
+			animation.continueTo(newScale, this.duration);
 		}
 		
 		public function remove():void
@@ -122,8 +110,16 @@
 		
 		public function update(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
 		{
-			this.setBarScale(false, totalAlliesHP > 0 ? Math.min(alliesHP / totalAlliesHP, 1.0) : 1.0);
-			this.setBarScale(true, totalEnemiesHP > 0 ? Math.min(enemiesHP / totalEnemiesHP, 1.0) : 1.0);
+			if (this.alliesHP != alliesHP)
+			{
+				this.alliesHP = alliesHP;
+				this.setBarScale(false, totalAlliesHP > 0 ? Math.min(alliesHP / totalAlliesHP, 1.0) : 1.0);
+			}
+			if (this.enemiesHP != enemiesHP)
+			{
+				this.enemiesHP = enemiesHP;
+				this.setBarScale(true, totalEnemiesHP > 0 ? Math.min(enemiesHP / totalEnemiesHP, 1.0) : 1.0);
+			}
 			this.greenText.text = alliesHP.toString();
 			this.redText.text = enemiesHP.toString();
 			this.difference(alliesHP - enemiesHP);

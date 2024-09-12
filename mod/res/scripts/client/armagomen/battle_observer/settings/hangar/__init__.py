@@ -324,19 +324,21 @@ class SettingsInterface(CreateElement):
                 return
             for key, value in data.iteritems():
                 updated_config_link, param_name = self.getLinkToParam(settings_block, key)
+                print param_name, value
                 if param_name in updated_config_link:
                     if GLOBAL.ALIGN in key:
                         value = GLOBAL.ALIGN_LIST[value]
-                    elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not isinstance(value, str):
+                    elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not isinstance(value, basestring):
                         value = HP_BARS.STYLES[value]
-                    elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, str):
+                    elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, basestring):
                         value = DEBUG_PANEL.STYLES[value]
-                    elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, str):
+                    elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value,
+                                                                                                         basestring):
                         value = SIXTH_SENSE.ICONS[value]
-                    elif blockID == SNIPER.NAME and SNIPER.STEPS in key:
-                        if value.strip():
-                            steps = [round(float(x.strip()), GLOBAL.ONE) for x in value.split(',')]
-                            value = [val for val in steps if val >= 2.0]
+                    elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and isinstance(value, basestring):
+                        value = value.strip().split(',')
+                        if value:
+                            value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]
                         else:
                             value = SNIPER.DEFAULT_STEPS
                     if type(value) == int and type(updated_config_link[param_name]) == float:

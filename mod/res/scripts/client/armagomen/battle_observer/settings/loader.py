@@ -80,7 +80,7 @@ class SettingsLoader(object):
                     if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
                         new_param = "logo.png"
                         file_update = True
-                    if key == SNIPER.ZOOMS and not len(old_param):
+                    if key == SNIPER.STEPS and (new_param_type != list or not len(new_param)):
                         new_param = SNIPER.DEFAULT_STEPS
                         file_update = True
                     internal_cfg[key] = new_param

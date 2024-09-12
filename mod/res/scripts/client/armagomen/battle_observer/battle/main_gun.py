@@ -1,5 +1,3 @@
-from math import ceil
-
 from armagomen._constants import GLOBAL, MAIN_GUN
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
@@ -48,7 +46,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
         if self.totalEnemiesHP != totalEnemiesHP:
             self.totalEnemiesHP = totalEnemiesHP
-            self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(ceil(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
+            self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, totalEnemiesHP / 5)
             self.updateMainGun()
 
     def updateMainGun(self):

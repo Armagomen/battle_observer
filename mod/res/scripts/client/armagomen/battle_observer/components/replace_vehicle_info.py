@@ -4,7 +4,8 @@ from armagomen._constants import ANOTHER, GLOBAL, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import overrideMethod, xvmInstalled
 from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO
-from helpers import getClientLanguage
+from helpers import dependency, getClientLanguage
+from skeletons.gui.battle_session import IBattleSessionProvider
 
 ANONYMOUS_TRANSLATE = "Анонімний" if getClientLanguage().lower() in ("uk", "be") else "Anonymous"
 
@@ -12,7 +13,8 @@ ANONYMOUS_TRANSLATE = "Анонімний" if getClientLanguage().lower() in ("u
 @overrideMethod(VehicleArenaInfoVO)
 @overrideMethod(VehicleArenaInfoVO, "update")
 def new_VehicleArenaInfoVO(base, *args, **kwargs):
-    if kwargs:
+    sessionProvider = dependency.instance(IBattleSessionProvider)
+    if kwargs and sessionProvider.arenaVisitor.gui.isRandomBattle():
         if user_settings.main[MAIN.HIDE_BADGES] and ANOTHER.BADGES in kwargs:
             kwargs[ANOTHER.BADGES] = None
             kwargs[ANOTHER.OVERRIDDEN_BADGE] = None

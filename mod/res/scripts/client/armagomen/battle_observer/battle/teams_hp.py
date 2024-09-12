@@ -10,7 +10,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def __init__(self):
         super(TeamsHP, self).__init__()
         self.showAliveCount = False
-        self.observers = set(vInfo.vehicleID for vInfo in self._arenaDP.getVehiclesInfoIterator() if vInfo.isObserver())
+        self.__observers = None
 
     def _populate(self):
         super(TeamsHP, self)._populate()
@@ -18,6 +18,13 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
         g_playerEvents.onAvatarReady += self.updateCounters
+
+    @property
+    def observers(self):
+        if self.__observers is None:
+            self.__observers = set(
+                vInfo.vehicleID for vInfo in self._arenaDP.getVehiclesInfoIterator() if vInfo.isObserver())
+        return self.__observers
 
     def updateCounters(self):
         self.settingsCore.applySetting(C_BAR.SHOW_HP_BAR, False)
