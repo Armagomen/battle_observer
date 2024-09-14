@@ -245,7 +245,6 @@ class SettingsInterface(CreateElement):
             self.addModificationToModList()
             self.appLoader.onGUISpaceEntered -= self.addToAPI
 
-
     def addModificationToModList(self):
         """register settings window in modsListApi"""
         kwargs = {
@@ -324,26 +323,25 @@ class SettingsInterface(CreateElement):
                 return
             for key, value in data.iteritems():
                 updated_config_link, param_name = self.getLinkToParam(settings_block, key)
-                print param_name, value
-                if param_name in updated_config_link:
-                    if GLOBAL.ALIGN in key:
-                        value = GLOBAL.ALIGN_LIST[value]
-                    elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not isinstance(value, basestring):
-                        value = HP_BARS.STYLES[value]
-                    elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, basestring):
-                        value = DEBUG_PANEL.STYLES[value]
-                    elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value,
-                                                                                                         basestring):
-                        value = SIXTH_SENSE.ICONS[value]
-                    elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and isinstance(value, basestring):
-                        value = value.strip().split(',')
-                        if value:
-                            value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]
-                        else:
-                            value = SNIPER.DEFAULT_STEPS
-                    if type(value) == int and type(updated_config_link[param_name]) == float:
-                        value = float(value)
-                    updated_config_link[param_name] = value
+                if param_name not in updated_config_link:
+                    continue
+                if GLOBAL.ALIGN in key:
+                    value = GLOBAL.ALIGN_LIST[value]
+                elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not isinstance(value, basestring):
+                    value = HP_BARS.STYLES[value]
+                elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, basestring):
+                    value = DEBUG_PANEL.STYLES[value]
+                elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, basestring):
+                    value = SIXTH_SENSE.ICONS[value if value in SIXTH_SENSE.ICONS else 0]
+                elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and isinstance(value, basestring):
+                    value = value.strip().split(',')
+                    if bool(value[0]):
+                        value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]
+                    else:
+                        value = SNIPER.DEFAULT_STEPS
+                if type(value) == int and type(updated_config_link[param_name]) == float:
+                    value = float(value)
+                updated_config_link[param_name] = value
             self.loader.updateConfigFile(blockID, settings_block)
             user_settings.onModSettingsChanged(settings_block, blockID)
 

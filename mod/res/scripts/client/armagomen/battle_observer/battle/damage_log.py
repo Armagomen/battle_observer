@@ -88,16 +88,20 @@ class DamageLog(DamageLogsMeta):
                 ammo_ctrl.onGunReloadTimeSet += self._onGunReloadTimeSet
 
     def update_top_log_start_params(self):
+        if self._arenaVisitor.gui.isRandomBattle():
+            avg_data = cachedVehicleData.efficiencyAvgData
+        else:
+            avg_data = cachedVehicleData.default
         template = self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG]
         self.top_log.update(self.settings.log_total[DAMAGE_LOG.ICONS],
                             tankDamageAvgColor=COLORS.WHITE,
                             tankAssistAvgColor=COLORS.WHITE,
                             tankBlockedAvgColor=COLORS.WHITE,
                             tankStunAvgColor=COLORS.WHITE,
-                            tankAvgDamage=cachedVehicleData.efficiencyAvgData.damage,
-                            tankAvgAssist=cachedVehicleData.efficiencyAvgData.assist,
-                            tankAvgStun=cachedVehicleData.efficiencyAvgData.stun,
-                            tankAvgBlocked=cachedVehicleData.efficiencyAvgData.blocked)
+                            tankAvgDamage=avg_data.damage,
+                            tankAvgAssist=avg_data.assist,
+                            tankAvgStun=avg_data.stun,
+                            tankAvgBlocked=avg_data.blocked)
         if not self.isSPG():
             self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
             template = [line for line in template if DAMAGE_LOG.STUN_ICON not in line]

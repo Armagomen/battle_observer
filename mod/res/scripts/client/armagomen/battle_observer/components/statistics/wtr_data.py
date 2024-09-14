@@ -15,7 +15,7 @@ class WTRStatistics(object):
 
     def __init__(self):
         self.settings = user_settings.statistics
-        self.wtr_ranges = ((3030, "bad"), (4590, "normal"), (6440, "good"), (8670, "very_good"), (10450, "unique"))
+        self.wtr_ranges = ((3154, "bad"), (4698, "normal"), (6578, "good"), (8929, "very_good"), (10736, "unique"))
         self.itemsData = {}
 
     def getPattern(self, isEnemy, itemData):
