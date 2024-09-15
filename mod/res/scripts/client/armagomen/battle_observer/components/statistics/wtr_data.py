@@ -3,7 +3,6 @@ from math import floor, log
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.logging import logDebug
-from gui.battle_control import avatar_getter
 
 
 class WTRStatistics(object):
@@ -26,7 +25,7 @@ class WTRStatistics(object):
             return self.settings[STATISTICS.FULL_LEFT] % itemData, self.settings[STATISTICS.CUT_LEFT] % itemData
 
     def updateAllItems(self, arenaDP, loadedData):
-        player_team = avatar_getter.getPlayerTeam()
+        player_team = arenaDP.getNumberOfTeam()
         for accountDBID, value in loadedData.iteritems():
             if not value:
                 continue
