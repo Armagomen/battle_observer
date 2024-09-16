@@ -9,7 +9,7 @@ def loadComponents():
     load = (
         'for_wg_fixes',
         'auto_claim_clan_reward',
-        'camera',
+        'camera_manager',
         'common',
         'crew',
         'dispersion',

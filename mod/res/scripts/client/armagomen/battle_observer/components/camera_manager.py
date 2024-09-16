@@ -94,18 +94,16 @@ class Arcade(CameraSettings):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
         if camera is None:
             return
-        if self.enabled != self.config[GLOBAL.ENABLED]:
-            self.enabled = self.config[GLOBAL.ENABLED]
-            if self.enabled:
-                MinMax = namedtuple('MinMax', ('min', 'max'))
-                camera._cfg['distRange'] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
-                camera._cfg['scrollSensitivity'] = self.config[ARCADE.SCROLL_SENSITIVITY]
-                camera._cfg['startDist'] = self.config[ARCADE.START_DEAD_DIST]
-            else:
-                ResMgr.purge('gui/avatar_input_handler.xml')
-                cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/arcadeMode/camera/')
-                camera._reloadConfigs(cameraSec)
-            camera._updateProperties(state=None)
+        if self.config[GLOBAL.ENABLED]:
+            MinMax = namedtuple('MinMax', ('min', 'max'))
+            camera._cfg['distRange'] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
+            camera._cfg['scrollSensitivity'] = self.config[ARCADE.SCROLL_SENSITIVITY]
+            camera._cfg['startDist'] = self.config[ARCADE.START_DEAD_DIST]
+        else:
+            ResMgr.purge('gui/avatar_input_handler.xml')
+            cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/arcadeMode/camera/')
+            camera._reloadConfigs(cameraSec)
+        camera._updateProperties(state=None)
 
 
 class Strategic(CameraSettings):
@@ -118,18 +116,16 @@ class Strategic(CameraSettings):
         arty = self.getCamera(CTRL_MODE_NAME.ARTY)
         if strategic is None or arty is None:
             return
-        if self.enabled != self.config[GLOBAL.ENABLED]:
-            self.enabled = self.config[GLOBAL.ENABLED]
-            if self.enabled:
-                for camera in (strategic, arty):
-                    camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
-                    camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
-            else:
-                ResMgr.purge('gui/avatar_input_handler.xml')
-                cameraSec_strategic = ResMgr.openSection('gui/avatar_input_handler.xml/strategicMode/camera/')
-                cameraSec_arty = ResMgr.openSection('gui/avatar_input_handler.xml/artyMode/camera/')
-                strategic._reloadConfigs(cameraSec_strategic)
-                arty._reloadConfigs(cameraSec_arty)
+        if self.config[GLOBAL.ENABLED]:
+            for camera in (strategic, arty):
+                camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
+                camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
+        else:
+            ResMgr.purge('gui/avatar_input_handler.xml')
+            cameraSec_strategic = ResMgr.openSection('gui/avatar_input_handler.xml/strategicMode/camera/')
+            cameraSec_arty = ResMgr.openSection('gui/avatar_input_handler.xml/artyMode/camera/')
+            strategic._reloadConfigs(cameraSec_strategic)
+            arty._reloadConfigs(cameraSec_arty)
 
 
 class Sniper(CameraSettings):

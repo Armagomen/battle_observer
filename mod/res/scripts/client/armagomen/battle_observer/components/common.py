@@ -122,13 +122,17 @@ def as_setPrestigeVisibleS(base, self, value):
     return base(self, value)
 
 
-def onModSettingsChanged(_settings, blockID):
+def updateKilledSounds(settings):
+    if settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
+        msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
+    elif not settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
+        msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
+        msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
+
+
+def onModSettingsChanged(settings, blockID):
     if blockID == MAIN.NAME:
-        if _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
-            msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
-        elif not _settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
-            msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
-            msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
+        updateKilledSounds(settings)
         if g_currentVehicle.intCD:
             g_currentVehicle.onChanged()
 
