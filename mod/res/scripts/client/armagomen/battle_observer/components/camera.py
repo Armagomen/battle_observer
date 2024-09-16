@@ -1,129 +1,19 @@
 import math
 from collections import namedtuple
 
+import ResMgr
+
 import TriggersManager
-from account_helpers.settings_core.options import SniperZoomSetting
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import callback, getPlayer, isReplay, overrideMethod
-from AvatarInputHandler.DynamicCameras.ArcadeCamera import ArcadeCamera
-from AvatarInputHandler.DynamicCameras.ArtyCamera import ArtyCamera
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
-from AvatarInputHandler.DynamicCameras.StrategicCamera import StrategicCamera
-from debug_utils import LOG_CURRENT_EXCEPTION
-from gui.battle_control.avatar_getter import getOwnVehiclePosition
+from cgf_components.attack_artillery_fort_components import ISettingsCore
+from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosition
+from helpers import dependency
 from PlayerEvents import g_playerEvents
-
-DEFAULT_X_METERS = 20.0
-settingsCache = {SNIPER.DYN_ZOOM: False, SNIPER.METERS: DEFAULT_X_METERS, SNIPER.STEPS_ONLY: False}
-MinMax = namedtuple('MinMax', ('min', 'max'))
-camCache = {}
-
-
-@overrideMethod(SniperCamera, "_readConfigs")
-def sniper_readConfigs(base, camera, data):
-    camera._baseCfg.clear()
-    camera._userCfg.clear()
-    camera._cfg.clear()
-    base(camera, data)
-    if not user_settings.zoom[GLOBAL.ENABLED] or isReplay():
-        return
-    if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC] and camera.isCameraDynamic():
-        camera.enableDynamicCamera(False)
-    if user_settings.zoom[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED]:
-        user_steps = user_settings.zoom[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
-        steps = sorted(x for x in user_steps if x >= SNIPER.MIN_ZOOM)
-        if len(steps) > 3:
-            for cfg in (camera._cfg, camera._userCfg, camera._baseCfg):
-                cfg[SNIPER.INCREASED_ZOOM] = True
-                cfg[SNIPER.ZOOMS] = steps
-            exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
-            while len(steps) > len(exposure):
-                exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
-    if settingsCache[SNIPER.DYN_ZOOM]:
-        camera.setSniperZoomSettings(-1)
-
-
-@overrideMethod(SniperZoomSetting, "setSystemValue")
-def setSystemValue(base, zoomSettings, value):
-    return base(zoomSettings, GLOBAL.ZERO if settingsCache[SNIPER.DYN_ZOOM] else value)
-
-
-def getZoom(distance, steps):
-    zoom = math.floor(distance / DEFAULT_X_METERS)
-    if settingsCache[SNIPER.STEPS_ONLY]:
-        zoom = min(steps, key=lambda value: abs(value - zoom))
-    if zoom < SNIPER.MIN_ZOOM:
-        return SNIPER.MIN_ZOOM
-    return zoom
-
-
-@overrideMethod(SniperCamera, "enable")
-def enable(base, camera, targetPos, saveZoom):
-    if settingsCache[SNIPER.DYN_ZOOM]:
-        saveZoom = True
-        ownPosition = getOwnVehiclePosition()
-        distance = (targetPos - ownPosition).length if ownPosition is not None else GLOBAL.ZERO
-        if distance > SNIPER.MAX_DIST:
-            distance = GLOBAL.ZERO
-        camera._cfg[SNIPER.ZOOM] = getZoom(distance, camera._cfg[SNIPER.ZOOMS])
-    return base(camera, targetPos, saveZoom)
-
-
-@overrideMethod(ArcadeCamera, "_readConfigs")
-@overrideMethod(StrategicCamera, "_readConfigs")
-@overrideMethod(ArtyCamera, "_readConfigs")
-def reload_configs(base, camera, dataSection):
-    try:
-        if camCache.setdefault(camera.__class__.__name__, True):
-            camera._baseCfg.clear()
-            camera._userCfg.clear()
-            camera._cfg.clear()
-            camCache[camera.__class__.__name__] = False
-    except Exception:
-        LOG_CURRENT_EXCEPTION()
-    finally:
-        return base(camera, dataSection)
-
-
-@overrideMethod(ArcadeCamera, "_readBaseCfg")
-@overrideMethod(ArcadeCamera, "_readUserCfg")
-def arcade_readConfigs(base, camera, *args, **kwargs):
-    base(camera, *args, **kwargs)
-    if user_settings.arcade_camera[GLOBAL.ENABLED]:
-        if base.__name__ == "_readBaseCfg":
-            cfg = camera._baseCfg
-            cfg[ARCADE.DIST_RANGE] = MinMax(user_settings.arcade_camera[ARCADE.MIN],
-                                            user_settings.arcade_camera[ARCADE.MAX])
-            cfg[ARCADE.SCROLL_SENSITIVITY] = user_settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
-        elif base.__name__ == "_readUserCfg":
-            cfg = camera._userCfg
-            cfg[ARCADE.START_DIST] = user_settings.arcade_camera[ARCADE.START_DEAD_DIST]
-
-
-@overrideMethod(ArcadeCamera, "_updateProperties")
-def arcade_updateProperties(base, camera, state=None):
-    try:
-        if user_settings.arcade_camera[GLOBAL.ENABLED] and state is not None:
-            distRange = MinMax(user_settings.arcade_camera[ARCADE.MIN], user_settings.arcade_camera[ARCADE.MAX])
-            scrollSensitivity = user_settings.arcade_camera[ARCADE.SCROLL_SENSITIVITY]
-            state = state._replace(distRange=distRange, scrollSensitivity=scrollSensitivity)
-    except Exception:
-        LOG_CURRENT_EXCEPTION()
-    finally:
-        return base(camera, state=state)
-
-
-@overrideMethod(StrategicCamera, "_readBaseCfg")
-@overrideMethod(ArtyCamera, "_readBaseCfg")
-def arty_readConfigs(base, camera, *args, **kwargs):
-    base(camera, *args, **kwargs)
-    if user_settings.strategic_camera[GLOBAL.ENABLED]:
-        cfg = camera._baseCfg
-        cfg[STRATEGIC.DIST_RANGE] = (
-            user_settings.strategic_camera[STRATEGIC.MIN], user_settings.strategic_camera[STRATEGIC.MAX])
-        cfg[STRATEGIC.SCROLL_SENSITIVITY] = user_settings.strategic_camera[ARCADE.SCROLL_SENSITIVITY]
+from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
 
 class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
@@ -180,28 +70,152 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
                                                curVehicleID=self.avatar.playerVehicleID)
 
 
-after_shoot = ChangeCameraModeAfterShoot()
+class CameraSettings(object):
+
+    def __init__(self):
+        self.enabled = False
+        self.config = None
+
+    @staticmethod
+    def getCamera(camera_name):
+        input_handler = getInputHandler()
+        if input_handler is not None and input_handler.ctrls:
+            return input_handler.ctrls[camera_name].camera
+        return None
 
 
-def onModSettingsChanged(config, blockID):
-    if blockID in (ARCADE.NAME, STRATEGIC.NAME):
-        for cam in camCache:
-            camCache[cam] = True
-    elif blockID == SNIPER.NAME:
-        if not config[GLOBAL.ENABLED] or isReplay():
+class Arcade(CameraSettings):
+
+    def __init__(self):
+        super(Arcade, self).__init__()
+        self.config = user_settings.arcade_camera
+
+    def update(self):
+        camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
+        if camera is None:
             return
-        settingsCache[SNIPER.DYN_ZOOM] = config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED]
-        settingsCache[SNIPER.STEPS_ONLY] = config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY]
-        after_shoot.updateSettings(config)
+        if self.enabled != self.config[GLOBAL.ENABLED]:
+            self.enabled = self.config[GLOBAL.ENABLED]
+            if self.enabled:
+                MinMax = namedtuple('MinMax', ('min', 'max'))
+                camera._cfg['distRange'] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
+                camera._cfg['scrollSensitivity'] = self.config[ARCADE.SCROLL_SENSITIVITY]
+                camera._cfg['startDist'] = self.config[ARCADE.START_DEAD_DIST]
+            else:
+                ResMgr.purge('gui/avatar_input_handler.xml')
+                cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/arcadeMode/camera/')
+                camera._reloadConfigs(cameraSec)
+            camera._updateProperties(state=None)
 
 
-user_settings.onModSettingsChanged += onModSettingsChanged
+class Strategic(CameraSettings):
+    def __init__(self):
+        super(Strategic, self).__init__()
+        self.config = user_settings.strategic_camera
 
-onModSettingsChanged(user_settings.arcade_camera, ARCADE.NAME)
-onModSettingsChanged(user_settings.strategic_camera, STRATEGIC.NAME)
-onModSettingsChanged(user_settings.zoom, SNIPER.NAME)
+    def update(self):
+        strategic = self.getCamera(CTRL_MODE_NAME.STRATEGIC)
+        arty = self.getCamera(CTRL_MODE_NAME.ARTY)
+        if strategic is None or arty is None:
+            return
+        if self.enabled != self.config[GLOBAL.ENABLED]:
+            self.enabled = self.config[GLOBAL.ENABLED]
+            if self.enabled:
+                for camera in (strategic, arty):
+                    camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
+                    camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
+            else:
+                ResMgr.purge('gui/avatar_input_handler.xml')
+                cameraSec_strategic = ResMgr.openSection('gui/avatar_input_handler.xml/strategicMode/camera/')
+                cameraSec_arty = ResMgr.openSection('gui/avatar_input_handler.xml/artyMode/camera/')
+                strategic._reloadConfigs(cameraSec_strategic)
+                arty._reloadConfigs(cameraSec_arty)
+
+
+class Sniper(CameraSettings):
+    settingsCore = dependency.descriptor(ISettingsCore)
+    DEFAULT_X_METERS = 20.0
+    _SNIPER_ZOOM_LEVEL = None
+
+    def __init__(self):
+        super(Sniper, self).__init__()
+        self.config = user_settings.zoom
+        self._dyn_zoom = False
+        self._steps_only = False
+        self._steps_enabled = False
+        self.after_shoot = ChangeCameraModeAfterShoot()
+        overrideMethod(SniperCamera, "enable")(self.enable)
+
+    def update(self):
+        if isReplay():
+            return
+        self.after_shoot.updateSettings(self.config)
+        self.enabled = self.config[GLOBAL.ENABLED]
+        self._dyn_zoom = self.config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED] and self.enabled
+        self._steps_only = self.config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY] and self._dyn_zoom
+        camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
+        if camera is None:
+            return
+        if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]:
+            camera.enableDynamicCamera(False)
+        else:
+            camera.enableDynamicCamera(self.settingsCore.getSetting('dynamicCamera'))
+        if self._dyn_zoom:
+            self._SNIPER_ZOOM_LEVEL = int(camera._SNIPER_ZOOM_LEVEL)
+            camera.setSniperZoomSettings(-1)
+        elif self._SNIPER_ZOOM_LEVEL is not None:
+            camera.setSniperZoomSettings(self._SNIPER_ZOOM_LEVEL)
+        steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
+        if self._steps_enabled != steps_enabled:
+            self._steps_enabled = steps_enabled
+            if self._steps_enabled:
+                user_steps = self.config[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
+                steps = sorted(x for x in user_steps if x >= SNIPER.MIN_ZOOM)
+                if len(steps) > 3:
+                    camera._cfg[SNIPER.INCREASED_ZOOM] = True
+                    camera._cfg[SNIPER.ZOOMS] = steps
+                    exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
+                    while len(steps) > len(exposure):
+                        exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
+            else:
+                ResMgr.purge('gui/avatar_input_handler.xml')
+                cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/sniperMode/camera/')
+                camera._reloadConfigs(cameraSec)
+
+    def getZoom(self, distance, steps):
+        zoom = math.floor(distance / self.DEFAULT_X_METERS)
+        if self._steps_only:
+            zoom = min(steps, key=lambda value: abs(value - zoom))
+        if zoom < SNIPER.MIN_ZOOM:
+            return SNIPER.MIN_ZOOM
+        return zoom
+
+    def enable(self, base, camera, targetPos, saveZoom):
+        if self._dyn_zoom:
+            saveZoom = True
+            ownPosition = getOwnVehiclePosition()
+            distance = (targetPos - ownPosition).length if ownPosition is not None else GLOBAL.ZERO
+            if distance > SNIPER.MAX_DIST:
+                distance = GLOBAL.ZERO
+            camera._cfg[SNIPER.ZOOM] = self.getZoom(distance, camera._cfg[SNIPER.ZOOMS])
+        return base(camera, targetPos, saveZoom)
+
+
+class CameraManager(object):
+    appLoader = dependency.descriptor(IAppLoader)
+
+    def __init__(self):
+        self.appLoader.onGUISpaceEntered += self.updateCameras
+        self.__modes = {Arcade(), Sniper(), Strategic()}
+
+    def updateCameras(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
+            for mode in self.__modes:
+                mode.update()
+
+
+camera = CameraManager()
 
 
 def fini():
-    global onModSettingsChanged
-    user_settings.onModSettingsChanged -= onModSettingsChanged
+    camera.appLoader.onGUISpaceBeforeEnter -= camera.updateCameras

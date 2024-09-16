@@ -8,6 +8,7 @@ from AvatarInputHandler.control_modes import PostMortemControlMode
 def enablePostMortem(base, mode, **kwargs):
     if POSTMORTEM.PARAMS in kwargs:
         kwargs[POSTMORTEM.PARAMS] = (mode.camera.angles, user_settings.arcade_camera[ARCADE.START_DEAD_DIST])
-    kwargs[POSTMORTEM.CAM_MATRIX] = mode.camera.camera.matrix
     kwargs.setdefault(POSTMORTEM.DURATION, 2.0)
+    kwargs.setdefault("keepCameraSettings", True)
+    kwargs.setdefault("distanceFromFocus", user_settings.arcade_camera[ARCADE.START_DEAD_DIST])
     return base(mode, **kwargs)
