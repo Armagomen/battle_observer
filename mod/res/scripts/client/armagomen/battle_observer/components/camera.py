@@ -123,7 +123,7 @@ class Strategic(CameraSettings):
             if self.enabled:
                 for camera in (strategic, arty):
                     camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
-                    camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
+                    camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
             else:
                 ResMgr.purge('gui/avatar_input_handler.xml')
                 cameraSec_strategic = ResMgr.openSection('gui/avatar_input_handler.xml/strategicMode/camera/')
