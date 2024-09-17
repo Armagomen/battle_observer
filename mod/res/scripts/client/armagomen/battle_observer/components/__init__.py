@@ -19,7 +19,6 @@ def loadComponents():
         'friends',
         'hangar_efficiency',
         'minimap_plugins',
-        'postmortem',
         'premium_time',
         'replace_vehicle_info',
         'save_shot_lite',

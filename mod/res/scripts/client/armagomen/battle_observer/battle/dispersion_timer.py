@@ -1,7 +1,7 @@
 from collections import defaultdict
 from math import ceil, log
 
-from armagomen._constants import DISPERSION_TIMER, GLOBAL, POSTMORTEM
+from armagomen._constants import DISPERSION_TIMER, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
@@ -40,7 +40,7 @@ class DispersionTimer(DispersionTimerMeta):
         super(DispersionTimer, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
-        self.isPostmortem = ctrlMode in POSTMORTEM.MODES
+        self.isPostmortem = ctrlMode in POSTMORTEM_MODES
         if self.isPostmortem:
             self.min_angle = GLOBAL.F_ONE
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)

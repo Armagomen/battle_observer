@@ -3,11 +3,13 @@ from collections import namedtuple
 
 import ResMgr
 
+import math_utils
 import TriggersManager
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import callback, getPlayer, isReplay, overrideMethod
+from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from cgf_components.attack_artillery_fort_components import ISettingsCore
 from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosition
@@ -15,6 +17,7 @@ from helpers import dependency
 from PlayerEvents import g_playerEvents
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
+MinMax = namedtuple('MinMax', ('min', 'max'))
 
 class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
@@ -77,10 +80,10 @@ class CameraSettings(object):
         self.config = None
 
     @staticmethod
-    def getCamera(camera_name):
+    def getCamera(control_mode_name):
         input_handler = getInputHandler()
         if input_handler is not None and input_handler.ctrls:
-            return input_handler.ctrls[camera_name].camera
+            return input_handler.ctrls[control_mode_name].camera
         return None
 
 
@@ -89,21 +92,29 @@ class Arcade(CameraSettings):
     def __init__(self):
         super(Arcade, self).__init__()
         self.config = user_settings.arcade_camera
+        overrideMethod(PostMortemControlMode, "enable")(self.enablePostMortem)
 
     def update(self):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
         if camera is None:
             return
         if self.config[GLOBAL.ENABLED]:
-            MinMax = namedtuple('MinMax', ('min', 'max'))
             camera._cfg['distRange'] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
             camera._cfg['scrollSensitivity'] = self.config[ARCADE.SCROLL_SENSITIVITY]
             camera._cfg['startDist'] = self.config[ARCADE.START_DEAD_DIST]
+            camera._cfg['startAngle'] = -0.4
         else:
             ResMgr.purge('gui/avatar_input_handler.xml')
             cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/arcadeMode/camera/')
             camera._reloadConfigs(cameraSec)
         camera._updateProperties(state=None)
+
+    def enablePostMortem(self, base, mode, **kwargs):
+        if self.config[GLOBAL.ENABLED]:
+            if 'postmortemParams' in kwargs:
+                kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
+                kwargs.setdefault('transitionDuration', 1.0)
+        return base(mode, **kwargs)
 
 
 class Strategic(CameraSettings):
@@ -140,6 +151,7 @@ class Sniper(CameraSettings):
         self._steps_only = False
         self._steps_enabled = False
         self.after_shoot = ChangeCameraModeAfterShoot()
+        self.min_max = None
         overrideMethod(SniperCamera, "enable")(self.enable)
 
     def update(self):
@@ -177,14 +189,13 @@ class Sniper(CameraSettings):
                 ResMgr.purge('gui/avatar_input_handler.xml')
                 cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/sniperMode/camera/')
                 camera._reloadConfigs(cameraSec)
+        self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
 
     def getZoom(self, distance, steps):
         zoom = math.floor(distance / self.DEFAULT_X_METERS)
         if self._steps_only:
             zoom = min(steps, key=lambda value: abs(value - zoom))
-        if zoom < SNIPER.MIN_ZOOM:
-            return SNIPER.MIN_ZOOM
-        return zoom
+        return math_utils.clamp(self.min_max.min, self.min_max.max, zoom)
 
     def enable(self, base, camera, targetPos, saveZoom):
         if self._dyn_zoom:

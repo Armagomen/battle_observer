@@ -1,7 +1,7 @@
 # coding=utf-8
 from collections import defaultdict
 
-from armagomen._constants import ARMOR_CALC, COLORS, GLOBAL, POSTMORTEM
+from armagomen._constants import ARMOR_CALC, COLORS, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
@@ -48,7 +48,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.settings[ARMOR_CALC.MESSAGES].get(color, GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
-        if ctrlMode in POSTMORTEM.MODES:
+        if ctrlMode in POSTMORTEM_MODES:
             self.as_armorCalcS(GLOBAL.EMPTY_LINE)
 
     def onArmorChanged(self, armor, piercingPower, caliber, ricochet, noDamage):

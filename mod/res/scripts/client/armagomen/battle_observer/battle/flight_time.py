@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen._constants import FLIGHT_TIME, GLOBAL, POSTMORTEM
+from armagomen._constants import FLIGHT_TIME, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 from armagomen.utils.common import getPlayer
 from gui.battle_control import avatar_getter
@@ -34,7 +34,7 @@ class FlightTime(FlightTimeMeta):
         super(FlightTime, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
-        if ctrlMode in POSTMORTEM.MODES:
+        if ctrlMode in POSTMORTEM_MODES:
             self.as_flightTimeS(GLOBAL.EMPTY_LINE)
 
     def __onGunMarkerStateChanged(self, markerType, position, *args, **kwargs):

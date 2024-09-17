@@ -208,12 +208,8 @@ ARCADE = namedtuple("ARCADE", (
 
 STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
     "strategic_camera", "min", "max", "distRange", "scrollSensitivity")
-POSTMORTEM = namedtuple("POSTMORTEM", ("DURATION", "PARAMS", "CAM_MATRIX", "MODES"))(
-    "transitionDuration", "postmortemParams", "camMatrix", {CTRL_MODE_NAME.KILL_CAM,
-                                                            CTRL_MODE_NAME.POSTMORTEM,
-                                                            CTRL_MODE_NAME.DEATH_FREE_CAM,
-                                                            CTRL_MODE_NAME.RESPAWN_DEATH,
-                                                            CTRL_MODE_NAME.VEHICLES_SELECTION})
+POSTMORTEM_MODES = {CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
+                    CTRL_MODE_NAME.RESPAWN_DEATH, CTRL_MODE_NAME.VEHICLES_SELECTION, CTRL_MODE_NAME.LOOK_AT_KILLER}
 
 __MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config. {}</font>".format(key) for key in
                        set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}

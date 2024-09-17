@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen._constants import DISTANCE, GLOBAL, POSTMORTEM
+from armagomen._constants import DISTANCE, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
 from armagomen.utils.logging import logDebug
 from armagomen.utils.timers import CyclicTimerEvent
@@ -90,7 +90,7 @@ class Distance(DistanceMeta):
         self.as_setDistanceS(self.settings[DISTANCE.TEMPLATE] % self.macrosDict)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
-        self.isPostmortem = ctrlMode in POSTMORTEM.MODES
+        self.isPostmortem = ctrlMode in POSTMORTEM_MODES
         if self.isPostmortem:
             if self.timeEvent is not None:
                 self.timeEvent.stop()

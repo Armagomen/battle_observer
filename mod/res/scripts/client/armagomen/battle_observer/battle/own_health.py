@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from armagomen._constants import GLOBAL, POSTMORTEM
+from armagomen._constants import GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.utils.common import percentToRGB
 from constants import ARENA_PERIOD
@@ -65,7 +65,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             self._updateHealth(value)
 
     def onCameraChanged(self, ctrlMode, *_, **__):
-        self.isAliveMode = ctrlMode not in POSTMORTEM.MODES
+        self.isAliveMode = ctrlMode not in POSTMORTEM_MODES
         self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
 
     def getAVGColor(self, percent=1.0):
