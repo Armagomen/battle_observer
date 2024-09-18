@@ -61,9 +61,7 @@ class SaveShootLite(object):
     @staticmethod
     def checkTarget(avatar):
         if avatar.target is not None and isinstance(avatar.target, Vehicle):
-            if avatar.target.isAlive():
-                return avatar.target.publicInfo[VEHICLE.TEAM] != avatar.team
-            return False
+            return avatar.target.isAlive() and avatar.target.publicInfo[VEHICLE.TEAM] != avatar.team
         return True
 
     def keyEvent(self, isKeyDown):

@@ -222,6 +222,8 @@ def updateIgnoredVehicles(vehicles):
     writeJsonFile(path, {"vehicles": sorted(vehicles)})
 
 
+overrides = {}
+
 def overrideMethod(wg_class, method_name="__init__"):
     """
     wg_class: class object
@@ -239,10 +241,8 @@ def overrideMethod(wg_class, method_name="__init__"):
     def outer(new_method):
         old_method = getattr(wg_class, method_name, None)
         if old_method is not None and callable(old_method):
-            def override(*args, **kwargs):
-                return new_method(old_method, *args, **kwargs)
-
-            setattr(wg_class, method_name, override)
+            overrides[method_name] = (wg_class, old_method)
+            setattr(wg_class, method_name, lambda *args, **kwargs: new_method(old_method, *args, **kwargs))
         else:
             logError("overrideMethod error: {} in {} is not callable or undefined in {}", method_name, class_name,
                      new_method.__name__)
@@ -250,6 +250,12 @@ def overrideMethod(wg_class, method_name="__init__"):
 
     return outer
 
+
+def cancelOverrideMethod(method_name):
+    if method_name in overrides:
+        wg_class, old_method = overrides[method_name]
+        setattr(wg_class, method_name, old_method)
+        del overrides[method_name]
 
 def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)

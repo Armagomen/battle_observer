@@ -51,7 +51,8 @@ def getAvgData():
 
 def onModSettingsChanged(config, blockID):
     if blockID == AVG_EFFICIENCY_HANGAR.NAME:
-        g_currentVehicle.onChanged()
+        if g_currentVehicle.intCD:
+            g_currentVehicle.onChanged()
 
 
 user_settings.onModSettingsChanged += onModSettingsChanged
