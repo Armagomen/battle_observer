@@ -14,15 +14,15 @@ from PlayerEvents import g_playerEvents
 class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
     def __init__(self):
         super(OwnHealth, self).__init__()
-        self.isAliveMode = True
-        self.isBattlePeriod = False
-        self.__maxHealth = GLOBAL.ZERO
-        self.__template = "{} • {:.2%}"
+        self.is_alive_mode = True
+        self.is_battle_period = False
+        self.max_health = GLOBAL.ZERO
+        self.template = "{} • {:.2%}"
 
     def updateVehicleParams(self, vehicle, *args):
-        if self.__maxHealth != vehicle.descriptor.maxHealth:
-            self.__maxHealth = vehicle.descriptor.maxHealth
-            self._updateHealth(self.__maxHealth)
+        if self.max_health != vehicle.descriptor.maxHealth:
+            self.max_health = vehicle.descriptor.maxHealth
+            self._updateHealth(self.max_health)
 
     def _populate(self):
         super(OwnHealth, self)._populate()
@@ -36,13 +36,13 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
-            self.isBattlePeriod = arena.period == ARENA_PERIOD.BATTLE
-            self.isAliveMode = self.getVehicleInfo().isAlive()
-            self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
+            self.is_battle_period = arena.period == ARENA_PERIOD.BATTLE
+            self.is_alive_mode = self.getVehicleInfo().isAlive()
+            self.as_BarVisibleS(self.is_battle_period and self.is_alive_mode)
 
     def onArenaPeriodChange(self, period, *args):
-        self.isBattlePeriod = period == ARENA_PERIOD.BATTLE
-        self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
+        self.is_battle_period = period == ARENA_PERIOD.BATTLE
+        self.as_BarVisibleS(self.is_battle_period and self.is_alive_mode)
 
     def _dispose(self):
         handler = avatar_getter.getInputHandler()
@@ -56,8 +56,8 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         super(OwnHealth, self)._dispose()
 
     def __onVehicleControlling(self, vehicle):
-        if self.__maxHealth != vehicle.maxHealth:
-            self.__maxHealth = vehicle.maxHealth
+        if self.max_health != vehicle.maxHealth:
+            self.max_health = vehicle.maxHealth
         self._updateHealth(vehicle.health)
 
     def __onVehicleStateUpdated(self, state, value):
@@ -65,17 +65,17 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             self._updateHealth(value)
 
     def onCameraChanged(self, ctrlMode, *_, **__):
-        self.isAliveMode = ctrlMode not in POSTMORTEM_MODES
-        self.as_BarVisibleS(self.isBattlePeriod and self.isAliveMode)
+        self.is_alive_mode = ctrlMode not in POSTMORTEM_MODES
+        self.as_BarVisibleS(self.is_battle_period and self.is_alive_mode)
 
     def getAVGColor(self, percent=1.0):
         return percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR])
 
     def _updateHealth(self, health):
-        if health > self.__maxHealth:
-            self.__maxHealth = health
-        if self.__maxHealth <= GLOBAL.ZERO:
+        if health > self.max_health:
+            self.max_health = health
+        if self.max_health <= GLOBAL.ZERO:
             return
-        percent = getHealthPercent(health, self.__maxHealth)
-        text = self.__template.format(int(normalizeHealth(health)), percent)
+        percent = getHealthPercent(health, self.max_health)
+        text = self.template.format(int(normalizeHealth(health)), percent)
         self.as_setOwnHealthS(percent, text, self.getAVGColor(percent))

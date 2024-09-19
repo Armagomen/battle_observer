@@ -204,9 +204,9 @@ def getUpdatePath():
 def cleanupObserverUpdates():
     root = getUpdatePath()
     for filename in os.listdir(root):
-        filePath = os.path.join(root, filename)
-        if os.path.isfile(filePath):
-            os.unlink(filePath)
+        path = os.path.join(root, filename)
+        if os.path.isfile(path):
+            os.unlink(path)
 
 
 def openIgnoredVehicles():

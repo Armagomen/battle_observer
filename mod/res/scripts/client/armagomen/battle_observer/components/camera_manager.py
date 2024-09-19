@@ -54,7 +54,7 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
             callback(max(self.latency, 0), self.changeControlMode)
 
     def changeControlMode(self):
-        if self.avatar is None:
+        if self.avatar is None or self.avatar.isObserver():
             return
         input_handler = self.avatar.inputHandler
         if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
@@ -77,7 +77,6 @@ class CameraSettings(object):
 
     def __init__(self):
         self.enabled = False
-        self.config = None
 
     @staticmethod
     def getCamera(control_mode_name):
@@ -113,7 +112,7 @@ class Arcade(CameraSettings):
         if self.config[GLOBAL.ENABLED]:
             if 'postmortemParams' in kwargs:
                 kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
-                kwargs.setdefault('transitionDuration', 1.0)
+                kwargs.setdefault('transitionDuration', 2.0)
         return base(mode, **kwargs)
 
 
@@ -151,12 +150,10 @@ class Sniper(CameraSettings):
         self._steps_only = False
         self._steps_enabled = False
         self.after_shoot = ChangeCameraModeAfterShoot()
-        self.min_max = None
+        self.min_max = MinMax(2, 25)
         overrideMethod(SniperCamera, "enable")(self.enable)
 
     def update(self):
-        if isReplay():
-            return
         self.after_shoot.updateSettings(self.config)
         self.enabled = self.config[GLOBAL.ENABLED]
         self._dyn_zoom = self.config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED] and self.enabled
@@ -173,6 +170,7 @@ class Sniper(CameraSettings):
             camera.setSniperZoomSettings(-1)
         elif self._SNIPER_ZOOM_LEVEL is not None:
             camera.setSniperZoomSettings(self._SNIPER_ZOOM_LEVEL)
+            self._SNIPER_ZOOM_LEVEL = None
         steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
         if self._steps_enabled != steps_enabled:
             self._steps_enabled = steps_enabled
@@ -216,7 +214,7 @@ class CameraManager(object):
         self.__modes = {Arcade(), Sniper(), Strategic()}
 
     def updateCameras(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
+        if spaceID == GuiGlobalSpaceID.BATTLE_LOADING and not isReplay():
             for mode in self.__modes:
                 mode.update()
 
