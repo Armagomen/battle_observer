@@ -79,7 +79,7 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
                     self._statistics.regionError()
                 else:
                     self._statistics.setFeedback(flashObject.as_BattleObserverUpdateStatisticData)
-                    self._statistics.getStatisticsDataFromServer()
+                    self._statistics.getStatisticsDataFromServer(self.isComp7Battle())
         callback(30.0, flashObject.as_BattleObserverUpdateDamageLogPosition)
 
 

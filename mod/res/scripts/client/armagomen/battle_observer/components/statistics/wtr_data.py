@@ -30,11 +30,14 @@ class WTRStatistics(object):
             if not value:
                 continue
             vehicle_id = arenaDP.getVehIDByAccDBID(int(accountDBID))
+            if vehicle_id in self.itemsData:
+                continue
             veh_info = arenaDP.getVehicleInfo(vehicle_id)
             item_data = self.buildItemData(veh_info.player.clanAbbrev, value)
             full, cut = self.getPattern(veh_info.team != player_team, item_data)
             text_color = item_data[self.COLOR_WTR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
+        return self.itemsData
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

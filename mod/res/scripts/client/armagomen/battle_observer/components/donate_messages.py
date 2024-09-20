@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from random import choice
 
 from armagomen._constants import getLogo, IMG, URLS
-from armagomen.utils.common import fetchURL, openWebBrowser, overrideMethod
+from armagomen.utils.common import fetchURL, isReplay, openWebBrowser, overrideMethod
 from armagomen.utils.logging import logDebug, logInfo
 from constants import AUTH_REALM
 from gui.clans.clan_cache import g_clanCache
@@ -98,7 +98,7 @@ class Donate(object):
                 self.show_clan_invite = False
 
 
-if AUTH_REALM == "EU":
+if AUTH_REALM == "EU" and not isReplay():
     from threading import Thread
 
     donate = Thread(target=Donate, name="Battle_observer_Donate")

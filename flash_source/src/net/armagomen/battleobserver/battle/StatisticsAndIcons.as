@@ -147,7 +147,7 @@ package net.armagomen.battleobserver.battle
 					this.updateFullstats(vehicleID, isEnemy);
 				}
 				
-				if (this.battleLoading && this.battleLoading.visible)
+				if (this.battleLoading && this.battleLoading.visible && !this.isComp7Battle)
 				{
 					this.updateBattleloading(vehicleID, isEnemy);
 				}
@@ -163,10 +163,10 @@ package net.armagomen.battleobserver.battle
 			}
 			if (this.iconsEnabled && holder.data)
 			{
-				var tColor:ColorTransform = holder.statsItem._vehicleIcon.transform.colorTransform;
+				var tColor:ColorTransform = holder.statsItem.vehicleIcon.transform.colorTransform;
 				tColor.color = this.iconColors[holder.data.vehicleType];
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
+				holder.statsItem.vehicleIcon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsData && this.statisticsData[vehicleID])
 			{
@@ -194,7 +194,7 @@ package net.armagomen.battleobserver.battle
 			{
 				return;
 			}
-			if (!this.isComp7Battle && this.iconsEnabled && holder.model)
+			if (this.iconsEnabled && holder.model)
 			{
 				var tColor:ColorTransform = holder._vehicleIcon.transform.colorTransform;
 				tColor.color = this.iconColors[holder.model.vehicleType];
@@ -207,7 +207,7 @@ package net.armagomen.battleobserver.battle
 				{
 					holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
 				}
-				if (!this.isComp7Battle && this.statisticsData[vehicleID].vehicleTextColor)
+				if (this.statisticsData[vehicleID].vehicleTextColor)
 				{
 					holder._vehicleField.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
 				}
