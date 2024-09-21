@@ -15,10 +15,10 @@ package net.armagomen.battleobserver.battle
 		private var battleLoading:*                 = null;
 		private var fullStats:*                     = null;
 		private var panels:*                        = null;
-		private var isComp7Battle:Boolean			= false;
+		private var isComp7Battle:Boolean           = false;
 		
 		private var iconColors:Object               = {};
-		private var statisticsData:Object           = null;
+		private var statisticsData:Object           = {};
 		private var iconsEnabled:Boolean            = false;
 		private var iconMultiplier:Number           = -1.25;
 		private var cutWidth:Number                 = 60.0;
@@ -43,7 +43,8 @@ package net.armagomen.battleobserver.battle
 		
 		public function onDispose():void
 		{
-			if (this.panels.hasEventListener(Event.CHANGE)){
+			if (this.panels.hasEventListener(Event.CHANGE))
+			{
 				this.panels.removeEventListener(Event.CHANGE, this.onChange);
 				this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onCountChange);
 			}
@@ -54,7 +55,10 @@ package net.armagomen.battleobserver.battle
 		
 		public function update_wtrdata(statsData:Object):void
 		{
-			this.statisticsData = statsData;
+			for (var key:String in statsData)
+			{
+				this.statisticsData[key] = statsData[key];
+			}
 		}
 		
 		private function onCountChange(eve:Event):void
@@ -121,7 +125,7 @@ package net.armagomen.battleobserver.battle
 					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
 				var vehicleID:int = holder.vehicleData.vehicleID;
-				if (this.statisticsData && this.statisticsData[vehicleID])
+				if (this.statisticsData[vehicleID])
 				{
 					if (this.statisticsData[vehicleID].vehicleTextColor)
 					{
@@ -168,7 +172,7 @@ package net.armagomen.battleobserver.battle
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder.statsItem.vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsData && this.statisticsData[vehicleID])
+			if (this.statisticsData[vehicleID])
 			{
 				if (this.statisticsData[vehicleID].fullName)
 				{
@@ -201,7 +205,7 @@ package net.armagomen.battleobserver.battle
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				holder._vehicleIcon.transform.colorTransform = tColor;
 			}
-			if (this.statisticsData && this.statisticsData[vehicleID])
+			if (this.statisticsData[vehicleID])
 			{
 				if (this.statisticsData[vehicleID].fullName)
 				{

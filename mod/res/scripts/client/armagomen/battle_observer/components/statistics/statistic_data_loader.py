@@ -35,8 +35,8 @@ class StatisticsDataLoader(object):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
             data = response_data.get("data", {})
-            items_data = self.__wtrData.updateAllItems(self.sessionProvider.getArenaDP(), data)
             logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
+            items_data = self.__wtrData.updateAllItems(self.sessionProvider.getArenaDP(), data)
             if self.__feedback is not None:
                 self.__feedback(items_data)
         else:
