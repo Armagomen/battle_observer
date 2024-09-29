@@ -5,7 +5,7 @@ from random import choice
 
 from armagomen._constants import getLogo, IMG, URLS
 from armagomen.utils.common import fetchURL, isReplay, openWebBrowser, overrideMethod
-from armagomen.utils.logging import logDebug, logInfo
+from armagomen.utils.logging import logDebug, logInfo, logWarning
 from constants import AUTH_REALM
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
@@ -65,6 +65,11 @@ class Donate(object):
             logDebug("Donate/onDataResponse: FINISH request clan data={}", data)
             if data:
                 self.show_clan_invite = data["500223690"]["members_count"] < 99
+        elif response.responseCode == 304:
+            return
+        else:
+            logWarning('Donate/check clan members: contentType={}, responseCode={} body={}', response.contentType,
+                       response.responseCode, response.body)
 
     def getRandomMessage(self):
         message = choice(self.messages)
@@ -72,18 +77,22 @@ class Donate(object):
             message = self.getRandomMessage()
         return message.decode('utf-8')
 
-    def getDonateMessage(self):
+    def pushDonateMessage(self):
         self.lastMessage = self.getRandomMessage()
-        return PATTERN.format(msg=self.lastMessage, **self.message_format)
+        message = PATTERN.format(msg=self.lastMessage, **self.message_format)
+        pushMessage(message, type=SM_TYPE.Warning)
+        logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
 
-    @staticmethod
-    def pushClanInviteMessage():
+    def pushClanInviteMessage(self):
+        if not self.show_clan_invite or g_clanCache.isInClan or self.ln_code != "uk":
+            return
         message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>, "
                    "отримаєш більше бонусів від гри (бустери, камуфляжі, та інше)."
                    "\nУмови на вступ: від 1000 боїв, грати 2-3 рази на тиждень."
                    "\nУ разі якщо ви не будете з'являтися онлайн протягом місяця вас буде виключено з клану."
                    "</font></p>").format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
         pushMessage(message, type=SM_TYPE.Warning)
+        self.show_clan_invite = False
 
     def pushNewMessage(self, spaceID):
         show = not g_clanCache.isInClan or "WG" not in g_clanCache.clanAbbrev
@@ -91,11 +100,8 @@ class Donate(object):
             current_time = datetime.now()
             if current_time >= self.timeDelta:
                 self.timeDelta = current_time + timedelta(hours=1)
-                pushMessage(self.getDonateMessage(), type=SM_TYPE.Warning)
-                logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
-            if self.show_clan_invite and not g_clanCache.isInClan and self.ln_code == "uk":
+                self.pushDonateMessage()
                 self.pushClanInviteMessage()
-                self.show_clan_invite = False
 
 
 if AUTH_REALM == "EU" and not isReplay():

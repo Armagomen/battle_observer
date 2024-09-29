@@ -128,6 +128,8 @@ class Updater(DownloadThread):
                     self.startDownload(new_version)
             else:
                 logInfo(LOG_MESSAGES.UPDATE_CHECKED)
+        elif response.responseCode == 304:
+            return
         else:
             logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode,
                        response.body)

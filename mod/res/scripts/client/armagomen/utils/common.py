@@ -1,3 +1,4 @@
+import inspect
 import json
 import locale
 import os
@@ -10,7 +11,7 @@ from io import open as _open
 import BigWorld
 import ResMgr
 
-from armagomen.utils.logging import logError, logInfo
+from armagomen.utils.logging import logDebug, logError, logInfo
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
@@ -224,6 +225,20 @@ def updateIgnoredVehicles(vehicles):
 
 overrides = {}
 
+
+def get_full_function_path(func):
+    module_name = func.__module__
+    func_name = func.__name__
+
+    if hasattr(func, "im_class"):
+        for cls in inspect.getmro(func.im_class):
+            if func_name in cls.__dict__:
+                class_name = cls.__name__
+                return "{}.{}.{}".format(module_name, class_name, func_name)
+
+    return "{}.{}".format(module_name, func_name)
+
+
 def overrideMethod(wg_class, method_name="__init__"):
     """
     wg_class: class object
@@ -239,13 +254,15 @@ def overrideMethod(wg_class, method_name="__init__"):
                 method_name = method_name[1:]
 
     def outer(new_method):
+        new_method_name = new_method.__name__
         old_method = getattr(wg_class, method_name, None)
         if old_method is not None and callable(old_method):
-            overrides[new_method.__name__] = (wg_class, old_method)
+            overrides[new_method_name] = (wg_class, old_method)
             setattr(wg_class, method_name, lambda *args, **kwargs: new_method(old_method, *args, **kwargs))
+            logDebug("Set override to {}.{} >> {}", class_name, method_name, get_full_function_path(new_method))
         else:
             logError("overrideMethod error: {} in {} is not callable or undefined in {}", method_name, class_name,
-                     new_method.__name__)
+                     new_method_name)
         return new_method
 
     return outer
@@ -255,7 +272,9 @@ def cancelOverrideMethod(method_name):
     if method_name in overrides:
         wg_class, old_method = overrides[method_name]
         setattr(wg_class, method_name, old_method)
+        logDebug("Remove override from {}.{} >> {}", wg_class.__name__, old_method.__name__, method_name)
         del overrides[method_name]
+
 
 def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
