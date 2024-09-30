@@ -28,20 +28,29 @@ class CrewProcessor(object):
         self.isDialogVisible = False
         g_events.onVehicleChangedDelayed += self.updateCrew
 
+        update_vehicles = False
+        for vehicle in tuple(ignored_vehicles):
+            if not isinstance(vehicle, int):
+                ignored_vehicles.discard(vehicle)
+                update_vehicles = True
+        if update_vehicles:
+            updateIgnoredVehicles(ignored_vehicles)
+        logDebug("accelerateCrewXp ignored vehicles: {}", ignored_vehicles)
+
     @staticmethod
     def getLocalizedMessage(value, description):
         dialog = localization[CREW_XP.NAME]
         return GLOBAL.NEW_LINE.join((dialog[description], dialog[CREW_XP.ENABLE if value else CREW_XP.DISABLE]))
 
     @wg_async
-    def showDialog(self, vehicle, value, description):
+    def showAccelerateDialog(self, vehicle, value, description):
         self.isDialogVisible = True
         message = self.getLocalizedMessage(value, description)
         dialog_result = yield wg_await(CrewDialog().showCrewDialog(vehicle.userName, message))
         if dialog_result.result == DialogButtons.SUBMIT:
             self.accelerateCrewXp(vehicle, value)
         elif dialog_result.result == DialogButtons.PURCHASE:
-            ignored_vehicles.add(vehicle.userName)
+            ignored_vehicles.add(vehicle.intCD)
             updateIgnoredVehicles(ignored_vehicles)
         self.isDialogVisible = False
 
@@ -70,11 +79,11 @@ class CrewProcessor(object):
             return False, CREW_XP.NED_TURN_OFF
 
     def accelerateCrewTraining(self, vehicle):
-        if vehicle.userName in ignored_vehicles or not vehicle.isElite:
+        if vehicle.intCD in ignored_vehicles or not vehicle.isElite:
             return
         acceleration, description = self.isAccelerateTraining(vehicle)
-        if vehicle.isXPToTman != acceleration and not self.isDialogVisible:
-            self.showDialog(vehicle, acceleration, description)
+        if vehicle.isXPToTman != acceleration:
+            self.showAccelerateDialog(vehicle, acceleration, description)
 
     def isCrewAvailable(self, vehicle):
         lastCrewIDs = vehicle.lastCrew
@@ -95,7 +104,7 @@ class CrewProcessor(object):
             if not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
                 self._processReturnCrew(vehicle)
             self.intCD = vehicle.intCD
-        if user_settings.main[MAIN.CREW_TRAINING]:
+        if user_settings.main[MAIN.CREW_TRAINING] and not self.isDialogVisible:
             self.accelerateCrewTraining(vehicle)
 
     @decorators.adisp_process('crewReturning')
@@ -103,7 +112,7 @@ class CrewProcessor(object):
         result = yield TankmanReturn(vehicle).request()
         if result.userMsg:
             SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType)
-            logInfo("{}: {}", vehicle.userName, result.userMsg)
+            logInfo("{}: {}", vehicle.name, result.userMsg)
 
 
 crew = Thread(target=CrewProcessor, name="Battle_observer_CrewProcessor")
