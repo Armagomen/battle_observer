@@ -1,3 +1,5 @@
+from inspect import getmro
+
 import BigWorld
 
 MOD_NAME = "BATTLE_OBSERVER"
@@ -7,7 +9,21 @@ IS_DEBUG = False
 
 def setDebug(value):
     global IS_DEBUG
-    IS_DEBUG = value
+    if IS_DEBUG != value:
+        IS_DEBUG = value
+
+
+def get_full_function_path(func):
+    module_name = func.__module__
+    func_name = func.__name__
+
+    if hasattr(func, "im_class"):
+        for cls in getmro(func.im_class):
+            if func_name in cls.__dict__:
+                class_name = cls.__name__
+                return "{}.{}.{}".format(module_name, class_name, func_name)
+
+    return "{}.{}".format(module_name, func_name)
 
 
 def _formatMessage(message, *args, **kwargs):
@@ -28,6 +44,8 @@ def logInfo(message, *args, **kwargs):
 
 def logDebug(message, *args, **kwargs):
     if IS_DEBUG:
+        if "func" in kwargs:
+            kwargs["func"] = get_full_function_path(kwargs["func"])
         BigWorld.logDebug(MOD_NAME, _formatMessage(message, *args, **kwargs), None)
 
 

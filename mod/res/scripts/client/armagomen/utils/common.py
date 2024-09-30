@@ -1,4 +1,3 @@
-import inspect
 import json
 import locale
 import os
@@ -37,17 +36,6 @@ def getTarget():
 
 def getEntity(entity_id):
     return BigWorld.entities.get(entity_id)
-
-
-# def getDistanceTo(targetPos):
-#     return getPlayer().position.distTo(targetPos)
-#
-#
-# def distanceToEntityVehicle(entityID):
-#     entity_vehicle = getEntity(entityID)
-#     if entity_vehicle is not None:
-#         return getDistanceTo(entity_vehicle.position)
-#     return 0.0
 
 
 def callback(delay, callMethod, *args, **kwargs):
@@ -226,19 +214,6 @@ def updateIgnoredVehicles(vehicles):
 overrides = {}
 
 
-def get_full_function_path(func):
-    module_name = func.__module__
-    func_name = func.__name__
-
-    if hasattr(func, "im_class"):
-        for cls in inspect.getmro(func.im_class):
-            if func_name in cls.__dict__:
-                class_name = cls.__name__
-                return "{}.{}.{}".format(module_name, class_name, func_name)
-
-    return "{}.{}".format(module_name, func_name)
-
-
 def overrideMethod(wg_class, method_name="__init__"):
     """
     wg_class: class object
@@ -259,7 +234,7 @@ def overrideMethod(wg_class, method_name="__init__"):
         if old_method is not None and callable(old_method):
             overrides[new_method_name] = (wg_class, old_method)
             setattr(wg_class, method_name, lambda *args, **kwargs: new_method(old_method, *args, **kwargs))
-            logDebug("Set override to {}.{} >> {}", class_name, method_name, get_full_function_path(new_method))
+            logDebug("Set override to {}.{} >> {func}", class_name, method_name, func=new_method)
         else:
             logError("overrideMethod error: {} in {} is not callable or undefined in {}", method_name, class_name,
                      new_method_name)
@@ -323,12 +298,3 @@ def getEncoding():
 
 ENCODING_LOCALE = getEncoding()
 ENCODING_ERRORS = "ignore"
-
-# MOD_PACKS = []
-
-
-# def isDonateMessageEnabled():
-#     for mod_pack in MOD_PACKS:
-#         if os.path.exists(os.path.join(cwd, mod_pack)):
-#             return False
-#     return True

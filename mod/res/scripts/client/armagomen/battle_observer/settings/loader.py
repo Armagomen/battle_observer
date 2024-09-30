@@ -46,9 +46,11 @@ class SettingsLoader(object):
         path = os.path.join(currentConfigPath, 'load.json')
         writeJsonFile(path, {'loadConfig': configName})
 
-    def updateConfigFile(self, fileName, _settings):
+    def updateConfigFile(self, fileName, data):
         path = os.path.join(currentConfigPath, self.configName, JSON.format(fileName))
-        writeJsonFile(path, _settings)
+        writeJsonFile(path, data)
+        if fileName == MAIN.NAME:
+            setDebug(data[DEBUG])
 
     @staticmethod
     def isNotEqualLen(data1, data2):
@@ -120,7 +122,6 @@ class SettingsLoader(object):
             self.__settings.onModSettingsChanged(internal_cfg, part_name)
             if part_name == MAIN.NAME:
                 setDebug(internal_cfg[DEBUG])
-
 
     def onGUISpaceEntered(self, spaceID):
         if self.errorMessages:
