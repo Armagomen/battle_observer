@@ -33,7 +33,7 @@ class SaveShootLite(object):
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
     def shoot(self, base, avatar, isRepeat=False):
-        if not self.enabled or self.unlock or self.checkTarget(avatar):
+        if isRepeat or not self.enabled or self.unlock or self.checkTarget(avatar):
             return base(avatar, isRepeat=isRepeat)
         vehicle_info = self.sessionProvider.getArenaDP().getVehicleInfo(avatar.target.id)
         message = LOCKED_MESSAGE.format(vehicle_info.vehicleType.shortName)

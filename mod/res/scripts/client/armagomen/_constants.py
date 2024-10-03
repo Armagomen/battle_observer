@@ -141,12 +141,12 @@ CLOCK = namedtuple("CLOCK", (
     "<textformat tabstops='[135]'>%d %b %Y<tab>%H:%M:%S</textformat>")
 
 __Sniper = namedtuple("SNIPER", (
-    "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "METERS", "ZOOMS", "ZOOM_EXPOSURE",
+    "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "ZOOMS", "ZOOM_EXPOSURE",
     "INCREASED_ZOOM", "DEFAULT_STEPS", "EXPOSURE_FACTOR", "MAX_CALIBER", "MAX_DIST", "DISABLE_SNIPER",
     "DISABLE_LATENCY", "SKIP_CLIP", "CLIP", "MIN_ZOOM"))
 SNIPER = __Sniper(
-    "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zoomXMeters", "zooms",
-    "zoomExposure", "increasedZoom", [float(x) for x in xrange(2, 32, 2)], 0.1, 60, 700.0,
+    "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zooms", "zoomExposure",
+    "increasedZoom", [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0], 0.1, 60, 700.0,
     "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip", 2.0)
 
 

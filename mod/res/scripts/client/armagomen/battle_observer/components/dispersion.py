@@ -1,7 +1,7 @@
 import aih_constants
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import getPlayer, overrideMethod
+from armagomen.utils.common import getPlayer, isReplay, overrideMethod
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import BattleReplay, g_replayCtrl
 from constants import SERVER_TICK_LENGTH
@@ -65,12 +65,8 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
         self._size *= self.__scaleConfig
         dispersionAngle = self._gunRotator.dispersionAngle * self.__scaleConfig
         isServerAim = self._gunMarkerType == SERVER
-        if g_replayCtrl.isPlaying and g_replayCtrl.isClientReady:
-            d, s = g_replayCtrl.getSPGGunMarkerParams()
-            if d != -1 and s != -1:
-                dispersionAngle = d
-        elif g_replayCtrl.isRecording and (g_replayCtrl.isServerAim and isServerAim or not isServerAim):
-            g_replayCtrl.setSPGGunMarkerParams(dispersionAngle, GLOBAL.ZERO)
+        if g_replayCtrl.isRecording and (g_replayCtrl.isServerAim and isServerAim or not isServerAim):
+            g_replayCtrl.setSPGGunMarkerParams(dispersionAngle, 0.0)
         self._dataProvider.setupConicDispersion(dispersionAngle)
 
 
@@ -133,7 +129,7 @@ class DispersionCircle(object):
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION.NAME:
-            self.enabled = config[GLOBAL.ENABLED] and not g_replayCtrl.isPlaying
+            self.enabled = config[GLOBAL.ENABLED] and not isReplay()
             if self.enabled:
                 self.server = config[DISPERSION.SERVER]
             else:

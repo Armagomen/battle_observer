@@ -148,7 +148,6 @@ class Sniper(CameraSettings):
         self.config = user_settings.zoom
         self._dyn_zoom = False
         self._steps_only = False
-        self._steps_enabled = False
         self.after_shoot = ChangeCameraModeAfterShoot()
         self.min_max = MinMax(2, 25)
         overrideMethod(SniperCamera, "enable")(self.enable)
@@ -171,22 +170,17 @@ class Sniper(CameraSettings):
         elif self._SNIPER_ZOOM_LEVEL is not None:
             camera.setSniperZoomSettings(self._SNIPER_ZOOM_LEVEL)
             self._SNIPER_ZOOM_LEVEL = None
-        steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
-        if self._steps_enabled != steps_enabled:
-            self._steps_enabled = steps_enabled
-            if self._steps_enabled:
-                user_steps = self.config[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
-                steps = sorted(x for x in user_steps if x >= SNIPER.MIN_ZOOM)
-                if len(steps) > 3:
-                    camera._cfg[SNIPER.INCREASED_ZOOM] = True
-                    camera._cfg[SNIPER.ZOOMS] = steps
-                    exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
-                    while len(steps) > len(exposure):
-                        exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
-            else:
-                ResMgr.purge('gui/avatar_input_handler.xml')
-                cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/sniperMode/camera/')
-                camera._reloadConfigs(cameraSec)
+        if self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled:
+            steps = self.config[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
+            camera._cfg[SNIPER.INCREASED_ZOOM] = True
+            camera._cfg[SNIPER.ZOOMS] = steps
+            exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
+            while len(steps) > len(exposure):
+                exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
+        else:
+            ResMgr.purge('gui/avatar_input_handler.xml')
+            cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/sniperMode/camera/')
+            camera._reloadConfigs(cameraSec)
         self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
 
     def getZoom(self, distance, steps):

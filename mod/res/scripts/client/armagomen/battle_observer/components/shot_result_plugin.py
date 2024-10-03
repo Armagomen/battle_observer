@@ -25,13 +25,12 @@ class _ShotResult(object):
         return False if onAlly else entity.publicInfo['team'] == player.team
 
     @classmethod
-    def getShotResult(cls, hitPoint, collision, direction, piercingMultiplier, onAlly):
+    def getShotResult(cls, hitPoint, collision, direction, piercingMultiplier, onAlly, player):
         if collision is None:
             return UNDEFINED_RESULT
         entity = collision.entity
         if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive():
             return UNDEFINED_RESULT
-        player = getPlayer()
         if player is None or cls.isAlly(entity, player, onAlly):
             return UNDEFINED_RESULT
         c_details = _CrosshairShotResults._getAllCollisionDetails(hitPoint, direction, entity)
@@ -109,10 +108,12 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
         self.__onAlly = bool(user_settings.armor_calculator[ARMOR_CALC.ON_ALLY])
+        self.__player = getPlayer()
 
     def __updateColor(self, markerType, hitPoint, collision, direction):
         shot_result, armor, piercing_power, caliber, ricochet, no_damage = \
-            _ShotResult.getShotResult(hitPoint, collision, direction, self.__piercingMultiplier, self.__onAlly)
+            _ShotResult.getShotResult(hitPoint, collision, direction, self.__piercingMultiplier, self.__onAlly,
+                                      self.__player)
         if shot_result in self.__colors:
             color = self.__colors[shot_result]
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):

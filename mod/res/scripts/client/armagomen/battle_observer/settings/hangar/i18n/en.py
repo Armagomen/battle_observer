@@ -247,8 +247,6 @@ localization = {
         "dynamic_zoom*enabled": "Automatic selection of the zoom ratio when switching to sniper mode.",
         "dynamic_zoom*steps_only": "Move only in fixed steps.",
         "dynamic_zoom*enabled_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
-        "dynamic_zoom*zoomXMeters_tooltip": "(dynamic_zoom = distance / Sensitivity of approach)<br>"
-                                            "The default is every 17 meters + 1 (the smaller the number, the more zoom",
         "zoomSteps*enabled": "Enable Steps of zoom.",
         "zoomSteps*steps": "Steps of zoom.",
         "zoomSteps*steps_tooltip": "You can write any number of commas and spaces or just a comma."
