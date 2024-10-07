@@ -234,10 +234,9 @@ def overrideMethod(wg_class, method_name="__init__"):
         if old_method is not None and callable(old_method):
             overrides[new_method_name] = (wg_class, old_method)
             setattr(wg_class, method_name, lambda *args, **kwargs: new_method(old_method, *args, **kwargs))
-            logDebug("Set override to {}.{} >> {func}", class_name, method_name, func=new_method)
+            logDebug("overrideMethod: Set override to {}.{} >> {func}", class_name, method_name, func=new_method)
         else:
-            logError("overrideMethod error: {} in {} is not callable or undefined in {}", method_name, class_name,
-                     new_method_name)
+            logError("overrideMethod: {} has not attr {}, or not callable", class_name, method_name)
         return new_method
 
     return outer

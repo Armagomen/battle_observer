@@ -3,7 +3,7 @@ from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import getPlayer, isReplay, overrideMethod
 from AvatarInputHandler import gun_marker_ctrl
-from BattleReplay import BattleReplay, g_replayCtrl
+from BattleReplay import g_replayCtrl
 from constants import SERVER_TICK_LENGTH
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
@@ -86,18 +86,13 @@ class DispersionCircle(object):
         overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPosition)
         overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onServerGunMarkerStateChanged)
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
-        overrideMethod(BattleReplay, "setUseServerAim")(self.replaySetUseServerAim)
-        self.onModSettingsChanged(user_settings.dispersion_circle, DISPERSION.NAME)
-
-    def replaySetUseServerAim(self, base, replay, enabled):
-        return base(replay, False if self.server else enabled)
 
     def createOverrideComponents(self, base, *args):
         if not self.server:
             return base(*args)
-        player = getPlayer()
-        player.enableServerAim(True)
         if len(args) == 2:
+            player = getPlayer()
+            player.enableServerAim(True)
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
 
@@ -151,6 +146,7 @@ class DispersionCircle(object):
 
 
 dispersion_circle = DispersionCircle()
+dispersion_circle.onModSettingsChanged(user_settings.dispersion_circle, DISPERSION.NAME)
 
 
 def fini():
