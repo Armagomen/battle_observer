@@ -115,9 +115,9 @@ Name: service_channel_filter/Selling; Description: {cm:service_channel_Selling};
 Name: service_channel_filter/autoMaintenance; Description: {cm:service_channel_autoMaintenance}; Types: armagomen saxon_ua;
 Name: service_channel_filter/customizationChanged; Description: {cm:service_channel_customizationChanged}; Types: armagomen saxon_ua;
 Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning;
-Name: statistics/icon_enabled; Description: {cm:statistics_icons}; Types: armagomen saxon_ua;
-Name: statistics/statistics_change_vehicle_name_color; Description: {cm:statistics_names_color};  Types: armagomen saxon_ua;
-Name: statistics/statistics_enabled; Description: {cm:statistics_enabled}; Types: armagomen saxon_ua;
+Name: statistics/icons; Description: {cm:statistics_icons}; Types: armagomen saxon_ua;
+Name: statistics/statistics_vehicle_name_color; Description: {cm:statistics_names_color};  Types: armagomen saxon_ua;
+Name: statistics/statistics; Description: {cm:statistics}; Types: armagomen saxon_ua;
 Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
 Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning;
 Name: wg_logs/wg_log_hide_assist; Description: {cm:wg_logs_assist};
@@ -421,9 +421,9 @@ begin
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('statistics'));
-    JSON_SetBool(Handle,'/icon_enabled', WizardIsComponentSelected('statistics/icon_enabled'));
-    JSON_SetBool(Handle,'/statistics_change_vehicle_name_color', WizardIsComponentSelected('statistics/statistics_change_vehicle_name_color'));
-    JSON_SetBool(Handle,'/statistics_enabled', WizardIsComponentSelected('statistics/statistics_enabled'));
+    JSON_SetBool(Handle,'/icons', WizardIsComponentSelected('statistics/icons'));
+    JSON_SetBool(Handle,'/statistics_vehicle_name_color', WizardIsComponentSelected('statistics/statistics_vehicle_name_color'));
+    JSON_SetBool(Handle,'/statistics', WizardIsComponentSelected('statistics/statistics'));
     JSON_Close(Handle);
   end;
 end;

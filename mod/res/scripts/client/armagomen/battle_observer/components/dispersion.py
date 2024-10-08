@@ -90,9 +90,9 @@ class DispersionCircle(object):
     def createOverrideComponents(self, base, *args):
         if not self.server:
             return base(*args)
+        player = getPlayer()
+        player.enableServerAim(True)
         if len(args) == 2:
-            player = getPlayer()
-            player.enableServerAim(True)
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
 

@@ -2,7 +2,8 @@ from collections import defaultdict
 
 from armagomen._constants import DISTANCE, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
-from armagomen.utils.logging import logDebug
+from armagomen.utils.common import getPlayer
+from armagomen.utils.logging import logDebug, logInfo
 from armagomen.utils.timers import CyclicTimerEvent
 from constants import ARENA_PERIOD, ARENA_PERIOD_NAMES
 from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler
@@ -16,6 +17,7 @@ class Distance(DistanceMeta):
         super(Distance, self).__init__()
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
         self.timeEvent = None
+        self.player = None
         self.isPostmortem = False
         self.vehicles = {}
 
@@ -35,6 +37,12 @@ class Distance(DistanceMeta):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleKilled += self.onVehicleMarkerRemoved
+            # arena.onPositionsUpdated += self.__arena_onPositionsUpdated
+
+    def __arena_onPositionsUpdated(self):
+        positions = self._arenaVisitor.getArenaPositions()
+        for vehicleID, position in positions.iteritems():
+            logInfo("{} : {}", position, self._arenaDP.getVehicleInfo(vehicleID))
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -54,16 +62,20 @@ class Distance(DistanceMeta):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleKilled -= self.onVehicleMarkerRemoved
+            # arena.onPositionsUpdated -= self.__arena_onPositionsUpdated
         super(Distance, self)._dispose()
 
     def onArenaPeriodChange(self, period, *args):
         if period == ARENA_PERIOD.BATTLE and self.timeEvent is None:
-            self.timeEvent = CyclicTimerEvent(0.5, self.updateDistance)
+            self.timeEvent = CyclicTimerEvent(0.2, self.updateDistance)
+            self.player = getPlayer()
             self.timeEvent.start()
+            logDebug("Distance: onArenaPeriodChange: timeEvent.start() {}", ARENA_PERIOD_NAMES[period])
         elif self.timeEvent is not None:
             self.timeEvent.stop()
+            self.player = None
             self.timeEvent = None
-        logDebug("Distance: onArenaPeriodChange: {}", ARENA_PERIOD_NAMES[period])
+            logDebug("Distance: onArenaPeriodChange: self.timeEvent.stop() {}", ARENA_PERIOD_NAMES[period])
 
     def onVehicleMarkerAdded(self, vProxy, vInfo, guiProps):
         if self.isPostmortem:
@@ -79,7 +91,7 @@ class Distance(DistanceMeta):
         distance = None
         vehicle_name = None
         for entity in self.vehicles.itervalues():
-            dist = getDistanceToTarget(entity)
+            dist = getDistanceToTarget(entity, self.player)
             if distance is None or dist < distance:
                 distance = dist
                 vehicle_name = entity.typeDescriptor.type.shortUserString

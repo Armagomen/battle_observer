@@ -3,7 +3,7 @@ import BigWorld
 from armagomen._constants import DAMAGE_LOG, GLOBAL
 from armagomen.battle_observer.components.controllers import squad_controller
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import overrideMethod
+from armagomen.utils.common import overrideMethod, xvmInstalled
 from BattleReplay import g_replayCtrl
 from constants import ATTACK_REASONS, SPECIAL_VEHICLE_HEALTH
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE as _ETYPE
@@ -81,6 +81,8 @@ onModSettingsChanged(user_settings.wg_logs, DAMAGE_LOG.WG_LOGS_FIX)
 # squad damage fix
 @overrideMethod(VehicleMarkerPlugin, "_updateVehicleHealth")
 def _updateVehicleHealth(base, plugin, vehicleID, handle, newHealth, aInfo, attackReasonID):
+    if xvmInstalled:
+        return base(plugin, vehicleID, handle, newHealth, aInfo, attackReasonID)
     if newHealth < 0 and not SPECIAL_VEHICLE_HEALTH.IS_AMMO_BAY_DESTROYED(newHealth):
         newHealth = 0
     if g_replayCtrl.isPlaying and g_replayCtrl.isTimeWarpInProgress:

@@ -85,20 +85,26 @@ localization = {
     },
     "statistics": {
         "header": "WTR (WGR) Player Statistics | Tank icons",
-        "statistics_enabled": "Enable player statistics WTR rating",
-        "statistics_change_vehicle_name_color": "Change the color of the tank name in the ears to the color "
-                                                "of the statistics",
-        "statistics_enabled_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
+        "statistics": "Enable player statistics WTR rating",
+        "statistics_vehicle_name_color": "Change the color of the tank name in the ears to the color "
+                                         "of the statistics",
+        "statistics_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
                                       "For more fine-tuning see the statistics.json file."
                                       " Available macro names: WTR, colorWTR, winRate, nickname, battles, clanTag",
-        "icon_enabled": "Repaint tank icons in the colors of vehicle classes",
-        "icon_enabled_tooltip": "This function repaints any vehicle icons in the ears, taboo window, on the loading "
+        "statistics_colors*very_bad": "very bad",
+        "statistics_colors*bad": "bad",
+        "statistics_colors*normal": "normal",
+        "statistics_colors*good": "good",
+        "statistics_colors*very_good": "very good",
+        "statistics_colors*unique": "unique",
+        "icons": "Repaint tank icons in the colors of vehicle classes",
+        "icons_tooltip": "This function repaints any vehicle icons in the ears, taboo window, on the loading "
                                 "screen in the color of vehicle classes.<br>"
                                 "Filter strength affects brightness.<br>Recommended filter strength -1.25",
-        "icon_blackout": "Filter strength (brightness)",
+        "icons_blackout": "Filter strength (brightness)",
 
-        "panels_full_width": "Player Name Field Width - Big Ears",
-        "panels_cut_width": "Player Name Field Width - Small Ears"
+        "statistics_panels_full_width": "Player Name Field Width - Big Ears",
+        "statistics_panels_cut_width": "Player Name Field Width - Small Ears"
     },
     "dispersion_circle": {
         "header": "Setting the collapsing circle, server sight",

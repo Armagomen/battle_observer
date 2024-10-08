@@ -279,11 +279,11 @@ STATISTICS = namedtuple("STATISTICS", (
     "CUT_LEFT", "CUT_RIGHT",
     "COLORS", "ICON_ENABLED", "ICON_BLACKOUT",
     "PANELS_FULL_WIDTH", "PANELS_CUT_WIDTH"))(
-    "statistics", "statistics_enabled", "statistics_change_vehicle_name_color",
+    "statistics", "statistics", "statistics_vehicle_name_color",
     "statistics_pattern_full_left", "statistics_pattern_full_right",
     "statistics_pattern_cut_left", "statistics_pattern_cut_right",
-    "statistics_colors", "icon_enabled", "icon_blackout",
-    "panels_full_width", "panels_cut_width"
+    "statistics_colors", "icons", "icons_blackout",
+    "statistics_panels_full_width", "statistics_panels_cut_width"
 )
 
 
@@ -395,8 +395,11 @@ class CONFIG_INTERFACE:
             SIXTH_SENSE.DEFAULT: (SIXTH_SENSE.ICON_NAME,)
         },
         STATISTICS.NAME: {
-            STATISTICS.STATISTIC_ENABLED: (STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH,
-                                           STATISTICS.CHANGE_VEHICLE_COLOR),
+            STATISTICS.STATISTIC_ENABLED: (
+                STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH, STATISTICS.CHANGE_VEHICLE_COLOR,
+                "statistics_colors*bad", "statistics_colors*normal", "statistics_colors*good",
+                "statistics_colors*very_good", "statistics_colors*unique", "statistics_colors*very_bad"
+            ),
             STATISTICS.ICON_ENABLED: (STATISTICS.ICON_BLACKOUT,)
         }
     }
