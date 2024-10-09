@@ -351,8 +351,8 @@ class UserSettings(object):
                 "unique": "#D042F3",
                 "very_bad": "#FE0E00",
             },
-            STATISTICS.icons: False,
-            STATISTICS.icons_blackout: -1.25,
+            STATISTICS.ICON_ENABLED: False,
+            STATISTICS.ICON_BLACKOUT: -1.25,
         }
 
 

@@ -206,9 +206,9 @@ class CreateElement(Getter):
         elif val_type == int:
             return self.createStepper(blockID, key, -2000, 2000, GLOBAL.ONE, value)
         elif val_type == float:
-            if DISPERSION.SCALE in key:
+            if blockID == DISPERSION.NAME and DISPERSION.SCALE == key:
                 return self.createSlider(blockID, key, 0.3, 1.0, 0.01, value)
-            if STATISTICS.ICON_BLACKOUT in key:
+            elif blockID == STATISTICS.NAME and STATISTICS.ICON_BLACKOUT == key:
                 return self.createStepper(blockID, key, -2.0, 2.0, 0.01, value)
             elif GLOBAL.ZERO <= value <= GLOBAL.F_ONE:
                 return self.createStepper(blockID, key, GLOBAL.ZERO, 2.0, 0.01, value)

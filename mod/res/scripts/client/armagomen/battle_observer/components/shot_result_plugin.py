@@ -38,7 +38,13 @@ class _ShotResult(object):
             return UNDEFINED_RESULT
         shot = player.getVehicleDescriptor().shot
         shell = shot.shell
-        full_piercing_power = cls.getFullPiercingPower(hitPoint, piercingMultiplier, shot, player)
+        distance = player.position.flatDistTo(hitPoint)
+        if shot.shell.kind in FULL_PP_RANGE:
+            full_piercing_power = shot.piercingPower[0] * piercingMultiplier
+        else:
+            full_piercing_power = _CrosshairShotResults._computePiercingPowerAtDist(shot.piercingPower, distance,
+                                                                                    shot.maxDistance,
+                                                                                    piercingMultiplier)
         is_modern = cls.isModernMechanics(shell)
         armor, piercing_power, ricochet, no_damage = cls.computeArmor(c_details, shell, full_piercing_power, is_modern)
         if no_damage or ricochet:
@@ -54,19 +60,6 @@ class _ShotResult(object):
         if is_modern:
             piercing_power = full_piercing_power
         return shot_result, armor, piercing_power, shell.caliber, ricochet, no_damage
-
-    @staticmethod
-    def getFullPiercingPower(hitPoint, piercingMultiplier, shot, player):
-        p100, p500 = (pp * piercingMultiplier for pp in shot.piercingPower)
-        if shot.shell.kind in FULL_PP_RANGE:
-            return p100
-        else:
-            distance = hitPoint.distTo(player.position)
-            if distance <= _MIN_PIERCING_DIST:
-                return p100
-            elif distance < shot.maxDistance:
-                return p100 - (p100 - p500) * (distance - _MIN_PIERCING_DIST) / _LERP_RANGE_PIERCING_DIST
-            return p500
 
     @staticmethod
     def isModernMechanics(shell):
