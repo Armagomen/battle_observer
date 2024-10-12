@@ -88,6 +88,8 @@ class AutoClaimClanReward(object):
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - Failed to claim Progression.",
                                        type=SystemMessages.SM_TYPE.Error)
             logWarning('Failed to claim Progression. Code: {code}', code=response.getCode())
+        elif stageID == 20:
+            self.__claimProgression(21, 0)
 
     def parseQuests(self, data):
         if not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):
@@ -104,14 +106,14 @@ class AutoClaimClanReward(object):
     def parseProgression(self, data):
         if not self.__cachedSettingsData.enabled:
             return
-        last_purchased = int(data.last_purchased or 0)
         to_purchased = 0
         if self.isMaximumPurchased(data):
             for stateID, stageProgress in sorted(data.points.items(), key=lambda i: int(i[0])):
                 if stageProgress.status == PointStatus.AVAILABLE:
-                    to_purchased = stateID
+                    to_purchased = int(stateID)
                     break
         else:
+            last_purchased = int(data.last_purchased or 0)
             to_purchased = last_purchased + 1 if last_purchased not in NEXT_DOUBLE else last_purchased + 2
         if not to_purchased:
             return
