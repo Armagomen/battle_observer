@@ -325,8 +325,9 @@ CREW_XP = namedtuple("CREW_XP", (
 EXCLUDED_MAPS = namedtuple("EXCLUDED_MAPS", ("NAME", "HEADER", "MESSAGE"))("excludedMaps", "header", "message")
 
 AVG_EFFICIENCY_HANGAR = namedtuple("AVG_EFFICIENCY_HANGAR", (
-    "NAME", "DAMAGE", "ASSIST", "BLOCKED", "STUN", "MARKS_ON_GUN", "WIN_RATE"
-))("avg_efficiency_in_hangar", "avg_damage", "avg_assist", "avg_blocked", "avg_stun", "gun_marks", "win_rate")
+    "NAME", "DAMAGE", "ASSIST", "BLOCKED", "STUN", "MARKS_ON_GUN", "WIN_RATE", "BATTLES"
+))("avg_efficiency_in_hangar", "avg_damage", "avg_assist", "avg_blocked", "avg_stun", "gun_marks", "win_rate",
+   "battles")
 
 # Settings Loader List
 LOAD_LIST = (

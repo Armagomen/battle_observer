@@ -54,6 +54,7 @@ class UserSettings(object):
             AVG_EFFICIENCY_HANGAR.STUN: True,
             AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN: True,
             AVG_EFFICIENCY_HANGAR.WIN_RATE: True,
+            AVG_EFFICIENCY_HANGAR.BATTLES: True
         }
         self.clock = {
             GLOBAL.ENABLED: False,

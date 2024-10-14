@@ -65,7 +65,8 @@ Name: avg_efficiency_in_hangar/avg_blocked; Description: {cm:avg_efficiency_in_h
 Name: avg_efficiency_in_hangar/avg_assist; Description: {cm:avg_efficiency_in_hangar_assist}; Types: armagomen saxon_ua;
 Name: avg_efficiency_in_hangar/avg_stun; Description: {cm:avg_efficiency_in_hangar_stun}; Types: armagomen saxon_ua;
 Name: avg_efficiency_in_hangar/win_rate; Description: {cm:avg_efficiency_in_hangar_win_rate}; Types: armagomen saxon_ua;
-Name: avg_efficiency_in_hangar/gun_marks; Description: {cm:avg_efficiency_in_hangar_gun_marks}; Types: armagomen saxon_ua; 
+Name: avg_efficiency_in_hangar/gun_marks; Description: {cm:avg_efficiency_in_hangar_gun_marks}; Types: armagomen saxon_ua;
+Name: avg_efficiency_in_hangar/battles; Description: {cm:avg_efficiency_in_hangar_battles};
 Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: armagomen;
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning;
@@ -220,7 +221,7 @@ begin
   end;
 end;
 
-procedure ChangeDispersioCircleJsonValues();
+procedure ChangeDispersionCircleJsonValues();
 var
   Handle: Integer;
 begin
@@ -301,7 +302,7 @@ begin
   end;
 end;
 
-procedure ChangeEffiencyJsonValues();
+procedure ChangeEfficiencyJsonValues();
 var
   Handle: Integer;
 begin
@@ -315,6 +316,7 @@ begin
     JSON_SetBool(Handle,'/avg_stun', WizardIsComponentSelected('avg_efficiency_in_hangar/avg_stun'));
     JSON_SetBool(Handle,'/gun_marks', WizardIsComponentSelected('avg_efficiency_in_hangar/gun_marks'));
     JSON_SetBool(Handle,'/win_rate', WizardIsComponentSelected('avg_efficiency_in_hangar/win_rate'));
+    JSON_SetBool(Handle,'/battles', WizardIsComponentSelected('avg_efficiency_in_hangar/battles'));
     JSON_Close(Handle);
   end;
 end;
@@ -560,11 +562,11 @@ begin
       ChangeBattleTimerJsonValues();
       ChangeClockJsonValues();
       ChangeDebugPanelJsonValues();
-      ChangeDispersioCircleJsonValues();
+      ChangeDispersionCircleJsonValues();
       ChangeDispersionTimerJsonValues();
       ChangeDistanceToEnemyJsonValues();
       ChangeEffectsJsonValues();
-      ChangeEffiencyJsonValues();
+      ChangeEfficiencyJsonValues();
       ChangeExtendedLogsJsonValues();
       ChangeFlightTimeJsonValues();
       ChangeHpBarsJsonValues();

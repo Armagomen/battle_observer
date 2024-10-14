@@ -78,8 +78,7 @@ class AutoClaimClanReward(object):
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - " + backport.text(
                 R.strings.clan_supply.messages.claimRewards.error()), type=SystemMessages.SM_TYPE.Error)
             logWarning('Failed to claim rewards. Code: {code}', code=response.getCode())
-        else:
-            self.__claim_started = False
+        self.__claim_started = False
 
     @adisp_process
     def __claimProgression(self, stageID, price):

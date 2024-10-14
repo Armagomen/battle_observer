@@ -24,6 +24,7 @@ EFFICIENCY_ICONS = {
     "winRateIcon": "<img src='{}/efficiency/wins.png' {}>".format(IMAGE_DIR, EFFICIENCY_ICONS_SIZE),
     "stunIcon": "<img src='{}/efficiency/stun.png' {}>".format(IMAGE_DIR, EFFICIENCY_ICONS_SIZE),
     "spottedIcon": "<img src='{}/efficiency/detection.png' {}>".format(IMAGE_DIR, EFFICIENCY_ICONS_SIZE),
+    "battlesIcon": "<img src='{}/efficiency/battles.png' {}>".format(IMAGE_DIR, EFFICIENCY_ICONS_SIZE),
 }
 
 
@@ -38,6 +39,8 @@ def getAvgData():
         text.append("{blockedIcon}{blocked}")
     if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
         text.append("{stunIcon}{stun}")
+    if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.BATTLES]:
+        text.append("{battlesIcon}{battles}")
     if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.WIN_RATE]:
         text.append("{winRateIcon}{winRate}%")
     if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:

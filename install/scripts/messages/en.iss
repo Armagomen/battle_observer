@@ -84,6 +84,7 @@ en.avg_efficiency_in_hangar_assist=Show average damage done with your help
 en.avg_efficiency_in_hangar_stun=Show average damage to targets whose crews you have stunned (self-propelled guns)
 en.avg_efficiency_in_hangar_gun_marks=Show mark percentage
 en.avg_efficiency_in_hangar_win_rate=Show win percentage
+en.avg_efficiency_in_hangar_battles=Show battles count
 
 en.battle_timer=Changed battle timer
 en.dispersion_timer=Dispersion timer
