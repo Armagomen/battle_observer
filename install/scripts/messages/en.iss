@@ -61,18 +61,17 @@ en.hp_normal=Classic style
 en.debug_panel=Changed FPS/PING panel
 
 //dispersion_circle
-en.dispersion_circle=Dispersion Circle Settings (Reduction and Server Sight)
-en.dispersion_circle_replace=Reduce dispersion circle by 70%
-en.dispersion_circle_server=Engage server crosshairs and reduce server collation circle by 70%
-
+en.dispersion_circle=Dispersion Circle Settings: Reducing Size and Adding Server Reticle.
+en.dispersion_circle_replace=Replace the main circle with the reduced one.
+en.dispersion_circle_server=Add a 70% reduced server reticle.
 
 //sixth_sense
 en.sixth_sense=The sixth sense with a timer, after installation, select the desired image in the settings.
 en.playTickSound=Play timer sound
 
-
 en.arcade_camera=Commander's camera - zoomed out
 en.strategic_camera=Artillery camera - increased distance
+
 en.armor_calculator=Calculator of listed armor
 en.armor_calculator_display_on_allies=Also activate on allies
 
@@ -103,11 +102,11 @@ en.flight_time_spg=Only when playing on art
 //log_extended
 en.log_extended=Extended damage history
 en.log_extended_top=Extended damage history
-en.log_extended_bottom=Extended damage history
+en.log_extended_bottom=Extended damage history received
 en.log_extended_reverse=Add events to history from above
 
 en.log_total=Total efficiency log
-en.main_gun=Main caliber
+en.main_gun=Main Caliber
 en.main_gun_progress=Show graphics
 
 //minimap
@@ -116,13 +115,13 @@ en.minimap_permanent=Show destroyed on the map always
 en.minimap_radius=Allow view radius greater than 445m
 en.minimap_names=Display names of destroyed tanks
 en.minimap_limits=Display horizontal guidance angles on all vehicles where possible
-en.minimap_zoom=Zoom the minimap to the center by pressing ALT
+en.minimap_zoom=Increase map size to center upon pressing ALT
 
 en.own_health=The health of the player's tank
 
 //players_panels
 en.players_panels=Panels with a list of commands (ears)
-en.players_panels_spotted=Move and whiten spotlights
+en.players_panels_spotted=Move and increase visibility indicators
 en.players_panels_bars=Player strength panels
 en.players_panels_bars_class=Paint the panels in the colors of the equipment classes
 en.players_panels_on_key=Show panels only when ALT is pressed
@@ -169,5 +168,5 @@ en.zoom=Sniper mode settings
 en.zoom_disable_cam=Disable sniper mode immediately after shooting
 en.zoom_dynamic_zoom=Select zoom factor automatically
 en.zoom_steps_only=Only by fixed steps
-en.zoom_zoomSteps=Replace zoom multiplicity with (2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30)
+en.zoom_zoomSteps=Replace zoom multiplicity with (2, 4, 8, 12, 16, 20, 24, 28, 32)
 

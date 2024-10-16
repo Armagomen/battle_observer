@@ -6,7 +6,7 @@ for /f "tokens=3 delims=<>" %%a in (
 ) do set "ModVersion=%%a"
 
 set sources=.\mod
-set GameVersion=1.26.0.2
+set GameVersion=1.26.1.0
 set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
 set OutputDir=..\output_data
 
@@ -34,4 +34,4 @@ Xcopy %OutputDir% %GameInstalled_ModsDir% /e /i /d
 
 DEL /s /q *.pyc
 
-REM exit
+exit

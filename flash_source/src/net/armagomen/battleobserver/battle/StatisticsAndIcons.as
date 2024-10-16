@@ -167,10 +167,10 @@ package net.armagomen.battleobserver.battle
 			}
 			if (this.iconsEnabled && holder.data)
 			{
-				var tColor:ColorTransform = holder.statsItem.vehicleIcon.transform.colorTransform;
+				var tColor:ColorTransform = holder.statsItem._vehicleIcon.transform.colorTransform;
 				tColor.color = this.iconColors[holder.data.vehicleType];
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				holder.statsItem.vehicleIcon.transform.colorTransform = tColor;
+				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
 			}
 			if (this.statisticsData[vehicleID])
 			{

@@ -1,5 +1,5 @@
 from armagomen._constants import BATTLE_PAGES, LOBBY_ALIASES
-from armagomen.battle_observer.components.controllers import damage_controller, squad_controller
+from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
 from armagomen.battle_observer.components.statistics.statistic_data_loader import StatisticsDataLoader
 from armagomen.battle_observer.view.view_settings import ViewSettings
@@ -29,7 +29,6 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         super(ViewHandlerBattle, self).init()
         self.setComponents()
         damage_controller.start()
-        squad_controller.start()
 
     def fini(self):
         if self._minimap is not None:
@@ -38,7 +37,6 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         self._statistics = None
         self._clear()
         damage_controller.stop()
-        squad_controller.stop()
         super(ViewHandlerBattle, self).fini()
 
     def eventListener(self, event):

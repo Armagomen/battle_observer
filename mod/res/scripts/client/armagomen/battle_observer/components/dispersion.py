@@ -108,9 +108,8 @@ class DispersionCircle(object):
         if not self.server:
             return
         m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
-        endPos, direction, diameter, idealDiameter, dualAccDiameter, dualAccIdealDiameter, collData = m_position
-        size = (diameter, idealDiameter)
-        rotator._avatar.inputHandler.updateServerGunMarker(endPos, direction, size, SERVER_TICK_LENGTH, collData)
+        mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
+        rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH, collData)
 
     def onServerGunMarkerStateChanged(self, base, *args, **kwargs):
         return None if self.server else base(*args, **kwargs)

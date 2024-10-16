@@ -48,13 +48,13 @@ class UserSettings(object):
         }
         self.avg_efficiency_in_hangar = {
             GLOBAL.ENABLED: False,
-            AVG_EFFICIENCY_HANGAR.DAMAGE: True,
             AVG_EFFICIENCY_HANGAR.ASSIST: True,
+            AVG_EFFICIENCY_HANGAR.BATTLES: True,
             AVG_EFFICIENCY_HANGAR.BLOCKED: True,
-            AVG_EFFICIENCY_HANGAR.STUN: True,
+            AVG_EFFICIENCY_HANGAR.DAMAGE: True,
             AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN: True,
+            AVG_EFFICIENCY_HANGAR.STUN: True,
             AVG_EFFICIENCY_HANGAR.WIN_RATE: True,
-            AVG_EFFICIENCY_HANGAR.BATTLES: True
         }
         self.clock = {
             GLOBAL.ENABLED: False,
