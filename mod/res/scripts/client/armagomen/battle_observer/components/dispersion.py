@@ -31,6 +31,8 @@ LINKAGES = {
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
+aih_constants.GUN_MARKER_MIN_SIZE = 12.0
+aih_constants.SPG_GUN_MARKER_MIN_SIZE = 25.0
 
 def getSetting(gunMakerType):
     if gunMakerType == CLIENT:
@@ -122,14 +124,7 @@ class DispersionCircle(object):
     def onModSettingsChanged(self, config, blockID):
         if blockID == DISPERSION.NAME:
             self.enabled = config[GLOBAL.ENABLED] and not isReplay()
-            if self.enabled:
-                aih_constants.GUN_MARKER_MIN_SIZE = 12.0
-                aih_constants.SPG_GUN_MARKER_MIN_SIZE = 25.0
-                self.server = config[DISPERSION.SERVER]
-            else:
-                aih_constants.GUN_MARKER_MIN_SIZE = 32.0
-                aih_constants.SPG_GUN_MARKER_MIN_SIZE = 50.0
-                self.server = False
+            self.server = config[DISPERSION.SERVER] and self.enabled
 
     def createGunMarker(self, baseCreateGunMarker, isStrategic):
         if not self.enabled:
