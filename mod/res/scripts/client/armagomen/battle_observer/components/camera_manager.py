@@ -176,7 +176,7 @@ class Sniper(CameraSettings):
             camera._cfg[SNIPER.ZOOMS] = steps
             exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
             while len(steps) > len(exposure):
-                exposure.insert(GLOBAL.FIRST, exposure[GLOBAL.ZERO] + SNIPER.EXPOSURE_FACTOR)
+                exposure.append(0.1)
         else:
             ResMgr.purge('gui/avatar_input_handler.xml')
             cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/sniperMode/camera/')
