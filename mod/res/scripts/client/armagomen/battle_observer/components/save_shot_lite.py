@@ -60,6 +60,8 @@ class SaveShootLite(object):
 
     @staticmethod
     def checkTarget(avatar):
+        if avatar._PlayerAvatar__autoAimVehID != 0:
+            return True
         if avatar.target is not None and isinstance(avatar.target, Vehicle):
             return avatar.target.isAlive() and avatar.target.publicInfo[VEHICLE.TEAM] != avatar.team
         return True
