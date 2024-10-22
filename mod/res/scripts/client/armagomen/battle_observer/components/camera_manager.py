@@ -19,6 +19,7 @@ from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
 MinMax = namedtuple('MinMax', ('min', 'max'))
 
+
 class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
     def __init__(self):
@@ -77,6 +78,7 @@ class CameraSettings(object):
 
     def __init__(self):
         self.enabled = False
+        self.reset = False
 
     @staticmethod
     def getCamera(control_mode_name):
@@ -84,6 +86,10 @@ class CameraSettings(object):
         if input_handler is not None and input_handler.ctrls:
             return input_handler.ctrls[control_mode_name].camera
         return None
+
+    def resetToDefault(self, *args):
+        ResMgr.purge('gui/avatar_input_handler.xml')
+        self.reset = False
 
 
 class Arcade(CameraSettings):
@@ -97,19 +103,25 @@ class Arcade(CameraSettings):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
         if camera is None:
             return
-        if self.config[GLOBAL.ENABLED]:
+        self.reset = self.enabled and not self.config[GLOBAL.ENABLED]
+        self.enabled = self.config[GLOBAL.ENABLED]
+        if self.enabled:
             camera._cfg['distRange'] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
             camera._cfg['scrollSensitivity'] = self.config[ARCADE.SCROLL_SENSITIVITY]
             camera._cfg['startDist'] = self.config[ARCADE.START_DEAD_DIST]
             camera._cfg['startAngle'] = -0.4
-        else:
-            ResMgr.purge('gui/avatar_input_handler.xml')
-            cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/arcadeMode/camera/')
-            camera._reloadConfigs(cameraSec)
+            camera._updateProperties(state=None)
+        elif self.reset:
+            self.resetToDefault(camera)
+
+    def resetToDefault(self, camera):
+        super(Arcade, self).resetToDefault()
+        cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/arcadeMode/camera/')
+        camera._reloadConfigs(cameraSec)
         camera._updateProperties(state=None)
 
     def enablePostMortem(self, base, mode, **kwargs):
-        if self.config[GLOBAL.ENABLED]:
+        if self.enabled:
             if 'postmortemParams' in kwargs:
                 kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
                 kwargs.setdefault('transitionDuration', 2.0)
@@ -117,6 +129,7 @@ class Arcade(CameraSettings):
 
 
 class Strategic(CameraSettings):
+
     def __init__(self):
         super(Strategic, self).__init__()
         self.config = user_settings.strategic_camera
@@ -126,16 +139,21 @@ class Strategic(CameraSettings):
         arty = self.getCamera(CTRL_MODE_NAME.ARTY)
         if strategic is None or arty is None:
             return
-        if self.config[GLOBAL.ENABLED]:
+        self.reset = self.enabled and not self.config[GLOBAL.ENABLED]
+        self.enabled = self.config[GLOBAL.ENABLED]
+        if self.enabled:
             for camera in (strategic, arty):
                 camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
                 camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
-        else:
-            ResMgr.purge('gui/avatar_input_handler.xml')
-            cameraSec_strategic = ResMgr.openSection('gui/avatar_input_handler.xml/strategicMode/camera/')
-            cameraSec_arty = ResMgr.openSection('gui/avatar_input_handler.xml/artyMode/camera/')
-            strategic._reloadConfigs(cameraSec_strategic)
-            arty._reloadConfigs(cameraSec_arty)
+        elif self.reset:
+            self.resetToDefault(arty, strategic)
+
+    def resetToDefault(self, arty, strategic):
+        super(Strategic, self).resetToDefault()
+        cameraSec_strategic = ResMgr.openSection('gui/avatar_input_handler.xml/strategicMode/camera/')
+        cameraSec_arty = ResMgr.openSection('gui/avatar_input_handler.xml/artyMode/camera/')
+        strategic._reloadConfigs(cameraSec_strategic)
+        arty._reloadConfigs(cameraSec_arty)
 
 
 class Sniper(CameraSettings):
@@ -148,6 +166,7 @@ class Sniper(CameraSettings):
         self.config = user_settings.zoom
         self._dyn_zoom = False
         self._steps_only = False
+        self._steps_enabled = False
         self.after_shoot = ChangeCameraModeAfterShoot()
         self.min_max = MinMax(2, 25)
         overrideMethod(SniperCamera, "enable")(self.enable)
@@ -170,18 +189,23 @@ class Sniper(CameraSettings):
         elif self._SNIPER_ZOOM_LEVEL is not None:
             camera.setSniperZoomSettings(self._SNIPER_ZOOM_LEVEL)
             self._SNIPER_ZOOM_LEVEL = None
-        if self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled:
+        self.reset = self._steps_enabled and (not self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] or not self.enabled)
+        self._steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
+        if self._steps_enabled:
             steps = self.config[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
             camera._cfg[SNIPER.INCREASED_ZOOM] = True
             camera._cfg[SNIPER.ZOOMS] = steps
             exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
             while len(steps) > len(exposure):
                 exposure.append(0.1)
-        else:
-            ResMgr.purge('gui/avatar_input_handler.xml')
-            cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/sniperMode/camera/')
-            camera._reloadConfigs(cameraSec)
-        self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
+            self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
+        elif self.reset:
+            self.resetToDefault(camera)
+
+    def resetToDefault(self, camera):
+        super(Sniper, self).resetToDefault()
+        cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/sniperMode/camera/')
+        camera._reloadConfigs(cameraSec)
 
     def getZoom(self, distance, steps):
         zoom = math.floor(distance / self.DEFAULT_X_METERS)
