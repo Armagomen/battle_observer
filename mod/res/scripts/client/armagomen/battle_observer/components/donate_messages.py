@@ -19,7 +19,7 @@ from uilogging.core.core_constants import HTTP_OK_STATUS
 
 CLAN_ABBREV = "BO-UA"
 
-PATTERN = getLogo(big=False) + ("<p><font color='#ffff66'>{msg}</font></p>\n"
+PATTERN = getLogo(big=False) + ("<p><font color='#ffff29'>{msg}</font></p>\n"
                                 "<p><textformat leading='2'>"
                                 "{img} <a href='event:{url}'>{name}</a>"
                                 "</textformat></p>")
@@ -38,8 +38,8 @@ MESSAGES = {
 }
 
 LINKS_FORMAT = {
-    "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO"},
-    "en": {"url": URLS.PATREON, "img": IMG.PATREON, "name": "PATREON"},
+    "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - поповнити банку."},
+    "en": {"url": URLS.PATREON, "img": IMG.PATREON, "name": "PATREON - subscribe."},
 }
 
 API_URL = ("https://api.worldoftanks.eu/wot/clans/info/?"
@@ -49,7 +49,7 @@ API_URL = ("https://api.worldoftanks.eu/wot/clans/info/?"
 class Donate(object):
 
     def __init__(self):
-        self.ln_code = "uk" if getClientLanguage().lower() in ("uk", "be") else "en"
+        self.ln_code = "uk" if getClientLanguage().lower() in ("uk", "be", "ru") else "en"
         self.messages = MESSAGES[self.ln_code]
         self.message_format = LINKS_FORMAT[self.ln_code]
         self.timeDelta = datetime.now() + timedelta(minutes=5)

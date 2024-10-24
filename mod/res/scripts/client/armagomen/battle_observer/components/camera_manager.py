@@ -198,9 +198,9 @@ class Sniper(CameraSettings):
             exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
             while len(steps) > len(exposure):
                 exposure.append(SNIPER.EXPOSURE_FACTOR)
-            self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
         elif self.reset:
             self.resetToDefault(camera)
+        self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
 
     def resetToDefault(self, camera):
         super(Sniper, self).resetToDefault()
@@ -229,7 +229,7 @@ class CameraManager(object):
 
     def __init__(self):
         self.appLoader.onGUISpaceEntered += self.updateCameras
-        self.__modes = {Arcade(), Sniper(), Strategic()}
+        self.__modes = (Arcade(), Sniper(), Strategic())
 
     def updateCameras(self, spaceID):
         if spaceID == GuiGlobalSpaceID.BATTLE_LOADING and not isReplay():
