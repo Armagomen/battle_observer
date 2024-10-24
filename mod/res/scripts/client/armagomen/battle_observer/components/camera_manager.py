@@ -197,7 +197,7 @@ class Sniper(CameraSettings):
             camera._cfg[SNIPER.ZOOMS] = steps
             exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
             while len(steps) > len(exposure):
-                exposure.append(0.1)
+                exposure.append(SNIPER.EXPOSURE_FACTOR)
             self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
         elif self.reset:
             self.resetToDefault(camera)
@@ -237,8 +237,8 @@ class CameraManager(object):
                 mode.update()
 
 
-camera = CameraManager()
+camera_manager = CameraManager()
 
 
 def fini():
-    camera.appLoader.onGUISpaceBeforeEnter -= camera.updateCameras
+    camera_manager.appLoader.onGUISpaceBeforeEnter -= camera_manager.updateCameras
