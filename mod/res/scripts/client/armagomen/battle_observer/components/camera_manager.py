@@ -103,9 +103,9 @@ class Arcade(CameraSettings):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
         if camera is None:
             return
-        self.reset = self.enabled and not self.config[GLOBAL.ENABLED]
         self.enabled = self.config[GLOBAL.ENABLED]
         if self.enabled:
+            self.reset = True
             camera._cfg['distRange'] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
             camera._cfg['scrollSensitivity'] = self.config[ARCADE.SCROLL_SENSITIVITY]
             camera._cfg['startDist'] = self.config[ARCADE.START_DEAD_DIST]
@@ -139,9 +139,9 @@ class Strategic(CameraSettings):
         arty = self.getCamera(CTRL_MODE_NAME.ARTY)
         if strategic is None or arty is None:
             return
-        self.reset = self.enabled and not self.config[GLOBAL.ENABLED]
         self.enabled = self.config[GLOBAL.ENABLED]
         if self.enabled:
+            self.reset = True
             for camera in (strategic, arty):
                 camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
                 camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
@@ -189,9 +189,9 @@ class Sniper(CameraSettings):
         elif self._SNIPER_ZOOM_LEVEL is not None:
             camera.setSniperZoomSettings(self._SNIPER_ZOOM_LEVEL)
             self._SNIPER_ZOOM_LEVEL = None
-        self.reset = self._steps_enabled and (not self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] or not self.enabled)
         self._steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
         if self._steps_enabled:
+            self.reset = True
             steps = self.config[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
             camera._cfg[SNIPER.INCREASED_ZOOM] = True
             camera._cfg[SNIPER.ZOOMS] = steps
