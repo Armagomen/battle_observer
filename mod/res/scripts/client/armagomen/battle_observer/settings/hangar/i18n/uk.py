@@ -245,11 +245,10 @@ localization = {
         "players_damages_settings*x": "Позиція тексту по горизонталі",
         "players_damages_settings*y": "Позиція тексту по вертикалі",
         "players_bars_enabled": "Відображати міцність машин",
-        "players_bars_settings*players_bars_bar*outline": "Увімкнути контур",
         "players_bars_hotkey": "Клавіша відображення міцності",
         "players_bars_classColor": "Пофарбувати смуги міцності у вухах по кольору типу техніки",
         "players_bars_on_key_pressed": "Відображати смуги тільки по натисканню клавіші",
-        "panels_spotted_fix": "Виправити розмір й позицію лампочок виявлення"
+        "panels_spotted_fix": "Виправити розмір й позицію індикаторів виявлення"
     },
     "zoom": {
         "header": "Налаштування режиму снайпера",

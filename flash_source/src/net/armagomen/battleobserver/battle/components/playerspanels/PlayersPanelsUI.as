@@ -75,7 +75,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			{
 				if (!this.storage[vehicleID])
 				{
-					this.storage[vehicleID] = new ListItem(enemy, 375);
+					this.storage[vehicleID] = new ListItem(enemy);
 					this.onAddedToStorage(vehicleID, enemy);
 				}
 				listitem.addChild(this.storage[vehicleID]);
@@ -102,11 +102,11 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		public function as_addHealthBar(vehicleID:int, color:String, settings:Object, visible:Boolean):void
+		public function as_addHealthBar(vehicleID:int, color:String, visible:Boolean):void
 		{
 			if (this.storage[vehicleID])
 			{
-				this.storage[vehicleID].addHealth(color, this.getColors().global, settings, visible);
+				this.storage[vehicleID].addHealth(color, this.getColors().global, visible);
 			}
 		}
 		

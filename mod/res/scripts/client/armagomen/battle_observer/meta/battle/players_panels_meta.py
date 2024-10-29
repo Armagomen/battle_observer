@@ -12,8 +12,8 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_AddVehIdToListS(self, vehID, isEnemy):
         return self.flashObject.as_AddVehIdToList(vehID, isEnemy) if self._isDAAPIInited() else None
 
-    def as_addHealthBarS(self, vehID, barColor, settings, visible):
-        return self.flashObject.as_addHealthBar(vehID, barColor, settings, visible) if self._isDAAPIInited() else None
+    def as_addHealthBarS(self, vehID, barColor, visible):
+        return self.flashObject.as_addHealthBar(vehID, barColor, visible) if self._isDAAPIInited() else None
 
     def as_addDamageS(self, vehID, params):
         return self.flashObject.as_addDamage(vehID, params) if self._isDAAPIInited() else None

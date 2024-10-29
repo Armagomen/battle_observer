@@ -59,7 +59,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             color = self.getBarColor(isEnemy)
         visible = not self.settings[PANELS.ON_KEY_DOWN]
         vehicle_data = {VEHICLE.CUR: max_health, VEHICLE.MAX: max_health, VEHICLE.PERCENT: 100}
-        self.as_addHealthBarS(vehicleID, color, self.settings[PANELS.BAR_SETTINGS], visible)
+        self.as_addHealthBarS(vehicleID, color, visible)
         self.as_updateHealthBarS(vehicleID, 100, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onAddedToStorage(self, vehicleID, isEnemy):

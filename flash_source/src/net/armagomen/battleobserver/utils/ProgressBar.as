@@ -17,7 +17,6 @@
 		private var animation:Tween      = null;
 		private var barColor:uint        = 0;
 		private var animationTime:Number = 1.0;
-		private var barEnabled:Boolean   = true;
 		
 		public function ProgressBar(x:Number, y:Number, width:Number, height:Number, color:String, bgColor:String = "#000000", time:Number = 1.0)
 		{
@@ -29,30 +28,23 @@
 			this.animationTime = time;
 			this.x = x;
 			this.y = y;
-			if (width == 0 || height == 0)
+			this.barColor = Utils.colorConvert(color);
+			this.graphics.beginFill(Utils.colorConvert(bgColor), Constants.BG_ALPHA);
+			this.graphics.drawRect(0, 0, width, height);
+			this.graphics.endFill();
+			this.bar.graphics.beginFill(this.barColor, Constants.ALPHA);
+			this.bar.graphics.drawRect(0, 0, width, height);
+			this.bar.graphics.endFill();
+			this.addChild(this.bar);
+			if (this.animationTime > 0)
 			{
-				this.barEnabled = false;
-			}
-			else
-			{
-				this.barColor = Utils.colorConvert(color);
-				this.graphics.beginFill(Utils.colorConvert(bgColor), Constants.BG_ALPHA);
-				this.graphics.drawRect(0, 0, width, height);
-				this.graphics.endFill();
-				this.bar.graphics.beginFill(this.barColor, Constants.ALPHA);
-				this.bar.graphics.drawRect(0, 0, width, height);
-				this.bar.graphics.endFill();
-				this.addChild(this.bar);
-				if (this.animationTime > 0)
-				{
-					this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime);
-				}
+				this.animation = new Tween(this.bar, "scaleX", 1.0, 0, this.animationTime);
 			}
 		}
 		
 		public function setNewScale(newScale:Number):void
 		{
-			if (this.barEnabled && this.bar.scaleX != newScale)
+			if (this.bar.scaleX != newScale)
 			{
 				var scale:Number = Math.max(0, newScale);
 				if (this.animationTime > 0 && this.visible)
@@ -78,39 +70,27 @@
 		
 		public function setOutline(width:Number = 0, height:Number = 0):void
 		{
-			if (this.barEnabled)
-			{
-				this.outline.graphics.lineStyle(1, this.barColor, Constants.ALPHA, true, LineScaleMode.NONE);
-				this.outline.graphics.drawRect(-1, -1, width + 1, height + 1);
-				this.addChild(this.outline);
-			}
+			
+			this.outline.graphics.lineStyle(1, this.barColor, Constants.ALPHA, true, LineScaleMode.NONE);
+			this.outline.graphics.drawRect(-1, -1, width + 1, height + 1);
+			this.addChild(this.outline);
 		}
 		
 		public function setVisible(vis:Boolean):void
 		{
-			if (this.barEnabled)
+			var active:Boolean = vis && this.bar.scaleX > 0;
+			if (this.visible != active)
 			{
-				var active:Boolean = vis && this.bar.scaleX > 0;
-				if (this.visible != active)
-				{
-					this.visible = active;
-				}
-			}
-			else
-			{
-				this.visible = vis;
+				this.visible = active;
 			}
 		}
 		
 		public function updateColor(color:String):void
 		{
-			if (this.barEnabled)
+			Utils.updateColor(this.bar, color);
+			if (this.outline)
 			{
-				Utils.updateColor(this.bar, color);
-				if (this.outline)
-				{
-					Utils.updateColor(this.outline, color);
-				}
+				Utils.updateColor(this.outline, color);
 			}
 		}
 		

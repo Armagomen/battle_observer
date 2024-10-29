@@ -237,7 +237,6 @@ localization = {
         "players_damages_settings*x": "Horizontal text position",
         "players_damages_settings*y": "Vertical text position",
         "players_bars_enabled": "HP players in the ears.",
-        "players_bars_settings*players_bars_bar*outline": "Include outline.",
         "players_bars_hotkey": "HP display key",
         "players_bars_classColor": "Color the HP stripes in the ears according to the color of the technique type.",
         "players_bars_on_key_pressed": "Show stripes only on key press.",

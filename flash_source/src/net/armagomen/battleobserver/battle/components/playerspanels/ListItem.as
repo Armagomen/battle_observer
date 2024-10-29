@@ -10,12 +10,13 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		private var healthBar:ProgressBar = null;
 		private var damage:TextExt        = null;
 		public var isEnemy:Boolean        = false;
+		private const position:Number     = 400;
 		
-		public function ListItem(enemy:Boolean, width:int)
+		public function ListItem(enemy:Boolean)
 		{
 			super();
 			this.isEnemy = enemy;
-			this.x = enemy ? -width : width;
+			this.x = enemy ? -this.position : this.position;
 		}
 		
 		public function updateDamage(text:String):void
@@ -40,28 +41,20 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 		}
 		
-		public function addHealth(color:String, colorParams:Object, settings:Object, startVisible:Boolean):void
+		public function addHealth(color:String, colorParams:Object, startVisible:Boolean):void
 		{
-			var barX:Number     = settings.players_bars_bar.x;
-			var barWidth:Number = settings.players_bars_bar.width;
-			var textX:Number    = settings.players_bars_text.x;
-			var autoSize:String = settings.players_bars_text.align;
+			var barX:Number     = 10;
+			var barWidth:Number = 70;
+			var textX:Number    = barWidth >> 1;
 			if (this.isEnemy)
 			{
-				if (autoSize != "center")
-				{
-					autoSize = settings.players_bars_text.align == "left" ? "right" : "left";
-				}
 				barWidth = -barWidth;
 				barX = -barX;
 				textX = -textX;
 			}
-			this.healthBar = new ProgressBar(barX, settings.players_bars_bar.y, barWidth, settings.players_bars_bar.height, color, colorParams.bgColor, 0.2);
-			if (settings.players_bars_bar.outline)
-			{
-				this.healthBar.setOutline(barWidth, settings.players_bars_bar.height);
-			}
-			this.healthBar.addTextField(textX, settings.players_bars_text.y, autoSize, Constants.normalText15);
+			this.healthBar = new ProgressBar(barX, 2, barWidth, 20, color, colorParams.bgColor, 0.2);
+			this.healthBar.setOutline(barWidth, 20);
+			this.healthBar.addTextField(textX, -2, "center", Constants.normalText15);
 			this.healthBar.setVisible(startVisible);
 			this.addChild(this.healthBar);
 		}

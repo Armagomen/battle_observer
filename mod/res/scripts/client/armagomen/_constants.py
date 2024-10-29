@@ -294,9 +294,7 @@ class PANELS:
     PANELS_NAME = "players_panels"
     # hp_bars
     BARS_ENABLED = "players_bars_enabled"
-    BAR_SETTINGS = "players_bars_settings"
     BAR_TEXT_SETTINGS = "players_bars_text"
-    BAR = "players_bars_bar"
     HP_TEMPLATE = "players_bars_hp_text"
     ON_KEY_DOWN = "players_bars_on_key_pressed"
     BAR_HOT_KEY = "players_bars_hotkey"
@@ -363,10 +361,7 @@ class CONFIG_INTERFACE:
         },
         PANELS.PANELS_NAME: {
             PANELS.BARS_ENABLED: (
-                "players_bars_settings*players_bars_bar*outline*enabled",
-                "players_bars_settings*players_bars_bar*outline*customColor",
-                "players_bars_settings*players_bars_bar*outline*color",
-                "players_bars_settings*players_bars_bar*outline*alpha",
+                PANELS.BAR_CLASS_COLOR,
                 PANELS.BAR_HOT_KEY,
                 PANELS.BAR_CLASS_COLOR,
                 PANELS.ON_KEY_DOWN,
