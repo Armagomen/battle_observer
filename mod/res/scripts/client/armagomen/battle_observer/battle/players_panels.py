@@ -79,6 +79,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         for vehicleID in aliveAllies.union(aliveEnemies):
             self.as_AddVehIdToListS(vehicleID, vehicleID in aliveEnemies)
         for vehicleID in deadAllies.union(deadEnemies):
+            self.as_AddVehIdToListS(vehicleID, vehicleID in deadEnemies)
             self.as_setVehicleDeadS(vehicleID)
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):

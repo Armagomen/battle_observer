@@ -70,19 +70,19 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
 		{
-			var listitem:* = this.getWGListitem(vehicleID, enemy);
-			if (listitem)
+			if (!this.storage[vehicleID])
 			{
-				if (!this.storage[vehicleID])
+				var listitem:* = this.getWGListitem(vehicleID, enemy);
+				if (listitem)
 				{
 					this.storage[vehicleID] = new ListItem(enemy);
+					listitem.addChild(this.storage[vehicleID]);
 					this.onAddedToStorage(vehicleID, enemy);
 				}
-				listitem.addChild(this.storage[vehicleID]);
-			}
-			else
-			{
-				DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: playersPanel list item holder is null: " + vehicleID.toString());
+				else
+				{
+					DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: playersPanel list item holder is null: " + vehicleID.toString());
+				}
 			}
 		}
 		
