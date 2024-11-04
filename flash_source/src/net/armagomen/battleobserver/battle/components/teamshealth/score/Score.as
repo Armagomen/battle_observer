@@ -26,7 +26,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth.score
 		public function Score(colorBlind:Boolean)
 		{
 			super();
-			this.arrows = new <Bitmap>[new arrowGreen(), new arrowRed(), new arrowRedCB()];
+			this.arrows = new <Bitmap>[new this.arrowGreen(), new this.arrowRed(), new this.arrowRedCB()];
 			this.isColorBlind = colorBlind;
 			this.arrowDots = new Shape();
 			for each (var item:Bitmap in this.arrows)

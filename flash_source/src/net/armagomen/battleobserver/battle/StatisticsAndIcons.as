@@ -4,6 +4,7 @@ package net.armagomen.battleobserver.battle
 	import flash.utils.setTimeout;
 	import flash.geom.ColorTransform;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	import net.armagomen.battleobserver.utils.Utils;
 	import net.wg.data.constants.generated.BATTLEATLAS;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
@@ -24,9 +25,12 @@ package net.armagomen.battleobserver.battle
 		private var cutWidth:Number                 = 60.0;
 		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
+		private var format:TextFormat;
 		
 		public function StatisticsAndIcons(battlePage:*, iconsEnabled:Boolean, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
 		{
+			this.format = new TextFormat(); 
+			this.format.bold = true;
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
 			this.panels = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
@@ -130,6 +134,7 @@ package net.armagomen.battleobserver.battle
 					if (this.statisticsData[vehicleID].vehicleTextColor)
 					{
 						listItem.vehicleTF.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
+						listItem.vehicleTF.setTextFormat(this.format);
 					}
 					if (this.statisticsData[vehicleID].fullName)
 					{

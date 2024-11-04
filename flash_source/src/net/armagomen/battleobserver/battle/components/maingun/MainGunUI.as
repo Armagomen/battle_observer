@@ -32,32 +32,23 @@ package net.armagomen.battleobserver.battle.components.maingun
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			this.icons = new <Bitmap>[new Gun_icon(), new Done_icon(), this.isColorBlind() ? new Warning_icon_cb() : new Warning_icon()];
+			this.icons = new <Bitmap>[new this.Gun_icon(), new this.Done_icon(), this.isColorBlind() ? new this.Warning_icon_cb() : new this.Warning_icon()];
 			this.icons.fixed = true;
-			
-			var gun_icon:Bitmap     = this.icons[0];
-			var done_icon:Bitmap    = this.icons[1];
-			var warning_icon:Bitmap = this.icons[2];
-			
+					
 			var _icons:Sprite       = new Sprite();
 			_icons.y = 2;
 			this.addChild(_icons);
 			
-			gun_icon.width = 26;
-			gun_icon.height = 26;
-			_icons.addChild(gun_icon);
-			
-			done_icon.width = 26;
-			done_icon.height = 26;
-			done_icon.visible = false;
-			_icons.addChild(done_icon);
-			
-			warning_icon.width = 26;
-			warning_icon.height = 26;
-			warning_icon.alpha = 0.7;
-			warning_icon.visible = false;
-			_icons.addChild(warning_icon);
-			
+			for each (var item:Bitmap in this.icons) 
+			{
+				item.width = 26;
+				item.height = 26;
+				item.visible = false;
+				_icons.addChild(item);
+			}
+			this.icons[0].visible = true;
+			this.icons[2].alpha = 0.6;
+				
 			var settings:Object = this.getSettings();
 			this.x = (App.appWidth >> 1) + settings.x;
 			this.y = settings.y;

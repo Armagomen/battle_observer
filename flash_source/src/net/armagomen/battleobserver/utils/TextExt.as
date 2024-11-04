@@ -19,7 +19,7 @@
 			this.defaultTextFormat = style;
 			this.antiAliasType = AntiAliasType.ADVANCED;
 			this.autoSize = align;
-			this.filters = [new GlowFilter(0, 0.55, 2, 2, 4)];
+			this.filters = [new GlowFilter(0, 0.56, 2, 2, 4)];
 			this.selectable = false;
 			this.multiline = true;
 			this.visible = enabled;
