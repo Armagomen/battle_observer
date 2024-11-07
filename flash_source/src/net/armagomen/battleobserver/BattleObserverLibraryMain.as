@@ -23,7 +23,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
 	import net.armagomen.battleobserver.battle.wgcomponents.minimapZoom;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.gui.battle.views.BaseBattlePage;
 	import net.wg.infrastructure.base.AbstractView;
 	
@@ -37,75 +36,23 @@ package net.armagomen.battleobserver
 			super();
 			BaseBattlePage.prototype.as_BattleObserverCreate = function(aliases:Array):void
 			{
+				var alias_to_ui:Object = {"Observer_MainGun_UI": MainGunUI, "Observer_TeamsHP_UI": TeamsHealthUI, "Observer_DamageLog_UI": DamageLogsUI, "Observer_DebugPanel_UI": ObserverDebugPanelUI, "Observer_BattleTimer_UI": ObserverBattleTimerUI, "Observer_SixthSense_UI": SixthSenseUI, "Observer_TeamBases_UI": TeamBasesUI, "Observer_ArmorCalculator_UI": ArmorCalculatorUI, "Observer_FlightTime_UI": FlightTimeUI, "Observer_DispersionTimer_UI": DispersionTimerUI, "Observer_DateTimes_UI": ObserverDateTimesUI, "Observer_Distance_UI": DistanceUI, "Observer_OwnHealth_UI": OwnHealthUI, "Observer_PlayersPanels_UI": PlayersPanelsUI};
+				
 				for each (var alias:String in aliases)
 				{
-					if (this.isFlashComponentRegisteredS(alias))
+					try
 					{
-						continue;
+						if (this.isFlashComponentRegisteredS(alias))
+						{
+							continue;
+						}
+						this.registerComponent(this.addChild(new alias_to_ui[alias]()), alias);
+						this.showComponent(alias, false);
 					}
-					switch (alias)
+					catch (err:Error)
 					{
-					case "Observer_TeamsHP_UI": 
-						var teamHealthUI:TeamsHealthUI = new TeamsHealthUI();
-						this.registerComponent(this.addChild(teamHealthUI), alias);
-						break;
-					case "Observer_DamageLog_UI": 
-						var damageLog:DamageLogsUI = new DamageLogsUI();
-						this.registerComponent(this.addChild(damageLog), alias);
-						break;
-					case "Observer_MainGun_UI": 
-						var mainGun:MainGunUI = new MainGunUI();
-						this.registerComponent(this.addChild(mainGun), alias);
-						break;
-					case "Observer_DebugPanel_UI": 
-						var debugPanel:ObserverDebugPanelUI = new ObserverDebugPanelUI();
-						this.registerComponent(this.addChild(debugPanel), alias);
-						break;
-					case "Observer_DateTimes_UI": 
-						var dateTime:ObserverDateTimesUI = new ObserverDateTimesUI();
-						this.registerComponent(this.addChild(dateTime), alias);
-						break;
-					case "Observer_BattleTimer_UI": 
-						var battleTimer:ObserverBattleTimerUI = new ObserverBattleTimerUI();
-						this.registerComponent(this.addChild(battleTimer), alias);
-						break;
-					case "Observer_SixthSense_UI": 
-						var sixthSense:SixthSenseUI = new SixthSenseUI();
-						this.registerComponent(this.addChild(sixthSense), alias);
-						break;
-					case "Observer_TeamBases_UI": 
-						var teamBases:TeamBasesUI = new TeamBasesUI();
-						this.registerComponent(this.addChild(teamBases), alias);
-						break;
-					case "Observer_ArmorCalculator_UI": 
-						var armorCalculator:ArmorCalculatorUI = new ArmorCalculatorUI();
-						this.registerComponent(this.addChild(armorCalculator), alias);
-						break;
-					case "Observer_FlightTime_UI": 
-						var flightTime:FlightTimeUI = new FlightTimeUI();
-						this.registerComponent(this.addChild(flightTime), alias);
-						break;
-					case "Observer_DispersionTimer_UI": 
-						var dispersionTimer:DispersionTimerUI = new DispersionTimerUI();
-						this.registerComponent(this.addChild(dispersionTimer), alias);
-						break;
-					case "Observer_Distance_UI": 
-						var distance:DistanceUI = new DistanceUI();
-						this.registerComponent(this.addChild(distance), alias);
-						break;
-					case "Observer_OwnHealth_UI": 
-						var ownHealth:OwnHealthUI = new OwnHealthUI();
-						this.registerComponent(this.addChild(ownHealth), alias);
-						break;
-					case "Observer_PlayersPanels_UI": 
-						var playersPanel:PlayersPanelsUI = new PlayersPanelsUI(this);
-						this.registerComponent(playersPanel, alias);
-						break;
-					default: 
-						DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: No view component named - " + alias);
-						break;
+						DebugUtils.LOG_ERROR("[BATTLE_OBSERVER] registerComponent " + alias + " : " + err.message);
 					}
-					this.showComponent(alias, false);
 				}
 			}
 			
@@ -163,14 +110,15 @@ package net.armagomen.battleobserver
 				}
 			}
 			
-			BaseBattlePage.prototype.as_BattleObserverUpdateDamageLogPosition = function():void
+			BaseBattlePage.prototype.as_BattleObserverUpdateLogsPosition = function():void
 			{
-				var playersPanel:* = this.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-				if (playersPanel)
+				try
 				{
-					var state:int = playersPanel.state;
-					playersPanel.as_setPanelMode(PLAYERS_PANEL_STATE.HIDDEN);
-					playersPanel.as_setPanelMode(state);
+					this.updateDamageLogPosition();
+				}
+				catch (err:Error)
+				{
+					DebugUtils.LOG_ERROR("[BATTLE_OBSERVER] as_BattleObserverUpdateLogsPosition : " + err.message);
 				}
 			}
 		}

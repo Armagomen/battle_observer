@@ -1,3 +1,4 @@
+import constants
 from armagomen._constants import BATTLE_PAGES, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.components.minimap_plugins import MinimapZoomPlugin
@@ -78,7 +79,15 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
                 else:
                     self._statistics.setFeedback(flashObject.as_BattleObserverUpdateStatisticData)
                     self._statistics.getStatisticsDataFromServer()
-        callback(30.0, flashObject.as_BattleObserverUpdateDamageLogPosition)
+        arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
+        if arena is None:
+            return logError("_loadView: arena is None")
+
+        def onPeriodChange(period, *args):
+            if period != constants.ARENA_PERIOD.AFTERBATTLE:
+                flashObject.as_BattleObserverUpdateLogsPosition()
+
+        arena.onPeriodChange += onPeriodChange
 
 
 class ViewHandlerLobby(PackageBusinessHandler):
