@@ -332,12 +332,12 @@ class SettingsInterface(CreateElement):
                 elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, basestring):
                     value = DEBUG_PANEL.STYLES[value]
                 elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, basestring):
-                    value = SIXTH_SENSE.ICONS[value if value in SIXTH_SENSE.ICONS else 0]
+                    value = SIXTH_SENSE.ICONS[value]
                 elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and isinstance(value, basestring):
                     value = value.strip().split(',')
-                    if bool(value[0]):
+                    try:
                         value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]
-                    else:
+                    except:
                         value = SNIPER.DEFAULT_STEPS
                 if type(value) == int and type(updated_config_link[param_name]) == float:
                     value = float(value)
