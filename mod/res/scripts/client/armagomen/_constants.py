@@ -47,6 +47,7 @@ URLS = namedtuple("URLS", (
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")
 REGIONS = {"EU": "eu", "ASIA": "asia", "NA": "com"}
+API_KEY = "5500d1b937426e47e2b039e4a11990be"
 
 VEHICLE_TYPES_COLORS = namedtuple("VEHICLE_TYPES_COLORS", ("NAME", "UNKNOWN"))("vehicle_types_colors", "unknown")
 

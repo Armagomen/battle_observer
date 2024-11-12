@@ -14,7 +14,7 @@ class WTRStatistics(object):
 
     def __init__(self):
         self.settings = user_settings.statistics
-        self.wtr_ranges = ((3154, "bad"), (4698, "normal"), (6578, "good"), (8929, "very_good"), (10736, "unique"))
+        self.ranges = ((3280, "bad"), (5165, "normal"), (7274, "good"), (9589, "very_good"), (11015, "unique"))
         self.itemsData = {}
 
     def getPattern(self, isEnemy, itemData):
@@ -54,7 +54,7 @@ class WTRStatistics(object):
 
     def __getColor(self, wtr):
         result = "very_bad"
-        for value, colorName in self.wtr_ranges:
+        for value, colorName in self.ranges:
             if wtr >= value:
                 result = colorName
             else:

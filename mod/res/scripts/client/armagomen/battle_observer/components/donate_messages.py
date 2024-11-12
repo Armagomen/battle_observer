@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timedelta
 from random import choice
 
-from armagomen._constants import getLogo, IMG, URLS
+from armagomen._constants import API_KEY, getLogo, IMG, URLS
 from armagomen.utils.common import fetchURL, isReplay, openWebBrowser, overrideMethod
 from armagomen.utils.logging import logDebug, logInfo, logWarning
 from constants import AUTH_REALM
@@ -42,8 +42,9 @@ LINKS_FORMAT = {
     "en": {"url": URLS.PATREON, "img": IMG.PATREON, "name": "PATREON - subscribe."},
 }
 
-API_URL = ("https://api.worldoftanks.eu/wot/clans/info/?"
-           "application_id=5500d1b937426e47e2b039e4a11990be&clan_id=500223690&fields=members_count")
+CLAN_ID = 500223690
+API_URL = "https://api.worldoftanks.eu/wot/clans/info/?application_id={}&clan_id={}&fields=members_count".format(
+    API_KEY, CLAN_ID)
 
 
 class Donate(object):
@@ -84,7 +85,7 @@ class Donate(object):
         logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
 
     def pushClanInviteMessage(self):
-        if not self.show_clan_invite or g_clanCache.isInClan or self.ln_code != "uk":
+        if not self.show_clan_invite or g_clanCache.isInClan or self.ln_code == "en":
             return
         message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>, "
                    "отримаєш більше бонусів від гри (бустери, камуфляжі, та інше)."
@@ -118,5 +119,5 @@ if AUTH_REALM == "EU" and not isReplay():
         if action in URLS:
             return openWebBrowser(action)
         if action == CLAN_ABBREV:
-            return event_dispatcher.showClanProfileWindow(500223690, action)
+            return event_dispatcher.showClanProfileWindow(CLAN_ID, action)
         return base(view, typeID, entityID, action)

@@ -1,7 +1,7 @@
 import json
 from httplib import responses
 
-from armagomen._constants import REGIONS
+from armagomen._constants import API_KEY, REGIONS
 from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
 from armagomen.utils.common import callback, fetchURL
 from armagomen.utils.logging import logDebug, logError
@@ -18,7 +18,6 @@ class StatisticsDataLoader(object):
     URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
-    API_KEY = "5500d1b937426e47e2b039e4a11990be"
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"
 
     def __init__(self):
@@ -73,7 +72,7 @@ class StatisticsDataLoader(object):
 
     def requestData(self):
         self.__getDataCallback = None
-        url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=self.API_KEY, url=self.URL,
+        url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=API_KEY, url=self.URL,
                                    fields=self.FIELDS)
         fetchURL(url, self.onDataResponse)
 
