@@ -57,7 +57,7 @@ package net.armagomen.battleobserver.battle
 			this.panels = null;
 		}
 		
-		public function update_wtrdata(statsData:Object):void
+		public function update_wgrdata(statsData:Object):void
 		{
 			for (var key:String in statsData)
 			{

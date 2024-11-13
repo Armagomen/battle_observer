@@ -152,7 +152,7 @@ en.service_channel_customizationChanged=Customization Changed
 en.statistics=Setting player statistics and tank icons
 en.statistics_icons=Repaint tank icons in the colors of vehicle classes
 en.statistics_names_color=Change the color of the tank name in the lists to the color of the player's statistics
-en.statistics=Enable player statistics by WTR rating
+en.statistics=Enable player statistics by WGR rating
 
 en.team_bases_panel=Base capture panel
 

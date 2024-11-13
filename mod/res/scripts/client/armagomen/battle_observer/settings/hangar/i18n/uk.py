@@ -90,11 +90,11 @@ localization = {
                          "у вікні по клавіші Tab в колір класів техніки. Сила фільтра впливає на яскравість."
                          "Рекомендована сила фільтра: -1.25",
         "icons_blackout": "Іконки: Сила фільтра (яскравість)",
-        "statistics": "Увімкнути статистику гравців за рейтингом WTR",
+        "statistics": "Увімкнути статистику гравців за рейтингом WGR",
         "statistics_vehicle_name_color": "Змінити колір назви танку у списках на колір статистики гравця",
         "statistics_tooltip": "Статистика буде відображатися на екрані завантаження, у вухах, у вікні по "
                               "клавіші Tab. Для більш тонкого налаштування дивись файл statistics.json"
-                              "Доступні імена макросів: WTR, colorWTR, winRate, nickname, battles, clanTag",
+                              "Доступні імена макросів: WGR, colorWGR, winRate, nickname, battles, clanTag",
         "statistics_colors*very_bad": "Дуже погано",
         "statistics_colors*bad": "Погано",
         "statistics_colors*normal": "Нормально",

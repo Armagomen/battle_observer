@@ -45,7 +45,7 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             return
         self._app.loaderManager.onViewLoaded += self.__onViewLoaded
         self.__subscribed = True
-        if self.isWTREnabled():
+        if self.isWGREnabled():
             self._statistics = StatisticsDataLoader()
         self._icons = self.isIconsEnabled()
         if self.isMinimapEnabled():

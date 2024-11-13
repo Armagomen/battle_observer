@@ -65,7 +65,7 @@ package net.armagomen.battleobserver
 			{
 				if (this.statisticsBO)
 				{
-					this.statisticsBO.update_wtrdata(statsData);
+					this.statisticsBO.update_wgrdata(statsData);
 				}
 			}
 			

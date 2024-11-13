@@ -14,8 +14,8 @@
     "very_good": "#02C9B3"
   },
   "statistics": false,
-  "statistics_pattern_cut_left": "<font color='%(colorWTR)s'>%(nickname).9s</font>",
-  "statistics_pattern_cut_right": "<font color='%(colorWTR)s'>%(nickname).9s</font>",
-  "statistics_pattern_full_left": "<font color='%(colorWTR)s'>%(WTR)d | %(nickname).12s</font>%(clanTag)s",
-  "statistics_pattern_full_right": "%(clanTag)s<font color='%(colorWTR)s'>%(nickname).12s | %(WTR)d</font>"
+  "statistics_pattern_cut_left": "<font color='%(colorWGR)s'>%(nickname).9s</font>",
+  "statistics_pattern_cut_right": "<font color='%(colorWGR)s'>%(nickname).9s</font>",
+  "statistics_pattern_full_left": "<font color='%(colorWGR)s'>%(WGR)d | %(nickname).12s</font>%(clanTag)s",
+  "statistics_pattern_full_right": "%(clanTag)s<font color='%(colorWGR)s'>%(nickname).12s | %(WGR)d</font>"
 }

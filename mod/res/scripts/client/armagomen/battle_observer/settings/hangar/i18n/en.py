@@ -84,13 +84,13 @@ localization = {
         "auto_claim_clan_reward": "Collect clan rewards automatically.",
     },
     "statistics": {
-        "header": "WTR (WGR) Player Statistics | Tank icons",
-        "statistics": "Enable player statistics WTR rating",
+        "header": "WGR (WGR) Player Statistics | Tank icons",
+        "statistics": "Enable player statistics WGR rating",
         "statistics_vehicle_name_color": "Change the color of the tank name in the ears to the color "
                                          "of the statistics",
         "statistics_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
                                       "For more fine-tuning see the statistics.json file."
-                                      " Available macro names: WTR, colorWTR, winRate, nickname, battles, clanTag",
+                              " Available macro names: WGR, colorWGR, winRate, nickname, battles, clanTag",
         "statistics_colors*very_bad": "very bad",
         "statistics_colors*bad": "bad",
         "statistics_colors*normal": "normal",

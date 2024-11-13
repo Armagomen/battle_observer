@@ -85,6 +85,9 @@ class SettingsLoader(object):
                     if key == SNIPER.STEPS and (new_param_type != list or not len(new_param)):
                         new_param = SNIPER.DEFAULT_STEPS
                         file_update = True
+                    if "statistics_pattern" in key and "WTR" in new_param:
+                        new_param = new_param.replace("WTR", "WGR")
+                        file_update = True
                     internal_cfg[key] = new_param
         return file_update
 

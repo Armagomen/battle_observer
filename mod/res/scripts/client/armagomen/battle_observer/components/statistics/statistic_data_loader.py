@@ -2,7 +2,7 @@ import json
 from httplib import responses
 
 from armagomen._constants import API_KEY, REGIONS
-from armagomen.battle_observer.components.statistics.wtr_data import WTRStatistics
+from armagomen.battle_observer.components.statistics.wgr_data import WGRStatistics
 from armagomen.utils.common import callback, fetchURL
 from armagomen.utils.logging import logDebug, logError
 from constants import AUTH_REALM
@@ -23,7 +23,7 @@ class StatisticsDataLoader(object):
     def __init__(self):
         self.enabled = region is not None
         self._load_try = 0
-        self.__wtrData = WTRStatistics()
+        self.__wgrData = WGRStatistics()
         self.__feedback = None
         self.__getDataCallback = None
         self.__vehicles = set()
@@ -35,7 +35,7 @@ class StatisticsDataLoader(object):
             response_data = json.loads(response.body)
             data = response_data.get("data", {})
             logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
-            items_data = self.__wtrData.updateAllItems(self.sessionProvider.getArenaDP(), data)
+            items_data = self.__wgrData.updateAllItems(self.sessionProvider.getArenaDP(), data)
             if self.__feedback is not None:
                 self.__feedback(items_data)
         else:

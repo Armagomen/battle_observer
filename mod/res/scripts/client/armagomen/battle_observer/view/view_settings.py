@@ -72,7 +72,7 @@ class ViewSettings(object):
             return False
         return user_settings.minimap[GLOBAL.ENABLED] and user_settings.minimap[MINIMAP.ZOOM]
 
-    def isWTREnabled(self):
+    def isWGREnabled(self):
         if self.xvmInstalled("Statistics"):
             return False
         return self.isStatisticsModuleEnabled() and user_settings.statistics[STATISTICS.STATISTIC_ENABLED]
