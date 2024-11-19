@@ -15,7 +15,7 @@ class SettingsLoader(object):
 
     def __init__(self, settings):
         self.__settings = settings
-        self.errorMessages = []
+        self.errorMessages = set()
         self.configsList = sorted(
             x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x))
         )
@@ -28,11 +28,11 @@ class SettingsLoader(object):
             else:
                 self.configName = 'default'
             self.createLoadJSON(self.configName)
-            self.errorMessages.append('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
+            self.errorMessages.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
             self.configsList.append(self.configName)
         config_path = os.path.join(currentConfigPath, self.configName)
         if not os.path.exists(config_path):
-            self.errorMessages.append('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
+            self.errorMessages.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
             os.makedirs(config_path)
         self.readConfig()
 
@@ -66,30 +66,30 @@ class SettingsLoader(object):
 
     def updateData(self, external_cfg, internal_cfg, file_update=False):
         """Recursively updates words from user_settings files"""
-        file_update |= self.isNotEqualLen(external_cfg, internal_cfg)
+        update = self.isNotEqualLen(external_cfg, internal_cfg) or file_update
         for key in internal_cfg:
             old_param = internal_cfg[key]
             old_param_type = type(old_param)
             if old_param_type == dict:
-                file_update |= self.updateData(external_cfg.get(key, {}), old_param, file_update)
+                update |= self.updateData(external_cfg.get(key, {}), old_param, file_update=update)
             else:
                 new_param = external_cfg.get(key)
                 new_param_type = type(new_param)
-                file_update |= new_param_type != old_param_type
+                update |= new_param_type != old_param_type
                 if new_param is not None:
                     if old_param_type == float and new_param_type == int:
                         new_param = float(new_param)
                     if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
                         new_param = "logo.png"
-                        file_update = True
+                        update = True
                     if key == SNIPER.STEPS and (new_param_type != list or not len(new_param)):
                         new_param = SNIPER.DEFAULT_STEPS
-                        file_update = True
+                        update = True
                     if "statistics_pattern" in key and "WTR" in new_param:
                         new_param = new_param.replace("WTR", "WGR")
-                        file_update = True
+                        update = True
                     internal_cfg[key] = new_param
-        return file_update
+        return update
 
     def readConfig(self):
         """Read settings"""
@@ -116,7 +116,7 @@ class SettingsLoader(object):
             file_data = openJsonFile(file_path)
         except Exception as error:
             message = READ_MESSAGE.format(file_path, error.message or repr(error))
-            self.errorMessages.append(message)
+            self.errorMessages.add(message)
             return logWarning(message)
         else:
             if self.updateData(file_data, internal_cfg):
@@ -130,5 +130,5 @@ class SettingsLoader(object):
         if self.errorMessages:
             dialog = LoadingErrorDialog()
             dialog.showLoadingError(GLOBAL.NEW_LINE.join(self.errorMessages))
-            self.errorMessages = []
+            self.errorMessages.clear()
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
