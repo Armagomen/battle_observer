@@ -185,9 +185,9 @@ class DamageLog(DamageLogsMeta):
 
     def __onPlayerFeedbackReceived(self, events):
         """Shared feedback player events"""
-        if self.isPlayerVehicle:
-            for event in events:
-                self.parseEvent(event)
+        # if self.isPlayerVehicle:
+        for event in events:
+            self.parseEvent(event)
 
     def getAVGColor(self, percent):
         return percentToRGB(percent, **self.settings.log_total[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE

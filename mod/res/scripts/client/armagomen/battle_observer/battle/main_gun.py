@@ -59,8 +59,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
 
     def onPlayerFeedbackReceived(self, events):
-        if self.isPlayerVehicle:
-            for event in events:
-                if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-                    self.playerDamage += event.getExtra().getDamage()
-                    self.updateMainGun()
+        # if self.isPlayerVehicle:
+        for event in events:
+            if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
+                self.playerDamage += event.getExtra().getDamage()
+                self.updateMainGun()
