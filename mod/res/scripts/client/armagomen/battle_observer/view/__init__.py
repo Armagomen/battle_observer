@@ -112,3 +112,4 @@ class ViewHandlerLobby(PackageBusinessHandler):
             if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
                 return logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)
             callback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
+            callback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverShadow)

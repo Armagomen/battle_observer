@@ -127,8 +127,7 @@ class SettingsLoader(object):
                 setDebug(internal_cfg[DEBUG])
 
     def onGUISpaceEntered(self, spaceID):
-        if self.errorMessages:
-            dialog = LoadingErrorDialog()
-            dialog.showLoadingError(GLOBAL.NEW_LINE.join(self.errorMessages))
-            self.errorMessages.clear()
-            ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
+        dialog = LoadingErrorDialog()
+        dialog.showLoadingError(GLOBAL.NEW_LINE.join(self.errorMessages))
+        self.errorMessages.clear()
+        ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered

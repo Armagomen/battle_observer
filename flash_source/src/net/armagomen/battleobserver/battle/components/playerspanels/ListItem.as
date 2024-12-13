@@ -44,8 +44,8 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		public function addHealth(color:String, colorParams:Object, startVisible:Boolean):void
 		{
 			var barX:Number     = 10;
-			var barWidth:Number = 70;
-			var textX:Number    = barWidth >> 1;
+			var barWidth:Number = 80;
+			var textX:Number    = 40;
 			if (this.isEnemy)
 			{
 				barWidth = -barWidth;

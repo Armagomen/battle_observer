@@ -9,6 +9,7 @@ from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import callback, getPlayer, isReplay, overrideMethod
+from armagomen.utils.logging import logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from cgf_components.attack_artillery_fort_components import ISettingsCore
@@ -102,7 +103,7 @@ class Arcade(CameraSettings):
     def update(self):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
         if camera is None:
-            return
+            return logError("{} control mode is Nome", CTRL_MODE_NAME.ARCADE)
         self.enabled = self.config[GLOBAL.ENABLED]
         if self.enabled:
             self.reset = True
@@ -138,7 +139,8 @@ class Strategic(CameraSettings):
         strategic = self.getCamera(CTRL_MODE_NAME.STRATEGIC)
         arty = self.getCamera(CTRL_MODE_NAME.ARTY)
         if strategic is None or arty is None:
-            return
+            return logError("{} control mode is Nome",
+                            CTRL_MODE_NAME.STRATEGIC if not strategic else CTRL_MODE_NAME.ARTY)
         self.enabled = self.config[GLOBAL.ENABLED]
         if self.enabled:
             self.reset = True
@@ -178,7 +180,7 @@ class Sniper(CameraSettings):
         self._steps_only = self.config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY] and self._dyn_zoom
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is None:
-            return
+            return logError("{} control mode is Nome", CTRL_MODE_NAME.SNIPER)
         if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]:
             camera.enableDynamicCamera(False)
         else:
