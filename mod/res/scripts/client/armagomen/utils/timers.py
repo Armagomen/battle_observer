@@ -1,7 +1,7 @@
 from collections import namedtuple
 from functools import partial
 
-from armagomen.utils.common import callback, cancelCallback
+from armagomen.utils.common import addCallback, cancelCallback
 from SoundGroups import g_instance
 
 CONSTANTS = namedtuple("CONSTANTS", ("ONE_SECOND", "ZERO", "ONE"))(1.0, 0, 1)
@@ -53,7 +53,7 @@ class SixthSenseTimer(Timer):
     def timeTicking(self, seconds):
         self.cancelCallback()
         if seconds > CONSTANTS.ZERO:
-            self._callback = callback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE))
+            self._callback = addCallback(CONSTANTS.ONE_SECOND, partial(self.timeTicking, seconds - CONSTANTS.ONE))
             if self.__soundID is not None:
                 self.callWWISE(self.__soundID)
         self.handleTimer(seconds)
@@ -74,7 +74,7 @@ class CyclicTimerEvent(Timer):
         self._function = function
 
     def update(self):
-        self._callback = callback(self._interval, self.update)
+        self._callback = addCallback(self._interval, self.update)
         self._function()
 
     def start(self):

@@ -1,4 +1,4 @@
-package net.armagomen.battleobserver.battle
+package net.armagomen.battleobserver.battle.components
 {
 	import flash.events.Event;
 	import flash.utils.setTimeout;
@@ -10,8 +10,9 @@ package net.armagomen.battleobserver.battle
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.gui.battle.random.views.stats.components.playersPanel.events.PlayersPanelEvent;
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	
-	public class StatisticsAndIcons
+	public class StatisticsAndIcons extends ObserverBattleDisplayable
 	{
 		private var battleLoading:*                 = null;
 		private var fullStats:*                     = null;
@@ -27,25 +28,35 @@ package net.armagomen.battleobserver.battle
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		private var format:TextFormat;
 		
-		public function StatisticsAndIcons(battlePage:*, iconsEnabled:Boolean, cutWidth:Number, fullWidth:Number, typeColors:Object, iconMultiplier:Number)
+		public function StatisticsAndIcons()
 		{
-			this.format = new TextFormat(); 
+			super();
+		}
+		
+		override protected function onPopulate():void 
+		{
+			super.onPopulate();
+			var battlePage:*    = this.parent;
+			var settings:Object = this.getSettings();
+			var colors:Object   = this.getColors();
+			
+			this.format = new TextFormat();
 			this.format.bold = true;
 			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
 			this.panels = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 			this.isComp7Battle = battlePage.getAlias() == "comp7BattlePage";
-			this.setIconColors(typeColors);
-			this.iconMultiplier = iconMultiplier;
-			this.iconsEnabled = iconsEnabled;
-			this.cutWidth = cutWidth;
-			this.fullWidth = fullWidth;
+			this.setIconColors(colors["vehicle_types_colors"]);
+			this.iconMultiplier = settings["icons_blackout"];
+			this.iconsEnabled = settings["icons"];
+			this.cutWidth = settings["statistics_panels_cut_width"];
+			this.fullWidth = settings["statistics_panels_full_width"];
 			this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onCountChange, false, 0, true);
 			this.updateItems();
 		}
 		
-		public function onDispose():void
+		override protected function onBeforeDispose():void
 		{
 			if (this.panels.hasEventListener(Event.CHANGE))
 			{
@@ -55,9 +66,10 @@ package net.armagomen.battleobserver.battle
 			this.battleLoading = null;
 			this.fullStats = null;
 			this.panels = null;
+			super.onBeforeDispose();
 		}
 		
-		public function update_wgrdata(statsData:Object):void
+		public function update_wgr_data(statsData:Object):void
 		{
 			for (var key:String in statsData)
 			{

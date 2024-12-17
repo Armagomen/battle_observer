@@ -1,5 +1,4 @@
-from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS, \
-    VEHICLE_TYPES_COLORS
+from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import xvmInstalled
 from armagomen.utils.logging import logDebug, logInfo
@@ -52,14 +51,6 @@ class ViewSettings(object):
         if self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
             return False
         return user_settings.statistics[GLOBAL.ENABLED]
-
-    @staticmethod
-    def getStatisticsSettings():
-        return (
-            user_settings.statistics[STATISTICS.PANELS_CUT_WIDTH],
-            user_settings.statistics[STATISTICS.PANELS_FULL_WIDTH],
-            user_settings.colors[VEHICLE_TYPES_COLORS.NAME], user_settings.statistics[STATISTICS.ICON_BLACKOUT]
-        )
 
     @staticmethod
     def xvmInstalled(module):
@@ -127,6 +118,8 @@ class ViewSettings(object):
             return self.isDistanceToEnemyEnabled()
         elif alias is BATTLE_ALIASES.OWN_HEALTH:
             return user_settings.own_health[GLOBAL.ENABLED]
+        elif alias is BATTLE_ALIASES.WGR_ICONS:
+            return self.isWGREnabled() or self.isIconsEnabled()
         return False
 
     def setComponents(self):

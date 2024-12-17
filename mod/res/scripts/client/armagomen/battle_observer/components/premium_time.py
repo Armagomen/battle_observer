@@ -2,7 +2,7 @@ from collections import namedtuple
 
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import callback, cancelCallback, overrideMethod
+from armagomen.utils.common import addCallback, cancelCallback, overrideMethod
 from gui.impl import backport
 from gui.impl.gen import R
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
@@ -38,7 +38,7 @@ class PremiumTime(object):
     def startCallback(self, base, header, data):
         self.stopCallback()
         if user_settings.main[MAIN.PREMIUM_TIME] and header.itemsCache.items.stats.isPremium:
-            self.callback = callback(1.0, self.startCallback, base, header, data)
+            self.callback = addCallback(1.0, self.startCallback, base, header, data)
             data["doLabel"] = self._getPremiumLabelText(header.itemsCache.items.stats.activePremiumExpiryTime)
         base(header, data)
 

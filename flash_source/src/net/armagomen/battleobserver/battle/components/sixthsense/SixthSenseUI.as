@@ -9,6 +9,8 @@
 	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.tween.Tween;
+	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
+	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{

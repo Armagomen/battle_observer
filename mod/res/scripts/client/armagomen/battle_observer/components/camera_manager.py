@@ -8,7 +8,7 @@ import TriggersManager
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import callback, getPlayer, isReplay, overrideMethod
+from armagomen.utils.common import addCallback, getPlayer, isReplay, overrideMethod
 from armagomen.utils.logging import logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
@@ -53,7 +53,7 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
     def onTriggerActivated(self, params):
         if params.get('type') == self.__trigger_type:
-            callback(max(self.latency, 0), self.changeControlMode)
+            addCallback(max(self.latency, 0), self.changeControlMode)
 
     def changeControlMode(self):
         if self.avatar is None or self.avatar.isObserver():

@@ -1,8 +1,8 @@
 from armagomen._constants import TEAM_BASES
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
-from armagomen.utils.common import callback
-from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
+from armagomen.utils.common import addCallback
 from gui.battle_control.controllers.team_bases_ctrl import ITeamBasesListener
+from gui.Scaleform.daapi.view.battle.classic.team_bases_panel import _getSettingItem
 from helpers import time_utils
 
 _MAX_INVADERS_COUNT = 3
@@ -59,7 +59,7 @@ class TeamBases(TeamBasesMeta, ITeamBasesListener):
         item = self.basesDict.get(clientID, None)
         if item:
             self.as_updateCaptureTextS(item.getColor(), item.getCapturedString())
-            callback(5.0, self.removeTeamBase, clientID)
+            addCallback(5.0, self.removeTeamBase, clientID)
 
     def removeTeamBase(self, clientID):
         if clientID in self.basesDict:

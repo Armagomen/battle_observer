@@ -15,7 +15,6 @@ from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
 from helpers.http import openUrl
-from uilogging.core.core_constants import HTTP_DEFAULT_TIMEOUT
 
 CONFIG_DIR = "mod_battle_observer"
 MOD_CACHE = "battle_observer"
@@ -38,7 +37,7 @@ def getEntity(entity_id):
     return BigWorld.entities.get(entity_id)
 
 
-def callback(delay, callMethod, *args, **kwargs):
+def addCallback(delay, callMethod, *args, **kwargs):
     return BigWorld.callback(delay, partial(callMethod, *args, **kwargs) if args or kwargs else callMethod)
 
 
@@ -281,8 +280,9 @@ def getPercent(param_a, param_b):
     return float(normalizeHealth(param_a)) / param_b
 
 
-def fetchURL(url, callback_function):
-    BigWorld.fetchURL(url, callback_function, {"User-Agent": "Battle-Observer-App"}, HTTP_DEFAULT_TIMEOUT, 'GET')
+def fetchURL(url, callback, timeout=30.0, method='GET', postData=''):
+    headers = {"User-Agent": "Battle-Observer-App"}
+    BigWorld.fetchURL(url, callback, headers, timeout, method, postData)
 
 
 locale.locale_encoding_alias["cp65001"] = UTF_8

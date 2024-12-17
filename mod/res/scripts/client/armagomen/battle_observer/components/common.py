@@ -1,6 +1,6 @@
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import callback, overrideMethod
+from armagomen.utils.common import addCallback, overrideMethod
 from armagomen.utils.events import g_events
 from CurrentVehicle import g_currentVehicle
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
@@ -24,7 +24,7 @@ from VehicleGunRotator import VehicleGunRotator
 def changeVehicle(base, *args, **kwargs):
     base(*args, **kwargs)
     g_events.onVehicleChanged()
-    callback(1.0, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
+    addCallback(1.0, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
 
 
 # disable field mail tips

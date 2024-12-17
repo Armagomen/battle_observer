@@ -260,8 +260,8 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
 BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
-    "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC",
-    "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "PANELS"))(
+    "WGR_ICONS", "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DEBUG", "TIMER", "SIXTH_SENSE", "TEAM_BASES", "ARMOR_CALC",
+    "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "PANELS"))("_Observer_WGRAndIcons_UI",
     "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_DebugPanel_UI",
     "Observer_BattleTimer_UI", "Observer_SixthSense_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI",
     "Observer_FlightTime_UI", "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI",
@@ -269,8 +269,8 @@ BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
 
 LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME",))("Observer_DateTimes_UI", )
 
-DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "DIST", "TANK_NAME"))("distance_to_enemy", "template",
-                                                                             "distance", "name")
+DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "DIST", "TANK_NAME"))(
+    "distance_to_enemy", "template", "distance", "name")
 
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME",))("own_health", )
 
@@ -416,7 +416,8 @@ ALIAS_TO_CONFIG_NAME = {
     BATTLE_ALIASES.PANELS: PANELS.PANELS_NAME,
     BATTLE_ALIASES.DATE_TIME: CLOCK.NAME,
     BATTLE_ALIASES.DISTANCE: DISTANCE.NAME,
-    BATTLE_ALIASES.OWN_HEALTH: OWN_HEALTH.NAME
+    BATTLE_ALIASES.OWN_HEALTH: OWN_HEALTH.NAME,
+    BATTLE_ALIASES.WGR_ICONS: STATISTICS.NAME
 }
 
 

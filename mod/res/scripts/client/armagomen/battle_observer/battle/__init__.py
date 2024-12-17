@@ -13,11 +13,13 @@ from armagomen.battle_observer.battle.players_panels import PlayersPanels
 from armagomen.battle_observer.battle.sixth_sense import SixthSense
 from armagomen.battle_observer.battle.team_bases import TeamBases
 from armagomen.battle_observer.battle.teams_hp import TeamsHP
+from armagomen.battle_observer.battle.wgr_and_icons import WGRAndIcons
 from armagomen.battle_observer.view import ViewHandlerBattle
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 
 __all__ = ()
 VIEW_SETTINGS = (
+    ComponentSettings(BATTLE_ALIASES.WGR_ICONS, WGRAndIcons, ScopeTemplates.DEFAULT_SCOPE),
     ComponentSettings(BATTLE_ALIASES.ARMOR_CALC, ArmorCalculator, ScopeTemplates.DEFAULT_SCOPE),
     ComponentSettings(BATTLE_ALIASES.TIMER, BattleTimer, ScopeTemplates.DEFAULT_SCOPE),
     ComponentSettings(BATTLE_ALIASES.DAMAGE_LOG, DamageLog, ScopeTemplates.DEFAULT_SCOPE),
