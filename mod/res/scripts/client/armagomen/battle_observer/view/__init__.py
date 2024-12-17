@@ -1,4 +1,3 @@
-import constants
 from armagomen._constants import BATTLE_PAGES, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
@@ -50,20 +49,8 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             to_format_str = "{}:flashObject, has ho attribute {}"
             return logError(to_format_str, alias, ATTRIBUTE_NAME)
         pyView._blToggling.update(self._components)
-        addCallback(2.0 if xvmInstalled else 0, self._loadView, pyView.flashObject)
-
-    def _loadView(self, flashObject):
-        flashObject.as_BattleObserverCreate(self._components)
-        flashObject.as_BattleObserverHideWg(self._hiddenComponents)
-        arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
-        if arena is None:
-            return logError("_loadView: arena is None")
-
-        def onPeriodChange(period, *args):
-            if period != constants.ARENA_PERIOD.AFTERBATTLE:
-                flashObject.as_BattleObserverUpdateLogsPosition()
-
-        arena.onPeriodChange += onPeriodChange
+        addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, self._components,
+                    self._hiddenComponents)
 
 
 class ViewHandlerLobby(PackageBusinessHandler):

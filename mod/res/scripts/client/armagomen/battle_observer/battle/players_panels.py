@@ -25,6 +25,9 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             if self.settings[PANELS.ON_KEY_DOWN]:
                 g_keysListener.registerComponent(self.as_setHealthBarsVisibleS,
                                                  keyList=self.settings[PANELS.BAR_HOT_KEY])
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None:
+                arena.onPeriodChange += self.onPeriodChange
         if self.damagesEnable:
             damage_controller.onPlayerDamaged += self.onPlayerDamaged
             g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS,
@@ -32,8 +35,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def _dispose(self):
         self.flashObject.as_clearStorage()
-        if self.hpBarsEnable and not self.settings[PANELS.BAR_CLASS_COLOR]:
-            self.settingsCore.onSettingsApplied -= self.onSettingsApplied
+        if self.hpBarsEnable:
+            if not self.settings[PANELS.BAR_CLASS_COLOR]:
+                self.settingsCore.onSettingsApplied -= self.onSettingsApplied
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None:
+                arena.onPeriodChange -= self.onPeriodChange
         if self.damagesEnable:
             damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         super(PlayersPanels, self)._dispose()
@@ -93,3 +100,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def onPlayerDamaged(self, attackerID, damage):
         damage_text = self.settings[PANELS.DAMAGES_TEMPLATE] % {PANELS.DAMAGE: damage}
         self.as_updateDamageS(attackerID, damage_text)
+
+    def onPeriodChange(self, period, *args):
+        self.updateDamageLogPosition()

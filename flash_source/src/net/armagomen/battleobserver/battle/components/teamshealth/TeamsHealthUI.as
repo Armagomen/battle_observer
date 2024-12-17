@@ -36,6 +36,9 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			background.alpha = 0.9;
 			this.correlation.y = 20;
 			this.updateCorrelationBar();
+			
+			var q_progress:* = page.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
+			page.addChildAt(q_progress, page.getChildIndex(this.correlation) - 1);
 		}
 		
 		private function updateCorrelationBar():void

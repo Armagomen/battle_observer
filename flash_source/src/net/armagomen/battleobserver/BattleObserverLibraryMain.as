@@ -6,14 +6,15 @@ package net.armagomen.battleobserver
 	 */
 	
 	import flash.display.*;
-	import net.armagomen.battleobserver.battle.components.StatisticsAndIcons;
 	import net.armagomen.battleobserver.battle.components.ArmorCalculatorUI;
 	import net.armagomen.battleobserver.battle.components.DamageLogsUI;
 	import net.armagomen.battleobserver.battle.components.DispersionTimerUI;
 	import net.armagomen.battleobserver.battle.components.DistanceUI;
 	import net.armagomen.battleobserver.battle.components.FlightTimeUI;
+	import net.armagomen.battleobserver.battle.components.MinimapUI;
 	import net.armagomen.battleobserver.battle.components.ObserverDateTimesUI;
 	import net.armagomen.battleobserver.battle.components.OwnHealthUI;
+	import net.armagomen.battleobserver.battle.components.StatisticsAndIcons;
 	import net.armagomen.battleobserver.battle.components.battletimer.ObserverBattleTimerUI;
 	import net.armagomen.battleobserver.battle.components.debugpanel.ObserverDebugPanelUI;
 	import net.armagomen.battleobserver.battle.components.maingun.MainGunUI;
@@ -21,7 +22,6 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.sixthsense.SixthSenseUI;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
-	import net.armagomen.battleobserver.battle.components.MinimapUI;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.BaseBattlePage;
 	import net.wg.infrastructure.base.AbstractView;
@@ -32,7 +32,7 @@ package net.armagomen.battleobserver
 		public function BattleObserverLibraryMain()
 		{
 			super();
-			BaseBattlePage.prototype.as_BattleObserverCreate = function(aliases:Array):void
+			BaseBattlePage.prototype.as_BattleObserverCreate = function(aliases:Array, hidden:Array):void
 			{
 				var alias_to_ui:Object = {"Observer_MainGun_UI": MainGunUI, "Observer_TeamsHP_UI": TeamsHealthUI, "Observer_DamageLog_UI": DamageLogsUI, "Observer_DebugPanel_UI": ObserverDebugPanelUI, "Observer_BattleTimer_UI": ObserverBattleTimerUI, "Observer_SixthSense_UI": SixthSenseUI, "Observer_TeamBases_UI": TeamBasesUI, "Observer_ArmorCalculator_UI": ArmorCalculatorUI, "Observer_FlightTime_UI": FlightTimeUI, "Observer_DispersionTimer_UI": DispersionTimerUI, "Observer_DateTimes_UI": ObserverDateTimesUI, "Observer_Distance_UI": DistanceUI, "Observer_OwnHealth_UI": OwnHealthUI, "Observer_PlayersPanels_UI": PlayersPanelsUI, "Observer_WGRAndIcons_UI": StatisticsAndIcons, "Observer_MiniMap_UI": MinimapUI};
 				
@@ -52,11 +52,8 @@ package net.armagomen.battleobserver
 						DebugUtils.LOG_ERROR("[BATTLE_OBSERVER] registerComponent " + alias + " : " + err.message);
 					}
 				}
-			}
-
-			BaseBattlePage.prototype.as_BattleObserverHideWg = function(components:Array):void
-			{
-				for each (var alias:String in components)
+				
+				for each (var alias:String in hidden)
 				{
 					var component:* = this.getComponent(alias);
 					if (component)
@@ -72,28 +69,7 @@ package net.armagomen.battleobserver
 				{
 					this.addChild(prebattleTimer);
 				}
-			
-				//var q_progress:* = this.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
-				//var t_health:*   = this.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-				//
-				//if (q_progress && t_health)
-				//{
-				//this.addChildAt(q_progress, this.getChildIndex(t_health) - 1);
-				//}
-			}
-			
-			BaseBattlePage.prototype.as_BattleObserverUpdateLogsPosition = function():void
-			{
-				try
-				{
-					this.updateDamageLogPosition();
-				}
-				catch (err:Error)
-				{
-					DebugUtils.LOG_ERROR("[BATTLE_OBSERVER] as_BattleObserverUpdateLogsPosition : " + err.message);
-				}
 			}
 		}
-		
 	}
 }

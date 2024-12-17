@@ -189,5 +189,18 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 			}
 			return null;
 		}
+		
+		public function as_updateDamageLogPosition():void
+		{
+			try
+			{
+				var page:* = parent;
+				page.updateDamageLogPosition();
+			}
+			catch (err:Error)
+			{
+				return;
+			}
+		}
 	}
 }

@@ -38,3 +38,6 @@ class PlayersPanelsMeta(BaseModMeta):
 
     def as_setSpottedPositionS(self, vehicleID):
         return self.flashObject.as_setSpottedPosition(vehicleID) if self._isDAAPIInited() else None
+
+    def updateDamageLogPosition(self):
+        return self.flashObject.as_updateDamageLogPosition() if self._isDAAPIInited() else None
