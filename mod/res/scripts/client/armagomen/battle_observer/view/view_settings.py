@@ -34,7 +34,7 @@ class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
-        self._components = set()
+        self._components = None
         self._hiddenComponents = set()
 
     @property
@@ -120,11 +120,13 @@ class ViewSettings(object):
             return user_settings.own_health[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.WGR_ICONS:
             return self.isWGREnabled() or self.isIconsEnabled()
+        elif alias is BATTLE_ALIASES.MAP:
+            return self.isMinimapEnabled()
         return False
 
     def setComponents(self):
         if self.gui.guiType in BATTLES_RANGE:
-            self._components = {alias for alias in BATTLE_ALIASES if self.getSetting(alias)}
+            self._components = [alias for alias in BATTLE_ALIASES if self.getSetting(alias)]
             if self.gui.isEpicBattle():
                 self.addInToEpicUI(True)
             self._hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self._components)
@@ -133,7 +135,7 @@ class ViewSettings(object):
     def _clear(self):
         if self.gui.isEpicBattle():
             self.addInToEpicUI(False)
-        self._components.clear()
+        self._components = None
         self._hiddenComponents.clear()
         logDebug("clear viewSettings components")
 
@@ -158,9 +160,12 @@ class ViewSettings(object):
                     _NEVER_HIDE.add(alias)
 
     def registerComponents(self):
+        if not self._components:
+            return logDebug("viewSettings, registerComponents: _components is empty")
         config = ComponentsConfig()
-        for alias in self._components.intersection(ALIAS_TO_CTRL.iterkeys()):
-            config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
+        for alias in ALIAS_TO_CTRL:
+            if alias in self._components:
+                config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
         config = config.getConfig()
         logDebug("viewSettings, registerComponents: {}", config)
         self.sessionProvider.registerViewComponents(*config)

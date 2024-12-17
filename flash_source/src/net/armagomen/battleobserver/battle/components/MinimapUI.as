@@ -1,21 +1,34 @@
-package net.armagomen.battleobserver.battle.wgcomponents
+package net.armagomen.battleobserver.battle.components
 {
+	import net.armagomen.battleobserver.battle.base.ObserverBattleDisplayable;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
-	public class minimapZoom
+	public class MinimapUI extends ObserverBattleDisplayable
 	{
 		private var oldSize:Number  = 2.0;
 		private var oldScale:Number = 1.0;
 		private var minimap:*       = null;
 		private var page:*          = null;
 		
-		public function minimapZoom(page:*)
+		public function MinimapUI()
 		{
 			super();
-			this.page = page;
+		}
+		
+		override protected function onPopulate():void
+		{
+			super.onPopulate();
+			this.page = parent;
 			this.minimap = this.page.getComponent(BATTLE_VIEW_ALIASES.MINIMAP);
 			this.page.addChild(this.minimap);
 			App.graphicsOptimizationMgr.unregister(this.minimap);
+		}
+		
+		override protected function onBeforeDispose():void
+		{
+			super.onBeforeDispose();
+			this.page = null;
+			this.minimap = null;
 		}
 		
 		public function minimapCentered(enabled:Boolean):void

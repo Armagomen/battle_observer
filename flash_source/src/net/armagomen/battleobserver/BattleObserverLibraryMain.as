@@ -21,21 +21,20 @@ package net.armagomen.battleobserver
 	import net.armagomen.battleobserver.battle.components.sixthsense.SixthSenseUI;
 	import net.armagomen.battleobserver.battle.components.teambases.TeamBasesUI;
 	import net.armagomen.battleobserver.battle.components.teamshealth.TeamsHealthUI;
-	import net.armagomen.battleobserver.battle.wgcomponents.minimapZoom;
+	import net.armagomen.battleobserver.battle.components.MinimapUI;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.views.BaseBattlePage;
 	import net.wg.infrastructure.base.AbstractView;
 	
 	public class BattleObserverLibraryMain extends AbstractView
 	{
-		private var mapZoom:minimapZoom             = null;
-		
+	
 		public function BattleObserverLibraryMain()
 		{
 			super();
 			BaseBattlePage.prototype.as_BattleObserverCreate = function(aliases:Array):void
 			{
-				var alias_to_ui:Object = {"Observer_MainGun_UI": MainGunUI, "Observer_TeamsHP_UI": TeamsHealthUI, "Observer_DamageLog_UI": DamageLogsUI, "Observer_DebugPanel_UI": ObserverDebugPanelUI, "Observer_BattleTimer_UI": ObserverBattleTimerUI, "Observer_SixthSense_UI": SixthSenseUI, "Observer_TeamBases_UI": TeamBasesUI, "Observer_ArmorCalculator_UI": ArmorCalculatorUI, "Observer_FlightTime_UI": FlightTimeUI, "Observer_DispersionTimer_UI": DispersionTimerUI, "Observer_DateTimes_UI": ObserverDateTimesUI, "Observer_Distance_UI": DistanceUI, "Observer_OwnHealth_UI": OwnHealthUI, "Observer_PlayersPanels_UI": PlayersPanelsUI, "_Observer_WGRAndIcons_UI": StatisticsAndIcons};
+				var alias_to_ui:Object = {"Observer_MainGun_UI": MainGunUI, "Observer_TeamsHP_UI": TeamsHealthUI, "Observer_DamageLog_UI": DamageLogsUI, "Observer_DebugPanel_UI": ObserverDebugPanelUI, "Observer_BattleTimer_UI": ObserverBattleTimerUI, "Observer_SixthSense_UI": SixthSenseUI, "Observer_TeamBases_UI": TeamBasesUI, "Observer_ArmorCalculator_UI": ArmorCalculatorUI, "Observer_FlightTime_UI": FlightTimeUI, "Observer_DispersionTimer_UI": DispersionTimerUI, "Observer_DateTimes_UI": ObserverDateTimesUI, "Observer_Distance_UI": DistanceUI, "Observer_OwnHealth_UI": OwnHealthUI, "Observer_PlayersPanels_UI": PlayersPanelsUI, "Observer_WGRAndIcons_UI": StatisticsAndIcons, "Observer_MiniMap_UI": MinimapUI};
 				
 				for each (var alias:String in aliases)
 				{
@@ -54,20 +53,7 @@ package net.armagomen.battleobserver
 					}
 				}
 			}
-			
-			BaseBattlePage.prototype.as_createMimimapCentered = function():void
-			{
-				this.mapZoom = new minimapZoom(this);
-			}
-			
-			BaseBattlePage.prototype.as_zoomMimimapCentered = function(enable:Boolean):void
-			{
-				if (this.mapZoom)
-				{
-					this.mapZoom.minimapCentered(enable);
-				}
-			}
-			
+
 			BaseBattlePage.prototype.as_BattleObserverHideWg = function(components:Array):void
 			{
 				for each (var alias:String in components)
@@ -109,10 +95,5 @@ package net.armagomen.battleobserver
 			}
 		}
 		
-		override protected function onBeforeDispose():void
-		{
-			super.onBeforeDispose();
-			this.mapZoom = null;
-		}
 	}
 }

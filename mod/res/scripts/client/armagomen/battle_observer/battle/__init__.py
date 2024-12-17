@@ -8,6 +8,7 @@ from armagomen.battle_observer.battle.dispersion_timer import DispersionTimer
 from armagomen.battle_observer.battle.distance_to_enemy import Distance
 from armagomen.battle_observer.battle.flight_time import FlightTime
 from armagomen.battle_observer.battle.main_gun import MainGun
+from armagomen.battle_observer.battle.minimap import MinimapZoomPlugin
 from armagomen.battle_observer.battle.own_health import OwnHealth
 from armagomen.battle_observer.battle.players_panels import PlayersPanels
 from armagomen.battle_observer.battle.sixth_sense import SixthSense
@@ -34,6 +35,7 @@ VIEW_SETTINGS = (
     ComponentSettings(BATTLE_ALIASES.SIXTH_SENSE, SixthSense, ScopeTemplates.DEFAULT_SCOPE),
     ComponentSettings(BATTLE_ALIASES.TEAM_BASES, TeamBases, ScopeTemplates.DEFAULT_SCOPE),
     ComponentSettings(BATTLE_ALIASES.HP_BARS, TeamsHP, ScopeTemplates.DEFAULT_SCOPE),
+    ComponentSettings(BATTLE_ALIASES.MAP, MinimapZoomPlugin, ScopeTemplates.DEFAULT_SCOPE),
 )
 
 

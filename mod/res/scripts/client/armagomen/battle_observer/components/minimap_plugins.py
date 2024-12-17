@@ -3,47 +3,10 @@ from math import degrees
 from armagomen._constants import BATTLES_RANGE, GLOBAL, MINIMAP
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import overrideMethod, xvmInstalled
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logError
-from constants import ARENA_PERIOD, VISIBILITY
-from gui.battle_control import avatar_getter
+from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
-from helpers import dependency
-from PlayerEvents import g_playerEvents
-from skeletons.gui.battle_session import IBattleSessionProvider
-
-
-class MinimapZoomPlugin(object):
-    sessionProvider = dependency.descriptor(IBattleSessionProvider)
-
-    def __init__(self):
-        self.__battleView_as = None
-        self.__started = False
-        self.isComp7Page = False
-
-    def init(self, flashObject):
-        self.__battleView_as = flashObject
-        g_playerEvents.onAvatarReady += self.onAvatarReady
-
-    def onAvatarReady(self):
-        if self.__started:
-            return
-        self.__battleView_as.as_createMimimapCentered()
-        self.isComp7Page = self.sessionProvider.arenaVisitor.gui.isComp7Battle()
-        g_keysListener.registerComponent(self.onKeyPressed, keyList=user_settings.minimap[MINIMAP.ZOOM_KEY])
-        self.__started = True
-
-    def fini(self):
-        g_playerEvents.onAvatarReady -= self.onAvatarReady
-        self.__battleView_as = None
-
-    def onKeyPressed(self, isKeyDown):
-        """hot key event"""
-        if self.isComp7Page and self.sessionProvider.arenaVisitor.getArenaPeriod() != ARENA_PERIOD.BATTLE:
-            return
-        self.__battleView_as.as_zoomMimimapCentered(isKeyDown)
-        avatar_getter.setForcedGuiControlMode(isKeyDown, enableAiming=False)
 
 
 class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
