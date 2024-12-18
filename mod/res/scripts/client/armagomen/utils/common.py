@@ -6,6 +6,7 @@ from collections import namedtuple
 from colorsys import hsv_to_rgb
 from functools import partial
 from io import open as _open
+from threading import Thread
 
 import BigWorld
 import ResMgr
@@ -280,9 +281,11 @@ def getPercent(param_a, param_b):
     return float(normalizeHealth(param_a)) / param_b
 
 
-def fetchURL(url, callback, timeout=30.0, method='GET', postData=''):
+def fetchURL(url, callback, timeout=15.0, method='GET', postData=''):
     headers = {"User-Agent": "Battle-Observer-App"}
-    BigWorld.fetchURL(url, callback, headers, timeout, method, postData)
+    th = Thread(target=BigWorld.fetchURL, args=(url, callback, headers, timeout, method, postData), name="fetchURL")
+    th.start()
+    th.join(timeout)
 
 
 locale.locale_encoding_alias["cp65001"] = UTF_8
