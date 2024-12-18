@@ -217,7 +217,7 @@ overrides = {}
 def overrideMethod(wg_class, method_name="__init__"):
     """
     wg_class: class object
-    method_name: unicode default __init__
+    method_name: Unicode, default __init__
     """
     class_name = wg_class.__name__
     if not hasattr(wg_class, method_name):
@@ -255,7 +255,7 @@ def convertDictToNamedtuple(dictionary):
 
 
 def percentToRGB(percent, saturation=0.5, brightness=1.0, **kwargs):
-    """Percent is float number in range 0 - 2.4 purple, or 1.0 green."""
+    """Percent, float number in range 0-2.4 purple, or 1.0 green."""
     # Adjusted for purple and green positions
     position = min(0.8333, percent * 0.3333)
     r, g, b = (int(i * 255) for i in hsv_to_rgb(position, saturation, brightness))
