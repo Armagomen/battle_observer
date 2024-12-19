@@ -281,11 +281,11 @@ def getPercent(param_a, param_b):
     return float(normalizeHealth(param_a)) / param_b
 
 
-def fetchURL(url, callback, timeout=15.0, method='GET', postData=''):
+def fetchURL(url, callback, timeout=10.0, method='GET', postData=''):
     headers = {"User-Agent": "Battle-Observer-App"}
     th = Thread(target=BigWorld.fetchURL, args=(url, callback, headers, timeout, method, postData), name="fetchURL")
     th.start()
-    th.join(timeout)
+    th.join(timeout + 2)
 
 
 locale.locale_encoding_alias["cp65001"] = UTF_8

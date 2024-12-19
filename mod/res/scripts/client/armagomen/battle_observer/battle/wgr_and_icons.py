@@ -7,9 +7,10 @@ from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 from armagomen.utils.common import addCallback, fetchURL
 from armagomen.utils.logging import logDebug, logError
 from constants import AUTH_REALM
-from helpers import dependency
-from skeletons.gui.battle_session import IBattleSessionProvider
+from Event import SafeEvent
 from uilogging.core.core_constants import HTTP_OK_STATUS
+
+region = REGIONS.get(AUTH_REALM)
 
 
 class WGRAndIcons(BaseModMeta):
@@ -20,20 +21,23 @@ class WGRAndIcons(BaseModMeta):
     UNITS = ['', 'k', 'm', 'g', 't', 'p']
 
     def __init__(self):
-        self.data_loader = None
         super(WGRAndIcons, self).__init__()
         self.ranges = ((3280, "bad"), (5165, "normal"), (7274, "good"), (9589, "very_good"), (11015, "unique"))
         self.itemsData = {}
+        self.data_loader = None
 
     def _populate(self):
         super(WGRAndIcons, self)._populate()
-        if self.settings[STATISTICS.STATISTIC_ENABLED]:
-            self.data_loader = StatisticsDataLoader()
-            if not self.data_loader.enabled:
-                self.data_loader.regionError()
-            else:
-                self.data_loader.setFeedback(self.update_wgr_data)
-                self.data_loader.getStatisticsDataFromServer()
+        if region is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
+            self.data_loader = StatisticsDataLoader(self._arenaVisitor.getArenaSubscription(), self._arenaDP)
+            self.data_loader.onDataReceived += self.update_wgr_data
+            self.data_loader.getStatisticsDataFromServer()
+
+    def _dispose(self):
+        if self.data_loader is not None:
+            self.data_loader.onDataReceived -= self.update_wgr_data
+            self.data_loader = None
+        super(WGRAndIcons, self)._dispose()
 
     def update_wgr_data(self, data):
         self.updateAllItems(self._arenaDP, data)
@@ -62,7 +66,6 @@ class WGRAndIcons(BaseModMeta):
             full, cut = self.getPattern(veh_info.team != player_team, item_data)
             text_color = item_data[self.COLOR_WGR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
-        return self.itemsData
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]
@@ -93,27 +96,20 @@ class WGRAndIcons(BaseModMeta):
                 "battles": battles, "nickname": data.get("nickname"),
                 "clanTag": "[{}]".format(clanTag) if clanTag else ""}
 
-    def _dispose(self):
-        self.data_loader = None
-        super(WGRAndIcons, self)._dispose()
-
-
-region = REGIONS.get(AUTH_REALM)
-
 
 class StatisticsDataLoader(object):
-    sessionProvider = dependency.descriptor(IBattleSessionProvider)
     URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"
 
-    def __init__(self):
-        self.enabled = region is not None
+    def __init__(self, arena, arenaDP):
+        self.arena = arena
+        self.arenaDP = arenaDP
         self._load_try = 0
-        self.__feedback = None
         self.__getDataCallback = None
         self.__vehicles = set()
+        self.onDataReceived = SafeEvent()
 
     def onDataResponse(self, response):
         if response.responseCode == 304:
@@ -122,13 +118,9 @@ class StatisticsDataLoader(object):
             response_data = json.loads(response.body)
             data = response_data.get("data", {})
             logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
-            if self.__feedback is not None:
-                self.__feedback(data)
+            self.onDataReceived(data)
         else:
             self.delayedLoad(response.responseCode)
-
-    def setFeedback(self, callback_method):
-        self.__feedback = callback_method
 
     def delayedLoad(self, code):
         if self._load_try < 5:
@@ -137,12 +129,8 @@ class StatisticsDataLoader(object):
             logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
             addCallback(2.0, self.getStatisticsDataFromServer)
 
-    @staticmethod
-    def regionError():
-        logError("Statistics are not available in your region={}. Only in {}", AUTH_REALM, REGIONS.keys())
-
     def updateList(self, vehicleID):
-        vInfo = self.sessionProvider.getArenaDP().getVehicleInfo(vehicleID)
+        vInfo = self.arenaDP.getVehicleInfo(vehicleID)
         accountDBID = vInfo.player.accountDBID
         if not accountDBID:
             return
@@ -163,19 +151,10 @@ class StatisticsDataLoader(object):
         fetchURL(url, self.onDataResponse)
 
     def getStatisticsDataFromServer(self):
-        if self.__feedback is None:
-            raise ReferenceError("feedback method is not set")
-        arenaDP = self.sessionProvider.getArenaDP()
-        if arenaDP is None:
-            return self.delayedLoad("arenaDP is None")
-        self.__vehicles = set(vInfo.player.accountDBID for vInfo in arenaDP.getVehiclesInfoIterator() if
-                              vInfo.player.accountDBID)
-        if not self.__vehicles:
-            return self.delayedLoad("users list is empty")
-        arena = self.sessionProvider.arenaVisitor.getArenaSubscription()
-        if arena is not None and arena.isFogOfWarEnabled:
-            arena.onVehicleAdded += self.updateList
-            arena.onVehicleUpdated += self.updateList
-        logDebug("StatisticsDataLoader/getStatisticsDataFromServer: START request data: ids={}, len={} ",
-                 self.__vehicles, len(self.__vehicles))
+        self.__vehicles.update(vInfo.player.accountDBID for vInfo in self.arenaDP.getVehiclesInfoIterator() if
+                               vInfo.player.accountDBID)
+        if self.arena is not None and self.arena.isFogOfWarEnabled:
+            self.arena.onVehicleAdded += self.updateList
+            self.arena.onVehicleUpdated += self.updateList
+        logDebug("getStatisticsDataFromServer: START request data: ids={}", self.__vehicles)
         self.requestData()
