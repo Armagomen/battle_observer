@@ -34,8 +34,11 @@ gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 aih_constants.GUN_MARKER_MIN_SIZE = 12.0
 aih_constants.SPG_GUN_MARKER_MIN_SIZE = 24.0
 
+REPLACE = {CLIENT, DUAL_ACC}
+
+
 def getSetting(gunMakerType):
-    if gunMakerType == CLIENT:
+    if gunMakerType in REPLACE:
         return user_settings.dispersion_circle[DISPERSION.REPLACE]
     elif gunMakerType == SERVER:
         return user_settings.dispersion_circle[DISPERSION.SERVER]
@@ -52,6 +55,15 @@ class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
     def __updateScreenRatio(self):
         super(_DefaultGunMarkerController, self).__updateScreenRatio()
         self.__screenRatio *= self.__scaleConfig
+
+
+class _DualAccMarkerController(_DefaultGunMarkerController):
+
+    def _replayReader(self, replayCtrl):
+        return replayCtrl.getDualAccMarkerSize
+
+    def _replayWriter(self, replayCtrl):
+        return replayCtrl.setDualAccMarkerSize
 
 
 class SPGController(gun_marker_ctrl._SPGGunMarkerController):
@@ -137,7 +149,7 @@ class DispersionCircle(object):
         else:
             client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
             server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
-            dual = gun_marker_ctrl._DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
+            dual = _DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
         return gun_marker_ctrl._GunMarkersDecorator(client, server, dual)
 
 
