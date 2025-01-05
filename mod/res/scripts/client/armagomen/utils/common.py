@@ -229,10 +229,10 @@ def overrideMethod(wg_class, method_name="__init__"):
                 method_name = method_name[1:]
 
     def outer(new_method):
-        old_method = getattr(wg_class, method_name, None)
         full_name_with_class = class_name + "." + method_name
-        if full_name_with_class is base_before_override:
+        if full_name_with_class in base_before_override:
             return new_method
+        old_method = getattr(wg_class, method_name, None)
         if old_method is not None and callable(old_method):
             base_before_override[full_name_with_class] = old_method
             setattr(wg_class, method_name, lambda *args, **kwargs: new_method(old_method, *args, **kwargs))
@@ -244,13 +244,14 @@ def overrideMethod(wg_class, method_name="__init__"):
     return outer
 
 
-def cancelOverrode(wg_class, method_name):
+def cancelOverride(wg_class, method_name):
     class_name = wg_class.__name__
     if method_name.startswith("__"):
         method_name = "_{0}{1}".format(class_name, method_name)
     full_name_with_class = class_name + "." + method_name
     if full_name_with_class in base_before_override:
         setattr(wg_class, method_name, base_before_override.pop(full_name_with_class))
+        logDebug("cancelOverrode: override {} removed", full_name_with_class)
 
 
 def convertDictToNamedtuple(dictionary):

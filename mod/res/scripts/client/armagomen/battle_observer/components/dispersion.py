@@ -1,7 +1,7 @@
 import aih_constants
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import cancelOverrode, getPlayer, isReplay, overrideMethod
+from armagomen.utils.common import cancelOverride, getPlayer, isReplay, overrideMethod
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
 from constants import SERVER_TICK_LENGTH
@@ -100,15 +100,15 @@ class DispersionCircle(object):
 
     @staticmethod
     def cancelServerCrossOverride():
-        cancelOverrode(gm_factory, "createComponents")
-        cancelOverrode(gm_factory, "overrideComponents")
-        cancelOverrode(gun_marker_ctrl, "useDefaultGunMarkers")
-        cancelOverrode(gun_marker_ctrl, "useClientGunMarker")
-        cancelOverrode(gun_marker_ctrl, "useServerGunMarker")
-        cancelOverrode(VehicleGunRotator, "applySettings")
-        cancelOverrode(VehicleGunRotator, "setShotPosition")
-        cancelOverrode(CrosshairDataProxy, "__onServerGunMarkerStateChanged")
-        cancelOverrode(CrosshairPanelContainer, "setGunMarkerColor")
+        cancelOverride(gm_factory, "createComponents")
+        cancelOverride(gm_factory, "overrideComponents")
+        cancelOverride(gun_marker_ctrl, "useDefaultGunMarkers")
+        cancelOverride(gun_marker_ctrl, "useClientGunMarker")
+        cancelOverride(gun_marker_ctrl, "useServerGunMarker")
+        cancelOverride(VehicleGunRotator, "applySettings")
+        cancelOverride(VehicleGunRotator, "setShotPosition")
+        cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged")
+        cancelOverride(CrosshairPanelContainer, "setGunMarkerColor")
 
     @staticmethod
     def createOverrideComponents(base, *args):
@@ -152,7 +152,7 @@ class DispersionCircle(object):
             if replace or server:
                 overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
             else:
-                cancelOverrode(gun_marker_ctrl, "createGunMarker")
+                cancelOverride(gun_marker_ctrl, "createGunMarker")
             if server:
                 self.addServerCrossOverrides()
             else:
