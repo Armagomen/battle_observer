@@ -1,7 +1,7 @@
 import aih_constants
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import getPlayer, isReplay, overrideMethod
+from armagomen.utils.common import cancelOverrode, getPlayer, isReplay, overrideMethod
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
 from constants import SERVER_TICK_LENGTH
@@ -31,15 +31,15 @@ LINKAGES = {
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
-aih_constants.GUN_MARKER_MIN_SIZE = 12.0
+aih_constants.GUN_MARKER_MIN_SIZE = 14.0
 aih_constants.SPG_GUN_MARKER_MIN_SIZE = 24.0
 
-REPLACE = {CLIENT, DUAL_ACC}
+REPLACE = {CLIENT, SERVER, DUAL_ACC}
 
 
 def getSetting(gunMakerType):
-    if gunMakerType in REPLACE:
-        return user_settings.dispersion_circle[DISPERSION.REPLACE]
+    if gunMakerType in REPLACE and user_settings.dispersion_circle[DISPERSION.REPLACE]:
+        return True
     elif gunMakerType == SERVER:
         return user_settings.dispersion_circle[DISPERSION.SERVER]
     return False
@@ -85,62 +85,81 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 class DispersionCircle(object):
 
     def __init__(self):
-        self.enabled = False
-        self.server = False
         user_settings.onModSettingsChanged += self.onModSettingsChanged
+
+    def addServerCrossOverrides(self):
         overrideMethod(gm_factory, "createComponents")(self.createOverrideComponents)
         overrideMethod(gm_factory, "overrideComponents")(self.createOverrideComponents)
-        overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
         overrideMethod(gun_marker_ctrl, "useDefaultGunMarkers")(self.useDefaultGunMarkers)
         overrideMethod(gun_marker_ctrl, "useClientGunMarker")(self.useGunMarker)
         overrideMethod(gun_marker_ctrl, "useServerGunMarker")(self.useGunMarker)
-        overrideMethod(VehicleGunRotator, "applySettings")(self.applySettings)
+        overrideMethod(VehicleGunRotator, "applySettings")(self.onPass)
         overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPosition)
-        overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onServerGunMarkerStateChanged)
+        overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onPass)
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
 
-    def createOverrideComponents(self, base, *args):
-        if not self.server:
-            return base(*args)
+    @staticmethod
+    def cancelServerCrossOverride():
+        cancelOverrode(gm_factory, "createComponents")
+        cancelOverrode(gm_factory, "overrideComponents")
+        cancelOverrode(gun_marker_ctrl, "useDefaultGunMarkers")
+        cancelOverrode(gun_marker_ctrl, "useClientGunMarker")
+        cancelOverrode(gun_marker_ctrl, "useServerGunMarker")
+        cancelOverrode(VehicleGunRotator, "applySettings")
+        cancelOverrode(VehicleGunRotator, "setShotPosition")
+        cancelOverrode(CrosshairDataProxy, "__onServerGunMarkerStateChanged")
+        cancelOverrode(CrosshairPanelContainer, "setGunMarkerColor")
+
+    @staticmethod
+    def createOverrideComponents(base, *args):
         player = getPlayer()
         player.enableServerAim(True)
         if len(args) == 2:
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
 
-    def useDefaultGunMarkers(self, base, *args, **kwargs):
-        return not self.server or base(*args, **kwargs)
+    @staticmethod
+    def useDefaultGunMarkers(*args, **kwargs):
+        return False
 
-    def useGunMarker(self, base, *args, **kwargs):
-        return self.server or base(*args, **kwargs)
+    @staticmethod
+    def useGunMarker(*args, **kwargs):
+        return True
 
-    def applySettings(self, base, *args, **kwargs):
-        return None if self.server else base(*args, **kwargs)
+    @staticmethod
+    def onPass(*args, **kwargs):
+        pass
 
-    def setShotPosition(self, base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
+    @staticmethod
+    def setShotPosition(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
         base(rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
-        if not self.server:
-            return
         m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
         mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
         rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH, collData)
 
-    def onServerGunMarkerStateChanged(self, base, *args, **kwargs):
-        return None if self.server else base(*args, **kwargs)
-
-    def setGunMarkerColor(self, base, cr_panel, markerType, color):
-        if self.server and markerType == CLIENT:
+    @staticmethod
+    def setGunMarkerColor(base, cr_panel, markerType, color):
+        if markerType == CLIENT:
             base(cr_panel, SERVER, color)
         return base(cr_panel, markerType, color)
 
     def onModSettingsChanged(self, config, blockID):
+        if isReplay():
+            return
         if blockID == DISPERSION.NAME:
-            self.enabled = config[GLOBAL.ENABLED] and not isReplay()
-            self.server = config[DISPERSION.SERVER] and self.enabled
+            replace = config[GLOBAL.ENABLED] and config[DISPERSION.REPLACE]
+            server = config[GLOBAL.ENABLED] and config[DISPERSION.SERVER]
+            if replace or server:
+                overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
+            else:
+                cancelOverrode(gun_marker_ctrl, "createGunMarker")
+            if server:
+                self.addServerCrossOverrides()
+            else:
+                self.cancelServerCrossOverride()
 
-    def createGunMarker(self, baseCreateGunMarker, isStrategic):
-        if not self.enabled:
-            return baseCreateGunMarker(isStrategic)
+    @staticmethod
+    def createGunMarker(baseCreateGunMarker, isStrategic):
         factory = gun_marker_ctrl._GunMarkersDPFactory()
         if isStrategic:
             client = SPGController(CLIENT, factory.getClientSPGProvider())
