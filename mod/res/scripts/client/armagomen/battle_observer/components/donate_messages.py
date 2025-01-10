@@ -39,7 +39,7 @@ MESSAGES = {
 
 LINKS_FORMAT = {
     "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - поповнити банку."},
-    "en": {"url": URLS.PATREON, "img": IMG.PATREON, "name": "PATREON - subscribe."},
+    "en": {"url": URLS.DONATELLO, "img": IMG.DONATELLO, "name": "DONATELLO - euro/uah/usdt."},
 }
 
 CLAN_ID = 500223690

@@ -25,9 +25,10 @@ def sixthSenseIconsNamesList():
     return sorted(folder.keys())
 
 
-IMG = namedtuple("IMG", "MONO PATREON")(
+IMG = namedtuple("IMG", "MONO PATREON DONATELLO")(
     "<img src='{}/donate/mono.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
+    "<img src='{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
+    "<img src='{}/donate/donatello.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
 )
 
 URLS = namedtuple("URLS", (
@@ -35,13 +36,15 @@ URLS = namedtuple("URLS", (
     "MONO",
     "PATREON",
     "DISCORD",
-    "UPDATE"
+    "UPDATE",
+    "DONATELLO"
 ))(
     "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
     "https://send.monobank.ua/jar/5BZHrPrJwr",
     "https://patreon.com/armagomen",
     "https://discord.gg/Nma5T5snKW",
-    "https://github.com/Armagomen/battle_observer/releases/download/"
+    "https://github.com/Armagomen/battle_observer/releases/download/",
+    "https://donatello.to/ArmagomenUA"
 )
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
