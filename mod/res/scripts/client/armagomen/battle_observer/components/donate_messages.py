@@ -39,7 +39,7 @@ MESSAGES = {
 
 LINKS_FORMAT = {
     "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - поповнити банку."},
-    "en": {"url": URLS.DONATELLO, "img": IMG.DONATELLO, "name": "DONATELLO - euro/uah/usdt."},
+    "en": {"url": URLS.DONATELLO, "img": IMG.DONATELLO, "name": "DONATELLO - euro|uah|usdt."},
 }
 
 CLAN_ID = 500223690
@@ -51,8 +51,6 @@ class Donate(object):
 
     def __init__(self):
         self.ln_code = "uk" if getClientLanguage().lower() in ("uk", "be", "ru") else "en"
-        self.messages = MESSAGES[self.ln_code]
-        self.message_format = LINKS_FORMAT[self.ln_code]
         self.timeDelta = datetime.now() + timedelta(minutes=5)
         self.lastMessage = None
         self.show_clan_invite = True
@@ -73,14 +71,14 @@ class Donate(object):
                        response.responseCode, response.body)
 
     def getRandomMessage(self):
-        message = choice(self.messages)
+        message = choice(MESSAGES[self.ln_code])
         if message is self.lastMessage:
             message = self.getRandomMessage()
         return message.decode('utf-8')
 
     def pushDonateMessage(self):
         self.lastMessage = self.getRandomMessage()
-        message = PATTERN.format(msg=self.lastMessage, **self.message_format)
+        message = PATTERN.format(msg=self.lastMessage, **LINKS_FORMAT[self.ln_code])
         pushMessage(message, type=SM_TYPE.Warning)
         logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
 
@@ -96,8 +94,10 @@ class Donate(object):
         self.show_clan_invite = False
 
     def pushNewMessage(self, spaceID):
-        show = not g_clanCache.isInClan or "WG" not in g_clanCache.clanAbbrev
-        if spaceID == GuiGlobalSpaceID.LOBBY and show:
+        if spaceID == GuiGlobalSpaceID.LOBBY:
+            if "WG" in str(g_clanCache.clanAbbrev):
+                ServicesLocator.appLoader.onGUISpaceEntered -= self.pushNewMessage
+                return
             current_time = datetime.now()
             if current_time >= self.timeDelta:
                 self.timeDelta = current_time + timedelta(hours=1)
