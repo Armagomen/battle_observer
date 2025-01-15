@@ -43,7 +43,7 @@ package net.armagomen.battleobserver.battle.components
 					damageLogPanel._detailsTopContainer.removeChild(this.logs[0])
 					damageLogPanel._detailsBottomContainer.removeChild(this.logs[1])
 				}
-				var top:TextExt = new TextExt(position.x + 40, position.y + 4, null, position.align, damageLogPanel._detailsTopContainer, top_enabled);
+				var top:TextExt = new TextExt(position.x + 50, position.y + 4, null, position.align, damageLogPanel._detailsTopContainer, top_enabled);
 				var bottom:TextExt = new TextExt(position.x + 20, position.y, null, position.align, damageLogPanel._detailsBottomContainer, bottom_enabled);
 				this.logs = new <TextExt>[top, bottom];
 				this.logs.fixed = true;

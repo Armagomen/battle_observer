@@ -67,9 +67,14 @@ class BaseModMeta(BaseDAAPIComponent):
     def isPlayerVehicle(self):
         vehicle = self.sessionProvider.shared.vehicleState.getControllingVehicle()
         if vehicle is not None:
-            return vehicle.id == self.playerVehicleID
+            return vehicle.isPlayerVehicle
         observed_veh_id = self.sessionProvider.shared.vehicleState.getControllingVehicleID()
         return self.playerVehicleID == observed_veh_id or observed_veh_id == 0
+
+    @property
+    def isInPostmortemComp7orEpic(self):
+        return self.sessionProvider.shared.vehicleState.isInPostmortem and (
+                self.gui.isComp7Battle() or self.gui.isEpicBattle())
 
     @property
     def playerVehicleID(self):
