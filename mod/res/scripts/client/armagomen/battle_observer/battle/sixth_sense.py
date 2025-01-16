@@ -67,12 +67,15 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
         return message
 
     def _onVehicleStateUpdated(self, state, value):
-        if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY and value:
-            time = self.settings[SIXTH_SENSE.TIME]
-            if self.radio_installed:
-                time -= RADIO_DURATION
-            self.__message = self.getNewRandomMessage()
-            self.show(time)
+        if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
+            if value.get('isObserved', False):
+                time = 4 if self.gui.isComp7Battle() else self.settings[SIXTH_SENSE.TIME]
+                if self.radio_installed:
+                    time -= RADIO_DURATION
+                self.__message = self.getNewRandomMessage()
+                self.show(time)
+            else:
+                self.hide()
         elif state in _STATES_TO_HIDE:
             self.hide()
 

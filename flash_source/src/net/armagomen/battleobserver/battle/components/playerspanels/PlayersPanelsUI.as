@@ -192,14 +192,14 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 		
 		public function as_updateDamageLogPosition():void
 		{
+			var page:* = parent;
 			try
 			{
-				var page:* = parent;
-				page.updateDamageLogPosition();
+				page.battleDamageLogPanel.updateTopContainerPosition(page.playersPanel.listLeft.getRenderersVisibleWidth() + page.playersPanelOffset);
 			}
 			catch (err:Error)
 			{
-				return;
+				page.updateDamageLogPosition();
 			}
 		}
 	}
