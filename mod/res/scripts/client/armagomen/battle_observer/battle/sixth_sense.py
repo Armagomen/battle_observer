@@ -3,7 +3,9 @@ from random import choice
 
 from armagomen._constants import GLOBAL, SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
+from armagomen.utils.logging import logInfo
 from armagomen.utils.timers import SixthSenseTimer
+from constants import DIRECT_DETECTION_TYPE
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from helpers import getClientLanguage
 from PlayerEvents import g_playerEvents
@@ -68,10 +70,17 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
+            logInfo(value)
             if value.get('isObserved', False):
-                time = 4 if self.gui.isComp7Battle() else self.settings[SIXTH_SENSE.TIME]
-                if self.radio_installed:
-                    time -= RADIO_DURATION
+                if self.gui.isComp7Battle():
+                    if value.get("detectionType", 0) == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
+                        time = 2
+                    else:
+                        time = 4
+                else:
+                    time = self.settings[SIXTH_SENSE.TIME]
+                    if self.radio_installed:
+                        time -= RADIO_DURATION
                 self.__message = self.getNewRandomMessage()
                 self.show(time)
             else:
