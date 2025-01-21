@@ -58,6 +58,7 @@ class DamageLog(DamageLogsMeta):
         self.top_log = defaultdict(int)
         self.last_shell = defaultdict(lambda: (DAMAGE_LOG.NOT_SHELL, False))
         self.top_log_template = ""
+        self.stun_added = False
 
     def _populate(self):
         super(DamageLog, self)._populate()
@@ -75,7 +76,7 @@ class DamageLog(DamageLogsMeta):
             position = self.settings.log_extended[GLOBAL.SETTINGS]
             top_enabled = self.settings.log_extended[DAMAGE_LOG.D_DONE_ENABLED]
             bottom_enabled = self.settings.log_extended[DAMAGE_LOG.D_RECEIVED_ENABLED]
-            self.as_createExtendedLogsS(position, top_enabled, bottom_enabled)
+            self.as_createExtendedLogsS(position, top_enabled, bottom_enabled, self.gui.isComp7Battle())
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
             self._damage_done = LogData(set(), list(), dict(), DAMAGE_LOG.D_DONE)
             self._damage_received = LogData(set(), list(), dict(), DAMAGE_LOG.D_RECEIVED)
@@ -92,7 +93,11 @@ class DamageLog(DamageLogsMeta):
             avg_data = cachedVehicleData.efficiencyAvgData
         else:
             avg_data = cachedVehicleData.default
-        template = self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG]
+        template_list = self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG]
+        if not self.isSPG():
+            template_list = (line for line in template_list if DAMAGE_LOG.STUN_ICON not in line)
+        else:
+            self.stun_added = True
         self.top_log.update(self.settings.log_total[DAMAGE_LOG.ICONS],
                             tankDamageAvgColor=COLORS.WHITE,
                             tankAssistAvgColor=COLORS.WHITE,
@@ -102,10 +107,7 @@ class DamageLog(DamageLogsMeta):
                             tankAvgAssist=avg_data.assist,
                             tankAvgStun=avg_data.stun,
                             tankAvgBlocked=avg_data.blocked)
-        if not self.isSPG():
-            self.top_log.update(stun=GLOBAL.EMPTY_LINE, stunIcon=GLOBAL.EMPTY_LINE)
-            template = [line for line in template if DAMAGE_LOG.STUN_ICON not in line]
-        self.top_log_template = self.settings.log_total[DAMAGE_LOG.TOP_LOG_SEPARATE].join(template)
+        self.top_log_template = self.settings.log_total[DAMAGE_LOG.TOP_LOG_SEPARATE].join(template_list)
 
     def isExtendedLogEventEnabled(self, eventType):
         return self._is_extended_log_enabled and eventType in EXTENDED_FEEDBACK
@@ -165,11 +167,10 @@ class DamageLog(DamageLogsMeta):
 
     def addToTopLog(self, e_type, event, extra):
         avg_value_macros, avg_color_macros, value_macros = _EVENT_TO_TOP_LOG_MACROS[e_type]
-        if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.top_log[DAMAGE_LOG.STUN_ICON]:
+        if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.stun_added:
+            self.stun_added = True
             self.top_log_template = self.settings.log_total[DAMAGE_LOG.TOP_LOG_SEPARATE].join(
                 self.settings.log_total[DAMAGE_LOG.TEMPLATE_MAIN_DMG])
-            self.top_log[DAMAGE_LOG.STUN_ICON] = self.settings.log_total[DAMAGE_LOG.ICONS][DAMAGE_LOG.STUN_ICON]
-            self.top_log[value_macros] = GLOBAL.ZERO
         self.top_log[value_macros] += self.unpackTopLogValue(e_type, event, extra)
         if avg_value_macros is not None:
             value = self.top_log[value_macros]
