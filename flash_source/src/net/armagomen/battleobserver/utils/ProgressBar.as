@@ -44,17 +44,14 @@
 		
 		public function setNewScale(newScale:Number):void
 		{
-			if (this.bar.scaleX != newScale)
+			var scale:Number = Math.max(0, newScale);
+			if (this.animationTime > 0 && this.visible)
 			{
-				var scale:Number = Math.max(0, newScale);
-				if (this.animationTime > 0 && this.visible)
-				{
-					this.animation.continueTo(scale, this.animationTime);
-				}
-				else
-				{
-					this.bar.scaleX = scale;
-				}
+				this.animation.continueTo(scale, this.animationTime);
+			}
+			else
+			{
+				this.bar.scaleX = scale;
 			}
 		}
 		

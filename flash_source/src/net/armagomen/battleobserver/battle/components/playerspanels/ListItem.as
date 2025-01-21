@@ -52,7 +52,7 @@ package net.armagomen.battleobserver.battle.components.playerspanels
 				barX = -barX;
 				textX = -textX;
 			}
-			this.healthBar = new ProgressBar(barX, 2, barWidth, 20, color, colorParams.bgColor, 0.2);
+			this.healthBar = new ProgressBar(barX, 2, barWidth, 20, color, colorParams.bgColor, 0);
 			this.healthBar.setOutline(barWidth, 20);
 			this.healthBar.addTextField(textX, -2, "center", Constants.normalText15);
 			this.healthBar.setVisible(startVisible);

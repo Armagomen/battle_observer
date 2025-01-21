@@ -14,6 +14,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         super(PlayersPanels, self).__init__()
         self.hpBarsEnable = False
         self.damagesEnable = False
+        self.undefined = 0
 
     def _populate(self):
         super(PlayersPanels, self)._populate()
@@ -59,7 +60,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         return colors[COLORS.ALLY_MAME]
 
     def createHealthBar(self, vehicleID, vInfoVO, isEnemy):
-        max_health = vInfoVO.vehicleType.maxHealth
+        max_health = vInfoVO.vehicleType.maxHealth or self.undefined
         if self.settings[PANELS.BAR_CLASS_COLOR]:
             color = self.getVehicleClassColor(vInfoVO.vehicleType.classTag)
         else:
@@ -91,10 +92,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):
         if self.hpBarsEnable:
-            if newHealth > maxHealth:
-                maxHealth = newHealth
-            health_percent = normalizeHealthPercent(newHealth, maxHealth)
-            vehicle_data = {VEHICLE.CUR: max(0, newHealth), VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: health_percent}
+            vInfoVO = self.getVehicleInfo(vehicleID)
+            if vInfoVO.isObserver():
+                return
+            max_health = max(newHealth, maxHealth)
+            health_percent = normalizeHealthPercent(newHealth, max_health)
+            vehicle_data = {VEHICLE.CUR: max(0, newHealth), VEHICLE.MAX: max_health, VEHICLE.PERCENT: health_percent}
             self.as_updateHealthBarS(vehicleID, health_percent, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onPlayerDamaged(self, attackerID, damage):

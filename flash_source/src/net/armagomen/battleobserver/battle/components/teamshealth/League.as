@@ -24,8 +24,8 @@
 		private var colors:Object;
 		private var score:Score;
 		private var duration:Number         = 0.5;
-		private var alliesHP:int            = 0;
-		private var enemiesHP:int           = 0;
+		private var _alliesHP:int            = 0;
+		private var _enemiesHP:int           = 0;
 		
 		public function League(colorBlind:Boolean, colors:Object)
 		{
@@ -110,14 +110,14 @@
 		
 		public function update(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
 		{
-			if (this.alliesHP != alliesHP)
+			if (this._alliesHP != alliesHP)
 			{
-				this.alliesHP = alliesHP;
+				this._alliesHP = alliesHP;
 				this.setBarScale(false, totalAlliesHP > 0 ? Math.min(alliesHP / totalAlliesHP, 1.0) : 1.0);
 			}
-			if (this.enemiesHP != enemiesHP)
+			if (this._enemiesHP != enemiesHP)
 			{
-				this.enemiesHP = enemiesHP;
+				this._enemiesHP = enemiesHP;
 				this.setBarScale(true, totalEnemiesHP > 0 ? Math.min(enemiesHP / totalEnemiesHP, 1.0) : 1.0);
 			}
 			this.greenText.text = alliesHP.toString();

@@ -4,7 +4,7 @@ from math import floor, log
 
 from armagomen._constants import API_KEY, REGIONS, STATISTICS
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
-from armagomen.utils.common import addCallback, fetchURL
+from armagomen.utils.common import addCallback, cancelCallback, fetchURL
 from armagomen.utils.logging import logDebug, logError
 from constants import AUTH_REALM
 from Event import SafeEvent
@@ -30,16 +30,24 @@ class WGRAndIcons(BaseModMeta):
     def _populate(self):
         super(WGRAndIcons, self)._populate()
         if region is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
-            self.data_loader = StatisticsDataLoader(self._arenaVisitor, self._arenaDP)
+            self.data_loader = StatisticsDataLoader(self._arenaDP)
             self.data_loader.onDataReceived += self.updateAllItems
             self.data_loader.getStatisticsDataFromServer()
             g_playerEvents.onAvatarReady += self.updateFlash
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None and arena.isFogOfWarEnabled:
+                arena.onVehicleAdded += self.data_loader.updateList
+                arena.onVehicleUpdated += self.data_loader.updateList
 
     def updateFlash(self):
         return self.flashObject.update_wgr_data(self.itemsData) if self._isDAAPIInited() and self.itemsData else None
 
     def _dispose(self):
         if self.data_loader is not None:
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None and arena.isFogOfWarEnabled:
+                arena.onVehicleAdded -= self.data_loader.updateList
+                arena.onVehicleUpdated -= self.data_loader.updateList
             self.data_loader.onDataReceived -= self.updateAllItems
             self.data_loader = None
             g_playerEvents.onAvatarReady -= self.updateFlash
@@ -60,7 +68,9 @@ class WGRAndIcons(BaseModMeta):
             vehicle_id = self._arenaDP.getVehIDByAccDBID(int(accountDBID))
             if vehicle_id in self.itemsData:
                 continue
-            veh_info = self._arenaDP.getVehicleInfo(vehicle_id)
+            veh_info = self.getVehicleInfo(vehicle_id)
+            if veh_info.isObserver():
+                continue
             item_data = self.buildItemData(veh_info.player.clanAbbrev, value)
             full, cut = self.getPattern(veh_info.team != player_team, item_data)
             text_color = item_data[self.COLOR_WGR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
@@ -103,8 +113,7 @@ class StatisticsDataLoader(object):
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"
 
-    def __init__(self, arenaVisitor, arenaDP):
-        self.arena = arenaVisitor.getArenaSubscription()
+    def __init__(self, arenaDP):
         self.arenaDP = arenaDP
         self._load_try = 0
         self.__getDataCallback = None
@@ -134,7 +143,7 @@ class StatisticsDataLoader(object):
     def updateList(self, vehicleID):
         vInfo = self.arenaDP.getVehicleInfo(vehicleID)
         accountDBID = vInfo.player.accountDBID
-        if not accountDBID or accountDBID in self.__loaded:
+        if not accountDBID or accountDBID in self.__loaded or vInfo.isObserver():
             return
         self.__vehicles.add(accountDBID)
         logDebug(self.__vehicles)
@@ -147,7 +156,9 @@ class StatisticsDataLoader(object):
             yield str(self.__vehicles.pop())
 
     def requestData(self):
-        self.__getDataCallback = None
+        if self.__getDataCallback is not None:
+            cancelCallback(self.__getDataCallback)
+            self.__getDataCallback = None
         url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=API_KEY, url=self.URL,
                                    fields=self.FIELDS)
         fetchURL(url, self.onDataResponse)
@@ -155,9 +166,6 @@ class StatisticsDataLoader(object):
     def getStatisticsDataFromServer(self):
         self.__vehicles.update(vInfo.player.accountDBID for vInfo in self.arenaDP.getVehiclesInfoIterator() if
                                vInfo.player.accountDBID and vInfo.player.accountDBID not in self.__loaded)
-        if self.arena is not None and self.arena.isFogOfWarEnabled:
-            self.arena.onVehicleAdded += self.updateList
-            self.arena.onVehicleUpdated += self.updateList
         logDebug("getStatisticsDataFromServer: START request data: ids={}", self.__vehicles)
         if self.__vehicles:
             self.requestData()
