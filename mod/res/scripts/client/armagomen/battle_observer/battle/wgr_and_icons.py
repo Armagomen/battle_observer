@@ -66,11 +66,7 @@ class WGRAndIcons(BaseModMeta):
             if not value:
                 continue
             vehicle_id = self._arenaDP.getVehIDByAccDBID(int(accountDBID))
-            if vehicle_id in self.itemsData:
-                continue
             veh_info = self.getVehicleInfo(vehicle_id)
-            if veh_info.isObserver():
-                continue
             item_data = self.buildItemData(veh_info.player.clanAbbrev, value)
             full, cut = self.getPattern(veh_info.team != player_team, item_data)
             text_color = item_data[self.COLOR_WGR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
@@ -164,8 +160,11 @@ class StatisticsDataLoader(object):
         fetchURL(url, self.onDataResponse)
 
     def getStatisticsDataFromServer(self):
-        self.__vehicles.update(vInfo.player.accountDBID for vInfo in self.arenaDP.getVehiclesInfoIterator() if
-                               vInfo.player.accountDBID and vInfo.player.accountDBID not in self.__loaded)
+        for vInfo in self.arenaDP.getVehiclesInfoIterator():
+            accountDBID = vInfo.player.accountDBID
+            if not accountDBID or accountDBID in self.__loaded or vInfo.isObserver():
+                continue
+            self.__vehicles.add(accountDBID)
         logDebug("getStatisticsDataFromServer: START request data: ids={}", self.__vehicles)
         if self.__vehicles:
             self.requestData()

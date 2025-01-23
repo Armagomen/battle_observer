@@ -229,7 +229,7 @@ def overrideMethod(wg_class, method_name="__init__"):
                 method_name = method_name[1:]
 
     def outer(new_method):
-        full_name_with_class = class_name + "." + method_name
+        full_name_with_class = "{0}.{1}".format(class_name, method_name)
         if full_name_with_class in base_before_override:
             return new_method
         old_method = getattr(wg_class, method_name, None)
