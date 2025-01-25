@@ -82,6 +82,7 @@ localization = {
         "hide_prestige_profile_widget": "Приховати віджет елітних рівнів в профілі гравця.",
         "excluded_map_slots_notification": "Сповіщати про доступні слоти для вилучення мап.",
         "auto_claim_clan_reward": "Автоматично збирати кланові нагороди.",
+        "hideEventBanner": "Вимкнути банер івентів."
     },
     "statistics": {
         "header": "Налаштування статистики гравців та іконок танків",

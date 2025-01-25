@@ -45,6 +45,7 @@ class UserSettings(object):
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
             MAIN.USE_KEY_PAIRS: True,
+            MAIN.HIDE_EVENT_BANNER: False,
         }
         self.avg_efficiency_in_hangar = {
             GLOBAL.ENABLED: False,

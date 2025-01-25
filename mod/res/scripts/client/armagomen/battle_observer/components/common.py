@@ -12,6 +12,7 @@ from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
+from gui.Scaleform.daapi.view.lobby.hangar.entry_points.event_entry_points_container import EventEntryPointsContainer
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
@@ -120,6 +121,13 @@ def as_setPrestigeVisibleS(base, self, value):
     if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET]:
         value = False
     return base(self, value)
+
+
+@overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
+def _EventEntryPointsContainer_as_updateEntries(base, self, data):
+    if user_settings.main[MAIN.HIDE_EVENT_BANNER]:
+        return base(self, [])
+    return base(self, data)
 
 
 def updateKilledSounds(settings):

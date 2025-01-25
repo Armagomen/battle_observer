@@ -82,6 +82,7 @@ localization = {
         "hide_prestige_profile_widget": "Hide elite levels widget in vehicle statistics in profile.",
         "excluded_map_slots_notification": "Notify about available excluded map slots.",
         "auto_claim_clan_reward": "Collect clan rewards automatically.",
+        "hideEventBanner": "Hide event banner."
     },
     "statistics": {
         "header": "WGR (WGR) Player Statistics | Tank icons",
@@ -89,7 +90,7 @@ localization = {
         "statistics_vehicle_name_color": "Change the color of the tank name in the ears to the color "
                                          "of the statistics",
         "statistics_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
-                                      "For more fine-tuning see the statistics.json file."
+                              "For more fine-tuning see the statistics.json file."
                               " Available macro names: WGR, colorWGR, winRate, nickname, battles, clanTag",
         "statistics_colors*very_bad": "very bad",
         "statistics_colors*bad": "bad",
@@ -99,8 +100,8 @@ localization = {
         "statistics_colors*unique": "unique",
         "icons": "Repaint tank icons in the colors of vehicle classes",
         "icons_tooltip": "This function repaints any vehicle icons in the ears, taboo window, on the loading "
-                                "screen in the color of vehicle classes.<br>"
-                                "Filter strength affects brightness.<br>Recommended filter strength -1.25",
+                         "screen in the color of vehicle classes.<br>"
+                         "Filter strength affects brightness.<br>Recommended filter strength -1.25",
         "icons_blackout": "Filter strength (brightness)",
 
         "statistics_panels_full_width": "Player Name Field Width - Big Ears",

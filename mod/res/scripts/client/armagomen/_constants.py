@@ -112,14 +112,14 @@ __Main = namedtuple("MAIN", (
     "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND", "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT",
     "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "HIDE_MAIN_CHAT", "HIDE_BTN_COUNTERS", "PREMIUM_TIME", "SAVE_SHOT",
     "MUTE_BASES_SOUND", "HIDE_PRESTIGE_HANGAR_WIDGET", "HIDE_PRESTIGE_PROFILE_WIDGET",
-    "HIDE_PRESTIGE_BATTLE_WIDGET", "EXCLUDED_MAP_SLOTS_NOTIFICATION", "AUTO_CLAIM_CLAN_REWARD"))
+    "HIDE_PRESTIGE_BATTLE_WIDGET", "EXCLUDED_MAP_SLOTS_NOTIFICATION", "AUTO_CLAIM_CLAN_REWARD", "HIDE_EVENT_BANNER"))
 MAIN = __Main(
     "clear_cache_automatically", "hide_badges", "hide_clan_abbrev", "hide_dog_tags", "main", "show_friends",
     "anti_anonymous", "useKeyPairs", "ignore_commanders_voice", "disable_score_sound", "DEBUG_MODE",
     "auto_crew_training", "directives_only_from_storage", "hide_hint_panel", "hide_field_mail",
     "auto_return_crew", "disable_stun_sound", "hide_main_chat_in_hangar", "hide_button_counters_on_top_panel",
     "premium_time", "save_shot", "mute_team_base_sound", "hide_prestige_hangar_widget", "hide_prestige_profile_widget",
-    "hide_prestige_battle_widget", "excluded_map_slots_notification", "auto_claim_clan_reward")
+    "hide_prestige_battle_widget", "excluded_map_slots_notification", "auto_claim_clan_reward", "hideEventBanner")
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "GOLD", "GREEN", "WHITE", "ORANGE", "RED", "S_YELLOW", "YELLOW",
