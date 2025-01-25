@@ -8,7 +8,6 @@ from armagomen.utils.common import addCallback, cancelCallback, fetchURL
 from armagomen.utils.logging import logDebug, logError
 from constants import AUTH_REALM
 from Event import SafeEvent
-from PlayerEvents import g_playerEvents
 from uilogging.core.core_constants import HTTP_OK_STATUS
 
 region = REGIONS.get(AUTH_REALM)
@@ -33,7 +32,6 @@ class WGRAndIcons(BaseModMeta):
             self.data_loader = StatisticsDataLoader(self._arenaDP)
             self.data_loader.onDataReceived += self.updateAllItems
             self.data_loader.getStatisticsDataFromServer()
-            g_playerEvents.onAvatarReady += self.updateFlash
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None and arena.isFogOfWarEnabled:
                 arena.onVehicleAdded += self.data_loader.updateList
@@ -50,7 +48,6 @@ class WGRAndIcons(BaseModMeta):
                 arena.onVehicleUpdated -= self.data_loader.updateList
             self.data_loader.onDataReceived -= self.updateAllItems
             self.data_loader = None
-            g_playerEvents.onAvatarReady -= self.updateFlash
         super(WGRAndIcons, self)._dispose()
 
     def getPattern(self, isEnemy, itemData):
@@ -134,7 +131,7 @@ class StatisticsDataLoader(object):
             self._load_try += 1
             code = responses.get(code) if isinstance(code, int) else code
             logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
-            addCallback(2.0, self.getStatisticsDataFromServer)
+            addCallback(10.0, self.getStatisticsDataFromServer)
 
     def updateList(self, vehicleID):
         vInfo = self.arenaDP.getVehicleInfo(vehicleID)

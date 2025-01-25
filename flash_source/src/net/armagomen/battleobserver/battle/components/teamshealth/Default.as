@@ -22,10 +22,10 @@
 			super();
 			this.colors = colors;
 			
-			this.allyBar = new ProgressBar(-50, 4, -200, 22, colors.ally, colors.bgColor, 0.5);
+			this.allyBar = new ProgressBar(-50, 4, -200, 22, colors.ally, colors.bgColor, 0);
 			this.allyBar.setOutline(-200, 22);
 			this.allyBar.addTextField(-100, -3, TextFieldAutoSize.CENTER, Constants.middleText);
-			this.enemyBar = new ProgressBar(50, 4, 200, 22, colorBlind ? colors.enemyColorBlind : colors.enemy, colors.bgColor, 0.5);
+			this.enemyBar = new ProgressBar(50, 4, 200, 22, colorBlind ? colors.enemyColorBlind : colors.enemy, colors.bgColor, 0);
 			this.enemyBar.setOutline(200, 22);
 			this.enemyBar.addTextField(100, -3, TextFieldAutoSize.CENTER, Constants.middleText);
 			this.score = new Score(colorBlind);

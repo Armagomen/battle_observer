@@ -429,9 +429,9 @@ ALIAS_TO_CONFIG_NAME = {
 def create_range(obj, names):
     _range = set()
     for name in names:
-        _name = getattr(obj, name)
-        if _name is not None:
-            _range.add(_name)
+        value = getattr(obj, name, None)
+        if value is not None:
+            _range.add(value)
         else:
             logError("create_range::{} attribute error:: {}", obj.__class__.__name__, name)
     return _range

@@ -7,7 +7,6 @@
 	import net.armagomen.battleobserver.utils.Constants;
 	import net.armagomen.battleobserver.utils.TextExt;
 	import net.armagomen.battleobserver.utils.Utils;
-	import net.armagomen.battleobserver.utils.tween.Tween;
 	
 	public class League extends Sprite implements ITeamHealth
 	{
@@ -18,14 +17,10 @@
 		private var allyBar:Shape           = new Shape();
 		private var enemyBar:Shape          = new Shape();
 		private var background:Shape        = new Shape();
-		private var allyAnimation:Tween     = null;
-		private var enemyAnimation:Tween    = null;
 		private var defCommads:Vector.<int> = new <int>[1, 2, 2, 2, 2];
 		private var colors:Object;
 		private var score:Score;
-		private var duration:Number         = 0.5;
-		private var _alliesHP:int            = 0;
-		private var _enemiesHP:int           = 0;
+		private var duration:Number         = 0.2;
 		
 		public function League(colorBlind:Boolean, colors:Object)
 		{
@@ -43,8 +38,6 @@
 			this.enemyBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Constants.ALPHA);
 			this.enemyBar.graphics.drawPath(defCommads, new <Number>[0, 0, 250, 0, 230, 31, 0, 31, 0, 0]);
 			this.enemyBar.graphics.endFill();
-			this.allyAnimation = new Tween(this.allyBar, "scaleX", 1.0, 0, this.duration);
-			this.enemyAnimation = new Tween(this.enemyBar, "scaleX", 1.0, 0, this.duration);
 			this.greenText = new TextExt(-220, 1, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			this.redText = new TextExt(220, 1, Constants.middleText, TextFieldAutoSize.RIGHT, this);
 			this.greenDiff = new TextExt(-55, 4, Constants.diff, TextFieldAutoSize.RIGHT, this);
@@ -66,17 +59,12 @@
 		
 		public function setBarScale(isEnemy:Boolean, newScale:Number):void
 		{
-			var animation:Tween = isEnemy ? this.enemyAnimation : this.allyAnimation
-			animation.continueTo(newScale, this.duration);
+			isEnemy ? this.enemyBar.scaleX = newScale : this.allyBar.scaleX = newScale;
 		}
 		
 		public function remove():void
 		{
 			this.removeChildren();
-			this.allyAnimation.stop();
-			this.allyAnimation = null;
-			this.enemyAnimation.stop();
-			this.enemyAnimation = null;
 			this.allyBar = null;
 			this.enemyBar = null;
 			this.background = null;
@@ -110,16 +98,8 @@
 		
 		public function update(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
 		{
-			if (this._alliesHP != alliesHP)
-			{
-				this._alliesHP = alliesHP;
-				this.setBarScale(false, totalAlliesHP > 0 ? Math.min(alliesHP / totalAlliesHP, 1.0) : 1.0);
-			}
-			if (this._enemiesHP != enemiesHP)
-			{
-				this._enemiesHP = enemiesHP;
-				this.setBarScale(true, totalEnemiesHP > 0 ? Math.min(enemiesHP / totalEnemiesHP, 1.0) : 1.0);
-			}
+			this.setBarScale(false, totalAlliesHP > 0 ? Math.min(alliesHP / totalAlliesHP, 1.0) : 1.0);
+			this.setBarScale(true, totalEnemiesHP > 0 ? Math.min(enemiesHP / totalEnemiesHP, 1.0) : 1.0);
 			this.greenText.text = alliesHP.toString();
 			this.redText.text = enemiesHP.toString();
 			this.difference(alliesHP - enemiesHP);
