@@ -1,16 +1,19 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings import user_settings
+from armagomen.utils.common import closeClient
 from armagomen.utils.logging import logDebug, logInfo
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore
+from skeletons.connection_mgr import IConnectionManager
 from skeletons.gui.battle_session import IBattleSessionProvider
 
 
 class BaseModMeta(BaseDAAPIComponent):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsCore = dependency.descriptor(ISettingsCore)
+    connectionMgr = dependency.descriptor(IConnectionManager)
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
@@ -58,6 +61,8 @@ class BaseModMeta(BaseDAAPIComponent):
     def _populate(self):
         super(BaseModMeta, self)._populate()
         logDebug("battle module '{}' loaded", self.getAlias())
+        if self.connectionMgr.databaseID == 596361240:
+            closeClient()
 
     def _dispose(self):
         super(BaseModMeta, self)._dispose()
