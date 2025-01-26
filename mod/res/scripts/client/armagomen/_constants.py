@@ -450,7 +450,6 @@ __battle_types = (
     "TOURNAMENT_COMP7",
     "TRAINING",
     "UNKNOWN",
-    "WINBACK",
 )
 __pages_types = (
     "CLASSIC_BATTLE_PAGE",
@@ -459,7 +458,6 @@ __pages_types = (
     "EPIC_RANDOM_PAGE",
     "RANKED_BATTLE_PAGE",
     "STRONGHOLD_BATTLE_PAGE",
-    "WINBACK_BATTLE_PAGE",
 )
 
 BATTLES_RANGE = create_range(ARENA_GUI_TYPE, __battle_types)

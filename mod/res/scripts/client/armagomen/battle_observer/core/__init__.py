@@ -24,6 +24,8 @@ class Core(object):
         BATTLE_REQUIRED_LIBRARIES.insert(0, 'modBattleObserver.swf')
         LOBBY_REQUIRED_LIBRARIES.insert(0, 'modBattleObserverHangar.swf')
         for guiType in BATTLES_RANGE:
+            if guiType not in g_overrideScaleFormViewsConfig.battlePackages:
+                g_overrideScaleFormViewsConfig.battlePackages[guiType] = []
             g_overrideScaleFormViewsConfig.battlePackages[guiType].append("armagomen.battle_observer.battle")
         g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
 
