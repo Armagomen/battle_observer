@@ -450,6 +450,7 @@ __battle_types = (
     "TOURNAMENT_COMP7",
     "TRAINING",
     "UNKNOWN",
+    "FUN_RANDOM",
 )
 __pages_types = (
     "CLASSIC_BATTLE_PAGE",

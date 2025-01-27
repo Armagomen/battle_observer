@@ -1,7 +1,7 @@
 import aih_constants
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import cancelOverride, getPlayer, isReplay, overrideMethod
+from armagomen.utils.common import cancelOverride, getPlayer, overrideMethod
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
 from constants import SERVER_TICK_LENGTH
@@ -144,8 +144,6 @@ class DispersionCircle(object):
         return base(cr_panel, markerType, color)
 
     def onModSettingsChanged(self, config, blockID):
-        if isReplay():
-            return
         if blockID == DISPERSION.NAME:
             replace = config[GLOBAL.ENABLED] and config[DISPERSION.REPLACE]
             server = config[GLOBAL.ENABLED] and config[DISPERSION.SERVER]

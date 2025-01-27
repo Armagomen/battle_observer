@@ -6,10 +6,11 @@ class Core(object):
         from armagomen.utils.keys_listener import g_keysListener
         from armagomen.utils.common import isReplay
 
-        self.registerBattleObserverPackages()
+        is_replay = isReplay()
+        self.registerBattleObserverPackages(is_replay)
         g_keysListener.init()
-        loadComponents()
-        if not isReplay():
+        loadComponents(is_replay)
+        if not is_replay:
             from armagomen.battle_observer.settings.hangar import SettingsInterface
             hangar_settings = Thread(target=SettingsInterface, args=(settings_loader, modVersion),
                                      name="Battle_Observer_SettingsInterface")
@@ -17,17 +18,18 @@ class Core(object):
             hangar_settings.start()
 
     @staticmethod
-    def registerBattleObserverPackages():
+    def registerBattleObserverPackages(is_replay):
         from armagomen._constants import BATTLES_RANGE
         from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
         from gui.Scaleform.required_libraries_config import BATTLE_REQUIRED_LIBRARIES, LOBBY_REQUIRED_LIBRARIES
+
+        if not is_replay:
+            LOBBY_REQUIRED_LIBRARIES.insert(0, 'modBattleObserverHangar.swf')
+            g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
         BATTLE_REQUIRED_LIBRARIES.insert(0, 'modBattleObserver.swf')
-        LOBBY_REQUIRED_LIBRARIES.insert(0, 'modBattleObserverHangar.swf')
         for guiType in BATTLES_RANGE:
-            if guiType not in g_overrideScaleFormViewsConfig.battlePackages:
-                g_overrideScaleFormViewsConfig.battlePackages[guiType] = []
-            g_overrideScaleFormViewsConfig.battlePackages[guiType].append("armagomen.battle_observer.battle")
-        g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
+            packages = g_overrideScaleFormViewsConfig.battlePackages.setdefault(guiType, [])
+            packages.append("armagomen.battle_observer.battle")
 
 
 def onFini():
