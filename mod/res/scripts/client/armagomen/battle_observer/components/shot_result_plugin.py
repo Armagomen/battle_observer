@@ -8,15 +8,16 @@ from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES, SHELL_TYPES as SHELLS
 from DestructibleEntity import DestructibleEntity
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
+from items.components import component_constants
 from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 from Vehicle import Vehicle
 
-UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
-_JET_FACTOR = 0.001
-FULL_PP_RANGE = (SHELLS.HIGH_EXPLOSIVE, SHELLS.HOLLOW_CHARGE)
-
 
 class _ShotResult(object):
+    RANDOMIZATION = component_constants.DEFAULT_PIERCING_POWER_RANDOMIZATION
+    UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None, None, None, False, False)
+    _JET_FACTOR = 0.001
+    FULL_PP_RANGE = (SHELLS.HIGH_EXPLOSIVE, SHELLS.HOLLOW_CHARGE)
 
     @staticmethod
     def isAlly(entity, player, onAlly):
@@ -25,38 +26,36 @@ class _ShotResult(object):
     @classmethod
     def getShotResult(cls, hitPoint, collision, direction, piercingMultiplier, onAlly, player):
         if collision is None:
-            return UNDEFINED_RESULT
+            return cls.UNDEFINED_RESULT
         entity = collision.entity
         if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive():
-            return UNDEFINED_RESULT
+            return cls.UNDEFINED_RESULT
         if player is None or cls.isAlly(entity, player, onAlly):
-            return UNDEFINED_RESULT
+            return cls.UNDEFINED_RESULT
         c_details = _CrosshairShotResults._getAllCollisionDetails(hitPoint, direction, entity)
         if c_details is None:
-            return UNDEFINED_RESULT
+            return cls.UNDEFINED_RESULT
         shot = player.getVehicleDescriptor().shot
         shell = shot.shell
         distance = player.position.flatDistTo(hitPoint)
-        if shot.shell.kind in FULL_PP_RANGE:
-            full_piercing_power = shot.piercingPower[0] * piercingMultiplier
+        is_modern = cls.isModernMechanics(shell) or shot.shell.kind in cls.FULL_PP_RANGE
+        if is_modern:
+            piercing_power = shot.piercingPower[0] * piercingMultiplier
         else:
-            full_piercing_power = _CrosshairShotResults._computePiercingPowerAtDist(shot.piercingPower, distance,
-                                                                                    shot.maxDistance,
-                                                                                    piercingMultiplier)
-        is_modern = cls.isModernMechanics(shell)
-        armor, piercing_power, ricochet, no_damage = cls.computeArmor(c_details, shell, full_piercing_power, is_modern)
+            piercing_power = _CrosshairShotResults._computePiercingPowerAtDist(shot.piercingPower, distance,
+                                                                               shot.maxDistance,
+                                                                               piercingMultiplier)
+        armor, piercing_power, ricochet, no_damage = cls.computeArmor(c_details, shell, piercing_power, is_modern)
         if no_damage or ricochet:
             shot_result = SHOT_RESULT.NOT_PIERCED
         else:
-            offset = piercing_power * shell.piercingPowerRandomization
+            offset = piercing_power * cls.RANDOMIZATION
             if armor < piercing_power - offset:
                 shot_result = SHOT_RESULT.GREAT_PIERCED
             elif armor > piercing_power + offset:
                 shot_result = SHOT_RESULT.NOT_PIERCED
             else:
                 shot_result = SHOT_RESULT.LITTLE_PIERCED
-        if is_modern:
-            piercing_power = full_piercing_power
         return shot_result, armor, piercing_power, shell.caliber, ricochet, no_damage
 
     @staticmethod
@@ -64,8 +63,8 @@ class _ShotResult(object):
         return shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and \
             shell.type.shieldPenetration
 
-    @staticmethod
-    def computeArmor(c_details, shell, piercing_power, is_modern_he):
+    @classmethod
+    def computeArmor(cls, c_details, shell, piercing_power, is_modern_he):
         computed_armor = GLOBAL.ZERO
         ricochet = False
         no_damage = True
@@ -90,7 +89,7 @@ class _ShotResult(object):
                 piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
             elif jet_loss > GLOBAL.ZERO:
                 is_jet = True
-                jet_start_dist += detail.dist + mat_info.armor * _JET_FACTOR
+                jet_start_dist += detail.dist + mat_info.armor * cls._JET_FACTOR
         return computed_armor, piercing_power, ricochet, no_damage
 
 
@@ -123,3 +122,24 @@ def createPlugins(base, *args):
     if user_settings.armor_calculator[GLOBAL.ENABLED]:
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
+
+
+GUNNER_ARMORER = 'gunner_armorer'
+
+
+def updateCrew(vehicle):
+    if vehicle is None or vehicle.isLocked or vehicle.isCrewLocked:
+        return
+    randomization = component_constants.DEFAULT_PIERCING_POWER_RANDOMIZATION
+    for _, tankman in vehicle.crew:
+        if tankman and GUNNER_ARMORER in tankman.skillsMap and tankman.canUseSkillsInCurrentVehicle:
+            level = tankman.skillsMap[GUNNER_ARMORER].level
+            if tankman.skillsEfficiency < 1.0:
+                level *= tankman.skillsEfficiency
+            randomization = randomization + (0.2 - randomization) * (level - randomization) / 100
+            break
+
+    _ShotResult.RANDOMIZATION = randomization
+
+
+g_events.onVehicleChangedDelayed += updateCrew

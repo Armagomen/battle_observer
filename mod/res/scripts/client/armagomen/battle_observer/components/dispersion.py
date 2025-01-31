@@ -40,8 +40,8 @@ REPLACE = {CLIENT, SERVER, DUAL_ACC}
 
 
 def getSetting(gunMakerType):
-    if gunMakerType in REPLACE and user_settings.dispersion_circle[DISPERSION.REPLACE]:
-        return True
+    if gunMakerType in REPLACE and not user_settings.dispersion_circle[DISPERSION.SERVER]:
+        return user_settings.dispersion_circle[DISPERSION.REPLACE]
     elif gunMakerType == SERVER:
         return user_settings.dispersion_circle[DISPERSION.SERVER]
     return False
