@@ -134,8 +134,11 @@ def updateCrew(vehicle):
     for _, tankman in vehicle.crew:
         if tankman and GUNNER_ARMORER in tankman.skillsMap and tankman.canUseSkillsInCurrentVehicle:
             level = tankman.skillsMap[GUNNER_ARMORER].level
+            role_level = tankman.nativeTankRealRoleLevel / 100.0
             if tankman.skillsEfficiency < 1.0:
-                level *= tankman.skillsEfficiency
+                level *= tankman.skillsEfficiency * role_level
+            else:
+                level *= role_level
             randomization = randomization + (0.2 - randomization) * (level - randomization) / 100
             break
 
