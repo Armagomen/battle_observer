@@ -7,6 +7,10 @@ __email__ = "armagomen@gmail.com"
 __status__ = "Production"
 __http__ = "https://github.com/Armagomen/battle_observer/releases"
 
+import logging
+
+logging.disable(logging.WARNING)
+
 from sys import version
 from threading import Thread
 

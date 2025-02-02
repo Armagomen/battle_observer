@@ -3,6 +3,7 @@ from armagomen._constants import ARMOR_CALC, GLOBAL
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
+from armagomen.utils.logging import logInfo
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES, SHELL_TYPES as SHELLS
 from DestructibleEntity import DestructibleEntity
@@ -142,6 +143,7 @@ def updateCrew(vehicle):
             randomization = randomization + (0.2 - randomization) * (level - randomization) / 100
             break
 
+    logInfo(randomization)
     _ShotResult.RANDOMIZATION = randomization
 
 
