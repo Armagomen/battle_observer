@@ -129,6 +129,8 @@ GUNNER_ARMORER = 'gunner_armorer'
 
 
 def updateCrew(vehicle):
+    if not user_settings.armor_calculator[GLOBAL.ENABLED]:
+        return
     if vehicle is None or vehicle.isLocked or vehicle.isCrewLocked:
         return
     randomization = component_constants.DEFAULT_PIERCING_POWER_RANDOMIZATION
@@ -148,3 +150,7 @@ def updateCrew(vehicle):
 
 
 g_events.onVehicleChangedDelayed += updateCrew
+
+
+def fini():
+    g_events.onVehicleChangedDelayed -= updateCrew
