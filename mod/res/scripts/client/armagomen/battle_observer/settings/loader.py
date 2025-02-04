@@ -37,9 +37,10 @@ class SettingsLoader(object):
         self.readConfig()
 
     def readOtherConfig(self, configID):
-        self.configName = self.configsList[configID]
+        if self.configName != self.configsList[configID]:
+            self.configName = self.configsList[configID]
+            self.createLoadJSON(self.configName)
         self.readConfig()
-        self.createLoadJSON(self.configName)
 
     @staticmethod
     def createLoadJSON(configName):

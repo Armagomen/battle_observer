@@ -33,7 +33,8 @@ localization = {
         "header": "Варіанти налаштувань",
         "selector": "Обрати налаштування:",
         "donate_button_ua": "MONO Банка",
-        "discord_button": "Discord сервер модифікації"
+        "discord_button": "Discord сервер модифікації",
+        "reload_config": "Перезавантажити налаштування",
     },
     "main": {
         "header": "Налаштування без категорії",

@@ -114,7 +114,7 @@ class CreateElement(Getter):
             result.update({'type': self.getControlType(value, cType), 'value': value, 'varName': varName,
                            GLOBAL.WIDTH: 350, 'defaultSelection': False})
             if cType == 'Button':
-                result.update({GLOBAL.WIDTH: 250, 'btnName': varName})
+                result.update({GLOBAL.WIDTH: 300, 'btnName': varName})
         return result
 
     def createDropDown(self, blockID, varName, values, value):
@@ -337,7 +337,7 @@ class SettingsInterface(CreateElement):
                     value = value.strip().split(',')
                     try:
                         value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]
-                    except:
+                    except Exception:
                         value = SNIPER.DEFAULT_STEPS
                 if type(value) == int and type(updated_config_link[param_name]) == float:
                     value = float(value)
@@ -366,11 +366,14 @@ class SettingsInterface(CreateElement):
                 obj.mouseChildren = value
                 obj.tabEnabled = value
 
-    @staticmethod
-    def onButtonPress(container, blockID, varName, value):
+    def onButtonPress(self, container, blockID, varName, value):
         if container == MOD_NAME and blockID == ANOTHER.CONFIG_SELECT:
             if varName in CONFIG_INTERFACE.DONATE_BUTTONS:
                 openWebBrowser(value)
+            elif varName == "reload_config":
+                self.newConfigID = self.currentConfigID
+                self.currentConfigID = value
+                self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
 
     def items(self, blockID, settings_block):
         for key, value in self.keyValueGetter(settings_block):
@@ -382,7 +385,8 @@ class SettingsInterface(CreateElement):
         """Create templates, do not change..."""
         settings_block = getattr(user_settings, blockID, {})
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.loader.configsList, self.currentConfigID)]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.loader.configsList, self.currentConfigID),
+                       self.createControl(blockID, 'reload_config', -1, 'Button')]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.MONO, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:

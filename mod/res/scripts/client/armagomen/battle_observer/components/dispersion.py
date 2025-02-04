@@ -36,14 +36,15 @@ gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 aih_constants.GUN_MARKER_MIN_SIZE = 14.0
 aih_constants.SPG_GUN_MARKER_MIN_SIZE = 24.0
 
-REPLACE = {CLIENT, SERVER, DUAL_ACC}
+REPLACE = {CLIENT, DUAL_ACC}
 
 
 def getSetting(gunMakerType):
-    if gunMakerType in REPLACE and not user_settings.dispersion_circle[DISPERSION.SERVER]:
-        return user_settings.dispersion_circle[DISPERSION.REPLACE]
-    elif gunMakerType == SERVER:
-        return user_settings.dispersion_circle[DISPERSION.SERVER]
+    replace = user_settings.dispersion_circle[DISPERSION.REPLACE]
+    if gunMakerType == SERVER:
+        return user_settings.dispersion_circle[DISPERSION.SERVER] or replace
+    elif gunMakerType in REPLACE:
+        return replace
     return False
 
 

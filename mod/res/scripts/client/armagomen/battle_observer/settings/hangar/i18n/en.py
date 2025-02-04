@@ -33,7 +33,8 @@ localization = {
         "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
         "selector": "Config",
         "donate_button_ua": "MONO BANK",
-        "discord_button": "Discord support & chat"
+        "discord_button": "Discord support & chat",
+        "reload_config": "Reload config files",
     },
     "main": {
         "header": "GENERAL SETTINGS",
