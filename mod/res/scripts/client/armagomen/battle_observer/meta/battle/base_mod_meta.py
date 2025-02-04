@@ -14,14 +14,20 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
-        self._arenaDP = self.sessionProvider.getArenaDP()
-        self._arenaVisitor = self.sessionProvider.arenaVisitor
         self.settings = None
 
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
         settings_name = ALIAS_TO_CONFIG_NAME.get(alias, GLOBAL.EMPTY_LINE)
-        self.settings = getattr(user_settings, settings_name, None) or user_settings
+        self.settings = getattr(user_settings, settings_name, user_settings)
+
+    @property
+    def _arenaDP(self):
+        return self.sessionProvider.getArenaDP()
+
+    @property
+    def _arenaVisitor(self):
+        return self.sessionProvider.arenaVisitor
 
     @property
     def gui(self):

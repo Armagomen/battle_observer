@@ -27,7 +27,7 @@ def get_full_function_path(func):
 
 
 def _formatMessage(message, *args, **kwargs):
-    if not isinstance(message, basestring):
+    if not isinstance(message, str):
         message = str(message)
     if args or kwargs:
         return message.format(*args, **kwargs)
