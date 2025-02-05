@@ -1,7 +1,9 @@
 import aih_constants
+from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, getPlayer, overrideMethod
+from armagomen.utils.logging import logDebug
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
 from constants import SERVER_TICK_LENGTH
@@ -9,6 +11,8 @@ from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
+from helpers import dependency
+from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
 
 CLIENT = gun_marker_ctrl._MARKER_TYPE.CLIENT
@@ -115,6 +119,10 @@ class DispersionCircle(object):
 
     @staticmethod
     def createOverrideComponents(base, *args):
+        settingsCore = dependency.instance(ISettingsCore)
+        if settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
+            result = settingsCore.applySetting(GAME.ENABLE_SERVER_AIM, False)
+            logDebug('useServerAim: {} {}', settingsCore.getSetting(GAME.ENABLE_SERVER_AIM), result)
         player = getPlayer()
         player.enableServerAim(True)
         if len(args) == 2:
@@ -135,7 +143,7 @@ class DispersionCircle(object):
 
     @staticmethod
     def setShotPosition(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
-        base(rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
+        # base(rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
         m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
         mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
         rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH, collData)
