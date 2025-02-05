@@ -64,7 +64,6 @@ class WG_Logs_Fix(object):
 
     def __init__(self):
         self.validated = {}
-        overrideMethod(_LogViewComponent, "addToLog")(self.addToLog)
 
     def addToLog(self, base, component, event):
         return base(component, [e for e in event if not self.validated.get(e.getType(), False)])
@@ -73,12 +72,15 @@ class WG_Logs_Fix(object):
         if blockID == DAMAGE_LOG.WG_LOGS_FIX:
             if config[GLOBAL.ENABLED]:
                 overrideMethod(_LogViewComponent, "addToLog")(self.addToLog)
+                self.validated.update(self.validateSettings(config))
             else:
-                cancelOverride(_LogViewComponent, "addToLog")
-            self.validated.update(self.validateSettings(config))
-            DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog, \
-                DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog = \
-                reversed(self.BASE_WG_LOGS) if config[DAMAGE_LOG.WG_POS] else self.BASE_WG_LOGS
+                cancelOverride(_LogViewComponent, "addToLog", "addToLog")
+            self.updatePositions(config)
+
+    def updatePositions(self, config):
+        DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog, \
+            DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog = \
+            reversed(self.BASE_WG_LOGS) if config[GLOBAL.ENABLED] and config[DAMAGE_LOG.WG_POS] else self.BASE_WG_LOGS
 
     @staticmethod
     def validateSettings(config):

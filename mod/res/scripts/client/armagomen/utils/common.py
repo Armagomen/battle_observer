@@ -229,8 +229,9 @@ def overrideMethod(wg_class, method_name="__init__"):
                 method_name = method_name[1:]
 
     def outer(new_method):
-        full_name_with_class = "{0}.{1}".format(class_name, method_name)
+        full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, new_method.__name__)
         if full_name_with_class in base_before_override:
+            logError("overrideMethod: {} already added to storage", full_name_with_class)
             return new_method
         old_method = getattr(wg_class, method_name, None)
         if old_method is not None and callable(old_method):
@@ -244,11 +245,11 @@ def overrideMethod(wg_class, method_name="__init__"):
     return outer
 
 
-def cancelOverride(wg_class, method_name):
+def cancelOverride(wg_class, method_name, replaced_name):
     class_name = wg_class.__name__
     if method_name.startswith("__"):
         method_name = "_{0}{1}".format(class_name, method_name)
-    full_name_with_class = class_name + "." + method_name
+    full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, replaced_name)
     if full_name_with_class in base_before_override:
         setattr(wg_class, method_name, base_before_override.pop(full_name_with_class))
         logDebug("cancelOverrode: override {} removed", full_name_with_class)

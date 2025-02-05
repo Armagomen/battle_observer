@@ -107,15 +107,15 @@ class DispersionCircle(object):
 
     @staticmethod
     def cancelServerCrossOverride():
-        cancelOverride(gm_factory, "createComponents")
-        cancelOverride(gm_factory, "overrideComponents")
-        cancelOverride(gun_marker_ctrl, "useDefaultGunMarkers")
-        cancelOverride(gun_marker_ctrl, "useClientGunMarker")
-        cancelOverride(gun_marker_ctrl, "useServerGunMarker")
-        cancelOverride(VehicleGunRotator, "applySettings")
-        cancelOverride(VehicleGunRotator, "setShotPosition")
-        cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged")
-        cancelOverride(CrosshairPanelContainer, "setGunMarkerColor")
+        cancelOverride(gm_factory, "createComponents", "createOverrideComponents")
+        cancelOverride(gm_factory, "overrideComponents", "createOverrideComponents")
+        cancelOverride(gun_marker_ctrl, "useDefaultGunMarkers", "useDefaultGunMarkers")
+        cancelOverride(gun_marker_ctrl, "useClientGunMarker", "useGunMarker")
+        cancelOverride(gun_marker_ctrl, "useServerGunMarker", "useGunMarker")
+        cancelOverride(VehicleGunRotator, "applySettings", "onPass")
+        cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPosition")
+        cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged", "onPass")
+        cancelOverride(CrosshairPanelContainer, "setGunMarkerColor", "setGunMarkerColor")
 
     @staticmethod
     def createOverrideComponents(base, *args):
@@ -161,7 +161,7 @@ class DispersionCircle(object):
             if replace or server:
                 overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
             else:
-                cancelOverride(gun_marker_ctrl, "createGunMarker")
+                cancelOverride(gun_marker_ctrl, "createGunMarker", "createGunMarker")
             if server:
                 self.addServerCrossOverrides()
             else:
