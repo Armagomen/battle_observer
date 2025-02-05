@@ -3,7 +3,6 @@ from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, getPlayer, overrideMethod
-from armagomen.utils.logging import logDebug
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
 from constants import SERVER_TICK_LENGTH
@@ -89,6 +88,14 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
         self._dataProvider.setupConicDispersion(dispersionAngle)
 
 
+def disable_server_aim():
+    settingsCore = dependency.instance(ISettingsCore)
+    if settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
+        settingsCore.applySettings({GAME.ENABLE_SERVER_AIM: 0})
+        settingsCore.applyStorages(False)
+        settingsCore.clearStorages()
+
+
 class DispersionCircle(object):
 
     def __init__(self):
@@ -107,24 +114,20 @@ class DispersionCircle(object):
 
     @staticmethod
     def cancelServerCrossOverride():
-        cancelOverride(gm_factory, "createComponents")
-        cancelOverride(gm_factory, "overrideComponents")
-        cancelOverride(gun_marker_ctrl, "useDefaultGunMarkers")
-        cancelOverride(gun_marker_ctrl, "useClientGunMarker")
-        cancelOverride(gun_marker_ctrl, "useServerGunMarker")
-        cancelOverride(VehicleGunRotator, "applySettings")
-        cancelOverride(VehicleGunRotator, "setShotPosition")
-        cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged")
-        cancelOverride(CrosshairPanelContainer, "setGunMarkerColor")
+        cancelOverride(gm_factory, "createComponents", "createOverrideComponents")
+        cancelOverride(gm_factory, "overrideComponents", "createOverrideComponents")
+        cancelOverride(gun_marker_ctrl, "useDefaultGunMarkers", "useDefaultGunMarkers")
+        cancelOverride(gun_marker_ctrl, "useClientGunMarker", "useGunMarker")
+        cancelOverride(gun_marker_ctrl, "useServerGunMarker", "useGunMarker")
+        cancelOverride(VehicleGunRotator, "applySettings", "onPass")
+        cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPosition")
+        cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged", "onPass")
+        cancelOverride(CrosshairPanelContainer, "setGunMarkerColor", "setGunMarkerColor")
 
     @staticmethod
     def createOverrideComponents(base, *args):
-        settingsCore = dependency.instance(ISettingsCore)
-        if settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
-            result = settingsCore.applySetting(GAME.ENABLE_SERVER_AIM, False)
-            logDebug('useServerAim: {} {}', settingsCore.getSetting(GAME.ENABLE_SERVER_AIM), result)
-        player = getPlayer()
-        player.enableServerAim(True)
+        disable_server_aim()
+        getPlayer().cell.setServerMarker(True)
         if len(args) == 2:
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
@@ -143,7 +146,6 @@ class DispersionCircle(object):
 
     @staticmethod
     def setShotPosition(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
-        # base(rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=forceValueRefresh)
         m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
         mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
         rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH, collData)
@@ -161,7 +163,7 @@ class DispersionCircle(object):
             if replace or server:
                 overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
             else:
-                cancelOverride(gun_marker_ctrl, "createGunMarker")
+                cancelOverride(gun_marker_ctrl, "createGunMarker", "createGunMarker")
             if server:
                 self.addServerCrossOverrides()
             else:

@@ -17,7 +17,8 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         is_normal_mode = self.gui.isRandomBattle() or self.gui.isRankedBattle() or self.gui.isTrainingBattle()
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
-        g_playerEvents.onAvatarReady += self.updateCounters
+        g_playerEvents.onAvatarReady += self.updateDefaultTopPanel
+        self.as_updateCountersPositionS()
 
     @property
     def observers(self):
@@ -26,14 +27,21 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
                 vInfo.vehicleID for vInfo in self._arenaDP.getVehiclesInfoIterator() if vInfo.isObserver())
         return self.__observers
 
-    def updateCounters(self):
-        self.settingsCore.applySetting(C_BAR.SHOW_HP_BAR, False)
-        self.settingsCore.applySetting(C_BAR.ENABLE_TIER_GROUPING, False)
-        self.as_updateCountersPositionS()
+    def updateDefaultTopPanel(self, settingName=None):
+        result = None
+        items = (C_BAR.ENABLE_TIER_GROUPING, C_BAR.SHOW_HP_BAR)
+        if settingName is not None:
+            items = (settingName,)
+        for key in items:
+            if self.settingsCore.getSetting(key):
+                result = self.settingsCore.applySetting(key, False)
+        if result is not None:
+            self.settingsCore.applyStorages(False)
+            self.settingsCore.clearStorages()
 
     def _dispose(self):
         self.settingsCore.onSettingsApplied -= self.onSettingsApplied
-        g_playerEvents.onAvatarReady -= self.updateCounters
+        g_playerEvents.onAvatarReady -= self.updateDefaultTopPanel
         super(TeamsHP, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
@@ -49,7 +57,10 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
             self.as_updateScoreS(len(deadEnemies), len(deadAllies))
 
     def onSettingsApplied(self, diff):
-        if GRAPHICS.COLOR_BLIND in diff:
-            self.as_colorBlindS(bool(diff[GRAPHICS.COLOR_BLIND]))
-        if GAME.SHOW_VEHICLES_COUNTER in diff or C_BAR.SHOW_HP_BAR in diff or C_BAR.ENABLE_TIER_GROUPING in diff:
-            self.updateCounters()
+        for key, value in diff.iteritems():
+            if key == GRAPHICS.COLOR_BLIND:
+                self.as_colorBlindS(bool(value))
+            if key == GAME.SHOW_VEHICLES_COUNTER and value:
+                self.as_updateCountersPositionS()
+            if key in (C_BAR.SHOW_HP_BAR, C_BAR.ENABLE_TIER_GROUPING) and value:
+                self.updateDefaultTopPanel(key)
