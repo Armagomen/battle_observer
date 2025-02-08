@@ -1,6 +1,7 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS, ScorePanelStorageKeys as C_BAR
 from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
+from armagomen.utils.logging import logDebug
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from PlayerEvents import g_playerEvents
 
@@ -10,7 +11,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def __init__(self):
         super(TeamsHP, self).__init__()
         self.showAliveCount = False
-        self.__observers = None
 
     def _populate(self):
         super(TeamsHP, self)._populate()
@@ -19,18 +19,9 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
         g_playerEvents.onAvatarReady += self.updateDefaultTopPanel
 
-    @property
-    def observers(self):
-        if self.__observers is None:
-            self.__observers = set(
-                vInfo.vehicleID for vInfo in self._arenaDP.getVehiclesInfoIterator() if vInfo.isObserver())
-        return self.__observers
-
     def updateDefaultTopPanel(self, settingName=None):
         result = None
-        items = (C_BAR.ENABLE_TIER_GROUPING, C_BAR.SHOW_HP_BAR)
-        if settingName is not None:
-            items = (settingName,)
+        items = (settingName,) if settingName is not None else (C_BAR.ENABLE_TIER_GROUPING, C_BAR.SHOW_HP_BAR)
         for key in items:
             if self.settingsCore.getSetting(key):
                 result = self.settingsCore.applySetting(key, False)
@@ -48,12 +39,11 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         if self.showAliveCount:
-            self.as_updateScoreS(len(aliveAllies.difference(deadAllies)), len(aliveEnemies.difference(deadEnemies)))
+            self.as_updateScoreS(len(aliveAllies), len(aliveEnemies))
+            logDebug("aliveAllies: {}, aliveEnemies: {}", aliveAllies, aliveEnemies)
         else:
-            if self.observers:
-                deadEnemies = deadEnemies.difference(self.observers)
-                deadAllies = deadAllies.difference(self.observers)
             self.as_updateScoreS(len(deadEnemies), len(deadAllies))
+            logDebug("deadEnemies: {} deadAllies: {}", deadEnemies, deadAllies)
 
     def onSettingsApplied(self, diff):
         for key, value in diff.iteritems():

@@ -103,7 +103,7 @@ class Arcade(CameraSettings):
     def update(self):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
         if camera is None:
-            return logError("{} control mode is Nome", CTRL_MODE_NAME.ARCADE)
+            return logError("{} camera is Nome", CTRL_MODE_NAME.ARCADE)
         self.enabled = self.config[GLOBAL.ENABLED]
         if self.enabled:
             self.reset = True
@@ -139,7 +139,7 @@ class Strategic(CameraSettings):
         strategic = self.getCamera(CTRL_MODE_NAME.STRATEGIC)
         arty = self.getCamera(CTRL_MODE_NAME.ARTY)
         if strategic is None or arty is None:
-            return logError("{} control mode is Nome",
+            return logError("{} camera is Nome",
                             CTRL_MODE_NAME.STRATEGIC if not strategic else CTRL_MODE_NAME.ARTY)
         self.enabled = self.config[GLOBAL.ENABLED]
         if self.enabled:
@@ -180,7 +180,7 @@ class Sniper(CameraSettings):
         self._steps_only = self.config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY] and self._dyn_zoom
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is None:
-            return logError("{} control mode is Nome", CTRL_MODE_NAME.SNIPER)
+            return logError("{} camera is Nome", CTRL_MODE_NAME.SNIPER)
         if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]:
             camera.enableDynamicCamera(False)
         else:

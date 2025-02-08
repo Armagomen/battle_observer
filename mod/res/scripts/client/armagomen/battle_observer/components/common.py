@@ -100,25 +100,41 @@ def muteCaptureSound(base, *args):
         return base(*args)
 
 
-@overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')
-def as_setPrestigeWidgetVisibleS(base, self, value):
-    if user_settings.main[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]:
-        value = False
-    return base(self, value)
+class PrestigeWidget(object):
+
+    def __init__(self):
+        self.enabled = False
+
+    @staticmethod
+    @overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')
+    def as_setPrestigeWidgetVisibleS(base, self, value):
+        if user_settings.main[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]:
+            value = False
+        return base(self, value)
+
+    @staticmethod
+    @overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')
+    def as_setPrestigeVisibleS(base, self, value):
+        if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET]:
+            value = False
+        return base(self, value)
+
+    @staticmethod
+    @overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
+    def _EventEntryPointsContainer_as_updateEntries(base, self, data):
+        if user_settings.main[MAIN.HIDE_EVENT_BANNER]:
+            return base(self, [])
+        return base(self, data)
+
+    def update(self, settings):
+        enabled = any((settings[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET], settings[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET],
+                       settings[MAIN.HIDE_EVENT_BANNER]))
+        if self.enabled != enabled and g_currentVehicle.intCD:
+            self.enabled = enabled
+            g_currentVehicle.onChanged()
 
 
-@overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')
-def as_setPrestigeVisibleS(base, self, value):
-    if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET]:
-        value = False
-    return base(self, value)
-
-
-@overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
-def _EventEntryPointsContainer_as_updateEntries(base, self, data):
-    if user_settings.main[MAIN.HIDE_EVENT_BANNER]:
-        return base(self, [])
-    return base(self, data)
+p_widget = PrestigeWidget()
 
 
 def updateKilledSounds(settings):
@@ -132,8 +148,7 @@ def updateKilledSounds(settings):
 def onModSettingsChanged(settings, blockID):
     if blockID == MAIN.NAME:
         updateKilledSounds(settings)
-        if g_currentVehicle.intCD:
-            g_currentVehicle.onChanged()
+        p_widget.update(settings)
 
 
 user_settings.onModSettingsChanged += onModSettingsChanged
