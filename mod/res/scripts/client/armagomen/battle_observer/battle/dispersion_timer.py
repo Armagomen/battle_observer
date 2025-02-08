@@ -3,9 +3,10 @@ from math import ceil, log
 
 from armagomen._constants import DISPERSION_TIMER, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
-from armagomen.utils.events import g_events
+from armagomen.utils.common import cancelOverride, overrideMethod
 from armagomen.utils.logging import logDebug
 from gui.battle_control.avatar_getter import getInputHandler
+from VehicleGunRotator import VehicleGunRotator
 
 TIMER, PERCENT = ("timer", "percent")
 MAXIMUM = 100
@@ -27,7 +28,7 @@ class DispersionTimer(DispersionTimerMeta):
         handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
-        g_events.onDispersionAngleChanged += self.updateDispersion
+        overrideMethod(VehicleGunRotator, "updateRotationAndGunMarker")(self.updateRotationAndGunMarker)
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -36,8 +37,12 @@ class DispersionTimer(DispersionTimerMeta):
         handler = getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
-        g_events.onDispersionAngleChanged -= self.updateDispersion
+        cancelOverride(VehicleGunRotator, "updateRotationAndGunMarker", "updateRotationAndGunMarker")
         super(DispersionTimer, self)._dispose()
+
+    def updateRotationAndGunMarker(self, base, rotator, *args, **kwargs):
+        base(rotator, *args, **kwargs)
+        self.updateDispersion(rotator)
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.isPostmortem = ctrlMode in POSTMORTEM_MODES

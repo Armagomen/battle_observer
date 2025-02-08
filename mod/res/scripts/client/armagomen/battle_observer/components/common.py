@@ -17,7 +17,6 @@ from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
-from VehicleGunRotator import VehicleGunRotator
 
 
 @overrideMethod(Hangar, "__onCurrentVehicleChanged")
@@ -48,13 +47,6 @@ def setSoundMode(base, *args, **kwargs):
 @overrideMethod(_ClientArenaVisitor, "hasDogTag")
 def hasDogTag(base, *args, **kwargs):
     return False if user_settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
-
-
-# update gun dispersion
-@overrideMethod(VehicleGunRotator, "updateRotationAndGunMarker")
-def updateRotationAndGunMarker(base, rotator, *args, **kwargs):
-    base(rotator, *args, **kwargs)
-    g_events.onDispersionAngleChanged(rotator)
 
 
 # disable battle hints
@@ -96,8 +88,7 @@ def handleLazyChannelCtlInited(base, entry, event):
 
 
 # hide button counters in lobby header
-@overrideMethod(LobbyHeader, "as_removeButtonCounterS")
-@overrideMethod(LobbyHeader, "as_setButtonCounterS")
+@overrideMethod(LobbyHeader, "__setCounter")
 def buttonCounterS(base, *args, **kwargs):
     if not user_settings.main[MAIN.HIDE_BTN_COUNTERS]:
         return base(*args, **kwargs)

@@ -36,6 +36,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			background.alpha = 0.9;
 			this.correlation.y = 20;
 			this.updateCorrelationBar();
+			this.updateCountersPosition();
 			
 			var q_progress:* = page.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
 			page.addChildAt(q_progress, page.getChildIndex(this.correlation) - 1);
@@ -53,7 +54,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 			this.correlation.removeChild(this.correlation.enemyTeamHealthBar);
 		}
 		
-		public function as_updateCountersPosition():void
+		private function updateCountersPosition():void
 		{
 			this.correlation.allyVehicleMarkersList._markerStartPosition = -25;
 			this.correlation.enemyVehicleMarkersList._markerStartPosition = -5;
@@ -87,6 +88,7 @@ package net.armagomen.battleobserver.battle.components.teamshealth
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
+			this.updateCountersPosition();
 		}
 	}
 }

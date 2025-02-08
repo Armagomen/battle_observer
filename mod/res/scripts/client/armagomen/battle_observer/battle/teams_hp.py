@@ -1,4 +1,4 @@
-from account_helpers.settings_core.settings_constants import GAME, GRAPHICS, ScorePanelStorageKeys as C_BAR
+from account_helpers.settings_core.settings_constants import GRAPHICS, ScorePanelStorageKeys as C_BAR
 from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
@@ -18,7 +18,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
         g_playerEvents.onAvatarReady += self.updateDefaultTopPanel
-        self.as_updateCountersPositionS()
 
     @property
     def observers(self):
@@ -60,7 +59,5 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         for key, value in diff.iteritems():
             if key == GRAPHICS.COLOR_BLIND:
                 self.as_colorBlindS(bool(value))
-            if key == GAME.SHOW_VEHICLES_COUNTER and value:
-                self.as_updateCountersPositionS()
-            if key in (C_BAR.SHOW_HP_BAR, C_BAR.ENABLE_TIER_GROUPING) and value:
+            elif key in (C_BAR.SHOW_HP_BAR, C_BAR.ENABLE_TIER_GROUPING) and value:
                 self.updateDefaultTopPanel(key)

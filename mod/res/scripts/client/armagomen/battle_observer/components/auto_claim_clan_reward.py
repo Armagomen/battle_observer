@@ -1,5 +1,3 @@
-from threading import Thread
-
 from adisp import adisp_process
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
@@ -134,6 +132,4 @@ class AutoClaimClanReward(object):
             self.__cachedSettingsData = data
 
 
-g_autoClaimClanReward = Thread(target=AutoClaimClanReward, name="Battle_observer_AutoClaimClanReward")
-g_autoClaimClanReward.daemon = True
-g_autoClaimClanReward.start()
+clanRewards = AutoClaimClanReward()
