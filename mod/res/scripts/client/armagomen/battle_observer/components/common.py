@@ -34,15 +34,6 @@ def __tryToShowTeaser(base, *args):
         return base(*args)
 
 
-# disable commander voices
-@overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByTankmen")
-@overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByCommanderSkinID")
-def setSoundMode(base, *args, **kwargs):
-    if user_settings.main[MAIN.IGNORE_COMMANDERS]:
-        return False
-    return base(*args, **kwargs)
-
-
 # disable dogTag
 @overrideMethod(_ClientArenaVisitor, "hasDogTag")
 def hasDogTag(base, *args, **kwargs):
@@ -56,20 +47,6 @@ def createPlugins(base, *args, **kwargs):
     if user_settings.main[MAIN.HIDE_HINT]:
         result.clear()
     return result
-
-
-# disable battle artillery_stun_effect sound
-@overrideMethod(TimersPanel, "__playStunSoundIfNeed")
-def playStunSoundIfNeed(base, *args, **kwargs):
-    if not user_settings.main[MAIN.STUN_SOUND]:
-        return base(*args, **kwargs)
-
-
-@overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
-def _onVehicleStateUpdated(base, eq, state, value):
-    if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
-        return
-    return base(eq, state, value)
 
 
 # hide shared chat button
@@ -92,12 +69,6 @@ def handleLazyChannelCtlInited(base, entry, event):
 def buttonCounterS(base, *args, **kwargs):
     if not user_settings.main[MAIN.HIDE_BTN_COUNTERS]:
         return base(*args, **kwargs)
-
-
-@overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
-def muteCaptureSound(base, *args):
-    if not user_settings.main[MAIN.MUTE_BASES_SOUND]:
-        return base(*args)
 
 
 class PrestigeWidget(object):
@@ -137,17 +108,52 @@ class PrestigeWidget(object):
 p_widget = PrestigeWidget()
 
 
-def updateKilledSounds(settings):
-    if settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
-        msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
-    elif not settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
-        msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
-        msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
+class TweakSounds(object):
+
+    @staticmethod
+    @overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
+    def muteCaptureSound(base, *args):
+        if not user_settings.main[MAIN.MUTE_BASES_SOUND]:
+            return base(*args)
+
+    # disable battle artillery_stun_effect sound
+    @staticmethod
+    @overrideMethod(TimersPanel, "__playStunSoundIfNeed")
+    def playStunSoundIfNeed(base, *args, **kwargs):
+        if not user_settings.main[MAIN.STUN_SOUND]:
+            return base(*args, **kwargs)
+
+    @staticmethod
+    @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
+    def _onVehicleStateUpdated(base, eq, state, value):
+        if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
+            return
+        return base(eq, state, value)
+
+    @staticmethod
+    def updateKilledSounds(settings):
+        if settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
+            msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
+        elif not settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
+            msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
+            msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
+
+    # disable commander voices
+    @staticmethod
+    @overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByTankmen")
+    @overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByCommanderSkinID")
+    def setSoundMode(base, *args, **kwargs):
+        if user_settings.main[MAIN.IGNORE_COMMANDERS]:
+            return False
+        return base(*args, **kwargs)
+
+
+t_sounds = TweakSounds()
 
 
 def onModSettingsChanged(settings, blockID):
     if blockID == MAIN.NAME:
-        updateKilledSounds(settings)
+        t_sounds.updateKilledSounds(settings)
         p_widget.update(settings)
 
 
