@@ -1,22 +1,31 @@
 class Core(object):
 
-    def __init__(self, modVersion, Thread):
-        from armagomen.battle_observer.settings import settings_loader
+    def __init__(self, modVersion):
         from armagomen.battle_observer.components import loadComponents
-        from armagomen.utils.keys_listener import g_keysListener
+        from armagomen.battle_observer.settings import settings_loader
         from armagomen.utils.common import isReplay
+        from armagomen.utils.keys_listener import g_keysListener
 
         is_replay = isReplay()
         self.registerBattleObserverPackages(is_replay)
-        g_keysListener.init()
+        g_keysListener.init(settings_loader.settings.main)
         loadComponents(is_replay)
         settings_loader.readConfig()
         if not is_replay:
-            from armagomen.battle_observer.settings.hangar import SettingsInterface
-            hangar_settings = Thread(target=SettingsInterface, args=(settings_loader, modVersion),
-                                     name="Battle_Observer_SettingsInterface")
-            hangar_settings.daemon = True
-            hangar_settings.start()
+            try:
+                from gui.modsListApi import g_modsListApi
+                from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
+            except Exception as error:
+                from armagomen.battle_observer.settings.hangar.loading_error import LoadingError
+                from armagomen.utils.logging import logError
+                from debug_utils import LOG_CURRENT_EXCEPTION
+                LoadingError(repr(error))
+                LOG_CURRENT_EXCEPTION()
+                logError("Settings Api Not Loaded")
+            else:
+                from armagomen.battle_observer.settings.hangar import SettingsInterface
+                self.hangar_settings = SettingsInterface(settings_loader, modVersion, g_modsListApi, vxSettingsApi,
+                                                         vxSettingsApiEvents)
 
     @staticmethod
     def registerBattleObserverPackages(is_replay):
@@ -34,14 +43,14 @@ class Core(object):
 
 
 def onFini():
+    from armagomen.battle_observer.components import components
     from armagomen.battle_observer.settings import user_settings
     from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache
     if user_settings.main["clear_cache_automatically"]:
         clearClientCache()
     cleanupObserverUpdates()
     cleanupUpdates()
-    from armagomen.battle_observer.components import components
-    for name, component in components.iteritems():
+    for component in components.itervalues():
         if hasattr(component, "fini"):
             component.fini()
     from armagomen.utils.keys_listener import g_keysListener

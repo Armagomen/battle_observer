@@ -3,7 +3,7 @@ from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPER
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
-from armagomen.utils.logging import logError, logInfo, logWarning
+from armagomen.utils.logging import logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
@@ -24,21 +24,6 @@ def makeTooltip(header=None, body=None, note=None, attention=None):
     if attention is not None:
         res_str += '{ATTENTION}%s{/ATTENTION}' % attention
     return res_str
-
-
-def importApi():
-    try:
-        from gui.modsListApi import g_modsListApi
-        from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-    except Exception as error:
-        from armagomen.battle_observer.settings.hangar.loading_error import LoadingError
-        from debug_utils import LOG_CURRENT_EXCEPTION
-        LoadingError(repr(error))
-        LOG_CURRENT_EXCEPTION()
-        logError("Settings Api Not Loaded")
-    else:
-        return g_modsListApi, vxSettingsApi, vxSettingsApiEvents
-    return None
 
 
 class Getter(object):
@@ -224,11 +209,8 @@ class CreateElement(Getter):
 class SettingsInterface(CreateElement):
     appLoader = dependency.descriptor(IAppLoader)
 
-    def __init__(self, settingsLoader, version):
-        api = importApi()
-        if api is None:
-            return
-        self.modsListApi, self.vxSettingsApi, self.apiEvents = api
+    def __init__(self, settingsLoader, version, g_modsListApi, vxSettingsApi, vxSettingsApiEvents):
+        self.modsListApi, self.vxSettingsApi, self.apiEvents = g_modsListApi, vxSettingsApi, vxSettingsApiEvents
         super(SettingsInterface, self).__init__()
         self.loader = settingsLoader
         self.inited = set()

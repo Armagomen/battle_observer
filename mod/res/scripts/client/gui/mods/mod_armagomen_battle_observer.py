@@ -20,7 +20,7 @@ from armagomen.utils.logging import logInfo
 from realm import CURRENT_REALM
 
 __update = Thread(target=Updater, args=(__version__,), name="Battle_Observer_update")
-__observer = Thread(target=Core, args=(__version__, Thread), name="Battle_Observer_Core")
+__observer = Thread(target=Core, args=(__version__,), name="Battle_Observer_Core")
 
 
 def init():

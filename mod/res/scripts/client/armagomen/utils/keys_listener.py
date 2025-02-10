@@ -1,7 +1,6 @@
 from collections import namedtuple
 
 from armagomen._constants import MAIN
-from armagomen.battle_observer.settings import user_settings
 from gui import InputHandler
 from Keys import KEY_LALT, KEY_LCONTROL, KEY_LSHIFT, KEY_RALT, KEY_RCONTROL, KEY_RSHIFT
 from PlayerEvents import g_playerEvents
@@ -18,8 +17,10 @@ class KeysListener(object):
         self.components = set()
         self.pressedKeys = set()
         self.usableKeys = set()
+        self.mainSettings = {}
 
-    def init(self):
+    def init(self, mainSettings):
+        self.mainSettings = mainSettings
         g_playerEvents.onAvatarReady += self.onAvatarReady
         g_playerEvents.onAvatarBecomeNonPlayer += self.onAvatarBecomeNonPlayer
 
@@ -67,7 +68,7 @@ class KeysListener(object):
                 keys.update(key)
             else:
                 keys.add(key)
-        if user_settings.main[MAIN.USE_KEY_PAIRS]:
+        if self.mainSettings[MAIN.USE_KEY_PAIRS]:
             for key in tuple(keys):
                 if key in KEY_ALIAS_CONTROL:
                     keys.update(KEY_ALIAS_CONTROL)

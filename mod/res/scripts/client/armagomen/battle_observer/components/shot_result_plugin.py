@@ -39,8 +39,8 @@ class _ShotResult(object):
         shot = player.getVehicleDescriptor().shot
         shell = shot.shell
         distance = player.position.flatDistTo(hitPoint)
-        is_modern = cls.isModernMechanics(shell) or shot.shell.kind in cls.FULL_PP_RANGE
-        if is_modern:
+        is_modern = cls.isModernMechanics(shell)
+        if is_modern or shot.shell.kind in cls.FULL_PP_RANGE:
             piercing_power = shot.piercingPower[0] * piercingMultiplier
         else:
             piercing_power = _CrosshairShotResults._computePiercingPowerAtDist(shot.piercingPower, distance,
@@ -65,7 +65,7 @@ class _ShotResult(object):
             shell.type.shieldPenetration
 
     @classmethod
-    def computeArmor(cls, c_details, shell, piercing_power, is_modern_he):
+    def computeArmor(cls, c_details, shell, piercing_power, is_modern):
         computed_armor = GLOBAL.ZERO
         ricochet = False
         no_damage = True
@@ -83,15 +83,15 @@ class _ShotResult(object):
                     piercing_power *= 1.0 - jetDist * jet_loss
             else:
                 ricochet = _CrosshairShotResults._shouldRicochet(shell, detail.hitAngleCos, mat_info)
-            if mat_info.vehicleDamageFactor:
-                no_damage = False
-                break
-            elif is_modern_he:
+            if is_modern:
                 piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
             elif jet_loss > GLOBAL.ZERO:
                 is_jet = True
                 jet_start_dist += detail.dist + mat_info.armor * cls._JET_FACTOR
-        return computed_armor, piercing_power, ricochet, no_damage
+            if mat_info.vehicleDamageFactor:
+                no_damage = False
+                break
+        return computed_armor, max(piercing_power, 0), ricochet, no_damage
 
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):

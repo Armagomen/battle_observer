@@ -5,11 +5,17 @@ from armagomen.utils.common import overrideMethod
 from CurrentVehicle import g_currentVehicle
 from gui.Scaleform.daapi.view.lobby.hangar.ammunition_panel import AmmunitionPanel
 
+_settings = user_settings.avg_efficiency_in_hangar
+
+
+def checkCategory():
+    return any(value for key, value in _settings.iteritems() if key != GLOBAL.ENABLED)
+
 
 @overrideMethod(AmmunitionPanel, "as_updateVehicleStatusS")
 def updateStatus(base, panel, data):
     cachedVehicleData.onVehicleChanged()
-    if user_settings.avg_efficiency_in_hangar[GLOBAL.ENABLED]:
+    if _settings[GLOBAL.ENABLED] and checkCategory():
         if data["message"]:
             data["message"] += "\n" + getAvgData()
         else:
@@ -31,19 +37,19 @@ EFFICIENCY_ICONS = {
 def getAvgData():
     data = cachedVehicleData.efficiencyAvgData
     text = []
-    if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.DAMAGE]:
+    if _settings[AVG_EFFICIENCY_HANGAR.DAMAGE]:
         text.append("{damageIcon}{damage}")
-    if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.ASSIST]:
+    if _settings[AVG_EFFICIENCY_HANGAR.ASSIST]:
         text.append("{assistIcon}{assist}")
-    if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.BLOCKED]:
+    if _settings[AVG_EFFICIENCY_HANGAR.BLOCKED]:
         text.append("{blockedIcon}{blocked}")
-    if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
+    if _settings[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
         text.append("{stunIcon}{stun}")
-    if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.BATTLES]:
+    if _settings[AVG_EFFICIENCY_HANGAR.BATTLES]:
         text.append("{battlesIcon}{battles}")
-    if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.WIN_RATE]:
+    if _settings[AVG_EFFICIENCY_HANGAR.WIN_RATE]:
         text.append("{winRateIcon}{winRate}%")
-    if user_settings.avg_efficiency_in_hangar[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:
+    if _settings[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:
         text.append("{marksOnGunIcon}{marksOnGunValue}%")
     if text:
         params = data._asdict()
