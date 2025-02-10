@@ -1,5 +1,3 @@
-from threading import Thread
-
 from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
@@ -34,7 +32,7 @@ class ExcludedMapsProcessor(object):
         self.__isDialogVisible = False
         self.appLoader.onGUISpaceEntered += self.init
         self.appLoader.onGUISpaceLeft += self.fini
-        user_settings.onModSettingsChanged += self.__onModSettingsChanged
+        user_settings.onModSettingsChanged += self._onModSettingsChanged
 
     @property
     def _serverSettings(self):
@@ -58,7 +56,7 @@ class ExcludedMapsProcessor(object):
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
         self.wotPlus.onDataChanged -= self.__onWotPlusChanged
 
-    def __onModSettingsChanged(self, data, name):
+    def _onModSettingsChanged(self, data, name):
         if name == MAIN.NAME:
             self.__enabled = data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
             self.__update()
@@ -112,6 +110,8 @@ class ExcludedMapsProcessor(object):
             self.__showDialog(message)
 
 
-excluded_maps = Thread(target=ExcludedMapsProcessor, name="Battle_observer_ExcludedMapsProcessor")
-excluded_maps.daemon = True
-excluded_maps.start()
+excluded_maps = ExcludedMapsProcessor()
+
+
+def fini():
+    user_settings.onModSettingsChanged -= excluded_maps._onModSettingsChanged

@@ -151,18 +151,14 @@ class TweakSounds(object):
 t_sounds = TweakSounds()
 
 
-def onModSettingsChanged(settings, blockID):
+def _onModSettingsChanged(settings, blockID):
     if blockID == MAIN.NAME:
         t_sounds.updateKilledSounds(settings)
         p_widget.update(settings)
 
 
-user_settings.onModSettingsChanged += onModSettingsChanged
+user_settings.onModSettingsChanged += _onModSettingsChanged
 
 
 def fini():
-    global onModSettingsChanged
-    user_settings.onModSettingsChanged -= onModSettingsChanged
-
-
-onModSettingsChanged(user_settings.main, MAIN.NAME)
+    user_settings.onModSettingsChanged -= _onModSettingsChanged

@@ -133,3 +133,7 @@ class AutoClaimClanReward(object):
 
 
 clanRewards = AutoClaimClanReward()
+
+
+def fini():
+    user_settings.onModSettingsChanged -= clanRewards.onSettingsChanged

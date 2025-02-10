@@ -184,7 +184,6 @@ class DispersionCircle(object):
 
 
 dispersion_circle = DispersionCircle()
-dispersion_circle.onModSettingsChanged(user_settings.dispersion_circle, DISPERSION.NAME)
 
 
 def fini():

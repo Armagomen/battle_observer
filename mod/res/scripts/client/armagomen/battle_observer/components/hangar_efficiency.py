@@ -52,15 +52,14 @@ def getAvgData():
     return GLOBAL.EMPTY_LINE
 
 
-def onModSettingsChanged(config, blockID):
+def _onModSettingsChanged(config, blockID):
     if blockID == AVG_EFFICIENCY_HANGAR.NAME:
         if g_currentVehicle.intCD:
             g_currentVehicle.onChanged()
 
 
-user_settings.onModSettingsChanged += onModSettingsChanged
+user_settings.onModSettingsChanged += _onModSettingsChanged
 
 
 def fini():
-    global onModSettingsChanged
-    user_settings.onModSettingsChanged -= onModSettingsChanged
+    user_settings.onModSettingsChanged -= _onModSettingsChanged

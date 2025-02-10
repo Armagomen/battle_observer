@@ -35,7 +35,7 @@ def onReceivePersonalSysMessage(base, manager, chatAction):
     return base(manager, chatAction)
 
 
-def onModSettingsChanged(config, blockID):
+def _onModSettingsChanged(config, blockID):
     if blockID == SERVICE_CHANNEL.NAME:
         channel_filter.clear()
         if config[GLOBAL.ENABLED]:
@@ -48,10 +48,8 @@ def onModSettingsChanged(config, blockID):
                         channel_filter.add(name)
 
 
-user_settings.onModSettingsChanged += onModSettingsChanged
-onModSettingsChanged(user_settings.service_channel_filter, SERVICE_CHANNEL.NAME)
+user_settings.onModSettingsChanged += _onModSettingsChanged
 
 
 def fini():
-    global onModSettingsChanged
-    user_settings.onModSettingsChanged -= onModSettingsChanged
+    user_settings.onModSettingsChanged -= _onModSettingsChanged

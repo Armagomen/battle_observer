@@ -10,6 +10,7 @@ class Core(object):
         self.registerBattleObserverPackages(is_replay)
         g_keysListener.init()
         loadComponents(is_replay)
+        settings_loader.readConfig()
         if not is_replay:
             from armagomen.battle_observer.settings.hangar import SettingsInterface
             hangar_settings = Thread(target=SettingsInterface, args=(settings_loader, modVersion),

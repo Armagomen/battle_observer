@@ -64,6 +64,7 @@ class WG_Logs_Fix(object):
 
     def __init__(self):
         self.validated = {}
+        user_settings.onModSettingsChanged += self.onModSettingsChanged
 
     def addToLog(self, base, component, event):
         return base(component, [e for e in event if not self.validated.get(e.getType(), False)])
@@ -91,9 +92,6 @@ class WG_Logs_Fix(object):
 
 
 logs_fix = WG_Logs_Fix()
-
-user_settings.onModSettingsChanged += logs_fix.onModSettingsChanged
-logs_fix.onModSettingsChanged(user_settings.wg_logs, DAMAGE_LOG.WG_LOGS_FIX)
 
 
 def fini():
