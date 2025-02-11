@@ -26,12 +26,11 @@ class _ShotResult(object):
 
     @classmethod
     def getShotResult(cls, hitPoint, collision, direction, piercingMultiplier, onAlly, player):
-        if collision is None:
+        if player is None or collision is None:
             return cls.UNDEFINED_RESULT
         entity = collision.entity
-        if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive():
-            return cls.UNDEFINED_RESULT
-        if player is None or cls.isAlly(entity, player, onAlly):
+        if not isinstance(entity, (Vehicle, DestructibleEntity)) or not entity.isAlive() or cls.isAlly(entity, player,
+                                                                                                       onAlly):
             return cls.UNDEFINED_RESULT
         c_details = _CrosshairShotResults._getAllCollisionDetails(hitPoint, direction, entity)
         if c_details is None:
@@ -46,52 +45,80 @@ class _ShotResult(object):
             piercing_power = _CrosshairShotResults._computePiercingPowerAtDist(shot.piercingPower, distance,
                                                                                shot.maxDistance,
                                                                                piercingMultiplier)
-        armor, piercing_power, ricochet, no_damage = cls.computeArmor(c_details, shell, piercing_power, is_modern)
+        return cls.computeArmorHE(c_details, shell, piercing_power) if is_modern else cls.computeArmor(c_details, shell,
+                                                                                                       piercing_power)
+
+    @classmethod
+    def _checkShotResult(cls, armor, piercing_power, ricochet, no_damage):
         if no_damage or ricochet:
-            shot_result = SHOT_RESULT.NOT_PIERCED
+            return SHOT_RESULT.NOT_PIERCED
         else:
             offset = piercing_power * cls.RANDOMIZATION
             if armor < piercing_power - offset:
-                shot_result = SHOT_RESULT.GREAT_PIERCED
+                return SHOT_RESULT.GREAT_PIERCED
             elif armor > piercing_power + offset:
-                shot_result = SHOT_RESULT.NOT_PIERCED
+                return SHOT_RESULT.NOT_PIERCED
             else:
-                shot_result = SHOT_RESULT.LITTLE_PIERCED
-        return shot_result, armor, piercing_power, shell.caliber, ricochet, no_damage
+                return SHOT_RESULT.LITTLE_PIERCED
 
     @staticmethod
     def isModernMechanics(shell):
-        return shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN and \
-            shell.type.shieldPenetration
+        return shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
 
     @classmethod
-    def computeArmor(cls, c_details, shell, piercing_power, is_modern):
+    def computeArmor(cls, c_details, shell, piercing_power):
         computed_armor = GLOBAL.ZERO
         ricochet = False
         no_damage = True
         is_jet = False
         jet_start_dist = GLOBAL.ZERO
         jet_loss = _CrosshairShotResults._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
+        ignoredMaterials = set()
         for detail in c_details:
             mat_info = detail.matInfo
-            if mat_info is None:
+            if mat_info is None or (detail.compName, mat_info.kind) in ignoredMaterials:
                 continue
-            computed_armor += _CrosshairShotResults._computePenetrationArmor(shell, detail.hitAngleCos, mat_info)
+            hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
+            computed_armor += _CrosshairShotResults._computePenetrationArmor(shell, hitAngleCos, mat_info)
             if is_jet:
                 jetDist = detail.dist - jet_start_dist
                 if jetDist > GLOBAL.ZERO:
                     piercing_power *= 1.0 - jetDist * jet_loss
             else:
-                ricochet = _CrosshairShotResults._shouldRicochet(shell, detail.hitAngleCos, mat_info)
-            if is_modern:
-                piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-            elif jet_loss > GLOBAL.ZERO:
-                is_jet = True
-                jet_start_dist += detail.dist + mat_info.armor * cls._JET_FACTOR
+                ricochet = _CrosshairShotResults._shouldRicochet(shell, hitAngleCos, mat_info)
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
-        return computed_armor, max(piercing_power, 0), ricochet, no_damage
+            if jet_loss > GLOBAL.ZERO:
+                is_jet = True
+                jet_start_dist += detail.dist + mat_info.armor * cls._JET_FACTOR
+            if mat_info.collideOnceOnly:
+                ignoredMaterials.add((detail.compName, mat_info.kind))
+
+        shot_result = cls._checkShotResult(computed_armor, piercing_power, ricochet, no_damage)
+        return shot_result, computed_armor, piercing_power, shell.caliber, ricochet, no_damage
+
+    @classmethod
+    def computeArmorHE(cls, c_details, shell, piercing_power):
+        computed_armor = GLOBAL.ZERO
+        ignoredMaterials = set()
+        no_damage = True
+        for detail in c_details:
+            mat_info = detail.matInfo
+            if mat_info is None or (detail.compName, mat_info.kind) in ignoredMaterials:
+                continue
+            hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
+            computed_armor += _CrosshairShotResults._computePenetrationArmor(shell, hitAngleCos, mat_info)
+            if mat_info.vehicleDamageFactor:
+                no_damage = False
+                break
+            if shell.type.shieldPenetration:
+                piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+            if mat_info.collideOnceOnly:
+                ignoredMaterials.add((detail.compName, mat_info.kind))
+
+        shot_result = cls._checkShotResult(computed_armor, piercing_power, False, no_damage)
+        return shot_result, computed_armor, max(piercing_power, 0), shell.caliber, False, no_damage
 
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
@@ -128,7 +155,7 @@ def createPlugins(base, *args):
 GUNNER_ARMORER = 'gunner_armorer'
 
 
-def updateCrew(vehicle):
+def _updateRandomization(vehicle):
     if not user_settings.armor_calculator[GLOBAL.ENABLED]:
         return
     if vehicle is None or vehicle.isLocked or vehicle.isCrewLocked:
@@ -149,8 +176,8 @@ def updateCrew(vehicle):
     _ShotResult.RANDOMIZATION = randomization
 
 
-g_events.onVehicleChangedDelayed += updateCrew
+g_events.onVehicleChangedDelayed += _updateRandomization
 
 
 def fini():
-    g_events.onVehicleChangedDelayed -= updateCrew
+    g_events.onVehicleChangedDelayed -= _updateRandomization

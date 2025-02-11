@@ -2,7 +2,7 @@
 from collections import defaultdict
 
 from armagomen._constants import ARMOR_CALC, COLORS, GLOBAL, POSTMORTEM_MODES
-from armagomen.battle_observer.components.shot_result_plugin import updateCrew
+from armagomen.battle_observer.components.shot_result_plugin import _updateRandomization
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
@@ -80,4 +80,4 @@ class ArmorCalculator(ArmorCalcMeta):
             if vehicle is None:
                 vehicle = ctrl.getCurrentGUIVehicle()
             if vehicle is not None and not avatar_getter.isObserver():
-                updateCrew(vehicle)
+                _updateRandomization(vehicle)

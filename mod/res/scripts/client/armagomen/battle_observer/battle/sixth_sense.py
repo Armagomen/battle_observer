@@ -3,7 +3,6 @@ from random import choice
 
 from armagomen._constants import GLOBAL, SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
-from armagomen.utils.logging import logInfo
 from armagomen.utils.timers import SixthSenseTimer
 from constants import DIRECT_DETECTION_TYPE
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
@@ -70,7 +69,6 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
-            logInfo(value)
             if value.get('isObserved', False):
                 if self.gui.isComp7Battle():
                     if value.get("detectionType", 0) == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
