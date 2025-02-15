@@ -156,23 +156,15 @@ GUNNER_ARMORER = 'gunner_armorer'
 
 
 def _updateRandomization(vehicle):
-    if not user_settings.armor_calculator[GLOBAL.ENABLED]:
-        return
-    if vehicle is None or vehicle.isLocked or vehicle.isCrewLocked:
-        return
     randomization = component_constants.DEFAULT_PIERCING_POWER_RANDOMIZATION
-    for _, tankman in vehicle.crew:
-        if tankman and GUNNER_ARMORER in tankman.skillsMap and tankman.canUseSkillsInCurrentVehicle:
-            level = tankman.skillsMap[GUNNER_ARMORER].level
-            role_level = tankman.nativeTankRealRoleLevel / 100.0
-            if tankman.skillsEfficiency < 1.0:
-                level *= tankman.skillsEfficiency * role_level
-            else:
-                level *= role_level
-            randomization = randomization + (0.2 - randomization) * (level - randomization) / 100
-            logDebug("level: {}, randomization: {}", level, randomization)
-            break
-
+    if user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None and vehicle.isCrewFull:
+        for _, tman in vehicle.crew:
+            if tman and GUNNER_ARMORER in tman.skillsMap and tman.canUseSkillsInCurrentVehicle:
+                level = tman.skillsMap[GUNNER_ARMORER].level * tman.skillsEfficiency * (
+                            tman.nativeTankRealRoleLevel / 100.0)
+                randomization += (0.2 - randomization) * (level - randomization) / 100
+                logDebug("PIERCING_POWER_RANDOMIZATION level: {}, randomization: {}", level, randomization)
+                break
     _ShotResult.RANDOMIZATION = randomization
 
 
