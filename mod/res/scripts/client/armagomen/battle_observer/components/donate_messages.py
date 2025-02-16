@@ -6,7 +6,6 @@ from random import choice
 from armagomen._constants import API_KEY, getLogo, IMG, URLS
 from armagomen.utils.common import fetchURL, openWebBrowser, overrideMethod
 from armagomen.utils.logging import logDebug, logInfo, logWarning
-from constants import AUTH_REALM
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
 from gui.shared.personality import ServicesLocator
@@ -14,6 +13,7 @@ from gui.SystemMessages import pushMessage, SM_TYPE
 from helpers import getClientLanguage
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
+from realm import CURRENT_REALM
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from uilogging.core.core_constants import HTTP_OK_STATUS
 
@@ -105,7 +105,7 @@ class Donate(object):
                 self.pushClanInviteMessage()
 
 
-if AUTH_REALM == "EU":
+if CURRENT_REALM == "EU":
     from threading import Thread
 
     donate = Thread(target=Donate, name="Battle_observer_Donate")

@@ -32,6 +32,7 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         super(ArenaVehiclesPlugin, self).__init__(*args, **kwargs)
         self.__showDestroyEntries = user_settings.minimap[MINIMAP.DEATH_PERMANENT]
         self.__isDestroyImmediately = user_settings.minimap[MINIMAP.DEATH_PERMANENT]
+        self.__showDestroyNames = user_settings.minimap[MINIMAP.SHOW_NAMES] and self.__isDestroyImmediately
 
     def _showVehicle(self, vehicleID, location):
         entry = self._entries[vehicleID]
@@ -53,9 +54,9 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
         super(ArenaVehiclesPlugin, self).__switchToVehicle(prevCtrlID)
 
     def _getDisplayedName(self, vInfo):
-        if not vInfo.isAlive() and not user_settings.minimap[MINIMAP.SHOW_NAMES]:
-            return ''
-        return super(ArenaVehiclesPlugin, self)._getDisplayedName(vInfo)
+        if vInfo.isAlive() or self.__showDestroyNames:
+            return super(ArenaVehiclesPlugin, self)._getDisplayedName(vInfo)
+        return ''
 
 
 @overrideMethod(MinimapComponent, "_setupPlugins")

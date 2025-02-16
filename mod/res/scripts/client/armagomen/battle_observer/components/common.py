@@ -1,4 +1,4 @@
-from armagomen._constants import MAIN
+from armagomen._constants import IS_LESTA, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import addCallback, overrideMethod
 from armagomen.utils.events import g_events
@@ -75,40 +75,46 @@ class PrestigeWidget(object):
 
     def __init__(self):
         self.enabled = False
+        overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')(self.as_setPrestigeWidgetVisibleS)
+        overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')(self.as_setPrestigeVisibleS)
+        user_settings.onModSettingsChanged += self.onModSettingsChanged
 
     @staticmethod
-    @overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')
-    def as_setPrestigeWidgetVisibleS(base, self, value):
+    def as_setPrestigeWidgetVisibleS(base, hangar, value):
         if user_settings.main[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]:
             value = False
-        return base(self, value)
+        return base(hangar, value)
 
     @staticmethod
-    @overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')
-    def as_setPrestigeVisibleS(base, self, value):
+    def as_setPrestigeVisibleS(base, profile, value):
         if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET]:
             value = False
-        return base(self, value)
+        return base(profile, value)
 
-    @staticmethod
-    @overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
-    def _EventEntryPointsContainer_as_updateEntries(base, self, data):
-        if user_settings.main[MAIN.HIDE_EVENT_BANNER]:
-            return base(self, [])
-        return base(self, data)
-
-    def update(self, settings):
-        enabled = any((settings[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET], settings[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET],
-                       settings[MAIN.HIDE_EVENT_BANNER]))
+    def onModSettingsChanged(self, settings, blockID):
+        if blockID != MAIN.NAME:
+            return
+        enabled = settings[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]
         if self.enabled != enabled and g_currentVehicle.intCD:
             self.enabled = enabled
             g_currentVehicle.onChanged()
 
 
-p_widget = PrestigeWidget()
+if not IS_LESTA:
+    p_widget = PrestigeWidget()
+
+
+@overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
+def _EventEntryPointsContainer_as_updateEntries(base, self, data):
+    if user_settings.main[MAIN.HIDE_EVENT_BANNER]:
+        return base(self, [])
+    return base(self, data)
 
 
 class TweakSounds(object):
+
+    def __init__(self):
+        user_settings.onModSettingsChanged += self.onModSettingsChanged
 
     @staticmethod
     @overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
@@ -131,7 +137,9 @@ class TweakSounds(object):
         return base(eq, state, value)
 
     @staticmethod
-    def updateKilledSounds(settings):
+    def onModSettingsChanged(settings, blockID):
+        if blockID != MAIN.NAME:
+            return
         if settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
             msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
         elif not settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
@@ -151,14 +159,7 @@ class TweakSounds(object):
 t_sounds = TweakSounds()
 
 
-def _onModSettingsChanged(settings, blockID):
-    if blockID == MAIN.NAME:
-        t_sounds.updateKilledSounds(settings)
-        p_widget.update(settings)
-
-
-user_settings.onModSettingsChanged += _onModSettingsChanged
-
-
 def fini():
-    user_settings.onModSettingsChanged -= _onModSettingsChanged
+    user_settings.onModSettingsChanged -= t_sounds.onModSettingsChanged
+    if not IS_LESTA:
+        user_settings.onModSettingsChanged -= p_widget.onModSettingsChanged

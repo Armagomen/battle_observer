@@ -9,3 +9,6 @@ class DebugPanel(DebugPanelMeta, IDebugPanel):
 
     def updateDebugInfo(self, ping, fps, isLaggingNow, fpsReplay=-1):
         self.as_updateS(ping, fps, isLaggingNow)
+
+    def updateReplayDebugInfo(self, ping, fps, isLaggingNow, fpsReplay=-1):
+        self.as_updateS(ping, fps, isLaggingNow)

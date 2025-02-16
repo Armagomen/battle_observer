@@ -1,4 +1,5 @@
-from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
+from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_LESTA, MAIN,
+                                  MINIMAP,
                                   MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
@@ -324,7 +325,7 @@ class SettingsInterface(CreateElement):
                 if type(value) == int and type(updated_config_link[param_name]) == float:
                     value = float(value)
                 updated_config_link[param_name] = value
-            self.loader.updateConfigFile(blockID, settings_block)
+            self.loader.updateConfigFile(settings_block, blockID)
             user_settings.onModSettingsChanged(settings_block, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
@@ -335,8 +336,15 @@ class SettingsInterface(CreateElement):
             if varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
                 values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]
                 self.setHandlerValue(blockID, values, value)
-        if blockID == MAIN.NAME and varName == MAIN.USE_KEY_PAIRS:
-            self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
+        if blockID == MAIN.NAME:
+            if varName == MAIN.USE_KEY_PAIRS:
+                self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
+            if IS_LESTA:
+                lesta_diasble = (
+                    MAIN.AUTO_CLAIM_CLAN_REWARD, MAIN.CREW_RETURN, MAIN.CREW_TRAINING,
+                    MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
+                    MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET)
+                self.setHandlerValue(blockID, lesta_diasble, False)
 
     def setHandlerValue(self, blockID, values, value):
         get_object = self.vxSettingsApi.getDAAPIObject

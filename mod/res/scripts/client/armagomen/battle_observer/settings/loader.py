@@ -47,7 +47,7 @@ class SettingsLoader(object):
         path = os.path.join(currentConfigPath, 'load.json')
         writeJsonFile(path, {'loadConfig': configName})
 
-    def updateConfigFile(self, fileName, data):
+    def updateConfigFile(self, data, fileName):
         path = os.path.join(currentConfigPath, self.configName, JSON.format(fileName))
         writeJsonFile(path, data)
         if fileName == MAIN.NAME:

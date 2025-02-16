@@ -34,4 +34,6 @@ Xcopy %OutputDir% %GameInstalled_ModsDir% /e /i /d
 
 DEL /s /q *.pyc
 
+pause
+
 exit

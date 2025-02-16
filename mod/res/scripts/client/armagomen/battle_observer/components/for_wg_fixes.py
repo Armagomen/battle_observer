@@ -1,6 +1,6 @@
 import BigWorld
 
-from armagomen._constants import DAMAGE_LOG, GLOBAL
+from armagomen._constants import DAMAGE_LOG, GLOBAL, IS_LESTA
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, overrideMethod
 from BattleReplay import g_replayCtrl
@@ -28,9 +28,12 @@ class Debug_ctrl_fix(object):
     def clearViewComponents(base, controller, *args):
         controller._debugPanelUI = []
 
-    @staticmethod
+
+fix_debug = Debug_ctrl_fix()
+
+if not IS_LESTA:
     @overrideMethod(debug_ctrl.DebugController, "_update")
-    def updateDebug(base, controller):
+    def _update(base, controller):
         fps = BigWorld.getFPS()[1]
         if g_replayCtrl.isPlaying:
             fpsReplay = g_replayCtrl.fps
@@ -52,10 +55,34 @@ class Debug_ctrl_fix(object):
             fps = ping = fpsReplay = 0
 
         for ui in controller._debugPanelUI:
-            ui.updateDebugInfo(ping, fps, isLaggingNow, fpsReplay=fpsReplay)
+            ui.updateDebugInfo(ping, fps, isLaggingNow, fpsReplay)
+else:
+    @overrideMethod(debug_ctrl.DebugController, "_update")
+    def _update(base, controller):
+        isLaggingNow = BigWorld.statLagDetected()
+        ping = BigWorld.statPing()
+        fps = BigWorld.getFPS()[1]
+        controller.statsCollector.update()
+        try:
+            ping = int(ping)
+            fps = int(fps)
+        except (ValueError, OverflowError):
+            return
+
+        if g_replayCtrl.isRecording:
+            g_replayCtrl.setFpsPingLag(fps, ping, isLaggingNow)
+        for ui in controller._debugPanelUI:
+            ui.updateDebugInfo(ping, fps, isLaggingNow)
 
 
-fix_debug = Debug_ctrl_fix()
+    @overrideMethod(debug_ctrl.DebugController, "_updateReplay")
+    def _updateReplay(base, controller):
+        fps = BigWorld.getFPS()[1]
+        fpsReplay = g_replayCtrl.fps
+        ping = g_replayCtrl.ping
+        isLaggingNow = g_replayCtrl.isLaggingNow
+        for ui in controller._debugPanelUI:
+            ui.updateReplayDebugInfo(ping, fps, isLaggingNow, fpsReplay)
 
 
 class WG_Logs_Fix(object):

@@ -6,7 +6,7 @@ import ResMgr
 import math_utils
 import TriggersManager
 from aih_constants import CTRL_MODE_NAME
-from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
+from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_LESTA, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import addCallback, getPlayer, isReplay, overrideMethod
 from armagomen.utils.logging import logError
@@ -28,7 +28,13 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
         self.skip_clip = False
         self.subscribed = False
         self.avatar = None
-        self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
+        self.__trigger_type = self.getTrigger()
+
+    @staticmethod
+    def getTrigger():
+        if IS_LESTA:
+            return TriggersManager.TRIGGER_TYPE.PLAYER_SHOOT
+        return TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
 
     def updateSettings(self, data):
         enabled = data[SNIPER.DISABLE_SNIPER] and data[GLOBAL.ENABLED]
@@ -111,7 +117,10 @@ class Arcade(CameraSettings):
             camera._cfg['scrollSensitivity'] = self.config[ARCADE.SCROLL_SENSITIVITY]
             camera._cfg['startDist'] = self.config[ARCADE.START_DEAD_DIST]
             camera._cfg['startAngle'] = -0.4
-            camera._updateProperties(state=None)
+            if IS_LESTA:
+                camera._ArcadeCamera__updateProperties(state=None)
+            else:
+                camera._updateProperties(state=None)
         elif self.reset:
             self.resetToDefault(camera)
 
@@ -119,7 +128,10 @@ class Arcade(CameraSettings):
         super(Arcade, self).resetToDefault()
         cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/arcadeMode/camera/')
         camera._reloadConfigs(cameraSec)
-        camera._updateProperties(state=None)
+        if IS_LESTA:
+            camera._ArcadeCamera__updateProperties(state=None)
+        else:
+            camera._updateProperties(state=None)
 
     def enablePostMortem(self, base, mode, **kwargs):
         if self.enabled:

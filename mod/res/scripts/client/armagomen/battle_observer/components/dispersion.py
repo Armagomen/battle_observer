@@ -1,6 +1,6 @@
 import aih_constants
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen._constants import DISPERSION, GLOBAL
+from armagomen._constants import DISPERSION, GLOBAL, IS_LESTA
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, getPlayer, overrideMethod
 from AvatarInputHandler import gun_marker_ctrl
@@ -29,10 +29,11 @@ LINKAGES = {
     _CONSTANTS.DEBUG_ARCADE_GUN_MARKER_NAME: _CONSTANTS.GUN_MARKER_LINKAGE,
     _CONSTANTS.DEBUG_SNIPER_GUN_MARKER_NAME: _CONSTANTS.GUN_MARKER_LINKAGE,
     _CONSTANTS.DEBUG_DUAL_GUN_ARCADE_MARKER_NAME: _CONSTANTS.DUAL_GUN_ARCADE_MARKER_LINKAGE,
-    _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DUAL_GUN_SNIPER_MARKER_LINKAGE,
-    _CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE,
-    _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE
+    _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DUAL_GUN_SNIPER_MARKER_LINKAGE
 }
+if not IS_LESTA:
+    LINKAGES.update({_CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE,
+                     _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE})
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
@@ -144,11 +145,16 @@ class DispersionCircle(object):
     def onPass(*args, **kwargs):
         pass
 
-    @staticmethod
-    def setShotPosition(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
+    def setShotPosition(self, base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
         m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
-        mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
-        rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH, collData)
+        if IS_LESTA:
+            mPos, mDir, mSize, mIdealSize, dualAccSize, _, collData = m_position
+            rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, (mSize, mIdealSize), SERVER_TICK_LENGTH,
+                                                               collData)
+        else:
+            mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
+            rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH,
+                                                               collData)
 
     @staticmethod
     def setGunMarkerColor(base, cr_panel, markerType, color):
@@ -161,25 +167,44 @@ class DispersionCircle(object):
             replace = config[GLOBAL.ENABLED] and config[DISPERSION.REPLACE]
             server = config[GLOBAL.ENABLED] and config[DISPERSION.SERVER]
             if replace or server:
-                overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker)
+                if IS_LESTA:
+                    overrideMethod(gun_marker_ctrl, "createDefaultGunMarker")(self.createDefaultGunMarker)
+                    overrideMethod(gun_marker_ctrl, "createStrategicGunMarker")(self.createStrategicGunMarker)
+                    overrideMethod(gun_marker_ctrl, "createAssaultSpgGunMarker")(self.createStrategicGunMarker)
+                else:
+                    overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker_WG)
             else:
-                cancelOverride(gun_marker_ctrl, "createGunMarker", "createGunMarker")
+                if IS_LESTA:
+                    cancelOverride(gun_marker_ctrl, "createDefaultGunMarker", "createDefaultGunMarker")
+                    cancelOverride(gun_marker_ctrl, "createStrategicGunMarker", "createStrategicGunMarker")
+                    cancelOverride(gun_marker_ctrl, "createAssaultSpgGunMarker", "createStrategicGunMarker")
+                else:
+                    cancelOverride(gun_marker_ctrl, "createGunMarker", "createGunMarker_WG")
             if server:
                 self.addServerCrossOverrides()
             else:
                 self.cancelServerCrossOverride()
 
-    @staticmethod
-    def createGunMarker(baseCreateGunMarker, isStrategic):
-        factory = gun_marker_ctrl._GunMarkersDPFactory()
+    def createGunMarker_WG(self, baseCreateGunMarker, isStrategic):
         if isStrategic:
-            client = SPGController(CLIENT, factory.getClientSPGProvider())
-            server = SPGController(SERVER, factory.getServerSPGProvider())
-            dual = gun_marker_ctrl._EmptyGunMarkerController(EMPTY, None)
+            return self.createStrategicGunMarker()
         else:
-            client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
-            server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
-            dual = _DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
+            return self.createDefaultGunMarker()
+
+    @staticmethod
+    def createDefaultGunMarker(*args):
+        factory = gun_marker_ctrl._GunMarkersDPFactory()
+        client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
+        server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
+        dual = _DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
+        return gun_marker_ctrl._GunMarkersDecorator(client, server, dual)
+
+    @staticmethod
+    def createStrategicGunMarker(*args):
+        factory = gun_marker_ctrl._GunMarkersDPFactory()
+        client = SPGController(CLIENT, factory.getClientSPGProvider())
+        server = SPGController(SERVER, factory.getServerSPGProvider())
+        dual = gun_marker_ctrl._EmptyGunMarkerController(EMPTY, None)
         return gun_marker_ctrl._GunMarkersDecorator(client, server, dual)
 
 

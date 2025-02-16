@@ -7,9 +7,9 @@ class Core(object):
         from armagomen.utils.keys_listener import g_keysListener
 
         is_replay = isReplay()
+        loadComponents(is_replay)
         self.registerBattleObserverPackages(is_replay)
         g_keysListener.init(settings_loader.settings.main)
-        loadComponents(is_replay)
         settings_loader.readConfig()
         if not is_replay:
             try:

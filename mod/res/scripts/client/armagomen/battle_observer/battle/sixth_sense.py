@@ -1,10 +1,12 @@
 # coding=utf-8
 from random import choice
 
-from armagomen._constants import GLOBAL, SIXTH_SENSE
+from armagomen._constants import GLOBAL, IS_LESTA, SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
 from armagomen.utils.timers import SixthSenseTimer
-from constants import DIRECT_DETECTION_TYPE
+
+if not IS_LESTA:
+    from constants import DIRECT_DETECTION_TYPE
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from helpers import getClientLanguage
 from PlayerEvents import g_playerEvents
@@ -69,7 +71,16 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
-            if value.get('isObserved', False):
+            if IS_LESTA:
+                if value:
+                    time = self.settings[SIXTH_SENSE.TIME]
+                    if self.radio_installed:
+                        time -= RADIO_DURATION
+                    self.__message = self.getNewRandomMessage()
+                    self.show(time)
+                else:
+                    self.hide()
+            elif value.get('isObserved', False):
                 if self.gui.isComp7Battle():
                     if value.get("detectionType", 0) == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
                         time = 2

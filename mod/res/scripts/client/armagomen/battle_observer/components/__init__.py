@@ -1,6 +1,9 @@
 from importlib import import_module
 
 from debug_utils import LOG_CURRENT_EXCEPTION
+from realm import CURRENT_REALM
+
+components = {}
 
 replay_disable = (
     'auto_claim_clan_reward',
@@ -15,7 +18,11 @@ replay_disable = (
     'service_channel_filter',
     'vehicle_battle_boosters',
 )
-components = {}
+
+lesta_disable = (
+    'auto_claim_clan_reward',
+    'crew',
+)
 
 
 def loadComponents(is_replay):
@@ -41,7 +48,7 @@ def loadComponents(is_replay):
     )
 
     for moduleName in load:
-        if moduleName in replay_disable and is_replay:
+        if moduleName in replay_disable and is_replay or CURRENT_REALM == "RU" and moduleName in lesta_disable:
             continue
         try:
             components[moduleName] = import_module("{}.{}".format(__package__, moduleName))

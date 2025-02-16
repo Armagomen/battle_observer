@@ -12,6 +12,10 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
 
+from realm import CURRENT_REALM
+
+IS_LESTA = CURRENT_REALM == "RU"
+
 
 def getLogo(big=True):
     if big:
@@ -212,8 +216,11 @@ ARCADE = namedtuple("ARCADE", (
 
 STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
     "strategic_camera", "min", "max", "distRange", "scrollSensitivity")
-POSTMORTEM_MODES = {CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
-                    CTRL_MODE_NAME.RESPAWN_DEATH, CTRL_MODE_NAME.VEHICLES_SELECTION, CTRL_MODE_NAME.LOOK_AT_KILLER}
+POSTMORTEM_MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
+                    CTRL_MODE_NAME.RESPAWN_DEATH, CTRL_MODE_NAME.VEHICLES_SELECTION}
+
+if not IS_LESTA:
+    POSTMORTEM_MODES.update((CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.LOOK_AT_KILLER))
 
 __MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config. {}</font>".format(key) for key in
                        set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}
@@ -433,11 +440,11 @@ def create_range(obj, names):
         if value is not None:
             _range.add(value)
         else:
-            logError("create_range::{} attribute error:: {}", obj.__class__.__name__, name)
+            logError("create_range::{} attribute error:: {}", getattr(obj, "__name__"), name)
     return _range
 
 
-__battle_types = (
+__battle_types = {
     "COMP7",
     "EPIC_BATTLE",
     "EPIC_RANDOM",
@@ -447,19 +454,21 @@ __battle_types = (
     "RANDOM",
     "RANKED",
     "SORTIE_2",
-    "TOURNAMENT_COMP7",
     "TRAINING",
     "UNKNOWN",
     "FUN_RANDOM",
-)
-__pages_types = (
+}
+__pages_types = {
     "CLASSIC_BATTLE_PAGE",
-    "COMP7_BATTLE_PAGE",
     "EPIC_BATTLE_PAGE",
     "EPIC_RANDOM_PAGE",
     "RANKED_BATTLE_PAGE",
     "STRONGHOLD_BATTLE_PAGE",
-)
+}
+
+if not IS_LESTA:
+    __battle_types.add("TOURNAMENT_COMP7")
+    __pages_types.add("COMP7_BATTLE_PAGE")
 
 BATTLES_RANGE = create_range(ARENA_GUI_TYPE, __battle_types)
 BATTLE_PAGES = create_range(VIEW_ALIAS, __pages_types)
