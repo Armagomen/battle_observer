@@ -1,31 +1,10 @@
 from importlib import import_module
 
-from debug_utils import LOG_CURRENT_EXCEPTION
 from realm import CURRENT_REALM
-
-components = {}
-
-replay_disable = (
-    'auto_claim_clan_reward',
-    'crew',
-    'dispersion',
-    'donate_messages',
-    'excluded_maps',
-    'friends',
-    'hangar_efficiency',
-    'premium_time',
-    'save_shot_lite',
-    'service_channel_filter',
-    'vehicle_battle_boosters',
-)
-
-lesta_disable = (
-    'auto_claim_clan_reward',
-    'crew',
-)
 
 
 def loadComponents(is_replay):
+    components = {}
     load = (
         'for_wg_fixes',
         'auto_claim_clan_reward',
@@ -47,10 +26,32 @@ def loadComponents(is_replay):
         'vehicle_battle_boosters',
     )
 
+    replay_disable = (
+        'auto_claim_clan_reward',
+        'crew',
+        'dispersion',
+        'donate_messages',
+        'excluded_maps',
+        'friends',
+        'hangar_efficiency',
+        'premium_time',
+        'save_shot_lite',
+        'service_channel_filter',
+        'vehicle_battle_boosters',
+    )
+
+    lesta_disable = (
+        'auto_claim_clan_reward',
+        'crew',
+    )
+
     for moduleName in load:
         if moduleName in replay_disable and is_replay or CURRENT_REALM == "RU" and moduleName in lesta_disable:
             continue
         try:
             components[moduleName] = import_module("{}.{}".format(__package__, moduleName))
         except Exception:
+            from debug_utils import LOG_CURRENT_EXCEPTION
             LOG_CURRENT_EXCEPTION()
+
+    return components

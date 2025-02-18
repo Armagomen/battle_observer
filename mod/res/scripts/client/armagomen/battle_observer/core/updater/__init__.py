@@ -48,6 +48,7 @@ class DownloadThread(object):
         self.dialogs = UpdaterDialogs()
         self.downloader = None
         self.modPath = os.path.join(modsPath, gameVersion)
+        self.isReplay = isReplay()
 
     def startDownload(self, version):
         path = os.path.join(getUpdatePath(), version + ".zip")
@@ -55,11 +56,11 @@ class DownloadThread(object):
             self.extractZipArchive(path)
             logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED, path)
             git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-            if not isReplay():
+            if not self.isReplay:
                 self.dialogs.showUpdateFinished(self.i18n['titleOK'],
                                                 self.i18n['messageOK'].format(version) + git_message)
         else:
-            if not isReplay():
+            if not self.isReplay:
                 Waiting.show(WAITING_UPDATE)
             url = URLS.UPDATE + ZIP.format(version)
             logInfo(LOG_MESSAGES.STARTED, version, url)
@@ -88,32 +89,38 @@ class DownloadThread(object):
             logInfo(LOG_MESSAGES.FINISHED, path)
             self.extractZipArchive(path)
             git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-            if not isReplay():
+            if not self.isReplay:
                 self.dialogs.showUpdateFinished(self.i18n['titleOK'],
                                                 self.i18n['messageOK'].format(version) + git_message)
         else:
             self.downloadError(_url)
-        if not isReplay() and Waiting.isOpened(WAITING_UPDATE):
+        if not self.isReplay and Waiting.isOpened(WAITING_UPDATE):
             Waiting.hide(WAITING_UPDATE)
         self.closeDownloader()
 
     def downloadError(self, url):
         message = LOG_MESSAGES.FAILED.format(url)
         logError(message)
-        if not isReplay():
+        if not self.isReplay:
             self.dialogs.showUpdateError(message)
 
 
 class Updater(DownloadThread):
 
-    def __init__(self, version):
+    def __init__(self):
         super(Updater, self).__init__()
         self.timeDelta = datetime.now()
+
+    def start(self, version):
         self.version = version
-        if isReplay():
-            self.check()
-        else:
+        if not self.isReplay:
             ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        else:
+            self.check()
+
+    def fini(self):
+        if not self.isReplay:
+            ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
     def responseUpdate(self, response):
         if response.responseCode == HTTP_OK_STATUS:
@@ -122,7 +129,7 @@ class Updater(DownloadThread):
             new_version = response_data.get('tag_name', self.version)
             if self.tupleVersion(self.version) < self.tupleVersion(new_version):
                 logInfo(LOG_MESSAGES.NEW_VERSION, new_version)
-                if not isReplay():
+                if not self.isReplay:
                     self.showUpdateDialog(new_version)
                 else:
                     self.startDownload(new_version)

@@ -106,11 +106,7 @@ class Donate(object):
 
 
 if CURRENT_REALM == "EU":
-    from threading import Thread
-
-    donate = Thread(target=Donate, name="Battle_observer_Donate")
-    donate.daemon = True
-    donate.start()
+    donate = Donate()
 
 
     @overrideMethod(NotificationListView, "onClickAction")

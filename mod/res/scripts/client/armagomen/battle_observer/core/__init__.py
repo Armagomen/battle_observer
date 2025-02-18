@@ -1,16 +1,22 @@
-class Core(object):
+from armagomen.utils.keys_listener import g_keysListener
 
-    def __init__(self, modVersion):
+
+class Core(object):
+    def __init__(self):
+        self.components = None
+        self.settings = None
+
+    def start(self, modVersion):
         from armagomen.battle_observer.components import loadComponents
         from armagomen.battle_observer.settings import settings_loader
         from armagomen.utils.common import isReplay
-        from armagomen.utils.keys_listener import g_keysListener
 
         is_replay = isReplay()
-        loadComponents(is_replay)
+        self.components = loadComponents(is_replay)
         self.registerBattleObserverPackages(is_replay)
         g_keysListener.init(settings_loader.settings.main)
         settings_loader.readConfig()
+        self.settings = settings_loader.settings
         if not is_replay:
             try:
                 from gui.modsListApi import g_modsListApi
@@ -27,6 +33,17 @@ class Core(object):
                 self.hangar_settings = SettingsInterface(settings_loader, modVersion, g_modsListApi, vxSettingsApi,
                                                          vxSettingsApiEvents)
 
+    def fini(self):
+        from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache
+        if self.settings.main["clear_cache_automatically"]:
+            clearClientCache()
+        cleanupObserverUpdates()
+        cleanupUpdates()
+        for component in self.components.itervalues():
+            if hasattr(component, "fini"):
+                component.fini()
+        g_keysListener.fini()
+
     @staticmethod
     def registerBattleObserverPackages(is_replay):
         from armagomen._constants import BATTLES_RANGE
@@ -40,18 +57,3 @@ class Core(object):
         for guiType in BATTLES_RANGE:
             packages = g_overrideScaleFormViewsConfig.battlePackages.setdefault(guiType, [])
             packages.append("armagomen.battle_observer.battle")
-
-
-def onFini():
-    from armagomen.battle_observer.components import components
-    from armagomen.battle_observer.settings import user_settings
-    from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache
-    if user_settings.main["clear_cache_automatically"]:
-        clearClientCache()
-    cleanupObserverUpdates()
-    cleanupUpdates()
-    for component in components.itervalues():
-        if hasattr(component, "fini"):
-            component.fini()
-    from armagomen.utils.keys_listener import g_keysListener
-    g_keysListener.fini()

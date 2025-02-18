@@ -12,26 +12,25 @@ import logging
 logging.disable(logging.WARNING)
 
 from sys import version
-from threading import Thread
 
-from armagomen.battle_observer.core import Core, onFini
-from armagomen.battle_observer.core.updater import Updater
 from armagomen.utils.logging import logInfo
 from realm import CURRENT_REALM
 
-__update = Thread(target=Updater, args=(__version__,), name="Battle_Observer_update")
-__observer = Thread(target=Core, args=(__version__,), name="Battle_Observer_Core")
+__mod = []
 
 
 def init():
+    from armagomen.battle_observer.core import Core
+    from armagomen.battle_observer.core.updater import Updater
     logInfo('MOD START LOADING: v{}', __version__)
     logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
-    __update.start()
-    __observer.start()
+    __mod.extend((Core(), Updater()))
+    for component in __mod:
+        component.start(__version__)
 
 
 def fini():
-    __observer.join()
-    __update.join()
-    onFini()
+    for component in __mod:
+        component.fini()
+
     logInfo('MOD SHUTTING DOWN: v{}', __version__)
