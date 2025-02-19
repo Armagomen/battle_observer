@@ -50,6 +50,8 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
             optional_devices.onDescriptorDevicesChanged += self.onDevicesChanged
 
     def _dispose(self):
+        if self.sessionProvider.isReplayPlaying and self._getPyReloading():
+            self.hide()
         self.destroyTimer()
         g_playerEvents.onRoundFinished -= self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState

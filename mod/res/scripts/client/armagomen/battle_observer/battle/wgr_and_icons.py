@@ -2,15 +2,12 @@ import json
 from httplib import responses
 from math import floor, log
 
-from armagomen._constants import API_KEY, REGIONS, STATISTICS
+from armagomen._constants import API_KEY, STATISTICS, STATISTICS_REGION
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 from armagomen.utils.common import addCallback, cancelCallback, fetchURL
 from armagomen.utils.logging import logDebug, logError
-from constants import AUTH_REALM
 from Event import SafeEvent
 from uilogging.core.core_constants import HTTP_OK_STATUS
-
-region = REGIONS.get(AUTH_REALM)
 
 
 class WGRAndIcons(BaseModMeta):
@@ -28,7 +25,7 @@ class WGRAndIcons(BaseModMeta):
 
     def _populate(self):
         super(WGRAndIcons, self)._populate()
-        if region is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
+        if STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
             self.data_loader = StatisticsDataLoader(self._arenaDP)
             self.data_loader.onDataReceived += self.updateAllItems
             self.data_loader.getStatisticsDataFromServer()
@@ -101,7 +98,7 @@ class WGRAndIcons(BaseModMeta):
 
 
 class StatisticsDataLoader(object):
-    URL = "https://api.worldoftanks.{}/wot/account/info/?".format(region)
+    URL = "https://api.worldoftanks.{}/wot/account/info/?".format(STATISTICS_REGION)
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"

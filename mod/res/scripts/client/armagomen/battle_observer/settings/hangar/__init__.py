@@ -1,6 +1,5 @@
 from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_LESTA, MAIN,
-                                  MINIMAP,
-                                  MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
+                                  MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STATISTICS_REGION, URLS)
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
@@ -345,6 +344,8 @@ class SettingsInterface(CreateElement):
                     MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
                     MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET)
                 self.setHandlerValue(blockID, lesta_diasble, False)
+        elif blockID == STATISTICS.NAME and STATISTICS_REGION is not None:
+            self.setHandlerValue(blockID, (STATISTICS.STATISTIC_ENABLED, STATISTICS.COLORS), False)
 
     def setHandlerValue(self, blockID, values, value):
         get_object = self.vxSettingsApi.getDAAPIObject

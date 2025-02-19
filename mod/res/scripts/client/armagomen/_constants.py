@@ -4,7 +4,7 @@ import ResMgr
 
 from aih_constants import CTRL_MODE_NAME
 from armagomen.utils.logging import logError
-from constants import ARENA_GUI_TYPE
+from constants import ARENA_GUI_TYPE, AUTH_REALM
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
     SHOT_RESULT_TO_DEFAULT_COLOR
@@ -12,9 +12,7 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESUL
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
 
-from realm import CURRENT_REALM
-
-IS_LESTA = CURRENT_REALM == "RU"
+IS_LESTA = AUTH_REALM == "RU"
 
 
 def getLogo(big=True):
@@ -54,6 +52,7 @@ URLS = namedtuple("URLS", (
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")
 REGIONS = {"EU": "eu", "ASIA": "asia", "NA": "com"}
+STATISTICS_REGION = REGIONS.get(AUTH_REALM)
 API_KEY = "5500d1b937426e47e2b039e4a11990be"
 
 VEHICLE_TYPES_COLORS = namedtuple("VEHICLE_TYPES_COLORS", ("NAME", "UNKNOWN"))("vehicle_types_colors", "unknown")
