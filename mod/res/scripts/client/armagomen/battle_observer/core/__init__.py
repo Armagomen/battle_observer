@@ -5,6 +5,7 @@ class Core(object):
     def __init__(self):
         self.components = None
         self.settings = None
+        self.hangar_settings = None
 
     def start(self, modVersion):
         from armagomen.battle_observer.components import loadComponents
@@ -43,6 +44,8 @@ class Core(object):
             if hasattr(component, "fini"):
                 component.fini()
         g_keysListener.fini()
+        if self.hangar_settings is not None:
+            self.hangar_settings.fini()
 
     @staticmethod
     def registerBattleObserverPackages(is_replay):

@@ -1,6 +1,5 @@
 from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_LESTA, MAIN,
                                   MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STATISTICS_REGION, URLS)
-from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
 from armagomen.utils.logging import logInfo, logWarning
@@ -216,10 +215,13 @@ class SettingsInterface(CreateElement):
         self.inited = set()
         self.currentConfigID = self.newConfigID = self.loader.configsList.index(self.loader.configName)
         self.newConfigLoadingInProcess = False
-        user_settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
+        self.loader.settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         self.appLoader.onGUISpaceEntered += self.addToAPI
+
+    def fini(self):
+        self.loader.settings.onUserConfigUpdateComplete -= self.onUserConfigUpdateComplete
 
     def addToAPI(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:
@@ -238,7 +240,7 @@ class SettingsInterface(CreateElement):
 
     def addModsToVX(self):
         self.vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                        useKeyPairs=user_settings.main[MAIN.USE_KEY_PAIRS])
+                                        useKeyPairs=self.loader.settings.main[MAIN.USE_KEY_PAIRS])
         for blockID in CONFIG_INTERFACE.BLOCK_IDS:
             if blockID in self.inited:
                 continue
@@ -300,7 +302,7 @@ class SettingsInterface(CreateElement):
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
             logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
         else:
-            settings_block = getattr(user_settings, blockID, None)
+            settings_block = getattr(self.loader.settings, blockID, None)
             if settings_block is None:
                 return
             for key, value in data.iteritems():
@@ -325,7 +327,7 @@ class SettingsInterface(CreateElement):
                     value = float(value)
                 updated_config_link[param_name] = value
             self.loader.updateConfigFile(settings_block, blockID)
-            user_settings.onModSettingsChanged(settings_block, blockID)
+            self.loader.settings.onModSettingsChanged(settings_block, blockID)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -374,7 +376,7 @@ class SettingsInterface(CreateElement):
 
     def getTemplate(self, blockID):
         """Create templates, do not change..."""
-        settings_block = getattr(user_settings, blockID, {})
+        settings_block = getattr(self.loader.settings, blockID, {})
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selector', self.loader.configsList, self.currentConfigID),
                        self.createControl(blockID, 'reload_config', -1, 'Button')]

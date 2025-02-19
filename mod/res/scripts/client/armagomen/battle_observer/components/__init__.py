@@ -1,6 +1,6 @@
 from importlib import import_module
 
-from realm import CURRENT_REALM
+from armagomen._constants import IS_LESTA
 
 
 def loadComponents(is_replay):
@@ -46,7 +46,7 @@ def loadComponents(is_replay):
     )
 
     for moduleName in load:
-        if moduleName in replay_disable and is_replay or CURRENT_REALM == "RU" and moduleName in lesta_disable:
+        if moduleName in replay_disable and is_replay or IS_LESTA and moduleName in lesta_disable:
             continue
         try:
             components[moduleName] = import_module("{}.{}".format(__package__, moduleName))
