@@ -242,7 +242,7 @@ class CameraManager(object):
     appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self):
-        self.appLoader.onGUISpaceEntered += self.updateCameras
+        self.appLoader.onGUISpaceBeforeEnter += self.updateCameras
         self.__modes = (Arcade(), Sniper(), Strategic())
 
     def updateCameras(self, spaceID):

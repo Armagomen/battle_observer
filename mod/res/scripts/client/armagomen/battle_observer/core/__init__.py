@@ -1,4 +1,4 @@
-from armagomen.utils.keys_listener import g_keysListener
+from armagomen.utils.keys_listener import g_keysListener, MAIN
 
 
 class Core(object):
@@ -36,7 +36,7 @@ class Core(object):
 
     def fini(self):
         from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache
-        if self.settings.main["clear_cache_automatically"]:
+        if self.settings.main[MAIN.AUTO_CLEAR_CACHE]:
             clearClientCache()
         cleanupObserverUpdates()
         cleanupUpdates()
