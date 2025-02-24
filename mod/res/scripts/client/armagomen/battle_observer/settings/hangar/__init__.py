@@ -346,7 +346,7 @@ class SettingsInterface(CreateElement):
                     MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
                     MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET)
                 self.setHandlerValue(blockID, lesta_diasble, False)
-        elif blockID == STATISTICS.NAME and STATISTICS_REGION is not None:
+        elif blockID == STATISTICS.NAME and STATISTICS_REGION is None:
             self.setHandlerValue(blockID, (STATISTICS.STATISTIC_ENABLED, STATISTICS.COLORS), False)
 
     def setHandlerValue(self, blockID, values, value):
