@@ -3,7 +3,6 @@ from collections import namedtuple
 import ResMgr
 
 from aih_constants import CTRL_MODE_NAME
-from armagomen.utils.logging import logError
 from constants import ARENA_GUI_TYPE, AUTH_REALM
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
@@ -431,19 +430,7 @@ ALIAS_TO_CONFIG_NAME = {
     BATTLE_ALIASES.MAP: MINIMAP.NAME
 }
 
-
-def create_range(obj, names):
-    _range = set()
-    for name in names:
-        value = getattr(obj, name, None)
-        if value is not None:
-            _range.add(value)
-        else:
-            logError("create_range::{} attribute error:: {}", getattr(obj, "__name__"), name)
-    return _range
-
-
-__battle_types = {
+__battle_types = (
     "COMP7",
     "EPIC_BATTLE",
     "EPIC_RANDOM",
@@ -456,18 +443,22 @@ __battle_types = {
     "TRAINING",
     "UNKNOWN",
     "FUN_RANDOM",
-}
-__pages_types = {
+    "TOURNAMENT_COMP7",
+)
+
+__pages_types = (
     "CLASSIC_BATTLE_PAGE",
     "EPIC_BATTLE_PAGE",
     "EPIC_RANDOM_PAGE",
     "RANKED_BATTLE_PAGE",
     "STRONGHOLD_BATTLE_PAGE",
-}
+    "COMP7_BATTLE_PAGE",
+)
 
-if not IS_LESTA:
-    __battle_types.add("TOURNAMENT_COMP7")
-    __pages_types.add("COMP7_BATTLE_PAGE")
+
+def create_range(obj, names):
+    return tuple(getattr(obj, name) for name in names if hasattr(obj, name))
+
 
 BATTLES_RANGE = create_range(ARENA_GUI_TYPE, __battle_types)
 BATTLE_PAGES = create_range(VIEW_ALIAS, __pages_types)
