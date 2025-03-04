@@ -333,21 +333,23 @@ class SettingsInterface(CreateElement):
         """Darkens dependent elements..."""
         if modID != MOD_NAME or blockID not in CONFIG_INTERFACE.BLOCK_IDS:
             return
-        if blockID in CONFIG_INTERFACE.HANDLER_VALUES:
-            if varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
-                values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]
-                self.setHandlerValue(blockID, values, value)
+        values = None
         if blockID == MAIN.NAME:
             if varName == MAIN.USE_KEY_PAIRS:
                 self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
             if IS_LESTA:
-                lesta_diasble = (
+                values = (
                     MAIN.AUTO_CLAIM_CLAN_REWARD, MAIN.CREW_RETURN, MAIN.CREW_TRAINING,
                     MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
                     MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET)
-                self.setHandlerValue(blockID, lesta_diasble, False)
         elif blockID == STATISTICS.NAME and STATISTICS_REGION is None:
-            self.setHandlerValue(blockID, (STATISTICS.STATISTIC_ENABLED, STATISTICS.COLORS), False)
+            values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][STATISTICS.STATISTIC_ENABLED] + (
+            STATISTICS.STATISTIC_ENABLED,)
+        if blockID in CONFIG_INTERFACE.HANDLER_VALUES:
+            if varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
+                values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]
+        if values:
+            self.setHandlerValue(blockID, values, value)
 
     def setHandlerValue(self, blockID, values, value):
         get_object = self.vxSettingsApi.getDAAPIObject
@@ -375,7 +377,7 @@ class SettingsInterface(CreateElement):
                 yield item
 
     def getTemplate(self, blockID):
-        """Create templates, do not change..."""
+        """Create templates, do not change."""
         settings_block = getattr(self.loader.settings, blockID, {})
         if blockID == ANOTHER.CONFIG_SELECT:
             column1 = [self.createRadioButtonGroup(blockID, 'selector', self.loader.configsList, self.currentConfigID),
