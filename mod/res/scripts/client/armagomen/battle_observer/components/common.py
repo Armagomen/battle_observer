@@ -4,9 +4,8 @@ from armagomen.utils.common import addCallback, overrideMethod
 from armagomen.utils.events import g_events
 from CurrentVehicle import g_currentVehicle
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
-from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
-from gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
+# from gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
 from gui.battle_control.controllers.team_bases_ctrl import BattleTeamsBasesController
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
@@ -129,12 +128,12 @@ class TweakSounds(object):
         if not user_settings.main[MAIN.STUN_SOUND]:
             return base(*args, **kwargs)
 
-    @staticmethod
-    @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
-    def _onVehicleStateUpdated(base, eq, state, value):
-        if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
-            return
-        return base(eq, state, value)
+    # @staticmethod
+    # @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
+    # def _onVehicleStateUpdated(base, eq, state, value):
+    #     if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
+    #         return
+    #     return base(eq, state, value)
 
     @staticmethod
     def onModSettingsChanged(settings, blockID):
