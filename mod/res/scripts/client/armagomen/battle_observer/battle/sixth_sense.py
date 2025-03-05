@@ -83,7 +83,7 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
                 else:
                     self.hide()
             elif value.get('isObserved', False):
-                if self.gui.isComp7Battle():
+                if self.isComp7Battle:
                     if value.get("detectionType", 0) == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
                         time = 2
                     else:

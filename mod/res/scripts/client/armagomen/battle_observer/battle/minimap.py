@@ -7,13 +7,8 @@ from gui.battle_control import avatar_getter
 
 class MinimapZoomPlugin(BaseModMeta):
 
-    def __init__(self):
-        super(MinimapZoomPlugin, self).__init__()
-        self.isComp7Battle = False
-
     def _populate(self):
         super(MinimapZoomPlugin, self)._populate()
-        self.isComp7Battle = self.gui.isComp7Battle()
         g_keysListener.registerComponent(self.onKeyPressed, keyList=self.settings[MINIMAP.ZOOM_KEY])
 
     def onKeyPressed(self, isKeyDown):

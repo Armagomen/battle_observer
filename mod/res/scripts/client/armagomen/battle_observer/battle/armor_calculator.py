@@ -2,7 +2,7 @@
 from collections import defaultdict
 
 from armagomen._constants import ARMOR_CALC, COLORS, GLOBAL, POSTMORTEM_MODES
-from armagomen.battle_observer.components.shot_result_plugin import _updateRandomization
+# from armagomen.battle_observer.components.shot_result_plugin import _updateRandomization
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
@@ -32,11 +32,11 @@ class ArmorCalculator(ArmorCalcMeta):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
-        if self.gui.isComp7Battle():
-            prebattleCtrl = self.sessionProvider.dynamic.comp7PrebattleSetup
-            if prebattleCtrl is not None:
-                prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
-            self.__updateCurrVehicleInfo()
+        # if self.isComp7Battle:
+        #     prebattleCtrl = self.sessionProvider.dynamic.comp7PrebattleSetup
+        #     if prebattleCtrl is not None:
+        #         prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
+        #     self.__updateCurrVehicleInfo()
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -47,10 +47,10 @@ class ArmorCalculator(ArmorCalcMeta):
             handler.onCameraChanged -= self.onCameraChanged
         g_events.onArmorChanged -= self.onArmorChanged
         g_events.onMarkerColorChanged -= self.onMarkerColorChanged
-        if self.gui.isComp7Battle():
-            prebattleCtrl = self.sessionProvider.dynamic.comp7PrebattleSetup
-            if prebattleCtrl is not None:
-                prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
+        # if self.isComp7Battle:
+        #     prebattleCtrl = self.sessionProvider.dynamic.comp7PrebattleSetup
+        #     if prebattleCtrl is not None:
+        #         prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):
@@ -72,12 +72,12 @@ class ArmorCalculator(ArmorCalcMeta):
         self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = caliber
         self.as_armorCalcS(self.settings[ARMOR_CALC.TEMPLATE] % self.calcMacro)
 
-    def __updateCurrVehicleInfo(self, vehicle=None):
-        ctrl = self.sessionProvider.dynamic.comp7PrebattleSetup
-        if ctrl is None:
-            return
-        else:
-            if vehicle is None:
-                vehicle = ctrl.getCurrentGUIVehicle()
-            if vehicle is not None and not avatar_getter.isObserver():
-                _updateRandomization(vehicle)
+    # def __updateCurrVehicleInfo(self, vehicle=None):
+    #     ctrl = self.sessionProvider.dynamic.comp7PrebattleSetup
+    #     if ctrl is None:
+    #         return
+    #     else:
+    #         if vehicle is None:
+    #             vehicle = ctrl.getCurrentGUIVehicle()
+    #         if vehicle is not None and not avatar_getter.isObserver():
+    #             _updateRandomization(vehicle)
