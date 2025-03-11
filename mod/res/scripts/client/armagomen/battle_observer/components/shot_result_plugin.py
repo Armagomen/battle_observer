@@ -108,16 +108,17 @@ class _ShotResult(object):
             if mat_info is None or (detail.compName, mat_info.kind) in ignoredMaterials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
-            computed_armor += _CrosshairShotResults._computePenetrationArmor(shell, hitAngleCos, mat_info)
+            armor = _CrosshairShotResults._computePenetrationArmor(shell, hitAngleCos, mat_info)
+            computed_armor += armor
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
             if shell.type.shieldPenetration:
-                piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                piercing_power -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
             if mat_info.collideOnceOnly:
                 ignoredMaterials.add((detail.compName, mat_info.kind))
 
-        shot_result = cls._checkShotResult(computed_armor, piercing_power, False, no_damage)
+        shot_result = cls._checkShotResult(computed_armor, max(piercing_power, 0), False, no_damage)
         return shot_result, computed_armor, max(piercing_power, 0), shell.caliber, False, no_damage
 
 
@@ -160,8 +161,7 @@ def _updateRandomization(vehicle):
     if user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None and vehicle.isCrewFull:
         for _, tman in vehicle.crew:
             if tman and GUNNER_ARMORER in tman.skillsMap and tman.canUseSkillsInCurrentVehicle:
-                level = tman.skillsMap[GUNNER_ARMORER].level * tman.skillsEfficiency * (
-                            tman.nativeTankRealRoleLevel / 100.0)
+                level = tman.skillsMap[GUNNER_ARMORER].level * tman.skillsEfficiency * (tman.nativeTankRealRoleLevel / 100.0)
                 randomization += (0.2 - randomization) * (level - randomization) / 100
                 logDebug("PIERCING_POWER_RANDOMIZATION level: {}, randomization: {}", level, randomization)
                 break

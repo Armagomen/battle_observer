@@ -1,5 +1,5 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, IS_LESTA, VEHICLE_TYPES_COLORS
+from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.logging import logDebug, logInfo
 from constants import ARENA_BONUS_TYPE
@@ -32,8 +32,6 @@ class BaseModMeta(BaseDAAPIComponent):
 
     @property
     def isComp7Battle(self):
-        if IS_LESTA:
-            return False
         return self._arenaVisitor.getArenaBonusType() == ARENA_BONUS_TYPE.COMP7
 
     @property
