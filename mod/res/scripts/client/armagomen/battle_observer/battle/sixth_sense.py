@@ -75,11 +75,7 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             if IS_LESTA:
                 if value:
-                    time = self.settings[SIXTH_SENSE.TIME]
-                    if self.radio_installed:
-                        time -= RADIO_DURATION
-                    self.__message = self.getNewRandomMessage()
-                    self.show(time)
+                    self.show()
                 else:
                     self.hide()
             elif value.get('isObserved', False):
@@ -107,11 +103,12 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
         if timeLeft == GLOBAL.ZERO:
             self.hide()
 
-    def show(self, seconds):
+    def show(self, seconds=None):
         if not self.__visible:
             self.as_showS()
             self.__visible = True
-        self.timeTicking(seconds)
+        if seconds is not None:
+            self.timeTicking(seconds)
 
     def hide(self):
         if self.__visible:
