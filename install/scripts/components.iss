@@ -31,7 +31,7 @@ Name: main/hide_prestige_battle_widget; Description: {cm:hide_prestige_battle_wi
 Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: armagomen saxon_ua;
 Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: armagomen saxon_ua;
 Name: main/premium_time; Description: {cm:premium_time}; Types: armagomen saxon_ua;
-Name: main/save_shot; Description: {cm:save_shot}; Types: armagomen saxon_ua;
+Name: main/save_shot; Description: {cm:save_shot}; Types: armagomen;
 Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen saxon_ua;
 Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward};
 Name: main/hideEventBanner; Description: {cm:hideEventBanner};
@@ -59,7 +59,7 @@ Name: zoom/dynamic_zoom; Description: {cm:zoom_dynamic_zoom}; Flags: checkableal
 Name: zoom/dynamic_zoom/steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck; Types: armagomen;
 Name: zoom/zoomSteps; Description: {cm:zoom_zoomSteps}; Types: armagomen;
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: checkablealone disablenouninstallwarning; Types: armagomen saxon_ua;
-Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck;
+Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck; Types: saxon_ua;
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning;
 Name: avg_efficiency_in_hangar/avg_damage; Description: {cm:avg_efficiency_in_hangar_damage}; Types: armagomen saxon_ua;
 Name: avg_efficiency_in_hangar/avg_blocked; Description: {cm:avg_efficiency_in_hangar_blocked}; Types: armagomen saxon_ua;
@@ -67,7 +67,7 @@ Name: avg_efficiency_in_hangar/avg_assist; Description: {cm:avg_efficiency_in_ha
 Name: avg_efficiency_in_hangar/avg_stun; Description: {cm:avg_efficiency_in_hangar_stun}; Types: armagomen saxon_ua;
 Name: avg_efficiency_in_hangar/win_rate; Description: {cm:avg_efficiency_in_hangar_win_rate}; Types: armagomen saxon_ua;
 Name: avg_efficiency_in_hangar/gun_marks; Description: {cm:avg_efficiency_in_hangar_gun_marks}; Types: armagomen saxon_ua;
-Name: avg_efficiency_in_hangar/battles; Description: {cm:avg_efficiency_in_hangar_battles};
+Name: avg_efficiency_in_hangar/battles; Description: {cm:avg_efficiency_in_hangar_battles}; Types: armagomen saxon_ua;
 Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: armagomen;
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning;
@@ -82,7 +82,7 @@ Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwar
 Name: log_extended/top_enabled; Description: {cm:log_extended_top}; Types: armagomen;
 Name: log_extended/bottom_enabled; Description: {cm:log_extended_bottom}; Types: armagomen;
 Name: log_extended/reverse; Description: {cm:log_extended_reverse};
-Name: main_gun; Description: {cm:main_gun}; Flags: checkablealone disablenouninstallwarning; Types: armagomen saxon_ua;
+Name: main_gun; Description: {cm:main_gun}; Flags: checkablealone disablenouninstallwarning; Types: armagomen;
 Name: main_gun/progress_bar; Description: {cm:main_gun_progress}; Flags: dontinheritcheck;
 Name: minimap; Description: {cm:minimap}; Flags: disablenouninstallwarning;
 Name: minimap/permanentMinimapDeath; Description: {cm:minimap_permanent}; 
@@ -118,8 +118,8 @@ Name: service_channel_filter/autoMaintenance; Description: {cm:service_channel_a
 Name: service_channel_filter/customizationChanged; Description: {cm:service_channel_customizationChanged}; Types: armagomen saxon_ua;
 Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning;
 Name: statistics/icons; Description: {cm:statistics_icons}; Types: armagomen saxon_ua;
-Name: statistics/statistics_vehicle_name_color; Description: {cm:statistics_names_color};  Types: armagomen saxon_ua;
-Name: statistics/statistics; Description: {cm:statistics}; Types: armagomen saxon_ua;
+Name: statistics/statistics_vehicle_name_color; Description: {cm:statistics_names_color};  Types: armagomen;
+Name: statistics/statistics; Description: {cm:statistics}; Types: armagomen;
 Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
 Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning;
 Name: wg_logs/wg_log_hide_assist; Description: {cm:wg_logs_assist};
