@@ -85,7 +85,7 @@ end;
 procedure onCurPageChanged(CurPage: Integer);
 begin
   case CurPage of
-    //wpSelectDir: CurPageChanged_wpSelectDir();
+    wpSelectDir: CurPageChanged_wpSelectDir();
     wpSelectComponents: CurPageChanged_wpSelectComponents();
   end
 end;
@@ -112,13 +112,20 @@ function NextButtonClick_wpSelectDir(): Boolean;
 begin
   Result := True;
   // check for version
-  //if not WotList_Selected_VersionMatch(WotList, '{#WOT_VERSION_PATTERN}') then
-  //begin
-  //  MsgBox(ExpandConstant('{cm:version_not_match}'), mbError, MB_OK);
-  //  Result := False;
-  //  Exit;
-  //end;
-  // check for running client
+  // if CHECK_IsLesta() and not WotList_Selected_VersionMatch(WotList, '{#VERSION_PATTERN_LESTA}') then
+  // begin
+  //   Result := False;
+  //   MsgBox(ExpandConstant('{cm:version_not_match_lesta}'), mbError, MB_OK);
+  //   Exit;
+  // end;
+  
+  // if not CHECK_IsLesta() and not WotList_Selected_VersionMatch(WotList, '{#VERSION_PATTERN_WG}') then
+  // begin
+  //   Result := False;
+  //   MsgBox(ExpandConstant('{cm:version_not_match_wg}'), mbError, MB_OK);
+  //   Exit;
+  // end;
+  
   if WotList_Selected_IsStarted(WotList) then
   begin
     if (MsgBox(ExpandConstant('{cm:client_started}'), mbConfirmation, MB_YESNO) = IDYES) then 
