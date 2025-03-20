@@ -1,21 +1,21 @@
 {
-  "enabled": false,
-  "icons": false,
+  "enabled": false, 
+  "icons": false, 
   "icons_blackout": -1.25, 
-  "statistics": false,
+  "statistics": false, 
   "statistics_colors": {
-    "bad": "#FE7B23",
-    "good": "#88D957",
-    "normal": "#F5F373",
-    "unique": "#A874BE",
-    "very_bad": "#FC4A3C",
+    "bad": "#FD9A35", 
+    "good": "#88D957", 
+    "normal": "#F5F373", 
+    "unique": "#A874BE", 
+    "very_bad": "#FC4A3C", 
     "very_good": "#44DBCB"
-  },
-  "statistics_panels_cut_width": 70,
-  "statistics_panels_full_width": 170,
-  "statistics_pattern_cut_left": "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>",
-  "statistics_pattern_cut_right": "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>",
-  "statistics_pattern_full_left": "<b><font color='%(colorWGR)s'>%(WGR)d | %(battles)s | %(nickname).12s</font>%(clanTag)s</b>",
-  "statistics_pattern_full_right": "<b>%(clanTag)s<font color='%(colorWGR)s'>%(nickname).12s | %(battles)s | %(WGR)d</font></b>",
-  "statistics_vehicle_name_color": true
+  }, 
+  "statistics_panels_cut_width": 70, 
+  "statistics_panels_full_width": 170, 
+  "statistics_pattern_cut_left": "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>", 
+  "statistics_pattern_cut_right": "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>", 
+  "statistics_pattern_full_left": "<b><font color='%(colorWGR)s'>%(WGR)d %(battles)s %(nickname).12s</font>%(clanTag)s</b>", 
+  "statistics_pattern_full_right": "<b>%(clanTag)s<font color='%(colorWGR)s'>%(nickname).12s %(battles)s %(WGR)d</font></b>", 
+  "statistics_vehicle_name_color": false
 }

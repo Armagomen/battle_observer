@@ -2,11 +2,11 @@
 from helpers import getClientLanguage
 
 language = getClientLanguage().lower()
-if language in ('uk', 'be'):
+if language == 'uk':
     from armagomen.battle_observer.settings.hangar.i18n.uk import localization
 
     LOCKED_MESSAGE = "Функція недоступна, тому що встановлено XVM."
-elif language == 'ru':
+elif language in ('ru', 'be'):
     from armagomen.battle_observer.settings.hangar.i18n.ru import localization
 
     LOCKED_MESSAGE = "Функция недоступна, потому что установлен XVM."

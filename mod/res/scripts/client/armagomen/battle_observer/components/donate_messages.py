@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timedelta
 from random import choice
 
-from armagomen._constants import API_KEY, getLogo, IMG, URLS
+from armagomen._constants import API_KEY, AUTH_REALM, getLogo, IMG, IS_LESTA, URLS
 from armagomen.utils.common import fetchURL, openWebBrowser, overrideMethod
 from armagomen.utils.logging import logDebug, logInfo, logWarning
 from gui.clans.clan_cache import g_clanCache
@@ -13,7 +13,6 @@ from gui.SystemMessages import pushMessage, SM_TYPE
 from helpers import getClientLanguage
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
-from realm import CURRENT_REALM
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from uilogging.core.core_constants import HTTP_OK_STATUS
 
@@ -83,7 +82,7 @@ class Donate(object):
         logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
 
     def pushClanInviteMessage(self):
-        if not self.show_clan_invite or g_clanCache.isInClan or self.ln_code == "en":
+        if AUTH_REALM != "EU" or not self.show_clan_invite or g_clanCache.isInClan or self.ln_code == "en":
             return
         message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>, "
                    "отримаєш більше бонусів від гри (бустери, камуфляжі, та інше)."
@@ -105,7 +104,7 @@ class Donate(object):
                 self.pushClanInviteMessage()
 
 
-if CURRENT_REALM == "EU":
+if not IS_LESTA:
     donate = Donate()
 
 

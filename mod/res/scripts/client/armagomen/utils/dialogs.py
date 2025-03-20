@@ -11,10 +11,15 @@ from helpers import dependency, getClientLanguage
 from skeletons.gui.app_loader import IAppLoader
 from wg_async import AsyncReturn, wg_async, wg_await
 
-if getClientLanguage().lower() in ("uk", "be"):
-    labels = ("ПЕРЕЗАВАНТАЖЕННЯ", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати", "Ігнорувати цей танк", "Так", "Ні")
+language = getClientLanguage().lower()
+if language == "uk":
+    labels = ("ПЕРЕЗАПУСТИТИ ГРУ", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати",
+              "Ігнорувати цей танк", "Так", "Ні")
+elif language in ('ru', 'be'):
+    labels = ("ПЕРЕЗАПУСТИТЬ ИГРУ", "Автоматически", "Ручной режим", "Отменить", "Закрыть", "Применить",
+              "Игнорировать танк", "Да", "Нет")
 else:
-    labels = ("RESTART", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank", "Yes", "No")
+    labels = ("RESTART GAME", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank", "Yes", "No")
 buttons = namedtuple("BUTTONS", "restart auto handle cancel close apply ignore yes no")(*labels)
 
 
@@ -90,6 +95,7 @@ class CrewDialog(DialogBase):
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.ignore)
         result = yield wg_await(dialogs.show(builder.build(self.view)))
         raise AsyncReturn(result)
+
 
 class ExcludedMapsDialog(DialogBase):
 
