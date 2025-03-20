@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT
+﻿// SPDX-License-Identifier: MIT
 // Copyright (c) 2017-2024 OpenWG.Utils Contributors
 
 // directory with OpenWG.Utils installation files, relative to the main .iss file
@@ -15,6 +15,16 @@
 #ifndef OPENWGUTILS_BUF_SIZE
 #define OPENWGUTILS_BUF_SIZE 1024
 #endif
+
+#ifndef OPENWGUTILS_LANG_EN
+#define OPENWGUTILS_LANG_EN 1
+#endif
+
+#ifndef OPENWGUTILS_LANG_RU
+#define OPENWGUTILS_LANG_RU 1
+#endif
+
+
 
 [Files]
 Source: "{#OPENWGUTILS_DIR_SRC}\openwg.utils.x86_32.dll"; DestName: openwg.utils.dll; Flags: ignoreversion dontcopy noencryption;
@@ -206,24 +216,389 @@ end;
 
 
 //
-// IMAGEDRAW
+// IMAGE
 //
 
 [Code]
 
-// IMAGEDRAW/PngToBmp
-procedure IMAGEDRAW_PngToBmp_I(FileName: String);
-external 'IMAGEDRAW_PngToBmp@files:openwg.utils.dll cdecl setuponly';
+// IMAGE/BitmapAlphaPremultiply
+function IMAGE_BitmapAlphaPremultiply_I(Bitmap: HBITMAP): Boolean;
+external 'IMAGE_BitmapAlphaPremultiply@files:openwg.utils.dll cdecl setuponly';
 
-procedure IMAGEDRAW_PngToBmp_U(FileName: String);
-external 'IMAGEDRAW_PngToBmp@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+function IMAGE_BitmapAlphaPremultiply_U(Bitmap: HBITMAP): Boolean;
+external 'IMAGE_BitmapAlphaPremultiply@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
 
-procedure IMAGEDRAW_PngToBmp(FileName: String);
+function IMAGE_BitmapAlphaPremultiply(Bitmap: HBITMAP): Boolean;
 begin
     if IsUninstaller() then
-        IMAGEDRAW_PngToBmp_U(FileName)
+        Result := IMAGE_BitmapAlphaPremultiply_U(Bitmap)
     else
-        IMAGEDRAW_PngToBmp_I(FileName)
+        Result := IMAGE_BitmapAlphaPremultiply_I(Bitmap)
+end;
+
+
+
+// IMAGE/BitmapBlend
+function IMAGE_BitmapBlend_I(Bitmap1: HBITMAP; Bitmap2: HBITMAP; DstX: Integer; DstY: Integer): Boolean;
+external 'IMAGE_BitmapBlend@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BitmapBlend_U(Bitmap1: HBITMAP; Bitmap2: HBITMAP; DstX: Integer; DstY: Integer): Boolean;
+external 'IMAGE_BitmapBlend@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BitmapBlend(Bitmap1: HBITMAP; Bitmap2: HBITMAP; DstX: Integer; DstY: Integer): Boolean;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BitmapBlend_U(Bitmap1, Bitmap2, DstX, DstY)
+    else
+        Result := IMAGE_BitmapBlend_I(Bitmap1, Bitmap2, DstX, DstY)
+end;
+
+
+// IMAGE/BitmapClone
+function IMAGE_BitmapClone_I(Bitmap: HBITMAP): HBITMAP;
+external 'IMAGE_BitmapClone@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BitmapClone_U(Bitmap: HBITMAP): HBITMAP;
+external 'IMAGE_BitmapClone@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BitmapClone(Bitmap: HBITMAP): HBITMAP;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BitmapClone_U(Bitmap)
+    else
+        Result := IMAGE_BitmapClone_I(Bitmap)
+end;
+
+
+// IMAGE/BitmapFree
+function IMAGE_BitmapFree_I(Bitmap: HBITMAP): Boolean;
+external 'IMAGE_BitmapFree@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BitmapFree_U(Bitmap: HBITMAP): Boolean;
+external 'IMAGE_BitmapFree@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BitmapFree(Bitmap: HBITMAP): Boolean;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BitmapFree_U(Bitmap)
+    else
+        Result := IMAGE_BitmapFree_I(Bitmap)
+end;
+
+
+
+// IMAGE/BitmapGetHeight
+function IMAGE_BitmapGetHeight_I(Bitmap: HBITMAP): Integer;
+external 'IMAGE_BitmapGetHeight@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BitmapGetHeight_U(Bitmap: HBITMAP): Integer;
+external 'IMAGE_BitmapGetHeight@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BitmapGetHeight(Bitmap: HBITMAP): Integer;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BitmapGetHeight_U(Bitmap)
+    else
+        Result := IMAGE_BitmapGetHeight_I(Bitmap)
+end;
+
+
+
+// IMAGE/BitmapGetWidth
+function IMAGE_BitmapGetWidth_I(Bitmap: HBITMAP): Integer;
+external 'IMAGE_BitmapGetWidth@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BitmapGetWidth_U(Bitmap: HBITMAP): Integer;
+external 'IMAGE_BitmapGetWidth@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BitmapGetWidth(Bitmap: HBITMAP): Integer;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BitmapGetWidth_U(Bitmap)
+    else
+        Result := IMAGE_BitmapGetWidth_I(Bitmap)
+end;
+
+
+
+// IMAGE/BitmapLoad
+function IMAGE_BitmapLoadW_I(Filename: String): HBITMAP;
+external 'IMAGE_BitmapLoadW@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BitmapLoadW_U(Filename: String): HBITMAP;
+external 'IMAGE_BitmapLoadW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BitmapLoad(Filename: String): HBITMAP;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BitmapLoadW_U(Filename)
+    else
+        Result := IMAGE_BitmapLoadW_I(Filename)
+end;
+
+
+
+// IMAGE/IMAGE_BitmapMultiplyColor
+function IMAGE_BitmapMultiplyColor_I(Bitmap: HBITMAP; ScaleR: Single; ScaleG: Single; ScaleB: Single; ScaleA: Single): HBITMAP;
+external 'IMAGE_BitmapMultiplyColor@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BitmapMultiplyColor_U(Bitmap: HBITMAP; ScaleR: Single; ScaleG: Single; ScaleB: Single; ScaleA: Single): HBITMAP;
+external 'IMAGE_BitmapMultiplyColor@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BitmapMultiplyColor(Bitmap: HBITMAP; ScaleR: Single; ScaleG: Single; ScaleB: Single; ScaleA: Single): HBITMAP;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BitmapMultiplyColor_U(Bitmap, ScaleR, ScaleG, ScaleB, ScaleA)
+    else
+        Result := IMAGE_BitmapMultiplyColor_I(Bitmap, ScaleR, ScaleG, ScaleB, ScaleA)
+end;
+
+
+
+// IMAGE/BitmapResize
+function IMAGE_BitmapResize_I(Bitmap: HBITMAP; Width: Integer; Height: Integer): HBITMAP;
+external 'IMAGE_BitmapResize@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BitmapResize_U(Bitmap: HBITMAP; Width: Integer; Height: Integer): HBITMAP;
+external 'IMAGE_BitmapResize@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BitmapResize(Bitmap: HBITMAP; Width: Integer; Height: Integer): HBITMAP;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BitmapResize_U(Bitmap, Width, Height)
+    else
+        Result := IMAGE_BitmapResize_I(Bitmap, Width, Height)
+end;
+
+
+
+// IMAGE/BrushCreate
+function IMAGE_BrushCreate_I(Bitmap: Integer): Integer;
+external 'IMAGE_BrushCreate@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BrushCreate_U(Bitmap: Integer): Integer;
+external 'IMAGE_BrushCreate@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BrushCreate(Bitmap: Integer): Integer;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BrushCreate_U(Bitmap)
+    else
+        Result := IMAGE_BrushCreate_I(Bitmap)
+end;
+
+
+
+// IMAGE/BrushFree
+function IMAGE_BrushFree_I(Brush: Integer): Boolean;
+external 'IMAGE_BrushFree@files:openwg.utils.dll cdecl setuponly';
+
+function IMAGE_BrushFree_U(Brush: Integer): Boolean;
+external 'IMAGE_BrushFree@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function IMAGE_BrushFree(Brush: Integer): Boolean;
+begin
+    if IsUninstaller() then
+        Result := IMAGE_BrushFree_U(Brush)
+    else
+        Result := IMAGE_BrushFree_I(Brush)
+end;
+
+
+
+// IMAGE/TBitmapLoad
+function IMAGE_TBitmapLoad(Filename: String; Scale: Boolean; PremultiplyAlpha: Boolean): TBitmap;
+var
+    Handle: HBITMAP;
+    HandleTemp: HBITMAP;
+begin
+    Handle := IMAGE_BitmapLoad(Filename);
+    if Handle = 0 then
+        Exit;
+
+    if Scale then
+    begin
+        HandleTemp := IMAGE_BitmapResize(Handle, ScaleX(IMAGE_BitmapGetWidth(Handle)), ScaleX(IMAGE_BitmapGetHeight(Handle)));
+        IMAGE_BitmapFree(Handle);
+        if HandleTemp = 0 then
+            Exit;
+        Handle := HandleTemp;
+    end;
+
+    if PremultiplyAlpha then
+        IMAGE_BitmapAlphaPremultiply(Handle);
+
+    Result := TBitmap.Create();
+    Result.Handle := Handle;
+end;
+
+
+
+// IMAGE/IMAGE_TBitmapLoadScaled
+function IMAGE_TBitmapLoadScaled(Filename: String; Scale: Extended; PremultiplyAlpha: Boolean): TBitmap;
+var
+    Handle: HBITMAP;
+    HandleTemp: HBITMAP;
+begin
+    Handle := IMAGE_BitmapLoad(Filename);
+    if Handle = 0 then
+        Exit;
+
+    HandleTemp := IMAGE_BitmapResize(Handle, Round(IMAGE_BitmapGetWidth(Handle) * Scale), Round(IMAGE_BitmapGetHeight(Handle) * Scale));
+    IMAGE_BitmapFree(Handle);
+    if HandleTemp = 0 then
+        Exit;
+    Handle := HandleTemp;
+
+    if PremultiplyAlpha then
+        IMAGE_BitmapAlphaPremultiply(Handle);
+
+    Result := TBitmap.Create();
+    Result.Handle := Handle;
+end;
+
+
+
+// Image/TBitmapMultiplyColor
+function IMAGE_TBitmapMultiplyColor(Bitmap: TBitmap; ScaleR: Single; ScaleG: Single; ScaleB: Single; ScaleA: Single): Boolean;
+var
+    HandleTemp: HBITMAP;
+begin
+    if Bitmap.Handle = 0 then
+        Exit;
+
+    HandleTemp := IMAGE_BitmapMultiplyColor(Bitmap.Handle, ScaleR, ScaleG, ScaleB, ScaleA);
+    if HandleTemp = 0 then
+        Exit;
+
+    Bitmap.Handle := HandleTemp;
+    Result := True;
+end;
+
+
+
+// Image/TBitmapResize
+function IMAGE_TBitmapResize(Bitmap: TBitmap; Width: Integer; Height: Integer): Boolean;
+var
+    HandleTemp: HBITMAP;
+begin
+    if Bitmap.Handle = 0 then
+        Exit;
+
+    HandleTemp := IMAGE_BitmapResize(Bitmap.Handle, Width, Height);
+    if HandleTemp = 0 then
+        Exit;
+
+    Bitmap.Handle := HandleTemp;
+    Result := True;
+end;
+
+
+
+// IMAGE/TBitmapScale
+function IMAGE_TBitmapScale(Bitmap: TBitmap; Scale: Extended): Boolean;
+begin
+    Result := IMAGE_TBitmapResize(Bitmap, Round(Bitmap.Width * Scale), Round(Bitmap.Height * Scale));
+end;
+
+
+
+//
+// PROCESS
+//
+
+[Code]
+
+// INNO/ComponentEntryGetName
+function INNO_ComponentEntryGetNameW_I(Object: TObject; Buffer: String; BufferSize: Integer): Boolean;
+external 'INNO_ComponentEntryGetNameW@files:openwg.utils.dll cdecl setuponly';
+
+function INNO_ComponentEntryGetNameW_U(Object: TObject; Buffer: String; BufferSize: Integer): Boolean;
+external 'INNO_ComponentEntryGetNameW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function INNO_ComponentEntryGetName(Object: TObject): String;
+var
+    FunctionResult: Boolean;
+    Buffer: String;
+begin
+    SetLength(Buffer, {#OPENWGUTILS_BUF_SIZE});
+
+    if IsUninstaller() then
+        FunctionResult := INNO_ComponentEntryGetNameW_U(Object, Buffer, {#OPENWGUTILS_BUF_SIZE})
+    else
+        FunctionResult := INNO_ComponentEntryGetNameW_I(Object, Buffer, {#OPENWGUTILS_BUF_SIZE});
+
+    if FunctionResult then
+        Result := Copy(Buffer, 1, Pos(#0, Buffer)-1);
+end;
+
+
+// INNO/ComponentEntryGetDescription
+function INNO_ComponentEntryGetDescriptionW_I(Object: TObject; Buffer: String; BufferSize: Integer): Boolean;
+external 'INNO_ComponentEntryGetDescriptionW@files:openwg.utils.dll cdecl setuponly';
+
+function INNO_ComponentEntryGetDescriptionW_U(Object: TObject; Buffer: String; BufferSize: Integer): Boolean;
+external 'INNO_ComponentEntryGetDescriptionW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function INNO_ComponentEntryGetDescription(Object: TObject): String;
+var
+    FunctionResult: Boolean;
+    Buffer: String;
+begin
+    SetLength(Buffer, {#OPENWGUTILS_BUF_SIZE});
+
+    if IsUninstaller() then
+        FunctionResult := INNO_ComponentEntryGetDescriptionW_U(Object, Buffer, {#OPENWGUTILS_BUF_SIZE})
+    else
+        FunctionResult := INNO_ComponentEntryGetDescriptionW_I(Object, Buffer, {#OPENWGUTILS_BUF_SIZE});
+
+    if FunctionResult then
+        Result := Copy(Buffer, 1, Pos(#0, Buffer)-1);
+end;
+
+
+// INNO/ComponentEntryCompareName
+function INNO_ComponentEntryCompareNameW_I(str1: String; str2: String): Boolean;
+external 'INNO_ComponentEntryCompareNameW@files:openwg.utils.dll cdecl setuponly';
+
+function INNO_ComponentEntryCompareNameW_U(str1: String; str2: String): Boolean;
+external 'INNO_ComponentEntryCompareNameW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function INNO_ComponentEntryCompareName(str1: String; str2: String): Boolean;
+begin
+    if IsUninstaller() then
+        Result := INNO_ComponentEntryCompareNameW_U(str1, str2)
+    else
+        Result := INNO_ComponentEntryCompareNameW_I(str1, str2);
+end;
+
+
+// INNO/ChecklistGetItemName
+function INNO_ChecklistGetItemName(Checklist: TNewCheckListBox; Index: Integer): String;
+begin
+    Result := INNO_ComponentEntryGetName(Checklist.ItemObject[Index]);
+end;
+
+// INNO/ChecklistGetItemDescription
+function INNO_ChecklistGetItemDescription(Checklist: TNewCheckListBox; Index: Integer): String;
+begin
+    Result := INNO_ComponentEntryGetDescription(Checklist.ItemObject[Index]);
+end;
+
+// INNO/ChecklistGetItemIndex
+function INNO_ChecklistGetItemIndex(Checklist: TNewCheckListBox; Name: String): Integer;
+var
+    Index: Integer;
+begin
+    Result := -1;
+    for Index := 0 to Checklist.Items.Count - 1 do
+    begin
+        if INNO_ComponentEntryCompareName(INNO_ChecklistGetItemName(Checklist, Index), Name) then
+        begin
+            Result := Index;
+            Exit;
+        end;
+    end;
 end;
 
 
@@ -980,6 +1355,28 @@ begin
 end;
 
 
+// WOT/GetClientExeNameW
+procedure WOT_GetClientExeNameW_I(Buffer: String; BufferSize: Integer; ClientIndex: Integer);
+external 'WOT_GetClientExeNameW@files:openwg.utils.dll cdecl setuponly';
+
+procedure WOT_GetClientExeNameW_U(Buffer: String; BufferSize: Integer; ClientIndex: Integer);
+external 'WOT_GetClientExeNameW@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function WOT_GetClientExeName(ClientIndex: Integer): String;
+var
+    Buffer: String;
+begin
+    SetLength(Buffer, {#OPENWGUTILS_BUF_SIZE});
+
+    if IsUninstaller() then
+        WOT_GetClientExeNameW_U(Buffer, {#OPENWGUTILS_BUF_SIZE}, ClientIndex)
+    else
+        WOT_GetClientExeNameW_I(Buffer, {#OPENWGUTILS_BUF_SIZE}, ClientIndex);
+
+    Result := Copy(Buffer, 1, Pos(#0, Buffer)-1);
+end;
+
+
 // WOT/GetClientExeVersionW
 procedure WOT_GetClientExeVersionW_I(Buffer: String; BufferSize: Integer; ClientIndex: Integer);
 external 'WOT_GetClientExeVersionW@files:openwg.utils.dll cdecl setuponly';
@@ -1001,6 +1398,62 @@ begin
     Result := Copy(Buffer, 1, Pos(#0, Buffer)-1);
 end;
 
+//
+// Cache
+//
+// Cache Types:
+//   1 -- PDC
+
+// WOT/WOT_GetClientCachePresent
+function WOT_GetClientCachePresent_I(ClientIndex: Integer): Integer;
+external 'WOT_GetClientCachePresent@files:openwg.utils.dll cdecl setuponly';
+
+function WOT_GetClientCachePresent_U(ClientIndex: Integer): Integer;
+external 'WOT_GetClientCachePresent@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function WOT_GetClientCachePresent(ClientIndex: Integer): Integer;
+begin
+    if IsUninstaller() then
+        Result := WOT_GetClientCachePresent_U(ClientIndex)
+    else
+        Result := WOT_GetClientCachePresent_I(ClientIndex)
+end;
+
+
+// WOT/WOT_GetClientCacheSupported
+function WOT_GetClientCacheSupported_I(ClientIndex: Integer): Integer;
+external 'WOT_GetClientCacheSupported@files:openwg.utils.dll cdecl setuponly';
+
+function WOT_GetClientCacheSupported_U(ClientIndex: Integer): Integer;
+external 'WOT_GetClientCacheSupported@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function WOT_GetClientCacheSupported(ClientIndex: Integer): Integer;
+begin
+    if IsUninstaller() then
+        Result := WOT_GetClientCacheSupported_U(ClientIndex)
+    else
+        Result := WOT_GetClientCacheSupported_I(ClientIndex)
+end;
+
+
+// WOT/WOT_GetClientCacheSupported
+function WOT_ClearClientCache_I(ClientIndex: Integer; CacheType: Integer): Integer;
+external 'WOT_ClearClientCache@files:openwg.utils.dll cdecl setuponly';
+
+function WOT_ClearClientCache_U(ClientIndex: Integer; CacheType: Integer): Integer;
+external 'WOT_ClearClientCache@{app}\{#OPENWGUTILS_DIR_UNINST}\openwg.utils.dll cdecl uninstallonly';
+
+function WOT_ClearClientCache(ClientIndex: Integer; CacheType: Integer): Integer;
+begin
+    if IsUninstaller() then
+        Result := WOT_ClearClientCache_U(ClientIndex, CacheType)
+    else
+        Result := WOT_ClearClientCache_I(ClientIndex, CacheType)
+end;
+
+//
+// Record
+//
 
 function CLIENT_GetRecord(Index: Integer): ClientRecord;
 begin
