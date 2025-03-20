@@ -172,7 +172,7 @@ class Strategic(CameraSettings):
 
 class Sniper(CameraSettings):
     settingsCore = dependency.descriptor(ISettingsCore)
-    DEFAULT_X_METERS = 20.0
+    DEFAULT_X_METERS = 25.0
     _SNIPER_ZOOM_LEVEL = None
 
     def __init__(self):
