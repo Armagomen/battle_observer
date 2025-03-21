@@ -180,15 +180,15 @@ def createPlugins(base, *args):
 GUNNER_ARMORER = 'gunner_armorer'
 LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
 RND_DEBUG = 'PIERCING_POWER_RANDOMIZATION: {}, vehicle: {}'
-RND_DIFF_DEBUG = "PIERCING_POWER_RANDOMIZATION getRandomDiff: skill_name: {} skill_lvl: {} role_level: {} percent: {}"
+RND_DIFF_DEBUG = "PIERCING_POWER_RANDOMIZATION getRandomDiff: skill_name: {} skill_lvl: {} skill_level_bonus: {} percent: {}"
 
 
 def getCurrentSkillEfficiency(percent, tman, skill_name):
-    skill_lvl = tman.skillsMap[skill_name].level * 0.01
-    role_level = tman.nativeTankRealRoleLevel * 0.01
-    result = tman.skillsEfficiency * skill_lvl * role_level * percent
-    logDebug(RND_DIFF_DEBUG, skill_name, skill_lvl, role_level, result)
-    return result
+    skill_level = tman.skillsMap[skill_name].level
+    skill_level_bonus = tman.crewLevelIncrease[0]
+    result = (skill_level + skill_level_bonus) * percent * tman.skillsEfficiency
+    logDebug(RND_DIFF_DEBUG, skill_name, skill_level, skill_level_bonus, result)
+    return result * 0.01
 
 
 def _updateRandomization(vehicle):
@@ -197,17 +197,20 @@ def _updateRandomization(vehicle):
     randomization_min, randomization_max = DEFAULT_RANDOMIZATION
     if user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None and vehicle.isCrewFull:
         gunners = []
+        loaders = []
         for _, tman in vehicle.crew:
             if not tman or not tman.canUseSkillsInCurrentVehicle:
                 continue
             if GUNNER_ARMORER in tman.skillsMap:
-                efficiency = getCurrentSkillEfficiency(0.05, tman, GUNNER_ARMORER)
-                randomization_max -= efficiency
-                randomization_min += efficiency
+                gunners.append(getCurrentSkillEfficiency(0.05, tman, GUNNER_ARMORER))
             if LOADER_AMMUNITION_IMPROVE in tman.skillsMap:
-                gunners.append(getCurrentSkillEfficiency(0.02, tman, LOADER_AMMUNITION_IMPROVE))
+                loaders.append(getCurrentSkillEfficiency(0.02, tman, LOADER_AMMUNITION_IMPROVE))
         if gunners:
-            randomization_min += sum(gunners) / len(gunners)
+            efficiency = sum(gunners) / len(gunners)
+            randomization_min += efficiency
+            randomization_max -= efficiency
+        if loaders:
+            randomization_min += sum(loaders) / len(loaders)
     _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
     logDebug(RND_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
 

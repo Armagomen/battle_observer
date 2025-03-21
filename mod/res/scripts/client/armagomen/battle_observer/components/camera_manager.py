@@ -4,7 +4,6 @@ from collections import namedtuple
 import ResMgr
 
 import math_utils
-import TriggersManager
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_LESTA, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
@@ -17,45 +16,37 @@ from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosit
 from helpers import dependency
 from PlayerEvents import g_playerEvents
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
+from TriggersManager import g_manager, ITriggerListener, TRIGGER_TYPE
 
 MinMax = namedtuple('MinMax', ('min', 'max'))
 
 
-class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
+class ChangeCameraModeAfterShoot(ITriggerListener):
 
     def __init__(self):
         self.latency = 0
         self.skip_clip = False
-        self.subscribed = False
         self.avatar = None
-        self.__trigger_type = self.getTrigger()
-
-    @staticmethod
-    def getTrigger():
-        if IS_LESTA:
-            return TriggersManager.TRIGGER_TYPE.PLAYER_SHOOT
-        return TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
+        self.__trigger_type = TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT if not IS_LESTA else TRIGGER_TYPE.PLAYER_SHOOT
 
     def updateSettings(self, data):
         enabled = data[SNIPER.DISABLE_SNIPER] and data[GLOBAL.ENABLED]
         self.latency = float(data[SNIPER.DISABLE_LATENCY])
         self.skip_clip = data[SNIPER.SKIP_CLIP]
-        if not self.subscribed and enabled:
+        if enabled:
             g_playerEvents.onAvatarReady += self.onStart
             g_playerEvents.onAvatarBecomeNonPlayer += self.onFinish
-            self.subscribed = True
-        elif self.subscribed and not enabled:
+        else:
             g_playerEvents.onAvatarReady -= self.onStart
             g_playerEvents.onAvatarBecomeNonPlayer -= self.onFinish
-            self.subscribed = False
 
     def onStart(self):
         self.avatar = getPlayer()
-        TriggersManager.g_manager.addListener(self)
+        g_manager.addListener(self)
 
     def onFinish(self):
         self.avatar = None
-        TriggersManager.g_manager.delListener(self)
+        g_manager.delListener(self)
 
     def onTriggerActivated(self, params):
         if params.get('type') == self.__trigger_type:

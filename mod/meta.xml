@@ -3,6 +3,6 @@
     <version>1.41.43</version>
     <name>Battle Observer</name>
     <description>Battle Observer mod: logs, teamsHp, zoomMod, bases panel, debug panel, timer + time, Armor Calculator,
-        Spotted Status, flight time, noBadge, minimap in center, sixth Sense
+        Spotted Status, flight time, noBadge, minimap, sixth Sense, crew, wgr rating.
     </description>
 </root>
