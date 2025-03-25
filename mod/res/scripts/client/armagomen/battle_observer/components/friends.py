@@ -9,13 +9,10 @@ from PlayerEvents import g_playerEvents
 _cache = set()
 
 
-def onGuiCacheSyncCompleted(ctx):
+def _onGuiCacheSyncCompleted(ctx):
     _cache.clear()
     users = storage_getter(ANOTHER.USERS)().getList(_ContactsCategories().getCriteria())
     _cache.update(user._userID for user in users if not user.isIgnored())
-
-
-g_playerEvents.onGuiCacheSyncCompleted += onGuiCacheSyncCompleted
 
 
 def showFriends():
@@ -39,6 +36,8 @@ def new_VehicleTypeInfoVO_update(update, vTypeVo, *args, **kwargs):
     return update(vTypeVo, *args, **kwargs)
 
 
+g_playerEvents.onGuiCacheSyncCompleted += _onGuiCacheSyncCompleted
+
+
 def fini():
-    global onGuiCacheSyncCompleted
-    g_playerEvents.onGuiCacheSyncCompleted -= onGuiCacheSyncCompleted
+    g_playerEvents.onGuiCacheSyncCompleted -= _onGuiCacheSyncCompleted

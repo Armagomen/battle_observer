@@ -7,15 +7,14 @@ from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
-from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES
-from CurrentVehicle import g_currentVehicle
+from constants import ARENA_BONUS_TYPE, SHELL_MECHANICS_TYPE, SHELL_TYPES
 from DestructibleEntity import DestructibleEntity
 from gui.battle_control import avatar_getter
-from gui.Scaleform.daapi.view.battle.epic.battle_carousel import BattleCarouselDataProvider
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from items.components.component_constants import DEFAULT_PIERCING_POWER_RANDOMIZATION, \
     MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+from items.tankmen import getSkillsConfig
 from Vehicle import Vehicle
 
 MinMax = namedtuple("MinMax", ("min", "max"))
@@ -158,15 +157,8 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     def __updateCurrVehicleInfo(self, vehicle):
         if avatar_getter.isObserver(self.__player) or vehicle is None:
             return
-        _updateRandomization(vehicle)
-
-
-@overrideMethod(BattleCarouselDataProvider, 'selectVehicle')
-def _selectVehicle(base, *args):
-    invID = base(*args)
-    if invID:
-        _updateRandomization(g_currentVehicle.itemsCache.items.getVehicle(invID))
-    return invID
+        isComp7Battle = self.sessionProvider.arenaVisitor.getArenaBonusType() == ARENA_BONUS_TYPE.COMP7
+        _updateRandomization(vehicle, isComp7=isComp7Battle)
 
 
 @overrideMethod(plugins, 'createPlugins')
@@ -180,61 +172,40 @@ def createPlugins(base, *args):
 GUNNER_ARMORER = 'gunner_armorer'
 LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
 RND_DEBUG = 'PIERCING_POWER_RANDOMIZATION: {}, vehicle: {}'
-RND_DIFF_DEBUG = "PIERCING_POWER_RANDOMIZATION getRandomDiff: skill_name: {} skill_lvl: {} skill_level_bonus: {} percent: {}"
+RND_DIFF_DEBUG = "PIERCING_POWER_RANDOMIZATION: skill_name: {} skill_lvl: {} skill_level_bonus: {} percent: {}"
 
 
-def getCurrentSkillEfficiency(percent, tman, skill_name):
-    skill_level = tman.skillsMap[skill_name].level
-    skill_level_bonus = tman.crewLevelIncrease[0]
-    result = (skill_level + skill_level_bonus) * percent * tman.skillsEfficiency
-    logDebug(RND_DIFF_DEBUG, skill_name, skill_level, skill_level_bonus, result)
-    return result * 0.01
+def getCurrentSkillEfficiency(tman, skill_name):
+    skill = tman.skillsMap.get(skill_name)
+    if skill is not None:
+        kpi = getSkillsConfig().getSkill(skill_name).kpi
+        if kpi:
+            base_percent = round(kpi[0].value, 2) - 1.0
+            skill_level_bonus = tman.crewLevelIncrease[0]
+            result = (skill.level + skill_level_bonus) * base_percent * tman.skillsEfficiency
+            logDebug(RND_DIFF_DEBUG, skill_name, skill.level, skill_level_bonus, result)
+            return result / 100.0
+    return 0
 
 
-def _updateRandomization(vehicle):
-    if IS_LESTA:
-        return
-    randomization_min, randomization_max = DEFAULT_RANDOMIZATION
-    if user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None and vehicle.isCrewFull:
-        gunners = []
-        loaders = []
+def _updateRandomization(vehicle, isComp7=False):
+    randomization_min, randomization_max = (0.85, 1.15) if isComp7 else DEFAULT_RANDOMIZATION
+    if not IS_LESTA and user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None and vehicle.isCrewFull:
+        data = {GUNNER_ARMORER: [], LOADER_AMMUNITION_IMPROVE: []}
         for _, tman in vehicle.crew:
             if not tman or not tman.canUseSkillsInCurrentVehicle:
                 continue
-            if GUNNER_ARMORER in tman.skillsMap:
-                gunners.append(getCurrentSkillEfficiency(0.05, tman, GUNNER_ARMORER))
-            if LOADER_AMMUNITION_IMPROVE in tman.skillsMap:
-                loaders.append(getCurrentSkillEfficiency(0.02, tman, LOADER_AMMUNITION_IMPROVE))
-        if gunners:
-            efficiency = sum(gunners) / len(gunners)
-            randomization_min += efficiency
-            randomization_max -= efficiency
-        if loaders:
-            randomization_min += sum(loaders) / len(loaders)
+            for skill_name in tman.getPossibleSkills().intersection(data):
+                data[skill_name].append(getCurrentSkillEfficiency(tman, skill_name))
+
+        for skill_name, value in data.iteritems():
+            if value:
+                percent = sum(value) / len(value)
+                randomization_min += percent
+                if skill_name == GUNNER_ARMORER:
+                    randomization_max -= percent
     _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
     logDebug(RND_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
-
-
-# from skeletons.gui.shared.gui_items import IGuiItemsFactory
-# from helpers import dependency
-#
-# @dependency.replace_none_kwargs(itemsFactory=IGuiItemsFactory)
-# def hasSkill(skillName, itemsFactory=None):
-#     if not skillName:
-#         return False
-#     player = getPlayer()
-#     if player is None:
-#         return False
-#     vehicle = player.vehicle
-#     if vehicle is None:
-#         vehicle = player.getVehicleAttached()
-#     if vehicle is None:
-#         return False
-#     isRoleSkill= '_' in skillName
-#     crewCompactDescrs = list(vehicle.crewCompactDescrs)
-#     crew = tuple(map(lambda tankmanStrCD: itemsFactory.createTankman(tankmanStrCD, -1), crewCompactDescrs))
-#     skillAvailability = tuple(skillName in tankman.skillsMap for tankman in crew)
-#     return any(skillAvailability) if isRoleSkill else all(skillAvailability)
 
 
 g_events.onVehicleChangedDelayed += _updateRandomization
