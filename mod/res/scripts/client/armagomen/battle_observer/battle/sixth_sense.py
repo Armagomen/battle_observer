@@ -1,12 +1,9 @@
 # coding=utf-8
 from random import choice
 
-from armagomen._constants import GLOBAL, IS_LESTA, SIXTH_SENSE
+from armagomen._constants import GLOBAL, SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
 from armagomen.utils.timers import SixthSenseTimer
-
-if not IS_LESTA:
-    from constants import DIRECT_DETECTION_TYPE
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from helpers import getClientLanguage
 from PlayerEvents import g_playerEvents
@@ -36,6 +33,12 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
         self.radio_installed = False
         self.__visible = False
         self.__message = None
+        self.__radar = None
+        try:
+            from constants import DIRECT_DETECTION_TYPE
+            self.__radar = DIRECT_DETECTION_TYPE.STEALTH_RADAR
+        except:
+            pass
 
     def _populate(self):
         super(SixthSense, self)._populate()
@@ -73,14 +76,9 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
-            if IS_LESTA:
-                if value:
-                    self.show()
-                else:
-                    self.hide()
-            elif value.get('isObserved', False):
+            if value.get('isObserved', False):
                 if self.isComp7Battle:
-                    if value.get("detectionType", 0) == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
+                    if value.get("detectionType", 0) == self.__radar:
                         time = 2
                     else:
                         time = 4
@@ -115,3 +113,15 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
             self.cancelCallback()
             self.as_hideS()
             self.__visible = False
+
+
+class SixthSenseLesta(SixthSense):
+
+    def _onVehicleStateUpdated(self, state, value):
+        if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
+            if value:
+                self.show()
+            else:
+                self.hide()
+        elif state in _STATES_TO_HIDE:
+            self.hide()
