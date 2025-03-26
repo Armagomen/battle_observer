@@ -19,7 +19,9 @@ from helpers.http import openUrl
 
 CONFIG_DIR = "mod_battle_observer"
 MOD_CACHE = "battle_observer"
-UTF_8 = 'utf-8'
+UTF_8 = "utf-8"
+
+MinMax = namedtuple("MinMax", ("min", "max"))
 
 
 def isReplay():

@@ -1,24 +1,17 @@
-import math
-from collections import namedtuple
-
-import ResMgr
-
-import math_utils
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_LESTA, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import addCallback, getPlayer, isReplay, overrideMethod
+from armagomen.utils.common import addCallback, getPlayer, isReplay, MinMax, overrideMethod, ResMgr
 from armagomen.utils.logging import logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from cgf_components.attack_artillery_fort_components import ISettingsCore
 from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosition
 from helpers import dependency
+from math_utils import clamp, math
 from PlayerEvents import g_playerEvents
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from TriggersManager import g_manager, ITriggerListener, TRIGGER_TYPE
-
-MinMax = namedtuple('MinMax', ('min', 'max'))
 
 
 class ChangeCameraModeAfterShoot(ITriggerListener):
@@ -216,7 +209,7 @@ class Sniper(CameraSettings):
         zoom = math.floor(distance / self.DEFAULT_X_METERS)
         if self._steps_only:
             zoom = min(steps, key=lambda value: abs(value - zoom))
-        return math_utils.clamp(self.min_max.min, self.min_max.max, zoom)
+        return clamp(self.min_max.min, self.min_max.max, zoom)
 
     def enable(self, base, camera, targetPos, saveZoom):
         if self._dyn_zoom:

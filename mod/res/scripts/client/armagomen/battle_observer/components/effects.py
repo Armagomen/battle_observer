@@ -6,11 +6,9 @@ from helpers.bound_effects import ModelBoundEffects
 
 
 @overrideMethod(SniperControlMode, "__setupBinoculars")
-def setupBinoculars(base, mode, isCoatedOptics):
-    base(mode, isCoatedOptics)
-    if user_settings.effects[EFFECTS.NO_BINOCULARS]:
-        mode._binoculars.setEnabled(False)
-        mode._binoculars.resetTextures()
+def setupBinoculars(base, mode, optDevices):
+    if not user_settings.effects[EFFECTS.NO_BINOCULARS]:
+        return base(mode, optDevices)
 
 
 @overrideMethod(ModelBoundEffects, 'addNewToNode')
