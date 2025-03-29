@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timedelta
 from random import choice
 
-from armagomen._constants import API_KEY, AUTH_REALM, getLogo, IMG, IS_LESTA, URLS
+from armagomen._constants import API_KEY, AUTH_REALM, getLogo, IMG, URLS
 from armagomen.utils.common import fetchURL, openWebBrowser, overrideMethod
 from armagomen.utils.logging import logDebug, logInfo, logWarning
 from gui.clans.clan_cache import g_clanCache
@@ -104,15 +104,14 @@ class Donate(object):
                 self.pushClanInviteMessage()
 
 
-if not IS_LESTA:
-    donate = Donate()
+donate = Donate()
 
 
-    @overrideMethod(NotificationListView, "onClickAction")
-    @overrideMethod(NotificationPopUpViewer, "onClickAction")
-    def clickAction(base, view, typeID, entityID, action):
-        if action in URLS:
-            return openWebBrowser(action)
-        if action == CLAN_ABBREV:
-            return event_dispatcher.showClanProfileWindow(CLAN_ID, action)
-        return base(view, typeID, entityID, action)
+@overrideMethod(NotificationListView, "onClickAction")
+@overrideMethod(NotificationPopUpViewer, "onClickAction")
+def clickAction(base, view, typeID, entityID, action):
+    if action in URLS:
+        return openWebBrowser(action)
+    if action == CLAN_ABBREV:
+        return event_dispatcher.showClanProfileWindow(CLAN_ID, action)
+    return base(view, typeID, entityID, action)

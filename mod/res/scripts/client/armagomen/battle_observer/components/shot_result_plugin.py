@@ -11,12 +11,11 @@ from gui.battle_control import avatar_getter
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from gui.shared.gui_items import KPI
-from items.components.component_constants import DEFAULT_PIERCING_POWER_RANDOMIZATION, \
-    MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 from items.tankmen import getSkillsConfig
 from Vehicle import Vehicle
 
-DEFAULT_RANDOMIZATION = MinMax(1.0 - DEFAULT_PIERCING_POWER_RANDOMIZATION, 1.0 + DEFAULT_PIERCING_POWER_RANDOMIZATION)
+DEFAULT_RANDOMIZATION = MinMax(0.75, 1.25)
 
 
 class _ShotResult(_CrosshairShotResults):
@@ -92,7 +91,7 @@ class _ShotResult(_CrosshairShotResults):
                 jet_start_dist += detail.dist + mat_info.armor * cls._JET_FACTOR
             if mat_info.collideOnceOnly:
                 ignoredMaterials.add((detail.compName, mat_info.kind))
-        data = (computed_armor, piercing_power, shell.caliber, ricochet, no_damage)
+        data = (computed_armor, max(piercing_power, 0), shell.caliber, ricochet, no_damage)
         return cls._checkShotResult(data), data
 
     @classmethod
@@ -138,19 +137,20 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         super(ShotResultIndicatorPlugin, self).__setMapping(keys)
         self.__mapping[CROSSHAIR_VIEW_ID.STRATEGIC] = True
 
+
+class ShotResultIndicatorPlugin_WG(ShotResultIndicatorPlugin):
+
     def start(self):
-        super(ShotResultIndicatorPlugin, self).start()
-        if not IS_LESTA:
-            prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
-            if prebattleCtrl is not None:
-                prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
+        super(ShotResultIndicatorPlugin_WG, self).start()
+        prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
+        if prebattleCtrl is not None:
+            prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
 
     def stop(self):
-        super(ShotResultIndicatorPlugin, self).stop()
-        if not IS_LESTA:
-            prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
-            if prebattleCtrl is not None:
-                prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
+        super(ShotResultIndicatorPlugin_WG, self).stop()
+        prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
+        if prebattleCtrl is not None:
+            prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
 
     def __updateCurrVehicleInfo(self, vehicle):
         if avatar_getter.isObserver(self.__player) or vehicle is None:
@@ -163,7 +163,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 def createPlugins(base, *args):
     _plugins = base(*args)
     if user_settings.armor_calculator[GLOBAL.ENABLED]:
-        _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
+        _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin if IS_LESTA else ShotResultIndicatorPlugin_WG
     return _plugins
 
 
@@ -200,7 +200,7 @@ class Randomizer(object):
     @classmethod
     def _updateRandomization(cls, vehicle, isComp7=False):
         randomization_min, randomization_max = (0.85, 1.15) if isComp7 else DEFAULT_RANDOMIZATION
-        if not IS_LESTA and user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None:
+        if user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None:
             data = {cls.GUNNER_ARMORER: [], cls.LOADER_AMMUNITION_IMPROVE: []}
             for _, tman in vehicle.crew:
                 if not tman or not tman.canUseSkillsInCurrentVehicle:
@@ -218,8 +218,9 @@ class Randomizer(object):
         logDebug(cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
 
 
-g_events.onVehicleChangedDelayed += Randomizer._updateRandomization
+if not IS_LESTA:
+    g_events.onVehicleChangedDelayed += Randomizer._updateRandomization
 
 
-def fini():
-    g_events.onVehicleChangedDelayed -= Randomizer._updateRandomization
+    def fini():
+        g_events.onVehicleChangedDelayed -= Randomizer._updateRandomization

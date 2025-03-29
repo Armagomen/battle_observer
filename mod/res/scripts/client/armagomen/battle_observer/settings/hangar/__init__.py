@@ -338,13 +338,11 @@ class SettingsInterface(CreateElement):
             if varName == MAIN.USE_KEY_PAIRS:
                 self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
             if IS_LESTA:
-                values = (
-                    MAIN.AUTO_CLAIM_CLAN_REWARD, MAIN.CREW_RETURN, MAIN.CREW_TRAINING,
-                    MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
-                    MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET)
+                values = (MAIN.AUTO_CLAIM_CLAN_REWARD, MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
+                          MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET)
         elif blockID == STATISTICS.NAME and STATISTICS_REGION is None:
             values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][STATISTICS.STATISTIC_ENABLED] + (
-            STATISTICS.STATISTIC_ENABLED,)
+                STATISTICS.STATISTIC_ENABLED,)
         if blockID in CONFIG_INTERFACE.HANDLER_VALUES:
             if varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
                 values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]

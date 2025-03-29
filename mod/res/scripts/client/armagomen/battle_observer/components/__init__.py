@@ -42,7 +42,7 @@ def loadComponents(is_replay):
 
     lesta_disable = (
         'auto_claim_clan_reward',
-        'crew',
+        'donate_messages',
     )
 
     for moduleName in load:

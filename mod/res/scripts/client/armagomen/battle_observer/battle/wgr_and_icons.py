@@ -44,7 +44,6 @@ class WGRAndIcons(BaseModMeta):
                 arena.onVehicleAdded -= self.data_loader.updateList
                 arena.onVehicleUpdated -= self.data_loader.updateList
             self.data_loader.onDataReceived -= self.updateAllItems
-            self.data_loader = None
         super(WGRAndIcons, self)._dispose()
 
     def getPattern(self, isEnemy, itemData):

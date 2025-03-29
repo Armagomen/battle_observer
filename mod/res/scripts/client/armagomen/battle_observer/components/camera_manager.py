@@ -101,10 +101,7 @@ class Arcade(CameraSettings):
             camera._cfg['scrollSensitivity'] = self.config[ARCADE.SCROLL_SENSITIVITY]
             camera._cfg['startDist'] = self.config[ARCADE.START_DEAD_DIST]
             camera._cfg['startAngle'] = -0.4
-            if IS_LESTA:
-                camera._ArcadeCamera__updateProperties(state=None)
-            else:
-                camera._updateProperties(state=None)
+            self.updateProperties(camera)
         elif self.reset:
             self.resetToDefault(camera)
 
@@ -112,6 +109,10 @@ class Arcade(CameraSettings):
         super(Arcade, self).resetToDefault()
         cameraSec = ResMgr.openSection('gui/avatar_input_handler.xml/arcadeMode/camera/')
         camera._reloadConfigs(cameraSec)
+        self.updateProperties(camera)
+
+    @staticmethod
+    def updateProperties(camera):
         if IS_LESTA:
             camera._ArcadeCamera__updateProperties(state=None)
         else:

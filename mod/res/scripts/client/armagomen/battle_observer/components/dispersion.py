@@ -109,7 +109,10 @@ class DispersionCircle(object):
         overrideMethod(gun_marker_ctrl, "useClientGunMarker")(self.useGunMarker)
         overrideMethod(gun_marker_ctrl, "useServerGunMarker")(self.useGunMarker)
         overrideMethod(VehicleGunRotator, "applySettings")(self.onPass)
-        overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPosition)
+        if IS_LESTA:
+            overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPositionLesta)
+        else:
+            overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPositionWG)
         overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onPass)
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
 
@@ -121,7 +124,10 @@ class DispersionCircle(object):
         cancelOverride(gun_marker_ctrl, "useClientGunMarker", "useGunMarker")
         cancelOverride(gun_marker_ctrl, "useServerGunMarker", "useGunMarker")
         cancelOverride(VehicleGunRotator, "applySettings", "onPass")
-        cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPosition")
+        if IS_LESTA:
+            cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPositionLesta")
+        else:
+            cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPositionWG")
         cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged", "onPass")
         cancelOverride(CrosshairPanelContainer, "setGunMarkerColor", "setGunMarkerColor")
 
@@ -145,16 +151,17 @@ class DispersionCircle(object):
     def onPass(*args, **kwargs):
         pass
 
-    def setShotPosition(self, base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
+    @staticmethod
+    def setShotPositionWG(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
         m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
-        if IS_LESTA:
-            mPos, mDir, mSize, mIdealSize, dualAccSize, _, collData = m_position
-            rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, (mSize, mIdealSize), SERVER_TICK_LENGTH,
-                                                               collData)
-        else:
-            mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
-            rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH,
-                                                               collData)
+        mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
+        rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH, collData)
+
+    @staticmethod
+    def setShotPositionLesta(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
+        m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
+        mPos, mDir, mSize, mISize, dualAccSize, _, collData = m_position
+        rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, (mSize, mISize), SERVER_TICK_LENGTH, collData)
 
     @staticmethod
     def setGunMarkerColor(base, cr_panel, markerType, color):
