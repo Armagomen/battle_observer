@@ -1,7 +1,7 @@
 import os
 
 from armagomen._constants import GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
-from armagomen.utils.common import currentConfigPath, openJsonFile, writeJsonFile
+from armagomen.utils.common import currentConfigPath, openJsonFile, ResMgr, writeJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.logging import DEBUG, logInfo, logWarning, setDebug
 from gui.shared.personality import ServicesLocator
@@ -11,10 +11,11 @@ READ_MESSAGE = "loadConfigPart: {}: {}"
 
 
 class SettingsLoader(object):
-    __slots__ = ('configName', 'configsList', 'errorMessages', '__settings')
+    __slots__ = ('configName', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list')
 
     def __init__(self, settings):
         self.__settings = settings
+        self.sixth_sense_list = self.sixthSenseIconsNamesList()
         self.errorMessages = set()
         self.configsList = sorted(
             x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x))
@@ -31,6 +32,12 @@ class SettingsLoader(object):
         if not os.path.exists(config_path):
             self.errorMessages.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
             os.makedirs(config_path)
+
+    @staticmethod
+    def sixthSenseIconsNamesList():
+        directory = "gui/maps/icons/battle_observer/sixth_sense/"
+        folder = ResMgr.openSection(directory)
+        return sorted(folder.keys())
 
     @property
     def settings(self):
@@ -80,7 +87,7 @@ class SettingsLoader(object):
                 if new_param is not None:
                     if old_param_type == float and new_param_type == int:
                         new_param = float(new_param)
-                    if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE.ICONS:
+                    if key == SIXTH_SENSE.ICON_NAME and new_param not in self.sixth_sense_list:
                         new_param = "logo.png"
                         update = True
                     if key == SNIPER.STEPS and (new_param_type != list or not len(new_param)):

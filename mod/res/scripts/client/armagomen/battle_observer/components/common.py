@@ -2,7 +2,6 @@ from armagomen._constants import IS_LESTA, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import addCallback, overrideMethod
 from armagomen.utils.events import g_events
-from comp7.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
 from CurrentVehicle import g_currentVehicle
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
@@ -15,7 +14,6 @@ from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.entry_points.event_entry_points_container import EventEntryPointsContainer
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
 from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
-from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
 from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 
 
@@ -24,7 +22,7 @@ from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 def changeVehicle(base, *args, **kwargs):
     base(*args, **kwargs)
     g_events.onVehicleChanged()
-    addCallback(1.0, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
+    addCallback(0.5, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
 
 
 # disable field mail tips
@@ -74,6 +72,7 @@ def buttonCounterS(base, *args, **kwargs):
 class PrestigeWidget(object):
 
     def __init__(self):
+        from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
         self.enabled = False
         overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')(self.as_setPrestigeWidgetVisibleS)
         overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')(self.as_setPrestigeVisibleS)
@@ -100,15 +99,18 @@ class PrestigeWidget(object):
             g_currentVehicle.onChanged()
 
 
-if not IS_LESTA:
-    p_widget = PrestigeWidget()
-
-
 @overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
 def _EventEntryPointsContainer_as_updateEntries(base, self, data):
     if user_settings.main[MAIN.HIDE_EVENT_BANNER]:
         return base(self, [])
     return base(self, data)
+
+
+if not IS_LESTA:
+    p_widget = PrestigeWidget()
+    from comp7.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
+else:
+    from gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
 
 
 class TweakSounds(object):

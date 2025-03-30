@@ -28,6 +28,7 @@ def loadComponents(is_replay):
 
     replay_disable = (
         'auto_claim_clan_reward',
+        'camera_manager',
         'crew',
         'dispersion',
         'donate_messages',

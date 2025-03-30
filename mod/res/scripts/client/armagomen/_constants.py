@@ -1,7 +1,5 @@
 from collections import namedtuple
 
-import ResMgr
-
 from aih_constants import CTRL_MODE_NAME
 from constants import ARENA_GUI_TYPE, AUTH_REALM
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -18,12 +16,6 @@ def getLogo(big=True):
     if big:
         return "<img src='{}/logo/big.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
     return "<img src='{}/logo/small.png' width='220' height='14' vspace='16'>".format(IMAGE_DIR)
-
-
-def sixthSenseIconsNamesList():
-    directory = "gui/maps/icons/battle_observer/sixth_sense/"
-    folder = ResMgr.openSection(directory)
-    return sorted(folder.keys())
 
 
 IMG = namedtuple("IMG", "MONO PATREON DONATELLO")(
@@ -209,8 +201,8 @@ class DAMAGE_LOG:
 
 
 ARCADE = namedtuple("ARCADE", (
-    "NAME", "DIST_RANGE", "MAX", "MIN", "START_DEAD_DIST", "START_DIST", "SCROLL_SENSITIVITY"))(
-    "arcade_camera", "distRange", "max", "min", "startDeadDist", "startDist", "scrollSensitivity")
+    "NAME", "DIST_RANGE", "MAX", "MIN", "START_DEAD_DIST", "START_DIST", "SCROLL_SENSITIVITY", "START_ANGLE"))(
+    "arcade_camera", "distRange", "max", "min", "startDeadDist", "startDist", "scrollSensitivity", "startAngle")
 
 STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
     "strategic_camera", "min", "max", "distRange", "scrollSensitivity")
@@ -236,9 +228,8 @@ FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TEMPLATE", "M_FLIG
     "flight_time", "spgOnly", "template", "flightTime", "distance", "align")
 
 SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
-    "NAME", "PLAY_TICK_SOUND", "TIME", "DEFAULT", "ICON_NAME", "USER_ICON", "ICONS"))(
-    "sixth_sense", "playTickSound", "lampShowTime", "default_icon", "default_icon_name", "user_icon",
-    sixthSenseIconsNamesList()
+    "NAME", "PLAY_TICK_SOUND", "TIME", "DEFAULT", "ICON_NAME", "USER_ICON"))(
+    "sixth_sense", "playTickSound", "lampShowTime", "default_icon", "default_icon_name", "user_icon"
 )
 
 __Dispersion = namedtuple("DISPERSION", ("NAME", "SERVER", "SCALE", "REPLACE"))

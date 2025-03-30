@@ -62,8 +62,9 @@ class Getter(object):
 
 class CreateElement(Getter):
 
-    def __init__(self):
+    def __init__(self, settingsLoader):
         super(CreateElement, self).__init__()
+        self.loader = settingsLoader
 
     @staticmethod
     def createLabel(blockID, name):
@@ -184,7 +185,8 @@ class CreateElement(Getter):
             elif blockID == DEBUG_PANEL.NAME and DEBUG_PANEL.STYLE == key:
                 return self.createDebugStyleDropDown(blockID, key, *self.getCollectionIndex(value, DEBUG_PANEL.STYLES))
             elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
-                return self.createSixthSenseDropDown(blockID, key, *self.getCollectionIndex(value, SIXTH_SENSE.ICONS))
+                return self.createSixthSenseDropDown(blockID, key,
+                                                     *self.getCollectionIndex(value, self.loader.sixth_sense_list))
         if val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
@@ -210,12 +212,12 @@ class SettingsInterface(CreateElement):
 
     def __init__(self, settingsLoader, version, g_modsListApi, vxSettingsApi, vxSettingsApiEvents):
         self.modsListApi, self.vxSettingsApi, self.apiEvents = g_modsListApi, vxSettingsApi, vxSettingsApiEvents
-        super(SettingsInterface, self).__init__()
-        self.loader = settingsLoader
+        super(SettingsInterface, self).__init__(settingsLoader)
+        # self.loader = settingsLoader
         self.inited = set()
-        self.currentConfigID = self.newConfigID = self.loader.configsList.index(self.loader.configName)
+        self.currentConfigID = self.newConfigID = settingsLoader.configsList.index(settingsLoader.configName)
         self.newConfigLoadingInProcess = False
-        self.loader.settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
+        settingsLoader.settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         self.appLoader.onGUISpaceEntered += self.addToAPI
@@ -316,7 +318,7 @@ class SettingsInterface(CreateElement):
                 elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, basestring):
                     value = DEBUG_PANEL.STYLES[value]
                 elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, basestring):
-                    value = SIXTH_SENSE.ICONS[value]
+                    value = self.loader.sixth_sense_list[value]
                 elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and isinstance(value, basestring):
                     value = value.strip().split(',')
                     try:
@@ -339,7 +341,7 @@ class SettingsInterface(CreateElement):
                 self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
             if IS_LESTA:
                 values = (MAIN.AUTO_CLAIM_CLAN_REWARD, MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
-                          MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET)
+                          MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET, MAIN.CREW_TRAINING)
         elif blockID == STATISTICS.NAME and STATISTICS_REGION is None:
             values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][STATISTICS.STATISTIC_ENABLED] + (
                 STATISTICS.STATISTIC_ENABLED,)
