@@ -7,8 +7,17 @@ class DebugPanel(DebugPanelMeta, IDebugPanel):
     def __init__(self):
         super(DebugPanel, self).__init__()
 
-    def updateDebugInfo(self, ping, fps, isLaggingNow, fpsReplay=-1):
+    def updateDebugInfo(self, ping, fps, isLaggingNow, fpsReplay):
         self.as_updateS(ping, fps, isLaggingNow)
 
-    def updateReplayDebugInfo(self, ping, fps, isLaggingNow, fpsReplay=-1):
+
+class DebugPanelLesta(DebugPanelMeta):
+
+    def __init__(self):
+        super(DebugPanelLesta, self).__init__()
+
+    def updateDebugInfo(self, ping, fps, isLaggingNow):
+        self.as_updateS(ping, fps, isLaggingNow)
+
+    def updateReplayDebugInfo(self, ping, fps, isLaggingNow, fpsReplay):
         self.as_updateS(ping, fps, isLaggingNow)

@@ -1,13 +1,11 @@
 from collections import namedtuple
 
 import Keys
-from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CLOCK, COLORS,
-                                  DAMAGE_LOG, DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, DISTANCE, EFFECTS,
-                                  EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP,
-                                  PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, TEAM_BASES,
-                                  VEHICLE_TYPES_COLORS)
+from armagomen._constants import (ALIAS_TO_CONFIG_NAME, ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CLOCK, COLORS, DAMAGE_LOG,
+                                  DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, DISTANCE, EFFECTS, EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HP_BARS,
+                                  IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC,
+                                  TEAM_BASES, VEHICLE_TYPES_COLORS)
 from armagomen.battle_observer.settings.loader import SettingsLoader
-from constants import ATTACK_REASON, ATTACK_REASONS
 from Event import SafeEvent
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -239,17 +237,9 @@ class UserSettings(object):
                 DAMAGE_LOG.GOLD: COLORS.GOLD
             },
             DAMAGE_LOG.HOT_KEY: [[Keys.KEY_LALT]],
-            DAMAGE_LOG.ATTACK_REASON: {
-                ATTACK_REASON.SHOT: "<img src='{}/efficiency/damage.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
-                ATTACK_REASON.FIRE: "<img src='{}/efficiency/fire.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
-                ATTACK_REASON.RAM: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
-                ATTACK_REASON.WORLD_COLLISION: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
-            },
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
-        additional = {reason: "<img src='{}/efficiency/module.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS) for reason
-                      in ATTACK_REASONS if reason not in self.log_extended[DAMAGE_LOG.ATTACK_REASON]}
-        self.log_extended[DAMAGE_LOG.ATTACK_REASON].update(additional)
+
         _logs = namedtuple('Logs', ('log_total', 'log_extended'))
         self.damage_log = _logs(self.log_total, self.log_extended)
         self.hp_bars = {
@@ -346,6 +336,9 @@ class UserSettings(object):
             STATISTICS.ICON_ENABLED: False,
             STATISTICS.ICON_BLACKOUT: -1.25,
         }
+
+    def getSettingDictByAlias(self, name):
+        return getattr(self, ALIAS_TO_CONFIG_NAME.get(name, GLOBAL.EMPTY_LINE), None)
 
 
 user_settings = UserSettings()

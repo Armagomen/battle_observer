@@ -106,8 +106,7 @@ class WG_Logs_Fix(object):
             self.updatePositions(config)
 
     def updatePositions(self, config):
-        DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog, \
-            DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog = \
+        DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog, DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog = \
             reversed(self.BASE_WG_LOGS) if config[GLOBAL.ENABLED] and config[DAMAGE_LOG.WG_POS] else self.BASE_WG_LOGS
 
     @staticmethod

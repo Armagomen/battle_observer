@@ -77,7 +77,7 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             if value.get('isObserved', False):
-                if self.isComp7Battle:
+                if self.isComp7Battle():
                     if value.get("detectionType", 0) == self.__radar:
                         time = 2
                     else:

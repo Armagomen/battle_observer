@@ -5,9 +5,9 @@ from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
 from helpers import dependency
 from skeletons.gui.shared import IItemsCache
 
-EfficiencyAVGData = namedtuple("EfficiencyAVGData", (
-    "damage", "assist", "stun", "blocked", "marksOnGunValue", "marksOnGunIcon", "name", "marksAvailable", "winRate",
-    "battles"))
+PARAMS = ("tankAvgDamage", "tankAvgAssist", "tankAvgStun", "tankAvgBlocked", "marksOnGunValue", "marksOnGunIcon", "name", "marksAvailable",
+          "winRate", "battles")
+EfficiencyAVGData = namedtuple("EfficiencyAVGData", PARAMS)
 
 
 class CurrentVehicleCachedData(object):
@@ -40,7 +40,7 @@ class CurrentVehicleCachedData(object):
             int(random.getAvgDamageAssistedStun() or 0),
             int(blocked) if blocked > 99 else round(blocked, 2),
             round(marks.getDamageRating(), 2),
-            "<img src='img://gui/{}' width='20' height='18' vspace='-8'>".format(marks.getIcons()['95x85'][3:]),
+            "<img src='img://gui/{}' width='20' height='18' vspace='-8'>".format(marks.getIcons()[marks.IT_95X85][3:]),
             name, level > 4, self.getWinsEfficiency(random),
             int(random.getBattlesCount())
         )

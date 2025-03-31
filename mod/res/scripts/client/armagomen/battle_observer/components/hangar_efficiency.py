@@ -38,13 +38,13 @@ def getAvgData():
     data = cachedVehicleData.efficiencyAvgData
     text = []
     if _settings[AVG_EFFICIENCY_HANGAR.DAMAGE]:
-        text.append("{damageIcon}{damage}")
+        text.append("{damageIcon}{tankAvgDamage}")
     if _settings[AVG_EFFICIENCY_HANGAR.ASSIST]:
-        text.append("{assistIcon}{assist}")
+        text.append("{assistIcon}{tankAvgAssist}")
     if _settings[AVG_EFFICIENCY_HANGAR.BLOCKED]:
-        text.append("{blockedIcon}{blocked}")
-    if _settings[AVG_EFFICIENCY_HANGAR.STUN] and data.stun:
-        text.append("{stunIcon}{stun}")
+        text.append("{blockedIcon}{tankAvgBlocked}")
+    if _settings[AVG_EFFICIENCY_HANGAR.STUN] and data.tankAvgStun:
+        text.append("{stunIcon}{tankAvgStun}")
     if _settings[AVG_EFFICIENCY_HANGAR.BATTLES]:
         text.append("{battlesIcon}{battles}")
     if _settings[AVG_EFFICIENCY_HANGAR.WIN_RATE]:

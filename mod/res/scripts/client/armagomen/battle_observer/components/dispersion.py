@@ -19,11 +19,7 @@ SERVER = gun_marker_ctrl._MARKER_TYPE.SERVER
 DUAL_ACC = gun_marker_ctrl._MARKER_TYPE.DUAL_ACC
 EMPTY = gun_marker_ctrl._MARKER_TYPE.UNDEFINED
 
-DEV_FACTORIES_COLLECTION = (
-    gm_factory._DevControlMarkersFactory,
-    gm_factory._OptionalMarkersFactory,
-    gm_factory._EquipmentMarkersFactory
-)
+DEV_FACTORIES_COLLECTION = (gm_factory._DevControlMarkersFactory, gm_factory._OptionalMarkersFactory, gm_factory._EquipmentMarkersFactory)
 LINKAGES = {
     _CONSTANTS.DEBUG_SPG_GUN_MARKER_NAME: _CONSTANTS.GUN_MARKER_SPG_LINKAGE,
     _CONSTANTS.DEBUG_ARCADE_GUN_MARKER_NAME: _CONSTANTS.GUN_MARKER_LINKAGE,
@@ -101,6 +97,7 @@ class DispersionCircle(object):
 
     def __init__(self):
         user_settings.onModSettingsChanged += self.onModSettingsChanged
+        self.enabled = False
 
     def addServerCrossOverrides(self):
         overrideMethod(gm_factory, "createComponents")(self.createOverrideComponents)
@@ -109,10 +106,7 @@ class DispersionCircle(object):
         overrideMethod(gun_marker_ctrl, "useClientGunMarker")(self.useGunMarker)
         overrideMethod(gun_marker_ctrl, "useServerGunMarker")(self.useGunMarker)
         overrideMethod(VehicleGunRotator, "applySettings")(self.onPass)
-        if IS_LESTA:
-            overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPositionLesta)
-        else:
-            overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPositionWG)
+        overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPositionLesta if IS_LESTA else self.setShotPositionWG)
         overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onPass)
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
 
@@ -124,10 +118,7 @@ class DispersionCircle(object):
         cancelOverride(gun_marker_ctrl, "useClientGunMarker", "useGunMarker")
         cancelOverride(gun_marker_ctrl, "useServerGunMarker", "useGunMarker")
         cancelOverride(VehicleGunRotator, "applySettings", "onPass")
-        if IS_LESTA:
-            cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPositionLesta")
-        else:
-            cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPositionWG")
+        cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPositionLesta" if IS_LESTA else "setShotPositionWG")
         cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged", "onPass")
         cancelOverride(CrosshairPanelContainer, "setGunMarkerColor", "setGunMarkerColor")
 
@@ -173,14 +164,16 @@ class DispersionCircle(object):
         if blockID == DISPERSION.NAME:
             replace = config[GLOBAL.ENABLED] and config[DISPERSION.REPLACE]
             server = config[GLOBAL.ENABLED] and config[DISPERSION.SERVER]
-            if replace or server:
+            if (replace or server) and not self.enabled:
+                self.enabled = True
                 if IS_LESTA:
                     overrideMethod(gun_marker_ctrl, "createDefaultGunMarker")(self.createDefaultGunMarker)
                     overrideMethod(gun_marker_ctrl, "createStrategicGunMarker")(self.createStrategicGunMarker)
                     overrideMethod(gun_marker_ctrl, "createAssaultSpgGunMarker")(self.createStrategicGunMarker)
                 else:
                     overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker_WG)
-            else:
+            elif not replace and not server and self.enabled:
+                self.enabled = False
                 if IS_LESTA:
                     cancelOverride(gun_marker_ctrl, "createDefaultGunMarker", "createDefaultGunMarker")
                     cancelOverride(gun_marker_ctrl, "createStrategicGunMarker", "createStrategicGunMarker")

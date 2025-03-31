@@ -1,5 +1,5 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen._constants import ALIAS_TO_CONFIG_NAME, GLOBAL, VEHICLE_TYPES_COLORS
+from armagomen._constants import VEHICLE_TYPES_COLORS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.logging import logDebug, logInfo
 from constants import ARENA_BONUS_TYPE
@@ -19,8 +19,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
-        settings_name = ALIAS_TO_CONFIG_NAME.get(alias, GLOBAL.EMPTY_LINE)
-        self.settings = getattr(user_settings, settings_name, user_settings)
+        self.settings = user_settings.getSettingDictByAlias(alias)
 
     @property
     def _arenaDP(self):
@@ -30,7 +29,6 @@ class BaseModMeta(BaseDAAPIComponent):
     def _arenaVisitor(self):
         return self.sessionProvider.arenaVisitor
 
-    @property
     def isComp7Battle(self):
         return self._arenaVisitor.getArenaBonusType() == ARENA_BONUS_TYPE.COMP7
 
@@ -61,7 +59,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def doLog(self, *args):
         for arg in args:
-            logInfo("{}:{} - {}", self.getAlias(), arg, dir(arg))
+            logInfo("{}: {}", self.getAlias(), arg)
 
     def isColorBlind(self):
         return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
@@ -74,7 +72,6 @@ class BaseModMeta(BaseDAAPIComponent):
         super(BaseModMeta, self)._dispose()
         logDebug("battle module '{}' destroyed", self.getAlias())
 
-    @property
     def isPlayerVehicle(self):
         vehicle = self.sessionProvider.shared.vehicleState.getControllingVehicle()
         if vehicle is not None:

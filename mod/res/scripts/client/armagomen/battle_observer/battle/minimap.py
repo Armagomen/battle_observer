@@ -14,7 +14,7 @@ class MinimapZoomPlugin(BaseModMeta):
     def onKeyPressed(self, isKeyDown):
         """hot key event"""
         if self._isDAAPIInited():
-            if self.isComp7Battle and self._arenaVisitor.getArenaPeriod() != ARENA_PERIOD.BATTLE:
+            if self.isComp7Battle() and self._arenaVisitor.getArenaPeriod() != ARENA_PERIOD.BATTLE:
                 return
             self.flashObject.minimapCentered(isKeyDown)
             avatar_getter.setForcedGuiControlMode(isKeyDown, enableAiming=False)

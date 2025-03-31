@@ -1,12 +1,12 @@
 from collections import defaultdict, namedtuple
 
-from armagomen._constants import COLORS, DAMAGE_LOG, GLOBAL, IMAGE_DIR
+from armagomen._constants import COLORS, DAMAGE_LOG, EX_LOGS_ICONS, GLOBAL, IMAGE_DIR
 from armagomen.battle_observer.components.controllers import cachedVehicleData
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.utils.common import getPercent, percentToRGB
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug
-from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
+from constants import ATTACK_REASON, ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
@@ -30,6 +30,14 @@ _EVENT_TO_TOP_LOG_MACROS = {
     FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_KILL_ENEMY: ("tankAvgAssist", "tankAssistAvgColor", "assistDamage"),
     FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY: ("tankAvgStun", "tankStunAvgColor", "stun"),
     FEEDBACK_EVENT_ID.PLAYER_SPOTTED_ENEMY: (None, None, "spottedTanks")
+}
+
+DEFAULT_REASON = "<img src='{}/efficiency/module.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
+A_REASONS = {
+    ATTACK_REASON.SHOT: "<img src='{}/efficiency/damage.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+    ATTACK_REASON.FIRE: "<img src='{}/efficiency/fire.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+    ATTACK_REASON.RAM: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+    ATTACK_REASON.WORLD_COLLISION: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
 }
 
 LogData = namedtuple('LogData', ('kills', 'id_list', 'vehicles', 'log_id'))
@@ -76,7 +84,7 @@ class DamageLog(DamageLogsMeta):
             position = self.settings.log_extended[GLOBAL.SETTINGS]
             top_enabled = self.settings.log_extended[DAMAGE_LOG.D_DONE_ENABLED]
             bottom_enabled = self.settings.log_extended[DAMAGE_LOG.D_RECEIVED_ENABLED]
-            self.as_createExtendedLogsS(position, top_enabled, bottom_enabled, self.isComp7Battle)
+            self.as_createExtendedLogsS(position, top_enabled, bottom_enabled)
             g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings.log_extended[DAMAGE_LOG.HOT_KEY])
             self._damage_done = LogData(set(), list(), dict(), DAMAGE_LOG.D_DONE)
             self._damage_received = LogData(set(), list(), dict(), DAMAGE_LOG.D_RECEIVED)
@@ -121,10 +129,10 @@ class DamageLog(DamageLogsMeta):
                             tankAssistAvgColor=COLORS.WHITE,
                             tankBlockedAvgColor=COLORS.WHITE,
                             tankStunAvgColor=COLORS.WHITE,
-                            tankAvgDamage=avg_data.damage,
-                            tankAvgAssist=avg_data.assist,
-                            tankAvgStun=avg_data.stun,
-                            tankAvgBlocked=avg_data.blocked)
+                            tankAvgDamage=avg_data.tankAvgDamage,
+                            tankAvgAssist=avg_data.tankAvgAssist,
+                            tankAvgStun=avg_data.tankAvgStun,
+                            tankAvgBlocked=avg_data.tankAvgBlocked)
         self.top_log_template = self.settings.log_total[DAMAGE_LOG.TOP_LOG_SEPARATE].join(template_list)
 
     def isExtendedLogEventEnabled(self, eventType):
@@ -186,7 +194,7 @@ class DamageLog(DamageLogsMeta):
 
     def __onPlayerFeedbackReceived(self, events):
         """Shared feedback player events"""
-        if self.isPlayerVehicle:
+        if self.isPlayerVehicle():
             for event in events:
                 self.parseEvent(event)
 
@@ -244,14 +252,14 @@ class DamageLog(DamageLogsMeta):
         self.updateVehicleData(extra, gold, shell_name, vehicle, max_health, is_player)
         self.updateExtendedLog(log_data)
 
+
     def updateVehicleData(self, extra, gold, shell_name, vehicle, maxHealth, isPlayer):
         vehicle[DAMAGE_LOG.DAMAGE_LIST].append(extra.getDamage())
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.ALL_DAMAGES] = GLOBAL.COMMA_SEP.join(str(x) for x in vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.LAST_DAMAGE] = vehicle[DAMAGE_LOG.DAMAGE_LIST][GLOBAL.LAST]
-        vehicle[DAMAGE_LOG.ATTACK_REASON] = self.settings.log_extended[DAMAGE_LOG.ATTACK_REASON][
-            ATTACK_REASONS[extra.getAttackReasonID()]]
+        vehicle[DAMAGE_LOG.ATTACK_REASON] = A_REASONS.get(ATTACK_REASONS[extra.getAttackReasonID()], DEFAULT_REASON)
         vehicle[DAMAGE_LOG.SHELL_TYPE] = shell_name
         vehicle[DAMAGE_LOG.SHELL_COLOR] = self.settings.log_extended[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)

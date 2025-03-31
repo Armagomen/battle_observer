@@ -4,9 +4,13 @@ from math import floor, log
 
 from armagomen._constants import API_KEY, STATISTICS, STATISTICS_REGION
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
-from armagomen.utils.common import addCallback, cancelCallback, fetchURL
+from armagomen.utils.common import addCallback, cancelCallback, cancelOverride, fetchURL, overrideMethod
+from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
 from Event import SafeEvent
+from gui.Scaleform.daapi.view.battle.classic.players_panel import PlayersPanel
+from gui.Scaleform.daapi.view.battle.shared.stats_exchange import BattleStatisticsDataController
+from Keys import KEY_LALT, KEY_TAB
 from uilogging.core.core_constants import HTTP_OK_STATUS
 
 
@@ -25,6 +29,15 @@ class WGRAndIcons(BaseModMeta):
 
     def _populate(self):
         super(WGRAndIcons, self)._populate()
+        overrideMethod(BattleStatisticsDataController, "as_updatePlayerStatusS")(self.updateALL)
+        overrideMethod(BattleStatisticsDataController, "as_updateVehiclesInfoS")(self.updateALL)
+        overrideMethod(BattleStatisticsDataController, "as_updateVehicleStatusS")(self.updateALL)
+        overrideMethod(BattleStatisticsDataController, "as_updateInvitationsStatusesS")(self.updateALL)
+        overrideMethod(PlayersPanel, "as_setPanelHPBarVisibilityStateS")(self.updateALL)
+        overrideMethod(PlayersPanel, "as_setPanelModeS")(self.updateALL)
+        overrideMethod(PlayersPanel, "as_setIsInteractiveS")(self.updateALL)
+        g_keysListener.registerComponent(self.updateAllOnKey, keyList=[KEY_LALT])
+        g_keysListener.registerComponent(self.updateFullStats, keyList=[KEY_TAB])
         if STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
             self.data_loader = StatisticsDataLoader(self._arenaDP)
             self.data_loader.onDataReceived += self.updateAllItems
@@ -34,10 +47,14 @@ class WGRAndIcons(BaseModMeta):
                 arena.onVehicleAdded += self.data_loader.updateList
                 arena.onVehicleUpdated += self.data_loader.updateList
 
-    def updateFlash(self):
-        return self.flashObject.update_wgr_data(self.itemsData) if self._isDAAPIInited() and self.itemsData else None
-
     def _dispose(self):
+        cancelOverride(BattleStatisticsDataController, "as_updatePlayerStatusS", "updateALL")
+        cancelOverride(BattleStatisticsDataController, "as_updateVehiclesInfoS", "updateALL")
+        cancelOverride(BattleStatisticsDataController, "as_updateVehicleStatusS", "updateALL")
+        cancelOverride(BattleStatisticsDataController, "as_updateInvitationsStatusesS", "updateALL")
+        cancelOverride(PlayersPanel, "as_setPanelHPBarVisibilityStateS", "updateALL")
+        cancelOverride(PlayersPanel, "as_setPanelModeS", "updateALL")
+        cancelOverride(PlayersPanel, "as_setIsInteractiveS", "updateALL")
         if self.data_loader is not None:
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None and arena.isFogOfWarEnabled:
@@ -64,7 +81,21 @@ class WGRAndIcons(BaseModMeta):
             full, cut = self.getPattern(veh_info.team != player_team, item_data)
             text_color = item_data[self.COLOR_WGR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
-        self.updateFlash()
+        if self._isDAAPIInited() and self.itemsData:
+            self.flashObject.update_wgr_data(self.itemsData)
+
+    def updateFullStats(self, key):
+        if self._isDAAPIInited():
+            addCallback(0.05, self.flashObject.updateFullStatsOnkey)
+
+    def updateAllOnKey(self, key):
+        if self._isDAAPIInited():
+            addCallback(0.05, self.flashObject.updateALL)
+
+    def updateALL(self, base, *args):
+        base(*args)
+        if self._isDAAPIInited():
+            addCallback(0.01, self.flashObject.updateALL)
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

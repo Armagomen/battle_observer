@@ -11,8 +11,8 @@ from gui.battle_control import avatar_getter
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from gui.shared.gui_items import KPI
+from gui.shared.utils.skill_presenter_helper import getSkillDescrArgs
 from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
-from items.tankmen import getSkillsConfig
 from Vehicle import Vehicle
 
 DEFAULT_RANDOMIZATION = MinMax(0.75, 1.25)
@@ -171,7 +171,8 @@ class Randomizer(object):
     GUNNER_ARMORER = 'gunner_armorer'
     LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
     RND_MIN_MAX_DEBUG = 'PIERCING_POWER_RANDOMIZATION: {}, vehicle: {}'
-    RND_SKILL_DIFF_DEBUG = "PIERCING_POWER_RANDOMIZATION: skill_name: {} skill_lvl: {} level_increase: {} percent: {}"
+    RND_SKILL_DIFF_DEBUG = 'PIERCING_POWER_RANDOMIZATION: skill_name: {} skill_lvl: {} level_increase: {} percent: {}'
+    RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'PIERCING_POWER_RANDOMIZATION: skill_name {}, percent {}'
 
     PIERCING_DISTRIBUTION_BOUND = {}
 
@@ -179,12 +180,12 @@ class Randomizer(object):
     def getBaseSkillPercent(cls, skill_name):
         percent = cls.PIERCING_DISTRIBUTION_BOUND.get(skill_name, 0)
         if not percent:
-            skill = getSkillsConfig().getSkill(skill_name)
-            if skill.uiSettings:
-                for name, descr in skill.uiSettings.descrArgs:
-                    if name == KPI.Name.DAMAGE_AND_PIERCING_DISTRIBUTION_LOWER_BOUND:
-                        percent = cls.PIERCING_DISTRIBUTION_BOUND[skill_name] = round(descr.value, 4)
-                    break
+            descrArgs = getSkillDescrArgs(skill_name)
+            for name, descr in descrArgs:
+                if name == KPI.Name.DAMAGE_AND_PIERCING_DISTRIBUTION_LOWER_BOUND:
+                    percent = cls.PIERCING_DISTRIBUTION_BOUND[skill_name] = round(descr.value, 4)
+                    logDebug(cls.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG, skill_name, percent)
+                break
         return percent
 
     @classmethod
