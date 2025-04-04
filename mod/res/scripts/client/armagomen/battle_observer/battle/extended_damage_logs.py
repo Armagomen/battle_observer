@@ -44,7 +44,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         self._damage_received = LogData(set(), list(), dict(), DAMAGE_LOG.D_RECEIVED)
         self._is_key_down = GLOBAL.ZERO
         self._playerShell = (DAMAGE_LOG.NOT_SHELL, False)
-        self.attack_reasons = {}
+        self.attack_reasons = defaultdict(lambda: DEFAULT_REASON)
         self.last_shell = defaultdict(lambda: (DAMAGE_LOG.NOT_SHELL, False))
 
     def _populate(self):
@@ -176,7 +176,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.ALL_DAMAGES] = GLOBAL.COMMA_SEP.join(str(x) for x in vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.LAST_DAMAGE] = vehicle[DAMAGE_LOG.DAMAGE_LIST][GLOBAL.LAST]
-        vehicle[DAMAGE_LOG.ATTACK_REASON] = self.attack_reasons.get(ATTACK_REASONS[extra.getAttackReasonID()], DEFAULT_REASON)
+        vehicle[DAMAGE_LOG.ATTACK_REASON] = self.attack_reasons[ATTACK_REASONS[extra.getAttackReasonID()]]
         vehicle[DAMAGE_LOG.SHELL_TYPE] = shell_name
         vehicle[DAMAGE_LOG.SHELL_COLOR] = self.settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]
         percent = getPercent(vehicle[DAMAGE_LOG.TOTAL_DAMAGE], maxHealth)

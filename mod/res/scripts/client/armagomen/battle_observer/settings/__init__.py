@@ -244,11 +244,9 @@ class UserSettings(object):
                     "</font></textformat>"
                 ],
                 [
-                    "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
+                    "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>",
                     "<font size='12'>%(shots)d:</font><tab>",
-                    "<font color='%(percentDamageAvgColor)s'>%(lastDamage)s</font><tab>",
-                    "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
-                    "%(attackReason)s<tab>",
+                    "%(allDamages)s",
                     "%(classIcon)s%(userName).12s %(killedIcon)s",
                     "</font></textformat>"
                 ]
