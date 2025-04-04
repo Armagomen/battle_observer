@@ -1,11 +1,10 @@
-from collections import namedtuple
-
 import Keys
 from armagomen._constants import (ALIAS_TO_CONFIG_NAME, ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CLOCK, COLORS, DAMAGE_LOG,
                                   DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, DISTANCE, EFFECTS, EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HP_BARS,
                                   IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC,
                                   TEAM_BASES, VEHICLE_TYPES_COLORS)
 from armagomen.battle_observer.settings.loader import SettingsLoader
+from constants import ATTACK_REASON
 from Event import SafeEvent
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -45,6 +44,7 @@ class UserSettings(object):
             MAIN.USE_KEY_PAIRS: True,
             MAIN.HIDE_EVENT_BANNER: False,
         }
+
         self.avg_efficiency_in_hangar = {
             GLOBAL.ENABLED: False,
             AVG_EFFICIENCY_HANGAR.ASSIST: True,
@@ -55,6 +55,7 @@ class UserSettings(object):
             AVG_EFFICIENCY_HANGAR.STUN: True,
             AVG_EFFICIENCY_HANGAR.WIN_RATE: True,
         }
+
         self.clock = {
             GLOBAL.ENABLED: False,
             CLOCK.IN_LOBBY: {
@@ -70,6 +71,7 @@ class UserSettings(object):
                 GLOBAL.Y: GLOBAL.ZERO
             }
         }
+
         self.sixth_sense = {
             GLOBAL.ENABLED: False,
             SIXTH_SENSE.PLAY_TICK_SOUND: True,
@@ -78,12 +80,14 @@ class UserSettings(object):
             SIXTH_SENSE.TIME: 9,
             SIXTH_SENSE.USER_ICON: "mods/configs/mod_battle_observer/__icon__path__200x200.png"
         }
+
         self.dispersion_circle = {
             GLOBAL.ENABLED: False,
             DISPERSION.SERVER: False,
             DISPERSION.REPLACE: False,
             DISPERSION.SCALE: 0.7,
         }
+
         self.dispersion_timer = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: 110,
@@ -93,6 +97,7 @@ class UserSettings(object):
             DISPERSION_TIMER.DONE_COLOR: "#a6ffa6",
             DISPERSION_TIMER.TEMPLATE: "<font color='%(color)s'>%(timer).1fs. - %(percent)d%%</font>"
         }
+
         self.debug_panel = {
             GLOBAL.ENABLED: False,
             DEBUG_PANEL.STYLE: DEBUG_PANEL.STYLES.minimal,
@@ -100,18 +105,21 @@ class UserSettings(object):
             DEBUG_PANEL.PING_COLOR: "#B3FE95",
             DEBUG_PANEL.LAG_COLOR: "#FD9675"
         }
+
         self.battle_timer = {
             GLOBAL.ENABLED: False,
             BATTLE_TIMER.TEMPLATE: "<font color='%(timerColor)s'>%(timer)s</font>",
             BATTLE_TIMER.COLOR: COLORS.S_YELLOW,
             BATTLE_TIMER.END_COLOR: COLORS.RED
         }
+
         self.effects = {
             EFFECTS.NO_FLASH_BANG: False,
             EFFECTS.NO_SHOCK_WAVE: False,
             EFFECTS.NO_BINOCULARS: False,
             EFFECTS.NO_SNIPER_DYNAMIC: False,
         }
+
         self.zoom = {
             GLOBAL.ENABLED: False,
             SNIPER.DISABLE_SNIPER: False,
@@ -126,6 +134,7 @@ class UserSettings(object):
                 SNIPER.STEPS: SNIPER.DEFAULT_STEPS
             }
         }
+
         self.arcade_camera = {
             GLOBAL.ENABLED: False,
             ARCADE.MIN: 2.0,
@@ -133,12 +142,14 @@ class UserSettings(object):
             ARCADE.START_DEAD_DIST: 20.0,
             ARCADE.SCROLL_SENSITIVITY: 4.0,
         }
+
         self.strategic_camera = {
             GLOBAL.ENABLED: False,
             STRATEGIC.MIN: 40.0,
             STRATEGIC.MAX: 150.0,
             STRATEGIC.SCROLL_SENSITIVITY: 10.0,
         }
+
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 30},
@@ -146,6 +157,7 @@ class UserSettings(object):
             ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE,
             ARMOR_CALC.ON_ALLY: False,
         }
+
         self.colors = {
             COLORS.GLOBAL: {
                 COLORS.ALLY_MAME: COLORS.GREEN,
@@ -169,6 +181,7 @@ class UserSettings(object):
                 VEHICLE_TYPES_COLORS.UNKNOWN: COLORS.WHITE
             }
         }
+
         self.wg_logs = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.WG_POS: False,
@@ -176,6 +189,7 @@ class UserSettings(object):
             DAMAGE_LOG.WG_BLOCKED: False,
             DAMAGE_LOG.WG_ASSIST: False,
         }
+
         self.log_total = {
             GLOBAL.ENABLED: False,
             GLOBAL.SETTINGS: {
@@ -201,6 +215,7 @@ class UserSettings(object):
             DAMAGE_LOG.TOP_LOG_SEPARATE: "  ",
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
+
         self.log_extended = {
             GLOBAL.ENABLED: False,
             DAMAGE_LOG.REVERSE: False,
@@ -210,6 +225,12 @@ class UserSettings(object):
                 GLOBAL.X: 0,
                 GLOBAL.Y: 0,
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left
+            },
+            DAMAGE_LOG.ATTACK_REASON: {
+                ATTACK_REASON.SHOT: "<img src='{}/efficiency/damage.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+                ATTACK_REASON.FIRE: "<img src='{}/efficiency/fire.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+                ATTACK_REASON.RAM: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
+                ATTACK_REASON.WORLD_COLLISION: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
             },
             DAMAGE_LOG.KILLED_ICON: "<img src='{}/efficiency/destruction.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
             DAMAGE_LOG.TEMPLATES: [
@@ -240,13 +261,12 @@ class UserSettings(object):
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
         }
 
-        _logs = namedtuple('Logs', ('log_total', 'log_extended'))
-        self.damage_log = _logs(self.log_total, self.log_extended)
         self.hp_bars = {
             GLOBAL.ENABLED: False,
             HP_BARS.STYLE: HP_BARS.STYLES.league,
             HP_BARS.ALIVE: False
         }
+
         self.team_bases_panel = {
             GLOBAL.ENABLED: False,
             GLOBAL.Y: 60,
@@ -262,12 +282,14 @@ class UserSettings(object):
                 GLOBAL.Y: GLOBAL.ZERO
             }
         }
+
         self.main_gun = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: 260,
             GLOBAL.Y: GLOBAL.ZERO,
             "progress_bar": False
         }
+
         self.players_panels = {
             GLOBAL.ENABLED: False,
             PANELS.SPOTTED_FIX: True,
@@ -281,6 +303,7 @@ class UserSettings(object):
             PANELS.BAR_HOT_KEY: [[Keys.KEY_LALT]],
             PANELS.HP_TEMPLATE: "%(health)s"
         }
+
         self.flight_time = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: -110,
@@ -289,6 +312,7 @@ class UserSettings(object):
             FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
             FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1fs. - %(distance).1f m.</font>"
         }
+
         self.distance_to_enemy = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: GLOBAL.ZERO,
@@ -296,12 +320,14 @@ class UserSettings(object):
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance).1fm. to %(name)s.</font>"
         }
+
         self.own_health = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: GLOBAL.ZERO,
             GLOBAL.Y: 350,
             GLOBAL.AVG_COLOR: {"saturation": 0.7, "brightness": 0.9}
         }
+
         self.minimap = {
             GLOBAL.ENABLED: False,
             MINIMAP.DEATH_PERMANENT: False,
@@ -311,10 +337,12 @@ class UserSettings(object):
             MINIMAP.ZOOM: False,
             MINIMAP.ZOOM_KEY: [[29]]
         }
+
         self.service_channel_filter = {
             GLOBAL.ENABLED: False,
             SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
         }
+
         self.statistics = {
             GLOBAL.ENABLED: False,
             STATISTICS.STATISTIC_ENABLED: False,
