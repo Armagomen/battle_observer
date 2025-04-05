@@ -58,7 +58,7 @@ package net.armagomen.battle_observer.battle.components
 			this.panels.listLeft.addEventListener(MouseEvent.ROLL_OUT, this.onChange, false, 0, true);
 			this.panels.listRight.addEventListener(MouseEvent.ROLL_OVER, this.onChange, false, 0, true);
 			this.panels.listRight.addEventListener(MouseEvent.ROLL_OUT, this.onChange, false, 0, true);
-			this.updateALL();
+			setTimeout(this.updateALL, 100);
 		}
 		
 		override protected function onBeforeDispose():void

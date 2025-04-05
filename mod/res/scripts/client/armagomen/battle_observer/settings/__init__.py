@@ -229,8 +229,7 @@ class UserSettings(object):
             DAMAGE_LOG.ATTACK_REASON: {
                 ATTACK_REASON.SHOT: "<img src='{}/efficiency/damage.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
                 ATTACK_REASON.FIRE: "<img src='{}/efficiency/fire.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
-                ATTACK_REASON.RAM: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
-                ATTACK_REASON.WORLD_COLLISION: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
+                ATTACK_REASON.RAM: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
             },
             DAMAGE_LOG.KILLED_ICON: "<img src='{}/efficiency/destruction.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
             DAMAGE_LOG.TEMPLATES: [
