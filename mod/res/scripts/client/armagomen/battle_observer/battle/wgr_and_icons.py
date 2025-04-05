@@ -42,8 +42,10 @@ class WGRAndIcons(BaseModMeta):
             self.data_loader = StatisticsDataLoader(self._arenaDP)
             self.data_loader.onDataReceived += self.updateAllItems
             self.data_loader.getStatisticsDataFromServer()
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None and arena.isFogOfWarEnabled:
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onPeriodChange += self.updateALL
+            if self.data_loader is not None and arena.isFogOfWarEnabled:
                 arena.onVehicleAdded += self.data_loader.updateList
                 arena.onVehicleUpdated += self.data_loader.updateList
 
@@ -55,12 +57,15 @@ class WGRAndIcons(BaseModMeta):
         cancelOverride(PlayersPanel, "as_setPanelHPBarVisibilityStateS", "updateALL")
         cancelOverride(PlayersPanel, "as_setPanelModeS", "updateALL")
         cancelOverride(PlayersPanel, "as_setIsInteractiveS", "updateALL")
-        if self.data_loader is not None:
-            arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None and arena.isFogOfWarEnabled:
-                arena.onVehicleAdded -= self.data_loader.updateList
-                arena.onVehicleUpdated -= self.data_loader.updateList
-            self.data_loader.onDataReceived -= self.updateAllItems
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onPeriodChange -= self.updateALL
+            if self.data_loader is not None:
+                self.data_loader.onDataReceived -= self.updateAllItems
+                if arena.isFogOfWarEnabled:
+                    arena.onVehicleAdded -= self.data_loader.updateList
+                    arena.onVehicleUpdated -= self.data_loader.updateList
+        self.data_loader = None
         super(WGRAndIcons, self)._dispose()
 
     def getPattern(self, isEnemy, itemData):
