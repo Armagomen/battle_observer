@@ -109,7 +109,7 @@ package net.armagomen.battle_observer.battle.components
 			super.onBeforeDispose();
 		}
 		
-		public function update_wgr_data(statsData:Object):void
+		public function as_update_wgr_data(statsData:Object):void
 		{
 			for (var key:String in statsData)
 			{
@@ -119,25 +119,30 @@ package net.armagomen.battle_observer.battle.components
 			this.updateALL();
 		}
 		
-		public function updateALL():void
+		public function as_updateAll(timeout:Number):void
+		{
+			setTimeout(this.updateALL, timeout);
+		}
+		
+		public function as_updateFullStatsOnkey(timeout:Number):void
+		{
+			setTimeout(this.updateFullStats, timeout);
+		}
+		
+		private function updateALL():void
 		{
 			if (this.panels)
 			{
 				this.updatePlayersPanel();
 			}
-			if (this.fullStats && this.fullStats.visible)
+			if (this.fullStats)
 			{
-				this.updateFullStatsOnkey();
+				this.updateFullStats();
 			}
 			if (this.battleLoading && this.battleLoading.visible && !this._isComp7Battle)
 			{
 				this.updateBattleloading();
 			}
-		}
-		
-		private function onCountChange(eve:Event):void
-		{
-			this.updateALL();
 		}
 		
 		private function setIconColors(colors:Object):void
@@ -158,79 +163,70 @@ package net.armagomen.battle_observer.battle.components
 		{
 			for each (var itemL:* in this.panels.listLeft._items)
 			{
-				if (itemL.vehicleData && itemL.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
-				{
-					this.updatePlayersPanelItem(itemL);
-				}
+				this.updatePlayersPanelItem(itemL);
 			}
 			for each (var itemR:* in this.panels.listRight._items)
 			{
-				if (itemR.vehicleData && itemR.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
-				{
-					this.updatePlayersPanelItem(itemR);
-				}
+				this.updatePlayersPanelItem(itemR);
 			}
 		}
 		
 		private function updatePlayersPanelItem(holder:*):void
 		{
-			var vehicleID:int = holder.vehicleData.vehicleID;
-			var listItem:*    = holder.getListItem();
-			if (this.iconsEnabled)
+			if (holder.vehicleData && holder.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
 			{
-				var tColor:ColorTransform = listItem.vehicleIcon.transform.colorTransform;
-				tColor.color = this.iconColors[holder.vehicleData.vehicleType];
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				listItem.vehicleIcon.transform.colorTransform = tColor;
-			}
-			
-			if (this.statisticsData[vehicleID])
-			{
-				if (this.statisticsData[vehicleID].vehicleTextColor)
+				var vehicleID:int = holder.vehicleData.vehicleID;
+				var listItem:*    = holder.getListItem();
+				if (this.iconsEnabled)
 				{
-					listItem.vehicleTF.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
-					listItem.vehicleTF.setTextFormat(this.format);
+					var tColor:ColorTransform = listItem.vehicleIcon.transform.colorTransform;
+					tColor.color = this.iconColors[holder.vehicleData.vehicleType];
+					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
-				if (this.statisticsData[vehicleID].fullName)
+				
+				if (this.statisticsData[vehicleID])
 				{
-					listItem.playerNameFullTF.htmlText = this.statisticsData[vehicleID].fullName;
-				}
-				if (this.statisticsData[vehicleID].cutName)
-				{
-					listItem.playerNameCutTF.htmlText = this.statisticsData[vehicleID].cutName;
-				}
-				if (!listItem._isAlive)
-				{
-					listItem.playerNameCutTF.alpha = DEAD_TEXT_ALPHA;
-					listItem.playerNameFullTF.alpha = DEAD_TEXT_ALPHA;
-					listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
+					if (this.statisticsData[vehicleID].vehicleTextColor)
+					{
+						listItem.vehicleTF.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
+						listItem.vehicleTF.setTextFormat(this.format);
+					}
+					if (this.statisticsData[vehicleID].fullName)
+					{
+						listItem.playerNameFullTF.htmlText = this.statisticsData[vehicleID].fullName;
+					}
+					if (this.statisticsData[vehicleID].cutName)
+					{
+						listItem.playerNameCutTF.htmlText = this.statisticsData[vehicleID].cutName;
+					}
+					if (!listItem._isAlive)
+					{
+						listItem.playerNameCutTF.alpha = DEAD_TEXT_ALPHA;
+						listItem.playerNameFullTF.alpha = DEAD_TEXT_ALPHA;
+						listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
+					}
 				}
 			}
 		}
 		
-		public function updateFullStatsOnkey():void
+		private function updateFullStats():void
 		{
 			var tableCtrl:* = this.fullStats.tableCtrl;
-			if (tableCtrl)
+			if (tableCtrl && this.fullStats.visible)
 			{
 				if (tableCtrl.allyRenderers)
 				{
 					for each (var ally:* in tableCtrl.allyRenderers)
 					{
-						if (ally.data && ally.data.vehicleType != BATTLEATLAS.UNKNOWN)
-						{
-							this.updateFullStatsItem(ally, false);
-						}
+						this.updateFullStatsItem(ally, false);
 					}
 				}
 				if (tableCtrl.enemyRenderers)
 				{
 					for each (var enemy:* in tableCtrl.enemyRenderers)
 					{
-						if (enemy.data && enemy.data.vehicleType != BATTLEATLAS.UNKNOWN)
-						{
-							this.updateFullStatsItem(enemy, true);
-						}
+						this.updateFullStatsItem(enemy, true);
 					}
 				}
 			}
@@ -238,29 +234,32 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function updateFullStatsItem(holder:*, isEnemy:Boolean):void
 		{
-			var vehicleID:int = holder.data.vehicleID;
-			if (this.iconsEnabled)
+			if (holder.data && holder.data.vehicleType != BATTLEATLAS.UNKNOWN)
 			{
-				var tColor:ColorTransform = holder.statsItem._vehicleIcon.transform.colorTransform;
-				tColor.color = this.iconColors[holder.data.vehicleType];
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
-			}
-			if (this.statisticsData[vehicleID])
-			{
-				if (this.statisticsData[vehicleID].fullName)
+				var vehicleID:int = holder.data.vehicleID;
+				if (this.iconsEnabled)
 				{
-					holder.statsItem._playerNameTF.autoSize = isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-					holder.statsItem._playerNameTF.htmlText = this.statisticsData[vehicleID].fullName;
+					var tColor:ColorTransform = holder.statsItem._vehicleIcon.transform.colorTransform;
+					tColor.color = this.iconColors[holder.data.vehicleType];
+					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+					holder.statsItem._vehicleIcon.transform.colorTransform = tColor;
 				}
-				if (this.statisticsData[vehicleID].vehicleTextColor)
+				if (this.statisticsData[vehicleID])
 				{
-					holder.statsItem._vehicleNameTF.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
-				}
-				if (!holder.data.isAlive())
-				{
-					holder.statsItem._playerNameTF.alpha = DEAD_TEXT_ALPHA;
-					holder.statsItem._vehicleNameTF.alpha = DEAD_TEXT_ALPHA;
+					if (this.statisticsData[vehicleID].fullName)
+					{
+						holder.statsItem._playerNameTF.autoSize = isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
+						holder.statsItem._playerNameTF.htmlText = this.statisticsData[vehicleID].fullName;
+					}
+					if (this.statisticsData[vehicleID].vehicleTextColor)
+					{
+						holder.statsItem._vehicleNameTF.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
+					}
+					if (!holder.data.isAlive())
+					{
+						holder.statsItem._playerNameTF.alpha = DEAD_TEXT_ALPHA;
+						holder.statsItem._vehicleNameTF.alpha = DEAD_TEXT_ALPHA;
+					}
 				}
 			}
 		}
@@ -274,20 +273,14 @@ package net.armagomen.battle_observer.battle.components
 				{
 					for each (var enemy:* in form._enemyRenderers)
 					{
-						if (enemy.model && enemy.model.vehicleType != BATTLEATLAS.UNKNOWN)
-						{
-							this.updateBattleloadingItem(enemy);
-						}
+						this.updateBattleloadingItem(enemy);
 					}
 				}
 				if (form._allyRenderers)
 				{
 					for each (var ally:* in form._allyRenderers)
 					{
-						if (ally.model && ally.model.vehicleType != BATTLEATLAS.UNKNOWN)
-						{
-							this.updateBattleloadingItem(ally);
-						}
+						this.updateBattleloadingItem(ally);
 					}
 				}
 			}
@@ -295,23 +288,26 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function updateBattleloadingItem(holder:*):void
 		{
-			var vehicleID:int = holder.model.vehicleID;
-			if (this.iconsEnabled)
+			if (holder.model && holder.model.vehicleType != BATTLEATLAS.UNKNOWN)
 			{
-				var tColor:ColorTransform = holder._vehicleIcon.transform.colorTransform;
-				tColor.color = this.iconColors[holder.model.vehicleType];
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				holder._vehicleIcon.transform.colorTransform = tColor;
-			}
-			if (this.statisticsData[vehicleID])
-			{
-				if (this.statisticsData[vehicleID].fullName)
+				var vehicleID:int = holder.model.vehicleID;
+				if (this.iconsEnabled)
 				{
-					holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
+					var tColor:ColorTransform = holder._vehicleIcon.transform.colorTransform;
+					tColor.color = this.iconColors[holder.model.vehicleType];
+					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+					holder._vehicleIcon.transform.colorTransform = tColor;
 				}
-				if (this.statisticsData[vehicleID].vehicleTextColor)
+				if (this.statisticsData[vehicleID])
 				{
-					holder._vehicleField.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
+					if (this.statisticsData[vehicleID].fullName)
+					{
+						holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
+					}
+					if (this.statisticsData[vehicleID].vehicleTextColor)
+					{
+						holder._vehicleField.textColor = Utils.colorConvert(this.statisticsData[vehicleID].vehicleTextColor);
+					}
 				}
 			}
 		}

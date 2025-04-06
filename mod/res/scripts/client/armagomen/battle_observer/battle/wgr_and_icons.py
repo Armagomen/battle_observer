@@ -3,7 +3,7 @@ from httplib import responses
 from math import floor, log
 
 from armagomen._constants import API_KEY, STATISTICS, STATISTICS_REGION
-from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
+from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIconsMeta
 from armagomen.utils.common import addCallback, cancelCallback, cancelOverride, fetchURL, overrideMethod
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
@@ -14,7 +14,7 @@ from Keys import KEY_LALT, KEY_TAB
 from uilogging.core.core_constants import HTTP_OK_STATUS
 
 
-class WGRAndIcons(BaseModMeta):
+class WGRAndIcons(WGRAndIconsMeta):
     COLOR_WGR = 'colorWGR'
     DEFAULT_COLOR = "#fafafa"
     DEFAULT_WIN_RATE = 0.0
@@ -57,14 +57,14 @@ class WGRAndIcons(BaseModMeta):
         cancelOverride(PlayersPanel, "as_setPanelHPBarVisibilityStateS", "updateALL")
         cancelOverride(PlayersPanel, "as_setPanelModeS", "updateALL")
         cancelOverride(PlayersPanel, "as_setIsInteractiveS", "updateALL")
+        if self.data_loader is not None:
+            self.data_loader.onDataReceived -= self.updateAllItems
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onPeriodChange -= self.updateAllOnKey
-            if self.data_loader is not None:
-                self.data_loader.onDataReceived -= self.updateAllItems
-                if arena.isFogOfWarEnabled:
-                    arena.onVehicleAdded -= self.data_loader.updateList
-                    arena.onVehicleUpdated -= self.data_loader.updateList
+            if arena.isFogOfWarEnabled and self.data_loader is not None:
+                arena.onVehicleAdded -= self.data_loader.updateList
+                arena.onVehicleUpdated -= self.data_loader.updateList
         self.data_loader = None
         super(WGRAndIcons, self)._dispose()
 
@@ -86,21 +86,18 @@ class WGRAndIcons(BaseModMeta):
             full, cut = self.getPattern(veh_info.team != player_team, item_data)
             text_color = item_data[self.COLOR_WGR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
-        if self._isDAAPIInited() and self.itemsData:
-            self.flashObject.update_wgr_data(self.itemsData)
+        if self.itemsData:
+            self.as_update_wgr_data(self.itemsData)
 
     def updateFullStats(self, key):
-        if self._isDAAPIInited():
-            addCallback(0.05, self.flashObject.updateFullStatsOnkey)
+        self.as_updateFullStats(50)
 
     def updateAllOnKey(self, *args):
-        if self._isDAAPIInited():
-            addCallback(0.05, self.flashObject.updateALL)
+        self.as_updateAll(50)
 
     def updateALL(self, base, *args):
         base(*args)
-        if self._isDAAPIInited():
-            addCallback(0.015, self.flashObject.updateALL)
+        self.as_updateAll(20)
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

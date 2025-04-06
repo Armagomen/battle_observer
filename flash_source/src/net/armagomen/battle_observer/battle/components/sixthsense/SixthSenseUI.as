@@ -82,7 +82,7 @@
 		
 		private function updateImageScale():void
 		{
-			var afterScaleWH:Number = Math.min(180.0, Math.ceil(100.0 * (App.appHeight / 1080.0)));
+			var afterScaleWH:Number = Math.min(180.0, Math.ceil(90.0 * (App.appHeight / 1080.0)));
 			if (afterScaleWH % 2 != 0)
 			{
 				afterScaleWH = afterScaleWH > 180.0 ? afterScaleWH - 1 : afterScaleWH + 1;
