@@ -44,7 +44,7 @@ class WGRAndIcons(BaseModMeta):
             self.data_loader.getStatisticsDataFromServer()
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
-            arena.onPeriodChange += self.updateALL
+            arena.onPeriodChange += self.updateAllOnKey
             if self.data_loader is not None and arena.isFogOfWarEnabled:
                 arena.onVehicleAdded += self.data_loader.updateList
                 arena.onVehicleUpdated += self.data_loader.updateList
@@ -59,7 +59,7 @@ class WGRAndIcons(BaseModMeta):
         cancelOverride(PlayersPanel, "as_setIsInteractiveS", "updateALL")
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
-            arena.onPeriodChange -= self.updateALL
+            arena.onPeriodChange -= self.updateAllOnKey
             if self.data_loader is not None:
                 self.data_loader.onDataReceived -= self.updateAllItems
                 if arena.isFogOfWarEnabled:
@@ -93,14 +93,14 @@ class WGRAndIcons(BaseModMeta):
         if self._isDAAPIInited():
             addCallback(0.05, self.flashObject.updateFullStatsOnkey)
 
-    def updateAllOnKey(self, key):
+    def updateAllOnKey(self, *args):
         if self._isDAAPIInited():
             addCallback(0.05, self.flashObject.updateALL)
 
     def updateALL(self, base, *args):
         base(*args)
         if self._isDAAPIInited():
-            addCallback(0.01, self.flashObject.updateALL)
+            addCallback(0.015, self.flashObject.updateALL)
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

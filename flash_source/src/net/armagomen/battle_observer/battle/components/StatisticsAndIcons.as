@@ -10,6 +10,7 @@ package net.armagomen.battle_observer.battle.components
 	import net.wg.data.constants.generated.BATTLEATLAS;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
+	import net.wg.gui.battle.components.events.PlayersPanelListEvent;
 	import net.wg.gui.battle.random.views.stats.components.playersPanel.events.PlayersPanelEvent;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	
@@ -52,16 +53,22 @@ package net.armagomen.battle_observer.battle.components
 			this.iconsEnabled = settings["icons"];
 			this.cutWidth = settings["statistics_panels_cut_width"];
 			this.fullWidth = settings["statistics_panels_full_width"];
+			this.addEventListeners();
+			setTimeout(this.updateALL, 100);
+		}
+		
+		private function addEventListeners():void
+		{
 			this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
 			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.onChange, false, 0, true);
 			this.panels.listLeft.addEventListener(MouseEvent.ROLL_OVER, this.onChange, false, 0, true);
 			this.panels.listLeft.addEventListener(MouseEvent.ROLL_OUT, this.onChange, false, 0, true);
 			this.panels.listRight.addEventListener(MouseEvent.ROLL_OVER, this.onChange, false, 0, true);
 			this.panels.listRight.addEventListener(MouseEvent.ROLL_OUT, this.onChange, false, 0, true);
-			setTimeout(this.updateALL, 100);
+			this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.onChange, false, 0, true);
 		}
 		
-		override protected function onBeforeDispose():void
+		private function removeEventListeners():void
 		{
 			if (this.panels.hasEventListener(Event.CHANGE))
 			{
@@ -87,6 +94,15 @@ package net.armagomen.battle_observer.battle.components
 			{
 				this.panels.listRight.removeEventListener(MouseEvent.ROLL_OUT, this.onChange);
 			}
+			if (this.panels.listRight && this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
+			{
+				this.panels.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.onChange);
+			}
+		}
+		
+		override protected function onBeforeDispose():void
+		{
+			this.removeEventListeners();
 			this.battleLoading = null;
 			this.fullStats = null;
 			this.panels = null;
