@@ -13,6 +13,7 @@
 	import net.armagomen.battle_observer.utils.RadialProgressBar;
 	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.tween.Tween;
+	import net.armagomen.battle_observer.utils.Utils;
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
@@ -116,7 +117,7 @@
 			{
 				this.radial_progress = this._container.addChild(new RadialProgressBar()) as RadialProgressBar;
 			}
-			this.radial_progress.setPosition(0, afterScaleWH >> 1, (afterScaleWH - 4) >> 1);
+			this.radial_progress.setParams(0, afterScaleWH >> 1, (afterScaleWH - 4) >> 1, Utils.colorConvert(this.params.show_timer_graphics_color));
 		}
 		
 		public function as_show(seconds:Number):void

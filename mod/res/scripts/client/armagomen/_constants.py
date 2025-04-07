@@ -228,8 +228,9 @@ FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TEMPLATE", "M_FLIG
     "flight_time", "spgOnly", "template", "flightTime", "distance", "align")
 
 SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
-    "NAME", "PLAY_TICK_SOUND", "TIME", "DEFAULT", "ICON_NAME", "USER_ICON", "SHOW_TIMER", "TIMER_GRAPHICS"))(
-    "sixth_sense", "playTickSound", "lampShowTime", "default_icon", "default_icon_name", "user_icon", "show_timer", "show_timer_graphics"
+    "NAME", "PLAY_TICK_SOUND", "TIME", "DEFAULT", "ICON_NAME", "USER_ICON", "SHOW_TIMER", "TIMER_GRAPHICS", "TIMER_GRAPHIX_COLOR"))(
+    "sixth_sense", "playTickSound", "lampShowTime", "default_icon", "default_icon_name", "user_icon", "show_timer", "show_timer_graphics",
+    "show_timer_graphics_color"
 )
 
 __Dispersion = namedtuple("DISPERSION", ("NAME", "SERVER", "SCALE", "REPLACE"))
@@ -389,7 +390,8 @@ class CONFIG_INTERFACE:
             'battle*enabled': ('battle*format', 'battle*x', 'battle*y')
         },
         SIXTH_SENSE.NAME: {
-            SIXTH_SENSE.DEFAULT: (SIXTH_SENSE.ICON_NAME,)
+            SIXTH_SENSE.DEFAULT: (SIXTH_SENSE.ICON_NAME,),
+            SIXTH_SENSE.TIMER_GRAPHICS: (SIXTH_SENSE.TIMER_GRAPHIX_COLOR,)
         },
         STATISTICS.NAME: {
             STATISTICS.STATISTIC_ENABLED: (
