@@ -84,7 +84,7 @@
 		
 		private function addTimerAndAnimations():void
 		{
-			this.timer = new TextExt(0, this._image.height - 4, Constants.middleText, TextFieldAutoSize.CENTER, this._container);
+			this.timer = new TextExt(0, this._image.height - 2, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
 			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -this._image.height, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
@@ -106,7 +106,7 @@
 			this._container.addChild(this._image);
 			if (this.timer)
 			{
-				this.timer.y = afterScaleWH - 2;
+				this.timer.y = afterScaleWH - (this.params.show_timer_graphics ? 0 : 2);
 			}
 			
 			if (this.hideAnimation)
@@ -117,7 +117,8 @@
 			{
 				this.radial_progress = this._container.addChild(new RadialProgressBar()) as RadialProgressBar;
 			}
-			this.radial_progress.setParams(0, afterScaleWH >> 1, (afterScaleWH - 4) >> 1, Utils.colorConvert(this.params.show_timer_graphics_color));
+			var radius:Number = afterScaleWH >> 1;
+			this.radial_progress.setParams(0, radius, radius, Utils.colorConvert(this.params.show_timer_graphics_color));
 		}
 		
 		public function as_show(seconds:Number):void

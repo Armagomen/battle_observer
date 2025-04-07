@@ -16,7 +16,7 @@ package net.armagomen.battle_observer.utils
 		{
 			this.graphics.clear();
 			this.graphics.moveTo(0, -this._radius);
-			this.graphics.lineStyle(5.0, this._color, 0.8);
+			this.graphics.lineStyle(5.0, this._color, 0.85);
 			for (var i:Number = 0; i <= _progress * 360; i++)
 			{
 				var radians:Number = (i - 90) * (Math.PI / 180);
