@@ -1,6 +1,6 @@
 import aih_constants
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen._constants import DISPERSION, GLOBAL, IS_LESTA
+from armagomen._constants import DISPERSION, GLOBAL, IS_WG_CLIENT
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, getPlayer, overrideMethod
 from AvatarInputHandler import gun_marker_ctrl
@@ -27,7 +27,7 @@ LINKAGES = {
     _CONSTANTS.DEBUG_DUAL_GUN_ARCADE_MARKER_NAME: _CONSTANTS.DUAL_GUN_ARCADE_MARKER_LINKAGE,
     _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DUAL_GUN_SNIPER_MARKER_LINKAGE
 }
-if not IS_LESTA:
+if IS_WG_CLIENT:
     LINKAGES.update({_CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE,
                      _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE})
 
@@ -106,7 +106,7 @@ class DispersionCircle(object):
         overrideMethod(gun_marker_ctrl, "useClientGunMarker")(self.useGunMarker)
         overrideMethod(gun_marker_ctrl, "useServerGunMarker")(self.useGunMarker)
         overrideMethod(VehicleGunRotator, "applySettings")(self.onPass)
-        overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPositionLesta if IS_LESTA else self.setShotPositionWG)
+        overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPositionWG if IS_WG_CLIENT else self.setShotPositionLesta)
         overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onPass)
         overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
 
@@ -118,7 +118,7 @@ class DispersionCircle(object):
         cancelOverride(gun_marker_ctrl, "useClientGunMarker", "useGunMarker")
         cancelOverride(gun_marker_ctrl, "useServerGunMarker", "useGunMarker")
         cancelOverride(VehicleGunRotator, "applySettings", "onPass")
-        cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPositionLesta" if IS_LESTA else "setShotPositionWG")
+        cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPositionWG" if IS_WG_CLIENT else "setShotPositionLesta")
         cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged", "onPass")
         cancelOverride(CrosshairPanelContainer, "setGunMarkerColor", "setGunMarkerColor")
 
@@ -166,20 +166,20 @@ class DispersionCircle(object):
             server = config[GLOBAL.ENABLED] and config[DISPERSION.SERVER]
             if (replace or server) and not self.enabled:
                 self.enabled = True
-                if IS_LESTA:
+                if IS_WG_CLIENT:
+                    overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker_WG)
+                else:
                     overrideMethod(gun_marker_ctrl, "createDefaultGunMarker")(self.createDefaultGunMarker)
                     overrideMethod(gun_marker_ctrl, "createStrategicGunMarker")(self.createStrategicGunMarker)
                     overrideMethod(gun_marker_ctrl, "createAssaultSpgGunMarker")(self.createStrategicGunMarker)
-                else:
-                    overrideMethod(gun_marker_ctrl, "createGunMarker")(self.createGunMarker_WG)
             elif not replace and not server and self.enabled:
                 self.enabled = False
-                if IS_LESTA:
+                if IS_WG_CLIENT:
+                    cancelOverride(gun_marker_ctrl, "createGunMarker", "createGunMarker_WG")
+                else:
                     cancelOverride(gun_marker_ctrl, "createDefaultGunMarker", "createDefaultGunMarker")
                     cancelOverride(gun_marker_ctrl, "createStrategicGunMarker", "createStrategicGunMarker")
                     cancelOverride(gun_marker_ctrl, "createAssaultSpgGunMarker", "createStrategicGunMarker")
-                else:
-                    cancelOverride(gun_marker_ctrl, "createGunMarker", "createGunMarker_WG")
             if server:
                 self.addServerCrossOverrides()
             else:

@@ -1,5 +1,5 @@
 from aih_constants import SHOT_RESULT
-from armagomen._constants import ARMOR_CALC, GLOBAL, IS_LESTA
+from armagomen._constants import ARMOR_CALC, GLOBAL, IS_WG_CLIENT
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import getPlayer, MinMax, overrideMethod
 from armagomen.utils.events import g_events
@@ -163,7 +163,7 @@ class ShotResultIndicatorPlugin_WG(ShotResultIndicatorPlugin):
 def createPlugins(base, *args):
     _plugins = base(*args)
     if user_settings.armor_calculator[GLOBAL.ENABLED]:
-        _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin if IS_LESTA else ShotResultIndicatorPlugin_WG
+        _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin_WG if IS_WG_CLIENT else ShotResultIndicatorPlugin
     return _plugins
 
 
@@ -219,7 +219,7 @@ class Randomizer(object):
         logDebug(cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
 
 
-if not IS_LESTA:
+if IS_WG_CLIENT:
     g_events.onVehicleChangedDelayed += Randomizer._updateRandomization
 
 

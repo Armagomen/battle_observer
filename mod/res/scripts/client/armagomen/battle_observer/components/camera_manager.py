@@ -1,5 +1,5 @@
 from aih_constants import CTRL_MODE_NAME
-from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_LESTA, SNIPER, STRATEGIC
+from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_WG_CLIENT, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import addCallback, getPlayer, MinMax, overrideMethod, ResMgr
 from armagomen.utils.logging import logError
@@ -20,7 +20,7 @@ class ChangeCameraModeAfterShoot(ITriggerListener):
         self.latency = 0
         self.skip_clip = False
         self.avatar = None
-        self.__trigger_type = TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT if not IS_LESTA else TRIGGER_TYPE.PLAYER_SHOOT
+        self.__trigger_type = TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT if IS_WG_CLIENT else TRIGGER_TYPE.PLAYER_SHOOT
 
     def updateSettings(self, data):
         enabled = data[SNIPER.DISABLE_SNIPER] and data[GLOBAL.ENABLED]
@@ -119,10 +119,10 @@ class Arcade(CameraSettings):
 
     @staticmethod
     def updateProperties(camera):
-        if IS_LESTA:
-            camera._ArcadeCamera__updateProperties(state=None)
-        else:
+        if IS_WG_CLIENT:
             camera._updateProperties(state=None)
+        else:
+            camera._ArcadeCamera__updateProperties(state=None)
 
     def enablePostMortem(self, base, mode, **kwargs):
         if self.enabled:

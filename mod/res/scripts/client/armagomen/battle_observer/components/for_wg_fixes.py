@@ -1,6 +1,6 @@
 import BigWorld
 
-from armagomen._constants import DAMAGE_LOG, GLOBAL, IS_LESTA
+from armagomen._constants import DAMAGE_LOG, GLOBAL, IS_WG_CLIENT
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, overrideMethod
 from BattleReplay import g_replayCtrl
@@ -31,7 +31,7 @@ class Debug_ctrl_fix(object):
 
 fix_debug = Debug_ctrl_fix()
 
-if not IS_LESTA:
+if IS_WG_CLIENT:
     @overrideMethod(debug_ctrl.DebugController, "_update")
     def _update(base, controller):
         fps = BigWorld.getFPS()[1]

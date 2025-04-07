@@ -142,7 +142,9 @@
 				else
 				{
 					setTimeout(as_hide, this.show_time)
-					this.timerId = setInterval(this.playSound, 1000);
+					if (this.params.playTickSound){
+						this.timerId = setInterval(this.playSound, 1000);
+					}
 				}
 			}
 			this._container.y = this.POSITION_Y;
@@ -173,7 +175,7 @@
 			{
 				this.timer.htmlText = this.getTimerString(this.progress / 1000);
 			}
-			if (this.progress >= 1000 && this.progress % 1000 == 0)
+			if (this.params.playTickSound && this.progress >= 1000 && this.progress % 1000 == 0)
 			{
 				this.playSound();
 			}

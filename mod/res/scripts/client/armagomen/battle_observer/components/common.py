@@ -1,4 +1,4 @@
-from armagomen._constants import IS_LESTA, MAIN
+from armagomen._constants import IS_WG_CLIENT, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import addCallback, overrideMethod
 from armagomen.utils.events import g_events
@@ -106,7 +106,7 @@ def _EventEntryPointsContainer_as_updateEntries(base, self, data):
     return base(self, data)
 
 
-if not IS_LESTA:
+if IS_WG_CLIENT:
     p_widget = PrestigeWidget()
     from comp7.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
 else:
@@ -163,5 +163,5 @@ t_sounds = TweakSounds()
 
 def fini():
     user_settings.onModSettingsChanged -= t_sounds.onModSettingsChanged
-    if not IS_LESTA:
+    if IS_WG_CLIENT:
         user_settings.onModSettingsChanged -= p_widget.onModSettingsChanged

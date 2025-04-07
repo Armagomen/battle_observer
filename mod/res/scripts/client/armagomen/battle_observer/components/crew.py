@@ -1,4 +1,4 @@
-from armagomen._constants import CREW_XP, GLOBAL, IS_LESTA, MAIN
+from armagomen._constants import CREW_XP, GLOBAL, IS_WG_CLIENT, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.utils.common import openIgnoredVehicles, updateIgnoredVehicles
@@ -99,7 +99,7 @@ class CrewProcessor(object):
             if not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
                 self._processReturnCrew(vehicle)
             self.intCD = vehicle.intCD
-        if not IS_LESTA and user_settings.main[MAIN.CREW_TRAINING] and not self.isDialogVisible:
+        if IS_WG_CLIENT and user_settings.main[MAIN.CREW_TRAINING] and not self.isDialogVisible:
             self.accelerateCrewTraining(vehicle)
 
     @decorators.adisp_process('crewReturning')

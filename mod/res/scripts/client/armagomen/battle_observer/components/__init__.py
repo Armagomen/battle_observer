@@ -1,6 +1,6 @@
 from importlib import import_module
 
-from armagomen._constants import IS_LESTA
+from armagomen._constants import IS_WG_CLIENT
 
 
 def loadComponents(is_replay):
@@ -41,13 +41,13 @@ def loadComponents(is_replay):
         'vehicle_battle_boosters',
     )
 
-    lesta_disable = (
+    wg_only = (
         'auto_claim_clan_reward',
         'donate_messages',
     )
 
     for moduleName in load:
-        if moduleName in replay_disable and is_replay or IS_LESTA and moduleName in lesta_disable:
+        if moduleName in replay_disable and is_replay or not IS_WG_CLIENT and moduleName in wg_only:
             continue
         try:
             components[moduleName] = import_module("{}.{}".format(__package__, moduleName))
