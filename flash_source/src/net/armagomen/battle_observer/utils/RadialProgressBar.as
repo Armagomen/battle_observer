@@ -10,6 +10,7 @@ package net.armagomen.battle_observer.utils
 	{
 		private var progressBar:Shape;
 		private var progressText:TextField;
+		private var radius:Number = 50;
 		
 		public function RadialProgressBar()
 		{
@@ -27,24 +28,24 @@ package net.armagomen.battle_observer.utils
 			addChild(progressText);
 		}
 		
-		private function updateProgressBar(_progress:Number = 1.0):void
+		public function updateProgressBar(_progress:Number = 1.0):void
 		{
-			var radius:Number = 50;
 			var g:Graphics    = progressBar.graphics;
 			g.clear();
-			g.beginFill(0xFF0000);
-			g.moveTo(0, 0);
-			g.lineTo(radius, 0);
-			g.lineStyle(3.0);
+			g.moveTo(0, -radius);
+			g.lineStyle(5.0, 0xffa500, 0.8);
 			for (var i:Number = 0; i <= _progress * 360; i++)
 			{
 				var radians:Number = (i - 90) * (Math.PI / 180);
 				g.lineTo(Math.cos(radians) * radius, Math.sin(radians) * radius);
 			}
-			g.lineTo(0, 0);
-			g.endFill();
-			
-			progressText.text = Math.round(_progress * 100) + "%";
+		}
+		
+		public function setPosition(x:Number, y:Number, radius:Number):void
+		{
+			this.x = x;
+			this.y = y;
+			this.radius = radius;
 		}
 	}
 }

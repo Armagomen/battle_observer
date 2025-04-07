@@ -1,12 +1,12 @@
 # coding=utf-8
 from random import choice
 
-from armagomen._constants import GLOBAL, SIXTH_SENSE
+from armagomen._constants import SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
-from armagomen.utils.timers import SixthSenseTimer
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from helpers import getClientLanguage
 from PlayerEvents import g_playerEvents
+from SoundGroups import g_instance
 
 _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
                    VEHICLE_VIEW_STATE.DESTROYED, VEHICLE_VIEW_STATE.CREW_DEACTIVATED}
@@ -23,27 +23,40 @@ else:
                 "Run: <font color='#daff8f'>{}</font> sec.")
 
 RADIO = 'improvedRadioCommunication'
-RADIO_DURATION = 2
+RADIO_DURATION = 1.5
 
 
-class SixthSense(SixthSenseMeta, SixthSenseTimer):
+class SixthSense(SixthSenseMeta):
 
     def __init__(self):
         super(SixthSense, self).__init__()
         self.radio_installed = False
+        self.__sounds = dict()
         self.__visible = False
         self.__message = None
         self.__radar = None
+        self.__soundID = None
         try:
             from constants import DIRECT_DETECTION_TYPE
             self.__radar = DIRECT_DETECTION_TYPE.STEALTH_RADAR
         except:
             pass
 
+    def callWWISE(self, wwiseEventName):
+        if wwiseEventName in self.__sounds:
+            sound = self.__sounds[wwiseEventName]
+        else:
+            sound = g_instance.getSound2D(wwiseEventName)
+            self.__sounds[wwiseEventName] = sound
+        if sound is not None:
+            if sound.isPlaying:
+                sound.stop()
+            sound.play()
+
     def _populate(self):
         super(SixthSense, self)._populate()
         if self.settings[SIXTH_SENSE.PLAY_TICK_SOUND]:
-            self.setSound(self._arenaVisitor.type.getCountdownTimerSound())
+            self.__soundID = self._arenaVisitor.type.getCountdownTimerSound()
         g_playerEvents.onRoundFinished += self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
@@ -55,7 +68,10 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
     def _dispose(self):
         if self.sessionProvider.isReplayPlaying and self._getPyReloading():
             self.hide()
-        self.destroyTimer()
+        for sound in self.__sounds.values():
+            sound.stop()
+        self.__sounds.clear()
+        self.__soundID = None
         g_playerEvents.onRoundFinished -= self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
@@ -87,32 +103,21 @@ class SixthSense(SixthSenseMeta, SixthSenseTimer):
                     if self.radio_installed:
                         time -= RADIO_DURATION
                 self.__message = self.getNewRandomMessage()
-                self.show(time)
+                self.as_showS(time)
             else:
-                self.hide()
+                self.as_hideS()
         elif state in _STATES_TO_HIDE:
-            self.hide()
+            self.as_hideS()
 
     def _onRoundFinished(self, *args):
-        self.hide()
+        self.as_hideS()
 
-    def handleTimer(self, timeLeft):
-        self.as_updateTimerS(self.__message.format(timeLeft))
-        if timeLeft == GLOBAL.ZERO:
-            self.hide()
+    def getTimerString(self, timeLeft):
+        return self.__message.format(timeLeft)
 
-    def show(self, seconds=None):
-        if not self.__visible:
-            self.as_showS()
-            self.__visible = True
-        if seconds is not None:
-            self.timeTicking(seconds)
-
-    def hide(self):
-        if self.__visible:
-            self.cancelCallback()
-            self.as_hideS()
-            self.__visible = False
+    def playSound(self):
+        if self.__soundID is not None:
+            self.callWWISE(self.__soundID)
 
 
 class SixthSenseLesta(SixthSense):
@@ -120,8 +125,8 @@ class SixthSenseLesta(SixthSense):
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             if value:
-                self.show()
+                self.as_showS(0)
             else:
-                self.hide()
+                self.as_hideS()
         elif state in _STATES_TO_HIDE:
-            self.hide()
+            self.as_hideS()

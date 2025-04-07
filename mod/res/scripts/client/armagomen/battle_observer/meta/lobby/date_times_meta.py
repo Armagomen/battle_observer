@@ -12,3 +12,6 @@ class DateTimesMeta(BaseModMeta):
 
     def as_clearSceneS(self):
         return self.flashObject.as_clearScene() if self._isDAAPIInited() else None
+
+    def as_onSettingsChanged(self, config):
+        return self.flashObject.as_onSettingsChanged(config) if self._isDAAPIInited() else None

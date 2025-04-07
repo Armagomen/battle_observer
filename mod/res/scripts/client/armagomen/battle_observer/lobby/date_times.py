@@ -18,14 +18,13 @@ class DateTimes(DateTimesMeta):
     def _populate(self):
         super(DateTimes, self)._populate()
         user_settings.onModSettingsChanged += self.onModSettingsChanged
-        self.as_startUpdateS(self.config)
         if self.config[GLOBAL.ENABLED] and user_settings.clock[GLOBAL.ENABLED]:
             self.timerEvent.start()
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == CLOCK.NAME:
             self.timerEvent.stop()
-            self.as_startUpdateS(self.config)
+            self.as_onSettingsChanged(config)
             if self.config[GLOBAL.ENABLED] and user_settings.clock[GLOBAL.ENABLED]:
                 self.timerEvent.start()
 

@@ -19,7 +19,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
-        self.settings = user_settings.getSettingDictByAlias(alias)
+        self.settings = user_settings.getSettingDictByAliasBattle(alias)
 
     @property
     def _arenaDP(self):
@@ -85,9 +85,6 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def as_setComponentVisible(self, param):
         return self.flashObject.setCompVisible(param) if self._isDAAPIInited() else None
-
-    def as_startUpdateS(self, *args):
-        return self.flashObject.as_startUpdate(*args) if self._isDAAPIInited() else None
 
     def as_colorBlindS(self, enabled):
         return self.flashObject.as_colorBlind(enabled) if self._isDAAPIInited() else None

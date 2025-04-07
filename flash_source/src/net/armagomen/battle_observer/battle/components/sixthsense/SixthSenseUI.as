@@ -5,12 +5,13 @@
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.clearInterval;
+	import flash.utils.setInterval;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.Constants;
+	import net.armagomen.battle_observer.utils.RadialProgressBar;
 	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.tween.Tween;
-	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
-	import net.wg.gui.battle.views.BaseBattlePage;
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
@@ -23,6 +24,13 @@
 		private var hideAnimation2:Tween;
 		private var POSITION_Y:Number = (App.appHeight >> 3) + 10;
 		private var _image:Bitmap;
+		private var radial_progress:RadialProgressBar;
+		private var timerId:Number;
+		private var progress:Number   = 10000;
+		private var show_time:Number  = 10000;
+		
+		public var playSound:Function;
+		public var getTimerString:Function;
 		
 		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
@@ -50,6 +58,7 @@
 			{
 				this.loader.load(new URLRequest('../../../' + this.params.user_icon));
 			}
+		
 		}
 		
 		override protected function onBeforeDispose():void
@@ -72,7 +81,7 @@
 		
 		private function addTimerAndAnimations():void
 		{
-			this.timer = new TextExt(0, this._image.height - 4, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
+			this.timer = new TextExt(0, this._image.height - 4, Constants.middleText, TextFieldAutoSize.CENTER, this._container);
 			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -this._image.height, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
@@ -94,16 +103,21 @@
 			this._container.addChild(this._image);
 			if (this.timer)
 			{
-				this.timer.y = afterScaleWH - 4;
+				this.timer.y = afterScaleWH - 2;
 			}
 			
 			if (this.hideAnimation)
 			{
 				this.hideAnimation.finish = -afterScaleWH;
 			}
+			if (!this.radial_progress)
+			{
+				this.radial_progress = this._container.addChild(new RadialProgressBar()) as RadialProgressBar;
+			}
+			this.radial_progress.setPosition(0, afterScaleWH >> 1, (afterScaleWH - 4) >> 1);
 		}
 		
-		public function as_show():void
+		public function as_show(seconds:Number):void
 		{
 			if (this.hideAnimation.isPlaying)
 			{
@@ -112,19 +126,42 @@
 				this.hideAnimation2.stop();
 				this.hideAnimation2.rewind();
 			}
+			if (seconds)
+			{
+				this.progress = this.show_time = seconds * 1000;
+				if (!this.timerId)
+				{
+					this.timerId = setInterval(this.updateProgress, 100);
+				}
+			}
 			this._container.y = this.POSITION_Y;
 			this.showAnimation.start();
 		}
 		
 		public function as_hide():void
 		{
+			if (this.timerId)
+			{
+				clearInterval(this.timerId);
+				this.timerId = 0;
+			}
 			this.hideAnimation.start();
 			this.hideAnimation2.start();
 		}
 		
-		public function as_updateTimer(text:String):void
+		private function updateProgress():void
 		{
-			this.timer.htmlText = text;
+			this.radial_progress.updateProgressBar(this.progress / this.show_time);
+			this.progress -= 100;
+			this.timer.htmlText = this.getTimerString(this.progress / 1000);
+			if (this.progress >= 1000 && this.progress % 1000 == 0)
+			{
+				this.playSound();
+			}
+			if (this.progress == 0)
+			{
+				this.as_hide();
+			}
 		}
 		
 		private function onLoadError(e:IOErrorEvent):void
@@ -151,7 +188,6 @@
 			{
 				this.updateImageScale();
 			}
-		
 		}
 	}
 }

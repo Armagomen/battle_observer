@@ -1,8 +1,8 @@
 import Keys
-from armagomen._constants import (ALIAS_TO_CONFIG_NAME, ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CLOCK, COLORS, DAMAGE_LOG,
-                                  DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, DISTANCE, EFFECTS, EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HP_BARS,
-                                  IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC,
-                                  TEAM_BASES, VEHICLE_TYPES_COLORS)
+from armagomen._constants import (ALIAS_TO_CONFIG_NAME, ALIAS_TO_CONFIG_NAME_LOBBY, ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER,
+                                  CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, DISTANCE, EFFECTS, EX_LOGS_ICONS,
+                                  FLIGHT_TIME, GLOBAL, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
+                                  SNIPER, STATISTICS, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS)
 from armagomen.battle_observer.settings.loader import SettingsLoader
 from constants import ATTACK_REASON
 from Event import SafeEvent
@@ -362,8 +362,11 @@ class UserSettings(object):
             STATISTICS.ICON_BLACKOUT: -1.25,
         }
 
-    def getSettingDictByAlias(self, name):
+    def getSettingDictByAliasBattle(self, name):
         return getattr(self, ALIAS_TO_CONFIG_NAME.get(name, GLOBAL.EMPTY_LINE), None)
+
+    def getSettingDictByAliasLobby(self, name):
+        return getattr(self, ALIAS_TO_CONFIG_NAME_LOBBY.get(name, GLOBAL.EMPTY_LINE), None)
 
 
 user_settings = UserSettings()

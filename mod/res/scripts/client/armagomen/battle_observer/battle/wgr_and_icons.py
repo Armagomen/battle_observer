@@ -45,7 +45,7 @@ class WGRAndIcons(WGRAndIconsMeta):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onPeriodChange += self.updateAllOnKey
-            if self.data_loader is not None and arena.isFogOfWarEnabled:
+            if arena.isFogOfWarEnabled and self.data_loader is not None:
                 arena.onVehicleAdded += self.data_loader.updateList
                 arena.onVehicleUpdated += self.data_loader.updateList
 
@@ -124,9 +124,8 @@ class WGRAndIcons(WGRAndIconsMeta):
     def buildItemData(self, clanTag, data):
         wgr = int(data.get("global_rating", 0))
         win_rate, battles = self.__getWinRateAndBattlesCount(data)
-        return {"WGR": wgr, self.COLOR_WGR: self.__getColor(wgr), "winRate": win_rate,
-                "battles": battles, "nickname": data.get("nickname"),
-                "clanTag": "[{}]".format(clanTag) if clanTag else ""}
+        return {"WGR": wgr, self.COLOR_WGR: self.__getColor(wgr), "winRate": win_rate, "battles": battles,
+                "nickname": data.get("nickname"), "clanTag": "[{}]".format(clanTag) if clanTag else ""}
 
 
 class StatisticsDataLoader(object):
@@ -181,8 +180,7 @@ class StatisticsDataLoader(object):
         if self.__getDataCallback is not None:
             cancelCallback(self.__getDataCallback)
             self.__getDataCallback = None
-        url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=API_KEY, url=self.URL,
-                                   fields=self.FIELDS)
+        url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=API_KEY, url=self.URL, fields=self.FIELDS)
         fetchURL(url, self.onDataResponse)
 
     def getStatisticsDataFromServer(self):
