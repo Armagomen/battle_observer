@@ -1,4 +1,4 @@
-from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_LESTA, MAIN,
+from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN,
                                   MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STATISTICS_REGION, URLS)
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
@@ -9,7 +9,13 @@ from Keys import KEY_LALT, KEY_RALT
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
 settingsVersion = 37
-LOCKED_BLOCKS = (STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME)
+LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME}
+LESTA_IGNORED_SIXTH_SENSE = {SIXTH_SENSE.SHOW_TIMER, SIXTH_SENSE.TIMER_GRAPHICS, SIXTH_SENSE.TIME, SIXTH_SENSE.PLAY_TICK_SOUND}
+LESTA_IGNORED_STATS = {STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH, STATISTICS.CHANGE_VEHICLE_COLOR,
+                       STATISTICS.STATISTIC_ENABLED, "statistics_colors*bad", "statistics_colors*normal", "statistics_colors*good",
+                       "statistics_colors*very_good", "statistics_colors*unique", "statistics_colors*very_bad"}
+LESTA_IGNORED_MAIN = {MAIN.AUTO_CLAIM_CLAN_REWARD, MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
+                      MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET, MAIN.CREW_TRAINING}
 
 
 def makeTooltip(header=None, body=None, note=None, attention=None):
@@ -185,8 +191,7 @@ class CreateElement(Getter):
             elif blockID == DEBUG_PANEL.NAME and DEBUG_PANEL.STYLE == key:
                 return self.createDebugStyleDropDown(blockID, key, *self.getCollectionIndex(value, DEBUG_PANEL.STYLES))
             elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
-                return self.createSixthSenseDropDown(blockID, key,
-                                                     *self.getCollectionIndex(value, self.loader.sixth_sense_list))
+                return self.createSixthSenseDropDown(blockID, key, *self.getCollectionIndex(value, self.loader.sixth_sense_list))
         if val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
@@ -339,12 +344,6 @@ class SettingsInterface(CreateElement):
         if blockID == MAIN.NAME:
             if varName == MAIN.USE_KEY_PAIRS:
                 self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
-            if IS_LESTA:
-                values = (MAIN.AUTO_CLAIM_CLAN_REWARD, MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
-                          MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET, MAIN.CREW_TRAINING)
-        elif blockID == STATISTICS.NAME and STATISTICS_REGION is None:
-            values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][STATISTICS.STATISTIC_ENABLED] + (
-                STATISTICS.STATISTIC_ENABLED,)
         if blockID in CONFIG_INTERFACE.HANDLER_VALUES:
             if varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
                 values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]
@@ -372,6 +371,12 @@ class SettingsInterface(CreateElement):
 
     def items(self, blockID, settings_block):
         for key, value in self.keyValueGetter(settings_block):
+            if blockID == SIXTH_SENSE and key in LESTA_IGNORED_SIXTH_SENSE:
+                continue
+            elif blockID == STATISTICS.NAME and STATISTICS_REGION is None and key in LESTA_IGNORED_STATS:
+                continue
+            elif blockID == MAIN.NAME and key in LESTA_IGNORED_MAIN:
+                continue
             item = self.createItem(blockID, key, value)
             if item is not None:
                 yield item

@@ -7,6 +7,7 @@
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.clearInterval;
 	import flash.utils.setInterval;
+	import flash.utils.setTimeout;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.RadialProgressBar;
@@ -22,12 +23,13 @@
 		private var hideAnimation:Tween;
 		private var showAnimation:Tween;
 		private var hideAnimation2:Tween;
-		private var POSITION_Y:Number = (App.appHeight >> 3) + 10;
+		private var POSITION_Y:Number  = (App.appHeight >> 3) + 10;
 		private var _image:Bitmap;
 		private var radial_progress:RadialProgressBar;
 		private var timerId:Number;
-		private var progress:Number   = 10000;
-		private var show_time:Number  = 10000;
+		private var progress:Number    = 10000;
+		private var show_time:Number   = 10000;
+		private var is_visible:Boolean = false;
 		
 		public var playSound:Function;
 		public var getTimerString:Function;
@@ -129,13 +131,23 @@
 			if (seconds)
 			{
 				this.progress = this.show_time = seconds * 1000;
-				if (!this.timerId)
+				if (this.params.show_timer)
+				{
+					this.timer.htmlText = this.getTimerString(seconds);
+				}
+				if (!this.timerId && this.params.show_timer_graphics)
 				{
 					this.timerId = setInterval(this.updateProgress, 100);
+				}
+				else
+				{
+					setTimeout(as_hide, this.show_time)
+					this.timerId = setInterval(this.playSound, 1000);
 				}
 			}
 			this._container.y = this.POSITION_Y;
 			this.showAnimation.start();
+			this.is_visible = true;
 		}
 		
 		public function as_hide():void
@@ -145,15 +157,22 @@
 				clearInterval(this.timerId);
 				this.timerId = 0;
 			}
-			this.hideAnimation.start();
-			this.hideAnimation2.start();
+			if (this.is_visible)
+			{
+				this.hideAnimation.start();
+				this.hideAnimation2.start();
+				this.is_visible = false;
+			}
 		}
 		
 		private function updateProgress():void
 		{
 			this.radial_progress.updateProgressBar(this.progress / this.show_time);
 			this.progress -= 100;
-			this.timer.htmlText = this.getTimerString(this.progress / 1000);
+			if (this.params.show_timer)
+			{
+				this.timer.htmlText = this.getTimerString(this.progress / 1000);
+			}
 			if (this.progress >= 1000 && this.progress % 1000 == 0)
 			{
 				this.playSound();

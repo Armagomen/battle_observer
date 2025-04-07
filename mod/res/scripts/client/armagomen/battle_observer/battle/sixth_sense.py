@@ -67,7 +67,7 @@ class SixthSense(SixthSenseMeta):
 
     def _dispose(self):
         if self.sessionProvider.isReplayPlaying and self._getPyReloading():
-            self.hide()
+            self.as_hideS()
         for sound in self.__sounds.values():
             sound.stop()
         self.__sounds.clear()
