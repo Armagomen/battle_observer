@@ -184,8 +184,14 @@ package net.armagomen.battle_observer.battle.components
 					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
-				listItem.playerNameFullTF.width = this.fullWidth;
-				listItem.playerNameCutTF.width = this.cutWidth;
+				if (listItem.playerNameFullTF.width != this.fullWidth)
+				{
+					listItem.playerNameFullTF.width = this.fullWidth;
+				}
+				if (listItem.playerNameCutTF.width != this.cutWidth)
+				{
+					listItem.playerNameCutTF.width = this.cutWidth
+				}
 				if (this.statisticsData[vehicleID])
 				{
 					if (this.statisticsData[vehicleID].vehicleTextColor)
@@ -196,12 +202,10 @@ package net.armagomen.battle_observer.battle.components
 					if (this.statisticsData[vehicleID].fullName)
 					{
 						listItem.playerNameFullTF.htmlText = this.statisticsData[vehicleID].fullName;
-						
 					}
 					if (this.statisticsData[vehicleID].cutName)
 					{
 						listItem.playerNameCutTF.htmlText = this.statisticsData[vehicleID].cutName;
-						
 					}
 					if (!listItem._isAlive)
 					{
