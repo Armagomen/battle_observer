@@ -80,8 +80,10 @@ class UserSettings(object):
             SIXTH_SENSE.TIME: 10,
             SIXTH_SENSE.SHOW_TIMER: True,
             SIXTH_SENSE.TIMER_GRAPHICS: True,
-            SIXTH_SENSE.TIMER_GRAPHIX_COLOR: "#ffa500",
-            SIXTH_SENSE.USER_ICON: "mods/configs/mod_battle_observer/__icon__path__200x200.png"
+            SIXTH_SENSE.TIMER_GRAPHICS_COLOR: "#ffa500",
+            SIXTH_SENSE.TIMER_GRAPHICS_RADIUS: 45,
+            SIXTH_SENSE.USER_ICON: "mods/configs/mod_battle_observer/__icon__path__200x200.png",
+            SIXTH_SENSE.ICON_SIZE: 90
         }
 
         self.dispersion_circle = {

@@ -349,7 +349,9 @@ localization = {
         "default_icon_tooltip": "The image built into the mod will be used instead of the custom one.",
         "show_timer": "Show text timer.",
         "show_timer_graphics": "Show Timer Graphics.",
-        "show_timer_graphics_color": "Graphics color."
+        "show_timer_graphics_color": "Graphics color.",
+        "show_timer_graphics_radius": "Radius of the graphic circle.",
+        "icon_size": "Image size in pixels. max 180"
     },
     "distance_to_enemy": {
         "header": "Distance to the closest spotted enemy.",

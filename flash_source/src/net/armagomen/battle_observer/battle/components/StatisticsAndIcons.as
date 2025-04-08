@@ -184,10 +184,7 @@ package net.armagomen.battle_observer.battle.components
 					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
-				if (listItem.playerNameFullTF.width != this.fullWidth)
-				{
-					listItem.playerNameFullTF.width = this.fullWidth;
-				}
+				listItem.setPlayerNameFullWidth(this.fullWidth);
 				if (listItem.playerNameCutTF.width != this.cutWidth)
 				{
 					listItem.playerNameCutTF.width = this.cutWidth

@@ -94,7 +94,7 @@
 		
 		private function updateImageScale():void
 		{
-			var size:Number         = 90.0;
+			var size:Number         = this.params.icon_size || 90.0;
 			var scale:Number        = App.appHeight / 1080.0;
 			var afterScaleWH:Number = Math.min(180.0, Math.ceil(size * scale));
 			if (afterScaleWH % 2 != 0)
@@ -120,8 +120,9 @@
 			{
 				this.radial_progress = this._container.addChild(new RadialProgressBar()) as RadialProgressBar;
 			}
-			var radius:Number = afterScaleWH >> 1;
-			this.radial_progress.setParams(0, radius, radius, Utils.colorConvert(this.params.show_timer_graphics_color));
+			var circleY:Number = afterScaleWH >> 1;
+			var radius:Number = this.params.show_timer_graphics_radius || circleY;
+			this.radial_progress.setParams(0, circleY, radius, Utils.colorConvert(this.params.show_timer_graphics_color));
 		}
 		
 		public function as_show(seconds:Number):void

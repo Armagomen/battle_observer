@@ -19,10 +19,10 @@ package net.armagomen.battle_observer.utils
 			{
 				return;
 			}
-			this.graphics.lineStyle(5.0, 0, 0.3);
+			this.graphics.lineStyle(5.0, 0, 0.25);
 			this.graphics.drawCircle(0, 0, _radius);
 			this.graphics.moveTo(0, -this._radius);
-			this.graphics.lineStyle(5.0, this._color, 0.6);
+			this.graphics.lineStyle(5.0, this._color, 0.7);
 			for (var i:Number = 0; i <= _progress * 360; i++)
 			{
 				var radians:Number = (i - 90) * (Math.PI / 180);

@@ -364,7 +364,9 @@ localization = {
         "playTickSound": "Програвати звук таймера",
         "show_timer": "Увімкнути таймер з текстом.",
         "show_timer_graphics": "Увімкнути графічний таймер.",
-        "show_timer_graphics_color": "Колір графіки."
+        "show_timer_graphics_color": "Колір графіки.",
+        "show_timer_graphics_radius": "Радіус графічного кола.",
+        "icon_size": "Розмір картинки в пікселях. макс 180"
     },
     "distance_to_enemy": {
         "header": "Налаштування відстані до найближчого виявленого ворога",

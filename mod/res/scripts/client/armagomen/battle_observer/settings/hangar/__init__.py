@@ -17,7 +17,7 @@ if IS_WG_CLIENT:
     IGNORED_MAIN = set()
 else:
     IGNORED_SIXTH_SENSE = {SIXTH_SENSE.SHOW_TIMER, SIXTH_SENSE.TIMER_GRAPHICS, SIXTH_SENSE.TIME, SIXTH_SENSE.PLAY_TICK_SOUND,
-                           SIXTH_SENSE.TIMER_GRAPHIX_COLOR}
+                           SIXTH_SENSE.TIMER_GRAPHICS_COLOR, SIXTH_SENSE.TIMER_GRAPHICS_RADIUS}
     IGNORED_STATS = {STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH, STATISTICS.CHANGE_VEHICLE_COLOR,
                      STATISTICS.STATISTIC_ENABLED, "statistics_colors*bad", "statistics_colors*normal", "statistics_colors*good",
                      "statistics_colors*very_good", "statistics_colors*unique", "statistics_colors*very_bad"}
