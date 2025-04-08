@@ -5,7 +5,7 @@ package net.armagomen.battle_observer.utils
 	public class RadialProgressBar extends Shape
 	{
 		private var _radius:Number = 50;
-		private var _color:uint = 0xffa500;
+		private var _color:uint    = 0xffa500;
 		
 		public function RadialProgressBar()
 		{
@@ -15,8 +15,14 @@ package net.armagomen.battle_observer.utils
 		public function updateProgressBar(_progress:Number = 1.0):void
 		{
 			this.graphics.clear();
+			if (!_progress)
+			{
+				return;
+			}
+			this.graphics.lineStyle(5.0, 0, 0.3);
+			this.graphics.drawCircle(0, 0, _radius);
 			this.graphics.moveTo(0, -this._radius);
-			this.graphics.lineStyle(5.0, this._color, 0.85);
+			this.graphics.lineStyle(5.0, this._color, 0.6);
 			for (var i:Number = 0; i <= _progress * 360; i++)
 			{
 				var radians:Number = (i - 90) * (Math.PI / 180);

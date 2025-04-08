@@ -97,7 +97,7 @@ class WGRAndIcons(WGRAndIconsMeta):
 
     def updateALL(self, base, *args):
         base(*args)
-        self.as_updateAll(20)
+        self.as_updateAll(30)
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

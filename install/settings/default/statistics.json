@@ -11,8 +11,8 @@
     "very_bad": "#FC4A3C", 
     "very_good": "#44DBCB"
   }, 
-  "statistics_panels_cut_width": 70, 
-  "statistics_panels_full_width": 170, 
+  "statistics_panels_cut_width": 60,
+  "statistics_panels_full_width": 150,
   "statistics_pattern_cut_left": "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>", 
   "statistics_pattern_cut_right": "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>", 
   "statistics_pattern_full_left": "<b><font color='%(colorWGR)s'>%(WGR)d %(battles)s %(nickname).12s</font>%(clanTag)s</b>", 

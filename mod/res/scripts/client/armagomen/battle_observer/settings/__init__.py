@@ -351,8 +351,8 @@ class UserSettings(object):
             STATISTICS.FULL_RIGHT: "<b>%(clanTag)s<font color='%(colorWGR)s'>%(nickname).12s | %(battles)s | %(WGR)d</font></b>",
             STATISTICS.CUT_LEFT: "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>",
             STATISTICS.CUT_RIGHT: "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>",
-            STATISTICS.PANELS_CUT_WIDTH: 70,
-            STATISTICS.PANELS_FULL_WIDTH: 180,
+            STATISTICS.PANELS_CUT_WIDTH: 60,
+            STATISTICS.PANELS_FULL_WIDTH: 150,
             STATISTICS.COLORS: {
                 "bad": "#FE7B23",
                 "good": "#88D957",

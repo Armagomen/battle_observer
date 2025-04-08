@@ -12,8 +12,8 @@
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.RadialProgressBar;
 	import net.armagomen.battle_observer.utils.TextExt;
-	import net.armagomen.battle_observer.utils.tween.Tween;
 	import net.armagomen.battle_observer.utils.Utils;
+	import net.armagomen.battle_observer.utils.tween.Tween;
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
@@ -84,7 +84,7 @@
 		
 		private function addTimerAndAnimations():void
 		{
-			this.timer = new TextExt(0, this._image.height - 2, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
+			this.timer = new TextExt(0, this._image.height, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
 			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -this._image.height, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
@@ -94,10 +94,12 @@
 		
 		private function updateImageScale():void
 		{
-			var afterScaleWH:Number = Math.min(180.0, Math.ceil(90.0 * (App.appHeight / 1080.0)));
+			var size:Number         = 90.0;
+			var scale:Number        = App.appHeight / 1080.0;
+			var afterScaleWH:Number = Math.min(180.0, Math.ceil(size * scale));
 			if (afterScaleWH % 2 != 0)
 			{
-				afterScaleWH = afterScaleWH > 180.0 ? afterScaleWH - 1 : afterScaleWH + 1;
+				afterScaleWH += 1;
 			}
 			this._image.width = afterScaleWH;
 			this._image.height = afterScaleWH;
@@ -106,7 +108,8 @@
 			this._container.addChild(this._image);
 			if (this.timer)
 			{
-				this.timer.y = afterScaleWH - (this.params.show_timer_graphics ? 0 : 2);
+				this.timer.scaleX = this.timer.scaleY = scale;
+				this.timer.y = afterScaleWH - (this.params.show_timer_graphics ? -2 : 2);
 			}
 			
 			if (this.hideAnimation)
@@ -139,12 +142,14 @@
 				}
 				if (!this.timerId && this.params.show_timer_graphics)
 				{
+					this.radial_progress.updateProgressBar(this.progress / this.show_time);
 					this.timerId = setInterval(this.updateProgress, 100);
 				}
 				else
 				{
 					setTimeout(as_hide, this.show_time)
-					if (this.params.playTickSound){
+					if (this.params.playTickSound)
+					{
 						this.timerId = setInterval(this.playSound, 1000);
 					}
 				}
@@ -171,8 +176,8 @@
 		
 		private function updateProgress():void
 		{
-			this.radial_progress.updateProgressBar(this.progress / this.show_time);
 			this.progress -= 100;
+			this.radial_progress.updateProgressBar(this.progress / this.show_time);
 			if (this.params.show_timer)
 			{
 				this.timer.htmlText = this.getTimerString(this.progress / 1000);

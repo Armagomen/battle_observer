@@ -14,9 +14,7 @@ _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
 if getClientLanguage().lower() in ("uk", "be"):
     MESSAGES = ("Засікли: <font color='#daff8f'>{}</font> сек.",
                 "Викрито: <font color='#daff8f'>{}</font> сек.",
-                "Тікай: <font color='#daff8f'>{}</font> сек.",
-                "Ховайся: <font color='#daff8f'>{}</font> сек.",
-                "Роби маневр: <font color='#daff8f'>{}</font> сек.")
+                "Тікай: <font color='#daff8f'>{}</font> сек.")
 else:
     MESSAGES = ("Detected: <font color='#daff8f'>{}</font> sec.",
                 "Hide: <font color='#daff8f'>{}</font> sec.",

@@ -54,7 +54,7 @@ package net.armagomen.battle_observer.battle.components
 			this.cutWidth = settings["statistics_panels_cut_width"];
 			this.fullWidth = settings["statistics_panels_full_width"];
 			this.addEventListeners();
-			setTimeout(this.updateALL, 100);
+			setTimeout(this.updateALL, 200);
 		}
 		
 		private function addEventListeners():void
@@ -184,7 +184,8 @@ package net.armagomen.battle_observer.battle.components
 					tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 					listItem.vehicleIcon.transform.colorTransform = tColor;
 				}
-				
+				listItem.playerNameFullTF.width = this.fullWidth;
+				listItem.playerNameCutTF.width = this.cutWidth;
 				if (this.statisticsData[vehicleID])
 				{
 					if (this.statisticsData[vehicleID].vehicleTextColor)
@@ -195,10 +196,12 @@ package net.armagomen.battle_observer.battle.components
 					if (this.statisticsData[vehicleID].fullName)
 					{
 						listItem.playerNameFullTF.htmlText = this.statisticsData[vehicleID].fullName;
+						
 					}
 					if (this.statisticsData[vehicleID].cutName)
 					{
 						listItem.playerNameCutTF.htmlText = this.statisticsData[vehicleID].cutName;
+						
 					}
 					if (!listItem._isAlive)
 					{
