@@ -24,7 +24,7 @@
 		private var hideAnimation:Tween;
 		private var showAnimation:Tween;
 		private var hideAnimation2:Tween;
-		private var POSITION_Y:Number  = (App.appHeight >> 3) + 10;
+		private var POSITION_Y:Number;
 		private var _image:Bitmap;
 		private var radial_progress:RadialProgressBar;
 		private var timerId:Number;
@@ -61,7 +61,6 @@
 			{
 				this.loader.load(new URLRequest('../../../' + this.params.user_icon));
 			}
-		
 		}
 		
 		override protected function onBeforeDispose():void
@@ -89,7 +88,6 @@
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
 			this._container.alpha = 0;
-			this._container.y = this.POSITION_Y;
 		}
 		
 		private function updateImageScale():void
@@ -101,10 +99,12 @@
 			{
 				afterScaleWH += 1;
 			}
+			var half_size:Number = afterScaleWH >> 1;
+			this.POSITION_Y = Math.round(App.appHeight / 7) + half_size;
 			this._image.width = afterScaleWH;
 			this._image.height = afterScaleWH;
 			this._image.smoothing = true;
-			this._image.x = -afterScaleWH >> 1;
+			this._image.x = -half_size;
 			this._container.addChild(this._image);
 			if (this.timer)
 			{
@@ -120,9 +120,8 @@
 			{
 				this.radial_progress = this._container.addChild(new RadialProgressBar()) as RadialProgressBar;
 			}
-			var circleY:Number = afterScaleWH >> 1;
-			var radius:Number = this.params.show_timer_graphics_radius || circleY;
-			this.radial_progress.setParams(0, circleY, radius, Utils.colorConvert(this.params.show_timer_graphics_color));
+			var radius:Number = Math.round(this.params.show_timer_graphics_radius * scale) || half_size;
+			this.radial_progress.setParams(0, half_size, radius, scale, Utils.colorConvert(this.params.show_timer_graphics_color));
 		}
 		
 		public function as_show(seconds:Number):void
@@ -212,10 +211,10 @@
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
-			this.POSITION_Y = (App.appHeight >> 3) + 10;
 			if (this._image)
 			{
 				this.updateImageScale();
+				this.hideAnimation.begin = this.POSITION_Y;
 			}
 		}
 	}

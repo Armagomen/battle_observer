@@ -78,7 +78,7 @@ class UserSettings(object):
             SIXTH_SENSE.DEFAULT: True,
             SIXTH_SENSE.ICON_NAME: "logo.png",
             SIXTH_SENSE.TIME: 10,
-            SIXTH_SENSE.SHOW_TIMER: True,
+            SIXTH_SENSE.SHOW_TIMER: False,
             SIXTH_SENSE.TIMER_GRAPHICS: True,
             SIXTH_SENSE.TIMER_GRAPHICS_COLOR: "#ffa500",
             SIXTH_SENSE.TIMER_GRAPHICS_RADIUS: 45,
