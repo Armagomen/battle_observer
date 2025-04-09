@@ -5,11 +5,13 @@
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	import flash.utils.clearInterval;
+	import flash.utils.clearTimeout;
 	import flash.utils.setInterval;
 	import flash.utils.setTimeout;
+	
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.RadialProgressBar;
 	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.Utils;
@@ -28,6 +30,7 @@
 		private var _image:Bitmap;
 		private var radial_progress:RadialProgressBar;
 		private var timerId:Number;
+		private var timeoutID:Number;
 		private var progress:Number    = 10000;
 		private var show_time:Number   = 10000;
 		private var is_visible:Boolean = false;
@@ -81,16 +84,15 @@
 			App.utils.data.cleanupDynamicObject(this.params);
 		}
 		
-		private function addTimerAndAnimations():void
+		private function addAnimations():void
 		{
-			this.timer = new TextExt(0, this._image.height, Constants.tite16, TextFieldAutoSize.CENTER, this._container);
 			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -this._image.height, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
 			this._container.alpha = 0;
 		}
 		
-		private function updateImageScale():void
+		private function updateParams():void
 		{
 			var size:Number         = this.params.icon_size || 90.0;
 			var scale:Number        = App.appHeight / 1080.0;
@@ -106,15 +108,22 @@
 			this._image.smoothing = true;
 			this._image.x = -half_size;
 			this._container.addChild(this._image);
-			if (this.timer)
+			if (this.params.show_timer)
 			{
-				this.timer.scaleX = this.timer.scaleY = scale;
-				this.timer.y = afterScaleWH - (this.params.show_timer_graphics ? -2 : 2);
+				if (this.timer)
+				{
+					this._container.removeChild(this.timer);
+					this.timer = null;
+				}
+				var textformat:TextFormat = new TextFormat("$TitleFont", Math.ceil(16 * scale), 0xFFFFFF);
+				var _y:Number             = afterScaleWH - (this.params.show_timer_graphics ? -2 : 2);
+				this.timer = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);
 			}
 			
 			if (this.hideAnimation)
 			{
 				this.hideAnimation.finish = -afterScaleWH;
+				this.hideAnimation.begin = this.POSITION_Y;
 			}
 			if (!this.radial_progress)
 			{
@@ -140,14 +149,19 @@
 				{
 					this.timer.htmlText = this.getTimerString(seconds);
 				}
-				if (!this.timerId && this.params.show_timer_graphics)
+				if (this.params.show_timer_graphics)
 				{
+					if (this.timerId)
+					{
+						clearInterval(this.timerId);
+					}
 					this.radial_progress.updateProgressBar(this.progress / this.show_time);
 					this.timerId = setInterval(this.updateProgress, 100);
+					
 				}
 				else
 				{
-					setTimeout(as_hide, this.show_time)
+					this.timeoutID = setTimeout(as_hide, this.show_time)
 					if (this.params.playTickSound)
 					{
 						this.timerId = setInterval(this.playSound, 1000);
@@ -165,6 +179,11 @@
 			{
 				clearInterval(this.timerId);
 				this.timerId = 0;
+			}
+			if (this.timeoutID)
+			{
+				clearTimeout(this.timeoutID);
+				this.timeoutID = 0;
 			}
 			if (this.is_visible)
 			{
@@ -196,15 +215,15 @@
 		{
 			this.loader.close();
 			this._image = new DefaultIcon() as Bitmap;
-			this.updateImageScale();
-			this.addTimerAndAnimations();
+			this.updateParams();
+			this.addAnimations();
 		}
 		
 		private function imageLoaded(e:Event):void
 		{
 			this._image = this.loader.content as Bitmap;
-			this.updateImageScale();
-			this.addTimerAndAnimations();
+			this.updateParams();
+			this.addAnimations();
 			this.loader.unload();
 		}
 		
@@ -213,8 +232,7 @@
 			this.x = App.appWidth >> 1;
 			if (this._image)
 			{
-				this.updateImageScale();
-				this.hideAnimation.begin = this.POSITION_Y;
+				this.updateParams();
 			}
 		}
 	}

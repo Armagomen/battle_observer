@@ -3,6 +3,7 @@ package net.armagomen.battle_observer.battle.components
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.setTimeout;
+	import flash.utils.clearTimeout;
 	import flash.geom.ColorTransform;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
@@ -20,7 +21,7 @@ package net.armagomen.battle_observer.battle.components
 		private var fullStats:*                     = null;
 		private var panels:*                        = null;
 		private var _isComp7Battle:Boolean          = false;
-		
+		private var timeoutID:Number;
 		private var iconColors:Object               = {};
 		private var statisticsData:Object           = {};
 		private var iconsEnabled:Boolean            = false;
@@ -54,7 +55,7 @@ package net.armagomen.battle_observer.battle.components
 			this.cutWidth = settings["statistics_panels_cut_width"];
 			this.fullWidth = settings["statistics_panels_full_width"];
 			this.addEventListeners();
-			setTimeout(this.updateALL, 200);
+			this.timeoutID = setTimeout(this.updateALL, 200);
 		}
 		
 		private function addEventListeners():void
@@ -121,12 +122,20 @@ package net.armagomen.battle_observer.battle.components
 		
 		public function as_updateAll(timeout:Number):void
 		{
-			setTimeout(this.updateALL, timeout);
+			if (this.timeoutID)
+			{
+				clearTimeout(this.timeoutID);
+			}
+			this.timeoutID = setTimeout(this.updateALL, timeout);
 		}
 		
 		public function as_updateFullStatsOnkey(timeout:Number):void
 		{
-			setTimeout(this.updateFullStats, timeout);
+			if (this.timeoutID)
+			{
+				clearTimeout(this.timeoutID);
+			}
+			this.timeoutID = setTimeout(this.updateFullStats, timeout);
 		}
 		
 		private function updateALL():void
@@ -156,7 +165,11 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function onChange(eve:Event):void
 		{
-			setTimeout(this.updateALL, 50);
+			if (this.timeoutID)
+			{
+				clearTimeout(this.timeoutID);
+			}
+			this.timeoutID = setTimeout(this.updateALL, 50);
 		}
 		
 		private function updatePlayersPanel():void

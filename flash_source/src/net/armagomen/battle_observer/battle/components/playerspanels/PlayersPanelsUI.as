@@ -4,6 +4,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.utils.setTimeout;
+	import flash.utils.clearTimeout;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.battle.components.playerspanels.ListItem;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
@@ -12,6 +13,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 	
 	public class PlayersPanelsUI extends ObserverBattleDisplayable
 	{
+		private var timeoutID:Number;
 		private var playersPanel:* = null;
 		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
@@ -71,7 +73,11 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		
 		private function onChange(eve:Event):void
 		{
-			setTimeout(this.reloadLists, 1000);
+			if (this.timeoutID)
+			{
+				clearTimeout(this.timeoutID);
+			}
+			this.timeoutID = setTimeout(this.reloadLists, 1000);
 		}
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
