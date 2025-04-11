@@ -24,18 +24,18 @@ class _ShotResult(_CrosshairShotResults):
     _JET_FACTOR = 0.001
     ENTITY_TYPES = (Vehicle, DestructibleEntity)
 
-    @staticmethod
-    def _isAlly(entity, player, onAlly):
-        return False if onAlly else entity.publicInfo['team'] == player.team
-
     @classmethod
-    def _getShotResult(cls, hitPoint, collision, direction, multiplier, onAlly, player):
+    def _getShotResult(cls, hitPoint, collision, direction, multiplier, player):
         if player is None or collision is None:
             return cls.UNDEFINED_RESULT
         entity = collision.entity
-        if not isinstance(entity, cls.ENTITY_TYPES) or not entity.isAlive() or cls._isAlly(entity, player, onAlly):
+        if not isinstance(entity, cls.ENTITY_TYPES) or not entity.isAlive() or entity.publicInfo['team'] == player.team:
             return cls.UNDEFINED_RESULT
-        c_details = cls._getAllCollisionDetails(hitPoint, direction, entity)
+        return cls.__result(hitPoint, collision, direction, multiplier, player)
+
+    @classmethod
+    def __result(cls, hitPoint, collision, direction, multiplier, player):
+        c_details = cls._getAllCollisionDetails(hitPoint, direction, collision.entity)
         if c_details is None:
             return cls.UNDEFINED_RESULT
         shot = player.getVehicleDescriptor().shot
@@ -116,16 +116,25 @@ class _ShotResult(_CrosshairShotResults):
         return cls._checkShotResult(data), data
 
 
+class _ShotResultAll(_ShotResult):
+
+    @classmethod
+    def _getShotResult(cls, hitPoint, collision, direction, multiplier, player):
+        if player is None or collision is None or not isinstance(collision.entity, cls.ENTITY_TYPES) or not collision.entity.isAlive():
+            return cls.UNDEFINED_RESULT
+        return cls.__result(hitPoint, collision, direction, multiplier, player)
+
+
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
-        self.__onAlly = bool(user_settings.armor_calculator[ARMOR_CALC.ON_ALLY])
+        onAlly = bool(user_settings.armor_calculator[ARMOR_CALC.ON_ALLY])
         self.__player = getPlayer()
+        self.__resolver = _ShotResultAll if onAlly else _ShotResult
 
     def __updateColor(self, markerType, hitPoint, collision, direction):
-        shot_result, data = _ShotResult._getShotResult(hitPoint, collision, direction, self.__piercingMultiplier,
-                                                       self.__onAlly, self.__player)
+        shot_result, data = self.__resolver._getShotResult(hitPoint, collision, direction, self.__piercingMultiplier, self.__player)
         if shot_result in self.__colors:
             color = self.__colors[shot_result]
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):
