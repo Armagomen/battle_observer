@@ -85,9 +85,9 @@
 			App.utils.data.cleanupDynamicObject(this.params);
 		}
 		
-		private function addAnimations():void
+		private function addAnimations(finish:Number):void
 		{
-			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, 0, 0.5);
+			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -finish, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
 			this._container.alpha = 0;
@@ -120,12 +120,16 @@
 				var _y:Number             = afterScaleWH - (this.params.show_timer_graphics ? -2 : 2);
 				this.timer = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);
 			}
-			
-			if (this.hideAnimation)
+			if (!this.hideAnimation)
+			{
+				this.addAnimations(afterScaleWH);
+			}
+			else
 			{
 				this.hideAnimation.finish = -afterScaleWH;
 				this.hideAnimation.begin = this.POSITION_Y;
 			}
+			
 			if (!this.radial_progress)
 			{
 				this.radial_progress = this._container.addChild(new RadialProgressBar()) as RadialProgressBar;
@@ -218,14 +222,12 @@
 		{
 			this.loader.close();
 			this._image = new DefaultIcon() as Bitmap;
-			this.addAnimations();
 			this.updateParams();
 		}
 		
 		private function imageLoaded(e:Event):void
 		{
 			this._image = this.loader.content as Bitmap;
-			this.addAnimations();
 			this.updateParams();
 			this.loader.unload();
 		}
