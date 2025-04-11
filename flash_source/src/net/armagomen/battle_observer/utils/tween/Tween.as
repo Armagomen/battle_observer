@@ -19,7 +19,7 @@ package net.armagomen.battle_observer.utils.tween
 		public var prevTime:Number    = NaN;
 		public var prevPos:Number     = NaN;
 		public var isPlaying:Boolean  = false;
-		private var _fps:Number       = 30;
+		private var _fps:Number       = 25;
 		private var _time:Number      = 0;
 		public var begin:Number       = NaN;
 		public var change:Number      = NaN;

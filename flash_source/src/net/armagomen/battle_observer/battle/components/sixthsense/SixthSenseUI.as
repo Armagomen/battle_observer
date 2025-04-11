@@ -69,6 +69,7 @@
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
+			this.clearTimers();
 			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
 			this.loader = null;
@@ -86,7 +87,7 @@
 		
 		private function addAnimations():void
 		{
-			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -this._image.height, 0.5);
+			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, 0, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
 			this._container.alpha = 0;
@@ -102,7 +103,7 @@
 				afterScaleWH += 1;
 			}
 			var half_size:Number = afterScaleWH >> 1;
-			this.POSITION_Y = Math.round(App.appHeight / 7) + half_size;
+			this.POSITION_Y = Math.ceil(App.appHeight / 7 + half_size);
 			this._image.width = afterScaleWH;
 			this._image.height = afterScaleWH;
 			this._image.smoothing = true;
@@ -144,6 +145,7 @@
 			}
 			if (seconds)
 			{
+				this.clearTimers();
 				this.progress = this.show_time = seconds * 1000;
 				if (this.params.show_timer)
 				{
@@ -151,10 +153,6 @@
 				}
 				if (this.params.show_timer_graphics)
 				{
-					if (this.timerId)
-					{
-						clearInterval(this.timerId);
-					}
 					this.radial_progress.updateProgressBar(this.progress / this.show_time);
 					this.timerId = setInterval(this.updateProgress, 100);
 					
@@ -173,7 +171,7 @@
 			this.is_visible = true;
 		}
 		
-		public function as_hide():void
+		private function clearTimers():void
 		{
 			if (this.timerId)
 			{
@@ -185,6 +183,11 @@
 				clearTimeout(this.timeoutID);
 				this.timeoutID = 0;
 			}
+		}
+		
+		public function as_hide():void
+		{
+			this.clearTimers();
 			if (this.is_visible)
 			{
 				this.hideAnimation.start();
@@ -215,15 +218,15 @@
 		{
 			this.loader.close();
 			this._image = new DefaultIcon() as Bitmap;
-			this.updateParams();
 			this.addAnimations();
+			this.updateParams();
 		}
 		
 		private function imageLoaded(e:Event):void
 		{
 			this._image = this.loader.content as Bitmap;
-			this.updateParams();
 			this.addAnimations();
+			this.updateParams();
 			this.loader.unload();
 		}
 		

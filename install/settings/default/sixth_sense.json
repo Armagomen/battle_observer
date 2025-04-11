@@ -1,8 +1,13 @@
 {
-  "default_icon": true,
-  "default_icon_name": "dog_patron.png",
-  "enabled": false,
-  "lampShowTime": 9,
-  "playTickSound": false,
+  "default_icon": true, 
+  "default_icon_name": "lamp_2.png", 
+  "enabled": false, 
+  "icon_size": 80, 
+  "lampShowTime": 10, 
+  "playTickSound": true, 
+  "show_timer": false, 
+  "show_timer_graphics": true, 
+  "show_timer_graphics_color": "#FE5301", 
+  "show_timer_graphics_radius": 35, 
   "user_icon": "mods/configs/mod_battle_observer/__icon__path__200x200.png"
 }
