@@ -1,7 +1,7 @@
 from aih_constants import SHOT_RESULT
 from armagomen._constants import ARMOR_CALC, GLOBAL, IS_WG_CLIENT
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import getPlayer, MinMax, overrideMethod
+from armagomen.utils.common import getPlayer, isReplay, MinMax, overrideMethod
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
@@ -146,20 +146,19 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         super(ShotResultIndicatorPlugin, self).__setMapping(keys)
         self.__mapping[CROSSHAIR_VIEW_ID.STRATEGIC] = True
 
-
-class ShotResultIndicatorPlugin_WG(ShotResultIndicatorPlugin):
-
     def start(self):
-        super(ShotResultIndicatorPlugin_WG, self).start()
-        prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
-        if prebattleCtrl is not None:
-            prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
+        super(ShotResultIndicatorPlugin, self).start()
+        if IS_WG_CLIENT:
+            prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
+            if prebattleCtrl is not None:
+                prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
 
     def stop(self):
-        super(ShotResultIndicatorPlugin_WG, self).stop()
-        prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
-        if prebattleCtrl is not None:
-            prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
+        super(ShotResultIndicatorPlugin, self).stop()
+        if IS_WG_CLIENT:
+            prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
+            if prebattleCtrl is not None:
+                prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
 
     def __updateCurrVehicleInfo(self, vehicle):
         if avatar_getter.isObserver(self.__player) or vehicle is None:
@@ -172,7 +171,7 @@ class ShotResultIndicatorPlugin_WG(ShotResultIndicatorPlugin):
 def createPlugins(base, *args):
     _plugins = base(*args)
     if user_settings.armor_calculator[GLOBAL.ENABLED]:
-        _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin_WG if IS_WG_CLIENT else ShotResultIndicatorPlugin
+        _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
 
 
@@ -228,7 +227,7 @@ class Randomizer(object):
         logDebug(cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
 
 
-if IS_WG_CLIENT:
+if IS_WG_CLIENT and not isReplay():
     g_events.onVehicleChangedDelayed += Randomizer._updateRandomization
 
 
