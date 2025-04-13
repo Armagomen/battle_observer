@@ -70,6 +70,7 @@ package net.armagomen.battle_observer
 				{
 					this.addChild(prebattleTimer);
 				}
+				this.updateStage(App.appWidth, App.appHeight);
 			}
 		}
 	}

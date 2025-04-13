@@ -201,11 +201,11 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			var page:* = parent;
 			try
 			{
-				page.battleDamageLogPanel.updateTopContainerPosition(page.playersPanel.listLeft.getRenderersVisibleWidth() + page.playersPanelOffset);
+				page.updateDamageLogPosition();
 			}
 			catch (err:Error)
 			{
-				page.updateDamageLogPosition();
+				page.updateDamageLogPosition(page.epicRandomPlayersPanel.state);
 			}
 		}
 	}
