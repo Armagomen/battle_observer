@@ -6,5 +6,9 @@ class DistanceMeta(BaseModMeta):
     def __init__(self):
         super(DistanceMeta, self).__init__()
 
-    def as_setDistanceS(self, text):
-        return self.flashObject.as_setDistance(text) if self._isDAAPIInited() else None
+    def as_setUpdateEnabled(self, param):
+        if self._isDAAPIInited():
+            self.flashObject.as_setUpdateEnabled(param)
+
+    def getUpdatedDistance(self):
+        return ''

@@ -5,13 +5,9 @@ from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 
 __all__ = ()
 
-VIEW_SETTINGS = (
-    ComponentSettings(LOBBY_ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),
-)
-
 
 def getViewSettings():
-    return VIEW_SETTINGS
+    return (ComponentSettings(LOBBY_ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),)
 
 
 def getBusinessHandlers():

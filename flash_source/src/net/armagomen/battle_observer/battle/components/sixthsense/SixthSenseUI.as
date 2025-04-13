@@ -3,25 +3,26 @@
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.events.TimerEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import flash.utils.clearInterval;
+	import flash.utils.Timer;
 	import flash.utils.clearTimeout;
-	import flash.utils.setInterval;
 	import flash.utils.setTimeout;
-	
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.RadialProgressBar;
 	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.Utils;
 	import net.armagomen.battle_observer.utils.tween.Tween;
 	
+	
+	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
 		private var loader:Loader;
 		private var params:Object;
-		private var timer:TextExt;
+		private var timer_text:TextExt;
 		private var _container:Sprite;
 		private var hideAnimation:Tween;
 		private var showAnimation:Tween;
@@ -29,11 +30,11 @@
 		private var POSITION_Y:Number;
 		private var _image:Bitmap;
 		private var radial_progress:RadialProgressBar;
-		private var timerId:Number;
 		private var timeoutID:Number;
 		private var progress:Number    = 10000;
 		private var show_time:Number   = 10000;
 		private var is_visible:Boolean = false;
+		private var _timer:Timer       = null;
 		
 		public var playSound:Function;
 		public var getTimerString:Function;
@@ -47,6 +48,8 @@
 			this.loader = new Loader();
 			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			this._timer = new Timer(100);
+			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 		}
 		
 		override protected function onPopulate():void
@@ -70,6 +73,8 @@
 		{
 			super.onBeforeDispose();
 			this.clearTimers();
+			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
+			this._timer = null;
 			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
 			this.loader = null;
@@ -80,7 +85,7 @@
 			this.hideAnimation2 = null;
 			this.showAnimation = null;
 			this._container.removeChildren();
-			this.timer = null;
+			this.timer_text = null;
 			this._container = null;
 			App.utils.data.cleanupDynamicObject(this.params);
 		}
@@ -111,14 +116,14 @@
 			this._container.addChild(this._image);
 			if (this.params.show_timer)
 			{
-				if (this.timer)
+				if (this.timer_text)
 				{
-					this._container.removeChild(this.timer);
-					this.timer = null;
+					this._container.removeChild(this.timer_text);
+					this.timer_text = null;
 				}
 				var textformat:TextFormat = new TextFormat("$TitleFont", Math.ceil(16 * scale), 0xFFFFFF);
 				var _y:Number             = afterScaleWH - (this.params.show_timer_graphics ? -2 : 2);
-				this.timer = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);
+				this.timer_text = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);
 			}
 			if (!this.hideAnimation)
 			{
@@ -151,23 +156,24 @@
 			{
 				this.clearTimers();
 				this.progress = this.show_time = seconds * 1000;
-				if (this.params.show_timer)
+				
+				if (this.params.show_timer || this.params.show_timer_graphics || this.params.playTickSound)
 				{
-					this.timer.htmlText = this.getTimerString(seconds);
-				}
-				if (this.params.show_timer_graphics)
-				{
-					this.radial_progress.updateProgressBar(this.progress / this.show_time);
-					this.timerId = setInterval(this.updateProgress, 100);
+					if (this.params.show_timer)
+					{
+						this.timer_text.htmlText = this.getTimerString(seconds);
+					}
 					
+					if (this.params.show_timer_graphics)
+					{
+						this.radial_progress.updateProgressBar(this.progress / this.show_time);
+					}
+					
+					this._timer.start();
 				}
 				else
 				{
 					this.timeoutID = setTimeout(as_hide, this.show_time)
-					if (this.params.playTickSound)
-					{
-						this.timerId = setInterval(this.playSound, 1000);
-					}
 				}
 			}
 			this._container.y = this.POSITION_Y;
@@ -177,10 +183,9 @@
 		
 		private function clearTimers():void
 		{
-			if (this.timerId)
+			if (this._timer.running)
 			{
-				clearInterval(this.timerId);
-				this.timerId = 0;
+				this._timer.stop();
 			}
 			if (this.timeoutID)
 			{
@@ -200,13 +205,22 @@
 			}
 		}
 		
+		protected function timerHandler(timerEvent:TimerEvent):void
+		{
+			this.updateProgress();
+			timerEvent.updateAfterEvent();
+		}
+		
 		private function updateProgress():void
 		{
 			this.progress -= 100;
-			this.radial_progress.updateProgressBar(this.progress / this.show_time);
+			if (this.params.show_timer_graphics)
+			{
+				this.radial_progress.updateProgressBar(this.progress / this.show_time);
+			}
 			if (this.params.show_timer)
 			{
-				this.timer.htmlText = this.getTimerString(this.progress / 1000);
+				this.timer_text.htmlText = this.getTimerString(this.progress / 1000);
 			}
 			if (this.params.playTickSound && this.progress >= 1000 && this.progress % 1000 == 0)
 			{
