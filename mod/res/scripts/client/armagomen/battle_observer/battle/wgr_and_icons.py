@@ -23,7 +23,7 @@ class WGRAndIcons(WGRAndIconsMeta):
 
     def __init__(self):
         super(WGRAndIcons, self).__init__()
-        self.ranges = ((3280, "bad"), (5165, "normal"), (7274, "good"), (9589, "very_good"), (11015, "unique"))
+        self.ranges = ((3287, "bad"), (5150, "normal"), (7258, "good"), (9586, "very_good"), (11025, "unique"))
         self.itemsData = {}
         self.data_loader = None
 
@@ -97,7 +97,7 @@ class WGRAndIcons(WGRAndIconsMeta):
 
     def updateALL(self, base, *args):
         base(*args)
-        self.as_updateAll(40)
+        self.as_updateAll(50)
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]
