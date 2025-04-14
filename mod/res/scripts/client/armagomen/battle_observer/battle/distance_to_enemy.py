@@ -14,9 +14,11 @@ class Distance(DistanceMeta):
         self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
         self.isPostmortem = False
         self.vehicles = {}
+        self.player = None
 
     def _populate(self):
         super(Distance, self)._populate()
+        self.player = getPlayer()
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -62,21 +64,19 @@ class Distance(DistanceMeta):
             self.vehicles.pop(vehicleID)
         self.as_setUpdateEnabled(bool(self.vehicles))
 
+    @property
+    def distances(self):
+        for vehicle in self.vehicles.itervalues():
+            yield getDistanceToTarget(vehicle, avatar=self.player), vehicle.typeDescriptor.type.shortUserString
+
     def getUpdatedDistance(self):
-        distance = None
-        vehicle_name = None
-        player = getPlayer()
-        for entity in self.vehicles.itervalues():
-            dist = getDistanceToTarget(entity, avatar=player)
-            if distance is None or dist < distance:
-                distance = dist
-                vehicle_name = entity.typeDescriptor.type.shortUserString
-        self.macrosDict[DISTANCE.TANK_NAME] = vehicle_name
-        self.macrosDict[DISTANCE.DIST] = distance
+        if not self.vehicles:
+            return super(Distance, self).getUpdatedDistance()
+        self.macrosDict[DISTANCE.DIST], self.macrosDict[DISTANCE.TANK_NAME] = min(self.distances)
         return self.settings[DISTANCE.TEMPLATE] % self.macrosDict
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.isPostmortem = ctrlMode in POSTMORTEM_MODES
         if self.isPostmortem:
-            self.vehicles.clear()
             self.as_setUpdateEnabled(False)
+            self.vehicles.clear()

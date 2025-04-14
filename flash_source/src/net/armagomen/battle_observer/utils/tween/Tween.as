@@ -16,14 +16,11 @@ package net.armagomen.battle_observer.utils.tween
 	public class Tween extends EventDispatcher
 	{
 		private var _position:Number  = NaN;
-		public var prevTime:Number    = NaN;
-		public var prevPos:Number     = NaN;
 		public var isPlaying:Boolean  = false;
-		private var _fps:Number       = 25;
+		private var _fps:Number       = 20;
 		private var _time:Number      = 0;
 		public var begin:Number       = NaN;
 		public var change:Number      = NaN;
-		public var looping:Boolean    = false;
 		private var _timer:Timer      = null;
 		private var _startTime:Number = NaN;
 		public var prop:String        = "";
@@ -43,7 +40,8 @@ package net.armagomen.battle_observer.utils.tween
 			this.position = begin;
 			this.duration = duration;
 			this.finish = finish;
-			this._timer = new Timer(100);
+			this._timer = new Timer(1000 / this._fps);
+			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 		}
 		
 		public function continueTo(finish:Number, duration:Number):void
@@ -59,8 +57,6 @@ package net.armagomen.battle_observer.utils.tween
 		
 		protected function startEnterFrame():void
 		{
-			this._timer.delay = 1000 / this._fps;
-			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 			this._timer.start();
 			this.isPlaying = true;
 		}
@@ -95,22 +91,12 @@ package net.armagomen.battle_observer.utils.tween
 		
 		public function set time(t:Number):void
 		{
-			this.prevTime = this._time;
 			if (t > this.duration)
 			{
-				if (this.looping)
-				{
-					this.rewind(t - this._duration);
-					this.update();
-					this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_LOOP, this._time, this._position));
-				}
-				else
-				{
-					this._time = this._duration;
-					this.update();
-					this.stop();
-					this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_FINISH, this._time, this._position));
-				}
+				this._time = this._duration;
+				this.update();
+				this.stop();
+				this.dispatchEvent(new TweenEvent(TweenEvent.MOTION_FINISH, this._time, this._position));
 			}
 			else if (t < 0)
 			{
@@ -150,7 +136,6 @@ package net.armagomen.battle_observer.utils.tween
 		
 		public function setPosition(p:Number):void
 		{
-			this.prevPos = this._position;
 			if (this.prop.length)
 			{
 				this.obj[this.prop] = this._position = p;
