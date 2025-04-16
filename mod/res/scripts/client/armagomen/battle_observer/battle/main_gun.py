@@ -46,7 +46,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
         if self.totalEnemiesHP != totalEnemiesHP:
             self.totalEnemiesHP = totalEnemiesHP
-            self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, totalEnemiesHP / 5)
+            self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(round(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
             self.updateMainGun()
 
     def updateMainGun(self):

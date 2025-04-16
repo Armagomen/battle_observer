@@ -4,7 +4,7 @@ from armagomen._constants import DAMAGE_LOG, GLOBAL, IS_WG_CLIENT
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, overrideMethod
 from BattleReplay import g_replayCtrl
-from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE as _ETYPE
+from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 from gui.battle_control.controllers import debug_ctrl
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
 
@@ -111,10 +111,10 @@ class WG_Logs_Fix(object):
 
     @staticmethod
     def validateSettings(config):
-        return {_ETYPE.RECEIVED_CRITICAL_HITS: config[DAMAGE_LOG.WG_CRITICS],
-                _ETYPE.BLOCKED_DAMAGE: config[DAMAGE_LOG.WG_BLOCKED],
-                _ETYPE.ASSIST_DAMAGE: config[DAMAGE_LOG.WG_ASSIST],
-                _ETYPE.STUN: config[DAMAGE_LOG.WG_ASSIST]}
+        return {PERSONAL_EFFICIENCY_TYPE.RECEIVED_CRITICAL_HITS: config[DAMAGE_LOG.WG_CRITICS],
+                PERSONAL_EFFICIENCY_TYPE.BLOCKED_DAMAGE: config[DAMAGE_LOG.WG_BLOCKED],
+                PERSONAL_EFFICIENCY_TYPE.ASSIST_DAMAGE: config[DAMAGE_LOG.WG_ASSIST],
+                PERSONAL_EFFICIENCY_TYPE.STUN: config[DAMAGE_LOG.WG_ASSIST]}
 
 
 logs_fix = WG_Logs_Fix()
