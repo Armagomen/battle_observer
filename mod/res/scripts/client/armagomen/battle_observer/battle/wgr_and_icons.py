@@ -86,7 +86,7 @@ class WGRAndIcons(WGRAndIconsMeta):
             self.as_update_wgr_data(self.itemsData)
 
     def updateFullStats(self, key):
-        self.as_updateFullStats(50)
+        self.as_updateFullStats(100)
 
     def updateAllOnKey(self, *args):
         self.as_updateAll(50)

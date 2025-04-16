@@ -1,8 +1,12 @@
-from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS
+from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, STATISTICS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import xvmInstalled
 from armagomen.utils.logging import logDebug, logInfo
-from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates
+
+if IS_WG_CLIENT:
+    from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates
+else:
+    from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, _STATE_TO_UI, PageStates
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
 from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
