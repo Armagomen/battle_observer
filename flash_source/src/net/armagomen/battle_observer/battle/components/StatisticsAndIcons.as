@@ -186,11 +186,11 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function updatePlayersPanelItem(holder:*):void
 		{
-			if (holder.vehicleData && holder.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
+			if (holder.vehicleData)
 			{
 				var vehicleID:int = holder.vehicleData.vehicleID;
 				var listItem:*    = holder.getListItem();
-				if (this.iconsEnabled)
+				if (this.iconsEnabled && holder.vehicleData.vehicleType != BATTLEATLAS.UNKNOWN)
 				{
 					var tColor:ColorTransform = listItem.vehicleIcon.transform.colorTransform;
 					tColor.color = this.iconColors[holder.vehicleData.vehicleType];
@@ -251,10 +251,10 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function updateFullStatsItem(holder:*, isEnemy:Boolean):void
 		{
-			if (holder.data && holder.data.vehicleType != BATTLEATLAS.UNKNOWN)
+			if (holder.data)
 			{
 				var vehicleID:int = holder.data.vehicleID;
-				if (this.iconsEnabled)
+				if (this.iconsEnabled && holder.data.vehicleType != BATTLEATLAS.UNKNOWN)
 				{
 					var tColor:ColorTransform = holder.statsItem._vehicleIcon.transform.colorTransform;
 					tColor.color = this.iconColors[holder.data.vehicleType];
@@ -305,10 +305,10 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function updateBattleloadingItem(holder:*):void
 		{
-			if (holder.model && holder.model.vehicleType != BATTLEATLAS.UNKNOWN)
+			if (holder.model)
 			{
 				var vehicleID:int = holder.model.vehicleID;
-				if (this.iconsEnabled)
+				if (this.iconsEnabled && holder.model.vehicleType != BATTLEATLAS.UNKNOWN)
 				{
 					var tColor:ColorTransform = holder._vehicleIcon.transform.colorTransform;
 					tColor.color = this.iconColors[holder.model.vehicleType];

@@ -7,7 +7,6 @@ from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIcons
 from armagomen.utils.common import addCallback, cancelCallback, cancelOverride, fetchURL, overrideMethod
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
-from Event import SafeEvent
 from gui.Scaleform.daapi.view.battle.classic.players_panel import PlayersPanel
 from gui.Scaleform.daapi.view.battle.shared.stats_exchange import BattleStatisticsDataController
 from Keys import KEY_LALT, KEY_TAB
@@ -39,8 +38,7 @@ class WGRAndIcons(WGRAndIconsMeta):
         g_keysListener.registerComponent(self.updateAllOnKey, keyList=[KEY_LALT])
         g_keysListener.registerComponent(self.updateFullStats, keyList=[KEY_TAB])
         if STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
-            self.data_loader = StatisticsDataLoader(self._arenaDP)
-            self.data_loader.onDataReceived += self.updateAllItems
+            self.data_loader = StatisticsDataLoader(self._arenaDP, self.updateAllItems)
             self.data_loader.getStatisticsDataFromServer()
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
@@ -57,8 +55,6 @@ class WGRAndIcons(WGRAndIconsMeta):
         cancelOverride(PlayersPanel, "as_setPanelHPBarVisibilityStateS", "updateALL")
         cancelOverride(PlayersPanel, "as_setPanelModeS", "updateALL")
         cancelOverride(PlayersPanel, "as_setIsInteractiveS", "updateALL")
-        if self.data_loader is not None:
-            self.data_loader.onDataReceived -= self.updateAllItems
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onPeriodChange -= self.updateAllOnKey
@@ -134,12 +130,12 @@ class StatisticsDataLoader(object):
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"
 
-    def __init__(self, arenaDP):
+    def __init__(self, arenaDP, callback):
         self.arenaDP = arenaDP
+        self.__callback = callback
         self._load_try = 0
         self.__getDataCallback = None
         self.__vehicles = set()
-        self.onDataReceived = SafeEvent()
         self.__loaded = set()
 
     def onDataResponse(self, response):
@@ -149,7 +145,7 @@ class StatisticsDataLoader(object):
             response_data = json.loads(response.body)
             data = response_data.get("data", {})
             logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
-            self.onDataReceived(data)
+            self.__callback(data)
             self.__loaded.update(int(k) for k in data.keys())
         else:
             self.delayedLoad(response.responseCode)
