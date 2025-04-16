@@ -31,8 +31,7 @@ class Core(object):
                 logError("Settings Api Not Loaded")
             else:
                 from armagomen.battle_observer.settings.hangar import SettingsInterface
-                self.hangar_settings = SettingsInterface(settings_loader, modVersion, g_modsListApi, vxSettingsApi,
-                                                         vxSettingsApiEvents)
+                self.hangar_settings = SettingsInterface(settings_loader, modVersion, g_modsListApi, vxSettingsApi, vxSettingsApiEvents)
 
     def fini(self):
         from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache

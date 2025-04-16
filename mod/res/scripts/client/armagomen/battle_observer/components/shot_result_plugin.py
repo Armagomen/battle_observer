@@ -5,7 +5,7 @@ from armagomen.utils.common import getPlayer, isReplay, MinMax, overrideMethod
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
-from constants import ARENA_BONUS_TYPE, SHELL_MECHANICS_TYPE, SHELL_TYPES
+from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES
 from DestructibleEntity import DestructibleEntity
 from gui.battle_control import avatar_getter
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
@@ -161,10 +161,8 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
                 prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
 
     def __updateCurrVehicleInfo(self, vehicle):
-        if avatar_getter.isObserver(self.__player) or vehicle is None:
-            return
-        isComp7Battle = self.sessionProvider.arenaVisitor.getArenaBonusType() == ARENA_BONUS_TYPE.COMP7
-        Randomizer._updateRandomization(vehicle, isComp7=isComp7Battle)
+        if not avatar_getter.isObserver(self.__player) and vehicle is not None:
+            Randomizer._updateRandomization(vehicle)
 
 
 @overrideMethod(plugins, 'createPlugins')
@@ -207,8 +205,8 @@ class Randomizer(object):
         return result
 
     @classmethod
-    def _updateRandomization(cls, vehicle, isComp7=False):
-        randomization_min, randomization_max = (0.85, 1.15) if isComp7 else DEFAULT_RANDOMIZATION
+    def _updateRandomization(cls, vehicle):
+        randomization_min, randomization_max = DEFAULT_RANDOMIZATION
         if user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None:
             data = {cls.GUNNER_ARMORER: [], cls.LOADER_AMMUNITION_IMPROVE: []}
             for _, tman in vehicle.crew:
