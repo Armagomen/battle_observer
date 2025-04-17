@@ -1,5 +1,6 @@
 from armagomen.battle_observer.components.controllers.current_vehicle_data import CurrentVehicleCachedData
 from armagomen.battle_observer.components.controllers.players_damage_controller import PlayersDamageController
+# import armagomen.battle_observer.components.controllers.tab_wiev
 
 cachedVehicleData = CurrentVehicleCachedData()
 damage_controller = PlayersDamageController()

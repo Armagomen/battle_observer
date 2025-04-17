@@ -1,24 +1,13 @@
 # coding=utf-8
-from random import choice
 
 from armagomen._constants import SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
-from helpers import getClientLanguage
 from PlayerEvents import g_playerEvents
 from SoundGroups import g_instance
 
 _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
                    VEHICLE_VIEW_STATE.DESTROYED, VEHICLE_VIEW_STATE.CREW_DEACTIVATED}
-
-if getClientLanguage().lower() in ("uk", "be"):
-    MESSAGES = ("Засікли: <font color='#daff8f'>{}</font> сек.",
-                "Викрито: <font color='#daff8f'>{}</font> сек.",
-                "Тікай: <font color='#daff8f'>{}</font> сек.")
-else:
-    MESSAGES = ("Detected: <font color='#daff8f'>{}</font> sec.",
-                "Hide: <font color='#daff8f'>{}</font> sec.",
-                "Run: <font color='#daff8f'>{}</font> sec.")
 
 RADIO = 'improvedRadioCommunication'
 RADIO_DURATION = 1.5
@@ -30,8 +19,6 @@ class SixthSense(SixthSenseMeta):
         super(SixthSense, self).__init__()
         self.radio_installed = False
         self.__sounds = dict()
-        self.__visible = False
-        self.__message = None
         self.__radar = None
         self.__soundID = None
         try:
@@ -82,12 +69,6 @@ class SixthSense(SixthSenseMeta):
     def onDevicesChanged(self, devices):
         self.radio_installed = RADIO in (device.groupName for device in devices if device is not None)
 
-    def getNewRandomMessage(self):
-        message = choice(MESSAGES)
-        if message == self.__message:
-            message = self.getNewRandomMessage()
-        return message
-
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             if value.get('isObserved', False):
@@ -100,7 +81,6 @@ class SixthSense(SixthSenseMeta):
                     time = self.settings[SIXTH_SENSE.TIME]
                     if self.radio_installed:
                         time -= RADIO_DURATION
-                self.__message = self.getNewRandomMessage()
                 self.as_showS(time)
             else:
                 self.as_hideS()
@@ -109,9 +89,6 @@ class SixthSense(SixthSenseMeta):
 
     def _onRoundFinished(self, *args):
         self.as_hideS()
-
-    def getTimerString(self, timeLeft):
-        return self.__message.format(timeLeft)
 
     def playSound(self):
         if self.__soundID is not None:

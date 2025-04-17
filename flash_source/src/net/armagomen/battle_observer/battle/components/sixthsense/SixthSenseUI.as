@@ -16,8 +16,6 @@
 	import net.armagomen.battle_observer.utils.Utils;
 	import net.armagomen.battle_observer.utils.tween.Tween;
 	
-	
-	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
 		private var loader:Loader;
@@ -37,7 +35,6 @@
 		private var _timer:Timer       = null;
 		
 		public var playSound:Function;
-		public var getTimerString:Function;
 		
 		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
@@ -121,9 +118,11 @@
 					this._container.removeChild(this.timer_text);
 					this.timer_text = null;
 				}
-				var textformat:TextFormat = new TextFormat("$TitleFont", Math.ceil(16 * scale), 0xFFFFFF);
-				var _y:Number             = afterScaleWH - (this.params.show_timer_graphics ? -2 : 2);
+				var text_size:Number      = Math.ceil(20 * scale);
+				var textformat:TextFormat = new TextFormat("$TitleFont", text_size, 0xFFFFFF);
+				var _y:Number             = half_size + (text_size >> 1);
 				this.timer_text = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);
+				this.timer_text.alpha = 0.75;
 			}
 			if (!this.hideAnimation)
 			{
@@ -161,7 +160,7 @@
 				{
 					if (this.params.show_timer)
 					{
-						this.timer_text.htmlText = this.getTimerString(seconds);
+						this.timer_text.text = seconds.toFixed(1);
 					}
 					
 					if (this.params.show_timer_graphics)
@@ -199,6 +198,10 @@
 			this.clearTimers();
 			if (this.is_visible)
 			{
+				if (this.timer_text)
+				{
+					this.timer_text.text = "";
+				}
 				this.hideAnimation.start();
 				this.hideAnimation2.start();
 				this.is_visible = false;
@@ -220,7 +223,7 @@
 			}
 			if (this.params.show_timer)
 			{
-				this.timer_text.htmlText = this.getTimerString(this.progress / 1000);
+				this.timer_text.text = (Math.round((this.progress / 1000) * 10) /10).toFixed(1);
 			}
 			if (this.params.playTickSound && this.progress >= 1000 && this.progress % 1000 == 0)
 			{

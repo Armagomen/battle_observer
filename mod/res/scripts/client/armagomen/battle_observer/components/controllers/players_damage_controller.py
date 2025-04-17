@@ -24,8 +24,9 @@ class PlayersDamageController(object):
             arena.onVehicleHealthChanged -= self.onVehicleHealthChanged
 
     def onVehicleHealthChanged(self, targetID, attackerID, damage):
-        self.__damages[attackerID] += damage
-        self.onPlayerDamaged(attackerID, self.__damages[attackerID])
+        if damage > 0:
+            self.__damages[attackerID] += damage
+            self.onPlayerDamaged(attackerID, self.__damages[attackerID])
 
     def getPlayerDamage(self, vehicleID):
         return self.__damages[vehicleID]

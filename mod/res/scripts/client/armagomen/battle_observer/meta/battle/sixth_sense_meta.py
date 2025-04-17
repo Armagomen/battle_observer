@@ -12,8 +12,5 @@ class SixthSenseMeta(BaseModMeta):
     def as_hideS(self):
         return self.flashObject.as_hide() if self._isDAAPIInited() else None
 
-    def getTimerString(self, timeLeft):
-        return "NO TIMER STRING"
-
     def playSound(self):
         pass
