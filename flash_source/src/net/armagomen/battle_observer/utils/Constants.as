@@ -4,7 +4,6 @@ package net.armagomen.battle_observer.utils
 	
 	public class Constants
 	{
-		public static const tite16:TextFormat       = new TextFormat("$TitleFont", 16, 0xFFFFFF);
 		public static const middleText:TextFormat   = new TextFormat("$TitleFont", 18, 0xFFFFFF);
 		public static const diff:TextFormat         = new TextFormat("$TitleFont", 14, 0xFFFFFF);
 		public static const largeText:TextFormat    = new TextFormat("$TitleFont", 20, 0xFFFFFF);

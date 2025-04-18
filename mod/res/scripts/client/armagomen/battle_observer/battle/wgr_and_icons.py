@@ -36,7 +36,8 @@ class WGRAndIcons(WGRAndIconsMeta):
         overrideMethod(PlayersPanel, "as_setPanelModeS")(self.updateALL)
         overrideMethod(PlayersPanel, "as_setIsInteractiveS")(self.updateALL)
         g_keysListener.registerComponent(self.updateAllOnKey, keyList=[KEY_LALT])
-        g_keysListener.registerComponent(self.updateFullStats, keyList=[KEY_TAB])
+        if self.isComp7Battle():
+            g_keysListener.registerComponent(self.updateFullStats, keyList=[KEY_TAB])
         if STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
             self.data_loader = StatisticsDataLoader(self._arenaDP, self.updateAllItems)
             self.data_loader.getStatisticsDataFromServer()

@@ -1,6 +1,7 @@
 package net.armagomen.battle_observer.utils
 {
 	import flash.display.Shape;
+	import flash.display.Sprite;
 	
 	public class RadialProgressBar extends Shape
 	{
@@ -8,9 +9,10 @@ package net.armagomen.battle_observer.utils
 		private var _color:uint       = 0xffa500;
 		private var _thickness:Number = 5.0;
 		
-		public function RadialProgressBar()
+		public function RadialProgressBar(container:Sprite)
 		{
 			super();
+			container.addChild(this);
 		}
 		
 		public function updateProgressBar(_progress:Number = 1.0):void

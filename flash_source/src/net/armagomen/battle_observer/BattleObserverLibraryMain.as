@@ -15,7 +15,7 @@ package net.armagomen.battle_observer
 	import net.armagomen.battle_observer.battle.components.MinimapUI;
 	import net.armagomen.battle_observer.battle.components.ObserverDateTimesUI;
 	import net.armagomen.battle_observer.battle.components.OwnHealthUI;
-	import net.armagomen.battle_observer.battle.components.StatisticsAndIcons;
+	import net.armagomen.battle_observer.battle.components.statistics.StatisticsAndIcons;
 	import net.armagomen.battle_observer.battle.components.battletimer.ObserverBattleTimerUI;
 	import net.armagomen.battle_observer.battle.components.debugpanel.ObserverDebugPanelUI;
 	import net.armagomen.battle_observer.battle.components.maingun.MainGunUI;

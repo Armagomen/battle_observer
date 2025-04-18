@@ -122,7 +122,7 @@
 				var textformat:TextFormat = new TextFormat("$TitleFont", text_size, 0xFFFFFF);
 				var _y:Number             = half_size + (text_size >> 1);
 				this.timer_text = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);
-				this.timer_text.alpha = 0.75;
+				this.timer_text.alpha = 0.7;
 			}
 			if (!this.hideAnimation)
 			{
@@ -136,7 +136,7 @@
 			
 			if (!this.radial_progress)
 			{
-				this.radial_progress = this._container.addChild(new RadialProgressBar()) as RadialProgressBar;
+				this.radial_progress = new RadialProgressBar(this._container);
 			}
 			var radius:Number = Math.round(this.params.show_timer_graphics_radius * scale) || half_size;
 			this.radial_progress.setParams(0, half_size, radius, scale, Utils.colorConvert(this.params.show_timer_graphics_color));
@@ -223,7 +223,7 @@
 			}
 			if (this.params.show_timer)
 			{
-				this.timer_text.text = (Math.round((this.progress / 1000) * 10) /10).toFixed(1);
+				this.timer_text.text = (Math.round((this.progress / 1000) * 10) / 10).toFixed(1);
 			}
 			if (this.params.playTickSound && this.progress >= 1000 && this.progress % 1000 == 0)
 			{
