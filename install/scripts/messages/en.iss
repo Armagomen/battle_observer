@@ -69,6 +69,8 @@ en.dispersion_circle_server=Add a 70% reduced server reticle.
 //sixth_sense
 en.sixth_sense=The sixth sense with a timer, after installation, select the desired image in the settings.
 en.playTickSound=Play timer sound
+en.show_timer_graphics=Show timer circle
+en.show_timer=Show seconds
 
 en.arcade_camera=Commander's camera - zoomed out
 en.strategic_camera=Artillery camera - increased distance

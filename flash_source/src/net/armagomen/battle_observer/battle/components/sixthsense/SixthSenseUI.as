@@ -118,7 +118,7 @@
 					this._container.removeChild(this.timer_text);
 					this.timer_text = null;
 				}
-				var text_size:Number      = Math.ceil(20 * scale);
+				var text_size:Number      = Math.ceil(18 * scale);
 				var textformat:TextFormat = new TextFormat("$TitleFont", text_size, 0xFFFFFF);
 				var _y:Number             = half_size + (text_size >> 1);
 				this.timer_text = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);

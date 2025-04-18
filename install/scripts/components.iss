@@ -46,11 +46,15 @@ Name: debug_panel; Description: {cm:debug_panel}; Flags: disablenouninstallwarni
 Name: debug_panel/minimal; Description: minimal; Flags: exclusive;
 Name: debug_panel/modern; Description: modern; Flags: exclusive; Types: armagomen;
 Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: disablenouninstallwarning;
-Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace}; Types: saxon_ua;
+Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace};
 Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Types: armagomen;
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning;
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning;
 Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: armagomen saxon_ua;
+
+Name: sixth_sense/show_timer; Description: {cm:show_timer};
+Name: sixth_sense/show_timer_graphics; Description: {cm:show_timer_graphics}; Types: armagomen saxon_ua;
+
 Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
 Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
 Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning;
