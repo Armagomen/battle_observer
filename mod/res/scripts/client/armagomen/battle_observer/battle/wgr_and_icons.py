@@ -4,12 +4,8 @@ from math import floor, log
 
 from armagomen._constants import API_KEY, STATISTICS, STATISTICS_REGION
 from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIconsMeta
-from armagomen.utils.common import addCallback, cancelCallback, cancelOverride, fetchURL, overrideMethod
-from armagomen.utils.keys_listener import g_keysListener
+from armagomen.utils.common import addCallback, cancelCallback, fetchURL
 from armagomen.utils.logging import logDebug, logError
-from gui.Scaleform.daapi.view.battle.classic.players_panel import PlayersPanel
-from gui.Scaleform.daapi.view.battle.shared.stats_exchange import BattleStatisticsDataController
-from Keys import KEY_LALT, KEY_TAB
 from uilogging.core.core_constants import HTTP_OK_STATUS
 
 
@@ -28,37 +24,18 @@ class WGRAndIcons(WGRAndIconsMeta):
 
     def _populate(self):
         super(WGRAndIcons, self)._populate()
-        overrideMethod(BattleStatisticsDataController, "as_updatePlayerStatusS")(self.updateALL)
-        overrideMethod(BattleStatisticsDataController, "as_updateVehiclesInfoS")(self.updateALL)
-        overrideMethod(BattleStatisticsDataController, "as_updateVehicleStatusS")(self.updateALL)
-        overrideMethod(BattleStatisticsDataController, "as_updateInvitationsStatusesS")(self.updateALL)
-        overrideMethod(PlayersPanel, "as_setPanelHPBarVisibilityStateS")(self.updateALL)
-        overrideMethod(PlayersPanel, "as_setPanelModeS")(self.updateALL)
-        overrideMethod(PlayersPanel, "as_setIsInteractiveS")(self.updateALL)
-        g_keysListener.registerComponent(self.updateAllOnKey, keyList=[KEY_LALT])
-        if self.isComp7Battle():
-            g_keysListener.registerComponent(self.updateFullStats, keyList=[KEY_TAB])
         if STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
             self.data_loader = StatisticsDataLoader(self._arenaDP, self.updateAllItems)
             self.data_loader.getStatisticsDataFromServer()
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
-            arena.onPeriodChange += self.updateAllOnKey
             if arena.isFogOfWarEnabled and self.data_loader is not None:
                 arena.onVehicleAdded += self.data_loader.updateList
                 arena.onVehicleUpdated += self.data_loader.updateList
 
     def _dispose(self):
-        cancelOverride(BattleStatisticsDataController, "as_updatePlayerStatusS", "updateALL")
-        cancelOverride(BattleStatisticsDataController, "as_updateVehiclesInfoS", "updateALL")
-        cancelOverride(BattleStatisticsDataController, "as_updateVehicleStatusS", "updateALL")
-        cancelOverride(BattleStatisticsDataController, "as_updateInvitationsStatusesS", "updateALL")
-        cancelOverride(PlayersPanel, "as_setPanelHPBarVisibilityStateS", "updateALL")
-        cancelOverride(PlayersPanel, "as_setPanelModeS", "updateALL")
-        cancelOverride(PlayersPanel, "as_setIsInteractiveS", "updateALL")
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
-            arena.onPeriodChange -= self.updateAllOnKey
             if arena.isFogOfWarEnabled and self.data_loader is not None:
                 arena.onVehicleAdded -= self.data_loader.updateList
                 arena.onVehicleUpdated -= self.data_loader.updateList
@@ -81,20 +58,10 @@ class WGRAndIcons(WGRAndIconsMeta):
             veh_info = self.getVehicleInfo(vehicle_id)
             item_data = self.buildItemData(veh_info.player.clanAbbrev, value)
             full, cut = self.getPattern(veh_info.team != player_team, item_data)
-            text_color = item_data[self.COLOR_WGR] if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else None
+            text_color = int(item_data[self.COLOR_WGR][1:], 16) if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else 0
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
         if self.itemsData:
             self.as_update_wgr_data(self.itemsData)
-
-    def updateFullStats(self, key):
-        self.as_updateFullStats(100)
-
-    def updateAllOnKey(self, *args):
-        self.as_updateAll(50)
-
-    def updateALL(self, base, *args):
-        base(*args)
-        self.as_updateAll(50)
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

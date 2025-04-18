@@ -5,7 +5,7 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="..\mod\res\gui\flash\modBattleObserver.swf" />
-    <movie fps="30" />
+    <movie fps="25" />
     <movie width="1024" />
     <movie height="768" />
     <movie version="32" />
