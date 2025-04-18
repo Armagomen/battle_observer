@@ -2,18 +2,19 @@ import json
 from httplib import responses
 from math import floor, log
 
+from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import API_KEY, STATISTICS, STATISTICS_REGION
 from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIconsMeta
-from armagomen.utils.common import addCallback, cancelCallback, cancelOverride, fetchURL, overrideMethod
+from armagomen.utils.common import addCallback, cancelCallback, fetchURL
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
-from gui.Scaleform.daapi.view.battle.classic.players_panel import PlayersPanel
-from gui.Scaleform.daapi.view.battle.shared.stats_exchange import BattleStatisticsDataController
+from gui.battle_control.arena_info.interfaces import IVehiclesAndPersonalInvitationsController
+from gui.shared import EVENT_BUS_SCOPE, events
 from Keys import KEY_LALT, KEY_TAB
 from uilogging.core.core_constants import HTTP_OK_STATUS
 
 
-class WGRAndIcons(WGRAndIconsMeta):
+class WGRAndIcons(WGRAndIconsMeta, IVehiclesAndPersonalInvitationsController):
     COLOR_WGR = 'colorWGR'
     DEFAULT_COLOR = "#fafafa"
     DEFAULT_WIN_RATE = 0.0
@@ -28,14 +29,10 @@ class WGRAndIcons(WGRAndIconsMeta):
 
     def _populate(self):
         super(WGRAndIcons, self)._populate()
-        overrideMethod(BattleStatisticsDataController, "as_updatePlayerStatusS")(self.updateALL)
-        overrideMethod(BattleStatisticsDataController, "as_updateVehiclesInfoS")(self.updateALL)
-        overrideMethod(BattleStatisticsDataController, "as_updateVehicleStatusS")(self.updateALL)
-        overrideMethod(BattleStatisticsDataController, "as_updateInvitationsStatusesS")(self.updateALL)
-        overrideMethod(PlayersPanel, "as_setPanelHPBarVisibilityStateS")(self.updateALL)
-        overrideMethod(PlayersPanel, "as_setPanelModeS")(self.updateALL)
-        overrideMethod(PlayersPanel, "as_setIsInteractiveS")(self.updateALL)
-        g_keysListener.registerComponent(self.updateAllOnKey, keyList=[KEY_LALT])
+        if self.settingsCore:
+            self.settingsCore.onSettingsChanged += self.__onSettingsChanged
+        self.addListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.updateALL, EVENT_BUS_SCOPE.BATTLE)
+        g_keysListener.registerComponent(self.updateALL, keyList=[KEY_LALT])
         if self.isComp7Battle():
             g_keysListener.registerComponent(self.updateFullStats, keyList=[KEY_TAB])
         if STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
@@ -43,27 +40,67 @@ class WGRAndIcons(WGRAndIconsMeta):
             self.data_loader.getStatisticsDataFromServer()
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
-            arena.onPeriodChange += self.updateAllOnKey
+            arena.onPeriodChange += self.updateALL
             if arena.isFogOfWarEnabled and self.data_loader is not None:
                 arena.onVehicleAdded += self.data_loader.updateList
                 arena.onVehicleUpdated += self.data_loader.updateList
+        ctrl = self.sessionProvider.shared.vehicleState
+        if ctrl is not None:
+            ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
 
     def _dispose(self):
-        cancelOverride(BattleStatisticsDataController, "as_updatePlayerStatusS", "updateALL")
-        cancelOverride(BattleStatisticsDataController, "as_updateVehiclesInfoS", "updateALL")
-        cancelOverride(BattleStatisticsDataController, "as_updateVehicleStatusS", "updateALL")
-        cancelOverride(BattleStatisticsDataController, "as_updateInvitationsStatusesS", "updateALL")
-        cancelOverride(PlayersPanel, "as_setPanelHPBarVisibilityStateS", "updateALL")
-        cancelOverride(PlayersPanel, "as_setPanelModeS", "updateALL")
-        cancelOverride(PlayersPanel, "as_setIsInteractiveS", "updateALL")
+        if self.settingsCore:
+            self.settingsCore.onSettingsChanged -= self.__onSettingsChanged
+        self.removeListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.updateALL, EVENT_BUS_SCOPE.BATTLE)
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
-            arena.onPeriodChange -= self.updateAllOnKey
+            arena.onPeriodChange -= self.updateALL
             if arena.isFogOfWarEnabled and self.data_loader is not None:
                 arena.onVehicleAdded -= self.data_loader.updateList
                 arena.onVehicleUpdated -= self.data_loader.updateList
         self.data_loader = None
+        ctrl = self.sessionProvider.shared.vehicleState
+        if ctrl is not None:
+            ctrl.onVehicleStateUpdated -= self.__onVehicleStateUpdated
         super(WGRAndIcons, self)._dispose()
+
+    def __onSettingsChanged(self, diff):
+        playersHPBarsVisibleState = diff.get(GAME.SHOW_VEHICLE_HP_IN_PLAYERS_PANEL)
+        if playersHPBarsVisibleState is not None:
+            self.as_updateAll()
+
+    def invalidateArenaInfo(self):
+        self.as_updateAll()
+
+    def invalidateVehiclesInfo(self, arenaDP):
+        self.as_updateAll()
+
+    def invalidateVehiclesStats(self, arenaDP):
+        self.as_updateAll()
+
+    def updateVehiclesStats(self, updated, arenaDP):
+        self.as_updateAll()
+
+    def addVehicleInfo(self, vo, arenaDP):
+        self.as_updateAll()
+
+    def updateVehiclesInfo(self, updated, arenaDP):
+        self.as_updateAll()
+
+    def invalidateVehicleStatus(self, flags, vo, arenaDP):
+        self.as_updateAll()
+
+    def invalidatePlayerStatus(self, flags, vo, arenaDP):
+        self.as_updateAll()
+
+    def updateFullStats(self, key):
+        self.as_updateFullStats(100)
+
+    def updateALL(self, *args):
+        self.as_updateAll()
+
+    def __onVehicleStateUpdated(self, state, value):
+        self.as_updateAll()
 
     def getPattern(self, isEnemy, itemData):
         logDebug("WGRStatistics: isEnemy={}, data={}", isEnemy, itemData)
@@ -85,16 +122,6 @@ class WGRAndIcons(WGRAndIconsMeta):
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
         if self.itemsData:
             self.as_update_wgr_data(self.itemsData)
-
-    def updateFullStats(self, key):
-        self.as_updateFullStats(100)
-
-    def updateAllOnKey(self, *args):
-        self.as_updateAll(50)
-
-    def updateALL(self, base, *args):
-        base(*args)
-        self.as_updateAll(50)
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

@@ -2,7 +2,7 @@ from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 
 class WGRAndIconsMeta(BaseModMeta):
 
-    def as_updateAll(self, milliseconds):
+    def as_updateAll(self, milliseconds=500):
         if self._isDAAPIInited():
             self.flashObject.as_updateAll(milliseconds)
 

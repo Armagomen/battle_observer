@@ -7,13 +7,11 @@ package net.armagomen.battle_observer.battle.components.statistics.components.ba
 	
 	import flash.geom.ColorTransform;
 	import flash.text.TextFormat;
-	import flash.utils.clearTimeout;
 	import net.armagomen.battle_observer.utils.Utils;
 	
 	public class BaseStatisticsComponent
 	{
 		public var component:*                     = null;
-		public var timeoutID:Number                = 0;
 		public var format:TextFormat               = null;
 		private var iconColors:Object              = {};
 		public var statisticsData:Object           = {};
@@ -42,15 +40,7 @@ package net.armagomen.battle_observer.battle.components.statistics.components.ba
 		{
 			return this.component.visible;
 		}
-		
-		public function removeTimeout():void
-		{
-			if (this.timeoutID)
-			{
-				clearTimeout(this.timeoutID);
-			}
-		}
-		
+			
 		public function setIconColors(colors:Object):void
 		{
 			for (var classTag:String in colors)

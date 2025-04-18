@@ -1,6 +1,5 @@
 package net.armagomen.battle_observer.battle.components.statistics
 {
-	import flash.utils.clearTimeout;
 	import flash.utils.setTimeout;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.battle.components.statistics.components.BattleLoading;
@@ -44,14 +43,12 @@ package net.armagomen.battle_observer.battle.components.statistics
 				this.battleLoading.setIconColors(colors);
 				this.battleLoading.setSettings(settings);
 			}
-			this.updateALL();
+			setTimeout(this.updateALL, 200);
 		}
 		
 		override protected function onBeforeDispose():void
 		{
-			this.newTimeout(0);
 			this.panels.removeEventListeners();
-			this.panels.removeTimeout();
 			this.battleLoading = null;
 			this.fullStats = null;
 			this.panels = null;
@@ -76,24 +73,15 @@ package net.armagomen.battle_observer.battle.components.statistics
 		
 		public function as_updateAll(timeout:Number):void
 		{
-			this.newTimeout(setTimeout(this.updateALL, timeout));
+			setTimeout(this.updateALL, timeout);
 		}
 		
 		public function as_updateFullStatsOnkey(timeout:Number):void
 		{
 			if (this.fullStats)
 			{
-				this.newTimeout(setTimeout(this.fullStats.updateFullStats, timeout));
+				setTimeout(this.fullStats.updateFullStats, timeout);
 			}
-		}
-		
-		private function newTimeout(id:Number):void
-		{
-			if (this.timeoutID)
-			{
-				clearTimeout(this.timeoutID);
-			}
-			this.timeoutID = id;
 		}
 		
 		private function updateALL():void

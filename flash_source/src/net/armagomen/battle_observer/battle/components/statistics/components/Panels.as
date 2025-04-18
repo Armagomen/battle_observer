@@ -106,7 +106,6 @@ package net.armagomen.battle_observer.battle.components.statistics.components
 		
 		public function updatePlayersPanel():void
 		{
-			this.removeTimeout();
 			if (this.component)
 			{
 				for each (var itemL:* in this.component.listLeft._items)
@@ -122,8 +121,7 @@ package net.armagomen.battle_observer.battle.components.statistics.components
 		
 		private function onChange(eve:Event):void
 		{
-			this.removeTimeout();
-			this.timeoutID = setTimeout(this.updatePlayersPanel, 100);
+			setTimeout(this.updatePlayersPanel, 100);
 		}
 	}
 }
