@@ -3,8 +3,6 @@ from collections import namedtuple
 from aih_constants import CTRL_MODE_NAME
 from constants import ARENA_GUI_TYPE, AUTH_REALM
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
-from gui.Scaleform.daapi.view.battle.shared.crosshair.settings import SHOT_RESULT_TO_ALT_COLOR, \
-    SHOT_RESULT_TO_DEFAULT_COLOR
 
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
@@ -212,16 +210,13 @@ POSTMORTEM_MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
 if IS_WG_CLIENT:
     POSTMORTEM_MODES.update((CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.LOOK_AT_KILLER))
 
-__MESSAGES_TEMPLATE = {key: "<font size='20' color='#FAFAFA'>Change me in config. {}</font>".format(key) for key in
-                       set(SHOT_RESULT_TO_ALT_COLOR.values() + SHOT_RESULT_TO_DEFAULT_COLOR.values())}
-
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "MACROS_COUNTED_ARMOR",
-    "MACROS_PIERCING_RESERVE", "MACROS_MESSAGE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE",
-    "MESSAGES_TEMPLATE", "DEFAULT_TEMPLATE", "ON_ALLY"))(
+    "MACROS_PIERCING_RESERVE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE",
+    "DEFAULT_TEMPLATE", "ON_ALLY"))(
     "piercingPower", "armor_calculator", "position", "messages", "template", "color", "countedArmor",
-    "piercingReserve", "message", "caliber", "ricochet", "noDamage", __MESSAGES_TEMPLATE,
-    "<p align='center'>%(ricochet)s %(noDamage)s<br><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
+    "piercingReserve", "caliber", "ricochet", "noDamage",
+    "<p align='center'>%(ricochet)s%(noDamage)s<br><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
     "display_on_allies")
 
 FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TEMPLATE", "M_FLIGHT_TIME", "M_DISTANCE", "ALIGN"))(

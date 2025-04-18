@@ -1,14 +1,6 @@
 {
   "display_on_allies": false,
   "enabled": false,
-  "messages": {
-    "green": "<font size='20' color='#66FF33'>Шмаляй, пробиття.</font>",
-    "normal": "Слава Україні",
-    "orange": "<font size='20' color='#FF9900'>Переходь на голду.</font>",
-    "purple": "<font size='20' color='#6F6CD3'>Фугас, настав твій час.</font>",
-    "red": "<font size='20' color='#FF0000'>Фугас, настав твій час.</font>",
-    "yellow": "<font size='20' color='#FAF829'>Переходь на голду.</font>"
-  },
   "position": {
     "x": 0,
     "y": 20

@@ -159,7 +159,6 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 30},
             ARMOR_CALC.TEMPLATE: ARMOR_CALC.DEFAULT_TEMPLATE,
-            ARMOR_CALC.MESSAGES: ARMOR_CALC.MESSAGES_TEMPLATE,
             ARMOR_CALC.ON_ALLY: False,
         }
 

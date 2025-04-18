@@ -8,3 +8,6 @@ class ArmorCalcMeta(BaseModMeta):
 
     def as_armorCalcS(self, text):
         return self.flashObject.as_armorCalc(text) if self._isDAAPIInited() else None
+
+    def as_clearMessage(self):
+        return self.flashObject.as_armorCalc("") if self._isDAAPIInited() else None

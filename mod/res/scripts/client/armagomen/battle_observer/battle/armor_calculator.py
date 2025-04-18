@@ -50,20 +50,20 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def onMarkerColorChanged(self, color):
         self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.getColors()[ARMOR_CALC.NAME].get(color, COLORS.C_RED)
-        self.calcMacro[ARMOR_CALC.MACROS_MESSAGE] = self.settings[ARMOR_CALC.MESSAGES].get(color, GLOBAL.EMPTY_LINE)
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         if ctrlMode in POSTMORTEM_MODES:
-            self.as_armorCalcS(GLOBAL.EMPTY_LINE)
+            self.as_clearMessage()
 
     def onArmorChanged(self, data):
         if data is None:
-            return self.as_armorCalcS(GLOBAL.EMPTY_LINE)
-        armor, piercingPower, caliber, ricochet, noDamage = data
-        self.calcMacro[ARMOR_CALC.RICOCHET] = RICOCHET if ricochet else GLOBAL.EMPTY_LINE
-        self.calcMacro[ARMOR_CALC.NO_DAMAGE] = NO_DAMAGE if noDamage else GLOBAL.EMPTY_LINE
-        self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = armor
-        self.calcMacro[ARMOR_CALC.PIERCING_POWER] = piercingPower
-        self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = piercingPower - armor
-        self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = caliber
-        self.as_armorCalcS(self.settings[ARMOR_CALC.TEMPLATE] % self.calcMacro)
+            self.as_clearMessage()
+        else:
+            armor, piercingPower, caliber, ricochet, noDamage = data
+            self.calcMacro[ARMOR_CALC.RICOCHET] = RICOCHET if ricochet else GLOBAL.EMPTY_LINE
+            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = NO_DAMAGE if noDamage else GLOBAL.EMPTY_LINE
+            self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = armor
+            self.calcMacro[ARMOR_CALC.PIERCING_POWER] = piercingPower
+            self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = piercingPower - armor
+            self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = caliber
+            self.as_armorCalcS(self.settings[ARMOR_CALC.TEMPLATE] % self.calcMacro)
