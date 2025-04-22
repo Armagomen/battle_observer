@@ -151,7 +151,6 @@ package net.armagomen.battle_observer.battle.components
 				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
 				vehicleIcon.transform.colorTransform = tColor;
 			}
-		
 		}
 		
 		private function onRenderPanels(eve:Event):void
@@ -179,7 +178,7 @@ package net.armagomen.battle_observer.battle.components
 		private function updatePanelsItem(vehicleID:int, holder:*):void
 		{
 			var listItem:* = holder.getListItem();
-			if (this.iconsEnabled && holder.vehicleData)
+			if (this.iconsEnabled)
 			{
 				this.updateVehicleIconColor(listItem.vehicleIcon, holder.vehicleData.vehicleType);
 			}
@@ -215,7 +214,7 @@ package net.armagomen.battle_observer.battle.components
 			{
 				return;
 			}
-			if (this.iconsEnabled && holder.data)
+			if (this.iconsEnabled)
 			{
 				this.updateVehicleIconColor(holder.statsItem._vehicleIcon, holder.data.vehicleType);
 			}
@@ -245,7 +244,7 @@ package net.armagomen.battle_observer.battle.components
 			{
 				return;
 			}
-			if (this.iconsEnabled && holder.model)
+			if (this.iconsEnabled)
 			{
 				this.updateVehicleIconColor(holder._vehicleIcon, holder.model.vehicleType);
 			}
@@ -295,7 +294,7 @@ package net.armagomen.battle_observer.battle.components
 		private function getLoadingHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
 		{
 			var form:* = this.battleLoading.form;
-			if (!form || !this.battleLoading.visible)
+			if (!form)
 			{
 				return null;
 			}
