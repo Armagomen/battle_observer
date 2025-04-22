@@ -8,7 +8,7 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.utils.common import fetchURL, gameVersion, getUpdatePath, isReplay, modsPath
+from armagomen.utils.common import fetchURL, GAME_VERSION, getUpdatePath, isReplay, MODS_PATH
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.logging import logError, logInfo, logWarning
 from gui.Scaleform.Waiting import Waiting
@@ -47,7 +47,7 @@ class DownloadThread(object):
         self.updateData = dict()
         self.dialogs = UpdaterDialogs()
         self.downloader = None
-        self.modPath = os.path.join(modsPath, gameVersion)
+        self.modPath = os.path.join(MODS_PATH, GAME_VERSION)
         self.isReplay = isReplay()
 
     def startDownload(self, version):

@@ -119,20 +119,21 @@ class SettingsLoader(object):
         file_name = JSON.format(part_name)
         file_path = os.path.join(direct_path, file_name)
         if file_name not in listdir:
-            return writeJsonFile(file_path, internal_cfg)
-        try:
-            file_data = openJsonFile(file_path)
-        except Exception as error:
-            message = READ_MESSAGE.format(file_path, error.message or repr(error))
-            self.errorMessages.add(message)
-            return logWarning(message)
+            writeJsonFile(file_path, internal_cfg)
         else:
-            if self.updateData(file_data, internal_cfg):
-                writeJsonFile(file_path, internal_cfg)
-            logInfo(READ_MESSAGE, self.configName, file_name)
-            self.__settings.onModSettingsChanged(internal_cfg, part_name)
-            if part_name == MAIN.NAME:
-                setDebug(internal_cfg[DEBUG])
+            try:
+                file_data = openJsonFile(file_path)
+            except Exception as error:
+                message = READ_MESSAGE.format(file_path, error.message or repr(error))
+                self.errorMessages.add(message)
+                logWarning(message)
+            else:
+                if self.updateData(file_data, internal_cfg):
+                    writeJsonFile(file_path, internal_cfg)
+                logInfo(READ_MESSAGE, self.configName, file_name)
+                self.__settings.onModSettingsChanged(internal_cfg, part_name)
+                if part_name == MAIN.NAME:
+                    setDebug(internal_cfg[DEBUG])
 
     def onGUISpaceEntered(self, spaceID):
         dialog = LoadingErrorDialog()

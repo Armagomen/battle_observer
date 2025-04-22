@@ -68,20 +68,24 @@ def openWebBrowser(url):
     BigWorld.wg_openWebBrowser(url)
 
 
-cwd = os.getcwdu() if os.path.supports_unicode_filenames else os.getcwd()
+CWD = os.getcwdu() if os.path.supports_unicode_filenames else os.getcwd()
+MODS_PATH = os.path.join(CWD, "mods")
 
 
-def getCurrentModsPath():
-    for sec in ResMgr.openSection(os.path.join(cwd, 'paths.xml'))['Paths'].values():
-        if './mods/' in sec.asString:
-            return os.path.split(os.path.realpath(os.path.join(cwd, os.path.normpath(sec.asString))))
+def getGameVersion():
+    full_version = ResMgr.openSection('../version.xml').readString('version')
+    for name in ResMgr.openSection(MODS_PATH).keys():
+        if name in full_version:
+            return name
+    return full_version.split('#')[0].strip()[2:]
 
 
-modsPath, gameVersion = getCurrentModsPath()
-configsPath = os.path.join(modsPath, "configs")
-if not os.path.exists(configsPath):
-    os.makedirs(configsPath)
+GAME_VERSION = getGameVersion()
+CONFIGS_PATH = os.path.join(MODS_PATH, "configs")
+if not os.path.exists(CONFIGS_PATH):
+    os.makedirs(CONFIGS_PATH)
 
+logInfo(GAME_VERSION)
 
 def setCurrentConfigPath(configs_path):
     config_path = None
@@ -96,10 +100,10 @@ def setCurrentConfigPath(configs_path):
     return config_path
 
 
-currentConfigPath = setCurrentConfigPath(configsPath)
+currentConfigPath = setCurrentConfigPath(CONFIGS_PATH)
 
 if currentConfigPath is None:
-    currentConfigPath = os.path.join(configsPath, CONFIG_DIR)
+    currentConfigPath = os.path.join(CONFIGS_PATH, CONFIG_DIR)
     if not os.path.exists(currentConfigPath):
         os.makedirs(currentConfigPath)
 
@@ -112,12 +116,12 @@ def removeDirs(path):
 
 
 def cleanupUpdates():
-    path = os.path.join(cwd, "updates")
+    path = os.path.join(CWD, "updates")
     # Gather directory contents
     if not os.path.exists(path):
-        return os.makedirs(path)
+        os.makedirs(path)
     ignored = set()
-    section = ResMgr.openSection(os.path.join(cwd, 'game_info.xml'))
+    section = ResMgr.openSection(os.path.join(CWD, 'game_info.xml'))
     if section['game']['upcoming_patches']:
         for value in section['game']['upcoming_patches'].values():
             ignored.update(val.asString.split("\\")[0] for val in value.values())
@@ -151,12 +155,13 @@ def encodeData(data):
 
 def openJsonFile(path):
     """Gets a dict from JSON."""
-    if os.path.exists(path):
-        with _open(path, 'r', encoding=UTF_8) as dataFile:
-            try:
-                return encodeData(json.load(dataFile, encoding=UTF_8))
-            except ValueError:
-                return encodeData(json.loads(dataFile.read(), encoding=UTF_8))
+    if not os.path.exists(path):
+        return {}
+    with _open(path, 'r', encoding=UTF_8) as dataFile:
+        try:
+            return encodeData(json.load(dataFile, encoding=UTF_8))
+        except ValueError:
+            return encodeData(json.loads(dataFile.read(), encoding=UTF_8))
 
 
 def writeJsonFile(path, data):
@@ -177,8 +182,8 @@ def getObserverCachePath():
 
 
 def isXvmInstalled():
-    xfw = os.path.exists(os.path.join(modsPath, gameVersion, 'com.modxvm.xfw'))
-    xvm = os.path.exists(os.path.join(cwd, 'res_mods', 'mods', 'xfw_packages', 'xvm_main'))
+    xfw = os.path.exists(os.path.join(MODS_PATH, GAME_VERSION, 'com.modxvm.xfw'))
+    xvm = os.path.exists(os.path.join(CWD, 'res_mods', 'mods', 'xfw_packages', 'xvm_main'))
     return xfw and xvm
 
 

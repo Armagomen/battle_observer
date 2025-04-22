@@ -90,8 +90,8 @@ package net.armagomen.battle_observer.battle.components
 			for (var key:String in statsData)
 			{
 				this.statisticsData[key] = statsData[key];
-				//this.statisticsData[key].vehicleTextColor = Utils.colorConvert(statsData[key].vehicleTextColor);
 			}
+			App.utils.data.cleanupDynamicObject(statsData);
 		}
 		
 		private function onCountChange(eve:Event):void
