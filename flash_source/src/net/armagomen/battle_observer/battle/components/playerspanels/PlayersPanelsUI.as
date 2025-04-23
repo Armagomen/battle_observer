@@ -4,16 +4,15 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.utils.setTimeout;
-	import flash.utils.clearTimeout;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.battle.components.playerspanels.ListItem;
 	import net.wg.data.constants.generated.PLAYERS_PANEL_STATE;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
+	import net.wg.gui.battle.components.events.PlayersPanelListEvent;
 	import net.wg.gui.battle.components.stats.playersPanel.SpottedIndicator;
 	
 	public class PlayersPanelsUI extends ObserverBattleDisplayable
 	{
-		private var timeoutID:Number;
 		private var playersPanel:* = null;
 		private var storage:Object = new Object();
 		public var onAddedToStorage:Function;
@@ -43,6 +42,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			if (this.playersPanel)
 			{
 				this.playersPanel.addEventListener(Event.CHANGE, this.onChange);
+				this.playersPanel.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.onChange, false, 0, true);
 			}
 			super.onPopulate();
 		}
@@ -58,6 +58,14 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			}
 		}
 		
+		private function addToRight():void
+		{
+			for each (var itemR:* in this.playersPanel.listRight._items)
+			{
+				this.as_AddVehIdToList(itemR.vehicleData.vehicleID, true);
+			}
+		}
+		
 		private function reloadLists():void
 		{
 			this.as_clearStorage();
@@ -65,19 +73,12 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			{
 				this.as_AddVehIdToList(itemL.vehicleData.vehicleID, false);
 			}
-			for each (var itemR:* in this.playersPanel.listRight._items)
-			{
-				this.as_AddVehIdToList(itemR.vehicleData.vehicleID, true);
-			}
+			this.addToRight();
 		}
 		
 		private function onChange(eve:Event):void
 		{
-			if (this.timeoutID)
-			{
-				clearTimeout(this.timeoutID);
-			}
-			this.timeoutID = setTimeout(this.reloadLists, 1000);
+			setTimeout(this.addToRight, 200);
 		}
 		
 		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean):void
