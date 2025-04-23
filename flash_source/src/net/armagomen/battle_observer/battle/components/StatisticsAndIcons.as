@@ -125,8 +125,7 @@ package net.armagomen.battle_observer.battle.components
 				if (!itemL._listItem.vehicleIcon.hasEventListener(Event.RENDER))
 				{
 					itemL._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
-					itemL._listItem["vehicleID"] = itemL.vehicleData.vehicleID;
-					itemL._listItem["vehicleType"] = itemL.vehicleData.vehicleType;
+					itemL._listItem["item"] = itemL;
 					itemL._listItem.playerNameCutTF.width = this.cutWidth;
 					itemL._listItem.setPlayerNameFullWidth(this.fullWidth);
 				}
@@ -137,8 +136,7 @@ package net.armagomen.battle_observer.battle.components
 				if (!itemR._listItem.vehicleIcon.hasEventListener(Event.RENDER))
 				{
 					itemR._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
-					itemR._listItem["vehicleID"] = itemR.vehicleData.vehicleID;
-					itemR._listItem["vehicleType"] = itemR.vehicleData.vehicleType;
+					itemR._listItem["item"] = itemR;
 					itemR._listItem.playerNameCutTF.width = this.cutWidth;
 					itemR._listItem.setPlayerNameFullWidth(this.fullWidth);
 				}
@@ -163,25 +161,26 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function onRenderPanels(eve:Event):void
 		{
-			var listItem:* = eve.currentTarget.parent;
+			var listItem:* = eve.target.parent;
+			var vehicleID:int = listItem.item.vehicleData.vehicleID;
 			
 			if (this.iconsEnabled)
 			{
-				this.updateVehicleIconColor(eve.currentTarget, listItem.vehicleType);
+				this.updateVehicleIconColor(eve.target, listItem.item.vehicleData.vehicleType);
 			}
 			if (this._statisticsEnabled)
 			{
-				this.updatePanelsItem(listItem.vehicleID, listItem);
+				this.updatePanelsItem(vehicleID, listItem);
 			}
 			
 			if (this.battleLoading && this.battleLoading.visible)
 			{
-				this.updateBattleloading(listItem.vehicleID, listItem._isRightAligned);
+				this.updateBattleloading(vehicleID, listItem._isRightAligned);
 			}
 			
 			if (this.fullStats && this.fullStats.visible)
 			{
-				this.updateFullstats(listItem.vehicleID, listItem._isRightAligned);
+				this.updateFullstats(vehicleID, listItem._isRightAligned);
 			}
 		}
 		
