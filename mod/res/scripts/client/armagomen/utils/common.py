@@ -85,7 +85,6 @@ CONFIGS_PATH = os.path.join(MODS_PATH, "configs")
 if not os.path.exists(CONFIGS_PATH):
     os.makedirs(CONFIGS_PATH)
 
-logInfo(GAME_VERSION)
 
 def setCurrentConfigPath(configs_path):
     config_path = None

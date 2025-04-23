@@ -25,6 +25,9 @@ package net.armagomen.battle_observer.battle.components
 		private var fullWidth:Number                = 150.0;
 		private static const DEAD_TEXT_ALPHA:Number = 0.68;
 		private var format:TextFormat;
+		private var _statisticsEnabled:Boolean      = false;
+		
+		public var statisticsEnabled:Function;
 		
 		public function StatisticsAndIcons()
 		{
@@ -38,6 +41,7 @@ package net.armagomen.battle_observer.battle.components
 			var settings:Object = this.getSettings();
 			var colors:Object   = this.getColors();
 			
+			this._statisticsEnabled = this.statisticsEnabled();
 			this.format = new TextFormat();
 			this.format.bold = true;
 			this.panels = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
@@ -121,6 +125,8 @@ package net.armagomen.battle_observer.battle.components
 				if (!itemL._listItem.vehicleIcon.hasEventListener(Event.RENDER))
 				{
 					itemL._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
+					itemL._listItem["vehicleID"] = itemL.vehicleData.vehicleID;
+					itemL._listItem["vehicleType"] = itemL.vehicleData.vehicleType;
 					itemL._listItem.playerNameCutTF.width = this.cutWidth;
 					itemL._listItem.setPlayerNameFullWidth(this.fullWidth);
 				}
@@ -131,6 +137,8 @@ package net.armagomen.battle_observer.battle.components
 				if (!itemR._listItem.vehicleIcon.hasEventListener(Event.RENDER))
 				{
 					itemR._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
+					itemR._listItem["vehicleID"] = itemR.vehicleData.vehicleID;
+					itemR._listItem["vehicleType"] = itemR.vehicleData.vehicleType;
 					itemR._listItem.playerNameCutTF.width = this.cutWidth;
 					itemR._listItem.setPlayerNameFullWidth(this.fullWidth);
 				}
@@ -155,34 +163,30 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function onRenderPanels(eve:Event):void
 		{
-			var isEnemy:Boolean = eve.currentTarget.parent._isRightAligned;
-			var list:*          = isEnemy ? this.panels.listRight : this.panels.listLeft;
-			var holder:*        = list.getItemHolderByIndex(eve.target.parent.holderItemID);
-			if (holder)
+			var listItem:* = eve.currentTarget.parent;
+			
+			if (this.iconsEnabled)
 			{
-				var vehicleID:int = holder.vehicleData.vehicleID;
-				this.updatePanelsItem(vehicleID, holder);
-				
-				if (this.fullStats && this.fullStats.visible)
-				{
-					this.updateFullstats(vehicleID, isEnemy);
-				}
-				
-				if (this.battleLoading && this.battleLoading.visible)
-				{
-					this.updateBattleloading(vehicleID, isEnemy);
-				}
+				this.updateVehicleIconColor(eve.currentTarget, listItem.vehicleType);
+			}
+			if (this._statisticsEnabled)
+			{
+				this.updatePanelsItem(listItem.vehicleID, listItem);
+			}
+			
+			if (this.battleLoading && this.battleLoading.visible)
+			{
+				this.updateBattleloading(listItem.vehicleID, listItem._isRightAligned);
+			}
+			
+			if (this.fullStats && this.fullStats.visible)
+			{
+				this.updateFullstats(listItem.vehicleID, listItem._isRightAligned);
 			}
 		}
 		
-		private function updatePanelsItem(vehicleID:int, holder:*):void
+		private function updatePanelsItem(vehicleID:int, listItem:*):void
 		{
-			var listItem:* = holder.getListItem();
-			if (this.iconsEnabled)
-			{
-				this.updateVehicleIconColor(listItem.vehicleIcon, holder.vehicleData.vehicleType);
-			}
-
 			if (this.statisticsData[vehicleID])
 			{
 				if (this.statisticsData[vehicleID].vehicleTextColor)
@@ -218,7 +222,7 @@ package net.armagomen.battle_observer.battle.components
 			{
 				this.updateVehicleIconColor(holder.statsItem._vehicleIcon, holder.data.vehicleType);
 			}
-			if (this.statisticsData[vehicleID])
+			if (this._statisticsEnabled && this.statisticsData[vehicleID])
 			{
 				if (this.statisticsData[vehicleID].fullName)
 				{
@@ -240,54 +244,54 @@ package net.armagomen.battle_observer.battle.components
 		private function updateBattleloading(vehicleID:int, isEnemy:Boolean):void
 		{
 			var holder:* = this.getLoadingHolderByVehicleID(vehicleID, isEnemy);
-			if (!holder)
+			if (holder)
 			{
-				return;
-			}
-			if (this.iconsEnabled)
-			{
-				this.updateVehicleIconColor(holder._vehicleIcon, holder.model.vehicleType);
-			}
-			if (this.statisticsData[vehicleID])
-			{
-				if (this.statisticsData[vehicleID].fullName)
+				if (this.iconsEnabled)
 				{
-					holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
+					this.updateVehicleIconColor(holder._vehicleIcon, holder.model.vehicleType);
 				}
-				if (this.statisticsData[vehicleID].vehicleTextColor)
+				if (this._statisticsEnabled && this.statisticsData[vehicleID])
 				{
-					holder._vehicleField.textColor = this.statisticsData[vehicleID].vehicleTextColor;
+					if (this.statisticsData[vehicleID].fullName)
+					{
+						holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
+					}
+					if (this.statisticsData[vehicleID].vehicleTextColor)
+					{
+						holder._vehicleField.textColor = this.statisticsData[vehicleID].vehicleTextColor;
+					}
 				}
 			}
+		
 		}
 		
 		private function getFullStatsHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
 		{
 			var tableCtrl:* = this.fullStats.tableCtrl;
-			if (!tableCtrl)
+			if (tableCtrl)
 			{
-				return null;
-			}
-			if (isEnemy && tableCtrl.enemyRenderers)
-			{
-				for each (var enemy:* in tableCtrl.enemyRenderers)
+				if (isEnemy && tableCtrl.enemyRenderers)
 				{
-					if (enemy.data && enemy.data.vehicleID == vehicleID)
+					for each (var enemy:* in tableCtrl.enemyRenderers)
 					{
-						return enemy;
+						if (enemy.data.vehicleID == vehicleID)
+						{
+							return enemy;
+						}
+					}
+				}
+				else if (tableCtrl.allyRenderers)
+				{
+					for each (var ally:* in tableCtrl.allyRenderers)
+					{
+						if (ally.data.vehicleID == vehicleID)
+						{
+							return ally;
+						}
 					}
 				}
 			}
-			else if (tableCtrl.allyRenderers)
-			{
-				for each (var ally:* in tableCtrl.allyRenderers)
-				{
-					if (ally.data && ally.data.vehicleID == vehicleID)
-					{
-						return ally;
-					}
-				}
-			}
+			
 			return null;
 		}
 		
@@ -302,7 +306,7 @@ package net.armagomen.battle_observer.battle.components
 			{
 				for each (var enemy:* in form._enemyRenderers)
 				{
-					if (enemy.model && enemy.model.vehicleID == vehicleID)
+					if (enemy.model.vehicleID == vehicleID)
 					{
 						return enemy;
 					}
@@ -312,7 +316,7 @@ package net.armagomen.battle_observer.battle.components
 			{
 				for each (var ally:* in form._allyRenderers)
 				{
-					if (ally.model && ally.model.vehicleID == vehicleID)
+					if (ally.model.vehicleID == vehicleID)
 					{
 						return ally;
 					}

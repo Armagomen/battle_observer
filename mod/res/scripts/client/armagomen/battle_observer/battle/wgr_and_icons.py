@@ -22,16 +22,19 @@ class WGRAndIcons(WGRAndIconsMeta):
         self.itemsData = {}
         self.data_loader = None
 
+    def statisticsEnabled(self):
+        return STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]
+
     def _populate(self):
         super(WGRAndIcons, self)._populate()
-        if STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]:
+        if self.statisticsEnabled():
             self.data_loader = StatisticsDataLoader(self._arenaDP, self.updateAllItems)
             self.data_loader.getStatisticsDataFromServer()
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            if arena.isFogOfWarEnabled and self.data_loader is not None:
-                arena.onVehicleAdded += self.data_loader.updateList
-                arena.onVehicleUpdated += self.data_loader.updateList
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None:
+                if arena.isFogOfWarEnabled:
+                    arena.onVehicleAdded += self.data_loader.updateList
+                    arena.onVehicleUpdated += self.data_loader.updateList
 
     def _dispose(self):
         arena = self._arenaVisitor.getArenaSubscription()
