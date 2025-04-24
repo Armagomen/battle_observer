@@ -73,5 +73,15 @@ package net.armagomen.battle_observer
 				this.updateStage(App.appWidth, App.appHeight);
 			}
 		}
+		
+		override protected function configUI():void 
+		{
+			super.configUI();
+			this.tabEnabled = false;
+			this.tabChildren = false;
+			this.mouseEnabled = false;
+			this.mouseChildren = false;
+			this.buttonMode = false;
+		}
 	}
 }
