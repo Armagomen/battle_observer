@@ -45,10 +45,13 @@ package net.armagomen.battle_observer.battle.components
 			this.format = new TextFormat();
 			this.format.bold = true;
 			this.panels = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-			this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			if (this.isComp7Battle())
 			{
 				this.fullStats = battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
+			}
+			else
+			{
+				this.battleLoading = battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 			}
 			this.setIconColors(colors["vehicle_types_colors"]);
 			this.iconMultiplier = settings["icons_blackout"];
