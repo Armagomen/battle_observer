@@ -21,8 +21,8 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_updateDamageS(self, vehicleID, text):
         return self.flashObject.as_updateDamage(vehicleID, text) if self._isDAAPIInited() else None
 
-    def as_setVehicleDeadS(self, vehicleID):
-        return self.flashObject.as_setVehicleDead(vehicleID) if self._isDAAPIInited() else None
+    def as_setVehiclesDeadS(self, items):
+        return self.flashObject.as_setVehiclesDead(items) if self._isDAAPIInited() else None
 
     def as_updateHealthBarS(self, vehicleID, percent, textField):
         return self.flashObject.as_updateHealthBar(vehicleID, percent, textField) if self._isDAAPIInited() else None
@@ -35,9 +35,6 @@ class PlayersPanelsMeta(BaseModMeta):
 
     def as_colorBlindBarsS(self, color):
         return self.flashObject.as_colorBlindBars(color) if self._isDAAPIInited() else None
-
-    def as_setSpottedPositionS(self, vehicleID):
-        return self.flashObject.as_setSpottedPosition(vehicleID) if self._isDAAPIInited() else None
 
     def updateDamageLogPosition(self):
         return self.flashObject.as_updateDamageLogPosition() if self._isDAAPIInited() else None

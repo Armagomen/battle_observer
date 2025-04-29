@@ -76,18 +76,12 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             return
         if self.hpBarsEnable and vInfoVO.isAlive():
             self.createHealthBar(vehicleID, vInfoVO, isEnemy)
-        if isEnemy and self.settings[PANELS.SPOTTED_FIX]:
-            self.as_setSpottedPositionS(vehicleID)
         if self.damagesEnable:
             self.as_addDamageS(vehicleID, self.settings[PANELS.DAMAGES_SETTINGS])
         logDebug("PlayersPanels onAddedToStorage: id={} enemy={}", vehicleID, isEnemy)
 
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
-        for vehicleID in aliveAllies.union(aliveEnemies):
-            self.as_AddVehIdToListS(vehicleID, vehicleID in aliveEnemies)
-        for vehicleID in deadAllies.union(deadEnemies):
-            self.as_AddVehIdToListS(vehicleID, vehicleID in deadEnemies)
-            self.as_setVehicleDeadS(vehicleID)
+        self.as_setVehiclesDeadS(deadAllies.union(deadEnemies))
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):
         if self.hpBarsEnable:
