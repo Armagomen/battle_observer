@@ -29,18 +29,6 @@ class DamageLog(DamageLogsMeta):
         if feedback is None:
             return
         feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
-        self.as_createTopLogS(self.settings[GLOBAL.SETTINGS])
-        self.update_top_log_start_params()
-        self.as_updateTopLogS(self.top_log_template % self.top_log)
-
-    def _dispose(self):
-        feedback = self.sessionProvider.shared.feedback
-        if feedback is not None:
-            feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
-        self.top_log.clear()
-        super(DamageLog, self)._dispose()
-
-    def update_top_log_start_params(self):
         if self._arenaVisitor.gui.isRandomBattle():
             avg_data = cachedVehicleData.efficiencyAvgData
         else:
@@ -60,6 +48,14 @@ class DamageLog(DamageLogsMeta):
                             tankAvgStun=avg_data.tankAvgStun,
                             tankAvgBlocked=avg_data.tankAvgBlocked)
         self.top_log_template = self.settings[DAMAGE_LOG.TOP_LOG_SEPARATE].join(template_list)
+        self.as_updateTopLogS(self.top_log_template % self.top_log)
+
+    def _dispose(self):
+        feedback = self.sessionProvider.shared.feedback
+        if feedback is not None:
+            feedback.onPlayerFeedbackReceived -= self.__onPlayerFeedbackReceived
+        self.top_log.clear()
+        super(DamageLog, self)._dispose()
 
     def addToTopLog(self, event):
         e_type = event.getType()

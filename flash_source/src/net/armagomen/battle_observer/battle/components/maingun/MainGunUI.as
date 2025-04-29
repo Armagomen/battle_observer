@@ -27,19 +27,25 @@ package net.armagomen.battle_observer.battle.components.maingun
 		public function MainGunUI()
 		{
 			super();
+			this.icons = new <Bitmap>[new this.Gun_icon(), new this.Done_icon(), this.isColorBlind() ? new this.Warning_icon_cb() : new this.Warning_icon()];
+			this.icons.fixed = true;
 		}
 		
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			this.icons = new <Bitmap>[new this.Gun_icon(), new this.Done_icon(), this.isColorBlind() ? new this.Warning_icon_cb() : new this.Warning_icon()];
-			this.icons.fixed = true;
-					
-			var _icons:Sprite       = new Sprite();
+			if (this.mainGun)
+			{
+				this.removeChildren();
+				this.mainGun = null;
+				this.progress = null;
+			}
+			
+			var _icons:Sprite = new Sprite();
 			_icons.y = 2;
 			this.addChild(_icons);
 			
-			for each (var item:Bitmap in this.icons) 
+			for each (var item:Bitmap in this.icons)
 			{
 				item.width = 26;
 				item.height = 26;
@@ -48,7 +54,7 @@ package net.armagomen.battle_observer.battle.components.maingun
 			}
 			this.icons[0].visible = true;
 			this.icons[2].alpha = 0.6;
-				
+			
 			var settings:Object = this.getSettings();
 			this.x = (App.appWidth >> 1) + settings.x;
 			this.y = settings.y;
@@ -75,7 +81,8 @@ package net.armagomen.battle_observer.battle.components.maingun
 		
 		private function setDoneVisible(value:Boolean):void
 		{
-			if (this.icons[1].visible != value){
+			if (this.icons[1].visible != value)
+			{
 				this.icons[1].visible = value
 			}
 		}

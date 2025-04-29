@@ -18,6 +18,13 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
+			if (this.hpBars)
+			{
+				this.removeChildren();
+				this.hpBars.remove();
+				this.hpBars = null;
+			}
+			
 			var settings:Object = this.getSettings();
 			this.x = App.appWidth >> 1;
 			

@@ -114,6 +114,13 @@ class SettingsLoader(object):
         if self.errorMessages:
             ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
+    def updateAllSettings(self):
+        for part_name in LOAD_LIST:
+            internal_cfg = getattr(self.__settings, part_name)
+            if internal_cfg is None:
+                continue
+            self.__settings.onModSettingsChanged(internal_cfg, part_name)
+
     def loadConfigPart(self, part_name, direct_path, listdir, internal_cfg):
         """Read settings part file from JSON"""
         file_name = JSON.format(part_name)

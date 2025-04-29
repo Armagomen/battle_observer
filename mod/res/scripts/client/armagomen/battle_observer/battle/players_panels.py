@@ -28,6 +28,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onPeriodChange += self.onPeriodChange
+                arena.onVehicleKilled += self.onVehicleKilled
         if self.damagesEnable:
             damage_controller.onPlayerDamaged += self.onPlayerDamaged
             g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS,
@@ -41,6 +42,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onPeriodChange -= self.onPeriodChange
+                arena.onVehicleKilled -= self.onVehicleKilled
         if self.damagesEnable:
             damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         super(PlayersPanels, self)._dispose()
@@ -70,7 +72,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.as_updateHealthBarS(vehicleID, 100, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onAddedToStorage(self, vehicleID, isEnemy):
-        """Called from flash after creation in as_AddVehIdToListS"""
+        """Called from flash after creation in AS"""
         vInfoVO = self.getVehicleInfo(vehicleID)
         if vInfoVO.isObserver():
             return
@@ -80,8 +82,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_addDamageS(vehicleID, self.settings[PANELS.DAMAGES_SETTINGS])
         logDebug("PlayersPanels onAddedToStorage: id={} enemy={}", vehicleID, isEnemy)
 
-    def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
-        self.as_setVehiclesDeadS(deadAllies.union(deadEnemies))
+    def onVehicleKilled(self, targetID, *args):
+        self.as_setVehicleDeadS(targetID)
 
     def updateVehicleHealth(self, vehicleID, newHealth, maxHealth):
         if self.hpBarsEnable:

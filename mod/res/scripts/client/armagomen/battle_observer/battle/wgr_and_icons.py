@@ -64,8 +64,8 @@ class WGRAndIcons(WGRAndIconsMeta):
             text_color = int(item_data[self.COLOR_WGR][1:], 16) if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else 0
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
         if self.itemsData:
-            self.as_update_wgr_data(self.itemsData)
-            self.itemsData.clear()
+            self.as_update_wgr_dataS(self.itemsData)
+            # self.itemsData.clear()
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

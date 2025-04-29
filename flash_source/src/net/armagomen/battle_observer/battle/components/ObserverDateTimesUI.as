@@ -19,6 +19,11 @@
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
+			if (this.dateTime)
+			{
+				this.removeChildren();
+				this.dateTime = null;
+			}
 			this.settings = this.getSettings().battle;
 			var x:Number = this.settings.x < 0 ? App.appWidth + this.settings.x : this.settings.x;
 			var y:Number = this.settings.y < 0 ? App.appHeight + this.settings.y : this.settings.y;

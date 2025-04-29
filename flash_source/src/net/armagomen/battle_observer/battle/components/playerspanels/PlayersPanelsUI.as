@@ -28,7 +28,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			{
 				if (item && item.parent)
 				{
-					item.removeChildren();
+					item.remove();
 					item.parent.removeChild(item);
 				}
 			}
@@ -64,7 +64,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		{
 			for each (var item:* in this.playersPanel.listRight._items)
 			{
-				this.as_AddVehIdToList(item.vehicleData.vehicleID, true, item._listItem);
+				this.addVehIdToList(item.vehicleData.vehicleID, true, item._listItem);
 				if (this.spotted_fix)
 				{
 					this.setSpottedPosition(item._listItem);
@@ -76,7 +76,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		{
 			for each (var item:* in this.playersPanel.listLeft._items)
 			{
-				this.as_AddVehIdToList(item.vehicleData.vehicleID, false, item._listItem);
+				this.addVehIdToList(item.vehicleData.vehicleID, false, item._listItem);
 			}
 			this.addToRight();
 		}
@@ -91,7 +91,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			this.loadLists();
 		}
 		
-		public function as_AddVehIdToList(vehicleID:int, enemy:Boolean, item:*):void
+		private function addVehIdToList(vehicleID:int, enemy:Boolean, item:*):void
 		{
 			if (!this.storage[vehicleID])
 			{
@@ -145,14 +145,11 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			}
 		}
 		
-		public function as_setVehiclesDead(vehicleIDs:Array):void
+		public function as_setVehicleDead(vehicleID:int):void
 		{
-			for each (var vehicleID:int in vehicleIDs)
+			if (this.storage[vehicleID])
 			{
-				if (this.storage[vehicleID])
-				{
-					this.storage[vehicleID].setDeath();
-				}
+				this.storage[vehicleID].setDeath();
 			}
 		}
 		
@@ -186,21 +183,6 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 				item.setDamageVisible(vis);
 			}
 		}
-		
-		//private function getWGListitem(vehicleID:int, enemy:Boolean):*
-		//{
-		//if (this.playersPanel)
-		//{
-		//var list:*   = enemy ? this.playersPanel.listRight : this.playersPanel.listLeft;
-		//var holder:* = list.getHolderByVehicleID(vehicleID);
-		//if (holder)
-		//{
-		//return holder.getListItem();
-		//}
-		//DebugUtils.LOG_WARNING("[BATTLE_OBSERVER]: playersPanel list item holder is not found: " + vehicleID.toString());
-		//}
-		//return null;
-		//}
 		
 		public function as_updateDamageLogPosition():void
 		{

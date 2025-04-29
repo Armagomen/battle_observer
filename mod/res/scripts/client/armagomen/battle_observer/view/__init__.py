@@ -49,8 +49,7 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
             to_format_str = "{}:flashObject, has ho attribute {}"
             return logError(to_format_str, alias, ATTRIBUTE_NAME)
         pyView._blToggling.update(self._components)
-        addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, self._components,
-                    self._hiddenComponents)
+        addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, self._components, self._hiddenComponents)
 
 
 class ViewHandlerLobby(PackageBusinessHandler):

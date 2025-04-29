@@ -90,7 +90,7 @@
 				Utils.updateColor(this.outline, color);
 			}
 		}
-		
+
 		public function remove():void
 		{
 			this.removeChildren();

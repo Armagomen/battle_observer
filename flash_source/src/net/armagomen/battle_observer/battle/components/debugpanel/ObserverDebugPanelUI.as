@@ -16,6 +16,11 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
+			if (this.debugPanel)
+			{
+				this.removeChildren();
+				this.debugPanel = null;
+			}
 			var settings:Object = this.getSettings();
 			if (settings.style == "modern")
 			{
@@ -30,6 +35,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
+			this.removeChildren();
 			this.debugPanel = null;
 		}
 		

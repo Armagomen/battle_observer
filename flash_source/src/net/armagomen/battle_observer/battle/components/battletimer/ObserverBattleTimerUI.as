@@ -19,6 +19,12 @@
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
+			
+			if (this.battleTimer)
+			{
+				this.removeChildren();
+				this.battleTimer = null;
+			}
 			this.x = App.appWidth;
 			this.battleTimer = new TextExt(-8, 0, Constants.largeText, TextFieldAutoSize.RIGHT, this);
 		}
@@ -26,6 +32,7 @@
 		override protected function onBeforeDispose():void 
 		{
 			super.onBeforeDispose();
+			this.removeChildren();
 			this.battleTimer = null;
 		}
 		

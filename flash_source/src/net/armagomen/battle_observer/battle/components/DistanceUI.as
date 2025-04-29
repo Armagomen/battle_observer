@@ -21,6 +21,19 @@ package net.armagomen.battle_observer.battle.components
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
+			if (this.distance)
+			{
+				this.removeChildren();
+				if (this._timer.hasEventListener(TimerEvent.TIMER))
+				{
+					if (this._timer.running)
+					{
+						this._timer.stop();
+					}
+					this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
+				}
+				this.distance = null;
+			}
 			var settings:Object = this.getSettings();
 			this.distance = new TextExt(settings.x, settings.y, Constants.middleText, settings.align, this);
 			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
@@ -32,7 +45,10 @@ package net.armagomen.battle_observer.battle.components
 			{
 				this._timer.stop();
 			}
-			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
+			if (this._timer.hasEventListener(TimerEvent.TIMER))
+			{
+				this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
+			}
 			this._timer = null;
 			this.distance = null;
 			super.onBeforeDispose();

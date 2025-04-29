@@ -52,6 +52,25 @@
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
+			if (this._container)
+			{
+				if (this._timer.running)
+				{
+					this._timer.stop();
+				}
+				this.removeChildren();
+				this.hideAnimation.stop();
+				this.hideAnimation2.stop();
+				this.showAnimation.stop();
+				this._image = null;
+				this.radial_progress = null;
+				this.hideAnimation = null;
+				this.hideAnimation2 = null;
+				this.showAnimation = null;
+				this._container.removeChildren();
+				this.timer_text = null;
+				this._container = null;
+			}
 			this.params = this.getSettings();
 			this.x = App.appWidth >> 1;
 			this._container = new Sprite()

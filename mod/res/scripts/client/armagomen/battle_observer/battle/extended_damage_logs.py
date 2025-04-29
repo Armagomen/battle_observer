@@ -53,11 +53,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         if feedback is None:
             return
         feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
-        position = self.settings[GLOBAL.SETTINGS]
-        top_enabled = self.settings[DAMAGE_LOG.D_DONE_ENABLED]
-        bottom_enabled = self.settings[DAMAGE_LOG.D_RECEIVED_ENABLED]
         self.attack_reasons.update(self.settings[DAMAGE_LOG.ATTACK_REASON])
-        self.as_createExtendedLogsS(position, top_enabled, bottom_enabled)
         g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings[DAMAGE_LOG.HOT_KEY])
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:

@@ -17,6 +17,11 @@ package net.armagomen.battle_observer.battle.components
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
+			if (this.armorCalc)
+			{
+				this.removeChildren();
+				this.armorCalc = null;
+			}
 			var settings:Object = this.getSettings().position;
 			this.armorCalc = new TextExt(settings.x, settings.y, Constants.largeText, TextFieldAutoSize.CENTER, this);
 		}

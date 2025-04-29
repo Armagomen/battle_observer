@@ -148,6 +148,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
+        self.__player = getPlayer()
         if IS_WG_CLIENT:
             prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
             if prebattleCtrl is not None:

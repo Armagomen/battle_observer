@@ -9,9 +9,6 @@ class PlayersPanelsMeta(BaseModMeta):
     def onAddedToStorage(self, vehicleID, isEnemy):
         pass
 
-    def as_AddVehIdToListS(self, vehID, isEnemy):
-        return self.flashObject.as_AddVehIdToList(vehID, isEnemy) if self._isDAAPIInited() else None
-
     def as_addHealthBarS(self, vehID, barColor, visible):
         return self.flashObject.as_addHealthBar(vehID, barColor, visible) if self._isDAAPIInited() else None
 
@@ -21,8 +18,8 @@ class PlayersPanelsMeta(BaseModMeta):
     def as_updateDamageS(self, vehicleID, text):
         return self.flashObject.as_updateDamage(vehicleID, text) if self._isDAAPIInited() else None
 
-    def as_setVehiclesDeadS(self, items):
-        return self.flashObject.as_setVehiclesDead(items) if self._isDAAPIInited() else None
+    def as_setVehicleDeadS(self, vehicleID):
+        return self.flashObject.as_setVehicleDead(vehicleID) if self._isDAAPIInited() else None
 
     def as_updateHealthBarS(self, vehicleID, percent, textField):
         return self.flashObject.as_updateHealthBar(vehicleID, percent, textField) if self._isDAAPIInited() else None

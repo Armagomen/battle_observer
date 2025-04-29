@@ -101,5 +101,14 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 				this.healthBar = null;
 			}
 		}
+		
+		public function remove():void
+		{
+			this.removeChildren();
+			this.healthBar = null;
+			this.damage = null;
+			this.isEnemy = null;
+			App.utils.data.cleanupDynamicObject(this);
+		}
 	}
 }

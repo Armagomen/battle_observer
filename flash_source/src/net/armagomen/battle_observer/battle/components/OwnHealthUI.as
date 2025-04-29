@@ -19,6 +19,11 @@ package net.armagomen.battle_observer.battle.components
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
+			if (this.own_health)
+			{
+				this.removeChildren();
+				this.own_health = null;
+			}
 			this.onResizeHandle(null);
 			var settings:Object = this.getSettings();
 			var colors:Object = this.getColors().global;
