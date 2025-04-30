@@ -16,21 +16,28 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 		
 		override protected function onPopulate():void
 		{
-			super.onPopulate();			
-			var settings:Object = this.getSettings();
-			this.x = App.appWidth >> 1;
-			
-			var _class:* = settings.style == "league" ? League : Default;
-			this.hpBars = new _class(this.isColorBlind(), this.getColors().global, this);
-			
-			var page:* = parent;
-			this.correlation = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-			
-			this.updateCorrelationBar();
-			this.updateCountersPosition();
-			
-			var q_progress:* = page.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
-			page.addChildAt(q_progress, page.getChildIndex(this.correlation) - 1);
+			if (not_initialized)
+			{
+				super.onPopulate();
+				var settings:Object = this.getSettings();
+				this.x = App.appWidth >> 1;
+				
+				var _class:* = settings.style == "league" ? League : Default;
+				this.hpBars = new _class(this.isColorBlind(), this.getColors().global, this);
+				
+				var page:* = parent;
+				this.correlation = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+				
+				this.updateCorrelationBar();
+				this.updateCountersPosition();
+				
+				var q_progress:* = page.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
+				page.addChildAt(q_progress, page.getChildIndex(this.correlation) - 1);
+			}
+			else
+			{
+				super.onPopulate();
+			}
 		}
 		
 		private function updateCorrelationBar():void

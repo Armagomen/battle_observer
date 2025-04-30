@@ -18,11 +18,19 @@
 		
 		override protected function onPopulate():void 
 		{
-			super.onPopulate();
-			this.settings = this.getSettings().battle;
-			var x:Number = this.settings.x < 0 ? App.appWidth + this.settings.x : this.settings.x;
-			var y:Number = this.settings.y < 0 ? App.appHeight + this.settings.y : this.settings.y;
-			this.dateTime = new TextExt(x, y, Constants.largeText, TextFieldAutoSize.LEFT, this);
+			
+			if (not_initialized)
+			{
+				super.onPopulate();
+				this.settings = this.getSettings().battle;
+				var x:Number = this.settings.x < 0 ? App.appWidth + this.settings.x : this.settings.x;
+				var y:Number = this.settings.y < 0 ? App.appHeight + this.settings.y : this.settings.y;
+				this.dateTime = new TextExt(x, y, Constants.largeText, TextFieldAutoSize.LEFT, this);
+			}
+			else
+			{
+				super.onPopulate();
+			}
 		}
 		
 		override protected function onBeforeDispose():void 

@@ -14,10 +14,18 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		
 		override protected function onPopulate():void
 		{
-			super.onPopulate();
-			var settings:Object = this.getSettings();
-			var _class:* = settings.style == "modern" ? Modern: Minimal;
-			this.debugPanel = new _class(settings, this)
+			
+			if (not_initialized)
+			{
+				super.onPopulate();
+				var settings:Object = this.getSettings();
+				var _class:* = settings.style == "modern" ? Modern: Minimal;
+				this.debugPanel = new _class(settings, this)
+			}
+			else
+			{
+				super.onPopulate();
+			}
 		}
 		
 		override protected function onBeforeDispose():void

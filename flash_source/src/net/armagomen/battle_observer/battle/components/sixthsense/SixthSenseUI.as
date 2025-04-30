@@ -50,18 +50,25 @@
 		
 		override protected function onPopulate():void
 		{
-			super.onPopulate();
-			this.params = this.getSettings();
-			this.x = App.appWidth >> 1;
-			this._container = new Sprite()
-			this.addChild(this._container);
-			if (this.params.default_icon)
+			if (not_initialized)
 			{
-				this.loader.load(new URLRequest('../maps/icons/battle_observer/sixth_sense/' + this.params.default_icon_name));
+				super.onPopulate();
+				this.params = this.getSettings();
+				this.x = App.appWidth >> 1;
+				this._container = new Sprite()
+				this.addChild(this._container);
+				if (this.params.default_icon)
+				{
+					this.loader.load(new URLRequest('../maps/icons/battle_observer/sixth_sense/' + this.params.default_icon_name));
+				}
+				else
+				{
+					this.loader.load(new URLRequest('../../../' + this.params.user_icon));
+				}
 			}
 			else
 			{
-				this.loader.load(new URLRequest('../../../' + this.params.user_icon));
+				super.onPopulate();
 			}
 		}
 		
@@ -71,18 +78,13 @@
 			this.removeChildren();
 			this.clearTimers();
 			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
-			this._timer = null;
 			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
-			this.loader = null;
 			this.hideAnimation.stop();
 			this.hideAnimation2.stop();
 			this.hideAnimation = null;
 			this.hideAnimation2 = null;
-			this._image = null;
 			this._container.removeChildren();
-			this.timer_text = null;
-			this._container = null;
 			App.utils.data.cleanupDynamicObject(this.params);
 		}
 		
@@ -156,10 +158,6 @@
 		
 		public function as_show(seconds:Number):void
 		{
-			if (!this._container)
-			{
-				return;
-			}
 			this.rewind();
 			if (seconds)
 			{

@@ -18,14 +18,22 @@ package net.armagomen.battle_observer.battle.components
 		
 		override protected function onPopulate():void 
 		{
-			super.onPopulate();
-			this.onResizeHandle(null);
-			var settings:Object = this.getSettings();
-			var colors:Object = this.getColors().global;
-			this.own_health = new ProgressBar(settings.x - 90, settings.y, 180, 22, this.getAVGColor(), colors.bgColor, 0.2);
-			this.own_health.setOutline(180, 22);
-			this.own_health.addTextField(90, -3, TextFieldAutoSize.CENTER, Constants.middleText);
-			this.addChild(this.own_health);
+			
+			if (not_initialized)
+			{
+				super.onPopulate();
+				this.onResizeHandle(null);
+				var settings:Object = this.getSettings();
+				var colors:Object = this.getColors().global;
+				this.own_health = new ProgressBar(settings.x - 90, settings.y, 180, 22, this.getAVGColor(), colors.bgColor, 0.2);
+				this.own_health.setOutline(180, 22);
+				this.own_health.addTextField(90, -3, TextFieldAutoSize.CENTER, Constants.middleText);
+				this.addChild(this.own_health);
+			}
+			else
+			{
+				super.onPopulate();
+			}
 		}
 		
 		override protected function onBeforeDispose():void 

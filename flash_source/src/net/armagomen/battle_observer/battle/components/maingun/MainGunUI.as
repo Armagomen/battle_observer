@@ -31,40 +31,48 @@ package net.armagomen.battle_observer.battle.components.maingun
 		
 		override protected function onPopulate():void
 		{
-			super.onPopulate();		
-			var _icons:Sprite = new Sprite();
-			_icons.y = 2;
-			this.addChild(_icons);
-			if (!this.icons)
-			{
-				this.icons = new <Bitmap>[new this.Gun_icon(), new this.Done_icon(), this.isColorBlind() ? new this.Warning_icon_cb() : new this.Warning_icon()];
-				this.icons.fixed = true;
-			}
 			
-			for each (var item:Bitmap in this.icons)
+			if (not_initialized)
 			{
-				item.width = 26;
-				item.height = 26;
-				item.visible = false;
-				_icons.addChild(item);
-			}
-			this.icons[0].visible = true;
-			this.icons[2].alpha = 0.6;
-			
-			var settings:Object = this.getSettings();
-			this.x = (App.appWidth >> 1) + settings.x;
-			this.y = settings.y;
-			if (settings.progress_bar)
-			{
-				var colors:Object = this.getColors().global;
-				this.mainGun = new TextExt(50, 0, Constants.middleText, TextFieldAutoSize.CENTER, this);
-				this.progress = new ProgressBar(30, 24, 42, 4, colors.ally, colors.bgColor, 0.2);
-				this.progress.setNewScale(0);
-				this.addChild(this.progress);
+				super.onPopulate();
+				var _icons:Sprite = new Sprite();
+				_icons.y = 2;
+				this.addChild(_icons);
+				if (!this.icons)
+				{
+					this.icons = new <Bitmap>[new this.Gun_icon(), new this.Done_icon(), this.isColorBlind() ? new this.Warning_icon_cb() : new this.Warning_icon()];
+					this.icons.fixed = true;
+				}
+				
+				for each (var item:Bitmap in this.icons)
+				{
+					item.width = 26;
+					item.height = 26;
+					item.visible = false;
+					_icons.addChild(item);
+				}
+				this.icons[0].visible = true;
+				this.icons[2].alpha = 0.6;
+				
+				var settings:Object = this.getSettings();
+				this.x = (App.appWidth >> 1) + settings.x;
+				this.y = settings.y;
+				if (settings.progress_bar)
+				{
+					var colors:Object = this.getColors().global;
+					this.mainGun = new TextExt(50, 0, Constants.middleText, TextFieldAutoSize.CENTER, this);
+					this.progress = new ProgressBar(30, 24, 42, 4, colors.ally, colors.bgColor, 0.2);
+					this.progress.setNewScale(0);
+					this.addChild(this.progress);
+				}
+				else
+				{
+					this.mainGun = new TextExt(28, 0, Constants.largeText, TextFieldAutoSize.LEFT, this);
+				}
 			}
 			else
 			{
-				this.mainGun = new TextExt(28, 0, Constants.largeText, TextFieldAutoSize.LEFT, this);
+				super.onPopulate();
 			}
 		}
 		

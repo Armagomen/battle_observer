@@ -37,16 +37,23 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		
 		override protected function onPopulate():void
 		{
-			super.onPopulate();
-			var battlePage:* = parent;
-			this.spotted_fix = this.getSettings().panels_spotted_fix;
-			this.playersPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-			if (this.playersPanel)
+			if (not_initialized)
 			{
-				this.playersPanel.addEventListener(Event.CHANGE, this.reloadAll, false, 0, true);
-				//this.playersPanel.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll, false, 0, true);
-				//this.playersPanel.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight, false, 0, true);
-				setTimeout(this.loadLists, 100);
+				super.onPopulate();
+				this.spotted_fix = this.getSettings().panels_spotted_fix;
+				var battlePage:* = parent;
+				this.playersPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
+				if (this.playersPanel)
+				{
+					this.playersPanel.addEventListener(Event.CHANGE, this.reloadAll, false, 0, true);
+					this.playersPanel.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll, false, 0, true);
+					this.playersPanel.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight, false, 0, true);
+					setTimeout(this.loadLists, 100);
+				}
+			}
+			else
+			{
+				super.onPopulate();
 			}
 		}
 		
@@ -60,15 +67,15 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 					this.playersPanel.removeEventListener(Event.CHANGE, this.reloadAll);
 				}
 				
-				//if (this.playersPanel.hasEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE))
-				//{
-					//this.playersPanel.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll);
-				//}
-			//
-				//if (this.playersPanel.listRight)
-				//{
-					//this.playersPanel.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight);
-				//}
+				if (this.playersPanel.hasEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE))
+				{
+					this.playersPanel.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll);
+				}
+				
+				if (this.playersPanel.listRight)
+				{
+					this.playersPanel.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight);
+				}
 				this.playersPanel = null;
 			}
 			super.onBeforeDispose();
@@ -76,26 +83,31 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		
 		private function addToRight(eve:Event = null):void
 		{
-			for each (var item:* in this.playersPanel.listRight._items)
+			if (this.playersPanel)
 			{
-				this.addVehIdToList(item.vehicleData.vehicleID, true, item._listItem);
-				if (this.spotted_fix)
+				for each (var item:* in this.playersPanel.listRight._items)
 				{
-					this.setSpottedPosition(item._listItem);
+					this.addVehIdToList(item.vehicleData.vehicleID, true, item._listItem);
+					if (this.spotted_fix)
+					{
+						this.setSpottedPosition(item._listItem);
+					}
 				}
 			}
 		}
 		
 		private function loadLists():void
 		{
-			for each (var item:* in this.playersPanel.listLeft._items)
+			if (this.playersPanel)
 			{
-				this.addVehIdToList(item.vehicleData.vehicleID, false, item._listItem);
+				for each (var item:* in this.playersPanel.listLeft._items)
+				{
+					this.addVehIdToList(item.vehicleData.vehicleID, false, item._listItem);
+				}
+				this.addToRight();
 			}
-			this.addToRight();
 		}
 		
-
 		private function reloadAll(eve:Event):void
 		{
 			this.loadLists();

@@ -20,10 +20,17 @@ package net.armagomen.battle_observer.battle.components
 		
 		override protected function onPopulate():void
 		{
-			super.onPopulate();
-			var settings:Object = this.getSettings();
-			this.distance = new TextExt(settings.x, settings.y, Constants.middleText, settings.align, this);
-			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
+			if (not_initialized)
+			{
+				super.onPopulate();
+				var settings:Object = this.getSettings();
+				this.distance = new TextExt(settings.x, settings.y, Constants.middleText, settings.align, this);
+				this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
+			}
+			else
+			{
+				super.onPopulate();
+			}
 		}
 		
 		override protected function onBeforeDispose():void

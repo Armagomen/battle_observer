@@ -10,6 +10,7 @@ package net.armagomen.battle_observer.battle.base
 		public var getColors:Function;
 		public var isComp7Battle:Function;
 		public var doLog:Function;
+		public var not_initialized:Boolean = true;
 		
 		public function ObserverBattleDisplayable()
 		{
@@ -29,8 +30,8 @@ package net.armagomen.battle_observer.battle.base
 		
 		override protected function onPopulate():void
 		{
-			this.removeChildren();
 			super.onPopulate();
+			this.not_initialized = false;
 		}
 		
 		override protected function onBeforeDispose():void 

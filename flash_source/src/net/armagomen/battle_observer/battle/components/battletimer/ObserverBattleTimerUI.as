@@ -16,14 +16,21 @@
 			super();
 		}
 		
-		override protected function onPopulate():void 
+		override protected function onPopulate():void
 		{
-			super.onPopulate();
-			this.x = App.appWidth;
-			this.battleTimer = new TextExt(-8, 0, Constants.largeText, TextFieldAutoSize.RIGHT, this);
+			if (not_initialized)
+			{
+				super.onPopulate();
+				this.x = App.appWidth;
+				this.battleTimer = new TextExt(-8, 0, Constants.largeText, TextFieldAutoSize.RIGHT, this);
+			}
+			else
+			{
+				super.onPopulate();
+			}
 		}
 		
-		override protected function onBeforeDispose():void 
+		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
 			this.removeChildren();

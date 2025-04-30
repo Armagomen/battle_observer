@@ -17,10 +17,17 @@ package net.armagomen.battle_observer.battle.components.teambases
 		
 		override protected function onPopulate():void 
 		{
-			super.onPopulate();
-			this.settings = this.getSettings();
-			this.colors = this.getColors().global;
-			this.yPos = this.settings.y >= 0 ? this.settings.y : App.appHeight + this.settings.y;
+			if (not_initialized)
+			{
+				super.onPopulate();
+				this.settings = this.getSettings();
+				this.colors = this.getColors().global;
+				this.yPos = this.settings.y >= 0 ? this.settings.y : App.appHeight + this.settings.y;
+			}
+			else
+			{
+				super.onPopulate();
+			}
 		}
 		
 		override protected function onBeforeDispose():void 
