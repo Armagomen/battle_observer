@@ -5,9 +5,8 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.Utils;
-	import net.armagomen.battle_observer.battle.interfaces.IDebugPanel;
 	
-	public class Minimal extends Sprite implements IDebugPanel
+	public class Minimal extends Sprite
 	{
 		private var pingColor:uint   = Utils.colorConvert("#B3FE95");
 		private var lagColor:uint    = Utils.colorConvert("#FD9675");
@@ -16,7 +15,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		private var fps:TextExt      = null;
 		private var ping:TextExt     = null;
 		
-		public function Minimal(settings:Object)
+		public function Minimal(settings:Object, panel:*)
 		{
 			super();
 			this.pingColor = Utils.colorConvert(settings.pingColor);
@@ -27,6 +26,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			this.fps.textColor = Utils.colorConvert(settings.fpsColor);
 			this.ping = new TextExt(136, 0, Constants.largeText, TextFieldAutoSize.LEFT, this);
 			this.ping.textColor = this.pingColor;
+			panel.addChild(this);
 		}
 		
 		public function update(ping:int, fps:int, lag:Boolean):void

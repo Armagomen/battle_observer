@@ -2,12 +2,11 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 {
 	import flash.events.Event;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battle_observer.battle.interfaces.ITeamHealth;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
 	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
-		private var hpBars:ITeamHealth;
+		private var hpBars:*;
 		private var correlation:* = null;
 		
 		public function TeamsHealthUI()
@@ -22,7 +21,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 			this.x = App.appWidth >> 1;
 			
 			var _class:* = settings.style == "league" ? League : Default;
-			this.hpBars = this.addChild(new _class(this.isColorBlind(), this.getColors().global)) as ITeamHealth;
+			this.hpBars = new _class(this.isColorBlind(), this.getColors().global, this);
 			
 			var page:* = parent;
 			this.correlation = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);

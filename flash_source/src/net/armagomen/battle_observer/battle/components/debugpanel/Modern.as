@@ -6,9 +6,8 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.Utils;
-	import net.armagomen.battle_observer.battle.interfaces.IDebugPanel;
 	
-	public class Modern extends Sprite implements IDebugPanel
+	public class Modern extends Sprite
 	{
 		[Embed(source = "ping_img/1.png")]
 		private var _1:Class;
@@ -41,7 +40,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		private var icons:Vector.<Bitmap>  = null;
 		private var lastVisibleIcon:Bitmap = null;
 		
-		public function Modern(settings:Object)
+		public function Modern(settings:Object, panel:*)
 		{
 			super();
 			this.lag = new TextExt(185, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
@@ -60,6 +59,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			this.lag.textColor = this.pingColor;
 			
 			this.createBitmapVector();
+			panel.addChild(this);
 		}
 		
 		private function createBitmapVector():void

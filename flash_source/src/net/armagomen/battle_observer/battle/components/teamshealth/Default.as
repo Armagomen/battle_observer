@@ -3,12 +3,11 @@
 	import flash.display.*;
 	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battle_observer.battle.components.teamshealth.score.Score;
-	import net.armagomen.battle_observer.battle.interfaces.ITeamHealth;
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.ProgressBar;
 	import net.armagomen.battle_observer.utils.TextExt;
 	
-	public class Default extends Sprite implements ITeamHealth
+	public class Default extends Sprite
 	{
 		private var greenDiff:TextExt;
 		private var redDiff:TextExt;
@@ -17,7 +16,7 @@
 		private var colors:Object;
 		private var score:Score;
 		
-		public function Default(colorBlind:Boolean, colors:Object)
+		public function Default(colorBlind:Boolean, colors:Object, panel:*)
 		{
 			super();
 			this.colors = colors;
@@ -34,6 +33,7 @@
 			this.addChild(score);
 			this.greenDiff = new TextExt(-55, 4, Constants.diff, TextFieldAutoSize.RIGHT, this);
 			this.redDiff = new TextExt(55, 4, Constants.diff, TextFieldAutoSize.LEFT, this);
+			panel.addChild(this);
 		}
 		
 		public function setColorBlind(enabled:Boolean):void

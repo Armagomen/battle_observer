@@ -1,12 +1,11 @@
 package net.armagomen.battle_observer.battle.components.debugpanel
 {
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
-	import net.armagomen.battle_observer.battle.interfaces.IDebugPanel;
 	
 	public class ObserverDebugPanelUI extends ObserverBattleDisplayable
 	{
 		
-		private var debugPanel:IDebugPanel;
+		private var debugPanel:*;
 		
 		public function ObserverDebugPanelUI()
 		{
@@ -17,14 +16,8 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		{
 			super.onPopulate();
 			var settings:Object = this.getSettings();
-			if (settings.style == "modern")
-			{
-				this.debugPanel = this.addChild(new Modern(settings)) as IDebugPanel;
-			}
-			else
-			{
-				this.debugPanel = this.addChild(new Minimal(settings)) as IDebugPanel;
-			}
+			var _class:* = settings.style == "modern" ? Modern: Minimal;
+			this.debugPanel = new _class(settings, this)
 		}
 		
 		override protected function onBeforeDispose():void
