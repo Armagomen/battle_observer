@@ -57,10 +57,6 @@ class ViewSettings(object):
             return False
         return user_settings.statistics[GLOBAL.ENABLED]
 
-    # def invalidateComponents(self):
-    #     self.__invalidate()
-    #     self.__registerComponents()
-
     @staticmethod
     def xvmInstalled(module):
         if xvmInstalled:
@@ -140,7 +136,7 @@ class ViewSettings(object):
         if self.gui.isEpicBattle():
             self.addInToEpicUI(True)
         self._hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self._components)
-        logDebug("viewSettings __invalidate: components={}", self._components)
+        logDebug("viewSettings _invalidateComponents: components={}", self._components)
 
     def _clear(self):
         if self.gui.isEpicBattle():
@@ -169,7 +165,7 @@ class ViewSettings(object):
                 if alias in NEVER_HIDE_FL:
                     _NEVER_HIDE.add(alias)
 
-    def _registerComponents(self):
+    def _registerViewComponents(self):
         components = REGISTER_CHECK_ALIAS.intersection(self._components)
         if components:
             config = ComponentsConfig()
@@ -177,4 +173,4 @@ class ViewSettings(object):
                 config += ComponentsConfig(config=((ALIAS_TO_CTRL[alias], (alias,)),))
             config = config.getConfig()
             self.sessionProvider.registerViewComponents(*config)
-            logDebug("viewSettings, __registerComponents: {}", config)
+            logDebug("viewSettings, _registerViewComponents: {}", config)

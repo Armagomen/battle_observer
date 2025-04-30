@@ -43,7 +43,6 @@ package net.armagomen.battle_observer
 					{
 						if (this.isFlashComponentRegisteredS(alias))
 						{
-							//this.unregisterFlashComponentS(alias);
 							continue;
 						}
 						this.registerComponent(this.addChild(new alias_to_ui[alias]()), alias);

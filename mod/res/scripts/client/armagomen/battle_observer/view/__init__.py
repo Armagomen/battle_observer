@@ -33,15 +33,14 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def eventListener(self, event):
         logDebug("ViewHandlerBattle:eventListener {}", event.name)
-        if self.gui.guiType in BATTLES_RANGE:
-            if self._components:
-                page = self.findViewByName(WindowLayer.VIEW, event.name)
-                if page:
-                    for component in self._components:
-                        page.flashObject.unregisterFlashComponentS(component)
-                        page._blToggling.discard(component)
-                self._registerComponents()
-                addCallback(DEFAULT_INTERVAL, self._loadView, event.name)
+        if self.gui.guiType in BATTLES_RANGE and self._components:
+            page = self.findViewByName(WindowLayer.VIEW, event.name)
+            if page:
+                for component in self._components:
+                    page.flashObject.unregisterFlashComponentS(component)
+                    page._blToggling.discard(component)
+            self._registerViewComponents()
+            addCallback(DEFAULT_INTERVAL, self._loadView, event.name)
 
     def _loadView(self, name):
         page = self.findViewByName(WindowLayer.VIEW, name)

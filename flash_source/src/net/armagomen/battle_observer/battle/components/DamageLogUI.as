@@ -17,11 +17,6 @@ package net.armagomen.battle_observer.battle.components
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			if (this.top_log)
-			{
-				this.removeChildren();
-				this.top_log = null;
-			}
 			var settings:Object = this.getSettings().settings;
 			this.x = !settings.inCenter ? 0 : Math.ceil(App.appWidth >> 1);
 			this.top_log = new TextExt(settings.x, settings.y, Constants.largeText, settings.align, this);

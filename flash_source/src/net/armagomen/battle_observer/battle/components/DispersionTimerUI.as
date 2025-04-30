@@ -16,11 +16,6 @@ package net.armagomen.battle_observer.battle.components
 		override protected function onPopulate():void 
 		{
 			super.onPopulate();
-			if (this.dispersionTime)
-			{
-				this.removeChildren();
-				this.dispersionTime = null;
-			}
 			var settings:Object = this.getSettings();
 			this.dispersionTime = new TextExt(settings.x, settings.y, Constants.middleText, settings.align, this);
 		}
