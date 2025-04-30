@@ -1,33 +1,31 @@
 from armagomen._constants import BATTLE_ALIASES, IS_WG_CLIENT
-from armagomen.battle_observer.battle.armor_calculator import ArmorCalculator
-from armagomen.battle_observer.battle.battle_timer import BattleTimer
-from armagomen.battle_observer.battle.damage_log import DamageLog
-from armagomen.battle_observer.battle.date_times import DateTimes
-from armagomen.battle_observer.battle.dispersion_timer import DispersionTimer
-from armagomen.battle_observer.battle.distance_to_enemy import Distance
-from armagomen.battle_observer.battle.extended_damage_logs import ExtendedDamageLogs
-from armagomen.battle_observer.battle.flight_time import FlightTime
-from armagomen.battle_observer.battle.main_gun import MainGun
-from armagomen.battle_observer.battle.minimap import MinimapZoomPlugin
-from armagomen.battle_observer.battle.own_health import OwnHealth
-from armagomen.battle_observer.battle.players_panels import PlayersPanels
-
-if IS_WG_CLIENT:
-    from armagomen.battle_observer.battle.sixth_sense import SixthSense
-    from armagomen.battle_observer.battle.debug_panel import DebugPanel
-else:
-    from armagomen.battle_observer.battle.sixth_sense import SixthSenseLesta as SixthSense
-    from armagomen.battle_observer.battle.debug_panel import DebugPanelLesta as DebugPanel
-from armagomen.battle_observer.battle.team_bases import TeamBases
-from armagomen.battle_observer.battle.teams_hp import TeamsHP
-from armagomen.battle_observer.battle.wgr_and_icons import WGRAndIcons
-from armagomen.battle_observer.view import ViewHandlerBattle
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
 
 __all__ = ()
 
 
 def getViewSettings():
+    from armagomen.battle_observer.battle.armor_calculator import ArmorCalculator
+    from armagomen.battle_observer.battle.battle_timer import BattleTimer
+    from armagomen.battle_observer.battle.damage_log import DamageLog
+    from armagomen.battle_observer.battle.date_times import DateTimes
+    from armagomen.battle_observer.battle.dispersion_timer import DispersionTimer
+    from armagomen.battle_observer.battle.distance_to_enemy import Distance
+    from armagomen.battle_observer.battle.extended_damage_logs import ExtendedDamageLogs
+    from armagomen.battle_observer.battle.flight_time import FlightTime
+    from armagomen.battle_observer.battle.main_gun import MainGun
+    from armagomen.battle_observer.battle.minimap import MinimapZoomPlugin
+    from armagomen.battle_observer.battle.own_health import OwnHealth
+    from armagomen.battle_observer.battle.players_panels import PlayersPanels
+    if IS_WG_CLIENT:
+        from armagomen.battle_observer.battle.sixth_sense import SixthSense
+        from armagomen.battle_observer.battle.debug_panel import DebugPanel
+    else:
+        from armagomen.battle_observer.battle.sixth_sense import SixthSenseLesta as SixthSense
+        from armagomen.battle_observer.battle.debug_panel import DebugPanelLesta as DebugPanel
+    from armagomen.battle_observer.battle.team_bases import TeamBases
+    from armagomen.battle_observer.battle.teams_hp import TeamsHP
+    from armagomen.battle_observer.battle.wgr_and_icons import WGRAndIcons
     return (
         ComponentSettings(BATTLE_ALIASES.WGR_ICONS, WGRAndIcons, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.PANELS, PlayersPanels, ScopeTemplates.DEFAULT_SCOPE),
@@ -50,6 +48,7 @@ def getViewSettings():
 
 
 def getBusinessHandlers():
+    from armagomen.battle_observer.view import ViewHandlerBattle
     return ViewHandlerBattle(),
 
 

@@ -27,23 +27,19 @@ package net.armagomen.battle_observer.battle.components.maingun
 		public function MainGunUI()
 		{
 			super();
-			this.icons = new <Bitmap>[new this.Gun_icon(), new this.Done_icon(), this.isColorBlind() ? new this.Warning_icon_cb() : new this.Warning_icon()];
-			this.icons.fixed = true;
 		}
 		
 		override protected function onPopulate():void
 		{
-			super.onPopulate();
-			if (this.mainGun)
-			{
-				this.removeChildren();
-				this.mainGun = null;
-				this.progress = null;
-			}
-			
+			super.onPopulate();		
 			var _icons:Sprite = new Sprite();
 			_icons.y = 2;
 			this.addChild(_icons);
+			if (!this.icons)
+			{
+				this.icons = new <Bitmap>[new this.Gun_icon(), new this.Done_icon(), this.isColorBlind() ? new this.Warning_icon_cb() : new this.Warning_icon()];
+				this.icons.fixed = true;
+			}
 			
 			for each (var item:Bitmap in this.icons)
 			{
@@ -89,7 +85,6 @@ package net.armagomen.battle_observer.battle.components.maingun
 		
 		public function as_gunData(value:int, max_value:int, warning:Boolean):void
 		{
-			
 			var notAchived:Boolean = value > 0;
 			this.icons[2].visible = warning && notAchived;
 			if (notAchived)

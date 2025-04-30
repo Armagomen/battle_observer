@@ -31,14 +31,14 @@ class WGRAndIcons(WGRAndIconsMeta):
             self.data_loader = StatisticsDataLoader(self._arenaDP, self.updateAllItems)
             self.data_loader.getStatisticsDataFromServer()
             arena = self._arenaVisitor.getArenaSubscription()
-            if arena is not None:
+            if arena is not None and not self.isComp7Battle():
                 if arena.isFogOfWarEnabled:
                     arena.onVehicleAdded += self.data_loader.updateList
                     arena.onVehicleUpdated += self.data_loader.updateList
 
     def _dispose(self):
         arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
+        if arena is not None and not self.isComp7Battle():
             if arena.isFogOfWarEnabled and self.data_loader is not None:
                 arena.onVehicleAdded -= self.data_loader.updateList
                 arena.onVehicleUpdated -= self.data_loader.updateList
@@ -157,6 +157,6 @@ class StatisticsDataLoader(object):
             if not accountDBID or accountDBID in self.__loaded or vInfo.isObserver():
                 continue
             self.__vehicles.add(accountDBID)
-        logDebug("getStatisticsDataFromServer: START request data: ids={}", self.__vehicles)
         if self.__vehicles:
+            logDebug("getStatisticsDataFromServer: START request data: ids={}", self.__vehicles)
             self.requestData()

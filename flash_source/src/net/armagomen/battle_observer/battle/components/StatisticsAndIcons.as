@@ -59,11 +59,11 @@ package net.armagomen.battle_observer.battle.components
 			this.cutWidth = settings["statistics_panels_cut_width"];
 			this.fullWidth = settings["statistics_panels_full_width"];
 			this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
-			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateRight, false, 0, true);
-			if (this.panels.listRight && !this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
-			{
-				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateRight, false, 0, true);
-			}
+			//this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateRight, false, 0, true);
+			//if (this.panels.listRight && !this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
+			//{
+				//this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateRight, false, 0, true);
+			//}
 			setTimeout(this.updateItems, 200);
 		}
 		
@@ -74,15 +74,15 @@ package net.armagomen.battle_observer.battle.components
 				this.panels.removeEventListener(Event.CHANGE, this.onChange);
 			}
 			
-			if (this.panels.hasEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE))
-			{
-				this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateRight);
-			}
-			
-			if (this.panels.listRight && this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
-			{
-				this.panels.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateRight);
-			}
+			//if (this.panels.hasEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE))
+			//{
+				//this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateRight);
+			//}
+			//
+			//if (this.panels.listRight && this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
+			//{
+				//this.panels.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateRight);
+			//}
 			this.battleLoading = null;
 			this.fullStats = null;
 			this.panels = null;

@@ -1,16 +1,17 @@
-from armagomen._constants import BATTLE_PAGES, LOBBY_ALIASES
+from armagomen._constants import BATTLE_PAGES, BATTLES_RANGE, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback, xvmInstalled
 from armagomen.utils.logging import logDebug, logError
+from frameworks.wulf import WindowLayer
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.shared import EVENT_BUS_SCOPE
 
 ATTRIBUTE_NAME = 'as_BattleObserverCreate'
-DEBUG_MSG = "app.loaderManager.onViewLoaded: {}, alias={}"
 INFO_MSG = "loading view {}: alias={}"
+DEFAULT_INTERVAL = 0.2
 
 
 class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
@@ -22,8 +23,8 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def init(self):
         super(ViewHandlerBattle, self).init()
-        self.setComponents()
         damage_controller.start()
+        self._invalidateComponents()
 
     def fini(self):
         self._clear()
@@ -31,25 +32,25 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         super(ViewHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        if self.__subscribed:
-            return
-        self._app.loaderManager.onViewLoaded += self.__onViewLoaded
-        self.__subscribed = True
-        self.registerComponents()
+        logDebug("ViewHandlerBattle:eventListener {}", event.name)
+        if self.gui.guiType in BATTLES_RANGE:
+            if self._components:
+                page = self.findViewByName(WindowLayer.VIEW, event.name)
+                if page:
+                    for component in self._components:
+                        page.flashObject.unregisterFlashComponentS(component)
+                        page._blToggling.discard(component)
+                self._registerComponents()
+                addCallback(DEFAULT_INTERVAL, self._loadView, event.name)
 
-    def __onViewLoaded(self, pyView, *args):
-        alias = pyView.getAlias()
-        if alias not in BATTLE_PAGES:
-            return
-        self._app.loaderManager.onViewLoaded -= self.__onViewLoaded
-        logDebug(INFO_MSG, self.__class__.__name__, alias)
-        if not self._components:
-            return
-        if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
-            to_format_str = "{}:flashObject, has ho attribute {}"
-            return logError(to_format_str, alias, ATTRIBUTE_NAME)
-        pyView._blToggling.update(self._components)
-        addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, self._components, self._hiddenComponents)
+    def _loadView(self, name):
+        page = self.findViewByName(WindowLayer.VIEW, name)
+        if page and hasattr(page.flashObject, ATTRIBUTE_NAME):
+            logDebug("ViewHandlerBattle:_loadView {}", ATTRIBUTE_NAME)
+            page._blToggling.update(self._components)
+            page.flashObject.as_BattleObserverCreate(self._components, self._hiddenComponents)
+        else:
+            addCallback(DEFAULT_INTERVAL, self._loadView, name)
 
 
 class ViewHandlerLobby(PackageBusinessHandler):
@@ -71,7 +72,8 @@ class ViewHandlerLobby(PackageBusinessHandler):
         is_hangar = alias == VIEW_ALIAS.LOBBY_HANGAR
         if is_hangar:
             logDebug(INFO_MSG, self.__class__.__name__, alias)
-            if not hasattr(pyView.flashObject, ATTRIBUTE_NAME):
-                return logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)
-            addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
-            addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverShadow)
+            if hasattr(pyView.flashObject, ATTRIBUTE_NAME):
+                addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
+                addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverShadow)
+            else:
+                logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)

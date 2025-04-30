@@ -31,10 +31,10 @@ class _ShotResult(_CrosshairShotResults):
         entity = collision.entity
         if not isinstance(entity, cls.ENTITY_TYPES) or not entity.isAlive() or entity.publicInfo['team'] == player.team:
             return cls.UNDEFINED_RESULT
-        return cls.__result(hitPoint, collision, direction, multiplier, player)
+        return cls._result(hitPoint, collision, direction, multiplier, player)
 
     @classmethod
-    def __result(cls, hitPoint, collision, direction, multiplier, player):
+    def _result(cls, hitPoint, collision, direction, multiplier, player):
         c_details = cls._getAllCollisionDetails(hitPoint, direction, collision.entity)
         if c_details is None:
             return cls.UNDEFINED_RESULT
@@ -122,7 +122,7 @@ class _ShotResultAll(_ShotResult):
     def _getShotResult(cls, hitPoint, collision, direction, multiplier, player):
         if player is None or collision is None or not isinstance(collision.entity, cls.ENTITY_TYPES) or not collision.entity.isAlive():
             return cls.UNDEFINED_RESULT
-        return cls.__result(hitPoint, collision, direction, multiplier, player)
+        return cls._result(hitPoint, collision, direction, multiplier, player)
 
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):

@@ -23,7 +23,6 @@
 		private var timer_text:TextExt;
 		private var _container:Sprite;
 		private var hideAnimation:Tween;
-		private var showAnimation:Tween;
 		private var hideAnimation2:Tween;
 		private var POSITION_Y:Number;
 		private var _image:Bitmap;
@@ -52,25 +51,25 @@
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			if (this._container)
-			{
-				if (this._timer.running)
-				{
-					this._timer.stop();
-				}
-				this.removeChildren();
-				this.hideAnimation.stop();
-				this.hideAnimation2.stop();
-				this.showAnimation.stop();
-				this._image = null;
-				this.radial_progress = null;
-				this.hideAnimation = null;
-				this.hideAnimation2 = null;
-				this.showAnimation = null;
-				this._container.removeChildren();
-				this.timer_text = null;
-				this._container = null;
-			}
+			//if (this._container)
+			//{
+			//if (this._timer.running)
+			//{
+			//this._timer.stop();
+			//}
+			//this.removeChildren();
+			//this.hideAnimation.stop();
+			//this.hideAnimation2.stop();
+			//this.showAnimation.stop();
+			//this._image = null;
+			//this.radial_progress = null;
+			//this.hideAnimation = null;
+			//this.hideAnimation2 = null;
+			//this.showAnimation = null;
+			//this._container.removeChildren();
+			//this.timer_text = null;
+			//this._container = null;
+			//}
 			this.params = this.getSettings();
 			this.x = App.appWidth >> 1;
 			this._container = new Sprite()
@@ -88,6 +87,7 @@
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
+			this.removeChildren();
 			this.clearTimers();
 			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
 			this._timer = null;
@@ -96,10 +96,9 @@
 			this.loader = null;
 			this.hideAnimation.stop();
 			this.hideAnimation2.stop();
-			this.showAnimation.stop();
 			this.hideAnimation = null;
 			this.hideAnimation2 = null;
-			this.showAnimation = null;
+			this._image = null;
 			this._container.removeChildren();
 			this.timer_text = null;
 			this._container = null;
@@ -110,8 +109,21 @@
 		{
 			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -finish, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
-			this.showAnimation = new Tween(this._container, "alpha", 0, 1.0, 0.1);
 			this._container.alpha = 0;
+		}
+		
+		private function rewind():void
+		{
+			if (this.hideAnimation && this.hideAnimation.isPlaying)
+			{
+				this.hideAnimation.stop();
+				this.hideAnimation.rewind();
+			}
+			if (this.hideAnimation2 && this.hideAnimation2.isPlaying)
+			{
+				this.hideAnimation2.stop();
+				this.hideAnimation2.rewind();
+			}
 		}
 		
 		private function updateParams():void
@@ -163,13 +175,11 @@
 		
 		public function as_show(seconds:Number):void
 		{
-			if (this.hideAnimation.isPlaying)
+			if (!this._container)
 			{
-				this.hideAnimation.stop();
-				this.hideAnimation.rewind();
-				this.hideAnimation2.stop();
-				this.hideAnimation2.rewind();
+				return;
 			}
+			this.rewind();
 			if (seconds)
 			{
 				this.clearTimers();
@@ -195,7 +205,7 @@
 				}
 			}
 			this._container.y = this.POSITION_Y;
-			this.showAnimation.start();
+			this._container.alpha = 1.0;
 			this.is_visible = true;
 		}
 		

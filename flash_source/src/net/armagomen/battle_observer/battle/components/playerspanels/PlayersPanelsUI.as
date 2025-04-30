@@ -28,8 +28,8 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			{
 				if (item && item.parent)
 				{
-					item.remove();
 					item.parent.removeChild(item);
+					item.remove();
 				}
 			}
 			App.utils.data.cleanupDynamicObject(this.storage);
@@ -44,8 +44,8 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			if (this.playersPanel)
 			{
 				this.playersPanel.addEventListener(Event.CHANGE, this.reloadAll, false, 0, true);
-				this.playersPanel.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll, false, 0, true);
-				this.playersPanel.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.onChange, false, 0, true);
+				//this.playersPanel.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll, false, 0, true);
+				//this.playersPanel.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight, false, 0, true);
 				setTimeout(this.loadLists, 100);
 			}
 		}
@@ -55,12 +55,26 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			if (this.playersPanel)
 			{
 				this.as_clearStorage();
+				if (this.playersPanel.hasEventListener(Event.CHANGE))
+				{
+					this.playersPanel.removeEventListener(Event.CHANGE, this.reloadAll);
+				}
+				
+				//if (this.playersPanel.hasEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE))
+				//{
+					//this.playersPanel.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll);
+				//}
+			//
+				//if (this.playersPanel.listRight)
+				//{
+					//this.playersPanel.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight);
+				//}
 				this.playersPanel = null;
 			}
 			super.onBeforeDispose();
 		}
 		
-		private function addToRight():void
+		private function addToRight(eve:Event = null):void
 		{
 			for each (var item:* in this.playersPanel.listRight._items)
 			{
@@ -81,11 +95,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			this.addToRight();
 		}
 		
-		private function onChange(eve:Event):void
-		{
-			this.addToRight();
-		}
-		
+
 		private function reloadAll(eve:Event):void
 		{
 			this.loadLists();

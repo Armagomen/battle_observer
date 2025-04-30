@@ -1,4 +1,4 @@
-from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, CLOCK, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, STATISTICS
+from armagomen._constants import BATTLE_ALIASES, CLOCK, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, STATISTICS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import xvmInstalled
 from armagomen.utils.logging import logDebug, logInfo
@@ -30,6 +30,8 @@ ALIAS_TO_CTRL = {
     BATTLE_ALIASES.TIMER: BATTLE_CTRL_ID.ARENA_PERIOD
 }
 
+REGISTER_CHECK_ALIAS = set(ALIAS_TO_CTRL.keys())
+
 NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE_TIME, BATTLE_ALIASES.SIXTH_SENSE)
 
 
@@ -37,7 +39,7 @@ class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
-        self._components = None
+        self._components = []
         self._hiddenComponents = set()
 
     @property
@@ -54,6 +56,10 @@ class ViewSettings(object):
         if self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
             return False
         return user_settings.statistics[GLOBAL.ENABLED]
+
+    # def invalidateComponents(self):
+    #     self.__invalidate()
+    #     self.__registerComponents()
 
     @staticmethod
     def xvmInstalled(module):
@@ -129,18 +135,17 @@ class ViewSettings(object):
             return self.isMinimapEnabled()
         return False
 
-    def setComponents(self):
-        if self.gui.guiType in BATTLES_RANGE:
-            self._components = [alias for alias in BATTLE_ALIASES if self.getSetting(alias)]
-            if self.gui.isEpicBattle():
-                self.addInToEpicUI(True)
-            self._hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self._components)
-        logDebug("viewSettings setComponents: components={}", self._components)
+    def _invalidateComponents(self):
+        self._components = [alias for alias in BATTLE_ALIASES if self.getSetting(alias)]
+        if self.gui.isEpicBattle():
+            self.addInToEpicUI(True)
+        self._hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self._components)
+        logDebug("viewSettings __invalidate: components={}", self._components)
 
     def _clear(self):
         if self.gui.isEpicBattle():
             self.addInToEpicUI(False)
-        self._components = None
+        self._components = []
         self._hiddenComponents.clear()
         logDebug("clear viewSettings components")
 
@@ -164,13 +169,12 @@ class ViewSettings(object):
                 if alias in NEVER_HIDE_FL:
                     _NEVER_HIDE.add(alias)
 
-    def registerComponents(self):
-        if not self._components:
-            return logDebug("viewSettings, registerComponents: _components is empty")
-        config = ComponentsConfig()
-        for alias in ALIAS_TO_CTRL:
-            if alias in self._components:
-                config += ComponentsConfig(((ALIAS_TO_CTRL[alias], (alias,)),))
-        config = config.getConfig()
-        logDebug("viewSettings, registerComponents: {}", config)
-        self.sessionProvider.registerViewComponents(*config)
+    def _registerComponents(self):
+        components = REGISTER_CHECK_ALIAS.intersection(self._components)
+        if components:
+            config = ComponentsConfig()
+            for alias in components:
+                config += ComponentsConfig(config=((ALIAS_TO_CTRL[alias], (alias,)),))
+            config = config.getConfig()
+            self.sessionProvider.registerViewComponents(*config)
+            logDebug("viewSettings, __registerComponents: {}", config)

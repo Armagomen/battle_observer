@@ -29,7 +29,7 @@ package net.armagomen.battle_observer
 	
 	public class BattleObserverLibraryMain extends AbstractView
 	{
-	
+		
 		public function BattleObserverLibraryMain()
 		{
 			super();
@@ -43,6 +43,7 @@ package net.armagomen.battle_observer
 					{
 						if (this.isFlashComponentRegisteredS(alias))
 						{
+							//this.unregisterFlashComponentS(alias);
 							continue;
 						}
 						this.registerComponent(this.addChild(new alias_to_ui[alias]()), alias);
@@ -75,7 +76,7 @@ package net.armagomen.battle_observer
 			}
 		}
 		
-		override protected function configUI():void 
+		override protected function configUI():void
 		{
 			super.configUI();
 			this.tabEnabled = false;
