@@ -1,0 +1,28 @@
+@Echo off
+
+set "ModVersion="
+for /f "tokens=3 delims=<>" %%a in (
+    'find /i "<version>" ^< ".\mod\meta.xml"'
+) do set "ModVersion=%%a"
+
+set sources=.\mod
+set GameVersion=1.28.1.0
+set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
+
+REM set GameVersion="1.29.0.0 Common Test"
+REM set GameInstalled_ModsDir=C:\Games\World_of_Tanks_CT\mods\%GameVersion%
+
+"python.exe" bo_compile_all.py -f -d scripts %sources%\res\scripts
+
+set ModFile=%GameInstalled_ModsDir%\armagomen.battleObserver_%ModVersion%.wotmod
+
+DEL %GameInstalled_ModsDir%\armagomen.battleObserver*
+
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py %ModFile% %sources%\*
+
+
+DEL /s /q *.pyc
+
+pause
+
+exit

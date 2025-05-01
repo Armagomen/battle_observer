@@ -25,14 +25,13 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 				var _class:* = settings.style == "league" ? League : Default;
 				this.hpBars = new _class(this.isColorBlind(), this.getColors().global, this);
 				
-				var page:* = parent;
-				this.correlation = page.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
+				this.correlation = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				
 				this.updateCorrelationBar();
 				this.updateCountersPosition();
 				
-				var q_progress:* = page.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
-				page.addChildAt(q_progress, page.getChildIndex(this.correlation) - 1);
+				var q_progress:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
+				this.battlePage.addChildAt(q_progress, this.battlePage.getChildIndex(this.correlation) - 1);
 			}
 			else
 			{

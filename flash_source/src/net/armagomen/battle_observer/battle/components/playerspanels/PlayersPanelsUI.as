@@ -41,8 +41,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			{
 				super.onPopulate();
 				this.spotted_fix = this.getSettings().panels_spotted_fix;
-				var battlePage:* = parent;
-				this.playersPanel = battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
+				this.playersPanel = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 				if (this.playersPanel)
 				{
 					this.playersPanel.addEventListener(Event.CHANGE, this.reloadAll, false, 0, true);
@@ -208,14 +207,13 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		
 		public function as_updateDamageLogPosition():void
 		{
-			var page:* = parent;
 			try
 			{
-				page.updateDamageLogPosition();
+				this.battlePage.updateDamageLogPosition();
 			}
 			catch (err:Error)
 			{
-				page.updateDamageLogPosition(page.epicRandomPlayersPanel.state);
+				this.battlePage.updateDamageLogPosition(this.battlePage.epicRandomPlayersPanel.state);
 			}
 		}
 	}

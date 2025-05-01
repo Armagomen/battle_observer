@@ -8,7 +8,6 @@ package net.armagomen.battle_observer.battle.components
 		private var oldSize:Number  = 2.0;
 		private var oldScale:Number = 1.0;
 		private var minimap:*       = null;
-		private var page:*          = null;
 		
 		public function MinimapUI()
 		{
@@ -18,16 +17,14 @@ package net.armagomen.battle_observer.battle.components
 		override protected function onPopulate():void
 		{
 			super.onPopulate();
-			this.page = parent;
-			this.minimap = this.page.getComponent(BATTLE_VIEW_ALIASES.MINIMAP);
-			this.page.addChild(this.minimap);
+			this.minimap = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.MINIMAP);
+			this.battlePage.addChild(this.minimap);
 			App.graphicsOptimizationMgr.unregister(this.minimap);
 		}
 		
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			this.page = null;
 			this.minimap = null;
 		}
 		
@@ -35,7 +32,7 @@ package net.armagomen.battle_observer.battle.components
 		{
 			if (this.minimap)
 			{
-				if (enabled && !this.page.as_isComponentVisible(BATTLE_VIEW_ALIASES.FULL_STATS))
+				if (enabled && !this.battlePage.as_isComponentVisible(BATTLE_VIEW_ALIASES.FULL_STATS))
 				{
 					this.oldSize = this.minimap.currentSizeIndex;
 					this.oldScale = this.minimap.scaleX;
@@ -52,7 +49,7 @@ package net.armagomen.battle_observer.battle.components
 					this.minimap.x = App.appWidth - this.minimap.currentWidth;
 					this.minimap.y = App.appHeight - this.minimap.currentHeight;
 				}
-				this.page.showComponent(BATTLE_VIEW_ALIASES.PLAYER_MESSAGES, !enabled);
+				this.battlePage.showComponent(BATTLE_VIEW_ALIASES.PLAYER_MESSAGES, !enabled);
 			}
 			else DebugUtils.LOG_WARNING("[BATTLE_OBSERVER_INFO] minimapCentered - minimap is Null !!!");
 		}

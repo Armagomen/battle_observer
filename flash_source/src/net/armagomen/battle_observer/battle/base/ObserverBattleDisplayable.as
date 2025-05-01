@@ -11,6 +11,7 @@ package net.armagomen.battle_observer.battle.base
 		public var isComp7Battle:Function;
 		public var doLog:Function;
 		public var not_initialized:Boolean = true;
+		public var battlePage:*;
 		
 		public function ObserverBattleDisplayable()
 		{
@@ -30,20 +31,17 @@ package net.armagomen.battle_observer.battle.base
 		
 		override protected function onPopulate():void
 		{
+			this.battlePage = parent;
 			super.onPopulate();
 			this.not_initialized = false;
-		}
-		
-		override protected function onBeforeDispose():void 
-		{
-			this.removeChildren();
-			super.onBeforeDispose();
 		}
 		
 		override protected function onDispose():void
 		{
 			this.removeEventListener(Event.RESIZE, this.onResizeHandle);
+			this.removeChildren();
 			super.onDispose();
+			App.utils.data.cleanupDynamicObject(this);
 		}
 		
 		public function onResizeHandle(event:Event):void {}
@@ -53,5 +51,7 @@ package net.armagomen.battle_observer.battle.base
 			this.x = x;
 			this.y = y;
 		}
+		
+
 	}
 }

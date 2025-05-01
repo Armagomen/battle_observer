@@ -20,8 +20,7 @@ package net.armagomen.battle_observer.battle.components
 			if (not_initialized)
 			{
 				super.onPopulate();
-				var page:*           = parent;
-				var damageLogPanel:* = page.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
+				var damageLogPanel:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
 				if (damageLogPanel)
 				{
 					var settings:Object = this.getSettings();
