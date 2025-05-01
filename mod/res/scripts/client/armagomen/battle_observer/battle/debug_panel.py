@@ -1,6 +1,5 @@
 from armagomen.battle_observer.meta.battle.debug_panel_meta import DebugPanelMeta
 from armagomen.utils.common import cancelOverride, overrideMethod
-from gui.battle_control.controllers import debug_ctrl
 from gui.Scaleform.daapi.view.battle.shared.debug_panel import DebugPanel as _DP
 
 
@@ -11,11 +10,9 @@ class DebugPanel(DebugPanelMeta):
 
     def _populate(self):
         super(DebugPanel, self)._populate()
-        debug_ctrl._UPDATE_INTERVAL = 0.4
         overrideMethod(_DP, "updateDebugInfo")(self.updateDebugInfo)
 
     def _dispose(self):
-        debug_ctrl._UPDATE_INTERVAL = 0.2
         cancelOverride(_DP, "updateDebugInfo", "updateDebugInfo")
         super(DebugPanel, self)._dispose()
 
@@ -31,12 +28,10 @@ class DebugPanelLesta(DebugPanelMeta):
 
     def _populate(self):
         super(DebugPanelLesta, self)._populate()
-        debug_ctrl._UPDATE_INTERVAL = 0.4
         overrideMethod(_DP, "updateDebugInfo")(self.updateDebugInfo)
         overrideMethod(_DP, "updateReplayDebugInfo")(self.updateReplayDebugInfo)
 
     def _dispose(self):
-        debug_ctrl._UPDATE_INTERVAL = 0.2
         cancelOverride(_DP, "updateDebugInfo", "updateDebugInfo")
         cancelOverride(_DP, "updateReplayDebugInfo", "updateReplayDebugInfo")
         super(DebugPanelLesta, self)._dispose()

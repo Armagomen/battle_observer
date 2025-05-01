@@ -103,19 +103,20 @@ class Arcade(CameraSettings):
 
     def update(self):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
-        if camera is None:
-            return logError("{} camera is Nome", CTRL_MODE_NAME.ARCADE)
-        self.enabled = self.config[GLOBAL.ENABLED]
-        if self.enabled:
-            self.reset = True
-            camera._cfg[ARCADE.DIST_RANGE] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
-            camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
-            camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
-            camera._cfg[ARCADE.START_ANGLE] = -0.4
-            self.updateProperties(camera)
-        elif self.reset:
-            self.resetToDefault(CTRL_MODE_NAME.ARCADE)
-            self.updateProperties(camera)
+        if camera is not None:
+            self.enabled = self.config[GLOBAL.ENABLED]
+            if self.enabled:
+                self.reset = True
+                camera._cfg[ARCADE.DIST_RANGE] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
+                camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
+                camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
+                camera._cfg[ARCADE.START_ANGLE] = -0.4
+                self.updateProperties(camera)
+            elif self.reset:
+                self.resetToDefault(CTRL_MODE_NAME.ARCADE)
+                self.updateProperties(camera)
+        else:
+            logError("{} camera is Nome", CTRL_MODE_NAME.ARCADE)
 
     @staticmethod
     def updateProperties(camera):
@@ -139,25 +140,22 @@ class Strategic(CameraSettings):
         self.config = user_settings.strategic_camera
 
     def update(self):
-        strategic = self.getCamera(CTRL_MODE_NAME.STRATEGIC)
-        if strategic is None:
-            return logError("{} camera is Nome", CTRL_MODE_NAME.STRATEGIC)
-        arty = self.getCamera(CTRL_MODE_NAME.ARTY)
-        if arty is None:
-            return logError("{} camera is Nome", CTRL_MODE_NAME.ARTY)
         self.enabled = self.config[GLOBAL.ENABLED]
         if self.enabled:
             self.reset = True
-            for camera in (strategic, arty):
-                camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
-                camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
+            for index, camera in enumerate((self.getCamera(CTRL_MODE_NAME.STRATEGIC), self.getCamera(CTRL_MODE_NAME.ARTY))):
+                if camera is not None:
+                    camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
+                    camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
+                else:
+                    logError("{} camera is Nome", CTRL_MODE_NAME.ARTY if index else CTRL_MODE_NAME.STRATEGIC)
         elif self.reset:
             self.resetToDefault(CTRL_MODE_NAME.ARTY, CTRL_MODE_NAME.STRATEGIC)
 
 
 class Sniper(CameraSettings):
     settingsCore = dependency.descriptor(ISettingsCore)
-    DEFAULT_X_METERS = 25.0
+    DEFAULT_X_METERS = 20.0
     _SNIPER_ZOOM_LEVEL = None
 
     def __init__(self):
@@ -176,30 +174,31 @@ class Sniper(CameraSettings):
         self._dyn_zoom = self.config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED] and self.enabled
         self._steps_only = self.config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY] and self._dyn_zoom
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
-        if camera is None:
-            return logError("{} camera is Nome", CTRL_MODE_NAME.SNIPER)
-        if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]:
-            camera.enableDynamicCamera(False)
+        if camera is not None:
+            if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]:
+                camera.enableDynamicCamera(False)
+            else:
+                camera.enableDynamicCamera(self.settingsCore.getSetting('dynamicCamera'))
+            if self._dyn_zoom:
+                self._SNIPER_ZOOM_LEVEL = int(camera._SNIPER_ZOOM_LEVEL)
+                camera.setSniperZoomSettings(-1)
+            elif self._SNIPER_ZOOM_LEVEL is not None:
+                camera.setSniperZoomSettings(self._SNIPER_ZOOM_LEVEL)
+                self._SNIPER_ZOOM_LEVEL = None
+            self._steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
+            if self._steps_enabled:
+                self.reset = True
+                steps = self.config[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
+                camera._cfg[SNIPER.INCREASED_ZOOM] = True
+                camera._cfg[SNIPER.ZOOMS] = steps
+                exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
+                while len(steps) > len(exposure):
+                    exposure.append(SNIPER.EXPOSURE_FACTOR)
+            elif self.reset:
+                self.resetToDefault(CTRL_MODE_NAME.SNIPER)
+            self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
         else:
-            camera.enableDynamicCamera(self.settingsCore.getSetting('dynamicCamera'))
-        if self._dyn_zoom:
-            self._SNIPER_ZOOM_LEVEL = int(camera._SNIPER_ZOOM_LEVEL)
-            camera.setSniperZoomSettings(-1)
-        elif self._SNIPER_ZOOM_LEVEL is not None:
-            camera.setSniperZoomSettings(self._SNIPER_ZOOM_LEVEL)
-            self._SNIPER_ZOOM_LEVEL = None
-        self._steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
-        if self._steps_enabled:
-            self.reset = True
-            steps = self.config[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
-            camera._cfg[SNIPER.INCREASED_ZOOM] = True
-            camera._cfg[SNIPER.ZOOMS] = steps
-            exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
-            while len(steps) > len(exposure):
-                exposure.append(SNIPER.EXPOSURE_FACTOR)
-        elif self.reset:
-            self.resetToDefault(CTRL_MODE_NAME.SNIPER)
-        self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
+            logError("{} camera is Nome", CTRL_MODE_NAME.SNIPER)
 
     def getZoom(self, distance, steps):
         zoom = math.floor(distance / self.DEFAULT_X_METERS)
