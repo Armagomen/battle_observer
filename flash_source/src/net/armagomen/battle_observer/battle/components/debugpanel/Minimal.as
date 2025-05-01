@@ -14,6 +14,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		private var statical:TextExt = null;
 		private var fps:TextExt      = null;
 		private var ping:TextExt     = null;
+		private var lags:Boolean     = false;
 		
 		public function Minimal(settings:Object, panel:*)
 		{
@@ -29,16 +30,14 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			panel.addChild(this);
 		}
 		
-		public function update(ping:int, fps:int, lag:Boolean):void
+		public function update(_ping:int, _fps:int, _lag:Boolean):void
 		{
-			this.ping.text = ping.toString();
-			this.fps.text = fps.toString();
-			
-			var color:uint = lag ? this.lagColor : this.pingColor;
-			
-			if (this.ping.textColor != color)
+			this.ping.text = _ping.toString();
+			this.fps.text = _fps.toString();
+			if (this.lags != _lag)
 			{
-				this.ping.textColor = color
+				this.lags = _lag;
+				this.ping.textColor = _lag ? this.lagColor : this.pingColor;
 			}
 		}
 	}

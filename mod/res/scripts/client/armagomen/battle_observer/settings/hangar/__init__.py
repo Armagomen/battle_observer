@@ -103,6 +103,7 @@ class CreateElement(Getter):
                 return 'TextInputField'
             elif type(value) == bool:
                 return 'CheckBox'
+            return 'Empty'
         else:
             return cType
 
@@ -217,6 +218,8 @@ class CreateElement(Getter):
                 return self.createHotKey(blockID, key, value)
             elif SNIPER.STEPS in key:
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
+            return self.createEmpty()
+        return self.createEmpty()
 
 
 class SettingsInterface(CreateElement):
@@ -238,7 +241,7 @@ class SettingsInterface(CreateElement):
         self.loader.settings.onUserConfigUpdateComplete -= self.onUserConfigUpdateComplete
 
     def addToAPI(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.LOBBY:
+        if spaceID == GuiGlobalSpaceID.LOGIN:
             self.addModsToVX()
             self.addModificationToModList()
             self.appLoader.onGUISpaceEntered -= self.addToAPI
@@ -325,13 +328,13 @@ class SettingsInterface(CreateElement):
                     continue
                 if GLOBAL.ALIGN in key:
                     value = GLOBAL.ALIGN_LIST[value]
-                elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not isinstance(value, basestring):
+                elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not isinstance(value, str):
                     value = HP_BARS.STYLES[value]
-                elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, basestring):
+                elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, str):
                     value = DEBUG_PANEL.STYLES[value]
-                elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, basestring):
+                elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, str):
                     value = self.loader.sixth_sense_list[value]
-                elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and isinstance(value, basestring):
+                elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and isinstance(value, str):
                     value = value.strip().split(',')
                     try:
                         value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]

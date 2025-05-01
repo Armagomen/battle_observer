@@ -40,6 +40,8 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		private var icons:Vector.<Bitmap>  = null;
 		private var lastVisibleIcon:Bitmap = null;
 		
+		private var lags:Boolean           = false;
+		
 		public function Modern(settings:Object, panel:*)
 		{
 			super();
@@ -77,68 +79,62 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 				icon.alpha = 0.75;
 				this.addChild(icon);
 			}
+			
+			this.lastVisibleIcon = this.icons[0];
+			this.lastVisibleIcon.visible = true;
 		}
 		
-		public function update(ping:int, fps:int, lag:Boolean):void
+		public function update(_ping:int, _fps:int, _lag:Boolean):void
 		{
-			this.fps.text = fps.toString();
-			this.ping.text = ping.toString();
-			var color:uint = lag ? this.lagColor : this.pingColor;
-			if (this.lag.textColor != color)
+			this.fps.text = _fps.toString();
+			this.ping.text = _ping.toString();
+			if (this.lags != _lag)
 			{
-				this.lag.textColor = color;
+				this.lags = _lag;
+				this.lag.textColor = _lag ? this.lagColor : this.pingColor;
 			}
-			var icon:Bitmap = null;
-			if (ping < 15)
+			this.lastVisibleIcon.visible = false;
+			if (_ping < 15)
 			{
-				icon = this.icons[9];
+				this.lastVisibleIcon = this.icons[9];
 			}
-			else if (ping < 30)
+			else if (_ping < 30)
 			{
-				icon = this.icons[8];
+				this.lastVisibleIcon = this.icons[8];
 			}
-			else if (ping < 40)
+			else if (_ping < 40)
 			{
-				icon = this.icons[7];
+				this.lastVisibleIcon = this.icons[7];
 			}
-			else if (ping < 60)
+			else if (_ping < 60)
 			{
-				icon = this.icons[6];
+				this.lastVisibleIcon = this.icons[6];
 			}
-			else if (ping < 80)
+			else if (_ping < 80)
 			{
-				icon = this.icons[5];
+				this.lastVisibleIcon = this.icons[5];
 			}
-			else if (ping < 100)
+			else if (_ping < 100)
 			{
-				icon = this.icons[4];
+				this.lastVisibleIcon = this.icons[4];
 			}
-			else if (ping < 150)
+			else if (_ping < 150)
 			{
-				icon = this.icons[3];
+				this.lastVisibleIcon = this.icons[3];
 			}
-			else if (ping < 200)
+			else if (_ping < 200)
 			{
-				icon = this.icons[2];
+				this.lastVisibleIcon = this.icons[2];
 			}
-			else if (ping < 300)
+			else if (_ping < 300)
 			{
-				icon = this.icons[1];
+				this.lastVisibleIcon = this.icons[1];
 			}
 			else
 			{
-				icon = this.icons[0];
+				this.lastVisibleIcon = this.icons[0];
 			}
-			
-			if (this.lastVisibleIcon !== icon)
-			{
-				if (this.lastVisibleIcon)
-				{
-					this.lastVisibleIcon.visible = false;
-				}
-				icon.visible = true;
-				this.lastVisibleIcon = icon;
-			}
+			this.lastVisibleIcon.visible = true;
 		}
 	}
 }

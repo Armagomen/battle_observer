@@ -5,7 +5,7 @@ from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 from gui.battle_control.controllers import debug_ctrl
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
 
-debug_ctrl._UPDATE_INTERVAL = 0.4
+debug_ctrl._UPDATE_INTERVAL = 0.5
 
 
 class WG_Logs_Fix(object):
