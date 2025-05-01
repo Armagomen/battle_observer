@@ -29,57 +29,71 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		private var _9:Class;
 		[Embed(source = "ping_img/10.png")]
 		private var _10:Class;
+		[Embed(source = "ping_img/good.png")]
+		private var good:Class;
+		[Embed(source = "ping_img/bad.png")]
+		private var bad:Class;
 		
 		private var fps:TextExt            = null;
 		private var ping:TextExt           = null;
-		private var lag:TextExt            = null;
 		private var statical:TextExt       = null;
-		
 		private var pingColor:uint         = Utils.colorConvert("#B3FE95");
-		private var lagColor:uint          = Utils.colorConvert("#FD9675");
-		private var icons:Vector.<Bitmap>  = null;
+		private var icons:Vector.<Bitmap>  = new <Bitmap>[new _1(), new _2(), new _3(), new _4(), new _5(), new _6(), new _7(), new _8(), new _9(), new _10()];
 		private var lastVisibleIcon:Bitmap = null;
-		
+		private var lag:Bitmap             = new bad();
+		private var no_lag:Bitmap          = new good();
 		private var lags:Boolean           = false;
 		
 		public function Modern(settings:Object, panel:*)
 		{
 			super();
-			this.lag = new TextExt(185, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
-			this.lag.text = "LAG";
+			this.icons.fixed = true;
+			
+			lag.x = 180;
+			lag.y = 4;
+			lag.visible = false;
+			lag.width = 20;
+			lag.height = 20;
+			//lag.alpha = 0.9;
+			lag.smoothing = true;
+			this.addChild(this.lag);
+			
+			no_lag.x = 180;
+			no_lag.y = 4;
+			no_lag.visible = true;
+			no_lag.width = 20;
+			no_lag.height = 20;
+			//no_lag.alpha = 0.9;
+			no_lag.smoothing = true;
+			this.addChild(this.no_lag);
+			
 			this.statical = new TextExt(20, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
-			this.statical.htmlText = "<textformat tabstops='[78]'>FPS:\tPING:</textformat>";
+			this.statical.htmlText = "<textformat tabstops='[75]'>FPS:\tPING:</textformat>";
 			
 			this.fps = new TextExt(58, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
-			this.ping = new TextExt(144, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
+			this.ping = new TextExt(142, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			
 			this.pingColor = Utils.colorConvert(settings.pingColor);
-			this.lagColor = Utils.colorConvert(settings.pingLagColor);
-			
+		
 			this.fps.textColor = Utils.colorConvert(settings.fpsColor);
 			this.ping.textColor = this.pingColor;
-			this.lag.textColor = this.pingColor;
 			
-			this.createBitmapVector();
+			this.updateIconsPreperty();
 			panel.addChild(this);
 		}
 		
-		private function createBitmapVector():void
+		private function updateIconsPreperty():void
 		{
-			this.icons = new <Bitmap>[new _1(), new _2(), new _3(), new _4(), new _5(), new _6(), new _7(), new _8(), new _9(), new _10()];
-			this.icons.fixed = true;
-			
 			for each (var icon:Bitmap in this.icons)
 			{
 				icon.visible = false;
 				icon.x = 15;
 				icon.y = 25;
-				icon.width = 210;
+				icon.width = 190;
 				icon.height = 7;
 				icon.alpha = 0.75;
 				this.addChild(icon);
 			}
-			
 			this.lastVisibleIcon = this.icons[0];
 			this.lastVisibleIcon.visible = true;
 		}
@@ -91,7 +105,8 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			if (this.lags != _lag)
 			{
 				this.lags = _lag;
-				this.lag.textColor = _lag ? this.lagColor : this.pingColor;
+				this.lag.visible = _lag;
+				this.no_lag.visible = !_lag;
 			}
 			this.lastVisibleIcon.visible = false;
 			if (_ping < 15)

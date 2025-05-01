@@ -47,7 +47,7 @@ if IS_WG_CLIENT and isReplay():
 
 
     @overrideMethod(Comp7PlayerMessages, "__onRoleEquipmentStateChanged")
-    def __onRoleEquipmentStateChanged(base, *args, **kwargs):
+    def __onRoleEquipmentStateChanged(*args, **kwargs):
         pass
 
 
