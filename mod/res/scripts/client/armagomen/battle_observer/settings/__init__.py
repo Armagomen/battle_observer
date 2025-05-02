@@ -107,8 +107,7 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             DEBUG_PANEL.STYLE: DEBUG_PANEL.STYLES.minimal,
             DEBUG_PANEL.FPS_COLOR: "#B3FE95",
-            DEBUG_PANEL.PING_COLOR: "#B3FE95",
-            DEBUG_PANEL.LAG_COLOR: "#FD9675"
+            DEBUG_PANEL.PING_COLOR: "#B3FE95"
         }
 
         self.battle_timer = {

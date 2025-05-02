@@ -136,7 +136,6 @@ localization = {
         "header": "Настройки панели FPS и PING",
         "fpsColor": "Цвет показателя FPS",
         "pingColor": "Цвет показателя PING",
-        "pingLagColor": "Цвет показателя LAG - Лаги присутствуют",
         "style": "Стиль панели"
     },
     "battle_timer": {

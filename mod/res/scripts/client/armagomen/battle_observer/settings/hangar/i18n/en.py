@@ -138,7 +138,6 @@ localization = {
         "header": "FPS and PING panel settings",
         "fpsColor": "FPS Color",
         "pingColor": "PING Color",
-        "pingLagColor": "LAG color - Lags present",
         "style": "Panel style",
     },
     "battle_timer": {

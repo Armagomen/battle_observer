@@ -236,8 +236,8 @@ __DispersionTimer = namedtuple("dispersion_timer", ("NAME", "DONE_COLOR", "TEMPL
 DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "done_color", "template")
 
 DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
-    "NAME", "FPS_COLOR", "PING_COLOR", "LAG_COLOR", "STYLES", "STYLE"))(
-    "debug_panel", "fpsColor", "pingColor", "pingLagColor", namedtuple("DebugStyles", ("minimal", "modern"))(
+    "NAME", "FPS_COLOR", "PING_COLOR", "STYLES", "STYLE"))(
+    "debug_panel", "fpsColor", "pingColor", namedtuple("DebugStyles", ("minimal", "modern"))(
         "minimal", "modern"), "style")
 
 BATTLE_TIMER = namedtuple("BATTLE_TIMER", (
