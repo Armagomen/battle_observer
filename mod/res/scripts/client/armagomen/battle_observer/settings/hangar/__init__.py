@@ -133,7 +133,7 @@ class CreateElement(Getter):
     def createDebugStyleDropDown(self, blockID, varName, icons, icon):
         result = self.createControl(blockID, varName, icon, cType='Dropdown')
         if result is not None:
-            image = "<img src='img://gui/maps/icons/battle_observer/style/debug/{}.jpg' width='240' height='52'>"
+            image = "<img src='img://gui/maps/icons/battle_observer/style/debug/{}.jpg' width='240' height='50'>"
             result.update({'options': [{'label': x, 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
                            GLOBAL.WIDTH: 190})
         return result
