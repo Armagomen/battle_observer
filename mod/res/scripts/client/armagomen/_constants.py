@@ -127,8 +127,7 @@ MINIMAP = namedtuple("MINIMAP", (
     "minimap", "permanentMinimapDeath", "showDeathNames", "zoom", "real_view_radius",
     "yaw_limits", "zoom_hotkey")
 
-HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "ALIVE", "STYLES"))(
-    "hp_bars", "style", "showAliveCount",
+HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "ALIVE", "STYLES"))("hp_bars", "style", "showAliveCount",
     namedtuple("HpStyles", ("normal", "league"))("normal", "league"))
 
 CLOCK = namedtuple("CLOCK", (
@@ -139,11 +138,11 @@ CLOCK = namedtuple("CLOCK", (
 __Sniper = namedtuple("SNIPER", (
     "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "ZOOMS", "ZOOM_EXPOSURE",
     "INCREASED_ZOOM", "DEFAULT_STEPS", "EXPOSURE_FACTOR", "MAX_CALIBER", "MAX_DIST", "DISABLE_SNIPER",
-    "DISABLE_LATENCY", "SKIP_CLIP", "CLIP", "MIN_ZOOM"))
+    "DISABLE_LATENCY", "SKIP_CLIP", "CLIP"))
 SNIPER = __Sniper(
     "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zooms", "zoomExposure",
     "increasedZoom", [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0], 0.1, 60, 700.0,
-    "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip", 2.0)
+    "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip")
 
 
 class DAMAGE_LOG:
@@ -204,16 +203,15 @@ ARCADE = namedtuple("ARCADE", (
 
 STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
     "strategic_camera", "min", "max", "distRange", "scrollSensitivity")
+
 POSTMORTEM_MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
                     CTRL_MODE_NAME.RESPAWN_DEATH, CTRL_MODE_NAME.VEHICLES_SELECTION}
-
 if IS_WG_CLIENT:
     POSTMORTEM_MODES.update((CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.LOOK_AT_KILLER))
 
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "MACROS_COUNTED_ARMOR",
-    "MACROS_PIERCING_RESERVE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE",
-    "DEFAULT_TEMPLATE", "ON_ALLY"))(
+    "MACROS_PIERCING_RESERVE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE", "DEFAULT_TEMPLATE", "ON_ALLY"))(
     "piercingPower", "armor_calculator", "position", "messages", "template", "color", "countedArmor",
     "piercingReserve", "caliber", "ricochet", "noDamage",
     "<p align='center'>%(ricochet)s%(noDamage)s<br><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
@@ -237,8 +235,7 @@ DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "done_color", "template
 
 DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
     "NAME", "FPS_COLOR", "PING_COLOR", "STYLES", "STYLE"))(
-    "debug_panel", "fpsColor", "pingColor", namedtuple("DebugStyles", ("minimal", "modern"))(
-        "minimal", "modern"), "style")
+    "debug_panel", "fpsColor", "pingColor", namedtuple("DebugStyles", ("minimal", "modern"))("minimal", "modern"), "style")
 
 BATTLE_TIMER = namedtuple("BATTLE_TIMER", (
     "NAME", "TEMPLATE", "COLOR", "END_COLOR", "M_TIMER", "TIME_FORMAT", "START_STRING", "END_BATTLE_SEC"))(
@@ -247,9 +244,7 @@ BATTLE_TIMER = namedtuple("BATTLE_TIMER", (
 EFFECTS = namedtuple("EFFECTS", (
     "NAME", "NO_FLASH_BANG", "NO_SHOCK_WAVE", "NO_BINOCULARS", "IS_PLAYER_VEHICLE", "SHOW_FLASH_BANG",
     "SHOW_SHOCK_WAVE", "NO_SNIPER_DYNAMIC"))(
-    "effects", "noFlashBang", "noShockWave", "noBinoculars", "isPlayerVehicle", "showFlashBang", "showShockWave",
-    "noSniperDynamic"
-)
+    "effects", "noFlashBang", "noShockWave", "noBinoculars", "isPlayerVehicle", "showFlashBang", "showShockWave", "noSniperDynamic")
 
 TEAM_BASES = namedtuple("TEAM_BASES", (
     "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE", "BASE_FONT", "FONT_SIZE", "HUNDRED"))(
@@ -258,16 +253,14 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
 BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
     "WGR_ICONS", "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DAMAGE_LOG_EXT", "DEBUG", "TIMER", "TEAM_BASES", "ARMOR_CALC",
     "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "PANELS", "SIXTH_SENSE", "MAP"))(
-    "Observer_WGRAndIcons_UI",
-    "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_ExtendedDamageLogs_UI", "Observer_DebugPanel_UI",
-    "Observer_BattleTimer_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI", "Observer_FlightTime_UI",
+    "Observer_WGRAndIcons_UI", "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_ExtendedDamageLogs_UI",
+    "Observer_DebugPanel_UI", "Observer_BattleTimer_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI", "Observer_FlightTime_UI",
     "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI", "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI",
     "Observer_SixthSense_UI", "Observer_MiniMap_UI")
 
 LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME",))("Observer_DateTimes_UI", )
 
-DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "DIST", "TANK_NAME"))(
-    "distance_to_enemy", "template", "distance", "name")
+DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "DIST", "TANK_NAME"))("distance_to_enemy", "template", "distance", "name")
 
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME",))("own_health", )
 
@@ -321,9 +314,8 @@ CREW_XP = namedtuple("CREW_XP", (
 EXCLUDED_MAPS = namedtuple("EXCLUDED_MAPS", ("NAME", "HEADER", "MESSAGE"))("excludedMaps", "header", "message")
 
 AVG_EFFICIENCY_HANGAR = namedtuple("AVG_EFFICIENCY_HANGAR", (
-    "NAME", "DAMAGE", "ASSIST", "BLOCKED", "STUN", "MARKS_ON_GUN", "WIN_RATE", "BATTLES"
-))("avg_efficiency_in_hangar", "avg_damage", "avg_assist", "avg_blocked", "avg_stun", "gun_marks", "win_rate",
-   "battles")
+    "NAME", "DAMAGE", "ASSIST", "BLOCKED", "STUN", "MARKS_ON_GUN", "WIN_RATE", "BATTLES"))(
+    "avg_efficiency_in_hangar", "avg_damage", "avg_assist", "avg_blocked", "avg_stun", "gun_marks", "win_rate", "battles")
 
 # Settings Loader List
 LOAD_LIST = (

@@ -1,3 +1,5 @@
+import math
+
 from armagomen._constants import GLOBAL, MAIN_GUN
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
@@ -9,10 +11,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def __init__(self):
         super(MainGun, self).__init__()
-        self.gunScore = GLOBAL.ZERO
-        self.gunLeft = GLOBAL.ZERO
         self._warning = False
-        self.totalEnemiesHP = GLOBAL.ZERO
+        self.gunScore = GLOBAL.ZERO
         self.playerDamage = GLOBAL.ZERO
 
     def _populate(self):
@@ -41,17 +41,15 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
-        if not self._warning and enemiesHP < self.gunLeft:
-            self._warning = True
+        if not self.gunScore:
+            self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(math.ceil(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
             self.updateMainGun()
-        if self.totalEnemiesHP != totalEnemiesHP:
-            self.totalEnemiesHP = totalEnemiesHP
-            self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(round(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
+        elif not self._warning and enemiesHP < self.gunScore - self.playerDamage:
+            self._warning = True
             self.updateMainGun()
 
     def updateMainGun(self):
-        self.gunLeft = self.gunScore - self.playerDamage
-        self.as_gunDataS(self.gunLeft, self.gunScore, self._warning)
+        self.as_gunDataS(self.playerDamage, self.gunScore, self._warning)
 
     def onPlayerDamaged(self, attackerID, damage):
         if damage > self.gunScore and attackerID != self.playerVehicleID:

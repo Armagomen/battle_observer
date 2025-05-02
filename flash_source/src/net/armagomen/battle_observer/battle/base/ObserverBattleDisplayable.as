@@ -6,7 +6,6 @@ package net.armagomen.battle_observer.battle.base
 	public class ObserverBattleDisplayable extends BattleDisplayable
 	{
 		public var getSettings:Function;
-		public var isColorBlind:Function;
 		public var getColors:Function;
 		public var isComp7Battle:Function;
 		public var doLog:Function;

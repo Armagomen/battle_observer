@@ -23,7 +23,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 				this.x = App.appWidth >> 1;
 				
 				var _class:* = settings.style == "league" ? League : Default;
-				this.hpBars = new _class(this.isColorBlind(), this.getColors().global, this);
+				this.hpBars = new _class(App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global, this);
 				
 				this.correlation = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				

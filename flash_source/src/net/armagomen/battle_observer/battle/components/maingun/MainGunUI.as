@@ -12,13 +12,13 @@ package net.armagomen.battle_observer.battle.components.maingun
 	public class MainGunUI extends ObserverBattleDisplayable
 	{
 		[Embed(source = "img/main_gun.png")]
-		private var Gun_icon:Class;
+		private var _gun:Class;
 		[Embed(source = "img/done.png")]
-		private var Done_icon:Class;
+		private var _done:Class;
 		[Embed(source = "img/warning_1.png")]
-		private var Warning_icon:Class;
+		private var _warn:Class;
 		[Embed(source = "img/warning_2.png")]
-		private var Warning_icon_cb:Class;
+		private var _warn_cb:Class;
 		
 		private var icons:Vector.<Bitmap> = null;
 		private var mainGun:TextExt       = null;
@@ -40,7 +40,7 @@ package net.armagomen.battle_observer.battle.components.maingun
 				this.addChild(_icons);
 				if (!this.icons)
 				{
-					this.icons = new <Bitmap>[new this.Gun_icon(), new this.Done_icon(), this.isColorBlind() ? new this.Warning_icon_cb() : new this.Warning_icon()];
+					this.icons = new <Bitmap>[new this._gun(), new this._done(), App.colorSchemeMgr.getIsColorBlindS() ? new this._warn_cb() : new this._warn()];
 					this.icons.fixed = true;
 				}
 				
@@ -91,23 +91,32 @@ package net.armagomen.battle_observer.battle.components.maingun
 			}
 		}
 		
-		public function as_gunData(value:int, max_value:int, warning:Boolean):void
+		private function setWarningVisible(value:Boolean):void
 		{
+			if (this.icons[2].visible != value)
+			{
+				this.icons[2].visible = value
+			}
+		}
+		
+		public function as_gunData(damage:int, gun_score:int, warning:Boolean):void
+		{
+			var value:int = gun_score - damage;
 			var notAchived:Boolean = value > 0;
-			this.icons[2].visible = warning && notAchived;
 			if (notAchived)
 			{
 				this.mainGun.text = value.toString();
 			}
 			else
 			{
-				this.mainGun.text = "+" + Math.abs(value).toString();
+				this.mainGun.text = "++" + Math.abs(value).toString();
 			}
-			this.setDoneVisible(!notAchived);
 			if (this.progress)
 			{
-				this.progress.setNewScale(1.0 - (notAchived ? value : 0) / max_value)
+				this.progress.setNewScale(Math.min(1.0, damage / gun_score))
 			}
+			this.setWarningVisible(warning);
+			this.setDoneVisible(!notAchived);
 		}
 		
 		override public function onResizeHandle(event:Event):void

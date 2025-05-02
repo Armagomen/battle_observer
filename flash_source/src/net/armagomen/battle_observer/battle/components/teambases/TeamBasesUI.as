@@ -46,7 +46,7 @@ package net.armagomen.battle_observer.battle.components.teambases
 			}
 			else
 			{
-				var base:TeamBase = new TeamBase(this.isColorBlind());
+				var base:TeamBase = new TeamBase(App.colorSchemeMgr.getIsColorBlindS());
 				base.create(this.settings, this.colors, team);
 				base.updateBase(points, invadersCnt, time, text);
 				var offset:Number = this.settings.y >= 0 ? this.settings.height + 4 : -(this.settings.height + 4);
