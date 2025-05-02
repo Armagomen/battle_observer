@@ -18,6 +18,7 @@
 			this.width = 1;
 			this.defaultTextFormat = style;
 			this.antiAliasType = AntiAliasType.ADVANCED;
+			this.gridFitType = GridFitType.SUBPIXEL;
 			this.autoSize = align;
 			this.filters = [new GlowFilter(0, 0.56, 2, 2, 4)];
 			this.selectable = false;

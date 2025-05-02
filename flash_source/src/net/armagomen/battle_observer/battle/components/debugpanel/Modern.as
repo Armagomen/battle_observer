@@ -29,37 +29,30 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		private var _9:Class;
 		[Embed(source = "ping_img/10.png")]
 		private var _10:Class;
-		[Embed(source = "ping_img/good.png")]
-		private var good:Class;
-		[Embed(source = "ping_img/bad.png")]
-		private var bad:Class;
-		[Embed(source = "ping_img/bad_cb.png")]
-		private var bad_cb:Class;
 		
 		private var fps:TextExt            = null;
 		private var ping:TextExt           = null;
 		private var statical:TextExt       = null;
 		private var icons:Vector.<Bitmap>  = new <Bitmap>[new _1(), new _2(), new _3(), new _4(), new _5(), new _6(), new _7(), new _8(), new _9(), new _10()];
 		private var lastVisibleIcon:Bitmap = null;
-		private var lag:Bitmap             = App.colorSchemeMgr.getIsColorBlindS() ? new bad_cb() : new bad();
-		private var no_lag:Bitmap          = new good();
 		private var lags:Boolean           = false;
+		private var lag_icons:LagIcons     = new LagIcons()
 		
 		public function Modern(settings:Object, panel:*)
 		{
 			super();
 			this.icons.fixed = true;
-			lag.x = 175;
-			lag.y = 4;
-			lag.visible = false;
-			lag.width = 20;
-			lag.height = 20;
-			lag.smoothing = true;
-			no_lag.x = 175;
-			no_lag.y = 4;
-			no_lag.width = 20;
-			no_lag.height = 20;
-			no_lag.smoothing = true;
+			this.lag_icons.lag.x = 175;
+			this.lag_icons.lag.y = 4;
+			this.lag_icons.lag.visible = false;
+			this.lag_icons.lag.width = 20;
+			this.lag_icons.lag.height = 20;
+			this.lag_icons.lag.smoothing = true;
+			this.lag_icons.no_lag.x = 175;
+			this.lag_icons.no_lag.y = 4;
+			this.lag_icons.no_lag.width = 20;
+			this.lag_icons.no_lag.height = 20;
+			this.lag_icons.no_lag.smoothing = true;
 			this.statical = new TextExt(15, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			this.statical.htmlText = "<textformat tabstops='[75]'>FPS:\tPING:</textformat>";
 			this.fps = new TextExt(53, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
@@ -67,8 +60,8 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			this.fps.textColor = Utils.colorConvert(settings.fpsColor);
 			this.ping.textColor = Utils.colorConvert(settings.pingColor);
 			this.updateIconsPreperty();
-			this.addChild(this.no_lag);
-			this.addChild(this.lag);
+			this.addChild(lag_icons.no_lag);
+			this.addChild(lag_icons.lag);
 			panel.addChild(this);
 		}
 		
@@ -95,7 +88,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			if (this.lags != _lag)
 			{
 				this.lags = _lag;
-				this.lag.visible = _lag;
+				this.lag_icons.lag.visible = _lag;
 			}
 			this.lastVisibleIcon.visible = false;
 			if (_ping < 15)
