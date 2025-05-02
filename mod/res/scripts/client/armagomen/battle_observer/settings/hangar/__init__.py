@@ -8,7 +8,7 @@ from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
-settingsVersion = 37
+settingsVersion = 38
 LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME}
 
 if IS_WG_CLIENT:
@@ -96,16 +96,13 @@ class CreateElement(Getter):
 
     @staticmethod
     def getControlType(value, cType):
-        if cType is None:
+        result = cType
+        if result is None:
             if isinstance(value, str):
-                if value.startswith("#"):
-                    return 'TextInputColor'
-                return 'TextInputField'
+                result = 'TextInputColor' if value.startswith("#") else 'TextInputField'
             elif type(value) == bool:
-                return 'CheckBox'
-            return 'Empty'
-        else:
-            return cType
+                result = 'CheckBox'
+        return result or 'Empty'
 
     def createControl(self, blockID, varName, value, cType=None):
         result = self.createLabel(blockID, varName)
@@ -218,8 +215,8 @@ class CreateElement(Getter):
                 return self.createHotKey(blockID, key, value)
             elif SNIPER.STEPS in key:
                 return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
-            return self.createEmpty()
-        return self.createEmpty()
+            return None
+        return None
 
 
 class SettingsInterface(CreateElement):
@@ -251,7 +248,7 @@ class SettingsInterface(CreateElement):
         kwargs = {
             'name': localization['service']['name'], 'description': localization['service']['description'],
             'icon': 'gui/maps/icons/battle_observer/hangar_settings_image.png',
-            GLOBAL.ENABLED: True, 'login': False, 'lobby': True, 'callback': self.load_window
+            GLOBAL.ENABLED: True, 'login': True, 'lobby': True, 'callback': self.load_window
         }
         self.modsListApi.addModification(MOD_NAME, **kwargs)
 
@@ -267,7 +264,7 @@ class SettingsInterface(CreateElement):
                     self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: template, dict(), lambda *args: None,
                                               button_handler=self.onButtonPress)
             except Exception as err:
-                logWarning('SettingsInterface addModsToVX: {}'.format(repr(err)))
+                logWarning('SettingsInterface addModsToVX: {} {}'.format(blockID, repr(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)

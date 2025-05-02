@@ -368,11 +368,6 @@ class CONFIG_INTERFACE:
             'zoom*enabled': ('zoom*zoom_hotkey', 'zoom*indent'),
             MINIMAP.DEATH_PERMANENT: (MINIMAP.SHOW_NAMES,)
         },
-        DEBUG_PANEL.NAME: {
-            'debugGraphics*enabled': (
-                'debugGraphics*pingBar*enabled', 'debugGraphics*fpsBar*enabled', 'debugGraphics*pingBar*color',
-                'debugGraphics*fpsBar*color')
-        },
         CLOCK.NAME: {
             'hangar*enabled': ('hangar*format', 'hangar*x', 'hangar*y'),
             'battle*enabled': ('battle*format', 'battle*x', 'battle*y')
