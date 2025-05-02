@@ -14,6 +14,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
         self._warning = False
         self.gunScore = GLOBAL.ZERO
         self.playerDamage = GLOBAL.ZERO
+        self.totalEnemiesHP = GLOBAL.ZERO
 
     def _populate(self):
         super(MainGun, self)._populate()
@@ -41,7 +42,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
-        if not self.gunScore:
+        if self.totalEnemiesHP != totalEnemiesHP:
+            self.totalEnemiesHP = totalEnemiesHP
             self.gunScore = max(MAIN_GUN.MIN_GUN_DAMAGE, int(math.ceil(totalEnemiesHP * MAIN_GUN.DAMAGE_RATE)))
             self.updateMainGun()
         elif not self._warning and enemiesHP < self.gunScore - self.playerDamage:
@@ -57,8 +59,8 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             self.updateMainGun()
 
     def onPlayerFeedbackReceived(self, events):
-        # if self.isPlayerVehicle:
-        for event in events:
-            if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
-                self.playerDamage += event.getExtra().getDamage()
-                self.updateMainGun()
+        if self.isPlayerVehicle:
+            for event in events:
+                if event.getType() == FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY:
+                    self.playerDamage += event.getExtra().getDamage()
+                    self.updateMainGun()
