@@ -16,7 +16,7 @@
 		private var colors:Object;
 		private var score:Score;
 		
-		public function Default(colorBlind:Boolean, colors:Object, panel:*)
+		public function Default(colorBlind:Boolean, colors:Object)
 		{
 			super();
 			this.colors = colors;
@@ -33,7 +33,6 @@
 			this.addChild(score);
 			this.greenDiff = new TextExt(-55, 4, Constants.diff, TextFieldAutoSize.RIGHT, this);
 			this.redDiff = new TextExt(55, 4, Constants.diff, TextFieldAutoSize.LEFT, this);
-			panel.addChild(this);
 		}
 		
 		public function setColorBlind(enabled:Boolean):void

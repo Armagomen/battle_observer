@@ -78,8 +78,6 @@
 			this.removeChildren();
 			this.clearTimers();
 			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
-			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
-			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
 			this.hideAnimation.stop();
 			this.hideAnimation2.stop();
 			this.hideAnimation = null;
@@ -243,11 +241,19 @@
 			}
 		}
 		
+		private function removeListeners():void
+		{
+			this.loader.contentLoaderInfo.removeEventListener(Event.COMPLETE, this.imageLoaded);
+			this.loader.contentLoaderInfo.removeEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
+			this.loader.close();
+			this.loader = null;
+		}
+		
 		private function onLoadError(e:IOErrorEvent):void
 		{
-			this.loader.close();
 			this._image = new DefaultIcon() as Bitmap;
 			this.updateParams();
+			this.removeListeners();
 		}
 		
 		private function imageLoaded(e:Event):void
@@ -255,6 +261,7 @@
 			this._image = this.loader.content as Bitmap;
 			this.updateParams();
 			this.loader.unload();
+			this.removeListeners();
 		}
 		
 		override public function onResizeHandle(event:Event):void

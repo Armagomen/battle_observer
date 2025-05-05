@@ -18,9 +18,9 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			if (not_initialized)
 			{
 				super.onPopulate();
-				var styles:Object = {"minimal": Minimal, "modern": Modern, "big_lag": BigLag}
+				var styles:Object = {"minimal": Minimal, "modern": Modern, "big_lag": BigLag};
 				var settings:Object = this.getSettings();
-				this.debugPanel = new styles[settings.style](settings, this)
+				this.debugPanel = this.addChild(new styles[settings.style](settings));
 			}
 			else
 			{

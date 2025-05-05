@@ -46,10 +46,10 @@
 			this.status.htmlText = captureText;
 		}
 		
-		public function create(bases:Object, colors:Object, team:String):void
+		public function create(settings:Object, colors:Object, team:String):void
 		{
-			this.basesFormat = new TextFormat(bases.text_settings.font, bases.text_settings.size, Utils.colorConvert(bases.text_settings.color), bases.text_settings.bold, bases.text_settings.italic, bases.text_settings.underline);
-			this.createBase(bases, colors, team);
+			this.basesFormat = new TextFormat(settings.text_settings.font, settings.text_settings.size, Utils.colorConvert(settings.text_settings.color), settings.text_settings.bold, settings.text_settings.italic, settings.text_settings.underline);
+			this.createBase(settings, colors, team);
 		}
 		
 		public function remove():void

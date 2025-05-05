@@ -31,11 +31,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		{
 			if (!this.damage)
 			{
-				var autoSize:String = params.align;
-				if (this.isEnemy && autoSize != "center")
-				{
-					autoSize = params.align == "left" ? "right" : "left";
-				}
+				var autoSize:String = (params.align == "center") ? params.align : (this.isEnemy && params.align == "left") ? "right" : params.align; 
 				this.damage = new TextExt(this.isEnemy ? -params.x : params.x, params.y, null, autoSize, this);
 				this.damage.visible = false;
 			}

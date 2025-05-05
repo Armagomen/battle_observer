@@ -33,14 +33,14 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		private var fps:TextExt            = null;
 		private var ping:TextExt           = null;
 		private var statical:TextExt       = null;
-		private var icons:Vector.<Bitmap>  = new <Bitmap>[new _1(), new _2(), new _3(), new _4(), new _5(), new _6(), new _7(), new _8(), new _9(), new _10()];
+		private var icons:Vector.<Bitmap>  = null;
 		private var lastVisibleIcon:Bitmap = null;
-		private var lags:Boolean           = false;
 		private var lag_icons:LagIcons     = new LagIcons()
 		
-		public function Modern(settings:Object, panel:*)
+		public function Modern(settings:Object)
 		{
 			super();
+			this.icons = new <Bitmap>[new _10(), new _9(), new _8(), new _7(), new _6(), new _5(), new _4(), new _3(), new _2(), new _1()];
 			this.icons.fixed = true;
 			this.lag_icons.lag.x = 175;
 			this.lag_icons.lag.y = 4;
@@ -59,13 +59,12 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			this.ping = new TextExt(137, 0, Constants.middleText, TextFieldAutoSize.LEFT, this);
 			this.fps.textColor = Utils.colorConvert(settings.fpsColor);
 			this.ping.textColor = Utils.colorConvert(settings.pingColor);
-			this.updateIconsPreperty();
+			this.updateIconsProperty();
 			this.addChild(lag_icons.no_lag);
 			this.addChild(lag_icons.lag);
-			panel.addChild(this);
 		}
 		
-		private function updateIconsPreperty():void
+		private function updateIconsProperty():void
 		{
 			for each (var icon:Bitmap in this.icons)
 			{
@@ -85,53 +84,32 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		{
 			this.fps.text = _fps.toString();
 			this.ping.text = _ping.toString();
-			if (this.lags != _lag)
+			if (this.lag_icons.lag.visible != _lag)
 			{
-				this.lags = _lag;
 				this.lag_icons.lag.visible = _lag;
 			}
-			this.lastVisibleIcon.visible = false;
-			if (_ping < 15)
+			this.updatePingIcon(_ping);
+		}
+		
+		private function updatePingIcon(_ping:int):void
+		{
+			var index:int =
+				(_ping < 15) ? 0 :
+				(_ping < 30) ? 1 :
+				(_ping < 40) ? 2 :
+				(_ping < 60) ? 3 :
+				(_ping < 80) ? 4 :
+				(_ping < 100) ? 5 :
+				(_ping < 150) ? 6 :
+				(_ping < 200) ? 7 :
+				(_ping < 300) ? 8 : 9;
+			
+			if (this.lastVisibleIcon !== this.icons[index])
 			{
-				this.lastVisibleIcon = this.icons[9];
+				this.lastVisibleIcon.visible = false;
+				this.lastVisibleIcon = this.icons[index];
+				this.lastVisibleIcon.visible = true;
 			}
-			else if (_ping < 30)
-			{
-				this.lastVisibleIcon = this.icons[8];
-			}
-			else if (_ping < 40)
-			{
-				this.lastVisibleIcon = this.icons[7];
-			}
-			else if (_ping < 60)
-			{
-				this.lastVisibleIcon = this.icons[6];
-			}
-			else if (_ping < 80)
-			{
-				this.lastVisibleIcon = this.icons[5];
-			}
-			else if (_ping < 100)
-			{
-				this.lastVisibleIcon = this.icons[4];
-			}
-			else if (_ping < 150)
-			{
-				this.lastVisibleIcon = this.icons[3];
-			}
-			else if (_ping < 200)
-			{
-				this.lastVisibleIcon = this.icons[2];
-			}
-			else if (_ping < 300)
-			{
-				this.lastVisibleIcon = this.icons[1];
-			}
-			else
-			{
-				this.lastVisibleIcon = this.icons[0];
-			}
-			this.lastVisibleIcon.visible = true;
 		}
 	}
 }

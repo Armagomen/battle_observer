@@ -60,7 +60,6 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		{
 			if (this.playersPanel)
 			{
-				this.as_clearStorage();
 				if (this.playersPanel.hasEventListener(Event.CHANGE))
 				{
 					this.playersPanel.removeEventListener(Event.CHANGE, this.reloadAll);
@@ -75,6 +74,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 				{
 					this.playersPanel.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight);
 				}
+				this.as_clearStorage();
 				this.playersPanel = null;
 			}
 			super.onBeforeDispose();

@@ -13,9 +13,8 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		private var statical2:TextExt   = null;
 		private var fps:TextExt        = null;
 		private var ping:TextExt       = null;
-		private var lags:Boolean       = false;
 		
-		public function BigLag(settings:Object, panel:*)
+		public function BigLag(settings:Object)
 		{
 			super();
 			this.lag_icons.lag.x = 5;
@@ -40,16 +39,14 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			this.ping.textColor = Utils.colorConvert(settings.pingColor);
 			this.addChild(this.lag_icons.no_lag);
 			this.addChild(this.lag_icons.lag);
-			panel.addChild(this);
 		}
 		
 		public function update(_ping:int, _fps:int, _lag:Boolean):void
 		{
 			this.ping.text = _ping.toString();
 			this.fps.text = _fps.toString();
-			if (this.lags != _lag)
+			if (this.lag_icons.lag.visible != _lag)
 			{
-				this.lags = _lag;
 				this.lag_icons.lag.visible = _lag;
 			}
 		}

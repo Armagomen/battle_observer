@@ -7,8 +7,6 @@ package net.armagomen.battle_observer.battle.components
 	public class ExtendedDamageLogsUI extends ObserverBattleDisplayable
 	{
 		private var logs:Vector.<TextExt> = null;
-		private var top:TextExt           = null;
-		private var bottom:TextExt        = null;
 		
 		public function ExtendedDamageLogsUI()
 		{
@@ -33,8 +31,9 @@ package net.armagomen.battle_observer.battle.components
 					{
 						damageLogPanel._detailsBottomContainer.removeChildren();
 					}
-					this.top = new TextExt(settings.settings.x + this.isComp7Battle() ? 50 : 30, settings.settings.y + 4, null, settings.settings.align, damageLogPanel._detailsTopContainer, settings.top_enabled);
-					this.bottom = new TextExt(settings.settings.x + 20, settings.settings.y, null, settings.settings.align, damageLogPanel._detailsBottomContainer, settings.bottom_enabled);
+					
+					this.logs = new <TextExt>[new TextExt(settings.settings.x + this.isComp7Battle() ? 50 : 30, settings.settings.y + 4, null, settings.settings.align, damageLogPanel._detailsTopContainer, settings.top_enabled), new TextExt(settings.settings.x + 20, settings.settings.y, null, settings.settings.align, damageLogPanel._detailsBottomContainer, settings.bottom_enabled)];
+					this.logs.fixed = true;
 					App.utils.data.cleanupDynamicObject(settings);
 				}
 			}
@@ -46,22 +45,16 @@ package net.armagomen.battle_observer.battle.components
 		
 		override protected function onBeforeDispose():void
 		{
-			this.top.htmlText = "";
-			this.bottom.htmlText = "";
 			super.onBeforeDispose();
+			for each (var item:TextExt in this.logs) 
+			{
+				item.parent.removeChild(item);
+			}
 		}
 		
 		public function as_updateExtendedLog(log_id:int, text:String):void
 		{
-			if (log_id == 0)
-			{
-				this.top.htmlText = text;
-			}
-			else
-			{
-				this.bottom.htmlText = text;
-			}
-		
+			this.logs[log_id].htmlText = text;
 		}
 	}
 }

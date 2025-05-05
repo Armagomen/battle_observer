@@ -21,7 +21,7 @@
 		private var score:Score;
 		private var duration:Number         = 0.2;
 		
-		public function League(colorBlind:Boolean, colors:Object, panel:*)
+		public function League(colorBlind:Boolean, colors:Object)
 		{
 			super();
 			this.addChild(background);
@@ -43,7 +43,6 @@
 			this.redDiff = new TextExt(55, 4, Constants.diff, TextFieldAutoSize.LEFT, this);
 			this.score = new Score(colorBlind);
 			this.addChild(score);
-			panel.addChild(this);
 		}
 		
 		public function setColorBlind(enabled:Boolean):void
