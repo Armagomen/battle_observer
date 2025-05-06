@@ -1,8 +1,9 @@
+from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_WG_CLIENT, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import addCallback, getPlayer, MinMax, overrideMethod, ResMgr
-from armagomen.utils.logging import logError
+from armagomen.utils.common import addCallback, cancelOverride, getPlayer, MinMax, overrideMethod, ResMgr
+from armagomen.utils.logging import logDebug, logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from cgf_components.attack_artillery_fort_components import ISettingsCore
@@ -166,7 +167,11 @@ class Sniper(CameraSettings):
         self._steps_enabled = False
         self.after_shoot = ChangeCameraModeAfterShoot()
         self.min_max = MinMax(2, 25)
-        overrideMethod(SniperCamera, "enable")(self.enable)
+
+    def applySniperSettings(self, param):
+        self.settingsCore.applySettings({GAME.SNIPER_ZOOM: param})
+        self.settingsCore.applyStorages(False)
+        self.settingsCore.clearStorages()
 
     def update(self):
         self.after_shoot.updateSettings(self.config)
@@ -178,13 +183,18 @@ class Sniper(CameraSettings):
             if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]:
                 camera.enableDynamicCamera(False)
             else:
-                camera.enableDynamicCamera(self.settingsCore.getSetting('dynamicCamera'))
+                camera.enableDynamicCamera(self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA))
             if self._dyn_zoom:
-                self._SNIPER_ZOOM_LEVEL = int(camera._SNIPER_ZOOM_LEVEL)
-                camera.setSniperZoomSettings(-1)
-            elif self._SNIPER_ZOOM_LEVEL is not None:
-                camera.setSniperZoomSettings(self._SNIPER_ZOOM_LEVEL)
-                self._SNIPER_ZOOM_LEVEL = None
+                overrideMethod(SniperCamera, "enable")(self.enableSniper)
+                if self.settingsCore.getSetting(GAME.SNIPER_ZOOM):
+                    self._SNIPER_ZOOM_LEVEL = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
+                    self.applySniperSettings(0)
+                    logDebug("Sniper zool level set to {}", self._SNIPER_ZOOM_LEVEL)
+            else:
+                cancelOverride(SniperCamera, "enable", "enableSniper")
+                if self._SNIPER_ZOOM_LEVEL is not None:
+                    self.applySniperSettings(self._SNIPER_ZOOM_LEVEL)
+                    self._SNIPER_ZOOM_LEVEL = None
             self._steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
             if self._steps_enabled:
                 self.reset = True
@@ -206,15 +216,11 @@ class Sniper(CameraSettings):
             zoom = min(steps, key=lambda value: abs(value - zoom))
         return clamp(self.min_max.min, self.min_max.max, zoom)
 
-    def enable(self, base, camera, targetPos, saveZoom):
-        if self._dyn_zoom:
-            saveZoom = True
-            ownPosition = getOwnVehiclePosition()
-            distance = (targetPos - ownPosition).length if ownPosition is not None else GLOBAL.ZERO
-            if distance > SNIPER.MAX_DIST:
-                distance = GLOBAL.ZERO
-            camera._cfg[SNIPER.ZOOM] = self.getZoom(distance, camera._cfg[SNIPER.ZOOMS])
-        return base(camera, targetPos, saveZoom)
+    def enableSniper(self, base, camera, targetPos, saveZoom):
+        ownPosition = getOwnVehiclePosition()
+        distance = (targetPos - ownPosition).length if ownPosition is not None else GLOBAL.ZERO
+        camera._cfg[SNIPER.ZOOM] = self.getZoom(distance, camera._cfg[SNIPER.ZOOMS]) if distance < SNIPER.MAX_DIST else self.min_max.min
+        return base(camera, targetPos, True)
 
 
 class CameraManager(object):

@@ -1,7 +1,7 @@
 # coding=utf-8
 from armagomen._constants import MAIN, VEHICLE
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import isReplay, overrideMethod
+from armagomen.utils.common import cancelOverride, overrideMethod
 from armagomen.utils.keys_listener import g_keysListener
 from Avatar import PlayerAvatar
 from frameworks.wulf import WindowLayer
@@ -27,13 +27,13 @@ class SaveShootLite(object):
         user_settings.onModSettingsChanged += self.onModSettingsChanged
         g_playerEvents.onAvatarReady += self.onAvatarReady
         g_playerEvents.onAvatarBecomeNonPlayer += self.onAvatarBecomeNonPlayer
-        self.enabled = user_settings.main[MAIN.SAVE_SHOT] and not isReplay()
+        self.enabled = user_settings.main[MAIN.SAVE_SHOT]
         self.unlock = False
         self.vehicleErrorComponent = None
         overrideMethod(PlayerAvatar, "shoot")(self.shoot)
 
     def shoot(self, base, avatar, isRepeat=False):
-        if isRepeat or not self.enabled or self.unlock or self.checkTarget(avatar):
+        if isRepeat or self.unlock or self.checkTarget(avatar):
             return base(avatar, isRepeat=isRepeat)
         vehicle_info = self.sessionProvider.getArenaDP().getVehicleInfo(avatar.target.id)
         message = LOCKED_MESSAGE.format(vehicle_info.vehicleType.shortName)
@@ -43,16 +43,18 @@ class SaveShootLite(object):
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == MAIN.NAME:
-            self.enabled = config[MAIN.SAVE_SHOT] and not isReplay()
+            self.enabled = config[MAIN.SAVE_SHOT]
+            if self.enabled:
+                overrideMethod(PlayerAvatar, "shoot")(self.shoot)
+            else:
+                cancelOverride(PlayerAvatar, "shoot", "shoot")
 
     def onAvatarReady(self):
-        if not self.enabled:
-            return
-        g_keysListener.registerComponent(self.keyEvent)
-        battlePage = self.appLoader.getApp().containerManager.getContainer(WindowLayer.VIEW).getView()
-        if battlePage is None:
-            return
-        self.vehicleErrorComponent = battlePage.components.get(BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES)
+        if self.enabled:
+            g_keysListener.registerComponent(self.keyEvent)
+            battlePage = self.appLoader.getApp().containerManager.getContainer(WindowLayer.VIEW).getView()
+            if battlePage is not None:
+                self.vehicleErrorComponent = battlePage.components.get(BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES)
 
     def onAvatarBecomeNonPlayer(self):
         self.unlock = False

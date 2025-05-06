@@ -9,16 +9,8 @@ else:
     from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, _STATE_TO_UI, PageStates
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
 from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
-from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
-
-ALIASES_TO_HIDE = (
-    (BATTLE_ALIASES.DEBUG, BATTLE_VIEW_ALIASES.DEBUG_PANEL),
-    (BATTLE_ALIASES.SIXTH_SENSE, BATTLE_VIEW_ALIASES.SIXTH_SENSE),
-    (BATTLE_ALIASES.TEAM_BASES, BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL),
-    (BATTLE_ALIASES.TIMER, BATTLE_VIEW_ALIASES.BATTLE_TIMER)
-)
 
 ALIAS_TO_CTRL = {
     BATTLE_ALIASES.DATE_TIME: BATTLE_CTRL_ID.ARENA_PERIOD,
@@ -40,7 +32,6 @@ class ViewSettings(object):
 
     def __init__(self):
         self._components = []
-        self._hiddenComponents = set()
 
     @property
     def gui(self):
@@ -135,14 +126,12 @@ class ViewSettings(object):
         self._components = [alias for alias in BATTLE_ALIASES if self.getSetting(alias)]
         if self.gui.isEpicBattle():
             self.addInToEpicUI(True)
-        self._hiddenComponents.update(wgAlias for alias, wgAlias in ALIASES_TO_HIDE if alias in self._components)
         logDebug("viewSettings _invalidateComponents: components={}", self._components)
 
     def _clear(self):
         if self.gui.isEpicBattle():
             self.addInToEpicUI(False)
         self._components = []
-        self._hiddenComponents.clear()
         logDebug("clear viewSettings components")
 
     def addInToEpicUI(self, add):

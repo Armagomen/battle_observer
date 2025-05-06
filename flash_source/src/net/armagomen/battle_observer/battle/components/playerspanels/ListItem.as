@@ -1,9 +1,11 @@
 package net.armagomen.battle_observer.battle.components.playerspanels
 {
 	import flash.display.Sprite;
+	import flash.text.TextFieldAutoSize;
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.ProgressBar;
 	import net.armagomen.battle_observer.utils.TextExt;
+	
 	
 	public class ListItem extends Sprite
 	{
@@ -31,7 +33,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		{
 			if (!this.damage)
 			{
-				var autoSize:String = (params.align == "center") ? params.align : (this.isEnemy && params.align == "left") ? "right" : params.align; 
+				var autoSize:String = (params.align == TextFieldAutoSize.CENTER) ? params.align : this.isEnemy ? (params.align == TextFieldAutoSize.LEFT) ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT : params.align; 
 				this.damage = new TextExt(this.isEnemy ? -params.x : params.x, params.y, null, autoSize, this);
 				this.damage.visible = false;
 			}
@@ -50,7 +52,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			}
 			this.healthBar = new ProgressBar(barX, 2, barWidth, 20, color, colorParams.bgColor, 0);
 			this.healthBar.setOutline(barWidth, 20);
-			this.healthBar.addTextField(textX, -2, "center", Constants.normalText15);
+			this.healthBar.addTextField(textX, -2, TextFieldAutoSize.CENTER, Constants.normalText15);
 			this.healthBar.setVisible(startVisible);
 			this.addChild(this.healthBar);
 		}

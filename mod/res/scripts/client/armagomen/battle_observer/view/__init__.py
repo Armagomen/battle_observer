@@ -41,7 +41,7 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         if page and hasattr(page.flashObject, ATTRIBUTE_NAME):
             logDebug("ViewHandlerBattle:_loadView {}", ATTRIBUTE_NAME)
             page._blToggling.update(self._components)
-            page.flashObject.as_BattleObserverCreate(self._components, self._hiddenComponents)
+            page.flashObject.as_BattleObserverCreate(self._components)
         else:
             addCallback(DEFAULT_INTERVAL, self._loadView, name)
 

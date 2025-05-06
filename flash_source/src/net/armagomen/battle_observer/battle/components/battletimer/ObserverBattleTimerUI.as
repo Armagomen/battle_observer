@@ -22,7 +22,8 @@
 			{
 				super.onPopulate();
 				this.x = App.appWidth;
-				this.battleTimer = new TextExt(-8, 0, Constants.largeText, TextFieldAutoSize.RIGHT, this);
+				this.battleTimer = new TextExt( -8, 0, Constants.largeText, TextFieldAutoSize.RIGHT, this);
+				this.hideComponent(BATTLE_VIEW_ALIASES.BATTLE_TIMER);
 			}
 			else
 			{

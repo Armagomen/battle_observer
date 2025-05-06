@@ -15,6 +15,7 @@
 	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.Utils;
 	import net.armagomen.battle_observer.utils.tween.Tween;
+	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
@@ -65,6 +66,7 @@
 				{
 					this.loader.load(new URLRequest('../../../' + this.params.user_icon));
 				}
+				this.hideComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
 			}
 			else
 			{

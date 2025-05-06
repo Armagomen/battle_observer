@@ -21,15 +21,18 @@ from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 @overrideMethod(Hangar, "__updateAll")
 def changeVehicle(base, *args, **kwargs):
     base(*args, **kwargs)
-    g_events.onVehicleChanged()
-    addCallback(0.5, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
+    addCallback(0.4, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
 
 
 # disable field mail tips
 @overrideMethod(PromoController, "__tryToShowTeaser")
 def __tryToShowTeaser(base, *args):
-    if not user_settings.main[MAIN.FIELD_MAIL]:
-        return base(*args)
+    return None if user_settings.main[MAIN.FIELD_MAIL] else base(*args)
+
+
+@overrideMethod(PromoController, "__needToGetTeasersInfo")
+def __needToGetTeasersInfo(base, *args):
+    return False if user_settings.main[MAIN.FIELD_MAIL] else base(*args)
 
 
 # disable dogTag
@@ -65,8 +68,7 @@ def handleLazyChannelCtlInited(base, entry, event):
 # hide button counters in lobby header
 @overrideMethod(LobbyHeader, "__setCounter")
 def buttonCounterS(base, *args, **kwargs):
-    if not user_settings.main[MAIN.HIDE_BTN_COUNTERS]:
-        return base(*args, **kwargs)
+    return None if user_settings.main[MAIN.HIDE_BTN_COUNTERS] else base(*args, **kwargs)
 
 
 class PrestigeWidget(object):
@@ -80,15 +82,11 @@ class PrestigeWidget(object):
 
     @staticmethod
     def as_setPrestigeWidgetVisibleS(base, hangar, value):
-        if user_settings.main[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]:
-            value = False
-        return base(hangar, value)
+        return base(hangar, False if user_settings.main[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET] else value)
 
     @staticmethod
     def as_setPrestigeVisibleS(base, profile, value):
-        if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET]:
-            value = False
-        return base(profile, value)
+        return base(profile, False if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET] else value)
 
     def onModSettingsChanged(self, settings, blockID):
         if blockID != MAIN.NAME:
@@ -101,9 +99,7 @@ class PrestigeWidget(object):
 
 @overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
 def _EventEntryPointsContainer_as_updateEntries(base, self, data):
-    if user_settings.main[MAIN.HIDE_EVENT_BANNER]:
-        return base(self, [])
-    return base(self, data)
+    return base(self, [] if user_settings.main[MAIN.HIDE_EVENT_BANNER] else data)
 
 
 if IS_WG_CLIENT:

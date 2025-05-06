@@ -13,7 +13,6 @@ class Events(object):
     def __init__(self):
         self.onArmorChanged = BOEvent()
         self.onMarkerColorChanged = BOEvent()
-        self.onVehicleChanged = SafeEvent()
         self.onVehicleChangedDelayed = SafeEvent()
 
 

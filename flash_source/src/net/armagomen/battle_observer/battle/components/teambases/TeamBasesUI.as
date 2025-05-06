@@ -2,6 +2,7 @@ package net.armagomen.battle_observer.battle.components.teambases
 {
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.battle.components.teambases.TeamBase;
+	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
 	public class TeamBasesUI extends ObserverBattleDisplayable
 	{
@@ -23,6 +24,7 @@ package net.armagomen.battle_observer.battle.components.teambases
 				this.settings = this.getSettings();
 				this.colors = this.getColors().global;
 				this.yPos = this.settings.y >= 0 ? this.settings.y : App.appHeight + this.settings.y;
+				this.hideComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
 			}
 			else
 			{

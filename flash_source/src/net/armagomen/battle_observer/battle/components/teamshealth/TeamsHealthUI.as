@@ -6,7 +6,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 	
 	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
-		private var hpBars:*;
+		private var bar_style:*;
 		
 		public function TeamsHealthUI()
 		{
@@ -25,7 +25,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 				var styles:Object   = {"league": League, "default": Default};
 				var settings:Object = this.getSettings();
 				this.x = App.appWidth >> 1;
-				this.hpBars = this.addChild(new styles[settings.style](App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global));
+				this.bar_style = this.addChild(new styles[settings.style](App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global));
 				
 				var q_progress:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
 				this.battlePage.addChildAt(q_progress, this.battlePage.getChildIndex(correlation) - 1);
@@ -63,31 +63,31 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			this.hpBars.remove();
-			this.hpBars = null;
+			this.bar_style.remove();
+			this.bar_style = null;
 		}
 		
 		public function as_colorBlind(enabled:Boolean):void
 		{
-			if (this.hpBars)
+			if (this.bar_style)
 			{
-				this.hpBars.setColorBlind(enabled);
+				this.bar_style.setColorBlind(enabled);
 			}
 		}
 		
 		public function as_updateHealth(alliesHP:int, enemiesHP:int, totalAlliesHP:int, totalEnemiesHP:int):void
 		{
-			if (this.hpBars)
+			if (this.bar_style)
 			{
-				this.hpBars.update(alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP);
+				this.bar_style.update(alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP);
 			}
 		}
 		
 		public function as_updateScore(ally:int, enemy:int):void
 		{
-			if (this.hpBars)
+			if (this.bar_style)
 			{
-				this.hpBars.updateScore(ally, enemy);
+				this.bar_style.updateScore(ally, enemy);
 			}
 		}
 		

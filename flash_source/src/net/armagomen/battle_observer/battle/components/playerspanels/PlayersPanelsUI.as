@@ -86,11 +86,11 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			{
 				for each (var item:* in this.playersPanel.listRight._items)
 				{
-					this.addVehIdToList(item.vehicleData.vehicleID, true, item._listItem);
 					if (this.spotted_fix)
 					{
 						this.setSpottedPosition(item._listItem);
 					}
+					this.addVehIdToList(item.vehicleData.vehicleID, true, item._listItem);
 				}
 			}
 		}

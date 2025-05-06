@@ -129,9 +129,8 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
-        onAlly = bool(user_settings.armor_calculator[ARMOR_CALC.ON_ALLY])
         self.__player = getPlayer()
-        self.__resolver = _ShotResultAll if onAlly else _ShotResult
+        self.__resolver = _ShotResultAll if user_settings.armor_calculator[ARMOR_CALC.ON_ALLY] else _ShotResult
 
     def __updateColor(self, markerType, hitPoint, collision, direction):
         shot_result, data = self.__resolver._getShotResult(hitPoint, collision, direction, self.__piercingMultiplier, self.__player)

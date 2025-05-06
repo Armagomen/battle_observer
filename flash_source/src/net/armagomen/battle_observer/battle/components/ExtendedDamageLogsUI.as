@@ -46,10 +46,6 @@ package net.armagomen.battle_observer.battle.components
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			for each (var item:TextExt in this.logs) 
-			{
-				item.parent.removeChild(item);
-			}
 		}
 		
 		public function as_updateExtendedLog(log_id:int, text:String):void

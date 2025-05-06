@@ -6,21 +6,20 @@
 	
 	public class TextExt extends TextField
 	{
-		public function TextExt(x:Number, y:Number, style:TextFormat, align:String, ui:*, enabled:Boolean = true)
+		public function TextExt(x:Number, y:Number, format:TextFormat, align:String, ui:*, enabled:Boolean = true)
 		{
 			super();
-			if (style == null)
+			if (format == null)
 			{
-				style = Constants.normalText;
+				format = Constants.normalText;
 			}
 			this.x = x;
 			this.y = y;
 			this.width = 1;
-			this.defaultTextFormat = style;
+			this.defaultTextFormat = format;
 			this.antiAliasType = AntiAliasType.ADVANCED;
-			this.gridFitType = GridFitType.SUBPIXEL;
 			this.autoSize = align;
-			this.filters = [new GlowFilter(0, 0.56, 2, 2, 4)];
+			this.filters = [new GlowFilter(0, 0.6, 2, 2, 4)];
 			this.selectable = false;
 			this.multiline = true;
 			this.visible = enabled;
