@@ -15,6 +15,7 @@ package net.armagomen.battle_observer.battle.base
 		public function ObserverBattleDisplayable()
 		{
 			super();
+			this.visible = false;
 			this.addEventListener(Event.RESIZE, this.onResizeHandle);
 		}
 		

@@ -323,15 +323,16 @@ class SettingsInterface(CreateElement):
                 updated_config_link, param_name = self.getLinkToParam(settings_block, key)
                 if param_name not in updated_config_link:
                     continue
+                is_string = isinstance(value, (unicode, str))
                 if GLOBAL.ALIGN in key:
                     value = GLOBAL.ALIGN_LIST[value]
-                elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not isinstance(value, str):
+                elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not is_string:
                     value = HP_BARS.STYLES[value]
-                elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not isinstance(value, str):
+                elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not is_string:
                     value = DEBUG_PANEL.STYLES[value]
-                elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not isinstance(value, str):
+                elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not is_string:
                     value = self.loader.sixth_sense_list[value]
-                elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and isinstance(value, str):
+                elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and is_string:
                     value = value.strip().split(',')
                     try:
                         value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]

@@ -1,4 +1,4 @@
-﻿[CustomMessages]
+[CustomMessages]
 // open wg utils
 en.openwg_browse=Browse...
 en.openwg_client_not_found=The game client was not detected in the specified folder.

@@ -58,6 +58,8 @@ class WGRAndIcons(WGRAndIconsMeta):
             if not value:
                 continue
             vehicle_id = self._arenaDP.getVehIDByAccDBID(int(accountDBID))
+            if vehicle_id in self.itemsData:
+                continue
             veh_info = self.getVehicleInfo(vehicle_id)
             item_data = self.buildItemData(veh_info.player.clanAbbrev, value)
             full, cut = self.getPattern(veh_info.team != player_team, item_data)
@@ -65,7 +67,6 @@ class WGRAndIcons(WGRAndIconsMeta):
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
         if self.itemsData:
             self.as_update_wgr_dataS(self.itemsData)
-            # self.itemsData.clear()
 
     def __getWinRateAndBattlesCount(self, data):
         random = data["statistics"]["random"]

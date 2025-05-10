@@ -1,4 +1,4 @@
-﻿#define configs_dir "{app}\mods\configs\mod_battle_observer"
+#define configs_dir "{app}\mods\configs\mod_battle_observer"
 #define mod_source "..\..\output_data"
 
 [Types]
@@ -16,7 +16,7 @@ Name: main/clear_cache_automatically; Description: {cm:clear_cache_automatically
 Name: main/disable_score_sound; Description: {cm:disable_score_sound}; Types: armagomen saxon_ua;
 Name: main/disable_stun_sound; Description: {cm:disable_stun_sound}; Types: armagomen;
 Name: main/directives_only_from_storage; Description: {cm:directives_only_from_storage}; Types: armagomen saxon_ua;
-Name: main/excluded_map_slots_notification; Description: {cm:excluded_map_slots_notification};
+Name: main/excluded_map_slots_notification; Description: {cm:excluded_map_slots_notification}; Types: armagomen;
 Name: main/hide_badges; Description: {cm:hide_badges}; Types: armagomen saxon_ua;
 Name: main/hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Types: armagomen saxon_ua;
 Name: main/hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Types: armagomen saxon_ua;
@@ -24,16 +24,16 @@ Name: main/hide_dog_tags; Description: {cm:hide_dog_tags}; Types: armagomen saxo
 Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Types: armagomen saxon_ua;
 Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Types: armagomen saxon_ua;
 Name: main/hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Types: armagomen saxon_ua;
-Name: main/hide_prestige_hangar_widget; Description: {cm:hide_prestige_hangar_widget};
-Name: main/hide_prestige_profile_widget; Description: {cm:hide_prestige_profile_widget};
-Name: main/hide_prestige_battle_widget; Description: {cm:hide_prestige_battle_widget};
+Name: main/hide_prestige_hangar_widget; Description: {cm:hide_prestige_hangar_widget}; Types: armagomen;
+Name: main/hide_prestige_profile_widget; Description: {cm:hide_prestige_profile_widget}; Types: armagomen;
+Name: main/hide_prestige_battle_widget; Description: {cm:hide_prestige_battle_widget}; Types: armagomen;
 Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: armagomen saxon_ua;
 Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: armagomen saxon_ua;
 Name: main/premium_time; Description: {cm:premium_time}; Types: armagomen saxon_ua;
 Name: main/save_shot; Description: {cm:save_shot}; Types: armagomen;
 Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen saxon_ua;
-Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward};
-Name: main/hideEventBanner; Description: {cm:hideEventBanner};
+Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward}; Types: armagomen;
+Name: main/hideEventBanner; Description: {cm:hideEventBanner}; Types: armagomen;
 
 Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning;
 Name: clock/hangar; Description: {cm:clock_hangar}; Types: armagomen;
@@ -51,7 +51,7 @@ Name: debug_panel/big_lag; Description: big_lag; Flags: exclusive; Types: armago
 
 Name: dispersion_circle; Description: {cm:dispersion_circle}; Flags: disablenouninstallwarning;
 Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace};
-Name: dispersion_circle/server; Description: {cm:dispersion_circle_server}; Types: armagomen;
+Name: dispersion_circle/server; Description: {cm:dispersion_circle_server};
 
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning;
 
@@ -86,7 +86,7 @@ Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwar
 Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenouninstallwarning;
 
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning;
-Name: effects/noBinoculars; Description: {cm:effects_noBinoculars};
+Name: effects/noBinoculars; Description: {cm:effects_noBinoculars}; Types: armagomen;
 Name: effects/noFlashBang; Description: {cm:effects_noFlashBang}; Types: armagomen saxon_ua;
 Name: effects/noShockWave; Description: {cm:effects_noShockWave}; Types: armagomen saxon_ua;
 Name: effects/noSniperDynamic; Description: {cm:effects_noSniperDynamic};
@@ -550,8 +550,6 @@ begin
     JSON_Close(Handle);
   end;
 end;
-
-
 
 procedure ChangeTeamBasesJsonValues();
 var

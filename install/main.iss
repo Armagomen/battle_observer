@@ -1,4 +1,4 @@
-﻿#define MyAppName "Battle Observer"
+#define MyAppName "Battle Observer"
 #define MyAppPublisher "Armagomen, Inc."
 #define MyAppURL "https://github.com/Armagomen/battle_observer"
 #define MyAppUpdatesURL MyAppURL+"/releases/latest/"
@@ -37,6 +37,7 @@ SetupIconFile=img\BattleObserver_icon.ico
 WizardSmallImageFile=img\small.bmp
 WizardImageFile=img\big.bmp
 ShowComponentSizes=no
+Uninstallable=yes
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 VersionInfoVersion={#MyAppVersion}
 WizardResizable=no

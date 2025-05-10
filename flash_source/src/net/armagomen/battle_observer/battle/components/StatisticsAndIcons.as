@@ -2,9 +2,9 @@ package net.armagomen.battle_observer.battle.components
 {
 	import flash.events.Event;
 	import flash.geom.ColorTransform;
+	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
-	import flash.text.TextFormat;
-	import flash.utils.setTimeout;
+	import flash.utils.Dictionary;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.Utils;
 	import net.wg.data.constants.generated.BATTLEATLAS;
@@ -14,20 +14,19 @@ package net.armagomen.battle_observer.battle.components
 	
 	public class StatisticsAndIcons extends ObserverBattleDisplayable
 	{
-		private var battleLoading:*                 = null;
-		private var fullStats:*                     = null;
-		private var panels:*                        = null;
-		private var iconColors:Object               = {};
-		private var statisticsData:Object           = {};
-		private var iconsEnabled:Boolean            = false;
-		private var iconMultiplier:Number           = -1.25;
-		private var cutWidth:Number                 = 60.0;
-		private var fullWidth:Number                = 150.0;
-		private static const DEAD_TEXT_ALPHA:Number = 0.68;
-		private var format:TextFormat;
-		private var _statisticsEnabled:Boolean      = false;
+		private var battleLoading:*           = null;
+		private var fullStats:*               = null;
+		private var panels:*                  = null;
+		private var statisticsData:Dictionary = new Dictionary();
+		private var iconsEnabled:Boolean      = false;
+		private var iconMultiplier:Number     = -1.25;
+		private var cutWidth:Number           = 60.0;
+		private var fullWidth:Number          = 150.0;
+		private var colorCache:Dictionary     = new Dictionary();
+		private var statisticsLoaded:Boolean  = false;
+		private var holdersCache:Array        = new Array();
 		
-		public var statisticsEnabled:Function;
+		private static const DEAD_ALT_TEXT_ALPHA:Number = 0.73;
 		
 		public function StatisticsAndIcons()
 		{
@@ -40,150 +39,163 @@ package net.armagomen.battle_observer.battle.components
 			if (not_initialized)
 			{
 				super.onPopulate();
+				this.holdersCache[0] = new Dictionary();
+				this.holdersCache[1] = new Dictionary();
+				
 				var settings:Object = this.getSettings();
 				var colors:Object = this.getColors();
-				this._statisticsEnabled = this.statisticsEnabled();
-				this.format = new TextFormat();
-				this.format.bold = true;
 				this.panels = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-				if (this.isComp7Battle())
-				{
-					this.fullStats = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
-				}
-				else
-				{
-					this.battleLoading = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
-				}
-				this.setIconColors(colors["vehicle_types_colors"]);
+				this.battleLoading = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
+				this.panels.stage.frameRate = 30;
+				this.fullStats = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
+				this.setIconColorsCache(colors["vehicle_types_colors"]);
 				this.iconMultiplier = settings["icons_blackout"];
 				this.iconsEnabled = settings["icons"];
 				this.cutWidth = settings["statistics_panels_cut_width"];
 				this.fullWidth = settings["statistics_panels_full_width"];
-				this.panels.addEventListener(Event.CHANGE, this.onChange, false, 0, true);
-				this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateRight, false, 0, true);
-				if (this.panels.listRight && !this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
-				{
-				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateRight, false, 0, true);
-				}
-				setTimeout(this.updateItems, 200);
+				this.addListeners();
+				this.updateItems();
 			}
 			else
 			{
 				super.onPopulate();
 			}
+		}
 		
+		private function addListeners():void
+		{
+			this.panels.addEventListener(Event.CHANGE, this.updateItems, false, 0, true);
+			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateItems, false, 0, true);
+			if (this.panels.listRight && !this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
+			{
+				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateItems, false, 0, true);
+			}
 		}
 		
 		override protected function onBeforeDispose():void
 		{
-			if (this.panels.hasEventListener(Event.CHANGE))
+			this.removeListeners();
+			for each (var item:* in this.holdersCache)
 			{
-				this.panels.removeEventListener(Event.CHANGE, this.onChange);
+				App.utils.data.cleanupDynamicObject(item);
 			}
-			
-			if (this.panels.listRight)
-			{
-				for each (var item:* in this.panels.listRight._items)
-				{
-					if (item._listItem.vehicleIcon.hasEventListener(Event.RENDER))
-					{
-						item._listItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderPanels);
-					}
-				}
-			}
-			
-			if (this.panels.listLeft)
-			{
-				for each (var item:* in this.panels.listLeft._items)
-				{
-					if (item._listItem.vehicleIcon.hasEventListener(Event.RENDER))
-					{
-						item._listItem.vehicleIcon.removeEventListener(Event.RENDER, this.onRenderPanels);
-					}
-				}
-			}
-			
-			if (this.panels.hasEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE))
-			{
-			this.panels.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateRight);
-			}
-			
-			if (this.panels.listRight && this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
-			{
-			this.panels.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateRight);
-			}
+			App.utils.data.cleanupDynamicObject(this.statisticsData);
+			App.utils.data.cleanupDynamicObject(this.colorCache);
 			this.battleLoading = null;
 			this.fullStats = null;
 			this.panels = null;
 			super.onBeforeDispose();
 		}
 		
+		private function removeListeners():void
+		{
+			this.removeListener(this.panels, Event.CHANGE, this.updateItems);
+			this.removeListener(this.panels, PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateItems);
+			this.removeListener(this.panels.listRight, PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateItems);
+			
+			this.removeEventListeners(this.panels.listRight);
+			this.removeEventListeners(this.panels.listLeft);
+		}
+		
+		private function removeEventListeners(list:*):void
+		{
+			if (!list) return;
+			for each (var item:Object in list._items)
+			{
+				this.removeListener(item.getListItem().vehicleIcon, Event.RENDER, onRenderPanels);
+			}
+		}
+		
+		private function removeListener(target:*, type:String, listener:Function):void
+		{
+			if (!target) return;
+			if (target.hasEventListener(type))
+			{
+				target.removeEventListener(type, listener);
+			}
+		}
+		
 		public function as_update_wgr_data(statsData:Object):void
 		{
 			for (var key:String in statsData)
 			{
-				this.statisticsData[key] = statsData[key];
+				this.statisticsData[int(key)] = statsData[key];
 			}
 			App.utils.data.cleanupDynamicObject(statsData);
+			this.statisticsLoaded = true;
 		}
 		
-		private function updateRight(eve:Event = null):void
+		private function setIconColorsCache(colors:Object):void
 		{
-			if (this.panels)
+			for (var vehicleType:String in colors)
 			{
-				for each (var item:* in this.panels.listRight._items)
-				{
-					if (!item._listItem.vehicleIcon.hasEventListener(Event.RENDER))
-					{
-						item._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
-						item._listItem["item"] = item;
-						item._listItem.playerNameCutTF.width = this.cutWidth;
-						item._listItem.setPlayerNameFullWidth(this.fullWidth);
-					}
-				}
-			}
-		}
-		
-		private function setIconColors(colors:Object):void
-		{
-			for (var classTag:String in colors)
-			{
-				this.iconColors[classTag] = Utils.colorConvert(colors[classTag]);
+				var tColor:ColorTransform = new ColorTransform();
+				tColor.color = Utils.colorConvert(colors[vehicleType]);
+				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
+				this.colorCache[vehicleType] = tColor;
 			}
 			App.utils.data.cleanupDynamicObject(colors);
 		}
 		
-		private function updateItems():void
+		private function updatePanelItems(items:*):void
 		{
-			if (this.panels)
+			if (items)
 			{
-				for each (var item:* in this.panels.listLeft._items)
+				for each (var item:* in items)
 				{
-					if (!item._listItem.vehicleIcon.hasEventListener(Event.RENDER))
+					var vehicleID:int = item.vehicleData.vehicleID;
+					var listItem:*    = item._listItem;
+					if (!listItem.vehicleIcon.hasEventListener(Event.RENDER))
 					{
-						item._listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
-						item._listItem["item"] = item;
-						item._listItem.playerNameCutTF.width = this.cutWidth;
-						item._listItem.setPlayerNameFullWidth(this.fullWidth);
+						listItem.vehicleIcon.addEventListener(Event.RENDER, this.onRenderPanels, false, 0, true);
 					}
+					listItem["item"] = item;
+					listItem.playerNameCutTF.width = this.cutWidth;
+					listItem.setPlayerNameFullWidth(this.fullWidth);
+					this.holdersCache[0][vehicleID] = this.getLoadingHolderByVehicleID(vehicleID, listItem._isRightAligned);
+					this.holdersCache[1][vehicleID] = this.getFullStatsHolderByVehicleID(vehicleID, listItem._isRightAligned);
 				}
-				this.updateRight();
 			}
 		}
 		
-		private function onChange(eve:Event):void
+		private function updateItems(eve:Event = null):void
 		{
-			setTimeout(this.updateItems, 1000);
+			var targetList:Array = eve && eve.type == PlayersPanelListEvent.ITEMS_COUNT_CHANGE ? [eve.target] : [this.panels.listLeft, this.panels.listRight];
+			for each (var list:* in targetList)
+			{
+				this.updatePanelItems(list._items);
+			}
 		}
 		
 		private function updateVehicleIconColor(vehicleIcon:*, vehicleType:String):void
 		{
-			if (vehicleType != BATTLEATLAS.UNKNOWN)
+			if (vehicleType != BATTLEATLAS.UNKNOWN && vehicleIcon.transform.colorTransform.color != this.colorCache[vehicleType].color)
 			{
-				var tColor:ColorTransform = vehicleIcon.transform.colorTransform;
-				tColor.color = this.iconColors[vehicleType];
-				tColor.redMultiplier = tColor.greenMultiplier = tColor.blueMultiplier = this.iconMultiplier;
-				vehicleIcon.transform.colorTransform = tColor;
+				vehicleIcon.transform.colorTransform = this.colorCache[vehicleType];
+			}
+		}
+		
+		private function setVehicleTextColor(field:TextField, vehicleTextColor:uint):void
+		{
+			if (field.visible && vehicleTextColor > 0 && field.textColor != vehicleTextColor)
+			{
+				field.textColor = vehicleTextColor;
+			}
+		}
+		
+		private function updateHtmlText(field:TextField, htmlText:String):void
+		{
+			if (field.visible)
+			{
+				field.htmlText = htmlText;
+			}
+		}
+		
+		private function updateAutoSize(field:TextField, autoSize:String):void
+		{
+			if (field.autoSize != autoSize)
+			{
+				field.autoSize = autoSize;
 			}
 		}
 		
@@ -191,93 +203,59 @@ package net.armagomen.battle_observer.battle.components
 		{
 			var listItem:*    = eve.target.parent;
 			var vehicleID:int = listItem.item.vehicleData.vehicleID;
-			
 			if (this.iconsEnabled)
 			{
-				this.updateVehicleIconColor(eve.target, listItem.item.vehicleData.vehicleType);
+				this.updateIcons(listItem, this.holdersCache[0][vehicleID], this.holdersCache[1][vehicleID]);
 			}
-			if (this._statisticsEnabled)
+			if (this.statisticsLoaded && this.statisticsData[vehicleID])
 			{
-				this.updatePanelsItem(vehicleID, listItem);
-			}
-			
-			if (this.battleLoading && this.battleLoading.visible)
-			{
-				this.updateBattleloading(vehicleID, listItem._isRightAligned);
-			}
-			
-			if (this.fullStats && this.fullStats.visible)
-			{
-				this.updateFullstats(vehicleID, listItem._isRightAligned);
+				this.updateStatistics(listItem, this.holdersCache[0][vehicleID], this.holdersCache[1][vehicleID], this.statisticsData[vehicleID]);
 			}
 		}
 		
-		private function updatePanelsItem(vehicleID:int, listItem:*):void
+		private function updateIcons(listItem:*, loadingHolder:*, statsHolder:*):void
 		{
-			if (this.statisticsData[vehicleID])
+			if (this.panels.visible)
 			{
-				if (this.statisticsData[vehicleID].vehicleTextColor)
-				{
-					listItem.vehicleTF.textColor = this.statisticsData[vehicleID].vehicleTextColor;
-					listItem.vehicleTF.setTextFormat(this.format);
-				}
-				listItem.playerNameFullTF.htmlText = this.statisticsData[vehicleID].fullName;
-				listItem.playerNameCutTF.htmlText = this.statisticsData[vehicleID].cutName;
-				if (!listItem._isAlive)
-				{
-					listItem.playerNameCutTF.alpha = DEAD_TEXT_ALPHA;
-					listItem.playerNameFullTF.alpha = DEAD_TEXT_ALPHA;
-					listItem.vehicleTF.alpha = DEAD_TEXT_ALPHA;
-				}
+				this.updateVehicleIconColor(listItem.vehicleIcon, listItem.item.vehicleData.vehicleType);
+			}
+			if (this.battleLoading.visible && loadingHolder && loadingHolder._vehicleIcon)
+			{
+				this.updateVehicleIconColor(loadingHolder._vehicleIcon, loadingHolder.model.vehicleType);
+			}
+			if (this.fullStats.visible && statsHolder)
+			{
+				this.updateVehicleIconColor(statsHolder.statsItem._vehicleIcon, statsHolder.data.vehicleType);
 			}
 		}
 		
-		private function updateFullstats(vehicleID:int, isEnemy:Boolean):void
+		private function updateStatistics(listItem:*, loadingHolder:*, statsHolder:*, data:Object):void
 		{
-			var holder:* = this.getFullStatsHolderByVehicleID(vehicleID, isEnemy);
-			if (!holder)
+			if (this.panels.visible)
 			{
-				return;
-			}
-			if (this.iconsEnabled)
-			{
-				this.updateVehicleIconColor(holder.statsItem._vehicleIcon, holder.data.vehicleType);
-			}
-			if (this._statisticsEnabled && this.statisticsData[vehicleID])
-			{
-				holder.statsItem._playerNameTF.autoSize = isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT;
-				holder.statsItem._playerNameTF.htmlText = this.statisticsData[vehicleID].fullName;
-				if (this.statisticsData[vehicleID].vehicleTextColor)
+				this.setVehicleTextColor(listItem.vehicleTF, data.vehicleTextColor);
+				this.updateHtmlText(listItem.playerNameFullTF, data.fullName);
+				this.updateHtmlText(listItem.playerNameCutTF, data.cutName);
+				if (listItem.deadAltBg.visible)
 				{
-					holder.statsItem._vehicleNameTF.textColor = this.statisticsData[vehicleID].vehicleTextColor;
-				}
-				if (!holder.data.isAlive())
-				{
-					holder.statsItem._playerNameTF.alpha = DEAD_TEXT_ALPHA;
-					holder.statsItem._vehicleNameTF.alpha = DEAD_TEXT_ALPHA;
+					listItem.playerNameFullTF.alpha = listItem.playerNameCutTF.alpha = listItem.vehicleTF.alpha = listItem.deadAltBg.visible ? DEAD_ALT_TEXT_ALPHA : listItem._originalTFAlpha;
 				}
 			}
-		}
-		
-		private function updateBattleloading(vehicleID:int, isEnemy:Boolean):void
-		{
-			var holder:* = this.getLoadingHolderByVehicleID(vehicleID, isEnemy);
-			if (holder)
+			if (this.battleLoading.visible && loadingHolder)
 			{
-				if (this.iconsEnabled && holder._vehicleIcon)
+				this.updateAutoSize(loadingHolder._textField, loadingHolder._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT)
+				this.updateHtmlText(loadingHolder._textField, data.fullName);
+				if (loadingHolder._vehicleField)
 				{
-					this.updateVehicleIconColor(holder._vehicleIcon, holder.model.vehicleType);
-				}
-				if (this._statisticsEnabled && this.statisticsData[vehicleID])
-				{
-					holder._textField.htmlText = this.statisticsData[vehicleID].fullName;
-					if (this.statisticsData[vehicleID].vehicleTextColor)
-					{
-						holder._vehicleField.textColor = this.statisticsData[vehicleID].vehicleTextColor;
-					}
+					this.setVehicleTextColor(loadingHolder._vehicleField, data.vehicleTextColor);
 				}
 			}
-		
+			if (this.fullStats.visible && statsHolder)
+			{
+				this.updateAutoSize(statsHolder.statsItem._playerNameTF, statsHolder.statsItem._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT);
+				this.updateHtmlText(statsHolder.statsItem._playerNameTF, data.fullName);
+				this.setVehicleTextColor(statsHolder.statsItem._vehicleNameTF, data.vehicleTextColor);
+			}
 		}
 		
 		private function getFullStatsHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
@@ -285,28 +263,15 @@ package net.armagomen.battle_observer.battle.components
 			var tableCtrl:* = this.fullStats.tableCtrl;
 			if (tableCtrl)
 			{
-				if (isEnemy && tableCtrl.enemyRenderers)
+				var renderers:* = isEnemy ? tableCtrl.enemyRenderers : tableCtrl.allyRenderers;
+				for each (var render:* in renderers)
 				{
-					for each (var enemy:* in tableCtrl.enemyRenderers)
+					if (render.data.vehicleID == vehicleID)
 					{
-						if (enemy.data.vehicleID == vehicleID)
-						{
-							return enemy;
-						}
-					}
-				}
-				else if (tableCtrl.allyRenderers)
-				{
-					for each (var ally:* in tableCtrl.allyRenderers)
-					{
-						if (ally.data.vehicleID == vehicleID)
-						{
-							return ally;
-						}
+						return render;
 					}
 				}
 			}
-			
 			return null;
 		}
 		
@@ -315,24 +280,12 @@ package net.armagomen.battle_observer.battle.components
 			var form:* = this.battleLoading.form;
 			if (form)
 			{
-				if (isEnemy && form._enemyRenderers)
+				var renderers:* = isEnemy ? form._enemyRenderers : form._allyRenderers;
+				for each (var render:* in renderers)
 				{
-					for each (var enemy:* in form._enemyRenderers)
+					if (render.model.vehicleID == vehicleID)
 					{
-						if (enemy.model.vehicleID == vehicleID)
-						{
-							return enemy;
-						}
-					}
-				}
-				else if (form._allyRenderers)
-				{
-					for each (var ally:* in form._allyRenderers)
-					{
-						if (ally.model.vehicleID == vehicleID)
-						{
-							return ally;
-						}
+						return render;
 					}
 				}
 			}

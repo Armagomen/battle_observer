@@ -46,7 +46,6 @@ package net.armagomen.battle_observer
 							continue;
 						}
 						this.registerComponent(this.addChild(new alias_to_ui[alias]()), alias);
-						this.showComponent(alias, false);
 					}
 					catch (err:Error)
 					{
@@ -61,16 +60,6 @@ package net.armagomen.battle_observer
 				this.updateStage(App.appWidth, App.appHeight);
 				App.utils.data.cleanupDynamicObject(alias_to_ui);
 			}
-		}
-		
-		override protected function configUI():void
-		{
-			super.configUI();
-			this.tabEnabled = false;
-			this.tabChildren = false;
-			this.mouseEnabled = false;
-			this.mouseChildren = false;
-			this.buttonMode = false;
 		}
 	}
 }

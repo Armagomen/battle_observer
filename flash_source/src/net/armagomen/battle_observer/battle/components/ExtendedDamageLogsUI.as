@@ -22,17 +22,19 @@ package net.armagomen.battle_observer.battle.components
 				if (damageLogPanel)
 				{
 					var settings:Object = this.getSettings();
+					var top:*           = damageLogPanel._detailsTopContainer;
+					var bottom:*        = damageLogPanel._detailsBottomContainer;
 					
 					if (settings.top_enabled)
 					{
-						damageLogPanel._detailsTopContainer.removeChildren();
+						top.removeChildren();
 					}
 					if (settings.bottom_enabled)
 					{
-						damageLogPanel._detailsBottomContainer.removeChildren();
+						bottom.removeChildren();
 					}
 					
-					this.logs = new <TextExt>[new TextExt(settings.settings.x + this.isComp7Battle() ? 50 : 30, settings.settings.y + 4, null, settings.settings.align, damageLogPanel._detailsTopContainer, settings.top_enabled), new TextExt(settings.settings.x + 20, settings.settings.y, null, settings.settings.align, damageLogPanel._detailsBottomContainer, settings.bottom_enabled)];
+					this.logs = new <TextExt>[new TextExt(settings.settings.x + (this.isComp7Battle() ? 50 : 30), settings.settings.y + 4, null, settings.settings.align, top, settings.top_enabled), new TextExt(settings.settings.x + 20, settings.settings.y, null, settings.settings.align, bottom, settings.bottom_enabled)];
 					this.logs.fixed = true;
 					App.utils.data.cleanupDynamicObject(settings);
 				}

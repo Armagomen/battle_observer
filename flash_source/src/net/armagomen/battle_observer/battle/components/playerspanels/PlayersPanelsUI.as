@@ -12,7 +12,7 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 	
 	public class PlayersPanelsUI extends ObserverBattleDisplayable
 	{
-		private var playersPanel:*      = null;
+		private var panels:*            = null;
 		private var storage:Object      = new Object();
 		private var spotted_fix:Boolean = false;
 		public var onAddedToStorage:Function;
@@ -41,13 +41,11 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			{
 				super.onPopulate();
 				this.spotted_fix = this.getSettings().panels_spotted_fix;
-				this.playersPanel = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
-				if (this.playersPanel)
+				this.panels = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
+				if (this.panels)
 				{
-					this.playersPanel.addEventListener(Event.CHANGE, this.reloadAll, false, 0, true);
-					this.playersPanel.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll, false, 0, true);
-					this.playersPanel.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight, false, 0, true);
-					setTimeout(this.loadLists, 100);
+					this.addListeners();
+					setTimeout(this.updateItems, 1000);
 				}
 			}
 			else
@@ -56,73 +54,80 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			}
 		}
 		
+		private function addListeners():void
+		{
+			this.panels.addEventListener(Event.CHANGE, this.updateItems, false, 0, true);
+			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateItems, false, 0, true);
+			
+			if (this.panels.listRight && !this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
+			{
+				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateItems, false, 0, true);
+			}
+		}
+		
 		override protected function onBeforeDispose():void
 		{
-			if (this.playersPanel)
+			if (this.panels)
 			{
-				if (this.playersPanel.hasEventListener(Event.CHANGE))
-				{
-					this.playersPanel.removeEventListener(Event.CHANGE, this.reloadAll);
-				}
-				
-				if (this.playersPanel.hasEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE))
-				{
-					this.playersPanel.removeEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.reloadAll);
-				}
-				
-				if (this.playersPanel.listRight)
-				{
-					this.playersPanel.listRight.removeEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.addToRight);
-				}
+				this.removeListeners();
 				this.as_clearStorage();
-				this.playersPanel = null;
 			}
 			super.onBeforeDispose();
 		}
 		
-		private function addToRight(eve:Event = null):void
+		private function removeListeners():void
 		{
-			if (this.playersPanel)
+			this.removeListener(this.panels, Event.CHANGE, this.updateItems);
+			this.removeListener(this.panels, PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateItems);
+			this.removeListener(this.panels.listRight, PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateItems);
+		}
+		
+		private function removeListener(target:*, type:String, listener:Function):void
+		{
+			if (!target) return;
+			if (target.hasEventListener(type))
 			{
-				for each (var item:* in this.playersPanel.listRight._items)
+				target.removeEventListener(type, listener);
+			}
+		}
+		
+		private function updatePanelItems(items:*):void
+		{
+			if (items)
+			{
+				for each (var item:* in items)
 				{
-					if (this.spotted_fix)
+					var listItem:* = item._listItem;
+					if (this.spotted_fix && listItem._isRightAligned)
 					{
-						this.setSpottedPosition(item._listItem);
+						this.setSpottedPosition(listItem);
 					}
-					this.addVehIdToList(item.vehicleData.vehicleID, true, item._listItem);
+					this.addVehIdToList(item.vehicleData.vehicleID, listItem);
 				}
 			}
 		}
 		
-		private function loadLists():void
+		private function updateItems(eve:Event = null):void
 		{
-			if (this.playersPanel)
+			var targetList:Array = [this.panels.listLeft, this.panels.listRight];
+			for each (var list:* in targetList)
 			{
-				for each (var item:* in this.playersPanel.listLeft._items)
-				{
-					this.addVehIdToList(item.vehicleData.vehicleID, false, item._listItem);
-				}
-				this.addToRight();
+				this.updatePanelItems(list._items);
 			}
 		}
 		
-		private function reloadAll(eve:Event):void
-		{
-			this.loadLists();
-		}
-		
-		private function addVehIdToList(vehicleID:int, enemy:Boolean, item:*):void
+		private function addVehIdToList(vehicleID:int, listItem:*):void
 		{
 			if (!this.storage[vehicleID])
 			{
+				var enemy:Boolean = listItem._isRightAligned;
 				this.storage[vehicleID] = new ListItem(enemy);
-				item.addChild(this.storage[vehicleID]);
+				listItem.addChild(this.storage[vehicleID]);
 				this.onAddedToStorage(vehicleID, enemy);
 			}
 			else
 			{
-				item.addChild(this.storage[vehicleID]);
+				listItem.addChild(this.storage[vehicleID]);
 			}
 		}
 		

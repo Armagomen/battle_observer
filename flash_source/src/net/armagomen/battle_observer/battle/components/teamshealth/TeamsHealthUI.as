@@ -1,6 +1,7 @@
 package net.armagomen.battle_observer.battle.components.teamshealth
 {
 	import flash.events.Event;
+	import flash.utils.setTimeout;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	
@@ -20,7 +21,9 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 				super.onPopulate();
 				var correlation:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				this.updateCorrelationBar(correlation);
-				this.updateCountersPosition(correlation);
+				
+				setTimeout(this.updateCountersPosition, 500, correlation);
+				//this.updateCountersPosition(correlation);
 				
 				var styles:Object   = {"league": League, "default": Default};
 				var settings:Object = this.getSettings();

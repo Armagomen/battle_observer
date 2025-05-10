@@ -1,4 +1,4 @@
-﻿[CustomMessages]
+[CustomMessages]
 // open wg utils
 uk.openwg_browse=Огляд...
 uk.openwg_client_not_found=Клієнт гри не виявлено.

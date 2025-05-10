@@ -3,7 +3,7 @@ from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_WG_CLIENT, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import addCallback, cancelOverride, getPlayer, MinMax, overrideMethod, ResMgr
-from armagomen.utils.logging import logDebug, logError
+from armagomen.utils.logging import logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from cgf_components.attack_artillery_fort_components import ISettingsCore
@@ -83,15 +83,18 @@ class CameraSettings(object):
     @staticmethod
     def getCamera(control_mode_name):
         input_handler = getInputHandler()
-        if input_handler is not None and input_handler.ctrls:
+        if input_handler is not None and input_handler.ctrls and control_mode_name in input_handler.ctrls:
             return input_handler.ctrls[control_mode_name].camera
+        logError("{} camera is Nome", control_mode_name)
         return None
 
     def resetToDefault(self, *ctrl_modes):
         for name in ctrl_modes:
-            ResMgr.purge('gui/avatar_input_handler.xml')
-            cameraSec = ResMgr.openSection(self._CONTROL_MODE_TO_SEC[name])
-            self.getCamera(name)._reloadConfigs(cameraSec)
+            camera = self.getCamera(name)
+            if camera is not None:
+                ResMgr.purge('gui/avatar_input_handler.xml')
+                cameraSec = ResMgr.openSection(self._CONTROL_MODE_TO_SEC[name])
+                camera._reloadConfigs(cameraSec)
         self.reset = False
 
 
@@ -116,8 +119,6 @@ class Arcade(CameraSettings):
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.ARCADE)
                 self.updateProperties(camera)
-        else:
-            logError("{} camera is Nome", CTRL_MODE_NAME.ARCADE)
 
     @staticmethod
     def updateProperties(camera):
@@ -144,12 +145,11 @@ class Strategic(CameraSettings):
         self.enabled = self.config[GLOBAL.ENABLED]
         if self.enabled:
             self.reset = True
-            for index, camera in enumerate((self.getCamera(CTRL_MODE_NAME.STRATEGIC), self.getCamera(CTRL_MODE_NAME.ARTY))):
+            for camera_name in (CTRL_MODE_NAME.STRATEGIC, CTRL_MODE_NAME.ARTY):
+                camera = self.getCamera(camera_name)
                 if camera is not None:
                     camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
                     camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
-                else:
-                    logError("{} camera is Nome", CTRL_MODE_NAME.ARTY if index else CTRL_MODE_NAME.STRATEGIC)
         elif self.reset:
             self.resetToDefault(CTRL_MODE_NAME.ARTY, CTRL_MODE_NAME.STRATEGIC)
 
@@ -186,10 +186,10 @@ class Sniper(CameraSettings):
                 camera.enableDynamicCamera(self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA))
             if self._dyn_zoom:
                 overrideMethod(SniperCamera, "enable")(self.enableSniper)
-                if self.settingsCore.getSetting(GAME.SNIPER_ZOOM):
-                    self._SNIPER_ZOOM_LEVEL = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
+                zoom_level = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
+                if zoom_level:
+                    self._SNIPER_ZOOM_LEVEL = zoom_level
                     self.applySniperSettings(0)
-                    logDebug("Sniper zool level set to {}", self._SNIPER_ZOOM_LEVEL)
             else:
                 cancelOverride(SniperCamera, "enable", "enableSniper")
                 if self._SNIPER_ZOOM_LEVEL is not None:
@@ -207,8 +207,6 @@ class Sniper(CameraSettings):
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
             self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
-        else:
-            logError("{} camera is Nome", CTRL_MODE_NAME.SNIPER)
 
     def getZoom(self, distance, steps):
         zoom = math.floor(distance / self.DEFAULT_X_METERS)

@@ -23,6 +23,4 @@ DEL %GameInstalled_ModsDir%\armagomen.battleObserver*
 
 DEL /s /q *.pyc
 
-pause
-
 exit

@@ -33,8 +33,8 @@ if IS_WG_CLIENT:
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
-aih_constants.GUN_MARKER_MIN_SIZE = 14.0
-aih_constants.SPG_GUN_MARKER_MIN_SIZE = 24.0
+aih_constants.GUN_MARKER_MIN_SIZE /= 2
+aih_constants.SPG_GUN_MARKER_MIN_SIZE /= 2
 
 REPLACE = {CLIENT, DUAL_ACC}
 
