@@ -2,7 +2,7 @@
   "default_icon": true, 
   "default_icon_name": "lamp_2.png", 
   "enabled": false, 
-  "icon_size": 80, 
+  "icon_size": 70,
   "lampShowTime": 10, 
   "playTickSound": true, 
   "show_timer": false, 

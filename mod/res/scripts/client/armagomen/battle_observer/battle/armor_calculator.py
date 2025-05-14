@@ -1,7 +1,6 @@
 # coding=utf-8
-from collections import defaultdict
 
-from armagomen._constants import ARMOR_CALC, COLORS, GLOBAL, POSTMORTEM_MODES
+from armagomen._constants import ARMOR_CALC, COLORS, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
@@ -19,12 +18,16 @@ else:
     NO_DAMAGE = "Critical hit, no damage."
     RICOCHET = "Ricochet."
 
+SETTING_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE, ARMOR_CALC.SHOW_CALIBER)
+
 
 class ArmorCalculator(ArmorCalcMeta):
 
     def __init__(self):
         super(ArmorCalculator, self).__init__()
-        self.calcMacro = defaultdict(lambda: GLOBAL.CONFIG_ERROR)
+        self.calcMacro = dict()
+        self.pattern = None
+        self.colors = dict()
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
@@ -36,6 +39,8 @@ class ArmorCalculator(ArmorCalcMeta):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
+        self.pattern = " | ".join(["%({})d".format(key) for key in SETTING_PARAMS if self.settings[key]])
+        self.colors.update(self.getColors()[ARMOR_CALC.NAME])
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -49,7 +54,7 @@ class ArmorCalculator(ArmorCalcMeta):
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):
-        self.calcMacro[ARMOR_CALC.MACROS_COLOR] = self.getColors()[ARMOR_CALC.NAME].get(color, COLORS.C_RED)
+        self.as_updateColor(int(self.colors.get(color, COLORS.WHITE)[1:], 16))
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         if ctrlMode in POSTMORTEM_MODES:
@@ -60,10 +65,13 @@ class ArmorCalculator(ArmorCalcMeta):
             self.as_clearMessage()
         else:
             armor, piercingPower, caliber, ricochet, noDamage = data
-            self.calcMacro[ARMOR_CALC.RICOCHET] = RICOCHET if ricochet else GLOBAL.EMPTY_LINE
-            self.calcMacro[ARMOR_CALC.NO_DAMAGE] = NO_DAMAGE if noDamage else GLOBAL.EMPTY_LINE
-            self.calcMacro[ARMOR_CALC.MACROS_COUNTED_ARMOR] = armor
-            self.calcMacro[ARMOR_CALC.PIERCING_POWER] = piercingPower
-            self.calcMacro[ARMOR_CALC.MACROS_PIERCING_RESERVE] = piercingPower - armor
-            self.calcMacro[ARMOR_CALC.MACROS_CALIBER] = caliber
-            self.as_armorCalcS(self.settings[ARMOR_CALC.TEMPLATE] % self.calcMacro)
+            if ricochet:
+                self.as_armorCalcS(RICOCHET)
+            elif noDamage:
+                self.as_armorCalcS(NO_DAMAGE)
+            else:
+                self.calcMacro[ARMOR_CALC.SHOW_COUNTED_ARMOR] = armor
+                self.calcMacro[ARMOR_CALC.SHOW_PIERCING_POWER] = piercingPower
+                self.calcMacro[ARMOR_CALC.SHOW_PIERCING_RESERVE] = piercingPower - armor
+                self.calcMacro[ARMOR_CALC.SHOW_CALIBER] = caliber
+                self.as_armorCalcS(self.pattern % self.calcMacro)

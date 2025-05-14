@@ -2,29 +2,25 @@
   "disable_cam_after_shot": false,
   "disable_cam_after_shot_latency": 0.5,
   "disable_cam_after_shot_skip_clip": true,
-  "dynamic_zoom": {
-    "enabled": false,
-    "steps_only": false
-  },
+  "dynamic_zoom": false,
+  "dynamic_zoom_steps_only": false,
   "enabled": false,
-  "zoomSteps": {
-    "enabled": false,
-    "steps": [
-      2.0,
-      4.0,
-      6.0,
-      8.0,
-      10.0,
-      12.0,
-      14.0,
-      16.0,
-      18.0,
-      20.0,
-      22.0,
-      24.0,
-      26.0,
-      28.0,
-      30.0
-    ]
-  }
+  "steps_enabled": false,
+  "steps_range": [
+    2.0,
+    4.0,
+    6.0,
+    8.0,
+    10.0,
+    12.0,
+    14.0,
+    16.0,
+    18.0,
+    20.0,
+    22.0,
+    24.0,
+    26.0,
+    28.0,
+    30.0
+  ]
 }

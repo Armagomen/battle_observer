@@ -158,6 +158,9 @@ class Sniper(CameraSettings):
     settingsCore = dependency.descriptor(ISettingsCore)
     DEFAULT_X_METERS = 20.0
     _SNIPER_ZOOM_LEVEL = None
+    ZOOM = "zoom"
+    ZOOMS = "zooms"
+    MAX_DIST = 700.0
 
     def __init__(self):
         super(Sniper, self).__init__()
@@ -176,8 +179,8 @@ class Sniper(CameraSettings):
     def update(self):
         self.after_shoot.updateSettings(self.config)
         self.enabled = self.config[GLOBAL.ENABLED]
-        self._dyn_zoom = self.config[SNIPER.DYN_ZOOM][GLOBAL.ENABLED] and self.enabled
-        self._steps_only = self.config[SNIPER.DYN_ZOOM][SNIPER.STEPS_ONLY] and self._dyn_zoom
+        self._dyn_zoom = self.config[SNIPER.DYN_ZOOM] and self.enabled
+        self._steps_only = self.config[SNIPER.STEPS_ONLY] and self._dyn_zoom
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is not None:
             if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]:
@@ -195,18 +198,18 @@ class Sniper(CameraSettings):
                 if self._SNIPER_ZOOM_LEVEL is not None:
                     self.applySniperSettings(self._SNIPER_ZOOM_LEVEL)
                     self._SNIPER_ZOOM_LEVEL = None
-            self._steps_enabled = self.config[SNIPER.ZOOM_STEPS][GLOBAL.ENABLED] and self.enabled
+            self._steps_enabled = self.config[SNIPER.ZOOM_STEPS] and self.enabled
             if self._steps_enabled:
                 self.reset = True
-                steps = self.config[SNIPER.ZOOM_STEPS][SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
+                steps = self.config[SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
                 camera._cfg[SNIPER.INCREASED_ZOOM] = True
-                camera._cfg[SNIPER.ZOOMS] = steps
+                camera._cfg[self.ZOOMS] = steps
                 exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
                 while len(steps) > len(exposure):
                     exposure.append(SNIPER.EXPOSURE_FACTOR)
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
-            self.min_max = MinMax(camera._cfg[SNIPER.ZOOMS][0], camera._cfg[SNIPER.ZOOMS][-1])
+            self.min_max = MinMax(camera._cfg[self.ZOOMS][0], camera._cfg[self.ZOOMS][-1])
 
     def getZoom(self, distance, steps):
         zoom = math.floor(distance / self.DEFAULT_X_METERS)
@@ -217,7 +220,7 @@ class Sniper(CameraSettings):
     def enableSniper(self, base, camera, targetPos, saveZoom):
         ownPosition = getOwnVehiclePosition()
         distance = (targetPos - ownPosition).length if ownPosition is not None else GLOBAL.ZERO
-        camera._cfg[SNIPER.ZOOM] = self.getZoom(distance, camera._cfg[SNIPER.ZOOMS]) if distance < SNIPER.MAX_DIST else self.min_max.min
+        camera._cfg[self.ZOOM] = self.getZoom(distance, camera._cfg[self.ZOOMS]) if distance < self.MAX_DIST else self.min_max.min
         return base(camera, targetPos, True)
 
 

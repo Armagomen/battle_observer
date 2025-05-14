@@ -136,12 +136,12 @@ CLOCK = namedtuple("CLOCK", (
     "<textformat tabstops='[135]'>%d %b %Y<tab>%H:%M:%S</textformat>")
 
 __Sniper = namedtuple("SNIPER", (
-    "ZOOM", "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "ZOOMS", "ZOOM_EXPOSURE",
-    "INCREASED_ZOOM", "DEFAULT_STEPS", "EXPOSURE_FACTOR", "MAX_CALIBER", "MAX_DIST", "DISABLE_SNIPER",
+    "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "ZOOM_EXPOSURE",
+    "INCREASED_ZOOM", "DEFAULT_STEPS", "EXPOSURE_FACTOR", "MAX_CALIBER", "DISABLE_SNIPER",
     "DISABLE_LATENCY", "SKIP_CLIP", "CLIP"))
 SNIPER = __Sniper(
-    "zoom", "zoom", "dynamic_zoom", "steps_only", "zoomSteps", "steps", "zooms", "zoomExposure",
-    "increasedZoom", [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0], 0.1, 60, 700.0,
+    "zoom", "dynamic_zoom", "dynamic_zoom_steps_only", "steps_enabled", "steps_range", "zoomExposure",
+    "increasedZoom", [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0], 0.1, 60,
     "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip")
 
 
@@ -210,12 +210,10 @@ if IS_WG_CLIENT:
     POSTMORTEM_MODES.update((CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.LOOK_AT_KILLER))
 
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
-    "PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "MACROS_COUNTED_ARMOR",
-    "MACROS_PIERCING_RESERVE", "MACROS_CALIBER", "RICOCHET", "NO_DAMAGE", "DEFAULT_TEMPLATE", "ON_ALLY"))(
-    "piercingPower", "armor_calculator", "position", "messages", "template", "color", "countedArmor",
-    "piercingReserve", "caliber", "ricochet", "noDamage",
-    "<p align='center'>%(ricochet)s%(noDamage)s<br><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>",
-    "display_on_allies")
+    "SHOW_PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "SHOW_COUNTED_ARMOR",
+    "SHOW_PIERCING_RESERVE", "SHOW_CALIBER",  "ON_ALLY"))(
+    "show_piercing_power", "armor_calculator", "position", "messages", "template", "color", "show_counted_armor",
+    "show_piercing_reserve", "show_caliber",  "display_on_allies")
 
 FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TEMPLATE", "M_FLIGHT_TIME", "M_DISTANCE", "ALIGN"))(
     "flight_time", "spgOnly", "template", "flightTime", "distance", "align")
@@ -343,8 +341,8 @@ class CONFIG_INTERFACE:
     )
     HANDLER_VALUES = {
         SNIPER.NAME: {
-            'dynamic_zoom*enabled': ('dynamic_zoom*steps_only',),
-            'zoomSteps*enabled': ('zoomSteps*steps',),
+            SNIPER.DYN_ZOOM: (SNIPER.STEPS_ONLY,),
+            SNIPER.ZOOM_STEPS: (SNIPER.STEPS,),
             SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY)
         },
         TEAM_BASES.NAME: {

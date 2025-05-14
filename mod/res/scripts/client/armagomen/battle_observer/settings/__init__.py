@@ -129,14 +129,10 @@ class UserSettings(object):
             SNIPER.DISABLE_SNIPER: False,
             SNIPER.DISABLE_LATENCY: 0.5,
             SNIPER.SKIP_CLIP: True,
-            SNIPER.DYN_ZOOM: {
-                GLOBAL.ENABLED: False,
-                SNIPER.STEPS_ONLY: True,
-            },
-            SNIPER.ZOOM_STEPS: {
-                GLOBAL.ENABLED: False,
-                SNIPER.STEPS: SNIPER.DEFAULT_STEPS
-            }
+            SNIPER.DYN_ZOOM:  False,
+            SNIPER.STEPS_ONLY: True,
+            SNIPER.ZOOM_STEPS: False,
+            SNIPER.STEPS: SNIPER.DEFAULT_STEPS
         }
 
         self.arcade_camera = {
@@ -157,8 +153,11 @@ class UserSettings(object):
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 30},
-            ARMOR_CALC.TEMPLATE: ARMOR_CALC.DEFAULT_TEMPLATE,
             ARMOR_CALC.ON_ALLY: False,
+            ARMOR_CALC.SHOW_PIERCING_RESERVE: False,
+            ARMOR_CALC.SHOW_COUNTED_ARMOR: True,
+            ARMOR_CALC.SHOW_PIERCING_POWER: True,
+            ARMOR_CALC.SHOW_CALIBER: False,
         }
 
         self.colors = {

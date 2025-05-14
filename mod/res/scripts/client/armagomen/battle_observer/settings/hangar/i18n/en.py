@@ -170,19 +170,11 @@ localization = {
         "position*x": "Position the main text box of the calculator Horizontally",
         "position*y": "Position the main text box of the calculator Vertically",
         "template": "Template Main text field",
-        "display_on_allies": "Display on allies",
-        "template_tooltip": "Macro format:% (name) data type s:d:f.<br>"
-                            "s-string, d-decimal, f-floating point<br><br>"
-                            "List of available macros:<br>"
-                            "<li>%(countedArmor)d - Counted armor.</li>"
-                            "<li>%(piercingPower)d - Distance-based projectile penetration.</li>"
-                            "<li>%(piercingReserve)d - Penetration reserve after piercing armor.</li>"
-                            "<li>%(caliber)d - Projectile caliber. </li>"
-                            "<li>%(message)s - Message from the messages section in the config file.</li>"
-                            "<li>%(ricochet)s - Potential ricochet alert.</li>"
-                            "<li>%(noDamage)s - Notification that there will be no damage. The projectile will hit the "
-                            "module bypassing main armor. Caterpillar no damage, wheel no damage, and so on.</li>"
-                            "<li>%(color)s - color (see color setting).</li>"
+        "display_on_allies": "Show on allies",
+        "show_piercing_power": "Show projectile penetration",
+        "show_counted_armor": "Show armor",
+        "show_piercing_reserve": "Show remaining penetration",
+        "show_caliber": "Show caliber",
     },
     "wg_logs": {
         "header": "WG LOG SETTINGS",
@@ -250,12 +242,12 @@ localization = {
                                           "a shot if the caliber of the gun is more than 60mm.",
         "disable_cam_after_shot_latency": "Delay automatic shutdown of the camera.",
         "disable_cam_after_shot_skip_clip": "Do not exit if magazine loading system.",
-        "dynamic_zoom*enabled": "Automatic selection of the zoom ratio when switching to sniper mode.",
-        "dynamic_zoom*steps_only": "Move only in fixed steps.",
-        "dynamic_zoom*enabled_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
-        "zoomSteps*enabled": "Enable Steps of zoom.",
-        "zoomSteps*steps": "Steps of zoom.",
-        "zoomSteps*steps_tooltip": "You can write any number of commas and spaces or just a comma."
+        "dynamic_zoom": "Automatic selection of the zoom ratio when switching to sniper mode.",
+        "dynamic_zoom_steps_only": "Move only in fixed steps.",
+        "dynamic_zoom_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
+        "steps_enabled": "Enable Steps of zoom.",
+        "steps_range": "Steps of zoom.",
+        "steps_range_tooltip": "You can write any number of commas and spaces or just a comma."
     },
     "arcade_camera": {
         "header": "COMMANDER CAMERA (FAR CAMERA)",

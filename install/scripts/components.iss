@@ -66,8 +66,8 @@ Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenounin
 Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning;
 Name: zoom/disable_cam_after_shot; Description: {cm:zoom_disable_cam};
 Name: zoom/dynamic_zoom; Description: {cm:zoom_dynamic_zoom}; Flags: checkablealone; Types: armagomen; 
-Name: zoom/dynamic_zoom/steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck; Types: armagomen;
-Name: zoom/zoomSteps; Description: {cm:zoom_zoomSteps}; Types: armagomen;
+Name: zoom/dynamic_zoom/dynamic_zoom_steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck; Types: armagomen;
+Name: zoom/steps_enabled; Description: {cm:zoom_steps_enabled}; Types: armagomen;
 
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: checkablealone disablenouninstallwarning; Types: armagomen saxon_ua;
 Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck; Types: saxon_ua;
@@ -145,7 +145,7 @@ Name: statistics/icons; Description: {cm:statistics_icons}; Types: armagomen;
 Name: statistics/statistics_vehicle_name_color; Description: {cm:statistics_names_color};  Types: armagomen;
 Name: statistics/statistics; Description: {cm:statistics}; Types: armagomen;
 
-Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning; Types: armagomen;
+Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning;
 
 Name: wg_logs; Description: {cm:wg_logs}; Flags: disablenouninstallwarning;
 Name: wg_logs/wg_log_hide_assist; Description: {cm:wg_logs_assist};
@@ -324,9 +324,9 @@ begin
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('zoom'));
     JSON_SetBool(Handle,'/disable_cam_after_shot', WizardIsComponentSelected('zoom/disable_cam_after_shot'));
-    JSON_SetBool(Handle,'/dynamic_zoom/enabled', WizardIsComponentSelected('zoom/dynamic_zoom'));
-    JSON_SetBool(Handle,'/dynamic_zoom/steps_only', WizardIsComponentSelected('zoom/dynamic_zoom/steps_only'));
-    JSON_SetBool(Handle,'/zoomSteps/enabled', WizardIsComponentSelected('zoom/zoomSteps'));
+    JSON_SetBool(Handle,'/dynamic_zoom', WizardIsComponentSelected('zoom/dynamic_zoom'));
+    JSON_SetBool(Handle,'/dynamic_zoom_steps_only', WizardIsComponentSelected('zoom/dynamic_zoom/dynamic_zoom_steps_only'));
+    JSON_SetBool(Handle,'/steps_enabled', WizardIsComponentSelected('zoom/steps_enabled'));
     JSON_Close(Handle);
   end;
 end;

@@ -61,7 +61,7 @@ class SettingsLoader(object):
             setDebug(data[DEBUG])
 
     @staticmethod
-    def isNotEqualLen(data1, data2):
+    def isNotEqualTypeOrLen(data1, data2):
         """
         Returns True if the lengths of the 2 dictionaries are not identical,
         or an error occurs when comparing the lengths, and the settings file needs to be rewritten.
@@ -74,29 +74,30 @@ class SettingsLoader(object):
 
     def updateData(self, external_cfg, internal_cfg, file_update=False):
         """Recursively updates words from user_settings files"""
-        update = self.isNotEqualLen(external_cfg, internal_cfg) or file_update
+        update = self.isNotEqualTypeOrLen(external_cfg, internal_cfg) or file_update
         for key in internal_cfg:
             old_param = internal_cfg[key]
+            new_param = external_cfg.get(key)
             old_param_type = type(old_param)
-            if old_param_type == dict:
+            new_param_type = type(new_param)
+            if old_param_type == new_param_type == dict:
                 update |= self.updateData(external_cfg.get(key, {}), old_param, file_update=update)
+            elif self.isNotEqualTypeOrLen(old_param, new_param):
+                update = True
+                if old_param_type == float and new_param_type == int:
+                    internal_cfg[key] = float(new_param)
+                continue
             else:
-                new_param = external_cfg.get(key)
-                new_param_type = type(new_param)
-                update |= new_param_type != old_param_type
-                if new_param is not None:
-                    if old_param_type == float and new_param_type == int:
-                        new_param = float(new_param)
-                    if key == SIXTH_SENSE.ICON_NAME and new_param not in self.sixth_sense_list:
-                        new_param = "logo.png"
-                        update = True
-                    if key == SNIPER.STEPS and (new_param_type != list or not len(new_param)):
-                        new_param = SNIPER.DEFAULT_STEPS
-                        update = True
-                    if "statistics_pattern" in key and "WTR" in new_param:
-                        new_param = new_param.replace("WTR", "WGR")
-                        update = True
-                    internal_cfg[key] = new_param
+                if key == SIXTH_SENSE.ICON_NAME and new_param not in self.sixth_sense_list:
+                    new_param = "logo.png"
+                    update = True
+                elif key == SNIPER.STEPS and new_param_type != list and not len(new_param):
+                    new_param = SNIPER.DEFAULT_STEPS
+                    update = True
+                elif "statistics_pattern" in key and "WTR" in new_param:
+                    new_param = new_param.replace("WTR", "WGR")
+                    update = True
+                internal_cfg[key] = new_param
         return update
 
     def readConfig(self):

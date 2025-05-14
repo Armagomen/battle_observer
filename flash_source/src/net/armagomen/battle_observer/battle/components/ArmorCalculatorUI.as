@@ -35,12 +35,18 @@ package net.armagomen.battle_observer.battle.components
 			this.armorCalc = null;
 		}
 		
+		public function as_updateColor(color:uint):void
+		{
+			if (this.armorCalc.textColor != color)
+			{
+				this.armorCalc.textColor = color;
+			}
+			
+		}
+		
 		public function as_armorCalc(text:String):void
 		{
-			if (armorCalc)
-			{
-				this.armorCalc.htmlText = text;
-			}
+			this.armorCalc.text = text;
 		}
 	}
 }
