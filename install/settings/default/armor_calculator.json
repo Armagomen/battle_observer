@@ -1,9 +1,12 @@
 {
-  "display_on_allies": false,
-  "enabled": false,
+  "display_on_allies": false, 
+  "enabled": false, 
   "position": {
-    "x": 0,
-    "y": 20
-  },
-  "template": "<p align='center'>%(ricochet)s%(noDamage)s<br><font color='%(color)s'>%(countedArmor)d | %(piercingPower)d</font></p>"
+    "x": 0, 
+    "y": 50
+  }, 
+  "show_caliber": false, 
+  "show_counted_armor": true, 
+  "show_piercing_power": true, 
+  "show_piercing_reserve": false
 }
