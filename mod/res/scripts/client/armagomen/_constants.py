@@ -115,10 +115,10 @@ MAIN = __Main(
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "GOLD", "GREEN", "WHITE", "ORANGE", "RED", "S_YELLOW", "YELLOW",
-    "C_GREEN", "C_ORANGE", "C_RED", "C_YELLOW", "C_PURPLE", "C_BG", "GLOBAL", "ALLY_MAME", "ENEMY_MAME",
+    "C_GREEN", "C_ORANGE", "C_RED", "C_NORMAL", "C_YELLOW", "C_PURPLE", "C_BG", "GLOBAL", "ALLY_MAME", "ENEMY_MAME",
     "ENEMY_BLIND_MAME"))(
     "colors", "#000000", "#6F6CD3", "#FFD700", "#60CB00", "#FFFFFF", "#FF9900", "#ED070A", "#E0E06D", "#FFC900",
-    "green", "orange", "red", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind")
+    "green", "orange", "red", "normal", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind")
 
 MAIN_GUN = namedtuple("MAIN_GUN", ("NAME", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))("main_gun", 1000, 0.2)
 

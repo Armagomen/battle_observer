@@ -172,7 +172,8 @@ class UserSettings(object):
                 COLORS.C_ORANGE: COLORS.ORANGE,
                 COLORS.C_RED: COLORS.RED,
                 COLORS.C_YELLOW: COLORS.YELLOW,
-                COLORS.C_PURPLE: COLORS.BLIND
+                COLORS.C_PURPLE: COLORS.BLIND,
+                COLORS.C_NORMAL: COLORS.WHITE
             },
             VEHICLE_TYPES_COLORS.NAME: {
                 VEHICLE_CLASS_NAME.HEAVY_TANK: "#F9B200",

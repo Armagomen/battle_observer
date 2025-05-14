@@ -294,6 +294,7 @@ localization = {
         "armor_calculator*red": "Приведённая броня: Шанс пробития 0%",
         "armor_calculator*yellow": "Приведённая броня: Шанс пробития 50% (режим ЦС)",
         "armor_calculator*purple": "Приведённая броня: Шанс пробития 0% (режим ЦС)",
+        "armor_calculator*normal": "Приведённая броня: Рикошет или попадание без урона",
         "global*ally": "Глобальный цвет, союзник",
         "global*bgColor": "Цвет фона панелей",
         "global*enemyColorBlind": "Глобальный цвет: противники (цветовая слепота)",

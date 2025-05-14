@@ -50,7 +50,7 @@ class _ShotResult(_CrosshairShotResults):
     def _checkShotResult(cls, data):
         armor, piercing_power, _, ricochet, no_damage = data
         if no_damage or ricochet:
-            return SHOT_RESULT.NOT_PIERCED
+            return SHOT_RESULT.UNDEFINED
         elif armor < piercing_power * cls.RANDOMIZATION.min:
             return SHOT_RESULT.GREAT_PIERCED
         elif armor > piercing_power * cls.RANDOMIZATION.max:
