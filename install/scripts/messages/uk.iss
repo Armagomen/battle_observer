@@ -131,7 +131,7 @@ uk.players_panels_on_key=Показувати панелі тільки при �
 uk.players_panels_damages=Шкода гравців у вухах при натисканні ALT
 
 //service_channel_filter
-uk.service_channel_filter=Налаштування фільтра повідомлень у системному каналі
+uk.service_channel_filter=Фільтр повідомлень у системному каналі
 uk.service_channel_CustomizationForCredits=Налаштування техніки за кредити
 uk.service_channel_CustomizationForGold=Налаштування техніки за золото
 uk.service_channel_DismantlingForCredits=Демонтування обладнання за кредити

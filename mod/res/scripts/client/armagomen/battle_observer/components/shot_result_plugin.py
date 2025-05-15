@@ -25,21 +25,21 @@ class _ShotResult(_CrosshairShotResults):
     ENTITY_TYPES = (Vehicle, DestructibleEntity)
 
     @classmethod
-    def _getShotResult(cls, hitPoint, collision, direction, multiplier, player):
+    def _getShotResult(cls, position, collision, direction, multiplier, player):
         if player is None or collision is None:
             return cls.UNDEFINED_RESULT
         entity = collision.entity
         if not isinstance(entity, cls.ENTITY_TYPES) or not entity.isAlive() or entity.publicInfo['team'] == player.team:
             return cls.UNDEFINED_RESULT
-        return cls._result(hitPoint, collision, direction, multiplier, player)
+        return cls._result(position, collision, direction, multiplier, player)
 
     @classmethod
-    def _result(cls, hitPoint, collision, direction, multiplier, player):
-        c_details = cls._getAllCollisionDetails(hitPoint, direction, collision.entity)
+    def _result(cls, position, collision, direction, multiplier, player):
+        c_details = cls._getAllCollisionDetails(position, direction, collision.entity)
         if c_details is None:
             return cls.UNDEFINED_RESULT
         shot = player.getVehicleDescriptor().shot
-        distance = player.position.flatDistTo(hitPoint)
+        distance = player.position.flatDistTo(position)
         piercing_power = cls._computePiercingPowerAtDist(shot.piercingPower, distance, shot.maxDistance, multiplier)
         if cls._isModernMechanics(shot.shell):
             return cls._computeArmorModern(c_details, shot.shell, piercing_power)
@@ -64,7 +64,7 @@ class _ShotResult(_CrosshairShotResults):
 
     @classmethod
     def _computeArmorDefault(cls, c_details, shell, piercing_power):
-        computed_armor = GLOBAL.ZERO
+        armor = GLOBAL.ZERO
         ricochet = False
         no_damage = True
         is_jet = False
@@ -82,7 +82,7 @@ class _ShotResult(_CrosshairShotResults):
                     piercing_power *= 1.0 - jetDist * jet_loss
             else:
                 ricochet = cls._shouldRicochet(shell, hitAngleCos, mat_info)
-            computed_armor += cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
+            armor += cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
@@ -91,12 +91,12 @@ class _ShotResult(_CrosshairShotResults):
                 jet_start_dist += detail.dist + mat_info.armor * cls._JET_FACTOR
             if mat_info.collideOnceOnly:
                 ignoredMaterials.add((detail.compName, mat_info.kind))
-        data = (computed_armor, max(piercing_power, 0), shell.caliber, ricochet, no_damage)
+        data = (armor, max(piercing_power, 0), shell.caliber, ricochet, no_damage)
         return cls._checkShotResult(data), data
 
     @classmethod
     def _computeArmorModern(cls, c_details, shell, piercing_power):
-        computed_armor = GLOBAL.ZERO
+        armor = GLOBAL.ZERO
         ignoredMaterials = set()
         no_damage = True
         for detail in c_details:
@@ -104,25 +104,25 @@ class _ShotResult(_CrosshairShotResults):
             if mat_info is None or (detail.compName, mat_info.kind) in ignoredMaterials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
-            computed_armor += cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
+            armor += cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
             if shell.type.shieldPenetration:
-                piercing_power -= computed_armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
+                piercing_power -= armor * MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
             if mat_info.collideOnceOnly:
                 ignoredMaterials.add((detail.compName, mat_info.kind))
-        data = (computed_armor, max(piercing_power, 0), shell.caliber, False, no_damage)
+        data = (armor, max(piercing_power, 0), shell.caliber, False, no_damage)
         return cls._checkShotResult(data), data
 
 
 class _ShotResultAll(_ShotResult):
 
     @classmethod
-    def _getShotResult(cls, hitPoint, collision, direction, multiplier, player):
+    def _getShotResult(cls, position, collision, direction, multiplier, player):
         if player is None or collision is None or not isinstance(collision.entity, cls.ENTITY_TYPES) or not collision.entity.isAlive():
             return cls.UNDEFINED_RESULT
-        return cls._result(hitPoint, collision, direction, multiplier, player)
+        return cls._result(position, collision, direction, multiplier, player)
 
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
@@ -132,8 +132,8 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         self.__player = getPlayer()
         self.__resolver = _ShotResultAll if user_settings.armor_calculator[ARMOR_CALC.ON_ALLY] else _ShotResult
 
-    def __updateColor(self, markerType, hitPoint, collision, direction):
-        shot_result, data = self.__resolver._getShotResult(hitPoint, collision, direction, self.__piercingMultiplier, self.__player)
+    def __updateColor(self, markerType, position, collision, direction):
+        shot_result, data = self.__resolver._getShotResult(position, collision, direction, self.__piercingMultiplier, self.__player)
         if shot_result in self.__colors:
             color = self.__colors[shot_result]
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):

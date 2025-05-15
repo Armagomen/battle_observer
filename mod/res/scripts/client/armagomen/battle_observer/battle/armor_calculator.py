@@ -68,12 +68,12 @@ class ArmorCalculator(ArmorCalcMeta):
             if data is None:
                 self.as_clearMessage()
             else:
-                armor, piercingPower, caliber, ricochet, noDamage = data
-                if ricochet or noDamage:
+                armor, piercing_power, caliber, ricochet, no_damage = data
+                if ricochet or no_damage:
                     self.as_armorCalcS(RICOCHET if ricochet else NO_DAMAGE)
                 else:
                     self.calcMacro[ARMOR_CALC.SHOW_COUNTED_ARMOR] = armor
-                    self.calcMacro[ARMOR_CALC.SHOW_PIERCING_POWER] = piercingPower
-                    self.calcMacro[ARMOR_CALC.SHOW_PIERCING_RESERVE] = piercingPower - armor
+                    self.calcMacro[ARMOR_CALC.SHOW_PIERCING_POWER] = piercing_power
+                    self.calcMacro[ARMOR_CALC.SHOW_PIERCING_RESERVE] = piercing_power - armor
                     self.calcMacro[ARMOR_CALC.SHOW_CALIBER] = caliber
                     self.as_armorCalcS(self.pattern % self.calcMacro)

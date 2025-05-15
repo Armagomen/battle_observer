@@ -4,9 +4,9 @@
   "enabled": false, 
   "icon_size": 70,
   "lampShowTime": 10, 
-  "playTickSound": true, 
+  "playTickSound": false, 
   "show_timer": false, 
-  "show_timer_graphics": true, 
+  "show_timer_graphics": false, 
   "show_timer_graphics_color": "#FE5301", 
   "show_timer_graphics_radius": 35, 
   "user_icon": "mods/configs/mod_battle_observer/__icon__path__200x200.png"
