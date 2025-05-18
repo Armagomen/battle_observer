@@ -98,7 +98,6 @@ class WGRAndIcons(WGRAndIconsMeta):
 
 
 class StatisticsDataLoader(object):
-    URL = "https://api.worldoftanks.{}/wot/account/info/?".format(STATISTICS_REGION)
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
     STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"
@@ -149,7 +148,7 @@ class StatisticsDataLoader(object):
         if self.__getDataCallback is not None:
             cancelCallback(self.__getDataCallback)
             self.__getDataCallback = None
-        url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=API_KEY, url=self.URL, fields=self.FIELDS)
+        url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=API_KEY, url=STATISTICS_REGION, fields=self.FIELDS)
         fetchURL(url, self.onDataResponse)
 
     def getStatisticsDataFromServer(self):

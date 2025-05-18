@@ -36,24 +36,20 @@ gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 aih_constants.GUN_MARKER_MIN_SIZE /= 2
 aih_constants.SPG_GUN_MARKER_MIN_SIZE /= 2
 
-REPLACE = {CLIENT, DUAL_ACC}
+REPLACE = (CLIENT, DUAL_ACC)
 
 
 def getSetting(gunMakerType):
-    replace = user_settings.dispersion_circle[DISPERSION.REPLACE]
-    if gunMakerType == SERVER:
-        return user_settings.dispersion_circle[DISPERSION.SERVER] or replace
-    elif gunMakerType in REPLACE:
-        return replace
-    return False
+    _replace = user_settings.dispersion_circle[DISPERSION.REPLACE]
+    _server = user_settings.dispersion_circle[DISPERSION.SERVER]
+    return _replace or _server if gunMakerType == SERVER else _replace if gunMakerType in REPLACE else False
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
 
     def __init__(self, gunMakerType, dataProvider, **kwargs):
         super(_DefaultGunMarkerController, self).__init__(gunMakerType, dataProvider, **kwargs)
-        self.__scaleConfig = float(user_settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(
-            gunMakerType) else 1.0
+        self.__scaleConfig = float(user_settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(gunMakerType) else 1.0
 
     def __updateScreenRatio(self):
         super(_DefaultGunMarkerController, self).__updateScreenRatio()
@@ -73,8 +69,7 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
     def __init__(self, gunMakerType, dataProvider, **kwargs):
         super(SPGController, self).__init__(gunMakerType, dataProvider, **kwargs)
-        self.__scaleConfig = float(user_settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(
-            gunMakerType) else 1.0
+        self.__scaleConfig = float(user_settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(gunMakerType) else 1.0
 
     def _updateDispersionData(self):
         self._size *= self.__scaleConfig
@@ -172,7 +167,7 @@ class DispersionCircle(object):
                     overrideMethod(gun_marker_ctrl, "createDefaultGunMarker")(self.createDefaultGunMarker)
                     overrideMethod(gun_marker_ctrl, "createStrategicGunMarker")(self.createStrategicGunMarker)
                     overrideMethod(gun_marker_ctrl, "createAssaultSpgGunMarker")(self.createStrategicGunMarker)
-            elif not replace and not server and self.enabled:
+            elif self.enabled and not replace and not server:
                 self.enabled = False
                 if IS_WG_CLIENT:
                     cancelOverride(gun_marker_ctrl, "createGunMarker", "createGunMarker_WG")

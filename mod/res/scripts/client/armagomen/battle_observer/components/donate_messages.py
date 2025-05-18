@@ -42,8 +42,7 @@ LINKS_FORMAT = {
 }
 
 CLAN_ID = 500223690
-API_URL = "https://api.worldoftanks.eu/wot/clans/info/?application_id={}&clan_id={}&fields=members_count".format(
-    API_KEY, CLAN_ID)
+API_URL = "https://api.worldoftanks.eu/wot/clans/info/?application_id={}&clan_id={}&fields=members_count".format(API_KEY, CLAN_ID)
 
 
 class Donate(object):

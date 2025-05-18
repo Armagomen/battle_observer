@@ -1,5 +1,5 @@
 from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_WG_CLIENT, MAIN,
-                                  MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STATISTICS_REGION, URLS)
+                                  MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
 from armagomen.utils.logging import logInfo, logWarning
@@ -13,14 +13,10 @@ LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME}
 
 if IS_WG_CLIENT:
     IGNORED_SIXTH_SENSE = set()
-    IGNORED_STATS = set()
     IGNORED_MAIN = set()
 else:
     IGNORED_SIXTH_SENSE = {SIXTH_SENSE.SHOW_TIMER, SIXTH_SENSE.TIMER_GRAPHICS, SIXTH_SENSE.TIME, SIXTH_SENSE.PLAY_TICK_SOUND,
                            SIXTH_SENSE.TIMER_GRAPHICS_COLOR, SIXTH_SENSE.TIMER_GRAPHICS_RADIUS}
-    IGNORED_STATS = {STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH, STATISTICS.CHANGE_VEHICLE_COLOR,
-                     STATISTICS.STATISTIC_ENABLED, "statistics_colors*bad", "statistics_colors*normal", "statistics_colors*good",
-                     "statistics_colors*very_good", "statistics_colors*unique", "statistics_colors*very_bad"}
     IGNORED_MAIN = {MAIN.AUTO_CLAIM_CLAN_REWARD, MAIN.HIDE_PRESTIGE_PROFILE_WIDGET,
                     MAIN.HIDE_PRESTIGE_HANGAR_WIDGET, MAIN.HIDE_PRESTIGE_BATTLE_WIDGET, MAIN.CREW_TRAINING}
 
@@ -379,8 +375,6 @@ class SettingsInterface(CreateElement):
     def items(self, blockID, settings_block):
         for key, value in self.keyValueGetter(settings_block):
             if blockID == SIXTH_SENSE.NAME and key in IGNORED_SIXTH_SENSE:
-                continue
-            elif blockID == STATISTICS.NAME and STATISTICS_REGION is None and key in IGNORED_STATS:
                 continue
             elif blockID == MAIN.NAME and key in IGNORED_MAIN:
                 continue

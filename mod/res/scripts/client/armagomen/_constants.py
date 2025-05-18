@@ -40,9 +40,10 @@ URLS = namedtuple("URLS", (
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")
-REGIONS = {"EU": "eu", "ASIA": "asia", "NA": "com"}
+REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/info/?", "ASIA": "https://api.worldoftanks.asia/wot/account/info/?",
+           "NA": "https://api.worldoftanks.com/wot/account/info/?", "RU": "https://api.tanki.su/wot/account/info/?"}
 STATISTICS_REGION = REGIONS.get(AUTH_REALM)
-API_KEY = "5500d1b937426e47e2b039e4a11990be"
+API_KEY = "5500d1b937426e47e2b039e4a11990be" if IS_WG_CLIENT else "53352ebb7cd87e994157d0d1e9f360b1"
 
 VEHICLE_TYPES_COLORS = namedtuple("VEHICLE_TYPES_COLORS", ("NAME", "UNKNOWN"))("vehicle_types_colors", "unknown")
 
@@ -128,7 +129,7 @@ MINIMAP = namedtuple("MINIMAP", (
     "yaw_limits", "zoom_hotkey")
 
 HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "ALIVE", "STYLES"))("hp_bars", "style", "showAliveCount",
-    namedtuple("HpStyles", ("normal", "league"))("normal", "league"))
+                                                                      namedtuple("HpStyles", ("normal", "league"))("normal", "league"))
 
 CLOCK = namedtuple("CLOCK", (
     "NAME", "IN_BATTLE", "IN_LOBBY", "FORMAT", "UPDATE_INTERVAL", "DEFAULT_FORMAT_BATTLE", "DEFAULT_FORMAT_HANGAR"))(
@@ -211,9 +212,9 @@ if IS_WG_CLIENT:
 
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "SHOW_PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "SHOW_COUNTED_ARMOR",
-    "SHOW_PIERCING_RESERVE", "SHOW_CALIBER",  "ON_ALLY"))(
+    "SHOW_PIERCING_RESERVE", "SHOW_CALIBER", "ON_ALLY"))(
     "show_piercing_power", "armor_calculator", "position", "messages", "template", "color", "show_counted_armor",
-    "show_piercing_reserve", "show_caliber",  "display_on_allies")
+    "show_piercing_reserve", "show_caliber", "display_on_allies")
 
 FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TEMPLATE", "M_FLIGHT_TIME", "M_DISTANCE", "ALIGN"))(
     "flight_time", "spgOnly", "template", "flightTime", "distance", "align")
