@@ -130,6 +130,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
         self.__player = getPlayer()
+        self.__data = None
         self.__resolver = _ShotResultAll if user_settings.armor_calculator[ARMOR_CALC.ON_ALLY] else _ShotResult
 
     def __updateColor(self, markerType, position, collision, direction):
@@ -139,7 +140,9 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):
                 self.__cache[markerType] = shot_result
                 g_events.onMarkerColorChanged(color)
-            g_events.onArmorChanged(data)
+            if self.__data != data:
+                self.__data = data
+                g_events.onArmorChanged(data)
 
     def __setMapping(self, keys):
         super(ShotResultIndicatorPlugin, self).__setMapping(keys)

@@ -28,7 +28,6 @@ class ArmorCalculator(ArmorCalcMeta):
         self.calcMacro = dict()
         self.pattern = None
         self.colors = dict()
-        self.last_data = None
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
@@ -63,17 +62,17 @@ class ArmorCalculator(ArmorCalcMeta):
             self.as_clearMessage()
 
     def onArmorChanged(self, data):
-        if self.last_data != data:
-            self.last_data = data
-            if data is None:
-                self.as_clearMessage()
+        if data is None:
+            self.as_clearMessage()
+        else:
+            armor, piercing_power, caliber, ricochet, no_damage = data
+            if ricochet:
+                self.as_armorCalcS(RICOCHET)
+            elif no_damage:
+                self.as_armorCalcS(NO_DAMAGE)
             else:
-                armor, piercing_power, caliber, ricochet, no_damage = data
-                if ricochet or no_damage:
-                    self.as_armorCalcS(RICOCHET if ricochet else NO_DAMAGE)
-                else:
-                    self.calcMacro[ARMOR_CALC.SHOW_COUNTED_ARMOR] = armor
-                    self.calcMacro[ARMOR_CALC.SHOW_PIERCING_POWER] = piercing_power
-                    self.calcMacro[ARMOR_CALC.SHOW_PIERCING_RESERVE] = piercing_power - armor
-                    self.calcMacro[ARMOR_CALC.SHOW_CALIBER] = caliber
-                    self.as_armorCalcS(self.pattern % self.calcMacro)
+                self.calcMacro[ARMOR_CALC.SHOW_COUNTED_ARMOR] = armor
+                self.calcMacro[ARMOR_CALC.SHOW_PIERCING_POWER] = piercing_power
+                self.calcMacro[ARMOR_CALC.SHOW_PIERCING_RESERVE] = piercing_power - armor
+                self.calcMacro[ARMOR_CALC.SHOW_CALIBER] = caliber
+                self.as_armorCalcS(self.pattern % self.calcMacro)
