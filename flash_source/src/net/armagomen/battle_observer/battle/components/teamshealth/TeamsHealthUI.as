@@ -22,10 +22,10 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 				var correlation:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				this.updateCorrelationBar(correlation);
 				
-				setTimeout(this.updateCountersPosition, 500, correlation);
+				setTimeout(this.updateCountersPosition, 1000, correlation);
 				//this.updateCountersPosition(correlation);
 				
-				var styles:Object   = {"league": League, "default": Default};
+				var styles:Object   = {"league": League, "normal": Default};
 				var settings:Object = this.getSettings();
 				this.x = App.appWidth >> 1;
 				this.bar_style = this.addChild(new styles[settings.style](App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global));
