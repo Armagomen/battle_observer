@@ -1,4 +1,4 @@
-package net.armagomen.battle_observer.battle.components.debugpanel
+package net.armagomen.battle_observer.battle.components.debugpanel.lag
 
 {
 	import flash.display.Bitmap;
@@ -9,11 +9,11 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 	 */
 	public class LagIcons
 	{
-		[Embed(source = "ping_img/good.png")]
+		[Embed(source = "good.png")]
 		private var good:Class;
-		[Embed(source = "ping_img/bad.png")]
+		[Embed(source = "bad.png")]
 		private var bad:Class;
-		[Embed(source = "ping_img/bad_cb.png")]
+		[Embed(source = "bad_cb.png")]
 		private var bad_cb:Class;
 		
 		public var lag:Bitmap    = null;

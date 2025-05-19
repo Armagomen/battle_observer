@@ -42,10 +42,7 @@ def _onModSettingsChanged(config, blockID):
             for name, enabled in config[SERVICE_CHANNEL.KEYS].iteritems():
                 if enabled:
                     item = SYS_MESSAGE_TYPE.lookup(name)
-                    if item is not None:
-                        channel_filter.add(item.index())
-                    else:
-                        channel_filter.add(name)
+                    channel_filter.add(item.index() if item is not None else name)
 
 
 user_settings.onModSettingsChanged += _onModSettingsChanged

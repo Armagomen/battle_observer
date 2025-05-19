@@ -8,6 +8,9 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
 		private var bar_style:*;
+		private const LEAGUE_BIG:String = "league_big";
+		private const LEAGUE:String     = "league";
+		private const NORMAL:String     = "normal";
 		
 		public function TeamsHealthUI()
 		{
@@ -21,15 +24,15 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 				super.onPopulate();
 				var correlation:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				this.updateCorrelationBar(correlation);
-				
-				setTimeout(this.updateCountersPosition, 1000, correlation);
-				//this.updateCountersPosition(correlation);
-				
-				var styles:Object   = {"league": League, "normal": Default};
+				var styles:Object   = {LEAGUE: League, LEAGUE_BIG: LeagueBig, NORMAL: Default};
 				var settings:Object = this.getSettings();
 				this.x = App.appWidth >> 1;
 				this.bar_style = this.addChild(new styles[settings.style](App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global));
 				
+				if (settings.style != LEAGUE_BIG)
+				{
+					setTimeout(this.updateCountersPosition, 500, correlation);
+				}
 				var q_progress:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
 				this.battlePage.addChildAt(q_progress, this.battlePage.getChildIndex(correlation) - 1);
 			}
@@ -97,7 +100,10 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
-			this.updateCountersPosition(this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR));
+			if (this.getSettings().style != LEAGUE_BIG)
+			{
+				this.updateCountersPosition(this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR));
+			}
 		}
 	}
 }

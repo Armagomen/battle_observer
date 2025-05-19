@@ -23,6 +23,8 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         result = None
         items = (settingName,) if settingName is not None else (C_BAR.ENABLE_TIER_GROUPING, C_BAR.SHOW_HP_BAR)
         for key in items:
+            if self.settings[HP_BARS.STYLE] == HP_BARS.STYLES.league_big and key == C_BAR.ENABLE_TIER_GROUPING:
+                continue
             if self.settingsCore.getSetting(key):
                 result = self.settingsCore.applySetting(key, False)
         if result is not None:

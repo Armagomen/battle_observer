@@ -3,11 +3,13 @@ package net.armagomen.battle_observer.battle.components.maingun
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 	import flash.text.TextFieldAutoSize;
+	import flash.utils.setTimeout;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.Constants;
-	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.ProgressBar;
+	import net.armagomen.battle_observer.utils.TextExt;
 	
 	public class MainGunUI extends ObserverBattleDisplayable
 	{
@@ -69,6 +71,8 @@ package net.armagomen.battle_observer.battle.components.maingun
 				{
 					this.mainGun = new TextExt(28, 0, Constants.largeText, TextFieldAutoSize.LEFT, this);
 				}
+				
+				this.testBounds();
 			}
 			else
 			{
@@ -101,7 +105,7 @@ package net.armagomen.battle_observer.battle.components.maingun
 		
 		public function as_gunData(damage:int, gun_score:int, warning:Boolean):void
 		{
-			var value:int = gun_score - damage;
+			var value:int          = gun_score - damage;
 			var notAchived:Boolean = value > 0;
 			if (notAchived)
 			{
@@ -119,9 +123,20 @@ package net.armagomen.battle_observer.battle.components.maingun
 			this.setDoneVisible(!notAchived);
 		}
 		
+		private function testBounds():void
+		{
+			var team_health:ObserverBattleDisplayable = this.battlePage.getComponent("Observer_TeamsHP_UI");
+			if (team_health && this.hitTestObject(team_health))
+			{
+				var bounds:Rectangle = team_health.getBounds(App.stage);
+				this.x = bounds.x + bounds.width + 10;
+			}
+		}
+		
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = (App.appWidth >> 1) + this.getSettings().x;
+			setTimeout(this.testBounds, 1000);
 		}
 	}
 }

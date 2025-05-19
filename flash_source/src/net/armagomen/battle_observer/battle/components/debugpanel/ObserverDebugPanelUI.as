@@ -5,8 +5,10 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 	
 	public class ObserverDebugPanelUI extends ObserverBattleDisplayable
 	{
-		
 		private var debugPanel:*;
+		private const MINIMAL:String = "minimal";
+		private const MODERN:String  = "modern";
+		private const BIG_LAG:String = "big_lag";
 		
 		public function ObserverDebugPanelUI()
 		{
@@ -19,7 +21,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 			if (not_initialized)
 			{
 				super.onPopulate();
-				var styles:Object = {"minimal": Minimal, "modern": Modern, "big_lag": BigLag};
+				var styles:Object   = {MINIMAL: Minimal, MODERN: Modern, BIG_LAG: BigLag};
 				var settings:Object = this.getSettings();
 				this.debugPanel = this.addChild(new styles[settings.style](settings));
 				this.hideComponent(BATTLE_VIEW_ALIASES.DEBUG_PANEL);

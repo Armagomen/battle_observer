@@ -3,6 +3,7 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.text.TextFieldAutoSize;
+	import net.armagomen.battle_observer.battle.components.debugpanel.lag.LagIcons;
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.TextExt;
 	import net.armagomen.battle_observer.utils.Utils;

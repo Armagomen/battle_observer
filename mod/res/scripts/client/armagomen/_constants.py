@@ -64,8 +64,7 @@ class GLOBAL:
     ENABLED = "enabled"
     ZERO, ONE, TWO, LAST, F_ONE = (0, 1, 2, -1, 1.0)
     HEIGHT = "height"
-    IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'",
-                  "vspace": "vspace='-13'"}
+    IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'", "vspace": "vspace='-13'"}
     SCALE = "scale"
     SETTINGS = "settings"
     WIDTH = "width"
@@ -114,8 +113,8 @@ MINIMAP = namedtuple("MINIMAP", (
     "minimap", "permanentMinimapDeath", "showDeathNames", "zoom", "real_view_radius",
     "yaw_limits", "zoom_hotkey")
 
-HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "ALIVE", "STYLES"))("hp_bars", "style", "showAliveCount",
-                                                                      namedtuple("HpStyles", ("normal", "league"))("normal", "league"))
+HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "ALIVE", "STYLES"))(
+    "hp_bars", "style", "showAliveCount", namedtuple("HpStyles", ("normal", "league", "league_big"))("normal", "league", "league_big"))
 
 CLOCK = namedtuple("CLOCK", (
     "NAME", "IN_BATTLE", "IN_LOBBY", "FORMAT", "UPDATE_INTERVAL", "DEFAULT_FORMAT_BATTLE", "DEFAULT_FORMAT_HANGAR"))(
@@ -237,9 +236,9 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
 
 BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
-    "WGR_ICONS", "MAIN_GUN", "HP_BARS", "DAMAGE_LOG", "DAMAGE_LOG_EXT", "DEBUG", "TIMER", "TEAM_BASES", "ARMOR_CALC",
+    "WGR_ICONS", "HP_BARS", "MAIN_GUN", "DAMAGE_LOG", "DAMAGE_LOG_EXT", "DEBUG", "TIMER", "TEAM_BASES", "ARMOR_CALC",
     "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "PANELS", "SIXTH_SENSE", "MAP"))(
-    "Observer_WGRAndIcons_UI", "Observer_MainGun_UI", "Observer_TeamsHP_UI", "Observer_DamageLog_UI", "Observer_ExtendedDamageLogs_UI",
+    "Observer_WGRAndIcons_UI", "Observer_TeamsHP_UI", "Observer_MainGun_UI", "Observer_DamageLog_UI", "Observer_ExtendedDamageLogs_UI",
     "Observer_DebugPanel_UI", "Observer_BattleTimer_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI", "Observer_FlightTime_UI",
     "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI", "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI",
     "Observer_SixthSense_UI", "Observer_MiniMap_UI")
