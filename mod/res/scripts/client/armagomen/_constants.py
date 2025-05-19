@@ -56,35 +56,21 @@ class GLOBAL:
     ALIGN_LIST = namedtuple("ALIGN_LIST", ("left", "center", "right"))("left", "center", "right")
     ALPHA = "alpha"
     AVG_COLOR = "avgColor"
-    BLUR_X = "blurX"
-    BLUR_Y = "blurY"
     COLOR = "color"
     COMMA_SEP = ", "
     CONFIG_ERROR = "macros not found"
-    CUSTOM_COLOR = "customColor"
     C_INTERFACE_SPLITTER = "*"
     EMPTY_LINE = ""
     ENABLED = "enabled"
-    FIRST, LAST = (0, -1)
-    F_ONE = 1.0
-    GLOW_FILTER = "glowFilter"
+    ZERO, ONE, TWO, LAST, F_ONE = (0, 1, 2, -1, 1.0)
     HEIGHT = "height"
-    ICONS_DIR = "img://gui/maps/icons"
-    IMG = "img"
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'",
                   "vspace": "vspace='-13'"}
-    INNER = "inner"
-    KNOCKOUT = "knockout"
-    ONE, TWO = (1, 2)
-    OUTLINE = "outline"
     SCALE = "scale"
     SETTINGS = "settings"
-    SMOOTHING = "smoothing"
-    STRENGTH = "strength"
     WIDTH = "width"
     X = "x"
     Y = "y"
-    ZERO = FIRST
     NEW_LINE = "\n"
 
 

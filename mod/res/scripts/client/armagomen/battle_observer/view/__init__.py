@@ -11,7 +11,7 @@ from gui.shared import EVENT_BUS_SCOPE
 
 ATTRIBUTE_NAME = 'as_BattleObserverCreate'
 INFO_MSG = "loading view {}: alias={}"
-DEFAULT_INTERVAL = 0.2
+DEFAULT_INTERVAL = 0.1
 
 
 class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
@@ -62,8 +62,7 @@ class ViewHandlerLobby(PackageBusinessHandler):
 
     def __onViewLoaded(self, pyView, *args):
         alias = pyView.getAlias()
-        is_hangar = alias == VIEW_ALIAS.LOBBY_HANGAR
-        if is_hangar:
+        if alias == VIEW_ALIAS.LOBBY_HANGAR:
             logDebug(INFO_MSG, self.__class__.__name__, alias)
             if hasattr(pyView.flashObject, ATTRIBUTE_NAME):
                 addCallback(2.0 if xvmInstalled else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
