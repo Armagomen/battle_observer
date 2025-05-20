@@ -67,8 +67,11 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			this.bar_style.remove();
-			this.bar_style = null;
+			if (this.bar_style)
+			{
+				this.bar_style.remove();
+				this.bar_style = null;
+			}
 		}
 		
 		public function as_colorBlind(enabled:Boolean):void

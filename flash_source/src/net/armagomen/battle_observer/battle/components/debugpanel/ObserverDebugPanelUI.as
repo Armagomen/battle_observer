@@ -32,7 +32,6 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		override protected function onBeforeDispose():void
 		{
 			super.onBeforeDispose();
-			this.removeChildren();
 			this.debugPanel = null;
 		}
 		

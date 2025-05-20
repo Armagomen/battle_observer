@@ -2,7 +2,7 @@ from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPER
                                   MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
 from armagomen.utils.common import openWebBrowser, xvmInstalled
-from armagomen.utils.logging import logInfo, logWarning
+from armagomen.utils.logging import logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
@@ -298,7 +298,8 @@ class SettingsInterface(CreateElement):
                 template = self.getTemplate(blockID)
                 if template is not None:
                     self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: template)
-            except Exception:
+            except Exception as error:
+                logError(error.message)
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
@@ -332,7 +333,8 @@ class SettingsInterface(CreateElement):
                     value = value.strip().split(',')
                     try:
                         value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]
-                    except Exception:
+                    except Exception as error:
+                        logError(error.message)
                         value = SNIPER.DEFAULT_STEPS
                 if type(value) == int and type(updated_config_link[param_name]) == float:
                     value = float(value)
@@ -377,6 +379,7 @@ class SettingsInterface(CreateElement):
             if blockID == SIXTH_SENSE.NAME and key in IGNORED_SIXTH_SENSE:
                 continue
             elif blockID == MAIN.NAME and key in IGNORED_MAIN:
+                settings_block[key] = False
                 continue
             else:
                 item = self.createItem(blockID, key, value)

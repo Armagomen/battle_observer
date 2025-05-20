@@ -7,7 +7,14 @@ from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logInfo
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
-from gui.shared.gui_items.processors.tankman import TankmanReturn
+
+if IS_WG_CLIENT:
+    from gui.shared.gui_items.processors.tankman import TankmanAutoReturn
+    from gui.shared.gui_items.processors.vehicle import VehicleAutoReturnProcessor
+else:
+    from gui.shared.gui_items.processors.tankman import TankmanReturn
+
+from gui.shared.notifications import NotificationPriorityLevel
 from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
 from helpers import dependency
@@ -29,6 +36,7 @@ class CrewProcessor(object):
                 update_vehicles = True
         if update_vehicles:
             updateIgnoredVehicles(self.ignored_vehicles)
+        g_events.onVehicleChangedDelayed += self.onVehicleChanged
         logDebug("accelerateCrewXp ignored vehicles: {}", self.ignored_vehicles)
 
     @staticmethod
@@ -73,13 +81,6 @@ class CrewProcessor(object):
         else:
             return False, CREW_XP.NED_TURN_OFF
 
-    def accelerateCrewTraining(self, vehicle):
-        if vehicle.intCD in self.ignored_vehicles or not vehicle.isElite:
-            return
-        acceleration, description = self.isAccelerateTraining(vehicle)
-        if vehicle.isXPToTman != acceleration:
-            self.showAccelerateDialog(vehicle, acceleration, description)
-
     def isCrewAvailable(self, vehicle):
         lastCrewIDs = vehicle.lastCrew
         if lastCrewIDs is None:
@@ -92,27 +93,49 @@ class CrewProcessor(object):
                     return False
         return True
 
-    def updateCrew(self, vehicle):
-        if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
+    def onVehicleChanged(self, vehicle):
+        if not vehicle or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked or vehicle.isAwaitingBattle or vehicle.isInPrebattle:
             return
-        if user_settings.main[MAIN.CREW_RETURN] and self.intCD != vehicle.intCD:
-            if not getattr(vehicle, "isAutoReturn", False) and not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
-                self._processReturnCrew(vehicle)
+        if user_settings.main[MAIN.CREW_RETURN]:
+            self.updateAutoReturn(vehicle)
+        if IS_WG_CLIENT and user_settings.main[MAIN.CREW_TRAINING]:
+            self.updateAcceleration(vehicle)
+
+    def updateAutoReturn(self, vehicle):
+        if self.intCD != vehicle.intCD:
+            if IS_WG_CLIENT:
+                self.__autoReturnToggleSwitch(vehicle)
+            else:
+                self.__processReturnCrew(vehicle)
             self.intCD = vehicle.intCD
-        if IS_WG_CLIENT and user_settings.main[MAIN.CREW_TRAINING] and not self.isDialogVisible:
-            self.accelerateCrewTraining(vehicle)
+
+    def updateAcceleration(self, vehicle):
+        if not self.isDialogVisible:
+            if vehicle.intCD in self.ignored_vehicles or not vehicle.isElite:
+                return
+            acceleration, description = self.isAccelerateTraining(vehicle)
+            if vehicle.isXPToTman != acceleration:
+                self.showAccelerateDialog(vehicle, acceleration, description)
+
+    @decorators.adisp_process('updating')
+    def __autoReturnToggleSwitch(self, vehicle):
+        if not vehicle.isAutoReturn:
+            result = yield VehicleAutoReturnProcessor(vehicle, True).request()
+            if result.success:
+                result = yield TankmanAutoReturn(vehicle).request()
+            if not result.success and result.userMsg:
+                SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType, priority=NotificationPriorityLevel.MEDIUM)
 
     @decorators.adisp_process('crewReturning')
-    def _processReturnCrew(self, vehicle):
-        result = yield TankmanReturn(vehicle).request()
-        if result.userMsg:
-            SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType)
-            logInfo("{}: {}", vehicle.name, result.userMsg)
+    def __processReturnCrew(self, vehicle):
+        if not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
+            result = yield TankmanReturn(vehicle).request()
+            if result.userMsg:
+                SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType, priority=NotificationPriorityLevel.MEDIUM)
 
 
 crew = CrewProcessor()
-g_events.onVehicleChangedDelayed += crew.updateCrew
 
 
 def fini():
-    g_events.onVehicleChangedDelayed -= crew.updateCrew
+    g_events.onVehicleChangedDelayed -= crew.onVehicleChanged
