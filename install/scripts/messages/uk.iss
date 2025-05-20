@@ -56,6 +56,7 @@ uk.clock_battle=Годинник у бою
 uk.hp_bars=Панель міцності команд
 uk.alive_count=Змінити рахунок на кількість живих
 uk.hp_league=Стиль WG League 2018
+uk.hp_league_big=Стиль WG League BIG
 uk.hp_normal=Стиль Classic
 
 //debug_panel

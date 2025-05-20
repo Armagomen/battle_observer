@@ -56,6 +56,7 @@ en.clock_battle=Clock in battle
 en.hp_bars=Command strength bar
 en.alive_count=Change the count to the number of living
 en.hp_league=HP League Style 2018
+en.hp_league_big=HP League Style BIG
 en.hp_normal=Classic style
 
 //debug_panel

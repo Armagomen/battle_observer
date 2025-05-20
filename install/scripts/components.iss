@@ -42,7 +42,8 @@ Name: clock/battle; Description: {cm:clock_battle}; Types: armagomen;
 Name: hp_bars; Description: {cm:hp_bars}; Flags: disablenouninstallwarning;
 Name: hp_bars/alive_count; Description: {cm:alive_count}; Flags: dontinheritcheck;
 Name: hp_bars/normal; Description: {cm:hp_normal}; Flags: exclusive;
-Name: hp_bars/league; Description: {cm:hp_league}; Flags: exclusive; Types: armagomen saxon_ua;
+Name: hp_bars/league; Description: {cm:hp_league}; Flags: exclusive; Types: armagomen;
+Name: hp_bars/league_big; Description: {cm:hp_league_big}; Flags: exclusive;
 
 Name: debug_panel; Description: {cm:debug_panel}; Flags: disablenouninstallwarning;  
 Name: debug_panel/minimal; Description: minimal; Flags: exclusive;
@@ -231,6 +232,7 @@ begin
     JSON_SetBool(Handle,'/showAliveCount', WizardIsComponentSelected('hp_bars/alive_count'));
     if WizardIsComponentSelected('hp_bars/normal') then JSON_SetString(Handle,'/style', 'normal');
     if WizardIsComponentSelected('hp_bars/league') then JSON_SetString(Handle,'/style', 'league');
+    if WizardIsComponentSelected('hp_bars/league_big') then JSON_SetString(Handle,'/style', 'league_big');
     JSON_Close(Handle);
   end;
 end;
