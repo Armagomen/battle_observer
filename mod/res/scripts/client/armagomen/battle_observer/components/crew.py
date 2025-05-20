@@ -96,7 +96,7 @@ class CrewProcessor(object):
         if vehicle is None or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked:
             return
         if user_settings.main[MAIN.CREW_RETURN] and self.intCD != vehicle.intCD:
-            if not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
+            if not getattr(vehicle, "isAutoReturn", False) and not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
                 self._processReturnCrew(vehicle)
             self.intCD = vehicle.intCD
         if IS_WG_CLIENT and user_settings.main[MAIN.CREW_TRAINING] and not self.isDialogVisible:

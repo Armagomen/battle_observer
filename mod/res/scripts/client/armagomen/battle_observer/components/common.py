@@ -21,7 +21,7 @@ from messenger.gui.Scaleform.lobby_entry import LobbyEntry
 @overrideMethod(Hangar, "__updateAll")
 def changeVehicle(base, *args, **kwargs):
     base(*args, **kwargs)
-    addCallback(0.4, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
+    addCallback(0.2, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
 
 
 # disable field mail tips
