@@ -16,7 +16,6 @@
 		private var allyBar:Shape           = new Shape();
 		private var enemyBar:Shape          = new Shape();
 		private var background:Shape        = new Shape();
-		private var defCommads:Vector.<int> = new <int>[1, 2, 2, 2, 2];
 		private var colors:Object;
 		private var score:Score;
 		
