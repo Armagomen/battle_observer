@@ -15,7 +15,6 @@ package net.armagomen.battle_observer.utils
 		public static const ALPHA:Number            = 0.6;
 		public static const BG_ALPHA:Number         = 0.3;
 		public static const HUNDREDTH:Number        = 0.01;
-		//public static var isLeagueBig:Boolean       = false;
 		
 		public function Constants()
 		{

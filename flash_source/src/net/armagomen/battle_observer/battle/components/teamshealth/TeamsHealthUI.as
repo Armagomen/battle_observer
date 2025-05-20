@@ -9,8 +9,6 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 	{
 		private var bar_style:*;
 		private const LEAGUE_BIG:String = "league_big";
-		private const LEAGUE:String     = "league";
-		private const NORMAL:String     = "normal";
 		
 		public function TeamsHealthUI()
 		{
@@ -24,12 +22,12 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 				super.onPopulate();
 				var correlation:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				this.updateCorrelationBar(correlation);
-				var styles:Object   = {LEAGUE: League, LEAGUE_BIG: LeagueBig, NORMAL: Default};
+				var styles:Object   = {"league": League, "league_big": LeagueBig, "normal": Default};
 				var settings:Object = this.getSettings();
 				this.x = App.appWidth >> 1;
 				this.bar_style = this.addChild(new styles[settings.style](App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global));
 				
-				if (settings.style != LEAGUE_BIG)
+				if (settings.style != "league_big")
 				{
 					setTimeout(this.updateCountersPosition, 500, correlation);
 				}
@@ -100,7 +98,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 		override public function onResizeHandle(event:Event):void
 		{
 			this.x = App.appWidth >> 1;
-			if (this.getSettings().style != LEAGUE_BIG)
+			if (this.getSettings().style != "league_big")
 			{
 				this.updateCountersPosition(this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR));
 			}
