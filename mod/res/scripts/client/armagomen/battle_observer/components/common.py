@@ -9,7 +9,7 @@ from gui.battle_control.controllers import msgs_ctrl
 from gui.battle_control.controllers.team_bases_ctrl import BattleTeamsBasesController
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
-from gui.Scaleform.daapi.view.battle.shared.hint_panel import plugins as hint_plugins
+from gui.Scaleform.daapi.view.battle.shared.hint_panel import BattleHintPanel
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.entry_points.event_entry_points_container import EventEntryPointsContainer
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
@@ -42,12 +42,10 @@ def hasDogTag(base, *args, **kwargs):
 
 
 # disable battle hints
-@overrideMethod(hint_plugins, "createPlugins")
-def createPlugins(base, *args, **kwargs):
-    result = base(*args, **kwargs)
-    if user_settings.main[MAIN.HIDE_HINT]:
-        result.clear()
-    return result
+@overrideMethod(BattleHintPanel, "_initPlugins")
+def _initPlugins(base, *args, **kwargs):
+    if not user_settings.main[MAIN.HIDE_HINT]:
+        base(*args, **kwargs)
 
 
 # hide shared chat button
