@@ -2,6 +2,7 @@ from armagomen._constants import BATTLE_ALIASES, CLOCK, FLIGHT_TIME, GLOBAL, IS_
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import xvmInstalled
 from armagomen.utils.logging import logDebug, logInfo
+from constants import ARENA_GUI_TYPE
 
 if IS_WG_CLIENT:
     from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates
@@ -43,8 +44,13 @@ class ViewSettings(object):
     def isRandomBattle(self):
         return self.gui.isRandomBattle() or self.gui.isMapbox()
 
+    def isLastStand(self):
+        if hasattr(ARENA_GUI_TYPE, "LAST_STAND"):
+            return self.gui.guiType == getattr(ARENA_GUI_TYPE, "LAST_STAND")
+        return False
+
     def isStatisticsModuleEnabled(self):
-        if self.gui.isEpicRandomBattle() or self.gui.isInEpicRange():
+        if self.gui.isEpicRandomBattle() or self.gui.isInEpicRange() or self.isLastStand():
             return False
         return user_settings.statistics[GLOBAL.ENABLED]
 
@@ -55,7 +61,7 @@ class ViewSettings(object):
         return xvmInstalled
 
     def isMinimapEnabled(self):
-        if self.xvmInstalled("Minimap") or self.gui.isEpicBattle():
+        if self.xvmInstalled("Minimap") or self.gui.isEpicBattle() or self.isLastStand():
             return False
         return user_settings.minimap[GLOBAL.ENABLED] and user_settings.minimap[MINIMAP.ZOOM]
 
@@ -70,7 +76,7 @@ class ViewSettings(object):
         return self.isStatisticsModuleEnabled() and user_settings.statistics[STATISTICS.ICON_ENABLED]
 
     def isPlayersPanelsEnabled(self):
-        if self.xvmInstalled("PlayersPanels") or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle():
+        if self.xvmInstalled("PlayersPanels") or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle() or self.isLastStand():
             return False
         return user_settings.players_panels[GLOBAL.ENABLED]
 
@@ -86,7 +92,7 @@ class ViewSettings(object):
         return user_settings.distance_to_enemy[GLOBAL.ENABLED]
 
     def getSetting(self, alias):
-        if alias is BATTLE_ALIASES.HP_BARS and not self.gui.isInEpicRange():
+        if alias is BATTLE_ALIASES.HP_BARS and not self.gui.isInEpicRange() and not self.isLastStand():
             return user_settings.hp_bars[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.DAMAGE_LOG:
             return user_settings.log_total[GLOBAL.ENABLED]
@@ -100,7 +106,7 @@ class ViewSettings(object):
             return user_settings.battle_timer[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.SIXTH_SENSE:
             return user_settings.sixth_sense[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.TEAM_BASES and not self.gui.isInEpicRange():
+        elif alias is BATTLE_ALIASES.TEAM_BASES and not self.gui.isInEpicRange() and not self.isLastStand():
             return user_settings.team_bases_panel[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.ARMOR_CALC:
             return user_settings.armor_calculator[GLOBAL.ENABLED]

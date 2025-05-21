@@ -1,4 +1,4 @@
-from armagomen._constants import BATTLE_PAGES, BATTLES_RANGE, LOBBY_ALIASES
+from armagomen._constants import BATTLES_RANGE, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback, xvmInstalled
@@ -17,7 +17,7 @@ DEFAULT_INTERVAL = 0.1
 class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def __init__(self):
-        listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES)
+        listeners = tuple((alias, self.eventListener) for alias in VIEW_ALIAS.BATTLE_PAGES)
         super(ViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def init(self):

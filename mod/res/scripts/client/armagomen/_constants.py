@@ -2,7 +2,6 @@ from collections import namedtuple
 
 from aih_constants import CTRL_MODE_NAME
 from constants import ARENA_GUI_TYPE, AUTH_REALM
-from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
@@ -410,15 +409,7 @@ __battle_types = (
     "UNKNOWN",
     "FUN_RANDOM",
     "TOURNAMENT_COMP7",
-)
-
-__pages_types = (
-    "CLASSIC_BATTLE_PAGE",
-    "EPIC_BATTLE_PAGE",
-    "EPIC_RANDOM_PAGE",
-    "RANKED_BATTLE_PAGE",
-    "STRONGHOLD_BATTLE_PAGE",
-    "COMP7_BATTLE_PAGE",
+    "LAST_STAND"
 )
 
 
@@ -427,4 +418,3 @@ def create_range(obj, names):
 
 
 BATTLES_RANGE = create_range(ARENA_GUI_TYPE, __battle_types)
-BATTLE_PAGES = create_range(VIEW_ALIAS, __pages_types)
