@@ -2,7 +2,7 @@ from armagomen._constants import BATTLES_RANGE, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback, xvmInstalled
-from armagomen.utils.logging import logDebug, logError, logInfo
+from armagomen.utils.logging import logDebug, logError
 from frameworks.wulf import WindowLayer
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -17,7 +17,6 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def __init__(self):
         listeners = tuple((alias, self.eventListener) for alias in set(VIEW_ALIAS.BATTLE_PAGES))
-        logInfo(VIEW_ALIAS.BATTLE_PAGES)
         super(ViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
 
     def init(self):
