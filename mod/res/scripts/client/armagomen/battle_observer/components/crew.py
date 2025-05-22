@@ -96,7 +96,7 @@ class CrewProcessor(object):
     def onVehicleChanged(self, vehicle):
         if not vehicle or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked or vehicle.isAwaitingBattle or vehicle.isInPrebattle:
             return
-        if user_settings.main[MAIN.CREW_RETURN]:
+        if user_settings.main[MAIN.CREW_RETURN] and vehicle.lastCrew:
             self.updateAutoReturn(vehicle)
         if IS_WG_CLIENT and user_settings.main[MAIN.CREW_TRAINING]:
             self.updateAcceleration(vehicle)
