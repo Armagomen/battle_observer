@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from armagomen._constants import BATTLE_ALIASES, CLOCK, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, STATISTICS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import xvmInstalled
@@ -9,7 +11,6 @@ if IS_WG_CLIENT:
 else:
     from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, _STATE_TO_UI, PageStates
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
-from gui.Scaleform.daapi.view.battle.shared.page import ComponentsConfig
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -22,8 +23,6 @@ ALIAS_TO_CTRL = {
     BATTLE_ALIASES.TEAM_BASES: BATTLE_CTRL_ID.TEAM_BASES,
     BATTLE_ALIASES.TIMER: BATTLE_CTRL_ID.ARENA_PERIOD
 }
-
-REGISTER_CHECK_ALIAS = set(ALIAS_TO_CTRL.keys())
 
 NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE_TIME, BATTLE_ALIASES.SIXTH_SENSE)
 
@@ -49,11 +48,6 @@ class ViewSettings(object):
             return self.gui.guiType == getattr(ARENA_GUI_TYPE, "LAST_STAND")
         return False
 
-    def isStatisticsModuleEnabled(self):
-        if self.gui.isEpicRandomBattle() or self.gui.isInEpicRange() or self.isLastStand():
-            return False
-        return user_settings.statistics[GLOBAL.ENABLED]
-
     @staticmethod
     def xvmInstalled(module):
         if xvmInstalled:
@@ -68,12 +62,12 @@ class ViewSettings(object):
     def isWGREnabled(self):
         if self.xvmInstalled("Statistics"):
             return False
-        return self.isStatisticsModuleEnabled() and user_settings.statistics[STATISTICS.STATISTIC_ENABLED]
+        return user_settings.statistics[GLOBAL.ENABLED] and user_settings.statistics[STATISTICS.STATISTIC_ENABLED]
 
     def isIconsEnabled(self):
         if self.xvmInstalled("Icons"):
             return False
-        return self.isStatisticsModuleEnabled() and user_settings.statistics[STATISTICS.ICON_ENABLED]
+        return user_settings.statistics[GLOBAL.ENABLED] and user_settings.statistics[STATISTICS.ICON_ENABLED]
 
     def isPlayersPanelsEnabled(self):
         if self.xvmInstalled("PlayersPanels") or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle() or self.isLastStand():
@@ -96,8 +90,8 @@ class ViewSettings(object):
             return user_settings.hp_bars[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.DAMAGE_LOG:
             return user_settings.log_total[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.DAMAGE_LOG_EXT:
-            return user_settings.log_extended[GLOBAL.ENABLED] and not self.gui.isEpicBattle()
+        elif alias is BATTLE_ALIASES.DAMAGE_LOG_EXT and not self.gui.isEpicBattle():
+            return user_settings.log_extended[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.MAIN_GUN and self.isRandomBattle():
             return user_settings.main_gun[GLOBAL.ENABLED]
         elif alias is BATTLE_ALIASES.DEBUG:
@@ -122,7 +116,7 @@ class ViewSettings(object):
             return self.isDistanceToEnemyEnabled()
         elif alias is BATTLE_ALIASES.OWN_HEALTH:
             return user_settings.own_health[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.WGR_ICONS:
+        elif alias is BATTLE_ALIASES.WGR_ICONS and not self.gui.isEpicRandomBattle() and not self.gui.isInEpicRange() and not self.isLastStand():
             return self.isWGREnabled() or self.isIconsEnabled()
         elif alias is BATTLE_ALIASES.MAP:
             return self.isMinimapEnabled()
@@ -161,11 +155,10 @@ class ViewSettings(object):
                     _NEVER_HIDE.add(alias)
 
     def _registerViewComponents(self):
-        components = REGISTER_CHECK_ALIAS.intersection(self._components)
+        components = set(ALIAS_TO_CTRL.keys()).intersection(self._components)
         if components:
-            config = ComponentsConfig()
+            grouped_aliases = defaultdict(list)
             for alias in components:
-                config += ComponentsConfig(config=((ALIAS_TO_CTRL[alias], (alias,)),))
-            config = config.getConfig()
-            self.sessionProvider.registerViewComponents(*config)
-            logDebug("viewSettings, _registerViewComponents: {}", config)
+                grouped_aliases[ALIAS_TO_CTRL[alias]].append(alias)
+            self.sessionProvider.registerViewComponents(*grouped_aliases.items())
+            logDebug("viewSettings, _registerViewComponents: {}", grouped_aliases)

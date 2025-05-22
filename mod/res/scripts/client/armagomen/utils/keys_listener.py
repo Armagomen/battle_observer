@@ -29,7 +29,7 @@ class KeysListener(object):
         g_playerEvents.onAvatarBecomeNonPlayer -= self.onAvatarBecomeNonPlayer
 
     def registerComponent(self, keyFunction, keyList=None):
-        self.components.add(KeysData(self.normalizeKey(keyList) if keyList else KEY_ALIAS_ALT, keyFunction))
+        self.components.add(KeysData(self.normalizeKey(keyList) if keyList else frozenset(KEY_ALIAS_ALT), keyFunction))
 
     def clear(self):
         self.components.clear()
@@ -45,39 +45,34 @@ class KeysListener(object):
         InputHandler.g_instance.onKeyUp -= self.onKeyUp
         self.clear()
 
-    def onKeyUp(self, event):
-        if event.key not in self.pressedKeys:
+    def handleKey(self, key, is_pressed):
+        if is_pressed and (key not in self.usableKeys or key in self.pressedKeys) or not is_pressed and key not in self.pressedKeys:
             return
         for component in self.components:
-            if event.key in component.keys:
-                component.keyFunction(False)
-        self.pressedKeys.discard(event.key)
+            if key in component.keys:
+                component.keyFunction(is_pressed)
+        if is_pressed:
+            self.pressedKeys.add(key)
+        else:
+            self.pressedKeys.discard(key)
+
+    def onKeyUp(self, event):
+        self.handleKey(event.key, False)
 
     def onKeyDown(self, event):
-        if event.key not in self.usableKeys or event.key in self.pressedKeys:
-            return
-        for component in self.components:
-            if event.key in component.keys:
-                component.keyFunction(True)
-        self.pressedKeys.add(event.key)
+        self.handleKey(event.key, True)
 
     def normalizeKey(self, keyList):
-        keys = set()
-        for key in keyList:
-            if isinstance(key, (list, set, tuple)):
-                keys.update(key)
-            else:
-                keys.add(key)
+        keys = {item for key in keyList for item in (key if isinstance(key, (list, set, tuple)) else [key])}
+
         if self.mainSettings[MAIN.USE_KEY_PAIRS]:
-            for key in tuple(keys):
-                if key in KEY_ALIAS_CONTROL:
-                    keys.update(KEY_ALIAS_CONTROL)
-                elif key in KEY_ALIAS_ALT:
-                    keys.update(KEY_ALIAS_ALT)
-                elif key in KEY_ALIAS_SHIFT:
-                    keys.update(KEY_ALIAS_SHIFT)
+            alias_sets = (KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT)
+            for alias_set in alias_sets:
+                if any(key in alias_set for key in keys):
+                    keys.update(alias_set)
+
         self.usableKeys.update(keys)
-        return tuple(keys)
+        return frozenset(keys)
 
 
 g_keysListener = KeysListener()

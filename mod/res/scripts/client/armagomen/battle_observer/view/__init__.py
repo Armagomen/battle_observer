@@ -11,7 +11,7 @@ from gui.shared import EVENT_BUS_SCOPE
 
 ATTRIBUTE_NAME = 'as_BattleObserverCreate'
 INFO_MSG = "loading view {}: alias={}"
-DEFAULT_INTERVAL = 0.1
+DEFAULT_INTERVAL = 0.2
 
 
 class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
