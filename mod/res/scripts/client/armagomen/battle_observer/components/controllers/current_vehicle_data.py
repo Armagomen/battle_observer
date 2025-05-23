@@ -11,6 +11,7 @@ EfficiencyAVGData = namedtuple("EfficiencyAVGData", PARAMS)
 
 
 class CurrentVehicleCachedData(object):
+    __slots__ = ("__EfficiencyAVGData", "__default")
     itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
@@ -24,11 +25,6 @@ class CurrentVehicleCachedData(object):
         else:
             self.__EfficiencyAVGData = None
 
-    @staticmethod
-    def getWinsEfficiency(random):
-        win_rate = random.getWinsEfficiency()
-        return round(win_rate * 100, 2) if win_rate is not None else 0.0
-
     def setAvgData(self, intCD, name, level):
         dossier = self.itemsCache.items.getVehicleDossier(intCD)
         random = dossier.getRandomStats()
@@ -41,7 +37,9 @@ class CurrentVehicleCachedData(object):
             int(blocked) if blocked > 99 else round(blocked, 2),
             round(marks.getDamageRating(), 2),
             "<img src='img://gui/{}' width='20' height='18' vspace='-8'>".format(marks.getIcons()[marks.IT_95X85][3:]),
-            name, level > 4, self.getWinsEfficiency(random),
+            name,
+            level > 4,
+            round((random.getWinsEfficiency() or 0.0) * 100, 2),
             int(random.getBattlesCount())
         )
 

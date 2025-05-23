@@ -111,11 +111,11 @@ class AutoClaimClanReward(object):
                     break
         else:
             last_purchased = int(data.last_purchased or 0)
-            to_purchased = last_purchased + 1 if last_purchased not in NEXT_DOUBLE else last_purchased + 2
+            to_purchased = last_purchased + (2 if last_purchased in NEXT_DOUBLE else 1)
         if not to_purchased:
             return
         next_points = self.__cachedSettingsData.points.get(str(to_purchased))
-        if next_points is not None and self.currency >= next_points.price:
+        if next_points and self.currency >= next_points.price:
             self.__claimProgression(to_purchased, next_points.price)
 
     def __onDataReceived(self, dataName, data):

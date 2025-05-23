@@ -9,14 +9,14 @@ from helpers import getClientLanguage
 language = getClientLanguage().lower()
 
 if language == "uk":
-    NO_DAMAGE = "Критичне влучання, без шкоди."
-    RICOCHET = "Рикошет."
+    NO_DAMAGE = "Крит без шкоди"
+    RICOCHET = "Рикошет"
 elif language in ("ru", "be"):
-    NO_DAMAGE = "Критическое попадание, без урона."
-    RICOCHET = "Рикошет."
+    NO_DAMAGE = "Крит без урона"
+    RICOCHET = "Рикошет"
 else:
-    NO_DAMAGE = "Critical hit, no damage."
-    RICOCHET = "Ricochet."
+    NO_DAMAGE = "Non-damaging crit"
+    RICOCHET = "Ricochet"
 
 SETTING_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE, ARMOR_CALC.SHOW_CALIBER)
 
@@ -25,7 +25,6 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def __init__(self):
         super(ArmorCalculator, self).__init__()
-        self.calcMacro = dict()
         self.pattern = None
         self.colors = dict()
 
@@ -39,7 +38,7 @@ class ArmorCalculator(ArmorCalcMeta):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
-        self.pattern = " | ".join(["%({})d".format(key) for key in SETTING_PARAMS if self.settings[key]])
+        self.pattern = " | ".join("{%d:d}" % i for i, key in enumerate(SETTING_PARAMS) if self.settings[key])
         for name, code in self.getColors()[ARMOR_CALC.NAME].iteritems():
             self.colors[name] = int(code[1:], 16)
 
@@ -70,9 +69,5 @@ class ArmorCalculator(ArmorCalcMeta):
                 self.as_armorCalcS(RICOCHET)
             elif no_damage:
                 self.as_armorCalcS(NO_DAMAGE)
-            else:
-                self.calcMacro[ARMOR_CALC.SHOW_COUNTED_ARMOR] = armor
-                self.calcMacro[ARMOR_CALC.SHOW_PIERCING_POWER] = piercing_power
-                self.calcMacro[ARMOR_CALC.SHOW_PIERCING_RESERVE] = piercing_power - armor
-                self.calcMacro[ARMOR_CALC.SHOW_CALIBER] = caliber
-                self.as_armorCalcS(self.pattern % self.calcMacro)
+            elif self.pattern:
+                self.as_armorCalcS(self.pattern.format(armor, piercing_power, piercing_power - armor, caliber))

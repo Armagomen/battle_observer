@@ -226,13 +226,11 @@ def overrideMethod(wg_class, method_name="__init__"):
     method_name: Unicode, default __init__
     """
     class_name = wg_class.__name__
-    if not hasattr(wg_class, method_name):
-        if method_name.startswith("__") and method_name != "__init__":
-            full_name = "_{0}{1}".format(class_name, method_name)
-            if hasattr(wg_class, full_name):
-                method_name = full_name
-            elif hasattr(wg_class, method_name[1:]):
-                method_name = method_name[1:]
+    if not hasattr(wg_class, method_name) and method_name.startswith("__") and method_name != "__init__":
+        method_name = next(
+            (name for name in ["_{}{}".format(class_name, method_name), method_name[1:]] if hasattr(wg_class, name)),
+            method_name
+        )
 
     def outer(new_method):
         full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, new_method.__name__)

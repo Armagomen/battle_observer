@@ -25,11 +25,8 @@ class PremiumTime(object):
         overrideMethod(LobbyHeader, "_removeListeners")(self._removeListeners)
 
     def _getPremiumLabelText(self, timeDelta):
-        delta = float(getTimeDeltaFromNow(makeLocalServerTime(timeDelta)))
-        if delta > ONE_DAY:
-            template = TEMPLATES.DAYS
-        else:
-            template = TEMPLATES.HOURS
+        delta = int(getTimeDeltaFromNow(makeLocalServerTime(timeDelta)))
+        template = TEMPLATES.DAYS if delta > ONE_DAY else TEMPLATES.HOURS
         self.macros["days"], delta = divmod(delta, ONE_DAY)
         self.macros["hours"], delta = divmod(delta, ONE_HOUR)
         self.macros["min"], self.macros["sec"] = divmod(delta, ONE_MINUTE)

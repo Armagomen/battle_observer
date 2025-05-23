@@ -1,4 +1,4 @@
-from armagomen._constants import BATTLES_RANGE, LOBBY_ALIASES
+from armagomen._constants import BATTLE_ALIASES, BATTLES_RANGE, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback, xvmInstalled
@@ -12,21 +12,27 @@ from gui.shared import EVENT_BUS_SCOPE
 ATTRIBUTE_NAME = 'as_BattleObserverCreate'
 INFO_MSG = "loading view {}: alias={}"
 DEFAULT_INTERVAL = 0.2
+DEF_IGNORED_PAGES = (VIEW_ALIAS.DEV_BATTLE_PAGE, VIEW_ALIAS.EVENT_BATTLE_PAGE, VIEW_ALIAS.MAPS_TRAINING_PAGE)
+
 
 class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
     def __init__(self):
-        listeners = tuple((alias, self.eventListener) for alias in set(VIEW_ALIAS.BATTLE_PAGES))
+        listeners = tuple((alias, self.eventListener) for alias in set(VIEW_ALIAS.BATTLE_PAGES).difference(DEF_IGNORED_PAGES))
         super(ViewHandlerBattle, self).__init__(listeners, APP_NAME_SPACE.SF_BATTLE, EVENT_BUS_SCOPE.BATTLE)
+        self.enable_controller = False
 
     def init(self):
         super(ViewHandlerBattle, self).init()
-        damage_controller.start()
         self._invalidateComponents()
+        self.enable_controller = bool({BATTLE_ALIASES.MAIN_GUN, BATTLE_ALIASES.PANELS}.intersection(self._components))
+        if self.enable_controller:
+            damage_controller.start()
 
     def fini(self):
         self._clear()
-        damage_controller.stop()
+        if self.enable_controller:
+            damage_controller.stop()
         super(ViewHandlerBattle, self).fini()
 
     def eventListener(self, event):
@@ -46,7 +52,6 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
 
 
 class ViewHandlerLobby(PackageBusinessHandler):
-    __slots__ = ('__subscribed', '_listeners', '_scope', '_app', '_appNS',)
 
     def __init__(self):
         self.__subscribed = False

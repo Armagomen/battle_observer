@@ -176,6 +176,20 @@ class Sniper(CameraSettings):
         self.settingsCore.applyStorages(False)
         self.settingsCore.clearStorages()
 
+    @staticmethod
+    def linear_interpolation(x, x_vals, y_vals):
+        if x <= x_vals[0]:
+            return y_vals[0]
+        if x >= x_vals[-1]:
+            x1, x2 = x_vals[-2], x_vals[-1]
+            y1, y2 = y_vals[-2], y_vals[-1]
+            return y2 + (y2 - y1) * ((x - x2) / float(x2 - x1))
+        for i in range(len(x_vals) - 1):
+            if x_vals[i] <= x <= x_vals[i + 1]:
+                x1, x2 = x_vals[i], x_vals[i + 1]
+                y1, y2 = y_vals[i], y_vals[i + 1]
+                return y1 + (y2 - y1) * ((x - x1) / float(x2 - x1))
+
     def update(self):
         self.after_shoot.updateSettings(self.config)
         self.enabled = self.config[GLOBAL.ENABLED]
@@ -203,10 +217,12 @@ class Sniper(CameraSettings):
                 self.reset = True
                 steps = self.config[SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
                 camera._cfg[SNIPER.INCREASED_ZOOM] = True
-                camera._cfg[self.ZOOMS] = steps
                 exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
-                while len(steps) > len(exposure):
-                    exposure.append(SNIPER.EXPOSURE_FACTOR)
+                zooms = camera._cfg[self.ZOOMS]
+                camera._cfg[self.ZOOMS] = steps
+                camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = [
+                    round(self.linear_interpolation(x, zooms, exposure), 2) for x in steps]
+                print camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE], steps
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
             self.min_max = MinMax(camera._cfg[self.ZOOMS][0], camera._cfg[self.ZOOMS][-1])

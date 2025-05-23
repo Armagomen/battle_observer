@@ -13,8 +13,11 @@ from skeletons.gui.app_loader import IAppLoader
 from skeletons.gui.battle_session import IBattleSessionProvider
 from Vehicle import Vehicle
 
-if getClientLanguage().lower() in ("uk", "be"):
+ln = getClientLanguage().lower()
+if ln == "uk":
     LOCKED_MESSAGE = 'Save Shot: Постріл у {} заблоковано'
+elif ln in ("ru", "be"):
+    LOCKED_MESSAGE = 'Save Shot: Выстрел в {} заблокирован'
 else:
     LOCKED_MESSAGE = 'Save Shot: Shot in {} blocked'
 
@@ -62,11 +65,9 @@ class SaveShootLite(object):
 
     @staticmethod
     def checkTarget(avatar):
-        if avatar._PlayerAvatar__autoAimVehID != 0:
-            return True
-        if avatar.target is not None and isinstance(avatar.target, Vehicle):
-            return avatar.target.isAlive() and avatar.target.publicInfo[VEHICLE.TEAM] != avatar.team
-        return True
+        return (avatar._PlayerAvatar__autoAimVehID != 0 or avatar.target is None or
+                isinstance(avatar.target, Vehicle) and avatar.target.isAlive() and avatar.target.publicInfo[VEHICLE.TEAM] != avatar.team
+                )
 
     def keyEvent(self, isKeyDown):
         self.unlock = isKeyDown

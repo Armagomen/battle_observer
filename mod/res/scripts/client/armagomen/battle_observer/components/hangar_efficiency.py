@@ -33,24 +33,18 @@ EFFICIENCY_ICONS = {
     "battlesIcon": "<img src='{}/efficiency/battles.png' {}>".format(IMAGE_DIR, EFFICIENCY_ICONS_SIZE),
 }
 
-
 def getAvgData():
     data = cachedVehicleData.efficiencyAvgData
-    text = []
-    if _settings[AVG_EFFICIENCY_HANGAR.DAMAGE]:
-        text.append("{damageIcon}{tankAvgDamage}")
-    if _settings[AVG_EFFICIENCY_HANGAR.ASSIST]:
-        text.append("{assistIcon}{tankAvgAssist}")
-    if _settings[AVG_EFFICIENCY_HANGAR.BLOCKED]:
-        text.append("{blockedIcon}{tankAvgBlocked}")
-    if _settings[AVG_EFFICIENCY_HANGAR.STUN] and data.tankAvgStun:
-        text.append("{stunIcon}{tankAvgStun}")
-    if _settings[AVG_EFFICIENCY_HANGAR.BATTLES]:
-        text.append("{battlesIcon}{battles}")
-    if _settings[AVG_EFFICIENCY_HANGAR.WIN_RATE]:
-        text.append("{winRateIcon}{winRate}%")
-    if _settings[AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN] and data.marksAvailable:
-        text.append("{marksOnGunIcon}{marksOnGunValue}%")
+    settings_map = [
+        (AVG_EFFICIENCY_HANGAR.DAMAGE, "{damageIcon}{tankAvgDamage}"),
+        (AVG_EFFICIENCY_HANGAR.ASSIST, "{assistIcon}{tankAvgAssist}"),
+        (AVG_EFFICIENCY_HANGAR.BLOCKED, "{blockedIcon}{tankAvgBlocked}"),
+        (AVG_EFFICIENCY_HANGAR.STUN, "{stunIcon}{tankAvgStun}", data.tankAvgStun),
+        (AVG_EFFICIENCY_HANGAR.BATTLES, "{battlesIcon}{battles}"),
+        (AVG_EFFICIENCY_HANGAR.WIN_RATE, "{winRateIcon}{winRate}%"),
+        (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "{marksOnGunIcon}{marksOnGunValue}%", data.marksAvailable)
+    ]
+    text = [tpl[1] for tpl in settings_map if _settings.get(tpl[0]) and (len(tpl) == 2 or tpl[2])]
     if text:
         params = data._asdict()
         params.update(EFFICIENCY_ICONS)

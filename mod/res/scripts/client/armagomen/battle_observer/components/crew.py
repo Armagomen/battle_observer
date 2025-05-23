@@ -82,10 +82,7 @@ class CrewProcessor(object):
             return False, CREW_XP.NED_TURN_OFF
 
     def isCrewAvailable(self, vehicle):
-        lastCrewIDs = vehicle.lastCrew
-        if lastCrewIDs is None:
-            return False
-        for lastTankmenInvID in lastCrewIDs:
+        for lastTankmenInvID in vehicle.lastCrew:
             actualLastTankman = self.itemsCache.items.getTankman(lastTankmenInvID)
             if actualLastTankman is not None and actualLastTankman.isInTank:
                 lastTankmanVehicle = self.itemsCache.items.getVehicle(actualLastTankman.vehicleInvID)
