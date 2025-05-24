@@ -221,7 +221,6 @@ class SettingsInterface(CreateElement):
     def __init__(self, settingsLoader, version, g_modsListApi, vxSettingsApi, vxSettingsApiEvents):
         self.modsListApi, self.vxSettingsApi, self.apiEvents = g_modsListApi, vxSettingsApi, vxSettingsApiEvents
         super(SettingsInterface, self).__init__(settingsLoader)
-        # self.loader = settingsLoader
         self.inited = set()
         self.currentConfigID = self.newConfigID = settingsLoader.configsList.index(settingsLoader.configName)
         self.newConfigLoadingInProcess = False

@@ -9,7 +9,7 @@ from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from cgf_components.attack_artillery_fort_components import ISettingsCore
 from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosition
 from helpers import dependency
-from math_utils import clamp, math
+from math_utils import clamp
 from PlayerEvents import g_playerEvents
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from TriggersManager import ITriggerListener, TRIGGER_TYPE
@@ -197,10 +197,8 @@ class Sniper(CameraSettings):
         self._steps_only = self.config[SNIPER.STEPS_ONLY] and self._dyn_zoom
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is not None:
-            if user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]:
-                camera.enableDynamicCamera(False)
-            else:
-                camera.enableDynamicCamera(self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA))
+            dynamic = user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]
+            camera.enableDynamicCamera(False if dynamic else self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA))
             if self._dyn_zoom:
                 overrideMethod(SniperCamera, "enable")(self.enableSniper)
                 zoom_level = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
@@ -222,21 +220,20 @@ class Sniper(CameraSettings):
                 camera._cfg[self.ZOOMS] = steps
                 camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = [
                     round(self.linear_interpolation(x, zooms, exposure), 2) for x in steps]
-                print camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE], steps
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
             self.min_max = MinMax(camera._cfg[self.ZOOMS][0], camera._cfg[self.ZOOMS][-1])
 
-    def getZoom(self, distance, steps):
-        zoom = math.floor(distance / self.DEFAULT_X_METERS)
-        if self._steps_only:
-            zoom = min(steps, key=lambda value: abs(value - zoom))
-        return clamp(self.min_max.min, self.min_max.max, zoom)
-
     def enableSniper(self, base, camera, targetPos, saveZoom):
         ownPosition = getOwnVehiclePosition()
         distance = (targetPos - ownPosition).length if ownPosition is not None else GLOBAL.ZERO
-        camera._cfg[self.ZOOM] = self.getZoom(distance, camera._cfg[self.ZOOMS]) if distance < self.MAX_DIST else self.min_max.min
+        if distance >= self.MAX_DIST:
+            camera._cfg[self.ZOOM] = self.min_max.min
+        else:
+            zoom = round(distance / self.DEFAULT_X_METERS)
+            if self._steps_only:
+                zoom = min(camera._cfg[self.ZOOMS], key=lambda value: abs(value - zoom))
+            camera._cfg[self.ZOOM] = clamp(self.min_max.min, self.min_max.max, zoom)
         return base(camera, targetPos, True)
 
 

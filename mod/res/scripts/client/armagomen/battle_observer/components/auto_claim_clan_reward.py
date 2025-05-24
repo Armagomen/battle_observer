@@ -17,7 +17,7 @@ from skeletons.gui.shared.utils import IHangarSpace
 from skeletons.gui.web import IWebController
 
 REWARD_STATUS_OK = (QuestStatus.REWARD_AVAILABLE, QuestStatus.REWARD_PENDING)
-NEXT_DOUBLE = (3, 8, 13, 18)
+SKIP_LEVELS = (5, 10, 15, 20)
 
 
 class AutoClaimClanReward(object):
@@ -26,22 +26,26 @@ class AutoClaimClanReward(object):
     __hangarSpace = dependency.descriptor(IHangarSpace)
 
     def __init__(self):
-        user_settings.onModSettingsChanged += self.onSettingsChanged
         self.__hangarSpace.onSpaceCreate += self.onCreate
         self.__cachedProgressData = None
         self.__cachedQuestsData = None
         self.__cachedSettingsData = None
         self.__claim_started = False
         self.__enabled = user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD]
-        self.__maximum_level = "21"
 
     def onCreate(self):
         self.__hangarSpace.onSpaceCreate -= self.onCreate
-        if not g_clanCache.isInClan:
-            return
+        self.updateCache()
+
+    def subscribe(self):
+        user_settings.onModSettingsChanged += self.onSettingsChanged
         g_wgncEvents.onProxyDataItemShowByDefault += self.__onProxyDataItemShow
         g_clanCache.clanSupplyProvider.onDataReceived += self.__onDataReceived
-        self.updateCache()
+
+    def unsubscribe(self):
+        g_wgncEvents.onProxyDataItemShowByDefault -= self.__onProxyDataItemShow
+        g_clanCache.clanSupplyProvider.onDataReceived -= self.__onDataReceived
+        user_settings.onModSettingsChanged -= self.onSettingsChanged
 
     def updateCache(self):
         self.__cachedQuestsData = g_clanCache.clanSupplyProvider.getQuestsInfo().data
@@ -49,24 +53,23 @@ class AutoClaimClanReward(object):
         self.__cachedProgressData = g_clanCache.clanSupplyProvider.getProgressionProgress().data
 
     def onSettingsChanged(self, data, name):
-        if name == MAIN.NAME:
+        if name == MAIN.NAME and g_clanCache.isInClan:
             self.__enabled = data[MAIN.AUTO_CLAIM_CLAN_REWARD]
             if self.__enabled:
                 self.updateCache()
-                if all([self.__cachedQuestsData, self.__cachedProgressData, self.__cachedSettingsData]):
+                if self.__cachedQuestsData and self.__cachedProgressData and self.__cachedSettingsData:
                     self.parseQuests(self.__cachedQuestsData)
                     self.parseProgression(self.__cachedProgressData)
 
     def __onProxyDataItemShow(self, _, item):
-        if not self.__enabled:
-            return
-        if item.getType() == WGNC_DATA_PROXY_TYPE.CLAN_SUPPLY_QUEST_UPDATE:
-            status = item.getStatus()
-            if not self.__claim_started and status in REWARD_STATUS_OK:
-                self.__claimRewards()
-            elif status == QuestStatus.COMPLETE and all([self.__cachedProgressData, self.__cachedSettingsData]):
-                self.parseProgression(self.__cachedProgressData)
-            logDebug(item)
+        if self.__enabled and g_clanCache.isInClan:
+            if item.getType() == WGNC_DATA_PROXY_TYPE.CLAN_SUPPLY_QUEST_UPDATE:
+                status = item.getStatus()
+                if not self.__claim_started and status in REWARD_STATUS_OK:
+                    self.__claimRewards()
+                elif status == QuestStatus.COMPLETE and self.__cachedProgressData and self.__cachedSettingsData:
+                    self.parseProgression(self.__cachedProgressData)
+                logDebug("AutoClaimClanReward __onProxyDataItemShow: {}", item)
 
     @adisp_process
     def __claimRewards(self):
@@ -75,7 +78,7 @@ class AutoClaimClanReward(object):
         if not response.isSuccess():
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - " + backport.text(
                 R.strings.clan_supply.messages.claimRewards.error()), type=SystemMessages.SM_TYPE.Error)
-            logWarning('Failed to claim rewards. Code: {code}', code=response.getCode())
+            logWarning('AutoClaimClanReward Failed to claim rewards. Code: {code}', code=response.getCode())
         self.__claim_started = False
 
     @adisp_process
@@ -84,42 +87,35 @@ class AutoClaimClanReward(object):
         if not response.isSuccess():
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - Failed to claim Progression.",
                                        type=SystemMessages.SM_TYPE.Error)
-            logWarning('Failed to claim Progression. Code: {code}', code=response.getCode())
-        elif stageID == 20:
-            self.__claimProgression(21, 0)
+            logWarning('AutoClaimClanReward Failed to claim Progression. Code: {code}', code=response.getCode())
 
     def parseQuests(self, data):
         if not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):
             self.__claimRewards()
 
-    @property
-    def currency(self):
-        return self.__itemsCache.items.stats.dynamicCurrencies.get(Currency.TOUR_COIN, 0)
-
-    def isMaximumPurchased(self, data):
-        maximum_progress = data.points.get(self.__maximum_level)
-        return maximum_progress is not None and maximum_progress.status == PointStatus.PURCHASED
+    @staticmethod
+    def isMaximumLevelPurchased(data):
+        maximum_level = data.points.get(str(max(map(int, data.points.keys()))), None)
+        return maximum_level and maximum_level.status == PointStatus.PURCHASED
 
     def parseProgression(self, data):
         if not self.__cachedSettingsData.enabled:
             return
-        to_purchased = 0
-        if self.isMaximumPurchased(data):
-            for stateID, stageProgress in sorted(data.points.items(), key=lambda i: int(i[0])):
-                if stageProgress.status == PointStatus.AVAILABLE:
-                    to_purchased = int(stateID)
-                    break
-        else:
-            last_purchased = int(data.last_purchased or 0)
-            to_purchased = last_purchased + (2 if last_purchased in NEXT_DOUBLE else 1)
-        if not to_purchased:
+        maximum_level_purchased = self.isMaximumLevelPurchased(data)
+        available_levels = [
+            int(stateID) for stateID, stageProgress in data.points.items()
+            if stageProgress.status == PointStatus.AVAILABLE and (int(stateID) not in SKIP_LEVELS or maximum_level_purchased)
+        ]
+        if not available_levels:
             return
-        next_points = self.__cachedSettingsData.points.get(str(to_purchased))
-        if next_points and self.currency >= next_points.price:
-            self.__claimProgression(to_purchased, next_points.price)
+        next_level = min(available_levels)
+        next_point = self.__cachedSettingsData.points.get(str(next_level))
+        currency = self.__itemsCache.items.stats.dynamicCurrencies.get(Currency.TOUR_COIN, 0)
+        if next_point and currency >= next_point.price:
+            self.__claimProgression(next_level, next_point.price)
 
     def __onDataReceived(self, dataName, data):
-        logDebug("__onDataReceived {} {}", dataName, data)
+        logDebug("AutoClaimClanReward __onDataReceived: {} {}", dataName, data)
         if dataName in (DataNames.QUESTS_INFO, DataNames.QUESTS_INFO_POST):
             self.__cachedQuestsData = data
             if self.__enabled:
@@ -133,7 +129,8 @@ class AutoClaimClanReward(object):
 
 
 clanRewards = AutoClaimClanReward()
+clanRewards.subscribe()
 
 
 def fini():
-    user_settings.onModSettingsChanged -= clanRewards.onSettingsChanged
+    clanRewards.unsubscribe()

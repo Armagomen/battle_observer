@@ -8,18 +8,13 @@ from gui.Scaleform.daapi.view.lobby.hangar.ammunition_panel import AmmunitionPan
 _settings = user_settings.avg_efficiency_in_hangar
 
 
-def checkCategory():
-    return any(value for key, value in _settings.iteritems() if key != GLOBAL.ENABLED)
-
-
 @overrideMethod(AmmunitionPanel, "as_updateVehicleStatusS")
 def updateStatus(base, panel, data):
     cachedVehicleData.onVehicleChanged()
-    if _settings[GLOBAL.ENABLED] and checkCategory():
-        if data["message"]:
-            data["message"] += "\n" + getAvgData()
-        else:
-            data["message"] = getAvgData()
+    if _settings[GLOBAL.ENABLED]:
+        text = getAvgData()
+        if text:
+            data["message"] += "\n" + text if data["message"] else text
     return base(panel, data)
 
 
@@ -32,6 +27,7 @@ EFFICIENCY_ICONS = {
     "spottedIcon": "<img src='{}/efficiency/detection.png' {}>".format(IMAGE_DIR, EFFICIENCY_ICONS_SIZE),
     "battlesIcon": "<img src='{}/efficiency/battles.png' {}>".format(IMAGE_DIR, EFFICIENCY_ICONS_SIZE),
 }
+
 
 def getAvgData():
     data = cachedVehicleData.efficiencyAvgData

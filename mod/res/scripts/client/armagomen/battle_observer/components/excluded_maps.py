@@ -95,18 +95,14 @@ class ExcludedMapsProcessor(object):
         premiumSlots = mapsConfig['premiumSlots']
         wotPlusSlots = mapsConfig['wotPlusSlots'] if self._serverSettings.isWotPlusExcludedMapEnabled() else 0
         mapsBlacklist = self.itemsCache.items.stats.getMapsBlackList()
-        maps = [(mapId, selectedTime) for mapId, selectedTime in mapsBlacklist if mapId > 0]
-        usedSlots = len(maps)
+        usedSlots = len([(mapId, selectedTime) for mapId, selectedTime in mapsBlacklist if mapId > 0])
         totalSlots = defaultSlots
-        isPremiumAcc = self.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS)
-        isWotPlusAcc = self.wotPlus.isEnabled()
-        if isPremiumAcc:
+        if self.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS):
             totalSlots += premiumSlots
-        if isWotPlusAcc:
+        if self.wotPlus.isEnabled():
             totalSlots += wotPlusSlots
         if usedSlots < totalSlots:
-            availableSlots = totalSlots - usedSlots
-            message = self.__getLocalizedMessage(availableSlots)
+            message = self.__getLocalizedMessage(totalSlots - usedSlots)
             self.__showDialog(message)
 
 

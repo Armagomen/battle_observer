@@ -1,3 +1,4 @@
+from AccountCommands import VEHICLE_SETTINGS_FLAG
 from armagomen._constants import CREW_XP, GLOBAL, IS_WG_CLIENT, MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.battle_observer.settings.hangar.i18n import localization
@@ -29,12 +30,8 @@ class CrewProcessor(object):
         self.intCD = None
         self.isDialogVisible = False
         self.ignored_vehicles = openIgnoredVehicles()
-        update_vehicles = False
-        for vehicle in tuple(self.ignored_vehicles):
-            if not isinstance(vehicle, int):
-                self.ignored_vehicles.discard(vehicle)
-                update_vehicles = True
-        if update_vehicles:
+        if any(not isinstance(vehicle, int) for vehicle in self.ignored_vehicles):
+            self.ignored_vehicles = {v for v in self.ignored_vehicles if isinstance(v, int)}
             updateIgnoredVehicles(self.ignored_vehicles)
         g_events.onVehicleChangedDelayed += self.onVehicleChanged
         logDebug("accelerateCrewXp ignored vehicles: {}", self.ignored_vehicles)
@@ -68,7 +65,7 @@ class CrewProcessor(object):
         iterator = vehicle.postProgression.iterOrderedSteps()
         currentXP = vehicle.xp
         needToProgress = sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
-        logDebug("isPPFullXP - {}: {}/{}", vehicle.userName, currentXP, needToProgress)
+        logDebug("isPostProgressionFullXP - {}: {}/{}", vehicle.userName, currentXP, needToProgress)
         return currentXP >= needToProgress
 
     def isAccelerateTraining(self, vehicle):
@@ -91,7 +88,7 @@ class CrewProcessor(object):
         return True
 
     def onVehicleChanged(self, vehicle):
-        if not vehicle or vehicle.isLocked or vehicle.isInBattle or vehicle.isCrewLocked or vehicle.isAwaitingBattle or vehicle.isInPrebattle:
+        if not vehicle or vehicle.isLocked:
             return
         if user_settings.main[MAIN.CREW_RETURN] and vehicle.lastCrew:
             self.updateAutoReturn(vehicle)
@@ -116,9 +113,9 @@ class CrewProcessor(object):
 
     @decorators.adisp_process('updating')
     def __autoReturnToggleSwitch(self, vehicle):
-        if not vehicle.isAutoReturn:
+        if not bool(vehicle.settings & VEHICLE_SETTINGS_FLAG.AUTO_RETURN):
             result = yield VehicleAutoReturnProcessor(vehicle, True).request()
-            if result.success:
+            if result.success and not vehicle.isCrewLocked:
                 result = yield TankmanAutoReturn(vehicle).request()
             if not result.success and result.userMsg:
                 SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType, priority=NotificationPriorityLevel.MEDIUM)
