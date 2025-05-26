@@ -69,7 +69,7 @@ class ChangeCameraModeAfterShoot(ITriggerListener):
 
 
 class CameraSettings(object):
-    _CONTROL_MODE_TO_SEC = {
+    _CONTROL_MODE_NAME_TO_SEC = {
         CTRL_MODE_NAME.ARCADE: "gui/avatar_input_handler.xml/arcadeMode/camera/",
         CTRL_MODE_NAME.SNIPER: "gui/avatar_input_handler.xml/sniperMode/camera/",
         CTRL_MODE_NAME.ARTY: "gui/avatar_input_handler.xml/artyMode/camera/",
@@ -88,13 +88,12 @@ class CameraSettings(object):
         logError("{} camera is Nome", control_mode_name)
         return None
 
-    def resetToDefault(self, *ctrl_modes):
-        for name in ctrl_modes:
-            camera = self.getCamera(name)
-            if camera is not None:
-                ResMgr.purge('gui/avatar_input_handler.xml')
-                cameraSec = ResMgr.openSection(self._CONTROL_MODE_TO_SEC[name])
-                camera._reloadConfigs(cameraSec)
+    def resetToDefault(self, control_mode_name):
+        camera = self.getCamera(control_mode_name)
+        if camera is not None:
+            ResMgr.purge('gui/avatar_input_handler.xml')
+            cameraSec = ResMgr.openSection(self._CONTROL_MODE_NAME_TO_SEC[control_mode_name])
+            camera._reloadConfigs(cameraSec)
         self.reset = False
 
 
@@ -143,15 +142,17 @@ class Strategic(CameraSettings):
 
     def update(self):
         self.enabled = self.config[GLOBAL.ENABLED]
+        ctrl_mode_names = (CTRL_MODE_NAME.STRATEGIC, CTRL_MODE_NAME.ARTY)
         if self.enabled:
             self.reset = True
-            for camera_name in (CTRL_MODE_NAME.STRATEGIC, CTRL_MODE_NAME.ARTY):
-                camera = self.getCamera(camera_name)
+            for control_mode_name in ctrl_mode_names:
+                camera = self.getCamera(control_mode_name)
                 if camera is not None:
                     camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
                     camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
         elif self.reset:
-            self.resetToDefault(CTRL_MODE_NAME.ARTY, CTRL_MODE_NAME.STRATEGIC)
+            for control_mode_name in ctrl_mode_names:
+                self.resetToDefault(control_mode_name)
 
 
 class Sniper(CameraSettings):
@@ -197,7 +198,6 @@ class Sniper(CameraSettings):
                         y_interp = y1 + (y2 - y1) * ((x - x1) / float(x2 - x1))
                         exposures_new.append(round(y_interp, 2))
                         break
-
         return exposures_new
 
     def update(self):

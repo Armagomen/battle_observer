@@ -236,9 +236,9 @@ package net.armagomen.battle_observer.battle.components
 				this.setVehicleTextColor(listItem.vehicleTF, data.vehicleTextColor);
 				this.updateHtmlText(listItem.playerNameFullTF, data.fullName);
 				this.updateHtmlText(listItem.playerNameCutTF, data.cutName);
-				if (listItem.deadAltBg.visible)
+				if (!listItem.isAlive && listItem.playerNameFullTF.alpha != DEAD_ALT_TEXT_ALPHA)
 				{
-					listItem.playerNameFullTF.alpha = listItem.playerNameCutTF.alpha = listItem.vehicleTF.alpha = listItem.deadAltBg.visible ? DEAD_ALT_TEXT_ALPHA : listItem._originalTFAlpha;
+					listItem.playerNameFullTF.alpha = listItem.playerNameCutTF.alpha = listItem.vehicleTF.alpha = listItem.vehicleIcon.alpha = DEAD_ALT_TEXT_ALPHA;
 				}
 			}
 			if (this.battleLoading.visible && loadingHolder)
