@@ -1,6 +1,3 @@
-from armagomen._constants import IS_WG_CLIENT
-
-from importlib import import_module
 from importlib import import_module
 
 from armagomen._constants import IS_WG_CLIENT
@@ -10,12 +7,12 @@ def loadComponents(is_replay):
     components = {}
 
     load = [
-        'for_wg_fixes', 'common', 'effects', 'minimap_plugins',
+        'camera_manager', 'for_wg_fixes', 'common', 'effects', 'minimap_plugins',
         'replace_vehicle_info', 'shot_result_plugin'
     ]
 
     not_replay = [
-        'camera_manager', 'crew', 'dispersion', 'excluded_maps',
+        'crew', 'dispersion', 'excluded_maps',
         'friends', 'hangar_efficiency', 'premium_time', 'save_shot_lite',
         'service_channel_filter', 'vehicle_battle_boosters'
     ]

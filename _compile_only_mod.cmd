@@ -8,18 +8,21 @@ for /f "tokens=3 delims=<>" %%a in (
 set sources=.\mod
 set GameVersion=1.28.1.1
 set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
+set OutputDir=..\output_data
 
 REM set GameVersion="1.29.0.0 Common Test"
 REM set GameInstalled_ModsDir=C:\Games\World_of_Tanks_CT\mods\%GameVersion%
 
 "python.exe" bo_compile_all.py -f -d scripts %sources%\res\scripts
 
-set ModFile=%GameInstalled_ModsDir%\armagomen.battleObserver_%ModVersion%.wotmod
+set ModFile=%OutputDir%\armagomen.battleObserver_%ModVersion%.wotmod
 
+DEL %OutputDir%\armagomen.battleObserver*
 DEL %GameInstalled_ModsDir%\armagomen.battleObserver*
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py %ModFile% %sources%\*
 
+Xcopy %OutputDir% %GameInstalled_ModsDir% /e /i /d
 
 DEL /s /q *.pyc
 

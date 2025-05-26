@@ -3,7 +3,7 @@ from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_WG_CLIENT, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import addCallback, cancelOverride, getPlayer, MinMax, overrideMethod, ResMgr
-from armagomen.utils.logging import logError
+from armagomen.utils.logging import logDebug, logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from cgf_components.attack_artillery_fort_components import ISettingsCore
@@ -177,18 +177,28 @@ class Sniper(CameraSettings):
         self.settingsCore.clearStorages()
 
     @staticmethod
-    def linear_interpolation(x, x_vals, y_vals):
-        if x <= x_vals[0]:
-            return y_vals[0]
-        if x >= x_vals[-1]:
-            x1, x2 = x_vals[-2], x_vals[-1]
-            y1, y2 = y_vals[-2], y_vals[-1]
-            return y2 + (y2 - y1) * ((x - x2) / float(x2 - x1))
-        for i in range(len(x_vals) - 1):
-            if x_vals[i] <= x <= x_vals[i + 1]:
-                x1, x2 = x_vals[i], x_vals[i + 1]
-                y1, y2 = y_vals[i], y_vals[i + 1]
-                return y1 + (y2 - y1) * ((x - x1) / float(x2 - x1))
+    def linear_interpolate(x_vals_new):
+        x_vals_old = [2.0, 4.0, 8.0, 16.0, 25.0]
+        exposures_old = [0.6, 0.5, 0.4, 0.3, 0.2]
+        exposures_new = []
+        for x in x_vals_new:
+            if x <= x_vals_old[0]:
+                exposures_new.append(exposures_old[0])
+            elif x >= x_vals_old[-1]:
+                x1, x2 = x_vals_old[-2], x_vals_old[-1]
+                y1, y2 = exposures_old[-2], exposures_old[-1]
+                y_extrap = y2 + (y2 - y1) * ((x - x2) / float(x2 - x1))
+                exposures_new.append(round(y_extrap, 2))
+            else:
+                for i in xrange(len(x_vals_old) - 1):
+                    if x_vals_old[i] <= x <= x_vals_old[i + 1]:
+                        x1, x2 = x_vals_old[i], x_vals_old[i + 1]
+                        y1, y2 = exposures_old[i], exposures_old[i + 1]
+                        y_interp = y1 + (y2 - y1) * ((x - x1) / float(x2 - x1))
+                        exposures_new.append(round(y_interp, 2))
+                        break
+
+        return exposures_new
 
     def update(self):
         self.after_shoot.updateSettings(self.config)
@@ -213,13 +223,13 @@ class Sniper(CameraSettings):
             self._steps_enabled = self.config[SNIPER.ZOOM_STEPS] and self.enabled
             if self._steps_enabled:
                 self.reset = True
-                steps = self.config[SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
                 camera._cfg[SNIPER.INCREASED_ZOOM] = True
-                exposure = camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE]
-                zooms = camera._cfg[self.ZOOMS]
-                camera._cfg[self.ZOOMS] = steps
-                camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = [
-                    round(self.linear_interpolation(x, zooms, exposure), 2) for x in steps]
+                steps = self.config[SNIPER.STEPS] or SNIPER.DEFAULT_STEPS
+                if steps != camera._cfg[self.ZOOMS]:
+                    new_exposure = self.linear_interpolate(steps)
+                    camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = new_exposure
+                    camera._cfg[self.ZOOMS] = steps
+                    logDebug("UPDATE_ZOOMS = steps:{} exposure:{}", steps, new_exposure)
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
             self.min_max = MinMax(camera._cfg[self.ZOOMS][0], camera._cfg[self.ZOOMS][-1])

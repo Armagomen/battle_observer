@@ -9,7 +9,6 @@ from gui.battle_control.controllers import msgs_ctrl
 from gui.battle_control.controllers.team_bases_ctrl import BattleTeamsBasesController
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
-from gui.Scaleform.daapi.view.battle.shared.hint_panel import BattleHintPanel
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.entry_points.event_entry_points_container import EventEntryPointsContainer
 from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
@@ -41,11 +40,7 @@ def hasDogTag(base, *args, **kwargs):
     return False if user_settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
 
 
-# disable battle hints
-@overrideMethod(BattleHintPanel, "_initPlugins")
-def _initPlugins(base, *args, **kwargs):
-    if not user_settings.main[MAIN.HIDE_HINT]:
-        base(*args, **kwargs)
+
 
 
 # hide shared chat button
@@ -103,8 +98,17 @@ def _EventEntryPointsContainer_as_updateEntries(base, self, data):
 if IS_WG_CLIENT:
     p_widget = PrestigeWidget()
     from comp7.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
+    from gui.Scaleform.daapi.view.battle.shared.hint_panel import BattleHintPanel
 else:
     from gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
+    from gui.Scaleform.daapi.view.battle.shared.hint_panel.component import BattleHintPanel
+
+
+# disable battle hints
+@overrideMethod(BattleHintPanel, "_initPlugins")
+def _initPlugins(base, *args, **kwargs):
+    if not user_settings.main[MAIN.HIDE_HINT]:
+        base(*args, **kwargs)
 
 
 class TweakSounds(object):
