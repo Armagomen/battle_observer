@@ -77,7 +77,7 @@ class _ShotResult(_CrosshairShotResults):
 
         for detail in c_details:
             mat_info = detail.matInfo
-            if not mat_info or (detail.compName, mat_info.kind) in ignoredMaterials:
+            if not mat_info or mat_info.collideOnceOnly and (detail.compName, mat_info.kind) in ignoredMaterials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
             if is_jet:
@@ -109,7 +109,7 @@ class _ShotResult(_CrosshairShotResults):
 
         for detail in c_details:
             mat_info = detail.matInfo
-            if not mat_info or (detail.compName, mat_info.kind) in ignoredMaterials:
+            if not mat_info or mat_info.collideOnceOnly and (detail.compName, mat_info.kind) in ignoredMaterials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
             armor += compute_penetration(shell, hitAngleCos, mat_info)

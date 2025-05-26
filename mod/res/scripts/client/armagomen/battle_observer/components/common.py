@@ -40,9 +40,6 @@ def hasDogTag(base, *args, **kwargs):
     return False if user_settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
 
 
-
-
-
 # hide shared chat button
 @overrideMethod(LobbyEntry, '__handleLazyChannelCtlInited')
 def handleLazyChannelCtlInited(base, entry, event):

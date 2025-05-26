@@ -49,30 +49,29 @@ class ViewSettings(object):
         return False
 
     @staticmethod
-    def xvmInstalled(module):
+    def xvm_installed(module):
         if xvmInstalled:
-            logInfo("{} module is disabled, XVM is installed", module)
+            logInfo("{} module is disabled, XVM is installed".format(module))
         return xvmInstalled
 
     def isMinimapEnabled(self):
-        if self.xvmInstalled("Minimap") or self.gui.isEpicBattle() or self.isLastStand():
+        if self.xvm_installed("Minimap") or self.gui.isEpicBattle() or self.isLastStand():
             return False
         return user_settings.minimap[GLOBAL.ENABLED] and user_settings.minimap[MINIMAP.ZOOM]
 
-    def isWGREnabled(self):
-        if self.xvmInstalled("Statistics"):
+    def isStatisticsAndIconsEnabled(self):
+        if self.xvm_installed("Statistics and Icons") or self.is_special_battle():
             return False
-        return user_settings.statistics[GLOBAL.ENABLED] and user_settings.statistics[STATISTICS.STATISTIC_ENABLED]
-
-    def isIconsEnabled(self):
-        if self.xvmInstalled("Icons"):
-            return False
-        return user_settings.statistics[GLOBAL.ENABLED] and user_settings.statistics[STATISTICS.ICON_ENABLED]
+        return user_settings.statistics[GLOBAL.ENABLED] and (
+                user_settings.statistics[STATISTICS.STATISTIC_ENABLED] or user_settings.statistics[STATISTICS.ICON_ENABLED])
 
     def isPlayersPanelsEnabled(self):
-        if self.xvmInstalled("PlayersPanels") or self.gui.isInEpicRange() or self.gui.isEpicRandomBattle() or self.isLastStand():
+        if self.xvm_installed("PlayersPanels") or self.is_special_battle():
             return False
         return user_settings.players_panels[GLOBAL.ENABLED]
+
+    def is_special_battle(self):
+        return self.gui.isInEpicRange() or self.gui.isEpicRandomBattle() or self.isLastStand()
 
     def isFlightTimeEnabled(self):
         enabled = user_settings.flight_time[GLOBAL.ENABLED]
@@ -81,49 +80,32 @@ class ViewSettings(object):
         return enabled
 
     def isDistanceToEnemyEnabled(self):
-        if self.isSPG() or self.gui.isInEpicRange():
+        if self.isSPG() or self.is_special_battle():
             return False
         return user_settings.distance_to_enemy[GLOBAL.ENABLED]
 
-    def getSetting(self, alias):
-        if alias is BATTLE_ALIASES.HP_BARS and not self.gui.isInEpicRange() and not self.isLastStand():
-            return user_settings.hp_bars[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.DAMAGE_LOG:
-            return user_settings.log_total[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.DAMAGE_LOG_EXT and not self.gui.isEpicBattle():
-            return user_settings.log_extended[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.MAIN_GUN and self.isRandomBattle():
-            return user_settings.main_gun[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.DEBUG:
-            return user_settings.debug_panel[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.TIMER:
-            return user_settings.battle_timer[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.SIXTH_SENSE:
-            return user_settings.sixth_sense[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.TEAM_BASES and not self.gui.isInEpicRange() and not self.isLastStand():
-            return user_settings.team_bases_panel[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.ARMOR_CALC:
-            return user_settings.armor_calculator[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.FLIGHT_TIME:
-            return self.isFlightTimeEnabled()
-        elif alias is BATTLE_ALIASES.DISPERSION_TIMER:
-            return user_settings.dispersion_timer[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.PANELS:
-            return self.isPlayersPanelsEnabled()
-        elif alias is BATTLE_ALIASES.DATE_TIME:
-            return user_settings.clock[GLOBAL.ENABLED] and user_settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.DISTANCE:
-            return self.isDistanceToEnemyEnabled()
-        elif alias is BATTLE_ALIASES.OWN_HEALTH:
-            return user_settings.own_health[GLOBAL.ENABLED]
-        elif alias is BATTLE_ALIASES.WGR_ICONS and not self.gui.isEpicRandomBattle() and not self.gui.isInEpicRange() and not self.isLastStand():
-            return self.isWGREnabled() or self.isIconsEnabled()
-        elif alias is BATTLE_ALIASES.MAP:
-            return self.isMinimapEnabled()
-        return False
-
     def _invalidateComponents(self):
-        self._components = [alias for alias in BATTLE_ALIASES if self.getSetting(alias)]
+        alias_map = {
+            BATTLE_ALIASES.HP_BARS: user_settings.hp_bars[GLOBAL.ENABLED] and not self.gui.isInEpicRange() and not self.isLastStand(),
+            BATTLE_ALIASES.TEAM_BASES: user_settings.team_bases_panel[GLOBAL.ENABLED] and not self.gui.isInEpicRange() and not self.isLastStand(),
+            BATTLE_ALIASES.DAMAGE_LOG: user_settings.log_total[GLOBAL.ENABLED],
+            BATTLE_ALIASES.DAMAGE_LOG_EXT: user_settings.log_extended[GLOBAL.ENABLED] and not self.gui.isEpicBattle(),
+            BATTLE_ALIASES.MAIN_GUN: user_settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle(),
+            BATTLE_ALIASES.DEBUG: user_settings.debug_panel[GLOBAL.ENABLED],
+            BATTLE_ALIASES.TIMER: user_settings.battle_timer[GLOBAL.ENABLED],
+            BATTLE_ALIASES.SIXTH_SENSE: user_settings.sixth_sense[GLOBAL.ENABLED],
+            BATTLE_ALIASES.ARMOR_CALC: user_settings.armor_calculator[GLOBAL.ENABLED],
+            BATTLE_ALIASES.FLIGHT_TIME: self.isFlightTimeEnabled(),
+            BATTLE_ALIASES.DISPERSION_TIMER: user_settings.dispersion_timer[GLOBAL.ENABLED],
+            BATTLE_ALIASES.PANELS: self.isPlayersPanelsEnabled(),
+            BATTLE_ALIASES.DATE_TIME: user_settings.clock[GLOBAL.ENABLED] and user_settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED],
+            BATTLE_ALIASES.DISTANCE: self.isDistanceToEnemyEnabled(),
+            BATTLE_ALIASES.OWN_HEALTH: user_settings.own_health[GLOBAL.ENABLED],
+            BATTLE_ALIASES.WGR_ICONS: self.isStatisticsAndIconsEnabled(),
+            BATTLE_ALIASES.MAP: self.isMinimapEnabled()
+        }
+
+        self._components = [alias for alias in BATTLE_ALIASES if alias_map.get(alias, False)]
         if self.gui.isEpicBattle():
             self.addInToEpicUI(True)
         logDebug("viewSettings _invalidateComponents: components={}", self._components)
