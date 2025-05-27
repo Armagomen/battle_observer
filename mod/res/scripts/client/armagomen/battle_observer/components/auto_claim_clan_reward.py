@@ -36,6 +36,9 @@ class AutoClaimClanReward(object):
     def onCreate(self):
         self.__hangarSpace.onSpaceCreate -= self.onCreate
         self.updateCache()
+        if self.__enabled and g_clanCache.isInClan and self.__cachedQuestsData and self.__cachedProgressData and self.__cachedSettingsData:
+            self.parseQuests(self.__cachedQuestsData)
+            self.parseProgression(self.__cachedProgressData)
 
     def subscribe(self):
         user_settings.onModSettingsChanged += self.onSettingsChanged
@@ -53,13 +56,8 @@ class AutoClaimClanReward(object):
         self.__cachedProgressData = g_clanCache.clanSupplyProvider.getProgressionProgress().data
 
     def onSettingsChanged(self, data, name):
-        if name == MAIN.NAME and g_clanCache.isInClan:
+        if name == MAIN.NAME:
             self.__enabled = data[MAIN.AUTO_CLAIM_CLAN_REWARD]
-            if self.__enabled:
-                self.updateCache()
-                if self.__cachedQuestsData and self.__cachedProgressData and self.__cachedSettingsData:
-                    self.parseQuests(self.__cachedQuestsData)
-                    self.parseProgression(self.__cachedProgressData)
 
     def __onProxyDataItemShow(self, _, item):
         if self.__enabled and g_clanCache.isInClan:
@@ -118,11 +116,11 @@ class AutoClaimClanReward(object):
         logDebug("AutoClaimClanReward __onDataReceived: {} {}", dataName, data)
         if dataName in (DataNames.QUESTS_INFO, DataNames.QUESTS_INFO_POST):
             self.__cachedQuestsData = data
-            if self.__enabled:
+            if self.__enabled and g_clanCache.isInClan:
                 self.parseQuests(data)
         elif dataName == DataNames.PROGRESSION_PROGRESS:
             self.__cachedProgressData = data
-            if self.__enabled:
+            if self.__enabled and g_clanCache.isInClan:
                 self.parseProgression(data)
         elif dataName == DataNames.PROGRESSION_SETTINGS:
             self.__cachedSettingsData = data

@@ -51,7 +51,7 @@ class ViewSettings(object):
     @staticmethod
     def xvm_installed(module):
         if xvmInstalled:
-            logInfo("{} module is disabled, XVM is installed".format(module))
+            logInfo("{} module is disabled, XVM is installed", module)
         return xvmInstalled
 
     def isMinimapEnabled(self):

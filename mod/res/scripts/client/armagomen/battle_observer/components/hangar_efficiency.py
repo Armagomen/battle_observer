@@ -14,7 +14,7 @@ def updateStatus(base, panel, data):
     if _settings[GLOBAL.ENABLED]:
         text = getAvgData()
         if text:
-            data["message"] += "\n" + text if data["message"] else text
+            data["message"] += ("\n" + text) if data["message"] else text
     return base(panel, data)
 
 
