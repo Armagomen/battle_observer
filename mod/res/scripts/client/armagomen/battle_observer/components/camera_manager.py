@@ -157,11 +157,11 @@ class Strategic(CameraSettings):
 
 class Sniper(CameraSettings):
     settingsCore = dependency.descriptor(ISettingsCore)
-    DEFAULT_X_METERS = 20.0
+    DEFAULT_X_METERS = 18.0
     _SNIPER_ZOOM_LEVEL = None
     ZOOM = "zoom"
     ZOOMS = "zooms"
-    MAX_DIST = 700.0
+    MAX_DIST = 570.0
 
     def __init__(self):
         super(Sniper, self).__init__()
@@ -171,6 +171,7 @@ class Sniper(CameraSettings):
         self._steps_enabled = False
         self.after_shoot = ChangeCameraModeAfterShoot()
         self.min_max = MinMax(2, 25)
+        self.__player = None
 
     def applySniperSettings(self, param):
         self.settingsCore.applySettings({GAME.SNIPER_ZOOM: param})
@@ -205,6 +206,7 @@ class Sniper(CameraSettings):
         self.enabled = self.config[GLOBAL.ENABLED]
         self._dyn_zoom = self.config[SNIPER.DYN_ZOOM] and self.enabled
         self._steps_only = self.config[SNIPER.STEPS_ONLY] and self._dyn_zoom
+        self.__player = getPlayer()
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is not None:
             dynamic = user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]
@@ -235,9 +237,9 @@ class Sniper(CameraSettings):
             self.min_max = MinMax(camera._cfg[self.ZOOMS][0], camera._cfg[self.ZOOMS][-1])
 
     def enableSniper(self, base, camera, targetPos, saveZoom):
-        ownPosition = getOwnVehiclePosition()
-        distance = (targetPos - ownPosition).length if ownPosition is not None else GLOBAL.ZERO
-        if distance >= self.MAX_DIST:
+        ownPosition = getOwnVehiclePosition(self.__player)
+        distance = (targetPos - ownPosition).length if ownPosition is not None else None
+        if not distance or distance >= self.MAX_DIST:
             camera._cfg[self.ZOOM] = self.min_max.min
         else:
             zoom = round(distance / self.DEFAULT_X_METERS)

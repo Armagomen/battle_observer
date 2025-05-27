@@ -26,7 +26,7 @@ package net.armagomen.battle_observer.battle.components
 		private var statisticsLoaded:Boolean  = false;
 		private var holdersCache:Array        = new Array();
 		
-		private static const DEAD_ALT_TEXT_ALPHA:Number = 0.73;
+		private static const DEAD_ALT_TEXT_ALPHA:Number = 0.7;
 		
 		public function StatisticsAndIcons()
 		{
@@ -211,6 +211,10 @@ package net.armagomen.battle_observer.battle.components
 			{
 				this.updateStatistics(listItem, this.holdersCache[0][vehicleID], this.holdersCache[1][vehicleID], this.statisticsData[vehicleID]);
 			}
+			if (!listItem.isAlive && listItem.playerNameFullTF.alpha != DEAD_ALT_TEXT_ALPHA)
+			{
+				listItem.playerNameFullTF.alpha = listItem.playerNameCutTF.alpha = listItem.vehicleTF.alpha = listItem.vehicleIcon.alpha = DEAD_ALT_TEXT_ALPHA;
+			}
 		}
 		
 		private function updateIcons(listItem:*, loadingHolder:*, statsHolder:*):void
@@ -236,10 +240,6 @@ package net.armagomen.battle_observer.battle.components
 				this.setVehicleTextColor(listItem.vehicleTF, data.vehicleTextColor);
 				this.updateHtmlText(listItem.playerNameFullTF, data.fullName);
 				this.updateHtmlText(listItem.playerNameCutTF, data.cutName);
-				if (!listItem.isAlive && listItem.playerNameFullTF.alpha != DEAD_ALT_TEXT_ALPHA)
-				{
-					listItem.playerNameFullTF.alpha = listItem.playerNameCutTF.alpha = listItem.vehicleTF.alpha = listItem.vehicleIcon.alpha = DEAD_ALT_TEXT_ALPHA;
-				}
 			}
 			if (this.battleLoading.visible && loadingHolder)
 			{
