@@ -30,15 +30,20 @@ class ExcludedMapsProcessor(object):
         self.__enabled = user_settings.main[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
         self.__isPremium = False
         self.__isDialogVisible = False
-        self.appLoader.onGUISpaceEntered += self.init
-        self.appLoader.onGUISpaceLeft += self.fini
+        self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
         user_settings.onModSettingsChanged += self._onModSettingsChanged
+
+    def fini(self):
+        self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
+        self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
+        user_settings.onModSettingsChanged -= self._onModSettingsChanged
 
     @property
     def _serverSettings(self):
         return self.lobbyContext.getServerSettings()
 
-    def init(self, spaceID):
+    def onGUISpaceEntered(self, spaceID):
         if spaceID != GuiGlobalSpaceID.LOBBY:
             return
         self.__isPremium = self.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS)
@@ -47,7 +52,7 @@ class ExcludedMapsProcessor(object):
         self.wotPlus.onDataChanged += self.__onWotPlusChanged
         self.__update()
 
-    def fini(self, spaceID):
+    def onGUISpaceLeft(self, spaceID):
         if spaceID != GuiGlobalSpaceID.LOBBY:
             return
         self.__isPremium = False
@@ -91,23 +96,17 @@ class ExcludedMapsProcessor(object):
         if not self.__enabled or self.__isDialogVisible or not self._serverSettings.isPreferredMapsEnabled():
             return
         mapsConfig = self._serverSettings.getPreferredMapsConfig()
-        defaultSlots = mapsConfig['defaultSlots']
-        premiumSlots = mapsConfig['premiumSlots']
-        wotPlusSlots = mapsConfig['wotPlusSlots'] if self._serverSettings.isWotPlusExcludedMapEnabled() else 0
-        mapsBlacklist = self.itemsCache.items.stats.getMapsBlackList()
-        usedSlots = len([(mapId, selectedTime) for mapId, selectedTime in mapsBlacklist if mapId > 0])
-        totalSlots = defaultSlots
-        if self.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS):
-            totalSlots += premiumSlots
-        if self.wotPlus.isEnabled():
-            totalSlots += wotPlusSlots
+        usedSlots = sum(int(mapId > 0) for mapId, _ in self.itemsCache.items.stats.getMapsBlackList())
+        totalSlots = sum([
+            mapsConfig['defaultSlots'],
+            mapsConfig['premiumSlots'] if self.__isPremium else 0,
+            mapsConfig['wotPlusSlots'] if self.wotPlus.isEnabled() and self._serverSettings.isWotPlusExcludedMapEnabled() else 0
+        ])
         if usedSlots < totalSlots:
-            message = self.__getLocalizedMessage(totalSlots - usedSlots)
-            self.__showDialog(message)
-
+            self.__showDialog(self.__getLocalizedMessage(totalSlots - usedSlots))
 
 excluded_maps = ExcludedMapsProcessor()
 
 
 def fini():
-    user_settings.onModSettingsChanged -= excluded_maps._onModSettingsChanged
+    excluded_maps.fini()

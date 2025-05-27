@@ -94,6 +94,9 @@ class DispersionCircle(object):
         user_settings.onModSettingsChanged += self.onModSettingsChanged
         self.enabled = False
 
+    def fini(self):
+        user_settings.onModSettingsChanged -= self.onModSettingsChanged
+
     def addServerCrossOverrides(self):
         overrideMethod(gm_factory, "createComponents")(self.createOverrideComponents)
         overrideMethod(gm_factory, "overrideComponents")(self.createOverrideComponents)
@@ -208,4 +211,4 @@ dispersion_circle = DispersionCircle()
 
 
 def fini():
-    user_settings.onModSettingsChanged -= dispersion_circle.onModSettingsChanged
+    dispersion_circle.fini()

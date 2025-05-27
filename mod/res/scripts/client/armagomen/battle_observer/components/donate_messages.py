@@ -55,6 +55,9 @@ class Donate(object):
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
         fetchURL(API_URL, self.onDataResponse)
 
+    def fini(self):
+        ServicesLocator.appLoader.onGUISpaceEntered -= self.pushNewMessage
+
     def onDataResponse(self, response):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
@@ -94,7 +97,6 @@ class Donate(object):
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             if "WG" in str(g_clanCache.clanAbbrev):
-                ServicesLocator.appLoader.onGUISpaceEntered -= self.pushNewMessage
                 return
             current_time = datetime.now()
             if current_time >= self.timeDelta:
@@ -105,6 +107,8 @@ class Donate(object):
 
 donate = Donate()
 
+def fini():
+    donate.fini()
 
 @overrideMethod(NotificationListView, "onClickAction")
 @overrideMethod(NotificationPopUpViewer, "onClickAction")

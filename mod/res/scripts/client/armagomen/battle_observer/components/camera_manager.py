@@ -256,6 +256,9 @@ class CameraManager(object):
         self.appLoader.onGUISpaceBeforeEnter += self.updateCameras
         self.__modes = (Arcade(), Sniper(), Strategic())
 
+    def fini(self):
+        self.appLoader.onGUISpaceBeforeEnter -= self.updateCameras
+
     def updateCameras(self, spaceID):
         if spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
             for mode in self.__modes:
@@ -266,4 +269,4 @@ camera_manager = CameraManager()
 
 
 def fini():
-    camera_manager.appLoader.onGUISpaceBeforeEnter -= camera_manager.updateCameras
+    camera_manager.fini()

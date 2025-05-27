@@ -70,6 +70,9 @@ class PrestigeWidget(object):
         overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')(self.as_setPrestigeVisibleS)
         user_settings.onModSettingsChanged += self.onModSettingsChanged
 
+    def fini(self):
+        user_settings.onModSettingsChanged -= self.onModSettingsChanged
+
     @staticmethod
     def as_setPrestigeWidgetVisibleS(base, hangar, value):
         return base(hangar, False if user_settings.main[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET] else value)
@@ -112,6 +115,9 @@ class TweakSounds(object):
 
     def __init__(self):
         user_settings.onModSettingsChanged += self.onModSettingsChanged
+
+    def fini(self):
+        user_settings.onModSettingsChanged -= self.onModSettingsChanged
 
     @staticmethod
     @overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
@@ -157,6 +163,6 @@ t_sounds = TweakSounds()
 
 
 def fini():
-    user_settings.onModSettingsChanged -= t_sounds.onModSettingsChanged
+    t_sounds.fini()
     if IS_WG_CLIENT:
-        user_settings.onModSettingsChanged -= p_widget.onModSettingsChanged
+        p_widget.fini()

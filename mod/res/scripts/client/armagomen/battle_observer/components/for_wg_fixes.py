@@ -1,6 +1,6 @@
-from armagomen._constants import DAMAGE_LOG, GLOBAL, IS_WG_CLIENT
+from armagomen._constants import DAMAGE_LOG, GLOBAL
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import cancelOverride, isReplay, overrideMethod
+from armagomen.utils.common import cancelOverride, overrideMethod
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 from gui.battle_control.controllers import debug_ctrl
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
@@ -15,6 +15,9 @@ class WG_Logs_Fix(object):
     def __init__(self):
         self.validated = {}
         user_settings.onModSettingsChanged += self.onModSettingsChanged
+
+    def fini(self):
+        user_settings.onModSettingsChanged -= self.onModSettingsChanged
 
     def addToLog(self, base, component, event):
         return base(component, [e for e in event if not self.validated.get(e.getType(), False)])
@@ -42,14 +45,6 @@ class WG_Logs_Fix(object):
 
 logs_fix = WG_Logs_Fix()
 
-if IS_WG_CLIENT and isReplay():
-    from comp7.gui.Scaleform.daapi.view.battle.messages.player_messages import Comp7PlayerMessages
-
-
-    @overrideMethod(Comp7PlayerMessages, "__onRoleEquipmentStateChanged")
-    def __onRoleEquipmentStateChanged(*args, **kwargs):
-        pass
-
 
 def fini():
-    user_settings.onModSettingsChanged -= logs_fix.onModSettingsChanged
+    logs_fix.fini()

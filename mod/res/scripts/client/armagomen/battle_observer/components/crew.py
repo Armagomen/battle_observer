@@ -36,6 +36,9 @@ class CrewProcessor(object):
         g_events.onVehicleChangedDelayed += self.onVehicleChanged
         logDebug("accelerateCrewXp ignored vehicles: {}", self.ignored_vehicles)
 
+    def fini(self):
+        g_events.onVehicleChangedDelayed -= self.onVehicleChanged
+
     @staticmethod
     def getLocalizedMessage(value, description):
         dialog = localization[CREW_XP.NAME]
@@ -132,4 +135,4 @@ crew = CrewProcessor()
 
 
 def fini():
-    g_events.onVehicleChangedDelayed -= crew.onVehicleChanged
+    crew.fini()
