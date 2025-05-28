@@ -36,16 +36,19 @@ def getVehicleClassIcon(classTag):
     return "<img src='{}/vehicle_types/{}.png' width='20' height='20' vspace='-6'>".format(IMAGE_DIR, classTag)
 
 
+NOT_SHELL = (DAMAGE_LOG.NOT_SHELL, False)
+
+
 class ExtendedDamageLogs(ExtendedDamageLogsMeta):
 
     def __init__(self):
         super(ExtendedDamageLogs, self).__init__()
         self._damage_done = LogData(set(), list(), dict(), DAMAGE_LOG.D_DONE)
         self._damage_received = LogData(set(), list(), dict(), DAMAGE_LOG.D_RECEIVED)
-        self._is_key_down = GLOBAL.ZERO
-        self._playerShell = (DAMAGE_LOG.NOT_SHELL, False)
+        self._is_key_down = 0
+        self._playerShell = NOT_SHELL
         self.attack_reasons = defaultdict(lambda: DEFAULT_REASON)
-        self.last_shell = defaultdict(lambda: (DAMAGE_LOG.NOT_SHELL, False))
+        self.last_shell = defaultdict(lambda: NOT_SHELL)
 
     def _populate(self):
         super(ExtendedDamageLogs, self)._populate()
@@ -89,7 +92,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         if state.isReloadingFinished():
             type_descriptor = getVehicleTypeDescriptor()
             if type_descriptor is None:
-                self._playerShell = (DAMAGE_LOG.NOT_SHELL, False)
+                self._playerShell = NOT_SHELL
             shell = type_descriptor.shot.shell
             shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(shell))
             is_shell_gold = shell.isGold or PREMIUM_SHELL_END in shell.iconName
@@ -171,7 +174,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         vehicle[DAMAGE_LOG.SHOTS] = len(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.TOTAL_DAMAGE] = sum(vehicle[DAMAGE_LOG.DAMAGE_LIST])
         vehicle[DAMAGE_LOG.ALL_DAMAGES] = GLOBAL.COMMA_SEP.join(str(x) for x in vehicle[DAMAGE_LOG.DAMAGE_LIST])
-        vehicle[DAMAGE_LOG.LAST_DAMAGE] = vehicle[DAMAGE_LOG.DAMAGE_LIST][GLOBAL.LAST]
+        vehicle[DAMAGE_LOG.LAST_DAMAGE] = vehicle[DAMAGE_LOG.DAMAGE_LIST][-1]
         vehicle[DAMAGE_LOG.ATTACK_REASON] = self.attack_reasons[ATTACK_REASONS[extra.getAttackReasonID()]]
         vehicle[DAMAGE_LOG.SHELL_TYPE] = shell_name
         vehicle[DAMAGE_LOG.SHELL_COLOR] = self.settings[DAMAGE_LOG.SHELL_COLOR][DAMAGE_LOG.SHELL[gold]]

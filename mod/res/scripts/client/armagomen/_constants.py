@@ -61,7 +61,6 @@ class GLOBAL:
     C_INTERFACE_SPLITTER = "*"
     EMPTY_LINE = ""
     ENABLED = "enabled"
-    ZERO, ONE, TWO, LAST, F_ONE = (0, 1, 2, -1, 1.0)
     HEIGHT = "height"
     IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'", "vspace": "vspace='-13'"}
     SCALE = "scale"

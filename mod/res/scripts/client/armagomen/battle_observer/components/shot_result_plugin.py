@@ -11,7 +11,6 @@ from gui.battle_control import avatar_getter
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from gui.shared.gui_items import KPI
-from items.components.component_constants import MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 from items.tankmen import getSkillsConfig
 from Vehicle import Vehicle
 
@@ -22,6 +21,12 @@ class _ShotResult(_CrosshairShotResults):
     RANDOMIZATION = DEFAULT_RANDOMIZATION
     UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None)
     ENTITY_TYPES = (Vehicle, DestructibleEntity)
+    JET_FACTOR = 0.001
+    PP_REDUCTION_FACTOR = 3.0
+
+    @classmethod
+    def _isDestructibleComponent(cls, entity, componentID):
+        return entity.isDestructibleComponent(componentID) if isinstance(entity, DestructibleEntity) else True
 
     @classmethod
     def _getShotResult(cls, position, collision, direction, multiplier, player):
@@ -34,16 +39,18 @@ class _ShotResult(_CrosshairShotResults):
 
     @classmethod
     def _result(cls, position, collision, direction, multiplier, player):
-        c_details = cls._getAllCollisionDetails(position, direction, collision.entity)
-        if c_details is None:
+        entity = collision.entity
+        collision_details = cls._getAllCollisionDetails(position, direction, entity)
+        if collision_details is None:
             return cls.UNDEFINED_RESULT
         shot = player.getVehicleDescriptor().shot
+        shell = shot.shell
         distance = player.position.flatDistTo(position)
         piercing_power = cls._computePiercingPowerAtDist(shot.piercingPower, distance, shot.maxDistance, multiplier)
-        if cls._isModernMechanics(shot.shell):
-            return cls._computeArmorModern(c_details, shot.shell, piercing_power)
+        if cls._isModernMechanics(shell):
+            return cls._computeArmorModern(collision_details, shell, piercing_power, entity)
         else:
-            return cls._computeArmorDefault(c_details, shot.shell, piercing_power)
+            return cls._computeArmorDefault(collision_details, shell, piercing_power, entity)
 
     @classmethod
     def _checkShotResult(cls, data):
@@ -62,65 +69,64 @@ class _ShotResult(_CrosshairShotResults):
         return shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
 
     @classmethod
-    def _computeArmorDefault(cls, c_details, shell, piercing_power):
-        armor = GLOBAL.ZERO
-        ricochet = False
-        no_damage = True
+    def _computeArmorDefault(cls, collision_details, shell, piercing_power, entity):
+        armor = 0
+        ignored_materials = set()
         is_jet = False
-        piercing_power_final = piercing_power
-        jet_start_dist = GLOBAL.ZERO
         jet_loss = cls._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
-        jet_factor = 0.001
-        ignoredMaterials = set()
-        should_ricochet = cls._shouldRicochet
-        compute_penetration = cls._computePenetrationArmor
+        jet_start_dist = 0
+        no_damage = True
+        piercing_power_final = piercing_power
+        ricochet = False
 
-        for detail in c_details:
+        for detail in collision_details:
+            if not cls._isDestructibleComponent(entity, detail.compName):
+                continue
             mat_info = detail.matInfo
-            if not mat_info or mat_info.collideOnceOnly and (detail.compName, mat_info.kind) in ignoredMaterials:
+            if not mat_info or mat_info.collideOnceOnly and (detail.compName, mat_info.kind) in ignored_materials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
             if is_jet:
                 jetDist = detail.dist - jet_start_dist
-                if jetDist > GLOBAL.ZERO:
-                    piercing_power_final *= 1.0 - jetDist * jet_loss
+                if jetDist > 0:
+                    piercing_power_final = max(0, piercing_power_final * (1.0 - jetDist * jet_loss))
             else:
-                ricochet = should_ricochet(shell, hitAngleCos, mat_info)
-            armor += compute_penetration(shell, hitAngleCos, mat_info)
+                ricochet = cls._shouldRicochet(shell, hitAngleCos, mat_info)
+            armor += cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
-            if jet_loss > GLOBAL.ZERO:
+            if jet_loss > 0:
                 is_jet = True
-                jet_start_dist += detail.dist + mat_info.armor * jet_factor
+                jet_start_dist = detail.dist + mat_info.armor * cls.JET_FACTOR
             if mat_info.collideOnceOnly:
-                ignoredMaterials.add((detail.compName, mat_info.kind))
-        data = (int(armor), max(int(piercing_power_final), 0), int(shell.caliber), ricochet, no_damage)
+                ignored_materials.add((detail.compName, mat_info.kind))
+        data = (int(armor), int(piercing_power_final), int(shell.caliber), ricochet, no_damage)
         return cls._checkShotResult(data), data
 
     @classmethod
-    def _computeArmorModern(cls, c_details, shell, piercing_power):
-        armor = GLOBAL.ZERO
-        ignoredMaterials = set()
+    def _computeArmorModern(cls, collision_details, shell, piercing_power, entity):
+        armor = 0
+        ignored_materials = set()
         no_damage = True
         piercing_power_final = piercing_power
-        compute_penetration = cls._computePenetrationArmor
-        piercing_reduction_factor = MODERN_HE_PIERCING_POWER_REDUCTION_FACTOR_FOR_SHIELDS
 
-        for detail in c_details:
+        for detail in collision_details:
+            if not cls._isDestructibleComponent(entity, detail.compName):
+                continue
             mat_info = detail.matInfo
-            if not mat_info or mat_info.collideOnceOnly and (detail.compName, mat_info.kind) in ignoredMaterials:
+            if not mat_info or mat_info.collideOnceOnly and (detail.compName, mat_info.kind) in ignored_materials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
-            armor += compute_penetration(shell, hitAngleCos, mat_info)
+            armor += cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
             if shell.type.shieldPenetration:
-                piercing_power_final -= armor * piercing_reduction_factor
+                piercing_power_final = max(0, piercing_power_final - armor * cls.PP_REDUCTION_FACTOR)
             if mat_info.collideOnceOnly:
-                ignoredMaterials.add((detail.compName, mat_info.kind))
-        data = (int(armor), max(int(piercing_power_final), 0), int(shell.caliber), False, no_damage)
+                ignored_materials.add((detail.compName, mat_info.kind))
+        data = (int(armor), int(piercing_power_final), int(shell.caliber), False, no_damage)
         return cls._checkShotResult(data), data
 
 

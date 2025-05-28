@@ -11,7 +11,7 @@ class Distance(DistanceMeta):
 
     def __init__(self):
         super(Distance, self).__init__()
-        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, distance=GLOBAL.ZERO, name=GLOBAL.EMPTY_LINE)
+        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, {"distance": 0, "name": GLOBAL.EMPTY_LINE})
         self.isPostmortem = False
         self.vehicles = {}
         self.player = None

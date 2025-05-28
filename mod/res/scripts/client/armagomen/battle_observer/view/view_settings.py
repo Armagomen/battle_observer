@@ -31,7 +31,7 @@ class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self):
-        self._components = []
+        self._components = None
 
     @property
     def gui(self):
@@ -85,27 +85,27 @@ class ViewSettings(object):
         return user_settings.distance_to_enemy[GLOBAL.ENABLED]
 
     def _invalidateComponents(self):
-        alias_map = {
-            BATTLE_ALIASES.HP_BARS: user_settings.hp_bars[GLOBAL.ENABLED] and not self.gui.isInEpicRange() and not self.isLastStand(),
-            BATTLE_ALIASES.TEAM_BASES: user_settings.team_bases_panel[GLOBAL.ENABLED] and not self.gui.isInEpicRange() and not self.isLastStand(),
-            BATTLE_ALIASES.DAMAGE_LOG: user_settings.log_total[GLOBAL.ENABLED],
-            BATTLE_ALIASES.DAMAGE_LOG_EXT: user_settings.log_extended[GLOBAL.ENABLED] and not self.gui.isEpicBattle(),
-            BATTLE_ALIASES.MAIN_GUN: user_settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle(),
-            BATTLE_ALIASES.DEBUG: user_settings.debug_panel[GLOBAL.ENABLED],
-            BATTLE_ALIASES.TIMER: user_settings.battle_timer[GLOBAL.ENABLED],
-            BATTLE_ALIASES.SIXTH_SENSE: user_settings.sixth_sense[GLOBAL.ENABLED],
-            BATTLE_ALIASES.ARMOR_CALC: user_settings.armor_calculator[GLOBAL.ENABLED],
-            BATTLE_ALIASES.FLIGHT_TIME: self.isFlightTimeEnabled(),
-            BATTLE_ALIASES.DISPERSION_TIMER: user_settings.dispersion_timer[GLOBAL.ENABLED],
-            BATTLE_ALIASES.PANELS: self.isPlayersPanelsEnabled(),
-            BATTLE_ALIASES.DATE_TIME: user_settings.clock[GLOBAL.ENABLED] and user_settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED],
-            BATTLE_ALIASES.DISTANCE: self.isDistanceToEnemyEnabled(),
-            BATTLE_ALIASES.OWN_HEALTH: user_settings.own_health[GLOBAL.ENABLED],
-            BATTLE_ALIASES.WGR_ICONS: self.isStatisticsAndIconsEnabled(),
-            BATTLE_ALIASES.MAP: self.isMinimapEnabled()
-        }
+        not_epic_and_last_stand = not self.gui.isInEpicRange() and not self.isLastStand()
+        self._components = tuple(alias for alias, enabled in (
+            (BATTLE_ALIASES.WGR_ICONS, self.isStatisticsAndIconsEnabled()),
+            (BATTLE_ALIASES.HP_BARS, user_settings.hp_bars[GLOBAL.ENABLED] and not_epic_and_last_stand),
+            (BATTLE_ALIASES.MAIN_GUN, user_settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle()),
+            (BATTLE_ALIASES.DAMAGE_LOG, user_settings.log_total[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.DAMAGE_LOG_EXT, user_settings.log_extended[GLOBAL.ENABLED] and not self.gui.isEpicBattle()),
+            (BATTLE_ALIASES.DEBUG, user_settings.debug_panel[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.TIMER, user_settings.battle_timer[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.TEAM_BASES, user_settings.team_bases_panel[GLOBAL.ENABLED] and not_epic_and_last_stand),
+            (BATTLE_ALIASES.SIXTH_SENSE, user_settings.sixth_sense[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.ARMOR_CALC, user_settings.armor_calculator[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.FLIGHT_TIME, self.isFlightTimeEnabled()),
+            (BATTLE_ALIASES.DISPERSION_TIMER, user_settings.dispersion_timer[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.PANELS, self.isPlayersPanelsEnabled()),
+            (BATTLE_ALIASES.DATE_TIME, user_settings.clock[GLOBAL.ENABLED] and user_settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.DISTANCE, self.isDistanceToEnemyEnabled()),
+            (BATTLE_ALIASES.OWN_HEALTH, user_settings.own_health[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.MAP, self.isMinimapEnabled())
+        ) if enabled)
 
-        self._components = [alias for alias in BATTLE_ALIASES if alias_map.get(alias, False)]
         if self.gui.isEpicBattle():
             self.addInToEpicUI(True)
         logDebug("viewSettings _invalidateComponents: components={}", self._components)
@@ -113,7 +113,7 @@ class ViewSettings(object):
     def _clear(self):
         if self.gui.isEpicBattle():
             self.addInToEpicUI(False)
-        self._components = []
+        self._components = None
         logDebug("clear viewSettings components")
 
     def addInToEpicUI(self, add):

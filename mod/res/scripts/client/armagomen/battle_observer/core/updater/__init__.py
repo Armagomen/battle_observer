@@ -64,7 +64,7 @@ class DownloadThread(object):
                 Waiting.show(WAITING_UPDATE)
             url = URLS.UPDATE + ZIP.format(version)
             logInfo(LOG_MESSAGES.STARTED, version, url)
-            self.downloader = WebDownloader(GLOBAL.ONE)
+            self.downloader = WebDownloader(1)
             self.downloader.download(url, self.onDownloaded)
 
     def closeDownloader(self):

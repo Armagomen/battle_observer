@@ -17,9 +17,9 @@ def new_VehicleArenaInfoVO(base, *args, **kwargs):
     if kwargs:
         if user_settings.main[MAIN.HIDE_BADGES] and ANOTHER.BADGES in kwargs:
             kwargs[ANOTHER.BADGES] = EMPTY_BADGES
-            kwargs[ANOTHER.OVERRIDDEN_BADGE] = GLOBAL.ZERO
+            kwargs[ANOTHER.OVERRIDDEN_BADGE] = 0
         if not xvmInstalled and user_settings.main[MAIN.SHOW_ANONYMOUS] and ANOTHER.ACCOUNT_DBID in kwargs:
-            if kwargs[ANOTHER.ACCOUNT_DBID] == GLOBAL.ZERO:
+            if kwargs[ANOTHER.ACCOUNT_DBID] == 0:
                 kwargs[ANOTHER.NAME] = ANONYMOUS_TRANSLATE
         if user_settings.main[MAIN.HIDE_CLAN_ABBREV] and ANOTHER.CLAN_ABBR in kwargs:
             kwargs[ANOTHER.CLAN_ABBR] = GLOBAL.EMPTY_LINE

@@ -43,11 +43,11 @@ class Getter(object):
         for fragment in path:
             if fragment in settings_block and isinstance(settings_block[fragment], dict):
                 settings_block = settings_block[fragment]
-        return settings_block, path[GLOBAL.LAST]
+        return settings_block, path[-1]
 
     @staticmethod
     def getCollectionIndex(value, collection):
-        index = GLOBAL.ZERO
+        index = 0
         if value in collection:
             index = collection.index(value)
         return collection, index
@@ -151,7 +151,7 @@ class CreateElement(Getter):
             result['defaultValue'] = [[KEY_LALT, KEY_RALT]]
         return result
 
-    def __createNumeric(self, blockID, varName, cType, value, vMin=GLOBAL.ZERO, vMax=GLOBAL.ZERO):
+    def __createNumeric(self, blockID, varName, cType, value, vMin=0, vMax=0):
         result = self.createControl(blockID, varName, value, cType=cType)
         if result is not None:
             result.update({'minimum': vMin, 'maximum': vMax})
@@ -196,16 +196,16 @@ class CreateElement(Getter):
         if val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
         elif val_type == int:
-            return self.createStepper(blockID, key, -2000, 2000, GLOBAL.ONE, value)
+            return self.createStepper(blockID, key, -2000, 2000, 1, value)
         elif val_type == float:
             if blockID == DISPERSION.NAME and DISPERSION.SCALE == key:
                 return self.createSlider(blockID, key, 0.3, 1.0, 0.01, value)
             elif blockID == STATISTICS.NAME and STATISTICS.ICON_BLACKOUT == key:
                 return self.createStepper(blockID, key, -2.0, 2.0, 0.01, value)
-            elif GLOBAL.ZERO <= value <= GLOBAL.F_ONE:
-                return self.createStepper(blockID, key, GLOBAL.ZERO, 2.0, 0.01, value)
+            elif 0 <= value <= 1.0:
+                return self.createStepper(blockID, key, 0, 2.0, 0.01, value)
             else:
-                return self.createStepper(blockID, key, GLOBAL.ZERO, 300.0, GLOBAL.F_ONE, value)
+                return self.createStepper(blockID, key, 0, 300.0, 1.0, value)
         elif val_type == list:
             if "_hotkey" in key:
                 return self.createHotKey(blockID, key, value)
@@ -331,7 +331,7 @@ class SettingsInterface(CreateElement):
                 elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and is_string:
                     value = value.strip().split(',')
                     try:
-                        value = [val for val in (round(float(x.strip()), GLOBAL.ONE) for x in value) if val >= 2.0]
+                        value = [val for val in (round(float(x.strip()), 1) for x in value) if val >= 2.0]
                     except Exception as error:
                         logError(error.message)
                         value = SNIPER.DEFAULT_STEPS
@@ -359,7 +359,7 @@ class SettingsInterface(CreateElement):
         for varName in values:
             obj = get_object(blockID, varName)
             if obj is not None:
-                obj.alpha = 0.4 if not value else GLOBAL.F_ONE
+                obj.alpha = 0.4 if not value else 1.0
                 obj.mouseEnabled = value
                 obj.mouseChildren = value
                 obj.tabEnabled = value

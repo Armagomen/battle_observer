@@ -16,8 +16,8 @@ class DispersionTimer(DispersionTimerMeta):
 
     def __init__(self):
         super(DispersionTimer, self).__init__()
-        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timer=GLOBAL.ZERO, percent=GLOBAL.ZERO)
-        self.min_angle = GLOBAL.F_ONE
+        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timer=0.0, percent=0)
+        self.min_angle = 1.0
         self.isPostmortem = False
 
     def _populate(self):
@@ -47,7 +47,7 @@ class DispersionTimer(DispersionTimerMeta):
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.isPostmortem = ctrlMode in POSTMORTEM_MODES
         if self.isPostmortem:
-            self.min_angle = GLOBAL.F_ONE
+            self.min_angle = 1.0
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)
 
     def updateDispersion(self, gunRotator):
@@ -60,7 +60,7 @@ class DispersionTimer(DispersionTimerMeta):
             logDebug("DispersionTimer - renew min dispersion angle {}", self.min_angle)
         diff = self.min_angle / aiming_angle
         percent = int(ceil(diff * MAXIMUM))
-        self.macro[TIMER] = round(type_descriptor.gun.aimingTime * abs(log(diff)), GLOBAL.TWO)
+        self.macro[TIMER] = round(type_descriptor.gun.aimingTime * abs(log(diff)), 2)
         self.macro[GLOBAL.COLOR] = self.settings[GLOBAL.COLOR if percent < MAXIMUM else DISPERSION_TIMER.DONE_COLOR]
         self.macro[PERCENT] = percent
         self.as_updateTimerTextS(self.settings[DISPERSION_TIMER.TEMPLATE] % self.macro)

@@ -62,13 +62,13 @@ class UserSettings(object):
                 GLOBAL.ENABLED: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
                 GLOBAL.X: -240,
-                GLOBAL.Y: GLOBAL.ZERO
+                GLOBAL.Y: 0
             },
             CLOCK.IN_BATTLE: {
                 GLOBAL.ENABLED: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_BATTLE,
                 GLOBAL.X: -270,
-                GLOBAL.Y: GLOBAL.ZERO
+                GLOBAL.Y: 0
             }
         }
 
@@ -96,7 +96,7 @@ class UserSettings(object):
         self.dispersion_timer = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: 110,
-            GLOBAL.Y: GLOBAL.ZERO,
+            GLOBAL.Y: 0,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left,
             GLOBAL.COLOR: "#f5ff8f",
             DISPERSION_TIMER.DONE_COLOR: "#a6ffa6",
@@ -152,7 +152,7 @@ class UserSettings(object):
 
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
-            ARMOR_CALC.POSITION: {GLOBAL.X: GLOBAL.ZERO, GLOBAL.Y: 80},
+            ARMOR_CALC.POSITION: {GLOBAL.X: 0, GLOBAL.Y: 80},
             ARMOR_CALC.ON_ALLY: False,
             ARMOR_CALC.SHOW_PIERCING_RESERVE: False,
             ARMOR_CALC.SHOW_COUNTED_ARMOR: True,
@@ -197,7 +197,7 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             GLOBAL.SETTINGS: {
                 GLOBAL.X: -260,
-                GLOBAL.Y: GLOBAL.ZERO,
+                GLOBAL.Y: 0,
                 GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.right,
                 DAMAGE_LOG.IN_CENTER: True
             },
@@ -279,14 +279,14 @@ class UserSettings(object):
                 TEAM_BASES.BOLD: False,
                 TEAM_BASES.ITALIC: False,
                 TEAM_BASES.UNDERLINE: False,
-                GLOBAL.Y: GLOBAL.ZERO
+                GLOBAL.Y: 0
             }
         }
 
         self.main_gun = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: 260,
-            GLOBAL.Y: GLOBAL.ZERO,
+            GLOBAL.Y: 0,
             "progress_bar": False
         }
 
@@ -307,7 +307,7 @@ class UserSettings(object):
         self.flight_time = {
             GLOBAL.ENABLED: False,
             GLOBAL.X: -110,
-            GLOBAL.Y: GLOBAL.ZERO,
+            GLOBAL.Y: 0,
             FLIGHT_TIME.SPG_ONLY: True,
             FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
             FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1fs. - %(distance).1f m.</font>"
@@ -315,7 +315,7 @@ class UserSettings(object):
 
         self.distance_to_enemy = {
             GLOBAL.ENABLED: False,
-            GLOBAL.X: GLOBAL.ZERO,
+            GLOBAL.X: 0,
             GLOBAL.Y: -190,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             DISTANCE.TEMPLATE: "<font color='#f5ff8f'>%(distance).1fm. to %(name)s.</font>"
@@ -323,7 +323,7 @@ class UserSettings(object):
 
         self.own_health = {
             GLOBAL.ENABLED: False,
-            GLOBAL.X: GLOBAL.ZERO,
+            GLOBAL.X: 0,
             GLOBAL.Y: 350,
             GLOBAL.AVG_COLOR: {"saturation": 0.7, "brightness": 0.9}
         }

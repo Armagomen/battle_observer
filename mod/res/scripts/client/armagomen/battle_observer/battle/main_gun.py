@@ -1,6 +1,6 @@
 import math
 
-from armagomen._constants import GLOBAL, MAIN_GUN
+from armagomen._constants import MAIN_GUN
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
@@ -12,9 +12,9 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def __init__(self):
         super(MainGun, self).__init__()
         self._warning = False
-        self.gunScore = GLOBAL.ZERO
-        self.playerDamage = GLOBAL.ZERO
-        self.totalEnemiesHP = GLOBAL.ZERO
+        self.gunScore = 0
+        self.playerDamage = 0
+        self.totalEnemiesHP = 0
 
     def _populate(self):
         super(MainGun, self)._populate()
