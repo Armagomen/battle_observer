@@ -213,12 +213,14 @@ class Sniper(CameraSettings):
             camera.enableDynamicCamera(False if dynamic else self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA))
             if self._dyn_zoom:
                 overrideMethod(SniperCamera, "enable")(self.enableSniper)
+                overrideMethod(SniperCamera, "_handleSettingsChange")(self._handleSettingsChange)
                 zoom_level = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
                 if zoom_level:
                     self._SNIPER_ZOOM_LEVEL = zoom_level
                     self.applySniperSettings(0)
             else:
                 cancelOverride(SniperCamera, "enable", "enableSniper")
+                cancelOverride(SniperCamera, "_handleSettingsChange", "_handleSettingsChange")
                 if self._SNIPER_ZOOM_LEVEL is not None:
                     self.applySniperSettings(self._SNIPER_ZOOM_LEVEL)
                     self._SNIPER_ZOOM_LEVEL = None
@@ -235,6 +237,10 @@ class Sniper(CameraSettings):
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
             self.min_max = MinMax(camera._cfg[self.ZOOMS][0], camera._cfg[self.ZOOMS][-1])
+
+    @staticmethod
+    def _handleSettingsChange(base, camera, diff):
+        return base(camera, diff) if 'increasedZoom' not in diff else None
 
     def enableSniper(self, base, camera, targetPos, saveZoom):
         ownPosition = getOwnVehiclePosition(self.__player)
