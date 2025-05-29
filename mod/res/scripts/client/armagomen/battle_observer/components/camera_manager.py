@@ -161,7 +161,7 @@ class Sniper(CameraSettings):
     _SNIPER_ZOOM_LEVEL = None
     ZOOM = "zoom"
     ZOOMS = "zooms"
-    MAX_DIST = 570.0
+    MAX_DIST = 580.0
 
     def __init__(self):
         super(Sniper, self).__init__()
@@ -238,14 +238,15 @@ class Sniper(CameraSettings):
 
     def enableSniper(self, base, camera, targetPos, saveZoom):
         ownPosition = getOwnVehiclePosition(self.__player)
-        distance = (targetPos - ownPosition).length if ownPosition is not None else None
+        distance = (targetPos - ownPosition).length if ownPosition is not None else 0
         if not distance or distance >= self.MAX_DIST:
             camera._cfg[self.ZOOM] = self.min_max.min
         else:
             zoom = round(distance / self.DEFAULT_X_METERS)
             if self._steps_only:
-                zoom = min(camera._cfg[self.ZOOMS], key=lambda value: abs(value - zoom))
-            camera._cfg[self.ZOOM] = clamp(self.min_max.min, self.min_max.max, zoom)
+                camera._cfg[self.ZOOM] = min(camera._cfg[self.ZOOMS], key=lambda value: abs(value - zoom))
+            else:
+                camera._cfg[self.ZOOM] = clamp(self.min_max.min, self.min_max.max, zoom)
         return base(camera, targetPos, True)
 
 
