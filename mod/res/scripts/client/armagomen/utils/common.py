@@ -57,6 +57,7 @@ preferencesDir = getPreferencesDir()
 
 
 def restartGame():
+    BigWorld.worldDrawEnabled(False)
     BigWorld.restartGame()
 
 

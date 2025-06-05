@@ -4,34 +4,33 @@
 [Types]
 Name: "empty"; Description: {cm:types_empty};
 Name: "armagomen"; Description: {cm:types_armagomen};
-Name: "saxon_ua"; Description: "SaXon UA";
 Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
 [Components]
 Name: main; Description: MAIN CATEGORY; Flags: disablenouninstallwarning;
 Name: main/anti_anonymous; Description: {cm:anti_anonymous}; 
-Name: main/auto_crew_training; Description: {cm:auto_crew_training}; Types: armagomen saxon_ua;
-Name: main/auto_return_crew; Description: {cm:auto_return_crew}; Types: armagomen saxon_ua;
+Name: main/auto_crew_training; Description: {cm:auto_crew_training}; Types: armagomen;
+Name: main/auto_return_crew; Description: {cm:auto_return_crew}; Types: armagomen;
 Name: main/clear_cache_automatically; Description: {cm:clear_cache_automatically}; 
-Name: main/disable_score_sound; Description: {cm:disable_score_sound}; Types: armagomen saxon_ua;
+Name: main/disable_score_sound; Description: {cm:disable_score_sound}; Types: armagomen;
 Name: main/disable_stun_sound; Description: {cm:disable_stun_sound}; Types: armagomen;
-Name: main/directives_only_from_storage; Description: {cm:directives_only_from_storage}; Types: armagomen saxon_ua;
+Name: main/directives_only_from_storage; Description: {cm:directives_only_from_storage}; Types: armagomen;
 Name: main/excluded_map_slots_notification; Description: {cm:excluded_map_slots_notification}; Types: armagomen;
-Name: main/hide_badges; Description: {cm:hide_badges}; Types: armagomen saxon_ua;
-Name: main/hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Types: armagomen saxon_ua;
-Name: main/hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Types: armagomen saxon_ua;
-Name: main/hide_dog_tags; Description: {cm:hide_dog_tags}; Types: armagomen saxon_ua;
-Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Types: armagomen saxon_ua;
-Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Types: armagomen saxon_ua;
-Name: main/hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Types: armagomen saxon_ua;
+Name: main/hide_badges; Description: {cm:hide_badges}; Types: armagomen;
+Name: main/hide_button_counters_on_top_panel; Description: {cm:hide_button_counters_on_top_panel}; Types: armagomen;
+Name: main/hide_clan_abbrev; Description: {cm:hide_clan_abbrev}; Types: armagomen;
+Name: main/hide_dog_tags; Description: {cm:hide_dog_tags}; Types: armagomen;
+Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Types: armagomen;
+Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Types: armagomen;
+Name: main/hide_main_chat_in_hangar; Description: {cm:hide_main_chat_in_hangar}; Types: armagomen;
 Name: main/hide_prestige_hangar_widget; Description: {cm:hide_prestige_hangar_widget}; Types: armagomen;
 Name: main/hide_prestige_profile_widget; Description: {cm:hide_prestige_profile_widget}; Types: armagomen;
 Name: main/hide_prestige_battle_widget; Description: {cm:hide_prestige_battle_widget}; Types: armagomen;
-Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: armagomen saxon_ua;
-Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: armagomen saxon_ua;
-Name: main/premium_time; Description: {cm:premium_time}; Types: armagomen saxon_ua;
+Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: armagomen;
+Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: armagomen;
+Name: main/premium_time; Description: {cm:premium_time}; Types: armagomen;
 Name: main/save_shot; Description: {cm:save_shot}; Types: armagomen;
-Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen saxon_ua;
+Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen;
 Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward}; Types: armagomen;
 Name: main/hideEventBanner; Description: {cm:hideEventBanner}; Types: armagomen;
 
@@ -57,12 +56,12 @@ Name: dispersion_circle/server; Description: {cm:dispersion_circle_server};
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning;
 
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning;
-Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: armagomen saxon_ua;
+Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: armagomen;
 Name: sixth_sense/show_timer; Description: {cm:show_timer};
-Name: sixth_sense/show_timer_graphics; Description: {cm:show_timer_graphics}; Types: armagomen saxon_ua;
+Name: sixth_sense/show_timer_graphics; Description: {cm:show_timer_graphics}; Types: armagomen;
 
-Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
-Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
+Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: armagomen;
+Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenouninstallwarning; Types: armagomen;
 
 Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning;
 Name: zoom/disable_cam_after_shot; Description: {cm:zoom_disable_cam};
@@ -70,17 +69,17 @@ Name: zoom/dynamic_zoom; Description: {cm:zoom_dynamic_zoom}; Flags: checkableal
 Name: zoom/dynamic_zoom/dynamic_zoom_steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck; Types: armagomen;
 Name: zoom/steps_enabled; Description: {cm:zoom_steps_enabled}; Types: armagomen;
 
-Name: armor_calculator; Description: {cm:armor_calculator}; Flags: checkablealone disablenouninstallwarning; Types: armagomen saxon_ua;
-Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck; Types: saxon_ua;
+Name: armor_calculator; Description: {cm:armor_calculator}; Flags: checkablealone disablenouninstallwarning; Types: armagomen;
+Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck; Types: ;
 
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning;
-Name: avg_efficiency_in_hangar/avg_damage; Description: {cm:avg_efficiency_in_hangar_damage}; Types: armagomen saxon_ua;
-Name: avg_efficiency_in_hangar/avg_blocked; Description: {cm:avg_efficiency_in_hangar_blocked}; Types: armagomen saxon_ua;
-Name: avg_efficiency_in_hangar/avg_assist; Description: {cm:avg_efficiency_in_hangar_assist}; Types: armagomen saxon_ua;
-Name: avg_efficiency_in_hangar/avg_stun; Description: {cm:avg_efficiency_in_hangar_stun}; Types: armagomen saxon_ua;
-Name: avg_efficiency_in_hangar/win_rate; Description: {cm:avg_efficiency_in_hangar_win_rate}; Types: armagomen saxon_ua;
-Name: avg_efficiency_in_hangar/gun_marks; Description: {cm:avg_efficiency_in_hangar_gun_marks}; Types: armagomen saxon_ua;
-Name: avg_efficiency_in_hangar/battles; Description: {cm:avg_efficiency_in_hangar_battles}; Types: armagomen saxon_ua;
+Name: avg_efficiency_in_hangar/avg_damage; Description: {cm:avg_efficiency_in_hangar_damage}; Types: armagomen;
+Name: avg_efficiency_in_hangar/avg_blocked; Description: {cm:avg_efficiency_in_hangar_blocked}; Types: armagomen;
+Name: avg_efficiency_in_hangar/avg_assist; Description: {cm:avg_efficiency_in_hangar_assist}; Types: armagomen;
+Name: avg_efficiency_in_hangar/avg_stun; Description: {cm:avg_efficiency_in_hangar_stun}; Types: armagomen;
+Name: avg_efficiency_in_hangar/win_rate; Description: {cm:avg_efficiency_in_hangar_win_rate}; Types: armagomen;
+Name: avg_efficiency_in_hangar/gun_marks; Description: {cm:avg_efficiency_in_hangar_gun_marks}; Types: armagomen;
+Name: avg_efficiency_in_hangar/battles; Description: {cm:avg_efficiency_in_hangar_battles}; Types: armagomen;
 
 Name: battle_timer; Description: {cm:battle_timer}; Flags: disablenouninstallwarning; Types: armagomen;
 
@@ -88,14 +87,14 @@ Name: distance_to_enemy; Description: {cm:distance_to_enemy}; Flags: disablenoun
 
 Name: effects; Description: {cm:effects}; Flags: disablenouninstallwarning;
 Name: effects/noBinoculars; Description: {cm:effects_noBinoculars}; Types: armagomen;
-Name: effects/noFlashBang; Description: {cm:effects_noFlashBang}; Types: armagomen saxon_ua;
-Name: effects/noShockWave; Description: {cm:effects_noShockWave}; Types: armagomen saxon_ua;
+Name: effects/noFlashBang; Description: {cm:effects_noFlashBang}; Types: armagomen;
+Name: effects/noShockWave; Description: {cm:effects_noShockWave}; Types: armagomen;
 Name: effects/noSniperDynamic; Description: {cm:effects_noSniperDynamic};
 
 Name: flight_time; Description: {cm:flight_time}; Flags: checkablealone disablenouninstallwarning;
 Name: flight_time/spgOnly; Description: {cm:flight_time_spg}; Flags: dontinheritcheck;
 
-Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: armagomen saxon_ua;
+Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: armagomen;
 
 Name: log_extended; Description: {cm:log_extended}; Flags: disablenouninstallwarning;
 Name: log_extended/top_enabled; Description: {cm:log_extended_top}; Types: armagomen;
@@ -107,39 +106,39 @@ Name: main_gun/progress_bar; Description: {cm:main_gun_progress}; Flags: dontinh
 
 Name: minimap; Description: {cm:minimap}; Flags: disablenouninstallwarning;
 Name: minimap/permanentMinimapDeath; Description: {cm:minimap_permanent}; 
-Name: minimap/real_view_radius; Description: {cm:minimap_radius};  Types: armagomen saxon_ua;
+Name: minimap/real_view_radius; Description: {cm:minimap_radius};  Types: armagomen;
 Name: minimap/showDeathNames; Description: {cm:minimap_names}; 
-Name: minimap/yaw_limits; Description: {cm:minimap_limits}; Types: armagomen saxon_ua;
-Name: minimap/zoom; Description: {cm:minimap_zoom}; Types: armagomen saxon_ua;
+Name: minimap/yaw_limits; Description: {cm:minimap_limits}; Types: armagomen;
+Name: minimap/zoom; Description: {cm:minimap_zoom}; Types: armagomen;
 
 Name: own_health; Description: {cm:own_health}; Flags: disablenouninstallwarning;
 
 Name: players_panels; Description: {cm:players_panels}; Flags: disablenouninstallwarning;
-Name: players_panels/panels_spotted_fix; Description: {cm:players_panels_spotted}; Types: armagomen saxon_ua;
+Name: players_panels/panels_spotted_fix; Description: {cm:players_panels_spotted}; Types: armagomen;
 Name: players_panels/players_bars; Description: {cm:players_panels_bars}; Flags: checkablealone; Types: armagomen; 
 Name: players_panels/players_bars/classColor; Description: {cm:players_panels_bars_class}; Flags: dontinheritcheck;
 Name: players_panels/players_bars/on_key_pressed; Description: {cm:players_panels_on_key}; Flags: dontinheritcheck;
-Name: players_panels/players_damages_enabled; Description: {cm:players_panels_damages}; Types: armagomen saxon_ua; 
+Name: players_panels/players_damages_enabled; Description: {cm:players_panels_damages}; Types: armagomen; 
 
 Name: service_channel_filter; Description: {cm:service_channel_filter}; Flags: disablenouninstallwarning; 
-Name: service_channel_filter/CustomizationForCredits; Description: {cm:service_channel_CustomizationForCredits}; Types: armagomen saxon_ua;
+Name: service_channel_filter/CustomizationForCredits; Description: {cm:service_channel_CustomizationForCredits}; Types: armagomen;
 Name: service_channel_filter/CustomizationForGold; Description: {cm:service_channel_CustomizationForGold}; 
-Name: service_channel_filter/DismantlingForCredits; Description: {cm:service_channel_DismantlingForCredits}; Types: armagomen saxon_ua;
+Name: service_channel_filter/DismantlingForCredits; Description: {cm:service_channel_DismantlingForCredits}; Types: armagomen;
 Name: service_channel_filter/DismantlingForCrystal; Description: {cm:service_channel_DismantlingForCrystal}; 
 Name: service_channel_filter/DismantlingForGold; Description: {cm:service_channel_DismantlingForGold}; 
-Name: service_channel_filter/GameGreeting; Description: {cm:service_channel_GameGreeting}; Types: armagomen saxon_ua;
-Name: service_channel_filter/Information; Description: {cm:service_channel_Information}; Types: armagomen saxon_ua;
-Name: service_channel_filter/MultipleSelling; Description: {cm:service_channel_MultipleSelling}; Types: armagomen saxon_ua;
-Name: service_channel_filter/PowerLevel; Description: {cm:service_channel_PowerLevel}; Types: armagomen saxon_ua;
-Name: service_channel_filter/PurchaseForCredits; Description: {cm:service_channel_PurchaseForCredits}; Types: armagomen saxon_ua;
+Name: service_channel_filter/GameGreeting; Description: {cm:service_channel_GameGreeting}; Types: armagomen;
+Name: service_channel_filter/Information; Description: {cm:service_channel_Information}; Types: armagomen;
+Name: service_channel_filter/MultipleSelling; Description: {cm:service_channel_MultipleSelling}; Types: armagomen;
+Name: service_channel_filter/PowerLevel; Description: {cm:service_channel_PowerLevel}; Types: armagomen;
+Name: service_channel_filter/PurchaseForCredits; Description: {cm:service_channel_PurchaseForCredits}; Types: armagomen;
 Name: service_channel_filter/PurchaseForCrystal; Description: {cm:service_channel_PurchaseForCrystal}; 
 Name: service_channel_filter/PurchaseForGold; Description: {cm:service_channel_PurchaseForGold}; 
 Name: service_channel_filter/Remove; Description: {cm:service_channel_Remove}; 
-Name: service_channel_filter/Repair; Description: {cm:service_channel_Repair}; Types: armagomen saxon_ua;
+Name: service_channel_filter/Repair; Description: {cm:service_channel_Repair}; Types: armagomen;
 Name: service_channel_filter/Restore; Description: {cm:service_channel_Restore}; 
-Name: service_channel_filter/Selling; Description: {cm:service_channel_Selling}; Types: armagomen saxon_ua;
-Name: service_channel_filter/autoMaintenance; Description: {cm:service_channel_autoMaintenance}; Types: armagomen saxon_ua;
-Name: service_channel_filter/customizationChanged; Description: {cm:service_channel_customizationChanged}; Types: armagomen saxon_ua;
+Name: service_channel_filter/Selling; Description: {cm:service_channel_Selling}; Types: armagomen;
+Name: service_channel_filter/autoMaintenance; Description: {cm:service_channel_autoMaintenance}; Types: armagomen;
+Name: service_channel_filter/customizationChanged; Description: {cm:service_channel_customizationChanged}; Types: armagomen;
 
 Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning;
 Name: statistics/icons; Description: {cm:statistics_icons}; Types: armagomen;

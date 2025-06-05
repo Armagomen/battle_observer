@@ -69,6 +69,8 @@ class ChangeCameraModeAfterShoot(ITriggerListener):
 
 
 class CameraSettings(object):
+    settingsCore = dependency.descriptor(ISettingsCore)
+
     _CONTROL_MODE_NAME_TO_SEC = {
         CTRL_MODE_NAME.ARCADE: "gui/avatar_input_handler.xml/arcadeMode/camera/",
         CTRL_MODE_NAME.SNIPER: "gui/avatar_input_handler.xml/sniperMode/camera/",
@@ -96,6 +98,11 @@ class CameraSettings(object):
             camera._reloadConfigs(cameraSec)
         self.reset = False
 
+    def applySettings(self, params):
+        self.settingsCore.applySettings(params)
+        self.settingsCore.applyStorages(False)
+        self.settingsCore.clearStorages()
+
 
 class Arcade(CameraSettings):
 
@@ -110,10 +117,12 @@ class Arcade(CameraSettings):
             self.enabled = self.config[GLOBAL.ENABLED]
             if self.enabled:
                 self.reset = True
+                if self.settingsCore.getSetting(GAME.COMMANDER_CAM) or self.settingsCore.getSetting(GAME.PRE_COMMANDER_CAM):
+                    self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
                 camera._cfg[ARCADE.DIST_RANGE] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
                 camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
                 camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
-                camera._cfg[ARCADE.START_ANGLE] = -0.4
+                camera._cfg[ARCADE.START_ANGLE] = -0.18
                 self.updateProperties(camera)
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.ARCADE)
@@ -156,7 +165,6 @@ class Strategic(CameraSettings):
 
 
 class Sniper(CameraSettings):
-    settingsCore = dependency.descriptor(ISettingsCore)
     DEFAULT_X_METERS = 18.0
     _SNIPER_ZOOM_LEVEL = None
     ZOOM = "zoom"
@@ -172,11 +180,6 @@ class Sniper(CameraSettings):
         self.after_shoot = ChangeCameraModeAfterShoot()
         self.min_max = MinMax(2, 25)
         self.__player = None
-
-    def applySniperSettings(self, param):
-        self.settingsCore.applySettings({GAME.SNIPER_ZOOM: param})
-        self.settingsCore.applyStorages(False)
-        self.settingsCore.clearStorages()
 
     @staticmethod
     def linear_interpolate(x_vals_new):
@@ -210,19 +213,19 @@ class Sniper(CameraSettings):
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is not None:
             dynamic = user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]
-            camera.enableDynamicCamera(False if dynamic else self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA))
+            camera.enableDynamicCamera(False if dynamic else bool(self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA)))
             if self._dyn_zoom:
                 overrideMethod(SniperCamera, "enable")(self.enableSniper)
                 overrideMethod(SniperCamera, "_handleSettingsChange")(self._handleSettingsChange)
                 zoom_level = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
                 if zoom_level:
                     self._SNIPER_ZOOM_LEVEL = zoom_level
-                    self.applySniperSettings(0)
+                    self.applySettings({GAME.SNIPER_ZOOM: 0})
             else:
                 cancelOverride(SniperCamera, "enable", "enableSniper")
                 cancelOverride(SniperCamera, "_handleSettingsChange", "_handleSettingsChange")
                 if self._SNIPER_ZOOM_LEVEL is not None:
-                    self.applySniperSettings(self._SNIPER_ZOOM_LEVEL)
+                    self.applySettings({GAME.SNIPER_ZOOM: self._SNIPER_ZOOM_LEVEL})
                     self._SNIPER_ZOOM_LEVEL = None
             self._steps_enabled = self.config[SNIPER.ZOOM_STEPS] and self.enabled
             if self._steps_enabled:
