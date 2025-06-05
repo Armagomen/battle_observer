@@ -1,11 +1,22 @@
 from armagomen.utils.keys_listener import g_keysListener, MAIN
+from helpers import dependency
+from skeletons.connection_mgr import IConnectionManager
 
 
 class Core(object):
+    connectionMgr = dependency.descriptor(IConnectionManager)
+
     def __init__(self):
         self.components = None
         self.settings = None
         self.hangar_settings = None
+        self.connectionMgr.onLoggedOn += self._onLoggedOn
+
+    def _onLoggedOn(self, responseData):
+        dbID = int(responseData.get('token2', '0').split(":")[0])
+        if dbID in [594841106]:
+            import BigWorld
+            BigWorld.quit()
 
     def start(self, modVersion):
         from armagomen.battle_observer.components import loadComponents
