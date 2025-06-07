@@ -15,32 +15,32 @@ package net.armagomen.battle_observer.utils.tween
 	[Event(name = "motionChange", type = "net.armagomen.battleobserver.utils.tween.TweenEvent")]
 	public class Tween extends EventDispatcher
 	{
+		private const FPS:Number      = 25;
 		private var _position:Number  = NaN;
 		public var isPlaying:Boolean  = false;
-		private var _fps:Number       = 25;
 		private var _time:Number      = 0;
 		public var begin:Number       = NaN;
-		public var change:Number      = NaN;
+		private var change:Number     = NaN;
 		private var _timer:Timer      = null;
 		private var _startTime:Number = NaN;
-		public var prop:String        = "";
+		private var prop:String       = "";
 		private var _duration:Number  = NaN;
-		public var obj:Object         = null;
+		private var obj:Object        = null;
 		
-		public function Tween(obj:Object, prop:String, begin:Number, finish:Number, duration:Number = 1.0)
+		public function Tween(_obj:Object, _prop:String, _begin:Number, _finish:Number, _duration:Number = 1.0)
 		{
 			super();
 			if (!arguments.length)
 			{
 				return;
 			}
-			this.obj = obj;
-			this.prop = prop;
-			this.begin = begin;
-			this.position = begin;
-			this.duration = duration;
-			this.finish = finish;
-			this._timer = new Timer(1000 / this._fps);
+			this.obj = _obj;
+			this.prop = _prop;
+			this.begin = _begin;
+			this.position = _begin;
+			this.duration = _duration;
+			this.finish = _finish;
+			this._timer = new Timer(1000 / this.FPS);
 			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 		}
 		

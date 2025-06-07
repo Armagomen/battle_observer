@@ -57,7 +57,6 @@ class GLOBAL:
     AVG_COLOR = "avgColor"
     COLOR = "color"
     COMMA_SEP = ", "
-    CONFIG_ERROR = "macros not found"
     C_INTERFACE_SPLITTER = "*"
     EMPTY_LINE = ""
     ENABLED = "enabled"
@@ -120,13 +119,11 @@ CLOCK = namedtuple("CLOCK", (
     "<textformat tabstops='[135]'>%d %b %Y<tab>%H:%M:%S</textformat>")
 
 __Sniper = namedtuple("SNIPER", (
-    "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "ZOOM_EXPOSURE",
-    "INCREASED_ZOOM", "DEFAULT_STEPS", "EXPOSURE_FACTOR", "MAX_CALIBER", "DISABLE_SNIPER",
-    "DISABLE_LATENCY", "SKIP_CLIP", "CLIP"))
+    "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "ZOOM_EXPOSURE", "DEFAULT_STEPS",
+    "MAX_CALIBER", "DISABLE_SNIPER", "DISABLE_LATENCY", "SKIP_CLIP"))
 SNIPER = __Sniper(
-    "zoom", "dynamic_zoom", "dynamic_zoom_steps_only", "steps_enabled", "steps_range", "zoomExposure",
-    "increasedZoom", [2.0, 4.0, 8.0, 12.0, 16.0, 20.0, 24.0, 28.0, 32.0], 0.1, 60,
-    "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "clip")
+    "zoom", "dynamic_zoom", "dynamic_zoom_steps_only", "steps_enabled", "steps_range", "zoomExposure", map(float, xrange(2, 34, 2)),
+    60, "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip")
 
 
 class DAMAGE_LOG:
@@ -395,20 +392,20 @@ ALIAS_TO_CONFIG_NAME_LOBBY = {
 }
 
 __battle_types = (
-    "COMP7",
-    "EPIC_BATTLE",
-    "EPIC_RANDOM",
-    "EPIC_RANDOM_TRAINING",
-    "FORT_BATTLE_2",
-    "MAPBOX",
-    "RANDOM",
-    "RANKED",
-    "SORTIE_2",
-    "TRAINING",
-    "UNKNOWN",
-    "FUN_RANDOM",
+    "LAST_STAND",
     "TOURNAMENT_COMP7",
-    "LAST_STAND"
+    "FUN_RANDOM",
+    "UNKNOWN",
+    "TRAINING",
+    "SORTIE_2",
+    "RANKED",
+    "RANDOM",
+    "MAPBOX",
+    "FORT_BATTLE_2",
+    "EPIC_RANDOM_TRAINING",
+    "EPIC_RANDOM",
+    "EPIC_BATTLE",
+    "COMP7",
 )
 
 

@@ -57,8 +57,7 @@ class DownloadThread(object):
             logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED, path)
             git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
             if not self.isReplay:
-                self.dialogs.showUpdateFinished(self.i18n['titleOK'],
-                                                self.i18n['messageOK'].format(version) + git_message)
+                self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
         else:
             if not self.isReplay:
                 Waiting.show(WAITING_UPDATE)
@@ -90,8 +89,7 @@ class DownloadThread(object):
             self.extractZipArchive(path)
             git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
             if not self.isReplay:
-                self.dialogs.showUpdateFinished(self.i18n['titleOK'],
-                                                self.i18n['messageOK'].format(version) + git_message)
+                self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
         else:
             self.downloadError(_url)
         if not self.isReplay and Waiting.isOpened(WAITING_UPDATE):
@@ -138,8 +136,7 @@ class Updater(DownloadThread):
         elif response.responseCode == 304:
             return
         else:
-            logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode,
-                       response.body)
+            logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode, response.body)
 
     def check(self):
         logInfo(LOG_MESSAGES.CHECK)

@@ -24,10 +24,11 @@ def init():
     from armagomen.battle_observer.core import Core
     logInfo('MOD START LOADING: v{}', __version__)
     logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
-    __mod.append(Core())
     if IS_WG_CLIENT:
         from armagomen.battle_observer.core.updater import Updater
         __mod.append(Updater())
+    __mod.append(Core())
+
 
     for component in __mod:
         component.start(__version__)

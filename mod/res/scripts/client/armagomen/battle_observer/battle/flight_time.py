@@ -11,7 +11,7 @@ class FlightTime(FlightTimeMeta):
 
     def __init__(self):
         super(FlightTime, self).__init__()
-        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, flightTime=0, distance=0)
+        self.macrosDict = defaultdict(int, flightTime=0, distance=0)
 
     def _populate(self):
         super(FlightTime, self)._populate()

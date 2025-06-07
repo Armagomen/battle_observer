@@ -1,6 +1,6 @@
 from collections import defaultdict, namedtuple
 
-from armagomen._constants import BATTLE_TIMER, COLORS, GLOBAL
+from armagomen._constants import BATTLE_TIMER, COLORS
 from armagomen.battle_observer.meta.battle.battle_timer_meta import BattleTimerMeta
 from gui.battle_control.controllers.period_ctrl import IAbstractPeriodView
 from helpers.time_utils import ONE_MINUTE
@@ -13,8 +13,7 @@ class BattleTimer(BattleTimerMeta, IAbstractPeriodView):
     def __init__(self):
         super(BattleTimer, self).__init__()
         self.timerColors = None
-        self.timer = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timerColor=COLORS.WHITE,
-                                 timer=BATTLE_TIMER.START_STRING)
+        self.timer = defaultdict(str, timerColor=COLORS.WHITE, timer=BATTLE_TIMER.START_STRING)
 
     def _populate(self):
         super(BattleTimer, self)._populate()

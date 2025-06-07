@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from armagomen._constants import DISTANCE, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
 from armagomen.utils.common import getPlayer
@@ -11,7 +9,7 @@ class Distance(DistanceMeta):
 
     def __init__(self):
         super(Distance, self).__init__()
-        self.macrosDict = defaultdict(lambda: GLOBAL.CONFIG_ERROR, {"distance": 0, "name": GLOBAL.EMPTY_LINE})
+        self.macrosDict = {"distance": 0, "name": GLOBAL.EMPTY_LINE}
         self.isPostmortem = False
         self.vehicles = {}
         self.player = None

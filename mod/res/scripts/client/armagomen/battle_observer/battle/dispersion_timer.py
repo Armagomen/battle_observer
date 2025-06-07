@@ -16,7 +16,7 @@ class DispersionTimer(DispersionTimerMeta):
 
     def __init__(self):
         super(DispersionTimer, self).__init__()
-        self.macro = defaultdict(lambda: GLOBAL.CONFIG_ERROR, timer=0.0, percent=0)
+        self.macro = defaultdict(float, timer=0.0, percent=0)
         self.min_angle = 1.0
         self.isPostmortem = False
 

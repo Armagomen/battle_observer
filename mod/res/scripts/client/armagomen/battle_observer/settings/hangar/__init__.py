@@ -311,35 +311,37 @@ class SettingsInterface(CreateElement):
             self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
             logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
-        else:
-            settings_block = getattr(self.loader.settings, blockID, None)
-            if settings_block is None:
-                return
-            for key, value in data.iteritems():
-                updated_config_link, param_name = self.getLinkToParam(settings_block, key)
-                if param_name not in updated_config_link:
-                    continue
-                is_string = isinstance(value, (unicode, str))
-                if GLOBAL.ALIGN in key:
-                    value = GLOBAL.ALIGN_LIST[value]
-                elif blockID == HP_BARS.NAME and key == HP_BARS.STYLE and not is_string:
+            return
+        settings_block = getattr(self.loader.settings, blockID, None)
+        if settings_block is None:
+            return
+        for key, value in data.iteritems():
+            updated_config_link, param_name = self.getLinkToParam(settings_block, key)
+            if param_name not in updated_config_link:
+                continue
+            if GLOBAL.ALIGN in key:
+                value = GLOBAL.ALIGN_LIST[value]
+            elif not isinstance(value, (unicode, str)):
+                if blockID == HP_BARS.NAME and key == HP_BARS.STYLE:
                     value = HP_BARS.STYLES[value]
-                elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE and not is_string:
+                elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE:
                     value = DEBUG_PANEL.STYLES[value]
-                elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME and not is_string:
+                elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
                     value = self.loader.sixth_sense_list[value]
-                elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name and is_string:
-                    value = value.strip().split(',')
-                    try:
-                        value = [val for val in (round(float(x.strip()), 1) for x in value) if val >= 2.0]
-                    except Exception as error:
-                        logError(error.message)
-                        value = SNIPER.DEFAULT_STEPS
-                if type(value) == int and type(updated_config_link[param_name]) == float:
-                    value = float(value)
-                updated_config_link[param_name] = value
-            self.loader.updateConfigFile(settings_block, blockID)
-            self.loader.settings.onModSettingsChanged(settings_block, blockID)
+            elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name:
+                value = self.process_steps(value)
+            updated_config_link[param_name] = value
+        self.loader.updateConfigFile(settings_block, blockID)
+        self.loader.settings.onModSettingsChanged(settings_block, blockID)
+
+
+    @staticmethod
+    def process_steps(value):
+        try:
+            return [round(float(x), 1) for x in value.replace(" ", "").split(',') if x and float(x) >= 2.0]
+        except Exception as error:
+            logError(str(error))
+            return SNIPER.DEFAULT_STEPS
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""

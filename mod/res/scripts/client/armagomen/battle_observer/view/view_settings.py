@@ -44,7 +44,6 @@ class ViewSettings(object):
         return self.gui.isRandomBattle() or self.gui.isMapbox()
 
     def isLastStand(self):
-        logInfo(self.gui.guiType)
         return self.gui.guiType == getattr(ARENA_GUI_TYPE, "LAST_STAND", -1)
 
     @staticmethod

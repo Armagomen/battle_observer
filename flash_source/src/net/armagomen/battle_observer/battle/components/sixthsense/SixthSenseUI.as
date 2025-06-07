@@ -31,7 +31,6 @@
 		private var timeoutID:Number;
 		private var progress:Number    = 10000;
 		private var show_time:Number   = 10000;
-		private var is_visible:Boolean = false;
 		private var _timer:Timer       = null;
 		
 		public var playSound:Function;
@@ -57,6 +56,7 @@
 				this.params = this.getSettings();
 				this.x = App.appWidth >> 1;
 				this._container = new Sprite()
+				this._container.alpha = 0;
 				this.addChild(this._container);
 				if (this.params.default_icon)
 				{
@@ -88,11 +88,10 @@
 			App.utils.data.cleanupDynamicObject(this.params);
 		}
 		
-		private function addAnimations(finish:Number):void
+		private function addAnimations():void
 		{
-			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, -finish, 0.5);
+			this.hideAnimation = new Tween(this._container, "y", this.POSITION_Y, 0, 0.5);
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
-			this._container.alpha = 0;
 		}
 		
 		private function rewind():void
@@ -140,25 +139,22 @@
 			}
 			if (!this.hideAnimation)
 			{
-				this.addAnimations(afterScaleWH);
-			}
-			else
-			{
-				this.hideAnimation.finish = -afterScaleWH;
-				this.hideAnimation.begin = this.POSITION_Y;
-			}
-			
+				this.addAnimations();
+			}			
 			if (!this.radial_progress)
 			{
 				this.radial_progress = new RadialProgressBar(this._container);
 			}
 			var radius:Number = Math.round(this.params.show_timer_graphics_radius * scale) || half_size;
 			this.radial_progress.setParams(0, half_size, radius, scale, Utils.colorConvert(this.params.show_timer_graphics_color));
+			this._container.alpha = 0;
 		}
 		
 		public function as_show(seconds:Number):void
 		{
 			this.rewind();
+			this._container.y = this.POSITION_Y;
+			this._container.alpha = 1.0;
 			if (seconds)
 			{
 				this.clearTimers();
@@ -183,9 +179,6 @@
 					this.timeoutID = setTimeout(as_hide, this.show_time)
 				}
 			}
-			this._container.y = this.POSITION_Y;
-			this._container.alpha = 1.0;
-			this.is_visible = true;
 		}
 		
 		private function clearTimers():void
@@ -204,7 +197,7 @@
 		public function as_hide():void
 		{
 			this.clearTimers();
-			if (this.is_visible)
+			if (this._container.alpha)
 			{
 				if (this.timer_text)
 				{
@@ -212,7 +205,6 @@
 				}
 				this.hideAnimation.start();
 				this.hideAnimation2.start();
-				this.is_visible = false;
 			}
 		}
 		

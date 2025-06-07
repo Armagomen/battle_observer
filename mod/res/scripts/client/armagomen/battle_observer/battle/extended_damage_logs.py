@@ -126,14 +126,16 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
                     self.updateExtendedLog(log_data)
 
     def onVehicleKilled(self, targetID, attackerID, *args, **kwargs):
-        if self.playerVehicleID in (targetID, attackerID):
-            if self.playerVehicleID == targetID:
-                log_data = self.getLogData(FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
-                log_data.kills.add(attackerID)
-            else:
-                log_data = self.getLogData(FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY)
-                log_data.kills.add(targetID)
-            self.updateExtendedLog(log_data)
+        if self.playerVehicleID not in (targetID, attackerID):
+            return
+        event_id, vehicle_id = (
+            (FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER, attackerID)
+            if self.playerVehicleID == targetID else
+            (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, targetID)
+        )
+        log_data = self.getLogData(event_id)
+        log_data.kills.add(vehicle_id)
+        self.updateExtendedLog(log_data)
 
     def checkShell(self, extra, target_id):
         shell_type = extra.getShellType()
@@ -158,7 +160,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         else:
             shell_name, gold = DAMAGE_LOG.NOT_SHELL, False
         logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, is_player)
-        vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: GLOBAL.CONFIG_ERROR))
+        vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: "ERROR"))
         vehicle_info_vo = self.getVehicleInfo(target_id)
         if is_player:
             max_health = vehicle_info_vo.vehicleType.maxHealth

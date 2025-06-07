@@ -14,7 +14,7 @@ def changeValue(vehicle, value):
 def onVehicleChanged(vehicle):
     if not user_settings.main[MAIN.DIRECTIVES]:
         return
-    if vehicle is None or vehicle.isLocked or vehicle.isInBattle:
+    if vehicle is None or vehicle.isLocked:
         return
     if not hasattr(vehicle, "battleBoosters") or vehicle.battleBoosters is None:
         logInfo("No battle boosters available for this vehicle: {}", vehicle.userName)
