@@ -243,7 +243,6 @@ localization = {
         "disable_cam_after_shot_latency": "Delay automatic shutdown of the camera.",
         "disable_cam_after_shot_skip_clip": "Do not exit if magazine loading system.",
         "dynamic_zoom": "Automatic selection of the zoom ratio when switching to sniper mode.",
-        "dynamic_zoom_steps_only": "Move only in fixed steps.",
         "dynamic_zoom_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
         "steps_enabled": "Enable Steps of zoom.",
         "steps_range": "Steps of zoom.",

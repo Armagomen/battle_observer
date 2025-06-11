@@ -2,7 +2,7 @@
 from collections import namedtuple
 
 from armagomen._constants import getLogo, GLOBAL
-from armagomen.utils.common import openWebBrowser, restartGame
+from armagomen.utils.common import closeClient, openWebBrowser
 from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
@@ -13,14 +13,14 @@ from wg_async import AsyncReturn, wg_async, wg_await
 
 language = getClientLanguage().lower()
 if language == "uk":
-    labels = ("ПЕРЕЗАПУСТИТИ ГРУ", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати",
+    labels = ("Закрити гру", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати",
               "Ігнорувати цей танк", "Так", "Ні")
 elif language in ('ru', 'be'):
-    labels = ("ПЕРЕЗАПУСТИТЬ ИГРУ", "Автоматически", "Ручной режим", "Отменить", "Закрыть", "Применить",
+    labels = ("Закрыть игру", "Автоматически", "Ручной режим", "Отменить", "Закрыть", "Применить",
               "Игнорировать танк", "Да", "Нет")
 else:
-    labels = ("RESTART GAME", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank", "Yes", "No")
-buttons = namedtuple("BUTTONS", "restart auto handle cancel close apply ignore yes no")(*labels)
+    labels = ("Close game", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank", "Yes", "No")
+buttons = namedtuple("BUTTONS", "close_game auto handle cancel close apply ignore yes no")(*labels)
 
 
 class DialogBase(object):
@@ -63,11 +63,11 @@ class UpdaterDialogs(DialogBase):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), title)))
         builder.setFormattedMessage(message)
-        builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=buttons.restart)
+        builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=buttons.close_game)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
         result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.PURCHASE))
         if result:
-            restartGame()
+            closeClient()
         raise AsyncReturn(result)
 
 

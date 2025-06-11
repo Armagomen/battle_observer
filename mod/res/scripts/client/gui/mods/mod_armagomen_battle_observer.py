@@ -29,9 +29,9 @@ def init():
         __mod.append(Updater())
     __mod.append(Core())
 
-
     for component in __mod:
         component.start(__version__)
+
 
 def fini():
     for component in __mod:

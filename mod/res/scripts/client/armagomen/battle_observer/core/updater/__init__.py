@@ -1,5 +1,9 @@
+# coding=utf-8
 import os
 import re
+import shutil
+import subprocess
+import urllib
 from collections import namedtuple
 from datetime import datetime, timedelta
 from json import loads
@@ -8,9 +12,9 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.utils.common import fetchURL, GAME_VERSION, getUpdatePath, isReplay, MODS_PATH
+from armagomen.utils.common import fetchURL, GAME_VERSION, getObserverCachePath, getUpdatePath, isReplay, MODS_PATH
 from armagomen.utils.dialogs import UpdaterDialogs
-from armagomen.utils.logging import logError, logInfo, logWarning
+from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
@@ -39,6 +43,19 @@ EXE_FILE = "{0}/mod_battle_observer_v{0}.exe"
 ZIP = "{0}/AutoUpdate.zip"
 
 
+def ensure_cleanup_exe(local_path, remote_url):
+    if os.path.exists(local_path):
+        return True
+    try:
+        response = urllib.urlopen(remote_url)
+        with open(local_path, 'wb') as out_file:
+            shutil.copyfileobj(response, out_file)
+        return True
+    except Exception as e:
+        logError("ensure_cleanup_exe {}", str(e))
+        return False
+
+
 class DownloadThread(object):
 
     def __init__(self):
@@ -49,6 +66,9 @@ class DownloadThread(object):
         self.downloader = None
         self.modPath = os.path.join(MODS_PATH, GAME_VERSION)
         self.isReplay = isReplay()
+        self.cleanup_exe = os.path.join(getObserverCachePath(), "cleanup_launcher.exe")
+        exe_url = "https://raw.githubusercontent.com/Armagomen/auto-cleanup-observer/master/dist/cleanup_launcher.exe"
+        self.hasCleanupFile = ensure_cleanup_exe(self.cleanup_exe, exe_url)
 
     def startDownload(self, version):
         path = os.path.join(getUpdatePath(), version + ".zip")
@@ -78,6 +98,20 @@ class DownloadThread(object):
                 if newFile not in old_files:
                     archive.extract(newFile, self.modPath)
                     logInfo(LOG_MESSAGES.NEW_FILE, newFile)
+
+    def fini(self):
+        if not self.hasCleanupFile:
+            return
+        version = self.updateData.get('tag_name', self.version)
+        to_delete = [str(os.path.join(self.modPath, old_file))
+                     for old_file in os.listdir(self.modPath)
+                     if "armagomen.battleObserver_" in old_file and str(version) not in old_file]
+        if to_delete:
+            logDebug("Try to remove old mod files {} in process {}", to_delete, self.cleanup_exe)
+            DETACHED_PROCESS = 0x00000008
+            CREATE_NO_WINDOW = 0x08000000
+            args = [self.cleanup_exe] + to_delete
+            subprocess.Popen(args, creationflags=DETACHED_PROCESS | CREATE_NO_WINDOW, close_fds=True)
 
     def onDownloaded(self, _url, data):
         if data is not None:
@@ -117,6 +151,7 @@ class Updater(DownloadThread):
             self.check()
 
     def fini(self):
+        super(Updater, self).fini()
         if not self.isReplay:
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 

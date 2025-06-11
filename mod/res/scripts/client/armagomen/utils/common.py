@@ -200,6 +200,8 @@ def getUpdatePath():
 def cleanupObserverUpdates():
     root = getUpdatePath()
     for filename in os.listdir(root):
+        if filename == "cleanup.bat":
+            continue
         path = os.path.join(root, filename)
         if os.path.isfile(path):
             os.unlink(path)

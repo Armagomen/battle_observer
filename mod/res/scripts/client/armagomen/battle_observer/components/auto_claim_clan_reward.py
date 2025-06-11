@@ -60,14 +60,13 @@ class AutoClaimClanReward(object):
             self.__enabled = data[MAIN.AUTO_CLAIM_CLAN_REWARD]
 
     def __onProxyDataItemShow(self, _, item):
-        if self.__enabled and g_clanCache.isInClan:
-            if item.getType() == WGNC_DATA_PROXY_TYPE.CLAN_SUPPLY_QUEST_UPDATE:
-                status = item.getStatus()
-                if not self.__claim_started and status in REWARD_STATUS_OK:
-                    self.__claimRewards()
-                elif status == QuestStatus.COMPLETE and self.__cachedProgressData and self.__cachedSettingsData:
-                    self.parseProgression(self.__cachedProgressData)
-                logDebug("AutoClaimClanReward __onProxyDataItemShow: {}", item)
+        if self.__enabled and g_clanCache.isInClan and item.getType() == WGNC_DATA_PROXY_TYPE.CLAN_SUPPLY_QUEST_UPDATE:
+            status = item.getStatus()
+            if not self.__claim_started and status in REWARD_STATUS_OK:
+                self.__claimRewards()
+            elif status == QuestStatus.COMPLETE and self.__cachedProgressData and self.__cachedSettingsData:
+                self.parseProgression(self.__cachedProgressData)
+            logDebug("AutoClaimClanReward __onProxyDataItemShow: {}", item)
 
     @adisp_process
     def __claimRewards(self):
@@ -88,7 +87,7 @@ class AutoClaimClanReward(object):
             logWarning('AutoClaimClanReward Failed to claim Progression. Code: {code}', code=response.getCode())
 
     def parseQuests(self, data):
-        if not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):
+        if data is not None and not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):
             self.__claimRewards()
 
     @staticmethod
@@ -97,7 +96,7 @@ class AutoClaimClanReward(object):
         return maximum_level and maximum_level.status == PointStatus.PURCHASED
 
     def parseProgression(self, data):
-        if not self.__cachedSettingsData.enabled:
+        if not self.__cachedSettingsData.enabled or data is None:
             return
         maximum_level_purchased = self.isMaximumLevelPurchased(data)
         available_levels = [

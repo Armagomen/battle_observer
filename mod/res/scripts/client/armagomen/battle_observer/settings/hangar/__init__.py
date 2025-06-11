@@ -8,7 +8,7 @@ from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
-settingsVersion = 38
+settingsVersion = 39
 LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME}
 
 if IS_WG_CLIENT:
@@ -222,7 +222,8 @@ class SettingsInterface(CreateElement):
         self.modsListApi, self.vxSettingsApi, self.apiEvents = g_modsListApi, vxSettingsApi, vxSettingsApiEvents
         super(SettingsInterface, self).__init__(settingsLoader)
         self.inited = set()
-        self.currentConfigID = self.newConfigID = settingsLoader.configsList.index(settingsLoader.configName)
+        _id = settingsLoader.configsList.index(settingsLoader.configName) if settingsLoader.configName in settingsLoader.configsList else 0
+        self.currentConfigID = self.newConfigID = _id
         self.newConfigLoadingInProcess = False
         settingsLoader.settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
         localization['service']['name'] = localization['service']['name'].format(version)
@@ -329,19 +330,14 @@ class SettingsInterface(CreateElement):
                 elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
                     value = self.loader.sixth_sense_list[value]
             elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name:
-                value = self.process_steps(value)
+                value = self.process_steps(value) or SNIPER.DEFAULT_STEPS
             updated_config_link[param_name] = value
         self.loader.updateConfigFile(settings_block, blockID)
         self.loader.settings.onModSettingsChanged(settings_block, blockID)
 
-
     @staticmethod
     def process_steps(value):
-        try:
-            return [round(float(x), 1) for x in value.replace(" ", "").split(',') if x and float(x) >= 2.0]
-        except Exception as error:
-            logError(str(error))
-            return SNIPER.DEFAULT_STEPS
+        return [round(float(x)) for x in value.replace(" ", "").split(',') if x.replace('.', '').isdigit() and float(x) >= 2.0]
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""

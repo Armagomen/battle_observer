@@ -66,7 +66,6 @@ Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenounin
 Name: zoom; Description: {cm:zoom}; Flags: disablenouninstallwarning;
 Name: zoom/disable_cam_after_shot; Description: {cm:zoom_disable_cam};
 Name: zoom/dynamic_zoom; Description: {cm:zoom_dynamic_zoom}; Flags: checkablealone; Types: armagomen; 
-Name: zoom/dynamic_zoom/dynamic_zoom_steps_only; Description: {cm:zoom_steps_only}; Flags: dontinheritcheck; Types: armagomen;
 Name: zoom/steps_enabled; Description: {cm:zoom_steps_enabled}; Types: armagomen;
 
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: checkablealone disablenouninstallwarning; Types: armagomen;
@@ -326,7 +325,6 @@ begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('zoom'));
     JSON_SetBool(Handle,'/disable_cam_after_shot', WizardIsComponentSelected('zoom/disable_cam_after_shot'));
     JSON_SetBool(Handle,'/dynamic_zoom', WizardIsComponentSelected('zoom/dynamic_zoom'));
-    JSON_SetBool(Handle,'/dynamic_zoom_steps_only', WizardIsComponentSelected('zoom/dynamic_zoom/dynamic_zoom_steps_only'));
     JSON_SetBool(Handle,'/steps_enabled', WizardIsComponentSelected('zoom/steps_enabled'));
     JSON_Close(Handle);
   end;

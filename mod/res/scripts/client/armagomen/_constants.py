@@ -119,10 +119,10 @@ CLOCK = namedtuple("CLOCK", (
     "<textformat tabstops='[135]'>%d %b %Y<tab>%H:%M:%S</textformat>")
 
 __Sniper = namedtuple("SNIPER", (
-    "NAME", "DYN_ZOOM", "STEPS_ONLY", "ZOOM_STEPS", "STEPS", "ZOOM_EXPOSURE", "DEFAULT_STEPS",
+    "NAME", "DYN_ZOOM", "ZOOM_STEPS", "STEPS", "ZOOM_EXPOSURE", "DEFAULT_STEPS",
     "MAX_CALIBER", "DISABLE_SNIPER", "DISABLE_LATENCY", "SKIP_CLIP"))
 SNIPER = __Sniper(
-    "zoom", "dynamic_zoom", "dynamic_zoom_steps_only", "steps_enabled", "steps_range", "zoomExposure", map(float, xrange(2, 34, 2)),
+    "zoom", "dynamic_zoom", "steps_enabled", "steps_range", "zoomExposure", map(float, xrange(2, 34, 2)),
     60, "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip")
 
 
@@ -322,7 +322,6 @@ class CONFIG_INTERFACE:
     )
     HANDLER_VALUES = {
         SNIPER.NAME: {
-            SNIPER.DYN_ZOOM: (SNIPER.STEPS_ONLY,),
             SNIPER.ZOOM_STEPS: (SNIPER.STEPS,),
             SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY)
         },

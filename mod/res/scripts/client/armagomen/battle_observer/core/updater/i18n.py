@@ -3,7 +3,7 @@ from helpers import getClientLanguage
 
 en = {
     "titleOK": "Update - Press RESTART",
-    "messageOK": "Click RESTART to complete the Upgrade process. v{0}\n",
+    "messageOK": "Click 'Close game' to complete the Upgrade process. v{0}\n",
     "messageNEW":
         "<font size='15'>"
         "<font size='20' color='#FFFF00'><b>Choose a download option.</b></font>\n"
@@ -18,7 +18,7 @@ en = {
 
 uk = {
     "titleOK": "Оновлення готове",
-    "messageOK": "Натисніть ПЕРЕЗАВАНТАЖЕННЯ для завершення процесу оновлення. v{0}\n",
+    "messageOK": "Натисніть 'Закрити гру' для завершення процесу оновлення. v{0}\n",
     "messageNEW":
         "<font size='15'>"
         "<font size='20' color='#FFFF00'><b>Оберіть варіант завантаження.</b></font>\n"
@@ -31,9 +31,27 @@ uk = {
     "titleNEW": "<font size='20'>Доступне оновлення <font color='#FFFF00'>v{0}</font></font>"
 }
 
+ru = {
+    "titleOK": "Обновление готово",
+    "messageOK": "Нажмите 'Закрыть игру' для завершения процесса обновления. v{0}\n",
+    "messageNEW":
+        "<font size='15'>"
+        "<font size='20' color='#FFFF00'><b>Выберите вариант загрузки.</b></font>\n"
+        "<p align='left'><font color='#00FF00'><b>Автоматически</b></font> — загрузит и распакует архив "
+        "обновления в папку. {0}\n<font color='#FFFF00'><b>Вручную</b></font> — откроет в браузере ссылку на "
+        "инсталлятор, устанавливать нужно будет вручную.</p>"
+        "\n<font size='20' color='#FFFF00'><b>Список изменений</b></font>\n"
+        "<p align='left'>{1}</p>"
+        "</font>",
+    "titleNEW": "<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>"
+}
+
 
 def getI18n():
-    if getClientLanguage().lower() in ("uk", "be"):
+    ln_code = getClientLanguage().lower()
+    if ln_code in ("ru", "be"):
+        return ru
+    elif ln_code == "uk":
         return uk
     else:
         return en

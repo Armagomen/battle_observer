@@ -130,7 +130,6 @@ class UserSettings(object):
             SNIPER.DISABLE_LATENCY: 0.5,
             SNIPER.SKIP_CLIP: True,
             SNIPER.DYN_ZOOM:  False,
-            SNIPER.STEPS_ONLY: True,
             SNIPER.ZOOM_STEPS: False,
             SNIPER.STEPS: SNIPER.DEFAULT_STEPS
         }

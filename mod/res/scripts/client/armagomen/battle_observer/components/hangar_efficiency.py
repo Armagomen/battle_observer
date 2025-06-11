@@ -37,10 +37,10 @@ def getAvgData():
         (AVG_EFFICIENCY_HANGAR.BLOCKED, "{blockedIcon}{tankAvgBlocked}"),
         (AVG_EFFICIENCY_HANGAR.STUN, "{stunIcon}{tankAvgStun}", data.tankAvgStun),
         (AVG_EFFICIENCY_HANGAR.BATTLES, "{battlesIcon}{battles}"),
-        (AVG_EFFICIENCY_HANGAR.WIN_RATE, "{winRateIcon}{winRate}%"),
-        (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "{marksOnGunIcon}{marksOnGunValue}%", data.marksAvailable)
+        (AVG_EFFICIENCY_HANGAR.WIN_RATE, "{winRateIcon}{winRate:.2f}%"),
+        (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "{marksOnGunIcon}{marksOnGunValue:.2f}%", data.marksAvailable)
     ]
-    text = [tpl[1] for tpl in settings_map if _settings.get(tpl[0]) and (len(tpl) == 2 or tpl[2])]
+    text = [tpl[1] for tpl in settings_map if _settings.get(tpl[0]) and tpl[-1]]
     if text:
         params = data._asdict()
         params.update(EFFICIENCY_ICONS)

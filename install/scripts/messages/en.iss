@@ -171,6 +171,5 @@ en.wg_logs_pos_fix=Put history in correct places (like in old mods)
 en.zoom=Sniper mode settings
 en.zoom_disable_cam=Disable sniper mode immediately after shooting
 en.zoom_dynamic_zoom=Select zoom factor automatically
-en.zoom_steps_only=Only by fixed steps
 en.zoom_steps_enabled=Replace zoom multiplicity with (2, 4, 8, 12, 16, 20, 24, 28, 32)
 
