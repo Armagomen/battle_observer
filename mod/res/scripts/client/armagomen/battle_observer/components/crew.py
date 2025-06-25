@@ -82,18 +82,19 @@ class CrewProcessor(object):
             return False, CREW_XP.NED_TURN_OFF
 
     def isCrewAvailable(self, vehicle):
-        for lastTankmenInvID in vehicle.lastCrew:
-            actualLastTankman = self.itemsCache.items.getTankman(lastTankmenInvID)
-            if actualLastTankman is not None and actualLastTankman.isInTank:
-                lastTankmanVehicle = self.itemsCache.items.getVehicle(actualLastTankman.vehicleInvID)
-                if lastTankmanVehicle and lastTankmanVehicle.isLocked:
-                    return False
-        return True
+        isLockedFound = False
+        for tankmanID in vehicle.lastCrew:
+            tankman = self.itemsCache.items.getTankman(tankmanID)
+            if tankman and tankman.isInTank:
+                tankmanVehicle = self.itemsCache.items.getVehicle(tankman.vehicleInvID)
+                if tankmanVehicle:
+                    isLockedFound |= tankmanVehicle.isLocked
+        return not isLockedFound
 
     def onVehicleChanged(self, vehicle):
         if not vehicle or vehicle.isLocked:
             return
-        if user_settings.main[MAIN.CREW_RETURN] and vehicle.lastCrew:
+        if user_settings.main[MAIN.CREW_RETURN]:
             self.updateAutoReturn(vehicle)
         if IS_WG_CLIENT and user_settings.main[MAIN.CREW_TRAINING]:
             self.updateAcceleration(vehicle)
@@ -116,16 +117,17 @@ class CrewProcessor(object):
 
     @decorators.adisp_process('updating')
     def __autoReturnToggleSwitch(self, vehicle):
-        if not bool(vehicle.settings & VEHICLE_SETTINGS_FLAG.AUTO_RETURN):
-            result = yield VehicleAutoReturnProcessor(vehicle, True).request()
-            if result.success and not vehicle.isCrewLocked:
+        available = bool(vehicle.lastCrew and not vehicle.isOnlyForBattleRoyaleBattles)
+        if available != bool(vehicle.settings & VEHICLE_SETTINGS_FLAG.AUTO_RETURN):
+            result = yield VehicleAutoReturnProcessor(vehicle, available).request()
+            if available and result.success and not vehicle.isCrewLocked and not vehicle.isCrewFull:
                 result = yield TankmanAutoReturn(vehicle).request()
             if not result.success and result.userMsg:
                 SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType, priority=NotificationPriorityLevel.MEDIUM)
 
     @decorators.adisp_process('crewReturning')
     def __processReturnCrew(self, vehicle):
-        if not vehicle.isCrewFull and self.isCrewAvailable(vehicle):
+        if not vehicle.isCrewFull and vehicle.lastCrew and self.isCrewAvailable(vehicle):
             result = yield TankmanReturn(vehicle).request()
             if result.userMsg:
                 SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType, priority=NotificationPriorityLevel.MEDIUM)
