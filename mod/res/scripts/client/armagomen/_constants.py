@@ -391,20 +391,21 @@ ALIAS_TO_CONFIG_NAME_LOBBY = {
 }
 
 __battle_types = (
-    "LAST_STAND",
-    "TOURNAMENT_COMP7",
-    "FUN_RANDOM",
-    "UNKNOWN",
-    "TRAINING",
-    "SORTIE_2",
-    "RANKED",
-    "RANDOM",
-    "MAPBOX",
-    "FORT_BATTLE_2",
-    "EPIC_RANDOM_TRAINING",
-    "EPIC_RANDOM",
-    "EPIC_BATTLE",
+    "BATTLE_ROYALE",
     "COMP7",
+    "EPIC_BATTLE",
+    "EPIC_RANDOM",
+    "EPIC_RANDOM_TRAINING",
+    "FORT_BATTLE_2",
+    "FUN_RANDOM",
+    "LAST_STAND",
+    "MAPBOX",
+    "RANDOM",
+    "RANKED",
+    "SORTIE_2",
+    "TOURNAMENT_COMP7",
+    "TRAINING",
+    "UNKNOWN",
 )
 
 
