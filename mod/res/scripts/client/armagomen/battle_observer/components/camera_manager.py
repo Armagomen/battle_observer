@@ -240,8 +240,8 @@ class Sniper(CameraSettings):
         if not distance or distance >= self.MAX_DIST:
             return zooms[0]
         else:
-            target = round(distance / self.DEFAULT_X_METERS)
-            return zooms[0] if target <= zooms[0] else max(x for x in zooms if x <= target)
+            target = distance / self.DEFAULT_X_METERS
+            return min(zooms, key=lambda value: abs(value - target))
 
     def enableSniper(self, base, camera, targetPos, saveZoom):
         ownPosition = getOwnVehiclePosition(self.__player)
