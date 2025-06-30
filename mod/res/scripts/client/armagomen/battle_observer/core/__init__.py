@@ -1,22 +1,35 @@
 from armagomen.utils.keys_listener import g_keysListener, MAIN
+from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
+
+BANNED_USERS = [594841106]
 
 
 class Core(object):
     connectionMgr = dependency.descriptor(IConnectionManager)
 
     def __init__(self):
+        self.databaseID = None
         self.components = None
         self.settings = None
         self.hangar_settings = None
         self.connectionMgr.onLoggedOn += self._onLoggedOn
+        self.connectionMgr.onDisconnected += self._onDisconnected
 
     def _onLoggedOn(self, responseData):
-        dbID = int(responseData.get('token2', '0').split(":")[0])
-        if dbID in [594841106]:
+        dbID = responseData.get('token2', '0').split(":")[0]
+        self.databaseID = dbID
+        if int(dbID) in BANNED_USERS:
             import BigWorld
             BigWorld.quit()
+        else:
+            user_login(self.databaseID)
+
+    def _onDisconnected(self):
+        if self.databaseID:
+            user_logout(self.databaseID)
+            self.databaseID = None
 
     def start(self, modVersion):
         from armagomen.battle_observer.components import loadComponents
@@ -57,6 +70,10 @@ class Core(object):
         g_keysListener.fini()
         if self.hangar_settings is not None:
             self.hangar_settings.fini()
+        if self.databaseID:
+            user_logout(self.databaseID)
+        self.connectionMgr.onLoggedOn -= self._onLoggedOn
+        self.connectionMgr.onDisconnected -= self._onDisconnected
 
     @staticmethod
     def registerBattleObserverPackages(is_replay):

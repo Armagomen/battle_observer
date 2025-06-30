@@ -6,6 +6,7 @@ from random import choice
 from armagomen._constants import API_KEY, AUTH_REALM, getLogo, IMG, URLS
 from armagomen.utils.common import fetchURL, openWebBrowser, overrideMethod
 from armagomen.utils.logging import logDebug, logInfo, logWarning
+from armagomen.utils.online import get_stats
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
 from gui.shared.personality import ServicesLocator
@@ -34,6 +35,11 @@ MESSAGES = {
         "Congratulations, team! Our project is growing thanks to all of you. If you'd like to support us, click the link in the description. Every donation matters!",
         "Friends, thank you for staying with us! If you want to contribute to the development of our project, click the link. Your support means a lot to us!"
     )
+}
+
+ONLINE = {
+    "uk": "\nОнлайн користувачів: {}\nУсього користувачів: {}",
+    "en": "\nOnline users: {}\nTotal users: {}"
 }
 
 LINKS_FORMAT = {
@@ -78,8 +84,9 @@ class Donate(object):
         return message.decode('utf-8')
 
     def pushDonateMessage(self):
+        stats_info = ONLINE[self.ln_code].format(*get_stats())
         self.lastMessage = self.getRandomMessage()
-        message = PATTERN.format(msg=self.lastMessage, **LINKS_FORMAT[self.ln_code])
+        message = PATTERN.format(msg=self.lastMessage + stats_info, **LINKS_FORMAT[self.ln_code])
         pushMessage(message, type=SM_TYPE.Warning)
         logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
 
