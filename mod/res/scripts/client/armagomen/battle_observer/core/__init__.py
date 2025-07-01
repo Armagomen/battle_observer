@@ -1,4 +1,5 @@
 from armagomen.utils.keys_listener import g_keysListener, MAIN
+from armagomen.utils.logging import logError, logInfo
 from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
@@ -35,6 +36,7 @@ class Core(object):
                 BigWorld.quit()
             else:
                 user_login(self.databaseID)
+        logInfo("user: {} connected", responseData)
 
     def _onDisconnected(self):
         if self.databaseID:
@@ -59,7 +61,6 @@ class Core(object):
                 from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
             except Exception as error:
                 from armagomen.battle_observer.settings.hangar.loading_error import LoadingError
-                from armagomen.utils.logging import logError
                 from debug_utils import LOG_CURRENT_EXCEPTION
                 LoadingError(repr(error))
                 LOG_CURRENT_EXCEPTION()

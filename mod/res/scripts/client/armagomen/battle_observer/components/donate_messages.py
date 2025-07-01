@@ -20,9 +20,8 @@ from uilogging.core.core_constants import HTTP_OK_STATUS
 CLAN_ABBREV = "BO-UA"
 
 PATTERN = getLogo(big=False) + ("<p><font color='#ffff29'>{msg}</font></p>\n"
-                                "<p><textformat leading='2'>"
-                                "{img} <a href='event:{url}'>{name}</a>"
-                                "</textformat></p>")
+                                "<p><font color='#fafafa'>{online}</font></p>\n"
+                                "<p><textformat leading='2'>{img} <a href='event:{url}'>{name}</a></textformat></p>")
 
 MESSAGES = {
     "uk": (
@@ -38,8 +37,8 @@ MESSAGES = {
 }
 
 ONLINE = {
-    "uk": "\nОнлайн користувачів: {}\nУсього користувачів: {}",
-    "en": "\nOnline users: {}\nTotal users: {}"
+    "uk": "Онлайн користувачів: {}\nУсього користувачів: {}",
+    "en": "Online users: {}\nTotal users: {}"
 }
 
 LINKS_FORMAT = {
@@ -86,7 +85,7 @@ class Donate(object):
     def pushDonateMessage(self):
         stats_info = ONLINE[self.ln_code].format(*get_stats())
         self.lastMessage = self.getRandomMessage()
-        message = PATTERN.format(msg=self.lastMessage + stats_info, **LINKS_FORMAT[self.ln_code])
+        message = PATTERN.format(msg=self.lastMessage, online=stats_info, **LINKS_FORMAT[self.ln_code])
         pushMessage(message, type=SM_TYPE.Warning)
         logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
 
