@@ -17,14 +17,24 @@ class Core(object):
         self.connectionMgr.onLoggedOn += self._onLoggedOn
         self.connectionMgr.onDisconnected += self._onDisconnected
 
+    @staticmethod
+    def extractDatabaseID(token):
+        try:
+            return int(str(token).split(":")[0])
+        except (IndexError, ValueError, TypeError):
+            return None
+
     def _onLoggedOn(self, responseData):
-        dbID = responseData.get('token2', '0').split(":")[0]
-        self.databaseID = dbID
-        if int(dbID) in BANNED_USERS:
-            import BigWorld
-            BigWorld.quit()
-        else:
-            user_login(self.databaseID)
+        if self.databaseID:
+            user_logout(self.databaseID)
+            self.databaseID = None
+        self.databaseID = self.extractDatabaseID(responseData.get('token2'))
+        if self.databaseID:
+            if self.databaseID in BANNED_USERS:
+                import BigWorld
+                BigWorld.quit()
+            else:
+                user_login(self.databaseID)
 
     def _onDisconnected(self):
         if self.databaseID:
