@@ -4,69 +4,50 @@ import urllib2
 BASE_URL = "https://battle-observer.firebaseio.com"
 TOKEN = "jt0cTgfMZIYgEZNuEwjIykhTJFJkOIxNEMHxfbA6"
 
-
 def get_url(path):
     return BASE_URL + path + ".json?auth=" + TOKEN
 
-
-def user_exists_and_online(user_id):
-    url = get_url("/users/%s" % user_id)
-    try:
-        data = json.loads(urllib2.urlopen(url).read())
-        return data and data.get("is_online") == True
-    except:
-        return False
-
+def get_full_url():
+    return BASE_URL + ".json?auth=" + TOKEN
 
 def is_known_user(user_id):
     url = get_url("/known_users/%s" % user_id)
     try:
         result = json.loads(urllib2.urlopen(url).read())
-        return result == True
+        return result == 1 if type(result) == int else result == True
     except:
         return False
 
-
-def mark_user_as_known(user_id):
-    url = get_url("/known_users/%s" % user_id)
-    data = json.dumps(True)
-    req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
-    req.get_method = lambda: 'PUT'
-    urllib2.urlopen(req)
-
-
-def increment_stat(counter, value):
-    url = get_url("/stats/%s" % counter)
-    data = json.dumps({".sv": {"increment": value}})
-    req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
-    req.get_method = lambda: 'PUT'
-    urllib2.urlopen(req)
-
-
 def user_login(user_id):
-    if user_exists_and_online(user_id):
-        return
-    is_new = not is_known_user(user_id)
-    url = get_url("/users/%s" % user_id)
-    data = json.dumps({"is_online": True})
-    req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
-    req.get_method = lambda: 'PUT'
-    urllib2.urlopen(req)
-    increment_stat("online_count", 1)
-    if is_new:
-        increment_stat("total_count", 1)
-        mark_user_as_known(user_id)
-
+    url = get_full_url()
+    payload = {
+        "users/%s" % user_id: {"is_online": 1},
+        "known_users/%s" % user_id: 1,
+        "stats/online_count": {".sv": {"increment": 1}}
+    }
+    if not is_known_user(user_id):
+        payload["stats/total_count"] = {".sv": {"increment": 1}}
+    data = json.dumps(payload)
+    try:
+        req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
+        req.get_method = lambda: 'PATCH'
+        urllib2.urlopen(req)
+    except:
+        pass
 
 def user_logout(user_id):
-    if not user_exists_and_online(user_id):
-        return
-    url = get_url("/users/%s" % user_id)
-    req = urllib2.Request(url)
-    req.get_method = lambda: 'DELETE'
-    urllib2.urlopen(req)
-    increment_stat("online_count", -1)
-
+    url = get_full_url()
+    payload = {
+        "users/%s/is_online" % user_id: 0,
+        "stats/online_count": {".sv": {"increment": -1}}
+    }
+    data = json.dumps(payload)
+    try:
+        req = urllib2.Request(url, data, {'Content-Type': 'application/json'})
+        req.get_method = lambda: 'PATCH'
+        urllib2.urlopen(req)
+    except:
+        pass
 
 def get_stats():
     try:
