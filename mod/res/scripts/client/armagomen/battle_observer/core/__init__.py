@@ -4,7 +4,7 @@ from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
 
-BANNED_USERS = [594841106]
+BANNED_USERS = ["594841106"]
 
 
 class Core(object):
@@ -21,7 +21,7 @@ class Core(object):
     @staticmethod
     def extractDatabaseID(token):
         try:
-            return int(str(token).split(":")[0])
+            return str(token).split(":")[0]
         except (IndexError, ValueError, TypeError):
             return None
 
