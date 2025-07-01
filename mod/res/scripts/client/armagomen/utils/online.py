@@ -3,88 +3,63 @@ import urllib2
 
 from armagomen.utils.logging import logError
 
-BASE_URL = "https://battle-observer.firebaseio.com"
-TOKEN = "jt0cTgfMZIYgEZNuEwjIykhTJFJkOIxNEMHxfbA6"
+SUPABASE_URL = "https://ocakppqqnkibvfqqfjol.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jYWtwcHFxbmtpYnZmcXFmam9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzOTAzMDUsImV4cCI6MjA2Njk2NjMwNX0.epik_9pG5mwUGqDFQby41k4g5Qg-oKiowFJP40nWVD4"
 
-# MEASUREMENT_ID = "G-VLCMRH2CTP"
-# API_SECRET = "H-MWk99TQgiG0h_7DeUHnQ"
+headers_common = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": "Bearer " + SUPABASE_KEY,
+    "Content-Type": "application/json"
+}
 
-def get_url(path):
-    return BASE_URL + path + ".json?auth=" + TOKEN
-
-def get_full_url():
-    return BASE_URL + "/.json?auth=" + TOKEN
-
-def is_known_user(user_id):
-    try:
-        url = get_url("/known_users/%s" % user_id)
-        response = urllib2.urlopen(url)
-        return response.read().strip() != "null"
-    except Exception as e:
-        logError("[Firebase] Error checking known user: {}", e)
-        return False
-
-# def log_event(event_name, user_id):
-#     url = "https://www.google-analytics.com/mp/collect?measurement_id=%s&api_secret=%s" % (MEASUREMENT_ID, API_SECRET)
-#
-#     payload = {
-#         "client_id": "wot_{}".format(user_id),
-#         "events": [{
-#             "name": event_name,
-#             "params": {
-#                 "user_id": user_id,
-#                 "region": CURRENT_REALM
-#             }
-#         }]
-#     }
-#
-#     try:
-#         req = urllib2.Request(url, json.dumps(payload), {"Content-Type": "application/json"})
-#         urllib2.urlopen(req, timeout=5)
-#     except Exception as e:
-#         logError("[GA4] Event '{}' logging failed: {}", event_name, e)
 
 def user_login(user_id):
-    url = get_full_url()
-    payload = {
-        "users/%s" % user_id: {"is_online": 1},
-        "known_users/%s" % user_id: 1,
-        "stats/online_count": {".sv": {"increment": 1}}
+    url = SUPABASE_URL + "/rest/v1/users"
+    headers = headers_common.copy()
+    headers["Prefer"] = "resolution=merge-duplicates,return=representation"
+
+    data = {
+        "id": user_id,
+        "is_online": True
     }
 
-    if not is_known_user(user_id):
-        payload["stats/total_count"] = {".sv": {"increment": 1}}
-        # log_event("new_user", user_id)
+    req = urllib2.Request(url, json.dumps(data), headers)
+    req.get_method = lambda: "POST"
 
     try:
-        req = urllib2.Request(url, json.dumps(payload), {"Content-Type": "application/json"})
-        req.get_method = lambda: "PATCH"
         urllib2.urlopen(req)
     except Exception as e:
-        logError("[Firebase] Login PATCH failed: {}", e)
+        logError("Login failed for user {}: {}", user_id, e)
 
-    # log_event("user_login", user_id)
 
 def user_logout(user_id):
-    url = get_full_url()
-    payload = {
-        "users/%s/is_online" % user_id: 0,
-        "stats/online_count": {".sv": {"increment": -1}}
+    url = SUPABASE_URL + "/rest/v1/users?id=eq." + user_id
+    headers = headers_common.copy()
+    headers["Prefer"] = "return=minimal"
+
+    data = {
+        "is_online": False
     }
 
+    req = urllib2.Request(url, json.dumps(data), headers)
+    req.get_method = lambda: "PATCH"
+
     try:
-        req = urllib2.Request(url, json.dumps(payload), {"Content-Type": "application/json"})
-        req.get_method = lambda: "PATCH"
         urllib2.urlopen(req)
     except Exception as e:
-        logError("[Firebase] Logout PATCH failed: {}", e)
+        logError("Logout failed for user {}: {}", user_id, e)
 
-    # log_event("user_logout", user_id)
 
 def get_stats():
     try:
-        data = json.loads(urllib2.urlopen(get_url("/stats")).read())
-        return data.get("online_count", 0), data.get("total_count", 0)
+        url = SUPABASE_URL + "/rest/v1/rpc/get_user_stats"
+        req = urllib2.Request(url, "{}", headers_common)
+        req.get_method = lambda: "POST"
+
+        res = urllib2.urlopen(req)
+        data = json.loads(res.read())
+        return data["online"], data["total"]
+
     except Exception as e:
-        logError("[Firebase] Failed to retrieve stats: {}", e)
+        logError("Unable to fetch Supabase statistics: {}", e)
         return 0, 0
