@@ -4,7 +4,7 @@ from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
 
-BANNED_USERS = ["594841106"]
+BANNED_USERS = [594841106]
 
 
 class Core(object):
@@ -21,7 +21,7 @@ class Core(object):
     @staticmethod
     def extractDatabaseID(token):
         try:
-            return str(token).split(":")[0]
+            return int(str(token).split(":")[0])
         except (IndexError, ValueError, TypeError):
             return None
 
@@ -35,7 +35,7 @@ class Core(object):
                 import BigWorld
                 BigWorld.quit()
             else:
-                user_login(self.databaseID)
+                user_login(self.databaseID, responseData.get('name'))
         logInfo("user: {} connected", responseData)
 
     def _onDisconnected(self):
