@@ -4,9 +4,11 @@ from math import floor, log
 
 from armagomen._constants import API_KEY, STATISTICS, STATISTICS_REGION
 from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIconsMeta
-from armagomen.utils.common import addCallback, cancelCallback, fetchURL
+from armagomen.utils.async_request import async_url_request
+from armagomen.utils.common import addCallback, cancelCallback
 from armagomen.utils.logging import logDebug, logError
 from uilogging.core.core_constants import HTTP_OK_STATUS
+from wg_async import wg_async
 
 
 class WGRAndIcons(WGRAndIconsMeta):
@@ -144,12 +146,14 @@ class StatisticsDataLoader(object):
         while self.__vehicles:
             yield str(self.__vehicles.pop())
 
+    @wg_async
     def requestData(self):
         if self.__getDataCallback is not None:
             cancelCallback(self.__getDataCallback)
             self.__getDataCallback = None
         url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=API_KEY, url=STATISTICS_REGION, fields=self.FIELDS)
-        fetchURL(url, self.onDataResponse)
+        response = yield async_url_request(url)
+        self.onDataResponse(response)
 
     def getStatisticsDataFromServer(self):
         for vInfo in self.arenaDP.getVehiclesInfoIterator():

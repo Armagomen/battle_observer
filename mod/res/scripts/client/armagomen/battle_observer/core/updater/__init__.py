@@ -12,7 +12,8 @@ from zipfile import ZipFile
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.core.updater.i18n import getI18n
-from armagomen.utils.common import fetchURL, GAME_VERSION, getObserverCachePath, getUpdatePath, isReplay, MODS_PATH
+from armagomen.utils.async_request import async_url_request
+from armagomen.utils.common import GAME_VERSION, getObserverCachePath, getUpdatePath, isReplay, MODS_PATH
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from gui.Scaleform.Waiting import Waiting
@@ -173,9 +174,11 @@ class Updater(DownloadThread):
         else:
             logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode, response.body)
 
+    @wg_async
     def check(self):
         logInfo(LOG_MESSAGES.CHECK)
-        fetchURL(URLS.UPDATE_GITHUB_API_URL, self.responseUpdate)
+        response = yield async_url_request(URLS.UPDATE_GITHUB_API_URL)
+        self.responseUpdate(response)
 
     @staticmethod
     def tupleVersion(version):

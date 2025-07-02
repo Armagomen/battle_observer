@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 from random import choice
 
 from armagomen._constants import API_KEY, AUTH_REALM, getLogo, IMG, URLS
-from armagomen.utils.common import fetchURL, openWebBrowser, overrideMethod
+from armagomen.utils.async_request import async_url_request
+from armagomen.utils.common import openWebBrowser, overrideMethod
 from armagomen.utils.logging import logDebug, logInfo, logWarning
 from armagomen.utils.online import get_stats
 from gui.clans.clan_cache import g_clanCache
@@ -16,6 +17,7 @@ from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from uilogging.core.core_constants import HTTP_OK_STATUS
+from wg_async import wg_async
 
 CLAN_ABBREV = "BO-UA"
 
@@ -58,7 +60,7 @@ class Donate(object):
         self.lastMessage = None
         self.show_clan_invite = True
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
-        fetchURL(API_URL, self.onDataResponse)
+        self.check_api()
 
     def fini(self):
         ServicesLocator.appLoader.onGUISpaceEntered -= self.pushNewMessage
@@ -82,12 +84,19 @@ class Donate(object):
             message = self.getRandomMessage()
         return message.decode('utf-8')
 
+    @wg_async
+    def check_api(self):
+        response = yield async_url_request(API_URL)
+        self.onDataResponse(response)
+
+    @wg_async
     def pushDonateMessage(self):
-        stats_info = ONLINE[self.ln_code].format(*get_stats())
+        online, total = yield get_stats()
+        stats_info = ONLINE[self.ln_code].format(online, total)
         self.lastMessage = self.getRandomMessage()
         message = PATTERN.format(msg=self.lastMessage, online=stats_info, **LINKS_FORMAT[self.ln_code])
         pushMessage(message, type=SM_TYPE.Warning)
-        logInfo("A donation message has been sent to the user. Repeated in 1 hour.")
+        logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
 
     def pushClanInviteMessage(self):
         if AUTH_REALM != "EU" or not self.show_clan_invite or g_clanCache.isInClan or self.ln_code == "en":
@@ -106,15 +115,17 @@ class Donate(object):
                 return
             current_time = datetime.now()
             if current_time >= self.timeDelta:
-                self.timeDelta = current_time + timedelta(hours=1)
+                self.timeDelta = current_time + timedelta(minutes=30)
                 self.pushDonateMessage()
                 self.pushClanInviteMessage()
 
 
 donate = Donate()
 
+
 def fini():
     donate.fini()
+
 
 @overrideMethod(NotificationListView, "onClickAction")
 @overrideMethod(NotificationPopUpViewer, "onClickAction")

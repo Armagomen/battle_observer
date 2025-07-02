@@ -1,5 +1,5 @@
 from armagomen.utils.keys_listener import g_keysListener, MAIN
-from armagomen.utils.logging import logError, logInfo
+from armagomen.utils.logging import logDebug, logError
 from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
@@ -26,6 +26,7 @@ class Core(object):
             return None
 
     def _onLoggedOn(self, responseData):
+        logDebug("user: {} connected", responseData)
         if self.databaseID:
             user_logout(self.databaseID)
             self.databaseID = None
@@ -36,7 +37,6 @@ class Core(object):
                 BigWorld.quit()
             else:
                 user_login(self.databaseID, responseData.get('name'))
-        logInfo("user: {} connected", responseData)
 
     def _onDisconnected(self):
         if self.databaseID:

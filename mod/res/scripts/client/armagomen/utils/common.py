@@ -6,7 +6,6 @@ from collections import namedtuple
 from colorsys import hsv_to_rgb
 from functools import partial
 from io import open as _open
-from threading import Thread
 
 import BigWorld
 import ResMgr
@@ -15,7 +14,6 @@ from armagomen.utils.logging import logDebug, logError, logInfo
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
-from helpers.http import openUrl
 
 CONFIG_DIR = "mod_battle_observer"
 MOD_CACHE = "battle_observer"
@@ -274,14 +272,6 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0, **kwargs):
     return "#{:02X}{:02X}{:02X}".format(r, g, b)
 
 
-def urlResponse(url):
-    response = openUrl(url, 10.0)
-    response_data = response.getData()
-    if response_data is not None:
-        return encodeData(json.loads(response_data, encoding=UTF_8))
-    return response_data
-
-
 def parseColorToHex(color, asInt=False):
     color = "0x" + color[1:]
     return int(color, 16) if asInt else color
@@ -291,13 +281,6 @@ def getPercent(param_a, param_b):
     if param_b <= 0:
         return 0.0
     return float(normalizeHealth(param_a)) / param_b
-
-
-def fetchURL(url, callback, timeout=10.0, method='GET', postData=''):
-    headers = {"User-Agent": "Battle-Observer-App"}
-    th = Thread(target=BigWorld.fetchURL, args=(url, callback, headers, timeout, method, postData), name="fetchURL")
-    th.start()
-    th.join(timeout + 2)
 
 
 locale.locale_encoding_alias["cp65001"] = UTF_8

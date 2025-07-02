@@ -1,9 +1,10 @@
 import json
-import urllib2
 
+from armagomen.utils.async_request import async_url_request
 from armagomen.utils.logging import logDebug, logError
 from helpers import getClientLanguage
 from realm import CURRENT_REALM
+from wg_async import AsyncReturn, wg_async
 
 SUPABASE_URL = "https://ocakppqqnkibvfqqfjol.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jYWtwcHFxbmtpYnZmcXFmam9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzOTAzMDUsImV4cCI6MjA2Njk2NjMwNX0.epik_9pG5mwUGqDFQby41k4g5Qg-oKiowFJP40nWVD4"
@@ -11,15 +12,14 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 headers_common = {
     "apikey": SUPABASE_KEY,
     "Authorization": "Bearer " + SUPABASE_KEY,
-    "Content-Type": "application/json"
 }
 
 
+@wg_async
 def user_login(user_id, name):
     url = SUPABASE_URL + "/rest/v1/users"
     headers = headers_common.copy()
     headers["Prefer"] = "resolution=merge-duplicates,return=minimal"
-
     data = {
         "id": user_id,
         "name": name,
@@ -27,48 +27,30 @@ def user_login(user_id, name):
         "ln_code": getClientLanguage().upper(),
         "is_online": True
     }
-
-    req = urllib2.Request(url, json.dumps(data), headers)
-    req.get_method = lambda: "POST"
-
-    try:
-        response = urllib2.urlopen(req)
-        code = response.getcode()
-        logDebug("Minimal response code for user {}: {}", user_id, code)
-    except Exception as e:
-        logError("Login failed for user {}: {}", user_id, e)
+    response = yield async_url_request(url, data=data, headers=headers, method="POST")
+    logDebug("Login [{}]: {}", user_id, response.responseCode)
 
 
+@wg_async
 def user_logout(user_id):
-    url = SUPABASE_URL + "/rest/v1/users?id=eq." + str(user_id)
+    url = SUPABASE_URL + "/rest/v1/users?id=eq.{}".format(user_id)
     headers = headers_common.copy()
     headers["Prefer"] = "return=minimal"
-
-    data = {
-        "is_online": False
-    }
-
-    req = urllib2.Request(url, json.dumps(data), headers)
-    req.get_method = lambda: "PATCH"
-
-    try:
-        response = urllib2.urlopen(req)
-        code = response.getcode()
-        logDebug("Minimal response code for user {}: {}", user_id, code)
-    except Exception as e:
-        logError("Logout failed for user {}: {}", user_id, e)
+    data = {"is_online": False}
+    response = yield async_url_request(url, data=data, headers=headers, method="PATCH")
+    logDebug("Logout [{}]: {}", user_id, response.responseCode)
 
 
+@wg_async
 def get_stats():
+    url = SUPABASE_URL + "/rest/v1/rpc/get_user_stats"
+    response = yield async_url_request(url, headers=headers_common, method="POST")
     try:
-        url = SUPABASE_URL + "/rest/v1/rpc/get_user_stats"
-        req = urllib2.Request(url, "{}", headers_common)
-        req.get_method = lambda: "POST"
-
-        res = urllib2.urlopen(req)
-        data = json.loads(res.read())
-        return data["online"], data["total"]
-
+        result = json.loads(response.body)
+        online = result.get("online", 0)
+        total = result.get("total", 0)
     except Exception as e:
-        logError("Unable to fetch Supabase statistics: {}", e)
-        return 0, 0
+        logError("Stats parsing error: {}", repr(e))
+        online = total = 0
+
+    raise AsyncReturn((online, total))
