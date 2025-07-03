@@ -136,12 +136,12 @@ class DownloadThread(object):
 
 class Updater(DownloadThread):
 
-    def __init__(self):
+    def __init__(self, modVersion):
         super(Updater, self).__init__()
+        self.version = modVersion
         self.timeDelta = datetime.now()
 
-    def start(self, version):
-        self.version = version
+    def start(self):
         if not self.isReplay:
             ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         else:

@@ -26,11 +26,11 @@ def init():
     logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
     if IS_WG_CLIENT:
         from armagomen.battle_observer.core.updater import Updater
-        __mod.append(Updater())
-    __mod.append(Core())
+        __mod.append(Updater(__version__))
+    __mod.append(Core(__version__))
 
     for component in __mod:
-        component.start(__version__)
+        component.start()
 
 
 def fini():

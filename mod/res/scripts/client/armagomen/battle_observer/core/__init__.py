@@ -10,7 +10,8 @@ BANNED_USERS = [594841106]
 class Core(object):
     connectionMgr = dependency.descriptor(IConnectionManager)
 
-    def __init__(self):
+    def __init__(self, modVersion):
+        self.version = modVersion
         self.databaseID = None
         self.components = None
         self.settings = None
@@ -36,14 +37,14 @@ class Core(object):
                 import BigWorld
                 BigWorld.quit()
             else:
-                user_login(self.databaseID, responseData.get('name'))
+                user_login(self.databaseID, responseData.get('name'), self.version)
 
     def _onDisconnected(self):
         if self.databaseID:
             user_logout(self.databaseID)
             self.databaseID = None
 
-    def start(self, modVersion):
+    def start(self):
         from armagomen.battle_observer.components import loadComponents
         from armagomen.battle_observer.settings import settings_loader
         from armagomen.utils.common import isReplay
@@ -67,7 +68,7 @@ class Core(object):
                 logError("Settings Api Not Loaded")
             else:
                 from armagomen.battle_observer.settings.hangar import SettingsInterface
-                self.hangar_settings = SettingsInterface(settings_loader, modVersion, g_modsListApi, vxSettingsApi, vxSettingsApiEvents)
+                self.hangar_settings = SettingsInterface(settings_loader, self.version, g_modsListApi, vxSettingsApi, vxSettingsApiEvents)
 
     def fini(self):
         from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache

@@ -16,7 +16,7 @@ headers_common = {
 
 
 @wg_async
-def user_login(user_id, name):
+def user_login(user_id, name, version):
     url = SUPABASE_URL + "/rest/v1/users"
     headers = headers_common.copy()
     headers["Prefer"] = "resolution=merge-duplicates,return=minimal"
@@ -25,7 +25,8 @@ def user_login(user_id, name):
         "name": name,
         "region": CURRENT_REALM,
         "ln_code": getClientLanguage().upper(),
-        "is_online": True
+        "is_online": True,
+        "version": version
     }
     response = yield async_url_request(url, data=data, headers=headers, method="POST")
     logDebug("Login [{}]: {}", user_id, response.responseCode)
