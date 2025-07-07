@@ -59,7 +59,7 @@ class WGRAndIcons(WGRAndIconsMeta):
         for accountDBID, value in loadedData.iteritems():
             if not value:
                 continue
-            vehicle_id = self._arenaDP.getVehIDByAccDBID(int(accountDBID))
+            vehicle_id = self._arenaDP.getVehIDByAccDBID(accountDBID)
             if vehicle_id in self.itemsData:
                 continue
             veh_info = self.getVehicleInfo(vehicle_id)
@@ -117,10 +117,10 @@ class StatisticsDataLoader(object):
             return
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
-            data = response_data.get("data", {})
+            data = {int(k): v for k, v in response_data.get("data", {}).iteritems()}
             logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
             self.__callback(data)
-            self.__loaded.update(int(k) for k in data.keys())
+            self.__loaded.update(data.iterkeys())
         else:
             self.delayedLoad(response.responseCode)
 

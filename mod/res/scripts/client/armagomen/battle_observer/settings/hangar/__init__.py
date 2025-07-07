@@ -1,7 +1,7 @@
 from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_WG_CLIENT, MAIN,
                                   MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
 from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
-from armagomen.utils.common import openWebBrowser, xvmInstalled
+from armagomen.utils.common import IS_XVM_INSTALLED, openWebBrowser
 from armagomen.utils.logging import logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
@@ -172,7 +172,7 @@ class CreateElement(Getter):
     @staticmethod
     def createBlock(blockID, params, column1, column2):
         name = localization.get(blockID, {}).get("header", blockID)
-        warning = xvmInstalled and blockID in LOCKED_BLOCKS
+        warning = IS_XVM_INSTALLED and blockID in LOCKED_BLOCKS
         if warning:
             name = " ".join((name, "<font color='#ff3d3d'>{}</font>".format(LOCKED_MESSAGE)))
         return {

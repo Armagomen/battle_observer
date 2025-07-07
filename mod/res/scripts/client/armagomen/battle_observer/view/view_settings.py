@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from armagomen._constants import BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, STATISTICS
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import xvmInstalled
+from armagomen.utils.common import IS_XVM_INSTALLED
 from armagomen.utils.logging import logDebug, logInfo
 from constants import ARENA_GUI_TYPE
 
@@ -48,9 +48,9 @@ class ViewSettings(object):
 
     @staticmethod
     def xvm_installed(module):
-        if xvmInstalled:
+        if IS_XVM_INSTALLED:
             logInfo("{} module is disabled, XVM is installed", module)
-        return xvmInstalled
+        return IS_XVM_INSTALLED
 
     def isSpecialBattle(self):
         return self.gui.isInEpicRange() or self.isLastStand() or self.gui.isBattleRoyale()

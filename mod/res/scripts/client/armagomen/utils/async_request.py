@@ -19,4 +19,4 @@ def async_url_request(url, data=None, headers=None, method='GET'):
 
 
 def _internal_fetch(url, headers, method, postData, callback=lambda x: x):
-    return BigWorld.fetchURL(url, callback, headers or {}, REQUEST_TIMEOUT, method, postData)
+    return BigWorld.fetchURL(url, callback, headers, REQUEST_TIMEOUT, method, postData)

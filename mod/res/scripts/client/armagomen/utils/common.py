@@ -115,20 +115,15 @@ def removeDirs(path):
 
 def cleanupUpdates():
     path = os.path.join(CWD, "updates")
-    # Gather directory contents
     if not os.path.exists(path):
         os.makedirs(path)
-    ignored = set()
+        return
     section = ResMgr.openSection(os.path.join(CWD, 'game_info.xml'))
-    if section['game']['upcoming_patches']:
-        for value in section['game']['upcoming_patches'].values():
-            ignored.update(val.asString.split("\\")[0] for val in value.values())
-    for _link in os.listdir(path):
-        if _link in ignored:
-            continue
-        link = os.path.join(path, _link)
-        os.unlink(link) if os.path.isfile(link) or os.path.islink(link) else removeDirs(link)
-        logInfo("CLEARING THE UPDATE FOLDER: {}", link)
+    ignored = {val.asString.split("\\")[0] for value in section['game']['upcoming_patches'].values() for val in value.values()}
+    for name in ignored.symmetric_difference(os.listdir(path)):
+        full_path = os.path.join(path, name)
+        os.unlink(full_path) if os.path.isfile(full_path) or os.path.islink(full_path) else removeDirs(full_path)
+        logInfo("CLEARING THE UPDATE FOLDER: {}", full_path)
 
 
 def clearClientCache():
@@ -179,13 +174,8 @@ def getObserverCachePath():
     return new_path
 
 
-def isXvmInstalled():
-    xfw = os.path.exists(os.path.join(MODS_PATH, GAME_VERSION, 'com.modxvm.xfw'))
-    xvm = os.path.exists(os.path.join(CWD, 'res_mods', 'mods', 'xfw_packages', 'xvm_main'))
-    return xfw and xvm
-
-
-xvmInstalled = isXvmInstalled()
+IS_XVM_INSTALLED = os.path.exists(os.path.join(MODS_PATH, GAME_VERSION, 'com.modxvm.xfw')) and os.path.exists(
+    os.path.join(CWD, 'res_mods', 'mods', 'xfw_packages', 'xvm_main'))
 
 
 def getUpdatePath():

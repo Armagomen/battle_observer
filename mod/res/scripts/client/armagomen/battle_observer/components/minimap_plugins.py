@@ -2,7 +2,7 @@ from math import degrees
 
 from armagomen._constants import BATTLES_RANGE, GLOBAL, MINIMAP
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import overrideMethod, xvmInstalled
+from armagomen.utils.common import IS_XVM_INSTALLED, overrideMethod
 from armagomen.utils.logging import logError
 from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
@@ -64,7 +64,7 @@ def _setupPlugins(base, plugin, arenaVisitor):
     _plugins = base(plugin, arenaVisitor)
     try:
         allowedMode = arenaVisitor.gui.guiType in BATTLES_RANGE
-        if not xvmInstalled and allowedMode and user_settings.minimap[GLOBAL.ENABLED]:
+        if not IS_XVM_INSTALLED and allowedMode and user_settings.minimap[GLOBAL.ENABLED]:
             if user_settings.minimap[MINIMAP.DEATH_PERMANENT]:
                 _plugins['vehicles'] = ArenaVehiclesPlugin
             _plugins['personal'] = PersonalEntriesPlugin
