@@ -5,7 +5,7 @@ __credits__ = ["Armagomen"]
 __license__ = "CC BY-NC-SA 4.0"
 __email__ = "armagomen@gmail.com"
 __status__ = "Production"
-__http__ = "https://github.com/Armagomen/battle_observer/releases"
+__http__ = "https://github.com/Armagomen/battle_observer/"
 
 import logging
 
@@ -35,7 +35,7 @@ def init():
 
 def fini():
     while _mod:
-        _mod.pop(-1).fini()
+        _mod.pop().fini()
 
     logInfo('MOD SHUTTING DOWN: v{}', __version__)
 

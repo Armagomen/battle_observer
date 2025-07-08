@@ -85,9 +85,7 @@ class DownloadThread(object):
                     zipArchive.write(data)
                 logInfo(LOG_MESSAGES.FINISHED, path)
                 self.extractZipArchive(path)
-                git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-                if not self.isReplay:
-                    self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
+                self.showUpdateFinishedDialog(version)
             else:
                 self.downloadError(_url)
             if not self.isReplay and Waiting.isOpened(WAITING_UPDATE):
@@ -98,12 +96,15 @@ class DownloadThread(object):
         logInfo(LOG_MESSAGES.STARTED, version, url)
         downloader.download(url, onUpdateDownloaded)
 
+    def showUpdateFinishedDialog(self, version):
+        if self.isReplay:
+            return
+        git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
+        self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
+
     def updateFiles(self, path, version):
         self.extractZipArchive(path)
-        logInfo(LOG_MESSAGES.ALREADY_DOWNLOADED, path)
-        git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-        if not self.isReplay:
-            self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
+        self.showUpdateFinishedDialog(version)
 
     def extractZipArchive(self, path):
         old_files = os.listdir(self.modPath)
