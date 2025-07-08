@@ -3,21 +3,31 @@ from armagomen.utils.logging import logDebug, logError
 from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
+from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
 BANNED_USERS = [594841106]
 
 
 class Core(object):
     connectionMgr = dependency.descriptor(IConnectionManager)
+    appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self, modVersion):
         self.version = modVersion
-        self.databaseID = None
-        self.components = None
+        self.userID = None
+        self.userName = None
+        self.components = {}
         self.settings = None
         self.hangar_settings = None
         self.connectionMgr.onLoggedOn += self._onLoggedOn
         self.connectionMgr.onDisconnected += self._onDisconnected
+
+    def showBanned(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.LOBBY:
+            from armagomen.utils.dialogs import BannedDialog
+            dialog = BannedDialog()
+            dialog.showDialog(self.userID, self.userName)
+            self.appLoader.onGUISpaceEntered -= self.showBanned
 
     @staticmethod
     def extractDatabaseID(token):
@@ -29,18 +39,18 @@ class Core(object):
     def _onLoggedOn(self, responseData):
         logDebug("_onLoggedOn: {}", responseData)
         self._onDisconnected()
-        self.databaseID = self.extractDatabaseID(responseData.get('token2'))
-        if self.databaseID:
-            if self.databaseID in BANNED_USERS:
-                import BigWorld
-                BigWorld.quit()
-            else:
-                user_login(self.databaseID, responseData.get('name'), self.version)
+        self.userID = self.extractDatabaseID(responseData.get('token2'))
+        self.userName = responseData.get('name')
+        if self.userID:
+            user_login(self.userID, self.userName, self.version)
+            if self.userID in BANNED_USERS:
+                self.appLoader.onGUISpaceEntered += self.showBanned
 
     def _onDisconnected(self):
-        if self.databaseID:
-            user_logout(self.databaseID)
-            self.databaseID = None
+        if self.userID:
+            user_logout(self.userID)
+            self.userID = None
+            self.userName = None
 
     def start(self):
         from armagomen.battle_observer.components import loadComponents

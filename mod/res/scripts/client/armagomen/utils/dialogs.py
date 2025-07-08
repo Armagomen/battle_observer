@@ -3,6 +3,7 @@ from collections import namedtuple
 
 from armagomen._constants import getLogo, GLOBAL
 from armagomen.utils.common import closeClient, openWebBrowser
+from armagomen.utils.logging import logInfo
 from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
@@ -32,6 +33,29 @@ class DialogBase(object):
         if app is not None and app.containerManager is not None:
             return app.containerManager.getView(WindowLayer.VIEW)
         return None
+
+class BannedDialog(DialogBase):
+
+    info = '''Access Denied
+
+User ID: {}
+Name: {}
+
+Your access to this service has been restricted due to a violation of our community guidelines. If you believe this is a mistake or would like to appeal the decision, please contact support with your User ID.
+
+Thank you for your understanding.'''
+
+    @wg_async
+    def showDialog(self, databaseId, name):
+        builder = InfoDialogBuilder()
+        builder.setFormattedTitle(getLogo())
+        builder.setFormattedMessage(self.info.format(databaseId, name))
+        builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
+        result = yield wg_await(dialogs.show(builder.buildInLobby()))
+        logInfo(result)
+        if result.result == DialogButtons.CANCEL:
+            closeClient()
+        raise AsyncReturn(result)
 
 
 class UpdaterDialogs(DialogBase):
