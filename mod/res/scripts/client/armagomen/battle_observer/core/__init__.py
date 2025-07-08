@@ -27,10 +27,8 @@ class Core(object):
             return None
 
     def _onLoggedOn(self, responseData):
-        logDebug("user: {} connected", responseData)
-        if self.databaseID:
-            user_logout(self.databaseID)
-            self.databaseID = None
+        logDebug("_onLoggedOn: {}", responseData)
+        self._onDisconnected()
         self.databaseID = self.extractDatabaseID(responseData.get('token2'))
         if self.databaseID:
             if self.databaseID in BANNED_USERS:
@@ -82,8 +80,7 @@ class Core(object):
         g_keysListener.fini()
         if self.hangar_settings is not None:
             self.hangar_settings.fini()
-        if self.databaseID:
-            user_logout(self.databaseID)
+        self._onDisconnected()
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         self.connectionMgr.onDisconnected -= self._onDisconnected
 

@@ -16,7 +16,7 @@ from sys import version
 from armagomen.utils.logging import logInfo
 from realm import CURRENT_REALM
 
-__mod = []
+_mod = []
 
 
 def init():
@@ -26,15 +26,23 @@ def init():
     logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
     if IS_WG_CLIENT:
         from armagomen.battle_observer.core.updater import Updater
-        __mod.append(Updater(__version__))
-    __mod.append(Core(__version__))
+        _mod.append(Updater(__version__))
+    _mod.append(Core(__version__))
 
-    for component in __mod:
+    for component in _mod:
         component.start()
 
 
 def fini():
-    for component in __mod:
-        component.fini()
+    while _mod:
+        _mod.pop(-1).fini()
 
     logInfo('MOD SHUTTING DOWN: v{}', __version__)
+
+
+onAvatarBecomePlayer = lambda: None
+onAccountBecomePlayer = lambda: None
+onAccountBecomeNonPlayer = lambda: None
+onConnected = lambda: None
+onDisconnected = lambda: None
+onAccountShowGUI = lambda ctx: None
