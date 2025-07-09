@@ -19,5 +19,6 @@ class LoadingError(object):
     def __show(self, spaceID):
         in_login = self.getSetting(GAME.LOGIN_SERVER_SELECTION)
         if spaceID == (GuiGlobalSpaceID.LOGIN if in_login else GuiGlobalSpaceID.LOBBY):
-            LoadingErrorDialog().showLoadingError(self.message)
+            isLobby = GuiGlobalSpaceID.LOBBY == spaceID
+            LoadingErrorDialog().showLoadingError(self.message, isLobby)
             ServicesLocator.appLoader.onGUISpaceEntered -= self.__show

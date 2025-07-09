@@ -61,35 +61,35 @@ Thank you for your understanding.'''
 class UpdaterDialogs(DialogBase):
 
     @wg_async
-    def showNewVersionAvailable(self, title, message, handleURL):
+    def showNewVersionAvailable(self, title, message, handleURL, isLobby):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), title)))
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=buttons.auto)
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.handle)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
-        result = yield wg_await(dialogs.show(builder.build(self.view)))
+        result = yield wg_await(dialogs.show(builder.buildInLobby() if isLobby else builder.build(self.view)))
         if result.result == DialogButtons.PURCHASE:
             openWebBrowser(handleURL)
         raise AsyncReturn(result.result == DialogButtons.RESEARCH)
 
     @wg_async
-    def showUpdateError(self, message):
+    def showUpdateError(self, message, isLobby):
         builder = WarningDialogBuilder()
         builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), "ERROR DOWNLOAD UPDATE")))
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
-        result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
+        result = yield wg_await(dialogs.showSimple(builder.buildInLobby() if isLobby else builder.build(self.view), DialogButtons.CANCEL))
         raise AsyncReturn(result)
 
     @wg_async
-    def showUpdateFinished(self, title, message):
+    def showUpdateFinished(self, title, message, isLobby):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), title)))
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.PURCHASE, None, True, rawLabel=buttons.close_game)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
-        result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.PURCHASE))
+        result = yield wg_await(dialogs.showSimple(builder.buildInLobby() if isLobby else builder.build(self.view), DialogButtons.PURCHASE))
         if result:
             closeClient()
         raise AsyncReturn(result)
@@ -98,12 +98,12 @@ class UpdaterDialogs(DialogBase):
 class LoadingErrorDialog(DialogBase):
 
     @wg_async
-    def showLoadingError(self, message):
+    def showLoadingError(self, message, isLobby):
         builder = WarningDialogBuilder()
         builder.setFormattedTitle(getLogo())
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
-        result = yield wg_await(dialogs.showSimple(builder.build(self.view), DialogButtons.CANCEL))
+        result = yield wg_await(dialogs.showSimple(builder.buildInLobby() if isLobby else builder.build(self.view), DialogButtons.CANCEL))
         raise AsyncReturn(result)
 
 
@@ -117,7 +117,7 @@ class CrewDialog(DialogBase):
         builder.addButton(DialogButtons.SUBMIT, None, True, rawLabel=buttons.apply)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.cancel)
         builder.addButton(DialogButtons.PURCHASE, None, False, rawLabel=buttons.ignore)
-        result = yield wg_await(dialogs.show(builder.build(self.view)))
+        result = yield wg_await(dialogs.show(builder.buildInLobby()))
         raise AsyncReturn(result)
 
 
@@ -130,5 +130,5 @@ class ExcludedMapsDialog(DialogBase):
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.RESEARCH, None, True, rawLabel=buttons.yes)
         builder.addButton(DialogButtons.CANCEL, None, False, rawLabel=buttons.no)
-        result = yield wg_await(dialogs.show(builder.build(self.view)))
+        result = yield wg_await(dialogs.show(builder.buildInLobby()))
         raise AsyncReturn(result)

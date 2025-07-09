@@ -45,6 +45,7 @@ class DownloadThread(object):
 
     def __init__(self):
         self.version = None
+        self.isLobby = False
         self.i18n = getI18n()
         self.updateData = dict()
         self.dialogs = UpdaterDialogs()
@@ -100,7 +101,7 @@ class DownloadThread(object):
         if self.isReplay:
             return
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-        self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message)
+        self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message, self.isLobby)
 
     def updateFiles(self, path, version):
         self.extractZipArchive(path)
@@ -118,9 +119,9 @@ class DownloadThread(object):
         if not self.cleanup_launcher_exist:
             return
         version = self.updateData.get('tag_name', self.version)
-        to_delete = [str(os.path.join(self.modPath, old_file))
+        to_delete = [os.path.join(self.modPath, old_file)
                      for old_file in os.listdir(self.modPath)
-                     if "armagomen.battleObserver_" in old_file and str(version) not in old_file]
+                     if "armagomen.battleObserver_" in old_file and version not in old_file]
         if to_delete:
             logDebug("Try to remove old mod files {} in process {}", to_delete, self.cleanup_exe)
             DETACHED_PROCESS = 0x00000008
@@ -132,7 +133,7 @@ class DownloadThread(object):
         message = LOG_MESSAGES.FAILED.format(url)
         logError(message)
         if not self.isReplay:
-            self.dialogs.showUpdateError(message)
+            self.dialogs.showUpdateError(message, self.isLobby)
 
 
 class Updater(DownloadThread):
@@ -184,6 +185,7 @@ class Updater(DownloadThread):
     def onGUISpaceEntered(self, spaceID):
         login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
         if spaceID == GuiGlobalSpaceID.LOGIN and login_server_selection or spaceID == GuiGlobalSpaceID.LOBBY:
+            self.isLobby = spaceID == GuiGlobalSpaceID.LOBBY
             current_time = datetime.now()
             if current_time >= self.timeDelta:
                 self.timeDelta = current_time + timedelta(hours=1)
@@ -195,6 +197,6 @@ class Updater(DownloadThread):
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
         message = self.i18n['messageNEW'].format(self.modPath, git_message)
         handle_url = URLS.UPDATE + EXE_FILE.format(ver)
-        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, handle_url))
+        result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, handle_url, self.isLobby))
         if result:
             self.startDownloadingUpdate(ver)

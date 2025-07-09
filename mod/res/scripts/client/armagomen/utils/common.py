@@ -118,12 +118,16 @@ def cleanupUpdates():
     if not os.path.exists(path):
         os.makedirs(path)
         return
-    section = ResMgr.openSection(os.path.join(CWD, 'game_info.xml'))
-    ignored = {val.asString.split("\\")[0] for value in section['game']['upcoming_patches'].values() for val in value.values()}
-    for name in ignored.symmetric_difference(os.listdir(path)):
-        full_path = os.path.join(path, name)
-        os.unlink(full_path) if os.path.isfile(full_path) or os.path.islink(full_path) else removeDirs(full_path)
-        logInfo("CLEARING THE UPDATE FOLDER: {}", full_path)
+    listDir = os.listdir(path)
+    if listDir:
+        ignored = set()
+        section = ResMgr.openSection(os.path.join(CWD, 'game_info.xml'))
+        if section['game']['upcoming_patches']:
+            ignored.update(val.asString.split("\\")[0] for value in section['game']['upcoming_patches'].values() for val in value.values())
+        for name in ignored.symmetric_difference(listDir):
+            full_path = os.path.join(path, name)
+            os.unlink(full_path) if os.path.isfile(full_path) or os.path.islink(full_path) else removeDirs(full_path)
+            logInfo("CLEARING THE UPDATE FOLDER: {}", full_path)
 
 
 def clearClientCache():

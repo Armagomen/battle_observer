@@ -164,7 +164,7 @@ class Strategic(CameraSettings):
 
 
 class Sniper(CameraSettings):
-    DEFAULT_X_METERS = 18.0
+    DEFAULT_X_METERS = 20.0
     _SNIPER_ZOOM_LEVEL = None
     ZOOM = "zoom"
     ZOOMS = "zooms"
