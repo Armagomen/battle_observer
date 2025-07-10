@@ -64,8 +64,7 @@ class DamageLog(DamageLogsMeta):
         avg_value_macros, avg_color_macros, value_macros = _EVENT_TO_TOP_LOG_MACROS[e_type]
         if e_type == FEEDBACK_EVENT_ID.PLAYER_ASSIST_TO_STUN_ENEMY and not self.stun_added:
             self.stun_added = True
-            self.top_log_template = self.settings[DAMAGE_LOG.TOP_LOG_SEPARATE].join(
-                self.settings[DAMAGE_LOG.TEMPLATE_MAIN_DMG])
+            self.top_log_template = self.settings[DAMAGE_LOG.TOP_LOG_SEPARATE].join(self.settings[DAMAGE_LOG.TEMPLATE_MAIN_DMG])
         self.top_log[value_macros] += self.unpackTopLogValue(e_type, event)
         if avg_value_macros is not None:
             value = self.top_log[value_macros]
