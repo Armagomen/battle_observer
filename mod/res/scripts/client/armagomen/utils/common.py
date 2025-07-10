@@ -277,13 +277,25 @@ def getPercent(param_a, param_b):
     return float(normalizeHealth(param_a)) / param_b
 
 
-locale.locale_encoding_alias["cp65001"] = UTF_8
-
-
 def getEncoding():
+    custom_locale_encoding_alias = {
+        "cp65001": UTF_8,
+        "utf8": UTF_8,
+        "win1251": "cp1251",
+        "euro": "ISO8859-15",
+        "latin1": "ISO8859-1",
+        "english": "ISO8859-1"
+    }
+    locale.locale_encoding_alias.update(custom_locale_encoding_alias)
     coding = locale.getpreferredencoding()
-    if coding in locale.locale_encoding_alias:
-        return locale.locale_encoding_alias[coding]
+    normalized = locale.locale_encoding_alias.get(coding)
+    if normalized:
+        return normalized
+    if "." in coding:
+        suffix = coding.split(".")[-1].lower()
+        normalized_suffix = locale.locale_encoding_alias.get(suffix)
+        if normalized_suffix:
+            return normalized_suffix
     return coding
 
 
