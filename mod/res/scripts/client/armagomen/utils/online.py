@@ -1,7 +1,7 @@
 import json
 
 from armagomen.utils.async_request import async_url_request
-from armagomen.utils.logging import logDebug, logError
+from armagomen.utils.logging import logError, logInfo
 from helpers import getClientLanguage
 from realm import CURRENT_REALM
 from wg_async import AsyncReturn, wg_async
@@ -17,9 +17,9 @@ headers_common = {
 
 @wg_async
 def user_login(user_id, name, version):
-    url = SUPABASE_URL + "/rest/v1/users"
+    url = SUPABASE_URL + "/rest/v1/users?select=banned"
     headers = headers_common.copy()
-    headers["Prefer"] = "resolution=merge-duplicates,return=minimal"
+    headers["Prefer"] = "resolution=merge-duplicates,return=representation"
     data = {
         "id": user_id,
         "name": name,
@@ -29,7 +29,14 @@ def user_login(user_id, name, version):
         "version": version
     }
     response = yield async_url_request(url, data=data, headers=headers, method="POST")
-    logDebug("Login [{}]: {}", user_id, response.responseCode)
+    banned = False
+    try:
+        body = json.loads(response.body)
+        banned = body and body[0].get("banned", False)
+        logInfo("Login [{}]: {}", user_id, body)
+    except Exception as e:
+        logError("Login body parse error: {}", e)
+    raise AsyncReturn(banned)
 
 
 @wg_async
@@ -39,7 +46,7 @@ def user_logout(user_id):
     headers["Prefer"] = "return=minimal"
     data = {"is_online": False}
     response = yield async_url_request(url, data=data, headers=headers, method="PATCH")
-    logDebug("Logout [{}]: {}", user_id, response.responseCode)
+    logInfo("Logout [{}]: {}", user_id, response.responseCode)
 
 
 @wg_async

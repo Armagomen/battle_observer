@@ -38,7 +38,7 @@ class BannedDialog(DialogBase):
 
     info = '''Access Denied
 
-User ID: {}
+ID: {}
 Name: {}
 
 Your access to this service has been restricted due to a violation of our community guidelines. If you believe this is a mistake or would like to appeal the decision, please contact support with your User ID.

@@ -4,8 +4,7 @@ from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
-
-BANNED_USERS = [594841106]
+from wg_async import wg_async
 
 
 class Core(object):
@@ -36,14 +35,15 @@ class Core(object):
         except (IndexError, ValueError, TypeError):
             return None
 
+    @wg_async
     def _onLoggedOn(self, responseData):
         logDebug("_onLoggedOn: {}", responseData)
         self._onDisconnected()
         self.userID = self.extractDatabaseID(responseData.get('token2'))
         self.userName = responseData.get('name')
         if self.userID:
-            user_login(self.userID, self.userName, self.version)
-            if self.userID in BANNED_USERS:
+            result = yield user_login(self.userID, self.userName, self.version)
+            if result:
                 self.appLoader.onGUISpaceEntered += self.showBanned
 
     def _onDisconnected(self):
