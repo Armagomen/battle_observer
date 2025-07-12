@@ -16,11 +16,17 @@ language = getClientLanguage().lower()
 if language == "uk":
     labels = ("Закрити гру", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати",
               "Ігнорувати цей танк", "Так", "Ні")
+    ban_info = ('Доступ заборонено\n\nID: {}\nІм`я: {}\n\nВаш доступ до цієї послуги обмежено.Якщо ви вважаєте, що це помилка, або хочете '
+                'оскаржити рішення, зверніться до служби підтримки, вказавши свій ідентифікатор користувача.\n\nДякуємо за розуміння.')
 elif language in ('ru', 'be'):
     labels = ("Закрыть игру", "Автоматически", "Ручной режим", "Отменить", "Закрыть", "Применить",
               "Игнорировать танк", "Да", "Нет")
+    ban_info = ('Доступ запрещён\n\nID: {}\nИмя: {}\n\nВаш доступ к этой услуге ограничен. Если вы считаете, что это ошибка, или хотите '
+                'обжаловать решение, обратитесь в службу поддержки, указав свой идентификатор пользователя.\n\nБлагодарим за понимание.')
 else:
     labels = ("Close game", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank", "Yes", "No")
+    ban_info = ('Access Denied\n\nID: {}\nName: {}\n\nYour access to this service has been restricted. If you believe this is a mistake or '
+                'would like to appeal the decision, please contact support with your User ID.\n\nThank you for your understanding.')
 buttons = namedtuple("BUTTONS", "close_game auto handle cancel close apply ignore yes no")(*labels)
 
 
@@ -34,22 +40,14 @@ class DialogBase(object):
             return app.containerManager.getView(WindowLayer.VIEW)
         return None
 
+
 class BannedDialog(DialogBase):
-
-    info = '''Access Denied
-
-ID: {}
-Name: {}
-
-Your access to this service has been restricted due to a violation of our community guidelines. If you believe this is a mistake or would like to appeal the decision, please contact support with your User ID.
-
-Thank you for your understanding.'''
 
     @wg_async
     def showDialog(self, databaseId, name):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(getLogo())
-        builder.setFormattedMessage(self.info.format(databaseId, name))
+        builder.setFormattedMessage(ban_info.format(databaseId, name))
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
         result = yield wg_await(dialogs.show(builder.buildInLobby()))
         logInfo(result)

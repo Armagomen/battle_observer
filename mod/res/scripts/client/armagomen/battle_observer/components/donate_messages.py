@@ -54,6 +54,7 @@ API_URL = "https://api.worldoftanks.eu/wot/clans/info/?application_id={}&clan_id
 
 BAN_CLAN = 500232266
 
+
 class Donate(object):
 
     def __init__(self):
@@ -70,13 +71,9 @@ class Donate(object):
     def onDataResponse(self, response):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
-            data = response_data.get("data")
-            logDebug("Donate/onDataResponse: FINISH request clan data={}", data)
-            if data:
-                self.show_clan_invite = data["500223690"]["members_count"] < 99
-        elif response.responseCode == 304:
-            return
-        else:
+            self.show_clan_invite = response_data.get("data", {}).get(str(CLAN_ID), {}).get("members_count", 0) < 99
+            logDebug("Donate/onDataResponse: FINISH request clan data={}", response.body)
+        elif response.responseCode != 304:
             logWarning('Donate/check clan members: contentType={}, responseCode={} body={}', response.contentType,
                        response.responseCode, response.body)
 
@@ -122,7 +119,7 @@ class Donate(object):
                 self.pushClanInviteMessage()
             if AUTH_REALM == "EU" and g_clanCache.clanDBID == BAN_CLAN:
                 dialog = BannedDialog()
-                dialog.showDialog(BAN_CLAN, g_clanCache.clanName)
+                dialog.showDialog(BAN_CLAN, "you clan <b>{}</b> in mod black list".format(g_clanCache.clanName))
 
 
 donate = Donate()
