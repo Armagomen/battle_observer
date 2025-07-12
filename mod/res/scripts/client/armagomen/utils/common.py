@@ -55,11 +55,14 @@ preferencesDir = getPreferencesDir()
 
 
 def restartGame():
+    BigWorld.savePreferences()
     BigWorld.worldDrawEnabled(False)
     BigWorld.restartGame()
 
 
 def closeClient():
+    BigWorld.savePreferences()
+    BigWorld.worldDrawEnabled(False)
     BigWorld.quit()
 
 
