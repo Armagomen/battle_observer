@@ -2,8 +2,7 @@
 from collections import namedtuple
 
 from armagomen._constants import getLogo, GLOBAL
-from armagomen.utils.common import closeClient, openWebBrowser
-from armagomen.utils.logging import logInfo
+from armagomen.utils.common import closeClient, disconnect, openWebBrowser
 from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
@@ -50,9 +49,8 @@ class BannedDialog(DialogBase):
         builder.setFormattedMessage(ban_info.format(databaseId, name))
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
         result = yield wg_await(dialogs.show(builder.buildInLobby()))
-        logInfo(result)
         if result.result == DialogButtons.CANCEL:
-            closeClient()
+            disconnect()
         raise AsyncReturn(result)
 
 

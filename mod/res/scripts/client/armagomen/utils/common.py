@@ -63,6 +63,10 @@ def closeClient():
     BigWorld.quit()
 
 
+def disconnect():
+    BigWorld.disconnect()
+
+
 def openWebBrowser(url):
     BigWorld.wg_openWebBrowser(url)
 
