@@ -240,7 +240,7 @@ BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
 
 LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME",))("Observer_DateTimes_UI", )
 
-DISTANCE = namedtuple("DISTANCE", ("NAME", "TEMPLATE", "DIST", "TANK_NAME"))("distance_to_enemy", "template", "distance", "name")
+DISTANCE = namedtuple("DISTANCE", ("NAME",))("distance_to_enemy", )
 
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME",))("own_health", )
 

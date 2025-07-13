@@ -237,7 +237,7 @@ class Sniper(CameraSettings):
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
 
     def getZoom(self, zooms, distance):
-        if not distance or distance >= self.MAX_DIST:
+        if not distance or distance > self.MAX_DIST:
             return zooms[0]
         else:
             target = distance / self.DEFAULT_X_METERS

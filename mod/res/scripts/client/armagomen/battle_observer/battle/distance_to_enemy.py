@@ -1,22 +1,29 @@
-from armagomen._constants import DISTANCE, GLOBAL, POSTMORTEM_MODES
+# coding=utf-8
+from armagomen._constants import GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
 from armagomen.utils.common import getPlayer
 from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler
 from gui.battle_control.battle_constants import PLAYER_GUI_PROPS
+from helpers import getClientLanguage
 
 
 class Distance(DistanceMeta):
 
     def __init__(self):
         super(Distance, self).__init__()
-        self.macrosDict = {"distance": 0, "name": GLOBAL.EMPTY_LINE}
         self.isPostmortem = False
         self.vehicles = {}
         self.player = None
+        if getClientLanguage() in ('uk', 'ru', 'be'):
+            self.__tpl = "<font color='{}' size='{}'>%.1f до %s</font>"
+        else:
+            self.__tpl = "<font color='{}' size='{}'>%.1f to %s</font>"
+        self.template = self.__tpl.format("#f5ff8f", 18)
 
     def _populate(self):
         super(Distance, self)._populate()
         self.player = getPlayer()
+        self.template = self.__tpl.format(self.settings[GLOBAL.COLOR], self.settings['text_size'])
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -68,10 +75,7 @@ class Distance(DistanceMeta):
             yield getDistanceToTarget(vehicle, avatar=self.player), vehicle.typeDescriptor.type.shortUserString
 
     def getUpdatedDistance(self):
-        if not self.vehicles:
-            return super(Distance, self).getUpdatedDistance()
-        self.macrosDict[DISTANCE.DIST], self.macrosDict[DISTANCE.TANK_NAME] = min(self.distances)
-        return self.settings[DISTANCE.TEMPLATE] % self.macrosDict
+        return self.template % min(self.distances) if self.vehicles else super(Distance, self).getUpdatedDistance()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.isPostmortem = ctrlMode in POSTMORTEM_MODES
