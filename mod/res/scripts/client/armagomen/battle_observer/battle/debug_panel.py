@@ -17,7 +17,7 @@ class DebugPanel(DebugPanelMeta):
         super(DebugPanel, self)._dispose()
 
     def updateDebugInfo(self, base, debug, ping, fps, isLaggingNow, fpsReplay):
-        base(debug, ping, fps, isLaggingNow, fpsReplay)
+        # base(debug, ping, fps, isLaggingNow, fpsReplay)
         self.as_updateS(ping, fps, isLaggingNow)
 
 
@@ -37,9 +37,9 @@ class DebugPanelLesta(DebugPanelMeta):
         super(DebugPanelLesta, self)._dispose()
 
     def updateDebugInfo(self, base, debug, ping, fps, isLaggingNow):
-        base(debug, ping, fps, isLaggingNow)
+        # base(debug, ping, fps, isLaggingNow)
         self.as_updateS(ping, fps, isLaggingNow)
 
     def updateReplayDebugInfo(self, base, debug, ping, fps, isLaggingNow, fpsReplay):
-        base(debug, ping, fps, isLaggingNow, fpsReplay)
+        # base(debug, ping, fps, isLaggingNow, fpsReplay)
         self.as_updateS(ping, fps, isLaggingNow)
