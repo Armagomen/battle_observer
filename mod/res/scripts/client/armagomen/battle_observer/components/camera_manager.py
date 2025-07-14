@@ -80,6 +80,15 @@ class CameraSettings(object):
     def __init__(self):
         self.enabled = False
         self.reset = False
+        self.isChanged = True
+
+    def onModSettingsChanged(self, data, name):
+        if name == self.name:
+            self.isChanged = True
+
+    @property
+    def name(self):
+        return None
 
     @staticmethod
     def getCamera(control_mode_name):
@@ -109,6 +118,10 @@ class Arcade(CameraSettings):
         super(Arcade, self).__init__()
         self.config = user_settings.arcade_camera
         overrideMethod(PostMortemControlMode, "enable")(self.enablePostMortem)
+
+    @property
+    def name(self):
+        return ARCADE.NAME
 
     def update(self):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
@@ -148,6 +161,10 @@ class Strategic(CameraSettings):
         super(Strategic, self).__init__()
         self.config = user_settings.strategic_camera
 
+    @property
+    def name(self):
+        return STRATEGIC.NAME
+
     def update(self):
         self.enabled = self.config[GLOBAL.ENABLED]
         ctrl_mode_names = (CTRL_MODE_NAME.STRATEGIC, CTRL_MODE_NAME.ARTY)
@@ -168,7 +185,8 @@ class Sniper(CameraSettings):
     _SNIPER_ZOOM_LEVEL = None
     ZOOM = "zoom"
     ZOOMS = "zooms"
-    MAX_DIST = 580.0
+    MAX_DIST = 600.0
+    MIN_DIST = 50.0
 
     def __init__(self):
         super(Sniper, self).__init__()
@@ -176,8 +194,10 @@ class Sniper(CameraSettings):
         self._dyn_zoom = False
         self._change_steps = False
         self.after_shoot = ChangeCameraModeAfterShoot()
-        self.min_max = MinMax(2, 25)
-        self.__player = None
+
+    @property
+    def name(self):
+        return SNIPER.NAME
 
     @staticmethod
     def linear_interpolate(x_vals_new):
@@ -207,7 +227,6 @@ class Sniper(CameraSettings):
         self.enabled = self.config[GLOBAL.ENABLED]
         self._dyn_zoom = self.config[SNIPER.DYN_ZOOM] and self.enabled
         self._change_steps = self.config[SNIPER.ZOOM_STEPS] and self.enabled
-        self.__player = getPlayer()
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is not None:
             dynamic = user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]
@@ -237,14 +256,14 @@ class Sniper(CameraSettings):
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
 
     def getZoom(self, zooms, distance):
-        if not distance or distance > self.MAX_DIST:
+        if not distance or distance > self.MAX_DIST or distance < self.MIN_DIST:
             return zooms[0]
         else:
-            target = distance / self.DEFAULT_X_METERS
+            target = (distance - self.MIN_DIST) / self.DEFAULT_X_METERS
             return min(zooms, key=lambda value: abs(value - target))
 
     def enableSniper(self, base, camera, targetPos, saveZoom):
-        ownPosition = getOwnVehiclePosition(self.__player)
+        ownPosition = getOwnVehiclePosition()
         distance = (targetPos - ownPosition).length if ownPosition is not None else 0
         camera._cfg[self.ZOOM] = self.getZoom(camera._cfg[self.ZOOMS], distance)
         return base(camera, targetPos, True)
@@ -256,14 +275,20 @@ class CameraManager(object):
     def __init__(self):
         self.appLoader.onGUISpaceBeforeEnter += self.updateCameras
         self.__modes = (Arcade(), Sniper(), Strategic())
+        for mode in self.__modes:
+            user_settings.onModSettingsChanged += mode.onModSettingsChanged
 
     def fini(self):
         self.appLoader.onGUISpaceBeforeEnter -= self.updateCameras
+        for mode in self.__modes:
+            user_settings.onModSettingsChanged -= mode.onModSettingsChanged
 
     def updateCameras(self, spaceID):
         if spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
             for mode in self.__modes:
-                mode.update()
+                if mode.isChanged:
+                    mode.update()
+                    mode.isChanged = False
 
 
 camera_manager = CameraManager()
