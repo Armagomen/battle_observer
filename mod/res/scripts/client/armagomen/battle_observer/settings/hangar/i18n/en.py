@@ -120,12 +120,14 @@ localization = {
                          "It is not recommended to set a value lower than 65%."
     },
     "dispersion_timer": {
-        "header": "Setting the reduction timer",
-        "x": "Horizontal position",
-        "y": "Vertical position",
-        "color": "Color: Not reduced",
-        "done_color": "Color: Reduced",
-        "align": "Text alignment"
+        "header": "Dispersion Timer Settings",
+        "x": "Horizontal Position",
+        "y": "Vertical Position",
+        "color": "Color: Not Aimed",
+        "done_color": "Color: Fully Aimed",
+        "align": "Text Alignment",
+        "timer": "Show Remaining Time",
+        "percent": "Show Percentage"
     },
     "effects": {
         "header": "Customize effects",
