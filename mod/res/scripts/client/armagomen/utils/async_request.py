@@ -4,7 +4,7 @@ import BigWorld
 
 from wg_async import AsyncReturn, await_callback, wg_async
 
-REQUEST_TIMEOUT = 10.0
+REQUEST_TIMEOUT = 15.0
 DEFAULT_HEADERS = {"User-Agent": "Battle-Observer-App", "Content-Type": "application/json"}
 
 

@@ -7,11 +7,9 @@ from realm import CURRENT_REALM
 from wg_async import AsyncReturn, wg_async
 
 SUPABASE_URL = "https://ocakppqqnkibvfqqfjol.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9jYWtwcHFxbmtpYnZmcXFmam9sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTEzOTAzMDUsImV4cCI6MjA2Njk2NjMwNX0.epik_9pG5mwUGqDFQby41k4g5Qg-oKiowFJP40nWVD4"
 
 headers_common = {
-    "apikey": SUPABASE_KEY,
-    "Authorization": "Bearer " + SUPABASE_KEY,
+    "apikey": "sb_publishable_Mt1NwMGZHqoj1CG7AkhozQ_XkboVWw1",
 }
 
 
@@ -52,7 +50,7 @@ def user_logout(user_id):
 @wg_async
 def get_stats():
     url = SUPABASE_URL + "/rest/v1/rpc/get_user_stats"
-    response = yield async_url_request(url, headers=headers_common, method="POST")
+    response = yield async_url_request(url, headers=headers_common.copy(), method="POST")
     try:
         result = json.loads(response.body)
         online = result.get("online", 0)
