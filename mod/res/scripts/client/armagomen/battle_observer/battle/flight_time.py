@@ -19,7 +19,7 @@ class FlightTime(FlightTimeMeta):
 
         if time or distance:
             time_str = "{0:.1f} s." if time else ""
-            percent_str = "{1:1f} m." if distance else ""
+            percent_str = "{1:.1f} m." if distance else ""
             separator = " - " if time and distance else ""
             self.tpl = "<font color='{0}'>{1}{2}{3}</font>".format(self.settings[GLOBAL.COLOR], time_str, separator, percent_str)
 

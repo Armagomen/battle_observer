@@ -17,6 +17,20 @@ if language == "uk":
               "Ігнорувати цей танк", "Так", "Ні")
     ban_info = ('Доступ заборонено\n\nID: {}\nІм`я: {}\n\nВаш доступ до цієї послуги обмежено.Якщо ви вважаєте, що це помилка, або хочете '
                 'оскаржити рішення, зверніться до служби підтримки, вказавши свій ідентифікатор користувача.\n\nДякуємо за розуміння.')
+elif language == "pl":
+    labels = ("Zamknij grę", "Automatycznie", "Ręcznie", "Anuluj", "Zamknij", "Zastosuj",
+              "Ignoruj ten pojazd", "Tak", "Nie")
+
+    ban_info = ("Dostęp zablokowany\n\nID: {}\nNazwa: {}\n\nTwój dostęp do tej usługi został ograniczony."
+                " Jeśli uważasz, że to pomyłka lub chcesz odwołać decyzję, skontaktuj się z pomocą techniczną,"
+                " podając swój identyfikator użytkownika.\n\nDziękujemy za zrozumienie.")
+elif language == "de":
+    labels = ("Spiel schließen", "Automatisch", "Manuell", "Abbrechen", "Schließen", "Übernehmen",
+              "Dieses Fahrzeug ignorieren", "Ja", "Nein")
+
+    ban_info = ("Zugriff verweigert\n\nID: {}\nName: {}\n\nDein Zugriff auf diesen Dienst wurde eingeschränkt."
+                " Falls du denkst, dass es sich um ein Versehen handelt oder du Einspruch einlegen möchtest,"
+                " wende dich bitte an den Support und gib deine Benutzer-ID an.\n\nVielen Dank für dein Verständnis.")
 elif language in ('ru', 'be'):
     labels = ("Закрыть игру", "Автоматически", "Ручной режим", "Отменить", "Закрыть", "Применить",
               "Игнорировать танк", "Да", "Нет")

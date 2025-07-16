@@ -408,9 +408,4 @@ __battle_types = (
     "UNKNOWN",
 )
 
-
-def create_range(obj, names):
-    return tuple(getattr(obj, name) for name in names if hasattr(obj, name))
-
-
-BATTLES_RANGE = create_range(ARENA_GUI_TYPE, __battle_types)
+BATTLES_RANGE = tuple(getattr(ARENA_GUI_TYPE, name) for name in __battle_types if hasattr(ARENA_GUI_TYPE, name))

@@ -46,12 +46,43 @@ ru = {
     "titleNEW": "<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>"
 }
 
+pl = {
+    "titleOK": "Aktualizacja – naciśnij RESTART",
+    "messageOK": "Kliknij „Zamknij grę”, aby zakończyć proces aktualizacji. v{0}\n",
+    "messageNEW":
+        "<font size='15'>"
+        "<font size='20' color='#FFFF00'><b>Wybierz opcję pobierania.</b></font>\n"
+        "<p align='left'><font color ='#00FF00'><b>Automatycznie</b></font> – pobierz i wypakuj archiwum"
+        " z aktualizacją do folderu {0}\n<font color='#FFFF00'><b>Ręcznie</b></font> – otwiera link do instalatora w"
+        " przeglądarce; instalacja ręczna będzie wymagana.</p>"
+        "\n<font size='20' color='#FFFF00'><b>Lista zmian</b></font>\n"
+        "<p align='left'>{1}</p>"
+        "</font>",
+    "titleNEW": "<font size='20'>Dostępna aktualizacja <font color='#FFFF00'>v{0}</font></font>"
+}
+
+de = {
+    "titleOK": "Update – Neustart erforderlich",
+    "messageOK": "Klicke auf „Spiel schließen“, um das Update abzuschließen. v{0}\n",
+    "messageNEW":
+        "<font size='15'>"
+        "<font size='20' color='#FFFF00'><b>Wähle eine Download-Option.</b></font>\n"
+        "<p align='left'><font color ='#00FF00'><b>Automatisch</b></font> – lade das Archiv herunter und entpacke"
+        " es in den Ordner {0}\n<font color='#FFFF00'><b>Manuell</b></font> – öffnet den Link zum Installer im"
+        " Browser; die Installation erfolgt manuell.</p>"
+        "\n<font size='20' color='#FFFF00'><b>Änderungsprotokoll</b></font>\n"
+        "<p align='left'>{1}</p>"
+        "</font>",
+    "titleNEW": "<font size='20'>Update verfügbar <font color='#FFFF00'>v{0}</font></font>"
+}
+
 
 def getI18n():
-    ln_code = getClientLanguage().lower()
-    if ln_code in ("ru", "be"):
-        return ru
-    elif ln_code == "uk":
-        return uk
-    else:
-        return en
+    lang_map = {
+        "uk": uk,
+        "ru": ru,
+        "be": ru,
+        "pl": pl,
+        "de": de
+    }
+    return lang_map.get(getClientLanguage().lower(), en)

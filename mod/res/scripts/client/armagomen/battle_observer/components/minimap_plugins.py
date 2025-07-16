@@ -70,5 +70,4 @@ def _setupPlugins(base, plugin, arenaVisitor):
             _plugins['personal'] = PersonalEntriesPlugin
     except Exception as err:
         logError(repr(err))
-    finally:
-        return _plugins
+    return _plugins

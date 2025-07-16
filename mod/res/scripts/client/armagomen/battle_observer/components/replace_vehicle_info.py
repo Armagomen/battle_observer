@@ -6,8 +6,13 @@ from armagomen.utils.common import overrideMethod
 from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO
 from helpers import getClientLanguage
 
-# IMG_TAG_EYE_ICON = " <IMG SRC=\"img://gui/maps/icons/library/icon_eye.png\" width=\"16\" height=\"13\" vspace=\"-2\"/>"
-ANONYMOUS_TRANSLATE = "Анонімно" if getClientLanguage().lower() == "uk" else "Anonymous"
+ANONYMOUS_TRANSLATE = {
+    "uk": "Анонімно",
+    "pl": "Anonimowo",
+    "de": "Anonym",
+    "en": "Anonymous",
+    "fr": "Anonyme"
+}.get(getClientLanguage().lower(), "Anonymous")
 EMPTY_BADGES = ([], [])
 
 

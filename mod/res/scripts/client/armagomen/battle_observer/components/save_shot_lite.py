@@ -13,13 +13,14 @@ from skeletons.gui.app_loader import IAppLoader
 from skeletons.gui.battle_session import IBattleSessionProvider
 from Vehicle import Vehicle
 
-ln = getClientLanguage().lower()
-if ln == "uk":
-    LOCKED_MESSAGE = 'Save Shot: Постріл у {} заблоковано'
-elif ln in ("ru", "be"):
-    LOCKED_MESSAGE = 'Save Shot: Выстрел в {} заблокирован'
-else:
-    LOCKED_MESSAGE = 'Save Shot: Shot in {} blocked'
+LOCKED_MESSAGE = {
+    "uk": "Save Shot: Постріл у {} заблоковано",
+    "ru": "Save Shot: Выстрел в {} заблокирован",
+    "be": "Save Shot: Выстрел в {} заблокирован",
+    "pl": "Save Shot: Strzał w {} zablokowany",
+    "de": "Save Shot: Schuss auf {} blockiert",
+    "en": "Save Shot: Shot in {} blocked"
+}.get(getClientLanguage().lower(), "Save Shot: Shot in {} blocked")
 
 
 class SaveShootLite(object):

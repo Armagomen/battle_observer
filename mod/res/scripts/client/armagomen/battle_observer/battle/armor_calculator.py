@@ -9,15 +9,21 @@ from helpers import getClientLanguage
 
 language = getClientLanguage().lower()
 
-if language == "uk":
-    NO_DAMAGE = "Крит без шкоди"
-    RICOCHET = "Рикошет"
-elif language in ("ru", "be"):
-    NO_DAMAGE = "Крит без урона"
-    RICOCHET = "Рикошет"
-else:
-    NO_DAMAGE = "Non-damaging crit"
-    RICOCHET = "Ricochet"
+NO_DAMAGE = {
+    "uk": "Крит без шкоди",
+    "pl": "Bez obrażeń",
+    "de": "Ohne Schaden",
+    "ru": "Крит без урона",
+    "be": "Крыт без пашкоджання",
+}.get(language, "Non-damaging crit")
+
+RICOCHET = {
+    "uk": "Рикошет",
+    "pl": "Rykoszet",
+    "de": "Abpraller",
+    "ru": "Рикошет",
+    "be": "Рыкашэт",
+}.get(language, "Ricochet")
 
 SETTING_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE, ARMOR_CALC.SHOW_CALIBER)
 

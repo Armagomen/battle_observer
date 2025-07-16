@@ -5,15 +5,21 @@ from gui.shared.personality import ServicesLocator
 from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 
+lang = getClientLanguage().lower()
+error_template = {
+    "uk": "Повідомлення про помилку: {}",
+    "be": "Паведамленне пра памылку: {}",
+    "ru": "Сообщение об ошибке: {}",
+    "pl": "Komunikat o błędzie: {}",
+    "de": "Fehlermeldung: {}"
+}.get(lang, "Error message: {}")
+
 
 class LoadingError(object):
     getSetting = ServicesLocator.settingsCore.getSetting
 
     def __init__(self, errorMessage):
-        if getClientLanguage().lower() in ("uk", "be"):
-            self.message = "Повідомлення про помилку: {}".format(errorMessage)
-        else:
-            self.message = "Error message: {}".format(errorMessage)
+        self.message = error_template.format(errorMessage)
         ServicesLocator.appLoader.onGUISpaceEntered += self.__show
 
     def __show(self, spaceID):

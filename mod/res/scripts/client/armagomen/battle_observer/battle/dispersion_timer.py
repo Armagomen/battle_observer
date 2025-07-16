@@ -1,3 +1,5 @@
+from collections import deque
+
 from armagomen._constants import DISPERSION_TIMER, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.utils.common import cancelOverride, overrideMethod
@@ -13,6 +15,7 @@ class DispersionTimer(DispersionTimerMeta):
         self.ideal_angle = 0
         self.isPostmortem = False
         self.tpl = None
+        self.temp = deque(maxlen=3)
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
@@ -60,10 +63,14 @@ class DispersionTimer(DispersionTimerMeta):
                 self.ideal_angle = dispersionAngles[1]
             diff = round(self.ideal_angle / dispersionAngles[0], 2)
             changeColor = diff >= 1.0
+            time = 0.0 if changeColor else round(avatar.aimingInfo[1], 1) * (1.0 - diff)
+            if time > 2.0:
+                self.temp.append(time)
+                time = sum(self.temp) / len(self.temp)
+            elif len(self.temp):
+                self.temp.clear()
             self.as_updateTimerTextS(self.tpl.format(self.settings[DISPERSION_TIMER.DONE_COLOR if changeColor else GLOBAL.COLOR],
-                                                     0.0 if changeColor else round(avatar.aimingInfo[1], 1) * (1.0 - diff),
-                                                     int(round(diff * 100))
-                                                     ))
+                                                     time, int(round(diff * 100))))
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.isPostmortem = ctrlMode in POSTMORTEM_MODES
