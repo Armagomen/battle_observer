@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from armagomen._constants import FLIGHT_TIME, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 from armagomen.utils.common import getPlayer
@@ -11,26 +9,37 @@ class FlightTime(FlightTimeMeta):
 
     def __init__(self):
         super(FlightTime, self).__init__()
-        self.macrosDict = defaultdict(int, flightTime=0, distance=0)
+        self.tpl = None
 
     def _populate(self):
         super(FlightTime, self)._populate()
-        ctrl = self.sessionProvider.shared.crosshair
-        if ctrl is not None:
-            ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
-            ctrl.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
-        handler = avatar_getter.getInputHandler()
-        if handler is not None and hasattr(handler, "onCameraChanged"):
-            handler.onCameraChanged += self.onCameraChanged
+
+        time = self.settings[FLIGHT_TIME.TIME]
+        distance = self.settings[FLIGHT_TIME.DISTANCE]
+
+        if time or distance:
+            time_str = "{0:.1f} s." if time else ""
+            percent_str = "{1:1f} m." if distance else ""
+            separator = " - " if time and distance else ""
+            self.tpl = "<font color='{0}'>{1}{2}{3}</font>".format(self.settings[GLOBAL.COLOR], time_str, separator, percent_str)
+
+            ctrl = self.sessionProvider.shared.crosshair
+            if ctrl is not None:
+                ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
+                ctrl.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
+            handler = avatar_getter.getInputHandler()
+            if handler is not None and hasattr(handler, "onCameraChanged"):
+                handler.onCameraChanged += self.onCameraChanged
 
     def _dispose(self):
-        ctrl = self.sessionProvider.shared.crosshair
-        if ctrl is not None:
-            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
-            ctrl.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
-        handler = avatar_getter.getInputHandler()
-        if handler is not None and hasattr(handler, "onCameraChanged"):
-            handler.onCameraChanged -= self.onCameraChanged
+        if self.tpl is not None:
+            ctrl = self.sessionProvider.shared.crosshair
+            if ctrl is not None:
+                ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
+                ctrl.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
+            handler = avatar_getter.getInputHandler()
+            if handler is not None and hasattr(handler, "onCameraChanged"):
+                handler.onCameraChanged -= self.onCameraChanged
         super(FlightTime, self)._dispose()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
@@ -43,6 +52,5 @@ class FlightTime(FlightTimeMeta):
             return self.as_flightTimeS(GLOBAL.EMPTY_LINE)
         shotPos, shotVec = player.gunRotator.getCurShotPosition()
         flatDist = position.flatDistTo(shotPos)
-        self.macrosDict[FLIGHT_TIME.M_FLIGHT_TIME] = flatDist / shotVec.flatDistTo(VectorConstant.Vector3Zero)
-        self.macrosDict[FLIGHT_TIME.M_DISTANCE] = flatDist
-        self.as_flightTimeS(self.settings[FLIGHT_TIME.TEMPLATE] % self.macrosDict)
+        time = flatDist / shotVec.flatDistTo(VectorConstant.Vector3Zero)
+        self.as_flightTimeS(self.tpl.format(time, flatDist))

@@ -90,7 +90,11 @@ uk.avg_efficiency_in_hangar_win_rate=Показати відсоток пере�
 uk.avg_efficiency_in_hangar_battles=Показати кількість боїв
 
 uk.battle_timer=Змінений таймер бою
-uk.dispersion_timer=Таймер зведення 
+
+uk.dispersion_timer=Таймер зведення
+uk.dispersion_timer_timer=Показувати залишок часу
+uk.dispersion_timer_percent=Показувати відсоток
+
 uk.distance_to_enemy=Дистанція до найближчого виявленого ворога
 
 //effects
@@ -102,6 +106,8 @@ uk.effects_noShockWave=Вимкнути вібрацію камери при в�
 
 uk.flight_time=Час польоту снаряду
 uk.flight_time_spg=Лише при грі на арті
+uk.flight_time_time=Показувати час
+uk.flight_time_distance=Показувати відстань
 
 //log_extended
 uk.log_extended=Розширена історія шкоди

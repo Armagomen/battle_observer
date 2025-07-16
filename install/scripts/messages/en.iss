@@ -90,7 +90,11 @@ en.avg_efficiency_in_hangar_win_rate=Show win percentage
 en.avg_efficiency_in_hangar_battles=Show battles count
 
 en.battle_timer=Changed battle timer
+
 en.dispersion_timer=Dispersion timer
+en.dispersion_timer_timer=Show Remaining Time
+en.dispersion_timer_percent=Show Percentage
+
 en.distance_to_enemy=Distance to the nearest detected enemy
 
 //effects
@@ -102,6 +106,8 @@ en.effects_noShockWave=Disable camera vibration when hitting a tank
 
 en.flight_time=Projectile flight time
 en.flight_time_spg=Only when playing on art
+en.flight_time_time=Display time
+en.flight_time_distance=Display distance
 
 //log_extended
 en.log_extended=Extended damage history

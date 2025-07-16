@@ -308,9 +308,12 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             GLOBAL.X: -110,
             GLOBAL.Y: 0,
+            GLOBAL.COLOR: "#f5ff8f",
+            FLIGHT_TIME.TIME: True,
+            FLIGHT_TIME.DISTANCE: True,
             FLIGHT_TIME.SPG_ONLY: True,
             FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
-            FLIGHT_TIME.TEMPLATE: "<font color='#f5ff8f'>%(flightTime).1fs. - %(distance).1f m.</font>"
+
         }
 
         self.distance_to_enemy = {

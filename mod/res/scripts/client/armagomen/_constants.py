@@ -196,8 +196,8 @@ ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "show_piercing_power", "armor_calculator", "position", "messages", "template", "color", "show_counted_armor",
     "show_piercing_reserve", "show_caliber", "display_on_allies")
 
-FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TEMPLATE", "M_FLIGHT_TIME", "M_DISTANCE", "ALIGN"))(
-    "flight_time", "spgOnly", "template", "flightTime", "distance", "align")
+FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TIME", "DISTANCE", "ALIGN"))(
+    "flight_time", "spgOnly", "time", "distance", "align")
 
 SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
     "NAME", "PLAY_TICK_SOUND", "TIME", "DEFAULT", "ICON_NAME", "USER_ICON", "SHOW_TIMER", "TIMER_GRAPHICS", "TIMER_GRAPHICS_COLOR",

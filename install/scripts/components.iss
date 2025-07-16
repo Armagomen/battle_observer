@@ -54,6 +54,8 @@ Name: dispersion_circle/replace; Description: {cm:dispersion_circle_replace};
 Name: dispersion_circle/server; Description: {cm:dispersion_circle_server};
 
 Name: dispersion_timer; Description: {cm:dispersion_timer}; Flags: disablenouninstallwarning;
+Name: dispersion_timer/timer; Description: {cm:dispersion_timer_timer};
+Name: dispersion_timer/percent; Description: {cm:dispersion_timer_percent};
 
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning;
 Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: armagomen;
@@ -92,6 +94,8 @@ Name: effects/noSniperDynamic; Description: {cm:effects_noSniperDynamic};
 
 Name: flight_time; Description: {cm:flight_time}; Flags: checkablealone disablenouninstallwarning;
 Name: flight_time/spgOnly; Description: {cm:flight_time_spg}; Flags: dontinheritcheck;
+Name: flight_time/time; Description: {cm:flight_time_time};
+Name: flight_time/distance; Description: {cm:flight_time_distance};
 
 Name: log_total; Description: {cm:log_total}; Flags: disablenouninstallwarning; Types: armagomen;
 
@@ -483,6 +487,8 @@ begin
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('flight_time'));
     JSON_SetBool(Handle,'/spgOnly', WizardIsComponentSelected('flight_time/spgOnly'));
+    JSON_SetBool(Handle,'/time', WizardIsComponentSelected('flight_time/time'));
+    JSON_SetBool(Handle,'/distance', WizardIsComponentSelected('flight_time/distance'));
     JSON_Close(Handle);
   end;
 end;
@@ -570,6 +576,8 @@ begin
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('dispersion_timer'));
+    JSON_SetBool(Handle,'/timer', WizardIsComponentSelected('dispersion_timer/timer'));
+    JSON_SetBool(Handle,'/percent', WizardIsComponentSelected('dispersion_timer/percent'));
     JSON_Close(Handle);
   end;
 end;

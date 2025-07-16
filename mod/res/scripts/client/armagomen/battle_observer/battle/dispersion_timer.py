@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from armagomen._constants import DISPERSION_TIMER, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.utils.common import cancelOverride, overrideMethod
@@ -12,22 +10,21 @@ class DispersionTimer(DispersionTimerMeta):
 
     def __init__(self):
         super(DispersionTimer, self).__init__()
-        self.macro = defaultdict(float, timer=0.0, percent=0)
         self.ideal_angle = 0
         self.isPostmortem = False
-        self.tpl = ""
+        self.tpl = None
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
+        timer = self.settings[DISPERSION_TIMER.TIMER]
+        percent = self.settings[DISPERSION_TIMER.PERCENT]
 
-        if self.settings[DISPERSION_TIMER.TIMER] and self.settings[DISPERSION_TIMER.PERCENT]:
-            self.tpl = "<font color='{0}'>{1:.1f}s. - {2:d}%</font>"
-        elif self.settings[DISPERSION_TIMER.PERCENT]:
-            self.tpl = "<font color='{0}'>{2:d}%</font>"
-        elif self.settings[DISPERSION_TIMER.TIMER]:
-            self.tpl = "<font color='{0}'>{1:.1f}s.</font>"
+        if timer or percent:
+            time_str = "{1:.1f}s." if timer else ""
+            percent_str = "{2:d}%" if percent else ""
+            separator = " - " if timer and percent else ""
+            self.tpl = "<font color='{0}'>{1}{2}{3}</font>".format('{0}', time_str, separator, percent_str)
 
-        if self.tpl:
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -37,7 +34,7 @@ class DispersionTimer(DispersionTimerMeta):
         overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")(self.getOwnVehicleShotDispersionAngle)
 
     def _dispose(self):
-        if self.tpl:
+        if self.tpl is not None:
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
@@ -71,4 +68,5 @@ class DispersionTimer(DispersionTimerMeta):
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.isPostmortem = ctrlMode in POSTMORTEM_MODES
         if self.isPostmortem:
+            self.ideal_angle = 0
             self.as_updateTimerTextS(GLOBAL.EMPTY_LINE)

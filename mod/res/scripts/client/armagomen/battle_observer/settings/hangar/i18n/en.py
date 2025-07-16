@@ -266,14 +266,16 @@ localization = {
         "scrollSensitivity": "Scroll sensitivity, default 10"
     },
     "flight_time": {
-        "header": "SHELLS FLIGHT TIME",
-        "x": "Horizontal text position",
-        "x_tooltip": "Position from the center of the screen. Align text ---|center|---",
-        "y": "Vertical text position",
-        "y_tooltip": "Position from the center of the screen.",
-        "spgOnly": "Display flight time only for artillery.",
-        "template": "A string template with values. Macro: %(flightTime).1f , %(distance).1f",
-        "align": "Text align."
+        "header": "Shell flight time and target distance settings",
+        "x": "Text horizontal position",
+        "x_tooltip": "Horizontal offset from screen center.",
+        "y": "Text vertical position",
+        "y_tooltip": "Vertical offset from screen center.",
+        "spgOnly": "Show flight time only for artillery",
+        "align": "Text alignment",
+        "time": "Display time",
+        "distance": "Display distance",
+        "color": "Text color"
     },
     "minimap": {
         "header": "MINIMAP",
