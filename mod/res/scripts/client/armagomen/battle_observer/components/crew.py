@@ -1,7 +1,7 @@
 from AccountCommands import VEHICLE_SETTINGS_FLAG
 from armagomen._constants import CREW_XP, GLOBAL, IS_WG_CLIENT, MAIN
+from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG
 from armagomen.battle_observer.settings import user_settings
-from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.utils.common import openIgnoredVehicles, updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
@@ -41,8 +41,7 @@ class CrewProcessor(object):
 
     @staticmethod
     def getLocalizedMessage(value, description):
-        dialog = localization[CREW_XP.NAME]
-        return GLOBAL.NEW_LINE.join((dialog[description], dialog[CREW_XP.ENABLE if value else CREW_XP.DISABLE]))
+        return GLOBAL.NEW_LINE.join((CREW_DIALOG_BY_LANG[description], CREW_DIALOG_BY_LANG[CREW_XP.ENABLE if value else CREW_XP.DISABLE]))
 
     @wg_async
     def showAccelerateDialog(self, vehicle, value, description):

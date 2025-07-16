@@ -146,7 +146,7 @@ Name: service_channel_filter/customizationChanged; Description: {cm:service_chan
 Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning;
 Name: statistics/icons; Description: {cm:statistics_icons}; Types: armagomen;
 Name: statistics/statistics_vehicle_name_color; Description: {cm:statistics_names_color};  Types: armagomen;
-Name: statistics/statistics; Description: {cm:statistics}; Types: armagomen;
+Name: statistics/statistics; Description: {cm:statistics_enabled}; Types: armagomen;
 
 Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning;
 
@@ -161,7 +161,7 @@ Source: "{#mod_source}\armagomen.battleObserver*.wotmod"; DestDir: "{app}\{code:
 Source: "{#mod_source}\me.poliroid.modslistapi*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist;
 Source: "{#mod_source}\polarfox.vxSettingsApi*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
 Source: "settings\load.json"; DestDir: "{#configs_dir}\"; Flags: ignoreversion;
-Source: "settings\default\*"; DestDir: "{#configs_dir}\armagomen_install"; Flags: ignoreversion;
+Source: "settings\default\*"; DestDir: "{#configs_dir}\bo_install"; Flags: ignoreversion;
 
 [InstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
@@ -170,14 +170,14 @@ Type: files; Name: "{app}\{code:PH_Folder_Mods}\polarfox.vxSettingsApi*.wotmod"
 
 [UninstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
-Type: filesandordirs; Name: "{#configs_dir}\armagomen_install\*"
+Type: filesandordirs; Name: "{#configs_dir}\bo_install\*"
 
 [Code]
 procedure ChangeMainJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\main.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\main.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/anti_anonymous', WizardIsComponentSelected('main/anti_anonymous'));
@@ -213,7 +213,7 @@ procedure ChangeClockJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\clock.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\clock.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('clock'));
@@ -227,7 +227,7 @@ procedure ChangeHpBarsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\hp_bars.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\hp_bars.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('hp_bars'));
@@ -243,7 +243,7 @@ procedure ChangeDebugPanelJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\debug_panel.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\debug_panel.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('debug_panel'));
@@ -258,7 +258,7 @@ procedure ChangeDispersionCircleJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\dispersion_circle.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\dispersion_circle.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('dispersion_circle'));
@@ -272,7 +272,7 @@ procedure ChangeSixthSenseJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\sixth_sense.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\sixth_sense.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('sixth_sense'));
@@ -286,7 +286,7 @@ procedure ChangeArcadeCameraJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\arcade_camera.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\arcade_camera.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('arcade_camera'));
@@ -298,7 +298,7 @@ procedure ChangeStrategicCameraJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\strategic_camera.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\strategic_camera.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('strategic_camera'));
@@ -310,7 +310,7 @@ procedure ChangeArmorCalculatorJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\armor_calculator.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\armor_calculator.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('armor_calculator'));
@@ -323,7 +323,7 @@ procedure ChangeZoomJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\zoom.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\zoom.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('zoom'));
@@ -338,7 +338,7 @@ procedure ChangeEfficiencyJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\avg_efficiency_in_hangar.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\avg_efficiency_in_hangar.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('avg_efficiency_in_hangar'));
@@ -357,7 +357,7 @@ procedure ChangeEffectsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\effects.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\effects.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/noBinoculars', WizardIsComponentSelected('effects/noBinoculars'));
@@ -372,7 +372,7 @@ procedure ChangeExtendedLogsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\log_extended.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\log_extended.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('log_extended'));
@@ -387,7 +387,7 @@ procedure ChangeMinimapLogsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\minimap.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\minimap.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('minimap'));
@@ -404,7 +404,7 @@ procedure ChangePlayersPanelsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\players_panels.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\players_panels.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('players_panels'));
@@ -421,7 +421,7 @@ procedure ChangeServiceChannelJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\service_channel_filter.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\service_channel_filter.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('service_channel_filter'));
@@ -451,7 +451,7 @@ procedure ChangeStatisticsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\statistics.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\statistics.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('statistics'));
@@ -466,7 +466,7 @@ procedure ChangeWGLogsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\wg_logs.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\wg_logs.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('wg_logs'));
@@ -482,7 +482,7 @@ procedure ChangeFlightTimeJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\flight_time.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\flight_time.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('flight_time'));
@@ -497,7 +497,7 @@ procedure ChangeDistanceToEnemyJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\distance_to_enemy.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\distance_to_enemy.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('distance_to_enemy'));
@@ -509,7 +509,7 @@ procedure ChangeBattleTimerJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\battle_timer.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\battle_timer.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('battle_timer'));
@@ -521,7 +521,7 @@ procedure ChangeLogTotalJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\log_total.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\log_total.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('log_total'));
@@ -534,7 +534,7 @@ procedure ChangeMainGunJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\main_gun.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\main_gun.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('main_gun'));
@@ -548,7 +548,7 @@ procedure ChangeOwnHealthJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\own_health.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\own_health.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('own_health'));
@@ -560,7 +560,7 @@ procedure ChangeTeamBasesJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\team_bases_panel.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\team_bases_panel.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('team_bases_panel'));
@@ -572,7 +572,7 @@ procedure ChangeDispersionTimerJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\armagomen_install\dispersion_timer.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\dispersion_timer.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('dispersion_timer'));

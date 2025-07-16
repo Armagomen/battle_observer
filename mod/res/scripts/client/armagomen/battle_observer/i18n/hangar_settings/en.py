@@ -123,8 +123,6 @@ localization = {
         "header": "Dispersion Timer Settings",
         "x": "Horizontal Position",
         "y": "Vertical Position",
-        "color": "Color: Not Aimed",
-        "done_color": "Color: Fully Aimed",
         "align": "Text Alignment",
         "timer": "Show Remaining Time",
         "percent": "Show Percentage"
@@ -195,8 +193,7 @@ localization = {
         "settings*inCenter": "Display the log in the middle of the screen",
         "settings*x": "the Position of the main log Horizontal",
         "settings*y": "the Position of the main log Vertical",
-        "settings*align": "Alignment text:",
-        "mainLogScale": "Scaling functions."
+        "settings*align": "Alignment text:"
     },
     "log_extended": {
         "header": "DETAILED LOG OF THE DAMAGE",
@@ -354,7 +351,6 @@ localization = {
         "x_tooltip": "Position from the center of the screen. Align text ---|center|---",
         "y": "Vertical text position",
         "y_tooltip": "Position from the center of the screen.",
-        "template": "String pattern. Macros: %(distance)s, %(name)s",
         "align": "Text align."
     },
     "own_health": {
@@ -363,18 +359,6 @@ localization = {
         "x_tooltip": "Position from the center of the screen.",
         "y": "Vertical text position",
         "y_tooltip": "Position from the center of the screen.",
-    },
-    "crewDialog": {
-        "enable": "<br>Enable accelerated crew training?",
-        "disable": "<br>Disable accelerated crew training?",
-        "notAvailable": "Field upgrades are not available for this vehicle.",
-        "isFullXp": "You have accumulated the necessary amount of experience to fully upgrade the field upgrade.",
-        "isFullComplete": "You have pumped the field upgrade to the highest possible level.",
-        "needTurnOff": "You do not have field upgrades, it is recommended to disable accelerated crew training."
-    },
-    "excludedMaps": {
-        "header": "Excluded Maps",
-        "message": "You have %s available slots for maps to exclude.\nProceed to the maps exclusion list?"
     },
     "avg_efficiency_in_hangar": {
         "header": "Tuning the tank stats widget in the garage",

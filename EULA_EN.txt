@@ -1,26 +1,24 @@
-## Agreement Regarding the Use of the "BATTLE OBSERVER" Modification
+## Terms of Use for the "BATTLE OBSERVER" Modification
 
-1. **Ownership Rights**: All rights not explicitly stated in this Agreement belong to the Project Owner (hereinafter referred to as the Developer).
+1. **Ownership Rights**: All rights not explicitly granted in this Agreement remain the property of the project owner (hereinafter referred to as the Developer).
 
-2. **Confirmation of Authorization**: The User guarantees that they have all necessary authorizations to enter into this Agreement or have obtained the necessary consent from their parents or legal representatives.
+2. **Authority Confirmation**: The User confirms that they have full legal authority to enter into this Agreement or have obtained permission from a parent or legal guardian.
 
-3. **Use at Your Own Risk**: The User uses the Modification at their own risk. The Modification is provided "as is," and the Developer does not guarantee seamless operation, compliance with expectations, or absence of conflicts with other mods.
+3. **Use at Your Own Risk**: The Modification is provided "as is". The Developer does not guarantee uninterrupted operation, compatibility with other mods, or that it will meet the User’s expectations. Use is at the User’s own risk.
 
-4. **Prohibited Actions by the User**:
-    - Adding modifications to modpacks without the Developer's consent.
-    - Distributing the modification on third-party resources without referencing the Developer's website.
-    - Modifying the modification's scripts in any way.
+4. **Prohibited Actions**:
+    - Including the Modification in a modpack without the Developer’s consent.
+    - Distributing the Modification on third-party platforms without linking to the Developer’s website.
+    - Altering the Modification’s scripts in any way.
 
-5. **Violation of the Agreement**: If the User violates this Agreement, the Developer has the right to limit the User's access to the modification.
+5. **Violation of Agreement**: If the User violates this Agreement, the Developer reserves the right to restrict functionality or access to the Modification.
 
-6. **Disagreement with the Agreement**: In case of disagreement with this Agreement, the User must cease participating in the Project, including removing the modification.
+6. **Disagreement with Terms**: If the User does not agree with these terms, they must stop using the Modification.
 
-7. **Termination of the Agreement**: Either Party has the right to terminate this Agreement unilaterally at any time (without judicial proceedings).
+7. **Termination of Agreement**: Either Party may terminate this Agreement at any time without legal proceedings.
 
-8. **Limitation of Liability**:
-    - The Developer is not liable for direct or indirect damages or lost profits incurred by the User or third parties.
-    - The Parties are released from liability for non-performance or partial performance of obligations under this Agreement due to force majeure circumstances.
+8. **Limitation of Liability**: The Developer is not liable for any direct or indirect damages, including loss of profit, incurred by the User or third parties.
 
-9. **Rights and Obligations of the Developer**:
-    - The Developer undertakes to provide the User with access to premium features.
-    - The Developer has the right to modify the characteristics of the modification and restrict User access.
+9. **Developer’s Rights and Obligations**:
+    - The Developer agrees to provide the User with access to premium features (if such features exist).
+    - The Developer reserves the right to modify the Modification’s features and restrict User access.

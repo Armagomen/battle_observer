@@ -63,14 +63,13 @@ class SettingsLoader(object):
     @staticmethod
     def isNotEqualTypeOrLen(data1, data2):
         """
-        Returns True if the lengths of the 2 dictionaries are not identical,
-        or an error occurs when comparing the lengths, and the settings file needs to be rewritten.
+        Returns True if:
+        - data1 and data2 are both dicts but have different lengths
+        - or they are of different types
         """
-        type_1 = type(data1)
-        type_2 = type(data2)
-        if type_1 == type_2 == dict:
+        if isinstance(data1, dict) and isinstance(data2, dict):
             return len(data1) != len(data2)
-        return type_1 != type_2
+        return type(data1) != type(data2)
 
     def updateData(self, external_cfg, internal_cfg, file_update=False):
         """Recursively updates words from user_settings files"""

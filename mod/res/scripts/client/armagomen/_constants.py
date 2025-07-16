@@ -209,8 +209,8 @@ SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
 __Dispersion = namedtuple("DISPERSION", ("NAME", "SERVER", "SCALE", "REPLACE"))
 DISPERSION = __Dispersion("dispersion_circle", "server_aim", "scale", "replace")
 
-__DispersionTimer = namedtuple("dispersion_timer", ("NAME", "DONE_COLOR", "TIMER", "PERCENT"))
-DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "done_color", "timer", "percent")
+__DispersionTimer = namedtuple("dispersion_timer", ("NAME", "TIMER", "PERCENT"))
+DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "timer", "percent")
 
 DEBUG_PANEL = namedtuple("DEBUG_PANEL", (
     "NAME", "FPS_COLOR", "PING_COLOR", "STYLES", "STYLE"))(

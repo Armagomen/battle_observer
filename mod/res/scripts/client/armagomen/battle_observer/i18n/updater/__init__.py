@@ -1,4 +1,5 @@
 # coding=utf-8
+
 from helpers import getClientLanguage
 
 en = {
@@ -13,7 +14,17 @@ en = {
         "\n<font size='20 'color='#FFFF00'><b>Changelog</b></font>\n"
         "<p align='left'>{1}</p>"
         "</font>",
-    "titleNEW": "<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>"
+    "titleNEW": "<font size='20'>Update available <font color='#FFFF00'>v{0}</font></font>",
+    "messages": (
+        "Checking for an available update.",
+        "The update check is completed, you have the current version.",
+        "An update {} is detected, the client will be restarted at the end of the download.",
+        "DownloadThread: update started {} at {}",
+        "DownloadThread: added new file {}",
+        "DownloadThread: update is already downloaded to: {}",
+        "DownloadThread: downloading update finished to: {}",
+        "DownloadThread: downloading failed: {}"
+    )
 }
 
 uk = {
@@ -28,7 +39,17 @@ uk = {
         "\n<font size='20' color='#FFFF00'><b>Список змін</b></font>\n"
         "<p align='left'>{1}</p>"
         "</font>",
-    "titleNEW": "<font size='20'>Доступне оновлення <font color='#FFFF00'>v{0}</font></font>"
+    "titleNEW": "<font size='20'>Доступне оновлення <font color='#FFFF00'>v{0}</font></font>",
+    "messages": (
+        "Перевірка доступного оновлення.",
+        "Перевірка завершена — у вас актуальна версія.",
+        "Виявлено оновлення {} — клієнт буде перезапущено після завершення завантаження.",
+        "DownloadThread: оновлення запущено {} о {}",
+        "DownloadThread: додано новий файл {}",
+        "DownloadThread: оновлення вже завантажене до: {}",
+        "DownloadThread: завантаження завершено до: {}",
+        "DownloadThread: збій завантаження: {}"
+    )
 }
 
 ru = {
@@ -43,7 +64,17 @@ ru = {
         "\n<font size='20' color='#FFFF00'><b>Список изменений</b></font>\n"
         "<p align='left'>{1}</p>"
         "</font>",
-    "titleNEW": "<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>"
+    "titleNEW": "<font size='20'>Доступно обновление <font color='#FFFF00'>v{0}</font></font>",
+    "messages": (
+        "Проверка доступного обновления.",
+        "Проверка завершена — у вас актуальная версия.",
+        "Обнаружено обновление {} — клиент будет перезапущен после загрузки.",
+        "DownloadThread: обновление начато {} в {}",
+        "DownloadThread: добавлен новый файл {}",
+        "DownloadThread: обновление уже загружено в: {}",
+        "DownloadThread: загрузка завершена в: {}",
+        "DownloadThread: сбой загрузки: {}"
+    )
 }
 
 pl = {
@@ -58,7 +89,17 @@ pl = {
         "\n<font size='20' color='#FFFF00'><b>Lista zmian</b></font>\n"
         "<p align='left'>{1}</p>"
         "</font>",
-    "titleNEW": "<font size='20'>Dostępna aktualizacja <font color='#FFFF00'>v{0}</font></font>"
+    "titleNEW": "<font size='20'>Dostępna aktualizacja <font color='#FFFF00'>v{0}</font></font>",
+    "messages": (
+        "Sprawdzanie dostępnej aktualizacji.",
+        "Sprawdzanie zakończone – masz aktualną wersję.",
+        "Wykryto aktualizację {} – klient zostanie ponownie uruchomiony po zakończeniu pobierania.",
+        "DownloadThread: aktualizacja rozpoczęta {} o {}",
+        "DownloadThread: dodano nowy plik {}",
+        "DownloadThread: aktualizacja już pobrana do: {}",
+        "DownloadThread: pobieranie zakończone w: {}",
+        "DownloadThread: pobieranie nie powiodło się: {}"
+    )
 }
 
 de = {
@@ -73,16 +114,22 @@ de = {
         "\n<font size='20' color='#FFFF00'><b>Änderungsprotokoll</b></font>\n"
         "<p align='left'>{1}</p>"
         "</font>",
-    "titleNEW": "<font size='20'>Update verfügbar <font color='#FFFF00'>v{0}</font></font>"
+    "titleNEW": "<font size='20'>Update verfügbar <font color='#FFFF00'>v{0}</font></font>",
+    "messages": (
+        "Suche nach verfügbaren Updates.",
+        "Updateprüfung abgeschlossen – aktuelle Version installiert.",
+        "Update {} erkannt – der Client wird nach dem Herunterladen neu gestartet.",
+        "DownloadThread: Update gestartet {} um {}",
+        "DownloadThread: neue Datei hinzugefügt {}",
+        "DownloadThread: Update bereits heruntergeladen in: {}",
+        "DownloadThread: Download abgeschlossen in: {}",
+        "DownloadThread: Download fehlgeschlagen: {}"
+    )
 }
 
-
-def getI18n():
-    lang_map = {
-        "uk": uk,
-        "ru": ru,
-        "be": ru,
-        "pl": pl,
-        "de": de
-    }
-    return lang_map.get(getClientLanguage().lower(), en)
+LOCALIZED_BY_LANG = {
+    "uk": uk,
+    "ru": ru,
+    "pl": pl,
+    "de": de
+}.get(getClientLanguage(), en)

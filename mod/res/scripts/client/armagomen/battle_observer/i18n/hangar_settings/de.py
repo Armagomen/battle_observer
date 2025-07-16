@@ -36,7 +36,6 @@ localization = {
         "discord_button": "Discord-Modserver",
         "reload_config": "Einstellungen neu laden",
     },
-
     "main": {
         "header": "Nicht kategorisierte Einstellungen",
         "DEBUG_MODE": "Debug-Modus (nur bei Bedarf aktivieren)",
@@ -77,7 +76,6 @@ localization = {
         "auto_claim_clan_reward": "Clanbelohnungen automatisch abholen",
         "hideEventBanner": "Eventbanner deaktivieren"
     },
-
     "statistics": {
         "header": "Spielerstatistiken und Fahrzeug-Icon-Einstellungen",
         "icons": "Icons: Einfärbung nach Fahrzeugklassen",
@@ -95,7 +93,6 @@ localization = {
         "statistics_panels_full_width": "Spielernamensfeldbreite (breite Ohren)",
         "statistics_panels_cut_width": "Spielernamensfeldbreite (schmale Ohren)"
     },
-
     "dispersion_circle": {
         "header": "Fadenkreuz- und Serverziel-Einstellungen",
         "server_aim": "Serverziel aktivieren (zusätzlicher Kreis)",
@@ -104,18 +101,14 @@ localization = {
         "scale": "Größenmultiplikator des Kreises 30–100 % (0.3–1.0)",
         "scale_tooltip": "Dieser Parameter beeinflusst die endgültige Größe des zusätzlichen Zielkreises. Bei 0.3 (30%) ist er minimal, bei 1.0 (100%) maximal — also unverändert, wie voreingestellt. Ein Wert unter 0.6 (60%) wird nicht empfohlen."
     },
-
     "dispersion_timer": {
         "header": "Zielzeit-Timer-Einstellungen",
         "x": "Horizontale Position",
         "y": "Vertikale Position",
-        "color": "Farbe: Nicht vollständig gezielt",
-        "done_color": "Farbe: Vollständig gezielt",
         "align": "Textausrichtung",
         "timer": "Restzeit anzeigen",
         "percent": "Prozent anzeigen"
     },
-
     "effects": {
         "header": "Einstellungen visueller Effekte",
         "noShockWave": "Kameravibration bei Treffer deaktivieren",
@@ -123,14 +116,12 @@ localization = {
         "noBinoculars": "Abdunklung im Scharfschützenmodus entfernen",
         "noSniperDynamic": "Dynamische Kamera im Scharfschützenmodus deaktivieren"
     },
-
     "debug_panel": {
         "header": "FPS- und PING-Panel-Einstellungen",
         "fpsColor": "FPS-Farbanzeige",
         "pingColor": "PING-Farbanzeige",
         "style": "Panelstil"
     },
-
     "battle_timer": {
         "header": "Gefechtstimer-Einstellungen",
         "timerTemplate": "Feld zur Timer-Formatierung",
@@ -138,7 +129,6 @@ localization = {
         "timerColorEndBattle": "Makrofarbe %(timerColor)s: weniger als 2 Min. verbleiben",
         "timerColor": "Makrofarbe %(timerColor)s: mehr als 2 Min. verbleiben"
     },
-
     "clock": {
         "header": "Uhranzeige in Garage und Gefecht",
         "battle*enabled": "Uhr im Gefecht",
@@ -152,13 +142,11 @@ localization = {
         "hangar*x": "Uhr in der Garage: horizontale Position",
         "hangar*y": "Uhr in der Garage: vertikale Position"
     },
-
     "hp_bars": {
         "header": "Team-Haltbarkeitsleisten-Einstellungen",
         "showAliveCount": "Zähler durch Lebendanzahl ersetzen",
         "style": "Leistenstil"
     },
-
     "armor_calculator": {
         "header": "Einstellungen des effektiven Panzerungsrechners",
         "position*x": "Horizontale Position vom Zentrum",
@@ -169,7 +157,6 @@ localization = {
         "show_piercing_reserve": "Restdurchschlag anzeigen",
         "show_caliber": "Kaliber anzeigen"
     },
-
     "wg_logs": {
         "header": "WG-Ereignisverlauf-Einstellungen",
         "wg_log_hide_assist": "Schaden durch Unterstützung ausblenden",
@@ -181,17 +168,14 @@ localization = {
         "wg_log_pos_fix": "Verlauf an korrekte Position setzen (wie bei alten Mods)",
         "wg_log_pos_fix_tooltip": "Tauscht Positionen von erhaltenem und verursachtem Schaden im Ereignisverlauf"
     },
-
     "log_total": {
         "header": "Spielergesamteffizienz-Einstellungen",
         "settings*inCenter": "Log im Bildschirmzentrum anzeigen",
         "settings*x": "Horizontale Position des Hauptlogs",
         "settings*y": "Vertikale Position des Hauptlogs",
         "settings*align": "Textausrichtung:",
-        "settings*align_tooltip": "left – links<br>center – zentriert<br>right – rechts",
-        "mainLogScale": "Log-Skalierung"
+        "settings*align_tooltip": "left – links<br>center – zentriert<br>right – rechts"
     },
-
     "log_extended": {
         "header": "Detailierter Schadensverlauf-Einstellungen",
         "logsAltMode_hotkey": "Schadensverlauf in Alternativmodus umschalten",
@@ -208,20 +192,17 @@ localization = {
         "top_enabled": "Detailverlauf für verursachten Schaden",
         "bottom_enabled": "Detailverlauf für erlittenen Schaden"
     },
-
     "main_gun": {
         "header": "Einstellungen für die Medaille 'Hauptkaliber'",
         "x": "Horizontale Position (vom Bildschirmzentrum)",
         "y": "Vertikale Position (vom oberen Rand)",
         "progress_bar": "Fortschrittsbalken"
     },
-
     "team_bases_panel": {
         "header": "Einstellungen der Basis-Eroberungsanzeige",
         "y": "Vertikale Position des Eroberungsbalkens",
         "width": "Balkenbreite in Pixel"
     },
-
     "vehicle_types_colors": {
         "header": "Farbkonfiguration nach Fahrzeugklassen",
         "AT-SPG": "Jagdpanzer (Panzerjäger)",
@@ -231,7 +212,6 @@ localization = {
         "mediumTank": "Mittlerer Panzer",
         "unknown": "Unbekannt (Globale Karte)"
     },
-
     "players_panels": {
         "header": "Spielerliste-Panel-Einstellungen",
         "players_damages_enabled": "Von Spielern verursachter Schaden",
@@ -244,7 +224,6 @@ localization = {
         "players_bars_on_key_pressed": "Balken nur bei Tastendruck anzeigen",
         "panels_spotted_fix": "Größe und Position der Aufklärungsindikatoren korrigieren"
     },
-
     "zoom": {
         "header": "Scharfschützenmodus-Einstellungen",
         "disable_cam_after_shot": "Scharfschützenmodus nach Schuss deaktivieren",
@@ -257,7 +236,6 @@ localization = {
         "steps_range": "Zoomstufen-Schritte",
         "steps_range_tooltip": "Zoomstufen als Werte mit Komma oder Komma plus Leerzeichen angeben. Beliebige Anzahl an Stufen möglich."
     },
-
     "arcade_camera": {
         "header": "Kommandantenkamera-Einstellungen",
         "max": "Maximale Entfernung (Standard: 25)",
@@ -265,14 +243,12 @@ localization = {
         "startDeadDist": "Kameraentfernung beim Start/Tod (Standard: 15)",
         "scrollSensitivity": "Scroll-Empfindlichkeit (Standard: 4)"
     },
-
     "strategic_camera": {
         "header": "Artilleriekamera-Einstellungen",
         "max": "Maximale Entfernung (Standard: 100)",
         "min": "Maximale Nähe (Standard: 40)",
         "scrollSensitivity": "Scroll-Empfindlichkeit (Standard: 10)"
     },
-
     "flight_time": {
         "header": "Einstellungen für Flugzeit und Zielentfernung",
         "x": "Horizontale Textposition",
@@ -285,7 +261,6 @@ localization = {
         "distance": "Entfernung anzeigen",
         "color": "Textfarbe"
     },
-
     "minimap": {
         "header": "Minikarten-Einstellungen",
         "zoom": "Mini-Karten-Zoom zentriert aktivieren",
@@ -295,7 +270,6 @@ localization = {
         "yaw_limits": "Horizontale Zielwinkel für alle möglichen Fahrzeuge anzeigen",
         "zoom_hotkey": "Taste für Kartenvergrößerung"
     },
-
     "colors": {
         "header": "Globale Farbanpassungen des Mods",
         "armor_calculator*green": "Effektive Panzerung: Durchschlagschance 100%",
@@ -315,7 +289,6 @@ localization = {
         "vehicle_types_colors*mediumTank": "Mittlerer Panzer",
         "vehicle_types_colors*unknown": "Unbekannt (Globale Karte)"
     },
-
     "service_channel_filter": {
         "header": "Systemkanal-Meldungsfilter",
         "sys_keys*CustomizationForCredits": "Fahrzeuganpassung gegen Credits",
@@ -337,7 +310,6 @@ localization = {
         "sys_keys*autoMaintenance": "Automatische Fahrzeugwartung",
         "sys_keys*customizationChanged": "Anpassung geändert"
     },
-
     "service": {
         "name": "Battle Observer – v{0}",
         "description": "Mod-Einstellungen für Battle Observer öffnen",
@@ -347,7 +319,6 @@ localization = {
         "buttonApply": "Übernehmen",
         "enableButtonTooltip": "{HEADER}AN/AUS{/HEADER}{BODY}Modul aktivieren/deaktivieren{/BODY}"
     },
-
     "sixth_sense": {
         "header": "Sechster Sinn – Einstellungen",
         "default_icon": "Integriertes Bild verwenden.",
@@ -365,17 +336,14 @@ localization = {
         "show_timer_graphics_radius": "Grafikkreisradius.",
         "icon_size": "Bildgröße in Pixel. Maximal 180"
     },
-
     "distance_to_enemy": {
         "header": "Entfernung zum nächsten erkannten Gegner – Einstellungen",
         "x": "Horizontale Textposition",
         "x_tooltip": "Position relativ zur Bildschirmmitte",
         "y": "Vertikale Textposition",
         "y_tooltip": "Position relativ zur Bildschirmmitte",
-        "template": "Textvorlage. Makros: %(distance)s, %(name)s",
         "align": "Textausrichtung"
     },
-
     "own_health": {
         "header": "Spielerfahrzeug-Haltbarkeitsanzeige – Einstellungen",
         "x": "Horizontale Textposition",
@@ -383,21 +351,6 @@ localization = {
         "y": "Vertikale Textposition",
         "y_tooltip": "Position relativ zur Bildschirmmitte"
     },
-
-    "crewDialog": {
-        "enable": "<br>Beschleunigte Ausbildung der Besatzung aktivieren?",
-        "disable": "<br>Beschleunigte Ausbildung der Besatzung deaktivieren?",
-        "notAvailable": "Feldmodifikation für dieses Fahrzeug nicht verfügbar",
-        "isFullXp": "Du hast genügend Erfahrung für die vollständige Feldmodifikation gesammelt",
-        "isFullComplete": "Du hast die Feldmodifikation auf das maximale Niveau ausgebaut",
-        "needTurnOff": "Feldmodifikation wurde nicht verbessert. Es wird empfohlen, die beschleunigte Ausbildung zu deaktivieren."
-    },
-
-    "excludedMaps": {
-        "header": "Liste ausgeschlossener Karten",
-        "message": "Du hast %s verfügbare Slots zum Ausschließen von Karten.\nZu den Kartenauswahl-Einstellungen wechseln?"
-    },
-
     "avg_efficiency_in_hangar": {
         "header": "Statistik-Widget im Hangar – Einstellungen",
         "avg_damage": "Durchschnittlicher verursachter Schaden anzeigen",

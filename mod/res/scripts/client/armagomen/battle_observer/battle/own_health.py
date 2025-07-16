@@ -69,7 +69,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.as_BarVisibleS(self.is_battle_period and self.is_alive_mode)
 
     def getAVGColor(self, percent=1.0):
-        return percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR])
+        return percentToRGB(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR])
 
     def _updateHealth(self, health):
         if health > self.max_health:

@@ -1,6 +1,6 @@
 from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_WG_CLIENT, MAIN,
                                   MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
-from armagomen.battle_observer.settings.hangar.i18n import localization, LOCKED_MESSAGE
+from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
 from armagomen.utils.common import IS_XVM_INSTALLED, openWebBrowser
 from armagomen.utils.logging import logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION

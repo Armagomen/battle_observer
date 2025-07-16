@@ -1,10 +1,10 @@
 # coding=utf-8
 from armagomen._constants import GLOBAL, POSTMORTEM_MODES
+from armagomen.battle_observer.i18n.distance_to_enemy import TEMPLATE_BY_LANG
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
 from armagomen.utils.common import getPlayer
 from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler
 from gui.battle_control.battle_constants import PLAYER_GUI_PROPS
-from helpers import getClientLanguage
 
 
 class Distance(DistanceMeta):
@@ -14,16 +14,12 @@ class Distance(DistanceMeta):
         self.isPostmortem = False
         self.vehicles = {}
         self.player = None
-        if getClientLanguage() in ('uk', 'ru', 'be'):
-            self.__tpl = "<font color='{}' size='{}'>%.1f до %s</font>"
-        else:
-            self.__tpl = "<font color='{}' size='{}'>%.1f to %s</font>"
-        self.template = self.__tpl.format("#f5ff8f", 18)
+        self.template = TEMPLATE_BY_LANG.format("#f5ff8f", 18)
 
     def _populate(self):
         super(Distance, self)._populate()
         self.player = getPlayer()
-        self.template = self.__tpl.format(self.settings[GLOBAL.COLOR], self.settings['text_size'])
+        self.template = TEMPLATE_BY_LANG.format(self.settings[GLOBAL.COLOR], self.settings['text_size'])
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS

@@ -100,8 +100,6 @@ class UserSettings(object):
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left,
             DISPERSION_TIMER.TIMER: True,
             DISPERSION_TIMER.PERCENT: True,
-            GLOBAL.COLOR: "#f5ff8f",
-            DISPERSION_TIMER.DONE_COLOR: "#a6ffa6"
         }
 
         self.debug_panel = {

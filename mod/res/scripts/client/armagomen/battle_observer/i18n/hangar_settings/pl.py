@@ -108,8 +108,6 @@ localization = {
         "header": "Timer skupienia",
         "x": "Pozycja pozioma",
         "y": "Pozycja pionowa",
-        "color": "Kolor – brak skupienia",
-        "done_color": "Kolor – pełne skupienie",
         "align": "Wyrównanie tekstu",
         "timer": "Wyświetl pozostały czas",
         "percent": "Wyświetl procent"
@@ -179,8 +177,7 @@ localization = {
         "settings*x": "Pozycja pozioma logu",
         "settings*y": "Pozycja pionowa logu",
         "settings*align": "Wyrównanie tekstu:",
-        "settings*align_tooltip": "left – lewo<br>center – środek<br>right – prawo",
-        "mainLogScale": "Skalowanie logu"
+        "settings*align_tooltip": "left – lewo<br>center – środek<br>right – prawo"
     },
     "log_extended": {
         "header": "Szczegółowy log obrażeń",
@@ -347,7 +344,6 @@ localization = {
         "x_tooltip": "Pozycja względem środka ekranu (pozioma)",
         "y": "Pozycja pionowa tekstu",
         "y_tooltip": "Pozycja względem środka ekranu (pionowa)",
-        "template": "Szablon tekstu. Makra: %(distance)s, %(name)s",
         "align": "Wyrównanie tekstu"
     },
     "own_health": {
@@ -356,18 +352,6 @@ localization = {
         "x_tooltip": "Pozycja względem środka ekranu (pozioma)",
         "y": "Pozycja pionowa tekstu",
         "y_tooltip": "Pozycja względem środka ekranu (pionowa)"
-    },
-    "crewDialog": {
-        "enable": "<br>Włączyć przyspieszone szkolenie załogi?",
-        "disable": "<br>Wyłączyć przyspieszone szkolenie załogi?",
-        "notAvailable": "Modernizacja polowa niedostępna dla tego pojazdu",
-        "isFullXp": "Zebrano pełne doświadczenie do modernizacji",
-        "isFullComplete": "Modernizacja ukończona w pełni",
-        "needTurnOff": "Brak modernizacji polowej – zaleca się wyłączyć szkolenie załogi"
-    },
-    "excludedMaps": {
-        "header": "Lista wykluczonych map",
-        "message": "Masz %s wolnych slotów do wykluczenia map.\nPrzejść do wyboru map?"
     },
     "avg_efficiency_in_hangar": {
         "header": "Ustawienia widżetu statystyk pojazdu w garażu",

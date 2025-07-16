@@ -11,8 +11,7 @@ ANONYMOUS_TRANSLATE = {
     "pl": "Anonimowo",
     "de": "Anonym",
     "en": "Anonymous",
-    "fr": "Anonyme"
-}.get(getClientLanguage().lower(), "Anonymous")
+}.get(getClientLanguage(), "Anonymous")
 EMPTY_BADGES = ([], [])
 
 

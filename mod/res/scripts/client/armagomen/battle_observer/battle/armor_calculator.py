@@ -1,29 +1,11 @@
 # coding=utf-8
 
 from armagomen._constants import ARMOR_CALC, POSTMORTEM_MODES
+from armagomen.battle_observer.i18n.armor_calculator import NO_DAMAGE, RICOCHET
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logWarning
 from gui.battle_control import avatar_getter
-from helpers import getClientLanguage
-
-language = getClientLanguage().lower()
-
-NO_DAMAGE = {
-    "uk": "Крит без шкоди",
-    "pl": "Bez obrażeń",
-    "de": "Ohne Schaden",
-    "ru": "Крит без урона",
-    "be": "Крыт без пашкоджання",
-}.get(language, "Non-damaging crit")
-
-RICOCHET = {
-    "uk": "Рикошет",
-    "pl": "Rykoszet",
-    "de": "Abpraller",
-    "ru": "Рикошет",
-    "be": "Рыкашэт",
-}.get(language, "Ricochet")
 
 SETTING_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE, ARMOR_CALC.SHOW_CALIBER)
 

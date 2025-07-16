@@ -1,3 +1,4 @@
+# coding=utf-8
 import json
 import locale
 import os
@@ -270,11 +271,25 @@ def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
 
-def percentToRGB(percent, saturation=0.5, brightness=1.0, **kwargs):
-    """Percent, float number in range 0-2.4 purple, or 1.0 green."""
-    # Adjusted for purple and green positions
-    position = min(0.8333, percent * 0.3333)
-    r, g, b = (int(i * 255) for i in hsv_to_rgb(position, saturation, brightness))
+def percentToRGB(percent, saturation=0.5, brightness=1.0, color_blind=False):
+    """
+    Returns a HEX color code based on percent.
+    If color_blind=True, uses a smooth gradient: blue → green (no yellow).
+    Args:
+        percent (float): Value between 0.0 and 1.0.
+        saturation (float): Saturation level (default: 0.5).
+        brightness (float): Brightness level (default: 1.0).
+        color_blind (bool): Enables color-blind-safe gradient if True.
+    Returns:
+        str: HEX color string.
+    """
+    if color_blind:
+        # Blue → Green
+        hue = 0.666 + (-0.333 * percent)
+    else:
+        hue = min(0.8333, percent * 0.3333)
+
+    r, g, b = (int(i * 255) for i in hsv_to_rgb(hue, saturation, brightness))
     return "#{:02X}{:02X}{:02X}".format(r, g, b)
 
 

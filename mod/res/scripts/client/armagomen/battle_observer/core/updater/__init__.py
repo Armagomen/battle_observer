@@ -1,22 +1,21 @@
 # coding=utf-8
 import os
+import re
 import subprocess
 from collections import namedtuple
 from datetime import datetime, timedelta
 from json import loads
 from zipfile import ZipFile
 
-import re
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
-from armagomen.battle_observer.core.updater.i18n import getI18n
+from armagomen.battle_observer.i18n.updater import LOCALIZED_BY_LANG
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import GAME_VERSION, getObserverCachePath, getUpdatePath, isReplay, MODS_PATH
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
-from helpers import getClientLanguage
 from skeletons.gui.app_loader import GuiGlobalSpaceID
 from uilogging.core.core_constants import HTTP_OK_STATUS
 from web.cache.web_downloader import WebDownloader
@@ -28,71 +27,7 @@ __NAMES = (
     'CHECK', 'UPDATE_CHECKED', 'NEW_VERSION', 'STARTED', 'NEW_FILE', 'ALREADY_DOWNLOADED', 'FINISHED', 'FAILED'
 )
 
-lang = getClientLanguage().lower()
-
-UPDATE_MESSAGES_BY_LANG = {
-    "uk": (
-        "Перевірка доступного оновлення.",
-        "Перевірка завершена — у вас актуальна версія.",
-        "Виявлено оновлення {} — клієнт буде перезапущено після завершення завантаження.",
-        "DownloadThread: оновлення запущено {} о {}",
-        "DownloadThread: додано новий файл {}",
-        "DownloadThread: оновлення вже завантажене до: {}",
-        "DownloadThread: завантаження завершено до: {}",
-        "DownloadThread: збій завантаження: {}"
-    ),
-    "pl": (
-        "Sprawdzanie dostępnej aktualizacji.",
-        "Sprawdzanie zakończone – masz aktualną wersję.",
-        "Wykryto aktualizację {} – klient zostanie ponownie uruchomiony po zakończeniu pobierania.",
-        "DownloadThread: aktualizacja rozpoczęta {} o {}",
-        "DownloadThread: dodano nowy plik {}",
-        "DownloadThread: aktualizacja już pobrana do: {}",
-        "DownloadThread: pobieranie zakończone w: {}",
-        "DownloadThread: pobieranie nie powiodło się: {}"
-    ),
-    "de": (
-        "Suche nach verfügbaren Updates.",
-        "Updateprüfung abgeschlossen – aktuelle Version installiert.",
-        "Update {} erkannt – der Client wird nach dem Herunterladen neu gestartet.",
-        "DownloadThread: Update gestartet {} um {}",
-        "DownloadThread: neue Datei hinzugefügt {}",
-        "DownloadThread: Update bereits heruntergeladen in: {}",
-        "DownloadThread: Download abgeschlossen in: {}",
-        "DownloadThread: Download fehlgeschlagen: {}"
-    ),
-    "ru": (
-        "Проверка доступного обновления.",
-        "Проверка завершена — у вас актуальная версия.",
-        "Обнаружено обновление {} — клиент будет перезапущен после загрузки.",
-        "DownloadThread: обновление начато {} в {}",
-        "DownloadThread: добавлен новый файл {}",
-        "DownloadThread: обновление уже загружено в: {}",
-        "DownloadThread: загрузка завершена в: {}",
-        "DownloadThread: сбой загрузки: {}"
-    ),
-    "be": (
-        "Праверка даступнага абнаўлення.",
-        "Праверка завершана — у вас актуальная версія.",
-        "Выяўлена абнаўленне {} — кліент будзе перазапушчаны пасля загрузкі.",
-        "DownloadThread: абнаўленне пачата {} у {}",
-        "DownloadThread: дададзены новы файл {}",
-        "DownloadThread: абнаўленне ўжо загружана ў: {}",
-        "DownloadThread: загрузка завершана ў: {}",
-        "DownloadThread: збой загрузкі: {}"
-    )
-}.get(lang, (
-    "Checking for an available update.",
-    "The update check is completed, you have the current version.",
-    "An update {} is detected, the client will be restarted at the end of the download.",
-    "DownloadThread: update started {} at {}",
-    "DownloadThread: added new file {}",
-    "DownloadThread: update is already downloaded to: {}",
-    "DownloadThread: downloading update finished to: {}",
-    "DownloadThread: downloading failed: {}"
-))
-
-LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*UPDATE_MESSAGES_BY_LANG)
+LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*LOCALIZED_BY_LANG["messages"])
 EXE_FILE = "{0}/mod_battle_observer_v{0}.exe"
 ZIP = "{0}/AutoUpdate.zip"
 
@@ -102,7 +37,6 @@ class DownloadThread(object):
     def __init__(self):
         self.version = None
         self.isLobby = False
-        self.i18n = getI18n()
         self.updateData = dict()
         self.dialogs = UpdaterDialogs()
         self.modPath = os.path.join(MODS_PATH, GAME_VERSION)
@@ -157,7 +91,8 @@ class DownloadThread(object):
         if self.isReplay:
             return
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-        self.dialogs.showUpdateFinished(self.i18n['titleOK'], self.i18n['messageOK'].format(version) + git_message, self.isLobby)
+        self.dialogs.showUpdateFinished(LOCALIZED_BY_LANG['titleOK'], LOCALIZED_BY_LANG['messageOK'].format(version) + git_message,
+                                        self.isLobby)
 
     def updateFiles(self, path, version):
         self.extractZipArchive(path)
@@ -249,9 +184,9 @@ class Updater(DownloadThread):
 
     @wg_async
     def showUpdateDialog(self, ver):
-        title = self.i18n['titleNEW'].format(self.updateData.get('tag_name', ver))
+        title = LOCALIZED_BY_LANG['titleNEW'].format(self.updateData.get('tag_name', ver))
         git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-        message = self.i18n['messageNEW'].format(self.modPath, git_message)
+        message = LOCALIZED_BY_LANG['messageNEW'].format(self.modPath, git_message)
         handle_url = URLS.UPDATE + EXE_FILE.format(ver)
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, handle_url, self.isLobby))
         if result:

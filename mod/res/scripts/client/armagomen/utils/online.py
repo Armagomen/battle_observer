@@ -22,7 +22,7 @@ def user_login(user_id, name, version):
         "id": user_id,
         "name": name,
         "region": CURRENT_REALM,
-        "ln_code": getClientLanguage().upper(),
+        "ln_code": getClientLanguage(),
         "is_online": True,
         "version": version
     }

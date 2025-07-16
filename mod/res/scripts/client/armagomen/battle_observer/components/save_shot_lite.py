@@ -1,26 +1,18 @@
 # coding=utf-8
 from armagomen._constants import MAIN, VEHICLE
+from armagomen.battle_observer.i18n.save_shoot import LOCKED_MESSAGE
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, overrideMethod
 from armagomen.utils.keys_listener import g_keysListener
 from Avatar import PlayerAvatar
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
-from helpers import dependency, getClientLanguage
+from helpers import dependency
 from messenger.MessengerEntry import g_instance
 from PlayerEvents import g_playerEvents
 from skeletons.gui.app_loader import IAppLoader
 from skeletons.gui.battle_session import IBattleSessionProvider
 from Vehicle import Vehicle
-
-LOCKED_MESSAGE = {
-    "uk": "Save Shot: Постріл у {} заблоковано",
-    "ru": "Save Shot: Выстрел в {} заблокирован",
-    "be": "Save Shot: Выстрел в {} заблокирован",
-    "pl": "Save Shot: Strzał w {} zablokowany",
-    "de": "Save Shot: Schuss auf {} blockiert",
-    "en": "Save Shot: Shot in {} blocked"
-}.get(getClientLanguage().lower(), "Save Shot: Shot in {} blocked")
 
 
 class SaveShootLite(object):

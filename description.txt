@@ -1,74 +1,78 @@
-1. Здоров'я команд: Спільне здоров'я команд. Відображення у вухах здоров'я кожного танка, що залишилося, по натисканню на гарячу клавішу обрану в налаштуваннях або завжди. Відображення різниці очок міцності між командами.
-2. Логи нанесеної та отриманої шкоди Damage LOG.
-3. Автоматична кратність наближення. Динамічне наближення камери, модуль сам вибере кратність залежно від відстані до точки прицілювання.
-4. Рахунок бою: живих / знищених.
-5. Debug Panel. Змінена панель ping та fps
+1. Здоров’я команд: спільне здоров’я команд. Відображення у «вухах» ХП кожного танка, що залишився — завжди або при натисканні гарячої клавіші (налаштовується). Відображення різниці очок міцності між командами.
+2. Логи завданої та отриманої шкоди (Damage Log).
+3. Автоматична кратність наближення: модуль самостійно обирає кратність залежно від відстані до точки прицілювання.
+4. Рахунок бою: живі / знищені.
+5. Debug Panel: змінена панель ping та FPS.
 6. Змінений таймер бою.
-7. Статистика гравців у бою. WG рейтинг.
+7. Статистика гравців у бою (рейтинг WG).
 8. Змінені смуги захоплення.
-9. Динамічний основний калібр: Показує скільки вам залишилося настріляти до отримання медалі.
-10. Калькулятор наведеної броні у точці прицілювання: Замінює колір центрального маркера залежно від реальної броні. Окремо виводить суму наведеної броні, а також інші показники.
-11. Шкода гравців у вухах.
+9. Динамічний «Основний калібр»: показує, скільки ще потрібно настріляти для отримання медалі.
+10. Калькулятор наведеної броні в точці прицілювання: змінює колір центрального маркера залежно від реальної броні. Окремо виводить значення наведеної броні та додаткові показники.
+11. Шкода гравців у «вухах».
 12. Максимальне віддалення камери.
-13. Час польоту снаряда будь-який техніці.
-14. Відключення відображення нашивок.
-15. Save-Shoot Lite (спрощена версія, блокує постріл по союзникам та трупам) можливо стріляти із затиснутим ALT.
-16. Міні-мапа: відображення по центру під час натискання на гарячу клавішу. Відображення знищених танків. (З ім'ям / тільки значок)
-17. Перефарбовування будь-яких іконок у вухах. (Самі обираєте колір та яскравість іконок.)
-18. Дистанція до найближчого виявленого супротивника в межах кола огляду. (тільки дистанція, без вказівки де він)
-19. Перевірка доступності слота вимкнення карти.
-20. Поліпшене коло зведення та серверний приціл: Налаштування розмірів кола. Заміна оригінального кола або додавання додаткового. Таймер зведення.
-21. Виділення "друзів/гравців вашого клану/танк гравця" у вухах спеціальним символом.
+13. Час польоту снаряда для будь-якої техніки.
+14. Вимкнення відображення нашивок.
+15. Save-Shoot Lite: спрощена версія блокування пострілу по союзниках і знищених танках. Можна стріляти при затиснутому ALT.
+16. Міні-мапа: відображення по центру при натисканні гарячої клавіші. Відображення знищених танків (з іменем або лише значком).
+17. Перефарбовування будь-яких іконок у «вухах»: вибір кольору та яскравості вручну.
+18. Відстань до найближчого виявленого супротивника в межах кола огляду (лише дистанція, без напрямку).
+19. Перевірка доступності слота для вимкнення карти.
+20. Поліпшене коло зведення та серверний приціл: налаштування розміру, заміна оригінального або додавання додаткового. Таймер зведення.
+21. Виділення друзів, гравців клану та власного танка у «вухах» спеціальним символом.
 22. Фільтр повідомлень у системному каналі.
-23. 6-те почуття, заміна лампочки на свою або вибір з вбудованих.
-24. Годинник в ангарі та в бою.
-25. Віджет даних ефективності танка в гаражі. (Середня: Шкода, Розвідка, Блокування, Оглушення. Відсоток відмітки)
-26. Автоматичний вихід із снайперського режиму після пострілу (налаштування у зум модулі)
-27. Відключення паразитних ефектів, таких як: Тряска камери при отриманні шкоди. Спалах при попаданні на ваш танк. Зелене затемнення по краях екрана у снайперському режимі.
-28. Посмертний режим: Виправлення розвороту камери до центру карти після смерті. Дистанція камери після знищення.
-29. Автоматичне очищення "кеша гри" під час виходу.
-30. Підсвічування гравців, що включили анонімайзер у списках команд.
+23. Шосте чуття: заміна лампочки на власну або вибір з вбудованих.
+24. Годинник в ангарі та бою.
+25. Віджет ефективності танка в ангарі: середня шкода, розвідка, блокування, оглушення, відсоток відмітки.
+26. Автоматичний вихід із снайперського режиму після пострілу (налаштовується в модулі зуму).
+27. Вимкнення паразитних ефектів: тряска камери при отриманні шкоди, спалах при влучанні, зелене затемнення по краях екрана в снайперському режимі.
+28. Посмертний режим: виправлення розвороту камери до центру карти після знищення, налаштування дистанції камери.
+29. Автоматичне очищення кешу гри при виході.
+30. Підсвічування гравців з увімкненим анонімайзером у списках команд.
 31. Вимкнення командирських озвучок.
-32. Автоматичне перемикання "пришвидшеного навчання екіпажу". Перевірить чи прокачана у вас "Польова модернізація" та включе або виключе "пришвидшене навчання екіпажу"
-33. ХП свого танка на чільному місці. (Смужка ХП свого танка під прицілом)
+32. Автоматичне перемикання «пришвидшеного навчання екіпажу»: перевіряє наявність польової модернізації та вмикає/вимикає функцію.
+33. ХП власного танка на чільному місці: смужка ХП під прицілом.
 34. Вимкнення сирени захоплення бази.
 35. Автоматичний збір кланових нагород.
 36. Вимкнення віджетів елітності.
+37. Вимкнення івентних банерів та польової пошти.
+38. Віджет статистики танка в гаражі.
 
 
-1. Health of teams: Joint health of teams. Display in the ears of the health of each remaining tank when pressing the hotkey selected in the settings or always. Displaying the strength point difference between teams.
-2. Logs of inflicted and received damage Damage LOG.
-3. Automatic multiplicity of approximation. Dynamic zooming of the camera, the module will choose the magnification depending on the distance to the aiming point.
-4. Battle score: alive / destroyed.
-5. Debug Panel. Changed ping and fps panel
-6. Changed the battle timer.
-7. Statistics of players in battle. WG rating.
-8. Changed capture strips.
-9. Dynamic main caliber: Shows how many shots you have left before receiving a medal.
-10. Targeted armor calculator: Replaces the color of the center marker depending on the actual armor. Separately displays the amount of the specified armor, as well as other indicators.
-11. Pity the ear players.
-12. The maximum distance of the camera.
-13. The flight time of a projectile of any technique.
-14. Disabling the display of stripes.
-15. Save-Shoot Lite (simplified version, blocks shots on allies and corpses) can be shot with ALT pressed.
-16. Mini-map: display in the center when pressing a hotkey. Display of destroyed tanks. (With name / badge only)
-17. Repainting any icons in the ears. (You choose the color and brightness of the icons yourself.)
-18. The distance to the nearest detected enemy within the scope. (only the distance, without indicating where it is)
-19. Checking the availability of the card disable slot.
-20. Improved Collation Circle and Server Sight: Adjust circle dimensions. Replacing the original wheel or adding an additional one. Build timer.
-21. Highlighting "friends/players of your clan/player's tank" in the ears with a special symbol.
-22. Message filter in the system channel.
-23. The 6th sense, replacing the light bulb with your own or choosing from the built-in ones.
-24. Clock in the hangar and in battle.
-25. Tank efficiency data widget in the garage. (Average: Damage, Intelligence, Block, Stun. Mark percentage)
-26. Automatic exit from sniper mode after a shot (settings in the zoom module)
-27. Disabling parasitic effects such as: Camera shaking when taking damage. Flash when hitting your tank. Green blackout around the edges of the screen in sniper mode.
-28. Post-death mode: Fixed camera panning to the center of the map after death. Camera distance after destruction.
-29. Automatic cleaning of the "game cache" when exiting.
-30. Highlighting of players who have enabled the anonymizer in the team lists.
-31. Disabling commander voices.
-32. Automatic switching of "accelerated training of the crew". Will check if you have "Field Upgrade" and enable or disable "accelerated crew training"
-33. HP of your tank in a prominent place. (Your tank's HP bar under the sight)
-34. Turning off the base capture siren.
-35. Automatic collection of clan rewards.
-36. Disabling elite widgets.
+1. Team HP: Displays total team HP. Shows remaining HP of each tank in the player panels (ears), either always or when pressing a hotkey. Displays HP difference between teams.
+2. Damage Logs: Logs of dealt and received damage.
+3. Auto Zoom Level: Dynamically adjusts zoom level based on aiming distance.
+4. Battle Score: Shows alive / destroyed tanks.
+5. Debug Panel: Modified ping and FPS panel.
+6. Custom Battle Timer.
+7. Player Stats in battle (WG rating).
+8. Modified base capture bars.
+9. Dynamic "High Caliber": Shows how much damage is left to earn the medal.
+10. Armor Calculator at aiming point: Changes reticle color based on actual armor. Displays effective armor and other values separately.
+11. Player damage in ears.
+12. Maximum camera distance.
+13. Shell flight time for any vehicle.
+14. Disable badge display.
+15. Save-Shoot Lite: simplified version that blocks shots at allies and destroyed tanks. ALT override available.
+16. Minimap: centered display when pressing hotkey. Shows destroyed tanks (with name or icon only).
+17. Recolor any icons in ears: choose custom color and brightness.
+18. Distance to nearest spotted enemy within view range (distance only, no direction).
+19. Map exclusion slot availability check.
+20. Improved aiming circle and server reticle: size settings, replace or add circle. Aiming timer included.
+21. Highlight friends, clanmates, and your own tank in ears with a special symbol.
+22. System channel message filter.
+23. Sixth Sense: replace the lamp icon with a custom or built-in one.
+24. Clock in garage and battle.
+25. Tank efficiency widget in garage: average damage, assist, block, stun, mark percentage.
+26. Auto exit sniper mode after shot (configurable in zoom module).
+27. Disable visual effects: camera shake on damage, flash on hit, green vignette in sniper mode.
+28. Postmortem mode: fixes camera snapping to map center after death, sets camera distance.
+29. Auto-clear game cache on exit.
+30. Highlight anonymized players in team lists.
+31. Disable commander voiceovers.
+32. Auto toggle "Accelerated Crew Training": checks Field Modification status and enables/disables accordingly.
+33. Own tank HP bar in prominent position (under reticle).
+34. Disable base capture siren.
+35. Auto-claim clan rewards.
+36. Disable elite level widgets.
+37. Disable event banners and field mail.
+38. Tank statistics widget in the garage.

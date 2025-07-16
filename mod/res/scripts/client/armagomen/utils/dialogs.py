@@ -2,44 +2,16 @@
 from collections import namedtuple
 
 from armagomen._constants import getLogo, GLOBAL
+from armagomen.battle_observer.i18n.dialogs import ban_info, labels
 from armagomen.utils.common import closeClient, disconnect, openWebBrowser
 from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
-from helpers import dependency, getClientLanguage
+from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 from wg_async import AsyncReturn, wg_async, wg_await
 
-language = getClientLanguage().lower()
-if language == "uk":
-    labels = ("Закрити гру", "Автоматично", "Вручну", "Скасувати", "Закрити", "Застосувати",
-              "Ігнорувати цей танк", "Так", "Ні")
-    ban_info = ('Доступ заборонено\n\nID: {}\nІм`я: {}\n\nВаш доступ до цієї послуги обмежено.Якщо ви вважаєте, що це помилка, або хочете '
-                'оскаржити рішення, зверніться до служби підтримки, вказавши свій ідентифікатор користувача.\n\nДякуємо за розуміння.')
-elif language == "pl":
-    labels = ("Zamknij grę", "Automatycznie", "Ręcznie", "Anuluj", "Zamknij", "Zastosuj",
-              "Ignoruj ten pojazd", "Tak", "Nie")
-
-    ban_info = ("Dostęp zablokowany\n\nID: {}\nNazwa: {}\n\nTwój dostęp do tej usługi został ograniczony."
-                " Jeśli uważasz, że to pomyłka lub chcesz odwołać decyzję, skontaktuj się z pomocą techniczną,"
-                " podając swój identyfikator użytkownika.\n\nDziękujemy za zrozumienie.")
-elif language == "de":
-    labels = ("Spiel schließen", "Automatisch", "Manuell", "Abbrechen", "Schließen", "Übernehmen",
-              "Dieses Fahrzeug ignorieren", "Ja", "Nein")
-
-    ban_info = ("Zugriff verweigert\n\nID: {}\nName: {}\n\nDein Zugriff auf diesen Dienst wurde eingeschränkt."
-                " Falls du denkst, dass es sich um ein Versehen handelt oder du Einspruch einlegen möchtest,"
-                " wende dich bitte an den Support und gib deine Benutzer-ID an.\n\nVielen Dank für dein Verständnis.")
-elif language in ('ru', 'be'):
-    labels = ("Закрыть игру", "Автоматически", "Ручной режим", "Отменить", "Закрыть", "Применить",
-              "Игнорировать танк", "Да", "Нет")
-    ban_info = ('Доступ запрещён\n\nID: {}\nИмя: {}\n\nВаш доступ к этой услуге ограничен. Если вы считаете, что это ошибка, или хотите '
-                'обжаловать решение, обратитесь в службу поддержки, указав свой идентификатор пользователя.\n\nБлагодарим за понимание.')
-else:
-    labels = ("Close game", "Automatically", "Manually", "Cancel", "Close", "Apply", "Ignore this tank", "Yes", "No")
-    ban_info = ('Access Denied\n\nID: {}\nName: {}\n\nYour access to this service has been restricted. If you believe this is a mistake or '
-                'would like to appeal the decision, please contact support with your User ID.\n\nThank you for your understanding.')
 buttons = namedtuple("BUTTONS", "close_game auto handle cancel close apply ignore yes no")(*labels)
 
 

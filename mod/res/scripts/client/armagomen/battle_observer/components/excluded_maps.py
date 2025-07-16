@@ -1,6 +1,6 @@
 from armagomen._constants import EXCLUDED_MAPS, MAIN
+from armagomen.battle_observer.i18n.exluded_maps import EXCLUDED_MAPS_BY_LANG
 from armagomen.battle_observer.settings import user_settings
-from armagomen.battle_observer.settings.hangar.i18n import localization
 from armagomen.utils.dialogs import ExcludedMapsDialog
 from constants import PREMIUM_TYPE, PremiumConfigs, RENEWABLE_SUBSCRIPTION_CONFIG
 from gui.impl.pub.dialog_window import DialogButtons
@@ -81,12 +81,12 @@ class ExcludedMapsProcessor(object):
 
     @staticmethod
     def __getLocalizedMessage(availableSlots):
-        return localization[EXCLUDED_MAPS.NAME][EXCLUDED_MAPS.MESSAGE] % availableSlots
+        return EXCLUDED_MAPS_BY_LANG[EXCLUDED_MAPS.MESSAGE] % availableSlots
 
     @wg_async
     def __showDialog(self, message):
         self.__isDialogVisible = True
-        header = localization[EXCLUDED_MAPS.NAME][EXCLUDED_MAPS.HEADER]
+        header = EXCLUDED_MAPS_BY_LANG[EXCLUDED_MAPS.HEADER]
         dialog = yield wg_await(ExcludedMapsDialog().showExcludedMapsDialog(header, message))
         if dialog.result == DialogButtons.RESEARCH:
             showMapsBlacklistView()
@@ -104,6 +104,7 @@ class ExcludedMapsProcessor(object):
         ])
         if usedSlots < totalSlots:
             self.__showDialog(self.__getLocalizedMessage(totalSlots - usedSlots))
+
 
 excluded_maps = ExcludedMapsProcessor()
 
