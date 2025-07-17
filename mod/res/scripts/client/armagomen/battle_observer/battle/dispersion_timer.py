@@ -34,7 +34,7 @@ class DispersionTimer(DispersionTimerMeta):
             handler = getInputHandler()
             if handler is not None and hasattr(handler, "onCameraChanged"):
                 handler.onCameraChanged += self.onCameraChanged
-        overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")(self.getOwnVehicleShotDispersionAngle)
+            overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")(self.getOwnVehicleShotDispersionAngle)
 
     def _dispose(self):
         if self.tpl is not None:
@@ -44,11 +44,11 @@ class DispersionTimer(DispersionTimerMeta):
             handler = getInputHandler()
             if handler is not None and hasattr(handler, "onCameraChanged"):
                 handler.onCameraChanged -= self.onCameraChanged
-                cancelOverride(PlayerAvatar, "getOwnVehicleShotDispersionAngle", "getOwnVehicleShotDispersionAngle")
+            cancelOverride(PlayerAvatar, "getOwnVehicleShotDispersionAngle", "getOwnVehicleShotDispersionAngle")
         super(DispersionTimer, self)._dispose()
 
-    def getOwnVehicleShotDispersionAngle(self, base, avatar, turretRotationSpeed, **kwargs):
-        dispersionAngles = base(avatar, turretRotationSpeed, **kwargs)
+    def getOwnVehicleShotDispersionAngle(self, base, avatar, turretRotationSpeed, *args, **kwargs):
+        dispersionAngles = base(avatar, turretRotationSpeed, *args, **kwargs)
         try:
             self.updateTimer(avatar, turretRotationSpeed, dispersionAngles)
         except Exception as e:

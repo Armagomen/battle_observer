@@ -294,8 +294,16 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0, color_blind=False):
 
 
 def parseColorToHex(color, asInt=False):
-    color = "0x" + color[1:]
-    return int(color, 16) if asInt else color
+    """
+    Converts color string to hex string or integer.
+    Accepts formats: '#RRGGBB', '0xRRGGBB', 'RRGGBB', even longer strings.
+    Compatible with Python 2.7.
+    """
+    if not isinstance(color, str):
+        raise ValueError("Color must be a string")
+
+    hex_part = color.replace("#", "").replace("0x", "").upper()[:6]
+    return int(hex_part, 16) if asInt else "0x" + hex_part
 
 
 def getPercent(param_a, param_b):
