@@ -30,6 +30,7 @@ class FlightTime(FlightTimeMeta):
             handler = avatar_getter.getInputHandler()
             if handler is not None and hasattr(handler, "onCameraChanged"):
                 handler.onCameraChanged += self.onCameraChanged
+            self.as_flightTimeS(self.tpl.format(0.0, 0.0))
 
     def _dispose(self):
         if self.tpl is not None:
