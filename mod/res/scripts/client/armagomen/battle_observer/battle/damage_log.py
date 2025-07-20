@@ -85,4 +85,4 @@ class DamageLog(DamageLogsMeta):
                 self.addToTopLog(event)
 
     def getAVGColor(self, percent):
-        return percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE
+        return percentToRGB(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE

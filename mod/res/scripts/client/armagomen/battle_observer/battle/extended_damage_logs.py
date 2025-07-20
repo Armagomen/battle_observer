@@ -111,7 +111,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
                 self.addToExtendedLog(event)
 
     def getAVGColor(self, percent):
-        return percentToRGB(percent, **self.settings[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE
+        return percentToRGB(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE
 
     def onVehicleUpdated(self, vehicleID, *args, **kwargs):
         """update log item in GM-mode"""

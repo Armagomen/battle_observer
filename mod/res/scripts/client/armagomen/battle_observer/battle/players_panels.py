@@ -1,4 +1,3 @@
-from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import COLORS, PANELS, VEHICLE
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
@@ -20,8 +19,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.hpBarsEnable = self.settings[PANELS.BARS_ENABLED]
         self.damagesEnable = self.settings[PANELS.DAMAGES_ENABLED]
         if self.hpBarsEnable:
-            if not self.settings[PANELS.BAR_CLASS_COLOR]:
-                self.settingsCore.onSettingsApplied += self.onSettingsApplied
             if self.settings[PANELS.ON_KEY_DOWN]:
                 g_keysListener.registerComponent(self.as_setHealthBarsVisibleS,
                                                  keyList=self.settings[PANELS.BAR_HOT_KEY])
@@ -37,8 +34,6 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     def _dispose(self):
         self.flashObject.as_clearStorage()
         if self.hpBarsEnable:
-            if not self.settings[PANELS.BAR_CLASS_COLOR]:
-                self.settingsCore.onSettingsApplied -= self.onSettingsApplied
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onPeriodChange -= self.onPeriodChange
@@ -47,10 +42,9 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         super(PlayersPanels, self)._dispose()
 
-    def onSettingsApplied(self, diff):
-        if GRAPHICS.COLOR_BLIND in diff:
-            barColor = self.getBarColor(True, diff[GRAPHICS.COLOR_BLIND])
-            self.as_colorBlindBarsS(barColor)
+    def onColorblindUpdated(self, blind):
+        barColor = self.getBarColor(True, blind)
+        self.as_colorBlindBarsS(barColor)
 
     def getBarColor(self, isEnemy, isColorBlind=None):
         colors = self.getColors()[COLORS.GLOBAL]

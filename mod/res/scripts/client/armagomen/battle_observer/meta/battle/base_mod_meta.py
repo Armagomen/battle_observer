@@ -16,6 +16,7 @@ class BaseModMeta(BaseDAAPIComponent):
     def __init__(self):
         super(BaseModMeta, self).__init__()
         self.settings = None
+        self._isColorBlind = self.isColorBlind()
 
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
@@ -64,13 +65,23 @@ class BaseModMeta(BaseDAAPIComponent):
     def isColorBlind(self):
         return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
 
+    def onColorblindUpdated(self, blind):
+        pass
+
+    def onSettingsApplied(self, diff):
+        if GRAPHICS.COLOR_BLIND in diff:
+            self._isColorBlind = bool(diff[GRAPHICS.COLOR_BLIND])
+            self.onColorblindUpdated(self._isColorBlind)
+
     def _populate(self):
         super(BaseModMeta, self)._populate()
         logDebug("battle module '{}' loaded", self.getAlias())
+        self.settingsCore.onSettingsApplied += self.onSettingsApplied
 
     def _dispose(self):
         super(BaseModMeta, self)._dispose()
         logDebug("battle module '{}' destroyed", self.getAlias())
+        self.settingsCore.onSettingsApplied -= self.onSettingsApplied
 
     def isPlayerVehicle(self):
         vehicle = self.sessionProvider.shared.vehicleState.getControllingVehicle()
