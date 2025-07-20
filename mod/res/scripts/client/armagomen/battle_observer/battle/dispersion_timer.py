@@ -62,8 +62,7 @@ class DispersionTimer(DispersionTimerMeta):
             if turretRotationSpeed == 0.0 and not self.ideal_angle:
                 self.ideal_angle = dispersionAngles[1]
             diff = round(self.ideal_angle / dispersionAngles[0], 2)
-            changeColor = diff >= 1.0
-            time = 0.0 if changeColor else round(avatar.aimingInfo[1], 1) * (1.0 - diff)
+            time = 0.0 if diff >= 1.0 else round(avatar.aimingInfo[1], 1) * (1.0 - diff)
             if time > 2.0:
                 self.temp.append(time)
                 time = sum(self.temp) / len(self.temp)

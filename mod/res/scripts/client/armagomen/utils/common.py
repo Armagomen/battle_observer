@@ -228,43 +228,50 @@ def updateIgnoredVehicles(vehicles):
 base_before_override = {}
 
 
-def overrideMethod(wg_class, method_name="__init__"):
+def find_similar_attr_name(obj, target_name):
+    for name in dir(obj):
+        if target_name in name:
+            return name
+    return None
+
+
+def overrideMethod(wg_class, _method_name="__init__"):
     """
     wg_class: class object
     method_name: Unicode, default __init__
     """
-    class_name = wg_class.__name__
-    if not hasattr(wg_class, method_name) and method_name.startswith("__") and method_name != "__init__":
-        method_name = next(
-            (name for name in ["_{}{}".format(class_name, method_name), method_name[1:]] if hasattr(wg_class, name)),
-            method_name
-        )
+    class_name = getattr(wg_class, '__name__', wg_class.__class__.__name__)
+    method_name = find_similar_attr_name(wg_class, _method_name)
 
     def outer(new_method):
+        if method_name is None:
+            logError("overrideMethod: {} do not find in {}", _method_name, class_name)
+            return new_method
         full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, new_method.__name__)
         if full_name_with_class in base_before_override:
-            logDebug("overrideMethod: {} already added to storage", full_name_with_class)
+            logError("overrideMethod: {} already added to storage", full_name_with_class)
             return new_method
-        old_method = getattr(wg_class, method_name, None)
-        if old_method is not None and callable(old_method):
+        old_method = getattr(wg_class, method_name)
+        if callable(old_method):
             base_before_override[full_name_with_class] = old_method
             setattr(wg_class, method_name, lambda *args, **kwargs: new_method(old_method, *args, **kwargs))
             logDebug("overrideMethod: Set override to {}.{} >> {func}", class_name, method_name, func=new_method)
         else:
-            logError("overrideMethod: {} has not attr {}, or not callable", class_name, method_name)
+            logError("overrideMethod: {}.{} is not callable", class_name, method_name)
         return new_method
 
     return outer
 
 
-def cancelOverride(wg_class, method_name, replaced_name):
-    class_name = wg_class.__name__
-    if method_name.startswith("__"):
-        method_name = "_{0}{1}".format(class_name, method_name)
+def cancelOverride(wg_class, _method_name, replaced_name):
+    class_name = getattr(wg_class, '__name__', wg_class.__class__.__name__)
+    method_name = find_similar_attr_name(wg_class, _method_name)
+    if method_name is None:
+        return logError("cancelOverride: {} do not find in {}", _method_name, class_name)
     full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, replaced_name)
     if full_name_with_class in base_before_override:
         setattr(wg_class, method_name, base_before_override.pop(full_name_with_class))
-        logDebug("cancelOverrode: override {} removed", full_name_with_class)
+        logDebug("cancelOverride: override {} removed", full_name_with_class)
 
 
 def convertDictToNamedtuple(dictionary):
