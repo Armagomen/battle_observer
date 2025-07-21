@@ -9,7 +9,7 @@ from gui.Scaleform.daapi.view.lobby.header.LobbyHeader import LobbyHeader
 from helpers.time_utils import getTimeDeltaFromNow, makeLocalServerTime, ONE_DAY, ONE_HOUR, ONE_MINUTE
 
 TEMPLATES = namedtuple("TEMPLATES", ("DAYS", "HOURS"))(
-    "<b><font color='#FAFAFA'>%(days)d {0}. %(hours)02d:%(min)02d:%(sec)02d</font></b>".format(
+    "<b><font color='#FAFAFA'>%(days)d {0}. %(hours)02d:%(min)02d</font></b>".format(
         backport.text(R.strings.menu.header.account.premium.days()).replace(".", "")),
     "<b><font color='#FAFAFA'>%(hours)d {0}. %(min)02d:%(sec)02d</font></b>".format(
         backport.text(R.strings.menu.header.account.premium.hours()).replace(".", ""))
@@ -24,9 +24,7 @@ class PremiumTime(object):
         overrideMethod(LobbyHeader, "as_setPremiumParamsS")(self.startCallback)
         overrideMethod(LobbyHeader, "_removeListeners")(self._removeListeners)
 
-    def _getPremiumLabelText(self, timeDelta):
-        delta = int(getTimeDeltaFromNow(makeLocalServerTime(timeDelta)))
-        template = TEMPLATES.DAYS if delta > ONE_DAY else TEMPLATES.HOURS
+    def _getPremiumLabelText(self, template, delta):
         self.macros["days"], delta = divmod(delta, ONE_DAY)
         self.macros["hours"], delta = divmod(delta, ONE_HOUR)
         self.macros["min"], self.macros["sec"] = divmod(delta, ONE_MINUTE)
@@ -35,8 +33,11 @@ class PremiumTime(object):
     def startCallback(self, base, header, data):
         self.stopCallback()
         if user_settings.main[MAIN.PREMIUM_TIME] and header.itemsCache.items.stats.isPremium:
-            self.callback = addCallback(1.0, self.startCallback, base, header, data)
-            data["doLabel"] = self._getPremiumLabelText(header.itemsCache.items.stats.activePremiumExpiryTime)
+            delta = int(getTimeDeltaFromNow(makeLocalServerTime(header.itemsCache.items.stats.activePremiumExpiryTime)))
+            days = delta > ONE_DAY
+            template = TEMPLATES.DAYS if days else TEMPLATES.HOURS
+            self.callback = addCallback(30.0 if days else 1.0, self.startCallback, base, header, data)
+            data["doLabel"] = self._getPremiumLabelText(template, delta)
         base(header, data)
 
     def stopCallback(self):
