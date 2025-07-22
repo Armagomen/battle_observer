@@ -15,10 +15,13 @@ from PlayerEvents import g_playerEvents
 from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
 
-CLIENT = gun_marker_ctrl._MARKER_TYPE.CLIENT
-SERVER = gun_marker_ctrl._MARKER_TYPE.SERVER
-DUAL_ACC = gun_marker_ctrl._MARKER_TYPE.DUAL_ACC
-EMPTY = gun_marker_ctrl._MARKER_TYPE.UNDEFINED
+COLOR_CHANGE_LINKAGES = {
+    _CONSTANTS.ARCADE_GUN_MARKER_NAME: _CONSTANTS.DEBUG_ARCADE_GUN_MARKER_NAME,
+    _CONSTANTS.SNIPER_GUN_MARKER_NAME: _CONSTANTS.DEBUG_SNIPER_GUN_MARKER_NAME,
+    _CONSTANTS.SPG_GUN_MARKER_NAME: _CONSTANTS.DEBUG_SPG_GUN_MARKER_NAME,
+    _CONSTANTS.DUAL_GUN_ARCADE_MARKER_NAME: _CONSTANTS.DEBUG_DUAL_GUN_ARCADE_MARKER_NAME,
+    _CONSTANTS.DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME
+}
 
 DEV_FACTORIES_COLLECTION = (gm_factory._DevControlMarkersFactory, gm_factory._OptionalMarkersFactory, gm_factory._EquipmentMarkersFactory)
 LINKAGES = {
@@ -29,21 +32,26 @@ LINKAGES = {
     _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DUAL_GUN_SNIPER_MARKER_LINKAGE
 }
 if IS_WG_CLIENT:
+    COLOR_CHANGE_LINKAGES.update({
+        _CONSTANTS.TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME,
+        _CONSTANTS.TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME
+    })
+
     LINKAGES.update({_CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE,
                      _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE})
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
-aih_constants.GUN_MARKER_MIN_SIZE /= 2
-aih_constants.SPG_GUN_MARKER_MIN_SIZE /= 2
+aih_constants.GUN_MARKER_MIN_SIZE = 10.0
+aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0
 
-REPLACE = (CLIENT, DUAL_ACC)
+REPLACE = (gun_marker_ctrl._MARKER_TYPE.CLIENT, gun_marker_ctrl._MARKER_TYPE.DUAL_ACC)
 
 
 def getSetting(gunMakerType):
     _replace = user_settings.dispersion_circle[DISPERSION.REPLACE]
     _server = user_settings.dispersion_circle[DISPERSION.SERVER]
-    return _replace or _server if gunMakerType == SERVER else _replace if gunMakerType in REPLACE else False
+    return _replace or _server if gunMakerType == gun_marker_ctrl._MARKER_TYPE.SERVER else _replace if gunMakerType in REPLACE else False
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
@@ -75,7 +83,7 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
     def _updateDispersionData(self):
         self._size *= self.__scaleConfig
         dispersionAngle = self._gunRotator.dispersionAngle * self.__scaleConfig
-        isServerAim = self._gunMarkerType == SERVER
+        isServerAim = self._gunMarkerType == gun_marker_ctrl._MARKER_TYPE.SERVER
         if g_replayCtrl.isRecording and (g_replayCtrl.isServerAim and isServerAim or not isServerAim):
             g_replayCtrl.setSPGGunMarkerParams(dispersionAngle, 0.0)
         self._dataProvider.setupConicDispersion(dispersionAngle)
@@ -131,8 +139,9 @@ class DispersionCircle(object):
 
     @staticmethod
     def setGunMarkerColor(base, cr_panel, markerType, color):
-        if markerType == CLIENT:
-            base(cr_panel, SERVER, color)
+        m_type = COLOR_CHANGE_LINKAGES.get(markerType)
+        if m_type:
+            base(cr_panel, m_type, color)
         return base(cr_panel, markerType, color)
 
     def onModSettingsChanged(self, config, blockID):
@@ -195,17 +204,17 @@ class DispersionCircle(object):
     @staticmethod
     def createDefaultGunMarker(*args):
         factory = gun_marker_ctrl._GunMarkersDPFactory()
-        client = _DefaultGunMarkerController(CLIENT, factory.getClientProvider())
-        server = _DefaultGunMarkerController(SERVER, factory.getServerProvider())
-        dual = _DualAccMarkerController(DUAL_ACC, factory.getDualAccuracyProvider())
+        client = _DefaultGunMarkerController(gun_marker_ctrl._MARKER_TYPE.CLIENT, factory.getClientProvider())
+        server = _DefaultGunMarkerController(gun_marker_ctrl._MARKER_TYPE.SERVER, factory.getServerProvider())
+        dual = _DualAccMarkerController(gun_marker_ctrl._MARKER_TYPE.DUAL_ACC, factory.getDualAccuracyProvider())
         return gun_marker_ctrl._GunMarkersDecorator(client, server, dual)
 
     @staticmethod
     def createStrategicGunMarker(*args):
         factory = gun_marker_ctrl._GunMarkersDPFactory()
-        client = SPGController(CLIENT, factory.getClientSPGProvider())
-        server = SPGController(SERVER, factory.getServerSPGProvider())
-        dual = gun_marker_ctrl._EmptyGunMarkerController(EMPTY, None)
+        client = SPGController(gun_marker_ctrl._MARKER_TYPE.CLIENT, factory.getClientSPGProvider())
+        server = SPGController(gun_marker_ctrl._MARKER_TYPE.SERVER, factory.getServerSPGProvider())
+        dual = gun_marker_ctrl._EmptyGunMarkerController(gun_marker_ctrl._MARKER_TYPE.UNDEFINED, None)
         return gun_marker_ctrl._GunMarkersDecorator(client, server, dual)
 
 
