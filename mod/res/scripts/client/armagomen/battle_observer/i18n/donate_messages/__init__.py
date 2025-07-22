@@ -27,11 +27,11 @@ MESSAGES = {
 ))
 
 ONLINE = {
-    "uk": "Онлайн користувачів: {}\nУсього користувачів: {}",
-    "ru": "Онлайн пользователей: {}\nВсего пользователей: {}",
-    "de": "Benutzer online: {}\nGesamtzahl der Benutzer: {}",
-    "pl": "Użytkownicy online: {}\nŁączna liczba użytkowników: {}"
-}.get(language, "Online users: {}\nTotal users: {}")
+    "uk": "Онлайн користувачів: {online}\nУсього користувачів: {total}",
+    "ru": "Онлайн пользователей: {online}\nВсего пользователей: {total}",
+    "de": "Benutzer online: {online}\nGesamtzahl der Benutzer: {total}",
+    "pl": "Użytkownicy online: {online}\nŁączna liczba użytkowników: {total}"
+}.get(language, "Online users: {online}\nTotal users: {total}")
 
 LINKS_FORMAT = {
     "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - поповнити банку."},

@@ -11,6 +11,7 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
 from helpers import dependency
+from PlayerEvents import g_playerEvents
 from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
 
@@ -80,14 +81,6 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
         self._dataProvider.setupConicDispersion(dispersionAngle)
 
 
-def disable_server_aim():
-    settingsCore = dependency.instance(ISettingsCore)
-    if settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
-        settingsCore.applySettings({GAME.ENABLE_SERVER_AIM: 0})
-        settingsCore.applyStorages(False)
-        settingsCore.clearStorages()
-
-
 class DispersionCircle(object):
 
     def __init__(self):
@@ -99,8 +92,6 @@ class DispersionCircle(object):
 
     @staticmethod
     def createOverrideComponents(base, *args):
-        disable_server_aim()
-        getPlayer().cell.setServerMarker(True)
         if len(args) == 2:
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
@@ -130,6 +121,15 @@ class DispersionCircle(object):
         rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, (mSize, mISize), SERVER_TICK_LENGTH, collData)
 
     @staticmethod
+    def enableServerMarker():
+        settingsCore = dependency.instance(ISettingsCore)
+        if settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
+            settingsCore.applySettings({GAME.ENABLE_SERVER_AIM: 0})
+            settingsCore.applyStorages(False)
+            settingsCore.clearStorages()
+        getPlayer().cell.setServerMarker(True)
+
+    @staticmethod
     def setGunMarkerColor(base, cr_panel, markerType, color):
         if markerType == CLIENT:
             base(cr_panel, SERVER, color)
@@ -151,6 +151,11 @@ class DispersionCircle(object):
         self.toggleServerCrossOverrides(server)
 
     def toggleServerCrossOverrides(self, enable):
+        if enable:
+            g_playerEvents.onAvatarReady += self.enableServerMarker
+        else:
+            g_playerEvents.onAvatarReady -= self.enableServerMarker
+
         server_overrides = (
             (gm_factory, "createComponents", self.createOverrideComponents),
             (gm_factory, "overrideComponents", self.createOverrideComponents),

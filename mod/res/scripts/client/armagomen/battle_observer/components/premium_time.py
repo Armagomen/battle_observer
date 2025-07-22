@@ -13,7 +13,7 @@ class PremiumTime(object):
         self.callback = None
         day = backport.text(R.strings.menu.header.account.premium.days()).replace(".", "")
         hour = backport.text(R.strings.menu.header.account.premium.hours()).replace(".", "")
-        self.days = "<b><font color='#FAFAFA'>{0:d} %s. {2:02d}:{3:02d}:{4:02d}</font></b>" % day
+        self.days = "<b><font color='#FAFAFA'>{0:d} %s. {1:02d}:{2:02d}:{3:02d}</font></b>" % day
         self.hours = "<b><font color='#FAFAFA'>{1:d} %s. {2:02d}:{3:02d}</font></b>" % hour
         overrideMethod(LobbyHeader, "as_setPremiumParamsS")(self.startCallback)
         overrideMethod(LobbyHeader, "_removeListeners")(self._removeListeners)

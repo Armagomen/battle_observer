@@ -46,17 +46,15 @@ def user_logout(user_id):
     response = yield async_url_request(url, data=data, headers=headers, method="PATCH")
     logInfo("Logout [{}]: {}", user_id, response.responseCode)
 
+online_cache = {"online": 0, "total": 0}
 
 @wg_async
 def get_stats():
     url = SUPABASE_URL + "/rest/v1/rpc/get_user_stats"
     response = yield async_url_request(url, headers=headers_common.copy(), method="POST")
     try:
-        result = json.loads(response.body)
-        online = result.get("online", 0)
-        total = result.get("total", 0)
+        online_cache.update(json.loads(response.body))
     except Exception as e:
         logError("Stats parsing error: {}", repr(e))
-        online = total = 0
 
-    raise AsyncReturn((online, total))
+    raise AsyncReturn(online_cache)

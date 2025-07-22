@@ -67,8 +67,8 @@ class Donate(object):
 
     @wg_async
     def pushDonateMessage(self):
-        online, total = yield get_stats()
-        stats_info = ONLINE.format(online, total)
+        stats = yield get_stats()
+        stats_info = ONLINE.format(**stats)
         self.lastMessage = self.getRandomMessage()
         message = PATTERN.format(msg=self.lastMessage, online=stats_info, **LINKS_FORMAT)
         pushMessage(message, type=SM_TYPE.Warning)
