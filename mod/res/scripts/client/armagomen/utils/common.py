@@ -249,7 +249,7 @@ def overrideMethod(wg_class, _method_name="__init__"):
             return new_method
         full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, new_method.__name__)
         if full_name_with_class in base_before_override:
-            logError("overrideMethod: {} already added to storage", full_name_with_class)
+            logDebug("overrideMethod: {} already added to storage", full_name_with_class)
             return new_method
         old_method = getattr(wg_class, method_name)
         if callable(old_method):

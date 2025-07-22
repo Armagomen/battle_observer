@@ -97,29 +97,6 @@ class DispersionCircle(object):
     def fini(self):
         user_settings.onModSettingsChanged -= self.onModSettingsChanged
 
-    def addServerCrossOverrides(self):
-        overrideMethod(gm_factory, "createComponents")(self.createOverrideComponents)
-        overrideMethod(gm_factory, "overrideComponents")(self.createOverrideComponents)
-        overrideMethod(gun_marker_ctrl, "useDefaultGunMarkers")(self.useDefaultGunMarkers)
-        overrideMethod(gun_marker_ctrl, "useClientGunMarker")(self.useGunMarker)
-        overrideMethod(gun_marker_ctrl, "useServerGunMarker")(self.useGunMarker)
-        overrideMethod(VehicleGunRotator, "applySettings")(self.onPass)
-        overrideMethod(VehicleGunRotator, "setShotPosition")(self.setShotPositionWG if IS_WG_CLIENT else self.setShotPositionLesta)
-        overrideMethod(CrosshairDataProxy, "__onServerGunMarkerStateChanged")(self.onPass)
-        overrideMethod(CrosshairPanelContainer, "setGunMarkerColor")(self.setGunMarkerColor)
-
-    @staticmethod
-    def cancelServerCrossOverride():
-        cancelOverride(gm_factory, "createComponents", "createOverrideComponents")
-        cancelOverride(gm_factory, "overrideComponents", "createOverrideComponents")
-        cancelOverride(gun_marker_ctrl, "useDefaultGunMarkers", "useDefaultGunMarkers")
-        cancelOverride(gun_marker_ctrl, "useClientGunMarker", "useGunMarker")
-        cancelOverride(gun_marker_ctrl, "useServerGunMarker", "useGunMarker")
-        cancelOverride(VehicleGunRotator, "applySettings", "onPass")
-        cancelOverride(VehicleGunRotator, "setShotPosition", "setShotPositionWG" if IS_WG_CLIENT else "setShotPositionLesta")
-        cancelOverride(CrosshairDataProxy, "__onServerGunMarkerStateChanged", "onPass")
-        cancelOverride(CrosshairPanelContainer, "setGunMarkerColor", "setGunMarkerColor")
-
     @staticmethod
     def createOverrideComponents(base, *args):
         disable_server_aim()
@@ -161,34 +138,54 @@ class DispersionCircle(object):
     def onModSettingsChanged(self, config, blockID):
         if blockID != DISPERSION.NAME:
             return
-        replace = config[GLOBAL.ENABLED] and config[DISPERSION.REPLACE]
-        server = config[GLOBAL.ENABLED] and config[DISPERSION.SERVER]
-        enabled = replace or server
-        if self.enabled != enabled:
-            self.enabled = enabled
-            if IS_WG_CLIENT:
-                self.toggleGunMarker("createGunMarker", self.createGunMarker_WG, enabled)
-            else:
-                self.toggleGunMarker("createDefaultGunMarker", self.createDefaultGunMarker, enabled)
-                self.toggleGunMarker("createStrategicGunMarker", self.createStrategicGunMarker, enabled)
-                self.toggleGunMarker("createAssaultSpgGunMarker", self.createStrategicGunMarker, enabled)
-        if server:
-            self.addServerCrossOverrides()
-        else:
-            self.cancelServerCrossOverride()
 
-    @staticmethod
-    def toggleGunMarker(method_name, func, enable):
-        if enable:
-            overrideMethod(gun_marker_ctrl, method_name)(func)
+        isEnabled = config[GLOBAL.ENABLED]
+        replace = isEnabled and config[DISPERSION.REPLACE]
+        server = isEnabled and config[DISPERSION.SERVER]
+        shouldOverride = replace or server
+
+        if self.enabled != shouldOverride:
+            self.enabled = shouldOverride
+            self.toggleCreateGunMarkerOverride(shouldOverride)
+
+        self.toggleServerCrossOverrides(server)
+
+    def toggleServerCrossOverrides(self, enable):
+        server_overrides = (
+            (gm_factory, "createComponents", self.createOverrideComponents),
+            (gm_factory, "overrideComponents", self.createOverrideComponents),
+            (gun_marker_ctrl, "useDefaultGunMarkers", self.useDefaultGunMarkers),
+            (gun_marker_ctrl, "useClientGunMarker", self.useGunMarker),
+            (gun_marker_ctrl, "useServerGunMarker", self.useGunMarker),
+            (VehicleGunRotator, "applySettings", self.onPass),
+            (VehicleGunRotator, "setShotPosition", self.setShotPositionWG if IS_WG_CLIENT else self.setShotPositionLesta),
+            (CrosshairDataProxy, "__onServerGunMarkerStateChanged", self.onPass),
+            (CrosshairPanelContainer, "setGunMarkerColor", self.setGunMarkerColor)
+        )
+
+        for obj, method_name, func in server_overrides:
+            self.toggleOverride(obj, method_name, func, enable)
+
+    def toggleCreateGunMarkerOverride(self, enable):
+        if IS_WG_CLIENT:
+            self.toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, enable)
         else:
-            cancelOverride(gun_marker_ctrl, method_name, func.__name__)
+            self.toggleOverride(gun_marker_ctrl, "createDefaultGunMarker", self.createDefaultGunMarker, enable)
+            self.toggleOverride(gun_marker_ctrl, "createStrategicGunMarker", self.createStrategicGunMarker, enable)
+            self.toggleOverride(gun_marker_ctrl, "createAssaultSpgGunMarker", self.createStrategicGunMarker, enable)
 
     def createGunMarker_WG(self, baseCreateGunMarker, isStrategic):
         if isStrategic:
             return self.createStrategicGunMarker()
         else:
             return self.createDefaultGunMarker()
+
+    @staticmethod
+    def toggleOverride(obj, method_name, func, enable):
+        if enable:
+            overrideMethod(obj, method_name)(func)
+        else:
+            cancelOverride(obj, method_name, func.__name__)
 
     @staticmethod
     def createDefaultGunMarker(*args):
