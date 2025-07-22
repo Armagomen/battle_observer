@@ -304,13 +304,14 @@ def parseColorToHex(color, asInt=False):
     """
     Converts color string to hex string or integer.
     Accepts formats: '#RRGGBB', '0xRRGGBB', 'RRGGBB', even longer strings.
-    Compatible with Python 2.7.
+    Compatible with Python 2.7. Falls back to 0xFAFAFA or 16448250 on error.
     """
-    if not isinstance(color, str):
-        raise ValueError("Color must be a string")
-
-    hex_part = color.replace("#", "").replace("0x", "").upper()[:6]
-    return int(hex_part, 16) if asInt else "0x" + hex_part
+    hex_part = 16448250
+    try:
+        hex_part = int(color.replace("#", "").replace("0x", "").upper()[:6], 16)
+    except Exception as error:
+        logError(error)
+    return hex_part if asInt else hex(hex_part)
 
 
 def getPercent(param_a, param_b):
