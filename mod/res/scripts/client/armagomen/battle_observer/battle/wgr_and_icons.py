@@ -2,7 +2,7 @@ import json
 from httplib import responses
 from math import floor, log
 
-from armagomen._constants import API_KEY, STATISTICS, STATISTICS_REGION
+from armagomen._constants import STATISTICS, STATISTICS_REGION
 from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIconsMeta
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import addCallback, cancelCallback
@@ -102,7 +102,7 @@ class WGRAndIcons(WGRAndIconsMeta):
 class StatisticsDataLoader(object):
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
-    STAT_URL = "{url}application_id={key}&account_id={ids}&extra=statistics.random&fields={fields}&language=en"
+    STAT_URL = STATISTICS_REGION + "&account_id={}&extra=statistics.random&language=en&fields=" + FIELDS
 
     def __init__(self, arenaDP, callback):
         self.arenaDP = arenaDP
@@ -151,7 +151,7 @@ class StatisticsDataLoader(object):
         if self.__getDataCallback is not None:
             cancelCallback(self.__getDataCallback)
             self.__getDataCallback = None
-        url = self.STAT_URL.format(ids=self.SEPARATOR.join(self.vehicles), key=API_KEY, url=STATISTICS_REGION, fields=self.FIELDS)
+        url = self.STAT_URL.format(self.SEPARATOR.join(self.vehicles))
         response = yield async_url_request(url)
         self.onDataResponse(response)
 

@@ -229,8 +229,12 @@ base_before_override = {}
 
 
 def find_similar_attr_name(obj, target_name):
-    for name in dir(obj):
+    attrs = dir(obj)
+    if target_name in attrs:
+        return target_name
+    for name in attrs:
         if target_name in name:
+            logDebug("{} {}", target_name, name)
             return name
     return None
 

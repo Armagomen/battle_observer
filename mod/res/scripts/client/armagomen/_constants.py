@@ -39,10 +39,13 @@ URLS = namedtuple("URLS", (
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")
-REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/info/?", "ASIA": "https://api.worldoftanks.asia/wot/account/info/?",
-           "NA": "https://api.worldoftanks.com/wot/account/info/?", "RU": "https://api.tanki.su/wot/account/info/?"}
-STATISTICS_REGION = REGIONS.get(AUTH_REALM)
+
 API_KEY = "5500d1b937426e47e2b039e4a11990be" if IS_WG_CLIENT else "53352ebb7cd87e994157d0d1e9f360b1"
+REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/info/?application_id={}".format(API_KEY),
+           "ASIA": "https://api.worldoftanks.asia/wot/account/info/?application_id={}".format(API_KEY),
+           "NA": "https://api.worldoftanks.com/wot/account/info/?application_id={}".format(API_KEY),
+           "RU": "https://api.tanki.su/wot/account/info/?application_id={}".format(API_KEY)}
+STATISTICS_REGION = REGIONS.get(AUTH_REALM)
 
 VEHICLE_TYPES_COLORS = namedtuple("VEHICLE_TYPES_COLORS", ("NAME", "UNKNOWN"))("vehicle_types_colors", "unknown")
 

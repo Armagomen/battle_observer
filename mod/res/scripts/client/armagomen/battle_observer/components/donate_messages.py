@@ -8,7 +8,7 @@ from armagomen.battle_observer.i18n.donate_messages import LINKS_FORMAT, MESSAGE
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from armagomen.utils.dialogs import BannedDialog
-from armagomen.utils.logging import logDebug, logInfo, logWarning
+from armagomen.utils.logging import IS_DEBUG, logDebug, logInfo, logWarning
 from armagomen.utils.online import get_stats
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
@@ -38,9 +38,12 @@ class Donate(object):
     def __init__(self):
         self.timeDelta = datetime.now() + timedelta(minutes=5)
         self.lastMessage = None
-        self.show_clan_invite = True
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
-        self.check_api()
+        if AUTH_REALM != "EU":
+            self.show_invite = getClientLanguage() in ("ru", "uk")
+            self.check_api()
+        else:
+            self.show_invite = False
 
     def fini(self):
         ServicesLocator.appLoader.onGUISpaceEntered -= self.pushNewMessage
@@ -48,7 +51,7 @@ class Donate(object):
     def onDataResponse(self, response):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
-            self.show_clan_invite = response_data.get("data", {}).get(str(CLAN_ID), {}).get("members_count", 0) < 99
+            self.show_invite = response_data.get("data", {}).get(str(CLAN_ID), {}).get("members_count", 0) < 99 and self.show_invite
             logDebug("Donate/check clan members: FINISH request clan data={}", response.body)
         elif response.responseCode != 304:
             logWarning('Donate/check clan members: contentType={}, responseCode={} body={}', response.contentType,
@@ -75,22 +78,23 @@ class Donate(object):
         logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
 
     def pushClanInviteMessage(self):
-        if AUTH_REALM != "EU" or not self.show_clan_invite or g_clanCache.isInClan or getClientLanguage() not in ("ru", "uk"):
-            return
-        message = ("{}<p><font color='#ffff66'>Приєднуйся до нашого клану <a href='event:{}'>[{}]</a>, "
-                   "отримаєш більше бонусів від гри (бустери, камуфляжі, та інше)."
-                   "\nУмови на вступ: від 1000 боїв, грати 2-3 рази на тиждень."
-                   "\nУ разі якщо ви не будете з'являтися онлайн протягом місяця вас буде виключено з клану."
-                   "</font></p>").format(getLogo(big=False), CLAN_ABBREV, CLAN_ABBREV)
-        pushMessage(message, type=SM_TYPE.Warning)
-        self.show_clan_invite = False
+        if self.show_invite and not g_clanCache.isInClan or IS_DEBUG:
+            message = ("{0}<p><font color='#ffff66'>"
+                       "Запрошуємо тебе до нашого клану.<br><a href='event:{1}'>[{1}]</a> — "
+                       "отримуй більше бонусів у грі: бустери, камуфляжі та багато іншого."
+                       "<br>Умови вступу: щонайменше 1000 боїв, активність 2–3 рази на тиждень."
+                       "<br>Якщо не заходиш онлайн протягом місяця — тебе буде виключено з клану."
+                       "</font></p>"
+                       ).format(getLogo(big=False), CLAN_ABBREV)
+            pushMessage(message, type=SM_TYPE.Warning)
+        self.show_invite = False
 
     def pushNewMessage(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             if "WG" in str(g_clanCache.clanAbbrev):
                 return
             current_time = datetime.now()
-            if current_time >= self.timeDelta:
+            if current_time >= self.timeDelta or IS_DEBUG:
                 self.timeDelta = current_time + timedelta(minutes=30)
                 self.pushDonateMessage()
                 self.pushClanInviteMessage()

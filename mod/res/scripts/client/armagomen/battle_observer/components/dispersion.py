@@ -15,14 +15,6 @@ from PlayerEvents import g_playerEvents
 from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
 
-COLOR_CHANGE_LINKAGES = {
-    _CONSTANTS.ARCADE_GUN_MARKER_NAME: _CONSTANTS.DEBUG_ARCADE_GUN_MARKER_NAME,
-    _CONSTANTS.SNIPER_GUN_MARKER_NAME: _CONSTANTS.DEBUG_SNIPER_GUN_MARKER_NAME,
-    _CONSTANTS.SPG_GUN_MARKER_NAME: _CONSTANTS.DEBUG_SPG_GUN_MARKER_NAME,
-    _CONSTANTS.DUAL_GUN_ARCADE_MARKER_NAME: _CONSTANTS.DEBUG_DUAL_GUN_ARCADE_MARKER_NAME,
-    _CONSTANTS.DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME
-}
-
 DEV_FACTORIES_COLLECTION = (gm_factory._DevControlMarkersFactory, gm_factory._OptionalMarkersFactory, gm_factory._EquipmentMarkersFactory)
 LINKAGES = {
     _CONSTANTS.DEBUG_SPG_GUN_MARKER_NAME: _CONSTANTS.GUN_MARKER_SPG_LINKAGE,
@@ -32,11 +24,6 @@ LINKAGES = {
     _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DUAL_GUN_SNIPER_MARKER_LINKAGE
 }
 if IS_WG_CLIENT:
-    COLOR_CHANGE_LINKAGES.update({
-        _CONSTANTS.TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME,
-        _CONSTANTS.TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME
-    })
-
     LINKAGES.update({_CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE,
                      _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE})
 
@@ -139,9 +126,7 @@ class DispersionCircle(object):
 
     @staticmethod
     def setGunMarkerColor(base, cr_panel, markerType, color):
-        m_type = COLOR_CHANGE_LINKAGES.get(markerType)
-        if m_type:
-            base(cr_panel, m_type, color)
+        base(cr_panel, gun_marker_ctrl._MARKER_TYPE.SERVER, color)
         return base(cr_panel, markerType, color)
 
     def onModSettingsChanged(self, config, blockID):
