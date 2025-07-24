@@ -39,7 +39,7 @@ class Donate(object):
         self.timeDelta = datetime.now() + timedelta(minutes=5)
         self.lastMessage = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
-        if AUTH_REALM != "EU":
+        if AUTH_REALM == "EU":
             self.show_invite = getClientLanguage() in ("ru", "uk")
             self.check_api()
         else:
