@@ -7,7 +7,6 @@ from armagomen._constants import API_KEY, AUTH_REALM, getLogo, URLS
 from armagomen.battle_observer.i18n.donate_messages import LINKS_FORMAT, MESSAGES, ONLINE
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import openWebBrowser, overrideMethod
-from armagomen.utils.dialogs import BannedDialog
 from armagomen.utils.logging import IS_DEBUG, logDebug, logInfo, logWarning
 from armagomen.utils.online import get_stats
 from gui.clans.clan_cache import g_clanCache
@@ -29,8 +28,6 @@ PATTERN = getLogo(big=False) + ("<p><font color='#ffff29'>{msg}</font></p>\n"
 
 CLAN_ID = 500223690
 API_URL = "https://api.worldoftanks.eu/wot/clans/info/?application_id={}&clan_id={}&fields=members_count".format(API_KEY, CLAN_ID)
-
-BAN_CLAN = 500232266
 
 
 class Donate(object):
@@ -98,9 +95,6 @@ class Donate(object):
                 self.timeDelta = current_time + timedelta(minutes=30)
                 self.pushDonateMessage()
                 self.pushClanInviteMessage()
-            if AUTH_REALM == "EU" and g_clanCache.clanDBID == BAN_CLAN:
-                dialog = BannedDialog()
-                dialog.showDialog(BAN_CLAN, "you clan <b>{}</b> in mod black list".format(g_clanCache.clanName))
 
 
 donate = Donate()

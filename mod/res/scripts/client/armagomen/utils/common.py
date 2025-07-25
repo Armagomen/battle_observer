@@ -10,7 +10,6 @@ from io import open as _open
 
 import BigWorld
 import ResMgr
-import WGC
 
 from armagomen.utils.logging import logDebug, logError, logInfo
 from BattleReplay import isLoading, isPlaying
@@ -63,7 +62,11 @@ def save():
 
 def restartGame():
     save()
-    WGC.notifyRestart()
+    try:
+        import WGC
+        WGC.notifyRestart()
+    except ImportError:
+        pass
     BigWorld.restartGame()
 
 
