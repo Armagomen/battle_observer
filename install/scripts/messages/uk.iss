@@ -65,7 +65,7 @@ uk.debug_panel=Змінена панель FPS/PING
 //dispersion_circle
 uk.dispersion_circle=Налаштування кола зведення: зменшення розміру та серверний приціл
 uk.dispersion_circle_replace=Замінити основне коло зменшеним
-uk.dispersion_circle_server=Додати зменшений на 70% серверний приціл
+uk.dispersion_circle_server=Додати зменшений до 70% серверний приціл
 
 //sixth_sense
 uk.sixth_sense=Шосте відчуття з таймером. Після встановлення оберіть зображення в налаштуваннях
@@ -162,7 +162,7 @@ uk.service_channel_customizationChanged=Зміна налаштувань
 uk.statistics=Налаштування статистики гравців та іконок техніки
 uk.statistics_icons=Забарвити іконки техніки за класами
 uk.statistics_names_color=Змінити колір назви техніки у списках на колір статистики гравця
-uk.statistics_enable=Увімкнути статистику гравців за рейтингом WGR
+uk.statistics_enabled=Увімкнути статистику гравців за рейтингом WGR
 
 uk.team_bases_panel=Панель захоплення бази
 
