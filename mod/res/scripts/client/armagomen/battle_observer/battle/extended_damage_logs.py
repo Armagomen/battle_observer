@@ -22,6 +22,7 @@ _SHELL_TYPES_TO_STR = {
 }
 EXTENDED_FEEDBACK = (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
 PREMIUM_SHELL_END = "PREMIUM"
+NOT_SHELL = (DAMAGE_LOG.NOT_SHELL, False)
 DEFAULT_REASON = "<img src='{}/efficiency/module.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
 LogData = namedtuple('LogData', ('kills', 'id_list', 'vehicles', 'log_id'))
 
@@ -34,9 +35,6 @@ def getVehicleClassIcon(classTag):
     if not classTag:
         classTag = "unknown"
     return "<img src='{}/vehicle_types/{}.png' width='20' height='20' vspace='-6'>".format(IMAGE_DIR, classTag)
-
-
-NOT_SHELL = (DAMAGE_LOG.NOT_SHELL, False)
 
 
 class ExtendedDamageLogs(ExtendedDamageLogsMeta):
@@ -93,10 +91,11 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
             type_descriptor = getVehicleTypeDescriptor()
             if type_descriptor is None:
                 self._playerShell = NOT_SHELL
-            shell = type_descriptor.shot.shell
-            shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(shell))
-            is_shell_gold = shell.isGold or PREMIUM_SHELL_END in shell.iconName
-            self._playerShell = (shell_name, is_shell_gold)
+            else:
+                shell = type_descriptor.shot.shell
+                shell_name = getI18nShellName(BATTLE_LOG_SHELL_TYPES.getType(shell))
+                is_shell_gold = shell.isGold or PREMIUM_SHELL_END in shell.iconName
+                self._playerShell = (shell_name, is_shell_gold)
 
     def onLogsAltMode(self, isKeyDown):
         """Hot key event"""
