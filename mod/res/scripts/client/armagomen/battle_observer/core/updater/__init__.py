@@ -32,6 +32,21 @@ EXE_FILE = "{0}/mod_battle_observer_v{0}.exe"
 ZIP = "{0}/AutoUpdate.zip"
 
 
+def download_and_write(url, local_path, on_success, on_failure):
+    downloader = WebDownloader(1)
+
+    def onDownloaded(_url, data):
+        if data is not None:
+            with open(local_path, 'wb') as out_file:
+                out_file.write(data)
+            on_success()
+        else:
+            on_failure(_url)
+        downloader.close()
+
+    downloader.download(url, onDownloaded)
+
+
 class DownloadThread(object):
 
     def __init__(self):
@@ -47,45 +62,42 @@ class DownloadThread(object):
             self.download_cleanup_exe(self.cleanup_exe)
 
     def download_cleanup_exe(self, local_path):
-        downloader = WebDownloader(1)
-        exe_url = "https://raw.githubusercontent.com/Armagomen/auto-cleanup-observer/master/dist/cleanup_launcher.exe"
+        url = "https://raw.githubusercontent.com/Armagomen/auto-cleanup-observer/master/dist/cleanup_launcher.exe"
 
-        def onDownload(_url, data):
-            if data is not None:
-                with open(local_path, 'wb') as out_file:
-                    out_file.write(data)
-                self.cleanup_launcher_exist = True
-            else:
-                self.downloadError(_url)
-            downloader.close()
+        def success():
+            self.cleanup_launcher_exist = True
 
-        downloader.download(exe_url, onDownload)
+        def failure(_url):
+            self.downloadError(_url)
+
+        download_and_write(url, local_path, success, failure)
+
+    def waiting(self, enable):
+        if self.isReplay:
+            return
+        if enable and not Waiting.isOpened(WAITING_UPDATE):
+            Waiting.show(WAITING_UPDATE)
+        else:
+            Waiting.hide(WAITING_UPDATE)
 
     def startDownloadingUpdate(self, version):
         path = os.path.join(getUpdatePath(), version + ".zip")
         if os.path.isfile(path):
             return self.updateFiles(path, version)
-
-        if not self.isReplay:
-            Waiting.show(WAITING_UPDATE)
-        downloader = WebDownloader(1)
-
-        def onUpdateDownloaded(_url, data):
-            if data is not None:
-                with open(path, "wb") as zipArchive:
-                    zipArchive.write(data)
-                logInfo(LOG_MESSAGES.FINISHED, path)
-                self.extractZipArchive(path)
-                self.showUpdateFinishedDialog(version)
-            else:
-                self.downloadError(_url)
-            if not self.isReplay and Waiting.isOpened(WAITING_UPDATE):
-                Waiting.hide(WAITING_UPDATE)
-            downloader.close()
-
+        self.waiting(True)
         url = URLS.UPDATE + ZIP.format(version)
         logInfo(LOG_MESSAGES.STARTED, version, url)
-        downloader.download(url, onUpdateDownloaded)
+
+        def success():
+            logInfo(LOG_MESSAGES.FINISHED, path)
+            self.waiting(False)
+            self.updateFiles(path, version)
+
+        def failure(_url):
+            self.waiting(False)
+            self.downloadError(_url)
+
+        download_and_write(url, path, success, failure)
 
     def showUpdateFinishedDialog(self, version):
         if self.isReplay:
@@ -146,28 +158,26 @@ class Updater(DownloadThread):
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
     def responseUpdateCheck(self, response):
-        if response.responseCode == HTTP_OK_STATUS:
-            response_data = loads(response.body)
-            self.updateData.update(response_data)
-            new_version = response_data.get('tag_name', self.version)
-            if self.tupleVersion(self.version) < self.tupleVersion(new_version):
-                logInfo(LOG_MESSAGES.NEW_VERSION, new_version)
-                if not self.isReplay:
-                    self.showUpdateDialog(new_version)
-                else:
-                    self.startDownloadingUpdate(new_version)
+        response_data = loads(response.body)
+        self.updateData.update(response_data)
+        new_version = response_data.get('tag_name', self.version)
+        if self.tupleVersion(self.version) < self.tupleVersion(new_version):
+            logInfo(LOG_MESSAGES.NEW_VERSION, new_version)
+            if not self.isReplay:
+                self.showUpdateDialog(new_version)
             else:
-                logInfo(LOG_MESSAGES.UPDATE_CHECKED)
-        elif response.responseCode == 304:
-            return
+                self.startDownloadingUpdate(new_version)
         else:
-            logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode, response.body)
+            logInfo(LOG_MESSAGES.UPDATE_CHECKED)
 
     @wg_async
     def check(self):
         logInfo(LOG_MESSAGES.CHECK)
         response = yield async_url_request(URLS.UPDATE_GITHUB_API_URL)
-        self.responseUpdateCheck(response)
+        if response.responseCode == HTTP_OK_STATUS:
+            self.responseUpdateCheck(response)
+        elif response.responseCode != 304:
+            logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode, response.body)
 
     @staticmethod
     def tupleVersion(version):
