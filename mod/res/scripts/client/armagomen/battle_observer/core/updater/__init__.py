@@ -67,34 +67,32 @@ class DownloadThread(object):
         def success():
             self.cleanup_launcher_exist = True
 
-        def failure(_url):
-            self.downloadError(_url)
+        download_and_write(url, local_path, success, logError)
 
-        download_and_write(url, local_path, success, failure)
-
-    def waiting(self, enable):
+    def setWaitingState(self, targetState):
         if self.isReplay:
             return
-        if enable and not Waiting.isOpened(WAITING_UPDATE):
-            Waiting.show(WAITING_UPDATE)
-        else:
-            Waiting.hide(WAITING_UPDATE)
+        if targetState != Waiting.isOpened(WAITING_UPDATE):
+            if targetState:
+                Waiting.show(WAITING_UPDATE)
+            else:
+                Waiting.hide(WAITING_UPDATE)
 
     def startDownloadingUpdate(self, version):
         path = os.path.join(getUpdatePath(), version + ".zip")
         if os.path.isfile(path):
             return self.updateFiles(path, version)
-        self.waiting(True)
+        self.setWaitingState(True)
         url = URLS.UPDATE + ZIP.format(version)
         logInfo(LOG_MESSAGES.STARTED, version, url)
 
         def success():
             logInfo(LOG_MESSAGES.FINISHED, path)
-            self.waiting(False)
+            self.setWaitingState(False)
             self.updateFiles(path, version)
 
         def failure(_url):
-            self.waiting(False)
+            self.setWaitingState(False)
             self.downloadError(_url)
 
         download_and_write(url, path, success, failure)
