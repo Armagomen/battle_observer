@@ -5,12 +5,13 @@ from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import cancelOverride, overrideMethod
 from armagomen.utils.keys_listener import g_keysListener
 from Avatar import PlayerAvatar
+from DestructibleEntity import DestructibleEntity
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
+from gui.shared.personality import ServicesLocator
 from helpers import dependency
 from messenger.MessengerEntry import g_instance
-from PlayerEvents import g_playerEvents
-from skeletons.gui.app_loader import IAppLoader
+from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from skeletons.gui.battle_session import IBattleSessionProvider
 from Vehicle import Vehicle
 
@@ -21,8 +22,8 @@ class SaveShootLite(object):
 
     def __init__(self):
         user_settings.onModSettingsChanged += self.onModSettingsChanged
-        g_playerEvents.onAvatarReady += self.onAvatarReady
-        g_playerEvents.onAvatarBecomeNonPlayer += self.onAvatarBecomeNonPlayer
+        ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        ServicesLocator.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
         self.enabled = user_settings.main[MAIN.SAVE_SHOT]
         self.unlock = False
         self.vehicleErrorComponent = None
@@ -45,22 +46,28 @@ class SaveShootLite(object):
             else:
                 cancelOverride(PlayerAvatar, "shoot", "shoot")
 
-    def onAvatarReady(self):
-        if self.enabled:
+    def onGUISpaceEntered(self, spaceID):
+        if self.enabled and spaceID == GuiGlobalSpaceID.BATTLE:
             g_keysListener.registerComponent(self.keyEvent)
             battlePage = self.appLoader.getApp().containerManager.getContainer(WindowLayer.VIEW).getView()
             if battlePage is not None:
                 self.vehicleErrorComponent = battlePage.components.get(BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES)
 
-    def onAvatarBecomeNonPlayer(self):
-        self.unlock = False
-        self.vehicleErrorComponent = None
+    def onGUISpaceLeft(self, spaceID):
+        if self.enabled and spaceID == GuiGlobalSpaceID.BATTLE:
+            self.unlock = False
+            self.vehicleErrorComponent = None
 
     @staticmethod
     def checkTarget(avatar):
-        return (avatar._PlayerAvatar__autoAimVehID != 0 or avatar.target is None or
-                isinstance(avatar.target, Vehicle) and avatar.target.isAlive() and avatar.target.publicInfo[VEHICLE.TEAM] != avatar.team
-                )
+        if avatar._PlayerAvatar__autoAimVehID != 0:
+            return True
+        target = avatar.target
+        if target is None:
+            return True
+        if isinstance(target, (Vehicle, DestructibleEntity)) and target.isAlive() and target.publicInfo[VEHICLE.TEAM] != avatar.team:
+            return True
+        return False
 
     def keyEvent(self, isKeyDown):
         self.unlock = isKeyDown
@@ -71,5 +78,5 @@ save_shoot_lite = SaveShootLite()
 
 def fini():
     user_settings.onModSettingsChanged -= save_shoot_lite.onModSettingsChanged
-    g_playerEvents.onAvatarReady -= save_shoot_lite.onAvatarReady
-    g_playerEvents.onAvatarBecomeNonPlayer -= save_shoot_lite.onAvatarBecomeNonPlayer
+    ServicesLocator.appLoader.onGUISpaceLeft -= save_shoot_lite.onGUISpaceLeft
+    ServicesLocator.appLoader.onGUISpaceEntered -= save_shoot_lite.onGUISpaceEntered

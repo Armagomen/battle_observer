@@ -87,6 +87,7 @@ class DispersionCircle(object):
 
     @staticmethod
     def createOverrideComponents(base, *args):
+        getPlayer().cell.setServerMarker(True)
         if len(args) == 2:
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)
@@ -116,13 +117,12 @@ class DispersionCircle(object):
         rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, (mSize, mISize), SERVER_TICK_LENGTH, collData)
 
     @staticmethod
-    def enableServerMarker():
+    def disableWGServerMarker():
         settingsCore = dependency.instance(ISettingsCore)
         if settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
             settingsCore.applySettings({GAME.ENABLE_SERVER_AIM: 0})
             settingsCore.applyStorages(False)
             settingsCore.clearStorages()
-        getPlayer().cell.setServerMarker(True)
 
     @staticmethod
     def setGunMarkerColor(base, cr_panel, markerType, color):
@@ -146,9 +146,9 @@ class DispersionCircle(object):
 
     def toggleServerCrossOverrides(self, enable):
         if enable:
-            g_playerEvents.onAvatarReady += self.enableServerMarker
+            g_playerEvents.onAvatarReady += self.disableWGServerMarker
         else:
-            g_playerEvents.onAvatarReady -= self.enableServerMarker
+            g_playerEvents.onAvatarReady -= self.disableWGServerMarker
 
         server_overrides = (
             (gm_factory, "createComponents", self.createOverrideComponents),
