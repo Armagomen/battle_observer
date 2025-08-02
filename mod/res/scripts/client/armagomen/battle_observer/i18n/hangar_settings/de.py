@@ -153,7 +153,8 @@ localization = {
         "position*y": "Vertikale Position vom Zentrum",
         "display_on_allies": "Bei Verbündeten anzeigen",
         "show_piercing_power": "Durchschlagskraft anzeigen",
-        "show_counted_armor": "Panzerung anzeigen",
+        "show_counted_armor": "Berechnete Panzerungsstärke anzeigen",
+        "show_counted_armor_tooltip": "Panzerungsstärke unter Berücksichtigung von Neigungswinkel und Normalisierung",
         "show_piercing_reserve": "Restdurchschlag anzeigen",
         "show_caliber": "Kaliber anzeigen"
     },
