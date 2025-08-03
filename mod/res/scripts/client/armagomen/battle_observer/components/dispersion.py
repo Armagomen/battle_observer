@@ -2,7 +2,8 @@ import aih_constants
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import DISPERSION, GLOBAL, IS_WG_CLIENT
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import cancelOverride, getPlayer, overrideMethod
+from armagomen.utils.common import getPlayer, toggleOverride
+from armagomen.utils.events import g_events
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
 from constants import SERVER_TICK_LENGTH
@@ -84,10 +85,10 @@ class DispersionCircle(object):
     settingsCore = dependency.descriptor(ISettingsCore)
 
     def __init__(self):
-        user_settings.onModSettingsChanged += self.onModSettingsChanged
+        g_events.onModSettingsChanged += self.onModSettingsChanged
 
     def fini(self):
-        user_settings.onModSettingsChanged -= self.onModSettingsChanged
+        g_events.onModSettingsChanged -= self.onModSettingsChanged
 
     def createOverrideComponents(self, base, *args):
         self.disableWGServerMarker()
@@ -154,28 +155,21 @@ class DispersionCircle(object):
             (CrosshairPanelContainer, "setGunMarkerColor", self.setGunMarkerColor)
         )
         for obj, method_name, func in server_overrides:
-            self.toggleOverride(obj, method_name, func, enable)
+            toggleOverride(obj, method_name, func, enable)
 
     def toggleCreateGunMarkerOverride(self, enable):
         if IS_WG_CLIENT:
-            self.toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, enable)
+            toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, enable)
         else:
-            self.toggleOverride(gun_marker_ctrl, "createDefaultGunMarker", self.createDefaultGunMarker, enable)
-            self.toggleOverride(gun_marker_ctrl, "createStrategicGunMarker", self.createStrategicGunMarker, enable)
-            self.toggleOverride(gun_marker_ctrl, "createAssaultSpgGunMarker", self.createStrategicGunMarker, enable)
+            toggleOverride(gun_marker_ctrl, "createDefaultGunMarker", self.createDefaultGunMarker, enable)
+            toggleOverride(gun_marker_ctrl, "createStrategicGunMarker", self.createStrategicGunMarker, enable)
+            toggleOverride(gun_marker_ctrl, "createAssaultSpgGunMarker", self.createStrategicGunMarker, enable)
 
     def createGunMarker_WG(self, baseCreateGunMarker, isStrategic):
         if isStrategic:
             return self.createStrategicGunMarker()
         else:
             return self.createDefaultGunMarker()
-
-    @staticmethod
-    def toggleOverride(obj, method_name, func, enable):
-        if enable:
-            overrideMethod(obj, method_name)(func)
-        else:
-            cancelOverride(obj, method_name, func.__name__)
 
     @staticmethod
     def createDefaultGunMarker(*args):

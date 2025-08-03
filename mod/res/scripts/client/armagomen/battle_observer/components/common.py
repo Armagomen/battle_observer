@@ -1,6 +1,6 @@
 from armagomen._constants import IS_WG_CLIENT, MAIN
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import addCallback, overrideMethod
+from armagomen.utils.common import addCallback, overrideMethod, toggleOverride
 from armagomen.utils.events import g_events
 from CurrentVehicle import g_currentVehicle
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
@@ -64,14 +64,11 @@ def buttonCounterS(base, *args, **kwargs):
 class PrestigeWidget(object):
 
     def __init__(self):
-        from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
         self.enabled = False
-        overrideMethod(Hangar, 'as_setPrestigeWidgetVisibleS')(self.as_setPrestigeWidgetVisibleS)
-        overrideMethod(ProfileTechnique, 'as_setPrestigeVisibleS')(self.as_setPrestigeVisibleS)
-        user_settings.onModSettingsChanged += self.onModSettingsChanged
+        g_events.onModSettingsChanged += self.onModSettingsChanged
 
     def fini(self):
-        user_settings.onModSettingsChanged -= self.onModSettingsChanged
+        g_events.onModSettingsChanged -= self.onModSettingsChanged
 
     @staticmethod
     def as_setPrestigeWidgetVisibleS(base, hangar, value):
@@ -85,9 +82,13 @@ class PrestigeWidget(object):
         if blockID != MAIN.NAME:
             return
         enabled = settings[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]
-        if self.enabled != enabled and g_currentVehicle.intCD:
+        if self.enabled != enabled:
             self.enabled = enabled
-            g_currentVehicle.onChanged()
+            from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
+            toggleOverride(Hangar, 'as_setPrestigeWidgetVisibleS', self.as_setPrestigeWidgetVisibleS, self.enabled)
+            toggleOverride(ProfileTechnique, 'as_setPrestigeVisibleS', self.as_setPrestigeVisibleS, self.enabled)
+            if g_currentVehicle.intCD:
+                g_currentVehicle.onChanged()
 
 
 @overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
@@ -114,10 +115,10 @@ def _initPlugins(base, *args, **kwargs):
 class TweakSounds(object):
 
     def __init__(self):
-        user_settings.onModSettingsChanged += self.onModSettingsChanged
+        g_events.onModSettingsChanged += self.onModSettingsChanged
 
     def fini(self):
-        user_settings.onModSettingsChanged -= self.onModSettingsChanged
+        g_events.onModSettingsChanged -= self.onModSettingsChanged
 
     @staticmethod
     @overrideMethod(BattleTeamsBasesController, "__playCaptureSound")

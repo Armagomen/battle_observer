@@ -1,7 +1,7 @@
 from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.i18n.exluded_maps import EXCLUDED_MAPS_BY_LANG
-from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.dialogs import ExcludedMapsDialog
+from armagomen.utils.events import g_events
 from constants import PREMIUM_TYPE, PremiumConfigs, RENEWABLE_SUBSCRIPTION_CONFIG
 from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.event_dispatcher import showMapsBlacklistView
@@ -27,17 +27,17 @@ class ExcludedMapsProcessor(object):
     lobbyContext = dependency.descriptor(ILobbyContext)
 
     def __init__(self):
-        self.__enabled = user_settings.main[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
+        self.__enabled = False
         self.__isPremium = False
         self.__isDialogVisible = False
         self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
-        user_settings.onModSettingsChanged += self._onModSettingsChanged
+        g_events.onModSettingsChanged += self._onModSettingsChanged
 
     def fini(self):
         self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
         self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
-        user_settings.onModSettingsChanged -= self._onModSettingsChanged
+        g_events.onModSettingsChanged -= self._onModSettingsChanged
 
     @property
     def _serverSettings(self):
@@ -62,7 +62,7 @@ class ExcludedMapsProcessor(object):
         self.wotPlus.onDataChanged -= self.__onWotPlusChanged
 
     def _onModSettingsChanged(self, data, name):
-        if name == MAIN.NAME:
+        if name == MAIN.NAME and self.__enabled != data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
             self.__enabled = data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
             self.__update()
 

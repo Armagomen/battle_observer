@@ -1,6 +1,6 @@
 from adisp import adisp_process
 from armagomen._constants import MAIN
-from armagomen.battle_observer.settings import user_settings
+from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logWarning
 from gui import SystemMessages
 from gui.clans.clan_cache import g_clanCache
@@ -31,7 +31,7 @@ class AutoClaimClanReward(object):
         self.__cachedQuestsData = None
         self.__cachedSettingsData = None
         self.__claim_started = False
-        self.__enabled = user_settings.main[MAIN.AUTO_CLAIM_CLAN_REWARD]
+        self.__enabled = False
 
     def onCreate(self):
         self.__hangarSpace.onSpaceCreate -= self.onCreate
@@ -41,14 +41,14 @@ class AutoClaimClanReward(object):
             self.parseProgression(self.__cachedProgressData)
 
     def subscribe(self):
-        user_settings.onModSettingsChanged += self.onSettingsChanged
+        g_events.onModSettingsChanged += self.onSettingsChanged
         g_wgncEvents.onProxyDataItemShowByDefault += self.__onProxyDataItemShow
         g_clanCache.clanSupplyProvider.onDataReceived += self.__onDataReceived
 
     def unsubscribe(self):
         g_wgncEvents.onProxyDataItemShowByDefault -= self.__onProxyDataItemShow
         g_clanCache.clanSupplyProvider.onDataReceived -= self.__onDataReceived
-        user_settings.onModSettingsChanged -= self.onSettingsChanged
+        g_events.onModSettingsChanged -= self.onSettingsChanged
 
     def updateCache(self):
         self.__cachedQuestsData = g_clanCache.clanSupplyProvider.getQuestsInfo().data

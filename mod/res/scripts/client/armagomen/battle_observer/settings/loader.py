@@ -3,6 +3,7 @@ import os
 from armagomen._constants import GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import currentConfigPath, openJsonFile, ResMgr, writeJsonFile
 from armagomen.utils.dialogs import LoadingErrorDialog
+from armagomen.utils.events import g_events
 from armagomen.utils.logging import DEBUG, logInfo, logWarning, setDebug
 from gui.shared.personality import ServicesLocator
 
@@ -110,7 +111,7 @@ class SettingsLoader(object):
                 continue
             self.loadConfigPart(part_name, direct_path, listdir, internal_cfg)
         logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
-        self.__settings.onUserConfigUpdateComplete()
+        g_events.onUserConfigUpdateComplete()
         if self.errorMessages:
             ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
@@ -119,7 +120,7 @@ class SettingsLoader(object):
             internal_cfg = getattr(self.__settings, part_name)
             if internal_cfg is None:
                 continue
-            self.__settings.onModSettingsChanged(internal_cfg, part_name)
+            g_events.onModSettingsChanged(internal_cfg, part_name)
 
     def loadConfigPart(self, part_name, direct_path, listdir, internal_cfg):
         """Read settings part file from JSON"""
@@ -138,7 +139,7 @@ class SettingsLoader(object):
                 if self.updateData(file_data, internal_cfg):
                     writeJsonFile(file_path, internal_cfg)
                 logInfo(READ_MESSAGE, self.configName, file_name)
-                self.__settings.onModSettingsChanged(internal_cfg, part_name)
+                g_events.onModSettingsChanged(internal_cfg, part_name)
                 if part_name == MAIN.NAME:
                     setDebug(internal_cfg[DEBUG])
 

@@ -2,8 +2,8 @@
 import TriggersManager
 from armagomen._constants import MAIN
 from armagomen.battle_observer.i18n.save_shoot import LOCKED_MESSAGE
-from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import cancelOverride, overrideMethod
+from armagomen.utils.common import toggleOverride
+from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from Avatar import PlayerAvatar
 from DestructibleEntity import DestructibleEntity
@@ -22,10 +22,10 @@ class SaveShootLite(TriggersManager.ITriggerListener):
     appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self):
-        user_settings.onModSettingsChanged += self.onModSettingsChanged
+        g_events.onModSettingsChanged += self.onModSettingsChanged
         ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         ServicesLocator.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
-        self.enabled = user_settings.main[MAIN.SAVE_SHOT]
+        self.enabled = False
         self.unlock = False
         self.vehicleErrorComponent = None
 
@@ -41,11 +41,9 @@ class SaveShootLite(TriggersManager.ITriggerListener):
 
     def onModSettingsChanged(self, config, blockID):
         if blockID == MAIN.NAME:
-            self.enabled = config[MAIN.SAVE_SHOT]
-            if self.enabled:
-                overrideMethod(PlayerAvatar, "shoot")(self.shoot)
-            else:
-                cancelOverride(PlayerAvatar, "shoot", "shoot")
+            if self.enabled != config[MAIN.SAVE_SHOT]:
+                self.enabled = config[MAIN.SAVE_SHOT]
+                toggleOverride(PlayerAvatar, "shoot", self.shoot, self.enabled)
 
     def onGUISpaceEntered(self, spaceID):
         if self.enabled and spaceID == GuiGlobalSpaceID.BATTLE:
@@ -81,6 +79,6 @@ save_shoot_lite = SaveShootLite()
 
 
 def fini():
-    user_settings.onModSettingsChanged -= save_shoot_lite.onModSettingsChanged
+    g_events.onModSettingsChanged -= save_shoot_lite.onModSettingsChanged
     ServicesLocator.appLoader.onGUISpaceLeft -= save_shoot_lite.onGUISpaceLeft
     ServicesLocator.appLoader.onGUISpaceEntered -= save_shoot_lite.onGUISpaceEntered

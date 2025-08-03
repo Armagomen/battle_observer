@@ -2,6 +2,7 @@ from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPER
                                   MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
 from armagomen.utils.common import IS_XVM_INSTALLED, openWebBrowser
+from armagomen.utils.events import g_events
 from armagomen.utils.logging import logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
@@ -225,13 +226,13 @@ class SettingsInterface(CreateElement):
         _id = settingsLoader.configsList.index(settingsLoader.configName) if settingsLoader.configName in settingsLoader.configsList else 0
         self.currentConfigID = self.newConfigID = _id
         self.newConfigLoadingInProcess = False
-        settingsLoader.settings.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
+        g_events.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         self.appLoader.onGUISpaceEntered += self.addToAPI
 
     def fini(self):
-        self.loader.settings.onUserConfigUpdateComplete -= self.onUserConfigUpdateComplete
+        g_events.onUserConfigUpdateComplete -= self.onUserConfigUpdateComplete
 
     def addToAPI(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOGIN:
@@ -333,7 +334,7 @@ class SettingsInterface(CreateElement):
                 value = self.process_steps(value) or SNIPER.DEFAULT_STEPS
             updated_config_link[param_name] = value
         self.loader.updateConfigFile(settings_block, blockID)
-        self.loader.settings.onModSettingsChanged(settings_block, blockID)
+        g_events.onModSettingsChanged(settings_block, blockID)
 
     @staticmethod
     def process_steps(value):

@@ -1,52 +1,54 @@
 from armagomen._constants import GLOBAL, SERVICE_CHANNEL
-from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import overrideMethod
+from armagomen.utils.common import toggleOverride
+from armagomen.utils.events import g_events
 from chat_shared import SYS_MESSAGE_TYPE
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 
-channel_filter = set()
 
+class ServiceChannelFilter(object):
+    def __init__(self):
+        self.enabled = False
+        self.channel_filter = set()
+        g_events.onModSettingsChanged += self._onModSettingsChanged
 
-@overrideMethod(ServiceChannelManager, "__addClientMessage")
-def addClientMessage(base, *args, **kwargs):
-    aux_data = kwargs.get(SERVICE_CHANNEL.AUX_DATA)
-    if aux_data and type(aux_data) == list:
-        first_element = aux_data[0]
-        if not isinstance(first_element, dict) and first_element in channel_filter:
-            return
-    return base(*args, **kwargs)
+    def addClientMessage(self, base, *args, **kwargs):
+        aux_data = kwargs.get(SERVICE_CHANNEL.AUX_DATA)
+        if aux_data and type(aux_data) == list:
+            first_element = aux_data[0]
+            if not isinstance(first_element, dict) and first_element in self.channel_filter:
+                return
+        return base(*args, **kwargs)
 
+    def onReceiveSysMessage(self, base, manager, chatAction):
+        if chatAction.has_key(SERVICE_CHANNEL.DATA):
+            data = dict(chatAction[SERVICE_CHANNEL.DATA])
+            if data.get(SERVICE_CHANNEL.TYPE, None) in self.channel_filter:
+                return
+        return base(manager, chatAction)
 
-@overrideMethod(ServiceChannelManager, "onReceiveSysMessage")
-def onReceiveSysMessage(base, manager, chatAction):
-    if chatAction.has_key(SERVICE_CHANNEL.DATA):
-        data = dict(chatAction[SERVICE_CHANNEL.DATA])
-        if data.get(SERVICE_CHANNEL.TYPE, None) in channel_filter:
-            return
-    return base(manager, chatAction)
+    def onReceivePersonalSysMessage(self, base, manager, chatAction):
+        if chatAction.has_key(SERVICE_CHANNEL.DATA):
+            data = dict(chatAction[SERVICE_CHANNEL.DATA])
+            if data.get(SERVICE_CHANNEL.TYPE, None) in self.channel_filter:
+                return
+        return base(manager, chatAction)
 
-
-@overrideMethod(ServiceChannelManager, "onReceivePersonalSysMessage")
-def onReceivePersonalSysMessage(base, manager, chatAction):
-    if chatAction.has_key(SERVICE_CHANNEL.DATA):
-        data = dict(chatAction[SERVICE_CHANNEL.DATA])
-        if data.get(SERVICE_CHANNEL.TYPE, None) in channel_filter:
-            return
-    return base(manager, chatAction)
-
-
-def _onModSettingsChanged(config, blockID):
-    if blockID == SERVICE_CHANNEL.NAME:
-        channel_filter.clear()
-        if config[GLOBAL.ENABLED]:
+    def _onModSettingsChanged(self, config, blockID):
+        if blockID == SERVICE_CHANNEL.NAME:
+            self.channel_filter.clear()
             for name, enabled in config[SERVICE_CHANNEL.KEYS].iteritems():
                 if enabled:
                     item = SYS_MESSAGE_TYPE.lookup(name)
-                    channel_filter.add(item.index() if item is not None else name)
+                    self.channel_filter.add(item.index() if item is not None else name)
+            if self.enabled != config[GLOBAL.ENABLED]:
+                self.enabled = config[GLOBAL.ENABLED]
+                toggleOverride(ServiceChannelManager, "onReceivePersonalSysMessage", self.onReceivePersonalSysMessage, self.enabled)
+                toggleOverride(ServiceChannelManager, "onReceiveSysMessage", self.onReceiveSysMessage, self.enabled)
+                toggleOverride(ServiceChannelManager, "__addClientMessage", self.addClientMessage, self.enabled)
 
 
-user_settings.onModSettingsChanged += _onModSettingsChanged
+c_filter = ServiceChannelFilter()
 
 
 def fini():
-    user_settings.onModSettingsChanged -= _onModSettingsChanged
+    g_events.onModSettingsChanged -= c_filter._onModSettingsChanged

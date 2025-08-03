@@ -15,5 +15,8 @@ class Events(object):
         self.onMarkerColorChanged = BOEvent()
         self.onVehicleChangedDelayed = SafeEvent()
 
+        self.onModSettingsChanged = SafeEvent()
+        self.onUserConfigUpdateComplete = SafeEvent()
+
 
 g_events = Events()

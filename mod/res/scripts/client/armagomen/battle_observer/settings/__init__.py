@@ -5,16 +5,12 @@ from armagomen._constants import (ALIAS_TO_CONFIG_NAME, ALIAS_TO_CONFIG_NAME_LOB
                                   SNIPER, STATISTICS, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS)
 from armagomen.battle_observer.settings.loader import SettingsLoader
 from constants import ATTACK_REASON
-from Event import SafeEvent
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
 
 class UserSettings(object):
 
     def __init__(self):
-        self.onModSettingsChanged = SafeEvent()
-        self.onUserConfigUpdateComplete = SafeEvent()
-
         self.main = {
             MAIN.AUTO_CLAIM_CLAN_REWARD: False,
             MAIN.AUTO_CLEAR_CACHE: False,
@@ -128,7 +124,7 @@ class UserSettings(object):
             SNIPER.DISABLE_SNIPER: False,
             SNIPER.DISABLE_LATENCY: 0.5,
             SNIPER.SKIP_CLIP: True,
-            SNIPER.DYN_ZOOM:  False,
+            SNIPER.DYN_ZOOM: False,
             SNIPER.ZOOM_STEPS: False,
             SNIPER.STEPS: SNIPER.DEFAULT_STEPS
         }

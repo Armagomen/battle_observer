@@ -281,6 +281,12 @@ def cancelOverride(wg_class, _method_name, replaced_name):
         logDebug("cancelOverride: override {} removed", full_name_with_class)
 
 
+def toggleOverride(obj, method_name, func, enable):
+    if enable:
+        overrideMethod(obj, method_name)(func)
+    else:
+        cancelOverride(obj, method_name, func.__name__)
+
 def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
 
