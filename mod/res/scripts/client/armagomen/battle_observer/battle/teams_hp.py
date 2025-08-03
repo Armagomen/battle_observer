@@ -3,7 +3,6 @@ from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 from armagomen.utils.logging import logDebug
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
-from PlayerEvents import g_playerEvents
 
 
 class TeamsHP(TeamHealthMeta, IBattleFieldListener):
@@ -16,7 +15,7 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         super(TeamsHP, self)._populate()
         is_normal_mode = self.gui.isRandomBattle() or self.gui.isRankedBattle() or self.gui.isTrainingBattle()
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
-        g_playerEvents.onAvatarReady += self.updateDefaultTopPanel
+        self.updateDefaultTopPanel()
 
     def updateDefaultTopPanel(self, settingName=None):
         result = None
@@ -29,10 +28,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         if result is not None:
             self.settingsCore.applyStorages(False)
             self.settingsCore.clearStorages()
-
-    def _dispose(self):
-        g_playerEvents.onAvatarReady -= self.updateDefaultTopPanel
-        super(TeamsHP, self)._dispose()
 
     def updateTeamHealth(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
         self.as_updateHealthS(alliesHP, enemiesHP, max(alliesHP, totalAlliesHP), max(enemiesHP, totalEnemiesHP))

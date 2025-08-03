@@ -11,7 +11,6 @@ from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from gui.Scaleform.genConsts.GUN_MARKER_VIEW_CONSTANTS import GUN_MARKER_VIEW_CONSTANTS as _CONSTANTS
 from helpers import dependency
-from PlayerEvents import g_playerEvents
 from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
 
@@ -32,20 +31,25 @@ gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 aih_constants.GUN_MARKER_MIN_SIZE = 10.0
 aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0
 
-REPLACE = (gun_marker_ctrl._MARKER_TYPE.CLIENT, gun_marker_ctrl._MARKER_TYPE.DUAL_ACC)
+REPLACE_TYPES = {gun_marker_ctrl._MARKER_TYPE.CLIENT, gun_marker_ctrl._MARKER_TYPE.DUAL_ACC}
 
 
-def getSetting(gunMakerType):
-    _replace = user_settings.dispersion_circle[DISPERSION.REPLACE]
-    _server = user_settings.dispersion_circle[DISPERSION.SERVER]
-    return _replace or _server if gunMakerType == gun_marker_ctrl._MARKER_TYPE.SERVER else _replace if gunMakerType in REPLACE else False
+def get_dispersion_scale_setting(marker_type):
+    replace_setting = user_settings.dispersion_circle[DISPERSION.REPLACE]
+    server_setting = user_settings.dispersion_circle[DISPERSION.SERVER]
+    result = False
+    if marker_type == gun_marker_ctrl._MARKER_TYPE.SERVER:
+        result = replace_setting or server_setting
+    elif marker_type in REPLACE_TYPES:
+        result = replace_setting
+    return float(user_settings.dispersion_circle[DISPERSION.SCALE]) if result else 1.0
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
 
     def __init__(self, gunMakerType, dataProvider, **kwargs):
         super(_DefaultGunMarkerController, self).__init__(gunMakerType, dataProvider, **kwargs)
-        self.__scaleConfig = float(user_settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(gunMakerType) else 1.0
+        self.__scaleConfig = get_dispersion_scale_setting(gunMakerType)
 
     def __updateScreenRatio(self):
         super(_DefaultGunMarkerController, self).__updateScreenRatio()
@@ -65,7 +69,7 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
     def __init__(self, gunMakerType, dataProvider, **kwargs):
         super(SPGController, self).__init__(gunMakerType, dataProvider, **kwargs)
-        self.__scaleConfig = float(user_settings.dispersion_circle[DISPERSION.SCALE]) if getSetting(gunMakerType) else 1.0
+        self.__scaleConfig = get_dispersion_scale_setting(gunMakerType)
 
     def _updateDispersionData(self):
         self._size *= self.__scaleConfig
@@ -77,16 +81,16 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
 
 class DispersionCircle(object):
+    settingsCore = dependency.descriptor(ISettingsCore)
 
     def __init__(self):
         user_settings.onModSettingsChanged += self.onModSettingsChanged
-        self.enabled = False
 
     def fini(self):
         user_settings.onModSettingsChanged -= self.onModSettingsChanged
 
-    @staticmethod
-    def createOverrideComponents(base, *args):
+    def createOverrideComponents(self, base, *args):
+        self.disableWGServerMarker()
         getPlayer().cell.setServerMarker(True)
         if len(args) == 2:
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
@@ -116,13 +120,11 @@ class DispersionCircle(object):
         mPos, mDir, mSize, mISize, dualAccSize, _, collData = m_position
         rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, (mSize, mISize), SERVER_TICK_LENGTH, collData)
 
-    @staticmethod
-    def disableWGServerMarker():
-        settingsCore = dependency.instance(ISettingsCore)
-        if settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
-            settingsCore.applySettings({GAME.ENABLE_SERVER_AIM: 0})
-            settingsCore.applyStorages(False)
-            settingsCore.clearStorages()
+    def disableWGServerMarker(self):
+        if self.settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
+            self.settingsCore.applySettings({GAME.ENABLE_SERVER_AIM: 0})
+            self.settingsCore.applyStorages(False)
+            self.settingsCore.clearStorages()
 
     @staticmethod
     def setGunMarkerColor(base, cr_panel, markerType, color):
@@ -136,20 +138,10 @@ class DispersionCircle(object):
         isEnabled = config[GLOBAL.ENABLED]
         replace = isEnabled and config[DISPERSION.REPLACE]
         server = isEnabled and config[DISPERSION.SERVER]
-        shouldOverride = replace or server
-
-        if self.enabled != shouldOverride:
-            self.enabled = shouldOverride
-            self.toggleCreateGunMarkerOverride(shouldOverride)
-
+        self.toggleCreateGunMarkerOverride(replace or server)
         self.toggleServerCrossOverrides(server)
 
     def toggleServerCrossOverrides(self, enable):
-        if enable:
-            g_playerEvents.onAvatarReady += self.disableWGServerMarker
-        else:
-            g_playerEvents.onAvatarReady -= self.disableWGServerMarker
-
         server_overrides = (
             (gm_factory, "createComponents", self.createOverrideComponents),
             (gm_factory, "overrideComponents", self.createOverrideComponents),
@@ -161,7 +153,6 @@ class DispersionCircle(object):
             (CrosshairDataProxy, "__onServerGunMarkerStateChanged", self.onPass),
             (CrosshairPanelContainer, "setGunMarkerColor", self.setGunMarkerColor)
         )
-
         for obj, method_name, func in server_overrides:
             self.toggleOverride(obj, method_name, func, enable)
 

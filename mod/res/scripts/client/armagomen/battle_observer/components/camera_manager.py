@@ -1,58 +1,59 @@
+import TriggersManager
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_WG_CLIENT, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import addCallback, cancelOverride, getPlayer, MinMax, overrideMethod, ResMgr
+from armagomen.utils.common import addCallback, cancelOverride, getPlayer, isReplay, MinMax, overrideMethod, ResMgr
 from armagomen.utils.logging import logDebug, logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from cgf_components.attack_artillery_fort_components import ISettingsCore
 from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosition
 from helpers import dependency
-from PlayerEvents import g_playerEvents
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
-from TriggersManager import ITriggerListener, TRIGGER_TYPE
 
 
-class ChangeCameraModeAfterShoot(ITriggerListener):
+class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
-    def __init__(self):
+    def __init__(self, appLoader):
         self.latency = 0
         self.skip_clip = False
-        self.avatar = None
-        self.__trigger_type = TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT if IS_WG_CLIENT else TRIGGER_TYPE.PLAYER_SHOOT
+        self.appLoader = appLoader
+        if IS_WG_CLIENT:
+            self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
+        else:
+            self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_SHOOT
 
     def updateSettings(self, data):
         enabled = data[SNIPER.DISABLE_SNIPER] and data[GLOBAL.ENABLED]
         self.latency = float(data[SNIPER.DISABLE_LATENCY])
         self.skip_clip = data[SNIPER.SKIP_CLIP]
         if enabled:
-            g_playerEvents.onAvatarReady += self.onStart
-            g_playerEvents.onAvatarBecomeNonPlayer += self.onFinish
+            self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+            self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
         else:
-            g_playerEvents.onAvatarReady -= self.onStart
-            g_playerEvents.onAvatarBecomeNonPlayer -= self.onFinish
+            self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
+            self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
 
-    def onStart(self):
-        from TriggersManager import g_manager
-        self.avatar = getPlayer()
-        g_manager.addListener(self)
+    def onGUISpaceEntered(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.BATTLE and not isReplay():
+            TriggersManager.g_manager.addListener(self)
 
-    def onFinish(self):
-        from TriggersManager import g_manager
-        self.avatar = None
-        g_manager.delListener(self)
+    def onGUISpaceLeft(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.BATTLE and not isReplay():
+            TriggersManager.g_manager.delListener(self)
 
     def onTriggerActivated(self, params):
         if params.get('type') == self.__trigger_type:
             addCallback(max(self.latency, 0), self.changeControlMode)
 
     def changeControlMode(self):
-        if self.avatar is None or self.avatar.isObserver():
+        avatar = getPlayer()
+        if avatar is None or avatar.isObserver():
             return
-        input_handler = self.avatar.inputHandler
+        input_handler = avatar.inputHandler
         if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
-            v_desc = self.avatar.getVehicleDescriptor()
+            v_desc = avatar.getVehicleDescriptor()
             tags = v_desc.gun.tags
             if v_desc.shot.shell.caliber <= SNIPER.MAX_CALIBER or "autoShoot" in tags or self.skip_clip and "clip" in tags:
                 return
@@ -64,7 +65,7 @@ class ChangeCameraModeAfterShoot(ITriggerListener):
                                                gunPitch=aiming_system.gunPitch,
                                                aimingMode=input_handler.ctrl._aimingMode,
                                                closesDist=False,
-                                               curVehicleID=self.avatar.playerVehicleID)
+                                               curVehicleID=avatar.playerVehicleID)
 
 
 class CameraSettings(object):
@@ -188,12 +189,12 @@ class Sniper(CameraSettings):
     MAX_DIST = 600.0
     MIN_DIST = 50.0
 
-    def __init__(self):
+    def __init__(self, appLoader):
         super(Sniper, self).__init__()
         self.config = user_settings.zoom
         self._dyn_zoom = False
         self._change_steps = False
-        self.after_shoot = ChangeCameraModeAfterShoot()
+        self.after_shoot = ChangeCameraModeAfterShoot(appLoader)
 
     @property
     def name(self):
@@ -274,7 +275,7 @@ class CameraManager(object):
 
     def __init__(self):
         self.appLoader.onGUISpaceBeforeEnter += self.updateCameras
-        self.__modes = (Arcade(), Sniper(), Strategic())
+        self.__modes = (Arcade(), Sniper(self.appLoader), Strategic())
         for mode in self.__modes:
             user_settings.onModSettingsChanged += mode.onModSettingsChanged
 

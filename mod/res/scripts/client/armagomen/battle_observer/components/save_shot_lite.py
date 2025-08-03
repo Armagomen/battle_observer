@@ -1,4 +1,5 @@
 # coding=utf-8
+import TriggersManager
 from armagomen._constants import MAIN, VEHICLE
 from armagomen.battle_observer.i18n.save_shoot import LOCKED_MESSAGE
 from armagomen.battle_observer.settings import user_settings
@@ -16,7 +17,7 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 from Vehicle import Vehicle
 
 
-class SaveShootLite(object):
+class SaveShootLite(TriggersManager.ITriggerListener):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     appLoader = dependency.descriptor(IAppLoader)
 
@@ -52,22 +53,27 @@ class SaveShootLite(object):
             battlePage = self.appLoader.getApp().containerManager.getContainer(WindowLayer.VIEW).getView()
             if battlePage is not None:
                 self.vehicleErrorComponent = battlePage.components.get(BATTLE_VIEW_ALIASES.VEHICLE_ERROR_MESSAGES)
+            TriggersManager.g_manager.addListener(self)
 
     def onGUISpaceLeft(self, spaceID):
         if self.enabled and spaceID == GuiGlobalSpaceID.BATTLE:
             self.unlock = False
             self.vehicleErrorComponent = None
+            TriggersManager.g_manager.delListener(self)
+
+    def onTriggerActivated(self, params):
+        if params.get('type') == TriggersManager.TRIGGER_TYPE.AUTO_AIM_AT_VEHICLE:
+            self.unlock = True
+
+    def onTriggerDeactivated(self, params):
+        if params.get('type') == TriggersManager.TRIGGER_TYPE.AUTO_AIM_AT_VEHICLE:
+            self.unlock = False
 
     @staticmethod
     def checkTarget(avatar):
-        if avatar._PlayerAvatar__autoAimVehID != 0:
-            return True
         target = avatar.target
-        if target is None:
-            return True
-        if isinstance(target, (Vehicle, DestructibleEntity)) and target.isAlive() and target.publicInfo[VEHICLE.TEAM] != avatar.team:
-            return True
-        return False
+        return target is None or isinstance(target, (Vehicle, DestructibleEntity)) and target.isAlive() and target.publicInfo[
+            VEHICLE.TEAM] != avatar.team
 
     def keyEvent(self, isKeyDown):
         self.unlock = isKeyDown
