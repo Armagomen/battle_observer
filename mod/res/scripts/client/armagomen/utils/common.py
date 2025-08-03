@@ -66,7 +66,8 @@ def restartGame():
         import WGC
         WGC.notifyRestart()
     except ImportError:
-        pass
+        import LGC
+        LGC.notifyRestart()
     BigWorld.restartGame()
 
 
