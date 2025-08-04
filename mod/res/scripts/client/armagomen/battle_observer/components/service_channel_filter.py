@@ -19,14 +19,7 @@ class ServiceChannelFilter(object):
                 return
         return base(*args, **kwargs)
 
-    def onReceiveSysMessage(self, base, manager, chatAction):
-        if chatAction.has_key(SERVICE_CHANNEL.DATA):
-            data = dict(chatAction[SERVICE_CHANNEL.DATA])
-            if data.get(SERVICE_CHANNEL.TYPE, None) in self.channel_filter:
-                return
-        return base(manager, chatAction)
-
-    def onReceivePersonalSysMessage(self, base, manager, chatAction):
+    def onReceiveMessage(self, base, manager, chatAction):
         if chatAction.has_key(SERVICE_CHANNEL.DATA):
             data = dict(chatAction[SERVICE_CHANNEL.DATA])
             if data.get(SERVICE_CHANNEL.TYPE, None) in self.channel_filter:
@@ -42,8 +35,8 @@ class ServiceChannelFilter(object):
                     self.channel_filter.add(item.index() if item is not None else name)
             if self.enabled != config[GLOBAL.ENABLED]:
                 self.enabled = config[GLOBAL.ENABLED]
-                toggleOverride(ServiceChannelManager, "onReceivePersonalSysMessage", self.onReceivePersonalSysMessage, self.enabled)
-                toggleOverride(ServiceChannelManager, "onReceiveSysMessage", self.onReceiveSysMessage, self.enabled)
+                toggleOverride(ServiceChannelManager, "onReceivePersonalSysMessage", self.onReceiveMessage, self.enabled)
+                toggleOverride(ServiceChannelManager, "onReceiveSysMessage", self.onReceiveMessage, self.enabled)
                 toggleOverride(ServiceChannelManager, "__addClientMessage", self.addClientMessage, self.enabled)
 
 

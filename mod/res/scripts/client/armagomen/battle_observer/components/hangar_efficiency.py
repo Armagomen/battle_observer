@@ -51,8 +51,8 @@ class HangarEfficiency(object):
         if blockID == AVG_EFFICIENCY_HANGAR.NAME:
             enabled = config[GLOBAL.ENABLED]
             self.config.update(config)
-            if self.enabled != config[GLOBAL.ENABLED]:
-                self.enabled = config[GLOBAL.ENABLED]
+            if self.enabled != enabled:
+                self.enabled = enabled
                 toggleOverride(AmmunitionPanel, "as_updateVehicleStatusS", self.updateStatus, self.enabled)
                 if g_currentVehicle.intCD:
                     g_currentVehicle.onChanged()

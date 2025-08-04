@@ -48,7 +48,7 @@ class Donate(object):
     def onDataResponse(self, response):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
-            self.show_invite = response_data.get("data", {}).get(str(CLAN_ID), {}).get("members_count", 0) < 99 and self.show_invite
+            self.show_invite = response_data.get("data", {}).get(str(CLAN_ID), {}).get("members_count", 0) < 99
             logDebug("Donate/check clan members: FINISH request clan data={}", response.body)
         elif response.responseCode != 304:
             logWarning('Donate/check clan members: contentType={}, responseCode={} body={}', response.contentType,
@@ -75,7 +75,7 @@ class Donate(object):
         logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
 
     def pushClanInviteMessage(self):
-        if self.show_invite and not g_clanCache.isInClan or IS_DEBUG:
+        if self.show_invite and not g_clanCache.isInClan:
             message = ("{0}<p><font color='#ffff66'>"
                        "Запрошуємо тебе до нашого клану.<br><a href='event:{1}'>[{1}]</a> — "
                        "отримуй більше бонусів у грі: бустери, камуфляжі та багато іншого."

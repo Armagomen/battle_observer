@@ -9,7 +9,6 @@ from Avatar import PlayerAvatar
 from DestructibleEntity import DestructibleEntity
 from frameworks.wulf import WindowLayer
 from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
-from gui.shared.personality import ServicesLocator
 from helpers import dependency
 from messenger.MessengerEntry import g_instance
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
@@ -23,11 +22,16 @@ class SaveShootLite(TriggersManager.ITriggerListener):
 
     def __init__(self):
         g_events.onModSettingsChanged += self.onModSettingsChanged
-        ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-        ServicesLocator.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
+        self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
         self.enabled = False
         self.unlock = False
         self.vehicleErrorComponent = None
+
+    def fini(self):
+        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
+        self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
     def shoot(self, base, avatar, isRepeat=False):
         target = avatar.target
@@ -79,6 +83,4 @@ save_shoot_lite = SaveShootLite()
 
 
 def fini():
-    g_events.onModSettingsChanged -= save_shoot_lite.onModSettingsChanged
-    ServicesLocator.appLoader.onGUISpaceLeft -= save_shoot_lite.onGUISpaceLeft
-    ServicesLocator.appLoader.onGUISpaceEntered -= save_shoot_lite.onGUISpaceEntered
+    save_shoot_lite.fini()
