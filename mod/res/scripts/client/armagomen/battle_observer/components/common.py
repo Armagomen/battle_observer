@@ -78,10 +78,10 @@ class PrestigeWidget(object):
     def as_setPrestigeVisibleS(base, profile, value):
         return base(profile, False if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET] else value)
 
-    def onModSettingsChanged(self, settings, blockID):
-        if blockID != MAIN.NAME:
+    def onModSettingsChanged(self, name, data):
+        if name != MAIN.NAME:
             return
-        enabled = settings[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]
+        enabled = data[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]
         if self.enabled != enabled:
             self.enabled = enabled
             from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
@@ -141,12 +141,12 @@ class TweakSounds(object):
         return base(eq, state, value)
 
     @staticmethod
-    def onModSettingsChanged(settings, blockID):
-        if blockID != MAIN.NAME:
+    def onModSettingsChanged(name, data):
+        if name != MAIN.NAME:
             return
-        if settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
+        if data[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
             msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
-        elif not settings[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
+        elif not data[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
             msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
             msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
 

@@ -13,9 +13,9 @@ class DateTimes(DateTimesMeta):
         super(DateTimes, self)._populate()
         g_events.onModSettingsChanged += self.onModSettingsChanged
 
-    def onModSettingsChanged(self, config, blockID):
-        if blockID == CLOCK.NAME:
-            self.as_onSettingsChanged(config)
+    def onModSettingsChanged(self, name, data):
+        if name == CLOCK.NAME:
+            self.as_onSettingsChanged(data)
 
     def _dispose(self):
         g_events.onModSettingsChanged -= self.onModSettingsChanged

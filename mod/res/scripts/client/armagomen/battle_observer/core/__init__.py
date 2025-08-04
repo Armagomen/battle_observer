@@ -1,4 +1,6 @@
-from armagomen.utils.keys_listener import g_keysListener, MAIN
+from armagomen._constants import BATTLES_RANGE, MAIN
+from armagomen.utils.events import g_events
+from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
 from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
@@ -6,6 +8,7 @@ from skeletons.connection_mgr import IConnectionManager
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from wg_async import wg_async
 
+SETTINGS_API = []
 
 class Core(object):
     connectionMgr = dependency.descriptor(IConnectionManager)
@@ -16,10 +19,11 @@ class Core(object):
         self.userID = None
         self.userName = None
         self.components = {}
-        self.settings = None
+        self.autoClearCache = False
         self.hangar_settings = None
         self.connectionMgr.onLoggedOn += self._onLoggedOn
         self.connectionMgr.onDisconnected += self._onDisconnected
+        g_events.onModSettingsChanged += self.onModSettingsChanged
 
     def showBanned(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOBBY:
@@ -63,24 +67,29 @@ class Core(object):
         self.registerBattleObserverPackages(is_replay)
         g_keysListener.init(settings_loader.settings.main)
         settings_loader.updateAllSettings()
-        self.settings = settings_loader.settings
+
         if not is_replay:
             try:
                 from gui.modsListApi import g_modsListApi
                 from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
+                SETTINGS_API.extend([g_modsListApi, vxSettingsApi, vxSettingsApiEvents])
             except Exception as error:
                 from armagomen.battle_observer.settings.hangar.loading_error import LoadingError
                 from debug_utils import LOG_CURRENT_EXCEPTION
                 LoadingError(repr(error))
                 LOG_CURRENT_EXCEPTION()
-                logError("Settings Api Not Loaded")
+                logError("Settings Api Not Loaded: {}", repr(error))
             else:
                 from armagomen.battle_observer.settings.hangar import SettingsInterface
-                self.hangar_settings = SettingsInterface(settings_loader, self.version, g_modsListApi, vxSettingsApi, vxSettingsApiEvents)
+                self.hangar_settings = SettingsInterface(settings_loader, self.version, *SETTINGS_API)
+
+    def onModSettingsChanged(self, name, data):
+        if name == MAIN.NAME:
+            self.autoClearCache = data[MAIN.AUTO_CLEAR_CACHE]
 
     def fini(self):
         from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache
-        if self.settings.main[MAIN.AUTO_CLEAR_CACHE]:
+        if self.autoClearCache:
             clearClientCache()
         cleanupObserverUpdates()
         cleanupUpdates()
@@ -93,10 +102,12 @@ class Core(object):
         self._onDisconnected()
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         self.connectionMgr.onDisconnected -= self._onDisconnected
+        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        while SETTINGS_API:
+            SETTINGS_API.pop()
 
     @staticmethod
     def registerBattleObserverPackages(is_replay):
-        from armagomen._constants import BATTLES_RANGE
         from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
         from gui.Scaleform.required_libraries_config import BATTLE_REQUIRED_LIBRARIES, LOBBY_REQUIRED_LIBRARIES
 

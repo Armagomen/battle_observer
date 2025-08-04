@@ -132,13 +132,12 @@ class DispersionCircle(object):
         base(cr_panel, gun_marker_ctrl._MARKER_TYPE.SERVER, color)
         return base(cr_panel, markerType, color)
 
-    def onModSettingsChanged(self, config, blockID):
-        if blockID != DISPERSION.NAME:
+    def onModSettingsChanged(self, name, data):
+        if name != DISPERSION.NAME:
             return
-
-        isEnabled = config[GLOBAL.ENABLED]
-        replace = isEnabled and config[DISPERSION.REPLACE]
-        server = isEnabled and config[DISPERSION.SERVER]
+        isEnabled = data[GLOBAL.ENABLED]
+        replace = isEnabled and data[DISPERSION.REPLACE]
+        server = isEnabled and data[DISPERSION.SERVER]
         self.toggleCreateGunMarkerOverride(replace or server)
         self.toggleServerCrossOverrides(server)
 

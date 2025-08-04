@@ -85,7 +85,7 @@ class CameraSettings(object):
         self.isChanged = False
         self.config = {}
 
-    def onModSettingsChanged(self, data, name):
+    def onModSettingsChanged(self, name, data):
         if name == self.name:
             self.config.update(data)
             self.isChanged = True

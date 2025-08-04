@@ -1,7 +1,7 @@
 from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_WG_CLIENT, MAIN,
                                   MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
-from armagomen.utils.common import IS_XVM_INSTALLED, openWebBrowser
+from armagomen.utils.common import addCallback, IS_XVM_INSTALLED, openWebBrowser
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
@@ -226,13 +226,12 @@ class SettingsInterface(CreateElement):
         _id = settingsLoader.configsList.index(settingsLoader.configName) if settingsLoader.configName in settingsLoader.configsList else 0
         self.currentConfigID = self.newConfigID = _id
         self.newConfigLoadingInProcess = False
-        g_events.onUserConfigUpdateComplete += self.onUserConfigUpdateComplete
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         self.appLoader.onGUISpaceEntered += self.addToAPI
 
     def fini(self):
-        g_events.onUserConfigUpdateComplete -= self.onUserConfigUpdateComplete
+        pass
 
     def addToAPI(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOGIN:
@@ -287,8 +286,8 @@ class SettingsInterface(CreateElement):
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
             if self.newConfigLoadingInProcess:
                 self.inited.clear()
-                self.loader.readOtherConfig(self.newConfigID)
-                self.currentConfigID = self.newConfigID
+                self.currentConfigID = self.loader.readOtherConfig(self.newConfigID)
+                addCallback(0.1, self.onUserConfigUpdateComplete)
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
             self.vxSettingsApi.onDataChanged += self.onDataChanged
@@ -307,7 +306,7 @@ class SettingsInterface(CreateElement):
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings in the settings file."""
-        if self.newConfigLoadingInProcess or MOD_NAME != modID:
+        if MOD_NAME != modID:
             return
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
             self.newConfigID = data['selector']
@@ -333,8 +332,8 @@ class SettingsInterface(CreateElement):
             elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name:
                 value = self.process_steps(value) or SNIPER.DEFAULT_STEPS
             updated_config_link[param_name] = value
-        self.loader.updateConfigFile(settings_block, blockID)
-        g_events.onModSettingsChanged(settings_block, blockID)
+        self.loader.updateConfigFile(blockID, settings_block)
+        g_events.onModSettingsChanged(blockID, settings_block)
 
     @staticmethod
     def process_steps(value):
@@ -345,9 +344,8 @@ class SettingsInterface(CreateElement):
         if modID != MOD_NAME or blockID not in CONFIG_INTERFACE.BLOCK_IDS:
             return
         values = None
-        if blockID == MAIN.NAME:
-            if varName == MAIN.USE_KEY_PAIRS:
-                self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
+        if blockID == MAIN.NAME and varName == MAIN.USE_KEY_PAIRS:
+            self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
         if blockID in CONFIG_INTERFACE.HANDLER_VALUES and varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
             values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]
         if values:

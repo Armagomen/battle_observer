@@ -43,10 +43,10 @@ class SaveShootLite(TriggersManager.ITriggerListener):
         if self.vehicleErrorComponent is not None:
             self.vehicleErrorComponent.as_showYellowMessageS(None, message)
 
-    def onModSettingsChanged(self, config, blockID):
-        if blockID == MAIN.NAME:
-            if self.enabled != config[MAIN.SAVE_SHOT]:
-                self.enabled = config[MAIN.SAVE_SHOT]
+    def onModSettingsChanged(self, name, data):
+        if name == MAIN.NAME:
+            if self.enabled != data[MAIN.SAVE_SHOT]:
+                self.enabled = data[MAIN.SAVE_SHOT]
                 toggleOverride(PlayerAvatar, "shoot", self.shoot, self.enabled)
 
     def onGUISpaceEntered(self, spaceID):

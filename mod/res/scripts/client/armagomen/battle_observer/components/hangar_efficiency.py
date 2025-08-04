@@ -47,10 +47,10 @@ class HangarEfficiency(object):
             return "<font face='$TitleFont' size='20' color='#FAFAFA'>{}</font>".format("  ".join(text).format(**params))
         return GLOBAL.EMPTY_LINE
 
-    def _onModSettingsChanged(self, config, blockID):
-        if blockID == AVG_EFFICIENCY_HANGAR.NAME:
-            enabled = config[GLOBAL.ENABLED]
-            self.config.update(config)
+    def _onModSettingsChanged(self, name, data):
+        if name == AVG_EFFICIENCY_HANGAR.NAME:
+            enabled = data[GLOBAL.ENABLED]
+            self.config.update(data)
             if self.enabled != enabled:
                 self.enabled = enabled
                 toggleOverride(AmmunitionPanel, "as_updateVehicleStatusS", self.updateStatus, self.enabled)

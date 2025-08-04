@@ -34,13 +34,13 @@ class WG_Logs_Fix(object):
     def addToLog(self, base, component, events):
         return base(component, list(self.filterEvents(events)))
 
-    def onModSettingsChanged(self, config, blockID):
-        if blockID == DAMAGE_LOG.WG_LOGS_FIX:
-            self.config = config
-            if self.enabled != config[GLOBAL.ENABLED]:
-                self.enabled = config[GLOBAL.ENABLED]
+    def onModSettingsChanged(self, name, data):
+        if name == DAMAGE_LOG.WG_LOGS_FIX:
+            self.config = data
+            if self.enabled != data[GLOBAL.ENABLED]:
+                self.enabled = data[GLOBAL.ENABLED]
                 toggleOverride(_LogViewComponent, "addToLog", self.addToLog, self.enabled)
-            self.updatePositions(config[GLOBAL.ENABLED] and config[DAMAGE_LOG.WG_POS])
+            self.updatePositions(data[GLOBAL.ENABLED] and data[DAMAGE_LOG.WG_POS])
 
     def updatePositions(self, enabled):
         DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog, DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog = \

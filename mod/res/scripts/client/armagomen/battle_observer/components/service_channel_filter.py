@@ -26,15 +26,15 @@ class ServiceChannelFilter(object):
                 return
         return base(manager, chatAction)
 
-    def _onModSettingsChanged(self, config, blockID):
-        if blockID == SERVICE_CHANNEL.NAME:
+    def _onModSettingsChanged(self, name, data):
+        if name == SERVICE_CHANNEL.NAME:
             self.channel_filter.clear()
-            for name, enabled in config[SERVICE_CHANNEL.KEYS].iteritems():
+            for name, enabled in data[SERVICE_CHANNEL.KEYS].iteritems():
                 if enabled:
                     item = SYS_MESSAGE_TYPE.lookup(name)
                     self.channel_filter.add(item.index() if item is not None else name)
-            if self.enabled != config[GLOBAL.ENABLED]:
-                self.enabled = config[GLOBAL.ENABLED]
+            if self.enabled != data[GLOBAL.ENABLED]:
+                self.enabled = data[GLOBAL.ENABLED]
                 toggleOverride(ServiceChannelManager, "onReceivePersonalSysMessage", self.onReceiveMessage, self.enabled)
                 toggleOverride(ServiceChannelManager, "onReceiveSysMessage", self.onReceiveMessage, self.enabled)
                 toggleOverride(ServiceChannelManager, "__addClientMessage", self.addClientMessage, self.enabled)

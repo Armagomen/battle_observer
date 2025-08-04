@@ -61,7 +61,7 @@ class ExcludedMapsProcessor(object):
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
         self.wotPlus.onDataChanged -= self.__onWotPlusChanged
 
-    def _onModSettingsChanged(self, data, name):
+    def _onModSettingsChanged(self, name, data):
         if name == MAIN.NAME and self.__enabled != data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
             self.__enabled = data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
             self.__update()
