@@ -66,7 +66,7 @@ class TeamBases(TeamBasesMeta, ITeamBasesListener):
             self.as_removeTeamBaseS(self.basesDict.pop(clientID).getColor())
 
     def removeTeamsBases(self):
-        for item in self.basesDict.itervalues():
+        for item in self.basesDict.values():
             self.as_removeTeamBaseS(item.getColor())
         self.basesDict.clear()
 

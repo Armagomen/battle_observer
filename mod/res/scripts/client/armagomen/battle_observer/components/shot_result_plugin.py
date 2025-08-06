@@ -232,7 +232,7 @@ class Randomizer(object):
                 for skill_name in tman.getPossibleSkills().intersection(data):
                     data[skill_name].append(cls.getCurrentSkillEfficiency(tman, skill_name))
 
-            for skill_name, value in data.iteritems():
+            for skill_name, value in data.items():
                 if value:
                     percent = sum(value) / len(value)
                     randomization_min += percent

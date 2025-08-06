@@ -158,7 +158,7 @@ def clearClientCache():
 def encodeData(data):
     """encode dict keys/values to utf-8."""
     if isinstance(data, dict):
-        return {encodeData(key): encodeData(value) for key, value in data.iteritems()}
+        return {encodeData(key): encodeData(value) for key, value in data.items()}
     elif isinstance(data, list):
         return [encodeData(element) for element in data]
     elif isinstance(data, (str, unicode)):

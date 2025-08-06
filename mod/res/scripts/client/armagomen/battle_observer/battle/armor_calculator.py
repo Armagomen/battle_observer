@@ -30,7 +30,7 @@ class ArmorCalculator(ArmorCalcMeta):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
-        for name, code in self.getColors()[ARMOR_CALC.NAME].iteritems():
+        for name, code in self.getColors()[ARMOR_CALC.NAME].items():
             self.colors[name] = int(code[1:], 16)
 
     def _dispose(self):

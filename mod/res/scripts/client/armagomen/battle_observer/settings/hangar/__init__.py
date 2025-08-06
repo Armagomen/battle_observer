@@ -54,7 +54,7 @@ class Getter(object):
         return collection, index
 
     def getKeyPath(self, settings_block, path=()):
-        for key, value in settings_block.iteritems():
+        for key, value in settings_block.items():
             key_path = path + (key,)
             if isinstance(value, dict):
                 for _path in self.getKeyPath(value, key_path):
@@ -316,7 +316,7 @@ class SettingsInterface(CreateElement):
         settings_block = getattr(self.loader.settings, blockID, None)
         if settings_block is None:
             return
-        for key, value in data.iteritems():
+        for key, value in data.items():
             updated_config_link, param_name = self.getLinkToParam(settings_block, key)
             if param_name not in updated_config_link:
                 continue

@@ -67,7 +67,7 @@ class Distance(DistanceMeta):
 
     @property
     def distances(self):
-        for vehicle in self.vehicles.itervalues():
+        for vehicle in self.vehicles.values():
             yield getDistanceToTarget(vehicle, avatar=self.player), vehicle.typeDescriptor.type.shortUserString
 
     def getUpdatedDistance(self):

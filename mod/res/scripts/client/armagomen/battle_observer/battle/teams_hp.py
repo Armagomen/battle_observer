@@ -45,6 +45,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def onSettingsApplied(self, diff):
         super(TeamsHP, self).onSettingsApplied(diff)
-        for key, value in diff.iteritems():
+        for key, value in diff.items():
             if key in (C_BAR.SHOW_HP_BAR, C_BAR.ENABLE_TIER_GROUPING) and value:
                 self.updateDefaultTopPanel(key)

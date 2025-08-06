@@ -93,9 +93,8 @@ class Core(object):
             clearClientCache()
         cleanupObserverUpdates()
         cleanupUpdates()
-        for component in self.components.itervalues():
-            if hasattr(component, "fini"):
-                component.fini()
+        for component in self.components.values():
+            getattr(component, 'fini', lambda: None)()
         g_keysListener.fini()
         if self.hangar_settings is not None:
             self.hangar_settings.fini()

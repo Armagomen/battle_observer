@@ -77,7 +77,7 @@ class SettingsLoader(object):
         """Recursively updates values from user settings files"""
         update = not self.isEqualLen(external_cfg, internal_cfg) or file_update
 
-        for key, old_param in internal_cfg.iteritems():
+        for key, old_param in internal_cfg.items():
             new_param = external_cfg.get(key)
             if new_param is None or not self.isEqualType(old_param, new_param):
                 update = True

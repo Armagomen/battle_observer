@@ -1,6 +1,7 @@
 from importlib import import_module
 
 from armagomen._constants import IS_WG_CLIENT
+from armagomen.utils.logging import logError
 
 
 def loadComponents(is_replay):
@@ -27,8 +28,9 @@ def loadComponents(is_replay):
     for moduleName in load:
         try:
             components[moduleName] = import_module("{}.{}".format(__package__, moduleName))
-        except Exception:
+        except Exception as error:
             from debug_utils import LOG_CURRENT_EXCEPTION
             LOG_CURRENT_EXCEPTION()
+            logError('{}: {}', moduleName, repr(error))
 
     return components

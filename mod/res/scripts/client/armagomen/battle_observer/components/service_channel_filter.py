@@ -29,7 +29,7 @@ class ServiceChannelFilter(object):
     def _onModSettingsChanged(self, name, data):
         if name == SERVICE_CHANNEL.NAME:
             self.channel_filter.clear()
-            for name, enabled in data[SERVICE_CHANNEL.KEYS].iteritems():
+            for name, enabled in data[SERVICE_CHANNEL.KEYS].items():
                 if enabled:
                     item = SYS_MESSAGE_TYPE.lookup(name)
                     self.channel_filter.add(item.index() if item is not None else name)
