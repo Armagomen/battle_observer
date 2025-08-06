@@ -22,6 +22,7 @@ class ArmorCalculator(ArmorCalcMeta):
         self.pattern = " | ".join("{%d:d}" % i for i, key in enumerate(SETTING_PARAMS) if self.settings[key])
         if not self.pattern:
             return logWarning("calc message is disabled - no params checked")
+        self.colors.update((name, int(code[1:], 16)) for name, code in self.getColors()[ARMOR_CALC.NAME].items())
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -30,8 +31,6 @@ class ArmorCalculator(ArmorCalcMeta):
             handler.onCameraChanged += self.onCameraChanged
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
-        for name, code in self.getColors()[ARMOR_CALC.NAME].items():
-            self.colors[name] = int(code[1:], 16)
 
     def _dispose(self):
         if self.pattern:

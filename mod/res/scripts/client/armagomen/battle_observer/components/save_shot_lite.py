@@ -33,7 +33,7 @@ class SaveShootLite(TriggersManager.ITriggerListener):
         self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
         self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
 
-    def shoot(self, base, avatar, isRepeat=False):
+    def _shoot(self, base, avatar, isRepeat=False):
         target = avatar.target
         if target is None or isRepeat or self.unlock or self.checkTarget(target):
             return base(avatar, isRepeat=isRepeat)
@@ -47,7 +47,7 @@ class SaveShootLite(TriggersManager.ITriggerListener):
         if name == MAIN.NAME:
             if self.enabled != data[MAIN.SAVE_SHOT]:
                 self.enabled = data[MAIN.SAVE_SHOT]
-                toggleOverride(PlayerAvatar, "shoot", self.shoot, self.enabled)
+                toggleOverride(PlayerAvatar, "shoot", self._shoot, self.enabled)
 
     def onGUISpaceEntered(self, spaceID):
         if self.enabled and spaceID == GuiGlobalSpaceID.BATTLE:

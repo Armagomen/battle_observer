@@ -240,6 +240,7 @@ def find_similar_attr_name(obj, target_name):
         if target_name in name:
             logDebug("{} {}", target_name, name)
             return name
+    logError("overrideError: method '{}' do not find in '{}'", target_name, str(obj))
     return None
 
 
@@ -248,13 +249,12 @@ def overrideMethod(wg_class, _method_name="__init__"):
     wg_class: class object
     method_name: Unicode, default __init__
     """
-    class_name = getattr(wg_class, '__name__', wg_class.__class__.__name__)
     method_name = find_similar_attr_name(wg_class, _method_name)
 
     def outer(new_method):
         if method_name is None:
-            logError("overrideMethod: {} do not find in {}", _method_name, class_name)
             return new_method
+        class_name = getattr(wg_class, '__name__', wg_class.__class__.__name__)
         full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, new_method.__name__)
         if full_name_with_class in base_before_override:
             logDebug("overrideMethod: {} already added to storage", full_name_with_class)
@@ -272,14 +272,13 @@ def overrideMethod(wg_class, _method_name="__init__"):
 
 
 def cancelOverride(wg_class, _method_name, replaced_name):
-    class_name = getattr(wg_class, '__name__', wg_class.__class__.__name__)
     method_name = find_similar_attr_name(wg_class, _method_name)
-    if method_name is None:
-        return logError("cancelOverride: {} do not find in {}", _method_name, class_name)
-    full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, replaced_name)
-    if full_name_with_class in base_before_override:
-        setattr(wg_class, method_name, base_before_override.pop(full_name_with_class))
-        logDebug("cancelOverride: override {} removed", full_name_with_class)
+    if method_name is not None:
+        class_name = getattr(wg_class, '__name__', wg_class.__class__.__name__)
+        full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, replaced_name)
+        if full_name_with_class in base_before_override:
+            setattr(wg_class, method_name, base_before_override.pop(full_name_with_class))
+            logDebug("cancelOverride: override {} removed", full_name_with_class)
 
 
 def toggleOverride(obj, method_name, func, enable):
@@ -287,6 +286,7 @@ def toggleOverride(obj, method_name, func, enable):
         overrideMethod(obj, method_name)(func)
     else:
         cancelOverride(obj, method_name, func.__name__)
+
 
 def convertDictToNamedtuple(dictionary):
     return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)

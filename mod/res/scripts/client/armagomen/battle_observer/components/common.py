@@ -25,12 +25,12 @@ def changeVehicle(base, *args, **kwargs):
 
 # disable field mail tips
 @overrideMethod(PromoController, "__tryToShowTeaser")
-def __tryToShowTeaser(base, *args):
+def _tryToShowTeaser(base, *args):
     return None if user_settings.main[MAIN.FIELD_MAIL] else base(*args)
 
 
 @overrideMethod(PromoController, "__needToGetTeasersInfo")
-def __needToGetTeasersInfo(base, *args):
+def _needToGetTeasersInfo(base, *args):
     return False if user_settings.main[MAIN.FIELD_MAIL] else base(*args)
 
 

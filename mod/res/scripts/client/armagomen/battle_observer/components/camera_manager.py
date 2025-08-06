@@ -3,7 +3,7 @@ from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_WG_CLIENT, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import addCallback, cancelOverride, getPlayer, isReplay, MinMax, overrideMethod, ResMgr
+from armagomen.utils.common import addCallback, getPlayer, isReplay, MinMax, ResMgr, toggleOverride
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
@@ -118,10 +118,6 @@ class CameraSettings(object):
 
 class Arcade(CameraSettings):
 
-    def __init__(self):
-        super(Arcade, self).__init__()
-        overrideMethod(PostMortemControlMode, "enable")(self.enablePostMortem)
-
     @property
     def name(self):
         return ARCADE.NAME
@@ -129,7 +125,9 @@ class Arcade(CameraSettings):
     def update(self):
         camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
         if camera is not None:
-            self.enabled = self.config[GLOBAL.ENABLED]
+            if self.enabled != self.config[GLOBAL.ENABLED]:
+                self.enabled = self.config[GLOBAL.ENABLED]
+                toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, self.enabled)
             if self.enabled:
                 self.reset = True
                 if self.settingsCore.getSetting(GAME.COMMANDER_CAM) or self.settingsCore.getSetting(GAME.PRE_COMMANDER_CAM):
@@ -193,7 +191,6 @@ class Sniper(CameraSettings):
     def __init__(self, appLoader):
         super(Sniper, self).__init__()
         self._dyn_zoom = False
-        self._change_steps = False
         self.after_shoot = ChangeCameraModeAfterShoot(appLoader)
 
     @property
@@ -226,26 +223,26 @@ class Sniper(CameraSettings):
     def update(self):
         self.after_shoot.updateSettings(self.config)
         self.enabled = self.config[GLOBAL.ENABLED]
-        self._dyn_zoom = self.config[SNIPER.DYN_ZOOM] and self.enabled
-        self._change_steps = self.config[SNIPER.ZOOM_STEPS] and self.enabled
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is not None:
             no_dynamic = user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]
             camera.enableDynamicCamera(False if no_dynamic else bool(self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA)))
+            if self._dyn_zoom != self.config[SNIPER.DYN_ZOOM] and self.enabled:
+                self._dyn_zoom = self.config[SNIPER.DYN_ZOOM] and self.enabled
+                toggleOverride(SniperCamera, "enable", self.enableSniper, self._dyn_zoom)
             if self._dyn_zoom:
-                overrideMethod(SniperCamera, "enable")(self.enableSniper)
                 zoom_level = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
                 if zoom_level and self._SNIPER_ZOOM_LEVEL is None:
                     self._SNIPER_ZOOM_LEVEL = zoom_level
                     self.applySettings({GAME.SNIPER_ZOOM: 0})
             else:
-                cancelOverride(SniperCamera, "enable", "enableSniper")
                 if self._SNIPER_ZOOM_LEVEL is not None:
                     self.applySettings({GAME.SNIPER_ZOOM: self._SNIPER_ZOOM_LEVEL})
                     self._SNIPER_ZOOM_LEVEL = None
-            if self._change_steps or self._dyn_zoom:
+            _change_steps = self.config[SNIPER.ZOOM_STEPS] and self.enabled
+            if _change_steps or self._dyn_zoom:
                 self.reset = True
-                steps = sorted(self.config[SNIPER.STEPS]) if self._change_steps else SNIPER.DEFAULT_STEPS
+                steps = sorted(self.config[SNIPER.STEPS]) if _change_steps else SNIPER.DEFAULT_STEPS
                 if steps and steps != camera._cfg[self.ZOOMS]:
                     new_exposure = self.linear_interpolate(steps)
                     camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = new_exposure
