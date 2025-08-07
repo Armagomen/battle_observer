@@ -5,6 +5,7 @@ from armagomen.battle_observer.i18n.save_shoot import LOCKED_MESSAGE
 from armagomen.utils.common import toggleOverride
 from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
+from armagomen.utils.logging import logError
 from Avatar import PlayerAvatar
 from DestructibleEntity import DestructibleEntity
 from frameworks.wulf import WindowLayer
@@ -37,8 +38,13 @@ class SaveShootLite(TriggersManager.ITriggerListener):
         target = avatar.target
         if target is None or isRepeat or self.unlock or self.checkTarget(target):
             return base(avatar, isRepeat=isRepeat)
-        vehicle_info = self.sessionProvider.getArenaDP().getVehicleInfo(target.id)
-        message = LOCKED_MESSAGE.format(vehicle_info.vehicleType.shortName)
+        try:
+            vehicle_info = self.sessionProvider.getArenaDP().getVehicleInfo(target.id)
+            shortName = vehicle_info.shortName
+        except Exception as error:
+            shortName = "Undefined"
+            logError(repr(error))
+        message = LOCKED_MESSAGE.format(shortName)
         g_instance.gui.addClientMessage(message)
         if self.vehicleErrorComponent is not None:
             self.vehicleErrorComponent.as_showYellowMessageS(None, message)
@@ -73,7 +79,7 @@ class SaveShootLite(TriggersManager.ITriggerListener):
 
     @staticmethod
     def checkTarget(target):
-        return isinstance(target, (Vehicle, DestructibleEntity)) and target.isAlive() and not target.isPlayerTeam()
+        return isinstance(target, (Vehicle, DestructibleEntity)) and target.isAlive() and not target.isPlayerTeam
 
     def keyEvent(self, isKeyDown):
         self.unlock = isKeyDown
