@@ -84,10 +84,10 @@ class SettingsLoader(object):
                 logError("Error in key '{}': parameter values are not compatible. Received: {}, expected: {} - Restore to default", key,
                          new_param, old_param)
                 continue
-            if key == SIXTH_SENSE.ICON_NAME:
-                update |= new_param not in self.sixth_sense_list
-            elif key == SNIPER.STEPS:
-                update |= not isinstance(new_param, list) or not len(new_param)
+            if key == SIXTH_SENSE.ICON_NAME and new_param not in self.sixth_sense_list:
+                update = True
+            elif key == SNIPER.STEPS and (not isinstance(new_param, list) or not len(new_param)):
+                update = True
             elif self.isDictAndEquals(old_param, new_param):
                 update |= self.updateData(new_param, old_param, file_update=update)
             else:

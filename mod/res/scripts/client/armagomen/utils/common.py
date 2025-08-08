@@ -68,16 +68,16 @@ def restartGame():
     except ImportError:
         import LGC
         LGC.notifyRestart()
-    BigWorld.restartGame()
+    addCallback(1.0, BigWorld.restartGame)
 
 
 def closeClient():
     save()
-    BigWorld.quit()
+    addCallback(1.0, BigWorld.quit)
 
 
 def disconnect():
-    BigWorld.disconnect()
+    addCallback(1.0, BigWorld.disconnect)
 
 
 def openWebBrowser(url):
@@ -167,15 +167,41 @@ def encodeData(data):
         return data
 
 
+# def openJsonFile(path):
+#     """Gets a dict from JSON."""
+#     if not os.path.isfile(path):
+#         return {}
+#     with _open(path, 'r', encoding=UTF_8) as dataFile:
+#         try:
+#             data = json.load(dataFile, encoding=UTF_8)
+#         except Exception as e:
+#             logError(repr(e))
+#             dataFile.seek(0)
+#             data = json.loads(dataFile.read(), encoding=UTF_8)
+#         return encodeData(data)
+#
+
+
 def openJsonFile(path):
     """Gets a dict from JSON."""
-    if not os.path.exists(path):
+    if not os.path.isfile(path):
         return {}
-    with _open(path, 'r', encoding=UTF_8) as dataFile:
-        try:
-            return encodeData(json.load(dataFile, encoding=UTF_8))
-        except ValueError:
-            return encodeData(json.loads(dataFile.read(), encoding=UTF_8))
+    try:
+        with _open(path, 'r', encoding='utf-8-sig') as dataFile:
+            try:
+                data = json.load(dataFile)
+            except ValueError as e:
+                logError(repr(e))
+                dataFile.seek(0)
+                data = json.loads(dataFile.read(), encoding='utf-8')
+    except Exception as e:
+        logError(repr(e))
+        return {}
+    try:
+        return encodeData(data)
+    except Exception as e:
+        logError(repr(e))
+        return {}
 
 
 def writeJsonFile(path, data):
