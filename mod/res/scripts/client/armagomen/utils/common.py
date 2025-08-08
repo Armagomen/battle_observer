@@ -158,7 +158,7 @@ def clearClientCache():
 def encodeData(data):
     """encode dict keys/values to utf-8."""
     if isinstance(data, dict):
-        return {encodeData(key): encodeData(value) for key, value in data.items()}
+        return {encodeData(key): encodeData(value) for key, value in data.iteritems()}
     elif isinstance(data, list):
         return [encodeData(element) for element in data]
     elif isinstance(data, (str, unicode)):
@@ -167,38 +167,13 @@ def encodeData(data):
         return data
 
 
-# def openJsonFile(path):
-#     """Gets a dict from JSON."""
-#     if not os.path.isfile(path):
-#         return {}
-#     with _open(path, 'r', encoding=UTF_8) as dataFile:
-#         try:
-#             data = json.load(dataFile, encoding=UTF_8)
-#         except Exception as e:
-#             logError(repr(e))
-#             dataFile.seek(0)
-#             data = json.loads(dataFile.read(), encoding=UTF_8)
-#         return encodeData(data)
-#
-
-
 def openJsonFile(path):
-    """Gets a dict from JSON."""
+    """Load JSON from file. Returns dict or {} if error."""
     if not os.path.isfile(path):
         return {}
     try:
-        with _open(path, 'r', encoding='utf-8-sig') as dataFile:
-            try:
-                data = json.load(dataFile)
-            except ValueError as e:
-                logError(repr(e))
-                dataFile.seek(0)
-                data = json.loads(dataFile.read(), encoding='utf-8')
-    except Exception as e:
-        logError(repr(e))
-        return {}
-    try:
-        return encodeData(data)
+        with _open(path, 'r', encoding='utf-8-sig') as f:
+            return encodeData(json.load(f))
     except Exception as e:
         logError(repr(e))
         return {}
