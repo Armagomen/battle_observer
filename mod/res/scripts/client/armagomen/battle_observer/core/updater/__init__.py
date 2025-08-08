@@ -2,6 +2,7 @@
 import os
 import re
 import subprocess
+import threading
 from collections import namedtuple
 from datetime import datetime, timedelta
 from json import loads
@@ -119,10 +120,15 @@ class DownloadThread(object):
     def fini(self):
         if not self.cleanup_launcher_exist:
             return
+        t = threading.Thread(target=self._cleanup_worker)
+        t.daemon = True
+        t.start()
+
+    def _cleanup_worker(self):
         version = self.updateData.get('tag_name', self.version)
-        to_delete = [os.path.join(self.modPath, old_file)
-                     for old_file in os.listdir(self.modPath)
+        to_delete = [os.path.join(self.modPath, old_file) for old_file in os.listdir(self.modPath)
                      if "armagomen.battleObserver_" in old_file and version not in old_file]
+
         if to_delete:
             logDebug("Try to remove old mod files {} in process {}", to_delete, self.cleanup_exe)
             DETACHED_PROCESS = 0x00000008

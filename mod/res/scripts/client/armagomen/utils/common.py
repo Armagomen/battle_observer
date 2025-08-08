@@ -14,7 +14,6 @@ import ResMgr
 from armagomen.utils.logging import logDebug, logError, logInfo
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
-from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealth
 
 CONFIG_DIR = "mod_battle_observer"
 MOD_CACHE = "battle_observer"
@@ -103,16 +102,15 @@ if not os.path.exists(CONFIGS_PATH):
 
 
 def setCurrentConfigPath(configs_path):
-    config_path = None
     for dir_name in os.listdir(configs_path):
         full_path = os.path.join(configs_path, dir_name)
         if os.path.isdir(full_path):
             if dir_name == CONFIG_DIR:
-                config_path = full_path
-                break
-            else:
-                config_path = setCurrentConfigPath(full_path)
-    return config_path
+                return full_path
+            deeper = setCurrentConfigPath(full_path)
+            if deeper:
+                return deeper
+    return None
 
 
 currentConfigPath = setCurrentConfigPath(CONFIGS_PATH)
@@ -186,12 +184,8 @@ def writeJsonFile(path, data):
 
 
 def getObserverCachePath():
-    old_path = os.path.join(preferencesDir, MOD_CACHE)
     new_path = os.path.join(preferencesDir, "mods", MOD_CACHE)
-    if os.path.exists(old_path):
-        shutil.copytree(old_path, new_path)
-        shutil.rmtree(old_path, ignore_errors=True)
-    elif not os.path.exists(new_path):
+    if not os.path.isdir(new_path):
         os.makedirs(new_path)
     return new_path
 
@@ -210,8 +204,6 @@ def getUpdatePath():
 def cleanupObserverUpdates():
     root = getUpdatePath()
     for filename in os.listdir(root):
-        if filename == "cleanup.bat":
-            continue
         path = os.path.join(root, filename)
         if os.path.isfile(path):
             os.unlink(path)
@@ -322,6 +314,8 @@ def parseColorToHex(color, asInt=False):
     Compatible with Python 2.7. Falls back to 0xFAFAFA or 16448250 on error.
     """
     hex_part = 16448250
+    if color.startswith("0x") and not asInt and len(color) == 8:
+        return color
     try:
         hex_part = int(color.replace("#", "").replace("0x", "").upper()[:6], 16)
     except Exception as error:
@@ -330,9 +324,9 @@ def parseColorToHex(color, asInt=False):
 
 
 def getPercent(param_a, param_b):
-    if param_b <= 0:
+    if param_b <= 0 or param_a <= 0:
         return 0.0
-    return float(normalizeHealth(param_a)) / param_b
+    return float(max(0.0, param_a)) / param_b
 
 
 def getEncoding():
