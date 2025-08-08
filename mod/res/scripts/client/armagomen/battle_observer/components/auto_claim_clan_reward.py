@@ -1,5 +1,6 @@
 from adisp import adisp_process
 from armagomen._constants import MAIN
+from armagomen.utils.common import addCallback
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logWarning
 from gui import SystemMessages
@@ -35,10 +36,18 @@ class AutoClaimClanReward(object):
 
     def onCreate(self):
         self.__hangarSpace.onSpaceCreate -= self.onCreate
-        self.updateCache()
-        if self.__enabled and g_clanCache.isInClan and self.__cachedQuestsData and self.__cachedProgressData and self.__cachedSettingsData:
-            self.parseQuests(self.__cachedQuestsData)
-            self.parseProgression(self.__cachedProgressData)
+
+        def update():
+            self.__cachedQuestsData = g_clanCache.clanSupplyProvider.getQuestsInfo().data
+            self.__cachedSettingsData = g_clanCache.clanSupplyProvider.getProgressionSettings().data
+            self.__cachedProgressData = g_clanCache.clanSupplyProvider.getProgressionProgress().data
+            if self.__enabled and g_clanCache.isInClan:
+                if self.__cachedQuestsData:
+                    self.parseQuests(self.__cachedQuestsData)
+                if self.__cachedProgressData and self.__cachedSettingsData:
+                    self.parseProgression(self.__cachedProgressData)
+
+        addCallback(3.0, update)
 
     def subscribe(self):
         g_events.onModSettingsChanged += self.onSettingsChanged
@@ -50,13 +59,8 @@ class AutoClaimClanReward(object):
         g_clanCache.clanSupplyProvider.onDataReceived -= self.__onDataReceived
         g_events.onModSettingsChanged -= self.onSettingsChanged
 
-    def updateCache(self):
-        self.__cachedQuestsData = g_clanCache.clanSupplyProvider.getQuestsInfo().data
-        self.__cachedSettingsData = g_clanCache.clanSupplyProvider.getProgressionSettings().data
-        self.__cachedProgressData = g_clanCache.clanSupplyProvider.getProgressionProgress().data
-
     def onSettingsChanged(self, data, name):
-        if name == MAIN.NAME:
+        if name == MAIN.NAME and self.__enabled != data[MAIN.AUTO_CLAIM_CLAN_REWARD]:
             self.__enabled = data[MAIN.AUTO_CLAIM_CLAN_REWARD]
 
     def __onProxyDataItemShow(self, _, item):
