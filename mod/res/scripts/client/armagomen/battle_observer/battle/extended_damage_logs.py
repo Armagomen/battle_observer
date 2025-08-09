@@ -20,6 +20,7 @@ _SHELL_TYPES_TO_STR = {
     BATTLE_LOG_SHELL_TYPES.HE_LEGACY_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE,
     BATTLE_LOG_SHELL_TYPES.HE_LEGACY_NO_STUN: INGAME_GUI.DAMAGELOG_SHELLTYPE_HIGH_EXPLOSIVE
 }
+
 EXTENDED_FEEDBACK = (FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY, FEEDBACK_EVENT_ID.ENEMY_DAMAGED_HP_PLAYER)
 PREMIUM_SHELL_END = "PREMIUM"
 NOT_SHELL = (DAMAGE_LOG.NOT_SHELL, False)
@@ -28,7 +29,10 @@ LogData = namedtuple('LogData', ('kills', 'id_list', 'vehicles', 'log_id'))
 
 
 def getI18nShellName(shellType):
-    return i18n.makeString(_SHELL_TYPES_TO_STR[shellType])
+    if shellType is not None and shellType in _SHELL_TYPES_TO_STR:
+        return i18n.makeString(_SHELL_TYPES_TO_STR[shellType])
+    else:
+        return DAMAGE_LOG.NOT_SHELL
 
 
 def getVehicleClassIcon(classTag):

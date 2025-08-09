@@ -15,7 +15,7 @@ class DispersionTimer(DispersionTimerMeta):
         self.ideal_angle = 0
         self.isPostmortem = False
         self.tpl = None
-        self.temp = deque(maxlen=3)
+        self.temp = deque(maxlen=2)
 
     def _populate(self):
         super(DispersionTimer, self)._populate()
@@ -23,11 +23,8 @@ class DispersionTimer(DispersionTimerMeta):
         percent = self.settings[DISPERSION_TIMER.PERCENT]
 
         if timer or percent:
-            time_str = "{1:.1f}s." if timer else ""
-            percent_str = "{2:d}%" if percent else ""
-            separator = " - " if timer and percent else ""
-            self.tpl = "<font color='{0}'>{1}{2}{3}</font>".format('{0}', time_str, separator, percent_str)
-
+            self.tpl = "".join(("<font color='{0}'>", "{1:.1f}s." if timer else "", " - " if timer and percent else "",
+                                "{2:d}%" if percent else "", "</font>"))
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS

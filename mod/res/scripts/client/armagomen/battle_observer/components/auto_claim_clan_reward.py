@@ -50,16 +50,16 @@ class AutoClaimClanReward(object):
         addCallback(3.0, update)
 
     def subscribe(self):
-        g_events.onModSettingsChanged += self.onSettingsChanged
+        g_events.onModSettingsChanged += self.onModSettingsChanged
         g_wgncEvents.onProxyDataItemShowByDefault += self.__onProxyDataItemShow
         g_clanCache.clanSupplyProvider.onDataReceived += self.__onDataReceived
 
     def unsubscribe(self):
         g_wgncEvents.onProxyDataItemShowByDefault -= self.__onProxyDataItemShow
         g_clanCache.clanSupplyProvider.onDataReceived -= self.__onDataReceived
-        g_events.onModSettingsChanged -= self.onSettingsChanged
+        g_events.onModSettingsChanged -= self.onModSettingsChanged
 
-    def onSettingsChanged(self, data, name):
+    def onModSettingsChanged(self, name, data):
         if name == MAIN.NAME and self.__enabled != data[MAIN.AUTO_CLAIM_CLAN_REWARD]:
             self.__enabled = data[MAIN.AUTO_CLAIM_CLAN_REWARD]
 
