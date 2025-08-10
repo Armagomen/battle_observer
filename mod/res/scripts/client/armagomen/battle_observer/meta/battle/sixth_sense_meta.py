@@ -16,4 +16,4 @@ class SixthSenseMeta(BaseModMeta):
         pass
 
     def getIconPatch(self):
-        return "../gui/maps/icons/battle_observer/sixth_sense/logo.png"
+        return "../../gui/maps/icons/battle_observer/sixth_sense/logo.png"
