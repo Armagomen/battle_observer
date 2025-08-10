@@ -126,15 +126,18 @@ class SettingsLoader(object):
             try:
                 file_data = openJsonFile(file_path)
             except Exception as error:
-                message = READ_MESSAGE.format(file_path, error.message or repr(error))
+                message = READ_MESSAGE.format(file_path, repr(error))
                 self.errorMessages.add(message)
                 logWarning(message)
             else:
-                if self.updateData(file_data, config):
-                    writeJsonFile(file_path, config)
-                logInfo(READ_MESSAGE, self.configName, file_name)
-                if component_name == MAIN.NAME:
-                    setDebug(config[DEBUG])
+                if file_data is not None:
+                    if self.updateData(file_data, config):
+                        writeJsonFile(file_path, config)
+                    logInfo(READ_MESSAGE, self.configName, file_name)
+                    if component_name == MAIN.NAME:
+                        setDebug(config[DEBUG])
+                else:
+                    logWarning(READ_MESSAGE, file_name, "file_data is None or file broken")
 
     def onGUISpaceEntered(self, spaceID):
         dialog = LoadingErrorDialog()

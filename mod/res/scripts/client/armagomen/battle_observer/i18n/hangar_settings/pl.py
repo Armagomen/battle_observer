@@ -325,19 +325,20 @@ localization = {
     },
     "sixth_sense": {
         "header": "Szósty zmysł – ustawienia",
-        "default_icon": "Użyj wbudowanej ikony",
-        "default_icon_name": "Wybierz wbudowaną ikonę",
-        "default_icon_tooltip": "Zostanie użyty domyślny obraz z modów zamiast ikony użytkownika",
+        "icon_name": "Wybierz wbudowaną ikonę",
+        "icon_name_tooltip": "Jeśli chcesz użyć własnego obrazka, skopiuj plik o rozmiarze 200x200 do folderu res_mods/**GAME_VERSION**/"
+                             "gui/maps/icons/battle_observer/sixth_sense/_file_name.png",
         "lampShowTime": "Czas wyświetlania (sekundy)",
-        "lampShowTime_tooltip": "<b>Jak długo cel pozostaje widoczny?</b><br>Po wykryciu pojazdu przeciwnika przez promień widoczności, "
-                                "pozostaje on widoczny nawet po zaniku interakcji. Standardowo: 10 sekund, zależnie od załogi, "
-                                "wyposażenia – od 8 do 16–18 sekund.",
+        "lampShowTime_tooltip": "<b>Jak długo cel pozostaje widoczny?</b><br>Po wykryciu czołg pozostaje widoczny nawet bez bezpośredniej "
+                                "widoczności. Standard — ~10 sekund, może się różnić od 8 do 18 w zależności od załogi, wyposażenia"
+                                " i instrukcji.",
         "playTickSound": "Odtwórz dźwięk timera",
         "show_timer": "Włącz timer",
         "show_timer_graphics": "Włącz graficzny timer",
         "show_timer_graphics_color": "Kolor grafiki",
         "show_timer_graphics_radius": "Promień graficznego kręgu",
-        "icon_size": "Rozmiar ikony (px), max 180"
+        "icon_size": "Rozmiar ikony (px), max 180",
+        "show_random_icon": "Pokazuj losowy obrazek w każdej walce"
     },
     "distance_to_enemy": {
         "header": "Ustawienia odległości do najbliższego wykrytego przeciwnika",

@@ -322,20 +322,20 @@ localization = {
     },
     "sixth_sense": {
         "header": "Sechster Sinn – Einstellungen",
-        "default_icon": "Integriertes Bild verwenden.",
-        "default_icon_name": "Integriertes Bild auswählen.",
-        "default_icon_tooltip": "Das im Mod enthaltene Bild wird anstelle eines benutzerdefinierten verwendet.",
+        "icon_name": "Integriertes Bild auswählen.",
+        "icon_name_tooltip": "Wenn Sie ein eigenes Bild verwenden möchten, kopieren Sie eine Datei mit der Größe 200x200 in "
+                             "den Ordner res_mods/**GAME_VERSION**/gui/maps/icons/battle_observer/sixth_sense/_file_name.png",
         "lampShowTime": "Anzeigedauer in Sekunden",
-        "lampShowTime_tooltip": "<b>Wie lange bleibt das Ziel sichtbar?</b><br>Nachdem sich die Sichtstrahlen eines Fahrzeugs mit den "
-                                "Erkennungspunkten eines anderen kreuzen, bleibt das erste Fahrzeug sichtbar – auch wenn keine aktive "
-                                "Sichtverbindung mehr besteht. Die normale Sichtdauer beträgt 10 Sekunden, kann jedoch durch Ausrüstung, "
-                                "Besatzungsskills und Direktiven auf 8 bis 16–18 Sekunden angepasst werden.",
+        "lampShowTime_tooltip": "<b>Wie lange bleibt das Ziel sichtbar?</b><br>Nach der Entdeckung bleibt der Panzer auch ohne direkte "
+                                "Sichtbarkeit sichtbar. Standard — ~10 Sekunden, kann je nach Besatzung, Ausrüstung und "
+                                "Anweisungen zwischen 8 und 18 variieren.",
         "playTickSound": "Timer-Sound abspielen",
         "show_timer": "Timer aktivieren.",
         "show_timer_graphics": "Grafischen Timer aktivieren.",
         "show_timer_graphics_color": "Grafikfarbe.",
         "show_timer_graphics_radius": "Grafikkreisradius.",
-        "icon_size": "Bildgröße in Pixel. Maximal 180"
+        "icon_size": "Bildgröße in Pixel. Maximal 180",
+        "show_random_icon": "Zufälliges Bild in jedem Kampf anzeigen"
     },
     "distance_to_enemy": {
         "header": "Entfernung zum nächsten erkannten Gegner – Einstellungen",

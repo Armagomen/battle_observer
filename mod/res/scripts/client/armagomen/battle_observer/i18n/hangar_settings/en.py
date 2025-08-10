@@ -336,15 +336,19 @@ localization = {
     "sixth_sense": {
         "header": "Sixth sense.",
         "lampShowTime": "Timer sec.",
+        "lampShowTime_tooltip": "<b>How long does the target remain visible?</b><br>After being spotted, the tank remains visible even "
+                                "without direct line of sight. Standard — ~10 seconds, may vary from 8 to 18 depending on crew, "
+                                "equipment, and directives.",
         "playTickSound": "Play tick sound.",
-        "default_icon": "Use embedded image.",
-        "default_icon_name": "Select an embedded image.",
-        "default_icon_tooltip": "The image built into the mod will be used instead of the custom one.",
+        "icon_name": "Select an embedded image.",
+        "icon_name_tooltip": "If you want to use your own image, copy a 200x200 file into the folder res_mods/**GAME_VERSION**/"
+                             "gui/maps/icons/battle_observer/sixth_sense/_file_name.png",
         "show_timer": "Show text timer.",
         "show_timer_graphics": "Show Timer Graphics.",
         "show_timer_graphics_color": "Graphics color.",
         "show_timer_graphics_radius": "Radius of the graphic circle.",
-        "icon_size": "Image size in pixels. max 180"
+        "icon_size": "Image size in pixels. max 180",
+        "show_random_icon": "Show a random image in each battle"
     },
     "distance_to_enemy": {
         "header": "Distance to the closest spotted enemy.",

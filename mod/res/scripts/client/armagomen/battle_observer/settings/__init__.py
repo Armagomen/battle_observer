@@ -71,15 +71,14 @@ class UserSettings(object):
         self.sixth_sense = {
             GLOBAL.ENABLED: False,
             SIXTH_SENSE.PLAY_TICK_SOUND: True,
-            SIXTH_SENSE.DEFAULT: True,
-            SIXTH_SENSE.ICON_NAME: "logo.png",
+            SIXTH_SENSE.ICON_NAME: "lamp_2.png",
             SIXTH_SENSE.TIME: 10,
             SIXTH_SENSE.SHOW_TIMER: False,
             SIXTH_SENSE.TIMER_GRAPHICS: True,
+            SIXTH_SENSE.RANDOM: False,
             SIXTH_SENSE.TIMER_GRAPHICS_COLOR: "#ffa500",
-            SIXTH_SENSE.TIMER_GRAPHICS_RADIUS: 45,
-            SIXTH_SENSE.USER_ICON: "mods/configs/mod_battle_observer/__icon__path__200x200.png",
-            SIXTH_SENSE.ICON_SIZE: 90
+            SIXTH_SENSE.TIMER_GRAPHICS_RADIUS: 38,
+            SIXTH_SENSE.ICON_SIZE: 70
         }
 
         self.dispersion_circle = {

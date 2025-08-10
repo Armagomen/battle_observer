@@ -33,6 +33,7 @@
 		private var show_time:Number   = 10000;
 		private var _timer:Timer       = null;
 		
+		public var getIconPatch:Function;
 		public var playSound:Function;
 		
 		[Embed(source = "error.png")]
@@ -50,7 +51,7 @@
 		
 		override protected function onPopulate():void
 		{
-			if (not_initialized)
+			if (this.not_initialized)
 			{
 				super.onPopulate();
 				this.params = this.getSettings();
@@ -58,14 +59,7 @@
 				this._container = new Sprite()
 				this._container.alpha = 0;
 				this.addChild(this._container);
-				if (this.params.default_icon)
-				{
-					this.loader.load(new URLRequest('../maps/icons/battle_observer/sixth_sense/' + this.params.default_icon_name));
-				}
-				else
-				{
-					this.loader.load(new URLRequest('../../../' + this.params.user_icon));
-				}
+				this.loader.load(new URLRequest(this.getIconPatch()));
 				this.hideComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
 			}
 			else
@@ -135,7 +129,7 @@
 				var textformat:TextFormat = new TextFormat("$TitleFont", text_size, 0xFFFFFF);
 				var _y:Number             = half_size + (text_size >> 1);
 				this.timer_text = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);
-				this.timer_text.alpha = 0.7;
+				this.timer_text.alpha = 0.80;
 			}
 			if (!this.hideAnimation)
 			{

@@ -1,7 +1,11 @@
 # coding=utf-8
+from random import choice
+
+import ResMgr
 
 from armagomen._constants import SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
+from armagomen.utils.logging import logError
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from PlayerEvents import g_playerEvents
 from SoundGroups import g_instance
@@ -93,6 +97,20 @@ class SixthSense(SixthSenseMeta):
     def playSound(self):
         if self.__soundID is not None:
             self.callWWISE(self.__soundID)
+
+    def getIconPatch(self):
+        try:
+            directory = "gui/maps/icons/battle_observer/sixth_sense/"
+            flash_path = '../../' + directory
+            if self.settings[SIXTH_SENSE.RANDOM]:
+                folder = ResMgr.openSection(directory)
+                return flash_path + choice(folder.keys())
+            else:
+                return flash_path + self.settings[SIXTH_SENSE.ICON_NAME]
+
+        except Exception as e:
+            logError(repr(e))
+            return super(SixthSense, self).getIconPatch()
 
 
 class SixthSenseLesta(SixthSense):

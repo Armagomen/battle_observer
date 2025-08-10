@@ -277,7 +277,7 @@ begin
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('sixth_sense'));
     JSON_SetBool(Handle,'/playTickSound', WizardIsComponentSelected('sixth_sense/playTickSound'));
-    JSON_SetString(Handle,'/default_icon_name', 'logo.png');
+    JSON_SetString(Handle,'/icon_name', 'logo.png');
     JSON_Close(Handle);
   end;
 end;

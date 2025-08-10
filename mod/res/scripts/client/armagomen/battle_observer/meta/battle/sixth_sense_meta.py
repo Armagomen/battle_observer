@@ -14,3 +14,6 @@ class SixthSenseMeta(BaseModMeta):
 
     def playSound(self):
         pass
+
+    def getIconPatch(self):
+        return "../gui/maps/icons/battle_observer/sixth_sense/logo.png"

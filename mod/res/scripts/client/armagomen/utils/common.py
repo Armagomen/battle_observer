@@ -168,13 +168,13 @@ def encodeData(data):
 def openJsonFile(path):
     """Load JSON from file. Returns dict or {} if error."""
     if not os.path.isfile(path):
-        return {}
+        return None
     try:
         with _open(path, 'r', encoding='utf-8-sig') as f:
             return encodeData(json.load(f))
     except Exception as e:
-        logError(repr(e))
-        return {}
+        logError("openJsonFile: {}", repr(e))
+        return None
 
 
 def writeJsonFile(path, data):
