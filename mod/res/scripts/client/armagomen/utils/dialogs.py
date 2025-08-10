@@ -91,7 +91,7 @@ class LoadingErrorDialog(DialogBase):
         builder.setFormattedMessage(message)
         builder.addButton(DialogButtons.CANCEL, None, True, rawLabel=buttons.close)
         result = yield wg_await(dialogs.showSimple(builder.buildInLobby() if isLobby else builder.build(self.view), DialogButtons.CANCEL))
-        raise AsyncReturn(result)
+        # raise AsyncReturn(result)
 
 
 class CrewDialog(DialogBase):

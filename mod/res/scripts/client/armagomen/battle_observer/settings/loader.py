@@ -123,7 +123,8 @@ class SettingsLoader(object):
                 file_data = openJsonFile(file_path)
             except Exception as error:
                 message = READ_MESSAGE.format(file_path, repr(error))
-                self.error_dialog.messages.add(message)
+                if self.error_dialog:
+                    self.error_dialog.messages.add(message)
                 logWarning(message)
             else:
                 if file_data is not None:

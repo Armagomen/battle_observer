@@ -21,6 +21,7 @@ class Core(object):
         self.components = {}
         self.autoClearCache = False
         self.hangar_settings = None
+        self.error_dialog = None
         self.connectionMgr.onLoggedOn += self._onLoggedOn
         self.connectionMgr.onDisconnected += self._onDisconnected
         g_events.onModSettingsChanged += self.onModSettingsChanged
@@ -60,10 +61,10 @@ class Core(object):
         from armagomen.battle_observer.components import loadComponents
         from armagomen.battle_observer.settings import settings_loader
         from armagomen.utils.common import isReplay
-        from armagomen.battle_observer.settings.hangar.loading_error import LoadingError
+        from armagomen.battle_observer.settings.hangar.loading_error import ErrorMessages
 
-        error_dialog = LoadingError()
-        settings_loader.error_dialog = error_dialog
+        self.error_dialog = ErrorMessages()
+        settings_loader.error_dialog = self.error_dialog
         is_replay = isReplay()
         settings_loader.readConfig()
         self.components = loadComponents(is_replay)
@@ -78,7 +79,7 @@ class Core(object):
                 SETTINGS_API.extend([g_modsListApi, vxSettingsApi, vxSettingsApiEvents])
             except Exception as error:
                 from debug_utils import LOG_CURRENT_EXCEPTION
-                error_dialog.messages.add(repr(error))
+                self.error_dialog.messages.add(repr(error))
                 LOG_CURRENT_EXCEPTION()
                 logError("Settings Api Not Loaded: {}", repr(error))
             else:
@@ -100,6 +101,7 @@ class Core(object):
         g_keysListener.fini()
         if self.hangar_settings is not None:
             self.hangar_settings.fini()
+        self.error_dialog.fini()
         self._onDisconnected()
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         self.connectionMgr.onDisconnected -= self._onDisconnected
