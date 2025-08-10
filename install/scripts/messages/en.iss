@@ -72,6 +72,7 @@ en.sixth_sense=The sixth sense with a timer, after installation, select the desi
 en.playTickSound=Play timer sound
 en.show_timer_graphics=Show timer circle
 en.show_timer=Show seconds
+en.show_random_icon=Show random icon
 
 en.arcade_camera=Commander's camera - zoomed out
 en.strategic_camera=Artillery camera - increased distance

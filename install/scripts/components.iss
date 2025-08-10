@@ -61,6 +61,8 @@ Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarni
 Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: armagomen;
 Name: sixth_sense/show_timer; Description: {cm:show_timer};
 Name: sixth_sense/show_timer_graphics; Description: {cm:show_timer_graphics}; Types: armagomen;
+Name: sixth_sense/show_random_icon; Description: {cm:show_random_icon};
+
 
 Name: arcade_camera; Description: {cm:arcade_camera}; Flags: disablenouninstallwarning; Types: armagomen;
 Name: strategic_camera; Description: {cm:strategic_camera}; Flags: disablenouninstallwarning; Types: armagomen;
@@ -277,7 +279,10 @@ begin
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('sixth_sense'));
     JSON_SetBool(Handle,'/playTickSound', WizardIsComponentSelected('sixth_sense/playTickSound'));
-    JSON_SetString(Handle,'/icon_name', 'logo.png');
+    JSON_SetBool(Handle,'/show_timer', WizardIsComponentSelected('sixth_sense/show_timer'));
+    JSON_SetBool(Handle,'/show_timer_graphics', WizardIsComponentSelected('sixth_sense/show_timer_graphics'));
+    JSON_SetBool(Handle,'/show_random_icon', WizardIsComponentSelected('sixth_sense/show_random_icon'));
+    JSON_SetString(Handle,'/icon_name', 'lamp_2.png');
     JSON_Close(Handle);
   end;
 end;
