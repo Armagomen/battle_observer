@@ -328,7 +328,7 @@ localization = {
         "lampShowTime": "Anzeigedauer in Sekunden",
         "lampShowTime_tooltip": "<b>Wie lange bleibt das Ziel sichtbar?</b><br>Nach der Entdeckung bleibt der Panzer auch ohne direkte "
                                 "Sichtbarkeit sichtbar. Standard — ~10 Sekunden, kann je nach Besatzung, Ausrüstung und "
-                                "Anweisungen zwischen 8 und 18 variieren.",
+                                "Anweisungen zwischen 7 und 13 variieren.",
         "playTickSound": "Timer-Sound abspielen",
         "show_timer": "Timer aktivieren.",
         "show_timer_graphics": "Grafischen Timer aktivieren.",

@@ -330,7 +330,7 @@ localization = {
                              "gui/maps/icons/battle_observer/sixth_sense/_file_name.png",
         "lampShowTime": "Czas wyświetlania (sekundy)",
         "lampShowTime_tooltip": "<b>Jak długo cel pozostaje widoczny?</b><br>Po wykryciu czołg pozostaje widoczny nawet bez bezpośredniej "
-                                "widoczności. Standard — ~10 sekund, może się różnić od 8 do 18 w zależności od załogi, wyposażenia"
+                                "widoczności. Standard — ~10 sekund, może się różnić od 7 do 13 w zależności od załogi, wyposażenia"
                                 " i instrukcji.",
         "playTickSound": "Odtwórz dźwięk timera",
         "show_timer": "Włącz timer",

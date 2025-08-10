@@ -337,7 +337,7 @@ localization = {
         "header": "Sixth sense.",
         "lampShowTime": "Timer sec.",
         "lampShowTime_tooltip": "<b>How long does the target remain visible?</b><br>After being spotted, the tank remains visible even "
-                                "without direct line of sight. Standard — ~10 seconds, may vary from 8 to 18 depending on crew, "
+                                "without direct line of sight. Standard — ~10 seconds, may vary from 7 to 13 depending on crew, "
                                 "equipment, and directives.",
         "playTickSound": "Play tick sound.",
         "icon_name": "Select an embedded image.",
