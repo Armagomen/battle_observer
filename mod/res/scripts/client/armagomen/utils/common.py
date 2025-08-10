@@ -169,12 +169,8 @@ def openJsonFile(path):
     """Load JSON from file. Returns dict or {} if error."""
     if not os.path.isfile(path):
         return None
-    try:
-        with _open(path, 'r', encoding='utf-8-sig') as f:
-            return encodeData(json.load(f))
-    except Exception as e:
-        logError("openJsonFile: {}", repr(e))
-        return None
+    with _open(path, 'r', encoding='utf-8-sig') as f:
+        return encodeData(json.load(f))
 
 
 def writeJsonFile(path, data):

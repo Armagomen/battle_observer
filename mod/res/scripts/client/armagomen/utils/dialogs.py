@@ -8,6 +8,8 @@ from frameworks.wulf import WindowLayer
 from gui.impl.dialogs import dialogs
 from gui.impl.dialogs.builders import InfoDialogBuilder, WarningDialogBuilder
 from gui.impl.pub.dialog_window import DialogButtons
+from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
+from gui.Scaleform.framework.entities.View import ViewKey
 from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 from wg_async import AsyncReturn, wg_async, wg_await
@@ -21,9 +23,12 @@ class DialogBase(object):
     @property
     def view(self):
         app = self.appLoader.getApp()
-        if app is not None and app.containerManager is not None:
-            return app.containerManager.getView(WindowLayer.VIEW)
-        return None
+        if app is None or app.containerManager is None:
+            return None
+        view = app.containerManager.getView(WindowLayer.VIEW)
+        if view is None:
+            view = app.containerManager.getViewByKey(ViewKey(VIEW_ALIAS.LOGIN))
+        return view
 
 
 class BannedDialog(DialogBase):

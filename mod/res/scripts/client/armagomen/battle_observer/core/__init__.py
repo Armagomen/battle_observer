@@ -60,7 +60,10 @@ class Core(object):
         from armagomen.battle_observer.components import loadComponents
         from armagomen.battle_observer.settings import settings_loader
         from armagomen.utils.common import isReplay
+        from armagomen.battle_observer.settings.hangar.loading_error import LoadingError
 
+        error_dialog = LoadingError()
+        settings_loader.error_dialog = error_dialog
         is_replay = isReplay()
         settings_loader.readConfig()
         self.components = loadComponents(is_replay)
@@ -74,9 +77,8 @@ class Core(object):
                 from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
                 SETTINGS_API.extend([g_modsListApi, vxSettingsApi, vxSettingsApiEvents])
             except Exception as error:
-                from armagomen.battle_observer.settings.hangar.loading_error import LoadingError
                 from debug_utils import LOG_CURRENT_EXCEPTION
-                LoadingError(repr(error))
+                error_dialog.messages.add(repr(error))
                 LOG_CURRENT_EXCEPTION()
                 logError("Settings Api Not Loaded: {}", repr(error))
             else:

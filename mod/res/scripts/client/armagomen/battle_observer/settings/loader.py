@@ -1,23 +1,21 @@
 import os
 
-from armagomen._constants import GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
+from armagomen._constants import LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import currentConfigPath, openJsonFile, ResMgr, writeJsonFile
-from armagomen.utils.dialogs import LoadingErrorDialog
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import DEBUG, logError, logInfo, logWarning, setDebug
-from gui.shared.personality import ServicesLocator
 
 JSON = "{}.json"
 READ_MESSAGE = "loadConfigPart: {}: {}"
 
 
 class SettingsLoader(object):
-    __slots__ = ('configName', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list')
+    __slots__ = ('configName', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog')
 
     def __init__(self, settings):
         self.__settings = settings
         self.sixth_sense_list = self.sixthSenseIconsNamesList()
-        self.errorMessages = set()
+        self.error_dialog = None
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
         load_json = os.path.join(currentConfigPath, 'load.json')
         if os.path.isfile(load_json):
@@ -109,8 +107,6 @@ class SettingsLoader(object):
         listdir = os.listdir(direct_path)
         self.iterateSettings(lambda name, config_part: self.loadConfigPart(name, direct_path, listdir, config_part))
         logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
-        if self.errorMessages:
-            ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
 
     def updateAllSettings(self):
         """Update all configuration settings"""
@@ -127,7 +123,7 @@ class SettingsLoader(object):
                 file_data = openJsonFile(file_path)
             except Exception as error:
                 message = READ_MESSAGE.format(file_path, repr(error))
-                self.errorMessages.add(message)
+                self.error_dialog.messages.add(message)
                 logWarning(message)
             else:
                 if file_data is not None:
@@ -138,9 +134,3 @@ class SettingsLoader(object):
                         setDebug(config[DEBUG])
                 else:
                     logWarning(READ_MESSAGE, file_name, "file_data is None or file broken")
-
-    def onGUISpaceEntered(self, spaceID):
-        dialog = LoadingErrorDialog()
-        dialog.showLoadingError(GLOBAL.NEW_LINE.join(self.errorMessages))
-        self.errorMessages.clear()
-        ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
