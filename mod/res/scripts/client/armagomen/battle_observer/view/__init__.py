@@ -71,7 +71,7 @@ class ViewHandlerLobby(PackageBusinessHandler):
         if alias == VIEW_ALIAS.LOBBY_HANGAR:
             logDebug(INFO_MSG, self.__class__.__name__, alias)
             if hasattr(pyView.flashObject, ATTRIBUTE_NAME):
-                addCallback(2.0 if IS_XVM_INSTALLED else 0, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
-                addCallback(2.0 if IS_XVM_INSTALLED else 0, pyView.flashObject.as_BattleObserverShadow)
+                addCallback(2.0 if IS_XVM_INSTALLED else DEFAULT_INTERVAL, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
+                addCallback(2.0 if IS_XVM_INSTALLED else DEFAULT_INTERVAL, pyView.flashObject.as_BattleObserverShadow)
             else:
                 logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)

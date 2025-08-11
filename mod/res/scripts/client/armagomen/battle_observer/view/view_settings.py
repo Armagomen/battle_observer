@@ -142,25 +142,22 @@ class ViewSettings(object):
         logDebug("clear viewSettings components")
 
     def addInToEpicUI(self, add):
+        states = (
+            PageStates.COUNTDOWN,
+            PageStates.RESPAWN,
+            PageStates.GAME,
+            PageStates.SPECTATOR_FREE,
+            PageStates.SPECTATOR_DEATHCAM,
+            PageStates.SPECTATOR_FOLLOW,
+        )
+        action_ui = lambda s, a: s.add(a) if add else s.discard(a)
+        action_never = _NEVER_HIDE.add if add else _NEVER_HIDE.discard
+
         for alias in self._components:
-            if not add:
-                if alias in NEVER_HIDE_FL:
-                    _NEVER_HIDE.discard(alias)
-                _STATE_TO_UI[PageStates.COUNTDOWN].discard(alias)
-                _STATE_TO_UI[PageStates.RESPAWN].discard(alias)
-                _STATE_TO_UI[PageStates.GAME].discard(alias)
-                _STATE_TO_UI[PageStates.SPECTATOR_FREE].discard(alias)
-                _STATE_TO_UI[PageStates.SPECTATOR_DEATHCAM].discard(alias)
-                _STATE_TO_UI[PageStates.SPECTATOR_FOLLOW].discard(alias)
-            else:
-                _STATE_TO_UI[PageStates.COUNTDOWN].add(alias)
-                _STATE_TO_UI[PageStates.RESPAWN].add(alias)
-                _STATE_TO_UI[PageStates.GAME].add(alias)
-                _STATE_TO_UI[PageStates.SPECTATOR_FREE].add(alias)
-                _STATE_TO_UI[PageStates.SPECTATOR_DEATHCAM].add(alias)
-                _STATE_TO_UI[PageStates.SPECTATOR_FOLLOW].add(alias)
-                if alias in NEVER_HIDE_FL:
-                    _NEVER_HIDE.add(alias)
+            for state in states:
+                action_ui(_STATE_TO_UI[state], alias)
+            if alias in NEVER_HIDE_FL:
+                action_never(alias)
 
     def _registerViewComponents(self):
         components = set(ALIAS_TO_CTRL.keys()).intersection(self._components)
