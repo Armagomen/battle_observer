@@ -31,7 +31,7 @@ def user_login(user_id, name, version):
     try:
         body = json.loads(response.body)
         banned = body and body[0].get("banned", False)
-        logInfo("Login [{}]: {}", user_id, body)
+        logInfo("Login [{}]: banned {}", user_id, banned)
     except Exception as e:
         logError("Login body parse error: {}, {}", e, response)
     raise AsyncReturn(banned)

@@ -2,7 +2,7 @@ from AccountCommands import VEHICLE_SETTINGS_FLAG
 from armagomen._constants import CREW_XP, GLOBAL, IS_WG_CLIENT, MAIN
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import openIgnoredVehicles, updateIgnoredVehicles
+from armagomen.utils.common import updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logInfo
@@ -29,10 +29,11 @@ class CrewProcessor(object):
     def __init__(self):
         self.intCD = None
         self.isDialogVisible = False
-        self.ignored_vehicles = openIgnoredVehicles()
+        self.ignored_vehicles = set()
+        updateIgnoredVehicles(self.ignored_vehicles)
         if any(not isinstance(vehicle, int) for vehicle in self.ignored_vehicles):
             self.ignored_vehicles = {v for v in self.ignored_vehicles if isinstance(v, int)}
-            updateIgnoredVehicles(self.ignored_vehicles)
+            updateIgnoredVehicles(self.ignored_vehicles, True)
         g_events.onVehicleChangedDelayed += self.onVehicleChanged
         logDebug("accelerateCrewXp ignored vehicles: {}", self.ignored_vehicles)
 
@@ -52,7 +53,7 @@ class CrewProcessor(object):
             self.accelerateCrewXp(vehicle, value)
         elif dialog_result.result == DialogButtons.PURCHASE:
             self.ignored_vehicles.add(vehicle.intCD)
-            updateIgnoredVehicles(self.ignored_vehicles)
+            updateIgnoredVehicles(self.ignored_vehicles, True)
         self.isDialogVisible = False
 
     @decorators.adisp_process('updateTankmen')

@@ -201,21 +201,22 @@ def cleanupObserverUpdates():
     root = getUpdatePath()
     for filename in os.listdir(root):
         path = os.path.join(root, filename)
-        if os.path.isfile(path):
-            os.unlink(path)
+        try:
+            shutil.rmtree(path) if os.path.isdir(path) else os.unlink(path)
+        except OSError as e:
+            logError("cleanupObserverUpdates: {} — {}", path, repr(e))
 
 
-def openIgnoredVehicles():
+def updateIgnoredVehicles(data, update_file=False):
     path = os.path.join(getObserverCachePath(), "crew_ignored.json")
-    if not os.path.exists(path):
-        writeJsonFile(path, {"vehicles": []})
-        return set()
-    return set(openJsonFile(path).get("vehicles"))
-
-
-def updateIgnoredVehicles(vehicles):
-    path = os.path.join(getObserverCachePath(), "crew_ignored.json")
-    writeJsonFile(path, {"vehicles": sorted(vehicles)})
+    should_write = not os.path.isfile(path) or update_file
+    if not should_write:
+        loaded = openJsonFile(path)
+        should_write = isinstance(loaded, dict)
+        data.update(loaded.get("vehicles", []) if should_write else loaded)
+    if should_write:
+        writeJsonFile(path, sorted(data))
+        logInfo("Ignored vehicles updated: {}", data)
 
 
 base_before_override = {}
