@@ -2,6 +2,7 @@ from armagomen._constants import BATTLE_ALIASES, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback, IS_XVM_INSTALLED
+from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
 from frameworks.wulf import WindowLayer
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -30,9 +31,11 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         self.enable_controller = bool({BATTLE_ALIASES.MAIN_GUN, BATTLE_ALIASES.PANELS}.intersection(self._components))
         if self.enable_controller:
             damage_controller.start()
+        g_keysListener.start()
 
     def fini(self):
         self._clear()
+        g_keysListener.stop()
         if self.enable_controller:
             damage_controller.stop()
         super(ViewHandlerBattle, self).fini()

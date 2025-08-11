@@ -2,9 +2,7 @@ from collections import namedtuple
 
 from armagomen._constants import MAIN
 from gui import InputHandler
-from gui.shared.personality import ServicesLocator
 from Keys import KEY_LALT, KEY_LCONTROL, KEY_LSHIFT, KEY_RALT, KEY_RCONTROL, KEY_RSHIFT
-from skeletons.gui.app_loader import GuiGlobalSpaceID
 
 KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
 KEY_ALIAS_CONTROL = (KEY_LCONTROL, KEY_RCONTROL)
@@ -22,12 +20,10 @@ class KeysListener(object):
 
     def init(self, mainSettings):
         self.mainSettings = mainSettings
-        ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-        ServicesLocator.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
 
     def fini(self):
-        ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
-        ServicesLocator.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
+        self.clear()
+        self.mainSettings = None
 
     def registerComponent(self, keyFunction, keyList=None):
         self.components.add(KeysData(self.normalizeKey(keyList) if keyList else frozenset(KEY_ALIAS_ALT), keyFunction))
@@ -37,16 +33,14 @@ class KeysListener(object):
         self.usableKeys.clear()
         self.pressedKeys.clear()
 
-    def onGUISpaceEntered(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.BATTLE:
-            InputHandler.g_instance.onKeyDown += self.onKeyDown
-            InputHandler.g_instance.onKeyUp += self.onKeyUp
+    def start(self):
+        InputHandler.g_instance.onKeyDown += self.onKeyDown
+        InputHandler.g_instance.onKeyUp += self.onKeyUp
 
-    def onGUISpaceLeft(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.BATTLE:
-            InputHandler.g_instance.onKeyDown -= self.onKeyDown
-            InputHandler.g_instance.onKeyUp -= self.onKeyUp
-            self.clear()
+    def stop(self):
+        InputHandler.g_instance.onKeyDown -= self.onKeyDown
+        InputHandler.g_instance.onKeyUp -= self.onKeyUp
+        self.clear()
 
     def handleKey(self, key, is_pressed):
         if is_pressed and (key not in self.usableKeys or key in self.pressedKeys) or not is_pressed and key not in self.pressedKeys:
@@ -68,9 +62,8 @@ class KeysListener(object):
     def normalizeKey(self, keyList):
         keys = {item for key in keyList for item in (key if isinstance(key, (list, set, tuple)) else [key])}
 
-        if self.mainSettings[MAIN.USE_KEY_PAIRS]:
-            alias_sets = (KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT)
-            for alias_set in alias_sets:
+        if self.mainSettings.get(MAIN.USE_KEY_PAIRS):
+            for alias_set in (KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT):
                 if any(key in alias_set for key in keys):
                     keys.update(alias_set)
 

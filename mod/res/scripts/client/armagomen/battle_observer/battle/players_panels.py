@@ -20,16 +20,14 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesEnable = self.settings[PANELS.DAMAGES_ENABLED]
         if self.hpBarsEnable:
             if self.settings[PANELS.ON_KEY_DOWN]:
-                g_keysListener.registerComponent(self.as_setHealthBarsVisibleS,
-                                                 keyList=self.settings[PANELS.BAR_HOT_KEY])
+                g_keysListener.registerComponent(self.as_setHealthBarsVisibleS, keyList=self.settings[PANELS.BAR_HOT_KEY])
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onPeriodChange += self.onPeriodChange
                 arena.onVehicleKilled += self.onVehicleKilled
         if self.damagesEnable:
             damage_controller.onPlayerDamaged += self.onPlayerDamaged
-            g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS,
-                                             keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
+            g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS, keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
 
     def _dispose(self):
         self.flashObject.as_clearStorage()
