@@ -194,9 +194,9 @@ if IS_WG_CLIENT:
     POSTMORTEM_MODES.update((CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.LOOK_AT_KILLER))
 
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
-    "SHOW_PIERCING_POWER", "NAME", "POSITION", "MESSAGES", "TEMPLATE", "MACROS_COLOR", "SHOW_COUNTED_ARMOR",
+    "NAME", "SHOW_PIERCING_POWER", "POSITION", "SHOW_COUNTED_ARMOR",
     "SHOW_PIERCING_RESERVE", "SHOW_CALIBER", "ON_ALLY"))(
-    "show_piercing_power", "armor_calculator", "position", "messages", "template", "color", "show_counted_armor",
+    "armor_calculator", "show_piercing_power", "position", "show_counted_armor",
     "show_piercing_reserve", "show_caliber", "display_on_allies")
 
 FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TIME", "DISTANCE", "ALIGN"))(

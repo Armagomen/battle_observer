@@ -10,6 +10,7 @@ from wg_async import wg_async
 
 SETTINGS_API = []
 
+
 class Core(object):
     connectionMgr = dependency.descriptor(IConnectionManager)
     appLoader = dependency.descriptor(IAppLoader)
@@ -60,8 +61,8 @@ class Core(object):
     def start(self):
         from armagomen.battle_observer.components import loadComponents
         from armagomen.battle_observer.settings import settings_loader
+        from armagomen.battle_observer.settings.loading_error import ErrorMessages
         from armagomen.utils.common import isReplay
-        from armagomen.battle_observer.settings.hangar.loading_error import ErrorMessages
 
         self.error_dialog = ErrorMessages()
         settings_loader.error_dialog = self.error_dialog
@@ -101,7 +102,8 @@ class Core(object):
         g_keysListener.fini()
         if self.hangar_settings is not None:
             self.hangar_settings.fini()
-        self.error_dialog.fini()
+        if self.error_dialog is not None:
+            self.error_dialog.fini()
         self._onDisconnected()
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         self.connectionMgr.onDisconnected -= self._onDisconnected

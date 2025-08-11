@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen._constants import BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, STATISTICS
+from armagomen._constants import ARMOR_CALC, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, STATISTICS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import IS_XVM_INSTALLED
 from armagomen.utils.logging import logDebug, logInfo
@@ -102,6 +102,14 @@ class ViewSettings(object):
     def isClockEnabled():
         return user_settings.clock[GLOBAL.ENABLED] and user_settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
 
+    @staticmethod
+    def isArmorCalculatorUIEnabled():
+        if user_settings.armor_calculator[GLOBAL.ENABLED]:
+            return any(user_settings.armor_calculator.get(key, False) for key in
+                       (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE,
+                        ARMOR_CALC.SHOW_CALIBER))
+        return False
+
     def _invalidateComponents(self):
         self._components = tuple(alias for alias, enabled in (
             (BATTLE_ALIASES.WGR_ICONS, self.isStatisticsAndIconsEnabled()),
@@ -113,7 +121,7 @@ class ViewSettings(object):
             (BATTLE_ALIASES.TIMER, user_settings.battle_timer[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.TEAM_BASES, self.isTeamBasesEnabled()),
             (BATTLE_ALIASES.SIXTH_SENSE, user_settings.sixth_sense[GLOBAL.ENABLED]),
-            (BATTLE_ALIASES.ARMOR_CALC, user_settings.armor_calculator[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.ARMOR_CALC, self.isArmorCalculatorUIEnabled()),
             (BATTLE_ALIASES.FLIGHT_TIME, self.isFlightTimeEnabled()),
             (BATTLE_ALIASES.DISPERSION_TIMER, user_settings.dispersion_timer[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.PANELS, self.isPlayersPanelsEnabled()),
