@@ -1,6 +1,7 @@
 package net.armagomen.battle_observer.battle.components
 {
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.TextExt;
@@ -20,8 +21,10 @@ package net.armagomen.battle_observer.battle.components
 			if (not_initialized)
 			{
 				super.onPopulate();
-				var settings:Object = this.getSettings().position;
-				this.armorCalc = new TextExt(settings.x, settings.y, Constants.largeText, TextFieldAutoSize.CENTER, this);
+				var settings:Object = this.getSettings();
+				var fmt:TextFormat = Constants.cloneTextFormat(Constants.largeText);
+				fmt.size = settings.text_size;
+				this.armorCalc = new TextExt(settings.position.x, settings.position.y, fmt, TextFieldAutoSize.CENTER, this);
 			}
 			else
 			{

@@ -95,6 +95,7 @@ class UserSettings(object):
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left,
             DISPERSION_TIMER.TIMER: True,
             DISPERSION_TIMER.PERCENT: True,
+            "text_size": 18,
         }
 
         self.debug_panel = {
@@ -151,6 +152,8 @@ class UserSettings(object):
             ARMOR_CALC.SHOW_COUNTED_ARMOR: True,
             ARMOR_CALC.SHOW_PIERCING_POWER: True,
             ARMOR_CALC.SHOW_CALIBER: False,
+            "splitter": " | ",
+            "text_size": 18,
         }
 
         self.colors = {
@@ -306,7 +309,7 @@ class UserSettings(object):
             FLIGHT_TIME.DISTANCE: True,
             FLIGHT_TIME.SPG_ONLY: True,
             FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
-
+            "text_size": 18,
         }
 
         self.distance_to_enemy = {
@@ -315,7 +318,7 @@ class UserSettings(object):
             GLOBAL.Y: -190,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             GLOBAL.COLOR: "#f5ff8f",
-            'text_size': 18,
+            "text_size": 18,
         }
 
         self.own_health = {

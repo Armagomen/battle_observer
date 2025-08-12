@@ -48,10 +48,7 @@ class KeysListener(object):
         for component in self.components:
             if key in component.keys:
                 component.keyFunction(is_pressed)
-        if is_pressed:
-            self.pressedKeys.add(key)
-        else:
-            self.pressedKeys.discard(key)
+        self.pressedKeys.add(key) if is_pressed else self.pressedKeys.discard(key)
 
     def onKeyUp(self, event):
         self.handleKey(event.key, False)

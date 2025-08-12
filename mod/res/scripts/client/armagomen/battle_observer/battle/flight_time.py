@@ -17,11 +17,7 @@ class FlightTime(FlightTimeMeta):
         distance = self.settings[FLIGHT_TIME.DISTANCE]
 
         if time or distance:
-            time_str = "{0:.1f}s." if time else ""
-            distance_str = "{1:.1f}m." if distance else ""
-            separator = " - " if time and distance else ""
-            self.tpl = "<font color='{0}'>{1}{2}{3}</font>".format(self.settings[GLOBAL.COLOR], time_str, separator, distance_str)
-
+            self.tpl = "".join(("{0:.1f}s." if time else "", " - " if time and distance else "", "{1:.1f}m." if distance else ""))
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS

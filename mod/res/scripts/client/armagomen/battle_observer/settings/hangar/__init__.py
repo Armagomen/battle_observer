@@ -79,13 +79,13 @@ class CreateElement(Getter):
     @staticmethod
     def createLabel(blockID, name):
         block = localization.get(blockID, {})
-        if name not in block:
-            return None
-        return {
-            'type': 'Label', 'text': block[name],
-            'tooltip': makeTooltip(block[name], block.get('{}_tooltip'.format(name))),
-            'tooltipIcon': 'no_icon'
-        }
+        if name in block or name == "text_size":
+            return {
+                'type': 'Label', 'text': block.get(name, name),
+                'tooltip': makeTooltip(block.get(name, name), block.get('{}_tooltip'.format(name))),
+                'tooltipIcon': 'no_icon'
+            }
+        return None
 
     @staticmethod
     def createEmpty():

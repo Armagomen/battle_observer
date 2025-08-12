@@ -1,8 +1,10 @@
 package net.armagomen.battle_observer.battle.components
 {
+	import flash.text.TextFormat;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.TextExt;
+	import net.armagomen.battle_observer.utils.Utils;
 	
 	public class FlightTimeUI extends ObserverBattleDisplayable
 	{
@@ -20,7 +22,10 @@ package net.armagomen.battle_observer.battle.components
 			{
 				super.onPopulate();
 				var settings:Object = this.getSettings();
-				this.flightTime = new TextExt(settings.x, settings.y, Constants.middleText, settings.align, this);
+				var fmt:TextFormat = Constants.cloneTextFormat(Constants.middleText);
+				fmt.size = settings.text_size;
+				fmt.color = Utils.colorConvert(settings.color);
+				this.flightTime = new TextExt(settings.x, settings.y, fmt, settings.align, this);
 			}
 			else
 			{
@@ -36,7 +41,7 @@ package net.armagomen.battle_observer.battle.components
 		
 		public function as_flightTime(text:String):void
 		{
-			this.flightTime.htmlText = text;
+			this.flightTime.text = text;
 		}
 	}
 }

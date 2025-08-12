@@ -199,6 +199,9 @@ ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "armor_calculator", "show_piercing_power", "position", "show_counted_armor",
     "show_piercing_reserve", "show_caliber", "display_on_allies")
 
+ARMOR_CALC_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE,
+                     ARMOR_CALC.SHOW_CALIBER)
+
 FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TIME", "DISTANCE", "ALIGN"))(
     "flight_time", "spgOnly", "time", "distance", "align")
 

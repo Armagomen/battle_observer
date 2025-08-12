@@ -1,6 +1,7 @@
 from collections import defaultdict
 
-from armagomen._constants import ARMOR_CALC, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, STATISTICS
+from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, \
+    STATISTICS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import IS_XVM_INSTALLED
 from armagomen.utils.logging import logDebug, logInfo
@@ -105,9 +106,7 @@ class ViewSettings(object):
     @staticmethod
     def isArmorCalculatorUIEnabled():
         if user_settings.armor_calculator[GLOBAL.ENABLED]:
-            return any(user_settings.armor_calculator.get(key, False) for key in
-                       (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE,
-                        ARMOR_CALC.SHOW_CALIBER))
+            return any(user_settings.armor_calculator.get(key, False) for key in ARMOR_CALC_PARAMS)
         return False
 
     def _invalidateComponents(self):

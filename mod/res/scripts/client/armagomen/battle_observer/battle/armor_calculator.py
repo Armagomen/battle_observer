@@ -1,27 +1,22 @@
 # coding=utf-8
 
-from armagomen._constants import ARMOR_CALC, POSTMORTEM_MODES
+from armagomen._constants import ARMOR_CALC, ARMOR_CALC_PARAMS, POSTMORTEM_MODES
 from armagomen.battle_observer.i18n.armor_calculator import NO_DAMAGE, RICOCHET
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logWarning
 from gui.battle_control import avatar_getter
-
-SETTING_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE, ARMOR_CALC.SHOW_CALIBER)
 
 
 class ArmorCalculator(ArmorCalcMeta):
 
     def __init__(self):
         super(ArmorCalculator, self).__init__()
-        self.pattern = None
+        self.pattern = str()
         self.colors = dict()
 
     def _populate(self):
         super(ArmorCalculator, self)._populate()
-        self.pattern = " | ".join("{%d:d}" % i for i, key in enumerate(SETTING_PARAMS) if self.settings[key])
-        if not self.pattern:
-            return logWarning("calc message is disabled - no params checked")
+        self.pattern = self.settings["splitter"].join("{%d:d}" % i for i, key in enumerate(ARMOR_CALC_PARAMS) if self.settings[key])
         self.colors.update((name, int(code[1:], 16)) for name, code in self.getColors()[ARMOR_CALC.NAME].items())
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
@@ -33,15 +28,14 @@ class ArmorCalculator(ArmorCalcMeta):
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
 
     def _dispose(self):
-        if self.pattern:
-            ctrl = self.sessionProvider.shared.crosshair
-            if ctrl is not None:
-                ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
-            handler = avatar_getter.getInputHandler()
-            if handler is not None and hasattr(handler, "onCameraChanged"):
-                handler.onCameraChanged -= self.onCameraChanged
-            g_events.onArmorChanged -= self.onArmorChanged
-            g_events.onMarkerColorChanged -= self.onMarkerColorChanged
+        ctrl = self.sessionProvider.shared.crosshair
+        if ctrl is not None:
+            ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
+        handler = avatar_getter.getInputHandler()
+        if handler is not None and hasattr(handler, "onCameraChanged"):
+            handler.onCameraChanged -= self.onCameraChanged
+        g_events.onArmorChanged -= self.onArmorChanged
+        g_events.onMarkerColorChanged -= self.onMarkerColorChanged
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):

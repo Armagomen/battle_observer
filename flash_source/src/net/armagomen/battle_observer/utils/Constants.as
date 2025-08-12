@@ -20,5 +20,10 @@ package net.armagomen.battle_observer.utils
 		{
 		
 		}
+		
+		public static function cloneTextFormat(fmt:TextFormat):TextFormat
+		{
+			return new TextFormat(fmt.font, fmt.size, fmt.color, fmt.bold, fmt.italic, fmt.underline, fmt.url, fmt.target, fmt.align, fmt.leftMargin, fmt.rightMargin, fmt.indent, fmt.leading);
+		}
 	}
 }
