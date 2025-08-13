@@ -41,9 +41,10 @@ class Getter(object):
     @staticmethod
     def getLinkToParam(settings_block, settingPath):
         path = settingPath.split(GLOBAL.C_INTERFACE_SPLITTER)
-        for fragment in path:
-            if fragment in settings_block and isinstance(settings_block[fragment], dict):
-                settings_block = settings_block[fragment]
+        if len(path) > 1:
+            for fragment in path:
+                if fragment in settings_block and isinstance(settings_block[fragment], dict):
+                    settings_block = settings_block[fragment]
         return settings_block, path[-1]
 
     @staticmethod
@@ -97,7 +98,7 @@ class CreateElement(Getter):
         if result is None:
             if isinstance(value, str):
                 result = 'TextInputColor' if value.startswith("#") else 'TextInputField'
-            elif type(value) == bool:
+            elif type(value) is bool:
                 result = 'CheckBox'
         return result or 'Empty'
 
@@ -120,8 +121,8 @@ class CreateElement(Getter):
         result = self.createControl(blockID, varName, icon, cType='Dropdown')
         if result is not None:
             image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}' width='180' height='180'>"
-            result.update({'options': [{'label': x[:-4], 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
-                           GLOBAL.WIDTH: 180})
+            result.update({'options': [{'label': x.rsplit('.', 1)[0], 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
+                           GLOBAL.WIDTH: 190})
         return result
 
     def createDebugStyleDropDown(self, blockID, varName, icons, icon):
@@ -184,35 +185,34 @@ class CreateElement(Getter):
         }
 
     def createItem(self, blockID, key, value):
-        val_type = type(value)
-        if val_type == str:
+        t, bk = type(value), (blockID, key)
+        if t is str:
             if GLOBAL.ALIGN in key:
                 return self.createRadioButtonGroup(blockID, key, *self.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
-            elif blockID == HP_BARS.NAME and HP_BARS.STYLE == key:
+            elif bk == (HP_BARS.NAME, HP_BARS.STYLE):
                 return self.createBarStyleDropDown(blockID, key, *self.getCollectionIndex(value, HP_BARS.STYLES))
-            elif blockID == DEBUG_PANEL.NAME and DEBUG_PANEL.STYLE == key:
+            elif bk == (DEBUG_PANEL.NAME, DEBUG_PANEL.STYLE):
                 return self.createDebugStyleDropDown(blockID, key, *self.getCollectionIndex(value, DEBUG_PANEL.STYLES))
-            elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
+            elif bk == (SIXTH_SENSE.NAME, SIXTH_SENSE.ICON_NAME):
                 return self.createSixthSenseDropDown(blockID, key, *self.getCollectionIndex(value, self.loader.sixth_sense_list))
-        if val_type == str or val_type == bool:
             return self.createControl(blockID, key, value)
-        elif val_type == int:
-            return self.createStepper(blockID, key, -2000, 2000, 1, value)
-        elif val_type == float:
-            if blockID == DISPERSION.NAME and DISPERSION.SCALE == key:
+        if t is bool:
+            return self.createControl(blockID, key, value)
+        if t is int:
+            return self.createStepper(blockID, key, -3000, 3000, 1, value)
+        if t is float:
+            if bk == (DISPERSION.NAME, DISPERSION.SCALE):
                 return self.createSlider(blockID, key, 0.3, 1.0, 0.01, value)
-            elif blockID == STATISTICS.NAME and STATISTICS.ICON_BLACKOUT == key:
+            elif bk == (STATISTICS.NAME, STATISTICS.ICON_BLACKOUT):
                 return self.createStepper(blockID, key, -2.0, 2.0, 0.01, value)
-            elif 0 <= value <= 1.0:
-                return self.createStepper(blockID, key, 0, 2.0, 0.01, value)
-            else:
-                return self.createStepper(blockID, key, 0, 300.0, 1.0, value)
-        elif val_type == list:
+            elif bk == (SNIPER.NAME, SNIPER.DISABLE_LATENCY):
+                return self.createSlider(blockID, key, 0.0, 3.0, 0.1, value)
+            return self.createStepper(blockID, key, 0.0, 300.0, 1.0, value)
+        if t is list:
             if "_hotkey" in key:
                 return self.createHotKey(blockID, key, value)
             elif SNIPER.STEPS in key:
-                return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join((str(x) for x in value)))
-            return None
+                return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join(map(str, value)))
         return None
 
 
@@ -229,6 +229,10 @@ class SettingsInterface(CreateElement):
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         self.appLoader.onGUISpaceEntered += self.addToAPI
+
+        self.bid_to_collection = {HP_BARS.NAME: (HP_BARS.STYLE, HP_BARS.STYLES),
+                                  DEBUG_PANEL.NAME: (DEBUG_PANEL.STYLE, DEBUG_PANEL.STYLES),
+                                  SIXTH_SENSE.NAME: (SIXTH_SENSE.ICON_NAME, settingsLoader.sixth_sense_list)}
 
     def fini(self):
         pass
@@ -304,34 +308,35 @@ class SettingsInterface(CreateElement):
             else:
                 self.inited.add(blockID)
 
+    def map_value(self, bid, key, val):
+        if GLOBAL.ALIGN == key:
+            return GLOBAL.ALIGN_LIST[val]
+        elif bid in self.bid_to_collection and key == self.bid_to_collection[bid][0] and isinstance(val, int):
+            return self.bid_to_collection[bid][1][val]
+        elif bid == SNIPER.NAME and SNIPER.STEPS == key:
+            return self.process_steps(val) or SNIPER.DEFAULT_STEPS
+        return val
+
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings in the settings file."""
         if MOD_NAME != modID:
             return
+
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
             self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
             logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
             return
+
         settings_block = getattr(self.loader.settings, blockID, None)
         if settings_block is None:
             return
+
         for key, value in data.items():
             updated_config_link, param_name = self.getLinkToParam(settings_block, key)
-            if param_name not in updated_config_link:
-                continue
-            if GLOBAL.ALIGN in key:
-                value = GLOBAL.ALIGN_LIST[value]
-            elif not isinstance(value, (unicode, str)):
-                if blockID == HP_BARS.NAME and key == HP_BARS.STYLE:
-                    value = HP_BARS.STYLES[value]
-                elif blockID == DEBUG_PANEL.NAME and key == DEBUG_PANEL.STYLE:
-                    value = DEBUG_PANEL.STYLES[value]
-                elif blockID == SIXTH_SENSE.NAME and key == SIXTH_SENSE.ICON_NAME:
-                    value = self.loader.sixth_sense_list[value]
-            elif blockID == SNIPER.NAME and SNIPER.STEPS == param_name:
-                value = self.process_steps(value) or SNIPER.DEFAULT_STEPS
-            updated_config_link[param_name] = value
+            if param_name in updated_config_link:
+                updated_config_link[param_name] = self.map_value(blockID, param_name, value)
+
         self.loader.updateConfigFile(blockID, settings_block)
         g_events.onModSettingsChanged(blockID, settings_block)
 
@@ -372,9 +377,7 @@ class SettingsInterface(CreateElement):
 
     def items(self, blockID, settings_block):
         for key, value in self.keyValueGetter(settings_block):
-            if blockID == SIXTH_SENSE.NAME and key in IGNORED_SIXTH_SENSE:
-                continue
-            elif blockID == MAIN.NAME and key in IGNORED_MAIN:
+            if blockID == SIXTH_SENSE.NAME and key in IGNORED_SIXTH_SENSE or blockID == MAIN.NAME and key in IGNORED_MAIN:
                 settings_block[key] = False
                 continue
             else:

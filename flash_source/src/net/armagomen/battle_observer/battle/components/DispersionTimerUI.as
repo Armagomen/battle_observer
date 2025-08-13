@@ -36,9 +36,10 @@ package net.armagomen.battle_observer.battle.components
 			this.dispersionTime = null;
 		}
 		
-		public function as_upateTimerText(text:String):void
+		public function as_upateTimerText(text:String, color:uint):void
 		{
-			this.dispersionTime.htmlText = text;
+			this.dispersionTime.textColor = color;
+			this.dispersionTime.text = text;
 		}
 	}
 }

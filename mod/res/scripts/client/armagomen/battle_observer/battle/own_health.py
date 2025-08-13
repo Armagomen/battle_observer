@@ -2,7 +2,7 @@
 
 from armagomen._constants import GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
-from armagomen.utils.common import percentToRGB
+from armagomen.utils.common import percentToColor
 from constants import ARENA_PERIOD
 from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
@@ -69,7 +69,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.as_BarVisibleS(self.is_battle_period and self.is_alive_mode)
 
     def getAVGColor(self, percent=1.0):
-        return percentToRGB(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR])
+        return percentToColor(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR])
 
     def _updateHealth(self, health):
         if health > self.max_health:

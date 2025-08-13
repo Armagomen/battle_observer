@@ -1,4 +1,3 @@
-from armagomen._constants import TEAM_BASES
 from armagomen.battle_observer.meta.battle.team_bases_meta import TeamBasesMeta
 from armagomen.utils.common import addCallback
 from gui.battle_control.controllers.team_bases_ctrl import ITeamBasesListener
@@ -36,7 +35,7 @@ class TeamBases(TeamBasesMeta, ITeamBasesListener):
         else:
             item = _getSettingItem(clientID, playerTeam, self.sessionProvider.arenaVisitor.type.getID())
             self.basesDict[clientID] = item
-            self.as_addTeamBaseS(item.getColor(), TEAM_BASES.HUNDRED, self.getInvadersCount(invadersCnt),
+            self.as_addTeamBaseS(item.getColor(), 100.0, self.getInvadersCount(invadersCnt),
                                  time_utils.getTimeLeftFormat(timeLeft), item.getCapturedString())
 
     def updateTeamBasePoints(self, clientID, points, rate, timeLeft, invadersCnt):

@@ -1,5 +1,5 @@
 # coding=utf-8
-from armagomen._constants import GLOBAL, POSTMORTEM_MODES
+from armagomen._constants import POSTMORTEM_MODES
 from armagomen.battle_observer.i18n.distance_to_enemy import TEMPLATE_BY_LANG
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
 from armagomen.utils.common import getPlayer
@@ -14,12 +14,10 @@ class Distance(DistanceMeta):
         self.isPostmortem = False
         self.vehicles = {}
         self.player = None
-        self.template = TEMPLATE_BY_LANG.format("#f5ff8f", 18)
 
     def _populate(self):
         super(Distance, self)._populate()
         self.player = getPlayer()
-        self.template = TEMPLATE_BY_LANG.format(self.settings[GLOBAL.COLOR], self.settings['text_size'])
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -71,7 +69,10 @@ class Distance(DistanceMeta):
             yield getDistanceToTarget(vehicle, avatar=self.player), vehicle.typeDescriptor.type.shortUserString
 
     def getUpdatedDistance(self):
-        return self.template % min(self.distances) if self.vehicles else super(Distance, self).getUpdatedDistance()
+        if self.vehicles:
+            return TEMPLATE_BY_LANG.format(*min(self.distances))
+        else:
+            return super(Distance, self).getUpdatedDistance()
 
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.isPostmortem = ctrlMode in POSTMORTEM_MODES

@@ -278,11 +278,7 @@ def toggleOverride(obj, method_name, func, enable):
         cancelOverride(obj, method_name, func.__name__)
 
 
-def convertDictToNamedtuple(dictionary):
-    return namedtuple(dictionary.__name__, dictionary.keys())(**dictionary)
-
-
-def percentToRGB(percent, saturation=0.5, brightness=1.0, color_blind=False):
+def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, as_int=False):
     """
     Returns a HEX color code based on percent.
     If color_blind=True, uses a smooth gradient: blue → green (no yellow).
@@ -291,8 +287,7 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0, color_blind=False):
         saturation (float): Saturation level (default: 0.5).
         brightness (float): Brightness level (default: 1.0).
         color_blind (bool): Enables color-blind-safe gradient if True.
-    Returns:
-        str: HEX color string.
+        as_int (bool): If True, returns int (0xRRGGBB), else HEX string.
     """
     if color_blind:
         # Blue → Green
@@ -301,23 +296,26 @@ def percentToRGB(percent, saturation=0.5, brightness=1.0, color_blind=False):
         hue = min(0.8333, percent * 0.3333)
 
     r, g, b = (int(i * 255) for i in hsv_to_rgb(hue, saturation, brightness))
-    return "#{:02X}{:02X}{:02X}".format(r, g, b)
+    if as_int:
+        return (r << 16) | (g << 8) | b
+    else:
+        return "#{:02X}{:02X}{:02X}".format(r, g, b)
 
 
-def parseColorToHex(color, asInt=False):
+def parseColorToHex(color, as_int=False):
     """
     Converts color string to hex string or integer.
     Accepts formats: '#RRGGBB', '0xRRGGBB', 'RRGGBB', even longer strings.
     Compatible with Python 2.7. Falls back to 0xFAFAFA or 16448250 on error.
     """
-    hex_part = 16448250
-    if color.startswith("0x") and not asInt and len(color) == 8:
+    if color.startswith("0x") and not as_int and len(color) == 8:
         return color
+    hex_part = 16448250
     try:
         hex_part = int(color.replace("#", "").replace("0x", "").upper()[:6], 16)
     except Exception as error:
         logError(error)
-    return hex_part if asInt else hex(hex_part)
+    return hex_part if as_int else hex(hex_part)
 
 
 def getPercent(param_a, param_b):

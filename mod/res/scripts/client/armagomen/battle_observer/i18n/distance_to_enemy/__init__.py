@@ -2,8 +2,8 @@
 from helpers import getClientLanguage
 
 TEMPLATE_BY_LANG = {
-    "uk": "<font color='{}' size='{}'>%.1f до %s</font>",
-    "ru": "<font color='{}' size='{}'>%.1f до %s</font>",
-    "pl": "<font color='{}' size='{}'>%.1f do %s</font>",
-    "de": "<font color='{}' size='{}'>%.1f bis %s</font>"
-}.get(getClientLanguage(), "<font color='{}' size='{}'>%.1f to %s</font>")
+    "uk": "{0:.1f} до {1}",
+    "ru": "{0:.1f} до {1}",
+    "pl": "{0:.1f} do {1}",
+    "de": "{0:.1f} bis {1}"
+}.get(getClientLanguage(), "{0:.1f} to {1}")

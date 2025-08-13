@@ -3,7 +3,7 @@ from collections import defaultdict
 from armagomen._constants import COLORS, DAMAGE_LOG, GLOBAL
 from armagomen.battle_observer.components.controllers import cachedVehicleData
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
-from armagomen.utils.common import getPercent, percentToRGB
+from armagomen.utils.common import getPercent, percentToColor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 
 _EVENT_TO_TOP_LOG_MACROS = {
@@ -85,4 +85,4 @@ class DamageLog(DamageLogsMeta):
                 self.addToTopLog(event)
 
     def getAVGColor(self, percent):
-        return percentToRGB(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE
+        return percentToColor(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE

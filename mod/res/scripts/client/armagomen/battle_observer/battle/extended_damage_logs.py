@@ -2,7 +2,7 @@ from collections import defaultdict, namedtuple
 
 from armagomen._constants import COLORS, DAMAGE_LOG, EX_LOGS_ICONS, GLOBAL, IMAGE_DIR
 from armagomen.battle_observer.meta.battle.extended_damage_logs_meta import ExtendedDamageLogsMeta
-from armagomen.utils.common import getPercent, percentToRGB
+from armagomen.utils.common import getPercent, percentToColor
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
@@ -114,7 +114,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
                 self.addToExtendedLog(event)
 
     def getAVGColor(self, percent):
-        return percentToRGB(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE
+        return percentToColor(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR]) if percent else COLORS.WHITE
 
     def onVehicleUpdated(self, vehicleID, *args, **kwargs):
         """update log item in GM-mode"""

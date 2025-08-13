@@ -269,8 +269,8 @@ class UserSettings(object):
             GLOBAL.WIDTH: 400,
             GLOBAL.HEIGHT: 24,
             TEAM_BASES.TEXT_SETTINGS: {
-                TEAM_BASES.FONT: TEAM_BASES.BASE_FONT,
-                TEAM_BASES.SIZE: TEAM_BASES.FONT_SIZE,
+                TEAM_BASES.FONT: "$TitleFont",
+                TEAM_BASES.SIZE: 16,
                 GLOBAL.COLOR: COLORS.WHITE,
                 TEAM_BASES.BOLD: False,
                 TEAM_BASES.ITALIC: False,

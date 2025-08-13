@@ -1,10 +1,12 @@
 package net.armagomen.battle_observer.battle.components
 {
 	import flash.events.TimerEvent;
+	import flash.text.TextFormat;
 	import flash.utils.Timer;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.Constants;
 	import net.armagomen.battle_observer.utils.TextExt;
+	import net.armagomen.battle_observer.utils.Utils;
 	
 	public class DistanceUI extends ObserverBattleDisplayable
 	{
@@ -24,7 +26,10 @@ package net.armagomen.battle_observer.battle.components
 			{
 				super.onPopulate();
 				var settings:Object = this.getSettings();
-				this.distance = new TextExt(settings.x, settings.y, Constants.middleText, settings.align, this);
+				var fmt:TextFormat  = Constants.cloneTextFormat(Constants.middleText);
+				fmt.size = settings.text_size;
+				fmt.color = Utils.colorConvert(settings.color);
+				this.distance = new TextExt(settings.x, settings.y, fmt, settings.align, this);
 				this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 			}
 			else
@@ -56,20 +61,19 @@ package net.armagomen.battle_observer.battle.components
 		
 		public function as_setUpdateEnabled(enabled:Boolean):void
 		{
-			if (!this._timer.running && enabled)
+			if (this._timer.running != enabled)
 			{
-				this._timer.start();
-			}
-			else if (this._timer.running && !enabled)
-			{
-				this._timer.stop();
-				this.distance.htmlText = '';
+				this._timer[enabled ? "start" : "stop"]();
+				if (!enabled)
+				{
+					this.distance.text = '';
+				}
 			}
 		}
 		
 		private function update():void
 		{
-			this.distance.htmlText = this.getUpdatedDistance();
+			this.distance.text = this.getUpdatedDistance();
 		}
 	}
 }

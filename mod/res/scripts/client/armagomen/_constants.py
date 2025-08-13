@@ -233,8 +233,8 @@ EFFECTS = namedtuple("EFFECTS", (
     "effects", "noFlashBang", "noShockWave", "noBinoculars", "isPlayerVehicle", "showFlashBang", "showShockWave", "noSniperDynamic")
 
 TEAM_BASES = namedtuple("TEAM_BASES", (
-    "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE", "BASE_FONT", "FONT_SIZE", "HUNDRED"))(
-    "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline", "$TitleFont", 16, 100.0)
+    "NAME", "TEXT_SETTINGS", "FONT", "SIZE", "BOLD", "ITALIC", "UNDERLINE"))(
+    "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline")
 
 BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
     "WGR_ICONS", "HP_BARS", "MAIN_GUN", "DAMAGE_LOG", "DAMAGE_LOG_EXT", "DEBUG", "TIMER", "TEAM_BASES", "ARMOR_CALC",
