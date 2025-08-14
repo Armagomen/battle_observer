@@ -1,5 +1,5 @@
-from armagomen._constants import (ANOTHER, CONFIG_INTERFACE, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_WG_CLIENT, MAIN,
-                                  MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, URLS)
+from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_WG_CLIENT,
+                                  MAIN, MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
 from armagomen.utils.common import addCallback, IS_XVM_INSTALLED, openWebBrowser
 from armagomen.utils.events import g_events
@@ -52,7 +52,7 @@ class Getter(object):
         index = 0
         if value in collection:
             index = collection.index(value)
-        return collection, index
+        return index
 
     def getKeyPath(self, settings_block, path=()):
         for key, value in settings_block.items():
@@ -160,16 +160,26 @@ class CreateElement(Getter):
         return result
 
     def createStepper(self, blockID, varName, vMin, vMax, step, value):
-        result = self.__createNumeric(blockID, varName, 'NumericStepper', value, vMin, vMax)
+        result = self.__createNumeric(blockID, varName, 'NumericStepper', value, vMin=vMin, vMax=vMax)
         if result is not None:
             result.update({'stepSize': step, 'canManualInput': True})
         return result
 
     def createSlider(self, blockID, varName, vMin, vMax, step, value):
-        result = self.__createNumeric(blockID, varName, 'Slider', value, vMin, vMax)
+        result = self.__createNumeric(blockID, varName, 'Slider', value, vMin=vMin, vMax=vMax)
         if result is not None:
             result.update({'snapInterval': step, 'format': '{{value}}'})
         return result
+
+    def createRangeSlider(self, blockID, varName, vMin, vMax, step, minRangeDistance, divisionLabelStep, value):
+        result = self.__createNumeric(blockID, varName, 'RangeSlider', value, vMin=vMin, vMax=vMax)
+        if result is not None:
+            result.update(
+                {'snapInterval': step, "minRangeDistance": minRangeDistance, "divisionStep": 1, "divisionLabelStep": divisionLabelStep})
+        return result
+
+    def createStepsRangeSlider(self, blockID, varName, value):
+        return self.createRangeSlider(blockID, varName, 2, 40, 2, 6, 2, value)
 
     @staticmethod
     def createBlock(blockID, params, column1, column2):
@@ -184,17 +194,25 @@ class CreateElement(Getter):
             'position': CONFIG_INTERFACE.BLOCK_IDS.index(blockID), 'column1': column1, 'column2': column2
         }
 
+    hk_bk = ((MINIMAP.ZOOM, MINIMAP.ZOOM_KEY), (DAMAGE_LOG.NAME, DAMAGE_LOG.HOT_KEY), (PANELS.PANELS_NAME, PANELS.BAR_HOT_KEY),
+             (PANELS.PANELS_NAME, PANELS.DAMAGES_HOT_KEY))
+    distRange = ((ARCADE.NAME, ARCADE.DIST_RANGE), (STRATEGIC.NAME, STRATEGIC.DIST_RANGE))
+
     def createItem(self, blockID, key, value):
         t, bk = type(value), (blockID, key)
         if t is str:
             if GLOBAL.ALIGN in key:
-                return self.createRadioButtonGroup(blockID, key, *self.getCollectionIndex(value, GLOBAL.ALIGN_LIST))
+                collection = GLOBAL.ALIGN_LIST
+                return self.createRadioButtonGroup(blockID, key, collection, self.getCollectionIndex(value, collection))
             elif bk == (HP_BARS.NAME, HP_BARS.STYLE):
-                return self.createBarStyleDropDown(blockID, key, *self.getCollectionIndex(value, HP_BARS.STYLES))
+                collection = HP_BARS.STYLES
+                return self.createBarStyleDropDown(blockID, key, collection, self.getCollectionIndex(value, collection))
             elif bk == (DEBUG_PANEL.NAME, DEBUG_PANEL.STYLE):
-                return self.createDebugStyleDropDown(blockID, key, *self.getCollectionIndex(value, DEBUG_PANEL.STYLES))
+                collection = DEBUG_PANEL.STYLES
+                return self.createDebugStyleDropDown(blockID, key, collection, self.getCollectionIndex(value, collection))
             elif bk == (SIXTH_SENSE.NAME, SIXTH_SENSE.ICON_NAME):
-                return self.createSixthSenseDropDown(blockID, key, *self.getCollectionIndex(value, self.loader.sixth_sense_list))
+                collection = self.loader.sixth_sense_list
+                return self.createSixthSenseDropDown(blockID, key, collection, self.getCollectionIndex(value, collection))
             return self.createControl(blockID, key, value)
         if t is bool:
             return self.createControl(blockID, key, value)
@@ -209,10 +227,12 @@ class CreateElement(Getter):
                 return self.createSlider(blockID, key, 0.0, 3.0, 0.1, value)
             return self.createStepper(blockID, key, 0.0, 300.0, 1.0, value)
         if t is list:
-            if "_hotkey" in key:
+            if bk in self.hk_bk:
                 return self.createHotKey(blockID, key, value)
-            elif SNIPER.STEPS in key:
-                return self.createControl(blockID, key, GLOBAL.COMMA_SEP.join(map(str, value)))
+            elif bk == (SNIPER.NAME, SNIPER.STEPS):
+                return self.createStepsRangeSlider(blockID, key, (min(value), max(value)))
+            elif bk in self.distRange:
+                return self.createRangeSlider(blockID, key, 0, 300, 2, 20, 20, value)
         return None
 
 
@@ -314,7 +334,7 @@ class SettingsInterface(CreateElement):
         elif bid in self.bid_to_collection and key == self.bid_to_collection[bid][0] and isinstance(val, int):
             return self.bid_to_collection[bid][1][val]
         elif bid == SNIPER.NAME and SNIPER.STEPS == key:
-            return self.process_steps(val) or SNIPER.DEFAULT_STEPS
+            return map(float, range(val[0], val[1] + 2, 2))
         return val
 
     def onSettingsChanged(self, modID, blockID, data):
@@ -333,16 +353,16 @@ class SettingsInterface(CreateElement):
             return
 
         for key, value in data.items():
+            if (blockID, key) in self.distRange:
+                value = map(float, value)
             updated_config_link, param_name = self.getLinkToParam(settings_block, key)
             if param_name in updated_config_link:
+                if type(updated_config_link[param_name]) is float and type(value) is int:
+                    value = float(value)
                 updated_config_link[param_name] = self.map_value(blockID, param_name, value)
 
         self.loader.updateConfigFile(blockID, settings_block)
         g_events.onModSettingsChanged(blockID, settings_block)
-
-    @staticmethod
-    def process_steps(value):
-        return [round(float(x)) for x in value.replace(" ", "").split(',') if x.replace('.', '').isdigit() and float(x) >= 2.0]
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""

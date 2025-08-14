@@ -233,21 +233,21 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Nicht verlassen, wenn Magazinladesystem aktiv ist",
         "dynamic_zoom": "Automatischer Zoomstufen-Wähler",
         "dynamic_zoom_tooltip": "Bei aktivierter Funktion wird <b>die feste Einstellung</b> ignoriert. Die Zoomstufe wird automatisch anhand der Entfernung zum Ziel (in Metern) geteilt durch die Empfindlichkeit gewählt.<br>",
-        "steps_enabled": "Zoomstufen ersetzen",
+        "steps_enabled": "Standardmäßige Zoom-Schritte erweitern",
         "steps_range": "Zoomstufen-Schritte",
-        "steps_range_tooltip": "Zoomstufen als Werte mit Komma oder Komma plus Leerzeichen angeben. Beliebige Anzahl an Stufen möglich."
+        "steps_range_tooltip": "Geben Sie den Bereich an, in dem Werte mit Schrittweite 2 erstellt werden.",
     },
     "arcade_camera": {
         "header": "Kommandantenkamera-Einstellungen",
-        "max": "Maximale Entfernung (Standard: 25)",
-        "min": "Maximale Nähe (Standard: 2)",
+        "distRange": "Minimale und maximale Kamera-Näherung/Entfernung.",
+        "distRange_tooltip": "Standardmäßig im Spielclient: (2 - 25)",
         "startDeadDist": "Kameraentfernung beim Start/Tod (Standard: 15)",
         "scrollSensitivity": "Scroll-Empfindlichkeit (Standard: 4)"
     },
     "strategic_camera": {
         "header": "Artilleriekamera-Einstellungen",
-        "max": "Maximale Entfernung (Standard: 100)",
-        "min": "Maximale Nähe (Standard: 40)",
+        "distRange": "Minimale und maximale Kamera-Näherung/Entfernung.",
+        "distRange_tooltip": "Standardmäßig im Spielclient: (40 - 100)",
         "scrollSensitivity": "Scroll-Empfindlichkeit (Standard: 10)"
     },
     "flight_time": {

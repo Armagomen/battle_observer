@@ -132,7 +132,7 @@ class Arcade(CameraSettings):
                 self.reset = True
                 if self.settingsCore.getSetting(GAME.COMMANDER_CAM) or self.settingsCore.getSetting(GAME.PRE_COMMANDER_CAM):
                     self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
-                camera._cfg[ARCADE.DIST_RANGE] = MinMax(self.config[ARCADE.MIN], self.config[ARCADE.MAX])
+                camera._cfg[ARCADE.DIST_RANGE] = MinMax(*self.config[ARCADE.DIST_RANGE])
                 camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
                 camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
                 camera._cfg[ARCADE.START_ANGLE] = -0.18
@@ -173,7 +173,7 @@ class Strategic(CameraSettings):
             for control_mode_name in ctrl_mode_names:
                 camera = self.getCamera(control_mode_name)
                 if camera is not None:
-                    camera._cfg[STRATEGIC.DIST_RANGE] = (self.config[STRATEGIC.MIN], self.config[STRATEGIC.MAX])
+                    camera._cfg[STRATEGIC.DIST_RANGE] = self.config[STRATEGIC.DIST_RANGE]
                     camera._cfg[STRATEGIC.SCROLL_SENSITIVITY] = self.config[STRATEGIC.SCROLL_SENSITIVITY]
         elif self.reset:
             for control_mode_name in ctrl_mode_names:

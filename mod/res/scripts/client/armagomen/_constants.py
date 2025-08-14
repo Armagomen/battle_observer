@@ -182,11 +182,11 @@ class DAMAGE_LOG:
 
 
 ARCADE = namedtuple("ARCADE", (
-    "NAME", "DIST_RANGE", "MAX", "MIN", "START_DEAD_DIST", "START_DIST", "SCROLL_SENSITIVITY", "START_ANGLE"))(
-    "arcade_camera", "distRange", "max", "min", "startDeadDist", "startDist", "scrollSensitivity", "startAngle")
+    "NAME", "DIST_RANGE", "START_DEAD_DIST", "START_DIST", "SCROLL_SENSITIVITY", "START_ANGLE"))(
+    "arcade_camera", "distRange", "startDeadDist", "startDist", "scrollSensitivity", "startAngle")
 
-STRATEGIC = namedtuple("STRATEGIC", ("NAME", "MIN", "MAX", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
-    "strategic_camera", "min", "max", "distRange", "scrollSensitivity")
+STRATEGIC = namedtuple("STRATEGIC", ("NAME", "DIST_RANGE", "SCROLL_SENSITIVITY"))(
+    "strategic_camera", "distRange", "scrollSensitivity")
 
 POSTMORTEM_MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
                     CTRL_MODE_NAME.RESPAWN_DEATH, CTRL_MODE_NAME.VEHICLES_SELECTION}
@@ -335,22 +335,13 @@ class CONFIG_INTERFACE:
             'outline*enabled': ('outline*color',)
         },
         PANELS.PANELS_NAME: {
-            PANELS.BARS_ENABLED: (
-                PANELS.BAR_CLASS_COLOR,
-                PANELS.BAR_HOT_KEY,
-                PANELS.BAR_CLASS_COLOR,
-                PANELS.ON_KEY_DOWN,
-            ),
+            PANELS.BARS_ENABLED: (PANELS.BAR_CLASS_COLOR, PANELS.BAR_HOT_KEY, PANELS.BAR_CLASS_COLOR, PANELS.ON_KEY_DOWN,),
             PANELS.DAMAGES_ENABLED: (
-                PANELS.DAMAGES_HOT_KEY, 'players_damages_settings*x', 'players_damages_settings*y'
+                PANELS.DAMAGES_HOT_KEY, 'players_damages_settings*x', 'players_damages_settings*y', 'players_damages_settings*align'
             ),
-        },
-        HP_BARS.NAME: {
-            'outline*enabled': ('outline*color',),
-            'markers*enabled': ("markers*x", "markers*y", "markers*showMarkers_hotkey", "markers*markersClassColor")
         },
         MINIMAP.NAME: {
-            'zoom*enabled': ('zoom*zoom_hotkey', 'zoom*indent'),
+            MINIMAP.ZOOM: (MINIMAP.ZOOM_KEY,),
             MINIMAP.DEATH_PERMANENT: (MINIMAP.SHOW_NAMES,)
         },
         CLOCK.NAME: {

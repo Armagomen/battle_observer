@@ -236,21 +236,21 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Nie wychodź z trybu przy magazynowym systemie ładowania",
         "dynamic_zoom": "Automatyczny wybór powiększenia",
         "dynamic_zoom_tooltip": "Funkcja ignoruje ustawienie stałe. Powiększenie zależy od odległości do celu podzielonej przez czułość.",
-        "steps_enabled": "Zastąp poziomy zoomu",
+        "steps_enabled": "Rozszerz standardowe stopnie przybliżenia",
         "steps_range": "Poziomy zoomu",
-        "steps_range_tooltip": "Podaj wartości oddzielone przecinkiem lub przecinkiem i spacją. Dowolna liczba kroków."
+        "steps_range_tooltip": "Określ zakres, w którym będą generowane wartości z krokiem 2.",
     },
     "arcade_camera": {
         "header": "Kamera dowódcy – ustawienia",
-        "max": "Maksymalna odległość (domyślnie: 25)",
-        "min": "Minimalna odległość (domyślnie: 2)",
+        "distRange": "Minimalne i maksymalne przybliżenie/oddalenie kamery.",
+        "distRange_tooltip": "Domyślnie w kliencie gry: (2 - 25)",
         "startDeadDist": "Odległość przy rozpoczęciu/śmierci (domyślnie: 15)",
         "scrollSensitivity": "Czułość scrolla (domyślnie: 4)"
     },
     "strategic_camera": {
         "header": "Kamera artyleryjska – ustawienia",
-        "max": "Maksymalna odległość (domyślnie: 100)",
-        "min": "Minimalna odległość (domyślnie: 40)",
+        "distRange": "Minimalne i maksymalne przybliżenie/oddalenie kamery.",
+        "distRange_tooltip": "Domyślnie w kliencie gry: (40 - 100)",
         "scrollSensitivity": "Czułość scrolla (domyślnie: 10)"
     },
     "flight_time": {

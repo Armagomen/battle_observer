@@ -131,16 +131,14 @@ class UserSettings(object):
 
         self.arcade_camera = {
             GLOBAL.ENABLED: False,
-            ARCADE.MIN: 2.0,
-            ARCADE.MAX: 150.0,
+            ARCADE.DIST_RANGE: [2.0, 150.0],
             ARCADE.START_DEAD_DIST: 20.0,
             ARCADE.SCROLL_SENSITIVITY: 4.0,
         }
 
         self.strategic_camera = {
             GLOBAL.ENABLED: False,
-            STRATEGIC.MIN: 40.0,
-            STRATEGIC.MAX: 150.0,
+            STRATEGIC.DIST_RANGE: [40.0, 150.0],
             STRATEGIC.SCROLL_SENSITIVITY: 10.0,
         }
 

@@ -244,14 +244,14 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Do not exit if magazine loading system.",
         "dynamic_zoom": "Automatic selection of the zoom ratio when switching to sniper mode.",
         "dynamic_zoom_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
-        "steps_enabled": "Enable Steps of zoom.",
+        "steps_enabled": "Extend standard zoom steps",
         "steps_range": "Steps of zoom.",
-        "steps_range_tooltip": "You can write any number of commas and spaces or just a comma."
+        "steps_range_tooltip": "Specify the range in which values will be generated with a step of 2.",
     },
     "arcade_camera": {
         "header": "COMMANDER CAMERA (FAR CAMERA)",
-        "max": "Maximum distance from the tank to the camera: default 25.0",
-        "min": "Maximum approximation of the camera to the tank: the default 2.0",
+        "distRange": "Minimum and maximum camera zoom in/out.",
+        "distRange_tooltip": "Default in the game client is (2 - 25)",
         "startDeadDist": "The start / dead distance",
         "startDeadDist_tooltip": "The distance of the camera from the Tank at the start of the battle / "
                                  "after the destruction of the Tank: the default is 15",
@@ -259,8 +259,8 @@ localization = {
     },
     "strategic_camera": {
         "header": "STRATEGIC CAMERA (FAR CAMERA)",
-        "max": "Maximum Camera Distance: Default is 100.0",
-        "min": "Maximum approximation of the camera: Default is 40.0",
+        "distRange": "Minimum and maximum camera zoom in/out.",
+        "distRange_tooltip": "Default in the game client is (40 - 100)",
         "scrollSensitivity": "Scroll sensitivity, default 10"
     },
     "flight_time": {
