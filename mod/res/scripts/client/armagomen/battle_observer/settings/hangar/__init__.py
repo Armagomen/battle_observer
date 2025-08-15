@@ -328,13 +328,16 @@ class SettingsInterface(CreateElement):
             else:
                 self.inited.add(blockID)
 
-    def map_value(self, bid, key, val):
+    def map_value(self, blockID, key, val):
+        bk = (blockID, key)
         if GLOBAL.ALIGN == key:
             return GLOBAL.ALIGN_LIST[val]
-        elif bid in self.bid_to_collection and key == self.bid_to_collection[bid][0] and isinstance(val, int):
-            return self.bid_to_collection[bid][1][val]
-        elif bid == SNIPER.NAME and SNIPER.STEPS == key:
+        elif blockID in self.bid_to_collection and key == self.bid_to_collection[blockID][0] and isinstance(val, int):
+            return self.bid_to_collection[blockID][1][val]
+        elif bk == (SNIPER.NAME, SNIPER.STEPS):
             return map(float, range(val[0], val[1] + 2, 2))
+        elif bk in self.distRange:
+            return map(float, val)
         return val
 
     def onSettingsChanged(self, modID, blockID, data):
@@ -353,8 +356,6 @@ class SettingsInterface(CreateElement):
             return
 
         for key, value in data.items():
-            if (blockID, key) in self.distRange:
-                value = map(float, value)
             updated_config_link, param_name = self.getLinkToParam(settings_block, key)
             if param_name in updated_config_link:
                 if type(updated_config_link[param_name]) is float and type(value) is int:

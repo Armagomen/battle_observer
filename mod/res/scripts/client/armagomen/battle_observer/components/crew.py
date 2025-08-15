@@ -115,10 +115,19 @@ class CrewProcessor(object):
             if vehicle.isXPToTman != acceleration:
                 self.showAccelerateDialog(vehicle, acceleration, description)
 
+    @staticmethod
+    def isSpecialVehicle(vehicle):
+        flags = ('isOnlyForFunRandomBattles', 'isOnlyForBattleRoyaleBattles', 'isOnlyForMapsTrainingBattles',
+                 'isOnlyForClanWarsBattles', 'isOnlyForComp7Battles', 'isOnlyForEventBattles', 'isOnlyForEpicBattles')
+        return any(getattr(vehicle, f, False) for f in flags)
+
     @decorators.adisp_process('updating')
     def __autoReturnToggleSwitch(self, vehicle):
-        available = bool(vehicle.lastCrew and not vehicle.isOnlyForBattleRoyaleBattles)
-        if available != bool(vehicle.settings & VEHICLE_SETTINGS_FLAG.AUTO_RETURN):
+        autoReturn = bool(vehicle.settings & VEHICLE_SETTINGS_FLAG.AUTO_RETURN)
+        if autoReturn or self.isSpecialVehicle(vehicle):
+            return
+        available = bool(vehicle.lastCrew)
+        if available != autoReturn:
             result = yield VehicleAutoReturnProcessor(vehicle, available).request()
             if available and result.success and not vehicle.isCrewLocked and not vehicle.isCrewFull:
                 result = yield TankmanAutoReturn(vehicle).request()
@@ -127,7 +136,7 @@ class CrewProcessor(object):
 
     @decorators.adisp_process('crewReturning')
     def __processReturnCrew(self, vehicle):
-        if not vehicle.isCrewFull and vehicle.lastCrew and self.isCrewAvailable(vehicle):
+        if not vehicle.isCrewFull and bool(vehicle.lastCrew) and self.isCrewAvailable(vehicle):
             result = yield TankmanReturn(vehicle).request()
             if result.userMsg:
                 SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType, priority=NotificationPriorityLevel.MEDIUM)
