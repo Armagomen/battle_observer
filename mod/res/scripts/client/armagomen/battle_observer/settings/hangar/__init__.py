@@ -76,6 +76,11 @@ class CreateElement(Getter):
     def __init__(self, settingsLoader):
         super(CreateElement, self).__init__()
         self.loader = settingsLoader
+        self.bid_to_collection = {
+            (HP_BARS.NAME, HP_BARS.STYLE): (HP_BARS.STYLES, self.createBarStyleDropDown),
+            (DEBUG_PANEL.NAME, DEBUG_PANEL.STYLE): (DEBUG_PANEL.STYLES, self.createDebugStyleDropDown),
+            (SIXTH_SENSE.NAME, SIXTH_SENSE.ICON_NAME): (settingsLoader.sixth_sense_list, self.createSixthSenseDropDown)
+        }
 
     @staticmethod
     def createLabel(blockID, name):
@@ -204,15 +209,9 @@ class CreateElement(Getter):
             if GLOBAL.ALIGN in key:
                 collection = GLOBAL.ALIGN_LIST
                 return self.createRadioButtonGroup(blockID, key, collection, self.getCollectionIndex(value, collection))
-            elif bk == (HP_BARS.NAME, HP_BARS.STYLE):
-                collection = HP_BARS.STYLES
-                return self.createBarStyleDropDown(blockID, key, collection, self.getCollectionIndex(value, collection))
-            elif bk == (DEBUG_PANEL.NAME, DEBUG_PANEL.STYLE):
-                collection = DEBUG_PANEL.STYLES
-                return self.createDebugStyleDropDown(blockID, key, collection, self.getCollectionIndex(value, collection))
-            elif bk == (SIXTH_SENSE.NAME, SIXTH_SENSE.ICON_NAME):
-                collection = self.loader.sixth_sense_list
-                return self.createSixthSenseDropDown(blockID, key, collection, self.getCollectionIndex(value, collection))
+            elif bk in self.bid_to_collection:
+                collection, func = self.bid_to_collection[bk]
+                return func(blockID, key, collection, self.getCollectionIndex(value, collection))
             return self.createControl(blockID, key, value)
         if t is bool:
             return self.createControl(blockID, key, value)
@@ -249,10 +248,6 @@ class SettingsInterface(CreateElement):
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
         self.appLoader.onGUISpaceEntered += self.addToAPI
-
-        self.bid_to_collection = {HP_BARS.NAME: (HP_BARS.STYLE, HP_BARS.STYLES),
-                                  DEBUG_PANEL.NAME: (DEBUG_PANEL.STYLE, DEBUG_PANEL.STYLES),
-                                  SIXTH_SENSE.NAME: (SIXTH_SENSE.ICON_NAME, settingsLoader.sixth_sense_list)}
 
     def fini(self):
         pass
@@ -332,8 +327,8 @@ class SettingsInterface(CreateElement):
         bk = (blockID, key)
         if GLOBAL.ALIGN == key:
             return GLOBAL.ALIGN_LIST[val]
-        elif blockID in self.bid_to_collection and key == self.bid_to_collection[blockID][0] and isinstance(val, int):
-            return self.bid_to_collection[blockID][1][val]
+        elif bk in self.bid_to_collection and isinstance(val, int):
+            return self.bid_to_collection[bk][0][val]
         elif bk == (SNIPER.NAME, SNIPER.STEPS):
             return map(float, range(val[0], val[1] + 2, 2))
         elif bk in self.distRange:
