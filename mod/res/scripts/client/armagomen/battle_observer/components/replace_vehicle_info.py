@@ -10,7 +10,7 @@ ANONYMOUS_TRANSLATE = {
     "uk": "Анонімно",
     "pl": "Anonimowo",
     "de": "Anonym",
-    "en": "Anonymous",
+    "ru": "Анонимно",
 }.get(getClientLanguage(), "Anonymous")
 EMPTY_BADGES = ([], [])
 
@@ -26,6 +26,4 @@ def new_VehicleArenaInfoVO(base, *args, **kwargs):
             kwargs[ANOTHER.NAME] = ANONYMOUS_TRANSLATE
         if user_settings.main[MAIN.HIDE_CLAN_ABBREV] and ANOTHER.CLAN_ABBR in kwargs:
             kwargs[ANOTHER.CLAN_ABBR] = GLOBAL.EMPTY_LINE
-        if user_settings.main[MAIN.HIDE_PRESTIGE_BATTLE_WIDGET] and ANOTHER.PRESTIGE_LEVEL in kwargs:
-            kwargs[ANOTHER.PRESTIGE_LEVEL] = kwargs[ANOTHER.PRESTIGE_GRADE_MARK_ID] = None
     return base(*args, **kwargs)

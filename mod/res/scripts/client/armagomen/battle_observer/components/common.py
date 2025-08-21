@@ -1,6 +1,6 @@
 from armagomen._constants import IS_WG_CLIENT, MAIN
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import addCallback, overrideMethod, toggleOverride
+from armagomen.utils.common import addCallback, overrideMethod
 from armagomen.utils.events import g_events
 from CurrentVehicle import g_currentVehicle
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
@@ -61,35 +61,6 @@ def buttonCounterS(base, *args, **kwargs):
     return None if user_settings.main[MAIN.HIDE_BTN_COUNTERS] else base(*args, **kwargs)
 
 
-class PrestigeWidget(object):
-
-    def __init__(self):
-        self.enabled = False
-        g_events.onModSettingsChanged += self.onModSettingsChanged
-
-    def fini(self):
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
-
-    @staticmethod
-    def as_setPrestigeWidgetVisibleS(base, hangar, value):
-        return base(hangar, False if user_settings.main[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET] else value)
-
-    @staticmethod
-    def as_setPrestigeVisibleS(base, profile, value):
-        return base(profile, False if user_settings.main[MAIN.HIDE_PRESTIGE_PROFILE_WIDGET] else value)
-
-    def onModSettingsChanged(self, name, data):
-        if name != MAIN.NAME:
-            return
-        enabled = data[MAIN.HIDE_PRESTIGE_HANGAR_WIDGET]
-        if self.enabled != enabled:
-            self.enabled = enabled
-            from gui.Scaleform.daapi.view.lobby.profile.ProfileTechnique import ProfileTechnique
-            toggleOverride(Hangar, 'as_setPrestigeWidgetVisibleS', self.as_setPrestigeWidgetVisibleS, self.enabled)
-            toggleOverride(ProfileTechnique, 'as_setPrestigeVisibleS', self.as_setPrestigeVisibleS, self.enabled)
-            if g_currentVehicle.intCD:
-                g_currentVehicle.onChanged()
-
 
 @overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
 def _EventEntryPointsContainer_as_updateEntries(base, self, data):
@@ -97,7 +68,6 @@ def _EventEntryPointsContainer_as_updateEntries(base, self, data):
 
 
 if IS_WG_CLIENT:
-    p_widget = PrestigeWidget()
     from comp7.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
     from gui.Scaleform.daapi.view.battle.shared.hint_panel import BattleHintPanel
 else:
@@ -165,5 +135,3 @@ t_sounds = TweakSounds()
 
 def fini():
     t_sounds.fini()
-    if IS_WG_CLIENT:
-        p_widget.fini()

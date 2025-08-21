@@ -9,7 +9,7 @@ def loadComponents(is_replay):
 
     load = [
         'camera_manager', 'for_wg_fixes', 'common', 'effects', 'minimap_plugins',
-        'replace_vehicle_info', 'shot_result_plugin'
+        'replace_vehicle_info', 'shot_result_plugin', "controllers"
     ]
 
     not_replay = [

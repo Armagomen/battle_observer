@@ -1,3 +1,5 @@
+from math import ceil
+
 from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, IS_WG_CLIENT,
                                   MAIN, MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
@@ -23,16 +25,21 @@ else:
 
 
 def makeTooltip(header=None, body=None, note=None, attention=None):
-    res_str = ''
-    if header is not None:
-        res_str += '{HEADER}%s{/HEADER}' % header
-    if body is not None:
-        res_str += '{BODY}%s{/BODY}' % body
-    if note is not None:
-        res_str += '{NOTE}%s{/NOTE}' % note
-    if attention is not None:
-        res_str += '{ATTENTION}%s{/ATTENTION}' % attention
-    return res_str
+    parts = (('HEADER', header), ('BODY', body), ('NOTE', note), ('ATTENTION', attention),)
+    return u''.join(u'{{{0}}}{1}{{/{0}}}'.format(tag, text) for tag, text in parts if text is not None)
+
+
+# def makeTooltip(header=None, body=None, note=None, attention=None):
+#     res_str = ''
+#     if header is not None:
+#         res_str += '{HEADER}%s{/HEADER}' % header
+#     if body is not None:
+#         res_str += '{BODY}%s{/BODY}' % body
+#     if note is not None:
+#         res_str += '{NOTE}%s{/NOTE}' % note
+#     if attention is not None:
+#         res_str += '{ATTENTION}%s{/ATTENTION}' % attention
+#     return res_str
 
 
 class Getter(object):
@@ -411,7 +418,7 @@ class SettingsInterface(CreateElement):
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
             columns = sorted(self.items(blockID, settings_block), key=lambda x: x["varName"])
-            middle_index = (len(columns) + int(len(columns) % 2 != 0)) / 2
+            middle_index = int(ceil(len(columns) / 2.0))
             column1 = columns[:middle_index]
             column2 = columns[middle_index:]
         return self.createBlock(blockID, settings_block, column1, column2) if column1 or column2 else None

@@ -3,6 +3,7 @@ from httplib import responses
 from math import floor, log
 
 from armagomen._constants import STATISTICS, STATISTICS_REGION
+from armagomen.battle_observer.components.controllers.tab_view import addWGR, cleanup
 from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIconsMeta
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import addCallback, cancelCallback
@@ -45,6 +46,8 @@ class WGRAndIcons(WGRAndIconsMeta):
                 arena.onVehicleAdded -= self.data_loader.updateList
                 arena.onVehicleUpdated -= self.data_loader.updateList
         self.data_loader = None
+        self.itemsData.clear()
+        cleanup()
         super(WGRAndIcons, self)._dispose()
 
     def getPattern(self, isEnemy, itemData):
@@ -55,7 +58,6 @@ class WGRAndIcons(WGRAndIconsMeta):
             return self.settings[STATISTICS.FULL_LEFT] % itemData, self.settings[STATISTICS.CUT_LEFT] % itemData
 
     def updateAllItems(self, loadedData):
-        player_team = self._arenaDP.getNumberOfTeam()
         for accountDBID, value in loadedData.items():
             if not value:
                 continue
@@ -63,10 +65,13 @@ class WGRAndIcons(WGRAndIconsMeta):
             if vehicle_id in self.itemsData:
                 continue
             veh_info = self.getVehicleInfo(vehicle_id)
+            is_enemy = veh_info.isEnemy()
             item_data = self.buildItemData(veh_info.player.clanAbbrev, value)
-            full, cut = self.getPattern(veh_info.team != player_team, item_data)
+            full, cut = self.getPattern(is_enemy, item_data)
             text_color = int(item_data[self.COLOR_WGR][1:], 16) if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else 0
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
+            if not self.isComp7Battle():
+                addWGR(vehicle_id, item_data["WGR"], is_enemy)
         if self.itemsData:
             self.as_update_wgr_dataS(self.itemsData)
 

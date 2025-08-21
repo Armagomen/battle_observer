@@ -78,9 +78,6 @@ localization = {
         "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
         "save_shot": "Block shooting at allies and destroyed.",
         "mute_team_base_sound": "Mute base capture siren.",
-        "hide_prestige_hangar_widget": "Hide elite levels widget in hangar.",
-        "hide_prestige_battle_widget": "Hide elite levels widget in battle.",
-        "hide_prestige_profile_widget": "Hide elite levels widget in vehicle statistics in profile.",
         "excluded_map_slots_notification": "Notify about available excluded map slots.",
         "auto_claim_clan_reward": "Collect clan rewards automatically.",
         "hideEventBanner": "Hide event banner."

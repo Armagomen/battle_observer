@@ -70,9 +70,6 @@ localization = {
         "useKeyPairs_tooltip": "Lewy i prawy klawisz działają jako jeden — niezależnie od ustawień modułu.",
         "save_shot": "Blokuj strzał w sojuszników i wraki",
         "mute_team_base_sound": "Wyłącz syrenę przejęcia bazy",
-        "hide_prestige_hangar_widget": "Ukryj widżet prestiżu w garażu",
-        "hide_prestige_battle_widget": "Ukryj widżet prestiżu w bitwie",
-        "hide_prestige_profile_widget": "Ukryj widżet prestiżu w profilu gracza",
         "excluded_map_slots_notification": "Powiadamiaj o dostępnych slotach do wykluczenia map",
         "auto_claim_clan_reward": "Automatycznie odbieraj nagrody klanowe",
         "hideEventBanner": "Ukryj banery wydarzeń"
