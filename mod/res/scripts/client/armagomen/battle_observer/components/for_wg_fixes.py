@@ -18,7 +18,6 @@ class WG_Logs_Fix(object):
 
     def __init__(self):
         self.config = {}
-        self.enabled = False
         g_events.onModSettingsChanged += self.onModSettingsChanged
 
     def fini(self):
@@ -37,9 +36,7 @@ class WG_Logs_Fix(object):
     def onModSettingsChanged(self, name, data):
         if name == DAMAGE_LOG.WG_LOGS_FIX:
             self.config = data
-            if self.enabled != data[GLOBAL.ENABLED]:
-                self.enabled = data[GLOBAL.ENABLED]
-                toggleOverride(_LogViewComponent, "addToLog", self.addToLog, self.enabled)
+            toggleOverride(_LogViewComponent, "addToLog", self.addToLog, data[GLOBAL.ENABLED])
             self.updatePositions(data[GLOBAL.ENABLED] and data[DAMAGE_LOG.WG_POS])
 
     def updatePositions(self, enabled):

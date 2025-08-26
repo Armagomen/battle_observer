@@ -3,7 +3,7 @@ from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback, IS_XVM_INSTALLED
 from armagomen.utils.keys_listener import g_keysListener
-from armagomen.utils.logging import logDebug, logError
+from armagomen.utils.logging import logDebug, logInfo
 from frameworks.wulf import WindowLayer
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -41,40 +41,36 @@ class ViewHandlerBattle(PackageBusinessHandler, ViewSettings):
         super(ViewHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        logDebug("ViewHandlerBattle:eventListener {}", event.name)
+        logDebug("{}:eventListener {}", self.__class__.__name__, repr(event))
         if self._components:
             self._registerViewComponents()
-            addCallback(DEFAULT_INTERVAL, self._loadView, event.name)
+            addCallback(DEFAULT_INTERVAL, self._loadView, event.alias)
 
-    def _loadView(self, name):
-        page = self.findViewByName(WindowLayer.VIEW, name)
+    def _loadView(self, alias):
+        page = self.findViewByAlias(WindowLayer.VIEW, alias)
         if page and hasattr(page.flashObject, ATTRIBUTE_NAME):
-            logDebug("ViewHandlerBattle:_loadView {}", ATTRIBUTE_NAME)
+            logInfo(INFO_MSG, self.__class__.__name__, alias)
             page._blToggling.update(self._components)
             page.flashObject.as_BattleObserverCreate(self._components)
         else:
-            addCallback(DEFAULT_INTERVAL, self._loadView, name)
+            addCallback(DEFAULT_INTERVAL, self._loadView, alias)
 
 
 class ViewHandlerLobby(PackageBusinessHandler):
 
     def __init__(self):
-        self.__subscribed = False
         listeners = ((VIEW_ALIAS.LOBBY_HANGAR, self.eventListener),)
         super(ViewHandlerLobby, self).__init__(listeners, APP_NAME_SPACE.SF_LOBBY, EVENT_BUS_SCOPE.LOBBY)
 
     def eventListener(self, event):
-        if self.__subscribed:
-            return
-        self._app.loaderManager.onViewLoaded += self.__onViewLoaded
-        self.__subscribed = True
+        logDebug("{}:eventListener {}", self.__class__.__name__, repr(event))
+        addCallback(DEFAULT_INTERVAL, self._loadView, event.alias)
 
-    def __onViewLoaded(self, pyView, *args):
-        alias = pyView.getAlias()
-        if alias == VIEW_ALIAS.LOBBY_HANGAR:
-            logDebug(INFO_MSG, self.__class__.__name__, alias)
-            if hasattr(pyView.flashObject, ATTRIBUTE_NAME):
-                addCallback(2.0 if IS_XVM_INSTALLED else DEFAULT_INTERVAL, pyView.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
-                addCallback(2.0 if IS_XVM_INSTALLED else DEFAULT_INTERVAL, pyView.flashObject.as_BattleObserverShadow)
-            else:
-                logError("{}:flashObject, has ho attribute {}", alias, ATTRIBUTE_NAME)
+    def _loadView(self, alias):
+        hangar = self.findViewByAlias(WindowLayer.SUB_VIEW, alias)
+        if hangar and hasattr(hangar.flashObject, ATTRIBUTE_NAME):
+            logInfo(INFO_MSG, self.__class__.__name__, alias)
+            addCallback(DEFAULT_INTERVAL if IS_XVM_INSTALLED else 0.0, hangar.flashObject.as_BattleObserverCreate, LOBBY_ALIASES)
+            addCallback(DEFAULT_INTERVAL if IS_XVM_INSTALLED else 0.0, hangar.flashObject.as_BattleObserverShadow)
+        else:
+            addCallback(DEFAULT_INTERVAL, self._loadView, alias)

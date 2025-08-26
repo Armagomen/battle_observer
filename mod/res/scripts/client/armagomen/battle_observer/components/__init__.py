@@ -27,10 +27,12 @@ def loadComponents(is_replay):
 
     for moduleName in load:
         try:
-            components[moduleName] = import_module("{}.{}".format(__package__, moduleName))
+            module = import_module("{}.{}".format(__package__, moduleName))
         except Exception as error:
             from debug_utils import LOG_CURRENT_EXCEPTION
             LOG_CURRENT_EXCEPTION()
             logError('{}: {}', moduleName, repr(error))
+        else:
+            components[moduleName] = module
 
     return components

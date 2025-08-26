@@ -71,8 +71,8 @@
 			this.as_clearScene();
 			if (settings.enabled && settings.hangar.enabled)
 			{
-				this.x = settings.hangar.x < 0 ? parent.width + settings.hangar.x : settings.hangar.x
-				this.y = settings.hangar.y < 0 ? parent.height + settings.hangar.y : settings.hangar.y
+				this.x = settings.hangar.x < 0 ? parent.width + settings.hangar.x : settings.hangar.x;
+				this.y = settings.hangar.y < 0 ? parent.height + settings.hangar.y : settings.hangar.y;
 				this.dateTime = new TextExt(0, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
 				this._timer.start();
 			}
