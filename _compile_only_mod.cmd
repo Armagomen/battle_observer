@@ -6,12 +6,16 @@ for /f "tokens=3 delims=<>" %%a in (
 ) do set "ModVersion=%%a"
 
 set sources=.\mod
-set GameVersion=1.29.1.1
-set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
+REM set GameVersion=1.29.1.1
+REM set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
 set OutputDir=..\output_data
 
 REM set GameVersion="1.29.0.0 Common Test"
 REM set GameInstalled_ModsDir=C:\Games\World_of_Tanks_CT\mods\%GameVersion%
+
+set GameVersion="2.0.0.0 Common Test"
+set GameInstalled_ModsDir=C:\Games\World_of_Tanks_Closed_Test\mods\%GameVersion%
+
 
 "python.exe" bo_compile_all.py -f -d scripts %sources%\res\scripts
 

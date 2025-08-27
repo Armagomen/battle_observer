@@ -1,4 +1,4 @@
-from armagomen._constants import FLIGHT_TIME, GLOBAL, POSTMORTEM_MODES
+from armagomen._constants import FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 from armagomen.utils.common import getPlayer
 from gui.battle_control import avatar_getter
@@ -21,7 +21,7 @@ class FlightTime(FlightTimeMeta):
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
-                ctrl.onGunMarkerStateChanged += self.__onGunMarkerStateChanged
+                ctrl.onGunMarkerStateChanged += self.__onGunMarkerStateChanged if IS_WG_CLIENT else self.__onGunMarkerStateChangedLS
             handler = avatar_getter.getInputHandler()
             if handler is not None and hasattr(handler, "onCameraChanged"):
                 handler.onCameraChanged += self.onCameraChanged
@@ -32,7 +32,7 @@ class FlightTime(FlightTimeMeta):
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
-                ctrl.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged
+                ctrl.onGunMarkerStateChanged -= self.__onGunMarkerStateChanged if IS_WG_CLIENT else self.__onGunMarkerStateChangedLS
             handler = avatar_getter.getInputHandler()
             if handler is not None and hasattr(handler, "onCameraChanged"):
                 handler.onCameraChanged -= self.onCameraChanged
@@ -42,7 +42,13 @@ class FlightTime(FlightTimeMeta):
         if ctrlMode in POSTMORTEM_MODES:
             self.as_flightTimeS(GLOBAL.EMPTY_LINE)
 
-    def __onGunMarkerStateChanged(self, markerType, position, *args, **kwargs):
+    def __onGunMarkerStateChangedLS(self, markerType, position, *args, **kwargs):
+        self.update(position)
+
+    def __onGunMarkerStateChanged(self, markerType, gunMarkerState, *args, **kwargs):
+        self.update(gunMarkerState.position)
+
+    def update(self, position):
         player = getPlayer()
         if player is None:
             return self.as_flightTimeS(GLOBAL.EMPTY_LINE)

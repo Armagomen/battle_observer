@@ -2,8 +2,10 @@ from armagomen._constants import AVG_EFFICIENCY_HANGAR, EFFICIENCY_ICONS_SIZE, G
 from armagomen.battle_observer.components.controllers import cachedVehicleData
 from armagomen.utils.common import toggleOverride
 from armagomen.utils.events import g_events
+from armagomen.utils.logging import logDebug
 from CurrentVehicle import g_currentVehicle
-from gui.Scaleform.daapi.view.lobby.hangar.ammunition_panel import AmmunitionPanel
+
+from gui.Scaleform.daapi.view.lobby.hangar.ResearchPanel import ResearchPanel
 
 
 class HangarEfficiency(object):
@@ -23,10 +25,12 @@ class HangarEfficiency(object):
         g_events.onModSettingsChanged += self._onModSettingsChanged
 
     def updateStatus(self, base, panel, data):
-        cachedVehicleData.onVehicleChanged()
-        text = self.getAvgData()
-        if text:
-            data["message"] += ("\n" + text) if data["message"] else text
+        logDebug("HangarEfficiency as_updateCurrentVehicleS: {}", data)
+        # cachedVehicleData.onVehicleChanged()
+        # text = self.getAvgData()
+        # if text:
+        #     data["message"] += ("\n" + text) if data["message"] else text
+        # logDebug("HangarEfficiency as_updateVehicleStatusS: {}", data)
         return base(panel, data)
 
     def getAvgData(self):
@@ -53,7 +57,7 @@ class HangarEfficiency(object):
             self.config.update(data)
             if self.enabled != enabled:
                 self.enabled = enabled
-                toggleOverride(AmmunitionPanel, "as_updateVehicleStatusS", self.updateStatus, self.enabled)
+                toggleOverride(ResearchPanel, "as_updateCurrentVehicleS", self.updateStatus, self.enabled)
                 if g_currentVehicle.intCD:
                     g_currentVehicle.onChanged()
 

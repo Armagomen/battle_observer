@@ -107,7 +107,7 @@ class WGRAndIcons(WGRAndIconsMeta):
 class StatisticsDataLoader(object):
     SEPARATOR = "%2C"
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
-    STAT_URL = STATISTICS_REGION + "&account_id={}&extra=statistics.random&language=en&fields=" + FIELDS
+    STAT_URL = str(STATISTICS_REGION) + "&account_id={}&extra=statistics.random&language=en&fields=" + FIELDS
 
     def __init__(self, arenaDP, callback):
         self.arenaDP = arenaDP

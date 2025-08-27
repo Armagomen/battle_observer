@@ -8,14 +8,26 @@ def loadComponents(is_replay):
     components = {}
 
     load = [
-        'camera_manager', 'for_wg_fixes', 'common', 'effects', 'minimap_plugins',
-        'replace_vehicle_info', 'shot_result_plugin', "controllers"
+        'camera_manager',
+        'for_wg_fixes',
+        'common',
+        'effects',
+        'minimap_plugins',
+        'replace_vehicle_info',
+        'shot_result_plugin',
+        "controllers"
     ]
 
     not_replay = [
-        'crew', 'dispersion', 'excluded_maps',
-        'friends', 'hangar_efficiency', 'premium_time', 'save_shot_lite',
-        'service_channel_filter', 'vehicle_battle_boosters'
+        'crew',
+        'dispersion',
+        'excluded_maps',
+        'friends',
+        'hangar_efficiency',
+        # 'premium_time',
+        'save_shot_lite',
+        'service_channel_filter',
+        'vehicle_battle_boosters'
     ]
 
     wg_only = ['auto_claim_clan_reward', 'donate_messages']

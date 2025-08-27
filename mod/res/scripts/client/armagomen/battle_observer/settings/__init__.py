@@ -3,7 +3,6 @@ from armagomen._constants import (ALIAS_TO_CONFIG_NAME, ALIAS_TO_CONFIG_NAME_LOB
                                   CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, EFFECTS, EX_LOGS_ICONS,
                                   FLIGHT_TIME, GLOBAL, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
                                   SNIPER, STATISTICS, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS)
-from armagomen.battle_observer.settings.loader import SettingsLoader
 from constants import ATTACK_REASON
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -22,11 +21,9 @@ class UserSettings(object):
             MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION: False,
             MAIN.FIELD_MAIL: False,
             MAIN.HIDE_BADGES: False,
-            MAIN.HIDE_BTN_COUNTERS: False,
             MAIN.HIDE_CLAN_ABBREV: False,
             MAIN.HIDE_DOG_TAGS: False,
             MAIN.HIDE_HINT: False,
-            MAIN.HIDE_MAIN_CHAT: False,
             MAIN.IGNORE_COMMANDERS: False,
             MAIN.MUTE_BASES_SOUND: False,
             MAIN.PREMIUM_TIME: False,
@@ -54,8 +51,8 @@ class UserSettings(object):
             CLOCK.IN_LOBBY: {
                 GLOBAL.ENABLED: False,
                 CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
-                GLOBAL.X: -240,
-                GLOBAL.Y: 0
+                GLOBAL.X: 30,
+                GLOBAL.Y: 60
             },
             CLOCK.IN_BATTLE: {
                 GLOBAL.ENABLED: False,
@@ -368,4 +365,6 @@ class UserSettings(object):
 
 
 user_settings = UserSettings()
+
+from armagomen.battle_observer.settings.loader import SettingsLoader
 settings_loader = SettingsLoader(user_settings)

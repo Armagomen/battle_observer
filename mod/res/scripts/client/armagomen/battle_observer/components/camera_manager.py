@@ -111,9 +111,12 @@ class CameraSettings(object):
         self.reset = False
 
     def applySettings(self, params):
-        self.settingsCore.applySettings(params)
-        self.settingsCore.applyStorages(False)
-        self.settingsCore.clearStorages()
+        applied = False
+        for key, value in params.items():
+            applied = bool(self.settingsCore.applySetting(key, value)) or applied
+        if applied:
+            self.settingsCore.applyStorages(False)
+            self.settingsCore.clearStorages()
 
 
 class Arcade(CameraSettings):
@@ -130,8 +133,7 @@ class Arcade(CameraSettings):
                 toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, self.enabled)
             if self.enabled:
                 self.reset = True
-                if self.settingsCore.getSetting(GAME.COMMANDER_CAM) or self.settingsCore.getSetting(GAME.PRE_COMMANDER_CAM):
-                    self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
+                self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
                 camera._cfg[ARCADE.DIST_RANGE] = MinMax(*self.config[ARCADE.DIST_RANGE])
                 camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
                 camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
@@ -248,7 +250,6 @@ class Sniper(CameraSettings):
                     camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = new_exposure
                     camera._cfg[self.ZOOMS] = steps
                     logDebug("UPDATE_ZOOMS = steps:{} exposure:{}", steps, new_exposure)
-                if not self.settingsCore.getSetting(GAME.INCREASED_ZOOM):
                     self.applySettings({GAME.INCREASED_ZOOM: 1})
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)

@@ -58,10 +58,7 @@
 		
 		public function as_clearScene():void
 		{
-			while (this.numChildren > 0)
-			{
-				this.removeChildAt(0);
-			}
+			this.removeChildren();
 			this.dateTime = null;
 		}
 		
@@ -93,6 +90,11 @@
 			this.x = settings.x < 0 ? parent.width + settings.x : settings.x
 			this.y = settings.y < 0 ? parent.height + settings.y : settings.y
 			App.utils.data.cleanupDynamicObject(settings);
+		}
+		
+		public function as_setVisible(vis:Boolean):void
+		{
+			this.visible = vis;
 		}
 	}
 }

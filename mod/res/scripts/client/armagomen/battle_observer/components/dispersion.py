@@ -111,9 +111,10 @@ class DispersionCircle(object):
 
     @staticmethod
     def setShotPositionWG(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
-        m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
-        mPos, mDir, mSize, dualAccSize, mSizeOffset, collData = m_position
-        rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, mSize, mSizeOffset, SERVER_TICK_LENGTH, collData)
+        gunMarkerInfo = rotator._VehicleGunRotator__getGunMarkerInfo(
+            sPos, sVec, rotator.getCurShotDispersionAngles(), rotator._VehicleGunRotator__gunIndex)
+        supportMarkersInfo = rotator._VehicleGunRotator__getSupportMarkersInfo()
+        rotator._avatar.inputHandler.updateServerGunMarker(gunMarkerInfo, supportMarkersInfo, SERVER_TICK_LENGTH)
 
     @staticmethod
     def setShotPositionLesta(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
@@ -122,8 +123,7 @@ class DispersionCircle(object):
         rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, (mSize, mISize), SERVER_TICK_LENGTH, collData)
 
     def disableWGServerMarker(self):
-        if self.settingsCore.getSetting(GAME.ENABLE_SERVER_AIM):
-            self.settingsCore.applySettings({GAME.ENABLE_SERVER_AIM: 0})
+        if self.settingsCore.applySetting(GAME.ENABLE_SERVER_AIM, False):
             self.settingsCore.applyStorages(False)
             self.settingsCore.clearStorages()
 

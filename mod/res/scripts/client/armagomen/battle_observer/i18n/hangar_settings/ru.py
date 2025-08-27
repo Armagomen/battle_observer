@@ -58,13 +58,9 @@ localization = {
         "hide_badges": "Отключить отображение нашивок в бою",
         "hide_badges_tooltip": "Уши, окно по Tab, экран загрузки.",
         "hide_clan_abbrev": "Отключить отображение клан тегов в бою",
-        "hide_button_counters_on_top_panel": "Отключить счетчики и подсказки на кнопках в шапке ангара.",
-        "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
         "hide_dog_tags": "Отключить отображение жетонов в бою",
         "hide_field_mail": "Отключить полевую почту",
         "hide_hint_panel": "Отключить подсказки в бою",
-        "hide_main_chat_in_hangar": "Отключить общий чат в ангаре",
-        "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
         "ignore_commanders_voice": "Игнорировать озвучку командиров",
         "ignore_commanders_voice_tooltip": "После включения будет принудительно использоваться стандартная озвучка "
                                            "экипажа. Параметр заменит все уникальные озвучки командиров на стандартную "
