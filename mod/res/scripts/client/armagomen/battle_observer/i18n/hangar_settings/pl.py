@@ -26,8 +26,6 @@ timeFormat_tooltip = "<br>".join((
     "%% – Znak '%'"
 ))
 
-RESTART_TOOLTIP = "Aby włączyć/wyłączyć, wymagany jest restart gry."
-
 localization = {
     "configSelect": {
         "header": "Opcje konfiguracji",
@@ -135,8 +133,6 @@ localization = {
         "hangar*enabled": "Zegar w garażu",
         "hangar*format": "Format zegara w garażu",
         "hangar*format_tooltip": timeFormat_tooltip,
-        "hangar*x": "Pozycja pozioma zegara (garaż)",
-        "hangar*y": "Pozycja pionowa zegara (garaż)"
     },
     "hp_bars": {
         "header": "Panel wytrzymałości drużyn",

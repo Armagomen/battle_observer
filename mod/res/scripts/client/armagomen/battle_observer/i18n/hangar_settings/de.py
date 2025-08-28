@@ -26,8 +26,6 @@ timeFormat_tooltip = "<br>".join((
     "%% - Zeichen '%'"
 ))
 
-RESTART_TOOLTIP = "Ein Neustart des Spiels ist erforderlich, um die Funktion zu aktivieren/deaktivieren."
-
 localization = {
     "configSelect": {
         "header": "Einstellungsoptionen",
@@ -132,8 +130,6 @@ localization = {
         "hangar*enabled": "Uhr in der Garage",
         "hangar*format": "Uhr in der Garage: Formatierung",
         "hangar*format_tooltip": timeFormat_tooltip,
-        "hangar*x": "Uhr in der Garage: horizontale Position",
-        "hangar*y": "Uhr in der Garage: vertikale Position"
     },
     "hp_bars": {
         "header": "Team-Haltbarkeitsleisten-Einstellungen",

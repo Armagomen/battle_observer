@@ -242,7 +242,7 @@ BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
     "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI", "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI",
     "Observer_SixthSense_UI", "Observer_MiniMap_UI")
 
-LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME",))("Observer_DateTimes_UI", )
+LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME", "EFFICIENCY"))("Observer_DateTimes_UI", "Observer_Efficiency_UI")
 
 DISTANCE = namedtuple("DISTANCE", ("NAME",))("distance_to_enemy", )
 
@@ -379,7 +379,8 @@ ALIAS_TO_CONFIG_NAME = {
 }
 
 ALIAS_TO_CONFIG_NAME_LOBBY = {
-    LOBBY_ALIASES.DATE_TIME: CLOCK.NAME
+    LOBBY_ALIASES.DATE_TIME: CLOCK.NAME,
+    LOBBY_ALIASES.EFFICIENCY: AVG_EFFICIENCY_HANGAR.NAME,
 }
 
 __battle_types = (

@@ -26,8 +26,6 @@ timeFormat_tooltip = "<br>".join((
     "%% — знак '%'",
 ))
 
-RESTART_TOOLTIP = "Щоб увімкнути або вимкнути, потрібен перезапуск гри."
-
 localization = {
     "configSelect": {
         "header": "Варіанти налаштувань",
@@ -132,8 +130,6 @@ localization = {
         "hangar*enabled": "Годинник у гаражі",
         "hangar*format": "Годинник у гаражі: форматування",
         "hangar*format_tooltip": timeFormat_tooltip,
-        "hangar*x": "Годинник у гаражі: позиція по горизонталі",
-        "hangar*y": "Годинник у гаражі: позиція по вертикалі"
     },
     "hp_bars": {
         "header": "Налаштування панелі міцності команд",

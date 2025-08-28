@@ -26,8 +26,6 @@ timeFormat_tooltip = "<br>".join((
     "%% - Знак '%'"
 ))
 
-RESTART_TOOLTIP = "Для включения/выключения необходим перезапуск игры."
-
 localization = {
     "configSelect": {
         "header": "Варианты настроек",
@@ -148,8 +146,6 @@ localization = {
         "hangar*enabled": "Часы в ангаре",
         "hangar*format": "Часы в ангаре: форматирование",
         "hangar*format_tooltip": "timeFormat_tooltip",
-        "hangar*x": "Часы в ангаре: позиция по горизонтали",
-        "hangar*y": "Часы в ангаре: позиция по вертикали"
     },
     "hp_bars": {
         "header": "Настройка панели прочности команд",

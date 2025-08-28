@@ -50,9 +50,7 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             CLOCK.IN_LOBBY: {
                 GLOBAL.ENABLED: False,
-                CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR,
-                GLOBAL.X: 30,
-                GLOBAL.Y: 60
+                CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR
             },
             CLOCK.IN_BATTLE: {
                 GLOBAL.ENABLED: False,

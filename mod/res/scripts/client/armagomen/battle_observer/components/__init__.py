@@ -23,7 +23,6 @@ def loadComponents(is_replay):
         'dispersion',
         'excluded_maps',
         'friends',
-        'hangar_efficiency',
         # 'premium_time',
         'save_shot_lite',
         'service_channel_filter',

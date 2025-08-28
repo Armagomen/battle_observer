@@ -26,8 +26,6 @@ timeFormat_tooltip = "<br>".join((
     "%% - A literal '%' character."
 ))
 
-RESTART_TOOLTIP = "To enable / disable you need to restart the game."
-
 localization = {
     "configSelect": {
         "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
@@ -150,8 +148,6 @@ localization = {
         "hangar*enabled": "Display in hangar.",
         "hangar*format": "format.",
         "hangar*format_tooltip": timeFormat_tooltip,
-        "hangar*x": "hangar X",
-        "hangar*y": "hangar Y"
     },
     "hp_bars": {
         "header": "TOTAL HP PANEL",
