@@ -166,7 +166,7 @@ def encodeData(data):
 
 
 def openJsonFile(path):
-    """Load JSON from file. Returns dict or {} if error."""
+    """Load JSON from file. Returns dict or None if error."""
     if not os.path.isfile(path):
         return None
     with _open(path, 'r', encoding='utf-8-sig') as f:
@@ -176,7 +176,7 @@ def openJsonFile(path):
 def writeJsonFile(path, data):
     """Creates a new json file in a folder or replace old."""
     with _open(path, 'w', encoding=UTF_8) as dataFile:
-        dataFile.write(unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)))
+        json.dump(data, dataFile, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)
 
 
 def getObserverCachePath():
