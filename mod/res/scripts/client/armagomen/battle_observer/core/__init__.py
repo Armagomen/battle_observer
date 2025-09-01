@@ -1,7 +1,7 @@
 from armagomen._constants import BATTLES_RANGE, IS_WG_CLIENT, MAIN
 from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
-from armagomen.utils.logging import logDebug
+from armagomen.utils.logging import logDebug, logError
 from armagomen.utils.online import user_login, user_logout
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
@@ -73,19 +73,19 @@ class Core(object):
         g_keysListener.init(settings_loader.settings.main)
         settings_loader.updateAllSettings()
 
-        # if not is_replay:
-        #     try:
-        #         from gui.modsListApi import g_modsListApi
-        #         from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-        #         SETTINGS_API.extend([g_modsListApi, vxSettingsApi, vxSettingsApiEvents])
-        #     except Exception as error:
-        #         from debug_utils import LOG_CURRENT_EXCEPTION
-        #         self.error_dialog.messages.add(repr(error))
-        #         LOG_CURRENT_EXCEPTION()
-        #         logError("Settings Api Not Loaded: {}", repr(error))
-        #     else:
-        #         from armagomen.battle_observer.settings.hangar import SettingsInterface
-        #         self.hangar_settings = SettingsInterface(settings_loader, self.version, *SETTINGS_API)
+        if not is_replay:
+            try:
+                from gui.modsListApi import g_modsListApi
+                from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
+                SETTINGS_API.extend([g_modsListApi, vxSettingsApi, vxSettingsApiEvents])
+            except Exception as error:
+                from debug_utils import LOG_CURRENT_EXCEPTION
+                self.error_dialog.messages.add(repr(error))
+                LOG_CURRENT_EXCEPTION()
+                logError("Settings Api Not Loaded: {}", repr(error))
+            else:
+                from armagomen.battle_observer.settings.hangar import SettingsInterface
+                self.hangar_settings = SettingsInterface(settings_loader, self.version, *SETTINGS_API)
 
     def onModSettingsChanged(self, name, data):
         if name == MAIN.NAME:

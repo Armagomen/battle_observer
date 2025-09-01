@@ -156,6 +156,7 @@ Name: wg_logs/wg_log_pos_fix; Description: {cm:wg_logs_pos_fix};
 [Files]
 Source: "{#mod_source}\armagomen.battleObserver*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
 Source: "{#mod_source}\me.poliroid.modslistapi*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist;
+Source: "{#mod_source}\net.openwg.gameface*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist;
 Source: "{#mod_source}\polarfox.vxSettingsApi*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
 Source: "settings\load.json"; DestDir: "{#configs_dir}\"; Flags: ignoreversion;
 Source: "settings\default\*"; DestDir: "{#configs_dir}\bo_install"; Flags: ignoreversion;

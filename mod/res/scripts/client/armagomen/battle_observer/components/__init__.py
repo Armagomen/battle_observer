@@ -8,7 +8,6 @@ def loadComponents(is_replay):
     components = {}
 
     load = [
-        'camera_manager',
         'for_wg_fixes',
         'common',
         'effects',
@@ -19,6 +18,7 @@ def loadComponents(is_replay):
     ]
 
     not_replay = [
+        'camera_manager',
         'crew',
         'dispersion',
         'excluded_maps',
@@ -33,8 +33,8 @@ def loadComponents(is_replay):
 
     if not is_replay:
         load.extend(not_replay)
-    if IS_WG_CLIENT and not is_replay:
-        load.extend(wg_only)
+        if IS_WG_CLIENT:
+            load.extend(wg_only)
 
     for moduleName in load:
         try:

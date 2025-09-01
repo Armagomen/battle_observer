@@ -113,7 +113,7 @@ class CameraSettings(object):
     def applySettings(self, params):
         applied = False
         for key, value in params.items():
-            applied = bool(self.settingsCore.applySetting(key, value)) or applied
+            applied |= bool(self.settingsCore.applySetting(key, value))
         if applied:
             self.settingsCore.applyStorages(False)
             self.settingsCore.clearStorages()
@@ -151,10 +151,9 @@ class Arcade(CameraSettings):
             camera._ArcadeCamera__updateProperties(state=None)
 
     def enablePostMortem(self, base, mode, **kwargs):
-        if self.enabled:
-            if 'postmortemParams' in kwargs:
-                kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
-                kwargs.setdefault('transitionDuration', 2.0)
+        if 'postmortemParams' in kwargs:
+            kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
+            kwargs.setdefault('transitionDuration', 2.0)
         return base(mode, **kwargs)
 
 
@@ -232,15 +231,8 @@ class Sniper(CameraSettings):
             if self._dyn_zoom != self.config[SNIPER.DYN_ZOOM] and self.enabled:
                 self._dyn_zoom = self.config[SNIPER.DYN_ZOOM] and self.enabled
                 toggleOverride(SniperCamera, "enable", self.enableSniper, self._dyn_zoom)
-            if self._dyn_zoom:
-                zoom_level = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
-                if zoom_level and self._SNIPER_ZOOM_LEVEL is None:
-                    self._SNIPER_ZOOM_LEVEL = zoom_level
-                    self.applySettings({GAME.SNIPER_ZOOM: 0})
-            else:
-                if self._SNIPER_ZOOM_LEVEL is not None:
-                    self.applySettings({GAME.SNIPER_ZOOM: self._SNIPER_ZOOM_LEVEL})
-                    self._SNIPER_ZOOM_LEVEL = None
+            if self._dyn_zoom and self.settingsCore.getSetting(GAME.SNIPER_ZOOM):
+                self.applySettings({GAME.SNIPER_ZOOM: 0})
             _change_steps = self.config[SNIPER.ZOOM_STEPS] and self.enabled
             if _change_steps or self._dyn_zoom:
                 self.reset = True
