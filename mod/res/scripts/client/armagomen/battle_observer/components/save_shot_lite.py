@@ -13,12 +13,10 @@ from gui.Scaleform.genConsts.BATTLE_VIEW_ALIASES import BATTLE_VIEW_ALIASES
 from helpers import dependency
 from messenger.MessengerEntry import g_instance
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
-from skeletons.gui.battle_session import IBattleSessionProvider
 from Vehicle import Vehicle
 
 
 class SaveShootLite(TriggersManager.ITriggerListener):
-    sessionProvider = dependency.descriptor(IBattleSessionProvider)
     appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self):
@@ -38,11 +36,11 @@ class SaveShootLite(TriggersManager.ITriggerListener):
         target = avatar.target
         if target is None or isRepeat or self.unlock or self.checkTarget(target):
             return base(avatar, isRepeat=isRepeat)
+        shortName = "Undefined"
         try:
-            vehicle_info = self.sessionProvider.getArenaDP().getVehicleInfo(target.id)
-            shortName = vehicle_info.shortName
+            if isinstance(target, Vehicle):
+                shortName = target.typeDescriptor.type.shortUserString
         except Exception as error:
-            shortName = "Undefined"
             logError(repr(error))
         message = LOCKED_MESSAGE.format(shortName)
         g_instance.gui.addClientMessage(message)
