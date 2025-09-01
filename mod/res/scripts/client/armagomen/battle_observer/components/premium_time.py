@@ -30,7 +30,7 @@ class PremiumTime(object):
         if user_settings.main[MAIN.PREMIUM_TIME] and header.itemsCache.items.stats.isPremium:
             delta = int(getTimeDeltaFromNow(makeLocalServerTime(header.itemsCache.items.stats.activePremiumExpiryTime)))
             self.callback = addCallback(1.0, self.startCallback, base, header, data)
-            data["doLabel"] = self._getPremiumLabelText(self.days if delta > ONE_DAY else self.hours, delta)
+            data["timeLabel"] = self._getPremiumLabelText(self.days if delta > ONE_DAY else self.hours, delta)
         base(header, data)
 
     def stopCallback(self):

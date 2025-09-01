@@ -26,8 +26,6 @@ timeFormat_tooltip = "<br>".join((
     "%% — знак '%'",
 ))
 
-RESTART_TOOLTIP = "Щоб увімкнути або вимкнути, потрібен перезапуск гри."
-
 localization = {
     "configSelect": {
         "header": "Варіанти налаштувань",
@@ -53,13 +51,9 @@ localization = {
         "hide_badges": "Вимкнути нашивки у бою",
         "hide_badges_tooltip": "Приховує значки у вухах, по Tab і на екрані завантаження.",
         "hide_clan_abbrev": "Приховати теги кланів у бою",
-        "hide_button_counters_on_top_panel": "Вимкнути лічильники та підказки на кнопках у шапці гаража",
-        "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
         "hide_dog_tags": "Вимкнути жетони у бою",
         "hide_field_mail": "Вимкнути польову пошту",
         "hide_hint_panel": "Приховати підказки у бою",
-        "hide_main_chat_in_hangar": "Вимкнути спільний чат у гаражі",
-        "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
         "ignore_commanders_voice": "Ігнорувати озвучку командирів",
         "ignore_commanders_voice_tooltip": "Замінює унікальні голоси командирів на стандартну озвучку екіпажу.",
         "premium_time": "Відображати таймер преміум-акаунту",
@@ -136,8 +130,6 @@ localization = {
         "hangar*enabled": "Годинник у гаражі",
         "hangar*format": "Годинник у гаражі: форматування",
         "hangar*format_tooltip": timeFormat_tooltip,
-        "hangar*x": "Годинник у гаражі: позиція по горизонталі",
-        "hangar*y": "Годинник у гаражі: позиція по вертикалі"
     },
     "hp_bars": {
         "header": "Налаштування панелі міцності команд",

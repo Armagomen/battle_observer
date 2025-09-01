@@ -26,8 +26,6 @@ timeFormat_tooltip = "<br>".join((
     "%% - Zeichen '%'"
 ))
 
-RESTART_TOOLTIP = "Ein Neustart des Spiels ist erforderlich, um die Funktion zu aktivieren/deaktivieren."
-
 localization = {
     "configSelect": {
         "header": "Einstellungsoptionen",
@@ -53,13 +51,9 @@ localization = {
         "hide_badges": "Abzeichen im Gefecht ausblenden",
         "hide_badges_tooltip": "Blendet Symbole in den Ohren, der Tab-Ansicht und dem Ladebildschirm aus.",
         "hide_clan_abbrev": "Clantags im Gefecht ausblenden",
-        "hide_button_counters_on_top_panel": "Zähler und Hinweise auf Garagenkopfleisten-Knöpfen deaktivieren",
-        "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
         "hide_dog_tags": "Erkennungsmarken im Gefecht ausblenden",
         "hide_field_mail": "Feldpost deaktivieren",
         "hide_hint_panel": "Hinweistafel im Gefecht ausblenden",
-        "hide_main_chat_in_hangar": "Gemeinsamen Chat in der Garage deaktivieren",
-        "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
         "ignore_commanders_voice": "Kommandantenstimme ignorieren",
         "ignore_commanders_voice_tooltip": "Nach Aktivierung wird die Standardbesatzungsstimme erzwungen. Diese Einstellung ersetzt einzigartige Kommandantenstimmen durch die Standardstimme oder ein installiertes Modpack.",
         "premium_time": "Premium-Account-Timer anzeigen",
@@ -136,8 +130,6 @@ localization = {
         "hangar*enabled": "Uhr in der Garage",
         "hangar*format": "Uhr in der Garage: Formatierung",
         "hangar*format_tooltip": timeFormat_tooltip,
-        "hangar*x": "Uhr in der Garage: horizontale Position",
-        "hangar*y": "Uhr in der Garage: vertikale Position"
     },
     "hp_bars": {
         "header": "Team-Haltbarkeitsleisten-Einstellungen",

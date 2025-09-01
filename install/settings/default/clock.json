@@ -9,7 +9,7 @@
   "hangar": {
     "enabled": false,
     "format": "<textformat tabstops='[145]'>%d %b %Y<tab>%H:%M:%S</textformat>",
-    "x": -250,
-    "y": 0
+    "x": 30,
+    "y": 60
   }
 }

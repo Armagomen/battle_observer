@@ -2,6 +2,7 @@ from collections import namedtuple
 
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
+from Event import SafeEvent
 from helpers import dependency
 from skeletons.gui.shared import IItemsCache
 
@@ -11,19 +12,23 @@ EfficiencyAVGData = namedtuple("EfficiencyAVGData", PARAMS)
 
 
 class CurrentVehicleCachedData(object):
-    __slots__ = ("__EfficiencyAVGData", "__default")
+    __slots__ = ("__EfficiencyAVGData", "__default", "onChanged")
     itemsCache = dependency.descriptor(IItemsCache)
 
     def __init__(self):
+        self.onChanged = SafeEvent()
         default = 3000
         self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, "", "Undefined", False, 0.0, 0)
         self.__EfficiencyAVGData = None
+        g_currentVehicle.onChanged += self.onVehicleChanged
 
     def onVehicleChanged(self):
         if g_currentVehicle.isPresent():
             self.setAvgData(g_currentVehicle.intCD, g_currentVehicle.item.userName, g_currentVehicle.item.level)
         else:
             self.__EfficiencyAVGData = None
+
+        self.onChanged(self.efficiencyAvgData)
 
     def setAvgData(self, intCD, name, level):
         dossier = self.itemsCache.items.getVehicleDossier(intCD)

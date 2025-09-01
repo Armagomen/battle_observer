@@ -3,23 +3,19 @@
 	import flash.display.*;
 	import flash.events.*;
 	import flash.text.*;
-	import net.armagomen.battleobserver.hangar.utils.Filters;
 	import net.armagomen.battleobserver.hangar.utils.TextExt;
+	import net.armagomen.battleobserver.hangar.utils.Filters;
 	import net.wg.infrastructure.base.BaseDAAPIComponent;
-	import flash.utils.Timer;
-	import flash.events.TimerEvent;
 	
-	public class ObserverDateTimesUI extends BaseDAAPIComponent
+	public class ObserverEfficiencyUI extends BaseDAAPIComponent
 	{
-		private var dateTime:TextExt;
+		private var text:TextExt;
 		public var getSettings:Function;
-		public var getTimeString:Function;
-		private var _timer:Timer = null;
+		public var getData:Function;
 		
-		public function ObserverDateTimesUI()
+		public function ObserverEfficiencyUI()
 		{
 			super();
-			this._timer = new Timer(1000);
 		}
 		
 		override protected function configUI():void
@@ -31,14 +27,11 @@
 			this.mouseChildren = false;
 			this.buttonMode = false;
 			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
+		
 		}
 		
 		override protected function onDispose():void
 		{
-			this._timer.stop();
-			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
-			this._timer = null;
 			this.removeEventListener(Event.RESIZE, this._onResizeHandle);
 			this.as_clearScene();
 			super.onDispose();
@@ -50,46 +43,40 @@
 			this.as_onSettingsChanged(this.getSettings());
 		}
 		
-		protected function timerHandler(timerEvent:TimerEvent):void
-		{
-			this.update();
-			timerEvent.updateAfterEvent();
-		}
-		
 		public function as_clearScene():void
 		{
 			this.removeChildren();
-			this.dateTime = null;
+			this.text = null;
 		}
 		
 		public function as_onSettingsChanged(settings:Object):void
 		{
-			this._timer.stop();
 			this.as_clearScene();
-			if (settings.enabled && settings.hangar.enabled)
+			if (settings.enabled)
 			{
 				this.scaleX = this.scaleY = App.appHeight / 1080;
-				this.x = Math.ceil(App.appWidth / 64);
-				this.y = Math.ceil(App.appHeight / 12);
-				this.dateTime = new TextExt(0, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
-				this._timer.start();
+				this.x = App.appWidth >> 1;
+				this.y = Math.ceil(App.appHeight / 5.5);
+				this.text = new TextExt(0, 0, Filters.mediumText, TextFieldAutoSize.CENTER, this);
+				this.text.htmlText = this.getData();
 			}
 			App.utils.data.cleanupDynamicObject(settings);
 		}
 		
-		private function update():void
+		public function as_updateValue(value:String):void
 		{
-			if (this.dateTime)
+			if (this.text)
 			{
-				this.dateTime.htmlText = this.getTimeString();
+				this.text.htmlText = value;
 			}
 		}
 		
-		public function _onResizeHandle(event:Event):void
+		private function _onResizeHandle(event:Event):void
 		{
 			this.scaleX = this.scaleY = App.appHeight / 1080;
-			this.x = Math.ceil(App.appWidth / 64);
-			this.y = Math.ceil(App.appHeight / 12);
+			this.x = App.appWidth >> 1;
+			this.y = Math.ceil(App.appHeight / 5.5);
+			
 		}
 		
 		public function as_setVisible(vis:Boolean):void

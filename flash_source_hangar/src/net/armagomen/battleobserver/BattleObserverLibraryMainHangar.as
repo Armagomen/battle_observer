@@ -5,8 +5,10 @@ package net.armagomen.battleobserver
 	 * @author Armagomen
 	 */
 	import flash.filters.GlowFilter;
+	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.hangar.ObserverDateTimesUI;
-	import net.wg.gui.lobby.hangar.Hangar;
+	import net.armagomen.battleobserver.hangar.ObserverEfficiencyUI;
+	import net.wg.gui.lobby.LobbyPage;
 	import net.wg.infrastructure.base.AbstractView;
 	
 	public class BattleObserverLibraryMainHangar extends AbstractView
@@ -14,7 +16,7 @@ package net.armagomen.battleobserver
 		public function BattleObserverLibraryMainHangar()
 		{
 			super();
-			Hangar.prototype.as_BattleObserverCreate = function(aliases:Array):void
+			LobbyPage.prototype.as_BattleObserverCreate = function(aliases:Array):void
 			{
 				for each (var alias:String in aliases)
 				{
@@ -23,14 +25,11 @@ package net.armagomen.battleobserver
 					case "Observer_DateTimes_UI": 
 						this.registerFlashComponent(this.addChild(new ObserverDateTimesUI), alias);
 						break;
+					case "Observer_Efficiency_UI": 
+						this.registerFlashComponent(this.addChild(new ObserverEfficiencyUI), alias);
+						break;
 					}
 				}
-			}
-			Hangar.prototype.as_BattleObserverShadow = function():void
-			{
-				var filter:GlowFilter = new GlowFilter(0, 0.5, 2, 2, 4);
-				this.ammunitionPanel.vehicleStatus.message.textField.filters = [filter];
-				this.ammunitionPanel.vehicleStatus.roleMessage.textField.filters = [filter];
 			}
 		}
 	}

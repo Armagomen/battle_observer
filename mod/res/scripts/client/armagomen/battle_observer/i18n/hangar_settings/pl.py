@@ -26,8 +26,6 @@ timeFormat_tooltip = "<br>".join((
     "%% – Znak '%'"
 ))
 
-RESTART_TOOLTIP = "Aby włączyć/wyłączyć, wymagany jest restart gry."
-
 localization = {
     "configSelect": {
         "header": "Opcje konfiguracji",
@@ -54,13 +52,9 @@ localization = {
         "hide_badges": "Ukryj odznaki w bitwie",
         "hide_badges_tooltip": "Dezaktywuje odznaki w panelach graczy, widoku Tab i ekranie ładowania.",
         "hide_clan_abbrev": "Ukryj skróty klanów w bitwie",
-        "hide_button_counters_on_top_panel": "Ukryj liczniki i podpowiedzi na górnym panelu garażu",
-        "hide_button_counters_on_top_panel_tooltip": RESTART_TOOLTIP,
         "hide_dog_tags": "Ukryj żetony graczy w bitwie",
         "hide_field_mail": "Wyłącz pocztę polową",
         "hide_hint_panel": "Ukryj panel wskazówek w bitwie",
-        "hide_main_chat_in_hangar": "Wyłącz czat ogólny w garażu",
-        "hide_main_chat_in_hangar_tooltip": RESTART_TOOLTIP,
         "ignore_commanders_voice": "Ignoruj głosy dowódców",
         "ignore_commanders_voice_tooltip": "Zastępuje unikalne głosy standardowym dźwiękiem załogi lub zainstalowanym modem.",
         "premium_time": "Wyświetl zegar konta premium",
@@ -139,8 +133,6 @@ localization = {
         "hangar*enabled": "Zegar w garażu",
         "hangar*format": "Format zegara w garażu",
         "hangar*format_tooltip": timeFormat_tooltip,
-        "hangar*x": "Pozycja pozioma zegara (garaż)",
-        "hangar*y": "Pozycja pionowa zegara (garaż)"
     },
     "hp_bars": {
         "header": "Panel wytrzymałości drużyn",

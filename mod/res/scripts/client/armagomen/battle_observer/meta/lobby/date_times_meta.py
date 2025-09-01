@@ -11,3 +11,6 @@ class DateTimesMeta(BaseModMeta):
 
     def as_onSettingsChanged(self, config):
         return self.flashObject.as_onSettingsChanged(config) if self._isDAAPIInited() else None
+
+    def setVisible(self, visible):
+        return self.flashObject.as_setVisible(visible) if self._isDAAPIInited() else None

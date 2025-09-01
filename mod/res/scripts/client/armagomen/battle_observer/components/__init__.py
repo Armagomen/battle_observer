@@ -8,22 +8,33 @@ def loadComponents(is_replay):
     components = {}
 
     load = [
-        'camera_manager', 'for_wg_fixes', 'common', 'effects', 'minimap_plugins',
-        'replace_vehicle_info', 'shot_result_plugin', "controllers"
+        'for_wg_fixes',
+        'common',
+        'effects',
+        'minimap_plugins',
+        'replace_vehicle_info',
+        'shot_result_plugin',
+        "controllers"
     ]
 
     not_replay = [
-        'crew', 'dispersion', 'excluded_maps',
-        'friends', 'hangar_efficiency', 'premium_time', 'save_shot_lite',
-        'service_channel_filter', 'vehicle_battle_boosters'
+        'camera_manager',
+        'crew',
+        'dispersion',
+        'excluded_maps',
+        'friends',
+        # 'premium_time',
+        'save_shot_lite',
+        'service_channel_filter',
+        'vehicle_battle_boosters'
     ]
 
     wg_only = ['auto_claim_clan_reward', 'donate_messages']
 
     if not is_replay:
         load.extend(not_replay)
-    if IS_WG_CLIENT and not is_replay:
-        load.extend(wg_only)
+        if IS_WG_CLIENT:
+            load.extend(wg_only)
 
     for moduleName in load:
         try:

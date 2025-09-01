@@ -111,9 +111,12 @@ class CameraSettings(object):
         self.reset = False
 
     def applySettings(self, params):
-        self.settingsCore.applySettings(params)
-        self.settingsCore.applyStorages(False)
-        self.settingsCore.clearStorages()
+        applied = False
+        for key, value in params.items():
+            applied |= bool(self.settingsCore.applySetting(key, value))
+        if applied:
+            self.settingsCore.applyStorages(False)
+            self.settingsCore.clearStorages()
 
 
 class Arcade(CameraSettings):
@@ -130,8 +133,7 @@ class Arcade(CameraSettings):
                 toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, self.enabled)
             if self.enabled:
                 self.reset = True
-                if self.settingsCore.getSetting(GAME.COMMANDER_CAM) or self.settingsCore.getSetting(GAME.PRE_COMMANDER_CAM):
-                    self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
+                self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
                 camera._cfg[ARCADE.DIST_RANGE] = MinMax(*self.config[ARCADE.DIST_RANGE])
                 camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
                 camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
@@ -149,10 +151,9 @@ class Arcade(CameraSettings):
             camera._ArcadeCamera__updateProperties(state=None)
 
     def enablePostMortem(self, base, mode, **kwargs):
-        if self.enabled:
-            if 'postmortemParams' in kwargs:
-                kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
-                kwargs.setdefault('transitionDuration', 2.0)
+        if 'postmortemParams' in kwargs:
+            kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
+            kwargs.setdefault('transitionDuration', 2.0)
         return base(mode, **kwargs)
 
 
@@ -230,15 +231,8 @@ class Sniper(CameraSettings):
             if self._dyn_zoom != self.config[SNIPER.DYN_ZOOM] and self.enabled:
                 self._dyn_zoom = self.config[SNIPER.DYN_ZOOM] and self.enabled
                 toggleOverride(SniperCamera, "enable", self.enableSniper, self._dyn_zoom)
-            if self._dyn_zoom:
-                zoom_level = self.settingsCore.getSetting(GAME.SNIPER_ZOOM)
-                if zoom_level and self._SNIPER_ZOOM_LEVEL is None:
-                    self._SNIPER_ZOOM_LEVEL = zoom_level
-                    self.applySettings({GAME.SNIPER_ZOOM: 0})
-            else:
-                if self._SNIPER_ZOOM_LEVEL is not None:
-                    self.applySettings({GAME.SNIPER_ZOOM: self._SNIPER_ZOOM_LEVEL})
-                    self._SNIPER_ZOOM_LEVEL = None
+            if self._dyn_zoom and self.settingsCore.getSetting(GAME.SNIPER_ZOOM):
+                self.applySettings({GAME.SNIPER_ZOOM: 0})
             _change_steps = self.config[SNIPER.ZOOM_STEPS] and self.enabled
             if _change_steps or self._dyn_zoom:
                 self.reset = True
@@ -248,7 +242,6 @@ class Sniper(CameraSettings):
                     camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = new_exposure
                     camera._cfg[self.ZOOMS] = steps
                     logDebug("UPDATE_ZOOMS = steps:{} exposure:{}", steps, new_exposure)
-                if not self.settingsCore.getSetting(GAME.INCREASED_ZOOM):
                     self.applySettings({GAME.INCREASED_ZOOM: 1})
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)

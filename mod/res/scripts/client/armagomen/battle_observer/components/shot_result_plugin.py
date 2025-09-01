@@ -4,7 +4,7 @@ from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import getPlayer, isReplay, MinMax, overrideMethod
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
-from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults
+from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, computePiercingPowerAtDist
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES
 from DestructibleEntity import DestructibleEntity
 from gui.battle_control import avatar_getter
@@ -29,28 +29,29 @@ class _ShotResult(_CrosshairShotResults):
         return entity.isDestructibleComponent(componentID) if isinstance(entity, DestructibleEntity) else True
 
     @classmethod
-    def _getShotResult(cls, position, collision, direction, multiplier, player):
-        if player is None or collision is None:
+    def _getShotResult(cls, gunMarker, multiplier, player):
+        if player is None or gunMarker.collData is None:
             return cls.UNDEFINED_RESULT
-        entity = collision.entity
+        entity = gunMarker.collData.entity
         if not isinstance(entity, cls.ENTITY_TYPES) or not entity.isAlive() or entity.publicInfo['team'] == player.team:
             return cls.UNDEFINED_RESULT
-        return cls._result(position, collision, direction, multiplier, player)
+        return cls._result(gunMarker, multiplier, player)
 
     @classmethod
-    def _result(cls, position, collision, direction, multiplier, player):
-        entity = collision.entity
-        collision_details = cls._getAllCollisionDetails(position, direction, entity)
+    def _result(cls, gunMarker, multiplier, player):
+        collision_details = cls._getAllCollisionDetails(gunMarker.position, gunMarker.direction, gunMarker.collData.entity)
         if collision_details is None:
             return cls.UNDEFINED_RESULT
-        shot = player.getVehicleDescriptor().shot
+        vDesc = player.getVehicleDescriptor()
+        gunInstallationSlot = vDesc.gunInstallations[gunMarker.gunInstallationIndex]
+        shot = vDesc.shot if gunInstallationSlot.isMainInstallation() else gunInstallationSlot.gun.shots[0]
         shell = shot.shell
-        distance = player.position.flatDistTo(position)
-        piercing_power = cls._computePiercingPowerAtDist(shot.piercingPower, distance, shot.maxDistance, multiplier)
+        distance = player.position.flatDistTo(gunMarker.position)
+        piercing_power = computePiercingPowerAtDist(shot.piercingPower, distance, shot.maxDistance, multiplier)
         if cls._isModernMechanics(shell):
-            return cls._computeArmorModern(collision_details, shell, piercing_power, entity)
+            return cls._computeArmorModern(collision_details, shell, piercing_power, gunMarker.collData.entity)
         else:
-            return cls._computeArmorDefault(collision_details, shell, piercing_power, entity)
+            return cls._computeArmorDefault(collision_details, shell, piercing_power, gunMarker.collData.entity)
 
     @classmethod
     def _checkShotResult(cls, data):
@@ -137,10 +138,11 @@ class _ShotResult(_CrosshairShotResults):
 class _ShotResultAll(_ShotResult):
 
     @classmethod
-    def _getShotResult(cls, position, collision, direction, multiplier, player):
+    def _getShotResult(cls, gunMarker, multiplier, player):
+        collision = gunMarker.collData
         if player is None or collision is None or not isinstance(collision.entity, cls.ENTITY_TYPES) or not collision.entity.isAlive():
             return cls.UNDEFINED_RESULT
-        return cls._result(position, collision, direction, multiplier, player)
+        return cls._result(gunMarker, multiplier, player)
 
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
@@ -151,8 +153,13 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         self.__data = None
         self.__resolver = _ShotResultAll if user_settings.armor_calculator[ARMOR_CALC.ON_ALLY] else _ShotResult
 
-    def __updateColor(self, markerType, position, collision, direction):
-        shot_result, data = self.__resolver._getShotResult(position, collision, direction, self.__piercingMultiplier, self.__player)
+    def __onGunMarkerStateChanged(self, markerType, gunMarkerState, supportMarkersInfo):
+        if not self.__isEnabled:
+            self.sessionProvider.shared.armorFlashlight.hide()
+            return
+        self.sessionProvider.shared.armorFlashlight.updateVisibilityState(markerType, gunMarkerState.position, gunMarkerState.direction,
+                                                                          gunMarkerState.collData, gunMarkerState.size)
+        shot_result, data = self.__resolver._getShotResult(gunMarkerState, self.__piercingMultiplier, self.__player)
         if shot_result in self.__colors:
             color = self.__colors[shot_result]
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):
