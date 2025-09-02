@@ -3,7 +3,7 @@ from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback
 from armagomen.utils.keys_listener import g_keysListener
-from armagomen.utils.logging import logDebug, logInfo
+from armagomen.utils.logging import logDebug
 from frameworks.wulf import WindowLayer
 from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
@@ -11,9 +11,7 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.shared import EVENT_BUS_SCOPE
 
 ATTRIBUTE_NAME = 'as_BattleObserverCreate'
-INFO_MSG = "loading view {}: alias={}"
 DEFAULT_INTERVAL = 0.1
-
 DEF_IGNORED_PAGES = (VIEW_ALIAS.DEV_BATTLE_PAGE, VIEW_ALIAS.EVENT_BATTLE_PAGE)
 
 
@@ -23,9 +21,19 @@ class TryLoadHandler(PackageBusinessHandler):
         super(TryLoadHandler, self).__init__(*args, **kwargs)
         self.__counter = 0
 
-    def try_load(self):
+    def __try_load(self):
         self.__counter += 1
         return self.__counter < 60
+
+    def _getView(self, alias, callback):
+        if not self.__try_load():
+            return
+        view = self.findViewByAlias(WindowLayer.VIEW, alias)
+        if view and hasattr(view.flashObject, ATTRIBUTE_NAME):
+            callback(view)
+        else:
+            logDebug("_getView: {} not found in {} or view is None", ATTRIBUTE_NAME, repr(view))
+            addCallback(DEFAULT_INTERVAL, self._getView, alias, callback)
 
 
 class ViewHandlerBattle(TryLoadHandler, ViewSettings):
@@ -55,19 +63,11 @@ class ViewHandlerBattle(TryLoadHandler, ViewSettings):
         logDebug("{}:eventListener {}", self.__class__.__name__, repr(event))
         if self._components:
             self._registerViewComponents()
-            addCallback(DEFAULT_INTERVAL, self._loadView, event.alias)
+            addCallback(DEFAULT_INTERVAL, self._getView, event.alias, self.onViewFounded)
 
-    def _loadView(self, alias):
-        if not self.try_load():
-            return
-        page = self.findViewByAlias(WindowLayer.VIEW, alias)
-        if page and hasattr(page.flashObject, ATTRIBUTE_NAME):
-            logInfo(INFO_MSG, self.__class__.__name__, alias)
-            page._blToggling.update(self._components)
-            page.flashObject.as_BattleObserverCreate(self._components)
-        else:
-            logDebug("{}:_loadView - {} not found in {} or view is None", self.__class__.__name__, ATTRIBUTE_NAME, alias)
-            addCallback(DEFAULT_INTERVAL, self._loadView, alias)
+    def onViewFounded(self, view):
+        view._blToggling.update(self._components)
+        view.flashObject.as_BattleObserverCreate(self._components)
 
 
 class ViewHandlerLobby(TryLoadHandler):
@@ -78,15 +78,8 @@ class ViewHandlerLobby(TryLoadHandler):
 
     def eventListener(self, event):
         logDebug("{}:eventListener {}", self.__class__.__name__, repr(event))
-        addCallback(DEFAULT_INTERVAL, self._loadView, event.alias)
+        addCallback(DEFAULT_INTERVAL, self._getView, event.alias, self.onViewFounded)
 
-    def _loadView(self, alias):
-        if not self.try_load():
-            return
-        hangar = self.findViewByAlias(WindowLayer.VIEW, alias)
-        if hangar and hasattr(hangar.flashObject, ATTRIBUTE_NAME):
-            logInfo(INFO_MSG, self.__class__.__name__, alias)
-            hangar.flashObject.as_BattleObserverCreate(LOBBY_ALIASES)
-        else:
-            logDebug("{}:_loadView - {} not found in {} or view is None", self.__class__.__name__, ATTRIBUTE_NAME, alias)
-            addCallback(DEFAULT_INTERVAL, self._loadView, alias)
+    @staticmethod
+    def onViewFounded(view):
+        view.flashObject.as_BattleObserverCreate(list(LOBBY_ALIASES))
