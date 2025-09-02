@@ -34,9 +34,6 @@ class HangarEfficiency(HangarEfficiencyMeta):
         cachedVehicleData.onChanged += self.update
         super(HangarEfficiency, self)._dispose()
 
-    def getData(self):
-        return self.getString(cachedVehicleData.efficiencyAvgData)
-
     def getString(self, data):
         value = GLOBAL.EMPTY_LINE
         settings_map = [
@@ -57,11 +54,15 @@ class HangarEfficiency(HangarEfficiencyMeta):
         return value
 
     def update(self, data):
+        if data is None:
+            return self.as_updateValue("NO DATA, PLAY 1 BATTLE")
         self.as_updateValue(self.getString(data))
 
     def onModSettingsChanged(self, name, data):
         if name == AVG_EFFICIENCY_HANGAR.NAME:
             self.as_onSettingsChanged(data)
+            if data[GLOBAL.ENABLED]:
+                cachedVehicleData.onVehicleChanged()
 
     def onWindowShowingStatusChanged(self, uniqueID, newStatus):
         window = self.gui.windowsManager.getWindow(uniqueID).content

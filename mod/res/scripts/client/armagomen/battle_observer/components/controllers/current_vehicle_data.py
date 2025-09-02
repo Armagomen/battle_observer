@@ -17,33 +17,29 @@ class CurrentVehicleCachedData(object):
 
     def __init__(self):
         self.onChanged = SafeEvent()
-        default = 3000
+        default = 2000
         self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, "", "Undefined", False, 0.0, 0)
         self.__EfficiencyAVGData = None
         g_currentVehicle.onChanged += self.onVehicleChanged
 
     def onVehicleChanged(self):
-        if g_currentVehicle.isPresent():
-            self.setAvgData(g_currentVehicle.intCD, g_currentVehicle.item.userName, g_currentVehicle.item.level)
-        else:
-            self.__EfficiencyAVGData = None
+        self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() else None
+        self.onChanged(self.__EfficiencyAVGData)
 
-        self.onChanged(self.efficiencyAvgData)
-
-    def setAvgData(self, intCD, name, level):
-        dossier = self.itemsCache.items.getVehicleDossier(intCD)
+    def setAvgData(self):
+        dossier = self.itemsCache.items.getVehicleDossier(g_currentVehicle.intCD)
         random = dossier.getRandomStats()
         marks = random.getAchievement(MARK_ON_GUN_RECORD)
         blocked = random.getAvgDamageBlocked() or 0
-        self.__EfficiencyAVGData = EfficiencyAVGData(
+        return EfficiencyAVGData(
             int(random.getAvgDamage() or 0),
             int(random.getDamageAssistedEfficiency() or 0),
             int(random.getAvgDamageAssistedStun() or 0),
             int(blocked) if blocked > 99 else round(blocked, 2),
             marks.getDamageRating(),
             "<img src='img://gui/{}' width='20' height='18' vspace='-8'>".format(marks.getIcons()[marks.IT_95X85][3:]),
-            name,
-            level > 4,
+            g_currentVehicle.item.userName,
+            g_currentVehicle.item.level > 4,
             (random.getWinsEfficiency() or 0.0) * 100,
             int(random.getBattlesCount())
         )

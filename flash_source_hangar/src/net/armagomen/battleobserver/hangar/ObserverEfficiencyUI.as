@@ -11,7 +11,6 @@
 	{
 		private var text:TextExt;
 		public var getSettings:Function;
-		public var getData:Function;
 		
 		public function ObserverEfficiencyUI()
 		{
@@ -58,7 +57,6 @@
 				this.x = App.appWidth >> 1;
 				this.y = Math.ceil(App.appHeight / 5.5);
 				this.text = new TextExt(0, 0, Filters.mediumText, TextFieldAutoSize.CENTER, this);
-				this.text.htmlText = this.getData();
 			}
 			App.utils.data.cleanupDynamicObject(settings);
 		}
