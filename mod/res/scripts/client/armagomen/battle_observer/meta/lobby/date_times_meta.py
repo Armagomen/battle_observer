@@ -6,11 +6,11 @@ class DateTimesMeta(BaseModMeta):
     def __init__(self):
         super(DateTimesMeta, self).__init__()
 
-    def getTimeString(self):
-        return 'TEST STRING'
+    def as_updateTimeS(self, text):
+        self.flashObject.as_updateTime(text) if self._isDAAPIInited() else None
 
-    def as_onSettingsChanged(self, config):
-        return self.flashObject.as_onSettingsChanged(config) if self._isDAAPIInited() else None
+    def as_addToStageS(self):
+        self.flashObject.as_addToStage() if self._isDAAPIInited() else None
 
-    def setVisible(self, visible):
-        return self.flashObject.as_setVisible(visible) if self._isDAAPIInited() else None
+    def as_clearSceneS(self):
+        self.flashObject.as_clearScene() if self._isDAAPIInited() else None

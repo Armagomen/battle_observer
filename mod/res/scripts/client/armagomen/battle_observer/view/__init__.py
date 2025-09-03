@@ -1,7 +1,8 @@
 from armagomen._constants import BATTLE_ALIASES, LOBBY_ALIASES
-from armagomen.battle_observer.components.controllers import damage_controller
+from armagomen.battle_observer.components.controllers import cachedVehicleData, damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback
+from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug
 from frameworks.wulf import WindowLayer
@@ -60,10 +61,9 @@ class ViewHandlerBattle(TryLoadHandler, ViewSettings):
         super(ViewHandlerBattle, self).fini()
 
     def eventListener(self, event):
-        logDebug("{}:eventListener {}", self.__class__.__name__, repr(event))
         if self._components:
             self._registerViewComponents()
-            addCallback(DEFAULT_INTERVAL, self._getView, event.alias, self.onViewFounded)
+            self._getView(event.alias, self.onViewFounded)
 
     def onViewFounded(self, view):
         view._blToggling.update(self._components)
@@ -76,9 +76,18 @@ class ViewHandlerLobby(TryLoadHandler):
         listeners = ((VIEW_ALIAS.LOBBY, self.eventListener),)
         super(ViewHandlerLobby, self).__init__(listeners, appNS=APP_NAME_SPACE.SF_LOBBY, scope=EVENT_BUS_SCOPE.LOBBY)
 
+    def init(self):
+        super(ViewHandlerLobby, self).init()
+        cachedVehicleData.subscribe()
+        g_events.subscribe()
+
+    def fini(self):
+        super(ViewHandlerLobby, self).fini()
+        cachedVehicleData.unsubscribe()
+        g_events.unsubscribe()
+
     def eventListener(self, event):
-        logDebug("{}:eventListener {}", self.__class__.__name__, repr(event))
-        addCallback(DEFAULT_INTERVAL, self._getView, event.alias, self.onViewFounded)
+        self._getView(event.alias, self.onViewFounded)
 
     @staticmethod
     def onViewFounded(view):

@@ -21,7 +21,7 @@ package net.armagomen.battleobserver
 					switch (alias)
 					{
 					case "Observer_DateTimes_UI": 
-						this.registerFlashComponent(this.addChildAt(new ObserverDateTimesUI, 2), alias);
+						this.registerFlashComponent(this.addChildAt(new ObserverDateTimesUI, 3), alias);
 						break;
 					case "Observer_Efficiency_UI": 
 						this.registerFlashComponent(this.addChildAt(new ObserverEfficiencyUI, 0), alias);

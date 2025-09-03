@@ -1,4 +1,4 @@
-from armagomen._constants import BATTLES_RANGE, MAIN
+from armagomen._constants import BATTLES_RANGE, IS_WG_CLIENT, MAIN
 from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
@@ -116,10 +116,10 @@ class Core(object):
         from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
         from gui.Scaleform.required_libraries_config import BATTLE_REQUIRED_LIBRARIES
 
-        # if not is_replay and IS_WG_CLIENT:
-        #     from gui.Scaleform.required_libraries_config import LOBBY_REQUIRED_LIBRARIES
-        #     LOBBY_REQUIRED_LIBRARIES.append('modBattleObserverHangar.swf')
-        #     g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
+        if not is_replay and IS_WG_CLIENT:
+            from gui.Scaleform.required_libraries_config import LOBBY_REQUIRED_LIBRARIES
+            LOBBY_REQUIRED_LIBRARIES.append('modBattleObserverHangar.swf')
+            g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
         BATTLE_REQUIRED_LIBRARIES.append('modBattleObserver.swf')
         for guiType in BATTLES_RANGE:
             packages = g_overrideScaleFormViewsConfig.battlePackages.setdefault(guiType, [])

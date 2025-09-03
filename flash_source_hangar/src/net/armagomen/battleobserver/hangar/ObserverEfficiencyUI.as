@@ -10,7 +10,6 @@
 	public class ObserverEfficiencyUI extends BaseDAAPIComponent
 	{
 		private var text:TextExt;
-		public var getSettings:Function;
 		
 		public function ObserverEfficiencyUI()
 		{
@@ -26,7 +25,6 @@
 			this.mouseChildren = false;
 			this.buttonMode = false;
 			this.addEventListener(Event.RESIZE, this._onResizeHandle);
-		
 		}
 		
 		override protected function onDispose():void
@@ -36,29 +34,18 @@
 			super.onDispose();
 		}
 		
-		override protected function onPopulate():void
-		{
-			super.onPopulate();
-			this.as_onSettingsChanged(this.getSettings());
-		}
-		
 		public function as_clearScene():void
 		{
 			this.removeChildren();
 			this.text = null;
 		}
 		
-		public function as_onSettingsChanged(settings:Object):void
+		public function as_addToStage():void
 		{
-			this.as_clearScene();
-			if (settings.enabled)
-			{
-				this.scaleX = this.scaleY = App.appHeight / 1080;
-				this.x = App.appWidth >> 1;
-				this.y = Math.ceil(App.appHeight / 5.5);
-				this.text = new TextExt(0, 0, Filters.mediumText, TextFieldAutoSize.CENTER, this);
-			}
-			App.utils.data.cleanupDynamicObject(settings);
+			this.scaleX = this.scaleY = App.appHeight / 1080;
+			this.x = App.appWidth >> 1;
+			this.y = Math.ceil(App.appHeight / 5.5);
+			this.text = new TextExt(0, 0, Filters.mediumText, TextFieldAutoSize.CENTER, this);
 		}
 		
 		public function as_updateValue(value:String):void
@@ -74,12 +61,6 @@
 			this.scaleX = this.scaleY = App.appHeight / 1080;
 			this.x = App.appWidth >> 1;
 			this.y = Math.ceil(App.appHeight / 5.5);
-			
-		}
-		
-		public function as_setVisible(vis:Boolean):void
-		{
-			this.visible = vis;
 		}
 	}
 }

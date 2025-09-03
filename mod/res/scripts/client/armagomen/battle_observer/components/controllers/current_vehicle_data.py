@@ -20,7 +20,12 @@ class CurrentVehicleCachedData(object):
         default = 2000
         self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, "", "Undefined", False, 0.0, 0)
         self.__EfficiencyAVGData = None
+
+    def subscribe(self):
         g_currentVehicle.onChanged += self.onVehicleChanged
+
+    def unsubscribe(self):
+        g_currentVehicle.onChanged -= self.onVehicleChanged
 
     def onVehicleChanged(self):
         self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() else None

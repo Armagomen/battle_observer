@@ -1,3 +1,5 @@
+from armagomen.utils.common import addCallback
+from CurrentVehicle import g_currentVehicle
 from Event import Event, SafeEvent
 
 
@@ -17,6 +19,15 @@ class Events(object):
 
         self.onModSettingsChanged = SafeEvent()
         self.onUserConfigUpdateComplete = SafeEvent()
+
+    def subscribe(self):
+        g_currentVehicle.onChanged += self.onChangedDelayed
+
+    def unsubscribe(self):
+        g_currentVehicle.onChanged -= self.onChangedDelayed
+
+    def onChangedDelayed(self):
+        addCallback(0.4, self.onVehicleChangedDelayed, g_currentVehicle.item)
 
 
 g_events = Events()

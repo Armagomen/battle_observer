@@ -1,8 +1,7 @@
 from armagomen._constants import IS_WG_CLIENT, MAIN
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import addCallback, GAME_VERSION, overrideMethod
+from armagomen.utils.common import GAME_VERSION, overrideMethod
 from armagomen.utils.events import g_events
-from CurrentVehicle import g_currentVehicle
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
@@ -11,14 +10,6 @@ from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
 from gui.Scaleform.daapi.view.lobby.hangar.entry_points.event_entry_points_container import EventEntryPointsContainer
-from gui.Scaleform.daapi.view.lobby.hangar.Hangar import Hangar
-
-
-@overrideMethod(Hangar, "__onCurrentVehicleChanged")
-@overrideMethod(Hangar, "__updateAll")
-def changeVehicle(base, *args, **kwargs):
-    base(*args, **kwargs)
-    addCallback(0.2, g_events.onVehicleChangedDelayed, g_currentVehicle.item)
 
 
 # disable field mail tips
