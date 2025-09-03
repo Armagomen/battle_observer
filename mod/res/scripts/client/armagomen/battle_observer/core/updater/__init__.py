@@ -48,6 +48,10 @@ def download_and_write(url, local_path, on_success, on_failure):
     downloader.download(url, onDownloaded)
 
 
+def tupleVersion(version):
+    return tuple(map(int, version.split('.')))
+
+
 class DownloadThread(object):
 
     def __init__(self):
@@ -126,15 +130,17 @@ class DownloadThread(object):
 
     def _cleanup_worker(self):
         version = self.updateData.get('tag_name', self.version)
-        to_delete = [os.path.join(self.modPath, old_file) for old_file in os.listdir(self.modPath)
-                     if "armagomen.battleObserver_" in old_file and version not in old_file]
+        logDebug("Cleaning up update for version {} >> {}", self.version, version)
+        if tupleVersion(self.version) < tupleVersion(version):
+            to_delete = [os.path.join(self.modPath, old_file) for old_file in os.listdir(self.modPath)
+                         if "armagomen.battleObserver_" in old_file and version not in old_file]
 
-        if to_delete:
-            logDebug("Try to remove old mod files {} in process {}", to_delete, self.cleanup_exe)
-            DETACHED_PROCESS = 0x00000008
-            CREATE_NO_WINDOW = 0x08000000
-            args = [self.cleanup_exe] + to_delete
-            subprocess.Popen(args, creationflags=DETACHED_PROCESS | CREATE_NO_WINDOW, close_fds=True)
+            if to_delete:
+                logDebug("Try to remove old mod files {} in process {}", to_delete, self.cleanup_exe)
+                DETACHED_PROCESS = 0x00000008
+                CREATE_NO_WINDOW = 0x08000000
+                args = [self.cleanup_exe] + to_delete
+                subprocess.Popen(args, creationflags=DETACHED_PROCESS | CREATE_NO_WINDOW, close_fds=True)
 
     def downloadError(self, url):
         message = LOG_MESSAGES.FAILED.format(url)
@@ -165,7 +171,7 @@ class Updater(DownloadThread):
         response_data = loads(response.body)
         self.updateData.update(response_data)
         new_version = response_data.get('tag_name', self.version)
-        if self.tupleVersion(self.version) < self.tupleVersion(new_version):
+        if tupleVersion(self.version) < tupleVersion(new_version):
             logInfo(LOG_MESSAGES.NEW_VERSION, new_version)
             if not self.isReplay:
                 self.showUpdateDialog(new_version)
@@ -182,10 +188,6 @@ class Updater(DownloadThread):
             self.responseUpdateCheck(response)
         elif response.responseCode != 304:
             logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode, response.body)
-
-    @staticmethod
-    def tupleVersion(version):
-        return tuple(map(int, version.split('.')))
 
     def onGUISpaceEntered(self, spaceID):
         login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)

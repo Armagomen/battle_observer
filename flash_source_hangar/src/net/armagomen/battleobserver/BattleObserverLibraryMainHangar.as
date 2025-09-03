@@ -4,8 +4,6 @@ package net.armagomen.battleobserver
 	 * ...
 	 * @author Armagomen
 	 */
-	import flash.filters.GlowFilter;
-	import flash.utils.setTimeout;
 	import net.armagomen.battleobserver.hangar.ObserverDateTimesUI;
 	import net.armagomen.battleobserver.hangar.ObserverEfficiencyUI;
 	import net.wg.gui.lobby.LobbyPage;
@@ -23,10 +21,10 @@ package net.armagomen.battleobserver
 					switch (alias)
 					{
 					case "Observer_DateTimes_UI": 
-						this.registerFlashComponent(this.addChild(new ObserverDateTimesUI), alias);
+						this.registerFlashComponent(this.addChildAt(new ObserverDateTimesUI, 2), alias);
 						break;
 					case "Observer_Efficiency_UI": 
-						this.registerFlashComponent(this.addChild(new ObserverEfficiencyUI), alias);
+						this.registerFlashComponent(this.addChildAt(new ObserverEfficiencyUI, 0), alias);
 						break;
 					}
 				}

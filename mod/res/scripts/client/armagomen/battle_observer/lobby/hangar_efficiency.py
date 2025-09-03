@@ -1,12 +1,17 @@
 from armagomen._constants import AVG_EFFICIENCY_HANGAR, EFFICIENCY_ICONS_SIZE, GLOBAL, IMAGE_DIR
 from armagomen.battle_observer.components.controllers import cachedVehicleData
-from armagomen.battle_observer.meta.lobby.base_mod_meta import SHOWING_STATUS_TO_VALUE
 from armagomen.battle_observer.meta.lobby.hangar_efficiency_meta import HangarEfficiencyMeta
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
 
+from gui.impl.lobby.crew.container_vews.personal_file.personal_file_view import PersonalFileView
+from gui.impl.lobby.crew.container_vews.quick_training.quick_training_view import QuickTrainingView
+from gui.impl.lobby.crew.container_vews.service_record.service_record_view import ServiceRecordView
+from gui.impl.lobby.crew.container_vews.skills_training.skills_training_view import SkillsTrainingView
 from gui.impl.lobby.hangar.random.random_hangar import RandomHangar
 from gui.impl.lobby.mode_selector.mode_selector_view import ModeSelectorView
+
+NOT_SHOW = (QuickTrainingView, SkillsTrainingView, ServiceRecordView, PersonalFileView, ModeSelectorView)
 
 
 class HangarEfficiency(HangarEfficiencyMeta):
@@ -28,6 +33,7 @@ class HangarEfficiency(HangarEfficiencyMeta):
         super(HangarEfficiency, self)._populate()
         g_events.onModSettingsChanged += self.onModSettingsChanged
         cachedVehicleData.onChanged += self.update
+        cachedVehicleData.onVehicleChanged()
 
     def _dispose(self):
         g_events.onModSettingsChanged -= self.onModSettingsChanged
@@ -64,12 +70,26 @@ class HangarEfficiency(HangarEfficiencyMeta):
             if data[GLOBAL.ENABLED]:
                 cachedVehicleData.onVehicleChanged()
 
+    # def onWindowShowingStatusChanged(self, uniqueID, newStatus):
+    #     window = self.gui.windowsManager.getWindow(uniqueID).content
+    #     logDebug("Hangar Efficiency Window: {}", repr(window))
+    #
+    #     if isinstance(window, RandomHangar) and newStatus in SHOWING_STATUS_TO_VALUE:
+    #         self.is_hangar = SHOWING_STATUS_TO_VALUE[newStatus]
+    #         self.setVisible(self.is_hangar)
+    #     if isinstance(window, ModeSelectorView) and newStatus in SHOWING_STATUS_TO_VALUE:
+    #         self.setVisible(self.is_hangar and not SHOWING_STATUS_TO_VALUE[newStatus])
+
     def onWindowShowingStatusChanged(self, uniqueID, newStatus):
+        if newStatus not in self.SHOWING_STATUS_TO_VALUE:
+            return
+
+        status_value = self.SHOWING_STATUS_TO_VALUE[newStatus]
         window = self.gui.windowsManager.getWindow(uniqueID).content
         logDebug("Hangar Efficiency Window: {}", repr(window))
 
-        if isinstance(window, RandomHangar) and newStatus in SHOWING_STATUS_TO_VALUE:
-            self.is_hangar = SHOWING_STATUS_TO_VALUE[newStatus]
+        if isinstance(window, RandomHangar):
+            self.is_hangar = status_value
             self.setVisible(self.is_hangar)
-        if isinstance(window, ModeSelectorView) and newStatus in SHOWING_STATUS_TO_VALUE:
-            self.setVisible(self.is_hangar and not SHOWING_STATUS_TO_VALUE[newStatus])
+        elif isinstance(window, ModeSelectorView):
+            self.setVisible(self.is_hangar and not status_value)

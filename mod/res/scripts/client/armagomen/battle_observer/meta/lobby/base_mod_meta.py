@@ -9,11 +9,12 @@ from helpers import dependency
 from last_stand.gui.impl.lobby.hangar_view import HangarWindow as LastStandWindow
 from skeletons.gui.impl import IGuiLoader
 
-SHOWING_STATUS_TO_VALUE = {ShowingStatus.SHOWN.value: True, ShowingStatus.HIDDEN.value: False}
+
 NOT_HIDE = (HangarWindow, Comp7LightHangarWindow, Comp7HangarWindow, LastStandWindow)
 
 
 class BaseModMeta(BaseDAAPIComponent):
+    SHOWING_STATUS_TO_VALUE = {ShowingStatus.SHOWN.value: True, ShowingStatus.HIDING.value: False}
     gui = dependency.descriptor(IGuiLoader)
 
     def __init__(self):
