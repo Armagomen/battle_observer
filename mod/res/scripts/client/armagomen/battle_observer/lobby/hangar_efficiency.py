@@ -73,9 +73,10 @@ class HangarEfficiency(HangarEfficiencyMeta):
                 self.enabled = data[GLOBAL.ENABLED]
                 if self.enabled:
                     self.as_addToStageS()
-                    cachedVehicleData.onVehicleChanged()
                 else:
                     self.as_clearSceneS()
+            if self.enabled:
+                cachedVehicleData.onVehicleChanged()
 
     def onWindowShowingStatusChanged(self, uniqueID, newStatus):
         if not self.enabled or newStatus not in self.SHOWING_STATUS_TO_VALUE:

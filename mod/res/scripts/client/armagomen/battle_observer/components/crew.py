@@ -92,6 +92,7 @@ class CrewProcessor(object):
         return not isLockedFound
 
     def onVehicleChanged(self, vehicle):
+        logDebug("crew onVehicleChanged")
         if not vehicle or vehicle.isLocked:
             return
         if user_settings.main[MAIN.CREW_RETURN]:

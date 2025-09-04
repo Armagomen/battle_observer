@@ -1,9 +1,11 @@
 from collections import namedtuple
 
+from armagomen.utils.logging import logDebug
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
 from Event import SafeEvent
 from helpers import dependency
+from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from skeletons.gui.shared import IItemsCache
 
 PARAMS = ("tankAvgDamage", "tankAvgAssist", "tankAvgStun", "tankAvgBlocked", "marksOnGunValue", "marksOnGunIcon", "name", "marksAvailable",
@@ -14,6 +16,7 @@ EfficiencyAVGData = namedtuple("EfficiencyAVGData", PARAMS)
 class CurrentVehicleCachedData(object):
     __slots__ = ("__EfficiencyAVGData", "__default", "onChanged")
     itemsCache = dependency.descriptor(IItemsCache)
+    appLoader = dependency.descriptor(IAppLoader)
 
     def __init__(self):
         self.onChanged = SafeEvent()
@@ -21,10 +24,19 @@ class CurrentVehicleCachedData(object):
         self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, "", "Undefined", False, 0.0, 0)
         self.__EfficiencyAVGData = None
 
-    def subscribe(self):
+        self.appLoader.onGUISpaceEntered += self.subscribe
+        self.appLoader.onGUISpaceLeft += self.unsubscribe
+
+    def subscribe(self, spaceID):
+        if spaceID != GuiGlobalSpaceID.LOBBY:
+            return
+        logDebug("CurrentVehicleCachedData::subscribe lobby")
         g_currentVehicle.onChanged += self.onVehicleChanged
 
-    def unsubscribe(self):
+    def unsubscribe(self, spaceID):
+        if spaceID != GuiGlobalSpaceID.LOBBY:
+            return
+        logDebug("CurrentVehicleCachedData::unsubscribe lobby")
         g_currentVehicle.onChanged -= self.onVehicleChanged
 
     def onVehicleChanged(self):

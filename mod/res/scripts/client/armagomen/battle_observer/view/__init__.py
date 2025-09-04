@@ -1,8 +1,7 @@
 from armagomen._constants import BATTLE_ALIASES, LOBBY_ALIASES
-from armagomen.battle_observer.components.controllers import cachedVehicleData, damage_controller
+from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback
-from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug
 from frameworks.wulf import WindowLayer
@@ -12,7 +11,7 @@ from gui.Scaleform.framework.package_layout import PackageBusinessHandler
 from gui.shared import EVENT_BUS_SCOPE
 
 ATTRIBUTE_NAME = 'as_BattleObserverCreate'
-DEFAULT_INTERVAL = 0.1
+DEFAULT_INTERVAL = 0.2
 DEF_IGNORED_PAGES = (VIEW_ALIAS.DEV_BATTLE_PAGE, VIEW_ALIAS.EVENT_BATTLE_PAGE)
 
 
@@ -75,16 +74,6 @@ class ViewHandlerLobby(TryLoadHandler):
     def __init__(self):
         listeners = ((VIEW_ALIAS.LOBBY, self.eventListener),)
         super(ViewHandlerLobby, self).__init__(listeners, appNS=APP_NAME_SPACE.SF_LOBBY, scope=EVENT_BUS_SCOPE.LOBBY)
-
-    def init(self):
-        super(ViewHandlerLobby, self).init()
-        cachedVehicleData.subscribe()
-        g_events.subscribe()
-
-    def fini(self):
-        super(ViewHandlerLobby, self).fini()
-        cachedVehicleData.unsubscribe()
-        g_events.unsubscribe()
 
     def eventListener(self, event):
         self._getView(event.alias, self.onViewFounded)
