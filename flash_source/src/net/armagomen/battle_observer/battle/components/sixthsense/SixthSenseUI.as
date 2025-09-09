@@ -29,9 +29,9 @@
 		private var _image:Bitmap;
 		private var radial_progress:RadialProgressBar;
 		private var timeoutID:Number;
-		private var progress:Number    = 10000;
-		private var show_time:Number   = 10000;
-		private var _timer:Timer       = null;
+		private var progress:Number  = 10000;
+		private var show_time:Number = 10000;
+		private var _timer:Timer     = null;
 		
 		public var getIconPatch:Function;
 		public var playSound:Function;
@@ -134,7 +134,7 @@
 			if (!this.hideAnimation)
 			{
 				this.addAnimations();
-			}			
+			}
 			if (!this.radial_progress)
 			{
 				this.radial_progress = new RadialProgressBar(this._container);
@@ -149,29 +149,26 @@
 			this.rewind();
 			this._container.y = this.POSITION_Y;
 			this._container.alpha = 1.0;
-			if (seconds)
+			this.clearTimers();
+			this.progress = this.show_time = seconds * 1000;
+			
+			if (this.params.show_timer || this.params.show_timer_graphics || this.params.playTickSound)
 			{
-				this.clearTimers();
-				this.progress = this.show_time = seconds * 1000;
+				if (this.params.show_timer)
+				{
+					this.timer_text.text = seconds.toFixed(1);
+				}
 				
-				if (this.params.show_timer || this.params.show_timer_graphics || this.params.playTickSound)
+				if (this.params.show_timer_graphics)
 				{
-					if (this.params.show_timer)
-					{
-						this.timer_text.text = seconds.toFixed(1);
-					}
-					
-					if (this.params.show_timer_graphics)
-					{
-						this.radial_progress.updateProgressBar(this.progress / this.show_time);
-					}
-					
-					this._timer.start();
+					this.radial_progress.updateProgressBar(1.0);
 				}
-				else
-				{
-					this.timeoutID = setTimeout(as_hide, this.show_time)
-				}
+				
+				this._timer.start();
+			}
+			else
+			{
+				this.timeoutID = setTimeout(as_hide, this.show_time)
 			}
 		}
 		

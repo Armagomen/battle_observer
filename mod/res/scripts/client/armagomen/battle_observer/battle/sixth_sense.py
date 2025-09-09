@@ -6,6 +6,7 @@ import ResMgr
 from armagomen._constants import SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
 from armagomen.utils.logging import logError
+from constants import DIRECT_DETECTION_TYPE
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from PlayerEvents import g_playerEvents
 from SoundGroups import g_instance
@@ -23,13 +24,7 @@ class SixthSense(SixthSenseMeta):
         super(SixthSense, self).__init__()
         self.radio_installed = False
         self.__sounds = dict()
-        self.__radar = None
         self.__soundID = None
-        try:
-            from constants import DIRECT_DETECTION_TYPE
-            self.__radar = DIRECT_DETECTION_TYPE.STEALTH_RADAR
-        except:
-            pass
 
     def callWWISE(self, wwiseEventName):
         if wwiseEventName in self.__sounds:
@@ -77,12 +72,12 @@ class SixthSense(SixthSenseMeta):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             if value.get('isObserved', False):
                 if self.isComp7Battle():
-                    if value.get("detectionType", 0) == self.__radar:
+                    if value.get("detectionType", 0) == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
                         time = 2
                     else:
                         time = 4
                 else:
-                    time = self.settings[SIXTH_SENSE.TIME]
+                    time = self.settings[SIXTH_SENSE.TIME] or 10
                     if self.radio_installed:
                         time -= RADIO_DURATION
                 self.as_showS(time)
