@@ -39,7 +39,8 @@ class TryLoadHandler(PackageBusinessHandler):
 class ViewHandlerBattle(TryLoadHandler, ViewSettings):
 
     def __init__(self):
-        BATTLE_PAGES = set(VIEW_ALIAS.BATTLE_PAGES + (VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE, VIEW_ALIAS.EPIC_RANDOM_PAGE))
+        BATTLE_PAGES = set(VIEW_ALIAS.BATTLE_PAGES + (VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE, VIEW_ALIAS.EPIC_RANDOM_PAGE,
+                                                      VIEW_ALIAS.COMP7_BATTLE_PAGE, VIEW_ALIAS.COMP7_LIGHT_BATTLE_PAGE))
         listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES.difference(DEF_IGNORED_PAGES))
         super(ViewHandlerBattle, self).__init__(listeners, appNS=APP_NAME_SPACE.SF_BATTLE, scope=EVENT_BUS_SCOPE.BATTLE)
         self.enable_controller = False

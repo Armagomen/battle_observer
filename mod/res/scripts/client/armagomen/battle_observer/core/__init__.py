@@ -117,13 +117,10 @@ class Core(object):
 
         if not is_replay:
             from gui.Scaleform.required_libraries_config import LOBBY_REQUIRED_LIBRARIES
-            LOBBY = "BATTLE_OBSERVER_LOBBY"
-            LOBBY_PACKAGES = ["armagomen.battle_observer.lobby"]
-            g_overrideScaleFormViewsConfig.initExtensionLobbyPackages(LOBBY, LOBBY_PACKAGES)
+            g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
             LOBBY_REQUIRED_LIBRARIES.append('modBattleObserverHangar.swf')
 
-        BATTLE = "BATTLE_OBSERVER_BATTLE"
-        BATTLE_PACKAGES = ["armagomen.battle_observer.battle"]
-        for arenaGUIType in BATTLES_RANGE:
-            g_overrideScaleFormViewsConfig.initExtensionBattlePackages(BATTLE, BATTLE_PACKAGES, arenaGUIType)
         BATTLE_REQUIRED_LIBRARIES.append('modBattleObserver.swf')
+        for guiType in BATTLES_RANGE:
+            packages = g_overrideScaleFormViewsConfig.battlePackages.setdefault(guiType, [])
+            packages.append("armagomen.battle_observer.battle")
