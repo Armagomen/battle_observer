@@ -16,8 +16,7 @@
   "hide_hint_panel": false,
   "ignore_commanders_voice": false,
   "mute_team_base_sound": false,
-  "premium_time": false,
   "save_shot": false,
-  "show_friends": false,
+  "show_friends": false, 
   "useKeyPairs": true
 }

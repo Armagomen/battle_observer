@@ -16,14 +16,14 @@ class KeysListener(object):
         self.components = set()
         self.pressedKeys = set()
         self.usableKeys = set()
-        self.mainSettings = {}
+        self.settings = None
 
-    def init(self, mainSettings):
-        self.mainSettings = mainSettings
+    def init(self, settings):
+        self.settings = settings.main
 
     def fini(self):
         self.clear()
-        self.mainSettings = None
+        self.settings = None
 
     def registerComponent(self, keyFunction, keyList=None):
         self.components.add(KeysData(self.normalizeKey(keyList) if keyList else frozenset(KEY_ALIAS_ALT), keyFunction))
@@ -59,7 +59,7 @@ class KeysListener(object):
     def normalizeKey(self, keyList):
         keys = {item for key in keyList for item in (key if isinstance(key, (list, set, tuple)) else [key])}
 
-        if self.mainSettings.get(MAIN.USE_KEY_PAIRS):
+        if self.settings and self.settings.get(MAIN.USE_KEY_PAIRS):
             for alias_set in (KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT):
                 if any(key in alias_set for key in keys):
                     keys.update(alias_set)

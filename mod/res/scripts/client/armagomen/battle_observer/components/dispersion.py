@@ -1,6 +1,6 @@
 import aih_constants
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen._constants import DISPERSION, GLOBAL, IS_WG_CLIENT
+from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import getPlayer, toggleOverride
 from armagomen.utils.events import g_events
@@ -21,11 +21,9 @@ LINKAGES = {
     _CONSTANTS.DEBUG_ARCADE_GUN_MARKER_NAME: _CONSTANTS.GUN_MARKER_LINKAGE,
     _CONSTANTS.DEBUG_SNIPER_GUN_MARKER_NAME: _CONSTANTS.GUN_MARKER_LINKAGE,
     _CONSTANTS.DEBUG_DUAL_GUN_ARCADE_MARKER_NAME: _CONSTANTS.DUAL_GUN_ARCADE_MARKER_LINKAGE,
-    _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DUAL_GUN_SNIPER_MARKER_LINKAGE
-}
-if IS_WG_CLIENT:
-    LINKAGES.update({_CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE,
-                     _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE})
+    _CONSTANTS.DEBUG_DUAL_GUN_SNIPER_MARKER_NAME: _CONSTANTS.DUAL_GUN_SNIPER_MARKER_LINKAGE,
+    _CONSTANTS.DEBUG_TWIN_GUN_ARCADE_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE,
+    _CONSTANTS.DEBUG_TWIN_GUN_SNIPER_MARKER_NAME: _CONSTANTS.TWIN_GUN_MARKER_LINKAGE}
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
@@ -110,17 +108,11 @@ class DispersionCircle(object):
         pass
 
     @staticmethod
-    def setShotPositionWG(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
+    def setShotPosition(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
         gunMarkerInfo = rotator._VehicleGunRotator__getGunMarkerInfo(
             sPos, sVec, rotator.getCurShotDispersionAngles(), rotator._VehicleGunRotator__gunIndex)
         supportMarkersInfo = rotator._VehicleGunRotator__getSupportMarkersInfo()
         rotator._avatar.inputHandler.updateServerGunMarker(gunMarkerInfo, supportMarkersInfo, SERVER_TICK_LENGTH)
-
-    @staticmethod
-    def setShotPositionLesta(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
-        m_position = rotator._VehicleGunRotator__getGunMarkerPosition(sPos, sVec, rotator.getCurShotDispersionAngles())
-        mPos, mDir, mSize, mISize, dualAccSize, _, collData = m_position
-        rotator._avatar.inputHandler.updateServerGunMarker(mPos, mDir, (mSize, mISize), SERVER_TICK_LENGTH, collData)
 
     def disableWGServerMarker(self):
         if self.settingsCore.applySetting(GAME.ENABLE_SERVER_AIM, False):
@@ -138,7 +130,7 @@ class DispersionCircle(object):
         isEnabled = data[GLOBAL.ENABLED]
         replace = isEnabled and data[DISPERSION.REPLACE]
         server = isEnabled and data[DISPERSION.SERVER]
-        self.toggleCreateGunMarkerOverride(replace or server)
+        toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, replace or server)
         self.toggleServerCrossOverrides(server)
 
     def toggleServerCrossOverrides(self, enable):
@@ -149,20 +141,12 @@ class DispersionCircle(object):
             (gun_marker_ctrl, "useClientGunMarker", self.useGunMarker),
             (gun_marker_ctrl, "useServerGunMarker", self.useGunMarker),
             (VehicleGunRotator, "applySettings", self.onPass),
-            (VehicleGunRotator, "setShotPosition", self.setShotPositionWG if IS_WG_CLIENT else self.setShotPositionLesta),
+            (VehicleGunRotator, "setShotPosition", self.setShotPosition),
             (CrosshairDataProxy, "__onServerGunMarkerStateChanged", self.onPass),
             (CrosshairPanelContainer, "setGunMarkerColor", self.setGunMarkerColor)
         )
         for obj, method_name, func in server_overrides:
             toggleOverride(obj, method_name, func, enable)
-
-    def toggleCreateGunMarkerOverride(self, enable):
-        if IS_WG_CLIENT:
-            toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, enable)
-        else:
-            toggleOverride(gun_marker_ctrl, "createDefaultGunMarker", self.createDefaultGunMarker, enable)
-            toggleOverride(gun_marker_ctrl, "createStrategicGunMarker", self.createStrategicGunMarker, enable)
-            toggleOverride(gun_marker_ctrl, "createAssaultSpgGunMarker", self.createStrategicGunMarker, enable)
 
     def createGunMarker_WG(self, baseCreateGunMarker, isStrategic):
         if isStrategic:

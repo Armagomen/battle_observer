@@ -36,11 +36,9 @@ en.hide_field_mail=Disable field mail
 en.hide_hint_panel=Disable hints in battle
 en.ignore_commanders_voice=Ignore commanders voice
 en.mute_team_base_sound=Mute base capture siren
-en.premium_time=Display premium account time timer
 en.save_shot=Block shooting on allies and destroyed
 en.show_friends=Tag friends and clan players in team lists
 en.auto_claim_clan_reward=Collect clan rewards automatically
-en.hideEventBanner=Hide hangar event Banner
 
 //clock
 en.clock=The clock in the garage and battle

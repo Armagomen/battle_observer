@@ -111,15 +111,3 @@ class SixthSense(SixthSenseMeta):
         except Exception as e:
             logError(repr(e))
             return super(SixthSense, self).getIconPatch()
-
-
-class SixthSenseLesta(SixthSense):
-
-    def _onVehicleStateUpdated(self, state, value):
-        if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
-            if value:
-                self.as_showS(0)
-            else:
-                self.as_hideS()
-        elif state in _STATES_TO_HIDE:
-            self.as_hideS()

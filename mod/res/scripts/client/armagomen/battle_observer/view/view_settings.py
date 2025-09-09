@@ -1,16 +1,12 @@
 from collections import defaultdict
 
-from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, IS_WG_CLIENT, MINIMAP, \
+from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, MINIMAP, \
     STATISTICS
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import IS_XVM_INSTALLED
 from armagomen.utils.logging import logDebug, logInfo
 from constants import ARENA_GUI_TYPE
-
-if IS_WG_CLIENT:
-    from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates
-else:
-    from gui.Scaleform.daapi.view.battle.epic.page import _NEVER_HIDE, _STATE_TO_UI, PageStates
+from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider

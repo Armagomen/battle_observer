@@ -12,10 +12,10 @@ READ_MESSAGE = "loadConfigPart: {}: {}"
 class SettingsLoader(object):
     __slots__ = ('configName', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog')
 
-    def __init__(self, settings):
+    def __init__(self, settings, errorDialog):
         self.__settings = settings
         self.sixth_sense_list = self.sixthSenseIconsNamesList()
-        self.error_dialog = None
+        self.error_dialog = errorDialog
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
         load_json = os.path.join(currentConfigPath, 'load.json')
         if os.path.isfile(load_json):
@@ -23,12 +23,13 @@ class SettingsLoader(object):
         else:
             self.configName = self.configsList[0] if self.configsList else 'default'
             self.createLoadJSON(self.configName)
-            self.errorMessages.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
-            self.configsList.append(self.configName)
+            self.error_dialog.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
+            if self.configName not in self.configsList:
+                self.configsList.append(self.configName)
         config_path = os.path.join(currentConfigPath, self.configName)
         if not os.path.isdir(config_path):
-            self.errorMessages.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
             os.makedirs(config_path)
+            self.error_dialog.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
 
     @staticmethod
     def sixthSenseIconsNamesList():
@@ -124,7 +125,7 @@ class SettingsLoader(object):
             except Exception as error:
                 message = READ_MESSAGE.format(file_path, repr(error))
                 if self.error_dialog:
-                    self.error_dialog.messages.add(message)
+                    self.error_dialog.add(message)
                 logWarning(message)
             else:
                 if file_data is not None:

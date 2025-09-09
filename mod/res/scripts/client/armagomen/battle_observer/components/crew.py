@@ -1,5 +1,5 @@
 from AccountCommands import VEHICLE_SETTINGS_FLAG
-from armagomen._constants import CREW_XP, IS_WG_CLIENT, MAIN
+from armagomen._constants import CREW_XP, MAIN
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import updateIgnoredVehicles
@@ -8,13 +8,8 @@ from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logInfo
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
-
-if IS_WG_CLIENT:
-    from gui.shared.gui_items.processors.tankman import TankmanAutoReturn
-    from gui.shared.gui_items.processors.vehicle import VehicleAutoReturnProcessor
-else:
-    from gui.shared.gui_items.processors.tankman import TankmanReturn
-
+from gui.shared.gui_items.processors.tankman import TankmanAutoReturn
+from gui.shared.gui_items.processors.vehicle import VehicleAutoReturnProcessor
 from gui.shared.notifications import NotificationPriorityLevel
 from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
@@ -97,15 +92,12 @@ class CrewProcessor(object):
             return
         if user_settings.main[MAIN.CREW_RETURN]:
             self.updateAutoReturn(vehicle)
-        if IS_WG_CLIENT and user_settings.main[MAIN.CREW_TRAINING]:
+        if user_settings.main[MAIN.CREW_TRAINING]:
             self.updateAcceleration(vehicle)
 
     def updateAutoReturn(self, vehicle):
         if self.intCD != vehicle.intCD:
-            if IS_WG_CLIENT:
-                self.__autoReturnToggleSwitch(vehicle)
-            else:
-                self.__processReturnCrew(vehicle)
+            self.__autoReturnToggleSwitch(vehicle)
             self.intCD = vehicle.intCD
 
     def updateAcceleration(self, vehicle):
@@ -133,13 +125,6 @@ class CrewProcessor(object):
             if available and result.success and not vehicle.isCrewLocked and not vehicle.isCrewFull:
                 result = yield TankmanAutoReturn(vehicle).request()
             if not result.success and result.userMsg:
-                SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType, priority=NotificationPriorityLevel.MEDIUM)
-
-    @decorators.adisp_process('crewReturning')
-    def __processReturnCrew(self, vehicle):
-        if not vehicle.isCrewFull and bool(vehicle.lastCrew) and self.isCrewAvailable(vehicle):
-            result = yield TankmanReturn(vehicle).request()
-            if result.userMsg:
                 SystemMessages.pushI18nMessage(result.userMsg, type=result.sysMsgType, priority=NotificationPriorityLevel.MEDIUM)
 
 

@@ -42,7 +42,8 @@
 		
 		public function as_addToStage():void
 		{
-			this.scaleX = this.scaleY = App.appHeight / 1080;
+			var scale:Number = Math.min(App.appHeight / 1080, 1.0);
+			this.scaleX = this.scaleY = scale;
 			this.x = App.appWidth >> 1;
 			this.y = Math.ceil(App.appHeight / 5.5);
 			this.text = new TextExt(0, 0, Filters.mediumText, TextFieldAutoSize.CENTER, this);
@@ -58,7 +59,8 @@
 		
 		private function _onResizeHandle(event:Event):void
 		{
-			this.scaleX = this.scaleY = App.appHeight / 1080;
+			var scale:Number = Math.min(App.appHeight / 1080, 1.0);
+			this.scaleX = this.scaleY = scale;
 			this.x = App.appWidth >> 1;
 			this.y = Math.ceil(App.appHeight / 5.5);
 		}

@@ -30,3 +30,6 @@ class ErrorMessages(object):
 
     def fini(self):
         ServicesLocator.appLoader.onGUISpaceEntered -= self.__show
+
+    def add(self, message):
+        self.messages.add(message)

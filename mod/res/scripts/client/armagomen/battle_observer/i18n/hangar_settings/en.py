@@ -56,7 +56,6 @@ localization = {
                                            "The parameter will replace all voiceover of bloggers, "
                                            "Chuck Norris and so on with the standard / from the voiceover mod. ",
         "disable_score_sound": "Disable score change sound",
-        "premium_time": "Display exact premium time.",
         "auto_crew_training": "Automatic switching of 'Accelerated crew training'",
         "auto_crew_training_tooltip": "Monitors whether 'Field Upgrade' is upgraded/available and enables or disables"
                                       " 'Expedited Crew Training' accordingly.",
@@ -74,7 +73,6 @@ localization = {
         "mute_team_base_sound": "Mute base capture siren.",
         "excluded_map_slots_notification": "Notify about available excluded map slots.",
         "auto_claim_clan_reward": "Collect clan rewards automatically.",
-        "hideEventBanner": "Hide event banner."
     },
     "statistics": {
         "header": "WGR (WGR) Player Statistics | Tank icons",

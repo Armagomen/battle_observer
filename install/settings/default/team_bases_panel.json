@@ -1,15 +1,15 @@
 {
   "enabled": false,
-  "height": 24,
+  "height": 24, 
   "text_settings": {
     "bold": false,
-    "color": "#FAFAFA",
+    "color": "#FFFFFF",
     "font": "$TitleFont",
     "italic": false,
     "size": 16,
-    "underline": false,
+    "underline": false, 
     "y": 0
   },
-  "width": 400,
+  "width": 400, 
   "y": 60
 }

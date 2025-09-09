@@ -56,8 +56,6 @@ localization = {
         "hide_hint_panel": "Hinweistafel im Gefecht ausblenden",
         "ignore_commanders_voice": "Kommandantenstimme ignorieren",
         "ignore_commanders_voice_tooltip": "Nach Aktivierung wird die Standardbesatzungsstimme erzwungen. Diese Einstellung ersetzt einzigartige Kommandantenstimmen durch die Standardstimme oder ein installiertes Modpack.",
-        "premium_time": "Premium-Account-Timer anzeigen",
-        "premium_time_tooltip": "Aktivierung oder Deaktivierung erfolgt nicht sofort—bitte bis zu 1 Minute warten oder die Garagenansicht wechseln.",
         "show_friends": "Freunde und Clanmitglieder in Teamlisten markieren",
         "useKeyPairs": "Gleichzeitige Nutzung linker/rechter Ctrl-, Alt- und Shift-Tasten",
         "useKeyPairs_tooltip": "Nach Aktivierung funktionieren die linken und rechten Tasten gleich, unabhängig von Moduleinstellungen.",
@@ -65,7 +63,6 @@ localization = {
         "mute_team_base_sound": "Basisalarm-Sirene deaktivieren",
         "excluded_map_slots_notification": "Benachrichtigung über verfügbare Kartensperrslots anzeigen",
         "auto_claim_clan_reward": "Clanbelohnungen automatisch abholen",
-        "hideEventBanner": "Eventbanner deaktivieren"
     },
     "statistics": {
         "header": "Spielerstatistiken und Fahrzeug-Icon-Einstellungen",

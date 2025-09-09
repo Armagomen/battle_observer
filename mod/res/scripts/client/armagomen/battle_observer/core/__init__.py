@@ -1,4 +1,4 @@
-from armagomen._constants import BATTLES_RANGE, IS_WG_CLIENT, MAIN
+from armagomen._constants import BATTLES_RANGE, MAIN
 from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
@@ -8,8 +8,6 @@ from skeletons.connection_mgr import IConnectionManager
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from wg_async import wg_async
 
-SETTINGS_API = []
-
 
 class Core(object):
     connectionMgr = dependency.descriptor(IConnectionManager)
@@ -17,6 +15,7 @@ class Core(object):
 
     def __init__(self, modVersion):
         self.version = modVersion
+        self.api = list()
         self.userID = None
         self.userName = None
         self.components = {}
@@ -60,24 +59,25 @@ class Core(object):
 
     def start(self):
         from armagomen.battle_observer.components import loadComponents
-        from armagomen.battle_observer.settings import settings_loader
+        from armagomen.battle_observer.settings import user_settings
+        from armagomen.battle_observer.settings.loader import SettingsLoader
         from armagomen.battle_observer.settings.loading_error import ErrorMessages
         from armagomen.utils.common import isReplay
 
         self.error_dialog = ErrorMessages()
-        settings_loader.error_dialog = self.error_dialog
-        is_replay = isReplay()
+        settings_loader = SettingsLoader(user_settings, self.error_dialog)
         settings_loader.readConfig()
+        is_replay = isReplay()
         self.components = loadComponents(is_replay)
         self.registerBattleObserverPackages(is_replay)
-        g_keysListener.init(settings_loader.settings.main)
+        g_keysListener.init(user_settings)
         settings_loader.updateAllSettings()
 
         if not is_replay:
             try:
                 from gui.modsListApi import g_modsListApi
                 from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-                SETTINGS_API.extend([g_modsListApi, vxSettingsApi, vxSettingsApiEvents])
+                self.api.extend([g_modsListApi, vxSettingsApi, vxSettingsApiEvents])
             except Exception as error:
                 from debug_utils import LOG_CURRENT_EXCEPTION
                 self.error_dialog.messages.add(repr(error))
@@ -85,7 +85,7 @@ class Core(object):
                 logError("Settings Api Not Loaded: {}", repr(error))
             else:
                 from armagomen.battle_observer.settings.hangar import SettingsInterface
-                self.hangar_settings = SettingsInterface(settings_loader, self.version, *SETTINGS_API)
+                self.hangar_settings = SettingsInterface(settings_loader, self.version, *self.api)
 
     def onModSettingsChanged(self, name, data):
         if name == MAIN.NAME:
@@ -108,19 +108,22 @@ class Core(object):
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         self.connectionMgr.onDisconnected -= self._onDisconnected
         g_events.onModSettingsChanged -= self.onModSettingsChanged
-        while SETTINGS_API:
-            SETTINGS_API.pop()
+        self.api = None
 
     @staticmethod
     def registerBattleObserverPackages(is_replay):
         from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
         from gui.Scaleform.required_libraries_config import BATTLE_REQUIRED_LIBRARIES
 
-        if not is_replay and IS_WG_CLIENT:
+        if not is_replay:
             from gui.Scaleform.required_libraries_config import LOBBY_REQUIRED_LIBRARIES
+            LOBBY = "BATTLE_OBSERVER_LOBBY"
+            LOBBY_PACKAGES = ["armagomen.battle_observer.lobby"]
+            g_overrideScaleFormViewsConfig.initExtensionLobbyPackages(LOBBY, LOBBY_PACKAGES)
             LOBBY_REQUIRED_LIBRARIES.append('modBattleObserverHangar.swf')
-            g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
+
+        BATTLE = "BATTLE_OBSERVER_BATTLE"
+        BATTLE_PACKAGES = ["armagomen.battle_observer.battle"]
+        for arenaGUIType in BATTLES_RANGE:
+            g_overrideScaleFormViewsConfig.initExtensionBattlePackages(BATTLE, BATTLE_PACKAGES, arenaGUIType)
         BATTLE_REQUIRED_LIBRARIES.append('modBattleObserver.swf')
-        for guiType in BATTLES_RANGE:
-            packages = g_overrideScaleFormViewsConfig.battlePackages.setdefault(guiType, [])
-            packages.append("armagomen.battle_observer.battle")

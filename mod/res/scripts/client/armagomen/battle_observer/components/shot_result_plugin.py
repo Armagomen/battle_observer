@@ -1,5 +1,5 @@
 from aih_constants import SHOT_RESULT
-from armagomen._constants import ARMOR_CALC, GLOBAL, IS_WG_CLIENT
+from armagomen._constants import ARMOR_CALC, GLOBAL
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import getPlayer, isReplay, MinMax, overrideMethod
 from armagomen.utils.events import g_events
@@ -176,17 +176,15 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
         self.__player = getPlayer()
-        if IS_WG_CLIENT:
-            prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
-            if prebattleCtrl is not None:
-                prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
+        prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
+        if prebattleCtrl is not None:
+            prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
 
     def stop(self):
         super(ShotResultIndicatorPlugin, self).stop()
-        if IS_WG_CLIENT:
-            prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
-            if prebattleCtrl is not None:
-                prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
+        prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
+        if prebattleCtrl is not None:
+            prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
 
     def __updateCurrVehicleInfo(self, vehicle):
         if not avatar_getter.isObserver(self.__player) and vehicle is not None:
@@ -253,7 +251,7 @@ class Randomizer(object):
         logDebug(cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
 
 
-if IS_WG_CLIENT and not isReplay():
+if not isReplay():
     g_events.onVehicleChangedDelayed += Randomizer._updateRandomization
 
 

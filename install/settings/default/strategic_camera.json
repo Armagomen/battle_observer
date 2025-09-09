@@ -1,6 +1,8 @@
 {
+  "distRange": [
+    40.0,
+    150.0
+  ],
   "enabled": false,
-  "max": 200.0,
-  "min": 40.0,
-  "scrollSensitivity": 12.0
+  "scrollSensitivity": 10.0
 }

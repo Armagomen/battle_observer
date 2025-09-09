@@ -1,15 +1,27 @@
-from armagomen._constants import IS_WG_CLIENT, MAIN
+from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import GAME_VERSION, overrideMethod
+from armagomen.utils.common import overrideMethod
 from armagomen.utils.events import g_events
+from comp7_core.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
 from gui.battle_control.controllers.team_bases_ctrl import BattleTeamsBasesController
 from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
+from gui.Scaleform.daapi.view.battle.shared.hint_panel import BattleHintPanel
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
-from gui.Scaleform.daapi.view.lobby.hangar.entry_points.event_entry_points_container import EventEntryPointsContainer
+
+
+# disable battle hints
+@overrideMethod(BattleHintPanel, "_initPlugins")
+def _initPlugins(base, panel, *args, **kwargs):
+    if not user_settings.main[MAIN.HIDE_HINT]:
+        base(panel, *args, **kwargs)
+    elif panel._plugins is not None:
+        panel._plugins.stop()
+        panel._plugins.fini()
+        panel._plugins = None
 
 
 # disable field mail tips
@@ -27,11 +39,6 @@ def _needToGetTeasersInfo(base, *args):
 @overrideMethod(_ClientArenaVisitor, "hasDogTag")
 def hasDogTag(base, *args, **kwargs):
     return False if user_settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
-
-
-@overrideMethod(EventEntryPointsContainer, 'as_updateEntriesS')
-def _EventEntryPointsContainer_as_updateEntries(base, self, data):
-    return base(self, [] if user_settings.main[MAIN.HIDE_EVENT_BANNER] else data)
 
 
 class TweakSounds(object):
@@ -74,28 +81,16 @@ class TweakSounds(object):
             return False
         return base(*args, **kwargs)
 
+    @staticmethod
+    @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
+    def _onVehicleStateUpdated(base, eq, state, value):
+        if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
+            return
+        return base(eq, state, value)
+
 
 t_sounds = TweakSounds()
 
 
 def fini():
     t_sounds.fini()
-
-
-if IS_WG_CLIENT and GAME_VERSION.startswith('2'):
-    from comp7_core.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
-    from gui.Scaleform.daapi.view.battle.shared.hint_panel import BattleHintPanel
-
-
-    # disable battle hints
-    @overrideMethod(BattleHintPanel, "_initPlugins")
-    def _initPlugins(base, *args, **kwargs):
-        if not user_settings.main[MAIN.HIDE_HINT]:
-            base(*args, **kwargs)
-
-
-    @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
-    def _onVehicleStateUpdated(base, eq, state, value):
-        if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
-            return
-        return base(eq, state, value)

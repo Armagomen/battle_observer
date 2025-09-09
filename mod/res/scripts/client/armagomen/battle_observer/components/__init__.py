@@ -1,6 +1,5 @@
 from importlib import import_module
 
-from armagomen._constants import IS_WG_CLIENT
 from armagomen.utils.logging import logError
 
 
@@ -23,18 +22,17 @@ def loadComponents(is_replay):
         'dispersion',
         'excluded_maps',
         'friends',
-        # 'premium_time',
         'save_shot_lite',
         'service_channel_filter',
-        'vehicle_battle_boosters'
+        'vehicle_battle_boosters',
+        'auto_claim_clan_reward',
+        'donate_messages'
     ]
 
     wg_only = ['auto_claim_clan_reward', 'donate_messages']
 
     if not is_replay:
         load.extend(not_replay)
-        if IS_WG_CLIENT:
-            load.extend(wg_only)
 
     for moduleName in load:
         try:

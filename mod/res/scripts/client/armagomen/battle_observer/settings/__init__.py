@@ -26,13 +26,11 @@ class UserSettings(object):
             MAIN.HIDE_HINT: False,
             MAIN.IGNORE_COMMANDERS: False,
             MAIN.MUTE_BASES_SOUND: False,
-            MAIN.PREMIUM_TIME: False,
             MAIN.SAVE_SHOT: False,
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
             MAIN.USE_KEY_PAIRS: True,
-            MAIN.HIDE_EVENT_BANNER: False,
         }
 
         self.avg_efficiency_in_hangar = {
@@ -363,6 +361,3 @@ class UserSettings(object):
 
 
 user_settings = UserSettings()
-
-from armagomen.battle_observer.settings.loader import SettingsLoader
-settings_loader = SettingsLoader(user_settings)

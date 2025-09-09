@@ -1,9 +1,8 @@
 {
   "align": "left", 
-  "color": "#f5ff8f", 
-  "done_color": "#a6ffa6", 
   "enabled": false, 
-  "percent": true, 
+  "percent": true,
+  "text_size": 18, 
   "timer": true, 
   "x": 110, 
   "y": 0

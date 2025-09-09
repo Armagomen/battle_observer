@@ -6,8 +6,6 @@ from constants import ARENA_GUI_TYPE, AUTH_REALM
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
 
-IS_WG_CLIENT = AUTH_REALM != "RU"
-
 
 def getLogo(big=True):
     if big:
@@ -40,7 +38,7 @@ URLS = namedtuple("URLS", (
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")
 
-API_KEY = "5500d1b937426e47e2b039e4a11990be" if IS_WG_CLIENT else "53352ebb7cd87e994157d0d1e9f360b1"
+API_KEY = "5500d1b937426e47e2b039e4a11990be"
 REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/info/?application_id={}".format(API_KEY),
            "ASIA": "https://api.worldoftanks.asia/wot/account/info/?application_id={}".format(API_KEY),
            "NA": "https://api.worldoftanks.com/wot/account/info/?application_id={}".format(API_KEY),
@@ -88,14 +86,14 @@ SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA",
 __Main = namedtuple("MAIN", (
     "AUTO_CLEAR_CACHE", "HIDE_BADGES", "HIDE_CLAN_ABBREV", "HIDE_DOG_TAGS", "NAME", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
     "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND", "DEBUG", "CREW_TRAINING", "DIRECTIVES", "HIDE_HINT",
-    "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "PREMIUM_TIME", "SAVE_SHOT", "MUTE_BASES_SOUND", "EXCLUDED_MAP_SLOTS_NOTIFICATION",
-    "AUTO_CLAIM_CLAN_REWARD", "HIDE_EVENT_BANNER"))
+    "FIELD_MAIL", "CREW_RETURN", "STUN_SOUND", "SAVE_SHOT", "MUTE_BASES_SOUND", "EXCLUDED_MAP_SLOTS_NOTIFICATION",
+    "AUTO_CLAIM_CLAN_REWARD"))
 MAIN = __Main(
     "clear_cache_automatically", "hide_badges", "hide_clan_abbrev", "hide_dog_tags", "main", "show_friends",
     "anti_anonymous", "useKeyPairs", "ignore_commanders_voice", "disable_score_sound", "DEBUG_MODE",
     "auto_crew_training", "directives_only_from_storage", "hide_hint_panel", "hide_field_mail",
-    "auto_return_crew", "disable_stun_sound", "premium_time", "save_shot", "mute_team_base_sound",
-    "excluded_map_slots_notification", "auto_claim_clan_reward", "hideEventBanner")
+    "auto_return_crew", "disable_stun_sound", "save_shot", "mute_team_base_sound",
+    "excluded_map_slots_notification", "auto_claim_clan_reward")
 
 COLORS = namedtuple("COLORS", (
     "NAME", "BLACK", "BLIND", "GOLD", "GREEN", "WHITE", "ORANGE", "RED", "S_YELLOW", "YELLOW",
@@ -187,9 +185,8 @@ STRATEGIC = namedtuple("STRATEGIC", ("NAME", "DIST_RANGE", "SCROLL_SENSITIVITY")
     "strategic_camera", "distRange", "scrollSensitivity")
 
 POSTMORTEM_MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
-                    CTRL_MODE_NAME.RESPAWN_DEATH, CTRL_MODE_NAME.VEHICLES_SELECTION}
-if IS_WG_CLIENT:
-    POSTMORTEM_MODES.update((CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.LOOK_AT_KILLER))
+                    CTRL_MODE_NAME.RESPAWN_DEATH, CTRL_MODE_NAME.VEHICLES_SELECTION,
+                    CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.LOOK_AT_KILLER}
 
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "NAME", "SHOW_PIERCING_POWER", "POSITION", "SHOW_COUNTED_ARMOR",
@@ -386,6 +383,7 @@ ALIAS_TO_CONFIG_NAME_LOBBY = {
 __battle_types = (
     "BATTLE_ROYALE",
     "COMP7",
+    "COMP7_LIGHT",
     "EPIC_BATTLE",
     "EPIC_RANDOM",
     "EPIC_RANDOM_TRAINING",

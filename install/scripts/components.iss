@@ -23,11 +23,9 @@ Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Types: armagomen;
 Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Types: armagomen;
 Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: armagomen;
 Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: armagomen;
-Name: main/premium_time; Description: {cm:premium_time}; Types: armagomen;
 Name: main/save_shot; Description: {cm:save_shot}; Types: armagomen;
 Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen;
 Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward}; Types: armagomen;
-Name: main/hideEventBanner; Description: {cm:hideEventBanner}; Types: armagomen;
 
 Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning;
 Name: clock/hangar; Description: {cm:clock_hangar}; Types: armagomen;
@@ -193,11 +191,9 @@ begin
     JSON_SetBool(Handle,'/hide_hint_panel', WizardIsComponentSelected('main/hide_hint_panel'));
     JSON_SetBool(Handle,'/ignore_commanders_voice', WizardIsComponentSelected('main/ignore_commanders_voice'));
     JSON_SetBool(Handle,'/mute_team_base_sound', WizardIsComponentSelected('main/mute_team_base_sound'));
-    JSON_SetBool(Handle,'/premium_time', WizardIsComponentSelected('main/premium_time'));
     JSON_SetBool(Handle,'/save_shot', WizardIsComponentSelected('main/save_shot'));
     JSON_SetBool(Handle,'/show_friends', WizardIsComponentSelected('main/show_friends'));
     JSON_SetBool(Handle,'/auto_claim_clan_reward', WizardIsComponentSelected('main/auto_claim_clan_reward'));
-    JSON_SetBool(Handle,'/hideEventBanner', WizardIsComponentSelected('main/hideEventBanner'));
     JSON_Close(Handle);
   end;
 end;

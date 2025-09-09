@@ -1,7 +1,7 @@
 import TriggersManager
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
-from armagomen._constants import ARCADE, EFFECTS, GLOBAL, IS_WG_CLIENT, SNIPER, STRATEGIC
+from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import addCallback, getPlayer, isReplay, MinMax, ResMgr, toggleOverride
 from armagomen.utils.events import g_events
@@ -20,10 +20,7 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
         self.latency = 0
         self.skip_clip = False
         self.appLoader = appLoader
-        if IS_WG_CLIENT:
-            self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
-        else:
-            self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_SHOOT
+        self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
 
     def updateSettings(self, data):
         enabled = data[SNIPER.DISABLE_SNIPER] and data[GLOBAL.ENABLED]
@@ -138,17 +135,10 @@ class Arcade(CameraSettings):
                 camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
                 camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
                 camera._cfg[ARCADE.START_ANGLE] = -0.18
-                self.updateProperties(camera)
+                camera._updateProperties(state=None)
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.ARCADE)
-                self.updateProperties(camera)
-
-    @staticmethod
-    def updateProperties(camera):
-        if IS_WG_CLIENT:
-            camera._updateProperties(state=None)
-        else:
-            camera._ArcadeCamera__updateProperties(state=None)
+                camera._updateProperties(state=None)
 
     def enablePostMortem(self, base, mode, **kwargs):
         if 'postmortemParams' in kwargs:

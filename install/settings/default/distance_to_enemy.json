@@ -1,7 +1,8 @@
 {
   "align": "center",
+  "color": "#f5ff8f",
   "enabled": false,
-  "template": "<font color='#f5ff8f' size='18'>%(distance).1f до %(name)s</font>",
+  "text_size": 18,
   "x": 0,
-  "y": -150
+  "y": -190
 }

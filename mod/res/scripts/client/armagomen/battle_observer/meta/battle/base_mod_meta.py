@@ -31,7 +31,7 @@ class BaseModMeta(BaseDAAPIComponent):
         return self.sessionProvider.arenaVisitor
 
     def isComp7Battle(self):
-        return self._arenaVisitor.getArenaBonusType() == ARENA_BONUS_TYPE.COMP7
+        return self._arenaVisitor.getArenaBonusType() in (ARENA_BONUS_TYPE.COMP7, ARENA_BONUS_TYPE.COMP7_LIGHT)
 
     @property
     def gui(self):

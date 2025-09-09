@@ -19,12 +19,12 @@ class ServiceChannelFilter(object):
                 return
         return base(*args, **kwargs)
 
-    def onReceiveMessage(self, base, manager, chatAction):
+    def onReceiveMessage(self, base, manager, chatAction, *args, **kwargs):
         if chatAction.has_key(SERVICE_CHANNEL.DATA):
             data = dict(chatAction[SERVICE_CHANNEL.DATA])
             if data.get(SERVICE_CHANNEL.TYPE, None) in self.channel_filter:
                 return
-        return base(manager, chatAction)
+        return base(manager, chatAction, *args, **kwargs)
 
     def _onModSettingsChanged(self, name, data):
         if name == SERVICE_CHANNEL.NAME:

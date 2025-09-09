@@ -1,9 +1,10 @@
 {
-  "avg_assist": false,
-  "avg_blocked": false,
-  "avg_damage": false,
-  "avg_stun": false,
+  "avg_assist": true,
+  "avg_blocked": true,
+  "avg_damage": true,
+  "avg_stun": true,
+  "battles": true,
   "enabled": false,
-  "gun_marks": false,
-  "win_rate": false
+  "gun_marks": true,
+  "win_rate": true
 }

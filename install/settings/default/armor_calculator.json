@@ -7,6 +7,8 @@
   }, 
   "show_caliber": false, 
   "show_counted_armor": true, 
-  "show_piercing_power": true, 
-  "show_piercing_reserve": false
+  "show_piercing_power": true,
+  "show_piercing_reserve": false,
+  "splitter": " | ",
+  "text_size": 18
 }

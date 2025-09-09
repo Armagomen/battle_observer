@@ -57,8 +57,6 @@ localization = {
         "hide_hint_panel": "Ukryj panel wskazówek w bitwie",
         "ignore_commanders_voice": "Ignoruj głosy dowódców",
         "ignore_commanders_voice_tooltip": "Zastępuje unikalne głosy standardowym dźwiękiem załogi lub zainstalowanym modem.",
-        "premium_time": "Wyświetl zegar konta premium",
-        "premium_time_tooltip": "Zmiana nie jest natychmiastowa — należy poczekać do 1 minuty lub przełączyć zakładkę garażu.",
         "show_friends": "Oznaczaj przyjaciół i członków klanu na listach drużyn",
         "useKeyPairs": "Używaj parowanych klawiszy Ctrl, Alt, Shift",
         "useKeyPairs_tooltip": "Lewy i prawy klawisz działają jako jeden — niezależnie od ustawień modułu.",
@@ -66,7 +64,6 @@ localization = {
         "mute_team_base_sound": "Wyłącz syrenę przejęcia bazy",
         "excluded_map_slots_notification": "Powiadamiaj o dostępnych slotach do wykluczenia map",
         "auto_claim_clan_reward": "Automatycznie odbieraj nagrody klanowe",
-        "hideEventBanner": "Ukryj banery wydarzeń"
     },
     "statistics": {
         "header": "Statystyki graczy i ikony pojazdów",

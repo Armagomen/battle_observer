@@ -36,11 +36,9 @@ uk.hide_field_mail=Вимикати польову пошту
 uk.hide_hint_panel=Приховувати підказки у бою
 uk.ignore_commanders_voice=Ігнорувати озвучку командирів
 uk.mute_team_base_sound=Вимикати сирену захоплення бази
-uk.premium_time=Відображати таймер преміум-акаунту
 uk.save_shot=Блокувати стрілянину по союзниках і знищених танках
 uk.show_friends=Позначати друзів і гравців клану у списках команд
 uk.auto_claim_clan_reward=Автоматично збирати кланові нагороди
-uk.hideEventBanner=Прибрати банери подій
 
 //clock
 uk.clock=Годинник у гаражі та бою

@@ -18,25 +18,3 @@ class DebugPanel(DebugPanelMeta):
 
     def updateDebugInfo(self, base, debug, ping, fps, isLaggingNow, fpsReplay):
         self.as_updateS(ping, fps, isLaggingNow)
-
-
-class DebugPanelLesta(DebugPanelMeta):
-
-    def __init__(self):
-        super(DebugPanelLesta, self).__init__()
-
-    def _populate(self):
-        super(DebugPanelLesta, self)._populate()
-        toggleOverride(_DP, "updateDebugInfo", self.updateDebugInfo, True)
-        toggleOverride(_DP, "updateReplayDebugInfo", self.updateReplayDebugInfo, True)
-
-    def _dispose(self):
-        toggleOverride(_DP, "updateDebugInfo", self.updateDebugInfo, False)
-        toggleOverride(_DP, "updateReplayDebugInfo", self.updateReplayDebugInfo, False)
-        super(DebugPanelLesta, self)._dispose()
-
-    def updateDebugInfo(self, base, debug, ping, fps, isLaggingNow):
-        self.as_updateS(ping, fps, isLaggingNow)
-
-    def updateReplayDebugInfo(self, base, debug, ping, fps, isLaggingNow, fpsReplay):
-        self.as_updateS(ping, fps, isLaggingNow)
