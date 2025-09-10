@@ -14,6 +14,7 @@
 		public function ObserverEfficiencyUI()
 		{
 			super();
+			this.visible = false;
 		}
 		
 		override protected function configUI():void

@@ -31,7 +31,7 @@ class HangarEfficiency(HangarEfficiencyMeta):
     def __init__(self):
         super(HangarEfficiency, self).__init__()
         self.enabled = False
-        self.is_hangar = False
+        self.visible = False
 
     def _populate(self):
         super(HangarEfficiency, self)._populate()
@@ -73,24 +73,25 @@ class HangarEfficiency(HangarEfficiencyMeta):
                 self.enabled = data[GLOBAL.ENABLED]
                 if self.enabled:
                     self.as_addToStageS()
+                    self.setVisible(self.visible)
                 else:
                     self.as_clearSceneS()
             if self.enabled:
                 cachedVehicleData.onVehicleChanged()
 
     def onWindowShowingStatusChanged(self, uniqueID, newStatus):
-        if not self.enabled or newStatus not in self.SHOWING_STATUS_TO_VALUE:
+        if newStatus not in self.SHOWING_STATUS_TO_VALUE:
             return
-
         window = self.gui.windowsManager.getWindow(uniqueID).content
         # logDebug("Hangar Efficiency Window: {}", repr(window))
         if not isinstance(window, ALL_VIEWS):
             return
-
-        status_value = self.SHOWING_STATUS_TO_VALUE[newStatus]
-
+        visible = self.visible
         if isinstance(window, RandomHangar):
-            self.is_hangar = status_value
-            self.setVisible(self.is_hangar)
+            visible = self.SHOWING_STATUS_TO_VALUE[newStatus]
         elif isinstance(window, NOT_SHOW):
-            self.setVisible(self.is_hangar and not status_value)
+            visible = self.visible and not self.SHOWING_STATUS_TO_VALUE[newStatus]
+        if self.visible != visible:
+            self.visible = visible
+            if self.enabled:
+                self.setVisible(self.visible)

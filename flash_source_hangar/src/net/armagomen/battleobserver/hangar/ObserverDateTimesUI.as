@@ -14,6 +14,7 @@
 		public function ObserverDateTimesUI()
 		{
 			super();
+			this.visible = false;
 		}
 		
 		override protected function configUI():void

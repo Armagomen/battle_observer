@@ -19,9 +19,7 @@ class Events(object):
         self.onArmorChanged = BOEvent()
         self.onMarkerColorChanged = BOEvent()
         self.onVehicleChangedDelayed = SafeEvent()
-
         self.onModSettingsChanged = SafeEvent()
-        self.onUserConfigUpdateComplete = SafeEvent()
 
         self.appLoader.onGUISpaceEntered += self.subscribe
         self.appLoader.onGUISpaceLeft += self.unsubscribe

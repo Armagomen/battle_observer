@@ -25,7 +25,7 @@ class DateTimes(DateTimesMeta):
     def __init__(self):
         super(DateTimes, self).__init__()
         self.enabled = False
-        self.is_hangar = False
+        self.visible = False
         self._timeInterval = TimeInterval(1.0, self, 'updateTime')
 
     def _populate(self):
@@ -37,11 +37,20 @@ class DateTimes(DateTimesMeta):
     def _dispose(self):
         self.gui.windowsManager.onWindowShowingStatusChanged -= self.onWindowShowingStatusChanged
         g_events.onModSettingsChanged -= self.onModSettingsChanged
-        self._timeInterval.stop()
+        self.toggleInterval(False)
         super(DateTimes, self)._dispose()
 
     def updateTime(self):
         self.as_updateTimeS(unicode(strftime(self.settings[CLOCK.IN_LOBBY][CLOCK.FORMAT]), ENCODING_LOCALE, ENCODING_ERRORS))
+
+    def toggleInterval(self, enabled):
+        self.setVisible(enabled)
+        if enabled:
+            self.updateTime()
+            if not self._timeInterval.isStarted():
+                self._timeInterval.start()
+        else:
+            self._timeInterval.stop()
 
     def onModSettingsChanged(self, name, data):
         if name == CLOCK.NAME:
@@ -49,23 +58,22 @@ class DateTimes(DateTimesMeta):
                 self.enabled = data[CLOCK.IN_LOBBY][GLOBAL.ENABLED]
                 if self.enabled:
                     self.as_addToStageS()
-                    self.updateTime()
-                    self._timeInterval.start()
                 else:
-                    self._timeInterval.stop()
                     self.as_clearSceneS()
+                self.toggleInterval(self.visible and self.enabled)
 
     def onWindowShowingStatusChanged(self, uniqueID, newStatus):
-        if not self.enabled or newStatus not in self.SHOWING_STATUS_TO_VALUE:
+        if newStatus not in self.SHOWING_STATUS_TO_VALUE:
             return
-
         window = self.gui.windowsManager.getWindow(uniqueID).content
         if not isinstance(window, ALL_VIEWS):
             return
-
-        status_value = self.SHOWING_STATUS_TO_VALUE[newStatus]
+        visible = self.visible
         if isinstance(window, CONTENT_VIEWS):
-            self.is_hangar = status_value
-            self.setVisible(self.is_hangar)
+            visible = self.SHOWING_STATUS_TO_VALUE[newStatus]
         elif isinstance(window, NOT_SHOW):
-            self.setVisible(self.is_hangar and not status_value)
+            visible = self.visible and not self.SHOWING_STATUS_TO_VALUE[newStatus]
+        if self.visible != visible:
+            self.visible = visible
+            if self.enabled:
+                self.toggleInterval(self.visible)
