@@ -79,7 +79,7 @@ class AutoClaimClanReward(object):
         if not response.isSuccess():
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - " + backport.text(
                 R.strings.clan_supply.messages.claimRewards.error()), type=SystemMessages.SM_TYPE.Error)
-            logWarning('AutoClaimClanReward Failed to claim rewards. Code: {code}', code=response.getCode())
+            logWarning('AutoClaimClanReward Failed to claim rewards. Code: {}', response.getCode())
         self.__claim_started = False
 
     @adisp_process
@@ -88,7 +88,7 @@ class AutoClaimClanReward(object):
         if not response.isSuccess():
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - Failed to claim Progression.",
                                        type=SystemMessages.SM_TYPE.Error)
-            logWarning('AutoClaimClanReward Failed to claim Progression. Code: {code}', code=response.getCode())
+            logWarning('AutoClaimClanReward Failed to claim Progression. Code: {}', response.getCode())
 
     def parseQuests(self, data):
         if data is not None and not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):

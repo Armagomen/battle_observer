@@ -61,12 +61,8 @@ def save():
 
 def restartGame():
     save()
-    try:
-        import WGC
-        WGC.notifyRestart()
-    except ImportError:
-        import LGC
-        LGC.notifyRestart()
+    import WGC
+    WGC.notifyRestart()
     addCallback(1.0, BigWorld.restartGame)
 
 

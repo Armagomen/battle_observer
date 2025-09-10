@@ -49,7 +49,7 @@ class _ShotResult(_CrosshairShotResults):
         distance = player.position.flatDistTo(gunMarker.position)
         piercing_power = computePiercingPowerAtDist(shot.piercingPower, distance, shot.maxDistance, multiplier)
         if cls._isModernMechanics(shell):
-            return cls._computeArmorModern(collision_details, shell, piercing_power, gunMarker.collData.entity)
+            return cls._computeArmorModernHE(collision_details, shell, piercing_power, gunMarker.collData.entity)
         else:
             return cls._computeArmorDefault(collision_details, shell, piercing_power, gunMarker.collData.entity)
 
@@ -76,7 +76,6 @@ class _ShotResult(_CrosshairShotResults):
         jet_loss = cls._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
         jet_start_dist = 0
         no_damage = True
-        piercing_power_final = piercing_power
         ricochet = False
 
         for detail in collision_details:
@@ -89,7 +88,7 @@ class _ShotResult(_CrosshairShotResults):
             if jet_start_dist > 0:
                 jetDist = detail.dist - jet_start_dist
                 if jetDist > 0:
-                    piercing_power_final = max(0, piercing_power_final * (1.0 - jetDist * jet_loss))
+                    piercing_power = max(0, piercing_power * (1.0 - jetDist * jet_loss))
             else:
                 ricochet = cls._shouldRicochet(shell, hitAngleCos, mat_info)
                 if ricochet:
@@ -102,16 +101,14 @@ class _ShotResult(_CrosshairShotResults):
                 jet_start_dist = detail.dist + mat_info.armor * cls.JET_FACTOR
             if mat_info.collideOnceOnly:
                 ignored_materials.add((detail.compName, mat_info.kind))
-        data = (int(armor), int(piercing_power_final), int(shell.caliber), ricochet, no_damage)
+        data = (int(armor), int(piercing_power), int(shell.caliber), ricochet, no_damage)
         return cls._checkShotResult(data), data
 
     @classmethod
-    def _computeArmorModern(cls, collision_details, shell, piercing_power, entity):
+    def _computeArmorModernHE(cls, collision_details, shell, piercing_power, entity):
         armor = 0
         ignored_materials = set()
         no_damage = True
-        ricochet = False
-        piercing_power_final = piercing_power
 
         for detail in collision_details:
             if not cls._isDestructibleComponent(entity, detail.compName):
@@ -120,18 +117,15 @@ class _ShotResult(_CrosshairShotResults):
             if not mat_info or (detail.compName, mat_info.kind) in ignored_materials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
-            ricochet = cls._shouldRicochet(shell, hitAngleCos, mat_info)
-            if ricochet:
-                break
             armor += cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
             if shell.type.shieldPenetration:
-                piercing_power_final = max(0, piercing_power_final - armor * cls.PP_REDUCTION_FACTOR)
+                piercing_power = max(0, piercing_power - armor * cls.PP_REDUCTION_FACTOR)
             if mat_info.collideOnceOnly:
                 ignored_materials.add((detail.compName, mat_info.kind))
-        data = (int(armor), int(piercing_power_final), int(shell.caliber), ricochet, no_damage)
+        data = (int(armor), int(piercing_power), int(shell.caliber), False, no_damage)
         return cls._checkShotResult(data), data
 
 
