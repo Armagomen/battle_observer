@@ -32,6 +32,7 @@ class HangarEfficiency(HangarEfficiencyMeta):
         super(HangarEfficiency, self).__init__()
         self.enabled = False
         self.visible = False
+        self.is_hangar = False
 
     def _populate(self):
         super(HangarEfficiency, self)._populate()
@@ -88,9 +89,9 @@ class HangarEfficiency(HangarEfficiencyMeta):
             return
         visible = self.visible
         if isinstance(window, RandomHangar):
-            visible = self.SHOWING_STATUS_TO_VALUE[newStatus]
+            self.is_hangar = visible = self.SHOWING_STATUS_TO_VALUE[newStatus]
         elif isinstance(window, NOT_SHOW):
-            visible = self.visible and not self.SHOWING_STATUS_TO_VALUE[newStatus]
+            visible = self.is_hangar and not self.SHOWING_STATUS_TO_VALUE[newStatus]
         if self.visible != visible:
             self.visible = visible
             if self.enabled:

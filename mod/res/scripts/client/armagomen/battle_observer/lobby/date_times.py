@@ -26,6 +26,7 @@ class DateTimes(DateTimesMeta):
         super(DateTimes, self).__init__()
         self.enabled = False
         self.visible = False
+        self.is_hangar = False
         self._timeInterval = TimeInterval(1.0, self, 'updateTime')
 
     def _populate(self):
@@ -70,9 +71,9 @@ class DateTimes(DateTimesMeta):
             return
         visible = self.visible
         if isinstance(window, CONTENT_VIEWS):
-            visible = self.SHOWING_STATUS_TO_VALUE[newStatus]
+            self.is_hangar = visible = self.SHOWING_STATUS_TO_VALUE[newStatus]
         elif isinstance(window, NOT_SHOW):
-            visible = self.visible and not self.SHOWING_STATUS_TO_VALUE[newStatus]
+            visible = self.is_hangar and not self.SHOWING_STATUS_TO_VALUE[newStatus]
         if self.visible != visible:
             self.visible = visible
             if self.enabled:
