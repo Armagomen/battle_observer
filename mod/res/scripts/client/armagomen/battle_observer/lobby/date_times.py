@@ -54,14 +54,13 @@ class DateTimes(DateTimesMeta):
             self._timeInterval.stop()
 
     def onModSettingsChanged(self, name, data):
-        if name == CLOCK.NAME:
-            if self.enabled != data[CLOCK.IN_LOBBY][GLOBAL.ENABLED]:
-                self.enabled = data[CLOCK.IN_LOBBY][GLOBAL.ENABLED]
-                if self.enabled:
-                    self.as_addToStageS()
-                else:
-                    self.as_clearSceneS()
-                self.toggleInterval(self.visible and self.enabled)
+        if name == CLOCK.NAME and self.enabled != data[CLOCK.IN_LOBBY][GLOBAL.ENABLED]:
+            self.enabled = data[CLOCK.IN_LOBBY][GLOBAL.ENABLED]
+            if self.enabled:
+                self.as_addToStageS()
+            else:
+                self.as_clearSceneS()
+            self.toggleInterval(self.visible and self.enabled)
 
     def onWindowShowingStatusChanged(self, uniqueID, newStatus):
         if newStatus not in self.SHOWING_STATUS_TO_VALUE:
