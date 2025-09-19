@@ -88,7 +88,7 @@ class CrewProcessor(object):
 
     def onVehicleChanged(self, vehicle):
         logDebug("crew onVehicleChanged")
-        if not vehicle or vehicle.isLocked:
+        if not vehicle or vehicle.isLocked or self.isSpecialVehicle(vehicle):
             return
         if user_settings.main[MAIN.CREW_RETURN]:
             self.updateAutoReturn(vehicle)
@@ -117,7 +117,7 @@ class CrewProcessor(object):
     @decorators.adisp_process('updating')
     def __autoReturnToggleSwitch(self, vehicle):
         autoReturn = bool(vehicle.settings & VEHICLE_SETTINGS_FLAG.AUTO_RETURN)
-        if autoReturn or self.isSpecialVehicle(vehicle):
+        if autoReturn:
             return
         available = bool(vehicle.lastCrew)
         if available != autoReturn:

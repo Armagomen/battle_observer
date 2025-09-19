@@ -1,6 +1,6 @@
 <root>
     <id>armagomen.Battle_Observer</id>
-    <version>1.43.05</version>
+    <version>1.43.06</version>
     <name>Battle Observer</name>
     <description>Battle Observer mod: logs, teamsHp, zoomMod, bases panel, debug panel, timer + time, Armor Calculator,
         Spotted Status, flight time, noBadge, minimap, sixth Sense, crew, wgr rating.
