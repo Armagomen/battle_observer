@@ -108,10 +108,7 @@ class CameraSettings(object):
         self.reset = False
 
     def applySettings(self, params):
-        applied = False
-        for key, value in params.items():
-            applied |= bool(self.settingsCore.applySetting(key, value))
-        if applied:
+        if any(self.settingsCore.applySetting(key, value) is not None for key, value in params.items()):
             self.settingsCore.applyStorages(False)
             self.settingsCore.clearStorages()
 

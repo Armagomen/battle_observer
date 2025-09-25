@@ -236,8 +236,8 @@ class CreateElement(Getter):
 class SettingsInterface(CreateElement):
     appLoader = dependency.descriptor(IAppLoader)
 
-    def __init__(self, settingsLoader, version, g_modsListApi, vxSettingsApi, vxSettingsApiEvents):
-        self.modsListApi, self.vxSettingsApi, self.apiEvents = g_modsListApi, vxSettingsApi, vxSettingsApiEvents
+    def __init__(self, settingsLoader, version, api):
+        self.modsListApi, self.vxSettingsApi, self.apiEvents = api
         super(SettingsInterface, self).__init__(settingsLoader)
         self.inited = set()
         _id = settingsLoader.configsList.index(settingsLoader.configName) if settingsLoader.configName in settingsLoader.configsList else 0
@@ -248,7 +248,7 @@ class SettingsInterface(CreateElement):
         self.appLoader.onGUISpaceEntered += self.addToAPI
 
     def fini(self):
-        pass
+        self.inited.clear()
 
     def addToAPI(self, spaceID):
         if spaceID == GuiGlobalSpaceID.LOGIN:

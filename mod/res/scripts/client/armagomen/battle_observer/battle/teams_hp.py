@@ -1,4 +1,4 @@
-from account_helpers.settings_core.settings_constants import ScorePanelStorageKeys as C_BAR
+from account_helpers.settings_core.settings_constants import ScorePanelStorageKeys
 from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
 from armagomen.utils.logging import logDebug
@@ -6,6 +6,7 @@ from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListene
 
 
 class TeamsHP(TeamHealthMeta, IBattleFieldListener):
+    settingParams = set(ScorePanelStorageKeys.ALL())
 
     def __init__(self):
         super(TeamsHP, self).__init__()
@@ -15,17 +16,13 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
         super(TeamsHP, self)._populate()
         is_normal_mode = self.gui.isRandomBattle() or self.gui.isRankedBattle() or self.gui.isTrainingBattle()
         self.showAliveCount = self.settings[HP_BARS.ALIVE] and is_normal_mode
-        self.updateDefaultTopPanel()
+        self.updateDefaultTopPanel(self.settingParams)
 
-    def updateDefaultTopPanel(self, settingName=None):
-        result = None
-        items = (settingName,) if settingName is not None else (C_BAR.ENABLE_TIER_GROUPING, C_BAR.SHOW_HP_BAR)
-        for key in items:
-            if self.settings[HP_BARS.STYLE] == HP_BARS.STYLES.league_big and key == C_BAR.ENABLE_TIER_GROUPING:
-                continue
-            if self.settingsCore.getSetting(key):
-                result = self.settingsCore.applySetting(key, False)
-        if result is not None:
+    def updateDefaultTopPanel(self, settingKeys):
+        if self.settings[HP_BARS.STYLE] == HP_BARS.STYLES.league_big:
+            settingKeys = settingKeys.copy()
+            settingKeys.discard(ScorePanelStorageKeys.ENABLE_TIER_GROUPING)
+        if settingKeys and any(self.settingsCore.applySetting(key, False) is not None for key in settingKeys):
             self.settingsCore.applyStorages(False)
             self.settingsCore.clearStorages()
 
@@ -45,6 +42,6 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
 
     def onSettingsApplied(self, diff):
         super(TeamsHP, self).onSettingsApplied(diff)
-        for key, value in diff.items():
-            if key in (C_BAR.SHOW_HP_BAR, C_BAR.ENABLE_TIER_GROUPING) and value:
-                self.updateDefaultTopPanel(key)
+        keys = {key for key, value in diff.items() if key in self.settingParams and value}
+        if keys:
+            self.updateDefaultTopPanel(keys)

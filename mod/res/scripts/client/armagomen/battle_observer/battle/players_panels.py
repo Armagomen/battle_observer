@@ -48,7 +48,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         colors = self.getColors()[COLORS.GLOBAL]
         if isEnemy:
             if isColorBlind is None:
-                isColorBlind = self.isColorBlind()
+                isColorBlind = self._isColorBlind
             return colors[COLORS.ENEMY_BLIND_MAME if isColorBlind else COLORS.ENEMY_MAME]
         return colors[COLORS.ALLY_MAME]
 

@@ -115,7 +115,7 @@ class DispersionCircle(object):
         rotator._avatar.inputHandler.updateServerGunMarker(gunMarkerInfo, supportMarkersInfo, SERVER_TICK_LENGTH)
 
     def disableWGServerMarker(self):
-        if self.settingsCore.applySetting(GAME.ENABLE_SERVER_AIM, False):
+        if self.settingsCore.applySetting(GAME.ENABLE_SERVER_AIM, False) is not None:
             self.settingsCore.applyStorages(False)
             self.settingsCore.clearStorages()
 

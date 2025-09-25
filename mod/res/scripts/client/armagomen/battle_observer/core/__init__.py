@@ -15,7 +15,6 @@ class Core(object):
 
     def __init__(self, modVersion):
         self.version = modVersion
-        self.api = list()
         self.userID = None
         self.userName = None
         self.components = {}
@@ -43,7 +42,7 @@ class Core(object):
     @wg_async
     def _onLoggedOn(self, responseData):
         logDebug("_onLoggedOn: {}", responseData)
-        self._onDisconnected()
+        # self._onDisconnected()
         self.userID = self.extractDatabaseID(responseData.get('token2'))
         self.userName = responseData.get('name')
         if self.userID:
@@ -77,15 +76,15 @@ class Core(object):
             try:
                 from gui.modsListApi import g_modsListApi
                 from gui.vxSettingsApi import vxSettingsApi, vxSettingsApiEvents
-                self.api.extend([g_modsListApi, vxSettingsApi, vxSettingsApiEvents])
+                from armagomen.battle_observer.settings.hangar import SettingsInterface
+                api = (g_modsListApi, vxSettingsApi, vxSettingsApiEvents)
             except Exception as error:
                 from debug_utils import LOG_CURRENT_EXCEPTION
                 self.error_dialog.messages.add(repr(error))
                 LOG_CURRENT_EXCEPTION()
                 logError("Settings Api Not Loaded: {}", repr(error))
             else:
-                from armagomen.battle_observer.settings.hangar import SettingsInterface
-                self.hangar_settings = SettingsInterface(settings_loader, self.version, *self.api)
+                self.hangar_settings = SettingsInterface(settings_loader, self.version, api)
 
     def onModSettingsChanged(self, name, data):
         if name == MAIN.NAME:
@@ -108,7 +107,6 @@ class Core(object):
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         self.connectionMgr.onDisconnected -= self._onDisconnected
         g_events.onModSettingsChanged -= self.onModSettingsChanged
-        self.api = None
 
     @staticmethod
     def registerBattleObserverPackages(is_replay):

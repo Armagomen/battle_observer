@@ -33,7 +33,7 @@ def user_login(user_id, name, version):
         banned = body and body[0].get("banned", False)
         logInfo("Login [{}]: banned {}", user_id, banned)
     except Exception as e:
-        logError("Login body parse error: {}, {}", e, response)
+        logError("Login body parse error: {}, {}", repr(e), response)
     raise AsyncReturn(banned)
 
 
