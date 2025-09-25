@@ -2,22 +2,31 @@ from time import strftime
 
 from armagomen._constants import CLOCK, GLOBAL
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
-from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE
+from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE, safe_import
 from armagomen.utils.events import g_events
-from comp7.gui.impl.lobby.hangar.comp7_hangar import Comp7Hangar
-from comp7_light.gui.impl.lobby.hangar.comp7_light_hangar import Comp7LightHangar
-from gui.impl.lobby.crew.container_vews.personal_file.personal_file_view import PersonalFileView
-from gui.impl.lobby.crew.container_vews.quick_training.quick_training_view import QuickTrainingView
-from gui.impl.lobby.crew.container_vews.service_record.service_record_view import ServiceRecordView
-from gui.impl.lobby.crew.container_vews.skills_training.skills_training_view import SkillsTrainingView
-from gui.impl.lobby.crew.tankman_container_view import TankmanContainerView
-from gui.impl.lobby.hangar.random.random_hangar import RandomHangar
 from gui.shared.utils.TimeInterval import TimeInterval
-from last_stand.gui.impl.lobby.hangar_view import HangarView
 
-CONTENT_VIEWS = (RandomHangar, Comp7LightHangar, Comp7Hangar, HangarView)
-NOT_SHOW = (QuickTrainingView, SkillsTrainingView, ServiceRecordView, PersonalFileView, TankmanContainerView)
-ALL_VIEWS = CONTENT_VIEWS + NOT_SHOW
+
+def import_views():
+    content = (
+            safe_import("gui.impl.lobby.hangar.random.random_hangar", "RandomHangar") +
+            safe_import("comp7_light.gui.impl.lobby.hangar.comp7_light_hangar", "Comp7LightHangar") +
+            safe_import("comp7.gui.impl.lobby.hangar.comp7_hangar", "Comp7Hangar") +
+            safe_import("last_stand.gui.impl.lobby.hangar_view", "HangarView")
+    )
+
+    hide = (
+            safe_import("gui.impl.lobby.crew.container_vews.quick_training.quick_training_view", "QuickTrainingView") +
+            safe_import("gui.impl.lobby.crew.container_vews.skills_training.skills_training_view", "SkillsTrainingView") +
+            safe_import("gui.impl.lobby.crew.container_vews.service_record.service_record_view", "ServiceRecordView") +
+            safe_import("gui.impl.lobby.crew.container_vews.personal_file.personal_file_view", "PersonalFileView") +
+            safe_import("gui.impl.lobby.crew.tankman_container_view", "TankmanContainerView")
+    )
+
+    return content, hide, content + hide
+
+
+CONTENT_VIEWS, NOT_SHOW, ALL_VIEWS = import_views()
 
 
 class DateTimes(DateTimesMeta):

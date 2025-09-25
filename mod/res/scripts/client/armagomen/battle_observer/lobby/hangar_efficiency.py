@@ -1,20 +1,28 @@
 from armagomen._constants import AVG_EFFICIENCY_HANGAR, EFFICIENCY_ICONS_SIZE, GLOBAL, IMAGE_DIR
 from armagomen.battle_observer.components.controllers import cachedVehicleData
 from armagomen.battle_observer.meta.lobby.hangar_efficiency_meta import HangarEfficiencyMeta
+from armagomen.utils.common import safe_import
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
-from gui.impl.lobby.battle_results.random_battle_results_view import RandomBattleResultsView
-from gui.impl.lobby.crew.container_vews.personal_file.personal_file_view import PersonalFileView
-from gui.impl.lobby.crew.container_vews.quick_training.quick_training_view import QuickTrainingView
-from gui.impl.lobby.crew.container_vews.service_record.service_record_view import ServiceRecordView
-from gui.impl.lobby.crew.container_vews.skills_training.skills_training_view import SkillsTrainingView
-from gui.impl.lobby.crew.tankman_container_view import TankmanContainerView
-from gui.impl.lobby.hangar.random.random_hangar import RandomHangar
-from gui.impl.lobby.mode_selector.mode_selector_view import ModeSelectorView
 
-NOT_SHOW = (QuickTrainingView, SkillsTrainingView, ServiceRecordView, PersonalFileView, ModeSelectorView, RandomBattleResultsView,
-            TankmanContainerView)
-ALL_VIEWS = (RandomHangar,) + NOT_SHOW
+
+def import_views():
+    content = safe_import("gui.impl.lobby.hangar.random.random_hangar", "RandomHangar")
+
+    hide = (
+            safe_import("gui.impl.lobby.crew.container_vews.quick_training.quick_training_view", "QuickTrainingView") +
+            safe_import("gui.impl.lobby.crew.container_vews.skills_training.skills_training_view", "SkillsTrainingView") +
+            safe_import("gui.impl.lobby.crew.container_vews.service_record.service_record_view", "ServiceRecordView") +
+            safe_import("gui.impl.lobby.crew.container_vews.personal_file.personal_file_view", "PersonalFileView") +
+            safe_import("gui.impl.lobby.mode_selector.mode_selector_view", "ModeSelectorView") +
+            safe_import("gui.impl.lobby.battle_results.random_battle_results_view", "RandomBattleResultsView") +
+            safe_import("gui.impl.lobby.crew.tankman_container_view", "TankmanContainerView")
+    )
+
+    return content, hide, content + hide
+
+
+CONTENT_VIEWS, NOT_SHOW, ALL_VIEWS = import_views()
 
 
 class HangarEfficiency(HangarEfficiencyMeta):
@@ -84,11 +92,10 @@ class HangarEfficiency(HangarEfficiencyMeta):
         if newStatus not in self.SHOWING_STATUS_TO_VALUE:
             return
         window = self.gui.windowsManager.getWindow(uniqueID).content
-        # logDebug("Hangar Efficiency Window: {}", repr(window))
         if not isinstance(window, ALL_VIEWS):
             return
         visible = self.visible
-        if isinstance(window, RandomHangar):
+        if isinstance(window, CONTENT_VIEWS):
             self.is_hangar = visible = self.SHOWING_STATUS_TO_VALUE[newStatus]
         elif isinstance(window, NOT_SHOW):
             visible = self.is_hangar and not self.SHOWING_STATUS_TO_VALUE[newStatus]

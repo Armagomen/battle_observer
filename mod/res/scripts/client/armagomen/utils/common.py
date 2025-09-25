@@ -1,4 +1,5 @@
 # coding=utf-8
+import importlib
 import json
 import locale
 import os
@@ -344,3 +345,18 @@ def getEncoding():
 
 ENCODING_LOCALE = getEncoding()
 ENCODING_ERRORS = "ignore"
+
+
+def safe_import(path, name):
+    try:
+        module = importlib.import_module(path)
+    except ImportError as e:
+        logError("Import error: {}", repr(e))
+        return ()
+    else:
+        cls = getattr(module, name, None)
+        if cls is not None:
+            return (cls,)
+        else:
+            logError("Import error: {} has not attribute {}", repr(module), name)
+            return ()
