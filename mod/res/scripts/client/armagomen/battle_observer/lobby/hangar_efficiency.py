@@ -56,10 +56,13 @@ class HangarEfficiency(HangarEfficiencyMeta):
         super(HangarEfficiency, self)._dispose()
 
     def update(self, data):
-        logDebug("Hangar Efficiency enabled: {} Data: {}", self.enabled, data)
-        if not self.enabled or data is None:
+        logDebug("Hangar Efficiency enabled: {}, Data: {}", self.enabled, data)
+        if not self.enabled:
             return
         value = GLOBAL.EMPTY_LINE
+        if data is None:
+            self.as_updateValueS(value)
+            return
         settings_map = [
             (AVG_EFFICIENCY_HANGAR.DAMAGE, "{damageIcon}{tankAvgDamage}"),
             (AVG_EFFICIENCY_HANGAR.ASSIST, "{assistIcon}{tankAvgAssist}"),

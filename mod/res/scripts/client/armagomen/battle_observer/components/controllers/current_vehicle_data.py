@@ -39,8 +39,14 @@ class CurrentVehicleCachedData(object):
         logDebug("CurrentVehicleCachedData::unsubscribe lobby")
         g_currentVehicle.onChanged -= self.onVehicleChanged
 
+    @staticmethod
+    def isSpecialVehicle():
+        flags = ('isOnlyForFunRandomBattles', 'isOnlyForBattleRoyaleBattles', 'isOnlyForMapsTrainingBattles',
+                 'isOnlyForClanWarsBattles', 'isOnlyForComp7Battles', 'isOnlyForEventBattles', 'isOnlyForEpicBattles')
+        return any(getattr(g_currentVehicle.item, f, False) for f in flags)
+
     def onVehicleChanged(self):
-        self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() else None
+        self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() and not self.isSpecialVehicle() else None
         self.onChanged(self.__EfficiencyAVGData)
 
     def setAvgData(self):

@@ -4,8 +4,11 @@ from armagomen._constants import CLOCK, GLOBAL
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
 from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE, safe_import
 from armagomen.utils.events import g_events
+from armagomen.utils.logging import logDebug
 from gui.shared.utils.TimeInterval import TimeInterval
 
+
+# "FrontlineHangar, BattleRoyaleHangarView"
 
 def import_views():
     content = (
@@ -75,6 +78,7 @@ class DateTimes(DateTimesMeta):
         if newStatus not in self.SHOWING_STATUS_TO_VALUE:
             return
         window = self.gui.windowsManager.getWindow(uniqueID).content
+        logDebug("Window {} changed to {}", window, newStatus)
         if not isinstance(window, ALL_VIEWS):
             return
         visible = self.visible
