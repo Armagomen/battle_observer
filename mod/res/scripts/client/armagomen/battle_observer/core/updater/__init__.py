@@ -52,17 +52,20 @@ def tupleVersion(version):
     return tuple(map(int, version.split('.')))
 
 
-class DownloadThread(object):
+class Updater(object):
 
-    def __init__(self):
-        self.version = None
-        self.isLobby = False
-        self.updateData = dict()
-        self.dialogs = UpdaterDialogs()
-        self.modPath = os.path.join(MODS_PATH, GAME_VERSION)
-        self.isReplay = isReplay()
+    def __init__(self, modVersion):
+        super(Updater, self).__init__()
         self.cleanup_exe = os.path.join(getObserverCachePath(), "cleanup_launcher.exe")
         self.cleanup_launcher_exist = os.path.isfile(self.cleanup_exe)
+        self.dialogs = UpdaterDialogs()
+        self.isLobby = False
+        self.isReplay = isReplay()
+        self.modsPath = os.path.join(MODS_PATH, GAME_VERSION)
+        self.timeDelta = datetime.now()
+        self.updateData = dict()
+        self.version = modVersion
+        self.gitMessage = ""
         if not self.cleanup_launcher_exist:
             self.download_cleanup_exe(self.cleanup_exe)
 
@@ -73,6 +76,12 @@ class DownloadThread(object):
             self.cleanup_launcher_exist = True
 
         download_and_write(url, local_path, success, logError)
+
+    def start(self):
+        if not self.isReplay:
+            ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        else:
+            self.check()
 
     def setWaitingState(self, targetState):
         if self.isReplay:
@@ -105,8 +114,7 @@ class DownloadThread(object):
     def showUpdateFinishedDialog(self, version):
         if self.isReplay:
             return
-        git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-        self.dialogs.showUpdateFinished(LOCALIZED_BY_LANG['titleOK'], LOCALIZED_BY_LANG['messageOK'].format(version) + git_message,
+        self.dialogs.showUpdateFinished(LOCALIZED_BY_LANG['titleOK'], LOCALIZED_BY_LANG['messageOK'].format(version) + self.gitMessage,
                                         self.isLobby)
 
     def updateFiles(self, path, version):
@@ -114,33 +122,12 @@ class DownloadThread(object):
         self.showUpdateFinishedDialog(version)
 
     def extractZipArchive(self, path):
-        old_files = os.listdir(self.modPath)
+        old_files = os.listdir(self.modsPath)
         with ZipFile(path) as archive:
             for newFile in archive.namelist():
                 if newFile not in old_files:
-                    archive.extract(newFile, self.modPath)
+                    archive.extract(newFile, self.modsPath)
                     logInfo(LOG_MESSAGES.NEW_FILE, newFile)
-
-    def fini(self):
-        if not self.cleanup_launcher_exist:
-            return
-        t = threading.Thread(target=self._cleanup_worker)
-        t.daemon = True
-        t.start()
-
-    def _cleanup_worker(self):
-        version = self.updateData.get('tag_name', self.version)
-        logDebug("Cleaning up update for version {} >> {}", self.version, version)
-        if tupleVersion(self.version) < tupleVersion(version):
-            to_delete = [os.path.join(self.modPath, old_file) for old_file in os.listdir(self.modPath)
-                         if "armagomen.battleObserver_" in old_file and version not in old_file]
-
-            if to_delete:
-                logDebug("Try to remove old mod files {} in process {}", to_delete, self.cleanup_exe)
-                DETACHED_PROCESS = 0x00000008
-                CREATE_NO_WINDOW = 0x08000000
-                args = [self.cleanup_exe] + to_delete
-                subprocess.Popen(args, creationflags=DETACHED_PROCESS | CREATE_NO_WINDOW, close_fds=True)
 
     def downloadError(self, url):
         message = LOG_MESSAGES.FAILED.format(url)
@@ -148,28 +135,35 @@ class DownloadThread(object):
         if not self.isReplay:
             self.dialogs.showUpdateError(message, self.isLobby)
 
-
-class Updater(DownloadThread):
-
-    def __init__(self, modVersion):
-        super(Updater, self).__init__()
-        self.version = modVersion
-        self.timeDelta = datetime.now()
-
-    def start(self):
-        if not self.isReplay:
-            ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
-        else:
-            self.check()
-
     def fini(self):
-        super(Updater, self).fini()
         if not self.isReplay:
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
+        if not self.cleanup_launcher_exist:
+            return
+        self.checkStartCleanup()
+
+    def checkStartCleanup(self):
+        new_version = self.updateData.get('tag_name', self.version)
+        if tupleVersion(self.version) < tupleVersion(new_version):
+            to_delete = [os.path.join(self.modsPath, old_file) for old_file in os.listdir(self.modsPath)
+                         if "armagomen.battleObserver_" in old_file and new_version not in old_file]
+            if to_delete:
+                logDebug("Cleaning up update for version {} >> {} : {}", self.version, new_version, ", ".join(to_delete))
+                t = threading.Thread(target=self._cleanup_worker, args=(to_delete,))
+                t.daemon = True
+                t.start()
+
+    def _cleanup_worker(self, to_delete):
+        logDebug("Try to remove old mod files {} in process {}", to_delete, self.cleanup_exe)
+        DETACHED_PROCESS = 0x00000008
+        CREATE_NO_WINDOW = 0x08000000
+        args = [self.cleanup_exe] + to_delete
+        subprocess.Popen(args, creationflags=DETACHED_PROCESS | CREATE_NO_WINDOW, close_fds=True)
 
     def responseUpdateCheck(self, response):
         response_data = loads(response.body)
         self.updateData.update(response_data)
+        self.gitMessage = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
         new_version = response_data.get('tag_name', self.version)
         if tupleVersion(self.version) < tupleVersion(new_version):
             logInfo(LOG_MESSAGES.NEW_VERSION, new_version)
@@ -199,11 +193,10 @@ class Updater(DownloadThread):
                 self.check()
 
     @wg_async
-    def showUpdateDialog(self, ver):
-        title = LOCALIZED_BY_LANG['titleNEW'].format(self.updateData.get('tag_name', ver))
-        git_message = re.sub(r'^\s+|\r|\t|\s+$', GLOBAL.EMPTY_LINE, self.updateData.get('body', GLOBAL.EMPTY_LINE))
-        message = LOCALIZED_BY_LANG['messageNEW'].format(self.modPath, git_message)
-        handle_url = URLS.UPDATE + EXE_FILE.format(ver)
+    def showUpdateDialog(self, version):
+        title = LOCALIZED_BY_LANG['titleNEW'].format(version)
+        message = LOCALIZED_BY_LANG['messageNEW'].format(self.modsPath, self.gitMessage)
+        handle_url = URLS.UPDATE + EXE_FILE.format(version)
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, handle_url, self.isLobby))
         if result:
-            self.startDownloadingUpdate(ver)
+            self.startDownloadingUpdate(version)
