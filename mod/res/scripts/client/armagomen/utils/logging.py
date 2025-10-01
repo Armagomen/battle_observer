@@ -1,9 +1,11 @@
+import traceback
 from inspect import getmro
 
 import BigWorld
 
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
+EMPTY_WARN = "!!! WARNING !!! - Empty string detected. Check first argument in call function at: File '{}', line {}, in {}, code {}"
 IS_DEBUG = False
 
 
@@ -29,7 +31,9 @@ def get_full_function_path(func):
 def _formatMessage(message, *args, **kwargs):
     if not isinstance(message, str):
         message = str(message)
-    if args or kwargs:
+    if not message:
+        return EMPTY_WARN.format(*traceback.extract_stack()[-3])
+    elif args or kwargs:
         return message.format(*args, **kwargs)
     return message
 
