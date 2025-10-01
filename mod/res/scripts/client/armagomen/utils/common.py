@@ -11,6 +11,7 @@ from io import open as _open
 
 import BigWorld
 import ResMgr
+import WGC
 
 from armagomen.utils.logging import logDebug, logError, logInfo
 from BattleReplay import isLoading, isPlaying
@@ -55,15 +56,15 @@ def getPreferencesDir():
 preferencesDir = getPreferencesDir()
 
 
-def save():
+def save(restart=False):
     BigWorld.savePreferences()
+    if restart:
+        WGC.notifyRestart()
     BigWorld.worldDrawEnabled(False)
 
 
 def restartGame():
-    save()
-    import WGC
-    WGC.notifyRestart()
+    save(restart=True)
     addCallback(1.0, BigWorld.restartGame)
 
 

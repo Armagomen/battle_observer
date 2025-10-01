@@ -1,4 +1,5 @@
 import json
+from collections import namedtuple
 
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.logging import logError, logInfo
@@ -8,25 +9,27 @@ from wg_async import AsyncReturn, wg_async
 
 SUPABASE_URL = "https://ocakppqqnkibvfqqfjol.supabase.co"
 
-headers_common = {
+HEADERS_API = {
     "apikey": "sb_publishable_Mt1NwMGZHqoj1CG7AkhozQ_XkboVWw1",
 }
+
+URLS = namedtuple("URLS", ["user_login", "user_logout", "get_stats"])(
+    SUPABASE_URL + "/rest/v1/rpc/user_login_rpc",
+    SUPABASE_URL + "/rest/v1/rpc/user_logout_rpc",
+    SUPABASE_URL + "/rest/v1/rpc/get_user_stats",
+)
 
 
 @wg_async
 def user_login(user_id, name, version):
-    url = SUPABASE_URL + "/rest/v1/users?select=banned"
-    headers = headers_common.copy()
-    headers["Prefer"] = "resolution=merge-duplicates,return=representation"
     data = {
-        "id": user_id,
-        "name": name,
-        "region": CURRENT_REALM,
-        "ln_code": getClientLanguage(),
-        "is_online": True,
-        "version": version
+        "user_id": user_id,
+        "login_name": name,
+        "login_version": version,
+        "login_region": CURRENT_REALM,
+        "login_ln_code": getClientLanguage()
     }
-    response = yield async_url_request(url, data=data, headers=headers, method="POST")
+    response = yield async_url_request(URLS.user_login, data=data, headers=HEADERS_API, method="POST")
     banned = False
     try:
         body = json.loads(response.body)
@@ -39,19 +42,17 @@ def user_login(user_id, name, version):
 
 @wg_async
 def user_logout(user_id):
-    url = SUPABASE_URL + "/rest/v1/users?id=eq.{}".format(user_id)
-    headers = headers_common.copy()
-    headers["Prefer"] = "return=minimal"
-    data = {"is_online": False}
-    response = yield async_url_request(url, data=data, headers=headers, method="PATCH")
+    data = {"user_id": user_id}
+    response = yield async_url_request(URLS.user_logout, data=data, headers=HEADERS_API, method="POST")
     logInfo("Logout [{}]: {}", user_id, response.responseCode)
+
 
 online_cache = {"online": 0, "total": 0}
 
+
 @wg_async
 def get_stats():
-    url = SUPABASE_URL + "/rest/v1/rpc/get_user_stats"
-    response = yield async_url_request(url, headers=headers_common.copy(), method="POST")
+    response = yield async_url_request(URLS.get_stats, headers=HEADERS_API, method="POST")
     try:
         online_cache.update(json.loads(response.body))
     except Exception as e:
