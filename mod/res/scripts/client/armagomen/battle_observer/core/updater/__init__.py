@@ -32,6 +32,8 @@ __NAMES = (
 LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*LOCALIZED_BY_LANG["messages"])
 EXE_FILE = "{0}/mod_battle_observer_v{0}.exe"
 ZIP = "{0}/AutoUpdate.zip"
+DETACHED_NO_WINDOW = 0x08000008
+WOTMOD_PATTERN = "armagomen.battleObserver_*.wotmod"
 
 
 def download_and_write(url, local_path, on_success, on_failure):
@@ -139,28 +141,34 @@ class Updater(object):
     def fini(self):
         if not self.isReplay:
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
-        if not self.cleanup_launcher_exist:
-            return
-        self.checkAndStartCleanup()
+        if self.cleanup_launcher_exist:
+            self.checkAndStartCleanup()
 
     @staticmethod
-    def parseVersion(f):
-        return tupleVersion(f.split('_')[1].rsplit('.', 1)[0])
+    def parseFullVersion(path):
+        versions = re.findall(r'(\d+(?:\.\d+)+)', path.replace('\\', '/'))
+        return tupleVersion(versions[0]), tupleVersion(versions[-1])
+
+    @staticmethod
+    def findObserverMods():
+        for root, dirs, files in os.walk(MODS_PATH):
+            for name in files:
+                if fnmatch.fnmatch(name, WOTMOD_PATTERN):
+                    yield os.path.join(root, name)
 
     def checkAndStartCleanup(self):
-        to_delete = sorted(fnmatch.filter(os.listdir(self.modsPath), "armagomen.battleObserver_*.wotmod"), key=self.parseVersion)[:-1]
-        if to_delete:
-            logInfo("Remove old versions >> {}", to_delete)
-            t = threading.Thread(target=self._cleanup_worker, args=([os.path.join(self.modsPath, f) for f in to_delete],))
+        mod_files = sorted(self.findObserverMods(), key=self.parseFullVersion)
+        mod_files.pop(-1)
+        if mod_files:
+            logInfo("Remove old versions >> {}", mod_files)
+            t = threading.Thread(target=self._cleanup_worker, args=(mod_files,))
             t.daemon = True
             t.start()
 
-    def _cleanup_worker(self, to_delete):
-        logDebug("Try to remove old mod files {} in process {}", to_delete, self.cleanup_exe)
-        DETACHED_PROCESS = 0x00000008
-        CREATE_NO_WINDOW = 0x08000000
-        args = [self.cleanup_exe] + to_delete
-        subprocess.Popen(args, creationflags=DETACHED_PROCESS | CREATE_NO_WINDOW, close_fds=True)
+    def _cleanup_worker(self, mod_files):
+        logDebug("Try to remove old mod files {} in process {}", mod_files, self.cleanup_exe)
+        mod_files.insert(0, self.cleanup_exe)
+        subprocess.Popen(mod_files, creationflags=DETACHED_NO_WINDOW)
 
     def responseUpdateCheck(self, response):
         response_data = loads(response.body)
@@ -186,9 +194,9 @@ class Updater(object):
             logWarning('Updater: contentType={}, responseCode={} body={}', response.contentType, response.responseCode, response.body)
 
     def onGUISpaceEntered(self, spaceID):
+        self.isLobby = spaceID == GuiGlobalSpaceID.LOBBY
         login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
-        if spaceID == GuiGlobalSpaceID.LOGIN and login_server_selection or spaceID == GuiGlobalSpaceID.LOBBY:
-            self.isLobby = spaceID == GuiGlobalSpaceID.LOBBY
+        if spaceID == GuiGlobalSpaceID.LOGIN and login_server_selection or self.isLobby:
             current_time = datetime.now()
             if current_time >= self.timeDelta:
                 self.timeDelta = current_time + timedelta(hours=1)
