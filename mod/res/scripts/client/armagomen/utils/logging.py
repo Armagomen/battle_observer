@@ -29,7 +29,7 @@ def get_full_function_path(func):
 
 
 def _formatMessage(message, *args, **kwargs):
-    if not isinstance(message, str):
+    if not isinstance(message, basestring):
         message = str(message)
     if not message:
         return EMPTY_WARN.format(*traceback.extract_stack()[-3])

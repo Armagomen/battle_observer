@@ -6,7 +6,7 @@ for /f "tokens=3 delims=<>" %%a in (
 ) do set "ModVersion=%%a"
 
 set sources=.\mod
-set GameVersion=2.0.0.1
+set GameVersion=2.0.0.2
 set GameInstalled_ModsDir=C:\Games\World_of_Tanks_EU\mods\%GameVersion%
 REM set GameInstalled_ModsDir=C:\Games\World_of_Tanks_CT\mods\%GameVersion% Common Test
 
