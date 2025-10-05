@@ -41,8 +41,7 @@ VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
 API_KEY = "5500d1b937426e47e2b039e4a11990be"
 REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/info/?application_id={}".format(API_KEY),
            "ASIA": "https://api.worldoftanks.asia/wot/account/info/?application_id={}".format(API_KEY),
-           "NA": "https://api.worldoftanks.com/wot/account/info/?application_id={}".format(API_KEY),
-           "RU": "https://api.tanki.su/wot/account/info/?application_id={}".format(API_KEY)}
+           "NA": "https://api.worldoftanks.com/wot/account/info/?application_id={}".format(API_KEY)}
 STATISTICS_REGION = REGIONS.get(AUTH_REALM)
 
 VEHICLE_TYPES_COLORS = namedtuple("VEHICLE_TYPES_COLORS", ("NAME", "UNKNOWN"))("vehicle_types_colors", "unknown")
