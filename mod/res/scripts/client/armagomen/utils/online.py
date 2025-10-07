@@ -36,7 +36,7 @@ def user_login(user_id, name, version):
         banned = body and body[0].get("banned", False)
         logInfo("Login [{}]: banned {}", user_id, banned)
     except Exception as e:
-        logError("Login body parse error: {}, {}", repr(e), response)
+        logError("Login body parse error: {}, {}", repr(e), response.body)
     raise AsyncReturn(banned)
 
 
@@ -56,6 +56,6 @@ def get_stats():
     try:
         online_cache.update(json.loads(response.body))
     except Exception as e:
-        logError("Stats parsing error: {}", repr(e))
+        logError("Stats parsing error: {}, {}", repr(e), response.body)
 
     raise AsyncReturn(online_cache)
