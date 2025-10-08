@@ -1,8 +1,7 @@
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import overrideMethod
+from armagomen.utils.common import overrideMethod, safe_import
 from armagomen.utils.events import g_events
-from comp7_core.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds import _EquipmentZoneSoundPlayer
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
@@ -11,6 +10,17 @@ from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import BattleHintPanel
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
+
+_EquipmentZoneSoundPlayer = safe_import((
+    ("comp7_core.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds", "_EquipmentZoneSoundPlayer"),
+), noneResults=True)[0]
+
+if _EquipmentZoneSoundPlayer:
+    @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
+    def _onVehicleStateUpdated(base, eq, state, value):
+        if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
+            return
+        return base(eq, state, value)
 
 
 # disable battle hints
@@ -80,13 +90,6 @@ class TweakSounds(object):
         if user_settings.main[MAIN.IGNORE_COMMANDERS]:
             return False
         return base(*args, **kwargs)
-
-    @staticmethod
-    @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
-    def _onVehicleStateUpdated(base, eq, state, value):
-        if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
-            return
-        return base(eq, state, value)
 
 
 t_sounds = TweakSounds()

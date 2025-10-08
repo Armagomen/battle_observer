@@ -7,17 +7,19 @@ from armagomen.utils.logging import logDebug
 
 
 def import_views():
-    content = safe_import("gui.impl.lobby.hangar.random.random_hangar", "RandomHangar")
+    content = safe_import((
+        ("gui.impl.lobby.hangar.random.random_hangar", "RandomHangar"),
+    ))
 
-    hide = (
-            safe_import("gui.impl.lobby.crew.container_vews.quick_training.quick_training_view", "QuickTrainingView") +
-            safe_import("gui.impl.lobby.crew.container_vews.skills_training.skills_training_view", "SkillsTrainingView") +
-            safe_import("gui.impl.lobby.crew.container_vews.service_record.service_record_view", "ServiceRecordView") +
-            safe_import("gui.impl.lobby.crew.container_vews.personal_file.personal_file_view", "PersonalFileView") +
-            safe_import("gui.impl.lobby.mode_selector.mode_selector_view", "ModeSelectorView") +
-            safe_import("gui.impl.lobby.battle_results.random_battle_results_view", "RandomBattleResultsView") +
-            safe_import("gui.impl.lobby.crew.tankman_container_view", "TankmanContainerView")
-    )
+    hide = safe_import((
+        ("gui.impl.lobby.battle_results.random_battle_results_view", "RandomBattleResultsView"),
+        ("gui.impl.lobby.crew.container_vews.personal_file.personal_file_view", "PersonalFileView"),
+        ("gui.impl.lobby.crew.container_vews.quick_training.quick_training_view", "QuickTrainingView"),
+        ("gui.impl.lobby.crew.container_vews.service_record.service_record_view", "ServiceRecordView"),
+        ("gui.impl.lobby.crew.container_vews.skills_training.skills_training_view", "SkillsTrainingView"),
+        ("gui.impl.lobby.crew.tankman_container_view", "TankmanContainerView"),
+        ("gui.impl.lobby.mode_selector.mode_selector_view", "ModeSelectorView"),
+    ))
 
     return content, hide, content + hide
 
@@ -44,15 +46,17 @@ class HangarEfficiency(HangarEfficiencyMeta):
 
     def _populate(self):
         super(HangarEfficiency, self)._populate()
-        g_events.onModSettingsChanged += self.onModSettingsChanged
-        self.gui.windowsManager.onWindowShowingStatusChanged += self.onWindowShowingStatusChanged
-        cachedVehicleData.onChanged += self.update
-        self.onModSettingsChanged(AVG_EFFICIENCY_HANGAR.NAME, self.settings)
+        if CONTENT_VIEWS and NOT_SHOW:
+            g_events.onModSettingsChanged += self.onModSettingsChanged
+            self.gui.windowsManager.onWindowShowingStatusChanged += self.onWindowShowingStatusChanged
+            cachedVehicleData.onChanged += self.update
+            self.onModSettingsChanged(AVG_EFFICIENCY_HANGAR.NAME, self.settings)
 
     def _dispose(self):
-        cachedVehicleData.onChanged -= self.update
-        self.gui.windowsManager.onWindowShowingStatusChanged -= self.onWindowShowingStatusChanged
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        if CONTENT_VIEWS and NOT_SHOW:
+            cachedVehicleData.onChanged -= self.update
+            self.gui.windowsManager.onWindowShowingStatusChanged -= self.onWindowShowingStatusChanged
+            g_events.onModSettingsChanged -= self.onModSettingsChanged
         super(HangarEfficiency, self)._dispose()
 
     def update(self, data):

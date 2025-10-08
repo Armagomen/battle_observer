@@ -38,7 +38,7 @@ class SaveShootLite(TriggersManager.ITriggerListener):
             return base(avatar, isRepeat=isRepeat)
         shortName = "Undefined"
         try:
-            if isinstance(target, Vehicle):
+            if isinstance(target, Vehicle) and target.typeDescriptor:
                 shortName = target.typeDescriptor.type.shortUserString
         except Exception as error:
             logError(repr(error))

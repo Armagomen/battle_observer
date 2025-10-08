@@ -13,7 +13,7 @@ import BigWorld
 import ResMgr
 import WGC
 
-from armagomen.utils.logging import logDebug, logError, logInfo
+from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
 
@@ -348,16 +348,22 @@ ENCODING_LOCALE = getEncoding()
 ENCODING_ERRORS = "ignore"
 
 
-def safe_import(path, name):
-    try:
-        module = importlib.import_module(path)
-    except ImportError as e:
-        logError("Import error: {}", repr(e))
-        return ()
-    else:
-        cls = getattr(module, name, None)
-        if cls is not None:
-            return (cls,)
+def safe_import(iterPatches, noneResults=False):
+    result = []
+
+    for path, name in iterPatches:
+        try:
+            module = importlib.import_module(path)
+        except ImportError as e:
+            logWarning("Import error: {}", repr(e))
         else:
-            logError("Import error: {} has not attribute {}", repr(module), name)
-            return ()
+            cls = getattr(module, name, None)
+            if cls is not None:
+                result.append(cls)
+                continue
+            else:
+                logError("Import error: {} has no attribute {}", repr(module), name)
+        if noneResults:
+            result.append(None)
+
+    return tuple(result)

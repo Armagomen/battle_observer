@@ -37,11 +37,13 @@
 		
 		public function as_addToStage():void
 		{
-			var scale:Number = Math.min(App.appHeight / 1080, 1.0);
-			this.scaleX = this.scaleY = scale;
-			this.x = Math.ceil(App.appWidth / 64);
-			this.y = Math.ceil(App.appHeight / 16);
+			var scale_x:Number = Math.min(App.appWidth / 1920, 1.0);
+			var scale_y:Number = Math.min(App.appHeight / 1080, 1.0);
+			this.scaleX = this.scaleY = Math.min(scale_x, scale_y);
+			this.x = Math.ceil(50 * scale_x);
+			this.y = Math.ceil(80 * scale_y);
 			this.dateTime = new TextExt(0, 0, Filters.largeText, TextFieldAutoSize.LEFT, this);
+			this.dateTime.alpha = 0.8;
 		}
 		
 		public function as_clearScene():void
@@ -60,10 +62,11 @@
 		
 		public function _onResizeHandle(event:Event):void
 		{
-			var scale:Number = Math.min(App.appHeight / 1080, 1.0);
-			this.scaleX = this.scaleY = scale;
-			this.x = Math.ceil(App.appWidth / 64);
-			this.y = Math.ceil(App.appHeight / 16);
+			var scale_x:Number = Math.min(App.appWidth / 1920, 1.0);
+			var scale_y:Number = Math.min(App.appHeight / 1080, 1.0);
+			this.scaleX = this.scaleY = Math.min(scale_x, scale_y);
+			this.x = Math.ceil(50 * scale_x);
+			this.y = Math.ceil(80 * scale_y);
 		}
 	}
 }

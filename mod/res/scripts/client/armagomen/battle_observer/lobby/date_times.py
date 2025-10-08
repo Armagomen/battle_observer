@@ -8,23 +8,24 @@ from armagomen.utils.logging import logDebug
 from gui.shared.utils.TimeInterval import TimeInterval
 
 
-# "FrontlineHangar, BattleRoyaleHangarView"
-
 def import_views():
-    content = (
-            safe_import("gui.impl.lobby.hangar.random.random_hangar", "RandomHangar") +
-            safe_import("comp7_light.gui.impl.lobby.hangar.comp7_light_hangar", "Comp7LightHangar") +
-            safe_import("comp7.gui.impl.lobby.hangar.comp7_hangar", "Comp7Hangar") +
-            safe_import("last_stand.gui.impl.lobby.hangar_view", "HangarView")
-    )
+    content = safe_import((
+        ("battle_royale.gui.impl.lobby.views.battle_royale_hangar_view", "BattleRoyaleHangarView"),
+        ("comp7.gui.impl.lobby.hangar.comp7_hangar", "Comp7Hangar"),
+        ("comp7_light.gui.impl.lobby.hangar.comp7_light_hangar", "Comp7LightHangar"),
+        ("frontline.gui.impl.lobby.hangar_view", "FrontlineHangar"),
+        ("fun_random.gui.impl.lobby.hangar.fun_random_hangar", "FunRandomHangar"),
+        ("gui.impl.lobby.hangar.random.random_hangar", "RandomHangar"),
+        ("last_stand.gui.impl.lobby.hangar_view", "HangarView"),
+    ))
 
-    hide = (
-            safe_import("gui.impl.lobby.crew.container_vews.quick_training.quick_training_view", "QuickTrainingView") +
-            safe_import("gui.impl.lobby.crew.container_vews.skills_training.skills_training_view", "SkillsTrainingView") +
-            safe_import("gui.impl.lobby.crew.container_vews.service_record.service_record_view", "ServiceRecordView") +
-            safe_import("gui.impl.lobby.crew.container_vews.personal_file.personal_file_view", "PersonalFileView") +
-            safe_import("gui.impl.lobby.crew.tankman_container_view", "TankmanContainerView")
-    )
+    hide = safe_import((
+        ("gui.impl.lobby.crew.container_vews.personal_file.personal_file_view", "PersonalFileView"),
+        ("gui.impl.lobby.crew.container_vews.quick_training.quick_training_view", "QuickTrainingView"),
+        ("gui.impl.lobby.crew.container_vews.service_record.service_record_view", "ServiceRecordView"),
+        ("gui.impl.lobby.crew.container_vews.skills_training.skills_training_view", "SkillsTrainingView"),
+        ("gui.impl.lobby.crew.tankman_container_view", "TankmanContainerView"),
+    ))
 
     return content, hide, content + hide
 
@@ -43,14 +44,16 @@ class DateTimes(DateTimesMeta):
 
     def _populate(self):
         super(DateTimes, self)._populate()
-        g_events.onModSettingsChanged += self.onModSettingsChanged
-        self.gui.windowsManager.onWindowShowingStatusChanged += self.onWindowShowingStatusChanged
-        self.onModSettingsChanged(CLOCK.NAME, self.settings)
+        if CONTENT_VIEWS and NOT_SHOW:
+            g_events.onModSettingsChanged += self.onModSettingsChanged
+            self.gui.windowsManager.onWindowShowingStatusChanged += self.onWindowShowingStatusChanged
+            self.onModSettingsChanged(CLOCK.NAME, self.settings)
 
     def _dispose(self):
-        self.gui.windowsManager.onWindowShowingStatusChanged -= self.onWindowShowingStatusChanged
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
-        self.toggleInterval(False)
+        if CONTENT_VIEWS and NOT_SHOW:
+            self.gui.windowsManager.onWindowShowingStatusChanged -= self.onWindowShowingStatusChanged
+            g_events.onModSettingsChanged -= self.onModSettingsChanged
+            self.toggleInterval(False)
         super(DateTimes, self)._dispose()
 
     def updateTime(self):
