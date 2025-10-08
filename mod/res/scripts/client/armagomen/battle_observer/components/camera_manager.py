@@ -8,9 +8,9 @@ from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
-from cgf_components.attack_artillery_fort_components import ISettingsCore
 from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosition
 from helpers import dependency
+from skeletons.account_helpers.settings_core import ISettingsCache, ISettingsCore
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
 
@@ -68,6 +68,7 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
 class CameraSettings(object):
     settingsCore = dependency.descriptor(ISettingsCore)
+    settingsCache = dependency.descriptor(ISettingsCache)
 
     _CONTROL_MODE_NAME_TO_SEC = {
         CTRL_MODE_NAME.ARCADE: "gui/avatar_input_handler.xml/arcadeMode/camera/",
@@ -108,7 +109,9 @@ class CameraSettings(object):
         self.reset = False
 
     def applySettings(self, params):
-        if any(self.settingsCore.applySetting(key, value) is not None for key, value in params.items()):
+        if not self.settingsCore.isReady() or not self.settingsCache.settings.isSynced():
+            addCallback(1.0, self.applySettings, params)
+        elif any(self.settingsCore.applySetting(key, value) is not None for key, value in params.items()):
             self.settingsCore.applyStorages(False)
             self.settingsCore.clearStorages()
 

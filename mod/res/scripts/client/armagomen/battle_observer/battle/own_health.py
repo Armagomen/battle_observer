@@ -1,5 +1,3 @@
-# coding=utf-8
-
 from armagomen._constants import GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.own_health_meta import OwnHealthMeta
 from armagomen.utils.common import percentToColor
@@ -17,7 +15,7 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.is_alive_mode = True
         self.is_battle_period = False
         self.max_health = 0
-        self.template = "{} • {:.2%}"
+        self.template = "{} | {:.0%}"
 
     def updateVehicleParams(self, vehicle, *args):
         if self.max_health != vehicle.descriptor.maxHealth:

@@ -24,6 +24,7 @@ class WGRAndIcons(WGRAndIconsMeta):
         self.ranges = ((3287, "bad"), (5150, "normal"), (7258, "good"), (9586, "very_good"), (11025, "unique"))
         self.itemsData = {}
         self.data_loader = None
+        self._format = {True: "{:.1f}{}", False: "{:.0f}{}"}
 
     def statisticsEnabled(self):
         return STATISTICS_REGION is not None and self.settings[STATISTICS.STATISTIC_ENABLED]
@@ -66,7 +67,7 @@ class WGRAndIcons(WGRAndIconsMeta):
                 continue
             veh_info = self.getVehicleInfo(vehicle_id)
             is_enemy = veh_info.isEnemy()
-            item_data = self.buildItemData(veh_info.player.clanAbbrev, value)
+            item_data = self.buildItemData(veh_info.player, value)
             full, cut = self.getPattern(is_enemy, item_data)
             text_color = int(item_data[self.COLOR_WGR][1:], 16) if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else 0
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
@@ -80,13 +81,11 @@ class WGRAndIcons(WGRAndIconsMeta):
         battles = int(random["battles"])
         if battles:
             return round(float(random["wins"]) / battles * 100, 2), self.__battlesFormat(battles)
-        return self.DEFAULT_WIN_RATE, str(battles)
+        return self.DEFAULT_WIN_RATE, "--"
 
     def __battlesFormat(self, battles):
-        if battles >= self.K:
-            magnitude = int(floor(log(battles, self.K)))
-            return '%.1f%s' % (battles / self.K ** magnitude, self.UNITS[magnitude])
-        return str(battles)
+        magnitude = int(floor(log(battles, self.K)))
+        return self._format[magnitude >= 1].format(battles / self.K ** magnitude, self.UNITS[magnitude])
 
     def __getColor(self, wgr):
         result = "very_bad"
@@ -97,17 +96,17 @@ class WGRAndIcons(WGRAndIconsMeta):
                 break
         return self.settings[STATISTICS.COLORS].get(result, self.DEFAULT_COLOR)
 
-    def buildItemData(self, clanTag, data):
+    def buildItemData(self, player, data):
         wgr = int(data.get("global_rating", 0))
         win_rate, battles = self.__getWinRateAndBattlesCount(data)
         return {"WGR": wgr, self.COLOR_WGR: self.__getColor(wgr), "winRate": win_rate, "battles": battles,
-                "nickname": data.get("nickname"), "clanTag": "[{}]".format(clanTag) if clanTag else ""}
+                "nickname": player.name, "clanTag": "[{}]".format(player.clanAbbrev) if player.clanAbbrev else ""}
 
 
 class StatisticsDataLoader(object):
-    SEPARATOR = "%2C"
-    FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating", "nickname"))
-    STAT_URL = str(STATISTICS_REGION) + "&account_id={}&extra=statistics.random&language=en&fields=" + FIELDS
+    SEPARATOR = ","
+    FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating"))
+    STAT_URL = str(STATISTICS_REGION) + "&account_id={}&extra=statistics.random&fields=" + FIELDS
 
     def __init__(self, arenaDP, callback):
         self.arenaDP = arenaDP
@@ -147,7 +146,7 @@ class StatisticsDataLoader(object):
             self.__getDataCallback = addCallback(5.0, self.requestData)
 
     @property
-    def vehicles(self):
+    def consumeVehicles(self):
         while self.__vehicles:
             yield str(self.__vehicles.pop())
 
@@ -156,8 +155,7 @@ class StatisticsDataLoader(object):
         if self.__getDataCallback is not None:
             cancelCallback(self.__getDataCallback)
             self.__getDataCallback = None
-        url = self.STAT_URL.format(self.SEPARATOR.join(self.vehicles))
-        response = yield async_url_request(url)
+        response = yield async_url_request(self.STAT_URL.format(self.SEPARATOR.join(self.consumeVehicles)))
         self.onDataResponse(response)
 
     def getStatisticsDataFromServer(self):

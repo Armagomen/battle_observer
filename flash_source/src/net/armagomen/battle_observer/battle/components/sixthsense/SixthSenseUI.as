@@ -45,7 +45,7 @@
 			this.loader = new Loader();
 			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
-			this._timer = new Timer(100);
+			this._timer = new Timer(50);
 			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 		}
 		
@@ -207,14 +207,14 @@
 		
 		private function updateProgress():void
 		{
-			this.progress -= 100;
+			this.progress -= 50;
 			if (this.params.show_timer_graphics)
 			{
 				this.radial_progress.updateProgressBar(this.progress / this.show_time);
 			}
 			if (this.params.show_timer)
 			{
-				this.timer_text.text = (Math.round((this.progress / 1000) * 10) / 10).toFixed(1);
+				this.timer_text.text = (this.progress / 1000).toFixed(1);
 			}
 			if (this.params.playTickSound && this.progress >= 1000 && this.progress % 1000 == 0)
 			{

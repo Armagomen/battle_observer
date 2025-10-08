@@ -20,7 +20,7 @@ class DispersionTimer(DispersionTimerMeta):
         percent = self.settings[DISPERSION_TIMER.PERCENT]
 
         if timer or percent:
-            self.tpl = " - ".join(param[1] for param in ((timer, "{0:.1f}s."), (percent, "{1:d}%")) if param[0])
+            self.tpl = " - ".join(param[1] for param in ((timer, "{0:.1f}s."), (percent, "{1:.0%}")) if param[0])
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -56,8 +56,7 @@ class DispersionTimer(DispersionTimerMeta):
                 self.ideal_angle = dispersionAngles[1]
             diff = round(self.ideal_angle / dispersionAngles[0], 2)
             time = 0.0 if diff >= 1.0 else round(avatar.aimingInfo[1], 1) * (1.0 - diff)
-            self.as_updateTimerTextS(self.tpl.format(time, int(round(diff * 100))),
-                                     percentToColor(diff, color_blind=self._isColorBlind, as_int=True))
+            self.as_updateTimerTextS(self.tpl.format(time, diff), percentToColor(diff, color_blind=self._isColorBlind, as_int=True))
 
     def onCameraChanged(self, ctrlMode, vehicleID=None):
         self.isPostmortem = ctrlMode in POSTMORTEM_MODES

@@ -18,7 +18,7 @@ def getViewSettings():
     from armagomen.battle_observer.battle.own_health import OwnHealth
     from armagomen.battle_observer.battle.players_panels import PlayersPanels
     from armagomen.battle_observer.battle.sixth_sense import SixthSense
-    from armagomen.battle_observer.battle.debug_panel import DebugPanel
+    from armagomen.battle_observer.battle.debug_panel import _DebugPanel
     from armagomen.battle_observer.battle.team_bases import TeamBases
     from armagomen.battle_observer.battle.teams_hp import TeamsHP
     from armagomen.battle_observer.battle.wgr_and_icons import WGRAndIcons
@@ -30,7 +30,7 @@ def getViewSettings():
         ComponentSettings(BATTLE_ALIASES.DAMAGE_LOG, DamageLog, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.DAMAGE_LOG_EXT, ExtendedDamageLogs, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.DATE_TIME, DateTimes, ScopeTemplates.DEFAULT_SCOPE),
-        ComponentSettings(BATTLE_ALIASES.DEBUG, DebugPanel, ScopeTemplates.DEFAULT_SCOPE),
+        ComponentSettings(BATTLE_ALIASES.DEBUG, _DebugPanel, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.DISPERSION_TIMER, DispersionTimer, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.DISTANCE, Distance, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.FLIGHT_TIME, FlightTime, ScopeTemplates.DEFAULT_SCOPE),

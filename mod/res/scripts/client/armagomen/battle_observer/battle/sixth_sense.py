@@ -1,4 +1,3 @@
-# coding=utf-8
 from random import choice
 
 import ResMgr
@@ -22,9 +21,10 @@ class SixthSense(SixthSenseMeta):
 
     def __init__(self):
         super(SixthSense, self).__init__()
-        self.radio_installed = False
         self.__sounds = dict()
         self.__soundID = None
+        self.__time = 10
+        self.__isComp7Battle = False
 
     def callWWISE(self, wwiseEventName):
         if wwiseEventName in self.__sounds:
@@ -39,6 +39,8 @@ class SixthSense(SixthSenseMeta):
 
     def _populate(self):
         super(SixthSense, self)._populate()
+        self.__isComp7Battle = self.isComp7Battle()
+        self.__time = self.settings[SIXTH_SENSE.TIME] if not self.__isComp7Battle else 4.0
         if self.settings[SIXTH_SENSE.PLAY_TICK_SOUND]:
             self.__soundID = self._arenaVisitor.type.getCountdownTimerSound()
         g_playerEvents.onRoundFinished += self._onRoundFinished
@@ -46,7 +48,7 @@ class SixthSense(SixthSenseMeta):
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
         optional_devices = self.sessionProvider.shared.optionalDevices
-        if optional_devices is not None:
+        if optional_devices is not None and not self.__isComp7Battle:
             optional_devices.onDescriptorDevicesChanged += self.onDevicesChanged
 
     def _dispose(self):
@@ -61,26 +63,27 @@ class SixthSense(SixthSenseMeta):
         if ctrl is not None:
             ctrl.onVehicleStateUpdated -= self._onVehicleStateUpdated
         optional_devices = self.sessionProvider.shared.optionalDevices
-        if optional_devices is not None:
+        if optional_devices is not None and not self.__isComp7Battle:
             optional_devices.onDescriptorDevicesChanged -= self.onDevicesChanged
         super(SixthSense, self)._dispose()
 
     def onDevicesChanged(self, devices):
-        self.radio_installed = RADIO in (device.groupName for device in devices if device is not None)
+        if RADIO in (device.groupName for device in devices if device is not None):
+            self.__time = self.settings[SIXTH_SENSE.TIME] - RADIO_DURATION
+        else:
+            self.__time = self.settings[SIXTH_SENSE.TIME]
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             if value.get('isObserved', False):
-                if self.isComp7Battle():
-                    if value.get("detectionType", 0) == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
-                        time = 2
-                    else:
-                        time = 4
-                else:
-                    time = self.settings[SIXTH_SENSE.TIME] or 10
-                    if self.radio_installed:
-                        time -= RADIO_DURATION
-                self.as_showS(time)
+                if self.__isComp7Battle:
+                    detectionType = value.get("detectionType", 0)
+                    if detectionType == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
+                        self.as_showS(2.0)
+                        return
+                    if detectionType == DIRECT_DETECTION_TYPE.SPECIAL_RECON:
+                        return
+                self.as_showS(self.__time)
             else:
                 self.as_hideS()
         elif state in _STATES_TO_HIDE:
