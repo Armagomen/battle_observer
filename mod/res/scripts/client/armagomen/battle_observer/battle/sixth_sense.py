@@ -4,17 +4,22 @@ import ResMgr
 
 from armagomen._constants import SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
-from armagomen.utils.logging import logError
+from armagomen.utils.logging import logError, logInfo
 from constants import DIRECT_DETECTION_TYPE
+from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
+from items.components.supply_slot_categories import SupplySlotFactorLevels
 from PlayerEvents import g_playerEvents
 from SoundGroups import g_instance
 
 _STATES_TO_HIDE = {VEHICLE_VIEW_STATE.SWITCHING, VEHICLE_VIEW_STATE.RESPAWNING,
                    VEHICLE_VIEW_STATE.DESTROYED, VEHICLE_VIEW_STATE.CREW_DEACTIVATED}
 
-RADIO = 'improvedRadioCommunication'
+BASE_TIME = 10.0
+COMP7_TIME_REDUCTION = 6.0
+RADIO = 'radioCommunication'
 RADIO_DURATION = 1.5
+RADIO_DURATION_BONUS = 2.0
 
 
 class SixthSense(SixthSenseMeta):
@@ -23,7 +28,7 @@ class SixthSense(SixthSenseMeta):
         super(SixthSense, self).__init__()
         self.__sounds = dict()
         self.__soundID = None
-        self.__time = 10
+        self.__time = BASE_TIME
         self.__isComp7Battle = False
 
     def callWWISE(self, wwiseEventName):
@@ -40,7 +45,8 @@ class SixthSense(SixthSenseMeta):
     def _populate(self):
         super(SixthSense, self)._populate()
         self.__isComp7Battle = self.isComp7Battle()
-        self.__time = self.settings[SIXTH_SENSE.TIME] if not self.__isComp7Battle else 4.0
+        if self.__isComp7Battle:
+            self.updateTime(diff=COMP7_TIME_REDUCTION)
         if self.settings[SIXTH_SENSE.PLAY_TICK_SOUND]:
             self.__soundID = self._arenaVisitor.type.getCountdownTimerSound()
         g_playerEvents.onRoundFinished += self._onRoundFinished
@@ -49,7 +55,7 @@ class SixthSense(SixthSenseMeta):
             ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
         optional_devices = self.sessionProvider.shared.optionalDevices
         if optional_devices is not None and not self.__isComp7Battle:
-            optional_devices.onDescriptorDevicesChanged += self.onDevicesChanged
+            optional_devices.onDescriptorDevicesChanged += self.onDescriptorDevicesChanged
 
     def _dispose(self):
         if self.sessionProvider.isReplayPlaying and self._getPyReloading():
@@ -64,30 +70,38 @@ class SixthSense(SixthSenseMeta):
             ctrl.onVehicleStateUpdated -= self._onVehicleStateUpdated
         optional_devices = self.sessionProvider.shared.optionalDevices
         if optional_devices is not None and not self.__isComp7Battle:
-            optional_devices.onDescriptorDevicesChanged -= self.onDevicesChanged
+            optional_devices.onDescriptorDevicesChanged -= self.onDescriptorDevicesChanged
         super(SixthSense, self)._dispose()
 
-    def onDevicesChanged(self, devices):
-        if RADIO in (device.groupName for device in devices if device is not None):
-            self.__time = self.settings[SIXTH_SENSE.TIME] - RADIO_DURATION
-        else:
-            self.__time = self.settings[SIXTH_SENSE.TIME]
+    def onDescriptorDevicesChanged(self, devices):
+        diff = 0.0
+        for device in devices:
+            if device and RADIO in device.tags:
+                descr = avatar_getter.getPlayerVehicle().typeDescriptor
+                improved = device.defineActiveLevel(descr) == SupplySlotFactorLevels.IMPROVED
+                diff = RADIO_DURATION_BONUS if improved else RADIO_DURATION
+                break
+        self.updateTime(diff=diff)
+
+    DETECTION_TYPE_TO_TIME = {DIRECT_DETECTION_TYPE.STEALTH_RADAR: 2.0, DIRECT_DETECTION_TYPE.SPECIAL_RECON: 0}
 
     def _onVehicleStateUpdated(self, state, value):
         if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
             if value.get('isObserved', False):
-                if self.__isComp7Battle:
-                    detectionType = value.get("detectionType", 0)
-                    if detectionType == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
-                        self.as_showS(2.0)
-                        return
-                    if detectionType == DIRECT_DETECTION_TYPE.SPECIAL_RECON:
-                        return
-                self.as_showS(self.__time)
+                detectionType = value.get("detectionType", 0)
+                self.as_showS(self.DETECTION_TYPE_TO_TIME.get(detectionType, self.__time))
             else:
                 self.as_hideS()
         elif state in _STATES_TO_HIDE:
             self.as_hideS()
+            if not self.__isComp7Battle:
+                self.updateTime()
+
+    def updateTime(self, diff=0.0):
+        new_time = BASE_TIME - diff
+        if new_time != self.__time:
+            logInfo("SixthSense - Updated time from {} to {}", self.__time, new_time)
+            self.__time = new_time
 
     def _onRoundFinished(self, *args):
         self.as_hideS()

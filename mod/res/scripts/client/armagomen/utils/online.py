@@ -2,6 +2,7 @@ import json
 from collections import namedtuple
 
 from armagomen.utils.async_request import async_url_request
+from armagomen.utils.common import addCallback
 from armagomen.utils.logging import logError, logInfo
 from helpers import getClientLanguage
 from realm import CURRENT_REALM
@@ -40,11 +41,29 @@ def user_login(user_id, name, version):
     raise AsyncReturn(banned)
 
 
+MAX_RETRIES = 3
+
+
+def isLogoutConfirmed(stats):
+    if not stats or "is_online" not in stats or "online_since" not in stats:
+        return False
+    return stats.get("is_online") is False and stats.get("online_since") is None
+
 @wg_async
-def user_logout(user_id):
+def user_logout(user_id, attempt=0):
     data = {"user_id": user_id}
     response = yield async_url_request(URLS.user_logout, data=data, headers=HEADERS_API, method="POST")
-    logInfo("Logout [{}]: {}", user_id, response.responseCode)
+    try:
+        stats = json.loads(response.body)
+        if not isLogoutConfirmed(stats):
+            if attempt < MAX_RETRIES:
+                addCallback(0, user_logout, user_id, attempt=attempt + 1)
+            else:
+                logError("Logout failed after {} attempts: {}", MAX_RETRIES, user_id)
+        else:
+            logInfo("Logout [{}]: {}", user_id, stats)
+    except Exception as e:
+        logError("Stats parsing error: {}, {}", repr(e), response.body)
 
 
 online_cache = {"online": 0, "total": 0}

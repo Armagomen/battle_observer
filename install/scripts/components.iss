@@ -52,7 +52,7 @@ Name: dispersion_timer/percent; Description: {cm:dispersion_timer_percent};
 
 Name: sixth_sense; Description: {cm:sixth_sense}; Flags: disablenouninstallwarning;
 Name: sixth_sense/playTickSound; Description: {cm:playTickSound}; Types: armagomen;
-Name: sixth_sense/show_timer; Description: {cm:show_timer};
+Name: sixth_sense/show_timer; Description: {cm:show_timer}; Types: armagomen;
 Name: sixth_sense/show_timer_graphics; Description: {cm:show_timer_graphics}; Types: armagomen;
 Name: sixth_sense/show_random_icon; Description: {cm:show_random_icon};
 

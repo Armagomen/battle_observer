@@ -62,7 +62,6 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             SIXTH_SENSE.PLAY_TICK_SOUND: True,
             SIXTH_SENSE.ICON_NAME: "lamp_2.png",
-            SIXTH_SENSE.TIME: 10,
             SIXTH_SENSE.SHOW_TIMER: False,
             SIXTH_SENSE.TIMER_GRAPHICS: True,
             SIXTH_SENSE.RANDOM: False,
