@@ -19,6 +19,10 @@
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
+		private const SECOND_IN_MS:int  = 1000;
+		private const DELAY:int         = 100;
+		private const TICK_INTERVAL:int = SECOND_IN_MS / DELAY;
+		
 		private var loader:Loader;
 		private var params:Object;
 		private var timer_text:TextExt;
@@ -29,9 +33,7 @@
 		private var _image:Bitmap;
 		private var radial_progress:RadialProgressBar;
 		private var timeoutID:Number;
-		private var progress:Number  = 10000;
-		private var show_time:Number = 10000;
-		private var _timer:Timer     = null;
+		private var _timer:Timer        = null;
 		
 		public var getIconPatch:Function;
 		public var playSound:Function;
@@ -45,8 +47,7 @@
 			this.loader = new Loader();
 			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
-			this._timer = new Timer(50);
-			this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
+			this._timer = new Timer(this.DELAY, this.DELAY);
 		}
 		
 		override protected function onPopulate():void
@@ -61,6 +62,7 @@
 				this.addChild(this._container);
 				this.loader.load(new URLRequest(this.getIconPatch()));
 				this.hideComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
+				this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 			}
 			else
 			{
@@ -150,7 +152,6 @@
 			this._container.y = this.POSITION_Y;
 			this._container.alpha = 1.0;
 			this.clearTimers();
-			this.progress = this.show_time = seconds * 1000;
 			
 			if (this.params.show_timer || this.params.show_timer_graphics || this.params.playTickSound)
 			{
@@ -163,22 +164,19 @@
 				{
 					this.radial_progress.updateProgressBar(1.0);
 				}
-				
+				this._timer.repeatCount = seconds * this.TICK_INTERVAL;
 				this._timer.start();
 			}
 			else
 			{
-				this.timeoutID = setTimeout(as_hide, this.show_time)
+				this.timeoutID = setTimeout(as_hide, seconds * this.SECOND_IN_MS)
 			}
 		}
 		
 		private function clearTimers():void
 		{
-			if (this._timer.running)
-			{
-				this._timer.stop();
-			}
-			if (this.timeoutID)
+			this._timer.reset();
+			if (this.timeoutID > 0)
 			{
 				clearTimeout(this.timeoutID);
 				this.timeoutID = 0;
@@ -207,20 +205,20 @@
 		
 		private function updateProgress():void
 		{
-			this.progress -= 50;
+			var remainingTicks:int = this._timer.repeatCount - this._timer.currentCount;
 			if (this.params.show_timer_graphics)
 			{
-				this.radial_progress.updateProgressBar(this.progress / this.show_time);
+				this.radial_progress.updateProgressBar(remainingTicks / this._timer.repeatCount);
 			}
 			if (this.params.show_timer)
 			{
-				this.timer_text.text = (this.progress / 1000).toFixed(1);
+				this.timer_text.text = (remainingTicks / this.TICK_INTERVAL).toFixed(1);
 			}
-			if (this.params.playTickSound && this.progress >= 1000 && this.progress % 1000 == 0)
+			if (this.params.playTickSound && remainingTicks % this.TICK_INTERVAL == 0)
 			{
 				this.playSound();
 			}
-			if (this.progress == 0)
+			if (remainingTicks == 0)
 			{
 				this.as_hide();
 			}

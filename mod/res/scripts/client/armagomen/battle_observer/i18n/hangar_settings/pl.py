@@ -314,10 +314,6 @@ localization = {
         "icon_name": "Wybierz wbudowaną ikonę",
         "icon_name_tooltip": "Jeśli chcesz użyć własnego obrazka, skopiuj plik o rozmiarze 200x200 do folderu res_mods/**GAME_VERSION**/"
                              "gui/maps/icons/battle_observer/sixth_sense/_file_name.png",
-        "lampShowTime": "Czas wyświetlania (sekundy)",
-        "lampShowTime_tooltip": "<b>Jak długo cel pozostaje widoczny?</b><br>Po wykryciu czołg pozostaje widoczny nawet bez bezpośredniej "
-                                "widoczności. Standard — ~10 sekund, może się różnić od 7 do 13 w zależności od załogi, wyposażenia"
-                                " i instrukcji.",
         "playTickSound": "Odtwórz dźwięk timera",
         "show_timer": "Włącz timer",
         "show_timer_graphics": "Włącz graficzny timer",

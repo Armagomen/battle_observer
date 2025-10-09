@@ -201,9 +201,9 @@ FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TIME", "DISTANCE",
     "flight_time", "spgOnly", "time", "distance", "align")
 
 SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
-    "NAME", "PLAY_TICK_SOUND", "TIME", "ICON_NAME", "SHOW_TIMER", "TIMER_GRAPHICS", "TIMER_GRAPHICS_COLOR",
+    "NAME", "PLAY_TICK_SOUND", "ICON_NAME", "SHOW_TIMER", "TIMER_GRAPHICS", "TIMER_GRAPHICS_COLOR",
     "ICON_SIZE", "TIMER_GRAPHICS_RADIUS", "RANDOM"))(
-    "sixth_sense", "playTickSound", "lampShowTime", "icon_name", "show_timer", "show_timer_graphics",
+    "sixth_sense", "playTickSound", "icon_name", "show_timer", "show_timer_graphics",
     "show_timer_graphics_color", "icon_size", "show_timer_graphics_radius", "show_random_icon"
 )
 

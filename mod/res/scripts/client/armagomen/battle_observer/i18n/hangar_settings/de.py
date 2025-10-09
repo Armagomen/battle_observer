@@ -311,10 +311,6 @@ localization = {
         "icon_name": "Integriertes Bild auswählen.",
         "icon_name_tooltip": "Wenn Sie ein eigenes Bild verwenden möchten, kopieren Sie eine Datei mit der Größe 200x200 in "
                              "den Ordner res_mods/**GAME_VERSION**/gui/maps/icons/battle_observer/sixth_sense/_file_name.png",
-        "lampShowTime": "Anzeigedauer in Sekunden",
-        "lampShowTime_tooltip": "<b>Wie lange bleibt das Ziel sichtbar?</b><br>Nach der Entdeckung bleibt der Panzer auch ohne direkte "
-                                "Sichtbarkeit sichtbar. Standard — ~10 Sekunden, kann je nach Besatzung, Ausrüstung und "
-                                "Anweisungen zwischen 7 und 13 variieren.",
         "playTickSound": "Timer-Sound abspielen",
         "show_timer": "Timer aktivieren.",
         "show_timer_graphics": "Grafischen Timer aktivieren.",

@@ -13,7 +13,7 @@ import BigWorld
 import ResMgr
 import WGC
 
-from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
+from armagomen.utils.logging import logDebug, logError, logInfo
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
 
@@ -355,7 +355,7 @@ def safe_import(iterPatches, noneResults=False):
         try:
             module = importlib.import_module(path)
         except ImportError as e:
-            logWarning("Import error: {}", repr(e))
+            logDebug("Import error: {}", repr(e))
         else:
             cls = getattr(module, name, None)
             if cls is not None:
