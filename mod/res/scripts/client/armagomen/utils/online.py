@@ -2,7 +2,6 @@ import json
 from collections import namedtuple
 
 from armagomen.utils.async_request import async_url_request
-from armagomen.utils.common import addCallback
 from armagomen.utils.logging import logError, logInfo
 from helpers import getClientLanguage
 from realm import CURRENT_REALM
@@ -53,17 +52,19 @@ def isLogoutConfirmed(stats):
 def user_logout(user_id, attempt=0):
     data = {"user_id": user_id}
     response = yield async_url_request(URLS.user_logout, data=data, headers=HEADERS_API, method="POST")
+    result = False
     try:
         stats = json.loads(response.body)
-        if not isLogoutConfirmed(stats):
-            if attempt < MAX_RETRIES:
-                addCallback(0, user_logout, user_id, attempt=attempt + 1)
-            else:
-                logError("Logout failed after {} attempts: {}", MAX_RETRIES, user_id)
-        else:
+        result = isLogoutConfirmed(stats)
+        if result:
             logInfo("Logout [{}]: {}", user_id, stats)
+        elif attempt < MAX_RETRIES:
+            result = yield user_logout(user_id, attempt=attempt + 1)
+        else:
+            logError("Logout failed after {} attempts: {}", MAX_RETRIES, user_id)
     except Exception as e:
         logError("Stats parsing error: {}, {}", repr(e), response.body)
+    raise AsyncReturn(result)
 
 
 online_cache = {"online": 0, "total": 0}

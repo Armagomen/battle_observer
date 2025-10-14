@@ -1,4 +1,5 @@
 from armagomen._constants import BATTLES_RANGE, MAIN
+from armagomen.utils.common import addCallback
 from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
@@ -21,6 +22,7 @@ class Core(object):
         self.autoClearCache = False
         self.hangar_settings = None
         self.error_dialog = None
+        self.logout_started = False
         self.connectionMgr.onLoggedOn += self._onLoggedOn
         self.connectionMgr.onDisconnected += self._onDisconnected
         g_events.onModSettingsChanged += self.onModSettingsChanged
@@ -39,10 +41,15 @@ class Core(object):
         except (IndexError, ValueError, TypeError):
             return None
 
-    @wg_async
     def _onLoggedOn(self, responseData):
+        if self.userID is not None:
+            addCallback(2.0, self._onLoggedOn, responseData.copy())
+        else:
+            self.onLoggedOn(responseData)
+
+    @wg_async
+    def onLoggedOn(self, responseData):
         logDebug("_onLoggedOn: {}", responseData)
-        # self._onDisconnected()
         self.userID = self.extractDatabaseID(responseData.get('token2'))
         self.userName = responseData.get('name')
         if self.userID:
@@ -50,11 +57,15 @@ class Core(object):
             if result:
                 self.appLoader.onGUISpaceEntered += self.showBanned
 
+    @wg_async
     def _onDisconnected(self):
-        if self.userID:
-            user_logout(self.userID)
-            self.userID = None
-            self.userName = None
+        if self.userID and not self.logout_started:
+            self.logout_started = True
+            result = yield user_logout(self.userID)
+            if result:
+                self.userID = None
+                self.userName = None
+                self.logout_started = False
 
     def start(self):
         from armagomen.battle_observer.components import loadComponents
