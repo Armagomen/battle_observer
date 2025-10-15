@@ -149,10 +149,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def __onGunMarkerStateChanged(self, markerType, gunMarkerState, supportMarkersInfo):
         if not self.__isEnabled:
-            self.sessionProvider.shared.armorFlashlight.hide()
             return
-        self.sessionProvider.shared.armorFlashlight.updateVisibilityState(markerType, gunMarkerState.position, gunMarkerState.direction,
-                                                                          gunMarkerState.collData, gunMarkerState.size)
         shot_result, data = self.__resolver._getShotResult(gunMarkerState, self.__piercingMultiplier, self.__player)
         if shot_result in self.__colors:
             color = self.__colors[shot_result]
