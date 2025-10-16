@@ -120,7 +120,7 @@ class UserSettings(object):
 
         self.arcade_camera = {
             GLOBAL.ENABLED: False,
-            ARCADE.DIST_RANGE: [2.0, 150.0],
+            ARCADE.DIST_RANGE: [10.0, 150.0],
             ARCADE.START_DEAD_DIST: 20.0,
             ARCADE.SCROLL_SENSITIVITY: 4.0,
         }

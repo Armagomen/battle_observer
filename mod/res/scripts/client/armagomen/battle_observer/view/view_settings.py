@@ -43,6 +43,9 @@ class ViewSettings(object):
     def isLastStand(self):
         return self.gui.guiType == getattr(ARENA_GUI_TYPE, "LAST_STAND", -1)
 
+    def isHalloween(self):
+        return self.gui.guiType == getattr(ARENA_GUI_TYPE, "HALLOWEEN", -1)
+
     @staticmethod
     def xvm_installed(module):
         if IS_XVM_INSTALLED:
@@ -50,7 +53,7 @@ class ViewSettings(object):
         return IS_XVM_INSTALLED
 
     def isSpecialBattle(self):
-        return self.gui.isInEpicRange() or self.isLastStand() or self.gui.isBattleRoyale()
+        return self.gui.isInEpicRange() or self.isLastStand() or self.gui.isBattleRoyale() or self.isHalloween()
 
     def spacialOrEpicRandom(self):
         return self.isSpecialBattle() or self.gui.isEpicRandomBattle()

@@ -81,7 +81,7 @@ class DateTimes(DateTimesMeta):
         if newStatus not in self.SHOWING_STATUS_TO_VALUE:
             return
         window = self.gui.windowsManager.getWindow(uniqueID).content
-        logDebug("Window {} changed to {}", window, newStatus)
+        logDebug("Window: {} status changed to {}", window, newStatus)
         if not isinstance(window, ALL_VIEWS):
             return
         visible = self.visible
