@@ -1,5 +1,4 @@
 from armagomen._constants import BATTLES_RANGE, MAIN
-from armagomen.utils.common import addCallback
 from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
@@ -22,9 +21,7 @@ class Core(object):
         self.autoClearCache = False
         self.hangar_settings = None
         self.error_dialog = None
-        self.logout_started = False
         self.connectionMgr.onLoggedOn += self._onLoggedOn
-        self.connectionMgr.onDisconnected += self._onDisconnected
         g_events.onModSettingsChanged += self.onModSettingsChanged
 
     def showBanned(self, spaceID):
@@ -41,31 +38,24 @@ class Core(object):
         except (IndexError, ValueError, TypeError):
             return None
 
-    def _onLoggedOn(self, responseData):
-        if self.userID is not None:
-            addCallback(2.0, self._onLoggedOn, responseData.copy())
-        else:
-            self.onLoggedOn(responseData)
-
     @wg_async
-    def onLoggedOn(self, responseData):
+    def _onLoggedOn(self, responseData):
         logDebug("_onLoggedOn: {}", responseData)
-        self.userID = self.extractDatabaseID(responseData.get('token2'))
-        self.userName = responseData.get('name')
-        if self.userID:
+        userID = self.extractDatabaseID(responseData.get('token2'))
+        if self.userID != userID:
+            if self.userID is not None:
+                self._onDisconnected(int(self.userID))
+            self.userID = userID
+            self.userName = responseData.get('username')
             result = yield user_login(self.userID, self.userName, self.version)
             if result:
                 self.appLoader.onGUISpaceEntered += self.showBanned
 
     @wg_async
-    def _onDisconnected(self):
-        if self.userID and not self.logout_started:
-            self.logout_started = True
-            result = yield user_logout(self.userID)
-            if result:
-                self.userID = None
-                self.userName = None
-                self.logout_started = False
+    def _onDisconnected(self, userID):
+        if userID is not None:
+            logDebug("_onDisconnected: {}", userID)
+            yield user_logout(userID)
 
     def start(self):
         from armagomen.battle_observer.components import loadComponents
@@ -114,9 +104,8 @@ class Core(object):
             self.hangar_settings.fini()
         if self.error_dialog is not None:
             self.error_dialog.fini()
-        self._onDisconnected()
+        self._onDisconnected(self.userID)
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
-        self.connectionMgr.onDisconnected -= self._onDisconnected
         g_events.onModSettingsChanged -= self.onModSettingsChanged
 
     @staticmethod

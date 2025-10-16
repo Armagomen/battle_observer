@@ -34,7 +34,7 @@ def user_login(user_id, name, version):
     try:
         body = json.loads(response.body)
         banned = body and body[0].get("banned", False)
-        logInfo("Login [{}]: banned {}", user_id, banned)
+        logInfo("Login response [{}]: banned {}", user_id, banned)
     except Exception as e:
         logError("Login body parse error: {}, {}", repr(e), response.body)
     raise AsyncReturn(banned)
@@ -57,13 +57,13 @@ def user_logout(user_id, attempt=0):
         stats = json.loads(response.body)
         result = isLogoutConfirmed(stats)
         if result:
-            logInfo("Logout [{}]: {}", user_id, stats)
+            logInfo("Logout response [{}]: {}", user_id, stats)
         elif attempt < MAX_RETRIES:
             result = yield user_logout(user_id, attempt=attempt + 1)
         else:
             logError("Logout failed after {} attempts: {}", MAX_RETRIES, user_id)
     except Exception as e:
-        logError("Stats parsing error: {}, {}", repr(e), response.body)
+        logError("Response parsing error: {}, {}", repr(e), response.body)
     raise AsyncReturn(result)
 
 

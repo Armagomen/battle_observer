@@ -17,8 +17,9 @@ class ErrorMessages(object):
         if not self.messages:
             return
         login_server_selection = ServicesLocator.settingsCore.getSetting(GAME.LOGIN_SERVER_SELECTION)
-        if spaceID == GuiGlobalSpaceID.LOGIN and login_server_selection or spaceID == GuiGlobalSpaceID.LOBBY:
-            addCallback(1.0, self.showDialog, spaceID == GuiGlobalSpaceID.LOBBY)
+        is_lobby = spaceID == GuiGlobalSpaceID.LOBBY
+        if spaceID == GuiGlobalSpaceID.LOGIN and login_server_selection or is_lobby:
+            addCallback(1.0, self.showDialog, is_lobby)
 
     @property
     def _messages(self):

@@ -34,8 +34,9 @@ class SettingsLoader(object):
     @staticmethod
     def sixthSenseIconsNamesList():
         directory = "gui/maps/icons/battle_observer/sixth_sense/"
-        folder = ResMgr.openSection(directory)
-        return sorted(folder.keys())
+        folder = ResMgr.openSection(directory).keys()
+        ResMgr.purge(directory)
+        return sorted(folder)
 
     @property
     def settings(self):

@@ -20,6 +20,7 @@ from external_strings_utils import unicode_from_utf8
 CONFIG_DIR = "mod_battle_observer"
 MOD_CACHE = "battle_observer"
 UTF_8 = "utf-8"
+CLIENT_VERSION_PATH = '../version.xml'
 
 MinMax = namedtuple("MinMax", ("min", "max"))
 
@@ -86,8 +87,11 @@ MODS_PATH = os.path.join(CWD, "mods")
 
 
 def getGameVersion():
-    full_version = ResMgr.openSection('../version.xml').readString('version')
-    for name in ResMgr.openSection(MODS_PATH).keys():
+    full_version = ResMgr.openSection(CLIENT_VERSION_PATH).readString('version')
+    mods_dir_keys = ResMgr.openSection(MODS_PATH).keys()
+    ResMgr.purge(CLIENT_VERSION_PATH)
+    ResMgr.purge(MODS_PATH, True)
+    for name in mods_dir_keys:
         if name in full_version:
             return name
     return full_version.split('#')[0].strip()[2:]
@@ -134,13 +138,15 @@ def cleanupUpdates():
     listDir = os.listdir(path)
     if listDir:
         ignored = set()
-        section = ResMgr.openSection(os.path.join(CWD, 'game_info.xml'))
+        game_info = os.path.join(CWD, 'game_info.xml')
+        section = ResMgr.openSection(game_info)
         if section['game']['upcoming_patches']:
             ignored.update(val.asString.split("\\")[0] for value in section['game']['upcoming_patches'].values() for val in value.values())
         for name in ignored.symmetric_difference(listDir):
             full_path = os.path.join(path, name)
             os.unlink(full_path) if os.path.isfile(full_path) or os.path.islink(full_path) else removeDirs(full_path)
             logInfo("CLEARING THE UPDATE FOLDER: {}", full_path)
+        ResMgr.purge(game_info, True)
 
 
 def clearClientCache():

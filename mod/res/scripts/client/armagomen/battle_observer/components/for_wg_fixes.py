@@ -49,3 +49,26 @@ logs_fix = WG_Logs_Fix()
 
 def fini():
     logs_fix.fini()
+
+# from shared_utils import first
+# from gui.impl.lobby.personal_missions_30.views_helpers import markBannerAnimationShown
+# from gui.impl.lobby.user_missions.hangar_widget.services.events_service import _EntryPointData
+# from account_helpers.settings_core.settings_constants import PersonalMission3
+# from gui.impl.lobby.user_missions.hangar_widget.services.campaign_service import BANNER_TEASER_ID, CampaignService
+#
+#
+# @overrideMethod(CampaignService, "__tryToUpdateBanner")
+# def __tryToUpdateBanner(base, cls):
+#     if cls._CampaignService__isBannerVisible():
+#         currentOperation = first(cls._CampaignService__getActiveOperationsForPM3())
+#         pm3BannerOperationID = str(currentOperation.getID()) if currentOperation is not None else BANNER_TEASER_ID
+#         pm3BannerData = {'id': cls.pm3bannerMap.get(pm3BannerOperationID),
+#                          'startDate': '01.01.2020 00:00',
+#                          'endDate': '01.01.2040 00:00',
+#                          'weightConfig': 'PM3EntryPoint'}
+#         entry = _EntryPointData(pm3BannerData)
+#         if entry.isValidData():
+#             cls._CampaignService__tryToUpdateVisibleEntry(None if entry.isExpiredDate() else entry)
+#     else:
+#         cls._CampaignService__tryToUpdateVisibleEntry(None)
+#         markBannerAnimationShown(PersonalMission3.PM_BANNER_ANIMATION_KEY, reset=True)

@@ -115,8 +115,9 @@ class SixthSense(SixthSenseMeta):
             directory = "gui/maps/icons/battle_observer/sixth_sense/"
             flash_path = '../../' + directory
             if self.settings[SIXTH_SENSE.RANDOM]:
-                folder = ResMgr.openSection(directory)
-                return flash_path + choice(folder.keys())
+                folder = ResMgr.openSection(directory).keys()
+                ResMgr.purge(directory, True)
+                return flash_path + choice(folder)
             else:
                 return flash_path + self.settings[SIXTH_SENSE.ICON_NAME]
 
