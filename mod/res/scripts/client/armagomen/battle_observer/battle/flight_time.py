@@ -17,7 +17,7 @@ class FlightTime(FlightTimeMeta):
         distance = self.settings[FLIGHT_TIME.DISTANCE]
 
         if time or distance:
-            self.tpl = " - ".join(param[1] for param in ((time, "{0:.2f}s."), (distance, "{1:.1f}m.")) if param[0])
+            self.tpl = " - ".join(param[1] for param in ((time, "{0}s"), (distance, "{1:.1f}m")) if param[0])
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -25,7 +25,7 @@ class FlightTime(FlightTimeMeta):
             handler = avatar_getter.getInputHandler()
             if handler is not None and hasattr(handler, "onCameraChanged"):
                 handler.onCameraChanged += self.onCameraChanged
-            self.as_flightTimeS(self.tpl.format(0.0, 0.0))
+            self.as_flightTimeS(self.tpl.format("0:00", 0.0))
 
     def _dispose(self):
         if self.tpl is not None:
@@ -53,4 +53,4 @@ class FlightTime(FlightTimeMeta):
         vehAttrs = self.sessionProvider.shared.feedback.getVehicleAttrs()
         shotPos, shotVel, shotGravity = player.gunRotator.getShotParams(gunMarkerPosition, ignoreYawLimits=True, overrideShotDescr=shot)
         flyTime = getSPGShotFlyTime(gunMarkerPosition, shotVel, shotPos, shot.maxDistance, shot.speed, vehAttrs)
-        self.as_flightTimeS(self.tpl.format(flyTime, gunMarkerPosition.flatDistTo(shotPos)))
+        self.as_flightTimeS(self.tpl.format("{:.2f}".format(flyTime).replace(".", ":"), shotPos.flatDistTo(gunMarkerPosition)))
