@@ -15,7 +15,7 @@ package net.armagomen.battle_observer.utils.tween
 	[Event(name = "motionChange", type = "net.armagomen.battleobserver.utils.tween.TweenEvent")]
 	public class Tween extends EventDispatcher
 	{
-		private const FPS:Number      = 25;
+		private const FPS:Number      = 20;
 		private var _position:Number  = NaN;
 		public var isPlaying:Boolean  = false;
 		private var _time:Number      = 0;

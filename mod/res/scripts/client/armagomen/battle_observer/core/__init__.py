@@ -46,7 +46,7 @@ class Core(object):
             if self.userID is not None:
                 self._onDisconnected(int(self.userID))
             self.userID = userID
-            self.userName = responseData.get('username')
+            self.userName = responseData.get('name')
             result = yield user_login(self.userID, self.userName, self.version)
             if result:
                 self.appLoader.onGUISpaceEntered += self.showBanned

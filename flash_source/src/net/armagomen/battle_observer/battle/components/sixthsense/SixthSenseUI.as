@@ -19,8 +19,8 @@
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
-		private const SECOND_IN_MS:int  = 1000;
-		private const DELAY:int         = 100;
+		private const SECOND_IN_MS:int     = 1000;
+		private const DELAY:int            = 100;
 		private const TICKS_PER_SECOND:int = SECOND_IN_MS / DELAY;
 		
 		private var loader:Loader;
@@ -33,7 +33,7 @@
 		private var _image:Bitmap;
 		private var radial_progress:RadialProgressBar;
 		private var timeoutID:Number;
-		private var _timer:Timer        = null;
+		private var _timer:Timer           = null;
 		
 		public var getIconPatch:Function;
 		public var playSound:Function;
@@ -90,6 +90,14 @@
 			this.hideAnimation2 = new Tween(this._container, "alpha", 1.0, 0, 0.5);
 		}
 		
+		private function hideIcon():void
+		{
+			if (!this.hideAnimation.isPlaying){
+				this.hideAnimation.start();
+				this.hideAnimation2.start();
+			}
+		}
+		
 		private function rewind():void
 		{
 			if (this.hideAnimation && this.hideAnimation.isPlaying)
@@ -106,7 +114,7 @@
 		
 		private function updateParams():void
 		{
-			var size:Number         = this.params.icon_size;
+			var size:Number = this.params.icon_size;
 			if (size % 2 != 0)
 			{
 				size += 1;
@@ -152,7 +160,8 @@
 		
 		public function as_show(seconds:Number):void
 		{
-			if (seconds <= 0) {
+			if (seconds <= 0)
+			{
 				return;
 			}
 			this.rewind();
@@ -199,8 +208,7 @@
 				{
 					this.timer_text.text = "";
 				}
-				this.hideAnimation.start();
-				this.hideAnimation2.start();
+				this.hideIcon();
 			}
 		}
 		
