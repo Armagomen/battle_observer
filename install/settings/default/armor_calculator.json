@@ -2,8 +2,8 @@
   "display_on_allies": false, 
   "enabled": false, 
   "position": {
-    "x": 0, 
-    "y": 80
+    "x": 0,
+    "y": 60
   }, 
   "show_caliber": false, 
   "show_counted_armor": true, 

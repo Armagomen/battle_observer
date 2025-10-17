@@ -133,7 +133,7 @@ class UserSettings(object):
 
         self.armor_calculator = {
             GLOBAL.ENABLED: False,
-            ARMOR_CALC.POSITION: {GLOBAL.X: 0, GLOBAL.Y: 80},
+            ARMOR_CALC.POSITION: {GLOBAL.X: 0, GLOBAL.Y: 60},
             ARMOR_CALC.ON_ALLY: False,
             ARMOR_CALC.SHOW_PIERCING_RESERVE: False,
             ARMOR_CALC.SHOW_COUNTED_ARMOR: True,

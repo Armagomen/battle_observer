@@ -41,21 +41,20 @@ class Core(object):
     @wg_async
     def _onLoggedOn(self, responseData):
         logDebug("_onLoggedOn: {}", responseData)
+        if responseData.get("isDemoAccount", False):
+            return
         userID = self.extractDatabaseID(responseData.get('token2'))
         if self.userID != userID:
-            if self.userID is not None:
-                self._onDisconnected(int(self.userID))
+            self.logout()
             self.userID = userID
             self.userName = responseData.get('name')
             result = yield user_login(self.userID, self.userName, self.version)
             if result:
                 self.appLoader.onGUISpaceEntered += self.showBanned
 
-    @wg_async
-    def _onDisconnected(self, userID):
-        if userID is not None:
-            logDebug("_onDisconnected: {}", userID)
-            yield user_logout(userID)
+    def logout(self):
+        if self.userID is not None:
+            user_logout(int(self.userID))
 
     def start(self):
         from armagomen.battle_observer.components import loadComponents
@@ -92,6 +91,7 @@ class Core(object):
             self.autoClearCache = data[MAIN.AUTO_CLEAR_CACHE]
 
     def fini(self):
+        self.logout()
         from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates, clearClientCache
         if self.autoClearCache:
             clearClientCache()
@@ -104,7 +104,6 @@ class Core(object):
             self.hangar_settings.fini()
         if self.error_dialog is not None:
             self.error_dialog.fini()
-        self._onDisconnected(self.userID)
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         g_events.onModSettingsChanged -= self.onModSettingsChanged
 
