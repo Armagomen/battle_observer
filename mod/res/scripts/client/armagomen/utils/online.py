@@ -44,9 +44,8 @@ MAX_RETRIES = 3
 
 
 def isLogoutConfirmed(stats):
-    if not stats or "is_online" not in stats or "online_since" not in stats:
-        return False
-    return stats.get("is_online") is False and stats.get("online_since") is None
+    return stats and stats.get("is_online") is False
+
 
 @wg_async
 def user_logout(user_id, attempt=0):

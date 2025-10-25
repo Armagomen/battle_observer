@@ -24,7 +24,7 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
     def updateSettings(self, data):
         enabled = data[SNIPER.DISABLE_SNIPER] and data[GLOBAL.ENABLED]
-        self.latency = float(data[SNIPER.DISABLE_LATENCY])
+        self.latency = float(max(data[SNIPER.DISABLE_LATENCY], 0))
         self.skip_clip = data[SNIPER.SKIP_CLIP]
         if enabled:
             self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
@@ -43,18 +43,22 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
     def onTriggerActivated(self, params):
         if params.get('type') == self.__trigger_type:
-            addCallback(max(self.latency, 0), self.changeControlMode)
+            addCallback(self.latency, self.changeControlMode)
+
+    def checkGunTags(self, descriptor):
+        if descriptor is None:
+            return True
+        tags = descriptor.gun.tags
+        return descriptor.shot.shell.caliber <= SNIPER.MAX_CALIBER or "autoShoot" in tags or self.skip_clip and "clip" in tags
 
     def changeControlMode(self):
         avatar = getPlayer()
         if avatar is None or avatar.isObserver():
             return
+        if self.checkGunTags(avatar.getVehicleDescriptor()):
+            return
         input_handler = avatar.inputHandler
         if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
-            v_desc = avatar.getVehicleDescriptor()
-            tags = v_desc.gun.tags
-            if v_desc.shot.shell.caliber <= SNIPER.MAX_CALIBER or "autoShoot" in tags or self.skip_clip and "clip" in tags:
-                return
             aiming_system = input_handler.ctrl.camera.aimingSystem
             input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
                                                prevModeName=input_handler.ctrlModeName,
