@@ -3,7 +3,7 @@ from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import user_settings
-from armagomen.utils.common import addCallback, getPlayer, isReplay, MinMax, ResMgr, toggleOverride
+from armagomen.utils.common import addCallback, getPlayer, MinMax, ResMgr, toggleOverride
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
@@ -12,20 +12,29 @@ from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosit
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCache, ISettingsCore
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
+from skeletons.gui.battle_session import IBattleSessionProvider
 
 
 class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
+    sessionProvider = dependency.descriptor(IBattleSessionProvider)
 
     def __init__(self, appLoader):
-        self.latency = 0
+        self.latency = 0.0
         self.skip_clip = False
         self.appLoader = appLoader
         self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
+        self.avatar = None
+        self.enabled = False
 
     def updateSettings(self, data):
         enabled = data[SNIPER.DISABLE_SNIPER] and data[GLOBAL.ENABLED]
-        self.latency = float(data[SNIPER.DISABLE_LATENCY])
+        self.latency = float(max(data[SNIPER.DISABLE_LATENCY], 0))
         self.skip_clip = data[SNIPER.SKIP_CLIP]
+        if self.enabled != enabled:
+            self.enabled = enabled
+            self.toggleSubscribe(enabled)
+
+    def toggleSubscribe(self, enabled):
         if enabled:
             self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
             self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
@@ -33,37 +42,53 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
             self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
             self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
 
+    def toggleTrigger(self, activate):
+        TriggersManager.g_manager.addListener(self) if activate else TriggersManager.g_manager.delListener(self)
+        logDebug("ChangeCameraModeAfterShoot/toggleTrigger: {}", activate)
+
     def onGUISpaceEntered(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.BATTLE and not isReplay():
-            TriggersManager.g_manager.addListener(self)
+        if spaceID == GuiGlobalSpaceID.BATTLE:
+            prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
+            if prebattleCtrl is not None:
+                prebattleCtrl.onSelectionConfirmed += self.__updateCurrVehicleInfo
+            self.avatar = getPlayer()
+            self.toggleTrigger(self.isTriggerEnabled())
 
     def onGUISpaceLeft(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.BATTLE and not isReplay():
-            TriggersManager.g_manager.delListener(self)
+        if spaceID == GuiGlobalSpaceID.BATTLE:
+            prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
+            if prebattleCtrl is not None:
+                prebattleCtrl.onSelectionConfirmed += self.__updateCurrVehicleInfo
+            self.toggleTrigger(False)
+            self.avatar = None
+
+    def __updateCurrVehicleInfo(self):
+        self.toggleTrigger(self.isTriggerEnabled())
 
     def onTriggerActivated(self, params):
         if params.get('type') == self.__trigger_type:
-            addCallback(max(self.latency, 0), self.changeControlMode)
+            addCallback(self.latency, self.changeControlMode)
+
+    def isTriggerEnabled(self):
+        vehicle = self.sessionProvider.getArenaDP().getVehicleInfo()
+        if self.avatar is None or vehicle is None or vehicle.isSPG() or vehicle.vehicleType.level < 5 or vehicle.isAutoShootGunVehicle():
+            return False
+        descriptor = self.avatar.getVehicleDescriptor()
+        if descriptor is None or self.skip_clip and "clip" in descriptor.gun.tags:
+            return False
+        return True
 
     def changeControlMode(self):
-        avatar = getPlayer()
-        if avatar is None or avatar.isObserver():
-            return
-        input_handler = avatar.inputHandler
+        input_handler = self.avatar.inputHandler
         if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
-            v_desc = avatar.getVehicleDescriptor()
-            tags = v_desc.gun.tags
-            if v_desc.shot.shell.caliber <= SNIPER.MAX_CALIBER or "autoShoot" in tags or self.skip_clip and "clip" in tags:
-                return
             aiming_system = input_handler.ctrl.camera.aimingSystem
-            input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
-                                               prevModeName=input_handler.ctrlModeName,
+            input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE, prevModeName=input_handler.ctrlModeName,
                                                preferredPos=aiming_system.getDesiredShotPoint(),
                                                turretYaw=aiming_system.turretYaw,
                                                gunPitch=aiming_system.gunPitch,
                                                aimingMode=input_handler.ctrl._aimingMode,
                                                closesDist=False,
-                                               curVehicleID=avatar.playerVehicleID)
+                                               curVehicleID=self.avatar.playerVehicleID)
 
 
 class CameraSettings(object):
@@ -95,9 +120,9 @@ class CameraSettings(object):
     @staticmethod
     def getCamera(control_mode_name):
         input_handler = getInputHandler()
-        if input_handler is not None and input_handler.ctrls and control_mode_name in input_handler.ctrls:
+        if input_handler is not None and control_mode_name in input_handler.ctrls:
             return input_handler.ctrls[control_mode_name].camera
-        logError("{} camera is Nome", control_mode_name)
+        logError("{}, camera is not found in input_handler.ctrls {}", control_mode_name, input_handler.ctrls)
         return None
 
     def resetToDefault(self, control_mode_name):
@@ -143,7 +168,7 @@ class Arcade(CameraSettings):
     def enablePostMortem(self, base, mode, **kwargs):
         if 'postmortemParams' in kwargs:
             kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
-            kwargs.setdefault('transitionDuration', 2.0)
+            kwargs.setdefault('transitionDuration', 1.0)
         return base(mode, **kwargs)
 
 

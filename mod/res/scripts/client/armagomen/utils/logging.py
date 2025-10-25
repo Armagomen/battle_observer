@@ -11,8 +11,10 @@ IS_DEBUG = False
 
 def setDebug(value):
     global IS_DEBUG
-    if IS_DEBUG != value:
+    update = IS_DEBUG != value
+    if update:
         IS_DEBUG = value
+    return update and value
 
 
 def get_full_function_path(func):

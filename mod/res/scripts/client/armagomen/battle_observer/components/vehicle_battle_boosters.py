@@ -2,6 +2,7 @@ from adisp import adisp_process
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.events import g_events
+from armagomen.utils.hangar_vehicle_getter import isSpecialVehicle
 from armagomen.utils.logging import logInfo
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
 
@@ -9,12 +10,6 @@ from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEqui
 @adisp_process
 def changeValue(vehicle, value):
     yield VehicleAutoBattleBoosterEquipProcessor(vehicle, value).request()
-
-
-def isSpecialVehicle(vehicle):
-    flags = ('isOnlyForFunRandomBattles', 'isOnlyForBattleRoyaleBattles', 'isOnlyForMapsTrainingBattles',
-             'isOnlyForClanWarsBattles', 'isOnlyForComp7Battles', 'isOnlyForEventBattles', 'isOnlyForEpicBattles')
-    return any(getattr(vehicle, f, False) for f in flags)
 
 
 def onVehicleChanged(vehicle):

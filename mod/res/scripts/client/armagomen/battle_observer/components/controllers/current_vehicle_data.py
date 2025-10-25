@@ -1,5 +1,6 @@
 from collections import namedtuple
 
+from armagomen.utils.hangar_vehicle_getter import isSpecialVehicle
 from armagomen.utils.logging import logDebug
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
@@ -39,14 +40,9 @@ class CurrentVehicleCachedData(object):
         logDebug("CurrentVehicleCachedData::unsubscribe lobby")
         g_currentVehicle.onChanged -= self.onVehicleChanged
 
-    @staticmethod
-    def isSpecialVehicle():
-        flags = ('isOnlyForFunRandomBattles', 'isOnlyForBattleRoyaleBattles', 'isOnlyForMapsTrainingBattles',
-                 'isOnlyForClanWarsBattles', 'isOnlyForComp7Battles', 'isOnlyForEventBattles', 'isOnlyForEpicBattles')
-        return any(getattr(g_currentVehicle.item, f, False) for f in flags)
-
     def onVehicleChanged(self):
-        self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() and not self.isSpecialVehicle() else None
+        self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() and not isSpecialVehicle(
+            g_currentVehicle.item) else None
         self.onChanged(self.__EfficiencyAVGData)
 
     def setAvgData(self):
@@ -74,3 +70,7 @@ class CurrentVehicleCachedData(object):
     @property
     def default(self):
         return self.__default
+
+    def fini(self):
+        self.appLoader.onGUISpaceEntered -= self.subscribe
+        self.appLoader.onGUISpaceLeft -= self.unsubscribe

@@ -5,7 +5,6 @@ import re
 import subprocess
 import threading
 from collections import namedtuple
-from datetime import datetime, timedelta
 from json import loads
 from zipfile import ZipFile
 
@@ -13,9 +12,10 @@ from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.i18n.updater import LOCALIZED_BY_LANG
 from armagomen.utils.async_request import async_url_request
-from armagomen.utils.common import GAME_VERSION, getObserverCachePath, getUpdatePath, isReplay, MODS_PATH
+from armagomen.utils.common import CURRENT_MODS_DIR, getObserverCachePath, getUpdatePath, isReplay
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
+from datetime import datetime, timedelta
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from skeletons.gui.app_loader import GuiGlobalSpaceID
@@ -64,7 +64,6 @@ class Updater(object):
         self.dialogs = UpdaterDialogs()
         self.isLobby = False
         self.isReplay = isReplay()
-        self.modsPath = os.path.join(MODS_PATH, GAME_VERSION)
         self.timeDelta = datetime.now()
         self.updateData = dict()
         self.version = modVersion
@@ -124,12 +123,13 @@ class Updater(object):
         self.extractZipArchive(path)
         self.showUpdateFinishedDialog(version)
 
-    def extractZipArchive(self, path):
-        old_files = os.listdir(self.modsPath)
+    @staticmethod
+    def extractZipArchive(path):
+        old_files = os.listdir(CURRENT_MODS_DIR)
         with ZipFile(path) as archive:
             for newFile in archive.namelist():
                 if newFile not in old_files:
-                    archive.extract(newFile, self.modsPath)
+                    archive.extract(newFile, CURRENT_MODS_DIR)
                     logInfo(LOG_MESSAGES.NEW_FILE, newFile)
 
     def downloadError(self, url):
@@ -151,7 +151,7 @@ class Updater(object):
 
     @staticmethod
     def findObserverMods():
-        for root, dirs, files in os.walk(MODS_PATH):
+        for root, dirs, files in os.walk('./mods/'):
             for name in files:
                 if fnmatch.fnmatch(name, WOTMOD_PATTERN):
                     yield os.path.join(root, name)
@@ -205,7 +205,7 @@ class Updater(object):
     @wg_async
     def showUpdateDialog(self, version):
         title = LOCALIZED_BY_LANG['titleNEW'].format(version)
-        message = LOCALIZED_BY_LANG['messageNEW'].format(self.modsPath, self.gitMessage)
+        message = LOCALIZED_BY_LANG['messageNEW'].format(CURRENT_MODS_DIR, self.gitMessage)
         handle_url = URLS.UPDATE + EXE_FILE.format(version)
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, handle_url, self.isLobby))
         if result:

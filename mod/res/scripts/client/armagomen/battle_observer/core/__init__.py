@@ -1,4 +1,5 @@
 from armagomen._constants import BATTLES_RANGE, MAIN
+from armagomen.utils.common import IS_COMMON_TEST
 from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
@@ -40,6 +41,8 @@ class Core(object):
 
     @wg_async
     def _onLoggedOn(self, responseData):
+        if IS_COMMON_TEST:
+            return
         logDebug("_onLoggedOn: {}", responseData)
         if responseData.get("isDemoAccount", False):
             return

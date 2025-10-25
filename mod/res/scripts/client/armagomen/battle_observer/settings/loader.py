@@ -1,7 +1,7 @@
 import os
 
 from armagomen._constants import LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
-from armagomen.utils.common import currentConfigPath, openJsonFile, ResMgr, writeJsonFile
+from armagomen.utils.common import currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import DEBUG, logError, logInfo, logWarning, setDebug
 
@@ -14,7 +14,6 @@ class SettingsLoader(object):
 
     def __init__(self, settings, errorDialog):
         self.__settings = settings
-        self.sixth_sense_list = self.sixthSenseIconsNamesList()
         self.error_dialog = errorDialog
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
         load_json = os.path.join(currentConfigPath, 'load.json')
@@ -30,13 +29,6 @@ class SettingsLoader(object):
         if not os.path.isdir(config_path):
             os.makedirs(config_path)
             self.error_dialog.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
-
-    @staticmethod
-    def sixthSenseIconsNamesList():
-        directory = "gui/maps/icons/battle_observer/sixth_sense/"
-        folder = ResMgr.openSection(directory).keys()
-        ResMgr.purge(directory)
-        return sorted(folder)
 
     @property
     def settings(self):
@@ -58,8 +50,8 @@ class SettingsLoader(object):
     def updateConfigFile(self, name, data):
         path = os.path.join(currentConfigPath, self.configName, JSON.format(name))
         writeJsonFile(path, data)
-        if name == MAIN.NAME:
-            setDebug(data[DEBUG])
+        if name == MAIN.NAME and setDebug(data[DEBUG]):
+            printDebuginfo()
 
     @staticmethod
     def isEqualType(data1, data2):
@@ -84,7 +76,7 @@ class SettingsLoader(object):
                 logError("Error in key '{}': parameter values are not compatible. Received: {}, expected: {} - Restore to default", key,
                          new_param, old_param)
                 continue
-            if key == SIXTH_SENSE.ICON_NAME and new_param not in self.sixth_sense_list:
+            if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE_LIST:
                 update = True
             elif key == SNIPER.STEPS and (not isinstance(new_param, list) or not len(new_param)):
                 update = True
@@ -133,7 +125,7 @@ class SettingsLoader(object):
                     if self.updateData(file_data, config):
                         writeJsonFile(file_path, config)
                     logInfo(READ_MESSAGE, self.configName, file_name)
-                    if component_name == MAIN.NAME:
-                        setDebug(config[DEBUG])
+                    if component_name == MAIN.NAME and setDebug(config[DEBUG]):
+                        printDebuginfo()
                 else:
                     logWarning(READ_MESSAGE, file_name, "file_data is None or file broken")

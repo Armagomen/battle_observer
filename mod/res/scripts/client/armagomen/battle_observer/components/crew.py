@@ -5,6 +5,7 @@ from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
+from armagomen.utils.hangar_vehicle_getter import isSpecialVehicle
 from armagomen.utils.logging import logDebug, logInfo
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
@@ -88,7 +89,7 @@ class CrewProcessor(object):
 
     def onVehicleChanged(self, vehicle):
         logDebug("crew onVehicleChanged")
-        if not vehicle or vehicle.isLocked or self.isSpecialVehicle(vehicle):
+        if not vehicle or vehicle.isLocked or isSpecialVehicle(vehicle):
             return
         if user_settings.main[MAIN.CREW_RETURN]:
             self.updateAutoReturn(vehicle)
@@ -107,12 +108,6 @@ class CrewProcessor(object):
             acceleration, description = self.isAccelerateTraining(vehicle)
             if vehicle.isXPToTman != acceleration:
                 self.showAccelerateDialog(vehicle, acceleration, description)
-
-    @staticmethod
-    def isSpecialVehicle(vehicle):
-        flags = ('isOnlyForFunRandomBattles', 'isOnlyForBattleRoyaleBattles', 'isOnlyForMapsTrainingBattles',
-                 'isOnlyForClanWarsBattles', 'isOnlyForComp7Battles', 'isOnlyForEventBattles', 'isOnlyForEpicBattles')
-        return any(getattr(vehicle, f, False) for f in flags)
 
     @decorators.adisp_process('updating')
     def __autoReturnToggleSwitch(self, vehicle):

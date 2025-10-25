@@ -43,11 +43,6 @@ def user_login(user_id, name, version):
 MAX_RETRIES = 3
 
 
-def isLogoutConfirmed(stats):
-    if not stats or "is_online" not in stats or "online_since" not in stats:
-        return False
-    return stats.get("is_online") is False and stats.get("online_since") is None
-
 @wg_async
 def user_logout(user_id, attempt=0):
     data = {"user_id": user_id}
@@ -55,7 +50,7 @@ def user_logout(user_id, attempt=0):
     result = False
     try:
         stats = json.loads(response.body)
-        result = isLogoutConfirmed(stats)
+        result = stats and stats.get("is_online") is False
         if result:
             logInfo("Logout response [{}]: {}", user_id, stats)
         elif attempt < MAX_RETRIES:

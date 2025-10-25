@@ -1,9 +1,7 @@
 import json
-from httplib import responses
 from math import floor, log
 
 from armagomen._constants import STATISTICS, STATISTICS_REGION
-from armagomen.battle_observer.components.controllers.tab_view import addWGR, cleanup
 from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIconsMeta
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import addCallback, cancelCallback
@@ -48,7 +46,6 @@ class WGRAndIcons(WGRAndIconsMeta):
                 arena.onVehicleUpdated -= self.data_loader.updateList
         self.data_loader = None
         self.itemsData.clear()
-        cleanup()
         super(WGRAndIcons, self)._dispose()
 
     def getPattern(self, isEnemy, itemData):
@@ -71,8 +68,6 @@ class WGRAndIcons(WGRAndIconsMeta):
             full, cut = self.getPattern(is_enemy, item_data)
             text_color = int(item_data[self.COLOR_WGR][1:], 16) if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else 0
             self.itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
-            if not self.isComp7Battle():
-                addWGR(vehicle_id, item_data["WGR"], is_enemy)
         if self.itemsData:
             self.as_update_wgr_dataS(self.itemsData)
 
@@ -131,7 +126,6 @@ class StatisticsDataLoader(object):
     def delayedLoad(self, code):
         if self._load_try < 5:
             self._load_try += 1
-            code = responses.get(code) if isinstance(code, int) else code
             logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
             addCallback(10.0, self.getStatisticsDataFromServer)
 
