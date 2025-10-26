@@ -12,7 +12,6 @@ from io import open as _open
 import BigWorld
 import ResMgr
 import WGC
-
 from armagomen.utils.logging import logDebug, logError, logInfo
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
@@ -373,3 +372,11 @@ def safe_import(iterPatches, noneResults=False):
             result.append(None)
 
     return tuple(result)
+
+
+SIXTH_SENSE_PATH = "gui/maps/icons/battle_observer/sixth_sense/"
+SIXTH_SENSE_LIST = sorted(encodeData(ResMgr.openSection(SIXTH_SENSE_PATH).keys()))
+
+
+def safe_index(seq, value, default=0):
+    return next((i for i, x in enumerate(seq) if x == value), default)

@@ -3,34 +3,23 @@ from math import ceil
 from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
                                   MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
-from armagomen.utils.common import addCallback, IS_XVM_INSTALLED, openWebBrowser
+from armagomen.utils.common import addCallback, IS_XVM_INSTALLED, openWebBrowser, safe_index, SIXTH_SENSE_LIST, SIXTH_SENSE_PATH
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logError, logInfo, logWarning
+from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
-settingsVersion = 39
+settingsVersion = 41
 LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME}
 
 
 def makeTooltip(header=None, body=None, note=None, attention=None):
     parts = (('HEADER', header), ('BODY', body), ('NOTE', note), ('ATTENTION', attention),)
-    return u''.join(u'{{{0}}}{1}{{/{0}}}'.format(tag, text) for tag, text in parts if text is not None)
-
-
-# def makeTooltip(header=None, body=None, note=None, attention=None):
-#     res_str = ''
-#     if header is not None:
-#         res_str += '{HEADER}%s{/HEADER}' % header
-#     if body is not None:
-#         res_str += '{BODY}%s{/BODY}' % body
-#     if note is not None:
-#         res_str += '{NOTE}%s{/NOTE}' % note
-#     if attention is not None:
-#         res_str += '{ATTENTION}%s{/ATTENTION}' % attention
-#     return res_str
+    res_str = u''.join(u'{{{0}}}{1}{{/{0}}}'.format(tag, text) for tag, text in parts if text is not None)
+    logDebug("SettingsInterface - makeTooltip: {}", res_str)
+    return res_str
 
 
 class Getter(object):
@@ -71,13 +60,12 @@ class Getter(object):
 
 class CreateElement(Getter):
 
-    def __init__(self, settingsLoader):
+    def __init__(self):
         super(CreateElement, self).__init__()
-        self.loader = settingsLoader
         self.bid_to_collection = {
             (HP_BARS.NAME, HP_BARS.STYLE): (HP_BARS.STYLES, self.createBarStyleDropDown),
             (DEBUG_PANEL.NAME, DEBUG_PANEL.STYLE): (DEBUG_PANEL.STYLES, self.createDebugStyleDropDown),
-            (SIXTH_SENSE.NAME, SIXTH_SENSE.ICON_NAME): (settingsLoader.sixth_sense_list, self.createSixthSenseDropDown)
+            (SIXTH_SENSE.NAME, SIXTH_SENSE.ICON_NAME): (SIXTH_SENSE_LIST, self.createSixthSenseDropDown)
         }
 
     @staticmethod
@@ -123,9 +111,10 @@ class CreateElement(Getter):
     def createSixthSenseDropDown(self, blockID, varName, icons, icon):
         result = self.createControl(blockID, varName, icon, cType='Dropdown')
         if result is not None:
-            image = "<img src='img://gui/maps/icons/battle_observer/sixth_sense/{}' width='180' height='180'>"
-            result.update({'options': [{'label': x.rsplit('.', 1)[0], 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
-                           GLOBAL.WIDTH: 190})
+            image = "<img src='img://{}{}' width='180' height='180'>"
+            result.update({
+                'options': [{'label': x.rsplit('.', 1)[0], 'tooltip': makeTooltip(body=image.format(SIXTH_SENSE_PATH, x))} for x in icons],
+                GLOBAL.WIDTH: 190})
         return result
 
     def createDebugStyleDropDown(self, blockID, varName, icons, icon):
@@ -238,10 +227,10 @@ class SettingsInterface(CreateElement):
 
     def __init__(self, settingsLoader, version, api):
         self.modsListApi, self.vxSettingsApi, self.apiEvents = api
-        super(SettingsInterface, self).__init__(settingsLoader)
+        super(SettingsInterface, self).__init__()
+        self.loader = settingsLoader
         self.inited = set()
-        _id = settingsLoader.configsList.index(settingsLoader.configName) if settingsLoader.configName in settingsLoader.configsList else 0
-        self.currentConfigID = self.newConfigID = _id
+        self.currentConfigID = self.newConfigID = safe_index(settingsLoader.configsList, settingsLoader.configName)
         self.newConfigLoadingInProcess = False
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)

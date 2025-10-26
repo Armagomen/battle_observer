@@ -101,7 +101,7 @@ class CameraSettings(object):
         input_handler = getInputHandler()
         if input_handler is not None and input_handler.ctrls and control_mode_name in input_handler.ctrls:
             return input_handler.ctrls[control_mode_name].camera
-        logError("{} camera is Nome", control_mode_name)
+        logError("{}, camera is undefined or None", control_mode_name)
         return None
 
     def resetToDefault(self, control_mode_name):

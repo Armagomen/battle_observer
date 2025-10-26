@@ -35,7 +35,7 @@
 		private var timeoutID:Number;
 		private var _timer:Timer           = null;
 		
-		public var getIconPatch:Function;
+		public var getIconName:Function;
 		public var playSound:Function;
 		
 		[Embed(source = "error.png")]
@@ -60,7 +60,7 @@
 				this._container = new Sprite()
 				this._container.alpha = 0;
 				this.addChild(this._container);
-				this.loader.load(new URLRequest(this.getIconPatch()));
+				this.loader.load(new URLRequest("../../gui/maps/icons/battle_observer/sixth_sense/" + this.getIconName()));
 				this.hideComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
 				this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 			}

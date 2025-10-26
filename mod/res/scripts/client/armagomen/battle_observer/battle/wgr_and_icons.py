@@ -1,5 +1,4 @@
 import json
-from httplib import responses
 from math import floor, log
 
 from armagomen._constants import STATISTICS, STATISTICS_REGION
@@ -131,7 +130,6 @@ class StatisticsDataLoader(object):
     def delayedLoad(self, code):
         if self._load_try < 5:
             self._load_try += 1
-            code = responses.get(code) if isinstance(code, int) else code
             logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
             addCallback(10.0, self.getStatisticsDataFromServer)
 
