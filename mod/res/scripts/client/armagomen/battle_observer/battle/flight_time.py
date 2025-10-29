@@ -1,8 +1,9 @@
+import math_utils
 from armagomen._constants import FLIGHT_TIME, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 from armagomen.utils.common import getPlayer
-from AvatarInputHandler.spg_marker_helpers.spg_marker_helpers import getSPGShotFlyTime
 from gui.battle_control import avatar_getter
+from items.utils import getVehicleShotSpeedByFactors
 
 
 class FlightTime(FlightTimeMeta):
@@ -46,11 +47,26 @@ class FlightTime(FlightTimeMeta):
         player = getPlayer()
         if player is None:
             return self.as_flightTimeS(GLOBAL.EMPTY_LINE)
-        gunMarkerPosition = gunMarkerState.position
+        targetPosition = gunMarkerState.position
         vDesc = player.getVehicleDescriptor()
         gunInstallationSlot = vDesc.gunInstallations[gunMarkerState.gunInstallationIndex]
         shot = vDesc.shot if gunInstallationSlot.isMainInstallation() else gunInstallationSlot.gun.shots[0]
         vehAttrs = self.sessionProvider.shared.feedback.getVehicleAttrs()
-        shotPos, shotVel, shotGravity = player.gunRotator.getShotParams(gunMarkerPosition, ignoreYawLimits=True, overrideShotDescr=shot)
-        flyTime = getSPGShotFlyTime(gunMarkerPosition, shotVel, shotPos, shot.maxDistance, shot.speed, vehAttrs)
-        self.as_flightTimeS(self.tpl.format(flyTime, shotPos.flatDistTo(gunMarkerPosition)))
+        shotPos, shotVel, _ = player.gunRotator.getShotParams(targetPosition, ignoreYawLimits=True, overrideShotDescr=shot)
+        flyTime, dist = self.getFlyData(targetPosition, shotVel, shotPos, shot, vehAttrs)
+        self.as_flightTimeS(self.tpl.format(flyTime, dist))
+
+    @staticmethod
+    def getFlyData(targetPosition, shotVelVector, shotPos, shot, vehAttrs):
+        distAxis = targetPosition - shotPos
+        distAxis.y = 0
+        distAxis.normalise()
+        shotVelDA = shotVelVector.dot(distAxis)
+        if math_utils.almostZero(shotVelDA):
+            shotVel, _ = getVehicleShotSpeedByFactors(vehAttrs, shot.speed)
+            if shotVel != 0:
+                return shot.maxDistance / shotVel, shot.maxDistance
+            return -1.0, 0
+        shotVelDA, _ = getVehicleShotSpeedByFactors(vehAttrs, shotVelDA)
+        dist = targetPosition.dot(distAxis) - shotPos.dot(distAxis)
+        return dist / shotVelDA, dist
