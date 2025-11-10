@@ -1,14 +1,14 @@
 # coding=utf-8
 import json
-from datetime import datetime, timedelta
 from random import choice
 
-from armagomen._constants import API_KEY, AUTH_REALM, getLogo, URLS
-from armagomen.battle_observer.i18n.donate_messages import LINKS_FORMAT, MESSAGES, ONLINE
+from armagomen._constants import API_KEY, CURRENT_REALM, getLogo, URLS
+from armagomen.battle_observer.i18n.donate_messages import LINKS_FORMAT, MESSAGES
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import openWebBrowser, overrideMethod
-from armagomen.utils.logging import IS_DEBUG, logDebug, logInfo, logWarning
-from armagomen.utils.online import get_stats
+from armagomen.utils.logging import debug, logDebug, logInfo, logWarning
+from armagomen.utils.online import get_stats_by_region
+from datetime import datetime, timedelta
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
 from gui.shared.personality import ServicesLocator
@@ -21,11 +21,10 @@ from uilogging.core.core_constants import HTTP_OK_STATUS
 from wg_async import wg_async
 
 CLAN_ABBREV = "BO-UA"
-
 PATTERN = getLogo(big=False) + ("<p><font color='#ffff29'>{msg}</font></p>\n"
                                 "<p><font color='#fafafa'>{online}</font></p>\n"
                                 "<p><textformat leading='2'>{img} <a href='event:{url}'>{name}</a></textformat></p>")
-
+TIMEOUT = 40
 CLAN_ID = 500223690
 API_URL = "https://api.worldoftanks.eu/wot/clans/info/?application_id={}&clan_id={}&fields=members_count".format(API_KEY, CLAN_ID)
 
@@ -34,16 +33,25 @@ class Donate(object):
 
     def __init__(self):
         self.timeDelta = datetime.now() + timedelta(minutes=5)
-        self.lastMessage = None
+        self.__lastMessage = None
         ServicesLocator.appLoader.onGUISpaceEntered += self.pushNewMessage
-        self.show_invite = AUTH_REALM == "EU" and getClientLanguage() in ("ru", "uk")
+        self.show_invite = CURRENT_REALM == "EU" and getClientLanguage() in ("ru", "uk")
         if self.show_invite:
-            self.check_api()
+            self.checkClanMembers()
 
     def fini(self):
         ServicesLocator.appLoader.onGUISpaceEntered -= self.pushNewMessage
 
-    def onDataResponse(self, response):
+    def getRandomMessage(self):
+        message = choice(MESSAGES)
+        while message is self.__lastMessage:
+            message = choice(MESSAGES)
+        self.__lastMessage = message
+        return message.decode('utf-8')
+
+    @wg_async
+    def checkClanMembers(self):
+        response = yield async_url_request(API_URL)
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
             self.show_invite = response_data.get("data", {}).get(str(CLAN_ID), {}).get("members_count", 0) < 99
@@ -52,25 +60,12 @@ class Donate(object):
             logWarning('Donate/check clan members: contentType={}, responseCode={} body={}', response.contentType,
                        response.responseCode, response.body)
 
-    def getRandomMessage(self):
-        message = choice(MESSAGES)
-        if message is self.lastMessage:
-            message = self.getRandomMessage()
-        return message.decode('utf-8')
-
-    @wg_async
-    def check_api(self):
-        response = yield async_url_request(API_URL)
-        self.onDataResponse(response)
-
     @wg_async
     def pushDonateMessage(self):
-        stats = yield get_stats()
-        stats_info = ONLINE.format(**stats)
-        self.lastMessage = self.getRandomMessage()
-        message = PATTERN.format(msg=self.lastMessage, online=stats_info, **LINKS_FORMAT)
+        stats_info = yield get_stats_by_region()
+        message = PATTERN.format(msg=self.getRandomMessage(), online=stats_info, **LINKS_FORMAT)
         pushMessage(message, type=SM_TYPE.Warning)
-        logInfo("A donation message has been sent to the user. Repeated in 30 minutes.")
+        logInfo("A donation message has been sent to the user. Repeated in {} minutes.", TIMEOUT)
 
     def pushClanInviteMessage(self):
         if self.show_invite and not g_clanCache.isInClan:
@@ -89,8 +84,8 @@ class Donate(object):
             if "WG" in str(g_clanCache.clanAbbrev):
                 return
             current_time = datetime.now()
-            if current_time >= self.timeDelta or IS_DEBUG:
-                self.timeDelta = current_time + timedelta(minutes=30)
+            if current_time >= self.timeDelta or debug.is_debug:
+                self.timeDelta = current_time + timedelta(minutes=TIMEOUT)
                 self.pushDonateMessage()
                 self.pushClanInviteMessage()
 

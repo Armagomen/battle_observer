@@ -6,15 +6,26 @@ import BigWorld
 MOD_NAME = "BATTLE_OBSERVER"
 DEBUG = "DEBUG_MODE"
 EMPTY_WARN = "!!! WARNING !!! - Empty string detected. Check first argument in call function at: File '{}', line {}, in {}, code {}"
-IS_DEBUG = False
 
 
-def setDebug(value):
-    global IS_DEBUG
-    update = IS_DEBUG != value
-    if update:
-        IS_DEBUG = value
-    return update and value
+class DebugFlag(object):
+    __slots__ = ["_is_debug"]
+
+    def __init__(self):
+        self._is_debug = False
+
+    @property
+    def is_debug(self):
+        return self._is_debug
+
+    def set_debug(self, value):
+        update = self._is_debug != value
+        if update:
+            self._is_debug = value
+        return update and value
+
+
+debug = DebugFlag()
 
 
 def get_full_function_path(func):
@@ -49,7 +60,7 @@ def logInfo(message, *args, **kwargs):
 
 
 def logDebug(message, *args, **kwargs):
-    if IS_DEBUG:
+    if debug.is_debug:
         if "func" in kwargs:
             kwargs["func"] = get_full_function_path(kwargs["func"])
         BigWorld.logDebug(MOD_NAME, _formatMessage(message, *args, **kwargs), None)

@@ -35,8 +35,8 @@ localization = {
         "reload_config": "Reload config files",
     },
     "main": {
-        "header": "GENERAL SETTINGS",
-        "DEBUG_MODE": "DEBUG_MODE",
+        "header": "Settings without category",
+        "DEBUG_MODE": "Debug mode (do not enable unnecessarily)",
         "hide_badges": "Disable chevrons/ribbons: in ears, on tab window, on boot screen.",
         "hide_clan_abbrev": "Disable clan display: in ears, on tab window, on boot screen.",
         "show_friends": "Mark friends and clan players in team lists.",

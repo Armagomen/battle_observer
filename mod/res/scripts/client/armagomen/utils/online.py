@@ -1,9 +1,10 @@
 import json
-from collections import namedtuple
+from collections import defaultdict, namedtuple
 
+from armagomen._constants import GLOBAL
+from armagomen.battle_observer.i18n.online import FALLBACK, language, ONLINE, TEXTFORMAT
 from armagomen.utils.async_request import async_url_request
-from armagomen.utils.logging import logError, logInfo
-from helpers import getClientLanguage
+from armagomen.utils.logging import logDebug, logError, logInfo
 from realm import CURRENT_REALM
 from wg_async import AsyncReturn, wg_async
 
@@ -13,10 +14,10 @@ HEADERS_API = {
     "apikey": "sb_publishable_Mt1NwMGZHqoj1CG7AkhozQ_XkboVWw1",
 }
 
-URLS = namedtuple("URLS", ["user_login", "user_logout", "get_stats"])(
+URLS = namedtuple("URLS", ["user_login", "user_logout", "get_stats_by_region"])(
     SUPABASE_URL + "/rest/v1/rpc/user_login_rpc",
     SUPABASE_URL + "/rest/v1/rpc/user_logout_rpc",
-    SUPABASE_URL + "/rest/v1/rpc/get_user_stats",
+    SUPABASE_URL + "/rest/v1/rpc/get_user_stats_by_region",
 )
 
 
@@ -27,7 +28,7 @@ def user_login(user_id, name, version):
         "login_name": name,
         "login_version": version,
         "login_region": CURRENT_REALM,
-        "login_ln_code": getClientLanguage()
+        "login_ln_code": language
     }
     response = yield async_url_request(URLS.user_login, data=data, headers=HEADERS_API, method="POST")
     banned = False
@@ -62,15 +63,25 @@ def user_logout(user_id, attempt=0):
     raise AsyncReturn(result)
 
 
-online_cache = {"online": 0, "total": 0}
+online_cache = defaultdict(lambda: [0, 0])
+skip_keys = ('CT', 'null', 'RU')
+
+
+def format_string(data):
+    filtered = [(region, stats) for region, stats in data.iteritems() if region not in skip_keys and isinstance(stats, list)]
+    if filtered:
+        sorted_items = sorted(filtered, key=lambda item: item[1][1], reverse=True)
+        result = GLOBAL.NEW_LINE.join(ONLINE.format(region, *stats) for region, stats in sorted_items)
+        return TEXTFORMAT.format(result)
+    return FALLBACK
 
 
 @wg_async
-def get_stats():
-    response = yield async_url_request(URLS.get_stats, headers=HEADERS_API, method="POST")
+def get_stats_by_region():
+    response = yield async_url_request(URLS.get_stats_by_region, headers=HEADERS_API, method="POST")
     try:
         online_cache.update(json.loads(response.body))
+        logDebug("online_cache = {}", online_cache)
     except Exception as e:
         logError("Stats parsing error: {}, {}", repr(e), response.body)
-
-    raise AsyncReturn(online_cache)
+    raise AsyncReturn(format_string(online_cache))

@@ -3,7 +3,7 @@ import os
 from armagomen._constants import LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import DEBUG, logError, logInfo, logWarning, setDebug
+from armagomen.utils.logging import DEBUG, debug, logError, logInfo, logWarning
 
 JSON = "{}.json"
 READ_MESSAGE = "loadConfigPart: {}: {}"
@@ -50,7 +50,7 @@ class SettingsLoader(object):
     def updateConfigFile(self, name, data):
         path = os.path.join(currentConfigPath, self.configName, JSON.format(name))
         writeJsonFile(path, data)
-        if name == MAIN.NAME and setDebug(data[DEBUG]):
+        if name == MAIN.NAME and debug.set_debug(data[DEBUG]):
             printDebuginfo()
 
     @staticmethod
@@ -125,7 +125,7 @@ class SettingsLoader(object):
                     if self.updateData(file_data, config):
                         writeJsonFile(file_path, config)
                     logInfo(READ_MESSAGE, self.configName, file_name)
-                    if component_name == MAIN.NAME and setDebug(config[DEBUG]):
+                    if component_name == MAIN.NAME and debug.set_debug(config[DEBUG]):
                         printDebuginfo()
                 else:
                     logWarning(READ_MESSAGE, file_name, "file_data is None or file broken")

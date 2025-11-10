@@ -7,7 +7,7 @@ Name: "armagomen"; Description: {cm:types_armagomen};
 Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
 [Components]
-Name: main; Description: MAIN CATEGORY; Flags: disablenouninstallwarning;
+Name: main; Description: {cm:main}; Flags: disablenouninstallwarning;
 Name: main/anti_anonymous; Description: {cm:anti_anonymous}; 
 Name: main/auto_crew_training; Description: {cm:auto_crew_training}; Types: armagomen;
 Name: main/auto_return_crew; Description: {cm:auto_return_crew}; Types: armagomen;

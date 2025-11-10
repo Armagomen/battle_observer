@@ -21,6 +21,7 @@ en.types_empty=Configure yourself
 en.types_user=Custom installation
 
 //main
+en.main=Settings without category
 en.anti_anonymous=Tag players with a hidden nickname
 en.auto_crew_training=Automatic switching of Accelerated Crew Training
 en.auto_return_crew=Auto return crew

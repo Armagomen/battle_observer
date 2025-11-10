@@ -25,24 +25,24 @@
   "shellColor": {
     "gold": "#FFD700",
     "normal": "#FFFFFF"
-  }, 
-  "templates": [
-    [
-      "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>", 
-      "<font size='12'>%(index)02d:</font><tab>", 
-      "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>", 
-      "<font color='%(shellColor)s'>%(shellType)s</font><tab>", 
-      "%(attackReason)s<tab>", 
-      "%(classIcon)s%(tankName)s %(killedIcon)s", 
-      "</font></textformat>"
-    ], 
-    [
-      "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>", 
+  },
+  "templates": {
+    "alt": [
       "<font size='12'>%(shots)d:</font><tab>",
-      "%(allDamages)s", 
-      "%(classIcon)s%(userName).12s %(killedIcon)s", 
-      "</font></textformat>"
+      "%(allDamages)s",
+      "%(classIcon)s%(userName).12s %(killedIcon)s"
+    ],
+    "normal": [
+      "<font size='12'>%(index)02d:</font><tab>",
+      "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
+      "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
+      "%(attackReason)s<tab>",
+      "%(classIcon)s%(tankName)s %(killedIcon)s"
     ]
-  ],
+  },
+  "textformat": {
+    "alt": "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>{0}</font></textformat>",
+    "normal": "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>{0}</font></textformat>"
+  },
   "top_enabled": true
 }

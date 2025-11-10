@@ -26,13 +26,6 @@ MESSAGES = {
     "Friends, thank you for staying with us! If you want to contribute to the development of our project, click the link. Your support means a lot to us!"
 ))
 
-ONLINE = {
-    "uk": "Онлайн користувачів: {online}\nУсього користувачів: {total}",
-    "ru": "Онлайн пользователей: {online}\nВсего пользователей: {total}",
-    "de": "Benutzer online: {online}\nGesamtzahl der Benutzer: {total}",
-    "pl": "Użytkownicy online: {online}\nŁączna liczba użytkowników: {total}"
-}.get(language, "Online users: {online}\nTotal users: {total}")
-
 LINKS_FORMAT = {
     "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - поповнити банку."},
     "ru": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - закинуть в банку."},

@@ -51,6 +51,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         self._playerShell = NOT_SHELL
         self.attack_reasons = defaultdict(lambda: DEFAULT_REASON)
         self.last_shell = defaultdict(lambda: NOT_SHELL)
+        self.template = None
 
     def _populate(self):
         super(ExtendedDamageLogs, self)._populate()
@@ -67,6 +68,8 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         ammo_ctrl = self.sessionProvider.shared.ammo
         if ammo_ctrl is not None:
             ammo_ctrl.onGunReloadTimeSet += self._onGunReloadTimeSet
+        self.template = (GLOBAL.EMPTY_LINE.join(self.settings[DAMAGE_LOG.TEMPLATES]["normal"]),
+                         GLOBAL.EMPTY_LINE.join(self.settings[DAMAGE_LOG.TEMPLATES]["alt"]))
 
     def _dispose(self):
         feedback = self.sessionProvider.shared.feedback
@@ -202,7 +205,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         vehicle[DAMAGE_LOG.CLASS_COLOR] = self.getVehicleClassColor(vehicleInfoVO.vehicleType.classTag)
 
     def getLogLines(self, log_data):
-        template = GLOBAL.EMPTY_LINE.join(self.settings[DAMAGE_LOG.TEMPLATES][self._is_key_down])
+        template = self.template[self._is_key_down]
         for vehicleID in reversed(log_data.id_list) if self.settings[DAMAGE_LOG.REVERSE] else log_data.id_list:
             if vehicleID in log_data.kills and not log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON]:
                 log_data.vehicles[vehicleID][DAMAGE_LOG.KILLED_ICON] = self.settings[DAMAGE_LOG.KILLED_ICON]
@@ -215,5 +218,6 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         """
         if log_data is None or not log_data.id_list:
             return
+        textformat = self.settings["textformat"]["alt" if self._is_key_down else "normal"]
         result = GLOBAL.NEW_LINE.join(self.getLogLines(log_data))
-        self.as_updateExtendedLogS(log_data.log_id, result)
+        self.as_updateExtendedLogS(log_data.log_id, textformat.format(result))

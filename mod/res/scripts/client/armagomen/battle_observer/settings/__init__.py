@@ -218,24 +218,24 @@ class UserSettings(object):
                 ATTACK_REASON.RAM: "<img src='{}/efficiency/ram.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS)
             },
             DAMAGE_LOG.KILLED_ICON: "<img src='{}/efficiency/destruction.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
-            DAMAGE_LOG.TEMPLATES: [
-                [
-                    "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>",
+            "textformat": {
+                "normal": "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>{}</font></textformat>",
+                "alt": "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>{}</font></textformat>",
+            },
+            DAMAGE_LOG.TEMPLATES: {
+                "normal": [
                     "<font size='12'>%(index)02d:</font><tab>",
                     "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
                     "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
                     "%(attackReason)s<tab>",
                     "%(classIcon)s%(tankName)s %(killedIcon)s",
-                    "</font></textformat>"
                 ],
-                [
-                    "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>",
+                "alt": [
                     "<font size='12'>%(shots)d:</font><tab>",
                     "%(allDamages)s",
                     "%(classIcon)s%(userName).12s %(killedIcon)s",
-                    "</font></textformat>"
                 ]
-            ],
+            },
             DAMAGE_LOG.SHELL_COLOR: {
                 DAMAGE_LOG.NORMAL: COLORS.WHITE,
                 DAMAGE_LOG.GOLD: COLORS.GOLD

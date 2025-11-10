@@ -1,7 +1,8 @@
 from collections import namedtuple
 
 from aih_constants import CTRL_MODE_NAME
-from constants import ARENA_GUI_TYPE, AUTH_REALM
+from constants import ARENA_GUI_TYPE
+from realm import CURRENT_REALM
 
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
@@ -43,7 +44,7 @@ REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/info/?application_id={
            "ASIA": "https://api.worldoftanks.asia/wot/account/info/?application_id={}".format(API_KEY),
            "NA": "https://api.worldoftanks.com/wot/account/info/?application_id={}".format(API_KEY)}
 
-STATISTICS_REGION = REGIONS.get(AUTH_REALM)
+STATISTICS_REGION = REGIONS.get(CURRENT_REALM)
 
 VEHICLE_TYPES_COLORS = namedtuple("VEHICLE_TYPES_COLORS", ("NAME", "UNKNOWN"))("vehicle_types_colors", "unknown")
 
