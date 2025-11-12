@@ -97,6 +97,7 @@ class CameraSettings(object):
 
     _CONTROL_MODE_NAME_TO_SEC = {
         CTRL_MODE_NAME.ARCADE: "gui/avatar_input_handler.xml/arcadeMode/camera/",
+        CTRL_MODE_NAME.MAP_CASE_ARCADE_EPIC_MINEFIELD: "gui/avatar_input_handler.xml/arcadeEpicMinefieldMode/camera/",
         CTRL_MODE_NAME.SNIPER: "gui/avatar_input_handler.xml/sniperMode/camera/",
         CTRL_MODE_NAME.ARTY: "gui/avatar_input_handler.xml/artyMode/camera/",
         CTRL_MODE_NAME.STRATEGIC: "gui/avatar_input_handler.xml/strategicMode/camera/",
@@ -125,12 +126,26 @@ class CameraSettings(object):
         logError("{}, camera is not found in input_handler.ctrls {}", control_mode_name, input_handler.ctrls)
         return None
 
+    @staticmethod
+    def get_private_attr(obj, attr_name):
+        for cls in obj.__class__.__mro__:
+            mangled = "_%s%s" % (cls.__name__, attr_name)
+            if hasattr(obj, mangled):
+                return getattr(obj, mangled)
+        return None
+
     def resetToDefault(self, control_mode_name):
         camera = self.getCamera(control_mode_name)
         if camera is not None:
             ResMgr.purge('gui/avatar_input_handler.xml')
             cameraSec = ResMgr.openSection(self._CONTROL_MODE_NAME_TO_SEC[control_mode_name])
             camera._reloadConfigs(cameraSec)
+            if hasattr(camera, "_updateProperties"):
+                state = None
+                zoomStateSwitcher = self.get_private_attr(camera, "__zoomStateSwitcher")
+                if zoomStateSwitcher is not None:
+                    state = zoomStateSwitcher.getCurrentState()
+                camera._updateProperties(state=state)
         self.reset = False
 
     def applySettings(self, params):
@@ -143,27 +158,32 @@ class CameraSettings(object):
 
 class Arcade(CameraSettings):
 
+    def __init__(self):
+        super(Arcade, self).__init__()
+
     @property
     def name(self):
         return ARCADE.NAME
 
     def update(self):
-        camera = self.getCamera(CTRL_MODE_NAME.ARCADE)
-        if camera is not None:
-            if self.enabled != self.config[GLOBAL.ENABLED]:
-                self.enabled = self.config[GLOBAL.ENABLED]
-                toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, self.enabled)
-            if self.enabled:
-                self.reset = True
-                self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
-                camera._cfg[ARCADE.DIST_RANGE] = MinMax(*self.config[ARCADE.DIST_RANGE])
-                camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
-                camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
-                camera._cfg[ARCADE.START_ANGLE] = -0.18
-                camera._updateProperties(state=None)
-            elif self.reset:
-                self.resetToDefault(CTRL_MODE_NAME.ARCADE)
-                camera._updateProperties(state=None)
+        if self.enabled != self.config[GLOBAL.ENABLED]:
+            self.enabled = self.config[GLOBAL.ENABLED]
+            toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, self.enabled)
+        ctrl_mode_names = (CTRL_MODE_NAME.ARCADE, CTRL_MODE_NAME.MAP_CASE_ARCADE_EPIC_MINEFIELD)
+        if self.enabled:
+            self.reset = True
+            for control_mode_name in ctrl_mode_names:
+                camera = self.getCamera(control_mode_name)
+                if camera is not None:
+                    self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
+                    camera._cfg[ARCADE.DIST_RANGE] = MinMax(*self.config[ARCADE.DIST_RANGE])
+                    camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
+                    camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
+                    camera._cfg[ARCADE.START_ANGLE] = -0.18
+                    camera._updateProperties()
+        elif self.reset:
+            for control_mode_name in ctrl_mode_names:
+                self.resetToDefault(control_mode_name)
 
     def enablePostMortem(self, base, mode, **kwargs):
         if 'postmortemParams' in kwargs:
@@ -248,10 +268,10 @@ class Sniper(CameraSettings):
             if self._dyn_zoom and self.settingsCore.getSetting(GAME.SNIPER_ZOOM):
                 self.applySettings({GAME.SNIPER_ZOOM: 0})
             _change_steps = self.config[SNIPER.ZOOM_STEPS] and self.enabled
-            if _change_steps or self._dyn_zoom:
+            if _change_steps:
                 self.reset = True
-                steps = sorted(self.config[SNIPER.STEPS]) if _change_steps else SNIPER.DEFAULT_STEPS
-                if steps and steps != camera._cfg[self.ZOOMS]:
+                steps = sorted(self.config[SNIPER.STEPS] or SNIPER.DEFAULT_STEPS)
+                if steps != camera._cfg[self.ZOOMS]:
                     new_exposure = self.linear_interpolate(steps)
                     camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = new_exposure
                     camera._cfg[self.ZOOMS] = steps
@@ -268,10 +288,14 @@ class Sniper(CameraSettings):
             return min(zooms, key=lambda value: abs(value - target))
 
     def enableSniper(self, base, camera, targetPos, saveZoom):
-        ownPosition = getOwnVehiclePosition()
-        distance = (targetPos - ownPosition).length if ownPosition is not None else 0
-        camera._cfg[self.ZOOM] = self.getZoom(camera._cfg[self.ZOOMS], distance)
-        return base(camera, targetPos, True)
+        try:
+            saveZoom = True
+            ownPosition = getOwnVehiclePosition()
+            distance = (targetPos - ownPosition).length if ownPosition is not None else 0
+            camera._cfg[self.ZOOM] = self.getZoom(camera._cfg[self.ZOOMS], distance)
+        except Exception as e:
+            logError("enableSniper: {}", repr(e))
+        return base(camera, targetPos, saveZoom)
 
 
 class CameraManager(object):
@@ -292,7 +316,10 @@ class CameraManager(object):
         if spaceID == GuiGlobalSpaceID.BATTLE_LOADING:
             for mode in self.__modes:
                 if mode.isChanged:
-                    mode.update()
+                    try:
+                        mode.update()
+                    except Exception as e:
+                        logError("{}: {}", mode.name, repr(e))
                     mode.isChanged = False
 
 

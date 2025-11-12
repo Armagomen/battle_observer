@@ -1,4 +1,5 @@
 import json
+import weakref
 from math import floor, log
 
 from armagomen._constants import STATISTICS, STATISTICS_REGION
@@ -6,6 +7,8 @@ from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIcons
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import addCallback, cancelCallback
 from armagomen.utils.logging import logDebug, logError
+from helpers import dependency
+from skeletons.gui.battle_session import IBattleSessionProvider
 from uilogging.core.core_constants import HTTP_OK_STATUS
 from wg_async import wg_async
 
@@ -30,7 +33,7 @@ class WGRAndIcons(WGRAndIconsMeta):
     def _populate(self):
         super(WGRAndIcons, self)._populate()
         if self.statisticsEnabled():
-            self.data_loader = StatisticsDataLoader(self._arenaDP, self.updateAllItems)
+            self.data_loader = StatisticsDataLoader(self, 'updateAllItems')
             self.data_loader.getStatisticsDataFromServer()
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None and not self.isComp7Battle():
@@ -99,13 +102,15 @@ class WGRAndIcons(WGRAndIconsMeta):
 
 
 class StatisticsDataLoader(object):
+    sessionProvider = dependency.descriptor(IBattleSessionProvider)
+
     SEPARATOR = ","
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating"))
     STAT_URL = str(STATISTICS_REGION) + "&account_id={}&extra=statistics.random&fields=" + FIELDS
 
-    def __init__(self, arenaDP, callback):
-        self.arenaDP = arenaDP
-        self.__callback = callback
+    def __init__(self, obj, name):
+        self.__obj = weakref.ref(obj)
+        self.__method_name = name
         self._load_try = 0
         self.__getDataCallback = None
         self.__vehicles = set()
@@ -118,8 +123,12 @@ class StatisticsDataLoader(object):
             response_data = json.loads(response.body)
             data = {int(k): v for k, v in response_data.get("data", {}).items()}
             logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
-            self.__callback(data)
-            self.__loaded.update(data.keys())
+            obj = self.__obj()
+            if obj is not None:
+                method = getattr(obj, self.__method_name, None)
+                if method and callable(method):
+                    method(data)
+                    self.__loaded.update(data.keys())
         else:
             self.delayedLoad(response.responseCode)
 
@@ -130,7 +139,8 @@ class StatisticsDataLoader(object):
             addCallback(10.0, self.getStatisticsDataFromServer)
 
     def updateList(self, vehicleID):
-        vInfo = self.arenaDP.getVehicleInfo(vehicleID)
+        arenaDP = self.sessionProvider.getArenaDP()
+        vInfo = arenaDP.getVehicleInfo(vehicleID)
         accountDBID = vInfo.player.accountDBID
         if not accountDBID or accountDBID in self.__loaded or vInfo.isObserver():
             return
@@ -153,7 +163,8 @@ class StatisticsDataLoader(object):
         self.onDataResponse(response)
 
     def getStatisticsDataFromServer(self):
-        for vInfo in self.arenaDP.getVehiclesInfoIterator():
+        arenaDP = self.sessionProvider.getArenaDP()
+        for vInfo in arenaDP.getVehiclesInfoIterator():
             accountDBID = vInfo.player.accountDBID
             if not accountDBID or accountDBID in self.__loaded or vInfo.isObserver():
                 continue
