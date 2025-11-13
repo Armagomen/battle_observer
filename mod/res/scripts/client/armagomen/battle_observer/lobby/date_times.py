@@ -1,11 +1,10 @@
-from time import strftime
-
 from armagomen._constants import CLOCK, GLOBAL
 from armagomen.battle_observer.meta.lobby.date_times_meta import DateTimesMeta
 from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE, safe_import
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
 from gui.shared.utils.TimeInterval import TimeInterval
+from time import strftime
 
 
 def import_views():
@@ -61,12 +60,10 @@ class DateTimes(DateTimesMeta):
 
     def toggleInterval(self, enabled):
         self.setVisible(enabled)
+        self._timeInterval.stop()
         if enabled:
             self.updateTime()
-            if not self._timeInterval.isStarted():
-                self._timeInterval.start()
-        else:
-            self._timeInterval.stop()
+            self._timeInterval.start()
 
     def onModSettingsChanged(self, name, data):
         if name == CLOCK.NAME and self.enabled != data[CLOCK.IN_LOBBY][GLOBAL.ENABLED]:

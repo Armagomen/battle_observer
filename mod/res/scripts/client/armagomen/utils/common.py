@@ -53,7 +53,7 @@ def cancelCallback(callbackID):
 
 def getPreferencesDir():
     preferences_file_path = unicode_from_utf8(BigWorld.wg_getPreferencesFilePath())[1]
-    return os.path.normpath(os.path.dirname(preferences_file_path))
+    return os.path.abspath(os.path.dirname(preferences_file_path))
 
 
 preferencesDir = getPreferencesDir()
@@ -111,7 +111,7 @@ currentConfigPath = setCurrentConfigPath('./mods/configs')
 
 
 def removeDirs(path):
-    if os.path.exists(path):
+    if os.path.isdir(path):
         shutil.rmtree(path, ignore_errors=True, onerror=None)
         return True
     return False
@@ -137,10 +137,8 @@ def cleanupUpdates():
 
 
 def clearClientCache():
-    exclude_cache_dirs = ['game_loading_cache']
-    game_cache_dirs = [x for x in os.listdir(preferencesDir) if '_cache' in x and x not in exclude_cache_dirs]
-    for dirName in game_cache_dirs:
-        if removeDirs(os.path.join(preferencesDir, dirName)):
+    for dirName in os.listdir(preferencesDir):
+        if '_cache' in dirName and removeDirs(os.path.join(preferencesDir, dirName)):
             logInfo('CLEANING CLIENT CACHE FOLDER: {}', dirName)
 
 
