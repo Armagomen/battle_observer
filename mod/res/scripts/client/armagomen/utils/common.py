@@ -110,11 +110,19 @@ def setCurrentConfigPath(configs_path):
 currentConfigPath = setCurrentConfigPath('./mods/configs')
 
 
-def removeDirs(path):
-    if os.path.isdir(path):
-        shutil.rmtree(path, ignore_errors=True, onerror=None)
-        return True
-    return False
+def cleanupPath(path, safe=False):
+    if os.path.isfile(path) or os.path.islink(path):
+        try:
+            os.unlink(path)
+        except Exception:
+            pass
+    elif os.path.isdir(path):
+        if safe:
+            for item in os.listdir(path):
+                item_path = os.path.join(path, item)
+                cleanupPath(item_path)
+        else:
+            shutil.rmtree(path, ignore_errors=True)
 
 
 def cleanupUpdates():
@@ -130,15 +138,16 @@ def cleanupUpdates():
         if upcoming:
             ignored.update(val.asString.split('\\')[0] for value in upcoming.values() for val in value.values())
         for name in ignored.symmetric_difference(listDir):
-            full_path = os.path.join(updates_path, name)
-            os.unlink(full_path) if os.path.isfile(full_path) or os.path.islink(full_path) else removeDirs(full_path)
+            full_path = os.path.abspath(os.path.join(updates_path, name))
+            cleanupPath(full_path)
             logInfo('CLEARING THE UPDATE FOLDER: {}', full_path)
         ResMgr.purge(upcoming_patches, True)
 
 
 def clearClientCache():
     for dirName in os.listdir(preferencesDir):
-        if '_cache' in dirName and removeDirs(os.path.join(preferencesDir, dirName)):
+        if '_cache' in dirName or dirName == 'profile':
+            cleanupPath(os.path.join(preferencesDir, dirName), safe=True)
             logInfo('CLEANING CLIENT CACHE FOLDER: {}', dirName)
 
 
