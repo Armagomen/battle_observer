@@ -20,11 +20,18 @@ CONFIG_DIR = 'mod_battle_observer'
 MOD_CACHE = 'battle_observer'
 UTF_8 = 'utf-8'
 
+
+def joinAndNormalizePath(*args):
+    return os.path.abspath(os.path.join(*args))
+
+
 __mods_dir = next(value for value in ResMgr.openSection('../paths.xml/Paths/').readStrings('Path') if '/mods/' in value)
-CURRENT_MODS_DIR = os.path.abspath(__mods_dir)
+CURRENT_MODS_DIR = joinAndNormalizePath(__mods_dir)
 MinMax = namedtuple('MinMax', ('min', 'max'))
 
 IS_COMMON_TEST = ResMgr.openSection('../game_info.xml/game/').readString('id', '') == 'WOT.CT.PRODUCTION'
+IS_XVM_INSTALLED = os.path.exists(joinAndNormalizePath(__mods_dir, 'com.modxvm.xfw')) and os.path.exists(
+    joinAndNormalizePath('./res_mods/mods/xfw_packages/xvm_main'))
 
 
 def isReplay():
@@ -53,7 +60,7 @@ def cancelCallback(callbackID):
 
 def getPreferencesDir():
     preferences_file_path = unicode_from_utf8(BigWorld.wg_getPreferencesFilePath())[1]
-    return os.path.abspath(os.path.dirname(preferences_file_path))
+    return joinAndNormalizePath(os.path.dirname(preferences_file_path))
 
 
 preferencesDir = getPreferencesDir()
@@ -104,7 +111,7 @@ def setCurrentConfigPath(configs_path):
     if not os.path.exists(current_path):
         os.makedirs(current_path)
 
-    return os.path.abspath(current_path)
+    return joinAndNormalizePath(current_path)
 
 
 currentConfigPath = setCurrentConfigPath('./mods/configs')
@@ -138,7 +145,7 @@ def cleanupUpdates():
         if upcoming:
             ignored.update(val.asString.split('\\')[0] for value in upcoming.values() for val in value.values())
         for name in ignored.symmetric_difference(listDir):
-            full_path = os.path.abspath(os.path.join(updates_path, name))
+            full_path = joinAndNormalizePath(updates_path, name)
             cleanupPath(full_path)
             logInfo('CLEARING THE UPDATE FOLDER: {}', full_path)
         ResMgr.purge(upcoming_patches, True)
@@ -164,7 +171,7 @@ def encodeData(data):
 
 
 def openJsonFile(path):
-    """Load JSON from file. Returns dict or None if error."""
+    """Load JSON from a file. Returns dict or None if error."""
     if not os.path.isfile(path):
         return None
     with _open(path, 'r', encoding='utf-8-sig') as f:
@@ -174,7 +181,7 @@ def openJsonFile(path):
 def writeJsonFile(path, data):
     """Creates a new json file in a folder or replace old."""
     with _open(path, 'w', encoding=UTF_8) as dataFile:
-        dataFile.write(unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True)))
+        dataFile.write(unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True), encoding=UTF_8))
 
 
 def getObserverCachePath():
@@ -182,10 +189,6 @@ def getObserverCachePath():
     if not os.path.isdir(new_path):
         os.makedirs(new_path)
     return new_path
-
-
-IS_XVM_INSTALLED = os.path.exists(os.path.join(CURRENT_MODS_DIR, 'com.modxvm.xfw')) and os.path.exists(
-    './res_mods/mods/xfw_packages/xvm_main')
 
 
 def getUpdatePath():

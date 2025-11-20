@@ -10,21 +10,24 @@ READ_MESSAGE = "loadConfigPart: {}: {}"
 
 
 class SettingsLoader(object):
-    __slots__ = ('configName', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog')
+    __slots__ = ('configName', 'load_json', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog')
 
     def __init__(self, settings, errorDialog):
         self.__settings = settings
         self.error_dialog = errorDialog
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
-        load_json = os.path.join(currentConfigPath, 'load.json')
-        if os.path.isfile(load_json):
-            self.configName = openJsonFile(load_json).get('loadConfig')
-        else:
-            self.configName = self.configsList[0] if self.configsList else 'default'
+        self.configName = self.configsList[0] if self.configsList else 'default'
+        self.load_json = os.path.join(currentConfigPath, 'load.json')
+        try:
+            data = openJsonFile(self.load_json)
+        except Exception as error:
+            logError("Error in openJsonFile: {}, {}", self.load_json, repr(error))
             self.createLoadJSON(self.configName)
             self.error_dialog.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
             if self.configName not in self.configsList:
                 self.configsList.append(self.configName)
+        else:
+            self.configName = data.get('loadConfig', self.configName)
         config_path = os.path.join(currentConfigPath, self.configName)
         if not os.path.isdir(config_path):
             os.makedirs(config_path)
@@ -42,10 +45,8 @@ class SettingsLoader(object):
         self.updateAllSettings()
         return configID
 
-    @staticmethod
-    def createLoadJSON(configName):
-        path = os.path.join(currentConfigPath, 'load.json')
-        writeJsonFile(path, {'loadConfig': configName})
+    def createLoadJSON(self, configName):
+        writeJsonFile(self.load_json, {'loadConfig': configName})
 
     def updateConfigFile(self, name, data):
         path = os.path.join(currentConfigPath, self.configName, JSON.format(name))
