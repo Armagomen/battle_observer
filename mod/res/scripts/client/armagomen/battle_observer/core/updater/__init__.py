@@ -12,7 +12,7 @@ from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.i18n.updater import LOCALIZED_BY_LANG
 from armagomen.utils.async_request import async_url_request
-from armagomen.utils.common import CURRENT_MODS_DIR, getObserverCachePath, getUpdatePath, isReplay
+from armagomen.utils.common import CURRENT_MODS_DIR, getObserverCachePath, getUpdatePath, isReplay, MODS_DIR
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from datetime import datetime, timedelta
@@ -146,12 +146,12 @@ class Updater(object):
 
     @staticmethod
     def parseFullVersion(path):
-        versions = re.findall(r'(\d+(?:\.\d+)+)', path.replace('\\', '/'))
+        versions = re.findall(r'(\d+(?:\.\d+)+)', path)
         return tupleVersion(versions[0]), tupleVersion(versions[-1])
 
     @staticmethod
     def findObserverMods():
-        for root, dirs, files in os.walk('./mods/'):
+        for root, dirs, files in os.walk(MODS_DIR):
             for name in files:
                 if fnmatch.fnmatch(name, WOTMOD_PATTERN):
                     yield os.path.join(root, name)

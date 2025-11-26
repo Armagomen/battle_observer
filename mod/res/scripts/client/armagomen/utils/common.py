@@ -27,6 +27,8 @@ def joinAndNormalizePath(*args):
 
 __mods_dir = next(value for value in ResMgr.openSection('../paths.xml/Paths/').readStrings('Path') if '/mods/' in value)
 CURRENT_MODS_DIR = joinAndNormalizePath(__mods_dir)
+MODS_DIR = joinAndNormalizePath('.', 'mods')
+
 MinMax = namedtuple('MinMax', ('min', 'max'))
 
 IS_COMMON_TEST = ResMgr.openSection('../game_info.xml/game/').readString('id', '') == 'WOT.CT.PRODUCTION'
@@ -111,10 +113,10 @@ def setCurrentConfigPath(configs_path):
     if not os.path.exists(current_path):
         os.makedirs(current_path)
 
-    return joinAndNormalizePath(current_path)
+    return current_path
 
 
-currentConfigPath = setCurrentConfigPath('./mods/configs')
+currentConfigPath = setCurrentConfigPath(os.path.join(MODS_DIR, 'configs'))
 
 
 def cleanupPath(path, safe=False):
