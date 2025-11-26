@@ -146,8 +146,9 @@ class Updater(object):
 
     @staticmethod
     def parseFullVersion(path):
-        versions = re.findall(r'(\d+(?:\.\d+)+)', path)
-        return tupleVersion(versions[0]), tupleVersion(versions[-1])
+        mod_version = re.search(r'mods[\\/](\d+(?:\.\d+)+)', path).group(1)
+        file_version = re.search(r'battleObserver_(\d+(?:\.\d+)+)\.wotmod', path).group(1)
+        return tupleVersion(mod_version), tupleVersion(file_version)
 
     @staticmethod
     def findObserverMods():
