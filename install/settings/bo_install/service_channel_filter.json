@@ -1,5 +1,5 @@
 {
-  "enabled": false, 
+  "enabled": false,
   "sys_keys": {
     "CustomizationForCredits": false,
     "CustomizationForGold": false,
@@ -16,8 +16,8 @@
     "Remove": false,
     "Repair": false,
     "Restore": false,
-    "Selling": false, 
-    "autoMaintenance": false, 
+    "Selling": false,
+    "autoMaintenance": false,
     "customizationChanged": false
   }
 }

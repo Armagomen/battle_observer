@@ -1,14 +1,14 @@
 {
-  "display_on_allies": false, 
-  "enabled": false, 
+  "display_on_allies": false,
+  "enabled": false,
   "position": {
-    "x": 0, 
+    "x": 0,
     "y": 60
-  }, 
-  "show_caliber": false, 
+  },
+  "show_caliber": false,
   "show_counted_armor": true,
   "show_piercing_power": true,
   "show_piercing_reserve": false,
-  "splitter": " | ", 
+  "splitter": " | ",
   "text_size": 18
 }

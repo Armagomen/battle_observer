@@ -17,11 +17,11 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 
 class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
+    appLoader = dependency.descriptor(IAppLoader)
 
-    def __init__(self, appLoader):
+    def __init__(self):
         self.latency = 0.0
         self.skip_clip = False
-        self.appLoader = appLoader
         self.__trigger_type = TriggersManager.TRIGGER_TYPE.PLAYER_DISCRETE_SHOOT
         self.avatar = None
         self.enabled = False
@@ -160,33 +160,33 @@ class Arcade(CameraSettings):
 
     def __init__(self):
         super(Arcade, self).__init__()
+        toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, True)
 
     @property
     def name(self):
         return ARCADE.NAME
 
     def update(self):
-        if self.enabled != self.config[GLOBAL.ENABLED]:
-            self.enabled = self.config[GLOBAL.ENABLED]
-            toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, self.enabled)
+        self.enabled = self.config[GLOBAL.ENABLED]
         ctrl_mode_names = (CTRL_MODE_NAME.ARCADE, CTRL_MODE_NAME.MAP_CASE_ARCADE_EPIC_MINEFIELD)
         if self.enabled:
             self.reset = True
             for control_mode_name in ctrl_mode_names:
                 camera = self.getCamera(control_mode_name)
                 if camera is not None:
-                    self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
                     camera._cfg[ARCADE.DIST_RANGE] = MinMax(*self.config[ARCADE.DIST_RANGE])
                     camera._cfg[ARCADE.SCROLL_SENSITIVITY] = self.config[ARCADE.SCROLL_SENSITIVITY]
                     camera._cfg[ARCADE.START_DIST] = self.config[ARCADE.START_DEAD_DIST]
                     camera._cfg[ARCADE.START_ANGLE] = -0.18
+                    self.applySettings({GAME.COMMANDER_CAM: 0, GAME.PRE_COMMANDER_CAM: 0})
                     camera._updateProperties()
         elif self.reset:
             for control_mode_name in ctrl_mode_names:
                 self.resetToDefault(control_mode_name)
 
     def enablePostMortem(self, base, mode, **kwargs):
-        if 'postmortemParams' in kwargs:
+        postmortemParams = kwargs.get('postmortemParams')
+        if postmortemParams is None:
             kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
             kwargs.setdefault('transitionDuration', 1.0)
         return base(mode, **kwargs)
@@ -223,10 +223,10 @@ class Sniper(CameraSettings):
     MAX_DIST = 600.0
     MIN_DIST = 50.0
 
-    def __init__(self, appLoader):
+    def __init__(self):
         super(Sniper, self).__init__()
         self._dyn_zoom = False
-        self.after_shoot = ChangeCameraModeAfterShoot(appLoader)
+        self.after_shoot = ChangeCameraModeAfterShoot()
 
     @property
     def name(self):
@@ -300,10 +300,11 @@ class Sniper(CameraSettings):
 
 class CameraManager(object):
     appLoader = dependency.descriptor(IAppLoader)
+    __slots__ = ("__modes",)
 
     def __init__(self):
         self.appLoader.onGUISpaceBeforeEnter += self.updateCameras
-        self.__modes = (Arcade(), Sniper(self.appLoader), Strategic())
+        self.__modes = (Arcade(), Sniper(), Strategic())
         for mode in self.__modes:
             g_events.onModSettingsChanged += mode.onModSettingsChanged
 

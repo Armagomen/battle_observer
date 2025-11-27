@@ -98,7 +98,7 @@ class SettingsLoader(object):
     def readConfig(self):
         """Load user configuration"""
         logInfo("LOADING USER CONFIGURATION: {}", self.configName.upper())
-        self.iterateSettings(lambda name, config_part: self.loadConfigPart(name, config_part))
+        self.iterateSettings(self.loadConfigPart)
         logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
 
     def updateAllSettings(self):

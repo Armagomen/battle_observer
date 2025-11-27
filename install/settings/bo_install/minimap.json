@@ -3,8 +3,8 @@
   "permanentMinimapDeath": false,
   "real_view_radius": false,
   "showDeathNames": false,
-  "yaw_limits": true, 
-  "zoom": false, 
+  "yaw_limits": true,
+  "zoom": false,
   "zoom_hotkey": [
     [
       29

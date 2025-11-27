@@ -12,7 +12,7 @@ from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.i18n.updater import LOCALIZED_BY_LANG
 from armagomen.utils.async_request import async_url_request
-from armagomen.utils.common import CURRENT_MODS_DIR, getObserverCachePath, getUpdatePath, isReplay, MODS_DIR
+from armagomen.utils.common import CURRENT_MODS_DIR, getObserverCachePath, getUpdatePath, isReplay, joinAndNormalizePath, MODS_DIR
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from datetime import datetime, timedelta
@@ -125,12 +125,12 @@ class Updater(object):
 
     @staticmethod
     def extractZipArchive(path):
-        old_files = os.listdir(CURRENT_MODS_DIR)
         with ZipFile(path) as archive:
             for newFile in archive.namelist():
-                if newFile not in old_files:
-                    archive.extract(newFile, CURRENT_MODS_DIR)
-                    logInfo(LOG_MESSAGES.NEW_FILE, newFile)
+                if newFile.endswith('/') or os.path.exists(joinAndNormalizePath(CURRENT_MODS_DIR, newFile)):
+                    continue
+                archive.extract(newFile, CURRENT_MODS_DIR)
+                logInfo(LOG_MESSAGES.NEW_FILE, newFile)
 
     def downloadError(self, url):
         message = LOG_MESSAGES.FAILED.format(url)

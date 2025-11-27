@@ -3,22 +3,22 @@
     "green": "#60CB00",
     "normal": "#FFFFFF",
     "orange": "#FF9900",
-    "purple": "#6F6CD3", 
-    "red": "#ED070A", 
+    "purple": "#6F6CD3",
+    "red": "#ED070A",
     "yellow": "#FFC900"
-  }, 
+  },
   "global": {
     "ally": "#60CB00",
-    "bgColor": "#000000", 
-    "enemy": "#ED070A", 
+    "bgColor": "#000000",
+    "enemy": "#ED070A",
     "enemyColorBlind": "#6F6CD3"
-  }, 
+  },
   "vehicle_types_colors": {
     "AT-SPG": "#0094EC",
     "SPG": "#A90400",
     "heavyTank": "#F9B200",
     "lightTank": "#37BC00",
-    "mediumTank": "#FDEF6C", 
+    "mediumTank": "#FDEF6C",
     "unknown": "#FFFFFF"
   }
 }

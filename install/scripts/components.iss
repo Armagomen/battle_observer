@@ -152,21 +152,17 @@ Name: wg_logs/wg_log_hide_critics; Description: {cm:wg_logs_critics};
 Name: wg_logs/wg_log_pos_fix; Description: {cm:wg_logs_pos_fix};
 
 [Files]
-Source: "{#mod_source}\armagomen.battleObserver*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
-Source: "{#mod_source}\me.poliroid.modslistapi*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist;
-Source: "{#mod_source}\net.openwg.gameface*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion uninsneveruninstall onlyifdoesntexist;
-Source: "{#mod_source}\polarfox.vxSettingsApi*.wotmod"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion;
-Source: "settings\load.json"; DestDir: "{#configs_dir}\"; Flags: ignoreversion;
-Source: "settings\default\*"; DestDir: "{#configs_dir}\bo_install"; Flags: ignoreversion;
+Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion recursesubdirs onlyifdoesntexist;
+Source: "settings\*"; DestDir: "{#configs_dir}"; Flags: ignoreversion recursesubdirs onlyifdoesntexist;
 
 [InstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\me.poliroid.modslistapi*.wotmod"
+Type: files; Name: "{app}\{code:PH_Folder_Mods}\net.openwg\net.openwg.gameface*.wotmod"
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\polarfox.vxSettingsApi*.wotmod"
 
 [UninstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
-Type: filesandordirs; Name: "{#configs_dir}\bo_install\*"
 
 [Code]
 procedure ChangeMainJsonValues();
