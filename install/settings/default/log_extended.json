@@ -1,15 +1,15 @@
 {
   "attackReason": {
     "fire": "<img src='img://gui/maps/icons/battle_observer/efficiency/fire.png' width='15' height='15' vspace='-4'>",
-    "ramming": "<img src='img://gui/maps/icons/battle_observer/efficiency/ram.png' width='15' height='15' vspace='-4'>",
+    "ramming": "<img src='img://gui/maps/icons/battle_observer/efficiency/ram.png' width='15' height='15' vspace='-4'>", 
     "shot": "<img src='img://gui/maps/icons/battle_observer/efficiency/damage.png' width='15' height='15' vspace='-4'>"
   }, 
   "avgColor": {
     "brightness": 1.0, 
     "saturation": 0.5
-  },
-  "bottom_enabled": true, 
-  "enabled": false,
+  }, 
+  "bottom_enabled": true,
+  "enabled": false, 
   "killedIcon": "<img src='img://gui/maps/icons/battle_observer/efficiency/destruction.png' width='15' height='15' vspace='-4'>", 
   "logsAltMode_hotkey": [
     [
@@ -23,26 +23,26 @@
     "y": 0
   }, 
   "shellColor": {
-    "gold": "#FFD700",
+    "gold": "#FFD700", 
     "normal": "#FFFFFF"
-  },
+  }, 
   "templates": {
     "alt": [
       "<font size='12'>%(shots)d:</font><tab>",
-      "%(allDamages)s",
+      "%(allDamages)s", 
       "%(classIcon)s%(userName).12s %(killedIcon)s"
-    ],
+    ], 
     "normal": [
       "<font size='12'>%(index)02d:</font><tab>",
       "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
       "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
-      "%(attackReason)s<tab>",
+      "%(attackReason)s<tab>", 
       "%(classIcon)s%(tankName)s %(killedIcon)s"
     ]
-  },
+  }, 
   "textformat": {
-    "alt": "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>{0}</font></textformat>",
-    "normal": "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>{0}</font></textformat>"
-  },
+    "alt": "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>{}</font></textformat>",
+    "normal": "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>{}</font></textformat>"
+  }, 
   "top_enabled": true
 }

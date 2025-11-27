@@ -3,12 +3,12 @@
   "disable_cam_after_shot_latency": 0.5,
   "disable_cam_after_shot_skip_clip": true,
   "dynamic_zoom": false,
-  "enabled": false,
+  "enabled": false, 
   "steps_enabled": false, 
   "steps_range": [
     2.0,
-    4.0,
-    6.0, 
+    4.0, 
+    6.0,
     8.0,
     10.0,
     12.0,
@@ -19,7 +19,7 @@
     22.0,
     24.0,
     26.0,
-    28.0,
+    28.0, 
     30.0, 
     32.0
   ]

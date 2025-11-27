@@ -1,11 +1,11 @@
 {
   "enabled": false,
   "icon_name": "lamp_2.png",
-  "icon_size": 80,
+  "icon_size": 70,
   "playTickSound": true,
   "show_random_icon": false,
-  "show_timer": true,
+  "show_timer": false,
   "show_timer_graphics": true,
-  "show_timer_graphics_color": "#CC5801",
-  "show_timer_graphics_radius": 40
+  "show_timer_graphics_color": "#ffa500",
+  "show_timer_graphics_radius": 38
 }

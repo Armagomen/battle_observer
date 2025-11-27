@@ -1,11 +1,11 @@
 {
   "align": "right", 
   "color": "#f5ff8f", 
-  "distance": true, 
+  "distance": true,
   "enabled": false,
-  "spgOnly": true,
-  "text_size": 18, 
-  "time": true,
+  "spgOnly": true, 
+  "text_size": 18,
+  "time": true, 
   "x": -110, 
   "y": 0
 }

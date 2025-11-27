@@ -21,7 +21,7 @@ class SettingsLoader(object):
         try:
             data = openJsonFile(self.load_json)
         except Exception as error:
-            logError("Error in openJsonFile: {}, {}", self.load_json, repr(error))
+            logError("Error in openJsonFile: {}", repr(error))
             self.createLoadJSON(self.configName)
             self.error_dialog.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
             if self.configName not in self.configsList:
@@ -98,35 +98,29 @@ class SettingsLoader(object):
     def readConfig(self):
         """Load user configuration"""
         logInfo("LOADING USER CONFIGURATION: {}", self.configName.upper())
-        direct_path = os.path.join(currentConfigPath, self.configName)
-        listdir = os.listdir(direct_path)
-        self.iterateSettings(lambda name, config_part: self.loadConfigPart(name, direct_path, listdir, config_part))
+        self.iterateSettings(lambda name, config_part: self.loadConfigPart(name, config_part))
         logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
 
     def updateAllSettings(self):
         """Update all configuration settings"""
         self.iterateSettings(g_events.onModSettingsChanged)
 
-    def loadConfigPart(self, component_name, direct_path, listdir, config):
+    def loadConfigPart(self, component_name, config):
         """Read settings part file from JSON"""
         file_name = JSON.format(component_name)
-        file_path = os.path.join(direct_path, file_name)
-        if file_name not in listdir:
+        file_path = os.path.join(currentConfigPath, self.configName, file_name)
+        try:
+            file_data = openJsonFile(file_path)
+        except IOError:
             writeJsonFile(file_path, config)
+        except Exception as error:
+            message = READ_MESSAGE.format(file_path, repr(error))
+            if self.error_dialog:
+                self.error_dialog.add(message)
+            logWarning(message)
         else:
-            try:
-                file_data = openJsonFile(file_path)
-            except Exception as error:
-                message = READ_MESSAGE.format(file_path, repr(error))
-                if self.error_dialog:
-                    self.error_dialog.add(message)
-                logWarning(message)
-            else:
-                if file_data is not None:
-                    if self.updateData(file_data, config):
-                        writeJsonFile(file_path, config)
-                    logInfo(READ_MESSAGE, self.configName, file_name)
-                    if component_name == MAIN.NAME and debug.set_debug(config[DEBUG]):
-                        printDebuginfo()
-                else:
-                    logWarning(READ_MESSAGE, file_name, "file_data is None or file broken")
+            if self.updateData(file_data, config):
+                writeJsonFile(file_path, config)
+            logInfo(READ_MESSAGE, self.configName, file_name)
+            if component_name == MAIN.NAME and debug.set_debug(config[DEBUG]):
+                printDebuginfo()

@@ -175,9 +175,19 @@ def encodeData(data):
 def openJsonFile(path):
     """Load JSON from a file. Returns dict or None if error."""
     if not os.path.isfile(path):
-        return None
+        raise IOError("JSON file not found: {}".format(path))
     with _open(path, 'r', encoding='utf-8-sig') as f:
-        return encodeData(json.load(f))
+        content = f.read()
+    try:
+        return encodeData(json.loads(content))
+    except ValueError as e:
+        # Спроба витягти позицію помилки
+        error_msg = str(e)
+        if hasattr(e, 'pos'):
+            error_msg += " at position {}".format(e.pos)
+        elif hasattr(e, 'lineno') and hasattr(e, 'colno'):
+            error_msg += " at line {}, column {}".format(e.lineno, e.colno)
+        raise ValueError("JSON decode error in '{}': {}".format(path, error_msg))
 
 
 def writeJsonFile(path, data):

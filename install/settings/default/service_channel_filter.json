@@ -16,7 +16,7 @@
     "Remove": false,
     "Repair": false,
     "Restore": false,
-    "Selling": false,
+    "Selling": false, 
     "autoMaintenance": false, 
     "customizationChanged": false
   }

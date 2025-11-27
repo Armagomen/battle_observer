@@ -1,7 +1,7 @@
 {
   "align": "left", 
-  "enabled": false, 
-  "percent": true,
+  "enabled": false,
+  "percent": true, 
   "text_size": 18, 
   "timer": true, 
   "x": 110, 

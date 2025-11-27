@@ -1,7 +1,7 @@
 {
   "enabled": false,
   "panels_spotted_fix": true,
-  "players_bars_classColor": false,
+  "players_bars_classColor": false, 
   "players_bars_enabled": false, 
   "players_bars_hotkey": [
     [
@@ -9,7 +9,7 @@
     ]
   ],
   "players_bars_hp_text": "%(health)s",
-  "players_bars_on_key_pressed": false,
+  "players_bars_on_key_pressed": false, 
   "players_damages_enabled": false, 
   "players_damages_hotkey": [
     [
@@ -18,7 +18,7 @@
   ], 
   "players_damages_settings": {
     "align": "left",
-    "x": -50,
+    "x": -50, 
     "y": -2
   }, 
   "players_damages_text": "<font color='#FFFF00'>%(damage)s</font>"

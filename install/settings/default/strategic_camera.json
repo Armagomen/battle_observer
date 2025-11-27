@@ -1,8 +1,8 @@
 {
   "distRange": [
-    40.0,
+    40.0, 
     150.0
   ],
-  "enabled": false,
+  "enabled": false, 
   "scrollSensitivity": 10.0
 }

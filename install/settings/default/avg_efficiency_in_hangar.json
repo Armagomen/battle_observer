@@ -5,6 +5,6 @@
   "avg_stun": true,
   "battles": true,
   "enabled": false,
-  "gun_marks": true,
+  "gun_marks": true, 
   "win_rate": true
 }

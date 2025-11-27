@@ -1,9 +1,9 @@
 {
   "distRange": [
-    2.0,
+    10.0, 
     150.0
   ],
-  "enabled": false,
+  "enabled": false, 
   "scrollSensitivity": 4.0, 
   "startDeadDist": 20.0
 }
