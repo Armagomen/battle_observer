@@ -153,7 +153,7 @@ Name: wg_logs/wg_log_pos_fix; Description: {cm:wg_logs_pos_fix};
 
 [Files]
 Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion recursesubdirs onlyifdoesntexist;
-Source: "settings\*"; DestDir: "{#configs_dir}"; Flags: ignoreversion recursesubdirs onlyifdoesntexist;
+Source: "settings\*"; DestDir: "{#configs_dir}"; Flags: ignoreversion recursesubdirs;
 
 [InstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"

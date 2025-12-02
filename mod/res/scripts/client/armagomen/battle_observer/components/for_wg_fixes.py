@@ -1,5 +1,6 @@
+import weakref
+
 import BigWorld
-from _weakref import weakref
 from armagomen._constants import DAMAGE_LOG, GLOBAL
 from armagomen.utils.common import overrideMethod, toggleOverride
 from armagomen.utils.events import g_events

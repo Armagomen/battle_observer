@@ -109,18 +109,22 @@ class SettingsLoader(object):
         """Read settings part file from JSON"""
         file_name = JSON.format(component_name)
         file_path = os.path.join(currentConfigPath, self.configName, file_name)
+        error_message = None
         try:
             file_data = openJsonFile(file_path)
-        except IOError:
+        except IOError as error:
+            error_message = str(error)
             writeJsonFile(file_path, config)
         except Exception as error:
-            message = READ_MESSAGE.format(file_path, repr(error))
-            if self.error_dialog:
-                self.error_dialog.add(message)
-            logWarning(message)
+            error_message = READ_MESSAGE.format(file_name, str(error))
         else:
             if self.updateData(file_data, config):
                 writeJsonFile(file_path, config)
             logInfo(READ_MESSAGE, self.configName, file_name)
             if component_name == MAIN.NAME and debug.set_debug(config[DEBUG]):
                 printDebuginfo()
+
+        if error_message:
+            if self.error_dialog:
+                self.error_dialog.add(error_message)
+            logWarning(error_message)

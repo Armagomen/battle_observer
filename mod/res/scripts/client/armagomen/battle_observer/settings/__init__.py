@@ -30,7 +30,7 @@ class UserSettings(object):
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
-            MAIN.USE_KEY_PAIRS: True,
+            MAIN.USE_KEY_PAIRS: True
         }
 
         self.avg_efficiency_in_hangar = {
@@ -41,7 +41,7 @@ class UserSettings(object):
             AVG_EFFICIENCY_HANGAR.DAMAGE: True,
             AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN: True,
             AVG_EFFICIENCY_HANGAR.STUN: True,
-            AVG_EFFICIENCY_HANGAR.WIN_RATE: True,
+            AVG_EFFICIENCY_HANGAR.WIN_RATE: True
         }
 
         self.clock = {
@@ -74,7 +74,7 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             DISPERSION.SERVER: False,
             DISPERSION.REPLACE: False,
-            DISPERSION.SCALE: 0.7,
+            DISPERSION.SCALE: 0.7
         }
 
         self.dispersion_timer = {
@@ -84,7 +84,7 @@ class UserSettings(object):
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left,
             DISPERSION_TIMER.TIMER: True,
             DISPERSION_TIMER.PERCENT: True,
-            "text_size": 18,
+            "text_size": 18
         }
 
         self.debug_panel = {
@@ -105,7 +105,7 @@ class UserSettings(object):
             EFFECTS.NO_FLASH_BANG: False,
             EFFECTS.NO_SHOCK_WAVE: False,
             EFFECTS.NO_BINOCULARS: False,
-            EFFECTS.NO_SNIPER_DYNAMIC: False,
+            EFFECTS.NO_SNIPER_DYNAMIC: False
         }
 
         self.zoom = {
@@ -122,13 +122,13 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             ARCADE.DIST_RANGE: [10.0, 150.0],
             ARCADE.START_DEAD_DIST: 20.0,
-            ARCADE.SCROLL_SENSITIVITY: 4.0,
+            ARCADE.SCROLL_SENSITIVITY: 4.0
         }
 
         self.strategic_camera = {
             GLOBAL.ENABLED: False,
             STRATEGIC.DIST_RANGE: [40.0, 150.0],
-            STRATEGIC.SCROLL_SENSITIVITY: 10.0,
+            STRATEGIC.SCROLL_SENSITIVITY: 10.0
         }
 
         self.armor_calculator = {
@@ -140,7 +140,7 @@ class UserSettings(object):
             ARMOR_CALC.SHOW_PIERCING_POWER: True,
             ARMOR_CALC.SHOW_CALIBER: False,
             "splitter": " | ",
-            "text_size": 18,
+            "text_size": 18
         }
 
         self.colors = {
@@ -148,7 +148,7 @@ class UserSettings(object):
                 COLORS.ALLY_MAME: COLORS.GREEN,
                 COLORS.ENEMY_MAME: COLORS.RED,
                 COLORS.ENEMY_BLIND_MAME: COLORS.BLIND,
-                COLORS.C_BG: COLORS.BLACK,
+                COLORS.C_BG: COLORS.BLACK
             },
             ARMOR_CALC.NAME: {
                 COLORS.C_GREEN: COLORS.GREEN,
@@ -196,7 +196,7 @@ class UserSettings(object):
                 "blockedIcon": "<img src='{}/efficiency/armor.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
                 "damageIcon": "<img src='{}/efficiency/damage.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
                 "stunIcon": "<img src='{}/efficiency/stun.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
-                "spottedIcon": "<img src='{}/efficiency/detection.png' {}>".format(IMAGE_DIR, LOGS_ICONS),
+                "spottedIcon": "<img src='{}/efficiency/detection.png' {}>".format(IMAGE_DIR, LOGS_ICONS)
             },
             DAMAGE_LOG.TOP_LOG_SEPARATE: "  ",
             GLOBAL.AVG_COLOR: {"saturation": 0.5, "brightness": 1.0}
@@ -220,7 +220,7 @@ class UserSettings(object):
             DAMAGE_LOG.KILLED_ICON: "<img src='{}/efficiency/destruction.png' {}>".format(IMAGE_DIR, EX_LOGS_ICONS),
             "textformat": {
                 "normal": "<textformat leading='-2' tabstops='[20, 55, 80, 100]'><font face='$TitleFont' size='15'>{}</font></textformat>",
-                "alt": "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>{}</font></textformat>",
+                "alt": "<textformat leading='-2' tabstops='[20]'><font face='$TitleFont' size='15'>{}</font></textformat>"
             },
             DAMAGE_LOG.TEMPLATES: {
                 "normal": [
@@ -228,12 +228,12 @@ class UserSettings(object):
                     "<font color='%(percentDamageAvgColor)s'>%(totalDamage)s</font><tab>",
                     "<font color='%(shellColor)s'>%(shellType)s</font><tab>",
                     "%(attackReason)s<tab>",
-                    "%(classIcon)s%(tankName)s %(killedIcon)s",
+                    "%(classIcon)s%(tankName)s %(killedIcon)s"
                 ],
                 "alt": [
                     "<font size='12'>%(shots)d:</font><tab>",
                     "%(allDamages)s",
-                    "%(classIcon)s%(userName).12s %(killedIcon)s",
+                    "%(classIcon)s%(userName).12s %(killedIcon)s"
                 ]
             },
             DAMAGE_LOG.SHELL_COLOR: {
@@ -296,7 +296,7 @@ class UserSettings(object):
             FLIGHT_TIME.DISTANCE: True,
             FLIGHT_TIME.SPG_ONLY: True,
             FLIGHT_TIME.ALIGN: GLOBAL.ALIGN_LIST.right,
-            "text_size": 18,
+            "text_size": 18
         }
 
         self.distance_to_enemy = {
@@ -305,7 +305,7 @@ class UserSettings(object):
             GLOBAL.Y: -190,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.center,
             GLOBAL.COLOR: "#f5ff8f",
-            "text_size": 18,
+            "text_size": 18
         }
 
         self.own_health = {
@@ -349,7 +349,7 @@ class UserSettings(object):
                 "very_good": "#44DBCB"
             },
             STATISTICS.ICON_ENABLED: False,
-            STATISTICS.ICON_BLACKOUT: -1.25,
+            STATISTICS.ICON_BLACKOUT: -1.25
         }
 
     def getSettingDictByAliasBattle(self, name):

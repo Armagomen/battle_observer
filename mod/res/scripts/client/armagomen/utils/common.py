@@ -27,7 +27,7 @@ def joinAndNormalizePath(*args):
 
 __mods_dir = next(value for value in ResMgr.openSection('../paths.xml/Paths/').readStrings('Path') if '/mods/' in value)
 CURRENT_MODS_DIR = joinAndNormalizePath(__mods_dir)
-MODS_DIR = joinAndNormalizePath('.', 'mods')
+MODS_DIR = os.path.dirname(CURRENT_MODS_DIR)
 
 MinMax = namedtuple('MinMax', ('min', 'max'))
 
@@ -173,21 +173,18 @@ def encodeData(data):
 
 
 def openJsonFile(path):
-    """Load JSON from a file. Returns dict or None if error."""
     if not os.path.isfile(path):
         raise IOError("JSON file not found: {}".format(path))
     with _open(path, 'r', encoding='utf-8-sig') as f:
         content = f.read()
+    if not content.strip():
+        raise ValueError("JSON decode error in '{}': file is empty".format(path))
     try:
-        return encodeData(json.loads(content))
+        data = json.loads(content)
     except ValueError as e:
-        # Спроба витягти позицію помилки
-        error_msg = str(e)
-        if hasattr(e, 'pos'):
-            error_msg += " at position {}".format(e.pos)
-        elif hasattr(e, 'lineno') and hasattr(e, 'colno'):
-            error_msg += " at line {}, column {}".format(e.lineno, e.colno)
-        raise ValueError("JSON decode error in '{}': {}".format(path, error_msg))
+        raise ValueError("JSON decode error in '{}': {}".format(path, str(e)))
+
+    return encodeData(data)
 
 
 def writeJsonFile(path, data):
