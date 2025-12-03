@@ -12,7 +12,7 @@ from io import open as _open
 import BigWorld
 import ResMgr
 import WGC
-from armagomen.utils.logging import logDebug, logError, logInfo
+from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
 
@@ -26,8 +26,8 @@ def joinAndNormalizePath(*args):
 
 
 __mods_dir = next(value for value in ResMgr.openSection('../paths.xml/Paths/').readStrings('Path') if '/mods/' in value)
-CURRENT_MODS_DIR = joinAndNormalizePath(__mods_dir)
-MODS_DIR = os.path.dirname(CURRENT_MODS_DIR)
+VERSIONED_MODS_DIR = joinAndNormalizePath(__mods_dir)
+MODS_DIR = os.path.dirname(VERSIONED_MODS_DIR)
 
 MinMax = namedtuple('MinMax', ('min', 'max'))
 
@@ -174,23 +174,31 @@ def encodeData(data):
 
 def openJsonFile(path):
     if not os.path.isfile(path):
-        raise IOError("JSON file not found: {}".format(path))
+        message = "JSON file not found: {}".format(path)
+        logWarning(message)
+        raise IOError(message)
     with _open(path, 'r', encoding='utf-8-sig') as f:
         content = f.read()
     if not content.strip():
-        raise ValueError("JSON decode error in '{}': file is empty".format(path))
+        message = "JSON decode error in '{}': file is empty".format(path)
+        logWarning(message)
+        raise IOError(message)
     try:
         data = json.loads(content)
     except ValueError as e:
-        raise ValueError("JSON decode error in '{}': {}".format(path, str(e)))
+        message = "JSON decode error in '{}': {}".format(path, str(e))
+        logWarning(message)
+        raise ValueError(message)
 
     return encodeData(data)
 
 
 def writeJsonFile(path, data):
     """Creates a new json file in a folder or replace old."""
-    with _open(path, 'w', encoding=UTF_8) as dataFile:
-        dataFile.write(unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True), encoding=UTF_8))
+    file_data = unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True))
+    if file_data:
+        with _open(path, 'w', encoding=UTF_8) as dataFile:
+            dataFile.write(file_data)
 
 
 def getObserverCachePath():
@@ -390,7 +398,7 @@ def safe_index(seq, value, default=0):
 
 
 def printDebuginfo():
-    logDebug("CURRENT_MODS_DIR: {}", CURRENT_MODS_DIR)
+    logDebug("VERSIONED_MODS_DIR: {}", VERSIONED_MODS_DIR)
     logDebug("IS_XVM_INSTALLED: {}", IS_XVM_INSTALLED)
     logDebug("currentConfigPath: {}", currentConfigPath)
     logDebug("SIXTH_SENSE_LIST: {}", SIXTH_SENSE_LIST)

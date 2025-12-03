@@ -5,7 +5,7 @@ from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG,
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
 from armagomen.utils.common import addCallback, IS_XVM_INSTALLED, openWebBrowser, safe_index, SIXTH_SENSE_LIST, SIXTH_SENSE_PATH
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
+from armagomen.utils.logging import debug, logDebug, logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
@@ -324,6 +324,8 @@ class SettingsInterface(CreateElement):
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings in the settings file."""
+        if debug.is_debug:
+            logDebug('onSettingsChanged: modID: {} blockID: {} data: {}', modID, blockID, data)
         if MOD_NAME != modID:
             return
 

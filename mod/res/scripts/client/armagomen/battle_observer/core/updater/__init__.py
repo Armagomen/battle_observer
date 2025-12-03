@@ -12,7 +12,7 @@ from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.i18n.updater import LOCALIZED_BY_LANG
 from armagomen.utils.async_request import async_url_request
-from armagomen.utils.common import CURRENT_MODS_DIR, getObserverCachePath, getUpdatePath, isReplay, joinAndNormalizePath, MODS_DIR
+from armagomen.utils.common import getObserverCachePath, getUpdatePath, isReplay, joinAndNormalizePath, MODS_DIR, VERSIONED_MODS_DIR
 from armagomen.utils.dialogs import UpdaterDialogs
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from datetime import datetime, timedelta
@@ -127,9 +127,9 @@ class Updater(object):
     def extractZipArchive(path):
         with ZipFile(path) as archive:
             for newFile in archive.namelist():
-                if newFile.endswith('/') or os.path.exists(joinAndNormalizePath(CURRENT_MODS_DIR, newFile)):
+                if newFile.endswith('/') or os.path.exists(joinAndNormalizePath(VERSIONED_MODS_DIR, newFile)):
                     continue
-                archive.extract(newFile, CURRENT_MODS_DIR)
+                archive.extract(newFile, VERSIONED_MODS_DIR)
                 logInfo(LOG_MESSAGES.NEW_FILE, newFile)
 
     def downloadError(self, url):
@@ -206,7 +206,7 @@ class Updater(object):
     @wg_async
     def showUpdateDialog(self, version):
         title = LOCALIZED_BY_LANG['titleNEW'].format(version)
-        message = LOCALIZED_BY_LANG['messageNEW'].format(CURRENT_MODS_DIR, self.gitMessage)
+        message = LOCALIZED_BY_LANG['messageNEW'].format(VERSIONED_MODS_DIR, self.gitMessage)
         handle_url = URLS.UPDATE + EXE_FILE.format(version)
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, handle_url, self.isLobby))
         if result:

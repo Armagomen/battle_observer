@@ -3,7 +3,7 @@ import os
 from armagomen._constants import LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import DEBUG, debug, logError, logInfo, logWarning
+from armagomen.utils.logging import DEBUG, debug, logError, logInfo
 
 JSON = "{}.json"
 READ_MESSAGE = "loadConfigPart: {}: {}"
@@ -113,7 +113,6 @@ class SettingsLoader(object):
         try:
             file_data = openJsonFile(file_path)
         except IOError as error:
-            error_message = str(error)
             writeJsonFile(file_path, config)
         except Exception as error:
             error_message = READ_MESSAGE.format(file_name, str(error))
@@ -127,4 +126,3 @@ class SettingsLoader(object):
         if error_message:
             if self.error_dialog:
                 self.error_dialog.add(error_message)
-            logWarning(error_message)
