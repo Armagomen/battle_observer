@@ -160,14 +160,15 @@ class Arcade(CameraSettings):
 
     def __init__(self):
         super(Arcade, self).__init__()
-        toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, True)
 
     @property
     def name(self):
         return ARCADE.NAME
 
     def update(self):
-        self.enabled = self.config[GLOBAL.ENABLED]
+        if self.enabled != self.config[GLOBAL.ENABLED]:
+            self.enabled = self.config[GLOBAL.ENABLED]
+            toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, self.enabled)
         ctrl_mode_names = (CTRL_MODE_NAME.ARCADE, CTRL_MODE_NAME.MAP_CASE_ARCADE_EPIC_MINEFIELD)
         if self.enabled:
             self.reset = True
@@ -188,7 +189,7 @@ class Arcade(CameraSettings):
         postmortemParams = kwargs.get('postmortemParams')
         if postmortemParams is None:
             kwargs['postmortemParams'] = (mode.camera.angles, self.config[ARCADE.START_DEAD_DIST])
-            kwargs.setdefault('transitionDuration', 1.0)
+            kwargs.setdefault('transitionDuration', 0.5)
         return base(mode, **kwargs)
 
 

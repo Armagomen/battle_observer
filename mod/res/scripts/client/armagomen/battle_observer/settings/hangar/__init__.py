@@ -3,7 +3,7 @@ from math import ceil
 from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
                                   MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
-from armagomen.utils.common import addCallback, IS_XVM_INSTALLED, openWebBrowser, safe_index, SIXTH_SENSE_LIST, SIXTH_SENSE_PATH
+from armagomen.utils.common import addCallback, encodeData, IS_XVM_INSTALLED, openWebBrowser, safe_index, SIXTH_SENSE_LIST, SIXTH_SENSE_PATH
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import debug, logDebug, logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
@@ -328,7 +328,7 @@ class SettingsInterface(CreateElement):
             logDebug('onSettingsChanged: modID: {} blockID: {} data: {}', modID, blockID, data)
         if MOD_NAME != modID:
             return
-
+        data = encodeData(data)
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
             self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)

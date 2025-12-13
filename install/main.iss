@@ -40,9 +40,7 @@ ShowComponentSizes=no
 Uninstallable=yes
 UninstallFilesDir={app}\{#APP_DIR_UNINST}
 VersionInfoVersion={#MyAppVersion}
-WizardResizable=no
 WizardStyle=modern
-
 
 
 [Run]  
