@@ -194,7 +194,7 @@ def openJsonFile(path):
 
 
 def writeJsonFile(path, data):
-    """Creates a new json file in a folder or replace old."""
+    """Creates a new JSON file in a folder or replace old."""
     file_data = unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True))
     if file_data:
         with _open(path, 'w', encoding=UTF_8) as dataFile:
