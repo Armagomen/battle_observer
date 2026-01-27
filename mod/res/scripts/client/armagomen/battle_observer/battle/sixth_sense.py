@@ -53,6 +53,7 @@ class SixthSense(SixthSenseMeta):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
+        g_playerEvents.onObservedByEnemy -= self._onObservedByEnemy
         optional_devices = self.sessionProvider.shared.optionalDevices
         if optional_devices is not None and not self.__isComp7Battle:
             optional_devices.onDescriptorDevicesChanged += self.onDescriptorDevicesChanged
@@ -64,6 +65,7 @@ class SixthSense(SixthSenseMeta):
             sound.stop()
         self.__sounds.clear()
         self.__soundID = None
+        g_playerEvents.onObservedByEnemy -= self._onObservedByEnemy
         g_playerEvents.onRoundFinished -= self._onRoundFinished
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
@@ -83,9 +85,8 @@ class SixthSense(SixthSenseMeta):
         else:
             self.__isRadioInstalledInBonusSlot = False
 
-    def getCurrentLampTime(self, value):
+    def getCurrentLampTime(self, detectionType):
         if self.__isComp7Battle:
-            detectionType = value.get("detectionType", 0)
             if detectionType == DIRECT_DETECTION_TYPE.STEALTH_RADAR:
                 return STEALTH_RADAR_TIME
             elif detectionType == DIRECT_DETECTION_TYPE.SPECIAL_RECON:
@@ -96,13 +97,19 @@ class SixthSense(SixthSenseMeta):
             return RADIO_DURATION_BONUS if self.__isRadioInstalledInBonusSlot else RADIO_DURATION
         return BASE_TIME
 
+    def _onObservedByEnemy(self, detectionType, isObserved):
+        if isObserved:
+            self.as_showS(self.getCurrentLampTime(detectionType))
+        else:
+            self.as_hideS()
+
     def _onVehicleStateUpdated(self, state, value):
-        if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
-            if value.get('isObserved', False):
-                self.as_showS(self.getCurrentLampTime(value))
-            else:
-                self.as_hideS()
-        elif state in _STATES_TO_HIDE:
+        # if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
+        #     if value.get('isObserved', False):
+        #         self.as_showS(self.getCurrentLampTime(value))
+        #     else:
+        #         self.as_hideS()
+        if state in _STATES_TO_HIDE:
             self.as_hideS()
             if state in _DESTROYED:
                 self.__isRadioInstalled = False

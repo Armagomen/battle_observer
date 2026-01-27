@@ -223,22 +223,24 @@ class Randomizer(object):
 
     @classmethod
     def _updateRandomization(cls, vehicle):
-        randomization_min, randomization_max = DEFAULT_RANDOMIZATION
-        if user_settings.armor_calculator[GLOBAL.ENABLED] and vehicle is not None:
+        if vehicle is None:
+            _ShotResult.RANDOMIZATION = DEFAULT_RANDOMIZATION
+            return
+        if user_settings.armor_calculator[GLOBAL.ENABLED]:
             data = {cls.GUNNER_ARMORER: [], cls.LOADER_AMMUNITION_IMPROVE: []}
             for _, tman in vehicle.crew:
                 if not tman or not tman.canUseSkillsInCurrentVehicle:
                     continue
                 for skill_name in tman.getPossibleSkills().intersection(data):
                     data[skill_name].append(cls.getCurrentSkillEfficiency(tman, skill_name))
-
+            randomization_min, randomization_max = DEFAULT_RANDOMIZATION
             for skill_name, value in data.items():
                 if value:
                     percent = sum(value) / len(value)
                     randomization_min += percent
                     if skill_name == cls.GUNNER_ARMORER:
                         randomization_max -= percent
-        _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
+            _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
         logDebug(cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
 
 
