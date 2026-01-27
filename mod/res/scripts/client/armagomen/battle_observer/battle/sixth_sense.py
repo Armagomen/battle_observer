@@ -53,7 +53,7 @@ class SixthSense(SixthSenseMeta):
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleStateUpdated += self._onVehicleStateUpdated
-        g_playerEvents.onObservedByEnemy -= self._onObservedByEnemy
+        g_playerEvents.onObservedByEnemy += self._onObservedByEnemy
         optional_devices = self.sessionProvider.shared.optionalDevices
         if optional_devices is not None and not self.__isComp7Battle:
             optional_devices.onDescriptorDevicesChanged += self.onDescriptorDevicesChanged
@@ -104,11 +104,6 @@ class SixthSense(SixthSenseMeta):
             self.as_hideS()
 
     def _onVehicleStateUpdated(self, state, value):
-        # if state == VEHICLE_VIEW_STATE.OBSERVED_BY_ENEMY:
-        #     if value.get('isObserved', False):
-        #         self.as_showS(self.getCurrentLampTime(value))
-        #     else:
-        #         self.as_hideS()
         if state in _STATES_TO_HIDE:
             self.as_hideS()
             if state in _DESTROYED:
