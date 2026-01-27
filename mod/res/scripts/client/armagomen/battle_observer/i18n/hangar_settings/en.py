@@ -28,7 +28,7 @@ timeFormat_tooltip = "<br>".join((
 
 localization = {
     "configSelect": {
-        "header": "SELECT CONFIG from mods/configs/mod_battle_observer",
+        "header": "SELECT CONFIG DIR",
         "selector": "Config",
         "donate_button_ua": "MONO BANK",
         "discord_button": "Discord support & chat",
@@ -69,7 +69,6 @@ localization = {
         "auto_return_crew_tooltip": "If there is no crew on the selected tank, but there is one for it and is not in "
                                     "battle on another tank, the crew will be returned to the tank automatically.",
         "disable_stun_sound": "Remove stun sound",
-        "save_shot": "Block shooting at allies and destroyed.",
         "mute_team_base_sound": "Mute base capture siren.",
         "excluded_map_slots_notification": "Notify about available excluded map slots.",
         "auto_claim_clan_reward": "Collect clan rewards automatically.",

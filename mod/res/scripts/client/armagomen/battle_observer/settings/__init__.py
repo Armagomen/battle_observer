@@ -26,7 +26,6 @@ class UserSettings(object):
             MAIN.HIDE_HINT: False,
             MAIN.IGNORE_COMMANDERS: False,
             MAIN.MUTE_BASES_SOUND: False,
-            MAIN.SAVE_SHOT: False,
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,

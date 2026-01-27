@@ -59,7 +59,6 @@ localization = {
         "show_friends": "Freunde und Clanmitglieder in Teamlisten markieren",
         "useKeyPairs": "Gleichzeitige Nutzung linker/rechter Ctrl-, Alt- und Shift-Tasten",
         "useKeyPairs_tooltip": "Nach Aktivierung funktionieren die linken und rechten Tasten gleich, unabhängig von Moduleinstellungen.",
-        "save_shot": "Schüsse auf Verbündete und zerstörte Panzer blockieren",
         "mute_team_base_sound": "Basisalarm-Sirene deaktivieren",
         "excluded_map_slots_notification": "Benachrichtigung über verfügbare Kartensperrslots anzeigen",
         "auto_claim_clan_reward": "Clanbelohnungen automatisch abholen",

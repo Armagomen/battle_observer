@@ -60,7 +60,6 @@ localization = {
         "show_friends": "Oznaczaj przyjaciół i członków klanu na listach drużyn",
         "useKeyPairs": "Używaj parowanych klawiszy Ctrl, Alt, Shift",
         "useKeyPairs_tooltip": "Lewy i prawy klawisz działają jako jeden — niezależnie od ustawień modułu.",
-        "save_shot": "Blokuj strzał w sojuszników i wraki",
         "mute_team_base_sound": "Wyłącz syrenę przejęcia bazy",
         "excluded_map_slots_notification": "Powiadamiaj o dostępnych slotach do wykluczenia map",
         "auto_claim_clan_reward": "Automatycznie odbieraj nagrody klanowe",

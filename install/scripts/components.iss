@@ -23,7 +23,6 @@ Name: main/hide_field_mail; Description: {cm:hide_field_mail}; Types: armagomen;
 Name: main/hide_hint_panel; Description: {cm:hide_hint_panel}; Types: armagomen;
 Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; Types: armagomen;
 Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: armagomen;
-Name: main/save_shot; Description: {cm:save_shot}; Types: armagomen;
 Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen;
 Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward}; Types: armagomen;
 

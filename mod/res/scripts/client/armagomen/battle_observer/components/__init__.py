@@ -22,7 +22,6 @@ def loadComponents(is_replay):
         'dispersion',
         'excluded_maps',
         'friends',
-        'save_shot_lite',
         'service_channel_filter',
         'vehicle_battle_boosters',
         'auto_claim_clan_reward',

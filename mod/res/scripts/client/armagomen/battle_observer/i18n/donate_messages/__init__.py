@@ -33,5 +33,5 @@ MESSAGES = {
 
 LINKS_FORMAT = {
     "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - поповнити банку."},
-    "ru": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - закинуть в банку."},
-}.get(language, {"url": URLS.DONATELLO, "img": IMG.DONATELLO, "name": "DONATE - euro|uah|usdt."})
+    "ru": {"url": URLS.MONO, "img": IMG.MONO, "name": "DONATE. (Юзай G-Pay несли донатиш не из Украины)"},
+}.get(language, {"url": URLS.MONO, "img": IMG.MONO, "name": "DONATE. (Use G‑Pay if you’re donating from outside Ukraine)"})
