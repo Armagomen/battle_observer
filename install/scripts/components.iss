@@ -186,7 +186,6 @@ begin
     JSON_SetBool(Handle,'/hide_hint_panel', WizardIsComponentSelected('main/hide_hint_panel'));
     JSON_SetBool(Handle,'/ignore_commanders_voice', WizardIsComponentSelected('main/ignore_commanders_voice'));
     JSON_SetBool(Handle,'/mute_team_base_sound', WizardIsComponentSelected('main/mute_team_base_sound'));
-    JSON_SetBool(Handle,'/save_shot', WizardIsComponentSelected('main/save_shot'));
     JSON_SetBool(Handle,'/show_friends', WizardIsComponentSelected('main/show_friends'));
     JSON_SetBool(Handle,'/auto_claim_clan_reward', WizardIsComponentSelected('main/auto_claim_clan_reward'));
     JSON_Close(Handle);

@@ -1,6 +1,6 @@
 from AccountCommands import VEHICLE_SETTINGS_FLAG
-from armagomen._constants import CREW_XP, MAIN
-from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG
+from armagomen._constants import MAIN
+from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.common import updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
@@ -68,12 +68,12 @@ class CrewProcessor(object):
         return currentXP >= needToProgress
 
     def isAccelerateTraining(self, vehicle):
-        if not vehicle.postProgressionAvailability(unlockOnly=True).result:
+        if not vehicle.isFullyElite:
+            return False, CREW_XP.NOT_ELITE
+        elif not vehicle.postProgressionAvailability(unlockOnly=True).result:
             return True, CREW_XP.NOT_AVAILABLE
-        elif vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL:
+        elif vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL or self.isPostProgressionFullXP(vehicle):
             return True, CREW_XP.IS_FULL_COMPLETE
-        elif self.isPostProgressionFullXP(vehicle):
-            return True, CREW_XP.IS_FULL_XP
         else:
             return False, CREW_XP.NED_TURN_OFF
 

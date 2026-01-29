@@ -6,8 +6,8 @@ for /f "tokens=3 delims=<>" %%a in (
 ) do set "ModVersion=%%a"
 
 set sources=.\mod
-set GameInstalled_ModsDir="C:\Games\World_of_Tanks_EU\mods\2.1.1.0"
-REM set GameInstalled_ModsDir="C:\Games\World_of_Tanks_CT\mods\2.0.1.1 Common Test"
+set GameInstalled_ModsDir="D:\Games\World_of_Tanks_EU\mods\2.1.1.0"
+REM set GameInstalled_ModsDir="D:\Games\World_of_Tanks_CT\mods\2.0.1.1 Common Test"
 
 "C:\Python27\python.exe" bo_compile_all.py -f -d scripts %sources%\res\scripts
 
@@ -23,11 +23,11 @@ DEL %GameInstalled_ModsDir%\me.poliroid.modslistapi*
 DEL %GameInstalled_ModsDir%\polarfox.vxSettingsApi*
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py %ModFile% %sources%\*
-"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 -x!armagomen.battle_observer_icons* %AutoUpdate% %OutputDir%\*
+REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 -x!armagomen.battle_observer_icons* %AutoUpdate% %OutputDir%\*
 
 Xcopy %OutputDir% %GameInstalled_ModsDir% /e /i /d
 
-"%ProgramFiles(x86)%\Inno Setup 6\ISCC.exe" /DMyAppVersion=%ModVersion% .\install\main.iss
+"%LocalAppData%\Programs\Inno Setup 6\ISCC.exe" /DMyAppVersion=%ModVersion% .\install\main.iss
 
 DEL /s /q *.pyc
 pause

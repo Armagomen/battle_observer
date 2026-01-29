@@ -287,10 +287,6 @@ ANOTHER = namedtuple("ANOTHER", (
     "CONFIG_SELECT", "ACCOUNT_DBID", "USERS", "DBID", "BADGES", "OVERRIDDEN_BADGE", "NAME", "FAKE_NAME", "CLAN_ABBR"))(
     "configSelect", "accountDBID", "users", "databaseID", "badges", "overriddenBadge", "name", "fakeName", "clanAbbrev")
 
-CREW_XP = namedtuple("CREW_XP", (
-    "NAME", "NOT_AVAILABLE", "IS_FULL_XP", "IS_FULL_COMPLETE", "NED_TURN_OFF", "ENABLE", "DISABLE"))(
-    "crewDialog", "notAvailable", "isFullXp", "isFullComplete", "needTurnOff", "enable", "disable")
-
 EXCLUDED_MAPS = namedtuple("EXCLUDED_MAPS", ("NAME", "HEADER", "MESSAGE"))("excludedMaps", "header", "message")
 
 AVG_EFFICIENCY_HANGAR = namedtuple("AVG_EFFICIENCY_HANGAR", (
