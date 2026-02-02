@@ -10,7 +10,7 @@ from armagomen.utils.logging import logDebug, logInfo
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.gui_items.processors.tankman import TankmanAutoReturn
-from gui.shared.gui_items.processors.vehicle import VehicleAutoReturnProcessor
+from gui.shared.gui_items.processors.vehicle import VehicleAutoReturnProcessor, VehicleTmenXPAccelerator
 from gui.shared.notifications import NotificationPriorityLevel
 from gui.shared.utils import decorators
 from gui.veh_post_progression.models.progression import PostProgressionCompletion
@@ -54,7 +54,7 @@ class CrewProcessor(object):
 
     @decorators.adisp_process('updateTankmen')
     def accelerateCrewXp(self, vehicle, value):
-        from gui.shared.gui_items.processors.vehicle import VehicleTmenXPAccelerator
+
         result = yield VehicleTmenXPAccelerator(vehicle, value, confirmationEnabled=False).request()
         if result.success:
             logInfo("The accelerated crew training is {} for '{}'", value, vehicle.userName)
