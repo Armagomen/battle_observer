@@ -100,8 +100,8 @@
 
 ## ⚙️ Team, System, and Utility Features / Командні, системні та допоміжні функції
 
-1. Save-Shoot Lite: blocks firing at allies/destroyed tanks (override via ALT)  
-   Save-Shoot Lite: блокування стрільби по союзниках/знищених танках (обхід через ALT)
+1. Auto-clear game cache on exit  
+   Автоматичне очищення кешу гри при виході
 
 2. Highlighting friends/clanmates in team lists with a special symbol  
    Підсвічування друзів/кланових гравців у списках команд спеціальним символом
@@ -126,9 +126,6 @@
 
 9. Disable elite widgets  
    Вимкнення віджетів елітності
-
-10. Auto-clear game cache on exit  
-    Автоматичне очищення кешу гри при виході
 
 ---
 
