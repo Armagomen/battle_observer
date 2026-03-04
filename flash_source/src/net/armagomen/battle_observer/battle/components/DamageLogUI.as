@@ -18,9 +18,9 @@ package net.armagomen.battle_observer.battle.components
 		
 		override protected function onPopulate():void
 		{
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				var settings:Object = this.getSettings().settings;
 				this.x = settings.x;
 				this.y = settings.y;
@@ -31,10 +31,6 @@ package net.armagomen.battle_observer.battle.components
 					this.x = Math.ceil(App.appWidth >> 1) + this.getSettings().settings.x;
 					this.testBounds();
 				}
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

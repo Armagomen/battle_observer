@@ -52,9 +52,9 @@
 		
 		override protected function onPopulate():void
 		{
-			if (this.not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				this.params = this.getSettings();
 				this.x = App.appWidth >> 1;
 				this._container = new Sprite()
@@ -63,10 +63,6 @@
 				this.loader.load(new URLRequest("../../gui/maps/icons/battle_observer/sixth_sense/" + this.getIconName()));
 				this.hideComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
 				this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

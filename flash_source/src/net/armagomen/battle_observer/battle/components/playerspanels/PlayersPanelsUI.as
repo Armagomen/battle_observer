@@ -37,9 +37,9 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		
 		override protected function onPopulate():void
 		{
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				this.spotted_fix = this.getSettings().panels_spotted_fix;
 				this.panels = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 				if (this.panels)
@@ -47,10 +47,6 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 					this.addListeners();
 					setTimeout(this.updateItems, 1000);
 				}
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

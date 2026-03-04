@@ -23,7 +23,7 @@ DEL %GameInstalled_ModsDir%\me.poliroid.modslistapi*
 DEL %GameInstalled_ModsDir%\polarfox.vxSettingsApi*
 
 "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx0 -x!*.py %ModFile% %sources%\*
-REM "%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 -x!armagomen.battle_observer_icons* %AutoUpdate% %OutputDir%\*
+"%ProgramFiles%\7-Zip\7z.exe" a -tzip -r -mx9 -x!armagomen.battle_observer_icons* %AutoUpdate% %OutputDir%\*
 
 Xcopy %OutputDir% %GameInstalled_ModsDir% /e /i /d
 

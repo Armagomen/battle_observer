@@ -17,9 +17,9 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 		
 		override protected function onPopulate():void
 		{
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				var correlation:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				this.updateCorrelationBar(correlation);
 				var styles:Object   = {"league": League, "league_big": LeagueBig, "normal": Default};
@@ -33,10 +33,6 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 				}
 				var q_progress:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
 				this.battlePage.addChildAt(q_progress, this.battlePage.getChildIndex(correlation) - 1);
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

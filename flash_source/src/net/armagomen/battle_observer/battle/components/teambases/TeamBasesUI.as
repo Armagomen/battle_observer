@@ -18,17 +18,13 @@ package net.armagomen.battle_observer.battle.components.teambases
 		
 		override protected function onPopulate():void 
 		{
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				this.settings = this.getSettings();
 				this.colors = this.getColors().global;
 				this.yPos = this.settings.y >= 0 ? this.settings.y : App.appHeight + this.settings.y;
 				this.hideComponent(BATTLE_VIEW_ALIASES.TEAM_BASES_PANEL);
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

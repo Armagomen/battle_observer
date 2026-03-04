@@ -18,16 +18,12 @@
 		
 		override protected function onPopulate():void
 		{
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				this.x = App.appWidth;
 				this.battleTimer = new TextExt( -8, 0, Constants.largeText, TextFieldAutoSize.RIGHT, this);
 				this.hideComponent(BATTLE_VIEW_ALIASES.BATTLE_TIMER);
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

@@ -35,10 +35,9 @@ package net.armagomen.battle_observer.battle.components
 		
 		override protected function onPopulate():void
 		{
-			
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				this.holdersCache[0] = new Dictionary();
 				this.holdersCache[1] = new Dictionary();
 				
@@ -55,10 +54,6 @@ package net.armagomen.battle_observer.battle.components
 				this.fullWidth = settings["statistics_panels_full_width"];
 				this.addListeners();
 				this.updateItems();
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

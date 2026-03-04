@@ -70,11 +70,13 @@ class _ShotResult(_CrosshairShotResults):
         return shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN
 
     @classmethod
-    def _computeArmorDefault(cls, collision_details, shell, piercing_power, entity):
+    def _computeArmorDefault(cls, collision_details, shell, full_piercing_power, entity):
         armor = 0
+        piercing_power = full_piercing_power
         ignored_materials = set()
+        isJet = False
         jet_loss = cls._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
-        jet_start_dist = 0
+        jet_start_dist = 0.0
         no_damage = True
         ricochet = False
 
@@ -85,10 +87,10 @@ class _ShotResult(_CrosshairShotResults):
             if not mat_info or (detail.compName, mat_info.kind) in ignored_materials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else 1.0
-            if jet_start_dist > 0:
+            if isJet:
                 jetDist = detail.dist - jet_start_dist
-                if jetDist > 0:
-                    piercing_power = max(0, piercing_power * (1.0 - jetDist * jet_loss))
+                if jetDist > 0.0:
+                    piercing_power *= 1.0 - jetDist * jet_loss
             else:
                 ricochet = cls._shouldRicochet(shell, hitAngleCos, mat_info)
                 if ricochet:
@@ -97,7 +99,8 @@ class _ShotResult(_CrosshairShotResults):
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
-            if jet_loss > 0:
+            if jet_loss > 0.0:
+                isJet = True
                 jet_start_dist = detail.dist + mat_info.armor * cls.JET_FACTOR
             if mat_info.collideOnceOnly:
                 ignored_materials.add((detail.compName, mat_info.kind))
@@ -223,24 +226,23 @@ class Randomizer(object):
 
     @classmethod
     def _updateRandomization(cls, vehicle):
-        if vehicle is None:
+        if vehicle is None or not user_settings.armor_calculator[GLOBAL.ENABLED]:
             _ShotResult.RANDOMIZATION = DEFAULT_RANDOMIZATION
             return
-        if user_settings.armor_calculator[GLOBAL.ENABLED]:
-            data = {cls.GUNNER_ARMORER: [], cls.LOADER_AMMUNITION_IMPROVE: []}
-            for _, tman in vehicle.crew:
-                if not tman or not tman.canUseSkillsInCurrentVehicle:
-                    continue
-                for skill_name in tman.getPossibleSkills().intersection(data):
-                    data[skill_name].append(cls.getCurrentSkillEfficiency(tman, skill_name))
-            randomization_min, randomization_max = DEFAULT_RANDOMIZATION
-            for skill_name, value in data.items():
-                if value:
-                    percent = sum(value) / len(value)
-                    randomization_min += percent
-                    if skill_name == cls.GUNNER_ARMORER:
-                        randomization_max -= percent
-            _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
+        data = {cls.GUNNER_ARMORER: [], cls.LOADER_AMMUNITION_IMPROVE: []}
+        for _, tman in vehicle.crew:
+            if not tman or not tman.canUseSkillsInCurrentVehicle:
+                continue
+            for skill_name in tman.getPossibleSkills().intersection(data):
+                data[skill_name].append(cls.getCurrentSkillEfficiency(tman, skill_name))
+        randomization_min, randomization_max = DEFAULT_RANDOMIZATION
+        for skill_name, value in data.items():
+            if value:
+                percent = sum(value) / len(value)
+                randomization_min += percent
+                if skill_name == cls.GUNNER_ARMORER:
+                    randomization_max -= percent
+        _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
         logDebug(cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
 
 

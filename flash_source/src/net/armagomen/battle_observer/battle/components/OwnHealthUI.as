@@ -18,10 +18,9 @@ package net.armagomen.battle_observer.battle.components
 		
 		override protected function onPopulate():void 
 		{
-			
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				this.onResizeHandle(null);
 				var settings:Object = this.getSettings();
 				var colors:Object = this.getColors().global;
@@ -29,10 +28,6 @@ package net.armagomen.battle_observer.battle.components
 				this.own_health.setOutline(180, 22);
 				this.own_health.addTextField(90, -3, TextFieldAutoSize.CENTER, Constants.middleText);
 				this.addChild(this.own_health);
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

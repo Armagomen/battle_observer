@@ -15,9 +15,9 @@ package net.armagomen.battle_observer.battle.components
 		
 		override protected function onPopulate():void
 		{
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				var damageLogPanel:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_DAMAGE_LOG_PANEL);
 				if (damageLogPanel)
 				{
@@ -38,10 +38,6 @@ package net.armagomen.battle_observer.battle.components
 					this.logs.fixed = true;
 					App.utils.data.cleanupDynamicObject(settings);
 				}
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

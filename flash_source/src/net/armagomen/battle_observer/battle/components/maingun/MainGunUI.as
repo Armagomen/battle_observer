@@ -33,10 +33,9 @@ package net.armagomen.battle_observer.battle.components.maingun
 		
 		override protected function onPopulate():void
 		{
-			
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				var _icons:Sprite = new Sprite();
 				_icons.y = 2;
 				this.addChild(_icons);
@@ -73,10 +72,6 @@ package net.armagomen.battle_observer.battle.components.maingun
 				}
 				
 				this.testBounds();
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

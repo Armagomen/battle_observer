@@ -8,10 +8,11 @@
     <movie fps="25" />
     <movie width="1024" />
     <movie height="768" />
-    <movie version="32" />
+    <movie version="28" />
     <movie minorVersion="0" />
     <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
+    <movie preferredSDK="Flex 4.6.0, AIR 3.1;4.6.0, 3.1;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
@@ -42,7 +43,7 @@
     <option linkReport="" />
     <option loadExterns="" />
     <option staticLinkRSL="True" />
-    <option additional="-use-direct-blit=true&#xA;-use-gpu=true" />
+    <option additional="-use-direct-blit=true&#xA;-use-gpu=true&#xA;-compress=false" />
     <option compilerConstants="" />
     <option minorVersion="" />
   </build>

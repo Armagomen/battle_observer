@@ -14,18 +14,13 @@ package net.armagomen.battle_observer.battle.components.debugpanel
 		
 		override protected function onPopulate():void
 		{
-			
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				var styles:Object   = {"minimal": Minimal, "modern": Modern, "big_lag": BigLag};
 				var settings:Object = this.getSettings();
 				this.debugPanel = this.addChild(new styles[settings.style](settings));
 				this.hideComponent(BATTLE_VIEW_ALIASES.DEBUG_PANEL);
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

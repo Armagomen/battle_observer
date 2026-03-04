@@ -17,18 +17,13 @@ package net.armagomen.battle_observer.battle.components
 		
 		override protected function onPopulate():void 
 		{
-			
-			if (not_initialized)
+			super.onPopulate();
+			if (this.notInitialized())
 			{
-				super.onPopulate();
 				var settings:Object = this.getSettings();
 				var fmt:TextFormat = Constants.cloneTextFormat(Constants.largeText);
 				fmt.size = settings.text_size;
 				this.armorCalc = new TextExt(settings.position.x, settings.position.y, fmt, TextFieldAutoSize.CENTER, this);
-			}
-			else
-			{
-				super.onPopulate();
 			}
 		}
 		

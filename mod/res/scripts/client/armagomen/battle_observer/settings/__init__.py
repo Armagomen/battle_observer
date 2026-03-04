@@ -64,7 +64,7 @@ class UserSettings(object):
             SIXTH_SENSE.SHOW_TIMER: False,
             SIXTH_SENSE.TIMER_GRAPHICS: True,
             SIXTH_SENSE.RANDOM: False,
-            SIXTH_SENSE.TIMER_GRAPHICS_COLOR: "#ffa500",
+            SIXTH_SENSE.TIMER_GRAPHICS_COLOR: "#FD7D1A",
             SIXTH_SENSE.TIMER_GRAPHICS_RADIUS: 38,
             SIXTH_SENSE.ICON_SIZE: 70
         }

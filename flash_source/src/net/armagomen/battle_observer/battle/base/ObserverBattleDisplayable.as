@@ -9,7 +9,7 @@ package net.armagomen.battle_observer.battle.base
 		public var getColors:Function;
 		public var isComp7Battle:Function;
 		public var doLog:Function;
-		public var not_initialized:Boolean = true;
+		private var not_initialized:Boolean = true;
 		public var battlePage:*;
 		
 		public function ObserverBattleDisplayable()
@@ -33,7 +33,6 @@ package net.armagomen.battle_observer.battle.base
 		{
 			this.battlePage = parent;
 			super.onPopulate();
-			this.not_initialized = false;
 		}
 		
 		override protected function onDispose():void
@@ -42,6 +41,16 @@ package net.armagomen.battle_observer.battle.base
 			this.removeChildren();
 			super.onDispose();
 			App.utils.data.cleanupDynamicObject(this);
+		}
+		
+		public function notInitialized():Boolean
+		{
+			if (this.not_initialized)
+			{
+				this.not_initialized = false;
+				return true;
+			}
+			return false;
 		}
 		
 		public function onResizeHandle(event:Event):void {}
