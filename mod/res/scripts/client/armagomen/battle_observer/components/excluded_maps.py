@@ -1,15 +1,17 @@
 from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.i18n.exluded_maps import EXCLUDED_MAPS_BY_LANG
+from armagomen.utils.common import delayedCall
 from armagomen.utils.dialogs import ExcludedMapsDialog
 from armagomen.utils.events import g_events
-from PlayerEvents import g_playerEvents
 from constants import PREMIUM_TYPE, PremiumConfigs
+from gui.ClientUpdateManager import g_clientUpdateManager
 from gui.game_control.wot_plus.utils import getExcludedMapsPromoData
 from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.event_dispatcher import showMapsBlacklistView
+from helpers import dependency
+from PlayerEvents import g_playerEvents
 from renewable_subscription_common.schema import renewableSubscriptionsConfigSchema
 from renewable_subscription_common.settings_constants import RS_TIER
-from helpers import dependency
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from skeletons.gui.game_control import IGameSessionController, IWotPlusController
 from skeletons.gui.lobby_context import ILobbyContext
@@ -32,16 +34,21 @@ class ExcludedMapsProcessor(object):
     def __init__(self):
         self.__enabled = False
         self.__isPremium = False
-        self.__isDialogVisible = False
+        self.__dialog = None
         self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
-        g_playerEvents.onConfigModelUpdated += self._onConfigModelUpdated
         g_events.onModSettingsChanged += self._onModSettingsChanged
+        g_clientUpdateManager.addCallbacks({'preferredMaps': self.__onPreferredMapsChanged})
 
     def fini(self):
         self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
         self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
         g_events.onModSettingsChanged -= self._onModSettingsChanged
+        g_clientUpdateManager.removeObjectCallbacks(self)
+
+    @property
+    def isLobby(self):
+        return self.appLoader.getSpaceID() == GuiGlobalSpaceID.LOBBY
 
     @property
     def _serverSettings(self):
@@ -54,16 +61,23 @@ class ExcludedMapsProcessor(object):
         self._serverSettings.onServerSettingsChange += self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify += self.__onPremiumNotify
         self.wotPlus.onDataChanged += self.__onWotPlusChanged
+        g_playerEvents.onConfigModelUpdated += self._onConfigModelUpdated
         self.__update()
 
     def onGUISpaceLeft(self, spaceID):
         if spaceID != GuiGlobalSpaceID.LOBBY:
             return
         self.__isPremium = False
-        self.__isDialogVisible = False
+        if self.__dialog is not None:
+            self.__dialog = None
         self._serverSettings.onServerSettingsChange -= self.__onServerSettingsChanged
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
         self.wotPlus.onDataChanged -= self.__onWotPlusChanged
+        g_playerEvents.onConfigModelUpdated -= self._onConfigModelUpdated
+
+    def __onPreferredMapsChanged(self, _):
+        if self.isLobby:
+            self.__update()
 
     def _onConfigModelUpdated(self, gpKey):
         if renewableSubscriptionsConfigSchema.gpKey == gpKey:
@@ -72,7 +86,8 @@ class ExcludedMapsProcessor(object):
     def _onModSettingsChanged(self, name, data):
         if name == MAIN.NAME and self.__enabled != data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
             self.__enabled = data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
-            self.__update()
+            if self.isLobby:
+                self.__update()
 
     def __onServerSettingsChanged(self, diff):
         if any(key in diff for key in SERVER_SETTINGS_DIFF_KEYS):
@@ -93,24 +108,26 @@ class ExcludedMapsProcessor(object):
 
     @wg_async
     def __showDialog(self, message):
-        self.__isDialogVisible = True
-        header = EXCLUDED_MAPS_BY_LANG[EXCLUDED_MAPS.HEADER]
-        dialog = yield wg_await(ExcludedMapsDialog().showExcludedMapsDialog(header, message))
+        self.__dialog = ExcludedMapsDialog()
+        dialog = yield wg_await(self.__dialog.show(EXCLUDED_MAPS_BY_LANG[EXCLUDED_MAPS.HEADER], message))
         if dialog.result == DialogButtons.RESEARCH:
             showMapsBlacklistView()
-        self.__isDialogVisible = False
+        self.__dialog = None
 
+    @delayedCall(3.0)
     def __update(self):
-        if not self.__enabled or self.__isDialogVisible or not self._serverSettings.isPreferredMapsEnabled():
+        if not self.__enabled or self.__dialog is not None or not self._serverSettings.isPreferredMapsEnabled():
             return
         mapsConfig = self._serverSettings.getPreferredMapsConfig()
-        usedSlots = sum(int(mapId > 0) for mapId, _ in self.itemsCache.items.stats.getMapsBlackList())
+        # usedSlots = sum(1 for mapId, _ in self.itemsCache.items.stats.getMapsBlackList() if mapId > 0)
+        usedSlots = len(self.itemsCache.items.stats.getMapsBlackList())
         isWotPlusAcc, wotPlusSlots = getExcludedMapsPromoData()
         totalSlots = sum([
             mapsConfig['defaultSlots'],
             mapsConfig['premiumSlots'] if self.__isPremium else 0,
             wotPlusSlots if isWotPlusAcc else 0
         ])
+
         if usedSlots < totalSlots:
             self.__showDialog(self.__getLocalizedMessage(totalSlots - usedSlots))
 

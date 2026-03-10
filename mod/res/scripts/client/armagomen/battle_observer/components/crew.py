@@ -44,7 +44,7 @@ class CrewProcessor(object):
     def showAccelerateDialog(self, vehicle, value, description):
         self.isDialogVisible = True
         message = self.getLocalizedMessage(value, description)
-        dialog_result = yield wg_await(CrewDialog().showCrewDialog(vehicle.userName, message))
+        dialog_result = yield wg_await(CrewDialog().show(vehicle.userName, message))
         if dialog_result.result == DialogButtons.SUBMIT:
             self.accelerateCrewXp(vehicle, value)
         elif dialog_result.result == DialogButtons.PURCHASE:

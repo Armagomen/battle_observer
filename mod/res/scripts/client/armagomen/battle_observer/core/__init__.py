@@ -29,7 +29,7 @@ class Core(object):
         if spaceID == GuiGlobalSpaceID.LOBBY:
             from armagomen.utils.dialogs import BannedDialog
             dialog = BannedDialog()
-            dialog.showDialog(self.userID, self.userName)
+            dialog.show(self.userID, self.userName)
             self.appLoader.onGUISpaceEntered -= self.showBanned
 
     @staticmethod

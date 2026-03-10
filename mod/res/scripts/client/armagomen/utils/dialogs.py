@@ -34,7 +34,7 @@ class DialogBase(object):
 class BannedDialog(DialogBase):
 
     @wg_async
-    def showDialog(self, databaseId, name):
+    def show(self, databaseId, name):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(getLogo())
         builder.setFormattedMessage(ban_info.format(databaseId, name))
@@ -85,7 +85,7 @@ class UpdaterDialogs(DialogBase):
 class LoadingErrorDialog(DialogBase):
 
     @wg_async
-    def showLoadingError(self, message, isLobby):
+    def show(self, message, isLobby):
         builder = WarningDialogBuilder()
         builder.setFormattedTitle(getLogo())
         builder.setFormattedMessage(message)
@@ -97,7 +97,7 @@ class LoadingErrorDialog(DialogBase):
 class CrewDialog(DialogBase):
 
     @wg_async
-    def showCrewDialog(self, vehicle_name, message):
+    def show(self, vehicle_name, message):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), vehicle_name)))
         builder.setFormattedMessage(message)
@@ -111,7 +111,7 @@ class CrewDialog(DialogBase):
 class ExcludedMapsDialog(DialogBase):
 
     @wg_async
-    def showExcludedMapsDialog(self, header, message):
+    def show(self, header, message):
         builder = InfoDialogBuilder()
         builder.setFormattedTitle(GLOBAL.NEW_LINE.join((getLogo(), header)))
         builder.setFormattedMessage(message)

@@ -3,8 +3,8 @@ from helpers import getClientLanguage
 
 EXCLUDED_MAPS_BY_LANG = {
     "uk": {
-        "header": "Список виключених карт",
-        "message": "Ви маєте %s доступних слотів для виключення карт.\nПерейти до вибору карт для виключення?"
+        "header": "Список виключених мап",
+        "message": "Ви маєте %s доступних слотів для виключення мап.\nПерейти до вибору мап для виключення?"
     },
     "pl": {
         "header": "Lista wykluczonych map",

@@ -1,4 +1,5 @@
 # coding=utf-8
+import functools
 import importlib
 import json
 import locale
@@ -6,7 +7,6 @@ import os
 import shutil
 from collections import namedtuple
 from colorsys import hsv_to_rgb
-from functools import partial
 from io import open as _open
 
 import BigWorld
@@ -53,11 +53,20 @@ def getEntity(entity_id):
 
 
 def addCallback(delay, callMethod, *args, **kwargs):
-    return BigWorld.callback(delay, partial(callMethod, *args, **kwargs) if args or kwargs else callMethod)
+    return BigWorld.callback(delay, functools.partial(callMethod, *args, **kwargs) if args or kwargs else callMethod)
 
 
 def cancelCallback(callbackID):
     return BigWorld.cancelCallback(callbackID)
+
+
+def delayedCall(delay):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            return addCallback(delay, func, *args, **kwargs)
+        return wrapper
+    return decorator
 
 
 def getPreferencesDir():

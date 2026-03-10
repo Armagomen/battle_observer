@@ -27,7 +27,7 @@ class ErrorMessages(object):
             yield error_template.format(self.messages.pop())
 
     def showDialog(self, isLobby):
-        LoadingErrorDialog().showLoadingError(GLOBAL.NEW_LINE.join(self._messages), isLobby)
+        LoadingErrorDialog().show(GLOBAL.NEW_LINE.join(self._messages), isLobby)
 
     def fini(self):
         ServicesLocator.appLoader.onGUISpaceEntered -= self.__show
