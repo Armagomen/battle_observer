@@ -2,8 +2,8 @@
 import json
 from random import choice
 
-from armagomen._constants import API_KEY, getLogo, URLS
-from armagomen.battle_observer.i18n.donate_messages import LINKS_FORMAT, MESSAGES
+from armagomen._constants import API_KEY, getLogo, IMG, URLS
+from armagomen.battle_observer.i18n.donate_messages import MESSAGES
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from armagomen.utils.logging import debug, logDebug, logInfo, logWarning
@@ -24,9 +24,6 @@ from wg_async import wg_async
 CLAN_ABBREV = "BO-UA"
 CLAN_ID = 500223690
 
-PATTERN = getLogo(big=False) + ("<p><font color='#ffff29'>{msg}</font></p>\n"
-                                "<p><font color='#fafafa'>{online}</font></p>\n"
-                                "<p><textformat leading='2'>{img} <a href='event:{url}'>{name}</a></textformat></p>")
 TIMEOUT = 40
 
 
@@ -34,6 +31,13 @@ class ClanInvite(object):
     API_URL = "https://api.worldoftanks.eu/wot/clans/info/?application_id={}&clan_id={}&fields=members_count".format(API_KEY, CLAN_ID)
 
     def __init__(self):
+        self.message = ("{0}<p><font color='#ffff66'>"
+                        "Запрошуємо тебе до нашого клану.<br><a href='event:{1}'>[{1}]</a> — "
+                        "отримуй більше бонусів у грі: бустери, камуфляжі та багато іншого."
+                        "<br>Умови вступу: щонайменше 1000 боїв, активність 2–3 рази на тиждень."
+                        "<br>Якщо не заходиш онлайн протягом місяця — тебе буде виключено з клану."
+                        "</font></p>"
+                        )
         self.show_invite = CURRENT_REALM == "EU" and getClientLanguage() in ("ru", "uk")
         if self.show_invite:
             self.checkClanMembers()
@@ -51,14 +55,7 @@ class ClanInvite(object):
 
     def pushClanInviteMessage(self):
         if self.show_invite and not g_clanCache.isInClan:
-            message = ("{0}<p><font color='#ffff66'>"
-                       "Запрошуємо тебе до нашого клану.<br><a href='event:{1}'>[{1}]</a> — "
-                       "отримуй більше бонусів у грі: бустери, камуфляжі та багато іншого."
-                       "<br>Умови вступу: щонайменше 1000 боїв, активність 2–3 рази на тиждень."
-                       "<br>Якщо не заходиш онлайн протягом місяця — тебе буде виключено з клану."
-                       "</font></p>"
-                       ).format(getLogo(big=False), CLAN_ABBREV)
-            pushMessage(message, type=SM_TYPE.Warning)
+            pushMessage(self.message.format(getLogo(big=False), CLAN_ABBREV), type=SM_TYPE.Warning)
         self.show_invite = False
 
 
@@ -66,18 +63,25 @@ class Donate(object):
 
     def __init__(self):
         self.__lastMessage = None
+        self.pattern = (
+            "<p><font color='#ffff29'>{msg}</font></p>",
+            "<p><font color='#fafafa'>{online}</font></p>",
+            "<p><textformat leading='2'>{img} <a href='event:{url}'>{name}</a></textformat></p><br>"
+        )
 
     def getRandomMessage(self):
         message = choice(MESSAGES)
-        while message is self.__lastMessage:
+        while message == self.__lastMessage and len(MESSAGES) > 1:
             message = choice(MESSAGES)
         self.__lastMessage = message
-        return message.decode('utf-8')
+        return message.decode("utf-8")
 
     @wg_async
     def pushDonateMessage(self):
         stats_info = yield get_stats_by_region()
-        message = PATTERN.format(msg=self.getRandomMessage(), online=stats_info, **LINKS_FORMAT)
+        message = getLogo(big=False) + "\n".join(self.pattern).format(
+            msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=IMG.MONO, name="DONATE.")
+
         pushMessage(message, type=SM_TYPE.Warning)
         logInfo("A donation message has been sent to the user. Repeated in {} minutes.", TIMEOUT)
 

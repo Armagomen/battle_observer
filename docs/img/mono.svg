@@ -1,0 +1,13 @@
+<svg width="512" height="512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2c2f36"/>
+      <stop offset="100%" stop-color="#1a1c20"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="512" height="512" rx="48" ry="48" fill="url(#bgGradient)"/>
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central"
+        font-family="Arial, sans-serif" font-size="140" fill="white" font-weight="bold">
+    mono
+  </text>
+</svg>

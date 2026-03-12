@@ -1,5 +1,4 @@
 # coding=utf-8
-from armagomen._constants import IMG, URLS
 from helpers import getClientLanguage
 
 language = getClientLanguage()
@@ -30,8 +29,3 @@ MESSAGES = {
     "Congratulations, team! Our project is growing thanks to all of you. If you'd like to support us, click the link in the description. Every donation matters!",
     "Friends, thank you for staying with us! If you want to contribute to the development of our project, click the link. Your support means a lot to us!"
 ))
-
-LINKS_FORMAT = {
-    "uk": {"url": URLS.MONO, "img": IMG.MONO, "name": "MONO - поповнити банку."},
-    "ru": {"url": URLS.MONO, "img": IMG.MONO, "name": "DONATE. (Юзай G-Pay несли донатиш не из Украины)"},
-}.get(language, {"url": URLS.MONO, "img": IMG.MONO, "name": "DONATE. (Use G‑Pay if you’re donating from outside Ukraine)"})

@@ -22,18 +22,14 @@ IMG = namedtuple("IMG", "MONO PATREON DONATELLO")(
 
 URLS = namedtuple("URLS", (
     "UPDATE_GITHUB_API_URL",
-    "MONO",
-    "PATREON",
+    "DONATE",
     "DISCORD",
-    "UPDATE",
-    "DONATELLO"
+    "UPDATE"
 ))(
     "https://api.github.com/repos/Armagomen/battle_observer/releases/latest",
-    "https://send.monobank.ua/jar/5BZHrPrJwr",
-    "https://patreon.com/armagomen",
+    "https://armagomen.github.io/battle_observer/",
     "https://discord.gg/Nma5T5snKW",
-    "https://github.com/Armagomen/battle_observer/releases/download/",
-    "https://donatello.to/ArmagomenUA"
+    "https://github.com/Armagomen/battle_observer/releases/download/"
 )
 
 VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(

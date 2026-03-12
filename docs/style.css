@@ -1,0 +1,145 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #121212;
+  color: #e0e0e0;
+  max-width: 780px;
+  margin: auto;
+  padding: 10px;
+  user-select: none;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #fff;
+}
+
+.ukraine-gradient {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 42px;
+  font-weight: bold;
+  background: linear-gradient(to bottom,
+    #289BFA 0%,
+    #289BFA 50%,
+    #ffd700 60%,
+    #ffd700 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+.donate {
+  background: #1e1e1e;
+  margin: 15px 0;
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  height: 50px;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.donate:hover {
+  transform: scale(1.05);
+}
+
+.donation__icons img {
+  width: 60px;
+  height: auto;
+}
+
+.mono {
+  filter: invert(100%);
+}
+
+.donation__info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fafafa;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.donation__info.extra {
+  gap: 30px;
+}
+
+.donation__info strong,
+.card-number {
+  color: #90caf9;
+}
+
+.currency {
+  font-weight: bold;
+}
+
+.donation__copy {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  background: url("img/copy.svg") no-repeat center;
+  background-size: contain;
+  filter: invert(100%);
+  margin-left: auto;
+}
+
+.card:hover::after {
+  content: "Click to copy";
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(50, 50, 50, 0.9);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.toast {
+  visibility: hidden;
+  min-width: 250px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  font-size: 30px;
+  border-radius: 4px;
+  padding: 10px;
+  position: fixed;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+.toast.show {
+  visibility: visible;
+  opacity: 1;
+}
+
+footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 18px;
+  color: #999;
+}
+
+footer .recipient {
+  margin-top: 6px;
+  font-weight: bold;
+  font-size: 20px;
+  color: #e0e0e0;
+}
