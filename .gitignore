@@ -5,5 +5,5 @@
 *.db
 /swc/
 /mod/res/gui/flash/
-/flash_source/obj/
-/flash_source_hangar/obj/
+/as/flash_source/obj/
+/as/flash_source_hangar/obj/
