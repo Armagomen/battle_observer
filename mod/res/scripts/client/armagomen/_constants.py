@@ -14,11 +14,9 @@ def getLogo(big=True):
     return "<img src='{}/logo/small.png' width='220' height='14' vspace='16'>".format(IMAGE_DIR)
 
 
-IMG = namedtuple("IMG", "MONO PATREON DONATELLO")(
-    "<img src='{}/donate/mono.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/patreon.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR),
-    "<img src='{}/donate/donatello.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
-)
+MONEY_PNG = "<img src='{}/donate/money.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
+
+
 
 URLS = namedtuple("URLS", (
     "UPDATE_GITHUB_API_URL",
