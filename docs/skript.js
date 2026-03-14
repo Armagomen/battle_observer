@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+  // Клік по блоках з данними для копіювання в буфер
   function showToast(message) {
     const toast = document.getElementById("toast");
     toast.textContent = message;
