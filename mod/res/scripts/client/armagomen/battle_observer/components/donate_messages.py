@@ -2,7 +2,7 @@
 import json
 from random import choice
 
-from armagomen._constants import API_KEY, getLogo, IMG, URLS
+from armagomen._constants import API_KEY, getLogo, MONEY_PNG, URLS
 from armagomen.battle_observer.i18n.donate_messages import MESSAGES
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import openWebBrowser, overrideMethod
@@ -80,7 +80,7 @@ class Donate(object):
     def pushDonateMessage(self):
         stats_info = yield get_stats_by_region()
         message = getLogo(big=False) + "\n".join(self.pattern).format(
-            msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=IMG.MONO, name="DONATE.")
+            msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=MONEY_PNG, name="DONATE.")
 
         pushMessage(message, type=SM_TYPE.Warning)
         logInfo("A donation message has been sent to the user. Repeated in {} minutes.", TIMEOUT)
