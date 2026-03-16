@@ -30,7 +30,7 @@ localization = {
     "configSelect": {
         "header": "Einstellungsoptionen",
         "selector": "Einstellungen auswählen:",
-        "donate_button_ua": "MONO Bank",
+        "donate_button_ua": "Donate",
         "discord_button": "Discord-Modserver",
         "reload_config": "Einstellungen neu laden",
     },

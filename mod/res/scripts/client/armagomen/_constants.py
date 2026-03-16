@@ -16,8 +16,6 @@ def getLogo(big=True):
 
 MONEY_PNG = "<img src='{}/donate/money.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
 
-
-
 URLS = namedtuple("URLS", (
     "UPDATE_GITHUB_API_URL",
     "DONATE",

@@ -30,7 +30,7 @@ localization = {
     "configSelect": {
         "header": "Варианты настроек",
         "selector": "Выбрать настройки:",
-        "donate_button_ua": "Донат в Банк",
+        "donate_button_ua": "Donate",
         "discord_button": "Discord сервер модификации",
         "reload_config": "Перезагрузить настройки"
     },

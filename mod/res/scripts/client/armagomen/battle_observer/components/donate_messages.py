@@ -23,7 +23,6 @@ from wg_async import wg_async
 
 CLAN_ABBREV = "BO-UA"
 CLAN_ID = 500223690
-
 TIMEOUT = 40
 
 
@@ -65,8 +64,8 @@ class Donate(object):
         self.__lastMessage = None
         self.pattern = (
             "<p><font color='#ffff29'>{msg}</font></p>",
+            "<p>{img} <a href='event:{url}'>DONATE.</a></p>",
             "<p><font color='#fafafa'>{online}</font></p>",
-            "<p><textformat leading='2'>{img} <a href='event:{url}'>{name}</a></textformat></p><br>"
         )
 
     def getRandomMessage(self):
@@ -80,7 +79,7 @@ class Donate(object):
     def pushDonateMessage(self):
         stats_info = yield get_stats_by_region()
         message = getLogo(big=False) + "\n".join(self.pattern).format(
-            msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=MONEY_PNG, name="DONATE.")
+            msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=MONEY_PNG)
 
         pushMessage(message, type=SM_TYPE.Warning)
         logInfo("A donation message has been sent to the user. Repeated in {} minutes.", TIMEOUT)

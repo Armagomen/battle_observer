@@ -30,7 +30,7 @@ localization = {
     "configSelect": {
         "header": "SELECT CONFIG DIR",
         "selector": "Config",
-        "donate_button_ua": "MONO BANK",
+        "donate_button_ua": "Donate",
         "discord_button": "Discord support & chat",
         "reload_config": "Reload config files",
     },
