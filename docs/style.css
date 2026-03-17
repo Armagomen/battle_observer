@@ -118,11 +118,11 @@ h1 {
   background-color: #333;
   color: #fff;
   text-align: center;
-  font-size: 30px;
+  font-size: 20px;
   border-radius: 4px;
   padding: 10px;
   position: fixed;
-  top: 30px;
+  top: 40px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
