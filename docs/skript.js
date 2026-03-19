@@ -19,9 +19,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 2000);
   }
 
-  document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', e => {
-      const value = card.getAttribute('data-value');
+  document.querySelectorAll('.copy_value').forEach(copy_value => {
+    copy_value.addEventListener('click', e => {
+      const value = copy_value.getAttribute('data-value');
       navigator.clipboard.writeText(value).then(() => {
         showToast("Copied: " + value + " ✅");
       });

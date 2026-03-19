@@ -29,16 +29,16 @@ h1 {
   -webkit-text-fill-color: transparent;
 }
 
-
 .donate {
   background: #1e1e1e;
   margin: 15px 0;
-  padding: 15px;
-  border-radius: 8px;
+  padding: 10px 15px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  height: 50px;
+  justify-content: center;
+  gap: 10px;
+  height: auto;
   cursor: pointer;
   transition: transform 0.3s;
 }
@@ -47,21 +47,25 @@ h1 {
   transform: scale(1.05);
 }
 
-.donation__icons img {
+.donation_icons img {
   width: 60px;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .mono_icon img {
   width: 80px;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
 .mono {
   filter: invert(100%);
 }
 
-.donation__info {
+.donation_info {
   flex: 1;
   display: flex;
   align-items: center;
@@ -73,12 +77,11 @@ h1 {
   font-family: 'Roboto Mono', monospace;
 }
 
-.donation__info.extra {
+.donation_info.extra {
   gap: 30px;
 }
 
-.donation__info strong,
-.card-number {
+.copy_info {
   color: #90caf9;
 }
 
@@ -86,7 +89,7 @@ h1 {
   font-weight: bold;
 }
 
-.donation__copy {
+.copy_icon {
   position: relative;
   width: 25px;
   height: 25px;
@@ -96,7 +99,7 @@ h1 {
   margin-left: auto;
 }
 
-.card:hover::after {
+.copy_value:hover::after {
   content: "Click to copy: " attr(data-value);
   position: absolute;
   bottom: 110%;
