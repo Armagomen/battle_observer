@@ -58,7 +58,7 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
         if spaceID == GuiGlobalSpaceID.BATTLE:
             prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
             if prebattleCtrl is not None:
-                prebattleCtrl.onSelectionConfirmed += self.__updateCurrVehicleInfo
+                prebattleCtrl.onSelectionConfirmed -= self.__updateCurrVehicleInfo
             self.toggleTrigger(False)
             self.avatar = None
 
@@ -67,7 +67,9 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
     def onTriggerActivated(self, params):
         if params.get('type') == self.__trigger_type:
-            addCallback(self.latency, self.changeControlMode)
+            input_handler = getattr(self.avatar, "inputHandler", None)
+            if input_handler is not None:
+                addCallback(self.latency, self.changeControlMode, input_handler)
 
     def isTriggerEnabled(self):
         vehicle = self.sessionProvider.getArenaDP().getVehicleInfo()
@@ -78,15 +80,15 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
             return False
         return True
 
-    def changeControlMode(self):
-        input_handler = self.avatar.inputHandler
-        if input_handler is not None and input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
+    def changeControlMode(self, input_handler):
+        if input_handler.ctrlModeName == CTRL_MODE_NAME.SNIPER:
             aiming_system = input_handler.ctrl.camera.aimingSystem
-            input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE, prevModeName=input_handler.ctrlModeName,
+            input_handler.onControlModeChanged(CTRL_MODE_NAME.ARCADE,
+                                               prevModeName=CTRL_MODE_NAME.SNIPER,
                                                preferredPos=aiming_system.getDesiredShotPoint(),
                                                turretYaw=aiming_system.turretYaw,
                                                gunPitch=aiming_system.gunPitch,
-                                               aimingMode=input_handler.ctrl._aimingMode,
+                                               aimingMode=input_handler.ctrl.aimingMode,
                                                closesDist=False,
                                                curVehicleID=self.avatar.playerVehicleID)
 
