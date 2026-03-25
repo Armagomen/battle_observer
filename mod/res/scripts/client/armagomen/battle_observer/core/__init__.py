@@ -4,6 +4,7 @@ from armagomen.utils.events import g_events
 from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
 from armagomen.utils.online import user_login, user_logout
+
 from helpers import dependency
 from skeletons.connection_mgr import IConnectionManager
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
@@ -116,9 +117,8 @@ class Core(object):
         from gui.Scaleform.required_libraries_config import BATTLE_REQUIRED_LIBRARIES
 
         if not is_replay:
-            from gui.Scaleform.required_libraries_config import LOBBY_REQUIRED_LIBRARIES
-            g_overrideScaleFormViewsConfig.lobbyPackages.append("armagomen.battle_observer.lobby")
-            LOBBY_REQUIRED_LIBRARIES.append('modBattleObserverHangar.swf')
+            from armagomen.battle_observer import hangar_gf
+            hangar_gf.addHooks()
 
         BATTLE_REQUIRED_LIBRARIES.append('modBattleObserver.swf')
         for guiType in BATTLES_RANGE:

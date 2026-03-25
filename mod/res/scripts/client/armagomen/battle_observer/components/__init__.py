@@ -28,8 +28,6 @@ def loadComponents(is_replay):
         'donate_messages'
     ]
 
-    wg_only = ['auto_claim_clan_reward', 'donate_messages']
-
     if not is_replay:
         load.extend(not_replay)
 

@@ -1,4 +1,4 @@
-from armagomen._constants import BATTLE_ALIASES, LOBBY_ALIASES
+from armagomen._constants import BATTLE_ALIASES
 from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback
@@ -68,17 +68,3 @@ class ViewHandlerBattle(TryLoadHandler, ViewSettings):
     def onViewFounded(self, view):
         view._blToggling.update(self._components)
         view.flashObject.as_BattleObserverCreate(self._components)
-
-
-class ViewHandlerLobby(TryLoadHandler):
-
-    def __init__(self):
-        listeners = ((VIEW_ALIAS.LOBBY, self.eventListener),)
-        super(ViewHandlerLobby, self).__init__(listeners, appNS=APP_NAME_SPACE.SF_LOBBY, scope=EVENT_BUS_SCOPE.LOBBY)
-
-    def eventListener(self, event):
-        self._getView(event.alias, self.onViewFounded)
-
-    @staticmethod
-    def onViewFounded(view):
-        view.flashObject.as_BattleObserverCreate(list(LOBBY_ALIASES))

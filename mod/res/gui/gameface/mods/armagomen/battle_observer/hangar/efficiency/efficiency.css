@@ -1,0 +1,31 @@
+.bo_effContainer {
+    display: flex;
+    position: absolute;
+    top: 63vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    transform-origin: center top;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 26px;
+    color: #fafafa;
+    text-shadow: 0 0 4px rgba(0,0,0,0.85);
+}
+
+.bo_effIcon {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+    margin-right: 4px;
+    margin-left: 10px;
+}
+
+.bo_effIcon_gun {
+    width: 22px;
+    height: 20px;
+    vertical-align: middle;
+    margin-right: 4px;
+    margin-left: 8px;
+}
