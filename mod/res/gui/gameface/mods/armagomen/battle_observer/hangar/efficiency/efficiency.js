@@ -7,14 +7,34 @@ const model = ModelObserver("Observer_Efficiency_UI");
 let effContainer;
 
 function applyScale() {
-    const baseWidth = 1920, baseHeight = 1080;
-    const scaleX = media.width / baseWidth;
-    const scaleY = media.height / baseHeight;
-    const scale = Math.min(scaleX, scaleY, media.scale);
+    let scale = 1;
 
-    effContainer.style.top = "63vh";
-    effContainer.style.left = "50vw";
-    effContainer.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    const fightButton = document.querySelector('#fight-button');
+    if (fightButton) {
+        const style = window.getComputedStyle(fightButton);
+        const transform = style.transform;
+
+        if (transform && transform !== "none") {
+            const match = transform.match(/scale\(([^)]+)\)/);
+            if (match) {
+                const parts = match[1].split(",");
+                scale = parseFloat(parts[parts.length - 1]);
+            } else if (transform.startsWith("matrix")) {
+                const values = transform.match(/matrix\(([^)]+)\)/)[1].split(",");
+                scale = parseFloat(values[3]);
+            }
+        }
+
+        const rect = fightButton.getBoundingClientRect();
+        const bottom = rect.bottom;
+
+        const offset = Math.floor(10 * scale);
+        const newTopPx = bottom + offset;
+
+        effContainer.style.top = `${newTopPx}px`;
+        effContainer.style.left = "50vw";
+        effContainer.style.transform = `translateX(-50%) scale(${scale})`;
+    }
 }
 
 function updateEfficiency() {
@@ -54,14 +74,14 @@ engine.whenReady.then(async () => {
 
     media.onUpdate(() => {
         updateEfficiency();
-        applyScale();
+        setTimeout(applyScale, 100);
     });
     media.subscribe();
 
     model.onUpdate(updateEfficiency);
     model.subscribe();
 
-    applyScale();
+    setTimeout(applyScale, 100);
 
     const observer = new MutationObserver(mutations => {
         for (const m of mutations) {

@@ -354,6 +354,7 @@ def getPercent(param_a, param_b):
 
 
 def getEncoding():
+    # type: () -> str
     custom_locale_encoding_alias = {
         'cp65001': UTF_8,
         'utf8': UTF_8,

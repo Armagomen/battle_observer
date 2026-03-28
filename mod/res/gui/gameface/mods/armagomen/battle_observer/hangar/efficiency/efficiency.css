@@ -1,17 +1,16 @@
 .bo_effContainer {
     display: flex;
     position: absolute;
-    top: 63vh;
+    top: 80px;
     left: 50vw;
     transform: translate(-50%, -50%);
     transform-origin: center top;
-
     justify-content: center;
     align-items: center;
-
     font-size: 26px;
-    color: #fafafa;
-    text-shadow: 0 0 4px rgba(0,0,0,0.85);
+    color: rgb(215, 215, 215);
+    text-shadow: 0 0 6px rgba(0,0,0,0.9);
+    z-index: 30;
 }
 
 .bo_effIcon {

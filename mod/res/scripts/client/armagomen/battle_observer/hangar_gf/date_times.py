@@ -9,6 +9,7 @@ from gui.shared.utils.TimeInterval import TimeInterval
 from openwg_gameface import gf_mod_inject, ModDynAccessor
 from time import strftime
 
+
 class ClockModel(ViewModel):
 
     def __init__(self, properties=1, commands=0):
@@ -74,11 +75,10 @@ class DateTimesView(ViewComponent[ClockModel]):
         if self._timeInterval.isStarted() and enabled:
             return
         self._timeInterval.stop()
+        self.viewModel.setContent(GLOBAL.EMPTY_LINE)
         if enabled:
             self.updateTime()
             self._timeInterval.start()
-        else:
-            self.viewModel.setContent(GLOBAL.EMPTY_LINE)
 
     def onModSettingsChanged(self, name, data):
         if name == CLOCK.NAME:

@@ -7,14 +7,33 @@ const model = ModelObserver("Observer_DateTimes_UI");
 let clockContainer;
 
 function applyScale() {
-    const baseWidth = 1920, baseHeight = 1080;
-    const scaleX = media.width / baseWidth;
-    const scaleY = media.height / baseHeight;
-    const scale = Math.min(scaleX, scaleY, media.scale);
+    let scale = 1;
 
-    clockContainer.style.top = "26vh";
-    clockContainer.style.left = "4vw";
-    clockContainer.style.transform = `translateY(-50%) scale(${scale})`;
+    const fightButton = document.querySelector("#fight-button");
+    if (fightButton) {
+        const style = window.getComputedStyle(fightButton);
+        const transform = style.transform;
+
+        if (transform && transform !== "none") {
+            const match = transform.match(/scale\(([^)]+)\)/);
+            if (match) {
+                const parts = match[1].split(",");
+                scale = parseFloat(parts[parts.length - 1]);
+            } else if (transform.startsWith("matrix")) {
+                const values = transform.match(/matrix\(([^)]+)\)/)[1].split(",");
+                scale = parseFloat(values[3]);
+            }
+        }
+
+        const rect = fightButton.getBoundingClientRect();
+        const bottom = rect.bottom;
+        const offset = Math.floor(10 * scale);
+        const newTopPx = bottom + offset;
+
+        clockContainer.style.top = `${newTopPx}px`;
+        clockContainer.style.left = "4vw";
+        clockContainer.style.transform = `scale(${scale})`;
+    }
 }
 
 function updateClock() {
@@ -54,14 +73,14 @@ engine.whenReady.then(async () => {
 
     media.onUpdate(() => {
         updateClock();
-        applyScale();
+        setTimeout(applyScale, 100);
     });
     media.subscribe();
 
     model.onUpdate(updateClock);
     model.subscribe();
 
-    applyScale();
+    setTimeout(applyScale, 100);
 
     const observer = new MutationObserver(mutations => {
         for (const m of mutations) {
