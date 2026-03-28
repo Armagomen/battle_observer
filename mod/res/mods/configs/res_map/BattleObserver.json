@@ -1,0 +1,22 @@
+[
+  {
+    "type": "Layout",
+    "path": "coui://gui/gameface/mods/armagomen/battle_observer/hangar/clock/clock.html",
+    "parameters": {
+      "extension": "",
+      "entrance": "Observer_DateTimes_UI",
+      "impl": "gameface"
+    },
+    "itemID": "Observer_DateTimes_UI"
+  },
+  {
+    "type": "Layout",
+    "path": "coui://gui/gameface/mods/armagomen/battle_observer/hangar/efficiency/efficiency.html",
+    "parameters": {
+      "extension": "",
+      "entrance": "Observer_Efficiency_UI",
+      "impl": "gameface"
+    },
+    "itemID": "Observer_Efficiency_UI"
+  }
+]

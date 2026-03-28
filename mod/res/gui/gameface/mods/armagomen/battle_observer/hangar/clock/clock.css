@@ -1,0 +1,15 @@
+.bo_clockContainer {
+    display: flex;
+    position: absolute;
+    top: 26vh;
+    left: 4vw;
+
+    justify-content: center;
+    align-items: center;
+
+    font-size: 26px;
+    color: #fafafa;
+    text-shadow: 0 0 4px rgba(0,0,0,0.85);
+    transform: translateY(-50%);
+    transform-origin: left top;
+}

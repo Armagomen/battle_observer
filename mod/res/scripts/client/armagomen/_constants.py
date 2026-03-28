@@ -108,7 +108,7 @@ HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "ALIVE", "STYLES"))(
 CLOCK = namedtuple("CLOCK", (
     "NAME", "IN_BATTLE", "IN_LOBBY", "FORMAT", "UPDATE_INTERVAL", "DEFAULT_FORMAT_BATTLE", "DEFAULT_FORMAT_HANGAR"))(
     "clock", "battle", "hangar", "format", 1.0, "<textformat tabstops='[120]'>%d %b %Y<tab>%H:%M:%S</textformat>",
-    "<textformat tabstops='[135]'>%d %b %Y<tab>%H:%M:%S</textformat>")
+    "%d %b %Y   %H:%M:%S")
 
 __Sniper = namedtuple("SNIPER", (
     "NAME", "DYN_ZOOM", "ZOOM_STEPS", "STEPS", "ZOOM_EXPOSURE", "DEFAULT_STEPS",
@@ -232,7 +232,8 @@ BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
     "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI", "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI",
     "Observer_SixthSense_UI", "Observer_MiniMap_UI")
 
-LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME", "EFFICIENCY"))("Observer_DateTimes_UI", "Observer_Efficiency_UI")
+LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME", "EFFICIENCY"))(
+    "Observer_DateTimes_UI", "Observer_Efficiency_UI")
 
 DISTANCE = namedtuple("DISTANCE", ("NAME",))("distance_to_enemy", )
 

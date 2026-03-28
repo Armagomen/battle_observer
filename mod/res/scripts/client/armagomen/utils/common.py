@@ -15,6 +15,8 @@ import WGC
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
+from helpers import dependency
+from skeletons.gui.impl import IGuiLoader
 
 CONFIG_DIR = 'mod_battle_observer'
 MOD_CACHE = 'battle_observer'
@@ -413,3 +415,13 @@ def printDebuginfo():
     logDebug("SIXTH_SENSE_LIST: {}", SIXTH_SENSE_LIST)
     logDebug("ENCODING_LOCALE: {}", ENCODING_LOCALE)
     logDebug("IS_COMMON_TEST: {}", IS_COMMON_TEST)
+
+
+def get_parent_window():
+    """
+    Gets the main window of the application.
+    """
+    ui_loader = dependency.instance(IGuiLoader)
+    if ui_loader and ui_loader.windowsManager:
+        return ui_loader.windowsManager.getMainWindow()
+    return None
