@@ -60,7 +60,7 @@
 				this._container = new Sprite()
 				this._container.alpha = 0;
 				this.addChild(this._container);
-				this.loader.load(new URLRequest("../../gui/maps/icons/battle_observer/sixth_sense/" + this.getIconName()));
+				this.loader.load(new URLRequest("../maps/icons/battle_observer/sixth_sense/" + this.getIconName()));
 				this.hideComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
 				this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 			}
@@ -115,7 +115,7 @@
 			{
 				size += 1;
 			}
-			var scale:Number        = App.appHeight / 1080.0;
+			var scale:Number        = Math.sqrt(App.appHeight / 1080.0);
 			var afterScaleWH:Number = Math.min(180.0, Math.ceil(size * scale));
 			if (afterScaleWH % 2 != 0)
 			{

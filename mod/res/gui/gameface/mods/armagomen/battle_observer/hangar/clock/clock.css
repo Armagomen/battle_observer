@@ -2,7 +2,7 @@
     display: flex;
     position: absolute;
     top: 80px;
-    left: 4vw;
+    left: calc(3.6vw);
     justify-content: center;
     align-items: center;
     font-size: 26px;
@@ -11,4 +11,5 @@
     transform: translateY(-50%);
     transform-origin: left top;
     z-index: 29;
+    font-weight: 500;
 }

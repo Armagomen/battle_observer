@@ -9,11 +9,11 @@ def addHooks():
     from gui.impl.lobby.page.lobby_header import LobbyHeader
 
     @overrideMethod(LobbyHeader, '_initChildren')
-    @overrideMethod(Comp7LightLobbyHeader, '_initChildren')
-    @overrideMethod(Comp7LobbyHeader, '_initChildren')
     def hooked_initChildren(baseMethod, baseObject):
         baseMethod(baseObject)
         if not manager.isResMapValidated:
             return
         baseObject.setChildView(DateTimesView.viewLayoutID(), DateTimesView())
+        if isinstance(baseObject, (Comp7LobbyHeader, Comp7LightLobbyHeader)):
+            return
         baseObject.setChildView(HangarEfficiencyView.viewLayoutID(), HangarEfficiencyView())

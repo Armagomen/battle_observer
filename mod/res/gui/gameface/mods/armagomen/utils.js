@@ -1,0 +1,121 @@
+/**
+ * Waits for an element matching selector to appear in the DOM.
+ * Resolves with the element once found.
+ *
+ * @param {string} selector - CSS selector of the element to wait for.
+ * @returns {Promise<HTMLElement>}
+ */
+function waitForElement(selector) {
+    return new Promise(resolve => {
+        const existing = document.querySelector(selector);
+        if (existing) {
+            return resolve(existing);
+        }
+
+        const observer = new MutationObserver(mutations => {
+            for (const mutation of mutations) {
+                if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
+                    const el = document.querySelector(selector);
+                    if (el) {
+                        resolve(el);
+                        observer.disconnect();
+                        break;
+                    }
+                }
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+    });
+}
+
+
+/**
+ * Prints a flat list of all descendant elements of a given root
+ * to the console, including their index, tag name, id, class names,
+ * and key computed style properties (z-index, position, opacity, transform).
+ * Useful for debugging and inspecting the DOM stacking context and layout.
+ *
+ * @param {HTMLElement} [root=document.body] - The root element to start from.
+ * @returns {void} - Outputs element information to console.error.
+ *
+ * Example output:
+ * 0: <div>#main.container [z-index:auto] [position:relative] [opacity:1]
+ * 1: <span>.highlight [z-index:10] [position:absolute] [opacity:1] [transform:scale(1.2)]
+ */
+function printDOM(root = document.body) {
+    for (const [i, child] of [...root.querySelectorAll("*")].entries()) {
+        const style = window.getComputedStyle(child);
+
+        console.error(
+            `${i}: <${child.tagName.toLowerCase()}>` +
+            (child.id ? `#${child.id}` : "") +
+            (child.className ? `.${child.className}` : "") +
+            ` [z-index:${style.zIndex}] [position:${style.position}] [opacity:${style.opacity}]` +
+            (style.transform !== "none" ? ` [transform:${style.transform}]` : "")
+        );
+    }
+}
+
+
+/**
+ * Toggle container visibility explicitly using display property.
+ *
+ * @param {HTMLElement} container - The container to show/hide
+ * @param {boolean} visible - true to show, false to hide
+ * @param {string} displayType - Display mode when visible (default: "flex")
+ */
+function setVisibility(container, visible, displayType = "flex") {
+    container.style.display = visible ? displayType : "none";
+}
+
+
+/**
+ * Observe DOM mutations and toggle container visibility
+ * depending on whether nodes matching selector are added or removed.
+ *
+ * @param {HTMLElement} container - The container to show/hide
+ * @param {string} selector - CSS selector to check
+ * @returns {MutationObserver} - The observer instance
+ */
+function watchVisibilityBySelector(container, selector) {
+    // Initial state check
+    setVisibility(container, Boolean(document.querySelector(selector)));
+
+    const observer = new MutationObserver(mutations => {
+        for (const m of mutations) {
+            // If a matching node is added → set visible = true
+            if ([...m.addedNodes].some(n => n.matches?.(selector))) {
+                setVisibility(container, true);
+                return;
+            }
+            // If a matching node is removed → set visible = false
+            if ([...m.removedNodes].some(n => n.matches?.(selector))) {
+                setVisibility(container, false);
+                return;
+            }
+        }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    return observer;
+}
+
+
+async function getScaleAndNewPosition(selector, media, timeout = 200) {
+    await new Promise(resolve => setTimeout(resolve, timeout));
+
+    const scale = Math.min(Math.sqrt(media.height / 1080), media.scale);
+    const fightButton = await waitForElement(selector);
+    const rect = fightButton.getBoundingClientRect();
+    const offset = Math.floor(10 * scale);
+    const newTopPx = rect.bottom + offset;
+
+    return { scale, newTopPx };
+}
+
+// Export public functions and constants
+export { waitForElement, printDOM, setVisibility, watchVisibilityBySelector, getScaleAndNewPosition };
+
+
+

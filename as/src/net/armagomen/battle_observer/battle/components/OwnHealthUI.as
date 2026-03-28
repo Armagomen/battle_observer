@@ -38,9 +38,9 @@ package net.armagomen.battle_observer.battle.components
 			this.own_health = null;
 		}
 		
-		public function as_setOwnHealth(scale:Number, text:String, color:String):void
+		public function as_setOwnHealth(percent:Number, text:String, color:String):void
 		{
-			this.own_health.setNewScale(scale);
+			this.own_health.setNewScale(percent);
 			this.own_health.setText(text);
 			this.own_health.updateColor(color);
 		}
