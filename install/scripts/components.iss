@@ -8,7 +8,7 @@ Name: "user"; Description: {cm:types_user}; Flags: iscustom;
 
 [Components]
 Name: main; Description: {cm:main}; Flags: disablenouninstallwarning;
-Name: main/anti_anonymous; Description: {cm:anti_anonymous}; 
+Name: main/anti_anonymous; Description: {cm:anti_anonymous};
 Name: main/auto_crew_training; Description: {cm:auto_crew_training}; Types: armagomen;
 Name: main/auto_return_crew; Description: {cm:auto_return_crew}; Types: armagomen;
 Name: main/clear_cache_automatically; Description: {cm:clear_cache_automatically}; 
@@ -25,6 +25,11 @@ Name: main/ignore_commanders_voice; Description: {cm:ignore_commanders_voice}; T
 Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: armagomen;
 Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen;
 Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward}; Types: armagomen;
+
+Name: hangar_header; Description: {cm:hangar_header};
+Name: hangar_header/premium_timer; Description: {cm:premium_timer}; Types: armagomen;
+Name: hangar_header/hide_wotPlus; Description: {cm:hide_wotPlus}; Types: armagomen;
+Name: hangar_header/hide_shoop; Description: {cm:hide_shop}; Types: armagomen;
 
 Name: clock; Description: {cm:clock}; Flags: disablenouninstallwarning;
 Name: clock/hangar; Description: {cm:clock_hangar}; Types: armagomen;
@@ -202,6 +207,20 @@ begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('clock'));
     JSON_SetBool(Handle,'/hangar/enabled', WizardIsComponentSelected('clock/hangar'));
     JSON_SetBool(Handle,'/battle/enabled', WizardIsComponentSelected('clock/battle'));
+    JSON_Close(Handle);
+  end;
+end;
+
+procedure ChangeHangarHeaderJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\hangar_header.json'), False);
+  if Handle <> 0 then
+  begin
+    JSON_SetBool(Handle,'/premium_timer', WizardIsComponentSelected('hangar_header/premium_timer'));
+    JSON_SetBool(Handle,'/hide_wotPlus', WizardIsComponentSelected('hangar_header/hide_wotPlus'));
+    JSON_SetBool(Handle,'/hide_shop', WizardIsComponentSelected('hangar_header/hide_shop'));
     JSON_Close(Handle);
   end;
 end;
@@ -577,6 +596,7 @@ procedure StepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then
     begin
+      ChangeHangarHeaderJsonValues();
       ChangeArcadeCameraJsonValues();
       ChangeArmorCalculatorJsonValues();
       ChangeBattleTimerJsonValues();

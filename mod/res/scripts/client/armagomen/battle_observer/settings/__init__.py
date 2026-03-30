@@ -1,7 +1,8 @@
 import Keys
 from armagomen._constants import (ALIAS_TO_CONFIG_NAME, ALIAS_TO_CONFIG_NAME_LOBBY, ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER,
                                   CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, EFFECTS, EX_LOGS_ICONS,
-                                  FLIGHT_TIME, GLOBAL, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE,
+                                  FLIGHT_TIME, GLOBAL, HANGAR_HEADER, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS,
+                                  SERVICE_CHANNEL, SIXTH_SENSE,
                                   SNIPER, STATISTICS, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS)
 from constants import ATTACK_REASON
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
@@ -29,7 +30,13 @@ class UserSettings(object):
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
-            MAIN.USE_KEY_PAIRS: True
+            MAIN.USE_KEY_PAIRS: True,
+        }
+
+        self.hangar_header = {
+            HANGAR_HEADER.PREMIUM_TIMER: False,
+            HANGAR_HEADER.WOT_PLUS: False,
+            HANGAR_HEADER.SHOP: False
         }
 
         self.avg_efficiency_in_hangar = {

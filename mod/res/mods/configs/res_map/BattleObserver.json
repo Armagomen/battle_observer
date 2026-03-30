@@ -18,5 +18,15 @@
       "impl": "gameface"
     },
     "itemID": "Observer_Efficiency_UI"
+  },
+  {
+    "type": "Layout",
+    "path": "coui://gui/gameface/mods/armagomen/battle_observer/hangar/header/header.html",
+    "parameters": {
+      "extension": "",
+      "entrance": "Observer_Header_UI",
+      "impl": "gameface"
+    },
+    "itemID": "Observer_Header_UI"
   }
 ]

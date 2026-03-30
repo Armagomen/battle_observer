@@ -1,0 +1,9 @@
+.bo_premiumContainer {
+    display: none;
+    min-width: 115px;
+    z-index: 48;
+}
+
+.bo_span {
+    opacity: 1 !important;
+}

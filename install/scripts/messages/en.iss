@@ -40,6 +40,12 @@ en.mute_team_base_sound=Mute base capture siren
 en.show_friends=Tag friends and clan players in team lists
 en.auto_claim_clan_reward=Collect clan rewards automatically
 
+//hangar_header
+en.hangar_header=Hangar header settings
+en.premium_timer=Enhanced premium account timer
+en.hide_wotPlus=Hide WOT Plus button
+en.hide_shop=Hide shop button
+
 //clock
 en.clock=The clock in the garage and battle
 en.clock_hangar=Clock in the garage

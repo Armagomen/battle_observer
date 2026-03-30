@@ -62,7 +62,13 @@ localization = {
         "useKeyPairs_tooltip": "Lewy i prawy klawisz działają jako jeden — niezależnie od ustawień modułu.",
         "mute_team_base_sound": "Wyłącz syrenę przejęcia bazy",
         "excluded_map_slots_notification": "Powiadamiaj o dostępnych slotach do wykluczenia map",
-        "auto_claim_clan_reward": "Automatycznie odbieraj nagrody klanowe",
+        "auto_claim_clan_reward": "Automatycznie odbieraj nagrody klanowe"
+    },
+    "hangar_header": {
+        "header": "Ustawienia nagłówka garażu",
+        "premium_timer": "Ulepszony licznik konta premium",
+        "hide_shop": "Ukryj przycisk sklepu",
+        "hide_wotPlus": "Ukryj przycisk WOT Plus"
     },
     "statistics": {
         "header": "Statystyki graczy i ikony pojazdów",

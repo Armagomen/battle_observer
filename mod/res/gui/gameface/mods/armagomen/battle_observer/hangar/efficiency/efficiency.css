@@ -1,29 +1,30 @@
 .bo_effContainer {
-    display: flex;
-    position: absolute;
-    top: 80px;
-    left: calc(50vw - 10px);
-    transform: translateX(-50%);
-    transform-origin: center top;
-    justify-content: center;
     align-items: center;
+    color: rgb(214, 211, 206);
+    display: flex;
     font-size: 26px;
-    color: rgb(215, 215, 215);
-    text-shadow: 0 0 6px rgba(0,0,0,0.9);
-    z-index: 30;
     font-weight: 500;
+    justify-content: center;
+    left: calc(50vw - 10px);
+    opacity: 1 !important;
+    position: absolute;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.94);
+    top: 80px;
+    transform-origin: center top;
+    transform: translateX(-50%);
+    z-index: 50;
 }
 
 .bo_effIcon {
-    width: 22px;
     height: 22px;
-    vertical-align: middle;
     margin: 0 2px 2px 10px;
+    vertical-align: middle;
+    width: 22px;
 }
 
 .bo_effIcon_gun {
-    width: 23px;
     height: 20px;
-    vertical-align: middle;
     margin: 0 2px 1px 10px;
+    vertical-align: middle;
+    width: 23px;
 }

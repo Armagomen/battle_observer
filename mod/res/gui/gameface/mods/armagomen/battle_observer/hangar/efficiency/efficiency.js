@@ -1,31 +1,39 @@
-import { MediaContext } from "coui://gui/gameface/mods/libs/media.js";
-import { ModelObserver } from "coui://gui/gameface/mods/libs/model.js";
-import { waitForElement, watchVisibilityBySelector, getScaleAndNewPosition } from "coui://gui/gameface/mods/armagomen/utils.js";
+import {MediaContext} from "coui://gui/gameface/mods/libs/media.js";
+import {ModelObserver} from "coui://gui/gameface/mods/libs/model.js";
+import {getScaleAndNewPosition, waitForElement, watchVisibilityBySelector} from "../../../utils.js";
 
 const media = MediaContext(false);
 const model = ModelObserver("Observer_Efficiency_UI");
 
-let effContainer;
+function getEffContainer() {
+    return document.querySelector(".bo_effContainer");
+}
 
 async function applyScale() {
-    const { scale, newTopPx } = await getScaleAndNewPosition("#fight-button", media);
+    const eff = getEffContainer();
+    if (!eff) return;
 
-    effContainer.style.top = `${newTopPx}px`;
-    effContainer.style.transform = `translateX(-50%) scale(${scale})`;
+    const {scale, newTopPx} = await getScaleAndNewPosition("#fight-button", media);
+    eff.style.top = `${newTopPx}px`;
+    eff.style.transform = `translateX(-50%) scale(${scale})`;
 }
 
 function updateEfficiency() {
-    effContainer.innerHTML = model.model.effHtmlText;
+    const eff = getEffContainer();
+    if (!eff) return;
+
+    eff.innerHTML = model?.model?.effHtmlText ?? "";
 }
 
 engine.whenReady.then(async () => {
     const fightButton = await waitForElement("#fight-button");
     const headerSection = fightButton.parentNode;
 
-    effContainer = document.createElement("div");
-    effContainer.className = "bo_effContainer";
-    effContainer.innerHTML = "";
-    headerSection.appendChild(effContainer);
+    const eff = document.createElement("div");
+    eff.setAttribute("data-bo", "true");
+    eff.className = "bo_effContainer";
+    eff.innerHTML = "";
+    headerSection.appendChild(eff);
 
     media.onUpdate(applyScale);
     media.subscribe();
@@ -35,5 +43,5 @@ engine.whenReady.then(async () => {
 
     applyScale();
 
-    const observer = watchVisibilityBySelector(effContainer, "[class*='UserProfile_']");
+    watchVisibilityBySelector(eff, "[class*='UserProfile_']");
 });

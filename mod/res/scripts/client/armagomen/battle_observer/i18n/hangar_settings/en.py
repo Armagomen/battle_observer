@@ -69,10 +69,17 @@ localization = {
         "auto_return_crew_tooltip": "If there is no crew on the selected tank, but there is one for it and is not in "
                                     "battle on another tank, the crew will be returned to the tank automatically.",
         "disable_stun_sound": "Remove stun sound",
-        "mute_team_base_sound": "Mute base capture siren.",
-        "excluded_map_slots_notification": "Notify about available excluded map slots.",
-        "auto_claim_clan_reward": "Collect clan rewards automatically.",
+        "mute_team_base_sound": "Mute base capture siren",
+        "excluded_map_slots_notification": "Notify about available excluded map slots",
+        "auto_claim_clan_reward": "Collect clan rewards automatically"
     },
+    "hangar_header": {
+        "header": "Hangar header settings",
+        "premium_timer": "Enhanced premium account timer",
+        "hide_shop": "Hide shop button",
+        "hide_wotPlus": "Hide WOT Plus button"
+    },
+
     "statistics": {
         "header": "WGR (WGR) Player Statistics | Tank icons",
         "statistics": "Enable player statistics WGR rating",

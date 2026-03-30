@@ -15,6 +15,7 @@ import WGC
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from BattleReplay import isLoading, isPlaying
 from external_strings_utils import unicode_from_utf8
+from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency
 from skeletons.gui.impl import IGuiLoader
 
@@ -67,7 +68,9 @@ def delayedCall(delay):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             return addCallback(delay, func, *args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
@@ -426,3 +429,15 @@ def get_parent_window():
     if ui_loader and ui_loader.windowsManager:
         return ui_loader.windowsManager.getMainWindow()
     return None
+
+
+class TimeInterval(_TimeInterval):
+
+    @property
+    def interval(self):
+        return self.__interval
+
+    @interval.setter
+    def interval(self, value):
+        self.__interval = value
+        self.restart()

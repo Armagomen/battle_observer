@@ -108,38 +108,44 @@
 			}
 		}
 		
+		
 		private function updateParams():void
 		{
 			var size:Number = this.params.icon_size;
-			if (size % 2 != 0)
-			{
-				size += 1;
-			}
+			if (size & 1) size++;
+			
 			var scale:Number        = Math.sqrt(App.appHeight / 1080.0);
 			var afterScaleWH:Number = Math.min(180.0, Math.ceil(size * scale));
-			if (afterScaleWH % 2 != 0)
-			{
-				afterScaleWH -= 1;
-			}
+			if (afterScaleWH & 1) afterScaleWH--;
+			
 			var half_size:Number = afterScaleWH >> 1;
 			this.POSITION_Y = Math.ceil(App.appHeight / 7 + half_size);
 			this._image.width = afterScaleWH;
 			this._image.height = afterScaleWH;
 			this._image.smoothing = true;
 			this._image.x = -half_size;
-			this._container.addChild(this._image);
+			if (!this._container.contains(this._image)) this._container.addChild(this._image);
 			if (this.params.show_timer)
 			{
+				var text_size:Number      = Math.ceil(18 * scale);
 				if (this.timer_text)
 				{
-					this._container.removeChild(this.timer_text);
-					this.timer_text = null;
+					var curFmt:TextFormat = this.timer_text.getTextFormat();
+					if (Number(curFmt.size) != text_size)
+					{
+						var newFmt:TextFormat = new TextFormat("$TitleFont", text_size, 0xFFFFFF);
+						this.timer_text.defaultTextFormat = newFmt;
+						this.timer_text.setTextFormat(newFmt);
+					}
+					this.timer_text.y = half_size + (text_size >> 1);
+					this.timer_text.alpha = 0.80;
 				}
-				var text_size:Number      = Math.ceil(18 * scale);
-				var textformat:TextFormat = new TextFormat("$TitleFont", text_size, 0xFFFFFF);
-				var _y:Number             = half_size + (text_size >> 1);
-				this.timer_text = new TextExt(0, _y, textformat, TextFieldAutoSize.CENTER, this._container);
-				this.timer_text.alpha = 0.80;
+				else
+				{
+					var _y:Number             = half_size + (text_size >> 1);
+					this.timer_text = new TextExt(0, _y, new TextFormat("$TitleFont", text_size, 0xFFFFFF), TextFieldAutoSize.CENTER, this._container);
+					this.timer_text.alpha = 0.80;
+				}
 			}
 			if (!this.hideAnimation)
 			{

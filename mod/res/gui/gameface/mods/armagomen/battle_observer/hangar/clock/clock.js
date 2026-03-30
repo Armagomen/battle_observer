@@ -1,31 +1,39 @@
-import { MediaContext } from "coui://gui/gameface/mods/libs/media.js";
-import { ModelObserver } from "coui://gui/gameface/mods/libs/model.js";
-import { waitForElement, watchVisibilityBySelector, getScaleAndNewPosition } from "coui://gui/gameface/mods/armagomen/utils.js";
+import {MediaContext} from "coui://gui/gameface/mods/libs/media.js";
+import {ModelObserver} from "coui://gui/gameface/mods/libs/model.js";
+import {getScaleAndNewPosition, waitForElement, watchVisibilityBySelector} from "../../../utils.js";
 
 const media = MediaContext(false);
 const model = ModelObserver("Observer_DateTimes_UI");
 
-let clockContainer;
+function getClockContainer() {
+    return document.querySelector(".bo_clockContainer");
+}
 
 async function applyScale() {
-    const { scale, newTopPx } = await getScaleAndNewPosition("#fight-button", media);
+    const clock = getClockContainer();
+    if (!clock) return;
 
-    clockContainer.style.top = `${newTopPx}px`;
-    clockContainer.style.transform = `scale(${scale})`;
+    const {scale, newTopPx} = await getScaleAndNewPosition("#fight-button", media);
+    clock.style.top = `${newTopPx}px`;
+    clock.style.transform = `scale(${scale})`;
 }
 
 function updateClock() {
-    clockContainer.innerHTML = model.model.clock;
+    const clock = getClockContainer();
+    if (!clock) return;
+
+    clock.innerHTML = model?.model?.clock ?? "";
 }
 
 engine.whenReady.then(async () => {
     const fightButton = await waitForElement("#fight-button");
     const headerSection = fightButton.parentNode;
 
-    clockContainer = document.createElement("div");
-    clockContainer.className = "bo_clockContainer";
-    clockContainer.innerHTML = "";
-    headerSection.appendChild(clockContainer);
+    const clock = document.createElement("div");
+    clock.setAttribute("data-bo", "true");
+    clock.className = "bo_clockContainer";
+    clock.innerHTML = "";
+    headerSection.appendChild(clock);
 
     media.onUpdate(applyScale);
     media.subscribe();
@@ -35,5 +43,5 @@ engine.whenReady.then(async () => {
 
     applyScale();
 
-    const observer = watchVisibilityBySelector(clockContainer, "[class*='UserProfile_']");
+    watchVisibilityBySelector(clock, "[class*='UserProfile_']");
 });

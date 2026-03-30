@@ -17,5 +17,6 @@
   "ignore_commanders_voice": false,
   "mute_team_base_sound": false,
   "show_friends": false,
-  "useKeyPairs": true
+  "useKeyPairs": true,
+  "premium_timer": false
 }

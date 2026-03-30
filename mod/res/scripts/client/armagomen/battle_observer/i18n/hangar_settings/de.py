@@ -61,7 +61,13 @@ localization = {
         "useKeyPairs_tooltip": "Nach Aktivierung funktionieren die linken und rechten Tasten gleich, unabhängig von Moduleinstellungen.",
         "mute_team_base_sound": "Basisalarm-Sirene deaktivieren",
         "excluded_map_slots_notification": "Benachrichtigung über verfügbare Kartensperrslots anzeigen",
-        "auto_claim_clan_reward": "Clanbelohnungen automatisch abholen",
+        "auto_claim_clan_reward": "Clanbelohnungen automatisch abholen"
+    },
+    "hangar_header": {
+        "header": "Einstellungen der Garagenkopfzeile",
+        "premium_timer": "Erweiterter Premium-Account-Timer",
+        "hide_shop": "Shop-Schaltfläche ausblenden",
+        "hide_wotPlus": "WOT Plus-Schaltfläche ausblenden"
     },
     "statistics": {
         "header": "Spielerstatistiken und Fahrzeug-Icon-Einstellungen",

@@ -25,7 +25,7 @@ function waitForElement(selector) {
             }
         });
 
-        observer.observe(document.body, { childList: true, subtree: true });
+        observer.observe(document.body, {childList: true, subtree: true});
     });
 }
 
@@ -55,18 +55,33 @@ function printDOM(root = document.body) {
             (style.transform !== "none" ? ` [transform:${style.transform}]` : "")
         );
     }
+
+    const elems = document.querySelectorAll('div[data-test-id]');
+
+    elems.forEach(el => {
+        console.error(el.dataset.testId);
+    });
+
 }
 
 
 /**
  * Toggle container visibility explicitly using display property.
  *
- * @param {HTMLElement} container - The container to show/hide
+ * @param {ParentNode} container - The container to show/hide
  * @param {boolean} visible - true to show, false to hide
  * @param {string} displayType - Display mode when visible (default: "flex")
  */
 function setVisibility(container, visible, displayType = "flex") {
-    container.style.display = visible ? displayType : "none";
+    if (!container || !container.style) {
+        const err = new Error("[BATTLE_OBSERVER] setVisibility: container is null or has no style");
+        console.error(err.message, "node:", container?.nodeName, "\nstack:", err.stack);
+        return;
+    }
+    const newType = visible ? displayType : "none";
+    if (container.style.display !== newType) {
+        container.style.display = newType;
+    }
 }
 
 
@@ -97,7 +112,7 @@ function watchVisibilityBySelector(container, selector) {
         }
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {childList: true, subtree: true});
     return observer;
 }
 
@@ -111,11 +126,12 @@ async function getScaleAndNewPosition(selector, media, timeout = 200) {
     const offset = Math.floor(10 * scale);
     const newTopPx = rect.bottom + offset;
 
-    return { scale, newTopPx };
+    return {scale, newTopPx};
 }
 
+
 // Export public functions and constants
-export { waitForElement, printDOM, setVisibility, watchVisibilityBySelector, getScaleAndNewPosition };
+export {waitForElement, printDOM, setVisibility, watchVisibilityBySelector, getScaleAndNewPosition};
 
 
 
