@@ -28,7 +28,6 @@ class ClockModel(ViewModel):
     def setContent(self, value):
         # type: (str) -> None
         self._setString(0, value)
-        logDebug("setContent: {}", value)
 
     def getContent(self):
         # type: () -> str

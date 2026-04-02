@@ -30,12 +30,11 @@ class HeaderModel(ViewModel):
                       modules=['coui://gui/gameface/mods/armagomen/battle_observer/hangar/header/header.js']
                       )
 
-    def setContent(self, value):
+    def setTimerValue(self, value):
         # type: (str) -> None
         self._setString(0, value)
-        logDebug("setContent: {}", value)
 
-    def getContent(self):
+    def getTimerValue(self):
         # type: () -> str
         return self._getString(0)
 
@@ -103,7 +102,7 @@ class HeaderView(ViewComponent[HeaderModel]):
     def updateTime(self):
         delta = int(getTimeDeltaFromNow(makeLocalServerTime(self.__activeTime)))
         content, interval = (self.days, ONE_MINUTE) if delta > ONE_DAY else (self.hours, ONE_SECOND)
-        self.viewModel.setContent(self._getPremiumLabelText(content, delta))
+        self.viewModel.setTimerValue(self._getPremiumLabelText(content, delta))
         if self._timeInterval.interval != interval:
             self._timeInterval.interval = interval
 
@@ -111,7 +110,7 @@ class HeaderView(ViewComponent[HeaderModel]):
         if self._timeInterval.isStarted() and enabled:
             return
         self._timeInterval.stop()
-        self.viewModel.setContent(GLOBAL.EMPTY_LINE)
+        self.viewModel.setTimerValue(GLOBAL.EMPTY_LINE)
         if enabled:
             self._timeInterval.start()
             self.updateTime()
@@ -129,4 +128,4 @@ class HeaderView(ViewComponent[HeaderModel]):
         if isPremium != self.__isPremium:
             self.__activeTime = activePremiumExpiryTime
             self.__isPremium = isPremium
-            self.toggleInterval(user_settings.hangar_header[HANGAR_HEADER.PREMIUM_TIMER], isPremium)
+            self.toggleInterval(user_settings.hangar_header[HANGAR_HEADER.PREMIUM_TIMER] and isPremium)
