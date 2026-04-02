@@ -55,7 +55,8 @@ localization = {
         "ignore_commanders_voice_tooltip": "Once enabled, the standard crew voiceover will be forcibly used. "
                                            "The parameter will replace all voiceover of bloggers, "
                                            "Chuck Norris and so on with the standard / from the voiceover mod. ",
-        "disable_score_sound": "Disable score change sound",
+        "disable_score_sound": "Disable the sound effect of score change",
+        "disable_stun_sound": "Disable the sound effect of stun",
         "auto_crew_training": "Automatic switching of 'Accelerated crew training'",
         "auto_crew_training_tooltip": "Monitors whether 'Field Upgrade' is upgraded/available and enables or disables"
                                       " 'Expedited Crew Training' accordingly.",
@@ -68,7 +69,6 @@ localization = {
         "auto_return_crew": "Automatic crew return",
         "auto_return_crew_tooltip": "If there is no crew on the selected tank, but there is one for it and is not in "
                                     "battle on another tank, the crew will be returned to the tank automatically.",
-        "disable_stun_sound": "Remove stun sound",
         "mute_team_base_sound": "Mute base capture siren",
         "excluded_map_slots_notification": "Notify about available excluded map slots",
         "auto_claim_clan_reward": "Collect clan rewards automatically"

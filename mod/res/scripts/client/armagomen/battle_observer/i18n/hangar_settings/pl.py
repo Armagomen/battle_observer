@@ -44,8 +44,8 @@ localization = {
         "auto_crew_training_tooltip": "Monitoruje status modernizacji polowej i aktywuje/dezaktywuje szkolenie zależnie od dostępności.",
         "auto_return_crew": "Automatyczny powrót załogi",
         "auto_return_crew_tooltip": "Jeśli załoga pojazdu jest dostępna i nie uczestniczy w bitwie, wróci automatycznie.",
-        "disable_score_sound": "Wyłącz dźwięk zniszczenia czołgu",
-        "disable_stun_sound": "Wyłącz dźwięk ogłuszenia artyleryjskiego",
+        "disable_score_sound": "Wyłącz efekt dźwiękowy zmiany wynikuu",
+        "disable_stun_sound": "Wyłącz efekt dźwiękowy ogłuszenia",
         "directives_only_from_storage": "Używaj dyrektyw tylko z magazynu",
         "directives_only_from_storage_tooltip": "Zapobiega zakupowi dyrektyw za obligacje/srebro, gdy ich brak w magazynie. "
                                                 "Włącza 'automatyczne uzupełnianie', jeśli dyrektywy są dostępne.",
