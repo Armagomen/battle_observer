@@ -1,31 +1,36 @@
+
+const OBSERVE_CHILD_LIST = {childList: true, subtree: true};
+
 /**
  * Waits for an element matching selector to appear in the DOM.
  * Resolves with the element once found.
  *
  * @param {string} selector - CSS selector of the element to wait for.
+ * @param {number} timeout - default 120 000 - 2mins.
  * @returns {Promise<HTMLElement>}
  */
-function waitForElement(selector) {
-    return new Promise(resolve => {
+function waitForElement(selector, timeout = 120000) {
+    return new Promise((resolve, reject) => {
         const existing = document.querySelector(selector);
-        if (existing) {
-            return resolve(existing);
-        }
+        if (existing) return resolve(existing);
 
         const observer = new MutationObserver(mutations => {
-            for (const mutation of mutations) {
-                if (mutation.type === "childList" && mutation.addedNodes.length > 0) {
-                    const el = document.querySelector(selector);
-                    if (el) {
-                        resolve(el);
-                        observer.disconnect();
-                        break;
-                    }
-                }
+            if (mutations.length === 0) return;
+            const el = document.querySelector(selector);
+            if (el) {
+                clearTimeout(timeoutId);
+                resolve(el);
+                observer.disconnect();
             }
         });
 
-        observer.observe(document.body, {childList: true, subtree: true});
+        const timeoutId = setTimeout(() => {
+            observer.disconnect();
+            resolve(null);
+        }, timeout);
+
+        observer.observe(document.body, OBSERVE_CHILD_LIST);
+
     });
 }
 
@@ -68,7 +73,7 @@ function printDOM(root = document.body) {
 /**
  * Toggle container visibility explicitly using display property.
  *
- * @param {ParentNode} container - The container to show/hide
+ * @param {HTMLElement} container - The container to show/hide
  * @param {boolean} visible - true to show, false to hide
  * @param {string} displayType - Display mode when visible (default: "flex")
  */
@@ -98,25 +103,29 @@ function watchVisibilityBySelector(container, selector) {
     setVisibility(container, Boolean(document.querySelector(selector)));
 
     const observer = new MutationObserver(mutations => {
-        for (const m of mutations) {
-            // If a matching node is added → set visible = true
-            if ([...m.addedNodes].some(n => n.matches?.(selector))) {
-                setVisibility(container, true);
-                return;
-            }
-            // If a matching node is removed → set visible = false
-            if ([...m.removedNodes].some(n => n.matches?.(selector))) {
-                setVisibility(container, false);
-                return;
-            }
-        }
+        if (mutations.length === 0) return;
+        setVisibility(container, Boolean(document.querySelector(selector)));
     });
 
-    observer.observe(document.body, {childList: true, subtree: true});
+    observer.observe(document.body, OBSERVE_CHILD_LIST);
     return observer;
 }
 
 
+/**
+ * Calculate a UI scale factor and determine a new vertical position
+ * relative to a target element in the DOM.
+ *
+ * Waits briefly to allow the DOM to update, computes the scale based on
+ * media dimensions and a predefined baseline, then finds the element
+ * matching the selector and calculates a new top offset in pixels.
+ *
+ * @async
+ * @param {string} selector - CSS selector for the target element
+ * @param {Object} media - Media object containing height and scale properties
+ * @param {number} [timeout=200] - Delay in milliseconds before calculation
+ * @returns {Promise<{scale: number, newTopPx: number}>} - Computed scale and new top position
+ */
 async function getScaleAndNewPosition(selector, media, timeout = 200) {
     await new Promise(resolve => setTimeout(resolve, timeout));
 
@@ -131,7 +140,5 @@ async function getScaleAndNewPosition(selector, media, timeout = 200) {
 
 
 // Export public functions and constants
-export {waitForElement, printDOM, setVisibility, watchVisibilityBySelector, getScaleAndNewPosition};
-
-
+export {waitForElement, printDOM, setVisibility, watchVisibilityBySelector, getScaleAndNewPosition, OBSERVE_CHILD_LIST};
 

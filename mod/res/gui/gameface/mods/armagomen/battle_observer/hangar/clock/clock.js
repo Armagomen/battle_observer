@@ -5,18 +5,26 @@ import {getScaleAndNewPosition, waitForElement, watchVisibilityBySelector} from 
 const media = MediaContext(false);
 const model = ModelObserver("Observer_DateTimes_UI");
 
+const fight_button_selector = "#fight-button";
+const user_profile_selector = "div[class*='UserProfile_']";
+
+const container_style = "bo_clockContainer";
+
+
 function getClockContainer() {
-    return document.querySelector(".bo_clockContainer");
+    return document.querySelector(`div.${container_style}`);
 }
+
 
 async function applyScale() {
     const clock = getClockContainer();
     if (!clock) return;
 
-    const {scale, newTopPx} = await getScaleAndNewPosition("#fight-button", media);
+    const {scale, newTopPx} = await getScaleAndNewPosition(fight_button_selector, media);
     clock.style.top = `${newTopPx}px`;
     clock.style.transform = `scale(${scale})`;
 }
+
 
 function updateClock() {
     const clock = getClockContainer();
@@ -25,23 +33,27 @@ function updateClock() {
     clock.innerHTML = model?.model?.clock ?? "";
 }
 
-engine.whenReady.then(async () => {
-    const fightButton = await waitForElement("#fight-button");
-    const headerSection = fightButton.parentNode;
 
-    const clock = document.createElement("div");
-    clock.setAttribute("data-bo", "true");
-    clock.className = "bo_clockContainer";
-    clock.innerHTML = "";
-    headerSection.appendChild(clock);
+function createContainer(headerSection) {
+    let container = getClockContainer();
+    if (!container) {
+        container = document.createElement("div");
+        container.className = container_style;
+        headerSection.appendChild(container);
+        applyScale();
+    }
+    return container;
+}
+
+
+engine.whenReady.then(async () => {
+    const fightButton = await waitForElement(fight_button_selector);
+    if (!fightButton) return;
+    watchVisibilityBySelector(createContainer(fightButton.parentNode), user_profile_selector);
 
     media.onUpdate(applyScale);
     media.subscribe();
 
     model.onUpdate(updateClock);
     model.subscribe();
-
-    applyScale();
-
-    watchVisibilityBySelector(clock, "[class*='UserProfile_']");
 });

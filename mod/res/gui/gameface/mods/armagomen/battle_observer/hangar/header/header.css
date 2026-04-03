@@ -1,7 +1,8 @@
 .bo_premiumContainer {
     display: none;
+    position: relative;
     min-width: 115px;
-    z-index: 48;
+    z-index: 9999;
 }
 
 .bo_span {

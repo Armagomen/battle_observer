@@ -12,5 +12,5 @@
     top: 80px;
     transform-origin: left top;
     transform: translateY(-50%);
-    z-index: 49;
+    z-index: 9999;
 }
