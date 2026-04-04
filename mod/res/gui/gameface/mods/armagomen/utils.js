@@ -6,11 +6,10 @@ const OBSERVE_CHILD_LIST = {childList: true, subtree: true};
  * Resolves with the element once found.
  *
  * @param {string} selector - CSS selector of the element to wait for.
- * @param {number} timeout - default 120 000 - 2mins.
  * @returns {Promise<HTMLElement>}
  */
-function waitForElement(selector, timeout = 120000) {
-    return new Promise((resolve, reject) => {
+function waitForElement(selector) {
+    return new Promise(resolve => {
         const existing = document.querySelector(selector);
         if (existing) return resolve(existing);
 
@@ -18,16 +17,10 @@ function waitForElement(selector, timeout = 120000) {
             if (mutations.length === 0) return;
             const el = document.querySelector(selector);
             if (el) {
-                clearTimeout(timeoutId);
                 resolve(el);
                 observer.disconnect();
             }
         });
-
-        const timeoutId = setTimeout(() => {
-            observer.disconnect();
-            resolve(null);
-        }, timeout);
 
         observer.observe(document.body, OBSERVE_CHILD_LIST);
 
