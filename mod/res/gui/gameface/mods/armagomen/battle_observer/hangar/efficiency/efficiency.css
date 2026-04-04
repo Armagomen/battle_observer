@@ -13,18 +13,63 @@
     transform-origin: center top;
     transform: translateX(-50%);
     z-index: 9999;
+    line-height: 1;
 }
 
 .bo_effIcon {
-    height: 22px;
-    margin: 0 2px 2px 10px;
-    vertical-align: middle;
+    margin: 0 2px 0 10px;
     width: 22px;
+    height: 22px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
 }
 
-.bo_effIcon_gun {
+.bo_effIcon.bo_gunIcon {
+    width: 22px;
     height: 20px;
-    margin: 0 2px 1px 10px;
-    vertical-align: middle;
-    width: 23px;
+}
+
+.assistIcon {
+    background-image: url("img://gui/maps/icons/battle_observer/efficiency/help.png");
+}
+
+.blockedIcon {
+    background-image: url("img://gui/maps/icons/battle_observer/efficiency/armor.png");
+}
+
+.damageIcon {
+    background-image: url("img://gui/maps/icons/battle_observer/efficiency/damage.png");
+}
+
+.winRateIcon {
+    background-image: url("img://gui/maps/icons/battle_observer/efficiency/wins.png");
+}
+
+.stunIcon {
+    background-image: url("img://gui/maps/icons/battle_observer/efficiency/stun.png");
+}
+
+.spottedIcon {
+    background-image: url("img://gui/maps/icons/battle_observer/efficiency/detection.png");
+}
+
+.battlesIcon {
+    background-image: url("img://gui/maps/icons/battle_observer/efficiency/battles.png");
+}
+
+.marksOnGunIcon0 {
+    background-image: url("img://gui/maps/icons/battle_observer/gun/00.png");
+}
+
+.marksOnGunIcon1 {
+    background-image: url("img://gui/maps/icons/battle_observer/gun/01.png");
+}
+
+.marksOnGunIcon2 {
+    background-image: url("img://gui/maps/icons/battle_observer/gun/02.png");
+}
+
+.marksOnGunIcon3 {
+    background-image: url("img://gui/maps/icons/battle_observer/gun/03.png");
 }

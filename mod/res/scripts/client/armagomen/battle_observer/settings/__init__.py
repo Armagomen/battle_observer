@@ -331,10 +331,7 @@ class UserSettings(object):
             MINIMAP.ZOOM_KEY: [[29]]
         }
 
-        self.service_channel_filter = {
-            GLOBAL.ENABLED: False,
-            SERVICE_CHANNEL.KEYS: dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
-        }
+        self.service_channel_filter = dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
 
         self.statistics = {
             GLOBAL.ENABLED: False,

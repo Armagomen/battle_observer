@@ -6,11 +6,10 @@ const OBSERVE_CHILD_LIST = {childList: true, subtree: true};
  * Resolves with the element once found.
  *
  * @param {string} selector - CSS selector of the element to wait for.
- * @param {number} timeout - default 120 000 - 2mins.
  * @returns {Promise<HTMLElement>}
  */
-function waitForElement(selector, timeout = 120000) {
-    return new Promise((resolve, reject) => {
+function waitForElement(selector) {
+    return new Promise(resolve => {
         const existing = document.querySelector(selector);
         if (existing) return resolve(existing);
 
@@ -18,16 +17,10 @@ function waitForElement(selector, timeout = 120000) {
             if (mutations.length === 0) return;
             const el = document.querySelector(selector);
             if (el) {
-                clearTimeout(timeoutId);
                 resolve(el);
                 observer.disconnect();
             }
         });
-
-        const timeoutId = setTimeout(() => {
-            observer.disconnect();
-            resolve(null);
-        }, timeout);
 
         observer.observe(document.body, OBSERVE_CHILD_LIST);
 
@@ -130,10 +123,9 @@ async function getScaleAndNewPosition(selector, media, timeout = 200) {
     await new Promise(resolve => setTimeout(resolve, timeout));
 
     const scale = Math.min(Math.sqrt(media.height / 1080), media.scale);
-    const fightButton = await waitForElement(selector);
-    const rect = fightButton.getBoundingClientRect();
+    const element = await waitForElement(selector);
     const offset = Math.floor(10 * scale);
-    const newTopPx = rect.bottom + offset;
+    const newTopPx = element.getBoundingClientRect().bottom + offset;
 
     return {scale, newTopPx};
 }

@@ -1,4 +1,4 @@
-from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, IMAGE_DIR, LOBBY_ALIASES
+from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, LOBBY_ALIASES
 from armagomen.battle_observer.components.controllers import cachedVehicleData
 from armagomen.battle_observer.settings import user_settings
 from armagomen.utils.events import g_events
@@ -30,17 +30,6 @@ class HangarEfficiencyModel(ViewModel):
     def getContent(self):
         # type: () -> str
         return self._getString(0)
-
-
-EFFICIENCY_ICONS = {
-    "assistIcon": "<img class='bo_effIcon' src='{}/efficiency/help.png'>".format(IMAGE_DIR),
-    "blockedIcon": "<img class='bo_effIcon' src='{}/efficiency/armor.png'>".format(IMAGE_DIR),
-    "damageIcon": "<img class='bo_effIcon' src='{}/efficiency/damage.png'>".format(IMAGE_DIR),
-    "winRateIcon": "<img class='bo_effIcon' src='{}/efficiency/wins.png'>".format(IMAGE_DIR),
-    "stunIcon": "<img class='bo_effIcon' src='{}/efficiency/stun.png'>".format(IMAGE_DIR),
-    "spottedIcon": "<img class='bo_effIcon' src='{}/efficiency/detection.png'>".format(IMAGE_DIR),
-    "battlesIcon": "<img class='bo_effIcon' src='{}/efficiency/battles.png'>".format(IMAGE_DIR),
-}
 
 
 class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
@@ -82,24 +71,23 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
 
     def update(self, data):
         value = GLOBAL.EMPTY_LINE
-        if not self.settings["enabled"] and self.viewModel.getContent() or data is None:
-            self.viewModel.setContent(value)
+        if not self.settings["enabled"] or data is None:
+            if self.viewModel.getContent():
+                self.viewModel.setContent(value)
             return
 
         settings_map = [
-            (AVG_EFFICIENCY_HANGAR.DAMAGE, "{damageIcon}<span>{tankAvgDamage}</span>"),
-            (AVG_EFFICIENCY_HANGAR.ASSIST, "{assistIcon}<span>{tankAvgAssist}</span>"),
-            (AVG_EFFICIENCY_HANGAR.BLOCKED, "{blockedIcon}<span>{tankAvgBlocked}</span>"),
-            (AVG_EFFICIENCY_HANGAR.STUN, "{stunIcon}<span>{tankAvgStun}</span>", data.tankAvgStun),
-            (AVG_EFFICIENCY_HANGAR.BATTLES, "{battlesIcon}<span>{battles}</span>"),
-            (AVG_EFFICIENCY_HANGAR.WIN_RATE, "{winRateIcon}<span>{winRate:.2f}%</span>"),
+            (AVG_EFFICIENCY_HANGAR.DAMAGE, "<span class='bo_effIcon damageIcon'></span><span>{tankAvgDamage}</span>"),
+            (AVG_EFFICIENCY_HANGAR.ASSIST, "<span class='bo_effIcon assistIcon'></span><span>{tankAvgAssist}</span>"),
+            (AVG_EFFICIENCY_HANGAR.BLOCKED, "<span class='bo_effIcon blockedIcon'></span><span>{tankAvgBlocked}</span>"),
+            (AVG_EFFICIENCY_HANGAR.STUN, "<span class='bo_effIcon stunIcon'></span><span>{tankAvgStun}</span>", data.tankAvgStun),
+            (AVG_EFFICIENCY_HANGAR.BATTLES, "<span class='bo_effIcon battlesIcon'></span><span>{battles}</span>"),
+            (AVG_EFFICIENCY_HANGAR.WIN_RATE, "<span class='bo_effIcon winRateIcon'></span><span>{winRate:.2f}%</span>"),
             (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "{marksOnGunIcon}<span>{marksOnGunValue:.2f}%</span>", data.marksAvailable)
         ]
         text = [tpl[1] for tpl in settings_map if self.settings.get(tpl[0]) and tpl[-1]]
         if text:
-            params = data._asdict()
-            params.update(EFFICIENCY_ICONS)
-            value = GLOBAL.EMPTY_LINE.join(text).format(**params)
+            value = GLOBAL.EMPTY_LINE.join(text).format(**data._asdict())
         self.viewModel.setContent(value)
 
     def onModSettingsChanged(self, name, data):

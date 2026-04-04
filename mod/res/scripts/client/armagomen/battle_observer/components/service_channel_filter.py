@@ -1,4 +1,4 @@
-from armagomen._constants import GLOBAL, SERVICE_CHANNEL
+from armagomen._constants import SERVICE_CHANNEL
 from armagomen.utils.common import toggleOverride
 from armagomen.utils.events import g_events
 from chat_shared import SYS_MESSAGE_TYPE
@@ -28,13 +28,18 @@ class ServiceChannelFilter(object):
 
     def _onModSettingsChanged(self, name, data):
         if name == SERVICE_CHANNEL.NAME:
-            self.channel_filter.clear()
-            for name, enabled in data[SERVICE_CHANNEL.KEYS].items():
+            for setting, enabled in data.items():
+                item = SYS_MESSAGE_TYPE.lookup(setting)
+                key = item.index() if item is not None else setting
                 if enabled:
-                    item = SYS_MESSAGE_TYPE.lookup(name)
-                    self.channel_filter.add(item.index() if item is not None else name)
-            if self.enabled != data[GLOBAL.ENABLED]:
-                self.enabled = data[GLOBAL.ENABLED]
+                    self.channel_filter.add(key)
+                else:
+                    self.channel_filter.discard(key)
+
+            enabled = bool(self.channel_filter)
+
+            if self.enabled != enabled:
+                self.enabled = enabled
                 toggleOverride(ServiceChannelManager, "onReceivePersonalSysMessage", self.onReceiveMessage, self.enabled)
                 toggleOverride(ServiceChannelManager, "onReceiveSysMessage", self.onReceiveMessage, self.enabled)
                 toggleOverride(ServiceChannelManager, "__addClientMessage", self.addClientMessage, self.enabled)

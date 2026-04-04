@@ -91,7 +91,7 @@ class Core(object):
                 self.hangar_settings = SettingsInterface(settings_loader, self.version, api)
 
     def onModSettingsChanged(self, name, data):
-        if name == MAIN.NAME:
+        if name == MAIN.NAME and MAIN.AUTO_CLEAR_CACHE in data:
             self.autoClearCache = data[MAIN.AUTO_CLEAR_CACHE]
 
     def fini(self):

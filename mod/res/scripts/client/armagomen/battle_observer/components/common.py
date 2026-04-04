@@ -76,11 +76,12 @@ class TweakSounds(object):
     def onModSettingsChanged(name, data):
         if name != MAIN.NAME:
             return
-        if data[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
-            msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
-        elif not data[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
-            msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
-            msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
+        if MAIN.DISABLE_SCORE_SOUND in data:
+            if data[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is not None:
+                msgs_ctrl._ALLY_KILLED_SOUND = msgs_ctrl._ENEMY_KILLED_SOUND = None
+            elif not data[MAIN.DISABLE_SCORE_SOUND] and msgs_ctrl._ALLY_KILLED_SOUND is None:
+                msgs_ctrl._ALLY_KILLED_SOUND = 'ally_killed_by_enemy'
+                msgs_ctrl._ENEMY_KILLED_SOUND = 'enemy_killed_by_ally'
 
     # disable commander voices
     @staticmethod

@@ -37,12 +37,14 @@ def addWGR(vehicleId, wgr, is_enemy):
 
 def _onModSettingsChanged(name, data):
     if name == MAIN.NAME:
-        toggleOverride(BattlePlayer, "setClanAbbrev", cleanString, data[MAIN.HIDE_CLAN_ABBREV])
-        toggleOverride(BadgeModel, "setLevel", cleanString, data[MAIN.HIDE_BADGES])
-        toggleOverride(BadgeModel, "setBadgeID", cleanString, data[MAIN.HIDE_BADGES])
-    elif name == STATISTICS.NAME:
-        toggleOverride(BattlePlayer, "setVehicleId", setVehicleId,
-                       data[GLOBAL.ENABLED] and data[STATISTICS.STATISTIC_ENABLED] and STATISTICS_REGION)
+        if MAIN.HIDE_CLAN_ABBREV in data:
+            toggleOverride(BattlePlayer, "setClanAbbrev", cleanString, data[MAIN.HIDE_CLAN_ABBREV])
+        if MAIN.HIDE_BADGES in data:
+            toggleOverride(BadgeModel, "setLevel", cleanString, data[MAIN.HIDE_BADGES])
+            toggleOverride(BadgeModel, "setBadgeID", cleanString, data[MAIN.HIDE_BADGES])
+    elif name == STATISTICS.NAME and STATISTICS.STATISTIC_ENABLED in data:
+        enabled = data[GLOBAL.ENABLED] and data[STATISTICS.STATISTIC_ENABLED] and STATISTICS_REGION
+        toggleOverride(BattlePlayer, "setVehicleId", setVehicleId, enabled )
 
 
 g_events.onModSettingsChanged += _onModSettingsChanged

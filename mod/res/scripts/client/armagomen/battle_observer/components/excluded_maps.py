@@ -84,10 +84,11 @@ class ExcludedMapsProcessor(object):
             self.__update()
 
     def _onModSettingsChanged(self, name, data):
-        if name == MAIN.NAME and self.__enabled != data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
-            self.__enabled = data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
-            if self.isLobby:
-                self.__update()
+        if name == MAIN.NAME and MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION in data:
+            if self.__enabled != data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]:
+                self.__enabled = data[MAIN.EXCLUDED_MAP_SLOTS_NOTIFICATION]
+                if self.isLobby:
+                    self.__update()
 
     def __onServerSettingsChanged(self, diff):
         if any(key in diff for key in SERVER_SETTINGS_DIFF_KEYS):

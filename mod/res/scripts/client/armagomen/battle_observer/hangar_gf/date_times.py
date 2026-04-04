@@ -38,14 +38,15 @@ class DateTimesView(ViewComponent[ClockModel]):
     viewLayoutID = ModDynAccessor(LOBBY_ALIASES.DATE_TIME)
 
     def __init__(self):
+
         logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.DATE_TIME, self.viewLayoutID())
         super(DateTimesView, self).__init__(
             layoutID=self.viewLayoutID(),
             model=ClockModel
         )
 
-        u_format = self.settings[CLOCK.IN_LOBBY][CLOCK.FORMAT]
-        self.__clockFormat = CLOCK.DEFAULT_FORMAT_HANGAR if "tab" in u_format.lower() else u_format
+        self.__enabled = False
+        self.__clockFormat = CLOCK.DEFAULT_FORMAT_HANGAR
         self._timeInterval = TimeInterval(1.0, self, 'updateTime')
 
     @property
@@ -81,4 +82,9 @@ class DateTimesView(ViewComponent[ClockModel]):
 
     def onModSettingsChanged(self, name, data):
         if name == CLOCK.NAME:
-            self.toggleInterval(data[CLOCK.IN_LOBBY][GLOBAL.ENABLED])
+            if CLOCK.IN_LOBBY in data:
+                u_format = data[CLOCK.IN_LOBBY][CLOCK.FORMAT]
+                self.__clockFormat = CLOCK.DEFAULT_FORMAT_HANGAR if "tab" in u_format.lower() else u_format
+                self.__enabled = data[CLOCK.IN_LOBBY][GLOBAL.ENABLED]
+            enabled = data[GLOBAL.ENABLED]
+            self.toggleInterval(enabled and self.__enabled)

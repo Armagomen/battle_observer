@@ -68,8 +68,8 @@ EFFICIENCY_ICONS_SIZE = "width='18' height='18' vspace='-3'"
 LOGS_ICONS = "width='16' height='16' vspace='-4'"
 EX_LOGS_ICONS = "width='15' height='15' vspace='-4'"
 
-SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "KEYS", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
-    "service_channel_filter", "sys_keys", "type", "data", "auxData", (
+SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "TYPE", "DATA", "AUX_DATA", "SYSTEM_CHANNEL_KEYS"))(
+    "service_channel_filter", "type", "data", "auxData", (
         "CustomizationForCredits", "CustomizationForGold", "DismantlingForCredits",
         "DismantlingForCrystal", "DismantlingForGold", "Information", "MultipleSelling",
         "PowerLevel", "PurchaseForCredits", "Remove", "Repair", "Restore", "Selling",
@@ -307,9 +307,8 @@ class CONFIG_INTERFACE:
         ANOTHER.CONFIG_SELECT, MAIN.NAME, HANGAR_HEADER.NAME, STATISTICS.NAME, DISPERSION.NAME, DISPERSION_TIMER.NAME,
         EFFECTS.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME,
         DAMAGE_LOG.WG_LOGS_FIX, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED_LOG, MAIN_GUN.NAME, TEAM_BASES.NAME,
-        PANELS.PANELS_NAME, SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME,
-        MINIMAP.NAME, SIXTH_SENSE.NAME, DISTANCE.NAME, OWN_HEALTH.NAME,
-        SERVICE_CHANNEL.NAME, AVG_EFFICIENCY_HANGAR.NAME, COLORS.NAME
+        PANELS.PANELS_NAME, SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME, MINIMAP.NAME, SIXTH_SENSE.NAME, DISTANCE.NAME,
+        OWN_HEALTH.NAME, AVG_EFFICIENCY_HANGAR.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME,
     )
     HANDLER_VALUES = {
         SNIPER.NAME: {

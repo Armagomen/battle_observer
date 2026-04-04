@@ -125,7 +125,9 @@ class HeaderView(ViewComponent[HeaderModel]):
                 self.viewModel.setPlusDisable(data[HANGAR_HEADER.WOT_PLUS])
 
     def __onPremiumNotify(self, isPremium, _, activePremiumExpiryTime):
-        if isPremium != self.__isPremium:
+        if isPremium and self.__activeTime != activePremiumExpiryTime:
             self.__activeTime = activePremiumExpiryTime
+            self.updateTime()
+        if isPremium != self.__isPremium:
             self.__isPremium = isPremium
             self.toggleInterval(user_settings.hangar_header[HANGAR_HEADER.PREMIUM_TIMER] and isPremium)

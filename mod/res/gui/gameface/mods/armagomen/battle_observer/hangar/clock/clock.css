@@ -5,12 +5,11 @@
     font-size: 26px;
     font-weight: 500;
     justify-content: center;
-    left: calc(3.6vw);
+    left: calc(3.4vw);
     opacity: 1 !important;
     position: absolute;
     text-shadow: 0 0 6px rgba(0, 0, 0, 0.94);
     top: 80px;
     transform-origin: left top;
-    transform: translateY(-50%);
     z-index: 9999;
 }

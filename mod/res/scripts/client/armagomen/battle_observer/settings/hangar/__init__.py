@@ -1,3 +1,4 @@
+import copy
 from math import ceil
 
 from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
@@ -11,14 +12,13 @@ from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
-settingsVersion = 41
+settingsVersion = 42
 LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME}
 
 
 def makeTooltip(header=None, body=None, note=None, attention=None):
     parts = (('HEADER', header), ('BODY', body), ('NOTE', note), ('ATTENTION', attention),)
     res_str = u''.join(u'{{{0}}}{1}{{/{0}}}'.format(tag, text) for tag, text in parts if text is not None)
-    logDebug("SettingsInterface - makeTooltip: {}", res_str)
     return res_str
 
 
@@ -265,11 +265,15 @@ class SettingsInterface(CreateElement):
                 if template is not None:
                     self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: template, dict(), lambda *args: None,
                                               button_handler=self.onButtonPress)
+                else:
+                    logWarning("SettingsInterface addModsToVX template is None: {}", blockID)
             except Exception as err:
                 logWarning('SettingsInterface addModsToVX: {} {}'.format(blockID, repr(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
+                logDebug("SettingsInterface addModsToVX: {}", blockID)
+
         self.vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
 
     def load_window(self):
@@ -304,11 +308,14 @@ class SettingsInterface(CreateElement):
                 template = self.getTemplate(blockID)
                 if template is not None:
                     self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: template)
+                else:
+                    logWarning("SettingsInterface updateMod template is None: {}", blockID)
             except Exception as error:
                 logError(error.message)
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
+                logDebug("SettingsInterface updateMod: {}", blockID)
 
     def map_value(self, blockID, key, val):
         bk = (blockID, key)
@@ -335,9 +342,10 @@ class SettingsInterface(CreateElement):
             logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
             return
 
-        settings_block = getattr(self.loader.settings, blockID, None)
-        if settings_block is None:
+        settings_block = getattr(self.loader.settings, blockID, {})
+        if not settings_block:
             return
+        old_settings = copy.deepcopy(settings_block)
 
         for key, value in data.items():
             updated_config_link, param_name = self.getLinkToParam(settings_block, key)
@@ -347,7 +355,9 @@ class SettingsInterface(CreateElement):
                 updated_config_link[param_name] = self.map_value(blockID, param_name, value)
 
         self.loader.updateConfigFile(blockID, settings_block)
-        g_events.onModSettingsChanged(blockID, settings_block)
+
+        changed_settings = {k: v for k, v in old_settings.items() if settings_block.get(k) != v or k == GLOBAL.ENABLED}
+        g_events.onModSettingsChanged(blockID, changed_settings)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -399,4 +409,5 @@ class SettingsInterface(CreateElement):
             middle_index = int(ceil(len(columns) / 2.0))
             column1 = columns[:middle_index]
             column2 = columns[middle_index:]
+
         return self.createBlock(blockID, settings_block, column1, column2) if column1 or column2 else None

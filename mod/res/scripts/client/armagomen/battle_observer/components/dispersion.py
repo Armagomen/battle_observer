@@ -83,6 +83,8 @@ class DispersionCircle(object):
     settingsCore = dependency.descriptor(ISettingsCore)
 
     def __init__(self):
+        self.replace = False
+        self.server = False
         g_events.onModSettingsChanged += self.onModSettingsChanged
 
     def fini(self):
@@ -128,10 +130,12 @@ class DispersionCircle(object):
         if name != DISPERSION.NAME:
             return
         isEnabled = data[GLOBAL.ENABLED]
-        replace = isEnabled and data[DISPERSION.REPLACE]
-        server = isEnabled and data[DISPERSION.SERVER]
-        toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, replace or server)
-        self.toggleServerCrossOverrides(server)
+        if DISPERSION.REPLACE in data:
+            self.replace = isEnabled and data[DISPERSION.REPLACE]
+        if DISPERSION.SERVER in data:
+            self.server = isEnabled and data[DISPERSION.SERVER]
+        toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, self.replace or self.server)
+        self.toggleServerCrossOverrides(self.server)
 
     def toggleServerCrossOverrides(self, enable):
         server_overrides = (

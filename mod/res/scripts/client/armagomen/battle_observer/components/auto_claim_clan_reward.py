@@ -60,8 +60,9 @@ class AutoClaimClanReward(object):
         g_events.onModSettingsChanged -= self.onModSettingsChanged
 
     def onModSettingsChanged(self, name, data):
-        if name == MAIN.NAME and self.__enabled != data[MAIN.AUTO_CLAIM_CLAN_REWARD]:
-            self.__enabled = data[MAIN.AUTO_CLAIM_CLAN_REWARD]
+        if name == MAIN.NAME and MAIN.AUTO_CLAIM_CLAN_REWARD in data:
+            if self.__enabled != data[MAIN.AUTO_CLAIM_CLAN_REWARD]:
+                self.__enabled = data[MAIN.AUTO_CLAIM_CLAN_REWARD]
 
     def __onProxyDataItemShow(self, _, item):
         if self.__enabled and g_clanCache.isInClan and item.getType() == WGNC_DATA_PROXY_TYPE.CLAN_SUPPLY_QUEST_UPDATE:
