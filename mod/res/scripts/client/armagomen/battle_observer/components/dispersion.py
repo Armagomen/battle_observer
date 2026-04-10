@@ -27,10 +27,11 @@ LINKAGES = {
 
 gm_factory._GUN_MARKER_LINKAGES.update(LINKAGES)
 
-aih_constants.GUN_MARKER_MIN_SIZE = 10.0
-aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0
-
 REPLACE_TYPES = {gun_marker_ctrl._MARKER_TYPE.CLIENT, gun_marker_ctrl._MARKER_TYPE.DUAL_ACC}
+
+if user_settings.dispersion_circle[GLOBAL.ENABLED] and user_settings.dispersion_circle[DISPERSION.LIMITER]:
+    aih_constants.GUN_MARKER_MIN_SIZE = 10.0
+    aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0
 
 
 def get_dispersion_scale_setting(marker_type):
@@ -129,13 +130,16 @@ class DispersionCircle(object):
     def onModSettingsChanged(self, name, data):
         if name != DISPERSION.NAME:
             return
-        isEnabled = data[GLOBAL.ENABLED]
-        if DISPERSION.REPLACE in data:
-            self.replace = isEnabled and data[DISPERSION.REPLACE]
-        if DISPERSION.SERVER in data:
-            self.server = isEnabled and data[DISPERSION.SERVER]
-        toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, self.replace or self.server)
-        self.toggleServerCrossOverrides(self.server)
+        if data[GLOBAL.ENABLED]:
+            if DISPERSION.REPLACE in data:
+                self.replace = data[DISPERSION.REPLACE]
+            if DISPERSION.SERVER in data:
+                self.server = data[DISPERSION.SERVER]
+            self.toggleServerCrossOverrides(self.server)
+            toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, self.replace or self.server)
+        else:
+            toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, False)
+            self.toggleServerCrossOverrides(False)
 
     def toggleServerCrossOverrides(self, enable):
         server_overrides = (

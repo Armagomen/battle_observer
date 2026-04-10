@@ -8,8 +8,8 @@
     left: calc(50vw - 10px);
     opacity: 1 !important;
     position: absolute;
-    text-shadow: 0 0 6px rgba(0, 0, 0, 0.94);
-    top: 80px;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.96);
+    top: 84px;
     transform-origin: center top;
     transform: translateX(-50%);
     z-index: 9999;
@@ -23,11 +23,6 @@
     background-size: contain;
     background-repeat: no-repeat;
     vertical-align: middle;
-}
-
-.bo_effIcon.bo_gunIcon {
-    width: 22px;
-    height: 20px;
 }
 
 .assistIcon {

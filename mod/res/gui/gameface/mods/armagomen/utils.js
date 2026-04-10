@@ -124,7 +124,7 @@ async function getScaleAndNewPosition(selector, media, timeout = 200) {
 
     const scale = Math.min(Math.sqrt(media.height / 1080), media.scale);
     const element = await waitForElement(selector);
-    const offset = Math.floor(10 * scale);
+    const offset = Math.floor(14 * scale);
     const newTopPx = element.getBoundingClientRect().bottom + offset;
 
     return {scale, newTopPx};

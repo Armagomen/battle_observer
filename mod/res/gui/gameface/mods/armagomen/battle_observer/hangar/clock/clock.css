@@ -8,8 +8,9 @@
     left: calc(3.4vw);
     opacity: 1 !important;
     position: absolute;
-    text-shadow: 0 0 6px rgba(0, 0, 0, 0.94);
-    top: 80px;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.96);
+    top: 84px;
     transform-origin: left top;
     z-index: 9999;
+    line-height: 1;
 }

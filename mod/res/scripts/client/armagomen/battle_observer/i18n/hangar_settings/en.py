@@ -112,7 +112,11 @@ localization = {
         "scale_tooltip": "This parameter affects what the additional summation circle will be in the result."
                          "If the value is 0.3 (30%), then the circle will be the minimum possible, "
                          "and at 1.0 (100%) - the maximum, i.e. without changes."
-                         "It is not recommended to set a value lower than 65%."
+                         "It is not recommended to set a value lower than 65%.",
+        "disable_scale_limiter": "Disable minimum aim limiter.\nRestart required.",
+        "disable_scale_limiter_tooltip": "By default, the aiming circle cannot shrink below a certain size. This may give the impression "
+                                         "that the gun is fully aimed, even though the process is still ongoing. The effect is especially "
+                                         "noticeable on guns with accuracy of 0.25 or less.."
     },
     "dispersion_timer": {
         "header": "Dispersion Timer Settings",

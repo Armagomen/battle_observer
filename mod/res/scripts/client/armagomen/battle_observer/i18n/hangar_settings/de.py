@@ -92,7 +92,12 @@ localization = {
         "server_aim_tooltip": "Aktiviert einen zusätzlichen Zielkreis des Serverfadenkreuzes.",
         "replace": "Originalen Zielkreis ersetzen",
         "scale": "Größenmultiplikator des Kreises 30–100 % (0.3–1.0)",
-        "scale_tooltip": "Dieser Parameter beeinflusst die endgültige Größe des zusätzlichen Zielkreises. Bei 0.3 (30%) ist er minimal, bei 1.0 (100%) maximal — also unverändert, wie voreingestellt. Ein Wert unter 0.6 (60%) wird nicht empfohlen."
+        "scale_tooltip": "Dieser Parameter beeinflusst die endgültige Größe des zusätzlichen Zielkreises. Bei 0.3 (30%) ist er minimal, "
+                         "bei 1.0 (100%) maximal — also unverändert, wie voreingestellt. Ein Wert unter 0.6 (60%) wird nicht empfohlen.",
+        "disable_scale_limiter": "Mindestzielbegrenzung deaktivieren.\nNeustart erforderlich.",
+        "disable_scale_limiter_tooltip": "Standardmäßig hat der Zielkreis eine Mindestgröße. Dies kann den Eindruck erwecken, dass die "
+                                         "Kanone bereits vollständig ausgerichtet ist, obwohl der Prozess noch läuft. Der Effekt ist "
+                                         "besonders bei Kanonen mit einer Genauigkeit von 0,25 oder weniger sichtbar."
     },
     "dispersion_timer": {
         "header": "Zielzeit-Timer-Einstellungen",

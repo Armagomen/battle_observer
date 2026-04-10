@@ -80,7 +80,8 @@ class UserSettings(object):
             GLOBAL.ENABLED: False,
             DISPERSION.SERVER: False,
             DISPERSION.REPLACE: False,
-            DISPERSION.SCALE: 0.7
+            DISPERSION.SCALE: 0.7,
+            DISPERSION.LIMITER: False
         }
 
         self.dispersion_timer = {

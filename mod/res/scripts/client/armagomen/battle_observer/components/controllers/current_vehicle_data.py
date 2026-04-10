@@ -56,7 +56,7 @@ class CurrentVehicleCachedData(object):
             int(random.getAvgDamageAssistedStun() or 0),
             int(blocked) if blocked > 99 else round(blocked, 2),
             marks.getDamageRating(),
-            "<span class='bo_effIcon bo_gunIcon marksOnGunIcon{}'></span>".format(marks._value),
+            "<span class='bo_effIcon marksOnGunIcon{}'></span>".format(marks._value),
             g_currentVehicle.item.userName,
             g_currentVehicle.item.level > 4,
             (random.getWinsEfficiency() or 0.0) * 100,

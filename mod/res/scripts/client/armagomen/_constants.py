@@ -203,8 +203,8 @@ SIXTH_SENSE = namedtuple("SIXTH_SENSE", (
     "show_timer_graphics_color", "icon_size", "show_timer_graphics_radius", "show_random_icon"
 )
 
-__Dispersion = namedtuple("DISPERSION", ("NAME", "SERVER", "SCALE", "REPLACE"))
-DISPERSION = __Dispersion("dispersion_circle", "server_aim", "scale", "replace")
+__Dispersion = namedtuple("DISPERSION", ("NAME", "SERVER", "SCALE", "REPLACE", "LIMITER"))
+DISPERSION = __Dispersion("dispersion_circle", "server_aim", "scale", "replace", "disable_scale_limiter")
 
 __DispersionTimer = namedtuple("dispersion_timer", ("NAME", "TIMER", "PERCENT"))
 DISPERSION_TIMER = __DispersionTimer("dispersion_timer", "timer", "percent")
