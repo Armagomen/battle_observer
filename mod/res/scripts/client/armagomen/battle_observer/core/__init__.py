@@ -23,6 +23,7 @@ class Core(object):
         self.autoClearCache = False
         self.hangar_settings = None
         self.error_dialog = None
+        self.hangar_gf = None
         self.connectionMgr.onLoggedOn += self._onLoggedOn
         g_events.onModSettingsChanged += self.onModSettingsChanged
 
@@ -110,15 +111,15 @@ class Core(object):
             self.error_dialog.fini()
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         g_events.onModSettingsChanged -= self.onModSettingsChanged
+        self.hangar_gf = None
 
-    @staticmethod
-    def registerBattleObserverPackages(is_replay):
+    def registerBattleObserverPackages(self, is_replay):
         from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig
         from gui.Scaleform.required_libraries_config import BATTLE_REQUIRED_LIBRARIES
 
         if not is_replay:
-            from armagomen.battle_observer import hangar_gf
-            hangar_gf.addHooks()
+            from armagomen.battle_observer.hangar_gf import HangarGamefaceInject
+            self.hangar_gf = HangarGamefaceInject()
 
         BATTLE_REQUIRED_LIBRARIES.append('modBattleObserver.swf')
         for guiType in BATTLES_RANGE:

@@ -1,7 +1,7 @@
 .bo_premiumContainer {
     display: none;
     position: relative;
-    min-width: 115px;
+    min-width: 114px;
     z-index: 9999;
 }
 

@@ -1,5 +1,6 @@
 
 const OBSERVE_CHILD_LIST = {childList: true, subtree: true};
+const PADDING_TOP = 13;
 
 /**
  * Waits for an element matching selector to appear in the DOM.
@@ -124,7 +125,7 @@ async function getScaleAndNewPosition(selector, media, timeout = 200) {
 
     const scale = Math.min(Math.sqrt(media.height / 1080), media.scale);
     const element = await waitForElement(selector);
-    const offset = Math.floor(14 * scale);
+    const offset = Math.floor(PADDING_TOP * scale);
     const newTopPx = element.getBoundingClientRect().bottom + offset;
 
     return {scale, newTopPx};
