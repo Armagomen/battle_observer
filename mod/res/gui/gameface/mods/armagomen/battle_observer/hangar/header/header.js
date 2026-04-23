@@ -37,10 +37,10 @@ function createContainer(premium_wg) {
     const formatText = premium_wg.querySelector(format_texts_selector);
 
     const premium = document.createElement("div");
-    premium.classList.add(...premText.classList, premium_style);
+    premium.classList.add(...(premText?.classList ?? []), premium_style);
 
     const content = document.createElement("span");
-    content.classList.add(...formatText.classList, "bo_span");
+    content.classList.add(...(formatText?.classList ?? []), "bo_span");
 
     const wrapper = document.createElement("span");
     wrapper.appendChild(content);

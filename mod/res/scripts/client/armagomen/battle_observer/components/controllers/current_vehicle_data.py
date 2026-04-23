@@ -1,3 +1,4 @@
+import math
 from collections import namedtuple
 
 from armagomen.utils.hangar_vehicle_getter import isSpecialVehicle
@@ -9,7 +10,7 @@ from helpers import dependency
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from skeletons.gui.shared import IItemsCache
 
-PARAMS = ("tankAvgDamage", "tankAvgAssist", "tankAvgStun", "tankAvgBlocked", "marksOnGunValue", "marksOnGunIcon", "name", "marksAvailable",
+PARAMS = ("tankAvgDamage", "tankAvgAssist", "tankAvgStun", "tankAvgBlocked", "marksRating", "marksValue", "name", "marksAvailable",
           "winRate", "battles")
 EfficiencyAVGData = namedtuple("EfficiencyAVGData", PARAMS)
 
@@ -22,7 +23,7 @@ class CurrentVehicleCachedData(object):
     def __init__(self):
         self.onChanged = SafeEvent()
         default = 2000
-        self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, "", "Undefined", False, 0.0, 0)
+        self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, 0, "Undefined", False, 0.0, 0)
         self.__EfficiencyAVGData = None
 
         self.appLoader.onGUISpaceEntered += self.subscribe
@@ -49,14 +50,13 @@ class CurrentVehicleCachedData(object):
         dossier = self.itemsCache.items.getVehicleDossier(g_currentVehicle.intCD)
         random = dossier.getRandomStats()
         marks = random.getAchievement(MARK_ON_GUN_RECORD)
-        blocked = random.getAvgDamageBlocked() or 0
         return EfficiencyAVGData(
             int(random.getAvgDamage() or 0),
             int(random.getDamageAssistedEfficiency() or 0),
             int(random.getAvgDamageAssistedStun() or 0),
-            int(blocked) if blocked > 99 else round(blocked, 2),
+            int(math.ceil(random.getAvgDamageBlocked() or 0.0)),
             marks.getDamageRating(),
-            "<span class='bo_effIcon marksOnGunIcon{}'></span>".format(marks._value),
+            marks.getValue(),
             g_currentVehicle.item.userName,
             g_currentVehicle.item.level > 4,
             (random.getWinsEfficiency() or 0.0) * 100,

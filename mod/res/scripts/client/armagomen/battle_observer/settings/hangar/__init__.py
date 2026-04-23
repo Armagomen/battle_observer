@@ -331,8 +331,6 @@ class SettingsInterface(CreateElement):
 
     def onSettingsChanged(self, modID, blockID, data):
         """Saves made by the user settings in the settings file."""
-        if debug.is_debug:
-            logDebug('onSettingsChanged: modID: {} blockID: {} data: {}', modID, blockID, data)
         if MOD_NAME != modID:
             return
         data = encodeData(data)
@@ -356,8 +354,10 @@ class SettingsInterface(CreateElement):
 
         self.loader.updateConfigFile(blockID, settings_block)
 
-        changed_settings = {k: v for k, v in old_settings.items() if settings_block.get(k) != v or k == GLOBAL.ENABLED}
+        changed_settings = {k: v for k, v in settings_block.items() if old_settings.get(k) != v or k == GLOBAL.ENABLED}
         g_events.onModSettingsChanged(blockID, changed_settings)
+        if debug.is_debug:
+            logDebug('onSettingsChanged: modID: {} blockID: {} data: {}', modID, blockID, changed_settings)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -368,7 +368,7 @@ class SettingsInterface(CreateElement):
             self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
         if blockID in CONFIG_INTERFACE.HANDLER_VALUES and varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
             values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]
-        if values:
+        if values is not None:
             self.setHandlerValue(blockID, values, value)
 
     def setHandlerValue(self, blockID, values, value):

@@ -53,18 +53,18 @@
     background-image: url("img://gui/maps/icons/battle_observer/efficiency/battles.png");
 }
 
-.marksOnGunIcon0 {
+.gun_icon_0 {
     background-image: url("img://gui/maps/icons/battle_observer/gun/00.png");
 }
 
-.marksOnGunIcon1 {
+.gun_icon_1 {
     background-image: url("img://gui/maps/icons/battle_observer/gun/01.png");
 }
 
-.marksOnGunIcon2 {
+.gun_icon_2 {
     background-image: url("img://gui/maps/icons/battle_observer/gun/02.png");
 }
 
-.marksOnGunIcon3 {
+.gun_icon_3 {
     background-image: url("img://gui/maps/icons/battle_observer/gun/03.png");
 }

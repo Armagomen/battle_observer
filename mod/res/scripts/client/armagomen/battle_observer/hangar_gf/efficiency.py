@@ -83,7 +83,7 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
             (AVG_EFFICIENCY_HANGAR.STUN, "<span class='bo_effIcon stunIcon'></span><span>{tankAvgStun}</span>", data.tankAvgStun),
             (AVG_EFFICIENCY_HANGAR.BATTLES, "<span class='bo_effIcon battlesIcon'></span><span>{battles}</span>"),
             (AVG_EFFICIENCY_HANGAR.WIN_RATE, "<span class='bo_effIcon winRateIcon'></span><span>{winRate:.2f}%</span>"),
-            (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "{marksOnGunIcon}<span>{marksOnGunValue:.2f}%</span>", data.marksAvailable)
+            (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "<span class='bo_effIcon gun_icon_{marksValue}'></span><span>{marksRating:.2f}%</span>", data.marksAvailable)
         ]
         text = [tpl[1] for tpl in settings_map if self.settings.get(tpl[0]) and tpl[-1]]
         if text:
