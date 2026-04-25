@@ -1,6 +1,6 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import VEHICLE_TYPES_COLORS
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.logging import logDebug, logInfo
 from constants import ARENA_BONUS_TYPE
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
@@ -12,6 +12,7 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 class BaseModMeta(BaseDAAPIComponent):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsCore = dependency.descriptor(ISettingsCore)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
@@ -20,7 +21,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
-        self.settings = user_settings.getSettingDictByAliasBattle(alias)
+        self.settings = self.settingsLoader.getSettingDictByAliasBattle(alias)
 
     @property
     def _arenaDP(self):
@@ -46,17 +47,14 @@ class BaseModMeta(BaseDAAPIComponent):
     def getSettings(self):
         return self.settings
 
-    @staticmethod
-    def getColors():
-        return user_settings.colors
+    def getColors(self):
+        return self.settingsLoader.settings.colors
 
-    @staticmethod
-    def getVehicleClassColors():
-        return user_settings.colors[VEHICLE_TYPES_COLORS.NAME]
+    def getVehicleClassColors(self):
+        return self.settingsLoader.settings.colors[VEHICLE_TYPES_COLORS.NAME]
 
-    @staticmethod
-    def getVehicleClassColor(classTag):
-        return user_settings.colors[VEHICLE_TYPES_COLORS.NAME].get(classTag, VEHICLE_TYPES_COLORS.UNKNOWN)
+    def getVehicleClassColor(self, classTag):
+        return self.settingsLoader.settings.colors[VEHICLE_TYPES_COLORS.NAME].get(classTag, VEHICLE_TYPES_COLORS.UNKNOWN)
 
     def doLog(self, *args):
         for arg in args:

@@ -1,10 +1,11 @@
 from collections import defaultdict
 
 from armagomen._constants import COLORS, DAMAGE_LOG, GLOBAL
-from armagomen.battle_observer.components.controllers import cachedVehicleData
+from armagomen.battle_observer.controllers import IBOCurrentVehicleCachedData
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
 from armagomen.utils.common import getPercent, percentToColor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
+from helpers import dependency
 
 _EVENT_TO_TOP_LOG_MACROS = {
     FEEDBACK_EVENT_ID.PLAYER_DAMAGED_HP_ENEMY: ("tankAvgDamage", "tankDamageAvgColor", "playerDamage"),
@@ -16,6 +17,7 @@ _EVENT_TO_TOP_LOG_MACROS = {
 
 
 class DamageLog(DamageLogsMeta):
+    cachedVehicleData = dependency.descriptor(IBOCurrentVehicleCachedData)
 
     def __init__(self):
         super(DamageLog, self).__init__()
@@ -30,9 +32,9 @@ class DamageLog(DamageLogsMeta):
             return
         feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
         if self._arenaVisitor.gui.isRandomBattle():
-            avg_data = cachedVehicleData.efficiencyAvgData
+            avg_data = self.cachedVehicleData.efficiencyAvgData
         else:
-            avg_data = cachedVehicleData.default
+            avg_data = self.cachedVehicleData.default
         template_list = self.settings[DAMAGE_LOG.TEMPLATE_MAIN_DMG]
         if not self.isSPG():
             template_list = (line for line in template_list if DAMAGE_LOG.STUN_ICON not in line)

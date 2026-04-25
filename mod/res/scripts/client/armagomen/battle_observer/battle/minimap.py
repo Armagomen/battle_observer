@@ -1,15 +1,17 @@
 from armagomen._constants import MINIMAP
+from armagomen.battle_observer.controllers import IBOKeysListener
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
-from armagomen.utils.keys_listener import g_keysListener
 from constants import ARENA_PERIOD
 from gui.battle_control import avatar_getter
+from helpers import dependency
 
 
 class MinimapZoomPlugin(BaseModMeta):
+    keysListener = dependency.descriptor(IBOKeysListener)
 
     def _populate(self):
         super(MinimapZoomPlugin, self)._populate()
-        g_keysListener.registerComponent(self.onKeyPressed, keyList=self.settings[MINIMAP.ZOOM_KEY])
+        self.keysListener.registerComponent(self.onKeyPressed, keyList=self.settings[MINIMAP.ZOOM_KEY])
 
     def onKeyPressed(self, isKeyDown):
         """hot key event"""

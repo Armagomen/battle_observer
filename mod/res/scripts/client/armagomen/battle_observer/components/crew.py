@@ -1,7 +1,7 @@
 from AccountCommands import VEHICLE_SETTINGS_FLAG
 from armagomen._constants import MAIN
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
@@ -21,6 +21,7 @@ from wg_async import wg_async, wg_await
 
 class CrewProcessor(object):
     itemsCache = dependency.descriptor(IItemsCache)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
         self.intCD = None
@@ -54,7 +55,6 @@ class CrewProcessor(object):
 
     @decorators.adisp_process('updateTankmen')
     def accelerateCrewXp(self, vehicle, value):
-
         result = yield VehicleTmenXPAccelerator(vehicle, value, confirmationEnabled=False).request()
         if result.success:
             logInfo("The accelerated crew training is {} for '{}'", value, vehicle.userName)
@@ -91,9 +91,9 @@ class CrewProcessor(object):
         logDebug("crew onVehicleChanged")
         if not vehicle or vehicle.isLocked or isSpecialVehicle(vehicle):
             return
-        if user_settings.main[MAIN.CREW_RETURN]:
+        if self.settingsLoader.getSetting(MAIN.NAME, MAIN.CREW_RETURN):
             self.updateAutoReturn(vehicle)
-        if user_settings.main[MAIN.CREW_TRAINING]:
+        if self.settingsLoader.getSetting(MAIN.NAME, MAIN.CREW_TRAINING):
             self.updateAcceleration(vehicle)
 
     def updateAutoReturn(self, vehicle):

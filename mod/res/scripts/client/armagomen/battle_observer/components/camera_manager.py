@@ -2,7 +2,7 @@ import TriggersManager
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import addCallback, getPlayer, MinMax, ResMgr, toggleOverride
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logError
@@ -263,7 +263,7 @@ class Sniper(CameraSettings):
         self.enabled = self.config[GLOBAL.ENABLED]
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
         if camera is not None:
-            no_dynamic = user_settings.effects[EFFECTS.NO_SNIPER_DYNAMIC]
+            no_dynamic = dependency.instance(IBOSettingsLoader).getSetting(EFFECTS.NAME, EFFECTS.NO_SNIPER_DYNAMIC)
             camera.enableDynamicCamera(False if no_dynamic else bool(self.settingsCore.getSetting(GAME.DYNAMIC_CAMERA)))
             if self._dyn_zoom != self.config[SNIPER.DYN_ZOOM] and self.enabled:
                 self._dyn_zoom = self.config[SNIPER.DYN_ZOOM] and self.enabled

@@ -1,13 +1,15 @@
 from armagomen._constants import COLORS, PANELS, VEHICLE
-from armagomen.battle_observer.components.controllers import damage_controller
+from armagomen.battle_observer.controllers import IBOPlayersDamageController, IBOKeysListener
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealthPercent
+from helpers import dependency
 
 
 class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
+    damage_controller = dependency.descriptor(IBOPlayersDamageController)
+    keysListener = dependency.descriptor(IBOKeysListener)
 
     def __init__(self):
         super(PlayersPanels, self).__init__()
@@ -20,14 +22,14 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         self.damagesEnable = self.settings[PANELS.DAMAGES_ENABLED]
         if self.hpBarsEnable:
             if self.settings[PANELS.ON_KEY_DOWN]:
-                g_keysListener.registerComponent(self.as_setHealthBarsVisibleS, keyList=self.settings[PANELS.BAR_HOT_KEY])
+                self.keysListener.registerComponent(self.as_setHealthBarsVisibleS, keyList=self.settings[PANELS.BAR_HOT_KEY])
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None:
                 arena.onPeriodChange += self.onPeriodChange
                 arena.onVehicleKilled += self.onVehicleKilled
         if self.damagesEnable:
-            damage_controller.onPlayerDamaged += self.onPlayerDamaged
-            g_keysListener.registerComponent(self.as_setPlayersDamageVisibleS, keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
+            self.damage_controller.onPlayerDamaged += self.onPlayerDamaged
+            self.keysListener.registerComponent(self.as_setPlayersDamageVisibleS, keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
 
     def _dispose(self):
         self.flashObject.as_clearStorage()
@@ -37,7 +39,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 arena.onPeriodChange -= self.onPeriodChange
                 arena.onVehicleKilled -= self.onVehicleKilled
         if self.damagesEnable:
-            damage_controller.onPlayerDamaged -= self.onPlayerDamaged
+            self.damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         super(PlayersPanels, self)._dispose()
 
     def onColorblindUpdated(self, blind):

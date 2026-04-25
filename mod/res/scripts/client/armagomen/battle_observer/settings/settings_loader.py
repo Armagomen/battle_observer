@@ -1,6 +1,6 @@
 import os
 
-from armagomen._constants import LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
+from armagomen._constants import ALIAS_TO_CONFIG_NAME, ALIAS_TO_CONFIG_NAME_LOBBY, GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import DEBUG, debug, logError, logInfo
@@ -18,20 +18,15 @@ class SettingsLoader(object):
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
         self.configName = self.configsList[0] if self.configsList else 'default'
         self.load_json = os.path.join(currentConfigPath, 'load.json')
-        try:
-            data = openJsonFile(self.load_json)
-        except Exception as error:
-            logError("Error in openJsonFile: {}", repr(error))
-            self.createLoadJSON(self.configName)
-            self.error_dialog.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
-            if self.configName not in self.configsList:
-                self.configsList.append(self.configName)
-        else:
-            self.configName = data.get('loadConfig', self.configName)
-        config_path = os.path.join(currentConfigPath, self.configName)
-        if not os.path.isdir(config_path):
-            os.makedirs(config_path)
-            self.error_dialog.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
+
+    def init(self):
+        self.error_dialog.init()
+        self.readConfig()
+
+    def fini(self):
+        self.error_dialog.fini()
+        self.error_dialog = None
+        self.__settings = None
 
     @property
     def settings(self):
@@ -97,6 +92,22 @@ class SettingsLoader(object):
 
     def readConfig(self):
         """Load user configuration"""
+
+        try:
+            data = openJsonFile(self.load_json)
+        except Exception as error:
+            logError("Error in openJsonFile: {}", repr(error))
+            self.createLoadJSON(self.configName)
+            self.error_dialog.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
+            if self.configName not in self.configsList:
+                self.configsList.append(self.configName)
+        else:
+            self.configName = data.get('loadConfig', self.configName)
+        config_path = os.path.join(currentConfigPath, self.configName)
+        if not os.path.isdir(config_path):
+            os.makedirs(config_path)
+            self.error_dialog.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
+
         logInfo("LOADING USER CONFIGURATION: {}", self.configName.upper())
         self.iterateSettings(self.loadConfigPart)
         logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
@@ -123,3 +134,20 @@ class SettingsLoader(object):
             logInfo(READ_MESSAGE, self.configName, file_name)
             if component_name == MAIN.NAME and debug.set_debug(config[DEBUG]):
                 printDebuginfo()
+
+    def getSettingDictByAliasBattle(self, alias):
+        return getattr(self.__settings, ALIAS_TO_CONFIG_NAME.get(alias, GLOBAL.EMPTY_LINE), self.__settings)
+
+    def getSettingDictByAliasLobby(self, alias):
+        return getattr(self.__settings, ALIAS_TO_CONFIG_NAME_LOBBY.get(alias, GLOBAL.EMPTY_LINE), self.__settings)
+
+    def getSetting(self, component_name, key=None):
+        component = getattr(self.__settings, component_name, None)
+        if component is None:
+            raise AttributeError('Component {} not found in settings'.format(component_name))
+        if key is None:
+            return component
+        param = component.get(key)
+        if param is None:
+            raise KeyError('Parameter {} not found in settings {}'.format(key, component))
+        return param

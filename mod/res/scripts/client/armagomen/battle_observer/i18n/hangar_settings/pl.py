@@ -96,7 +96,7 @@ localization = {
         "replace": "Zastąp oryginalny krąg skupienia",
         "scale": "Skalowanie kręgu: 30–100% (0.3–1.0)",
         "scale_tooltip": "Wartość 0.3 oznacza minimalny rozmiar, 1.0 – domyślny. Nie zaleca się ustawień poniżej 0.6.",
-        "disable_scale_limiter": "Wyłącz ogranicznik minimalnego skupienia.\nWymagany restart.",
+        "disable_scale_limiter": "Wyłącz ogranicznik minimalnego skupienia.",
         "disable_scale_limiter_tooltip": "Domyślnie okrąg celowania ma minimalny rozmiar. Może to sprawiać wrażenie, że działo jest już "
                                          "skupione, choć proces jeszcze trwa. Efekt jest szczególnie zauważalny w działach o celności 0.25 lub mniejszej."
     },

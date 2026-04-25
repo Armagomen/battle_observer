@@ -1,7 +1,7 @@
 import aih_constants
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import DISPERSION, GLOBAL
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import getPlayer, toggleOverride
 from armagomen.utils.events import g_events
 from AvatarInputHandler import gun_marker_ctrl
@@ -23,20 +23,17 @@ for key, value in gm_factory._GUN_MARKER_LINKAGES.items():
 
 REPLACE_TYPES = {gun_marker_ctrl._MARKER_TYPE.CLIENT, gun_marker_ctrl._MARKER_TYPE.DUAL_ACC}
 
-if user_settings.dispersion_circle[GLOBAL.ENABLED] and user_settings.dispersion_circle[DISPERSION.LIMITER]:
-    aih_constants.GUN_MARKER_MIN_SIZE = 10.0
-    aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0
-
+settingsLoder = dependency.instance(IBOSettingsLoader)
 
 def get_dispersion_scale_setting(marker_type):
-    replace_setting = user_settings.dispersion_circle[DISPERSION.REPLACE]
-    server_setting = user_settings.dispersion_circle[DISPERSION.SERVER]
+    replace_setting = settingsLoder.getSetting(DISPERSION.NAME, DISPERSION.REPLACE)
+    server_setting = settingsLoder.getSetting(DISPERSION.NAME, DISPERSION.SERVER)
     result = False
     if marker_type == gun_marker_ctrl._MARKER_TYPE.SERVER:
         result = replace_setting or server_setting
     elif marker_type in REPLACE_TYPES:
         result = replace_setting
-    return float(user_settings.dispersion_circle[DISPERSION.SCALE]) if result else 1.0
+    return float(settingsLoder.getSetting(DISPERSION.NAME, DISPERSION.SCALE)) if result else 1.0
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
@@ -80,6 +77,8 @@ class DispersionCircle(object):
     def __init__(self):
         self.replace = False
         self.server = False
+        self.limiter = False
+        self.enabled = False
         g_events.onModSettingsChanged += self.onModSettingsChanged
 
     def fini(self):
@@ -121,19 +120,26 @@ class DispersionCircle(object):
         base(cr_panel, gun_marker_ctrl._MARKER_TYPE.SERVER, color)
         return base(cr_panel, markerType, color)
 
+    @staticmethod
+    def toggleLimiter(enable):
+        aih_constants.GUN_MARKER_MIN_SIZE = 16.0 if enable else 32.0
+        aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0 if enable else 40.0
+
     def onModSettingsChanged(self, name, data):
         if name != DISPERSION.NAME:
             return
-        if data[GLOBAL.ENABLED]:
-            if DISPERSION.REPLACE in data:
-                self.replace = data[DISPERSION.REPLACE]
-            if DISPERSION.SERVER in data:
-                self.server = data[DISPERSION.SERVER]
+        self.enabled = data.get(GLOBAL.ENABLED, self.enabled)
+        if self.enabled:
+            self.limiter = data.get(DISPERSION.LIMITER, self.limiter)
+            self.replace = data.get(DISPERSION.REPLACE, self.replace)
+            self.server = data.get(DISPERSION.SERVER, self.server)
+            self.toggleLimiter(self.limiter)
             self.toggleServerCrossOverrides(self.server)
             toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, self.replace or self.server)
         else:
             toggleOverride(gun_marker_ctrl, "createGunMarker", self.createGunMarker_WG, False)
             self.toggleServerCrossOverrides(False)
+            self.toggleLimiter(False)
 
     def toggleServerCrossOverrides(self, enable):
         server_overrides = (

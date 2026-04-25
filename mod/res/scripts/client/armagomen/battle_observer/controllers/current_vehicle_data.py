@@ -26,8 +26,13 @@ class CurrentVehicleCachedData(object):
         self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, 0, "Undefined", False, 0.0, 0)
         self.__EfficiencyAVGData = None
 
+    def init(self):
         self.appLoader.onGUISpaceEntered += self.subscribe
         self.appLoader.onGUISpaceLeft += self.unsubscribe
+
+    def fini(self):
+        self.appLoader.onGUISpaceEntered -= self.subscribe
+        self.appLoader.onGUISpaceLeft -= self.unsubscribe
 
     def subscribe(self, spaceID):
         if spaceID != GuiGlobalSpaceID.LOBBY:
@@ -70,7 +75,3 @@ class CurrentVehicleCachedData(object):
     @property
     def default(self):
         return self.__default
-
-    def fini(self):
-        self.appLoader.onGUISpaceEntered -= self.subscribe
-        self.appLoader.onGUISpaceLeft -= self.unsubscribe

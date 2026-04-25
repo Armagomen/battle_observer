@@ -1,26 +1,29 @@
 from math import degrees
 
 from armagomen._constants import BATTLES_RANGE, GLOBAL, MINIMAP
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.settings_loader import SettingsLoader
 from armagomen.utils.common import IS_XVM_INSTALLED, overrideMethod
 from armagomen.utils.logging import logError
 from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
+from helpers import dependency
 
+settingsLoader = dependency.instance(IBOSettingsLoader)
 
 class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 
     def start(self):
         super(PersonalEntriesPlugin, self).start()
-        if user_settings.minimap[MINIMAP.YAW] and self.__yawLimits is None:
+        if settingsLoader.getSetting(MINIMAP.NAME, MINIMAP.YAW) and self.__yawLimits is None:
             vInfo = self._arenaDP.getVehicleInfo()
             yawLimits = vInfo.vehicleType.turretYawLimits
             if yawLimits is not None:
                 self.__yawLimits = (degrees(yawLimits[0]), degrees(yawLimits[1]))
 
     def _calcCircularVisionRadius(self):
-        if user_settings.minimap[MINIMAP.VIEW_RADIUS]:
+        if settingsLoader.getSetting(MINIMAP.NAME, MINIMAP.VIEW_RADIUS):
             vehAttrs = self.sessionProvider.shared.feedback.getVehicleAttrs()
             return vehAttrs.get('circularVisionRadius', VISIBILITY.MIN_RADIUS)
         return super(PersonalEntriesPlugin, self)._calcCircularVisionRadius()
@@ -30,9 +33,8 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
 
     def __init__(self, *args, **kwargs):
         super(ArenaVehiclesPlugin, self).__init__(*args, **kwargs)
-        self.__showDestroyEntries = user_settings.minimap[MINIMAP.DEATH_PERMANENT]
-        self.__isDestroyImmediately = user_settings.minimap[MINIMAP.DEATH_PERMANENT]
-        self.__showDestroyNames = user_settings.minimap[MINIMAP.SHOW_NAMES] and self.__isDestroyImmediately
+        self.__showDestroyEntries = self.__isDestroyImmediately = True
+        self.__showDestroyNames = settingsLoader.getSetting(MINIMAP.NAME, MINIMAP.SHOW_NAMES)
 
     def _showVehicle(self, vehicleID, location):
         entry = self._entries[vehicleID]
@@ -64,8 +66,8 @@ def _setupPlugins(base, plugin, arenaVisitor):
     _plugins = base(plugin, arenaVisitor)
     try:
         allowedMode = arenaVisitor.gui.guiType in BATTLES_RANGE
-        if not IS_XVM_INSTALLED and allowedMode and user_settings.minimap[GLOBAL.ENABLED]:
-            if user_settings.minimap[MINIMAP.DEATH_PERMANENT]:
+        if not IS_XVM_INSTALLED and allowedMode and settingsLoader.getSetting(MINIMAP.NAME, GLOBAL.ENABLED):
+            if settingsLoader.getSetting(MINIMAP.NAME, MINIMAP.DEATH_PERMANENT):
                 _plugins['vehicles'] = ArenaVehiclesPlugin
             _plugins['personal'] = PersonalEntriesPlugin
     except Exception as err:

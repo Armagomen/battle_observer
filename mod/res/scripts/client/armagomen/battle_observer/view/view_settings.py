@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, MINIMAP, \
     STATISTICS
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import IS_XVM_INSTALLED
 from armagomen.utils.logging import logDebug, logInfo
 from constants import ARENA_GUI_TYPE
@@ -26,9 +26,11 @@ NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE
 
 class ViewSettings(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self, *args, **kwargs):
         self._components = None
+        self._settings = self.settingsLoader.settings
 
     @property
     def gui(self):
@@ -59,53 +61,51 @@ class ViewSettings(object):
         return self.isSpecialBattle() or self.gui.isEpicRandomBattle()
 
     def isFlightTimeEnabled(self):
-        enabled = user_settings.flight_time[GLOBAL.ENABLED]
-        if user_settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
+        enabled = self._settings.flight_time[GLOBAL.ENABLED]
+        if self._settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
             return enabled and self.isSPG()
         return enabled
 
     def isDistanceToEnemyEnabled(self):
         if self.isSPG() or self.isSpecialBattle():
             return False
-        return user_settings.distance_to_enemy[GLOBAL.ENABLED]
+        return self._settings.distance_to_enemy[GLOBAL.ENABLED]
 
     def isHealthEnabled(self):
-        return user_settings.hp_bars[GLOBAL.ENABLED] and not self.isSpecialBattle()
+        return self._settings.hp_bars[GLOBAL.ENABLED] and not self.isSpecialBattle()
 
     def isMainGunEnabled(self):
-        return user_settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle()
+        return self._settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle()
 
     def isExtendedLogEnabled(self):
-        return user_settings.log_extended[GLOBAL.ENABLED] and not self.isSpecialBattle() and (
-                user_settings.log_extended[DAMAGE_LOG.D_DONE_ENABLED] or user_settings.log_extended[DAMAGE_LOG.D_RECEIVED_ENABLED])
+        return self._settings.log_extended[GLOBAL.ENABLED] and not self.isSpecialBattle() and (
+                self._settings.log_extended[DAMAGE_LOG.D_DONE_ENABLED] or self._settings.log_extended[DAMAGE_LOG.D_RECEIVED_ENABLED])
 
     def isMinimapEnabled(self):
         if self.xvm_installed("Minimap") or self.spacialOrEpicRandom():
             return False
-        return user_settings.minimap[GLOBAL.ENABLED] and user_settings.minimap[MINIMAP.ZOOM]
+        return self._settings.minimap[GLOBAL.ENABLED] and self._settings.minimap[MINIMAP.ZOOM]
 
     def isStatisticsAndIconsEnabled(self):
         if self.xvm_installed("Statistics and Icons") or self.spacialOrEpicRandom():
             return False
-        return user_settings.statistics[GLOBAL.ENABLED] and (
-                user_settings.statistics[STATISTICS.STATISTIC_ENABLED] or user_settings.statistics[STATISTICS.ICON_ENABLED])
+        return self._settings.statistics[GLOBAL.ENABLED] and (
+                self._settings.statistics[STATISTICS.STATISTIC_ENABLED] or self._settings.statistics[STATISTICS.ICON_ENABLED])
 
     def isPlayersPanelsEnabled(self):
         if self.xvm_installed("PlayersPanels") or self.spacialOrEpicRandom():
             return False
-        return user_settings.players_panels[GLOBAL.ENABLED]
+        return self._settings.players_panels[GLOBAL.ENABLED]
 
     def isTeamBasesEnabled(self):
-        return user_settings.team_bases_panel[GLOBAL.ENABLED] and not self.isSpecialBattle()
+        return self._settings.team_bases_panel[GLOBAL.ENABLED] and not self.isSpecialBattle()
 
-    @staticmethod
-    def isClockEnabled():
-        return user_settings.clock[GLOBAL.ENABLED] and user_settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
+    def isClockEnabled(self):
+        return self._settings.clock[GLOBAL.ENABLED] and self._settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
 
-    @staticmethod
-    def isArmorCalculatorUIEnabled():
-        if user_settings.armor_calculator[GLOBAL.ENABLED]:
-            return any(user_settings.armor_calculator.get(key, False) for key in ARMOR_CALC_PARAMS)
+    def isArmorCalculatorUIEnabled(self):
+        if self._settings.armor_calculator[GLOBAL.ENABLED]:
+            return any(self._settings.armor_calculator.get(key, False) for key in ARMOR_CALC_PARAMS)
         return False
 
     def _invalidateComponents(self):
@@ -113,19 +113,19 @@ class ViewSettings(object):
             (BATTLE_ALIASES.WGR_ICONS, self.isStatisticsAndIconsEnabled()),
             (BATTLE_ALIASES.HP_BARS, self.isHealthEnabled()),
             (BATTLE_ALIASES.MAIN_GUN, self.isMainGunEnabled()),
-            (BATTLE_ALIASES.DAMAGE_LOG, user_settings.log_total[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.DAMAGE_LOG, self._settings.log_total[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.DAMAGE_LOG_EXT, self.isExtendedLogEnabled()),
-            (BATTLE_ALIASES.DEBUG, user_settings.debug_panel[GLOBAL.ENABLED]),
-            (BATTLE_ALIASES.TIMER, user_settings.battle_timer[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.DEBUG, self._settings.debug_panel[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.TIMER, self._settings.battle_timer[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.TEAM_BASES, self.isTeamBasesEnabled()),
-            (BATTLE_ALIASES.SIXTH_SENSE, user_settings.sixth_sense[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.SIXTH_SENSE, self._settings.sixth_sense[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.ARMOR_CALC, self.isArmorCalculatorUIEnabled()),
             (BATTLE_ALIASES.FLIGHT_TIME, self.isFlightTimeEnabled()),
-            (BATTLE_ALIASES.DISPERSION_TIMER, user_settings.dispersion_timer[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.DISPERSION_TIMER, self._settings.dispersion_timer[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.PANELS, self.isPlayersPanelsEnabled()),
             (BATTLE_ALIASES.DATE_TIME, self.isClockEnabled()),
             (BATTLE_ALIASES.DISTANCE, self.isDistanceToEnemyEnabled()),
-            (BATTLE_ALIASES.OWN_HEALTH, user_settings.own_health[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.OWN_HEALTH, self._settings.own_health[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.MAP, self.isMinimapEnabled())
         ) if enabled)
 

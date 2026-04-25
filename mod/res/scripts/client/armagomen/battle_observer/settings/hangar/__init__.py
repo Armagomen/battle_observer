@@ -4,6 +4,7 @@ from math import ceil
 from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
                                   MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import addCallback, encodeData, IS_XVM_INSTALLED, openWebBrowser, safe_index, SIXTH_SENSE_LIST, SIXTH_SENSE_PATH
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import debug, logDebug, logError, logInfo, logWarning
@@ -224,13 +225,13 @@ class CreateElement(Getter):
 
 class SettingsInterface(CreateElement):
     appLoader = dependency.descriptor(IAppLoader)
+    loader = dependency.descriptor(IBOSettingsLoader)
 
-    def __init__(self, settingsLoader, version, api):
+    def __init__(self, version, api):
         self.modsListApi, self.vxSettingsApi, self.apiEvents = api
         super(SettingsInterface, self).__init__()
-        self.loader = settingsLoader
         self.inited = set()
-        self.currentConfigID = self.newConfigID = safe_index(settingsLoader.configsList, settingsLoader.configName)
+        self.currentConfigID = self.newConfigID = safe_index(self.loader.configsList, self.loader.configName)
         self.newConfigLoadingInProcess = False
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
@@ -352,12 +353,12 @@ class SettingsInterface(CreateElement):
                     value = float(value)
                 updated_config_link[param_name] = self.map_value(blockID, param_name, value)
 
-        self.loader.updateConfigFile(blockID, settings_block)
-
-        changed_settings = {k: v for k, v in settings_block.items() if old_settings.get(k) != v or k == GLOBAL.ENABLED}
-        g_events.onModSettingsChanged(blockID, changed_settings)
-        if debug.is_debug:
-            logDebug('onSettingsChanged: modID: {} blockID: {} data: {}', modID, blockID, changed_settings)
+        changed_settings = {k: v for k, v in settings_block.items() if old_settings.get(k) != v}
+        if changed_settings:
+            self.loader.updateConfigFile(blockID, settings_block)
+            g_events.onModSettingsChanged(blockID, changed_settings)
+            if debug.is_debug:
+                logDebug('onSettingsChanged: blockID: {} changed_settings: {}', blockID, changed_settings)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""

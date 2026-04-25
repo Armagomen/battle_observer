@@ -11,7 +11,6 @@ class ErrorMessages(object):
 
     def __init__(self):
         self.messages = set()
-        ServicesLocator.appLoader.onGUISpaceEntered += self.__show
 
     def __show(self, spaceID):
         if not self.messages:
@@ -27,7 +26,10 @@ class ErrorMessages(object):
             yield error_template.format(self.messages.pop())
 
     def showDialog(self, isLobby):
-        LoadingErrorDialog().show(GLOBAL.NEW_LINE.join(self._messages), isLobby)
+        LoadingErrorDialog().show(GLOBAL.DOUBLE_NEW_LINE.join(self._messages), isLobby)
+
+    def init(self):
+        ServicesLocator.appLoader.onGUISpaceEntered += self.__show
 
     def fini(self):
         ServicesLocator.appLoader.onGUISpaceEntered -= self.__show

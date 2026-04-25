@@ -1,15 +1,15 @@
 from collections import defaultdict, namedtuple
 
 from armagomen._constants import COLORS, DAMAGE_LOG, EX_LOGS_ICONS, GLOBAL, IMAGE_DIR
+from armagomen.battle_observer.controllers import IBOKeysListener
 from armagomen.battle_observer.meta.battle.extended_damage_logs_meta import ExtendedDamageLogsMeta
 from armagomen.utils.common import getPercent, percentToColor
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.Scaleform.locale.INGAME_GUI import INGAME_GUI
-from helpers import i18n
+from helpers import dependency, i18n
 
 _SHELL_TYPES_TO_STR = {
     BATTLE_LOG_SHELL_TYPES.ARMOR_PIERCING: INGAME_GUI.DAMAGELOG_SHELLTYPE_ARMOR_PIERCING,
@@ -42,6 +42,7 @@ def getVehicleClassIcon(classTag):
 
 
 class ExtendedDamageLogs(ExtendedDamageLogsMeta):
+    keysListener = dependency.descriptor(IBOKeysListener)
 
     def __init__(self):
         super(ExtendedDamageLogs, self).__init__()
@@ -60,7 +61,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
             return
         feedback.onPlayerFeedbackReceived += self.__onPlayerFeedbackReceived
         self.attack_reasons.update(self.settings[DAMAGE_LOG.ATTACK_REASON])
-        g_keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings[DAMAGE_LOG.HOT_KEY])
+        self.keysListener.registerComponent(self.onLogsAltMode, keyList=self.settings[DAMAGE_LOG.HOT_KEY])
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onVehicleUpdated += self.onVehicleUpdated

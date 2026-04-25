@@ -1,5 +1,5 @@
 from armagomen._constants import MAIN
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import overrideMethod, safe_import
 from armagomen.utils.events import g_events
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
@@ -10,6 +10,9 @@ from gui.game_control.PromoController import PromoController
 from gui.game_control.special_sound_ctrl import SpecialSoundCtrl
 from gui.Scaleform.daapi.view.battle.shared.hint_panel import BattleHintPanel
 from gui.Scaleform.daapi.view.battle.shared.timers_panel import TimersPanel
+from helpers import dependency
+
+settingsLoader = dependency.instance(IBOSettingsLoader)
 
 _EquipmentZoneSoundPlayer = safe_import((
     ("comp7_core.gui.battle_control.controllers.sound_ctrls.comp7_battle_sounds", "_EquipmentZoneSoundPlayer"),
@@ -18,15 +21,15 @@ _EquipmentZoneSoundPlayer = safe_import((
 if _EquipmentZoneSoundPlayer:
     @overrideMethod(_EquipmentZoneSoundPlayer, "_onVehicleStateUpdated")
     def _onVehicleStateUpdated(base, eq, state, value):
-        if state == VEHICLE_VIEW_STATE.STUN and user_settings.main[MAIN.STUN_SOUND]:
-            return
+        if state == VEHICLE_VIEW_STATE.STUN and settingsLoader.getSetting(MAIN.NAME, MAIN.STUN_SOUND):
+            return None
         return base(eq, state, value)
 
 
 # disable battle hints
 @overrideMethod(BattleHintPanel, "_initPlugins")
 def _initPlugins(base, panel, *args, **kwargs):
-    if not user_settings.main[MAIN.HIDE_HINT]:
+    if not settingsLoader.getSetting(MAIN.NAME, MAIN.HIDE_HINT):
         base(panel, *args, **kwargs)
     elif panel._plugins is not None:
         panel._plugins.stop()
@@ -37,18 +40,18 @@ def _initPlugins(base, panel, *args, **kwargs):
 # disable field mail tips
 @overrideMethod(PromoController, "__tryToShowTeaser")
 def _tryToShowTeaser(base, *args):
-    return None if user_settings.main[MAIN.FIELD_MAIL] else base(*args)
+    return None if settingsLoader.getSetting(MAIN.NAME, MAIN.FIELD_MAIL) else base(*args)
 
 
 @overrideMethod(PromoController, "__needToGetTeasersInfo")
 def _needToGetTeasersInfo(base, *args):
-    return False if user_settings.main[MAIN.FIELD_MAIL] else base(*args)
+    return False if settingsLoader.getSetting(MAIN.NAME, MAIN.FIELD_MAIL) else base(*args)
 
 
 # disable dogTag
 @overrideMethod(_ClientArenaVisitor, "hasDogTag")
 def hasDogTag(base, *args, **kwargs):
-    return False if user_settings.main[MAIN.HIDE_DOG_TAGS] else base(*args, **kwargs)
+    return False if settingsLoader.getSetting(MAIN.NAME, MAIN.HIDE_DOG_TAGS) else base(*args, **kwargs)
 
 
 class TweakSounds(object):
@@ -62,15 +65,17 @@ class TweakSounds(object):
     @staticmethod
     @overrideMethod(BattleTeamsBasesController, "__playCaptureSound")
     def muteCaptureSound(base, *args):
-        if not user_settings.main[MAIN.MUTE_BASES_SOUND]:
+        if not settingsLoader.getSetting(MAIN.NAME, MAIN.MUTE_BASES_SOUND):
             return base(*args)
+        return None
 
     # disable battle artillery_stun_effect sound
     @staticmethod
     @overrideMethod(TimersPanel, "__playStunSoundIfNeed")
     def playStunSoundIfNeed(base, *args, **kwargs):
-        if not user_settings.main[MAIN.STUN_SOUND]:
+        if not settingsLoader.getSetting(MAIN.NAME, MAIN.STUN_SOUND):
             return base(*args, **kwargs)
+        return None
 
     @staticmethod
     def onModSettingsChanged(name, data):
@@ -88,7 +93,7 @@ class TweakSounds(object):
     @overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByTankmen")
     @overrideMethod(SpecialSoundCtrl, "__setSpecialVoiceByCommanderSkinID")
     def setSoundMode(base, *args, **kwargs):
-        if user_settings.main[MAIN.IGNORE_COMMANDERS]:
+        if settingsLoader.getSetting(MAIN.NAME, MAIN.IGNORE_COMMANDERS):
             return False
         return base(*args, **kwargs)
 

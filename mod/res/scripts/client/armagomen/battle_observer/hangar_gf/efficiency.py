@@ -1,10 +1,11 @@
 from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, LOBBY_ALIASES
-from armagomen.battle_observer.components.controllers import cachedVehicleData
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.controllers import IBOCurrentVehicleCachedData
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
 from frameworks.wulf import ViewModel
 from gui.impl.pub.view_component import ViewComponent
+from helpers import dependency
 from openwg_gameface import gf_mod_inject, ModDynAccessor
 
 
@@ -34,6 +35,8 @@ class HangarEfficiencyModel(ViewModel):
 
 class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
     viewLayoutID = ModDynAccessor(LOBBY_ALIASES.EFFICIENCY)
+    cachedVehicleData = dependency.descriptor(IBOCurrentVehicleCachedData)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
         logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.EFFICIENCY, self.viewLayoutID())
@@ -41,6 +44,7 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
             layoutID=self.viewLayoutID(),
             model=HangarEfficiencyModel
         )
+        self.enabled = False
 
     @property
     def viewModel(self):
@@ -58,15 +62,15 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
 
     @property
     def settings(self):
-        return user_settings.getSettingDictByAliasLobby(LOBBY_ALIASES.EFFICIENCY)
+        return self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.EFFICIENCY)
 
     def subscribe(self):
         g_events.onModSettingsChanged += self.onModSettingsChanged
-        cachedVehicleData.onChanged += self.update
+        self.cachedVehicleData.onChanged += self.update
         self.onModSettingsChanged(AVG_EFFICIENCY_HANGAR.NAME, self.settings)
 
     def unsubscribe(self):
-        cachedVehicleData.onChanged -= self.update
+        self.cachedVehicleData.onChanged -= self.update
         g_events.onModSettingsChanged -= self.onModSettingsChanged
 
     def update(self, data):
@@ -83,7 +87,8 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
             (AVG_EFFICIENCY_HANGAR.STUN, "<span class='bo_effIcon stunIcon'></span><span>{tankAvgStun}</span>", data.tankAvgStun),
             (AVG_EFFICIENCY_HANGAR.BATTLES, "<span class='bo_effIcon battlesIcon'></span><span>{battles}</span>"),
             (AVG_EFFICIENCY_HANGAR.WIN_RATE, "<span class='bo_effIcon winRateIcon'></span><span>{winRate:.2f}%</span>"),
-            (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "<span class='bo_effIcon gun_icon_{marksValue}'></span><span>{marksRating:.2f}%</span>", data.marksAvailable)
+            (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "<span class='bo_effIcon gun_icon_{marksValue}'></span><span>{marksRating:.2f}%</span>",
+             data.marksAvailable)
         ]
         text = [tpl[1] for tpl in settings_map if self.settings.get(tpl[0]) and tpl[-1]]
         if text:
@@ -92,7 +97,8 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
 
     def onModSettingsChanged(self, name, data):
         if name == AVG_EFFICIENCY_HANGAR.NAME:
-            if data[GLOBAL.ENABLED]:
-                cachedVehicleData.onVehicleChanged()
+            self.enabled = data.get(GLOBAL.ENABLED, self.enabled)
+            if self.enabled:
+                self.cachedVehicleData.onVehicleChanged()
             else:
                 self.viewModel.setContent(GLOBAL.EMPTY_LINE)

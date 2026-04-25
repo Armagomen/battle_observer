@@ -1,8 +1,5 @@
-from armagomen._constants import BATTLE_ALIASES
-from armagomen.battle_observer.components.controllers import damage_controller
 from armagomen.battle_observer.view.view_settings import ViewSettings
 from armagomen.utils.common import addCallback
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug
 from frameworks.wulf import WindowLayer
 from gui.app_loader.settings import APP_NAME_SPACE
@@ -43,21 +40,13 @@ class ViewHandlerBattle(TryLoadHandler, ViewSettings):
                                                       VIEW_ALIAS.COMP7_BATTLE_PAGE, VIEW_ALIAS.COMP7_LIGHT_BATTLE_PAGE))
         listeners = tuple((alias, self.eventListener) for alias in BATTLE_PAGES.difference(DEF_IGNORED_PAGES))
         super(ViewHandlerBattle, self).__init__(listeners, appNS=APP_NAME_SPACE.SF_BATTLE, scope=EVENT_BUS_SCOPE.BATTLE)
-        self.enable_controller = False
 
     def init(self):
         super(ViewHandlerBattle, self).init()
         self._invalidateComponents()
-        self.enable_controller = bool({BATTLE_ALIASES.MAIN_GUN, BATTLE_ALIASES.PANELS}.intersection(self._components))
-        if self.enable_controller:
-            damage_controller.start()
-        g_keysListener.start()
 
     def fini(self):
         self._clear()
-        g_keysListener.stop()
-        if self.enable_controller:
-            damage_controller.stop()
         super(ViewHandlerBattle, self).fini()
 
     def eventListener(self, event):

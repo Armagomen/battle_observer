@@ -1,6 +1,6 @@
 from aih_constants import SHOT_RESULT
 from armagomen._constants import ARMOR_CALC, GLOBAL
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import getPlayer, isReplay, MinMax, overrideMethod
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
@@ -11,6 +11,7 @@ from gui.battle_control import avatar_getter
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
 from gui.shared.gui_items import KPI
+from helpers import dependency
 from items.tankmen import getSkillsConfig
 from Vehicle import Vehicle
 
@@ -143,12 +144,13 @@ class _ShotResultAll(_ShotResult):
 
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
         self.__player = getPlayer()
         self.__data = None
-        self.__resolver = _ShotResultAll if user_settings.armor_calculator[ARMOR_CALC.ON_ALLY] else _ShotResult
+        self.__resolver = _ShotResultAll if self.settingsLoader.getSetting(ARMOR_CALC.NAME, ARMOR_CALC.ON_ALLY) else _ShotResult
 
     def __onGunMarkerStateChanged(self, markerType, gunMarkerState, supportMarkersInfo):
         if not self.__isEnabled:
@@ -188,12 +190,15 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 @overrideMethod(plugins, 'createPlugins')
 def createPlugins(base, *args):
     _plugins = base(*args)
-    if user_settings.armor_calculator[GLOBAL.ENABLED]:
+    settingsLoader = dependency.instance(IBOSettingsLoader)
+    if settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
 
 
 class Randomizer(object):
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
+
     GUNNER_ARMORER = 'gunner_armorer'
     LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
     RND_MIN_MAX_DEBUG = 'PIERCING_POWER_RANDOMIZATION: {}, vehicle: {}'
@@ -226,7 +231,7 @@ class Randomizer(object):
 
     @classmethod
     def _updateRandomization(cls, vehicle):
-        if vehicle is None or not user_settings.armor_calculator[GLOBAL.ENABLED]:
+        if vehicle is None or not cls.settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
             _ShotResult.RANDOMIZATION = DEFAULT_RANDOMIZATION
             return
         data = {cls.GUNNER_ARMORER: [], cls.LOADER_AMMUNITION_IMPROVE: []}

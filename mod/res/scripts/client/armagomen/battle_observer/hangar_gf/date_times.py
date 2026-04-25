@@ -1,11 +1,12 @@
 from armagomen._constants import CLOCK, GLOBAL, LOBBY_ALIASES
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
 from frameworks.wulf import ViewModel
 from gui.impl.pub.view_component import ViewComponent
 from gui.shared.utils.TimeInterval import TimeInterval
+from helpers import dependency
 from openwg_gameface import gf_mod_inject, ModDynAccessor
 from time import strftime
 
@@ -36,6 +37,7 @@ class ClockModel(ViewModel):
 
 class DateTimesView(ViewComponent[ClockModel]):
     viewLayoutID = ModDynAccessor(LOBBY_ALIASES.DATE_TIME)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
 
@@ -44,8 +46,8 @@ class DateTimesView(ViewComponent[ClockModel]):
             layoutID=self.viewLayoutID(),
             model=ClockModel
         )
-
         self.__enabled = False
+        self.__hangarEnabled = False
         self.__clockFormat = CLOCK.DEFAULT_FORMAT_HANGAR
         self._timeInterval = TimeInterval(1.0, self, 'updateTime')
 
@@ -55,7 +57,7 @@ class DateTimesView(ViewComponent[ClockModel]):
 
     @property
     def settings(self):
-        return user_settings.getSettingDictByAliasLobby(LOBBY_ALIASES.DATE_TIME)
+        return self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.DATE_TIME)
 
     def _onLoading(self):
         super(DateTimesView, self)._onLoading()
@@ -82,9 +84,11 @@ class DateTimesView(ViewComponent[ClockModel]):
 
     def onModSettingsChanged(self, name, data):
         if name == CLOCK.NAME:
-            if CLOCK.IN_LOBBY in data:
-                u_format = data[CLOCK.IN_LOBBY][CLOCK.FORMAT]
-                self.__clockFormat = CLOCK.DEFAULT_FORMAT_HANGAR if "tab" in u_format.lower() else u_format
-                self.__enabled = data[CLOCK.IN_LOBBY][GLOBAL.ENABLED]
-            enabled = data[GLOBAL.ENABLED]
-            self.toggleInterval(enabled and self.__enabled)
+            in_lobby = data.get(CLOCK.IN_LOBBY)
+            if in_lobby:
+                u_format = in_lobby.get(CLOCK.FORMAT, self.__clockFormat)
+                if not u_format.lower().startswith("tab"):
+                    self.__clockFormat = u_format
+                self.__hangarEnabled = in_lobby.get(GLOBAL.ENABLED, self.__hangarEnabled)
+            self.__enabled = data.get(GLOBAL.ENABLED, self.__enabled)
+            self.toggleInterval(self.__enabled and self.__hangarEnabled)

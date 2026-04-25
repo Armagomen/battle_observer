@@ -1,13 +1,15 @@
 import math
 
 from armagomen._constants import MAIN_GUN
-from armagomen.battle_observer.components.controllers import damage_controller
+from armagomen.battle_observer.controllers import IBOPlayersDamageController
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
+from helpers import dependency
 
 
 class MainGun(MainGunMeta, IBattleFieldListener):
+    damage_controller = dependency.descriptor(IBOPlayersDamageController)
 
     def __init__(self):
         super(MainGun, self).__init__()
@@ -18,7 +20,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def _populate(self):
         super(MainGun, self)._populate()
-        damage_controller.onPlayerDamaged += self.onPlayerDamaged
+        self.damage_controller.onPlayerDamaged += self.onPlayerDamaged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived += self.onPlayerFeedbackReceived
@@ -27,7 +29,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             arena.onVehicleKilled += self.onVehicleKilled
 
     def _dispose(self):
-        damage_controller.onPlayerDamaged -= self.onPlayerDamaged
+        self.damage_controller.onPlayerDamaged -= self.onPlayerDamaged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived -= self.onPlayerFeedbackReceived

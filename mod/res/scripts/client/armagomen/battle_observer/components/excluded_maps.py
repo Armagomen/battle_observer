@@ -120,7 +120,6 @@ class ExcludedMapsProcessor(object):
         if not self.__enabled or self.__dialog is not None or not self._serverSettings.isPreferredMapsEnabled():
             return
         mapsConfig = self._serverSettings.getPreferredMapsConfig()
-        # usedSlots = sum(1 for mapId, _ in self.itemsCache.items.stats.getMapsBlackList() if mapId > 0)
         usedSlots = len(self.itemsCache.items.stats.getMapsBlackList())
         isWotPlusAcc, wotPlusSlots = getExcludedMapsPromoData()
         totalSlots = sum([

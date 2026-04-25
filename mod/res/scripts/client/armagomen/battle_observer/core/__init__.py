@@ -1,7 +1,6 @@
 from armagomen._constants import BATTLES_RANGE, MAIN
 from armagomen.utils.common import IS_COMMON_TEST
 from armagomen.utils.events import g_events
-from armagomen.utils.keys_listener import g_keysListener
 from armagomen.utils.logging import logDebug, logError
 from armagomen.utils.online import user_login, user_logout
 
@@ -22,7 +21,7 @@ class Core(object):
         self.components = {}
         self.autoClearCache = False
         self.hangar_settings = None
-        self.error_dialog = None
+
         self.hangar_gf = None
         self.connectionMgr.onLoggedOn += self._onLoggedOn
         g_events.onModSettingsChanged += self.onModSettingsChanged
@@ -62,20 +61,18 @@ class Core(object):
             user_logout(int(self.userID))
 
     def start(self):
+        from armagomen.battle_observer.controllers import init_controllers
         from armagomen.battle_observer.components import loadComponents
-        from armagomen.battle_observer.settings import user_settings
-        from armagomen.battle_observer.settings.loader import SettingsLoader
-        from armagomen.battle_observer.settings.loading_error import ErrorMessages
+        from armagomen.battle_observer.settings import init_settings, IBOSettingsLoader
         from armagomen.utils.common import isReplay
 
-        self.error_dialog = ErrorMessages()
-        settings_loader = SettingsLoader(user_settings, self.error_dialog)
-        settings_loader.readConfig()
+        init_controllers()
+        init_settings()
         is_replay = isReplay()
         self.components = loadComponents(is_replay)
         self.registerBattleObserverPackages(is_replay)
-        g_keysListener.init(user_settings)
-        settings_loader.updateAllSettings()
+        settingsLoader = dependency.instance(IBOSettingsLoader)
+        settingsLoader.updateAllSettings()
 
         if not is_replay:
             try:
@@ -85,11 +82,11 @@ class Core(object):
                 api = (g_modsListApi, vxSettingsApi, vxSettingsApiEvents)
             except Exception as error:
                 from debug_utils import LOG_CURRENT_EXCEPTION
-                self.error_dialog.messages.add(repr(error))
+                settingsLoader.error_dialog.add(repr(error))
                 LOG_CURRENT_EXCEPTION()
                 logError("Settings Api Not Loaded: {}", repr(error))
             else:
-                self.hangar_settings = SettingsInterface(settings_loader, self.version, api)
+                self.hangar_settings = SettingsInterface(self.version, api)
 
     def onModSettingsChanged(self, name, data):
         if name == MAIN.NAME and MAIN.AUTO_CLEAR_CACHE in data:
@@ -104,11 +101,8 @@ class Core(object):
         cleanupUpdates()
         for component in self.components.values():
             getattr(component, 'fini', lambda: None)()
-        g_keysListener.fini()
         if self.hangar_settings is not None:
             self.hangar_settings.fini()
-        if self.error_dialog is not None:
-            self.error_dialog.fini()
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         g_events.onModSettingsChanged -= self.onModSettingsChanged
         self.hangar_gf = None

@@ -12,8 +12,7 @@ def loadComponents(is_replay):
         'effects',
         'minimap_plugins',
         'replace_vehicle_info',
-        'shot_result_plugin',
-        "controllers"
+        'shot_result_plugin'
     ]
 
     not_replay = [

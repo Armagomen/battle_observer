@@ -55,13 +55,13 @@ class GLOBAL:
     EMPTY_LINE = ""
     ENABLED = "enabled"
     HEIGHT = "height"
-    IMG_PARAMS = {"dir": "img://gui/maps/icons/library/efficiency/48x48", "size": "width='24' height='24'", "vspace": "vspace='-13'"}
     SCALE = "scale"
     SETTINGS = "settings"
     WIDTH = "width"
     X = "x"
     Y = "y"
     NEW_LINE = "\n"
+    DOUBLE_NEW_LINE = NEW_LINE * 2
 
 
 EFFICIENCY_ICONS_SIZE = "width='18' height='18' vspace='-3'"

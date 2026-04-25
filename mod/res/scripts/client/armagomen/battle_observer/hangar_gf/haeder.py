@@ -1,5 +1,5 @@
 from armagomen._constants import GLOBAL, HANGAR_HEADER, LOBBY_ALIASES
-from armagomen.battle_observer.settings import user_settings
+from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import TimeInterval
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug
@@ -58,6 +58,7 @@ class HeaderModel(ViewModel):
 class HeaderView(ViewComponent[HeaderModel]):
     viewLayoutID = ModDynAccessor(LOBBY_ALIASES.HEADER)
     gameSession = dependency.descriptor(IGameSessionController)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
         logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.HEADER, self.viewLayoutID())
@@ -91,7 +92,7 @@ class HeaderView(ViewComponent[HeaderModel]):
         self.__activeTime = self.gameSession._stats.activePremiumExpiryTime
         g_events.onModSettingsChanged += self.onModSettingsChanged
         self.gameSession.onPremiumNotify += self.__onPremiumNotify
-        self.onModSettingsChanged(HANGAR_HEADER.NAME, user_settings.hangar_header)
+        self.onModSettingsChanged(HANGAR_HEADER.NAME, self.settingsLoader.getSetting(HANGAR_HEADER.NAME))
 
     def _finalize(self):
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
@@ -130,4 +131,4 @@ class HeaderView(ViewComponent[HeaderModel]):
             self.updateTime()
         if isPremium != self.__isPremium:
             self.__isPremium = isPremium
-            self.toggleInterval(user_settings.hangar_header[HANGAR_HEADER.PREMIUM_TIMER] and isPremium)
+            self.toggleInterval(self.settingsLoader.getSetting(HANGAR_HEADER.NAME, HANGAR_HEADER.PREMIUM_TIMER) and isPremium)
