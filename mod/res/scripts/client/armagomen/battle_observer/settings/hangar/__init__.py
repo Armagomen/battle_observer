@@ -363,13 +363,12 @@ class SettingsInterface(CreateElement):
         """Darkens dependent elements..."""
         if modID != MOD_NAME or blockID not in CONFIG_INTERFACE.BLOCK_IDS:
             return
-        values = None
         if blockID == MAIN.NAME and varName == MAIN.USE_KEY_PAIRS:
             self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
-        if blockID in CONFIG_INTERFACE.HANDLER_VALUES and varName in CONFIG_INTERFACE.HANDLER_VALUES[blockID]:
-            values = CONFIG_INTERFACE.HANDLER_VALUES[blockID][varName]
-        if values is not None:
-            self.setHandlerValue(blockID, values, value)
+        if blockID in CONFIG_INTERFACE.HANDLER_VALUES:
+            values = CONFIG_INTERFACE.HANDLER_VALUES[blockID].get(varName, None)
+            if values is not None:
+                self.setHandlerValue(blockID, values, value)
 
     def setHandlerValue(self, blockID, values, value):
         get_object = self.vxSettingsApi.getDAAPIObject

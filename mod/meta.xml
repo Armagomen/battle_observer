@@ -2,7 +2,43 @@
     <id>armagomen.Battle_Observer</id>
     <version>1.43.29</version>
     <name>Battle Observer</name>
-    <description>Battle Observer mod: logs, teamsHp, zoomMod, bases panel, debug panel, timer + time, Armor Calculator,
-        Spotted Status, flight time, noBadge, minimap, sixth Sense, crew, wgr rating.
+    <description>
+        Interface and Battle Statistics Enhancements
+            1. Display of team health (HP of individual tanks + strength difference)
+            2. Log of dealt and received damage
+            3. Counter of active and destroyed tanks
+            4. An updated PING and FPS panels
+            5. Customizable battle timer
+            6. Player stats in battle (WG rating only)
+            7. Modified base capture indicators
+            8. Damage counter for “High Caliber” medal
+            9. Display of your tanks HP in a visible spot
+            10. Highlighting players with hidden names in team lists
+            11. Clock in garage and battle
+        Camera Aiming and Visual Settings
+            1. Dynamic camera zoom based on distance
+            2. Maximum camera distance
+            3. Projectile flight time indicator
+            4. Improved aiming circle and server reticle (size, stabilization timer)
+            5. Centering the minimap via hotkey + info about destroyed tanks (icon/name)
+            6. Customization of icons in team lists (brightness, color)
+            7. Armor calculator: actual thickness + reticle color change
+            8. Distance to the nearest spotted enemy (no direction)
+            9. Disable effects: shaking, flashes, blackout in sniper mode
+            10. Disable commander voiceovers
+            11. Auto-exit sniper mode after firing (optional)
+            12. Customization of “Sixth Sense” icon (timer, animation, image)
+        Team System and Utility Features
+            1. Auto-clear game cache on exit
+            2. Highlighting friends/clanmates in team lists with a special symbol
+            3. Message filtering in system chat
+            4. Check slot availability for map blacklist
+            5. Tank performance widget in a garage (damage, spotting, blocking, stun, gun mark progress)
+            6. Auto-toggle “speed up crew training” based on field modifications
+            7. Auto-collection of clan rewards
+            8. Disable base capture siren
+        Post-Destruction Modes
+            1. After death, the camera anchors to the last-known position
+            2. Adjust camera distance after being destroyed
     </description>
 </root>
