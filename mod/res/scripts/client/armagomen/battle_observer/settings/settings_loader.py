@@ -1,6 +1,7 @@
 import os
+from typing import Any, Dict, List, Union
 
-from armagomen._constants import ALIAS_TO_CONFIG_NAME, ALIAS_TO_CONFIG_NAME_LOBBY, GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
+from armagomen._constants import ALIAS_TO_CONFIG_NAME_BATTLE, ALIAS_TO_CONFIG_NAME_LOBBY, GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import DEBUG, debug, logError, logInfo
@@ -136,10 +137,12 @@ class SettingsLoader(object):
                 printDebuginfo()
 
     def getSettingDictByAliasBattle(self, alias):
-        return getattr(self.__settings, ALIAS_TO_CONFIG_NAME.get(alias, GLOBAL.EMPTY_LINE), self.__settings)
+        # type: (str) -> dict
+        return getattr(self.__settings, ALIAS_TO_CONFIG_NAME_BATTLE.get(alias, GLOBAL.EMPTY_LINE), {})
 
     def getSettingDictByAliasLobby(self, alias):
-        return getattr(self.__settings, ALIAS_TO_CONFIG_NAME_LOBBY.get(alias, GLOBAL.EMPTY_LINE), self.__settings)
+        # type: (str) -> dict
+        return getattr(self.__settings, ALIAS_TO_CONFIG_NAME_LOBBY.get(alias, GLOBAL.EMPTY_LINE), {})
 
     def getSetting(self, component_name, key=None):
         component = getattr(self.__settings, component_name, None)

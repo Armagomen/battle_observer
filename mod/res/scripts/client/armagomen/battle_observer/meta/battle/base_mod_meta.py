@@ -16,12 +16,12 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
-        self.settings = None
+        self.settings = {}
         self._isColorBlind = self.isColorBlind()
 
     def setAlias(self, alias):
         super(BaseModMeta, self).setAlias(alias)
-        self.settings = self.settingsLoader.getSettingDictByAliasBattle(alias)
+        self.settings.update(self.settingsLoader.getSettingDictByAliasBattle(alias))
 
     @property
     def _arenaDP(self):

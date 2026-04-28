@@ -12,7 +12,7 @@ from PlayerEvents import g_playerEvents
 class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
     def __init__(self):
         super(OwnHealth, self).__init__()
-        self.is_alive_mode = True
+        self.is_alive = False
         self.is_battle_period = False
         self.max_health = 0
         self.template = "{} | {:.0%}"
@@ -35,12 +35,12 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             self.is_battle_period = arena.period == ARENA_PERIOD.BATTLE
-            self.is_alive_mode = self.getVehicleInfo().isAlive()
-            self.as_BarVisibleS(self.is_battle_period and self.is_alive_mode)
+            self.is_alive = self.getVehicleInfo().isAlive()
+            self.toggleVisible()
 
     def onArenaPeriodChange(self, period, *args):
         self.is_battle_period = period == ARENA_PERIOD.BATTLE
-        self.as_BarVisibleS(self.is_battle_period and self.is_alive_mode)
+        self.toggleVisible()
 
     def _dispose(self):
         handler = avatar_getter.getInputHandler()
@@ -53,6 +53,9 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             ctrl.onVehicleStateUpdated -= self.__onVehicleStateUpdated
         super(OwnHealth, self)._dispose()
 
+    def toggleVisible(self):
+        self.as_setComponentVisible(self.is_battle_period and self.is_alive)
+
     def __onVehicleControlling(self, vehicle):
         if self.max_health != vehicle.maxHealth:
             self.max_health = vehicle.maxHealth
@@ -63,8 +66,8 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
             self._updateHealth(value)
 
     def onCameraChanged(self, ctrlMode, *_, **__):
-        self.is_alive_mode = ctrlMode not in POSTMORTEM_MODES
-        self.as_BarVisibleS(self.is_battle_period and self.is_alive_mode)
+        self.is_alive = ctrlMode not in POSTMORTEM_MODES
+        self.toggleVisible()
 
     def getAVGColor(self, percent=1.0):
         return percentToColor(percent, color_blind=self._isColorBlind, **self.settings[GLOBAL.AVG_COLOR])

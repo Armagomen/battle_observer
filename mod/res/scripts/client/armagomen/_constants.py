@@ -92,11 +92,10 @@ HANGAR_HEADER = (namedtuple("HANGAR_HEADER", ("NAME", "PREMIUM_TIMER", "WOT_PLUS
     "hangar_header", "premium_timer", "hide_wotPlus", "hide_shop"))
 
 COLORS = namedtuple("COLORS", (
-    "NAME", "BLACK", "BLIND", "GOLD", "GREEN", "WHITE", "ORANGE", "RED", "S_YELLOW", "YELLOW",
-    "C_GREEN", "C_ORANGE", "C_RED", "C_NORMAL", "C_YELLOW", "C_PURPLE", "C_BG", "GLOBAL", "ALLY_MAME", "ENEMY_MAME",
-    "ENEMY_BLIND_MAME"))(
+    "NAME", "BLACK", "BLUE_VIOLET", "GOLD", "GREEN", "WHITE", "ORANGE", "RED", "SOFT_YELLOW", "YELLOW",
+    "BACKGROUND", "GLOBAL", "ALLY", "ENEMY", "ENEMY_BLIND_MAME"))(
     "colors", "#000000", "#6F6CD3", "#FFD700", "#60CB00", "#FFFFFF", "#FF9900", "#ED070A", "#E0E06D", "#FFC900",
-    "green", "orange", "red", "normal", "yellow", "purple", "bgColor", "global", "ally", "enemy", "enemyColorBlind")
+    "bgColor", "global", "ally", "enemy", "enemyColorBlind")
 
 MAIN_GUN = namedtuple("MAIN_GUN", ("NAME", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))("main_gun", 1000, 0.2)
 
@@ -346,7 +345,7 @@ class CONFIG_INTERFACE:
     }
 
 
-ALIAS_TO_CONFIG_NAME = {
+ALIAS_TO_CONFIG_NAME_BATTLE = {
     BATTLE_ALIASES.HP_BARS: HP_BARS.NAME,
     BATTLE_ALIASES.DAMAGE_LOG: DAMAGE_LOG.TOP_LOG,
     BATTLE_ALIASES.DAMAGE_LOG_EXT: DAMAGE_LOG.EXTENDED_LOG,

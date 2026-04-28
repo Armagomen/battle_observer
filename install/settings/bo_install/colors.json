@@ -5,7 +5,8 @@
     "orange": "#FF9900",
     "purple": "#6F6CD3",
     "red": "#ED070A",
-    "yellow": "#FFC900"
+    "yellow": "#FFC900",
+    "pink": "#FFC0CB"
   },
   "global": {
     "ally": "#60CB00",

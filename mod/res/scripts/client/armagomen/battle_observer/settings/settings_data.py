@@ -86,8 +86,8 @@ class SettingsData(object):
 
         self.dispersion_timer = {
             GLOBAL.ENABLED: False,
-            GLOBAL.X: 110,
-            GLOBAL.Y: 0,
+            GLOBAL.X: 100,
+            GLOBAL.Y: 40,
             GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left,
             DISPERSION_TIMER.TIMER: True,
             DISPERSION_TIMER.PERCENT: True,
@@ -104,7 +104,7 @@ class SettingsData(object):
         self.battle_timer = {
             GLOBAL.ENABLED: False,
             BATTLE_TIMER.TEMPLATE: "<font color='%(timerColor)s'>%(timer)s</font>",
-            BATTLE_TIMER.COLOR: COLORS.S_YELLOW,
+            BATTLE_TIMER.COLOR: COLORS.SOFT_YELLOW,
             BATTLE_TIMER.END_COLOR: COLORS.RED
         }
 
@@ -152,18 +152,19 @@ class SettingsData(object):
 
         self.colors = {
             COLORS.GLOBAL: {
-                COLORS.ALLY_MAME: COLORS.GREEN,
-                COLORS.ENEMY_MAME: COLORS.RED,
-                COLORS.ENEMY_BLIND_MAME: COLORS.BLIND,
-                COLORS.C_BG: COLORS.BLACK
+                COLORS.ALLY: COLORS.GREEN,
+                COLORS.ENEMY: COLORS.RED,
+                COLORS.ENEMY_BLIND_MAME: COLORS.BLUE_VIOLET,
+                COLORS.BACKGROUND: COLORS.BLACK
             },
             ARMOR_CALC.NAME: {
-                COLORS.C_GREEN: COLORS.GREEN,
-                COLORS.C_ORANGE: COLORS.ORANGE,
-                COLORS.C_RED: COLORS.RED,
-                COLORS.C_YELLOW: COLORS.YELLOW,
-                COLORS.C_PURPLE: COLORS.BLIND,
-                COLORS.C_NORMAL: COLORS.WHITE
+                "normal": "#FAFAFA",
+                "green": "#60CB00",
+                "orange": "#FF9900",
+                "red": "#ED070A",
+                "yellow": "#FFC900",
+                "pink": "#FFC0CB",
+                "purple": "#6F6CD3",
             },
             VEHICLE_TYPES_COLORS.NAME: {
                 VEHICLE_CLASS_NAME.HEAVY_TANK: "#F9B200",
@@ -296,8 +297,8 @@ class SettingsData(object):
 
         self.flight_time = {
             GLOBAL.ENABLED: False,
-            GLOBAL.X: -110,
-            GLOBAL.Y: 0,
+            GLOBAL.X: -100,
+            GLOBAL.Y: 40,
             GLOBAL.COLOR: "#f5ff8f",
             FLIGHT_TIME.TIME: True,
             FLIGHT_TIME.DISTANCE: True,

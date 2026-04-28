@@ -2,15 +2,19 @@ import math_utils
 from armagomen._constants import FLIGHT_TIME, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
 from armagomen.utils.common import getPlayer
+from constants import ARENA_PERIOD
 from gui.battle_control import avatar_getter
 from items.utils import getVehicleShotSpeedByFactors
+from PlayerEvents import g_playerEvents
 
 
 class FlightTime(FlightTimeMeta):
 
     def __init__(self):
         super(FlightTime, self).__init__()
+        self.is_alive = False
         self.tpl = None
+        self.is_battle_period = False
 
     def _populate(self):
         super(FlightTime, self)._populate()
@@ -19,6 +23,7 @@ class FlightTime(FlightTimeMeta):
 
         if time or distance:
             self.tpl = " - ".join(param[1] for param in ((time, "{0:.2f}s"), (distance, "{1:.1f}m")) if param[0])
+            g_playerEvents.onArenaPeriodChange += self.onArenaPeriodChange
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS
@@ -26,10 +31,15 @@ class FlightTime(FlightTimeMeta):
             handler = avatar_getter.getInputHandler()
             if handler is not None and hasattr(handler, "onCameraChanged"):
                 handler.onCameraChanged += self.onCameraChanged
-            self.as_flightTimeS(self.tpl.format(0.0, 0.0))
+            arena = self._arenaVisitor.getArenaSubscription()
+            if arena is not None:
+                self.is_battle_period = arena.period == ARENA_PERIOD.BATTLE
+                self.is_alive = self.getVehicleInfo().isAlive()
+                self.toggleVisible()
 
     def _dispose(self):
         if self.tpl is not None:
+            g_playerEvents.onArenaPeriodChange -= self.onArenaPeriodChange
             ctrl = self.sessionProvider.shared.crosshair
             if ctrl is not None:
                 ctrl.onCrosshairPositionChanged -= self.as_onCrosshairPositionChangedS
@@ -39,9 +49,16 @@ class FlightTime(FlightTimeMeta):
                 handler.onCameraChanged -= self.onCameraChanged
         super(FlightTime, self)._dispose()
 
+    def toggleVisible(self):
+        self.as_setComponentVisible(self.is_battle_period and self.is_alive)
+
+    def onArenaPeriodChange(self, period, *args):
+        self.is_battle_period = period == ARENA_PERIOD.BATTLE
+        self.toggleVisible()
+
     def onCameraChanged(self, ctrlMode, *args, **kwargs):
-        if ctrlMode in POSTMORTEM_MODES:
-            self.as_flightTimeS(GLOBAL.EMPTY_LINE)
+        self.is_alive = ctrlMode not in POSTMORTEM_MODES
+        self.toggleVisible()
 
     def __onGunMarkerStateChanged(self, markerType, gunMarkerState, *args, **kwargs):
         player = getPlayer()
