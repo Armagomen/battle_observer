@@ -5,7 +5,6 @@ import json
 import locale
 import os
 import shutil
-from collections import namedtuple
 from colorsys import hsv_to_rgb
 from io import open as _open
 
@@ -14,6 +13,7 @@ import ResMgr
 import WGC
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from BattleReplay import isLoading, isPlaying
+from collections import namedtuple
 from external_strings_utils import unicode_from_utf8
 from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency
@@ -334,20 +334,33 @@ def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, a
         return '#{:02X}{:02X}{:02X}'.format(r, g, b)
 
 
-def parseColorToHex(color, as_int=False):
+def hexToInt(color):
     """
-    Converts color string to hex string or integer.
+    Converts color string to integer.
+    Accepts formats: '#RRGGBB', '0xRRGGBB', 'RRGGBB'.
+    Compatible with Python 2.7. Falls back to 16448250 on error.
+    """
+    hex_part = color.lstrip("#").lstrip("0x").upper()
+    if len(hex_part) == 6:
+        return int(hex_part, 16)
+    logError("hexToInt: color code is corrupted >> {} <<, should be #RRGGBB or 0xRRGGBB or RRGGBB".format(color))
+    return 16448250
+
+
+def colorToHex(color):
+    """
+    Converts color string to hex string.
     Accepts formats: '#RRGGBB', '0xRRGGBB', 'RRGGBB', even longer strings.
-    Compatible with Python 2.7. Falls back to 0xFAFAFA or 16448250 on error.
+    Compatible with Python 2.7. Falls back to 0xFAFAFAon error.
     """
-    if color.startswith('0x') and not as_int and len(color) == 8:
+    if color.startswith('0x') and len(color) == 8:
         return color
     hex_part = 16448250
     try:
         hex_part = int(color.replace('#', '').replace('0x', '').upper()[:6], 16)
     except Exception as error:
         logError(error)
-    return hex_part if as_int else hex(hex_part)
+    return hex(hex_part)
 
 
 def getPercent(param_a, param_b):
