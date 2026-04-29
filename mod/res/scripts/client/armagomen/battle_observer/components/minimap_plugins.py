@@ -2,7 +2,6 @@ from math import degrees
 
 from armagomen._constants import BATTLES_RANGE, GLOBAL, MINIMAP
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.battle_observer.settings.settings_loader import SettingsLoader
 from armagomen.utils.common import IS_XVM_INSTALLED, overrideMethod
 from armagomen.utils.logging import logError
 from constants import VISIBILITY
@@ -11,6 +10,7 @@ from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComp
 from helpers import dependency
 
 settingsLoader = dependency.instance(IBOSettingsLoader)
+
 
 class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 

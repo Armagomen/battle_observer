@@ -122,11 +122,12 @@ class CameraSettings(object):
 
     @staticmethod
     def getCamera(control_mode_name):
+        camera = None
         input_handler = getInputHandler()
         if input_handler is not None and control_mode_name in input_handler.ctrls:
-            return input_handler.ctrls[control_mode_name].camera
+            camera = input_handler.ctrls[control_mode_name].camera
         logError("{}, camera is not found in input_handler.ctrls {}", control_mode_name, input_handler.ctrls)
-        return None
+        return camera
 
     @staticmethod
     def get_private_attr(obj, attr_name):
