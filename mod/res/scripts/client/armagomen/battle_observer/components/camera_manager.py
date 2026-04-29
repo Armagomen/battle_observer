@@ -118,7 +118,7 @@ class CameraSettings(object):
 
     @property
     def name(self):
-        return None
+        raise NotImplementedError
 
     @staticmethod
     def getCamera(control_mode_name):
