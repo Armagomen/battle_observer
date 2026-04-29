@@ -1,25 +1,22 @@
 from aih_constants import SHOT_RESULT
 from armagomen._constants import ARMOR_CALC, GLOBAL
+from armagomen.battle_observer.controllers import IPiercingRandomizer
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.common import getPlayer, isReplay, MinMax, overrideMethod
+from armagomen.utils.common import getPlayer, overrideMethod
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, computePiercingPowerAtDist
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES
 from DestructibleEntity import DestructibleEntity
 from gui.battle_control import avatar_getter
 from gui.Scaleform.daapi.view.battle.shared.crosshair import plugins
 from gui.Scaleform.genConsts.CROSSHAIR_VIEW_ID import CROSSHAIR_VIEW_ID
-from gui.shared.gui_items import KPI
 from helpers import dependency
-from items.tankmen import getSkillsConfig
 from Vehicle import Vehicle
-
-DEFAULT_RANDOMIZATION = MinMax(0.75, 1.25)
 
 
 class _ShotResult(_CrosshairShotResults):
-    RANDOMIZATION = DEFAULT_RANDOMIZATION
+    randomizer = dependency.descriptor(IPiercingRandomizer)
+
     UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None)
     ENTITY_TYPES = (Vehicle, DestructibleEntity)
     JET_FACTOR = 0.001
@@ -59,9 +56,9 @@ class _ShotResult(_CrosshairShotResults):
         armor, piercing_power, _, ricochet, no_damage = data
         if no_damage or ricochet:
             return SHOT_RESULT.UNDEFINED
-        elif armor < piercing_power * cls.RANDOMIZATION.min:
+        elif armor < piercing_power * cls.randomizer.confines.min:
             return SHOT_RESULT.GREAT_PIERCED
-        elif armor > piercing_power * cls.RANDOMIZATION.max:
+        elif armor > piercing_power * cls.randomizer.confines.max:
             return SHOT_RESULT.NOT_PIERCED
         else:
             return SHOT_RESULT.LITTLE_PIERCED
@@ -145,6 +142,7 @@ class _ShotResultAll(_ShotResult):
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
+    randomizer = dependency.descriptor(IPiercingRandomizer)
 
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
@@ -184,7 +182,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def __updateCurrVehicleInfo(self, vehicle):
         if not avatar_getter.isObserver(self.__player) and vehicle is not None:
-            Randomizer._updateRandomization(vehicle)
+            self.randomizer.updateRandomization(vehicle)
 
 
 @overrideMethod(plugins, 'createPlugins')
@@ -194,66 +192,3 @@ def createPlugins(base, *args):
     if settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
-
-
-class Randomizer(object):
-    settingsLoader = dependency.descriptor(IBOSettingsLoader)
-
-    GUNNER_ARMORER = 'gunner_armorer'
-    LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
-    RND_MIN_MAX_DEBUG = 'PIERCING_POWER_RANDOMIZATION: {}, vehicle: {}'
-    RND_SKILL_DIFF_DEBUG = 'PIERCING_POWER_RANDOMIZATION: skill_name: {} skill_lvl: {} level_increase: {} percent: {}'
-    RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'PIERCING_POWER_RANDOMIZATION: skill_name {}, percent {}'
-
-    PIERCING_DISTRIBUTION_BOUND = {}
-
-    @classmethod
-    def getBaseSkillPercent(cls, skill_name):
-        percent = cls.PIERCING_DISTRIBUTION_BOUND.get(skill_name, 0)
-        if not percent:
-            descrArgs = getSkillsConfig().getSkill(skill_name).uiSettings.descrArgs
-            for name, descr in descrArgs:
-                if name == KPI.Name.DAMAGE_AND_PIERCING_DISTRIBUTION_LOWER_BOUND:
-                    percent = cls.PIERCING_DISTRIBUTION_BOUND[skill_name] = round(descr.value, 4)
-                    logDebug(cls.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG, skill_name, percent)
-                break
-        return percent
-
-    @classmethod
-    def getCurrentSkillEfficiency(cls, tman, skill_name):
-        skill = tman.skillsMap.get(skill_name)
-        if skill is None:
-            return 0
-        level_increase, bonuses = tman.crewLevelIncrease
-        result = (skill.level + level_increase) * tman.skillsEfficiency * cls.getBaseSkillPercent(skill_name)
-        logDebug(cls.RND_SKILL_DIFF_DEBUG, skill_name, skill.level, level_increase, result)
-        return result
-
-    @classmethod
-    def _updateRandomization(cls, vehicle):
-        if vehicle is None or not cls.settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
-            _ShotResult.RANDOMIZATION = DEFAULT_RANDOMIZATION
-            return
-        data = {cls.GUNNER_ARMORER: [], cls.LOADER_AMMUNITION_IMPROVE: []}
-        for _, tman in vehicle.crew:
-            if not tman or not tman.canUseSkillsInCurrentVehicle:
-                continue
-            for skill_name in tman.getPossibleSkills().intersection(data):
-                data[skill_name].append(cls.getCurrentSkillEfficiency(tman, skill_name))
-        randomization_min, randomization_max = DEFAULT_RANDOMIZATION
-        for skill_name, value in data.items():
-            if value:
-                percent = sum(value) / len(value)
-                randomization_min += percent
-                if skill_name == cls.GUNNER_ARMORER:
-                    randomization_max -= percent
-        _ShotResult.RANDOMIZATION = MinMax(round(randomization_min, 4), round(randomization_max, 4))
-        logDebug(cls.RND_MIN_MAX_DEBUG, _ShotResult.RANDOMIZATION, vehicle.userName)
-
-
-if not isReplay():
-    g_events.onVehicleChangedDelayed += Randomizer._updateRandomization
-
-
-    def fini():
-        g_events.onVehicleChangedDelayed -= Randomizer._updateRandomization

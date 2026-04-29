@@ -1,14 +1,12 @@
-from armagomen.utils.logging import logError
-from openwg_gameface import manager
-
 from armagomen.battle_observer.hangar_gf.date_times import DateTimesView
 from armagomen.battle_observer.hangar_gf.efficiency import HangarEfficiencyView
 from armagomen.battle_observer.hangar_gf.haeder import HeaderView
 from armagomen.utils.common import overrideMethod
+from armagomen.utils.logging import logError
 from comp7.gui.impl.lobby.page.lobby_header import Comp7LobbyHeader
 from comp7_light.gui.impl.lobby.page.lobby_header import Comp7LightLobbyHeader
 from gui.impl.lobby.page.lobby_header import LobbyHeader
-
+from openwg_gameface import manager
 
 
 class HangarGamefaceInject(object):
