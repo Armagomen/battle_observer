@@ -1,5 +1,4 @@
 import os
-from typing import Any, Dict, List, Union
 
 from armagomen._constants import ALIAS_TO_CONFIG_NAME_BATTLE, ALIAS_TO_CONFIG_NAME_LOBBY, GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
@@ -147,10 +146,11 @@ class SettingsLoader(object):
     def getSetting(self, component_name, key=None):
         component = getattr(self.__settings, component_name, None)
         if component is None:
-            raise AttributeError('Component {} not found in settings'.format(component_name))
+            logError(repr(AttributeError('Component {} not found in settings'.format(component_name))))
+            return component
         if key is None:
             return component
         param = component.get(key)
         if param is None:
-            raise KeyError('Parameter {} not found in settings {}'.format(key, component))
+            logError(repr(KeyError('Parameter {} not found in {} settings: {}'.format(key, component_name, component))))
         return param

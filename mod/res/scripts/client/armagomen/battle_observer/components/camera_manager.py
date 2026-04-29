@@ -118,7 +118,10 @@ class CameraSettings(object):
 
     @property
     def name(self):
-        return None
+        raise NotImplementedError
+
+    def update(self):
+        self.isChanged = False
 
     @staticmethod
     def getCamera(control_mode_name):
@@ -168,6 +171,7 @@ class Arcade(CameraSettings):
         return ARCADE.NAME
 
     def update(self):
+        super(Arcade, self).update()
         if self.enabled != self.config[GLOBAL.ENABLED]:
             self.enabled = self.config[GLOBAL.ENABLED]
             toggleOverride(PostMortemControlMode, "enable", self.enablePostMortem, self.enabled)
@@ -205,6 +209,7 @@ class Strategic(CameraSettings):
         return STRATEGIC.NAME
 
     def update(self):
+        super(Strategic, self).update()
         self.enabled = self.config[GLOBAL.ENABLED]
         ctrl_mode_names = (CTRL_MODE_NAME.STRATEGIC, CTRL_MODE_NAME.ARTY)
         if self.enabled:
@@ -259,6 +264,7 @@ class Sniper(CameraSettings):
         return exposures_new
 
     def update(self):
+        super(Sniper, self).update()
         self.after_shoot.updateSettings(self.config)
         self.enabled = self.config[GLOBAL.ENABLED]
         camera = self.getCamera(CTRL_MODE_NAME.SNIPER)
@@ -297,7 +303,7 @@ class Sniper(CameraSettings):
             distance = (targetPos - ownPosition).length if ownPosition is not None else 0
             camera._cfg[self.ZOOM] = self.getZoom(camera._cfg[self.ZOOMS], distance)
         except Exception as e:
-            logError("enableSniper: {}", repr(e))
+            logError("enableSniper: {} - {}", e.args, e.message)
         return base(camera, targetPos, saveZoom)
 
 
@@ -323,8 +329,7 @@ class CameraManager(object):
                     try:
                         mode.update()
                     except Exception as e:
-                        logError("{}: {}", mode.name, repr(e))
-                    mode.isChanged = False
+                        logError("{}: {} - {}", mode.name, e.args, e.message)
 
 
 camera_manager = CameraManager()
