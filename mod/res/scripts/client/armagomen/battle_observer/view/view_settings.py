@@ -60,10 +60,10 @@ class ViewSettings(object):
         return self.isSpecialBattle() or self.gui.isEpicRandomBattle()
 
     def isFlightTimeEnabled(self):
-        enabled = self._settings.flight_time[GLOBAL.ENABLED]
-        if self._settings.flight_time[FLIGHT_TIME.SPG_ONLY]:
-            return enabled and self.isSPG()
-        return enabled
+        flight_time = self._settings.flight_time
+        if flight_time[FLIGHT_TIME.SPG_ONLY]:
+            return flight_time[GLOBAL.ENABLED] and self.isSPG()
+        return flight_time[GLOBAL.ENABLED]
 
     def isDistanceToEnemyEnabled(self):
         if self.isSPG() or self.isSpecialBattle():
@@ -77,22 +77,25 @@ class ViewSettings(object):
         return self._settings.main_gun[GLOBAL.ENABLED] and self.isRandomBattle()
 
     def isExtendedLogEnabled(self):
-        return self._settings.log_extended[GLOBAL.ENABLED] and not self.isSpecialBattle() and (
-                self._settings.log_extended[DAMAGE_LOG.D_DONE_ENABLED] or self._settings.log_extended[DAMAGE_LOG.D_RECEIVED_ENABLED])
+        extended = self._settings.log_extended
+        return extended[GLOBAL.ENABLED] and not self.isSpecialBattle() and (
+                extended[DAMAGE_LOG.D_DONE_ENABLED] or extended[DAMAGE_LOG.D_RECEIVED_ENABLED])
 
     def isMinimapEnabled(self):
-        if self.xvm_installed("Minimap") or self.spacialOrEpicRandom():
+        if self.xvm_installed(BATTLE_ALIASES.MAP) or self.spacialOrEpicRandom():
             return False
-        return self._settings.minimap[GLOBAL.ENABLED] and self._settings.minimap[MINIMAP.ZOOM]
+        minimap = self._settings.minimap
+        return minimap[GLOBAL.ENABLED] and minimap[MINIMAP.ZOOM]
 
     def isStatisticsAndIconsEnabled(self):
-        if self.xvm_installed("Statistics and Icons") or self.spacialOrEpicRandom():
+        if self.xvm_installed(BATTLE_ALIASES.WGR_ICONS) or self.spacialOrEpicRandom():
             return False
-        return self._settings.statistics[GLOBAL.ENABLED] and (
-                self._settings.statistics[STATISTICS.STATISTIC_ENABLED] or self._settings.statistics[STATISTICS.ICON_ENABLED])
+        statistics = self._settings.statistics
+        return statistics[GLOBAL.ENABLED] and (
+                statistics[STATISTICS.STATISTIC_ENABLED] or statistics[STATISTICS.ICON_ENABLED])
 
     def isPlayersPanelsEnabled(self):
-        if self.xvm_installed("PlayersPanels") or self.spacialOrEpicRandom():
+        if self.xvm_installed(BATTLE_ALIASES.PANELS) or self.spacialOrEpicRandom():
             return False
         return self._settings.players_panels[GLOBAL.ENABLED]
 
@@ -100,7 +103,8 @@ class ViewSettings(object):
         return self._settings.team_bases_panel[GLOBAL.ENABLED] and not self.isSpecialBattle()
 
     def isClockEnabled(self):
-        return self._settings.clock[GLOBAL.ENABLED] and self._settings.clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED]
+        clock = self._settings.clock
+        return clock[GLOBAL.ENABLED] and clock[CLOCK.IN_BATTLE][GLOBAL.ENABLED] and not self.isLastStand()
 
     def isArmorCalculatorUIEnabled(self):
         if self._settings.armor_calculator[GLOBAL.ENABLED]:
@@ -115,7 +119,7 @@ class ViewSettings(object):
             (BATTLE_ALIASES.DAMAGE_LOG, self._settings.log_total[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.DAMAGE_LOG_EXT, self.isExtendedLogEnabled()),
             (BATTLE_ALIASES.DEBUG, self._settings.debug_panel[GLOBAL.ENABLED]),
-            (BATTLE_ALIASES.TIMER, self._settings.battle_timer[GLOBAL.ENABLED]),
+            (BATTLE_ALIASES.TIMER, self._settings.battle_timer[GLOBAL.ENABLED] and not self.isLastStand()),
             (BATTLE_ALIASES.TEAM_BASES, self.isTeamBasesEnabled()),
             (BATTLE_ALIASES.SIXTH_SENSE, self._settings.sixth_sense[GLOBAL.ENABLED]),
             (BATTLE_ALIASES.ARMOR_CALC, self.isArmorCalculatorUIEnabled()),

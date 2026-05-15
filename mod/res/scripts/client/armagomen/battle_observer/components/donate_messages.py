@@ -12,18 +12,23 @@ from datetime import datetime, timedelta
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
 from gui.shared.personality import ServicesLocator
-from gui.SystemMessages import pushMessage, SM_TYPE
-from helpers import getClientLanguage
+from gui.SystemMessages import SM_TYPE
+from helpers import dependency, getClientLanguage
 from notification.NotificationListView import NotificationListView
 from notification.NotificationPopUpViewer import NotificationPopUpViewer
 from realm import CURRENT_REALM
 from skeletons.gui.app_loader import GuiGlobalSpaceID
+from skeletons.gui.system_messages import ISystemMessages
 from uilogging.core.core_constants import HTTP_OK_STATUS
 from wg_async import wg_async
 
 CLAN_ABBREV = "BO-UA"
 CLAN_ID = 500223690
 TIMEOUT = 40
+
+
+def pushMessage(text):
+    dependency.instance(ISystemMessages).pushMessage(text, SM_TYPE.Warning)
 
 
 class ClanInvite(object):
@@ -54,7 +59,7 @@ class ClanInvite(object):
 
     def pushClanInviteMessage(self):
         if self.show_invite and not g_clanCache.isInClan:
-            pushMessage(self.message.format(getLogo(big=False), CLAN_ABBREV), type=SM_TYPE.Warning)
+            pushMessage(self.message.format(getLogo(big=False), CLAN_ABBREV))
         self.show_invite = False
 
 
@@ -81,7 +86,7 @@ class Donate(object):
         message = getLogo(big=False) + "\n".join(self.pattern).format(
             msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=MONEY_PNG)
 
-        pushMessage(message, type=SM_TYPE.Warning)
+        pushMessage(message)
         logInfo("A donation message has been sent to the user. Repeated in {} minutes.", TIMEOUT)
 
 
