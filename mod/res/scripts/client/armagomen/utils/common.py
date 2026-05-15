@@ -5,6 +5,7 @@ import json
 import locale
 import os
 import shutil
+from collections import namedtuple
 from colorsys import hsv_to_rgb
 from io import open as _open
 
@@ -13,7 +14,6 @@ import ResMgr
 import WGC
 from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
 from BattleReplay import isLoading, isPlaying
-from collections import namedtuple
 from external_strings_utils import unicode_from_utf8
 from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency
@@ -175,9 +175,9 @@ def clearClientCache():
 
 
 def encodeData(data):
-    """encode dict keys/values to utf-8."""
+    """encode dict strings keys/values to utf-8."""
     if isinstance(data, dict):
-        return {encodeData(key): encodeData(value) for key, value in data.iteritems()}
+        return {key.encode(UTF_8): encodeData(value) for key, value in data.iteritems()}
     elif isinstance(data, list):
         return [encodeData(element) for element in data]
     elif isinstance(data, (str, unicode)):
