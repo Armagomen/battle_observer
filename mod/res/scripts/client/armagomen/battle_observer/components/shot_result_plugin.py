@@ -14,6 +14,10 @@ from helpers import dependency
 from Vehicle import Vehicle
 
 
+def toInt(value):
+    return int(round(value))
+
+
 class _ShotResult(_CrosshairShotResults):
     randomizer = dependency.descriptor(IPiercingRandomizer)
     UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None)
@@ -22,15 +26,18 @@ class _ShotResult(_CrosshairShotResults):
     DEFAULT_HIT_ANGLE_COS = 1.0
 
     @classmethod
+    def _collisionIsBad(cls, collision):
+        return collision is None or collision.entity is None or not isinstance(collision.entity, cls.ENTITY_TYPES) or \
+            collision.entity.health <= 0
+
+    @classmethod
     def _isDestructibleComponent(cls, entity, componentID):
         return entity.isDestructibleComponent(componentID) if isinstance(entity, DestructibleEntity) else True
 
     @classmethod
     def _getShotResult(cls, gunMarker, multiplier, player):
-        if player is None or gunMarker.collData is None:
-            return cls.UNDEFINED_RESULT
-        entity = gunMarker.collData.entity
-        if not isinstance(entity, cls.ENTITY_TYPES) or not entity.isAlive() or entity.publicInfo['team'] == player.team:
+        collision = gunMarker.collData
+        if player is None or cls._collisionIsBad(collision) or collision.entity.publicInfo['team'] == player.team:
             return cls.UNDEFINED_RESULT
         return cls._result(gunMarker, multiplier, player)
 
@@ -46,10 +53,11 @@ class _ShotResult(_CrosshairShotResults):
         shell = shot.shell
         distance = player.position.flatDistTo(gunMarker.position)
         piercing_power = computePiercingPowerAtDist(shot.piercingPower, distance, shot.maxDistance, multiplier)
+        jet_loss = cls._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
         if shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN:
             return cls.__computeArmorModernHE(collision_details, shell, piercing_power, entity)
-        elif shell.kind == SHELL_TYPES.HOLLOW_CHARGE:
-            return cls.__computeArmorHC(collision_details, shell, piercing_power, entity)
+        elif jet_loss > 0:
+            return cls.__computeArmorJetLoss(collision_details, shell, piercing_power, entity, jet_loss)
         else:
             return cls.__computeArmorDefault(collision_details, shell, piercing_power, entity)
 
@@ -64,6 +72,7 @@ class _ShotResult(_CrosshairShotResults):
         else:
             return SHOT_RESULT.LITTLE_PIERCED
 
+
     @classmethod
     def __computeArmorDefault(cls, collision_details, shell, piercing_power, entity):
         full_armor = 0
@@ -75,7 +84,10 @@ class _ShotResult(_CrosshairShotResults):
             if not cls._isDestructibleComponent(entity, detail.compName):
                 continue
             mat_info = detail.matInfo
-            if not mat_info or (detail.compName, mat_info.kind) in ignored_materials:
+            if not mat_info:
+                continue
+            mat_key = (detail.compName, mat_info.kind)
+            if mat_key in ignored_materials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else cls.DEFAULT_HIT_ANGLE_COS
             ricochet = cls._shouldRicochet(shell, hitAngleCos, mat_info)
@@ -86,19 +98,17 @@ class _ShotResult(_CrosshairShotResults):
                 no_damage = False
                 break
             if mat_info.collideOnceOnly:
-                ignored_materials.add((detail.compName, mat_info.kind))
+                ignored_materials.add(mat_key)
 
         result = cls._checkShotResult(full_armor, piercing_power, ricochet or no_damage)
-        data = (int(round(full_armor)), int(round(piercing_power)), int(shell.caliber), ricochet, no_damage)
+        data = (toInt(full_armor), toInt(piercing_power), toInt(shell.caliber), ricochet, no_damage)
         return result, data
 
     @classmethod
-    def __computeArmorHC(cls, collision_details, shell, piercing_power, entity):
+    def __computeArmorJetLoss(cls, collision_details, shell, piercing_power, entity, jet_loss):
         full_armor = 0
         jet_start_dist = 0
         ignored_materials = set()
-        is_jet = False
-        jet_loss = cls._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
         no_damage = True
         ricochet = False
 
@@ -106,14 +116,17 @@ class _ShotResult(_CrosshairShotResults):
             if not cls._isDestructibleComponent(entity, detail.compName):
                 continue
             mat_info = detail.matInfo
-            if not mat_info or (detail.compName, mat_info.kind) in ignored_materials:
+            if not mat_info:
+                continue
+            mat_key = (detail.compName, mat_info.kind)
+            if mat_key in ignored_materials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else cls.DEFAULT_HIT_ANGLE_COS
-            if is_jet:
+            if jet_start_dist > 0:
                 jetDist = detail.dist - jet_start_dist
-                if jetDist > 0.0:
+                if jetDist > 0:
                     loss = 1.0 - jetDist * jet_loss
-                    if loss <= 0.0:
+                    if loss <= 0:
                         break
                     piercing_power *= loss
             else:
@@ -125,13 +138,12 @@ class _ShotResult(_CrosshairShotResults):
             if mat_info.vehicleDamageFactor:
                 no_damage = False
                 break
-            is_jet = True
             jet_start_dist = detail.dist + armor * 0.001
             if mat_info.collideOnceOnly:
-                ignored_materials.add((detail.compName, mat_info.kind))
+                ignored_materials.add(mat_key)
 
         result = cls._checkShotResult(full_armor, piercing_power, ricochet or no_damage)
-        data = (int(round(full_armor)), int(round(piercing_power)), int(shell.caliber), ricochet, no_damage)
+        data = (toInt(full_armor), toInt(piercing_power), toInt(shell.caliber), ricochet, no_damage)
         return result, data
 
     @classmethod
@@ -144,7 +156,10 @@ class _ShotResult(_CrosshairShotResults):
             if not cls._isDestructibleComponent(entity, detail.compName):
                 continue
             mat_info = detail.matInfo
-            if not mat_info or (detail.compName, mat_info.kind) in ignored_materials:
+            if not mat_info:
+                continue
+            mat_key = (detail.compName, mat_info.kind)
+            if mat_key in ignored_materials:
                 continue
             hitAngleCos = detail.hitAngleCos if mat_info.useHitAngle else cls.DEFAULT_HIT_ANGLE_COS
             armor = cls._computePenetrationArmor(shell, hitAngleCos, mat_info)
@@ -157,9 +172,9 @@ class _ShotResult(_CrosshairShotResults):
                 if piercing_power <= 0:
                     break
             if mat_info.collideOnceOnly:
-                ignored_materials.add((detail.compName, mat_info.kind))
+                ignored_materials.add(mat_key)
         result = cls._checkShotResult(full_armor, piercing_power, no_damage)
-        data = (int(round(full_armor)), int(round(piercing_power)), int(shell.caliber), False, no_damage)
+        data = (toInt(full_armor), toInt(piercing_power), toInt(shell.caliber), False, no_damage)
         return result, data
 
 
@@ -167,8 +182,7 @@ class _ShotResultAll(_ShotResult):
 
     @classmethod
     def _getShotResult(cls, gunMarker, multiplier, player):
-        collision = gunMarker.collData
-        if player is None or collision is None or not isinstance(collision.entity, cls.ENTITY_TYPES) or not collision.entity.isAlive():
+        if player is None or cls._collisionIsBad(gunMarker.collData):
             return cls.UNDEFINED_RESULT
         return cls._result(gunMarker, multiplier, player)
 
@@ -196,16 +210,13 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
                 self.__data = data
                 g_events.onArmorChanged(data)
 
-    def __setMapping(self, keys):
-        super(ShotResultIndicatorPlugin, self).__setMapping(keys)
-        self.__mapping[CROSSHAIR_VIEW_ID.STRATEGIC] = True
-
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
         self.__player = getPlayer()
         prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
         if prebattleCtrl is not None:
             prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
+        self.__mapping[CROSSHAIR_VIEW_ID.STRATEGIC] = True
 
     def stop(self):
         super(ShotResultIndicatorPlugin, self).stop()

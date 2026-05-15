@@ -7,4 +7,5 @@ class BattleTimerMeta(BaseModMeta):
         super(BattleTimerMeta, self).__init__()
 
     def as_timerS(self, timer):
-        return self.flashObject.as_timer(timer) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_timer(timer)

@@ -93,10 +93,13 @@ class BaseModMeta(BaseDAAPIComponent):
         return self._arenaDP.getPlayerVehicleID()
 
     def as_setComponentVisible(self, param):
-        return self.flashObject.setCompVisible(param) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.setCompVisible(param)
 
     def as_colorBlindS(self, enabled):
-        return self.flashObject.as_colorBlind(enabled) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_colorBlind(enabled)
 
     def as_onCrosshairPositionChangedS(self, x, y):
-        return self.flashObject.as_onCrosshairPositionChanged(x, y) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_onCrosshairPositionChanged(x, y)

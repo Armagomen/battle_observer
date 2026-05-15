@@ -2,10 +2,9 @@ from AccountCommands import VEHICLE_SETTINGS_FLAG
 from armagomen._constants import MAIN
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.common import updateIgnoredVehicles
+from armagomen.utils.common import updateIgnoredVehicles, isSpecialVehicle
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
-from armagomen.utils.hangar_vehicle_getter import isSpecialVehicle
 from armagomen.utils.logging import logDebug, logInfo
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons

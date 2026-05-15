@@ -7,4 +7,5 @@ class DamageLogsMeta(BaseModMeta):
         super(DamageLogsMeta, self).__init__()
 
     def as_updateTopLogS(self, text):
-        return self.flashObject.as_updateTopLog(text) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_updateTopLog(text)

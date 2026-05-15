@@ -7,14 +7,17 @@ class TeamBasesMeta(BaseModMeta):
         super(TeamBasesMeta, self).__init__()
 
     def as_addTeamBaseS(self, team, points, invadersCnt, time, text):
-        return self.flashObject.as_addTeamBase(team, points, invadersCnt, time, text) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_addTeamBase(team, points, invadersCnt, time, text)
 
     def as_updateBaseS(self, team, points, invadersCnt, time, text):
-        return self.flashObject.as_updateBase(team, points, invadersCnt, time,
-                                              text) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_updateBase(team, points, invadersCnt, time, text)
 
     def as_updateCaptureTextS(self, team, text):
-        return self.flashObject.as_updateCaptureText(team, text) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_updateCaptureText(team, text)
 
     def as_removeTeamBaseS(self, team):
-        return self.flashObject.as_removeTeamBase(team) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_removeTeamBase(team)

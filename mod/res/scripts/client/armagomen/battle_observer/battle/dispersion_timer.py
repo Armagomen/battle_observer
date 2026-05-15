@@ -7,6 +7,7 @@ from constants import ARENA_PERIOD
 from gui.battle_control.avatar_getter import getInputHandler
 from PlayerEvents import g_playerEvents
 
+ERROR = "DispersionTimer getDispersionAngle override: {}"
 
 class DispersionTimer(DispersionTimerMeta):
 
@@ -62,7 +63,7 @@ class DispersionTimer(DispersionTimerMeta):
         try:
             self.updateTimer(avatar, turretRotationSpeed, dispersionAngles)
         except Exception as e:
-            logError(e)
+            logError(ERROR, e.message)
         return dispersionAngles
 
     def updateTimer(self, avatar, turretRotationSpeed, dispersionAngles):
@@ -72,7 +73,7 @@ class DispersionTimer(DispersionTimerMeta):
         time = 0.0 if diff >= 1.0 else round(avatar.aimingInfo[1], 1) * (1.0 - diff)
         self.as_updateTimerTextS(self.tpl.format(time, diff), percentToColor(diff, color_blind=self._isColorBlind, as_int=True))
 
-    def onCameraChanged(self, ctrlMode, vehicleID=None):
+    def onCameraChanged(self, ctrlMode, *args, **kwargs):
         self.is_alive = ctrlMode not in POSTMORTEM_MODES
         self.toggleVisible()
         if not self.is_alive:
