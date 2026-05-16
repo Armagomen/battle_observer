@@ -2,7 +2,7 @@ from adisp import adisp_process
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.events import g_events
-from armagomen.utils.hangar_vehicle_getter import isSpecialVehicle
+from armagomen.utils import isSpecialVehicle
 from armagomen.utils.logging import logInfo
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
 from helpers import dependency
