@@ -7,10 +7,12 @@ class SixthSenseMeta(BaseModMeta):
         super(SixthSenseMeta, self).__init__()
 
     def as_showS(self, seconds):
-        return self.flashObject.as_show(seconds) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_show(seconds)
 
     def as_hideS(self):
-        return self.flashObject.as_hide() if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_hide()
 
     def playSound(self):
         pass

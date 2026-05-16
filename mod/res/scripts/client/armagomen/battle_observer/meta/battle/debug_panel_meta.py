@@ -7,4 +7,5 @@ class DebugPanelMeta(BaseModMeta):
         super(DebugPanelMeta, self).__init__()
 
     def as_updateS(self, ping, fps, isLaggingNow):
-        return self.flashObject.as_update(ping, fps, isLaggingNow) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_update(ping, fps, isLaggingNow)

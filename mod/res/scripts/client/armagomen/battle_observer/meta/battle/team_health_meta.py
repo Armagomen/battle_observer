@@ -7,11 +7,13 @@ class TeamHealthMeta(BaseModMeta):
         super(TeamHealthMeta, self).__init__()
 
     def as_updateHealthS(self, alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP):
-        return self.flashObject.as_updateHealth(alliesHP, enemiesHP, totalAlliesHP,
-                                                totalEnemiesHP) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_updateHealth(alliesHP, enemiesHP, totalAlliesHP, totalEnemiesHP)
 
     def as_updateScoreS(self, ally, enemy):
-        return self.flashObject.as_updateScore(ally, enemy) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_updateScore(ally, enemy)
 
     def as_updateCorrelationBarS(self):
-        return self.flashObject.as_updateCorrelationBar() if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_updateCorrelationBar()

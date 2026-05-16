@@ -7,4 +7,5 @@ class FlightTimeMeta(BaseModMeta):
         super(FlightTimeMeta, self).__init__()
 
     def as_flightTimeS(self, text):
-        return self.flashObject.as_flightTime(text) if self._isDAAPIInited() else None
+        if self._isDAAPIInited():
+            self.flashObject.as_flightTime(text)
