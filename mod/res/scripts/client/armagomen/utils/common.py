@@ -460,5 +460,5 @@ flags = ('isOnlyForFunRandomBattles', 'isOnlyForBattleRoyaleBattles', 'isOnlyFor
          'isOnlyForClanWarsBattles', 'isOnlyForComp7Battles', 'isOnlyForEventBattles', 'isOnlyForEpicBattles')
 
 
-def isSpecialVehicle(vehicle):
+def isSpecialBattleVehicle(vehicle):
     return any(getattr(vehicle, f, False) for f in flags)

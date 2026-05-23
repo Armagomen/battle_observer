@@ -9,9 +9,7 @@ Name: "user"; Description: {cm:types_user}; Flags: iscustom;
 [Components]
 Name: main; Description: {cm:main}; Flags: disablenouninstallwarning;
 Name: main/anti_anonymous; Description: {cm:anti_anonymous};
-Name: main/auto_crew_training; Description: {cm:auto_crew_training}; Types: armagomen;
-Name: main/auto_return_crew; Description: {cm:auto_return_crew}; Types: armagomen;
-Name: main/clear_cache_automatically; Description: {cm:clear_cache_automatically}; 
+Name: main/clear_cache_automatically; Description: {cm:clear_cache_automatically};
 Name: main/disable_score_sound; Description: {cm:disable_score_sound}; Types: armagomen;
 Name: main/disable_stun_sound; Description: {cm:disable_stun_sound}; Types: armagomen;
 Name: main/directives_only_from_storage; Description: {cm:directives_only_from_storage}; Types: armagomen;
@@ -26,7 +24,12 @@ Name: main/mute_team_base_sound; Description: {cm:mute_team_base_sound}; Types: 
 Name: main/show_friends; Description: {cm:show_friends}; Types: armagomen;
 Name: main/auto_claim_clan_reward; Description: {cm:auto_claim_clan_reward}; Types: armagomen;
 
-Name: hangar_header; Description: {cm:hangar_header};
+Name: crew; Description: {cm:crew}; Flags: disablenouninstallwarning;
+Name: crew/auto_crew_training; Description: {cm:auto_crew_training}; Types: armagomen;
+Name: crew/auto_crew_training_xp11_threshold; Description: {cm:auto_crew_training_xp11_threshold}; Types: armagomen;
+Name: crew/auto_return_crew; Description: {cm:auto_return_crew}; Types: armagomen;
+
+Name: hangar_header; Description: {cm:hangar_header}; Flags: disablenouninstallwarning;
 Name: hangar_header/premium_timer; Description: {cm:premium_timer}; Types: armagomen;
 Name: hangar_header/hide_wotPlus; Description: {cm:hide_wotPlus}; Types: armagomen;
 Name: hangar_header/hide_shoop; Description: {cm:hide_shop}; Types: armagomen;
@@ -177,8 +180,7 @@ begin
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/anti_anonymous', WizardIsComponentSelected('main/anti_anonymous'));
-    JSON_SetBool(Handle,'/auto_crew_training', WizardIsComponentSelected('main/auto_crew_training'));
-    JSON_SetBool(Handle,'/auto_return_crew', WizardIsComponentSelected('main/auto_return_crew'));
+
     JSON_SetBool(Handle,'/clear_cache_automatically', WizardIsComponentSelected('main/clear_cache_automatically'));
     JSON_SetBool(Handle,'/directives_only_from_storage', WizardIsComponentSelected('main/directives_only_from_storage'));
     JSON_SetBool(Handle,'/excluded_map_slots_notification', WizardIsComponentSelected('main/excluded_map_slots_notification'));
@@ -196,6 +198,21 @@ begin
     JSON_Close(Handle);
   end;
 end;
+
+procedure ChangeCrewJsonValues();
+var
+  Handle: Integer;
+begin
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\crew.json'), False);
+  if Handle <> 0 then
+  begin
+    JSON_SetBool(Handle,'/auto_crew_training', WizardIsComponentSelected('crew/auto_crew_training'));
+    JSON_SetBool(Handle,'/auto_return_crew', WizardIsComponentSelected('crew/auto_return_crew'));
+    JSON_SetBool(Handle,'/auto_crew_training_xp11_threshold', WizardIsComponentSelected('crew/auto_crew_training_xp11_threshold'));
+    JSON_Close(Handle);
+  end;
+end;
+
 
 procedure ChangeClockJsonValues();
 var
@@ -595,7 +612,9 @@ procedure StepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssPostInstall then
     begin
+      ChangeMainGunJsonValues();
       ChangeHangarHeaderJsonValues();
+      ChangeCrewJsonValues();
       ChangeArcadeCameraJsonValues();
       ChangeArmorCalculatorJsonValues();
       ChangeBattleTimerJsonValues();
@@ -610,7 +629,6 @@ begin
       ChangeFlightTimeJsonValues();
       ChangeHpBarsJsonValues();
       ChangeLogTotalJsonValues();
-      ChangeMainGunJsonValues();
       ChangeMainJsonValues();
       ChangeMinimapLogsJsonValues();
       ChangeOwnHealthJsonValues();

@@ -1,7 +1,7 @@
 import math
 from collections import namedtuple
 
-from armagomen.utils.common import isSpecialVehicle
+from armagomen.utils.common import isSpecialBattleVehicle
 from armagomen.utils.logging import logDebug
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
@@ -47,7 +47,7 @@ class CurrentVehicleCachedData(object):
         g_currentVehicle.onChanged -= self.onVehicleChanged
 
     def onVehicleChanged(self):
-        self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() and not isSpecialVehicle(
+        self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() and not isSpecialBattleVehicle(
             g_currentVehicle.item) else None
         self.onChanged(self.__EfficiencyAVGData)
 

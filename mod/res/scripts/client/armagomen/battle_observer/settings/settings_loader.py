@@ -146,11 +146,16 @@ class SettingsLoader(object):
     def getSetting(self, component_name, key=None):
         component = getattr(self.__settings, component_name, None)
         if component is None:
-            logError(repr(AttributeError('Component {} not found in settings'.format(component_name))))
+            err = AttributeError("Component {} not found in settings",format(component_name))
+            logError("{}: {}", type(err).__name__, err)
             return component
+
         if key is None:
             return component
+
         param = component.get(key)
         if param is None:
-            logError(repr(KeyError('Parameter {} not found in {} settings: {}'.format(key, component_name, component))))
+            err = KeyError("Parameter {} not found in {}".format(key, component_name))
+            logError("{}: {}", type(err).__name__, err)
         return param
+

@@ -23,8 +23,6 @@ en.types_user=Custom installation
 //main
 en.main=Settings without category
 en.anti_anonymous=Tag players with a hidden nickname
-en.auto_crew_training=Automatic switching of Accelerated Crew Training
-en.auto_return_crew=Auto return crew
 en.clear_cache_automatically=Clear cache after exiting the game
 en.disable_score_sound=Disable sound when destroying friendly or enemy tank
 en.disable_stun_sound=Disable artillery stun sound
@@ -39,6 +37,12 @@ en.ignore_commanders_voice=Ignore commanders voice
 en.mute_team_base_sound=Mute base capture siren
 en.show_friends=Tag friends and clan players in team lists
 en.auto_claim_clan_reward=Collect clan rewards automatically
+
+//crew
+en.crew=Crew settings
+en.auto_crew_training=Automatic switching of Accelerated Crew Training
+en.auto_return_crew=Auto return crew
+en.auto_crew_training_xp11_threshold=Collect experience for level 11
 
 //hangar_header
 en.hangar_header=Hangar header settings

@@ -1,9 +1,8 @@
 import Keys
-from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER,
-                                  CLOCK, COLORS, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, DISPERSION_TIMER, EFFECTS, EX_LOGS_ICONS,
-                                  FLIGHT_TIME, GLOBAL, HANGAR_HEADER, HP_BARS, IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS,
-                                  SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, TEAM_BASES, VEHICLE_TYPES_COLORS)
-
+from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CLOCK, COLORS, CREW, DAMAGE_LOG, DEBUG_PANEL,
+                                  DISPERSION, DISPERSION_TIMER, EFFECTS, EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HANGAR_HEADER, HP_BARS,
+                                  IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC,
+                                  TEAM_BASES, VEHICLE_TYPES_COLORS)
 from constants import ATTACK_REASON
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -14,8 +13,6 @@ class SettingsData(object):
         self.main = {
             MAIN.AUTO_CLAIM_CLAN_REWARD: False,
             MAIN.AUTO_CLEAR_CACHE: False,
-            MAIN.CREW_RETURN: False,
-            MAIN.CREW_TRAINING: False,
             MAIN.DEBUG: False,
             MAIN.DIRECTIVES: False,
             MAIN.DISABLE_SCORE_SOUND: False,
@@ -31,6 +28,12 @@ class SettingsData(object):
             MAIN.SHOW_FRIENDS: False,
             MAIN.STUN_SOUND: False,
             MAIN.USE_KEY_PAIRS: True,
+        }
+
+        self.crew = {
+            CREW.CREW_RETURN: False,
+            CREW.CREW_TRAINING: False,
+            CREW.THRESHOLD: False
         }
 
         self.hangar_header = {

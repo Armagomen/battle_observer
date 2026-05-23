@@ -40,14 +40,12 @@ localization = {
         "anti_anonymous": "Spieler mit verborgenem Spitznamen markieren",
         "clear_cache_automatically": "Cache beim Verlassen des Spiels automatisch löschen",
         "clear_cache_automatically_tooltip": "Löschen temporärer Spieldateien unter: AppData/Roaming/Wargaming.net/WorldOfTanks",
-        "auto_crew_training": "'Schnelle Ausbildung der Besatzung' automatisch umschalten",
-        "auto_crew_training_tooltip": "Überwacht den Status der 'Feldmodifikation' und aktiviert oder deaktiviert entsprechend die 'Schnelle Ausbildung der Besatzung'.",
-        "auto_return_crew": "Besatzung automatisch zurückbringen",
-        "auto_return_crew_tooltip": "Wenn die ausgewählte Panzerbesatzung fehlt, aber verfügbar ist und nicht in einem anderen Gefecht steckt, wird sie automatisch zurückgebracht.",
         "disable_score_sound": "Soundeffekt bei Punktänderung deaktivieren",
         "disable_stun_sound": "Soundeffekt bei Betäubung deaktivieren",
         "directives_only_from_storage": "Bonds und Silber beim Kauf von Direktiven sparen",
-        "directives_only_from_storage_tooltip": "Verhindert das automatische Auffüllen von Direktiven mit Bonds oder Silber, wenn keine im Lager vorhanden sind. Aktiviert auch das Kontrollkästchen 'Automatisches Auffüllen', falls Vorräte vorhanden sind.",
+        "directives_only_from_storage_tooltip": "Verhindert das automatische Auffüllen von Direktiven mit Bonds oder Silber, wenn keine "
+                                                "im Lager vorhanden sind. Aktiviert auch das Kontrollkästchen 'Automatisches Auffüllen', "
+                                                "falls Vorräte vorhanden sind.",
         "hide_badges": "Abzeichen im Gefecht ausblenden",
         "hide_badges_tooltip": "Blendet Symbole in den Ohren, der Tab-Ansicht und dem Ladebildschirm aus.",
         "hide_clan_abbrev": "Clantags im Gefecht ausblenden",
@@ -55,13 +53,26 @@ localization = {
         "hide_field_mail": "Feldpost deaktivieren",
         "hide_hint_panel": "Hinweistafel im Gefecht ausblenden",
         "ignore_commanders_voice": "Kommandantenstimme ignorieren",
-        "ignore_commanders_voice_tooltip": "Nach Aktivierung wird die Standardbesatzungsstimme erzwungen. Diese Einstellung ersetzt einzigartige Kommandantenstimmen durch die Standardstimme oder ein installiertes Modpack.",
+        "ignore_commanders_voice_tooltip": "Nach Aktivierung wird die Standardbesatzungsstimme erzwungen. Diese Einstellung ersetzt "
+                                           "einzigartige Kommandantenstimmen durch die Standardstimme oder ein installiertes Modpack.",
         "show_friends": "Freunde und Clanmitglieder in Teamlisten markieren",
         "useKeyPairs": "Gleichzeitige Nutzung linker/rechter Ctrl-, Alt- und Shift-Tasten",
         "useKeyPairs_tooltip": "Nach Aktivierung funktionieren die linken und rechten Tasten gleich, unabhängig von Moduleinstellungen.",
         "mute_team_base_sound": "Basisalarm-Sirene deaktivieren",
         "excluded_map_slots_notification": "Benachrichtigung über verfügbare Kartensperrslots anzeigen",
         "auto_claim_clan_reward": "Clanbelohnungen automatisch abholen"
+    },
+    "crew": {
+        "header": "Besatzungseinstellungen",
+        "auto_crew_training": "Automatisches Umschalten „Beschleunigte Ausbildung der Besatzung“",
+        "auto_crew_training_tooltip": "Überwacht die Feldaufrüstung und aktiviert/deaktiviert die beschleunigte Ausbildung der "
+                                      "Besatzung entsprechend.",
+        "auto_return_crew": "Automatische Rückkehr der Besatzung",
+        "auto_return_crew_tooltip": "Wenn das ausgewählte Fahrzeug keine Besatzung hat, aber verfügbar ist und nicht im Gefecht – "
+                                    "wird sie automatisch zurückgebracht.",
+        "auto_crew_training_xp11_threshold": "Erfahrung für Stufe 11 sammeln",
+        "auto_crew_training_xp11_threshold_tooltip": "Wenn aktiviert, wird die beschleunigte Ausbildung nicht genutzt, bis 325.000 "
+                                                     "Erfahrung auf dem Panzer gesammelt wurden."
     },
     "hangar_header": {
         "header": "Einstellungen der Garagenkopfzeile",
@@ -72,11 +83,14 @@ localization = {
     "statistics": {
         "header": "Spielerstatistiken und Fahrzeug-Icon-Einstellungen",
         "icons": "Icons: Einfärbung nach Fahrzeugklassen",
-        "icons_tooltip": "Diese Funktion verändert die Farben aller Fahrzeug-Icons im Ladebildschirm, in den Ohren und im Tab-Fenster. Der Filter beeinflusst die Helligkeit. Empfohlene Filterstärke: -1.25.",
+        "icons_tooltip": "Diese Funktion verändert die Farben aller Fahrzeug-Icons im Ladebildschirm, in den Ohren und im Tab-Fenster. "
+                         "Der Filter beeinflusst die Helligkeit. Empfohlene Filterstärke: -1.25.",
         "icons_blackout": "Icons: Filterintensität (Helligkeit)",
         "statistics": "Spielerstatistiken nach WGR aktivieren",
         "statistics_vehicle_name_color": "Fahrzeugname entsprechend Spielerstatistik einfärben",
-        "statistics_tooltip": "Statistiken werden im Ladebildschirm, in den Ohren und im Tab-Fenster angezeigt. Für genauere Einstellungen verwende die Datei statistics.json. Verfügbare Makros: WGR, colorWGR, winRate, nickname, battles, clanTag.",
+        "statistics_tooltip": "Statistiken werden im Ladebildschirm, in den Ohren und im Tab-Fenster angezeigt. Für genauere "
+                              "Einstellungen verwende die Datei statistics.json. Verfügbare Makros: WGR, colorWGR, winRate, "
+                              "nickname, battles, clanTag.",
         "statistics_colors*very_bad": "Sehr niedriges Niveau",
         "statistics_colors*bad": "Niedriges Niveau",
         "statistics_colors*normal": "Mittleres Niveau",

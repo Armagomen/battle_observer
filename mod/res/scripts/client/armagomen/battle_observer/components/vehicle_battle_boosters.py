@@ -2,7 +2,7 @@ from adisp import adisp_process
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.events import g_events
-from armagomen.utils.common import isSpecialVehicle
+from armagomen.utils.common import isSpecialBattleVehicle
 from armagomen.utils.logging import logInfo
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
 from helpers import dependency
@@ -21,7 +21,7 @@ class BattleBoosters(object):
     def onVehicleChanged(self, vehicle):
         if not self.settingsLoader.getSetting(MAIN.NAME, MAIN.DIRECTIVES):
             return
-        if vehicle is None or vehicle.isLocked or isSpecialVehicle(vehicle):
+        if vehicle is None or vehicle.isLocked or isSpecialBattleVehicle(vehicle):
             return
         if not hasattr(vehicle, "battleBoosters") or vehicle.battleBoosters is None:
             logInfo("No battle boosters available for this vehicle: {}", vehicle.userName)

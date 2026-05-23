@@ -40,10 +40,6 @@ localization = {
         "anti_anonymous": "Oznaczaj graczy z ukrytym pseudonimem",
         "clear_cache_automatically": "Czyść cache automatycznie po wyjściu z gry",
         "clear_cache_automatically_tooltip": "Usuwa pliki tymczasowe z: AppData/Roaming/Wargaming.net/WorldOfTanks",
-        "auto_crew_training": "Automatycznie przełączaj 'Przyspieszone szkolenie załogi'",
-        "auto_crew_training_tooltip": "Monitoruje status modernizacji polowej i aktywuje/dezaktywuje szkolenie zależnie od dostępności.",
-        "auto_return_crew": "Automatyczny powrót załogi",
-        "auto_return_crew_tooltip": "Jeśli załoga pojazdu jest dostępna i nie uczestniczy w bitwie, wróci automatycznie.",
         "disable_score_sound": "Wyłącz efekt dźwiękowy zmiany wynikuu",
         "disable_stun_sound": "Wyłącz efekt dźwiękowy ogłuszenia",
         "directives_only_from_storage": "Używaj dyrektyw tylko z magazynu",
@@ -63,6 +59,16 @@ localization = {
         "mute_team_base_sound": "Wyłącz syrenę przejęcia bazy",
         "excluded_map_slots_notification": "Powiadamiaj o dostępnych slotach do wykluczenia map",
         "auto_claim_clan_reward": "Automatycznie odbieraj nagrody klanowe"
+    },
+    "crew": {
+        "header": "Ustawienia załogi",
+        "auto_crew_training": "Automatyczne przełączanie „Przyspieszonego szkolenia załogi”",
+        "auto_crew_training_tooltip": "Monitoruje modernizację polową i odpowiednio włącza/wyłącza przyspieszone szkolenie załogi.",
+        "auto_return_crew": "Automatyczny powrót załogi",
+        "auto_return_crew_tooltip": "Jeśli wybrany czołg nie ma załogi, ale jest ona dostępna i nie walczy — zostanie automatycznie przywrócona.",
+        "auto_crew_training_xp11_threshold": "Zbieraj doświadczenie na poziom 11",
+        "auto_crew_training_xp11_threshold_tooltip": "Jeśli włączone, przyspieszone szkolenie nie będzie używane, dopóki na czołgu nie "
+                                                     "zostanie zdobyte 325 000 doświadczenia."
     },
     "hangar_header": {
         "header": "Ustawienia nagłówka garażu",

@@ -1,11 +1,12 @@
 from AccountCommands import VEHICLE_SETTINGS_FLAG
-from armagomen._constants import MAIN
+from armagomen._constants import CREW
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.common import updateIgnoredVehicles, isSpecialVehicle
+from armagomen.utils.common import isSpecialBattleVehicle, updateIgnoredVehicles
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
 from armagomen.utils.logging import logDebug, logInfo
+from dossiers2.custom.cache import getCache
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
 from gui.shared.gui_items.processors.tankman import TankmanAutoReturn
@@ -23,6 +24,7 @@ class CrewProcessor(object):
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
+        self.xp_to_11_lvl = 325000
         self.intCD = None
         self.isDialogVisible = False
         self.ignored_vehicles = set()
@@ -38,7 +40,7 @@ class CrewProcessor(object):
 
     @staticmethod
     def getLocalizedMessage(value, description):
-        return "<br><br>".join((CREW_DIALOG_BY_LANG[description], CREW_DIALOG_BY_LANG[CREW_XP.ENABLE if value else CREW_XP.DISABLE]))
+        return "{}\n\n<b>{}</b>".format(CREW_DIALOG_BY_LANG[description], CREW_DIALOG_BY_LANG[CREW_XP.ENABLE if value else CREW_XP.DISABLE])
 
     @wg_async
     def showAccelerateDialog(self, vehicle, value, description):
@@ -59,40 +61,46 @@ class CrewProcessor(object):
             logInfo("The accelerated crew training is {} for '{}'", value, vehicle.userName)
 
     @staticmethod
-    def isPostProgressionFullXP(vehicle):
-        iterator = vehicle.postProgression.iterOrderedSteps()
-        currentXP = vehicle.xp
-        needToProgress = sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
-        logDebug("isPostProgressionFullXP - {}: {}/{}", vehicle.userName, currentXP, needToProgress)
-        return currentXP >= needToProgress
+    def getRemainPostProgressionXP(vehicle):
+        postProgressionAvailability = vehicle.postProgressionAvailability(unlockOnly=True).result
+        if postProgressionAvailability:
+            iterator = vehicle.postProgression.iterOrderedSteps()
+            remain_PP_XP = sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
+            logDebug("postProgressionXP - {}: {}", vehicle.userName, remain_PP_XP)
+            return postProgressionAvailability, remain_PP_XP
+        return postProgressionAvailability, 0
+
+    def isXPto11(self, vehicle, remain_PP_XP):
+        enabled = self.settingsLoader.getSetting(CREW.NAME, CREW.THRESHOLD)
+        remain_XP = remain_PP_XP + self.xp_to_11_lvl
+        return enabled and vehicle.level == 10 and not vehicle.isSpecial and not vehicle.isCollectible and \
+            getCache()['vehiclesByLevel'][11].isdisjoint(vehicle.getEliteStatusProgress().unlocked) and vehicle.xp < remain_XP
+
+    @staticmethod
+    def isProgressionComplete(vehicle, remain_PP_XP):
+        return vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL or vehicle.xp >= remain_PP_XP
 
     def isAccelerateTraining(self, vehicle):
-        if not vehicle.isFullyElite:
+        postProgressionAvailability, remain_PP_XP = self.getRemainPostProgressionXP(vehicle)
+
+        if self.isXPto11(vehicle, remain_PP_XP):
+            return False, CREW_XP.THRESHOLD
+        elif not vehicle.isFullyElite:
             return False, CREW_XP.NOT_ELITE
-        elif not vehicle.postProgressionAvailability(unlockOnly=True).result:
+        elif not postProgressionAvailability:
             return True, CREW_XP.NOT_AVAILABLE
-        elif vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL or self.isPostProgressionFullXP(vehicle):
+        elif self.isProgressionComplete(vehicle, remain_PP_XP):
             return True, CREW_XP.IS_FULL_COMPLETE
         else:
             return False, CREW_XP.NED_TURN_OFF
 
-    def isCrewAvailable(self, vehicle):
-        isLockedFound = False
-        for tankmanID in vehicle.lastCrew:
-            tankman = self.itemsCache.items.getTankman(tankmanID)
-            if tankman and tankman.isInTank:
-                tankmanVehicle = self.itemsCache.items.getVehicle(tankman.vehicleInvID)
-                if tankmanVehicle:
-                    isLockedFound |= tankmanVehicle.isLocked
-        return not isLockedFound
-
     def onVehicleChanged(self, vehicle):
         logDebug("crew onVehicleChanged")
-        if not vehicle or vehicle.isLocked or isSpecialVehicle(vehicle):
+        if not vehicle or vehicle.isLocked or isSpecialBattleVehicle(vehicle):
             return
-        if self.settingsLoader.getSetting(MAIN.NAME, MAIN.CREW_RETURN):
+        if self.settingsLoader.getSetting(CREW.NAME, CREW.CREW_RETURN):
             self.updateAutoReturn(vehicle)
-        if self.settingsLoader.getSetting(MAIN.NAME, MAIN.CREW_TRAINING):
+        if self.settingsLoader.getSetting(CREW.NAME, CREW.CREW_TRAINING):
             self.updateAcceleration(vehicle)
 
     def updateAutoReturn(self, vehicle):

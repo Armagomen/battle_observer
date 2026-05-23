@@ -57,21 +57,26 @@ localization = {
                                            "Chuck Norris and so on with the standard / from the voiceover mod. ",
         "disable_score_sound": "Disable the sound effect of score change",
         "disable_stun_sound": "Disable the sound effect of stun",
-        "auto_crew_training": "Automatic switching of 'Accelerated crew training'",
-        "auto_crew_training_tooltip": "Monitors whether 'Field Upgrade' is upgraded/available and enables or disables"
-                                      " 'Expedited Crew Training' accordingly.",
         "directives_only_from_storage": "Do not replenish directives for currency (automatically)",
         "directives_only_from_storage_tooltip":
             "Prevent automatic replenishment of instructions for game currency if they are not in stock. It will also "
             "turn on automatic replenishment from the warehouse if they are there and you forgot to tick the box.",
         "hide_hint_panel": "Disable hints in battle",
         "hide_field_mail": "Disable field mail",
-        "auto_return_crew": "Automatic crew return",
-        "auto_return_crew_tooltip": "If there is no crew on the selected tank, but there is one for it and is not in "
-                                    "battle on another tank, the crew will be returned to the tank automatically.",
         "mute_team_base_sound": "Mute base capture siren",
         "excluded_map_slots_notification": "Notify about available excluded map slots",
         "auto_claim_clan_reward": "Collect clan rewards automatically"
+    },
+    "crew": {
+        "header": "Crew settings",
+        "auto_crew_training": "Automatically toggle 'Accelerated crew training'",
+        "auto_crew_training_tooltip": "Monitors field upgrades and enables/disables accelerated crew training accordingly.",
+        "auto_return_crew": "Automatic crew return",
+        "auto_return_crew_tooltip": "If the selected tank has no crew, but they are available and not in battle — they will be "
+                                    "returned automatically.",
+        "auto_crew_training_xp11_threshold": "Collect experience for level 11",
+        "auto_crew_training_xp11_threshold_tooltip": "If enabled, accelerated training will not be used until 325,000 experience has "
+                                                     "been earned on the tank."
     },
     "hangar_header": {
         "header": "Hangar header settings",
