@@ -39,13 +39,13 @@ class CrewProcessor(object):
         g_events.onVehicleChangedDelayed -= self.onVehicleChanged
 
     @staticmethod
-    def getLocalizedMessage(value, description):
-        return "{}\n\n<b>{}</b>".format(CREW_DIALOG_BY_LANG[description], CREW_DIALOG_BY_LANG[CREW_XP.ENABLE if value else CREW_XP.DISABLE])
+    def getLocalizedMessage(value, description, xp):
+        return "{}\n\n<b>{}</b>".format(CREW_DIALOG_BY_LANG[description].format(xp),
+                                        CREW_DIALOG_BY_LANG[CREW_XP.ENABLE if value else CREW_XP.DISABLE])
 
     @wg_async
-    def showAccelerateDialog(self, vehicle, value, description):
+    def showAccelerateDialog(self, vehicle, value, message):
         self.isDialogVisible = True
-        message = self.getLocalizedMessage(value, description)
         dialog_result = yield wg_await(CrewDialog().show(vehicle.userName, message))
         if dialog_result.result == DialogButtons.SUBMIT:
             self.accelerateCrewXp(vehicle, value)
@@ -67,32 +67,32 @@ class CrewProcessor(object):
             iterator = vehicle.postProgression.iterOrderedSteps()
             remain_PP_XP = sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
             logDebug("postProgressionXP - {}: {}", vehicle.userName, remain_PP_XP)
-            return postProgressionAvailability, remain_PP_XP
+            return postProgressionAvailability, remain_PP_XP - vehicle.xp
         return postProgressionAvailability, 0
 
-    def isXPto11(self, vehicle, remain_PP_XP):
+    def isXPto11(self, vehicle):
         enabled = self.settingsLoader.getSetting(CREW.NAME, CREW.THRESHOLD)
-        remain_XP = remain_PP_XP + self.xp_to_11_lvl
         return enabled and vehicle.level == 10 and not vehicle.isSpecial and not vehicle.isCollectible and \
-            getCache()['vehiclesByLevel'][11].isdisjoint(vehicle.getEliteStatusProgress().unlocked) and vehicle.xp < remain_XP
-
-    @staticmethod
-    def isProgressionComplete(vehicle, remain_PP_XP):
-        return vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL or vehicle.xp >= remain_PP_XP
+            getCache()['vehiclesByLevel'][11].isdisjoint(vehicle.getEliteStatusProgress().unlocked)
 
     def isAccelerateTraining(self, vehicle):
-        postProgressionAvailability, remain_PP_XP = self.getRemainPostProgressionXP(vehicle)
+        postProgressionAvailability, xp = self.getRemainPostProgressionXP(vehicle)
+        acceleration, description = False, CREW_XP.NED_TURN_OFF
 
-        if self.isXPto11(vehicle, remain_PP_XP):
-            return False, CREW_XP.THRESHOLD
+        isXPto11 = self.isXPto11(vehicle)
+        if isXPto11:
+            xp += self.xp_to_11_lvl
+
+        if isXPto11 and xp > 0:
+            description = CREW_XP.THRESHOLD
         elif not vehicle.isFullyElite:
-            return False, CREW_XP.NOT_ELITE
+            description = CREW_XP.NOT_ELITE
         elif not postProgressionAvailability:
-            return True, CREW_XP.NOT_AVAILABLE
-        elif self.isProgressionComplete(vehicle, remain_PP_XP):
-            return True, CREW_XP.IS_FULL_COMPLETE
-        else:
-            return False, CREW_XP.NED_TURN_OFF
+            acceleration, description = True, CREW_XP.NOT_AVAILABLE
+        elif vehicle.postProgression.getCompletion() is PostProgressionCompletion.FULL or xp <= 0:
+            acceleration, description = True, CREW_XP.IS_FULL_COMPLETE
+
+        return acceleration, description, max(0, xp)
 
     def onVehicleChanged(self, vehicle):
         logDebug("crew onVehicleChanged")
@@ -112,9 +112,10 @@ class CrewProcessor(object):
         if not self.isDialogVisible:
             if vehicle.intCD in self.ignored_vehicles or not vehicle.isElite:
                 return
-            acceleration, description = self.isAccelerateTraining(vehicle)
+            acceleration, description, xp = self.isAccelerateTraining(vehicle)
             if vehicle.isXPToTman != acceleration:
-                self.showAccelerateDialog(vehicle, acceleration, description)
+                message = self.getLocalizedMessage(acceleration, description, xp)
+                self.showAccelerateDialog(vehicle, acceleration, message)
 
     @decorators.adisp_process('updating')
     def __autoReturnToggleSwitch(self, vehicle):
