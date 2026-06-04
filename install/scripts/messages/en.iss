@@ -12,13 +12,12 @@ en.client_started=The selected client is running.%n%nDo you want to terminate th
 
 // run
 en.open_donate=Support the developer with a donation
-en.open_patreon=Support by subscribing to Patreon
 
 // components
 // en
 en.types_armagomen=Everything is like armagomen
-en.types_empty=Configure yourself
 en.types_user=Custom installation
+en.types_update=Update only the mod files (without configurations)
 
 //main
 en.main=Settings without category

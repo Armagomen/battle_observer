@@ -44,8 +44,7 @@ WizardStyle=modern
 
 
 [Run]  
-Filename: "https://send.monobank.ua/jar/5BZHrPrJwr"; Description: "MONO {cm:open_donate}"; Flags: postinstall nowait shellexec;
-Filename: "https://www.patreon.com/armagomen"; Description: "{cm:open_patreon}"; Flags: postinstall nowait shellexec unchecked;
+Filename: "https://armagomen.github.io/battle_observer/"; Description: "{cm:open_donate}"; Flags: postinstall nowait shellexec;
 Filename: "https://discord.gg/Nma5T5snKW"; Description: "DISCORD"; Flags: postinstall nowait shellexec unchecked;
 
 

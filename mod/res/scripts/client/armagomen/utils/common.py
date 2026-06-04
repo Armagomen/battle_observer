@@ -239,18 +239,6 @@ def cleanupObserverUpdates():
             logError('cleanupObserverUpdates: {} — {}', path, repr(e))
 
 
-def updateIgnoredVehicles(data, update_file=False):
-    path = os.path.join(getObserverCachePath(), 'crew_ignored.json')
-    should_write = not os.path.isfile(path) or update_file
-    if not should_write:
-        loaded = openJsonFile(path)
-        should_write = isinstance(loaded, dict)
-        data.update(loaded.get('vehicles', []) if should_write else loaded)
-    if should_write:
-        writeJsonFile(path, sorted(data))
-        logInfo('Ignored vehicles updated: {}', data)
-
-
 base_before_override = {}
 
 

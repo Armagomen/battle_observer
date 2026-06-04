@@ -2,7 +2,7 @@
 #define mod_source "..\..\output_data"
 
 [Types]
-Name: "empty"; Description: {cm:types_empty};
+Name: "update"; Description: {cm:types_update};
 Name: "armagomen"; Description: {cm:types_armagomen};
 Name: "user"; Description: {cm:types_user}; Flags: iscustom; 
 
@@ -160,7 +160,7 @@ Name: wg_logs/wg_log_pos_fix; Description: {cm:wg_logs_pos_fix};
 
 [Files]
 Source: "{#mod_source}\*"; DestDir: "{app}\{code:PH_Folder_Mods}"; Flags: ignoreversion recursesubdirs onlyifdoesntexist;
-Source: "settings\*"; DestDir: "{#configs_dir}"; Flags: ignoreversion recursesubdirs;
+Source: "settings\*"; DestDir: "{#configs_dir}"; Flags: ignoreversion recursesubdirs onlyifdoesntexist;
 
 [InstallDelete]
 Type: files; Name: "{app}\{code:PH_Folder_Mods}\armagomen.battleObserver*.wotmod"
@@ -610,7 +610,7 @@ end;
 <event('CurStepChanged')>
 procedure StepChanged(CurStep: TSetupStep);
 begin
-  if CurStep = ssPostInstall then
+  if (CurStep = ssPostInstall) and (not IsUpdate) then
     begin
       ChangeMainGunJsonValues();
       ChangeHangarHeaderJsonValues();

@@ -36,6 +36,25 @@ begin
   Result := WotList_Selected_Record(WotList).PathResmods;
 end;
 
+
+var
+  IsUpdate: Boolean;
+
+function ShouldSkipPage(PageID: Integer): Boolean;
+begin
+  Result := False;
+
+  if PageID = wpSelectComponents then
+  begin
+    if DirExists(ExpandConstant('{app}\mods\configs\mod_battle_observer')) then
+    begin
+      IsUpdate := True;
+      Result := True;
+    end;
+  end;
+end;
+
+
 <event('InitializeWizard')>
 procedure ClientFind();
 begin
