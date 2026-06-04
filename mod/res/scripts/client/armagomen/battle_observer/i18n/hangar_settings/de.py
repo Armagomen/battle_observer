@@ -67,6 +67,7 @@ localization = {
         "auto_crew_training": "Automatisches Umschalten „Beschleunigte Ausbildung der Besatzung“",
         "auto_crew_training_tooltip": "Überwacht die Feldaufrüstung und aktiviert/deaktiviert die beschleunigte Ausbildung der "
                                       "Besatzung entsprechend.",
+        "auto_crew_training_hidden": "Dialog nicht anzeigen, automatisch umschalten.",
         "auto_return_crew": "Automatische Rückkehr der Besatzung",
         "auto_return_crew_tooltip": "Wenn das ausgewählte Fahrzeug keine Besatzung hat, aber verfügbar ist und nicht im Gefecht – "
                                     "wird sie automatisch zurückgebracht.",

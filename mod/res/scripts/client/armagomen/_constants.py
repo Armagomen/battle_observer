@@ -87,8 +87,8 @@ MAIN = __Main(
     "directives_only_from_storage", "hide_hint_panel", "hide_field_mail", "disable_stun_sound", "mute_team_base_sound",
     "excluded_map_slots_notification", "auto_claim_clan_reward")
 
-CREW = (namedtuple("CREW", ("NAME", "THRESHOLD", "CREW_TRAINING", "CREW_RETURN"))
-        ("crew", "auto_crew_training_xp11_threshold", "auto_crew_training", "auto_return_crew"))
+CREW = (namedtuple("CREW", ("NAME", "THRESHOLD", "TRAINING", "RETURN", "HIDDEN_ACCELERATE"))
+        ("crew", "auto_crew_training_xp11_threshold", "auto_crew_training", "auto_return_crew", "auto_crew_training_hidden"))
 
 HANGAR_HEADER = (namedtuple("HANGAR_HEADER", ("NAME", "PREMIUM_TIMER", "WOT_PLUS", "SHOP"))(
     "hangar_header", "premium_timer", "hide_wotPlus", "hide_shop"))
@@ -313,7 +313,7 @@ class CONFIG_INTERFACE:
     )
     HANDLER_VALUES = {
         CREW.NAME: {
-            CREW.CREW_TRAINING: (CREW.THRESHOLD,)
+            CREW.TRAINING: (CREW.THRESHOLD, CREW.HIDDEN_ACCELERATE)
         },
         SNIPER.NAME: {
             SNIPER.ZOOM_STEPS: (SNIPER.STEPS,),

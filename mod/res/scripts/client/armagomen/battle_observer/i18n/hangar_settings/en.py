@@ -71,6 +71,7 @@ localization = {
         "header": "Crew settings",
         "auto_crew_training": "Automatically toggle 'Accelerated crew training'",
         "auto_crew_training_tooltip": "Monitors field upgrades and enables/disables accelerated crew training accordingly.",
+        "auto_crew_training_hidden": "Do not show dialog, switch automatically.",
         "auto_return_crew": "Automatic crew return",
         "auto_return_crew_tooltip": "If the selected tank has no crew, but they are available and not in battle — they will be "
                                     "returned automatically.",

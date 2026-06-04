@@ -31,9 +31,10 @@ class SettingsData(object):
         }
 
         self.crew = {
-            CREW.CREW_RETURN: False,
-            CREW.CREW_TRAINING: False,
-            CREW.THRESHOLD: False
+            CREW.RETURN: False,
+            CREW.TRAINING: False,
+            CREW.THRESHOLD: False,
+            CREW.HIDDEN_ACCELERATE: False
         }
 
         self.hangar_header = {

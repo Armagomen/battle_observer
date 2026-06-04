@@ -25,8 +25,8 @@ class CrewProcessor(object):
 
     def __init__(self):
         self.xp_to_11_lvl = 325000
-        self.intCD = None
         self.isDialogVisible = False
+        self.hidden_update = False
         self.ignored_vehicles = set()
         updateIgnoredVehicles(self.ignored_vehicles)
         if any(not isinstance(vehicle, int) for vehicle in self.ignored_vehicles):
@@ -98,15 +98,10 @@ class CrewProcessor(object):
         logDebug("crew onVehicleChanged")
         if not vehicle or vehicle.isLocked or isSpecialBattleVehicle(vehicle):
             return
-        if self.settingsLoader.getSetting(CREW.NAME, CREW.CREW_RETURN):
-            self.updateAutoReturn(vehicle)
-        if self.settingsLoader.getSetting(CREW.NAME, CREW.CREW_TRAINING):
-            self.updateAcceleration(vehicle)
-
-    def updateAutoReturn(self, vehicle):
-        if self.intCD != vehicle.intCD:
+        if self.settingsLoader.getSetting(CREW.NAME, CREW.RETURN):
             self.__autoReturnToggleSwitch(vehicle)
-            self.intCD = vehicle.intCD
+        if self.settingsLoader.getSetting(CREW.NAME, CREW.TRAINING):
+            self.updateAcceleration(vehicle)
 
     def updateAcceleration(self, vehicle):
         if not self.isDialogVisible:
@@ -114,8 +109,11 @@ class CrewProcessor(object):
                 return
             acceleration, description, xp = self.isAccelerateTraining(vehicle)
             if vehicle.isXPToTman != acceleration:
-                message = self.getLocalizedMessage(acceleration, description, xp)
-                self.showAccelerateDialog(vehicle, acceleration, message)
+                if self.settingsLoader.getSetting(CREW.NAME, CREW.HIDDEN_ACCELERATE):
+                    self.accelerateCrewXp(vehicle, acceleration)
+                else:
+                    message = self.getLocalizedMessage(acceleration, description, xp)
+                    self.showAccelerateDialog(vehicle, acceleration, message)
 
     @decorators.adisp_process('updating')
     def __autoReturnToggleSwitch(self, vehicle):

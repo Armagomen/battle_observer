@@ -64,6 +64,7 @@ localization = {
         "header": "Ustawienia załogi",
         "auto_crew_training": "Automatyczne przełączanie „Przyspieszonego szkolenia załogi”",
         "auto_crew_training_tooltip": "Monitoruje modernizację polową i odpowiednio włącza/wyłącza przyspieszone szkolenie załogi.",
+        "auto_crew_training_hidden": "Nie pokazuj okna dialogowego, przełączaj automatycznie.",
         "auto_return_crew": "Automatyczny powrót załogi",
         "auto_return_crew_tooltip": "Jeśli wybrany czołg nie ma załogi, ale jest ona dostępna i nie walczy — zostanie automatycznie przywrócona.",
         "auto_crew_training_xp11_threshold": "Zbieraj doświadczenie na poziom 11",
