@@ -10,6 +10,7 @@
 
 #include "scripts\openwg.utils.iss"
 #include "scripts\code.iss"
+#include "scripts\uninstall.iss"
 //#include "scripts\splash.iss"
 
 #ifndef MyAppVersion
