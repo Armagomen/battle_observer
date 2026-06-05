@@ -6,16 +6,13 @@ class SixthSenseMeta(BaseModMeta):
     def __init__(self):
         super(SixthSenseMeta, self).__init__()
 
-    def as_showS(self, seconds):
+    def as_invoke(self, seconds, percentage):
         if self._isDAAPIInited():
-            self.flashObject.as_show(seconds)
+            self.flashObject.as_invoke(seconds, percentage)
 
-    def as_hideS(self):
+    def as_show(self):
         if self._isDAAPIInited():
-            self.flashObject.as_hide()
-
-    def playSound(self):
-        pass
+            self.flashObject.as_show()
 
     def getIconName(self):
         return "lamp_2.png"

@@ -3,13 +3,9 @@
 	import flash.display.*;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
-	import flash.events.TimerEvent;
 	import flash.net.URLRequest;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
-	import flash.utils.Timer;
-	import flash.utils.clearTimeout;
-	import flash.utils.setTimeout;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.armagomen.battle_observer.utils.RadialProgressBar;
 	import net.armagomen.battle_observer.utils.TextExt;
@@ -19,10 +15,6 @@
 	
 	public class SixthSenseUI extends ObserverBattleDisplayable
 	{
-		private const SECOND_IN_MS:int     = 1000;
-		private const DELAY:int            = 100;
-		private const TICKS_PER_SECOND:int = SECOND_IN_MS / DELAY;
-		
 		private var loader:Loader;
 		private var params:Object;
 		private var timer_text:TextExt;
@@ -32,11 +24,8 @@
 		private var POSITION_Y:Number;
 		private var _image:Bitmap;
 		private var radial_progress:RadialProgressBar;
-		private var timeoutID:Number;
-		private var _timer:Timer           = null;
 		
 		public var getIconName:Function;
-		public var playSound:Function;
 		
 		[Embed(source = "error.png")]
 		private var DefaultIcon:Class;
@@ -47,7 +36,6 @@
 			this.loader = new Loader();
 			this.loader.contentLoaderInfo.addEventListener(Event.COMPLETE, this.imageLoaded);
 			this.loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, this.onLoadError);
-			this._timer = new Timer(this.DELAY);
 		}
 		
 		override protected function onPopulate():void
@@ -62,7 +50,6 @@
 				this.addChild(this._container);
 				this.loader.load(new URLRequest("../maps/icons/battle_observer/sixth_sense/" + this.getIconName()));
 				this.hideComponent(BATTLE_VIEW_ALIASES.SIXTH_SENSE);
-				this._timer.addEventListener(TimerEvent.TIMER, this.timerHandler, false, 0, true);
 			}
 		}
 		
@@ -70,8 +57,6 @@
 		{
 			super.onBeforeDispose();
 			this.removeChildren();
-			this.clearTimers();
-			this._timer.removeEventListener(TimerEvent.TIMER, this.timerHandler);
 			this.hideAnimation.stop();
 			this.hideAnimation2.stop();
 			this.hideAnimation = null;
@@ -88,7 +73,8 @@
 		
 		private function hideIcon():void
 		{
-			if (!this.hideAnimation.isPlaying){
+			if (!this.hideAnimation.isPlaying)
+			{
 				this.hideAnimation.start();
 				this.hideAnimation2.start();
 			}
@@ -108,102 +94,58 @@
 			}
 		}
 		
+		private function makeEven(n:Number):Number
+		{
+			return (n & 1) ? n + 1 : n;
+		}
 		
 		private function updateParams():void
 		{
-			var size:Number = this.params.icon_size;
-			if (size & 1) size++;
+			var scale:Number = Math.sqrt(App.appHeight / 1080.0);
+			var size:Number = makeEven(this.params.icon_size);
+			var afterScaleWH:Number = makeEven(Math.min(180.0, Math.ceil(size * scale)));
+			var half_size:int = afterScaleWH >> 1;
 			
-			var scale:Number        = Math.sqrt(App.appHeight / 1080.0);
-			var afterScaleWH:Number = Math.min(180.0, Math.ceil(size * scale));
-			if (afterScaleWH & 1) afterScaleWH--;
-			
-			var half_size:Number = afterScaleWH >> 1;
 			this.POSITION_Y = Math.ceil(App.appHeight / 7 + half_size);
-			this._image.width = afterScaleWH;
-			this._image.height = afterScaleWH;
+			this._image.width = this._image.height = afterScaleWH;
 			this._image.smoothing = true;
 			this._image.x = -half_size;
 			if (!this._container.contains(this._image)) this._container.addChild(this._image);
+			
 			if (this.params.show_timer)
 			{
-				var text_size:Number      = Math.ceil(18 * scale);
+				var text_size:Number = Math.ceil(18 * scale);
+				var fmt:TextFormat = new TextFormat("$TitleFont", text_size, 0xFFFFFF);
+				
 				if (this.timer_text)
 				{
-					var curFmt:TextFormat = this.timer_text.getTextFormat();
-					if (Number(curFmt.size) != text_size)
+					if (Number(this.timer_text.getTextFormat().size) != text_size)
 					{
-						var newFmt:TextFormat = new TextFormat("$TitleFont", text_size, 0xFFFFFF);
-						this.timer_text.defaultTextFormat = newFmt;
-						this.timer_text.setTextFormat(newFmt);
+						this.timer_text.defaultTextFormat = fmt;
+						this.timer_text.setTextFormat(fmt);
 					}
 					this.timer_text.y = half_size + (text_size >> 1);
-					this.timer_text.alpha = 0.80;
 				}
 				else
 				{
-					var _y:Number             = half_size + (text_size >> 1);
-					this.timer_text = new TextExt(0, _y, new TextFormat("$TitleFont", text_size, 0xFFFFFF), TextFieldAutoSize.CENTER, this._container);
-					this.timer_text.alpha = 0.80;
+					this.timer_text = new TextExt(0, half_size + (text_size >> 1), fmt, TextFieldAutoSize.CENTER, this._container);
 				}
+				this.timer_text.alpha = 0.85;
 			}
-			if (!this.hideAnimation)
+			
+			if (!this.hideAnimation) this.addAnimations();
+			
+			if (this.params.show_timer_graphics)
 			{
-				this.addAnimations();
+				if (!this.radial_progress) this.radial_progress = new RadialProgressBar(this._container);
+				var radius:Number = Math.round(this.params.show_timer_graphics_radius * scale) || half_size;
+				this.radial_progress.setParams(0, half_size, radius, scale, Utils.colorConvert(this.params.show_timer_graphics_color));
 			}
-			if (!this.radial_progress)
-			{
-				this.radial_progress = new RadialProgressBar(this._container);
-			}
-			var radius:Number = Math.round(this.params.show_timer_graphics_radius * scale) || half_size;
-			this.radial_progress.setParams(0, half_size, radius, scale, Utils.colorConvert(this.params.show_timer_graphics_color));
 			this._container.alpha = 0;
 		}
 		
-		public function as_show(seconds:Number):void
+		private function hide():void
 		{
-			if (seconds <= 0)
-			{
-				return;
-			}
-			this.rewind();
-			this._container.y = this.POSITION_Y;
-			this._container.alpha = 1.0;
-			this.clearTimers();
-			
-			if (this.params.show_timer || this.params.show_timer_graphics || this.params.playTickSound)
-			{
-				if (this.params.show_timer)
-				{
-					this.timer_text.text = seconds.toFixed(1);
-				}
-				
-				if (this.params.show_timer_graphics)
-				{
-					this.radial_progress.updateProgressBar(1.0);
-				}
-				this._timer.repeatCount = seconds * this.TICKS_PER_SECOND;
-				this._timer.start();
-			}
-			else
-			{
-				this.timeoutID = setTimeout(this.as_hide, seconds * this.SECOND_IN_MS)
-			}
-		}
-		
-		private function clearTimers():void
-		{
-			this._timer.reset();
-			if (this.timeoutID > 0)
-			{
-				clearTimeout(this.timeoutID);
-				this.timeoutID = 0;
-			}
-		}
-		
-		public function as_hide():void
-		{
-			this.clearTimers();
 			if (this._container.alpha)
 			{
 				if (this.timer_text)
@@ -214,30 +156,27 @@
 			}
 		}
 		
-		protected function timerHandler(timerEvent:TimerEvent):void
+		public function as_show():void
 		{
-			this.updateProgress();
-			timerEvent.updateAfterEvent();
+			this.rewind();
+			this._container.y = this.POSITION_Y;
+			this._container.alpha = 1.0;
 		}
 		
-		private function updateProgress():void
+		public function as_invoke(time:Number, percentage:Number):void
 		{
-			var remainingTicks:int = this._timer.repeatCount - this._timer.currentCount;
-			if (this.params.show_timer_graphics)
+			if (time <= 0.0)
 			{
-				this.radial_progress.updateProgressBar(remainingTicks / this._timer.repeatCount);
+				this.hide();
+				return;
 			}
-			if (this.params.show_timer)
+			if (this.timer_text)
 			{
-				this.timer_text.text = (remainingTicks / this.TICKS_PER_SECOND).toFixed(1);
+				this.timer_text.text = time.toFixed(1);
 			}
-			if (this.params.playTickSound && remainingTicks % this.TICKS_PER_SECOND == 0)
+			if (this.radial_progress)
 			{
-				this.playSound();
-			}
-			if (remainingTicks == 0)
-			{
-				this.as_hide();
+				this.radial_progress.updateProgressBar(percentage);
 			}
 		}
 		

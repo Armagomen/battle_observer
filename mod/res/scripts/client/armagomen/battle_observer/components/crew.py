@@ -102,7 +102,7 @@ class CrewProcessor(object):
         dialog_result = yield wg_await(CrewDialog().show(vehicle.userName, message))
         if dialog_result.result == DialogButtons.SUBMIT:
             self.accelerateCrewXp(vehicle, value)
-        elif dialog_result.result == DialogButtons.PURCHASE:
+        elif dialog_result.result == DialogButtons.PURCHASE and vehicle.intCD not in self.user_cache:
             self.user_cache.append(vehicle.intCD)
         self.isDialogVisible = False
 
