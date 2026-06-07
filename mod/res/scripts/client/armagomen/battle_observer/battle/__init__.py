@@ -1,5 +1,13 @@
 from armagomen._constants import BATTLE_ALIASES
+from armagomen.battle_observer.shared import IViewSettings
+from armagomen import IALogger
+from armagomen.utils.common import addCallback
+from frameworks.wulf import WindowLayer
+from gui.app_loader.settings import APP_NAME_SPACE
 from gui.Scaleform.framework import ComponentSettings, ScopeTemplates
+from gui.Scaleform.framework.package_layout import PackageBusinessHandler
+from gui.shared import EVENT_BUS_SCOPE
+from helpers import dependency
 
 __all__ = ()
 
@@ -44,9 +52,50 @@ def getViewSettings():
 
 
 def getBusinessHandlers():
-    from armagomen.battle_observer.view import ViewHandlerBattle
     return ViewHandlerBattle(),
 
 
 def getContextMenuHandlers():
     return ()
+
+
+class ViewHandlerBattle(PackageBusinessHandler):
+    wiewSettings = dependency.descriptor(IViewSettings)
+    logger = dependency.descriptor(IALogger)
+
+    def __init__(self):
+        listeners = tuple((alias, self.eventListener) for alias in self.wiewSettings.battlePages)
+        super(ViewHandlerBattle, self).__init__(listeners, appNS=APP_NAME_SPACE.SF_BATTLE, scope=EVENT_BUS_SCOPE.BATTLE)
+        self.__counter = 0
+
+    def init(self):
+        super(ViewHandlerBattle, self).init()
+        self.wiewSettings.invalidateComponents()
+
+    def fini(self):
+        self.wiewSettings.clear()
+        super(ViewHandlerBattle, self).fini()
+
+    def eventListener(self, event):
+        if self.wiewSettings.components:
+            self.wiewSettings.registerViewComponents()
+            self.__findView(event.alias)
+            self.logger.logInfo("ViewHandlerBattle: Register components for view: {}: {}", event.alias, self.wiewSettings.components)
+
+    def onViewFounded(self, view):
+        view._blToggling.update(self.wiewSettings.components)
+        view.flashObject.as_BattleObserverCreate(self.wiewSettings.components)
+
+    def __try_load(self):
+        self.__counter += 1
+        return self.__counter < 80
+
+    def __findView(self, alias):
+        if not self.__try_load():
+            return
+        view = self.findViewByAlias(WindowLayer.VIEW, alias)
+        if view and hasattr(view.flashObject, self.wiewSettings.AS_ATTRIBUTE_NAME):
+            self.onViewFounded(view)
+        else:
+            self.logger.logDebug("_getView: {} not found in {} or view is None", self.wiewSettings.AS_ATTRIBUTE_NAME, str(view))
+            addCallback(0.1, self.__findView, alias)

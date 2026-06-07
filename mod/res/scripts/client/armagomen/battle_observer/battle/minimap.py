@@ -1,5 +1,5 @@
 from armagomen._constants import MINIMAP
-from armagomen.battle_observer.controllers import IBOKeysListener
+from armagomen.battle_observer.shared import IBOKeysListener
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 from constants import ARENA_PERIOD
 from gui.battle_control import avatar_getter

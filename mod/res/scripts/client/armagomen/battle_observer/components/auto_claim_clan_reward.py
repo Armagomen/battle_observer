@@ -1,8 +1,8 @@
 from adisp import adisp_process
 from armagomen._constants import MAIN
+from armagomen import IALogger
 from armagomen.utils.common import addCallback
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug, logWarning
 from gui import SystemMessages
 from gui.clans.clan_cache import g_clanCache
 from gui.clans.data_wrapper.clan_supply import DataNames, PointStatus, QuestStatus
@@ -25,6 +25,7 @@ class AutoClaimClanReward(object):
     __webController = dependency.descriptor(IWebController)
     __itemsCache = dependency.descriptor(IItemsCache)
     __hangarSpace = dependency.descriptor(IHangarSpace)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         self.__hangarSpace.onSpaceCreate += self.onCreate
@@ -52,11 +53,15 @@ class AutoClaimClanReward(object):
     def subscribe(self):
         g_events.onModSettingsChanged += self.onModSettingsChanged
         g_wgncEvents.onProxyDataItemShowByDefault += self.__onProxyDataItemShow
-        g_clanCache.clanSupplyProvider.onDataReceived += self.__onDataReceived
+        clanSupplyProvider = g_clanCache.clanSupplyProvider
+        if clanSupplyProvider is not None:
+            clanSupplyProvider.onDataReceived += self.__onDataReceived
 
     def unsubscribe(self):
+        clanSupplyProvider = g_clanCache.clanSupplyProvider
+        if clanSupplyProvider is not None:
+            clanSupplyProvider.onDataReceived -= self.__onDataReceived
         g_wgncEvents.onProxyDataItemShowByDefault -= self.__onProxyDataItemShow
-        g_clanCache.clanSupplyProvider.onDataReceived -= self.__onDataReceived
         g_events.onModSettingsChanged -= self.onModSettingsChanged
 
     def onModSettingsChanged(self, name, data):
@@ -71,7 +76,7 @@ class AutoClaimClanReward(object):
                 self.__claimRewards()
             elif status == QuestStatus.COMPLETE and self.__cachedProgressData and self.__cachedSettingsData:
                 self.parseProgression(self.__cachedProgressData)
-            logDebug("AutoClaimClanReward __onProxyDataItemShow: {}", item)
+            self.logger.logDebug("AutoClaimClanReward __onProxyDataItemShow: {}", item)
 
     @adisp_process
     def __claimRewards(self):
@@ -80,7 +85,7 @@ class AutoClaimClanReward(object):
         if not response.isSuccess():
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - " + backport.text(
                 R.strings.clan_supply.messages.claimRewards.error()), type=SystemMessages.SM_TYPE.Error)
-            logWarning('AutoClaimClanReward Failed to claim rewards. Code: {}', response.getCode())
+            self.logger.logWarning('AutoClaimClanReward Failed to claim rewards. Code: {}', response.getCode())
         self.__claim_started = False
 
     @adisp_process
@@ -89,7 +94,7 @@ class AutoClaimClanReward(object):
         if not response.isSuccess():
             SystemMessages.pushMessage("Battle Observer: Auto Claim Clan Reward - Failed to claim Progression.",
                                        type=SystemMessages.SM_TYPE.Error)
-            logWarning('AutoClaimClanReward Failed to claim Progression. Code: {}', response.getCode())
+            self.logger.logWarning('AutoClaimClanReward Failed to claim Progression. Code: {}', response.getCode())
 
     def parseQuests(self, data):
         if data is not None and not self.__claim_started and any(q.status in REWARD_STATUS_OK for q in data.quests):
@@ -117,7 +122,7 @@ class AutoClaimClanReward(object):
             self.__claimProgression(next_level, next_point.price)
 
     def __onDataReceived(self, dataName, data):
-        logDebug("AutoClaimClanReward __onDataReceived: {} {}", dataName, data)
+        self.logger.logDebug("AutoClaimClanReward __onDataReceived: {} {}", dataName, data)
         if dataName in (DataNames.QUESTS_INFO, DataNames.QUESTS_INFO_POST):
             self.__cachedQuestsData = data
             if self.__enabled and g_clanCache.isInClan:

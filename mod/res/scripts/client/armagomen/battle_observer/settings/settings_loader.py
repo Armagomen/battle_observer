@@ -1,16 +1,53 @@
 import os
 
+from armagomen import IALogger
 from armagomen._constants import ALIAS_TO_CONFIG_NAME_BATTLE, ALIAS_TO_CONFIG_NAME_LOBBY, GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
-from armagomen.utils.common import currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
+from armagomen.utils.common import clearClientCache, currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import DEBUG, debug, logError, logInfo
+from helpers import dependency
 
 JSON = "{}.json"
 READ_MESSAGE = "loadConfigPart: {}: {}"
 
 
-class SettingsLoader(object):
+class IBOSettingsLoader(object):
+    __slots__ = ()
+
+    def fini(self):
+        raise NotImplementedError
+
+    @property
+    def settings(self):
+        raise NotImplementedError
+
+    def readOtherConfig(self, configID):
+        raise NotImplementedError
+
+    def createLoadJSON(self, configName):
+        raise NotImplementedError
+
+    def updateConfigFile(self, name, data):
+        raise NotImplementedError
+
+    def updateData(self, external_cfg, internal_cfg, file_update=False):
+        raise NotImplementedError
+
+    def updateAllSettings(self):
+        raise NotImplementedError
+
+    def getSettingDictByAliasBattle(self, alias):
+        raise NotImplementedError
+
+    def getSettingDictByAliasLobby(self, alias):
+        raise NotImplementedError
+
+    def getSetting(self, component_name, param):
+        raise NotImplementedError
+
+
+class SettingsLoader(IBOSettingsLoader):
     __slots__ = ('configName', 'load_json', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog')
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self, settings, errorDialog):
         self.__settings = settings
@@ -18,14 +55,14 @@ class SettingsLoader(object):
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
         self.configName = self.configsList[0] if self.configsList else 'default'
         self.load_json = os.path.join(currentConfigPath, 'load.json')
-
-    def init(self):
         self.error_dialog.init()
         self.readConfig()
 
     def fini(self):
         self.error_dialog.fini()
         self.error_dialog = None
+        if self.__settings.main[MAIN.AUTO_CLEAR_CACHE]:
+            clearClientCache()
         self.__settings = None
 
     @property
@@ -46,7 +83,7 @@ class SettingsLoader(object):
     def updateConfigFile(self, name, data):
         path = os.path.join(currentConfigPath, self.configName, JSON.format(name))
         writeJsonFile(path, data)
-        if name == MAIN.NAME and debug.set_debug(data[DEBUG]):
+        if name == MAIN.NAME and self.logger.set_debug(data[MAIN.DEBUG]):
             printDebuginfo()
 
     @staticmethod
@@ -69,8 +106,9 @@ class SettingsLoader(object):
             new_param = external_cfg.get(key)
             if new_param is None or not self.isEqualType(old_param, new_param):
                 update = True
-                logError("Error in key '{}': parameter values are not compatible. Received: {}, expected: {} - Restore to default", key,
-                         new_param, old_param)
+                self.logger.logError(
+                    "Error in key '{}': parameter values are not compatible. Received: {}, expected: {} - Restore to default", key,
+                    new_param, old_param)
                 continue
             if key == SIXTH_SENSE.ICON_NAME and new_param not in SIXTH_SENSE_LIST:
                 update = True
@@ -96,7 +134,7 @@ class SettingsLoader(object):
         try:
             data = openJsonFile(self.load_json)
         except Exception as error:
-            logError("Error in openJsonFile: {}", repr(error))
+            self.logger.logError("Error in openJsonFile: {}", repr(error))
             self.createLoadJSON(self.configName)
             self.error_dialog.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
             if self.configName not in self.configsList:
@@ -108,12 +146,13 @@ class SettingsLoader(object):
             os.makedirs(config_path)
             self.error_dialog.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
 
-        logInfo("LOADING USER CONFIGURATION: {}", self.configName.upper())
+        self.logger.logInfo("LOADING USER CONFIGURATION: {}", self.configName.upper())
         self.iterateSettings(self.loadConfigPart)
-        logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
+        self.logger.logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
 
-    def updateAllSettings(self):
+    def handleModSettingsChangedEvent(self):
         """Update all configuration settings"""
+        self.logger.logInfo('HANDLE MOD SETTINGS CHANGED EVENT')
         self.iterateSettings(g_events.onModSettingsChanged)
 
     def loadConfigPart(self, component_name, config):
@@ -131,8 +170,8 @@ class SettingsLoader(object):
         else:
             if self.updateData(file_data, config):
                 writeJsonFile(file_path, config)
-            logInfo(READ_MESSAGE, self.configName, file_name)
-            if component_name == MAIN.NAME and debug.set_debug(config[DEBUG]):
+            self.logger.logInfo(READ_MESSAGE, self.configName, file_name)
+            if component_name == MAIN.NAME and self.logger.set_debug(config[MAIN.DEBUG]):
                 printDebuginfo()
 
     def getSettingDictByAliasBattle(self, alias):
@@ -146,8 +185,8 @@ class SettingsLoader(object):
     def getSetting(self, component_name, key=None):
         component = getattr(self.__settings, component_name, None)
         if component is None:
-            err = AttributeError("Component {} not found in settings",format(component_name))
-            logError("{}: {}", type(err).__name__, err)
+            err = AttributeError("Component {} not found in settings".format(component_name))
+            self.logger.logError("{}: {}", type(err).__name__, err)
             return component
 
         if key is None:
@@ -156,6 +195,5 @@ class SettingsLoader(object):
         param = component.get(key)
         if param is None:
             err = KeyError("Parameter {} not found in {}".format(key, component_name))
-            logError("{}: {}", type(err).__name__, err)
+            self.logger.logError("{}: {}", type(err).__name__, err)
         return param
-

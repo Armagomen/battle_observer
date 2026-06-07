@@ -1,8 +1,8 @@
 from armagomen._constants import CLOCK, GLOBAL, LOBBY_ALIASES
+from armagomen import IALogger
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug
 from frameworks.wulf import ViewModel
 from gui.impl.pub.view_component import ViewComponent
 from gui.shared.utils.TimeInterval import TimeInterval
@@ -38,10 +38,10 @@ class ClockModel(ViewModel):
 class DateTimesView(ViewComponent[ClockModel]):
     viewLayoutID = ModDynAccessor(LOBBY_ALIASES.DATE_TIME)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
-
-        logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.DATE_TIME, self.viewLayoutID())
+        self.logger.logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.DATE_TIME, self.viewLayoutID())
         super(DateTimesView, self).__init__(
             layoutID=self.viewLayoutID(),
             model=ClockModel

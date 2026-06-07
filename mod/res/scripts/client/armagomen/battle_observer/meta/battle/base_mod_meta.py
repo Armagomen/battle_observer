@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen._constants import VEHICLE_TYPES_COLORS
+from armagomen import IALogger
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.logging import logDebug, logInfo
 from constants import ARENA_BONUS_TYPE
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
@@ -13,6 +13,7 @@ class BaseModMeta(BaseDAAPIComponent):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsCore = dependency.descriptor(ISettingsCore)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         super(BaseModMeta, self).__init__()
@@ -58,7 +59,7 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def doLog(self, *args):
         for arg in args:
-            logInfo("{}: {}", self.getAlias(), arg)
+            self.logger.logInfo("{}: {}", self.getAlias(), arg)
 
     def isColorBlind(self):
         return bool(self.settingsCore.getSetting(GRAPHICS.COLOR_BLIND))
@@ -73,12 +74,12 @@ class BaseModMeta(BaseDAAPIComponent):
 
     def _populate(self):
         super(BaseModMeta, self)._populate()
-        logDebug("battle module '{}' loaded", self.getAlias())
+        self.logger.logDebug("battle module '{}' loaded", self.getAlias())
         self.settingsCore.onSettingsApplied += self.onSettingsApplied
 
     def _dispose(self):
         super(BaseModMeta, self)._dispose()
-        logDebug("battle module '{}' destroyed", self.getAlias())
+        self.logger.logDebug("battle module '{}' destroyed", self.getAlias())
         self.settingsCore.onSettingsApplied -= self.onSettingsApplied
 
     def isPlayerVehicle(self):

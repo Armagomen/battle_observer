@@ -1,20 +1,13 @@
 # coding=utf-8
 import functools
 import importlib
-import json
-import locale
 import os
-import shutil
 from collections import namedtuple
 from colorsys import hsv_to_rgb
-from io import open as _open
 
 import BigWorld
 import ResMgr
-import WGC
-from armagomen.utils.logging import logDebug, logError, logInfo, logWarning
-from BattleReplay import isLoading, isPlaying
-from external_strings_utils import unicode_from_utf8
+from armagomen import IALogger
 from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency
 from skeletons.gui.impl import IGuiLoader
@@ -39,22 +32,6 @@ IS_XVM_INSTALLED = os.path.exists(joinAndNormalizePath(__mods_dir, 'com.modxvm.x
     joinAndNormalizePath('./res_mods/mods/xfw_packages/xvm_main'))
 
 
-def isReplay():
-    return isPlaying() or isLoading()
-
-
-def getPlayer():
-    return BigWorld.player()
-
-
-def getTarget():
-    return BigWorld.target()
-
-
-def getEntity(entity_id):
-    return BigWorld.entities.get(entity_id)
-
-
 def addCallback(delay, callMethod, *args, **kwargs):
     return BigWorld.callback(delay, functools.partial(callMethod, *args, **kwargs) if args or kwargs else callMethod)
 
@@ -75,6 +52,7 @@ def delayedCall(delay):
 
 
 def getPreferencesDir():
+    from external_strings_utils import unicode_from_utf8
     preferences_file_path = unicode_from_utf8(BigWorld.wg_getPreferencesFilePath())[1]
     return joinAndNormalizePath(os.path.dirname(preferences_file_path))
 
@@ -85,6 +63,7 @@ preferencesDir = getPreferencesDir()
 def save(restart=False):
     BigWorld.savePreferences()
     if restart:
+        import WGC
         WGC.notifyRestart()
     BigWorld.worldDrawEnabled(False)
 
@@ -145,7 +124,8 @@ def cleanupPath(path, safe=False):
                 item_path = os.path.join(path, item)
                 cleanupPath(item_path)
         else:
-            shutil.rmtree(path, ignore_errors=True)
+            from shutil import rmtree
+            rmtree(path, ignore_errors=True)
 
 
 def cleanupUpdates():
@@ -163,7 +143,8 @@ def cleanupUpdates():
         for name in ignored.symmetric_difference(listDir):
             full_path = joinAndNormalizePath(updates_path, name)
             cleanupPath(full_path)
-            logInfo('CLEARING THE UPDATE FOLDER: {}', full_path)
+            logger = dependency.instance(IALogger)
+            logger.logInfo('CLEARING THE UPDATE FOLDER: {}', full_path)
         ResMgr.purge(upcoming_patches, True)
 
 
@@ -171,7 +152,8 @@ def clearClientCache():
     for dirName in os.listdir(preferencesDir):
         if '_cache' in dirName or dirName == 'profile':
             cleanupPath(os.path.join(preferencesDir, dirName), safe=True)
-            logInfo('CLEANING CLIENT CACHE FOLDER: {}', dirName)
+            logger = dependency.instance(IALogger)
+            logger.logInfo('CLEANING CLIENT CACHE FOLDER: {}', dirName)
 
 
 def encodeData(data):
@@ -187,21 +169,24 @@ def encodeData(data):
 
 
 def openJsonFile(path):
+    logger = dependency.instance(IALogger)
     if not os.path.isfile(path):
         message = "JSON file not found: {}".format(path)
-        logWarning(message)
+        logger.logWarning(message)
         raise IOError(message)
-    with _open(path, 'r', encoding='utf-8-sig') as f:
+    from io import open
+    with open(path, 'r', encoding='utf-8-sig') as f:
         content = f.read()
     if not content.strip():
         message = "JSON decode error in '{}': file is empty".format(path)
-        logWarning(message)
+        logger.logWarning(message)
         raise IOError(message)
     try:
+        import json
         data = json.loads(content)
     except ValueError as e:
         message = "JSON decode error in '{}': {}".format(path, str(e))
-        logWarning(message)
+        logger.logWarning(message)
         raise ValueError(message)
 
     return encodeData(data)
@@ -209,9 +194,11 @@ def openJsonFile(path):
 
 def writeJsonFile(path, data):
     """Creates a new JSON file in a folder or replace old."""
+    import json
     file_data = unicode(json.dumps(data, skipkeys=True, ensure_ascii=False, indent=2, sort_keys=True))
     if file_data:
-        with _open(path, 'w', encoding=UTF_8) as dataFile:
+        from io import open
+        with open(path, 'w', encoding=UTF_8) as dataFile:
             dataFile.write(file_data)
 
 
@@ -234,9 +221,11 @@ def cleanupObserverUpdates():
     for filename in os.listdir(root):
         path = os.path.join(root, filename)
         try:
-            shutil.rmtree(path) if os.path.isdir(path) else os.unlink(path)
+            from shutil import rmtree
+            rmtree(path) if os.path.isdir(path) else os.unlink(path)
         except OSError as e:
-            logError('cleanupObserverUpdates: {} — {}', path, repr(e))
+            logger = dependency.instance(IALogger)
+            logger.logError('cleanupObserverUpdates: {} — {}', path, str(e))
 
 
 base_before_override = {}
@@ -246,11 +235,12 @@ def find_similar_attr_name(obj, target_name):
     attrs = dir(obj)
     if target_name in attrs:
         return target_name
+    logger = dependency.instance(IALogger)
     for name in attrs:
         if target_name in name:
-            logDebug('{} {}', target_name, name)
+            logger.logDebug('{} {}', target_name, name)
             return name
-    logError("overrideError: method '{}' do not find in '{}'", target_name, str(obj))
+    logger.logError("overrideError: method '{}' do not find in '{}'", target_name, str(obj))
     return None
 
 
@@ -264,18 +254,19 @@ def overrideMethod(wg_class, _method_name='__init__'):
     def outer(new_method):
         if method_name is None:
             return new_method
+        logger = dependency.instance(IALogger)
         class_name = getattr(wg_class, '__name__', wg_class.__class__.__name__)
         full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, new_method.__name__)
         if full_name_with_class in base_before_override:
-            logDebug('overrideMethod: {} already added to storage', full_name_with_class)
+            logger.logDebug('overrideMethod: {} already added to storage', full_name_with_class)
             return new_method
         old_method = getattr(wg_class, method_name)
         if callable(old_method):
             base_before_override[full_name_with_class] = old_method
             setattr(wg_class, method_name, lambda *args, **kwargs: new_method(old_method, *args, **kwargs))
-            logDebug('overrideMethod: Set override to {}.{} >> {func}', class_name, method_name, func=new_method)
+            logger.logDebug('overrideMethod: Set override to {}.{} >> {func}', class_name, method_name, func=new_method)
         else:
-            logError('overrideMethod: {}.{} is not callable', class_name, method_name)
+            logger.logError('overrideMethod: {}.{} is not callable', class_name, method_name)
         return new_method
 
     return outer
@@ -288,7 +279,8 @@ def cancelOverride(wg_class, _method_name, replaced_name):
         full_name_with_class = '{0}.{1}*{2}'.format(class_name, method_name, replaced_name)
         if full_name_with_class in base_before_override:
             setattr(wg_class, method_name, base_before_override.pop(full_name_with_class))
-            logDebug('cancelOverride: override {} removed', full_name_with_class)
+            logger = dependency.instance(IALogger)
+            logger.logDebug('cancelOverride: override {} removed', full_name_with_class)
 
 
 def toggleOverride(obj, method_name, func, enable):
@@ -331,7 +323,8 @@ def hexToInt(color):
     hex_part = color.lstrip("#").lstrip("0x").upper()
     if len(hex_part) == 6:
         return int(hex_part, 16)
-    logError("hexToInt: color code is corrupted >> {} <<, should be #RRGGBB or 0xRRGGBB or RRGGBB".format(color))
+    logger = dependency.instance(IALogger)
+    logger.logError("hexToInt: color code is corrupted >> {} <<, should be #RRGGBB or 0xRRGGBB or RRGGBB".format(color))
     return 16448250
 
 
@@ -347,7 +340,8 @@ def colorToHex(color):
     try:
         hex_part = int(color.replace('#', '').replace('0x', '').upper()[:6], 16)
     except Exception as error:
-        logError(error)
+        logger = dependency.instance(IALogger)
+        logger.logError(error)
     return hex(hex_part)
 
 
@@ -367,6 +361,7 @@ def getEncoding():
         'latin1': 'ISO8859-1',
         'english': 'ISO8859-1'
     }
+    import locale
     locale.locale_encoding_alias.update(custom_locale_encoding_alias)
     coding = locale.getpreferredencoding()
     normalized = locale.locale_encoding_alias.get(coding)
@@ -386,19 +381,19 @@ ENCODING_ERRORS = 'ignore'
 
 def safe_import(iterPatches, noneResults=False):
     result = []
-
+    logger = dependency.instance(IALogger)
     for path, name in iterPatches:
         try:
             module = importlib.import_module(path)
         except ImportError as e:
-            logDebug('Import error: {}', repr(e))
+            logger.logDebug('Import error: {}', str(e))
         else:
             cls = getattr(module, name, None)
             if cls is not None:
                 result.append(cls)
                 continue
             else:
-                logError('Import error: {} has no attribute {}', repr(module), name)
+                logger.logError('Import error: {} has no attribute {}', str(module), name)
         if noneResults:
             result.append(None)
 
@@ -414,12 +409,13 @@ def safe_index(seq, value, default=0):
 
 
 def printDebuginfo():
-    logDebug("VERSIONED_MODS_DIR: {}", VERSIONED_MODS_DIR)
-    logDebug("IS_XVM_INSTALLED: {}", IS_XVM_INSTALLED)
-    logDebug("currentConfigPath: {}", currentConfigPath)
-    logDebug("SIXTH_SENSE_LIST: {}", SIXTH_SENSE_LIST)
-    logDebug("ENCODING_LOCALE: {}", ENCODING_LOCALE)
-    logDebug("IS_COMMON_TEST: {}", IS_COMMON_TEST)
+    logger = dependency.instance(IALogger)
+    logger.logDebug("VERSIONED_MODS_DIR: {}", VERSIONED_MODS_DIR)
+    logger.logDebug("IS_XVM_INSTALLED: {}", IS_XVM_INSTALLED)
+    logger.logDebug("currentConfigPath: {}", currentConfigPath)
+    logger.logDebug("SIXTH_SENSE_LIST: {}", SIXTH_SENSE_LIST)
+    logger.logDebug("ENCODING_LOCALE: {}", ENCODING_LOCALE)
+    logger.logDebug("IS_COMMON_TEST: {}", IS_COMMON_TEST)
 
 
 def get_parent_window():

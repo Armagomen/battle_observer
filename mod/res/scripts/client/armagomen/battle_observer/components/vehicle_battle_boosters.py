@@ -1,15 +1,16 @@
 from adisp import adisp_process
 from armagomen._constants import MAIN
+from armagomen import IALogger
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.events import g_events
 from armagomen.utils.common import isSpecialBattleVehicle
-from armagomen.utils.logging import logInfo
+from armagomen.utils.events import g_events
 from gui.shared.gui_items.processors.vehicle import VehicleAutoBattleBoosterEquipProcessor
 from helpers import dependency
 
 
 class BattleBoosters(object):
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         g_events.onVehicleChangedDelayed += self.onVehicleChanged
@@ -24,7 +25,7 @@ class BattleBoosters(object):
         if vehicle is None or vehicle.isLocked or isSpecialBattleVehicle(vehicle):
             return
         if not hasattr(vehicle, "battleBoosters") or vehicle.battleBoosters is None:
-            logInfo("No battle boosters available for this vehicle: {}", vehicle.userName)
+            self.logger.logInfo("No battle boosters available for this vehicle: {}", vehicle.userName)
             return
         isAuto = vehicle.isAutoBattleBoosterEquip()
         boosters = vehicle.battleBoosters.installed.getItems()
@@ -32,8 +33,8 @@ class BattleBoosters(object):
             value = battleBooster.inventoryCount > 0
             if value != isAuto:
                 self.changeValue(vehicle, value)
-                logInfo("VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}",
-                        value, vehicle.userName, battleBooster.userName)
+                self.logger.logInfo("VehicleAutoBattleBoosterEquipProcessor: value={} vehicle={}, booster={}",
+                                    value, vehicle.userName, battleBooster.userName)
 
     def fini(self):
         g_events.onVehicleChangedDelayed -= self.onVehicleChanged

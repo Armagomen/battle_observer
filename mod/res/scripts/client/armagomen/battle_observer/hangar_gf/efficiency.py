@@ -1,8 +1,8 @@
 from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, LOBBY_ALIASES
-from armagomen.battle_observer.controllers import IBOCurrentVehicleCachedData
+from armagomen import IALogger
+from armagomen.battle_observer.shared.current_vehicle_data import IBOCurrentVehicleCachedData
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug
 from frameworks.wulf import ViewModel
 from gui.impl.pub.view_component import ViewComponent
 from helpers import dependency
@@ -37,9 +37,10 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
     viewLayoutID = ModDynAccessor(LOBBY_ALIASES.EFFICIENCY)
     cachedVehicleData = dependency.descriptor(IBOCurrentVehicleCachedData)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
-        logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.EFFICIENCY, self.viewLayoutID())
+        self.logger.logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.EFFICIENCY, self.viewLayoutID())
         super(HangarEfficiencyView, self).__init__(
             layoutID=self.viewLayoutID(),
             model=HangarEfficiencyModel
@@ -53,12 +54,12 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
     def _onLoading(self, *args, **kwargs):
         super(HangarEfficiencyView, self)._onLoading()
         self.subscribe()
-        logDebug("hangar module '{}' loaded", LOBBY_ALIASES.EFFICIENCY)
+        self.logger.logDebug("hangar module '{}' loaded", LOBBY_ALIASES.EFFICIENCY)
 
     def _finalize(self):
         self.unsubscribe()
         super(HangarEfficiencyView, self)._finalize()
-        logDebug("hangar module '{}' dispose", LOBBY_ALIASES.EFFICIENCY)
+        self.logger.logDebug("hangar module '{}' dispose", LOBBY_ALIASES.EFFICIENCY)
 
     @property
     def settings(self):

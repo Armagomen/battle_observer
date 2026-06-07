@@ -1,8 +1,8 @@
 import math
 from collections import namedtuple
 
+from armagomen import IALogger
 from armagomen.utils.common import isSpecialBattleVehicle
-from armagomen.utils.logging import logDebug
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
 from Event import SafeEvent
@@ -15,35 +15,54 @@ PARAMS = ("tankAvgDamage", "tankAvgAssist", "tankAvgStun", "tankAvgBlocked", "ma
 EfficiencyAVGData = namedtuple("EfficiencyAVGData", PARAMS)
 
 
-class CurrentVehicleCachedData(object):
+class IBOCurrentVehicleCachedData(object):
+    __slots__ = ()
+
+    def fini(self):
+        raise NotImplementedError
+
+    def onVehicleChanged(self):
+        raise NotImplementedError
+
+    @property
+    def efficiencyAvgData(self):
+        raise NotImplementedError
+
+    @property
+    def default(self):
+        raise NotImplementedError
+
+
+class CurrentVehicleCachedData(IBOCurrentVehicleCachedData):
     __slots__ = ("__EfficiencyAVGData", "__default", "onChanged")
     itemsCache = dependency.descriptor(IItemsCache)
     appLoader = dependency.descriptor(IAppLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
+        self.logger.logInfo("Initializing CurrentVehicleCachedData")
         self.onChanged = SafeEvent()
         default = 2000
         self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, 0, "Undefined", False, 0.0, 0)
         self.__EfficiencyAVGData = None
-
-    def init(self):
         self.appLoader.onGUISpaceEntered += self.subscribe
         self.appLoader.onGUISpaceLeft += self.unsubscribe
 
     def fini(self):
         self.appLoader.onGUISpaceEntered -= self.subscribe
         self.appLoader.onGUISpaceLeft -= self.unsubscribe
+        self.logger.logInfo("Finished CurrentVehicleCachedData")
 
     def subscribe(self, spaceID):
         if spaceID != GuiGlobalSpaceID.LOBBY:
             return
-        logDebug("CurrentVehicleCachedData::subscribe lobby")
+        self.logger.logDebug("CurrentVehicleCachedData::subscribe lobby")
         g_currentVehicle.onChanged += self.onVehicleChanged
 
     def unsubscribe(self, spaceID):
         if spaceID != GuiGlobalSpaceID.LOBBY:
             return
-        logDebug("CurrentVehicleCachedData::unsubscribe lobby")
+        self.logger.logDebug("CurrentVehicleCachedData::unsubscribe lobby")
         g_currentVehicle.onChanged -= self.onVehicleChanged
 
     def onVehicleChanged(self):

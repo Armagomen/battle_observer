@@ -1,7 +1,7 @@
+import BigWorld
 import math_utils
 from armagomen._constants import FLIGHT_TIME, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta
-from armagomen.utils.common import getPlayer
 from constants import ARENA_PERIOD
 from gui.battle_control import avatar_getter
 from items.utils import getVehicleShotSpeedByFactors
@@ -61,7 +61,7 @@ class FlightTime(FlightTimeMeta):
         self.toggleVisible()
 
     def __onGunMarkerStateChanged(self, markerType, gunMarkerState, *args, **kwargs):
-        player = getPlayer()
+        player = BigWorld.player()
         if player is None:
             return self.as_flightTimeS(GLOBAL.EMPTY_LINE)
         targetPosition = gunMarkerState.position

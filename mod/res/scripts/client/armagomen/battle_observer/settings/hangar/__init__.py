@@ -5,9 +5,9 @@ from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG,
                                   MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
 from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen import IALogger
 from armagomen.utils.common import addCallback, encodeData, IS_XVM_INSTALLED, openWebBrowser, safe_index, SIXTH_SENSE_LIST, SIXTH_SENSE_PATH
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import debug, logDebug, logError, logInfo, logWarning
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
@@ -226,6 +226,7 @@ class CreateElement(Getter):
 class SettingsInterface(CreateElement):
     appLoader = dependency.descriptor(IAppLoader)
     loader = dependency.descriptor(IBOSettingsLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self, version, api):
         self.modsListApi, self.vxSettingsApi, self.apiEvents = api
@@ -267,13 +268,13 @@ class SettingsInterface(CreateElement):
                     self.vxSettingsApi.addMod(MOD_NAME, blockID, lambda *args: template, dict(), lambda *args: None,
                                               button_handler=self.onButtonPress)
                 else:
-                    logWarning("SettingsInterface addModsToVX template is None: {}", blockID)
+                    self.logger.logWarning("SettingsInterface addModsToVX template is None: {}", blockID)
             except Exception as err:
-                logWarning('SettingsInterface addModsToVX: {} {}'.format(blockID, repr(err)))
+                self.logger.logWarning('SettingsInterface addModsToVX: {} {}'.format(blockID, repr(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
-                logDebug("SettingsInterface addModsToVX: {}", blockID)
+                self.logger.logDebug("SettingsInterface addModsToVX: {}", blockID)
 
         self.vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
 
@@ -310,13 +311,13 @@ class SettingsInterface(CreateElement):
                 if template is not None:
                     self.vxSettingsApi.updateMod(MOD_NAME, blockID, lambda *args: template)
                 else:
-                    logWarning("SettingsInterface updateMod template is None: {}", blockID)
+                    self.logger.logWarning("SettingsInterface updateMod template is None: {}", blockID)
             except Exception as error:
-                logError(error.message)
+                self.logger.logError(error)
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
-                logDebug("SettingsInterface updateMod: {}", blockID)
+                self.logger.logDebug("SettingsInterface updateMod: {}", blockID)
 
     def map_value(self, blockID, key, val):
         bk = (blockID, key)
@@ -338,7 +339,7 @@ class SettingsInterface(CreateElement):
         if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
             self.newConfigID = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
+            self.logger.logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
             return
 
         settings_block = getattr(self.loader.settings, blockID, {})
@@ -357,8 +358,7 @@ class SettingsInterface(CreateElement):
         if changed_settings:
             self.loader.updateConfigFile(blockID, settings_block)
             g_events.onModSettingsChanged(blockID, changed_settings)
-            if debug.is_debug:
-                logDebug('onSettingsChanged: blockID: {} changed_settings: {}', blockID, changed_settings)
+            self.logger.logDebug('onSettingsChanged: blockID: {} changed_settings: {}', blockID, changed_settings)
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""

@@ -1,11 +1,12 @@
+import BigWorld
 import TriggersManager
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.common import addCallback, getPlayer, MinMax, ResMgr, toggleOverride
+from armagomen import IALogger
+from armagomen.utils.common import addCallback, MinMax, ResMgr, toggleOverride
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug, logError
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosition
@@ -18,6 +19,7 @@ from skeletons.gui.battle_session import IBattleSessionProvider
 class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     appLoader = dependency.descriptor(IAppLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         self.latency = 0.0
@@ -44,14 +46,14 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 
     def toggleTrigger(self, activate):
         TriggersManager.g_manager.addListener(self) if activate else TriggersManager.g_manager.delListener(self)
-        logDebug("ChangeCameraModeAfterShoot/toggleTrigger: {}", activate)
+        self.logger.logDebug("ChangeCameraModeAfterShoot/toggleTrigger: {}", activate)
 
     def onGUISpaceEntered(self, spaceID):
         if spaceID == GuiGlobalSpaceID.BATTLE:
             prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
             if prebattleCtrl is not None:
                 prebattleCtrl.onSelectionConfirmed += self.__updateCurrVehicleInfo
-            self.avatar = getPlayer()
+            self.avatar = BigWorld.player()
             self.toggleTrigger(self.isTriggerEnabled())
 
     def onGUISpaceLeft(self, spaceID):
@@ -96,6 +98,7 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
 class CameraSettings(object):
     settingsCore = dependency.descriptor(ISettingsCore)
     settingsCache = dependency.descriptor(ISettingsCache)
+    logger = dependency.descriptor(IALogger)
 
     _CONTROL_MODE_NAME_TO_SEC = {
         CTRL_MODE_NAME.ARCADE: "gui/avatar_input_handler.xml/arcadeMode/camera/",
@@ -123,12 +126,11 @@ class CameraSettings(object):
     def update(self):
         self.isChanged = False
 
-    @staticmethod
-    def getCamera(control_mode_name):
+    def getCamera(self, control_mode_name):
         input_handler = getInputHandler()
         if input_handler is not None and control_mode_name in input_handler.ctrls:
             return input_handler.ctrls[control_mode_name].camera
-        logError("{}, camera is not found in input_handler.ctrls {}", control_mode_name, input_handler.ctrls)
+        self.logger.logError("{}, camera is not found in input_handler.ctrls {}", control_mode_name, input_handler.ctrls)
         return None
 
     @staticmethod
@@ -225,7 +227,7 @@ class Strategic(CameraSettings):
 
 
 class Sniper(CameraSettings):
-    DEFAULT_X_METERS = 20.0
+    DEFAULT_X_METERS = 18.0
     ZOOM = "zoom"
     ZOOMS = "zooms"
     MAX_DIST = 600.0
@@ -284,7 +286,7 @@ class Sniper(CameraSettings):
                     new_exposure = self.linear_interpolate(steps)
                     camera._SniperCamera__dynamicCfg[SNIPER.ZOOM_EXPOSURE] = new_exposure
                     camera._cfg[self.ZOOMS] = steps
-                    logDebug("UPDATE_ZOOMS = steps:{} exposure:{}", steps, new_exposure)
+                    self.logger.logDebug("UPDATE_ZOOMS = steps:{} exposure:{}", steps, new_exposure)
                     self.applySettings({GAME.INCREASED_ZOOM: 1})
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
@@ -303,12 +305,13 @@ class Sniper(CameraSettings):
             distance = (targetPos - ownPosition).length if ownPosition is not None else 0
             camera._cfg[self.ZOOM] = self.getZoom(camera._cfg[self.ZOOMS], distance)
         except Exception as e:
-            logError("enableSniper: {} - {}", e.args, e.message)
+            self.logger.logError("enableSniper: {} - {}", e.args, e.message)
         return base(camera, targetPos, saveZoom)
 
 
 class CameraManager(object):
     appLoader = dependency.descriptor(IAppLoader)
+    logger = dependency.descriptor(IALogger)
     __slots__ = ("__modes",)
 
     def __init__(self):
@@ -329,7 +332,7 @@ class CameraManager(object):
                     try:
                         mode.update()
                     except Exception as e:
-                        logError("{}: {} - {}", mode.name, e.args, e.message)
+                        self.logger.logError("{}: {} - {}", mode.name, e.args, e.message)
 
 
 camera_manager = CameraManager()

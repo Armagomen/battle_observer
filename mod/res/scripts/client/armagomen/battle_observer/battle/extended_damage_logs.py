@@ -1,10 +1,10 @@
 from collections import defaultdict, namedtuple
 
 from armagomen._constants import COLORS, DAMAGE_LOG, EX_LOGS_ICONS, GLOBAL, IMAGE_DIR
-from armagomen.battle_observer.controllers import IBOKeysListener
+from armagomen.battle_observer.shared import IBOKeysListener
 from armagomen.battle_observer.meta.battle.extended_damage_logs_meta import ExtendedDamageLogsMeta
+from armagomen import IALogger
 from armagomen.utils.common import getPercent, percentToColor
-from armagomen.utils.logging import logDebug
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.battle_control.avatar_getter import getVehicleTypeDescriptor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
@@ -43,6 +43,7 @@ def getVehicleClassIcon(classTag):
 
 class ExtendedDamageLogs(ExtendedDamageLogsMeta):
     keysListener = dependency.descriptor(IBOKeysListener)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         super(ExtendedDamageLogs, self).__init__()
@@ -166,7 +167,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
             shell_name, gold = self._playerShell if is_player else self.checkShell(extra, target_id)
         else:
             shell_name, gold = DAMAGE_LOG.NOT_SHELL, False
-        logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, is_player)
+        self.logger.logDebug("Shell type: {}, gold: {}, is_player: {}", shell_name, gold, is_player)
         vehicle = log_data.vehicles.setdefault(target_id, defaultdict(lambda: "ERROR"))
         vehicle_info_vo = self.getVehicleInfo(target_id)
         if is_player:

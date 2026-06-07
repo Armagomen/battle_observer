@@ -1,9 +1,11 @@
 from importlib import import_module
 
-from armagomen.utils.logging import logError
+from armagomen import IALogger
+from helpers import dependency
 
 
 def loadComponents(is_replay):
+    logger = dependency.instance(IALogger)
     components = {}
 
     load = [
@@ -24,11 +26,13 @@ def loadComponents(is_replay):
         'service_channel_filter',
         'vehicle_battle_boosters',
         'auto_claim_clan_reward',
-        'donate_messages'
+        'system_messages'
     ]
 
     if not is_replay:
         load.extend(not_replay)
+
+    logger.logInfo("Loading components: {}", load)
 
     for moduleName in load:
         try:
@@ -36,7 +40,7 @@ def loadComponents(is_replay):
         except Exception as error:
             from debug_utils import LOG_CURRENT_EXCEPTION
             LOG_CURRENT_EXCEPTION()
-            logError('{}: {}', moduleName, repr(error))
+            logger.logError('{}: {}', moduleName, str(error))
         else:
             components[moduleName] = module
 

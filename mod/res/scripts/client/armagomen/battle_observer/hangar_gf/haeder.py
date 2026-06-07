@@ -1,8 +1,8 @@
 from armagomen._constants import GLOBAL, HANGAR_HEADER, LOBBY_ALIASES
+from armagomen import IALogger
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import TimeInterval
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug
 from frameworks.wulf import ViewModel
 from gui.impl import backport
 from gui.impl.gen import R
@@ -59,9 +59,10 @@ class HeaderView(ViewComponent[HeaderModel]):
     viewLayoutID = ModDynAccessor(LOBBY_ALIASES.HEADER)
     gameSession = dependency.descriptor(IGameSessionController)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
-        logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.HEADER, self.viewLayoutID())
+        self.logger.logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.HEADER, self.viewLayoutID())
         super(HeaderView, self).__init__(
             layoutID=self.viewLayoutID(),
             model=HeaderModel

@@ -1,8 +1,9 @@
 import aih_constants
+import BigWorld
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.common import getPlayer, toggleOverride
+from armagomen.utils.common import toggleOverride
 from armagomen.utils.events import g_events
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
@@ -24,6 +25,7 @@ for key, value in gm_factory._GUN_MARKER_LINKAGES.items():
 REPLACE_TYPES = {gun_marker_ctrl._MARKER_TYPE.CLIENT, gun_marker_ctrl._MARKER_TYPE.DUAL_ACC}
 
 settingsLoder = dependency.instance(IBOSettingsLoader)
+
 
 def get_dispersion_scale_setting(marker_type):
     replace_setting = settingsLoder.getSetting(DISPERSION.NAME, DISPERSION.REPLACE)
@@ -86,7 +88,7 @@ class DispersionCircle(object):
 
     def createOverrideComponents(self, base, *args):
         self.disableWGServerMarker()
-        getPlayer().cell.setServerMarker(True)
+        BigWorld.player().cell.setServerMarker(True)
         if len(args) == 2:
             return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).create(*args)
         return gm_factory._GunMarkersFactories(*DEV_FACTORIES_COLLECTION).override(*args)

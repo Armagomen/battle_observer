@@ -3,10 +3,11 @@ import weakref
 from math import floor, log
 
 from armagomen._constants import STATISTICS, STATISTICS_REGION
+from armagomen import IALogger
 from armagomen.battle_observer.meta.battle.wgr_and_icons_meta import WGRAndIconsMeta
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import addCallback, cancelCallback
-from armagomen.utils.logging import logDebug, logError
+
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 from uilogging.core.core_constants import HTTP_OK_STATUS
@@ -14,6 +15,7 @@ from wg_async import wg_async
 
 
 class WGRAndIcons(WGRAndIconsMeta):
+    logger = dependency.descriptor(IALogger)
     COLOR_WGR = 'colorWGR'
     DEFAULT_COLOR = "#fafafa"
     DEFAULT_WIN_RATE = 0.0
@@ -52,7 +54,7 @@ class WGRAndIcons(WGRAndIconsMeta):
         super(WGRAndIcons, self)._dispose()
 
     def getPattern(self, isEnemy, itemData):
-        logDebug("WGRStatistics: isEnemy={}, data={}", isEnemy, itemData)
+        self.logger.logDebug("Statistics: isEnemy={}, data={}", isEnemy, itemData)
         if isEnemy:
             return self.settings[STATISTICS.FULL_RIGHT] % itemData, self.settings[STATISTICS.CUT_RIGHT] % itemData
         else:
@@ -103,6 +105,7 @@ class WGRAndIcons(WGRAndIconsMeta):
 
 class StatisticsDataLoader(object):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
+    logger = dependency.descriptor(IALogger)
 
     SEPARATOR = ","
     FIELDS = SEPARATOR.join(("statistics.random.wins", "statistics.random.battles", "global_rating"))
@@ -122,7 +125,7 @@ class StatisticsDataLoader(object):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
             data = {int(k): v for k, v in response_data.get("data", {}).items()}
-            logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
+            self.logger.logDebug("StatisticsDataLoader/onDataResponse: FINISH request users data={}", data)
             obj = self.__obj()
             if obj is not None:
                 method = getattr(obj, self.__method_name, None)
@@ -135,7 +138,7 @@ class StatisticsDataLoader(object):
     def delayedLoad(self, code):
         if self._load_try < 5:
             self._load_try += 1
-            logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
+            self.logger.logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
             addCallback(10.0, self.getStatisticsDataFromServer)
 
     def updateList(self, vehicleID):
@@ -145,7 +148,7 @@ class StatisticsDataLoader(object):
         if not accountDBID or accountDBID in self.__loaded or vInfo.isObserver():
             return
         self.__vehicles.add(accountDBID)
-        logDebug(self.__vehicles)
+        self.logger.logDebug(self.__vehicles)
         if self.__getDataCallback is None:
             self.__getDataCallback = addCallback(5.0, self.requestData)
 
@@ -170,5 +173,5 @@ class StatisticsDataLoader(object):
                 continue
             self.__vehicles.add(accountDBID)
         if self.__vehicles:
-            logDebug("getStatisticsDataFromServer: START request data: ids={}", self.__vehicles)
+            self.logger.logDebug("getStatisticsDataFromServer: START request data: ids={}", self.__vehicles)
             self.requestData()

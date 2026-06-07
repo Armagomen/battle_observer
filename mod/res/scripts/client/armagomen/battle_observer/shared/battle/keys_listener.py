@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 from armagomen._constants import MAIN
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen import IALogger
 from gui import InputHandler
 from helpers import dependency
 from Keys import KEY_LALT, KEY_LCONTROL, KEY_LSHIFT, KEY_RALT, KEY_RCONTROL, KEY_RSHIFT
@@ -13,17 +13,26 @@ KEY_ALIAS_ALT = (KEY_LALT, KEY_RALT)
 KEY_ALIAS_SHIFT = (KEY_LSHIFT, KEY_RSHIFT)
 
 
-class KeysListener(object):
+class IBOKeysListener(object):
+    __slots__ = ()
+
+    def fini(self):
+        raise NotImplementedError
+
+    def registerComponent(self, keyFunction, keyList=None):
+        raise NotImplementedError
+
+
+class KeysListener(IBOKeysListener):
     appLoader = dependency.descriptor(IAppLoader)
-    settingsLoader = dependency.descriptor(IBOSettingsLoader)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
+        self.logger.logInfo("Initializing KeysListener")
         self.components = set()
         self.pressedKeys = set()
         self.usableKeys = set()
         self.__prevSpaceID = GuiGlobalSpaceID.LOBBY
-
-    def init(self):
         self.appLoader.onGUISpaceEntered += self.subscribe
         self.appLoader.onGUISpaceLeft += self.unsubscribe
 
@@ -31,6 +40,7 @@ class KeysListener(object):
         self.appLoader.onGUISpaceEntered -= self.subscribe
         self.appLoader.onGUISpaceLeft -= self.unsubscribe
         self.clear()
+        self.logger.logInfo("Finished KeysListener")
 
     def registerComponent(self, keyFunction, keyList=None):
         self.components.add(KeysData(self.normalizeKey(keyList) if keyList else frozenset(KEY_ALIAS_ALT), keyFunction))
@@ -68,8 +78,10 @@ class KeysListener(object):
         self.handleKey(event.key, True)
 
     def normalizeKey(self, keyList):
+        from armagomen.battle_observer.settings import IBOSettingsLoader
+        settingsLoader = dependency.instance(IBOSettingsLoader)
         keys = {item for key in keyList for item in (key if isinstance(key, (list, set, tuple)) else [key])}
-        if self.settingsLoader.settings.main.get(MAIN.USE_KEY_PAIRS):
+        if settingsLoader.getSetting(MAIN.NAME, MAIN.USE_KEY_PAIRS):
             for alias_set in (KEY_ALIAS_CONTROL, KEY_ALIAS_ALT, KEY_ALIAS_SHIFT):
                 if any(key in alias_set for key in keys):
                     keys.update(alias_set)

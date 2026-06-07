@@ -1,8 +1,9 @@
+import BigWorld
 from aih_constants import SHOT_RESULT
 from armagomen._constants import ARMOR_CALC, GLOBAL
-from armagomen.battle_observer.controllers import IPiercingRandomizer
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.common import getPlayer, overrideMethod
+from armagomen.battle_observer.shared import IBOPiercingRandomizer
+from armagomen.utils.common import overrideMethod
 from armagomen.utils.events import g_events
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, computePiercingPowerAtDist
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES
@@ -19,7 +20,7 @@ def toInt(value):
 
 
 class _ShotResult(_CrosshairShotResults):
-    randomizer = dependency.descriptor(IPiercingRandomizer)
+    randomizer = dependency.instance(IBOPiercingRandomizer)
     UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None)
     ENTITY_TYPES = (Vehicle, DestructibleEntity)
     PP_REDUCTION_FACTOR = 3.0
@@ -71,7 +72,6 @@ class _ShotResult(_CrosshairShotResults):
             return SHOT_RESULT.NOT_PIERCED
         else:
             return SHOT_RESULT.LITTLE_PIERCED
-
 
     @classmethod
     def __computeArmorDefault(cls, collision_details, shell, piercing_power, entity):
@@ -189,11 +189,10 @@ class _ShotResultAll(_ShotResult):
 
 class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
-    randomizer = dependency.descriptor(IPiercingRandomizer)
 
     def __init__(self, parentObj):
         super(ShotResultIndicatorPlugin, self).__init__(parentObj)
-        self.__player = getPlayer()
+        self.__player = BigWorld.player()
         self.__data = None
         self.__resolver = _ShotResultAll if self.settingsLoader.getSetting(ARMOR_CALC.NAME, ARMOR_CALC.ON_ALLY) else _ShotResult
 
@@ -212,7 +211,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
-        self.__player = getPlayer()
+        self.__player = BigWorld.player()
         prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
         if prebattleCtrl is not None:
             prebattleCtrl.onVehicleChanged += self.__updateCurrVehicleInfo
@@ -226,7 +225,8 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
 
     def __updateCurrVehicleInfo(self, vehicle):
         if not avatar_getter.isObserver(self.__player) and vehicle is not None:
-            self.randomizer.updateRandomization(vehicle)
+            randomizer = dependency.instance(IBOPiercingRandomizer)
+            randomizer.updateRandomization(vehicle)
 
 
 @overrideMethod(plugins, 'createPlugins')

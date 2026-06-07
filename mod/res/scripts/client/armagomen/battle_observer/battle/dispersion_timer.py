@@ -1,19 +1,24 @@
-from armagomen._constants import DISPERSION_TIMER, GLOBAL, POSTMORTEM_MODES
+from armagomen._constants import DISPERSION_TIMER, POSTMORTEM_MODES
+from armagomen import IALogger
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.utils.common import cancelOverride, overrideMethod, percentToColor
-from armagomen.utils.logging import logError
+
 from Avatar import PlayerAvatar
 from constants import ARENA_PERIOD
 from gui.battle_control.avatar_getter import getInputHandler
+from helpers import dependency
 from PlayerEvents import g_playerEvents
 
 ERROR = "DispersionTimer getDispersionAngle override: {}"
 
+
 class DispersionTimer(DispersionTimerMeta):
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         super(DispersionTimer, self).__init__()
         self.ideal_angle = 0
+        self.period = ARENA_PERIOD.IDLE
         self.is_alive = False
         self.is_battle_period = False
         self.tpl = None
@@ -35,7 +40,7 @@ class DispersionTimer(DispersionTimerMeta):
             overrideMethod(PlayerAvatar, "getOwnVehicleShotDispersionAngle")(self.getDispersionAngle)
             arena = self._arenaVisitor.getArenaSubscription()
             if arena is not None:
-                self.is_battle_period = arena.period == ARENA_PERIOD.BATTLE
+                self.period = arena.period
                 self.is_alive = self.getVehicleInfo().isAlive()
                 self.toggleVisible()
 
@@ -52,10 +57,10 @@ class DispersionTimer(DispersionTimerMeta):
         super(DispersionTimer, self)._dispose()
 
     def toggleVisible(self):
-        self.as_setComponentVisible(self.is_battle_period and self.is_alive)
+        self.as_setComponentVisible(self.period == ARENA_PERIOD.BATTLE and self.is_alive)
 
     def onArenaPeriodChange(self, period, *args):
-        self.is_battle_period = period == ARENA_PERIOD.BATTLE
+        self.period = period
         self.toggleVisible()
 
     def getDispersionAngle(self, base, avatar, turretRotationSpeed, *args, **kwargs):
@@ -63,12 +68,14 @@ class DispersionTimer(DispersionTimerMeta):
         try:
             self.updateTimer(avatar, turretRotationSpeed, dispersionAngles)
         except Exception as e:
-            logError(ERROR, e.message)
+            self.logger.logError(ERROR, e.message)
         return dispersionAngles
 
     def updateTimer(self, avatar, turretRotationSpeed, dispersionAngles):
         if turretRotationSpeed == 0.0 and not self.ideal_angle:
             self.ideal_angle = dispersionAngles[1]
+        if self.period != ARENA_PERIOD.BATTLE:
+            return
         diff = round(self.ideal_angle / dispersionAngles[0], 2)
         time = 0.0 if diff >= 1.0 else round(avatar.aimingInfo[1], 1) * (1.0 - diff)
         self.as_updateTimerTextS(self.tpl.format(time, diff), percentToColor(diff, color_blind=self._isColorBlind, as_int=True))
@@ -78,4 +85,3 @@ class DispersionTimer(DispersionTimerMeta):
         self.toggleVisible()
         if not self.is_alive:
             self.ideal_angle = 0
-

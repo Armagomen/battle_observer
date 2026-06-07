@@ -1,12 +1,14 @@
 from account_helpers.settings_core.settings_constants import ScorePanelStorageKeys
 from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
-from armagomen.utils.logging import logDebug
+from armagomen import IALogger
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
+from helpers import dependency
 
 
 class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     settingParams = set(ScorePanelStorageKeys.ALL())
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         super(TeamsHP, self).__init__()
@@ -32,10 +34,10 @@ class TeamsHP(TeamHealthMeta, IBattleFieldListener):
     def updateDeadVehicles(self, aliveAllies, deadAllies, aliveEnemies, deadEnemies):
         if self.showAliveCount:
             self.as_updateScoreS(len(aliveAllies), len(aliveEnemies))
-            logDebug("aliveAllies: {}, aliveEnemies: {}", aliveAllies, aliveEnemies)
+            self.logger.logDebug("aliveAllies: {}, aliveEnemies: {}", aliveAllies, aliveEnemies)
         else:
             self.as_updateScoreS(len(deadEnemies), len(deadAllies))
-            logDebug("deadEnemies: {} deadAllies: {}", deadEnemies, deadAllies)
+            self.logger.logDebug("deadEnemies: {} deadAllies: {}", deadEnemies, deadAllies)
 
     def onColorblindUpdated(self, blind):
         self.as_colorBlindS(blind)

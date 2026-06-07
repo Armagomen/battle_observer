@@ -1,13 +1,16 @@
+from armagomen import IALogger
 from armagomen.battle_observer.hangar_gf.date_times import DateTimesView
 from armagomen.battle_observer.hangar_gf.efficiency import HangarEfficiencyView
 from armagomen.battle_observer.hangar_gf.haeder import HeaderView
 from armagomen.utils.common import overrideMethod, safe_import
-from armagomen.utils.logging import logError
 from gui.impl.lobby.page.lobby_header import LobbyHeader
+from helpers import dependency
 from openwg_gameface import manager
 
 
 class HangarGamefaceInject(object):
+    logger = dependency.descriptor(IALogger)
+
     headers = safe_import((
         ("comp7.gui.impl.lobby.page.lobby_header", "Comp7LobbyHeader"),
         ("comp7_light.gui.impl.lobby.page.lobby_header", "Comp7LightLobbyHeader"),
@@ -17,12 +20,11 @@ class HangarGamefaceInject(object):
     def __init__(self):
         overrideMethod(LobbyHeader, '_initChildren')(self.hooked_initChildren)
 
-    @staticmethod
-    def _registerChild(child, baseView):
+    def _registerChild(self, child, baseView):
         try:
             baseView._registerChild(child.viewLayoutID(), child())
         except Exception as error:
-            logError(repr(error))
+            self.logger.logError(error)
 
     def hooked_initChildren(self, baseMethod, baseView):
         baseMethod(baseView)

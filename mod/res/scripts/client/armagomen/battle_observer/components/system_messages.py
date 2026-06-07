@@ -3,11 +3,11 @@ import json
 from random import choice
 
 from armagomen._constants import API_KEY, getLogo, MONEY_PNG, URLS
+from armagomen.battle_observer.shared import IBOOnline
 from armagomen.battle_observer.i18n.donate_messages import MESSAGES
+from armagomen import IALogger
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import openWebBrowser, overrideMethod
-from armagomen.utils.logging import debug, logDebug, logInfo, logWarning
-from armagomen.utils.online import get_stats_by_region
 from datetime import datetime, timedelta
 from gui.clans.clan_cache import g_clanCache
 from gui.shared import event_dispatcher
@@ -32,6 +32,7 @@ def pushMessage(text):
 
 
 class ClanInvite(object):
+    logger = dependency.descriptor(IALogger)
     API_URL = "https://api.worldoftanks.eu/wot/clans/info/?application_id={}&clan_id={}&fields=members_count".format(API_KEY, CLAN_ID)
 
     def __init__(self):
@@ -52,10 +53,9 @@ class ClanInvite(object):
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body)
             self.show_invite = response_data.get("data", {}).get(str(CLAN_ID), {}).get("members_count", 0) < 99
-            logDebug("Donate/check clan members: FINISH request clan data={}", response.body)
+            self.logger.logDebug("ClanInvite.checkClanMembers: FINISH request clan data={}", response.body)
         elif response.responseCode != 304:
-            logWarning('Donate/check clan members: contentType={}, responseCode={} body={}', response.contentType,
-                       response.responseCode, response.body)
+            self.logger.logWarning('ClanInvite.checkClanMembers: response={}', response)
 
     def pushClanInviteMessage(self):
         if self.show_invite and not g_clanCache.isInClan:
@@ -64,6 +64,8 @@ class ClanInvite(object):
 
 
 class Donate(object):
+    logger = dependency.descriptor(IALogger)
+    online = dependency.descriptor(IBOOnline)
 
     def __init__(self):
         self.__lastMessage = None
@@ -82,15 +84,16 @@ class Donate(object):
 
     @wg_async
     def pushDonateMessage(self):
-        stats_info = yield get_stats_by_region()
+        stats_info = yield self.online.get_stats_by_region()
         message = getLogo(big=False) + "\n".join(self.pattern).format(
             msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=MONEY_PNG)
 
         pushMessage(message)
-        logInfo("A donation message has been sent to the user. Repeated in {} minutes.", TIMEOUT)
+        self.logger.logInfo("A donation message has been sent to the user. Repeated in {} minutes.", TIMEOUT)
 
 
 class Listener(object):
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         self.timeDelta = datetime.now() + timedelta(minutes=5)
@@ -106,7 +109,7 @@ class Listener(object):
             if "WG" in str(g_clanCache.clanAbbrev):
                 return
             current_time = datetime.now()
-            if current_time >= self.timeDelta or debug.is_debug:
+            if current_time >= self.timeDelta or self.logger.is_debug:
                 self.timeDelta = current_time + timedelta(minutes=TIMEOUT)
                 self.donate.pushDonateMessage()
                 self.clan_invite.pushClanInviteMessage()

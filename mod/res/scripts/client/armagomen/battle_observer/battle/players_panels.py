@@ -1,7 +1,7 @@
 from armagomen._constants import COLORS, PANELS, VEHICLE
-from armagomen.battle_observer.controllers import IBOPlayersDamageController, IBOKeysListener
+from armagomen.battle_observer.shared import IBOKeysListener, IBOPlayersDamageController
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
-from armagomen.utils.logging import logDebug
+from armagomen import IALogger
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealthPercent
 from helpers import dependency
@@ -10,6 +10,7 @@ from helpers import dependency
 class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
     damage_controller = dependency.descriptor(IBOPlayersDamageController)
     keysListener = dependency.descriptor(IBOKeysListener)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         super(PlayersPanels, self).__init__()
@@ -74,7 +75,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.createHealthBar(vehicleID, vInfoVO, isEnemy)
         if self.damagesEnable:
             self.as_addDamageS(vehicleID, self.settings[PANELS.DAMAGES_SETTINGS])
-        logDebug("PlayersPanels onAddedToStorage: id={} enemy={}", vehicleID, isEnemy)
+        self.logger.logDebug("PlayersPanels onAddedToStorage: id={} enemy={}", vehicleID, isEnemy)
 
     def onVehicleKilled(self, targetID, *args):
         self.as_setVehicleDeadS(targetID)

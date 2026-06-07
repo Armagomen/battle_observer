@@ -1,8 +1,8 @@
 # coding=utf-8
+import BigWorld
 from armagomen._constants import POSTMORTEM_MODES
 from armagomen.battle_observer.i18n.distance_to_enemy import TEMPLATE_BY_LANG
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta
-from armagomen.utils.common import getPlayer
 from gui.battle_control.avatar_getter import getDistanceToTarget, getInputHandler
 from gui.battle_control.battle_constants import PLAYER_GUI_PROPS
 
@@ -17,7 +17,7 @@ class Distance(DistanceMeta):
 
     def _populate(self):
         super(Distance, self)._populate()
-        self.player = getPlayer()
+        self.player = BigWorld.player()
         ctrl = self.sessionProvider.shared.crosshair
         if ctrl is not None:
             ctrl.onCrosshairPositionChanged += self.as_onCrosshairPositionChangedS

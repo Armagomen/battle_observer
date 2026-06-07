@@ -3,12 +3,12 @@ from collections import defaultdict
 
 from AccountCommands import VEHICLE_SETTINGS_FLAG
 from armagomen._constants import CREW
+from armagomen import IALogger
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import getObserverCachePath, IS_COMMON_TEST, isSpecialBattleVehicle, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import CrewDialog
 from armagomen.utils.events import g_events
-from armagomen.utils.logging import logDebug, logInfo
 from dossiers2.custom.cache import getCache
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
@@ -34,6 +34,8 @@ class TrackingList(list):
 
 
 class CrewIgnoredCache(defaultdict):
+    logger = dependency.descriptor(IALogger)
+
     def __init__(self):
         super(CrewIgnoredCache, self).__init__(lambda: TrackingList(self))
         self.file_path = os.path.join(getObserverCachePath(), 'crew_ignored.json')
@@ -48,7 +50,7 @@ class CrewIgnoredCache(defaultdict):
         if self._updated:
             serialized = {k: sorted(v) for k, v in self.iteritems()}
             writeJsonFile(self.file_path, serialized)
-            logDebug('CrewIgnoredCache saved: {}', serialized)
+            self.logger.logDebug('CrewIgnoredCache saved: {}', serialized)
 
     def getUserCache(self, userName):
         if not self._loaded and os.path.isfile(self.file_path):
@@ -61,7 +63,7 @@ class CrewIgnoredCache(defaultdict):
                 self._updated = False
 
         result = self[userName]
-        logDebug("CrewIgnoredCache loaded for {}: {}", userName, result)
+        self.logger.logDebug("CrewIgnoredCache loaded for {}: {}", userName, result)
         return result
 
 
@@ -69,6 +71,7 @@ class CrewProcessor(object):
     itemsCache = dependency.descriptor(IItemsCache)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
     connectionMgr = dependency.descriptor(IConnectionManager)
+    logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         self.xp_to_11_lvl = 325000
@@ -110,15 +113,14 @@ class CrewProcessor(object):
     def accelerateCrewXp(self, vehicle, value):
         result = yield VehicleTmenXPAccelerator(vehicle, value, confirmationEnabled=False).request()
         if result.success:
-            logInfo("The accelerated crew training is {} for '{}'", value, vehicle.userName)
+            self.logger.logInfo("The accelerated crew training is {} for '{}'", value, vehicle.userName)
 
-    @staticmethod
-    def getRemainPostProgressionXP(vehicle):
+    def getRemainPostProgressionXP(self, vehicle):
         postProgressionAvailability = vehicle.postProgressionAvailability(unlockOnly=True).result
         if postProgressionAvailability:
             iterator = vehicle.postProgression.iterOrderedSteps()
             remain_PP_XP = sum(x.getPrice().xp for x in iterator if not x.isRestricted() and not x.isReceived())
-            logDebug("postProgressionXP - {}: {}", vehicle.userName, remain_PP_XP)
+            self.logger.logDebug("postProgressionXP - {}: {}", vehicle.userName, remain_PP_XP)
             return postProgressionAvailability, remain_PP_XP - vehicle.xp
         return postProgressionAvailability, 0
 
@@ -147,7 +149,7 @@ class CrewProcessor(object):
         return acceleration, description, max(0, xp)
 
     def onVehicleChanged(self, vehicle):
-        logDebug("crew onVehicleChanged")
+        self.logger.logDebug("crew onVehicleChanged")
         if not vehicle or vehicle.isLocked or isSpecialBattleVehicle(vehicle):
             return
         if self.settingsLoader.getSetting(CREW.NAME, CREW.RETURN):

@@ -1,9 +1,9 @@
 from math import degrees
 
 from armagomen._constants import BATTLES_RANGE, GLOBAL, MINIMAP
+from armagomen import IALogger
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import IS_XVM_INSTALLED, overrideMethod
-from armagomen.utils.logging import logError
 from constants import VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
@@ -73,5 +73,6 @@ def _setupPlugins(base, plugin, arenaVisitor):
                 _plugins['vehicles'] = ArenaVehiclesPlugin
             _plugins['personal'] = PersonalEntriesPlugin
     except Exception as err:
-        logError("MinimapComponent _setupPlugins {} {}", err.args, err.message)
+        logger = dependency.instance(IALogger)
+        logger.logError("MinimapComponent _setupPlugins {} {}", err.args, str(err))
     return _plugins
