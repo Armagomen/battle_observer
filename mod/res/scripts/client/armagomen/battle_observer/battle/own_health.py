@@ -6,7 +6,6 @@ from gui.battle_control import avatar_getter
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers.prebattle_setups_ctrl import IPrebattleSetupsListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import getHealthPercent, normalizeHealth
-from PlayerEvents import g_playerEvents
 
 
 class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
@@ -27,13 +26,14 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
-        g_playerEvents.onArenaPeriodChange += self.onArenaPeriodChange
+
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling += self.__onVehicleControlling
             ctrl.onVehicleStateUpdated += self.__onVehicleStateUpdated
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
+            arena.onPeriodChange += self.onArenaPeriodChange
             self.is_battle_period = arena.period == ARENA_PERIOD.BATTLE
             self.is_alive = self.getVehicleInfo().isAlive()
             self.toggleVisible()
@@ -43,10 +43,12 @@ class OwnHealth(OwnHealthMeta, IPrebattleSetupsListener):
         self.toggleVisible()
 
     def _dispose(self):
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None:
+            arena.onPeriodChange -= self.onArenaPeriodChange
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
-        g_playerEvents.onArenaPeriodChange -= self.onArenaPeriodChange
         ctrl = self.sessionProvider.shared.vehicleState
         if ctrl is not None:
             ctrl.onVehicleControlling -= self.__onVehicleControlling
