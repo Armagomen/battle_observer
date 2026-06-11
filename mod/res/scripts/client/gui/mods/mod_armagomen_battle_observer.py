@@ -1,4 +1,4 @@
-__version__ = "1.43.32"
+__version__ = "1.43.33"
 __author__ = "Armagomen"
 __copyright__ = "Copyright 2014-2026, Armagomen"
 __credits__ = ["Armagomen"]
