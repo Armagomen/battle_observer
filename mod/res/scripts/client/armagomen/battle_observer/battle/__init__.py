@@ -29,9 +29,9 @@ def getViewSettings():
     from armagomen.battle_observer.battle.debug_panel import _DebugPanel
     from armagomen.battle_observer.battle.team_bases import TeamBases
     from armagomen.battle_observer.battle.teams_hp import TeamsHP
-    from armagomen.battle_observer.battle.wgr_and_icons import WGRAndIcons
+    from armagomen.battle_observer.battle.statistics_and_icons import StatisticsAndIcons
     return (
-        ComponentSettings(BATTLE_ALIASES.WGR_ICONS, WGRAndIcons, ScopeTemplates.DEFAULT_SCOPE),
+        ComponentSettings(BATTLE_ALIASES.WGR_ICONS, StatisticsAndIcons, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.PANELS, PlayersPanels, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.ARMOR_CALC, ArmorCalculator, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.TIMER, BattleTimer, ScopeTemplates.DEFAULT_SCOPE),

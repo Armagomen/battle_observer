@@ -1,4 +1,3 @@
-# coding=utf-8
 import BigWorld
 from armagomen._constants import POSTMORTEM_MODES
 from armagomen.battle_observer.i18n.distance_to_enemy import TEMPLATE_BY_LANG
@@ -65,7 +64,7 @@ class Distance(DistanceMeta):
 
     @property
     def distances(self):
-        for vehicle in self.vehicles.values():
+        for vehicle in self.vehicles.itervalues():
             yield getDistanceToTarget(vehicle, avatar=self.player), vehicle.typeDescriptor.type.shortUserString
 
     def getUpdatedDistance(self):

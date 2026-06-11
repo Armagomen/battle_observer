@@ -2,10 +2,10 @@
 import json
 from random import choice
 
-from armagomen._constants import API_KEY, getLogo, MONEY_PNG, URLS
-from armagomen.battle_observer.shared import IBOOnline
-from armagomen.battle_observer.i18n.donate_messages import MESSAGES
 from armagomen import IALogger
+from armagomen._constants import API_KEY, getLogo, IMAGE_DIR, URLS
+from armagomen.battle_observer.i18n.donate_messages import MESSAGES
+from armagomen.battle_observer.shared import IBOOnline
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from datetime import datetime, timedelta
@@ -66,6 +66,7 @@ class ClanInvite(object):
 class Donate(object):
     logger = dependency.descriptor(IALogger)
     online = dependency.descriptor(IBOOnline)
+    MONEY_ICO = "<img src='{}/donate/money.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
 
     def __init__(self):
         self.__lastMessage = None
@@ -86,7 +87,7 @@ class Donate(object):
     def pushDonateMessage(self):
         stats_info = yield self.online.get_stats_by_region()
         message = getLogo(big=False) + "\n".join(self.pattern).format(
-            msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=MONEY_PNG)
+            msg=self.getRandomMessage(), online=stats_info, url=URLS.DONATE, img=self.MONEY_ICO)
 
         pushMessage(message)
         self.logger.logInfo("A donation message has been sent to the user. Repeated in {} minutes.", TIMEOUT)

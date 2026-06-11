@@ -2,14 +2,14 @@ import BigWorld
 import TriggersManager
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
+from armagomen import IALogger
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen import IALogger
 from armagomen.utils.common import addCallback, MinMax, ResMgr, toggleOverride
 from armagomen.utils.events import g_events
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
-from gui.battle_control.avatar_getter import getInputHandler, getOwnVehiclePosition
+from gui.battle_control.avatar_getter import getInputHandler
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCache, ISettingsCore
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
@@ -227,11 +227,9 @@ class Strategic(CameraSettings):
 
 
 class Sniper(CameraSettings):
-    DEFAULT_X_METERS = 18.0
     ZOOM = "zoom"
     ZOOMS = "zooms"
     MAX_DIST = 600.0
-    MIN_DIST = 50.0
 
     def __init__(self):
         super(Sniper, self).__init__()
@@ -291,21 +289,12 @@ class Sniper(CameraSettings):
             elif self.reset:
                 self.resetToDefault(CTRL_MODE_NAME.SNIPER)
 
-    def getZoom(self, zooms, distance):
-        if not distance or distance > self.MAX_DIST or distance < self.MIN_DIST:
-            return zooms[0]
-        else:
-            target = (distance - self.MIN_DIST) / self.DEFAULT_X_METERS
-            return min(zooms, key=lambda value: abs(value - target))
-
     def enableSniper(self, base, camera, targetPos, saveZoom):
-        try:
-            saveZoom = True
-            ownPosition = getOwnVehiclePosition()
-            distance = (targetPos - ownPosition).length if ownPosition is not None else 0
-            camera._cfg[self.ZOOM] = self.getZoom(camera._cfg[self.ZOOMS], distance)
-        except Exception as e:
-            self.logger.logError("enableSniper: {} - {}", e.args, e.message)
+        distance = BigWorld.player().position.distTo(targetPos)
+        saveZoom = distance < self.MAX_DIST
+        if saveZoom:
+            target = round(distance / self.config[SNIPER.DYN_ZOOM_SENSITIVITY])
+            camera._cfg[self.ZOOM] = min(camera._cfg[self.ZOOMS], key=lambda value: abs(value - target))
         return base(camera, targetPos, saveZoom)
 
 

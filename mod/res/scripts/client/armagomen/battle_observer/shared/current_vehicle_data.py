@@ -83,7 +83,7 @@ class CurrentVehicleCachedData(IBOCurrentVehicleCachedData):
             marks.getValue(),
             g_currentVehicle.item.userName,
             g_currentVehicle.item.level > 4,
-            (random.getWinsEfficiency() or 0.0) * 100,
+            (random.getWinsEfficiency() or 0.0),
             int(random.getBattlesCount())
         )
 

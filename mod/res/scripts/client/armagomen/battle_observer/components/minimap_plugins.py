@@ -1,12 +1,13 @@
 from math import degrees
 
-from armagomen._constants import BATTLES_RANGE, GLOBAL, MINIMAP
 from armagomen import IALogger
+from armagomen._constants import GLOBAL, MINIMAP
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import IS_XVM_INSTALLED, overrideMethod
-from constants import VISIBILITY
+from constants import ARENA_GUI_TYPE, VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
+from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from helpers import dependency
 
 
@@ -31,29 +32,38 @@ class PersonalEntriesPlugin(plugins.PersonalEntriesPlugin):
 class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
+    __slots__ = ('__showDestroyNames',)
+
     def __init__(self, *args, **kwargs):
         super(ArenaVehiclesPlugin, self).__init__(*args, **kwargs)
-        self.__showDestroyEntries = self.__isDestroyImmediately = True
         self.__showDestroyNames = self.settingsLoader.getSetting(MINIMAP.NAME, MINIMAP.SHOW_NAMES)
 
+    def isAlive(self, vehicleID):
+        return self._arenaDP.getVehicleInfo(vehicleID).isAlive()
+
     def _showVehicle(self, vehicleID, location):
-        entry = self._entries[vehicleID]
-        if entry.isAlive():
+        if self.isAlive(vehicleID):
             super(ArenaVehiclesPlugin, self)._showVehicle(vehicleID, location)
 
     def _hideVehicle(self, entry):
-        if entry.isAlive() and entry.isActive():
+        if entry.isAlive():
             super(ArenaVehiclesPlugin, self)._hideVehicle(entry)
 
     def __setDestroyed(self, vehicleID, entry):
-        if self.__isDestroyImmediately:
-            self._setInAoI(entry, True)
-        super(ArenaVehiclesPlugin, self).__setDestroyed(vehicleID, entry)
+        self.__clearAoIToFarCallback(vehicleID)
+        if entry.isAlive():
+            entry._isAlive = False
+            if not entry.isInAoI():
+                if entry.wasSpotted():
+                    self._setInAoI(entry, True)
+                else:
+                    self.__setActive(entry, False)
+                    return
+            self._invoke(entry.getID(), 'setDead', True)
+            self._move(entry.getID(), CONTAINER_NAME.DEAD_VEHICLES)
 
     def __switchToVehicle(self, prevCtrlID):
-        if self.__isDestroyImmediately:
-            return
-        super(ArenaVehiclesPlugin, self).__switchToVehicle(prevCtrlID)
+        pass
 
     def _getDisplayedName(self, vInfo):
         if vInfo.isAlive() or self.__showDestroyNames:
@@ -66,10 +76,9 @@ def _setupPlugins(base, plugin, arenaVisitor):
     _plugins = base(plugin, arenaVisitor)
     try:
         settingsLoader = dependency.instance(IBOSettingsLoader)
-        allowedMode = arenaVisitor.gui.guiType in BATTLES_RANGE
-        minimap = settingsLoader.getSetting(MINIMAP.NAME)
-        if not IS_XVM_INSTALLED and allowedMode and minimap[GLOBAL.ENABLED]:
-            if minimap[MINIMAP.DEATH_PERMANENT]:
+        minimap = settingsLoader.getComponentDict(MINIMAP.NAME)
+        if not IS_XVM_INSTALLED and minimap.get(GLOBAL.ENABLED, False):
+            if arenaVisitor.gui.guiType in ARENA_GUI_TYPE.RANDOM_RANGE and minimap.get(MINIMAP.DEATH_PERMANENT, False):
                 _plugins['vehicles'] = ArenaVehiclesPlugin
             _plugins['personal'] = PersonalEntriesPlugin
     except Exception as err:

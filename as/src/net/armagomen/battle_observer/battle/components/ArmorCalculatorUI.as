@@ -22,7 +22,6 @@ package net.armagomen.battle_observer.battle.components
 			{
 				var settings:Object = this.getSettings();
 				var fmt:TextFormat = Constants.cloneTextFormat(Constants.largeText);
-				fmt.size = settings.text_size;
 				this.armorCalc = new TextExt(settings.position.x, settings.position.y, fmt, TextFieldAutoSize.CENTER, this);
 			}
 		}
@@ -39,12 +38,11 @@ package net.armagomen.battle_observer.battle.components
 			{
 				this.armorCalc.textColor = color;
 			}
-			
 		}
 		
 		public function as_armorCalc(text:String):void
 		{
-			this.armorCalc.text = text;
+			this.armorCalc.htmlText = text;
 		}
 	}
 }

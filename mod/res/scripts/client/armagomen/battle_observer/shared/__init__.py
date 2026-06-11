@@ -1,12 +1,13 @@
 from armagomen.battle_observer.shared.battle.keys_listener import IBOKeysListener
 from armagomen.battle_observer.shared.battle.piercing_randomizer import IBOPiercingRandomizer
 from armagomen.battle_observer.shared.battle.players_damage import IBOPlayersDamageController
+from armagomen.battle_observer.shared.battle.statistics_loader import IStatisticsDataLoader
 from armagomen.battle_observer.shared.battle.view_settings import IViewSettings
 from armagomen.battle_observer.shared.current_vehicle_data import IBOCurrentVehicleCachedData
 from armagomen.battle_observer.shared.online import IBOOnline
 
 __all__ = ('IBOCurrentVehicleCachedData', 'IBOPlayersDamageController', 'IBOKeysListener', 'IBOPiercingRandomizer', 'IBOOnline',
-           'IViewSettings')
+           'IViewSettings', 'IStatisticsDataLoader')
 
 
 def register_services():
@@ -17,13 +18,15 @@ def register_services():
     from armagomen.battle_observer.shared.battle.view_settings import ViewSettingsAS
     from armagomen.battle_observer.shared.current_vehicle_data import CurrentVehicleCachedData
     from armagomen.battle_observer.shared.online import Online
+    from armagomen.battle_observer.shared.battle.statistics_loader import StatisticsDataLoader
 
     services = ((IBOOnline, Online),
                 (IBOPlayersDamageController, PlayersDamageController),
                 (IBOCurrentVehicleCachedData, CurrentVehicleCachedData),
                 (IBOKeysListener, KeysListener),
                 (IBOPiercingRandomizer, PiercingRandomizer),
-                (IViewSettings, ViewSettingsAS))
+                (IViewSettings, ViewSettingsAS),
+                (IStatisticsDataLoader, StatisticsDataLoader))
 
     manager = _g_manager  # type: DependencyManager
 

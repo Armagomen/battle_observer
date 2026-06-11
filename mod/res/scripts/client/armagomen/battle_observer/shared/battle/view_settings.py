@@ -111,7 +111,7 @@ class ViewSettingsAS(IViewSettings):
     def isStatisticsAndIconsEnabled(self):
         if self.xvm_installed(BATTLE_ALIASES.WGR_ICONS) or self.spacialOrEpicRandom():
             return False
-        statistics = self.settingsLoader.settings.statistics
+        statistics = self.settingsLoader.settings.statistics_and_icons
         return statistics[GLOBAL.ENABLED] and (
                 statistics[STATISTICS.STATISTIC_ENABLED] or statistics[STATISTICS.ICON_ENABLED])
 

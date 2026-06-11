@@ -32,7 +32,7 @@ localization = {
         "selector": "Wybierz konfigurację:",
         "donate_button_ua": "Donate",
         "discord_button": "Serwer Discord modyfikacji",
-        "reload_config": "Przeładuj ustawienia"
+        "reload_config": "reload files"
     },
     "main": {
         "header": "Ustawienia ogólne",
@@ -77,7 +77,7 @@ localization = {
         "hide_shop": "Ukryj przycisk sklepu",
         "hide_wotPlus": "Ukryj przycisk WOT Plus"
     },
-    "statistics": {
+    "statistics_and_icons": {
         "header": "Statystyki graczy i ikony pojazdów",
         "icons": "Ikony: Kolory według typów pojazdów",
         "icons_tooltip": "Funkcja zmienia kolory ikon pojazdów na ekranie ładowania, w panelach drużyn i oknie Tab. Filtr wpływa na "
@@ -94,7 +94,8 @@ localization = {
         "statistics_colors*very_good": "Bardzo wysoki poziom",
         "statistics_colors*unique": "Unikalny poziom",
         "statistics_panels_full_width": "Szerokość pola nazwy gracza (szeroki panel)",
-        "statistics_panels_cut_width": "Szerokość pola nazwy gracza (wąski panel)"
+        "statistics_panels_cut_width": "Szerokość pola nazwy gracza (wąski panel)",
+        "statistics_use_new_WTR": "Używaj nowej oceny WTR zamiast WGR"
     },
     "dispersion_circle": {
         "header": "Celownik – ustawienia kręgu skupienia",
@@ -160,7 +161,8 @@ localization = {
         "show_counted_armor": "Pokaż obliczoną grubość pancerza",
         "show_counted_armor_tooltip": "Grubość pancerza z uwzględnieniem kąta nachylenia i normalizacji",
         "show_piercing_reserve": "Wyświetl zapas penetracji",
-        "show_caliber": "Wyświetl kaliber"
+        "show_caliber": "Wyświetl kaliber",
+        "show_icons": "Pokaż ikony"
     },
     "wg_logs": {
         "header": "Ustawienia logu wydarzeń WG",
@@ -237,6 +239,7 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Nie wychodź z trybu przy magazynowym systemie ładowania",
         "dynamic_zoom": "Automatyczny wybór powiększenia",
         "dynamic_zoom_tooltip": "Funkcja ignoruje ustawienie stałe. Powiększenie zależy od odległości do celu podzielonej przez czułość.",
+        "dynamic_zoom_sensitivity": "Czułość dynamicznego powiększenia w metrach.",
         "steps_enabled": "Rozszerz standardowe stopnie przybliżenia",
         "steps_range": "Poziomy zoomu",
         "steps_range_tooltip": "Określ zakres, w którym będą generowane wartości z krokiem 2.",

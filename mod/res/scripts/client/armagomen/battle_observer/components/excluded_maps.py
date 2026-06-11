@@ -4,6 +4,7 @@ from armagomen.utils.common import delayedCall
 from armagomen.utils.dialogs import ExcludedMapsDialog
 from armagomen.utils.events import g_events
 from constants import PREMIUM_TYPE, PremiumConfigs
+from datetime import datetime, timedelta
 from gui.ClientUpdateManager import g_clientUpdateManager
 from gui.game_control.wot_plus.utils import getExcludedMapsPromoData
 from gui.impl.pub.dialog_window import DialogButtons
@@ -35,6 +36,7 @@ class ExcludedMapsProcessor(object):
         self.__enabled = False
         self.__isPremium = False
         self.__dialog = None
+        self.timeDelta = None
         self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
         g_events.onModSettingsChanged += self._onModSettingsChanged
@@ -109,11 +111,14 @@ class ExcludedMapsProcessor(object):
 
     @wg_async
     def __showDialog(self, message):
-        self.__dialog = ExcludedMapsDialog()
-        dialog = yield wg_await(self.__dialog.show(EXCLUDED_MAPS_BY_LANG[EXCLUDED_MAPS.HEADER], message))
-        if dialog.result == DialogButtons.RESEARCH:
-            showMapsBlacklistView()
-        self.__dialog = None
+        current_time = datetime.now()
+        if self.timeDelta is None or current_time >= self.timeDelta:
+            self.timeDelta = current_time + timedelta(minutes=30)
+            self.__dialog = ExcludedMapsDialog()
+            dialog = yield wg_await(self.__dialog.show(EXCLUDED_MAPS_BY_LANG[EXCLUDED_MAPS.HEADER], message))
+            if dialog.result == DialogButtons.RESEARCH:
+                showMapsBlacklistView()
+            self.__dialog = None
 
     @delayedCall(3.0)
     def __update(self):

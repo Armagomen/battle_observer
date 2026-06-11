@@ -87,7 +87,7 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
             (AVG_EFFICIENCY_HANGAR.BLOCKED, "<span class='bo_effIcon blockedIcon'></span><span>{tankAvgBlocked}</span>"),
             (AVG_EFFICIENCY_HANGAR.STUN, "<span class='bo_effIcon stunIcon'></span><span>{tankAvgStun}</span>", data.tankAvgStun),
             (AVG_EFFICIENCY_HANGAR.BATTLES, "<span class='bo_effIcon battlesIcon'></span><span>{battles}</span>"),
-            (AVG_EFFICIENCY_HANGAR.WIN_RATE, "<span class='bo_effIcon winRateIcon'></span><span>{winRate:.2f}%</span>"),
+            (AVG_EFFICIENCY_HANGAR.WIN_RATE, "<span class='bo_effIcon winRateIcon'></span><span>{winRate:.2%}</span>"),
             (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "<span class='bo_effIcon gun_icon_{marksValue}'></span><span>{marksRating:.2f}%</span>",
              data.marksAvailable)
         ]

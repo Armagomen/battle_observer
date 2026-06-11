@@ -85,10 +85,10 @@ class DateTimesView(ViewComponent[ClockModel]):
     def onModSettingsChanged(self, name, data):
         if name == CLOCK.NAME:
             in_lobby = data.get(CLOCK.IN_LOBBY)
-            if in_lobby:
+            self.__enabled = data.get(GLOBAL.ENABLED, self.__enabled)
+            if in_lobby and self.__enabled:
                 u_format = in_lobby.get(CLOCK.FORMAT, self.__clockFormat)
                 if not u_format.lower().startswith("tab"):
                     self.__clockFormat = u_format
                 self.__hangarEnabled = in_lobby.get(GLOBAL.ENABLED, self.__hangarEnabled)
-            self.__enabled = data.get(GLOBAL.ENABLED, self.__enabled)
             self.toggleInterval(self.__enabled and self.__hangarEnabled)

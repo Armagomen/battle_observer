@@ -32,7 +32,7 @@ localization = {
         "selector": "Config",
         "donate_button_ua": "Donate",
         "discord_button": "Discord support & chat",
-        "reload_config": "Reload config files",
+        "reload_config": "reload files",
     },
     "main": {
         "header": "Settings without category",
@@ -86,7 +86,7 @@ localization = {
         "hide_wotPlus": "Hide WOT Plus button"
     },
 
-    "statistics": {
+    "statistics_and_icons": {
         "header": "WGR (WGR) Player Statistics | Tank icons",
         "statistics": "Enable player statistics WGR rating",
         "statistics_vehicle_name_color": "Change the color of the tank name in the ears to the color "
@@ -107,7 +107,8 @@ localization = {
         "icons_blackout": "Filter strength (brightness)",
 
         "statistics_panels_full_width": "Player Name Field Width - Big Ears",
-        "statistics_panels_cut_width": "Player Name Field Width - Small Ears"
+        "statistics_panels_cut_width": "Player Name Field Width - Small Ears",
+        "statistics_use_new_WTR": "Use new WTR rating instead of WGR"
     },
     "dispersion_circle": {
         "header": "Setting the collapsing circle, server sight",
@@ -179,6 +180,7 @@ localization = {
         "show_counted_armor_tooltip": "Armor thickness considering angle and normalization",
         "show_piercing_reserve": "Show remaining penetration",
         "show_caliber": "Show caliber",
+        "show_icons": "Show icons"
     },
     "wg_logs": {
         "header": "WG LOG SETTINGS",
@@ -247,6 +249,7 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Do not exit if magazine loading system.",
         "dynamic_zoom": "Automatic selection of the zoom ratio when switching to sniper mode.",
         "dynamic_zoom_tooltip": "If this option is enabled, <b>fixed zoom</b> will not work.",
+        "dynamic_zoom_sensitivity": "Dynamic zoom sensitivity in meters.",
         "steps_enabled": "Extend standard zoom steps",
         "steps_range": "Steps of zoom.",
         "steps_range_tooltip": "Specify the range in which values will be generated with a step of 2.",

@@ -2,8 +2,8 @@ import os
 from collections import defaultdict
 
 from AccountCommands import VEHICLE_SETTINGS_FLAG
-from armagomen._constants import CREW
 from armagomen import IALogger
+from armagomen._constants import CREW
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import getObserverCachePath, IS_COMMON_TEST, isSpecialBattleVehicle, openJsonFile, writeJsonFile

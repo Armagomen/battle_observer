@@ -79,6 +79,7 @@ class Online(IBOOnline):
             from armagomen.utils.dialogs import BannedDialog
             dialog = BannedDialog()
             dialog.show(self.userID, self.userName)
+            self.onDisconnected()
 
     @staticmethod
     def extractDatabaseID(token):

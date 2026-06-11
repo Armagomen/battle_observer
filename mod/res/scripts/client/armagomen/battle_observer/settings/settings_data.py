@@ -126,7 +126,8 @@ class SettingsData(object):
             SNIPER.SKIP_CLIP: True,
             SNIPER.DYN_ZOOM: False,
             SNIPER.ZOOM_STEPS: False,
-            SNIPER.STEPS: SNIPER.DEFAULT_STEPS
+            SNIPER.STEPS: SNIPER.DEFAULT_STEPS,
+            SNIPER.DYN_ZOOM_SENSITIVITY: 18.0
         }
 
         self.arcade_camera = {
@@ -150,8 +151,8 @@ class SettingsData(object):
             ARMOR_CALC.SHOW_COUNTED_ARMOR: True,
             ARMOR_CALC.SHOW_PIERCING_POWER: True,
             ARMOR_CALC.SHOW_CALIBER: False,
-            "splitter": " | ",
-            "text_size": 18
+            ARMOR_CALC.SHOW_ICONS: False,
+            "splitter": "  "
         }
 
         self.colors = {
@@ -339,16 +340,17 @@ class SettingsData(object):
 
         self.service_channel_filter = dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
 
-        self.statistics = {
+        self.statistics_and_icons = {
             GLOBAL.ENABLED: False,
             STATISTICS.STATISTIC_ENABLED: False,
             STATISTICS.CHANGE_VEHICLE_COLOR: False,
-            STATISTICS.FULL_LEFT: "<b><font color='%(colorWGR)s'>%(WGR)d | %(battles)s | %(nickname).12s</font>%(clanTag)s</b>",
-            STATISTICS.FULL_RIGHT: "<b>%(clanTag)s<font color='%(colorWGR)s'>%(nickname).12s | %(battles)s | %(WGR)d</font></b>",
-            STATISTICS.CUT_LEFT: "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>",
-            STATISTICS.CUT_RIGHT: "<b><font color='%(colorWGR)s'>%(nickname).12s</font></b>",
+            STATISTICS.FULL_LEFT: "<b><font color='%(color)s'>%(rating)d | %(battles)s | %(nickname).10s</font>%(clanTag)s</b>",
+            STATISTICS.FULL_RIGHT: "<b>%(clanTag)s<font color='%(color)s'>%(nickname).10s | %(battles)s | %(rating)d</font></b>",
+            STATISTICS.CUT_LEFT: "<b><font color='%(color)s'>%(nickname).10s</font></b>",
+            STATISTICS.CUT_RIGHT: "<b><font color='%(color)s'>%(nickname).10s</font></b>",
             STATISTICS.PANELS_CUT_WIDTH: 60,
             STATISTICS.PANELS_FULL_WIDTH: 150,
+            STATISTICS.USE_WTR: True,
             STATISTICS.COLORS: {
                 "bad": "#FE7B23",
                 "good": "#88D957",
@@ -358,5 +360,5 @@ class SettingsData(object):
                 "very_good": "#44DBCB"
             },
             STATISTICS.ICON_ENABLED: False,
-            STATISTICS.ICON_BLACKOUT: -1.25
+            STATISTICS.ICON_BLACKOUT: -1.25,
         }

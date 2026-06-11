@@ -32,7 +32,7 @@ localization = {
         "selector": "Einstellungen auswählen:",
         "donate_button_ua": "Donate",
         "discord_button": "Discord-Modserver",
-        "reload_config": "Einstellungen neu laden",
+        "reload_config": "reload files",
     },
     "main": {
         "header": "Nicht kategorisierte Einstellungen",
@@ -81,7 +81,7 @@ localization = {
         "hide_shop": "Shop-Schaltfläche ausblenden",
         "hide_wotPlus": "WOT Plus-Schaltfläche ausblenden"
     },
-    "statistics": {
+    "statistics_and_icons": {
         "header": "Spielerstatistiken und Fahrzeug-Icon-Einstellungen",
         "icons": "Icons: Einfärbung nach Fahrzeugklassen",
         "icons_tooltip": "Diese Funktion verändert die Farben aller Fahrzeug-Icons im Ladebildschirm, in den Ohren und im Tab-Fenster. "
@@ -99,7 +99,9 @@ localization = {
         "statistics_colors*very_good": "Sehr hohes Niveau",
         "statistics_colors*unique": "Einzigartiges Niveau",
         "statistics_panels_full_width": "Spielernamensfeldbreite (breite Ohren)",
-        "statistics_panels_cut_width": "Spielernamensfeldbreite (schmale Ohren)"
+        "statistics_panels_cut_width": "Spielernamensfeldbreite (schmale Ohren)",
+        "statistics_use_new_WTR": "Neuen WTR-Wert anstelle von WGR verwenden"
+
     },
     "dispersion_circle": {
         "header": "Fadenkreuz- und Serverziel-Einstellungen",
@@ -167,7 +169,8 @@ localization = {
         "show_counted_armor": "Berechnete Panzerungsstärke anzeigen",
         "show_counted_armor_tooltip": "Panzerungsstärke unter Berücksichtigung von Neigungswinkel und Normalisierung",
         "show_piercing_reserve": "Restdurchschlag anzeigen",
-        "show_caliber": "Kaliber anzeigen"
+        "show_caliber": "Kaliber anzeigen",
+        "show_icons": "Symbole anzeigen"
     },
     "wg_logs": {
         "header": "WG-Ereignisverlauf-Einstellungen",
@@ -244,6 +247,7 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Nicht verlassen, wenn Magazinladesystem aktiv ist",
         "dynamic_zoom": "Automatischer Zoomstufen-Wähler",
         "dynamic_zoom_tooltip": "Bei aktivierter Funktion wird <b>die feste Einstellung</b> ignoriert. Die Zoomstufe wird automatisch anhand der Entfernung zum Ziel (in Metern) geteilt durch die Empfindlichkeit gewählt.<br>",
+        "dynamic_zoom_sensitivity": "Dynamische Zoom-Empfindlichkeit in Metern.",
         "steps_enabled": "Standardmäßige Zoom-Schritte erweitern",
         "steps_range": "Zoomstufen-Schritte",
         "steps_range_tooltip": "Geben Sie den Bereich an, in dem Werte mit Schrittweite 2 erstellt werden.",

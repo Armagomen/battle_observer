@@ -290,7 +290,7 @@ def toggleOverride(obj, method_name, func, enable):
         cancelOverride(obj, method_name, func.__name__)
 
 
-def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, as_int=False):
+def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, as_int=False, full=False):
     """
     Returns a HEX color code based on percent.
     If color_blind=True, uses a smooth gradient: blue → green (no yellow).
@@ -301,7 +301,9 @@ def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, a
         color_blind (bool): Enables color-blind-safe gradient if True.
         as_int (bool): If True, returns int (0xRRGGBB), else HEX string.
     """
-    if color_blind:
+    if full:
+        hue = percent
+    elif color_blind:
         # Blue → Green
         hue = 0.666 + (-0.333 * percent)
     else:

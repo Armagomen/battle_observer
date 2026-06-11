@@ -2,7 +2,6 @@ from collections import namedtuple
 
 from aih_constants import CTRL_MODE_NAME
 from constants import ARENA_GUI_TYPE
-from realm import CURRENT_REALM
 
 MOD_NAME = "BATTLE_OBSERVER"
 IMAGE_DIR = "img://gui/maps/icons/battle_observer"
@@ -13,8 +12,6 @@ def getLogo(big=True):
         return "<img src='{}/logo/big.png' width='500' height='32' vspace='16'>".format(IMAGE_DIR)
     return "<img src='{}/logo/small.png' width='220' height='14' vspace='16'>".format(IMAGE_DIR)
 
-
-MONEY_PNG = "<img src='{}/donate/money.png' width='16' height='16' vspace='-3'>".format(IMAGE_DIR)
 
 URLS = namedtuple("URLS", (
     "UPDATE_GITHUB_API_URL",
@@ -32,11 +29,6 @@ VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
     "health", "maxHealth", "team", "percent", "Vehicle")
 
 API_KEY = "5500d1b937426e47e2b039e4a11990be"
-REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/info/?application_id={}".format(API_KEY),
-           "ASIA": "https://api.worldoftanks.asia/wot/account/info/?application_id={}".format(API_KEY),
-           "NA": "https://api.worldoftanks.com/wot/account/info/?application_id={}".format(API_KEY)}
-
-STATISTICS_REGION = REGIONS.get(CURRENT_REALM)
 
 VEHICLE_TYPES_COLORS = namedtuple("VEHICLE_TYPES_COLORS", ("NAME", "UNKNOWN"))("vehicle_types_colors", "unknown")
 
@@ -116,10 +108,10 @@ CLOCK = namedtuple("CLOCK", (
 
 __Sniper = namedtuple("SNIPER", (
     "NAME", "DYN_ZOOM", "ZOOM_STEPS", "STEPS", "ZOOM_EXPOSURE", "DEFAULT_STEPS",
-    "MAX_CALIBER", "DISABLE_SNIPER", "DISABLE_LATENCY", "SKIP_CLIP"))
+    "MAX_CALIBER", "DISABLE_SNIPER", "DISABLE_LATENCY", "SKIP_CLIP", "DYN_ZOOM_SENSITIVITY"))
 SNIPER = __Sniper(
     "zoom", "dynamic_zoom", "steps_enabled", "steps_range", "zoomExposure", map(float, range(2, 34, 2)),
-    60, "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip")
+    60, "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "dynamic_zoom_sensitivity")
 
 
 class DAMAGE_LOG:
@@ -187,12 +179,12 @@ POSTMORTEM_MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
 
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
     "NAME", "SHOW_PIERCING_POWER", "POSITION", "SHOW_COUNTED_ARMOR",
-    "SHOW_PIERCING_RESERVE", "SHOW_CALIBER", "ON_ALLY"))(
+    "SHOW_PIERCING_RESERVE", "SHOW_CALIBER", "ON_ALLY", "SHOW_ICONS"))(
     "armor_calculator", "show_piercing_power", "position", "show_counted_armor",
-    "show_piercing_reserve", "show_caliber", "display_on_allies")
+    "show_piercing_reserve", "show_caliber", "display_on_allies", "show_icons")
 
-ARMOR_CALC_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_PIERCING_RESERVE,
-                     ARMOR_CALC.SHOW_CALIBER)
+ARMOR_CALC_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_CALIBER,
+                     ARMOR_CALC.SHOW_PIERCING_RESERVE)
 
 FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TIME", "DISTANCE", "ALIGN"))(
     "flight_time", "spgOnly", "time", "distance", "align")
@@ -248,12 +240,13 @@ STATISTICS = namedtuple("STATISTICS", (
     "FULL_LEFT", "FULL_RIGHT",
     "CUT_LEFT", "CUT_RIGHT",
     "COLORS", "ICON_ENABLED", "ICON_BLACKOUT",
-    "PANELS_FULL_WIDTH", "PANELS_CUT_WIDTH"))(
-    "statistics", "statistics", "statistics_vehicle_name_color",
+    "PANELS_FULL_WIDTH", "PANELS_CUT_WIDTH", "USE_WTR"))(
+    "statistics_and_icons", "statistics", "statistics_vehicle_name_color",
     "statistics_pattern_full_left", "statistics_pattern_full_right",
     "statistics_pattern_cut_left", "statistics_pattern_cut_right",
     "statistics_colors", "icons", "icons_blackout",
-    "statistics_panels_full_width", "statistics_panels_cut_width"
+    "statistics_panels_full_width", "statistics_panels_cut_width",
+    "statistics_use_new_WTR"
 )
 
 
@@ -317,7 +310,8 @@ class CONFIG_INTERFACE:
         },
         SNIPER.NAME: {
             SNIPER.ZOOM_STEPS: (SNIPER.STEPS,),
-            SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY)
+            SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY),
+            SNIPER.DYN_ZOOM: (SNIPER.DYN_ZOOM_SENSITIVITY,)
         },
         TEAM_BASES.NAME: {
             'outline*enabled': ('outline*color',)
@@ -343,7 +337,8 @@ class CONFIG_INTERFACE:
             STATISTICS.STATISTIC_ENABLED: (
                 STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH, STATISTICS.CHANGE_VEHICLE_COLOR,
                 "statistics_colors*bad", "statistics_colors*normal", "statistics_colors*good",
-                "statistics_colors*very_good", "statistics_colors*unique", "statistics_colors*very_bad"
+                "statistics_colors*very_good", "statistics_colors*unique", "statistics_colors*very_bad",
+                STATISTICS.USE_WTR
             ),
             STATISTICS.ICON_ENABLED: (STATISTICS.ICON_BLACKOUT,)
         }

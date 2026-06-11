@@ -32,7 +32,7 @@ localization = {
         "selector": "Обрати конфігурацію:",
         "donate_button_ua": "Donate",
         "discord_button": "Discord-сервер модифікації",
-        "reload_config": "Перезавантажити конфігурацію",
+        "reload_config": "reload files",
     },
     "main": {
         "header": "Налаштування без категорії",
@@ -76,7 +76,7 @@ localization = {
         "hide_shop": "Приховати кнопку магазина",
         "hide_wotPlus": "Приховати кнопку WOT Plus"
     },
-    "statistics": {
+    "statistics_and_icons": {
         "header": "Налаштування статистики гравців та іконок техніки",
         "icons": "Іконки: Перефарбування у кольори класів техніки",
         "icons_tooltip": "Ця функція змінює кольори всіх іконок техніки на екрані завантаження, у вухах та у вікні, що відкривається "
@@ -94,7 +94,8 @@ localization = {
         "statistics_colors*very_good": "Дуже високий рівень",
         "statistics_colors*unique": "Унікальний рівень",
         "statistics_panels_full_width": "Ширина поля імені гравця (розширені вуха)",
-        "statistics_panels_cut_width": "Ширина поля імені гравця (стиснені вуха)"
+        "statistics_panels_cut_width": "Ширина поля імені гравця (стиснені вуха)",
+        "statistics_use_new_WTR": "Використовувати новий WTR рейтинг замість WGR",
     },
     "dispersion_circle": {
         "header": "Налаштування кола зведення, серверного прицілу",
@@ -162,6 +163,7 @@ localization = {
         "show_counted_armor_tooltip": "Товщина броні з урахуванням кута нахилу і нормалізації",
         "show_piercing_reserve": "Показувати запас пробиття",
         "show_caliber": "Показувати калібр снаряда",
+        "show_icons": "Показувати іконки"
     },
     "wg_logs": {
         "header": "Налаштування історії подій WG",
@@ -238,6 +240,7 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Не виходити з режиму при наявності касетної системи заряджання",
         "dynamic_zoom": "Автоматичний вибір кратності наближення",
         "dynamic_zoom_tooltip": "Відстань до цілі ділиться на чутливість, щоб автоматично вибрати кратність. Фіксований параметр при цьому не працює.",
+        "dynamic_zoom_sensitivity": "Чутливість динамічного наближення в метрах.",
         "steps_enabled": "Розширити стандартні кратності наближення",
         "steps_range": "Кроки кратності",
         "steps_range_tooltip": "Вкажіть діапазон, у якому створюватимуться значення з кроком 2.",
