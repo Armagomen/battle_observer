@@ -165,11 +165,6 @@
 		
 		public function as_invoke(time:Number, percentage:Number):void
 		{
-			if (time <= 0.0)
-			{
-				this.hide();
-				return;
-			}
 			if (this.timer_text)
 			{
 				this.timer_text.text = time.toFixed(1);
@@ -177,6 +172,10 @@
 			if (this.radial_progress)
 			{
 				this.radial_progress.updateProgressBar(percentage);
+			}
+			if (time <= 0.0)
+			{
+				this.hide();
 			}
 		}
 		

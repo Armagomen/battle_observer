@@ -67,9 +67,9 @@ def _setupPlugins(base, plugin, arenaVisitor):
     try:
         settingsLoader = dependency.instance(IBOSettingsLoader)
         allowedMode = arenaVisitor.gui.guiType in BATTLES_RANGE
-        minimap = settingsLoader.getSetting(MINIMAP.NAME)
-        if not IS_XVM_INSTALLED and allowedMode and minimap[GLOBAL.ENABLED]:
-            if minimap[MINIMAP.DEATH_PERMANENT]:
+        minimap = settingsLoader.getComponentDict(MINIMAP.NAME)
+        if not IS_XVM_INSTALLED and allowedMode and minimap.get(GLOBAL.ENABLED, False):
+            if minimap.get(MINIMAP.DEATH_PERMANENT, False):
                 _plugins['vehicles'] = ArenaVehiclesPlugin
             _plugins['personal'] = PersonalEntriesPlugin
     except Exception as err:

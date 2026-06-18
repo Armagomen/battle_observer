@@ -1,19 +1,19 @@
 import copy
 from math import ceil
 
+from armagomen import IALogger
 from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
                                   MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen import IALogger
-from armagomen.utils.common import addCallback, encodeData, IS_XVM_INSTALLED, openWebBrowser, safe_index, SIXTH_SENSE_LIST, SIXTH_SENSE_PATH
+from armagomen.utils.common import encodeData, IS_XVM_INSTALLED, openWebBrowser, printDebuginfo, safe_index, SIXTH_SENSE_LIST, \
+    SIXTH_SENSE_PATH
 from armagomen.utils.events import g_events
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
-from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
-settingsVersion = 42
+settingsVersion = 43
 LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME}
 
 
@@ -224,28 +224,28 @@ class CreateElement(Getter):
 
 
 class SettingsInterface(CreateElement):
-    appLoader = dependency.descriptor(IAppLoader)
     loader = dependency.descriptor(IBOSettingsLoader)
     logger = dependency.descriptor(IALogger)
 
     def __init__(self, version, api):
+        self.logger.logInfo('Initializing SettingsInterface')
         self.modsListApi, self.vxSettingsApi, self.apiEvents = api
         super(SettingsInterface, self).__init__()
         self.inited = set()
-        self.currentConfigID = self.newConfigID = safe_index(self.loader.configsList, self.loader.configName)
-        self.newConfigLoadingInProcess = False
+        self.configID = safe_index(self.loader.configsList, self.loader.configName)
+        self.loader.onOtherConfigReadComplete += self.onOtherConfigReadComplete
+        self.vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
         localization['service']['name'] = localization['service']['name'].format(version)
         localization['service']['windowTitle'] = localization['service']['windowTitle'].format(version)
-        self.appLoader.onGUISpaceEntered += self.addToAPI
+
+        self.addModsToVX()
+        self.addModificationToModList()
 
     def fini(self):
         self.inited.clear()
-
-    def addToAPI(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.LOGIN:
-            self.addModsToVX()
-            self.addModificationToModList()
-            self.appLoader.onGUISpaceEntered -= self.addToAPI
+        self.loader.onOtherConfigReadComplete -= self.onOtherConfigReadComplete
+        self.vxSettingsApi.onFeedbackReceived -= self.onFeedbackReceived
+        self.logger.logInfo('Finished SettingsInterface')
 
     def addModificationToModList(self):
         """register settings window in modsListApi"""
@@ -270,36 +270,30 @@ class SettingsInterface(CreateElement):
                 else:
                     self.logger.logWarning("SettingsInterface addModsToVX template is None: {}", blockID)
             except Exception as err:
-                self.logger.logWarning('SettingsInterface addModsToVX: {} {}'.format(blockID, repr(err)))
+                self.logger.logWarning('SettingsInterface addModsToVX: {} {}'.format(blockID, str(err)))
                 LOG_CURRENT_EXCEPTION(tags=[MOD_NAME])
             else:
                 self.inited.add(blockID)
                 self.logger.logDebug("SettingsInterface addModsToVX: {}", blockID)
 
-        self.vxSettingsApi.onFeedbackReceived += self.onFeedbackReceived
-
     def load_window(self):
         """Loading settings window"""
         self.vxSettingsApi.loadWindow(MOD_NAME)
 
-    def onUserConfigUpdateComplete(self):
-        if self.newConfigLoadingInProcess:
-            for blockID in CONFIG_INTERFACE.BLOCK_IDS:
-                self.updateMod(blockID)
-            self.load_window()
+    def onOtherConfigReadComplete(self, new_id):
+        self.configID = new_id
+        for blockID in CONFIG_INTERFACE.BLOCK_IDS:
+            self.updateMod(blockID)
+        from BigWorld import callback
+        callback(1.0, self.load_window)
 
     def onFeedbackReceived(self, container, event):
         """Feedback EVENT"""
         if container != MOD_NAME:
             return
-        self.newConfigLoadingInProcess = self.currentConfigID != self.newConfigID
         if event == self.apiEvents.WINDOW_CLOSED:
             self.vxSettingsApi.onSettingsChanged -= self.onSettingsChanged
             self.vxSettingsApi.onDataChanged -= self.onDataChanged
-            if self.newConfigLoadingInProcess:
-                self.inited.clear()
-                self.currentConfigID = self.loader.readOtherConfig(self.newConfigID)
-                addCallback(0.1, self.onUserConfigUpdateComplete)
         elif event == self.apiEvents.WINDOW_LOADED:
             self.vxSettingsApi.onSettingsChanged += self.onSettingsChanged
             self.vxSettingsApi.onDataChanged += self.onDataChanged
@@ -336,10 +330,11 @@ class SettingsInterface(CreateElement):
         if MOD_NAME != modID:
             return
         data = encodeData(data)
-        if blockID == ANOTHER.CONFIG_SELECT and self.currentConfigID != data['selector']:
-            self.newConfigID = data['selector']
+        if blockID == ANOTHER.CONFIG_SELECT and self.configID != data['selector']:
+            new_id = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
-            self.logger.logInfo("change config '{}' - {}", self.loader.configsList[self.newConfigID], blockID)
+            self.inited.clear()
+            self.loader.readOtherConfig(new_id)
             return
 
         settings_block = getattr(self.loader.settings, blockID, {})
@@ -356,9 +351,11 @@ class SettingsInterface(CreateElement):
 
         changed_settings = {k: v for k, v in settings_block.items() if old_settings.get(k) != v}
         if changed_settings:
-            self.loader.updateConfigFile(blockID, settings_block)
+            self.loader.addToFiniUpdate(blockID)
             g_events.onModSettingsChanged(blockID, changed_settings)
             self.logger.logDebug('onSettingsChanged: blockID: {} changed_settings: {}', blockID, changed_settings)
+            if blockID == MAIN.NAME and MAIN.DEBUG in changed_settings and self.logger.set_debug(changed_settings[MAIN.DEBUG]):
+                printDebuginfo()
 
     def onDataChanged(self, modID, blockID, varName, value, *a, **k):
         """Darkens dependent elements..."""
@@ -386,9 +383,9 @@ class SettingsInterface(CreateElement):
             if varName in CONFIG_INTERFACE.DONATE_BUTTONS:
                 openWebBrowser(value)
             elif varName == "reload_config":
-                self.newConfigID = self.currentConfigID
-                self.currentConfigID = value
                 self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
+                self.inited.clear()
+                self.loader.readOtherConfig(self.configID, reloadConfig=True)
 
     def items(self, blockID, settings_block):
         for key, value in self.keyValueGetter(settings_block):
@@ -400,8 +397,8 @@ class SettingsInterface(CreateElement):
         """Create templates, do not change."""
         settings_block = getattr(self.loader.settings, blockID, {})
         if blockID == ANOTHER.CONFIG_SELECT:
-            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.loader.configsList, self.currentConfigID),
-                       self.createControl(blockID, 'reload_config', -1, 'Button')]
+            column1 = [self.createRadioButtonGroup(blockID, 'selector', self.loader.configsList, self.configID),
+                       self.createControl(blockID, 'reload_config', 0, 'Button')]
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:

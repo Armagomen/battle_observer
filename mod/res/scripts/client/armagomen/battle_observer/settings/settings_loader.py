@@ -4,6 +4,7 @@ from armagomen import IALogger
 from armagomen._constants import ALIAS_TO_CONFIG_NAME_BATTLE, ALIAS_TO_CONFIG_NAME_LOBBY, GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
 from armagomen.utils.common import clearClientCache, currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
 from armagomen.utils.events import g_events
+from Event import Event
 from helpers import dependency
 
 JSON = "{}.json"
@@ -32,9 +33,6 @@ class IBOSettingsLoader(object):
     def updateData(self, external_cfg, internal_cfg, file_update=False):
         raise NotImplementedError
 
-    def updateAllSettings(self):
-        raise NotImplementedError
-
     def getSettingDictByAliasBattle(self, alias):
         raise NotImplementedError
 
@@ -44,18 +42,28 @@ class IBOSettingsLoader(object):
     def getSetting(self, component_name, param):
         raise NotImplementedError
 
+    def getComponentDict(self, component_name):
+        raise NotImplementedError
+
+    def setSetting(self, component_name, key, value):
+        raise NotImplementedError
+
 
 class SettingsLoader(IBOSettingsLoader):
-    __slots__ = ('configName', 'load_json', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog')
+    __slots__ = ('configName', 'load_json', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog',
+                 '__fini_update', 'onOtherConfigReadComplete')
     logger = dependency.descriptor(IALogger)
 
     def __init__(self, settings, errorDialog):
+        self.logger.logInfo('Initializing SettingsLoader')
+        self.onOtherConfigReadComplete = Event()
         self.__settings = settings
         self.error_dialog = errorDialog
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
         self.configName = self.configsList[0] if self.configsList else 'default'
         self.load_json = os.path.join(currentConfigPath, 'load.json')
         self.error_dialog.init()
+        self.__fini_update = set()
         self.readConfig()
 
     def fini(self):
@@ -63,19 +71,30 @@ class SettingsLoader(IBOSettingsLoader):
         self.error_dialog = None
         if self.__settings.main[MAIN.AUTO_CLEAR_CACHE]:
             clearClientCache()
+        self.iterateSettings(self.updateConfigFile, self.__fini_update)
         self.__settings = None
+        self.__fini_update.clear()
+        self.onOtherConfigReadComplete.clear()
+        self.onOtherConfigReadComplete = None
+        self.logger.logInfo('Finished SettingsLoader')
 
     @property
     def settings(self):
         return self.__settings
 
-    def readOtherConfig(self, configID):
-        if self.configName != self.configsList[configID]:
+    def addToFiniUpdate(self, component_name):
+        self.__fini_update.add(component_name)
+
+    def readOtherConfig(self, configID, reloadConfig=False):
+        if self.configName != self.configsList[configID] or reloadConfig:
+            self.iterateSettings(self.updateConfigFile, self.__fini_update)
+            self.__fini_update.clear()
             self.configName = self.configsList[configID]
-            self.createLoadJSON(self.configName)
-        self.readConfig()
-        self.updateAllSettings()
-        return configID
+            if not reloadConfig:
+                self.createLoadJSON(self.configName)
+            self.readConfig()
+            self.logger.logDebug('SettingsLoader: readOtherConfig={} reload={}', self.configName, reloadConfig)
+            self.onOtherConfigReadComplete(configID)
 
     def createLoadJSON(self, configName):
         writeJsonFile(self.load_json, {'loadConfig': configName})
@@ -83,8 +102,6 @@ class SettingsLoader(IBOSettingsLoader):
     def updateConfigFile(self, name, data):
         path = os.path.join(currentConfigPath, self.configName, JSON.format(name))
         writeJsonFile(path, data)
-        if name == MAIN.NAME and self.logger.set_debug(data[MAIN.DEBUG]):
-            printDebuginfo()
 
     @staticmethod
     def isEqualType(data1, data2):
@@ -120,13 +137,13 @@ class SettingsLoader(IBOSettingsLoader):
                 internal_cfg[key] = new_param
         return update
 
-    def iterateSettings(self, callback):
+    def iterateSettings(self, callback, components):
         """Process all settings using the provided callback function"""
-        for component_name in LOAD_LIST:
-            config = getattr(self.__settings, component_name)
-            if config is None:
+        for component_name in components:
+            component = self.getComponentDict(component_name)
+            if not component:
                 continue
-            callback(component_name, config)
+            callback(component_name, component)
 
     def readConfig(self):
         """Load user configuration"""
@@ -134,7 +151,7 @@ class SettingsLoader(IBOSettingsLoader):
         try:
             data = openJsonFile(self.load_json)
         except Exception as error:
-            self.logger.logError("Error in openJsonFile: {}", repr(error))
+            self.logger.logError("Error in openJsonFile: {}", str(error))
             self.createLoadJSON(self.configName)
             self.error_dialog.add('NEW CONFIGURATION FILE load.json IS CREATED for {}'.format(self.configName))
             if self.configName not in self.configsList:
@@ -147,13 +164,13 @@ class SettingsLoader(IBOSettingsLoader):
             self.error_dialog.add('CONFIGURATION FOLDER {} IS NOT FOUND, CREATE NEW'.format(self.configName))
 
         self.logger.logInfo("LOADING USER CONFIGURATION: {}", self.configName.upper())
-        self.iterateSettings(self.loadConfigPart)
+        self.iterateSettings(self.loadConfigPart, LOAD_LIST)
         self.logger.logInfo("LOADING '{}' CONFIGURATION COMPLETED", self.configName.upper())
 
     def handleModSettingsChangedEvent(self):
         """Update all configuration settings"""
         self.logger.logInfo('HANDLE MOD SETTINGS CHANGED EVENT')
-        self.iterateSettings(g_events.onModSettingsChanged)
+        self.iterateSettings(g_events.onModSettingsChanged, LOAD_LIST)
 
     def loadConfigPart(self, component_name, config):
         """Read settings part file from JSON"""
@@ -161,7 +178,7 @@ class SettingsLoader(IBOSettingsLoader):
         file_path = os.path.join(currentConfigPath, self.configName, file_name)
         try:
             file_data = openJsonFile(file_path)
-        except IOError as error:
+        except IOError:
             writeJsonFile(file_path, config)
         except Exception as error:
             error_message = READ_MESSAGE.format(file_name, str(error))
@@ -176,24 +193,31 @@ class SettingsLoader(IBOSettingsLoader):
 
     def getSettingDictByAliasBattle(self, alias):
         # type: (str) -> dict
-        return getattr(self.__settings, ALIAS_TO_CONFIG_NAME_BATTLE.get(alias, GLOBAL.EMPTY_LINE), {})
+        return self.getComponentDict(ALIAS_TO_CONFIG_NAME_BATTLE.get(alias, GLOBAL.EMPTY_LINE))
 
     def getSettingDictByAliasLobby(self, alias):
         # type: (str) -> dict
-        return getattr(self.__settings, ALIAS_TO_CONFIG_NAME_LOBBY.get(alias, GLOBAL.EMPTY_LINE), {})
+        return self.getComponentDict(ALIAS_TO_CONFIG_NAME_LOBBY.get(alias, GLOBAL.EMPTY_LINE))
+
+    def getComponentDict(self, component_name):
+        component = getattr(self.__settings, component_name, {})
+        if not component:
+            self.logger.logError("AttributeError: Component * {} * not found in settings", component_name)
+        return component
 
     def getSetting(self, component_name, key=None):
-        component = getattr(self.__settings, component_name, None)
-        if component is None:
-            err = AttributeError("Component {} not found in settings".format(component_name))
-            self.logger.logError("{}: {}", type(err).__name__, err)
-            return component
-
-        if key is None:
+        component = self.getComponentDict(component_name)
+        if not component or key is None:
             return component
 
         param = component.get(key)
         if param is None:
-            err = KeyError("Parameter {} not found in {}".format(key, component_name))
-            self.logger.logError("{}: {}", type(err).__name__, err)
+            self.logger.logError("KeyError: Parameter {} not found in {}", key, component_name)
+        if isinstance(param, bool):
+            param = component.get(GLOBAL.ENABLED, True) and param
         return param
+
+    def setSetting(self, component_name, key, value):
+        component = self.getComponentDict(component_name)
+        component[key] = value
+        self.addToFiniUpdate(component_name)

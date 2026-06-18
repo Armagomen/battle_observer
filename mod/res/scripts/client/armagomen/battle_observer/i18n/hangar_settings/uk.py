@@ -32,7 +32,7 @@ localization = {
         "selector": "Обрати конфігурацію:",
         "donate_button_ua": "Donate",
         "discord_button": "Discord-сервер модифікації",
-        "reload_config": "Перезавантажити конфігурацію",
+        "reload_config": "reload files",
     },
     "main": {
         "header": "Налаштування без категорії",

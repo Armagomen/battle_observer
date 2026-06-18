@@ -124,7 +124,7 @@ class DispersionCircle(object):
 
     @staticmethod
     def toggleLimiter(enable):
-        aih_constants.GUN_MARKER_MIN_SIZE = 16.0 if enable else 32.0
+        aih_constants.GUN_MARKER_MIN_SIZE = 16.0 if enable else 30.0
         aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0 if enable else 40.0
 
     def onModSettingsChanged(self, name, data):

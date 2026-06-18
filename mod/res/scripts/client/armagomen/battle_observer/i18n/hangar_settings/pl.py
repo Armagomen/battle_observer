@@ -32,7 +32,7 @@ localization = {
         "selector": "Wybierz konfigurację:",
         "donate_button_ua": "Donate",
         "discord_button": "Serwer Discord modyfikacji",
-        "reload_config": "Przeładuj ustawienia"
+        "reload_config": "reload files"
     },
     "main": {
         "header": "Ustawienia ogólne",

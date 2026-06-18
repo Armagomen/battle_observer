@@ -32,7 +32,7 @@ localization = {
         "selector": "Config",
         "donate_button_ua": "Donate",
         "discord_button": "Discord support & chat",
-        "reload_config": "Reload config files",
+        "reload_config": "reload files",
     },
     "main": {
         "header": "Settings without category",

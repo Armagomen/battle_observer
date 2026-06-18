@@ -26,6 +26,8 @@ package net.armagomen.battle_observer.battle.components
 		private var statisticsLoaded:Boolean  = false;
 		private var holdersCache:Array        = new Array();
 		
+		public var getVehicleClassColors:Function;
+		
 		private static const DEAD_ALT_TEXT_ALPHA:Number = 0.7;
 		
 		public function StatisticsAndIcons()
@@ -42,12 +44,11 @@ package net.armagomen.battle_observer.battle.components
 				this.holdersCache[1] = new Dictionary();
 				
 				var settings:Object = this.getSettings();
-				var colors:Object = this.getColors();
 				this.panels = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 				this.battleLoading = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
 				this.panels.stage.frameRate = 30;
 				this.fullStats = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
-				this.setIconColorsCache(colors["vehicle_types_colors"]);
+				this.setIconColorsCache(this.getVehicleClassColors());
 				this.iconMultiplier = settings["icons_blackout"];
 				this.iconsEnabled = settings["icons"];
 				this.cutWidth = settings["statistics_panels_cut_width"];
