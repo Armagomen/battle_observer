@@ -113,7 +113,7 @@ class ExcludedMapsProcessor(object):
     def __showDialog(self, message):
         current_time = datetime.now()
         if self.timeDelta is None or current_time >= self.timeDelta:
-            self.timeDelta = current_time + timedelta(minutes=10)
+            self.timeDelta = current_time + timedelta(minutes=30)
             self.__dialog = ExcludedMapsDialog()
             dialog = yield wg_await(self.__dialog.show(EXCLUDED_MAPS_BY_LANG[EXCLUDED_MAPS.HEADER], message))
             if dialog.result == DialogButtons.RESEARCH:
