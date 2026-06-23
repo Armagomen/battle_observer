@@ -237,6 +237,7 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Nie wychodź z trybu przy magazynowym systemie ładowania",
         "dynamic_zoom": "Automatyczny wybór powiększenia",
         "dynamic_zoom_tooltip": "Funkcja ignoruje ustawienie stałe. Powiększenie zależy od odległości do celu podzielonej przez czułość.",
+        "dynamic_zoom_sensitivity": "Czułość dynamicznego powiększenia w metrach.",
         "steps_enabled": "Rozszerz standardowe stopnie przybliżenia",
         "steps_range": "Poziomy zoomu",
         "steps_range_tooltip": "Określ zakres, w którym będą generowane wartości z krokiem 2.",

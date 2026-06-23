@@ -126,7 +126,8 @@ class SettingsData(object):
             SNIPER.SKIP_CLIP: True,
             SNIPER.DYN_ZOOM: False,
             SNIPER.ZOOM_STEPS: False,
-            SNIPER.STEPS: SNIPER.DEFAULT_STEPS
+            SNIPER.STEPS: SNIPER.DEFAULT_STEPS,
+            SNIPER.DYN_ZOOM_SENSITIVITY: 18.0
         }
 
         self.arcade_camera = {

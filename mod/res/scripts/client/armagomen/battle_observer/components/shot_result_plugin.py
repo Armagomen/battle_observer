@@ -222,6 +222,8 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
         prebattleCtrl = self.sessionProvider.dynamic.prebattleSetup
         if prebattleCtrl is not None:
             prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
+        self.__player = None
+        self.__resolver = None
 
     def __updateCurrVehicleInfo(self, vehicle):
         if not avatar_getter.isObserver(self.__player) and vehicle is not None:

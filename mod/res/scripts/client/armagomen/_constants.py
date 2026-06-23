@@ -116,10 +116,10 @@ CLOCK = namedtuple("CLOCK", (
 
 __Sniper = namedtuple("SNIPER", (
     "NAME", "DYN_ZOOM", "ZOOM_STEPS", "STEPS", "ZOOM_EXPOSURE", "DEFAULT_STEPS",
-    "MAX_CALIBER", "DISABLE_SNIPER", "DISABLE_LATENCY", "SKIP_CLIP"))
+    "MAX_CALIBER", "DISABLE_SNIPER", "DISABLE_LATENCY", "SKIP_CLIP", "DYN_ZOOM_SENSITIVITY"))
 SNIPER = __Sniper(
     "zoom", "dynamic_zoom", "steps_enabled", "steps_range", "zoomExposure", map(float, range(2, 34, 2)),
-    60, "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip")
+    60, "disable_cam_after_shot", "disable_cam_after_shot_latency", "disable_cam_after_shot_skip_clip", "dynamic_zoom_sensitivity")
 
 
 class DAMAGE_LOG:
@@ -317,7 +317,8 @@ class CONFIG_INTERFACE:
         },
         SNIPER.NAME: {
             SNIPER.ZOOM_STEPS: (SNIPER.STEPS,),
-            SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY)
+            SNIPER.DISABLE_SNIPER: (SNIPER.SKIP_CLIP, SNIPER.DISABLE_LATENCY),
+            SNIPER.DYN_ZOOM : (SNIPER.DYN_ZOOM_SENSITIVITY, )
         },
         TEAM_BASES.NAME: {
             'outline*enabled': ('outline*color',)

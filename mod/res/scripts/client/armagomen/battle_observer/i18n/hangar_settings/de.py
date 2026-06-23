@@ -244,6 +244,7 @@ localization = {
         "disable_cam_after_shot_skip_clip": "Nicht verlassen, wenn Magazinladesystem aktiv ist",
         "dynamic_zoom": "Automatischer Zoomstufen-Wähler",
         "dynamic_zoom_tooltip": "Bei aktivierter Funktion wird <b>die feste Einstellung</b> ignoriert. Die Zoomstufe wird automatisch anhand der Entfernung zum Ziel (in Metern) geteilt durch die Empfindlichkeit gewählt.<br>",
+        "dynamic_zoom_sensitivity": "Dynamische Zoom-Empfindlichkeit in Metern.",
         "steps_enabled": "Standardmäßige Zoom-Schritte erweitern",
         "steps_range": "Zoomstufen-Schritte",
         "steps_range_tooltip": "Geben Sie den Bereich an, in dem Werte mit Schrittweite 2 erstellt werden.",

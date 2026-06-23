@@ -138,7 +138,7 @@ class SettingsLoader(IBOSettingsLoader):
         return update
 
     def iterateSettings(self, callback, components):
-        """Process all settings using the provided callback function"""
+        """Process list of components using the provided callback function"""
         for component_name in components:
             component = self.getComponentDict(component_name)
             if not component:
@@ -179,14 +179,14 @@ class SettingsLoader(IBOSettingsLoader):
         try:
             file_data = openJsonFile(file_path)
         except IOError:
-            writeJsonFile(file_path, config)
+            self.addToFiniUpdate(component_name)
         except Exception as error:
             error_message = READ_MESSAGE.format(file_name, str(error))
             if self.error_dialog:
                 self.error_dialog.add(error_message)
         else:
             if self.updateData(file_data, config):
-                writeJsonFile(file_path, config)
+                self.addToFiniUpdate(component_name)
             self.logger.logInfo(READ_MESSAGE, self.configName, file_name)
             if component_name == MAIN.NAME and self.logger.set_debug(config[MAIN.DEBUG]):
                 printDebuginfo()
