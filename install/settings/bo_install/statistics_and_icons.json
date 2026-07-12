@@ -1,0 +1,22 @@
+{
+  "enabled": false, 
+  "icons": false, 
+  "icons_blackout": -1.25, 
+  "statistics": false, 
+  "statistics_colors": {
+    "bad": "#FE7B23", 
+    "good": "#88D957", 
+    "normal": "#F5F373", 
+    "unique": "#A874BE", 
+    "very_bad": "#FD5F54", 
+    "very_good": "#44DBCB"
+  }, 
+  "statistics_panels_cut_width": 60, 
+  "statistics_panels_full_width": 160, 
+  "statistics_pattern_cut_left": "<b><font color='%(color)s'>%(nickname).10s</font></b>", 
+  "statistics_pattern_cut_right": "<b><font color='%(color)s'>%(nickname).10s</font></b>", 
+  "statistics_pattern_full_left": "<b><font color='%(color)s'>%(rating)d | %(battles)s | %(nickname).10s</font>%(clanTag)s</b>", 
+  "statistics_pattern_full_right": "<b>%(clanTag)s<font color='%(color)s'>%(nickname).10s | %(battles)s | %(rating)d</font></b>", 
+  "statistics_vehicle_name_color": true,
+  "statistics_use_new_WTR": true
+}

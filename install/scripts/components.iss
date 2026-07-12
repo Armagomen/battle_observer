@@ -472,7 +472,7 @@ procedure ChangeStatisticsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\statistics.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\statistics_and_icons.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('statistics'));

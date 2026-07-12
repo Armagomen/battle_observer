@@ -360,5 +360,5 @@ class SettingsData(object):
                 "very_good": "#44DBCB"
             },
             STATISTICS.ICON_ENABLED: False,
-            STATISTICS.ICON_BLACKOUT: -1.25,
+            STATISTICS.ICON_BLACKOUT: -1.25
         }
