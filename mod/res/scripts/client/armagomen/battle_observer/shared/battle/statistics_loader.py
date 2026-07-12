@@ -50,6 +50,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
 
     def __init__(self):
         super(StatisticsDataLoader, self).__init__()
+        self.logger.logInfo("Initializing StatisticsDataLoader")
         self.onDataResponse = SafeEvent()
         self._load_try = 0
         self.enabled = WTR_REGION is not None
@@ -58,6 +59,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
     def fini(self):
         self.__cached_vehicles.clear()
         self.onDataResponse.clear()
+        self.logger.logInfo("Finished StatisticsDataLoader")
 
     def __onInfoResponse(self, response, DBIDs):
         if response.responseCode == 304:
