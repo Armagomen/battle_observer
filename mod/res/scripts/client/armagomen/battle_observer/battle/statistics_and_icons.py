@@ -19,14 +19,14 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
 
     def __init__(self):
         super(StatisticsAndIcons, self).__init__()
-        self.useWTR = True
+        self.useWTR = self.settingsLoader.getSetting(STATISTICS.NAME, STATISTICS.USE_WTR)
         self._format = {True: "{:.1f}{}", False: "{:.0f}{}"}
         self.__addedVehicles = set()
         self.__sentVehicles = set()
         self.__callback = None
 
         self.ranges_WGR = ((0, "very_bad"), (3500, "bad"), (5300, "normal"), (7400, "good"), (9700, "very_good"), (11000, "unique"))
-        self.ranges_WTR = ((0, "very_bad"), (2700, "bad"), (4800, "normal"), (6200, "good"), (8000, "very_good"), (9900, "unique"))
+        self.ranges_WTR = ((0, "very_bad"), (3100, "bad"), (4700, "normal"), (6700, "good"), (9200, "very_good"), (10900, "unique"))
 
     @property
     def statisticsEnabled(self):
@@ -41,7 +41,6 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
                 {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
                  if vInfo.player.accountDBID and not vInfo.isObserver()}
             )
-            self.useWTR = self.settings[STATISTICS.USE_WTR]
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:
@@ -77,6 +76,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         BigWorld.callback(0.1, lambda: self.as_updateByVehicleID(vehicleID))
 
     def onAddedUpdatedDelay(self):
+        self.__callback = None
         to_request = self.__addedVehicles - self.__sentVehicles
         self.statisticsLoader.requestStatisticsFromApi({str(k) for k in to_request})
         self.__sentVehicles.update(to_request)
@@ -125,7 +125,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         return self.DEFAULT_COLOR
 
     def buildItemData(self, player, data):
-        rating = data["rating"] if self.useWTR else data["global_rating"]
+        rating = data["rating" if self.useWTR else "global_rating"]
         return {
             "rating": rating,
             "color": self.__getColor(rating),
