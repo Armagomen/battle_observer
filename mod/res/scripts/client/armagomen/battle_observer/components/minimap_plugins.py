@@ -3,10 +3,11 @@ from math import degrees
 from armagomen import IALogger
 from armagomen._constants import GLOBAL, MINIMAP
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.utils.common import IS_XVM_INSTALLED, overrideMethod
+from armagomen.utils.common import IS_XVM_INSTALLED, overrideMethod, toggleOverride
 from constants import ARENA_GUI_TYPE, VISIBILITY
 from gui.Scaleform.daapi.view.battle.shared.minimap import plugins
 from gui.Scaleform.daapi.view.battle.shared.minimap.component import MinimapComponent
+from gui.Scaleform.daapi.view.battle.shared.minimap.entries import VehicleEntry
 from gui.Scaleform.daapi.view.battle.shared.minimap.settings import CONTAINER_NAME
 from helpers import dependency
 
@@ -37,6 +38,19 @@ class ArenaVehiclesPlugin(plugins.ArenaVehiclesPlugin):
     def __init__(self, *args, **kwargs):
         super(ArenaVehiclesPlugin, self).__init__(*args, **kwargs)
         self.__showDestroyNames = self.settingsLoader.getSetting(MINIMAP.NAME, MINIMAP.SHOW_NAMES)
+
+    def start(self):
+        super(ArenaVehiclesPlugin, self).start()
+        toggleOverride(VehicleEntry, "updatePosition", self.entryUpdatePosition, True)
+
+    def stop(self):
+        toggleOverride(VehicleEntry, "updatePosition", self.entryUpdatePosition, False)
+        super(ArenaVehiclesPlugin, self).stop()
+
+    @staticmethod
+    def entryUpdatePosition(base, entry, position):
+        if entry.isAlive():
+            base(entry, position)
 
     def isAlive(self, vehicleID):
         return self._arenaDP.getVehicleInfo(vehicleID).isAlive()

@@ -8,4 +8,8 @@ class StatisticsAndIconsMeta(BaseModMeta):
 
     def as_updateByVehicleID(self, vehicleID, isEnemy):
         if self._isDAAPIInited():
-            self.flashObject.updateByVehicleID(vehicleID, isEnemy)
+            self.flashObject.as_updateByVehicleID(vehicleID, isEnemy)
+
+    def as_updateALL(self, *args):
+        if self._isDAAPIInited():
+            self.flashObject.as_updateALL()

@@ -17,7 +17,6 @@ package net.armagomen.battle_observer.battle.components
 	public class StatisticsAndIcons extends ObserverBattleDisplayable
 	{
 		private var battleLoading:* = null;
-		private var fullStats:* = null;
 		private var panels:* = null;
 		private var statisticsData:Dictionary = new Dictionary();
 		private var iconsEnabled:Boolean = false;
@@ -44,26 +43,24 @@ package net.armagomen.battle_observer.battle.components
 				var settings:Object = this.getSettings();
 				this.panels = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 				this.battleLoading = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
-				this.fullStats = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
 				this.setIconColorsCache(this.getVehicleClassColors());
 				this.iconMultiplier = settings["icons_blackout"];
 				this.iconsEnabled = settings["icons"];
 				this.cutWidth = settings["statistics_panels_cut_width"];
 				this.fullWidth = settings["statistics_panels_full_width"];
 				this.addListeners();
-				this.updateItems();
 			}
 		}
 		
 		private function addListeners():void
 		{
-			this.panels.addEventListener(Event.CHANGE, this.eventDelay, false, 0, true);
-			this.panels.addEventListener(MouseEvent.MOUSE_OVER, this.eventDelay, false, 0, true);
-			this.panels.addEventListener(MouseEvent.MOUSE_OUT, this.eventDelay, false, 0, true);
-			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.eventDelay, false, 0, true);
+			this.panels.addEventListener(Event.CHANGE, this.as_updateALL, false, 0, true);
+			this.panels.addEventListener(MouseEvent.MOUSE_OVER, this.as_updateALL, false, 0, true);
+			this.panels.addEventListener(MouseEvent.MOUSE_OUT, this.as_updateALL, false, 0, true);
+			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.as_updateALL, false, 0, true);
 			if (this.panels.listRight)
 			{
-				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.eventDelay, false, 0, true);
+				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.as_updateALL, false, 0, true);
 			}
 		}
 		
@@ -73,25 +70,24 @@ package net.armagomen.battle_observer.battle.components
 			App.utils.data.cleanupDynamicObject(this.statisticsData);
 			App.utils.data.cleanupDynamicObject(this.colorCache);
 			this.battleLoading = null;
-			this.fullStats = null;
 			this.panels = null;
 			super.onBeforeDispose();
 		}
 		
 		private function removeListeners():void
 		{
-			this.removeListener(this.panels, Event.CHANGE, this.eventDelay);
-			this.removeListener(this.panels, MouseEvent.MOUSE_OVER, this.eventDelay);
-			this.removeListener(this.panels, MouseEvent.MOUSE_OUT, this.eventDelay);
-			this.removeListener(this.panels, PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.eventDelay);
+			this.removeListener(this.panels, Event.CHANGE, this.as_updateALL);
+			this.removeListener(this.panels, MouseEvent.MOUSE_OVER, this.as_updateALL);
+			this.removeListener(this.panels, MouseEvent.MOUSE_OUT, this.as_updateALL);
+			this.removeListener(this.panels, PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.as_updateALL);
 			
 			if (this.panels.listRight)
 			{
-				this.removeListener(this.panels.listRight, PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.eventDelay);
+				this.removeListener(this.panels.listRight, PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.as_updateALL);
 			}
 		}
 		
-		private function eventDelay(e:*):void
+		public function as_updateALL(e:* = null):void
 		{
 			setTimeout(this.updateItems, 100, e);
 		}
@@ -127,27 +123,18 @@ package net.armagomen.battle_observer.battle.components
 			App.utils.data.cleanupDynamicObject(colors);
 		}
 		
-		private function updatePanelItems(items:*):void
-		{
-			if (items)
-			{
-				for each (var item:* in items)
-				{
-					var listItem:* = item._listItem;
-					listItem.playerNameCutTF.width = this.cutWidth;
-					listItem.setPlayerNameFullWidth(this.fullWidth);
-					
-					this.updateByVehicleID(item.vehicleData.vehicleID, listItem._isRightAligned);
-				}
-			}
-		}
-		
-		private function updateItems(eve:Event = null):void
+		private function updateItems(eve:* = null):void
 		{
 			var targetList:Array = eve && eve.type == PlayersPanelListEvent.ITEMS_COUNT_CHANGE ? [eve.target] : [this.panels.listLeft, this.panels.listRight];
 			for each (var list:* in targetList)
 			{
-				this.updatePanelItems(list._items);
+				for each (var item:* in list._items)
+				{
+					if (!item || !item._listItem) continue;
+					item._listItem.playerNameCutTF.width = this.cutWidth;
+					item._listItem.setPlayerNameFullWidth(this.fullWidth);
+					this.updateByItem(item, item._listItem._isRightAligned);
+				}
 			}
 		}
 		
@@ -183,22 +170,31 @@ package net.armagomen.battle_observer.battle.components
 			}
 		}
 		
-		public function updateByVehicleID(vehicleID:int, isEnemy:Boolean):void
+		public function as_updateByVehicleID(vehicleID:int, isEnemy:Boolean):void
 		{
-			var item:* = this.getPanelHolderByVehicleID(vehicleID, isEnemy)
-			if (!item) return;
-			var listItem:* = item._listItem;
+			setTimeout(this.updateByVehicleID, 100, vehicleID, isEnemy);
+		}
+		
+		private function updateByVehicleID(vehicleID:int, isEnemy:Boolean):void
+		{
+			var item:* = this.getPanelHolderByVehicleID(vehicleID, isEnemy);
+			this.updateByItem(item, isEnemy);
+		}
+		
+		private function updateByItem(item:*, isEnemy:Boolean):void
+		{
+			if (!item || !item._listItem) return;
 			if (this.iconsEnabled)
 			{
 				this.updateIconsVID(item, isEnemy);
 			}
-			if (this.statisticsLoaded && this.statisticsData[vehicleID])
+			if (this.statisticsLoaded && this.statisticsData[item.vehicleData.vehicleID])
 			{
-				this.updateStatisticsVID(item, isEnemy, this.statisticsData[vehicleID]);
+				this.updateStatisticsVID(item, isEnemy, this.statisticsData[item.vehicleData.vehicleID]);
 			}
-			if (!listItem.isAlive && listItem.playerNameFullTF.alpha != DEAD_ALT_TEXT_ALPHA)
+			if (!item._listItem.isAlive && item._listItem.playerNameFullTF.alpha != DEAD_ALT_TEXT_ALPHA)
 			{
-				listItem.playerNameFullTF.alpha = listItem.playerNameCutTF.alpha = listItem.vehicleTF.alpha = listItem.vehicleIcon.alpha = DEAD_ALT_TEXT_ALPHA;
+				item._listItem.playerNameFullTF.alpha = item._listItem.playerNameCutTF.alpha = item._listItem.vehicleTF.alpha = item._listItem.vehicleIcon.alpha = DEAD_ALT_TEXT_ALPHA;
 			}
 		}
 		

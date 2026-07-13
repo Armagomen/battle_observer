@@ -7,6 +7,8 @@ from armagomen.battle_observer.shared import IBOKeysListener, IStatisticsDataLoa
 from armagomen.utils.common import getGreatPercent, hexToInt
 from gui.shared import EVENT_BUS_SCOPE, events
 from helpers import dependency
+from Keys import KEY_LALT, KEY_LCONTROL, KEY_RALT, KEY_RCONTROL
+from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 
 WGR_RANGES = ((0, "very_bad"), (3500, "bad"), (5300, "normal"), (7400, "good"), (9700, "very_good"), (11000, "unique"))
 WTR_RANGES = ((0, "very_bad"), (3100, "bad"), (4700, "normal"), (6700, "good"), (9200, "very_good"), (10900, "unique"))
@@ -15,6 +17,7 @@ WTR_RANGES = ((0, "very_bad"), (3100, "bad"), (4700, "normal"), (6700, "good"), 
 class StatisticsAndIcons(StatisticsAndIconsMeta):
     statisticsLoader = dependency.descriptor(IStatisticsDataLoader)
     keysListener = dependency.descriptor(IBOKeysListener)
+    appLoader = dependency.descriptor(IAppLoader)
 
     DEFAULT_COLOR = "#fafafa"
     DEFAULT_WIN_RATE = 0.0
@@ -35,13 +38,14 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
 
     def _populate(self):
         super(StatisticsAndIcons, self)._populate()
-        self.keysListener.registerComponent(self.updateAll)
+        self.keysListener.registerComponent(self.as_updateALL, keyList={KEY_LALT, KEY_RALT, KEY_RCONTROL, KEY_LCONTROL})
         if self.statisticsEnabled:
             self.statisticsLoader.onDataResponse += self.onDataResponse
             self.statisticsLoader.requestStatisticsFromApi(
                 {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
                  if vInfo.player.accountDBID and not vInfo.isObserver()}
             )
+        self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:
@@ -50,20 +54,16 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
             arena.onVehicleStatisticsUpdate += self.onVehicleUpdate
             arena.onVehicleKilled += self.onVehicleUpdate
             arena.onAvatarReady += self.onVehicleUpdate
-            arena.onPeriodChange += self.updateAll
-            arena.onNewVehicleListReceived += self.updateAll
-        self.addListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.updateAll, scope=EVENT_BUS_SCOPE.BATTLE)
-        self.addListener(events.GameEvent.SHOW_EXTENDED_INFO, self.updateAll, scope=EVENT_BUS_SCOPE.BATTLE)
-        self.updateAll()
-
-    def updateAll(self, *args):
-        for vInfo in self._arenaDP.getVehiclesInfoIterator():
-            if not vInfo.isObserver():
-                self.onVehicleUpdate(vInfo.vehicleID)
+            arena.onPeriodChange += self.as_updateALL
+            arena.onNewVehicleListReceived += self.as_updateALL
+        self.addListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
+        self.addListener(events.GameEvent.SHOW_EXTENDED_INFO, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
+        self.as_updateALL()
 
     def _dispose(self):
         if self.statisticsEnabled:
             self.statisticsLoader.onDataResponse -= self.onDataResponse
+        self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:
@@ -72,15 +72,19 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
             arena.onVehicleStatisticsUpdate -= self.onVehicleUpdate
             arena.onVehicleKilled -= self.onVehicleUpdate
             arena.onAvatarReady -= self.onVehicleUpdate
-            arena.onPeriodChange -= self.updateAll
-            arena.onNewVehicleListReceived -= self.updateAll
-        self.removeListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.updateAll, scope=EVENT_BUS_SCOPE.BATTLE)
-        self.removeListener(events.GameEvent.SHOW_EXTENDED_INFO, self.updateAll, scope=EVENT_BUS_SCOPE.BATTLE)
+            arena.onPeriodChange -= self.as_updateALL
+            arena.onNewVehicleListReceived -= self.as_updateALL
+        self.removeListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
+        self.removeListener(events.GameEvent.SHOW_EXTENDED_INFO, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
         super(StatisticsAndIcons, self)._dispose()
+
+    def onGUISpaceEntered(self, spaceID):
+        if spaceID == GuiGlobalSpaceID.BATTLE:
+            self.as_updateALL()
 
     def onVehicleUpdate(self, vehicleID, *args):
         isEnemy = self.getVehicleInfo(vehicleID).team != BigWorld.player().team
-        BigWorld.callback(0.1, lambda: self.as_updateByVehicleID(vehicleID, isEnemy))
+        self.as_updateByVehicleID(vehicleID, isEnemy)
 
     def onAddedUpdatedDelay(self):
         self.__callback = None
@@ -97,7 +101,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
                     BigWorld.cancelCallback(self.__callback)
                 self.__addedVehicles.add(accountDBID)
                 self.__callback = BigWorld.callback(2.0, self.onAddedUpdatedDelay)
-        if vInfo.vehicleType:
+        if vInfo.vehicleType and not vInfo.isObserver():
             self.onVehicleUpdate(vehicleID)
 
     def getPattern(self, isEnemy, itemData):
@@ -119,7 +123,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
             itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
         if itemsData:
             self.as_update_wgr_dataS(itemsData)
-            self.updateAll()
+            self.as_updateALL()
 
     def __battlesFormat(self, battles):
         magnitude = int(floor(log(battles, self.K)))
