@@ -350,7 +350,11 @@ def colorToHex(color):
 def getPercent(param_a, param_b):
     if param_b <= 0 or param_a <= 0:
         return 0.0
-    return float(max(0.0, param_a)) / param_b
+    return float(param_a) / param_b
+
+
+def getGreatPercent(param_a, param_b):
+    return int(round(getPercent(param_a, param_b) * 100))
 
 
 def getEncoding():

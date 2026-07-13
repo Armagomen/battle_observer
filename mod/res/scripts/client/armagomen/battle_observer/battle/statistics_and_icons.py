@@ -4,8 +4,12 @@ import BigWorld
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.meta.battle.statistics_and_icons_meta import StatisticsAndIconsMeta
 from armagomen.battle_observer.shared import IBOKeysListener, IStatisticsDataLoader
-from armagomen.utils.common import hexToInt
+from armagomen.utils.common import getGreatPercent, hexToInt
+from gui.shared import EVENT_BUS_SCOPE, events
 from helpers import dependency
+
+WGR_RANGES = ((0, "very_bad"), (3500, "bad"), (5300, "normal"), (7400, "good"), (9700, "very_good"), (11000, "unique"))
+WTR_RANGES = ((0, "very_bad"), (3100, "bad"), (4700, "normal"), (6700, "good"), (9200, "very_good"), (10900, "unique"))
 
 
 class StatisticsAndIcons(StatisticsAndIconsMeta):
@@ -24,9 +28,6 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         self.__addedVehicles = set()
         self.__sentVehicles = set()
         self.__callback = None
-
-        self.ranges_WGR = ((0, "very_bad"), (3500, "bad"), (5300, "normal"), (7400, "good"), (9700, "very_good"), (11000, "unique"))
-        self.ranges_WTR = ((0, "very_bad"), (3100, "bad"), (4700, "normal"), (6700, "good"), (9200, "very_good"), (10900, "unique"))
 
     @property
     def statisticsEnabled(self):
@@ -51,6 +52,8 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
             arena.onAvatarReady += self.onVehicleUpdate
             arena.onPeriodChange += self.updateAll
             arena.onNewVehicleListReceived += self.updateAll
+        self.addListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.updateAll, scope=EVENT_BUS_SCOPE.BATTLE)
+        self.addListener(events.GameEvent.SHOW_EXTENDED_INFO, self.updateAll, scope=EVENT_BUS_SCOPE.BATTLE)
         self.updateAll()
 
     def updateAll(self, *args):
@@ -71,6 +74,8 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
             arena.onAvatarReady -= self.onVehicleUpdate
             arena.onPeriodChange -= self.updateAll
             arena.onNewVehicleListReceived -= self.updateAll
+        self.removeListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.updateAll, scope=EVENT_BUS_SCOPE.BATTLE)
+        self.removeListener(events.GameEvent.SHOW_EXTENDED_INFO, self.updateAll, scope=EVENT_BUS_SCOPE.BATTLE)
         super(StatisticsAndIcons, self)._dispose()
 
     def onVehicleUpdate(self, vehicleID, *args):
@@ -121,7 +126,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         return self._format[magnitude >= 1].format(battles / self.K ** magnitude, self.UNITS[magnitude])
 
     def __getColor(self, rating):
-        for value, colorName in reversed(self.ranges_WTR if self.useWTR else self.ranges_WGR):
+        for value, colorName in reversed(WTR_RANGES if self.useWTR else WGR_RANGES):
             if rating >= value:
                 return self.settings[STATISTICS.COLORS].get(colorName, self.DEFAULT_COLOR)
         return self.DEFAULT_COLOR
@@ -131,7 +136,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         return {
             "rating": rating,
             "color": self.__getColor(rating),
-            "winRate": float(data["wins"]) / data["battles"] * 100,
+            "winRate": getGreatPercent(data["wins"], data["battles"]),
             "battles": self.__battlesFormat(data["battles"]),
             "nickname": player.name,
             "clanTag": "[{}]".format(player.clanAbbrev) if player.clanAbbrev else ""

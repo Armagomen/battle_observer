@@ -1,6 +1,8 @@
 package net.armagomen.battle_observer.battle.components
 {
+	import flash.utils.setTimeout;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.ColorTransform;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -42,7 +44,6 @@ package net.armagomen.battle_observer.battle.components
 				var settings:Object = this.getSettings();
 				this.panels = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.PLAYERS_PANEL);
 				this.battleLoading = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
-				this.panels.stage.frameRate = 30;
 				this.fullStats = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FULL_STATS);
 				this.setIconColorsCache(this.getVehicleClassColors());
 				this.iconMultiplier = settings["icons_blackout"];
@@ -56,11 +57,13 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function addListeners():void
 		{
-			this.panels.addEventListener(Event.CHANGE, this.updateItems, false, 0, true);
-			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateItems, false, 0, true);
-			if (this.panels.listRight && !this.panels.listRight.hasEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE))
+			this.panels.addEventListener(Event.CHANGE, this.eventDelay, false, 0, true);
+			this.panels.addEventListener(MouseEvent.MOUSE_OVER, this.eventDelay, false, 0, true);
+			this.panels.addEventListener(MouseEvent.MOUSE_OUT, this.eventDelay, false, 0, true);
+			this.panels.addEventListener(PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.eventDelay, false, 0, true);
+			if (this.panels.listRight)
 			{
-				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateItems, false, 0, true);
+				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.eventDelay, false, 0, true);
 			}
 		}
 		
@@ -77,9 +80,20 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function removeListeners():void
 		{
-			this.removeListener(this.panels, Event.CHANGE, this.updateItems);
-			this.removeListener(this.panels, PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.updateItems);
-			this.removeListener(this.panels.listRight, PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateItems);
+			this.removeListener(this.panels, Event.CHANGE, this.eventDelay);
+			this.removeListener(this.panels, MouseEvent.MOUSE_OVER, this.eventDelay);
+			this.removeListener(this.panels, MouseEvent.MOUSE_OUT, this.eventDelay);
+			this.removeListener(this.panels, PlayersPanelEvent.ON_ITEMS_COUNT_CHANGE, this.eventDelay);
+			
+			if (this.panels.listRight)
+			{
+				this.removeListener(this.panels.listRight, PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.eventDelay);
+			}
+		}
+		
+		private function eventDelay(e:*):void
+		{
+			setTimeout(this.updateItems, 100, e);
 		}
 		
 		private function removeListener(target:*, type:String, listener:Function):void
@@ -119,12 +133,11 @@ package net.armagomen.battle_observer.battle.components
 			{
 				for each (var item:* in items)
 				{
-					var vehicleID:int = item.vehicleData.vehicleID;
 					var listItem:* = item._listItem;
 					listItem.playerNameCutTF.width = this.cutWidth;
 					listItem.setPlayerNameFullWidth(this.fullWidth);
 					
-					this.updateByVehicleID(vehicleID, listItem._isRightAligned);
+					this.updateByVehicleID(item.vehicleData.vehicleID, listItem._isRightAligned);
 				}
 			}
 		}
@@ -173,6 +186,7 @@ package net.armagomen.battle_observer.battle.components
 		public function updateByVehicleID(vehicleID:int, isEnemy:Boolean):void
 		{
 			var item:* = this.getPanelHolderByVehicleID(vehicleID, isEnemy)
+			if (!item) return;
 			var listItem:* = item._listItem;
 			if (this.iconsEnabled)
 			{
@@ -220,7 +234,7 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function getPanelHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
 		{
-			var list:* = isEnemy ? this.panels.listLeft : this.panels.listRight;
+			var list:* = isEnemy ? this.panels.listRight : this.panels.listLeft;
 			for each (var item:* in list._items)
 			{
 				if (item.vehicleData.vehicleID == vehicleID)
