@@ -7,21 +7,26 @@ from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import addCallback
 from Event import SafeEvent
 from helpers import dependency
-from realm import CURRENT_REALM
 from skeletons.gui.battle_session import IBattleSessionProvider
 from uilogging.core.core_constants import HTTP_OK_STATUS
 from wg_async import wg_async
 
-INFO_REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/info/?application_id={}".format(API_KEY),
-                "ASIA": "https://api.worldoftanks.asia/wot/account/info/?application_id={}".format(API_KEY),
-                "NA": "https://api.worldoftanks.com/wot/account/info/?application_id={}".format(API_KEY)}
 
-WTR_REGIONS = {"EU": "https://api.worldoftanks.eu/wot/account/wtr/?application_id={}".format(API_KEY),
-               "ASIA": "https://api.worldoftanks.asia/wot/account/wtr/?application_id={}".format(API_KEY),
-               "NA": "https://api.worldoftanks.com/wot/account/wtr/?application_id={}".format(API_KEY)}
+def get_urls():
+    from realm import CURRENT_REALM
+    realm_to_domain = {"EU": "eu", "ASIA": "asia", "NA": "com"}
+    domain = realm_to_domain.get(CURRENT_REALM)
+    if not domain:
+        return None, None
+    main = "https://api.worldoftanks.%s/wot/account/" % domain
+    info_url = main + ("info/?application_id=%s&account_id={}&extra=statistics.random&"
+                       "fields=statistics.random.wins,statistics.random.battles,global_rating") % API_KEY
+    wtr_url = main + "wtr/?application_id=%s&account_id={}&fields=rating" % API_KEY
+    return info_url, wtr_url
 
-INFO_REGION = INFO_REGIONS.get(CURRENT_REALM)
-WTR_REGION = WTR_REGIONS.get(CURRENT_REALM)
+
+INFO_URL, WTR_URL = get_urls()
+SEPARATOR = ","
 
 
 class IStatisticsDataLoader(object):
@@ -29,32 +34,24 @@ class IStatisticsDataLoader(object):
     def requestStatisticsFromApi(self, DBIDs):
         raise NotImplementedError
 
-    def init(self):
-        pass
-
     def fini(self):
         pass
-
-    def updateList(self, vehicleID):
-        raise NotImplementedError
 
 
 class StatisticsDataLoader(IStatisticsDataLoader):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     logger = dependency.descriptor(IALogger)
 
-    SEPARATOR = ","
-
-    INFO_URL = str(INFO_REGION) + "&account_id={}&extra=statistics.random&fields=statistics.random.wins,statistics.random.battles,global_rating"
-    WTR_URL = str(WTR_REGION) + "&account_id={}&fields=rating"
-
     def __init__(self):
         super(StatisticsDataLoader, self).__init__()
         self.logger.logInfo("Initializing StatisticsDataLoader")
         self.onDataResponse = SafeEvent()
         self._load_try = 0
-        self.enabled = WTR_REGION is not None
         self.__cached_vehicles = defaultdict(dict)
+
+    @property
+    def enabled(self):
+        return INFO_URL is not None
 
     def fini(self):
         self.__cached_vehicles.clear()
@@ -99,7 +96,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
         if self._load_try < 6:
             self._load_try += 1
             self.logger.logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
-            addCallback(5.0, lambda: method(DBIDs))
+            addCallback(5.0, method, DBIDs)
 
     def requestStatisticsFromApi(self, DBIDs):
         loaded = set()
@@ -117,10 +114,10 @@ class StatisticsDataLoader(IStatisticsDataLoader):
 
     @wg_async
     def requestWTR(self, DBIDs):
-        response = yield async_url_request(self.WTR_URL.format(self.SEPARATOR.join(DBIDs)))
+        response = yield async_url_request(WTR_URL.format(SEPARATOR.join(DBIDs)))
         self.__onWTRResponse(response, DBIDs)
 
     @wg_async
     def requestInfo(self, DBIDs):
-        response = yield async_url_request(self.INFO_URL.format(self.SEPARATOR.join(DBIDs)))
+        response = yield async_url_request(INFO_URL.format(SEPARATOR.join(DBIDs)))
         self.__onInfoResponse(response, DBIDs)

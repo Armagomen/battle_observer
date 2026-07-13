@@ -6,6 +6,6 @@ class StatisticsAndIconsMeta(BaseModMeta):
         if self._isDAAPIInited():
             self.flashObject.as_update_wgr_data(itemsData)
 
-    def as_updateByVehicleID(self, vehicleID):
+    def as_updateByVehicleID(self, vehicleID, isEnemy):
         if self._isDAAPIInited():
-            self.flashObject.updateByVehicleID(vehicleID)
+            self.flashObject.updateByVehicleID(vehicleID, isEnemy)

@@ -24,7 +24,6 @@ package net.armagomen.battle_observer.battle.components
 		private var fullWidth:Number = 150.0;
 		private var colorCache:Dictionary = new Dictionary();
 		private var statisticsLoaded:Boolean = false;
-		private var holdersCache = new Dictionary();
 		
 		public var getVehicleClassColors:Function;
 		
@@ -68,7 +67,6 @@ package net.armagomen.battle_observer.battle.components
 		override protected function onBeforeDispose():void
 		{
 			this.removeListeners();
-			App.utils.data.cleanupDynamicObject(this.holdersCache);
 			App.utils.data.cleanupDynamicObject(this.statisticsData);
 			App.utils.data.cleanupDynamicObject(this.colorCache);
 			this.battleLoading = null;
@@ -125,8 +123,8 @@ package net.armagomen.battle_observer.battle.components
 					var listItem:* = item._listItem;
 					listItem.playerNameCutTF.width = this.cutWidth;
 					listItem.setPlayerNameFullWidth(this.fullWidth);
-					this.holdersCache[vehicleID] = this.getLoadingHolderByVehicleID(vehicleID, listItem._isRightAligned);
-					this.updateByVehicleID(vehicleID);
+					
+					this.updateByVehicleID(vehicleID, listItem._isRightAligned);
 				}
 			}
 		}
@@ -172,17 +170,17 @@ package net.armagomen.battle_observer.battle.components
 			}
 		}
 		
-		public function updateByVehicleID(vehicleID:int):void
+		public function updateByVehicleID(vehicleID:int, isEnemy:Boolean):void
 		{
-			var item:* = this.getPanelHolderByVehicleID(vehicleID)
+			var item:* = this.getPanelHolderByVehicleID(vehicleID, isEnemy)
 			var listItem:* = item._listItem;
 			if (this.iconsEnabled)
 			{
-				this.updateIconsVID(item, this.holdersCache[vehicleID]);
+				this.updateIconsVID(item, isEnemy);
 			}
 			if (this.statisticsLoaded && this.statisticsData[vehicleID])
 			{
-				this.updateStatisticsVID(item, this.holdersCache[vehicleID], this.statisticsData[vehicleID]);
+				this.updateStatisticsVID(item, isEnemy, this.statisticsData[vehicleID]);
 			}
 			if (!listItem.isAlive && listItem.playerNameFullTF.alpha != DEAD_ALT_TEXT_ALPHA)
 			{
@@ -190,23 +188,27 @@ package net.armagomen.battle_observer.battle.components
 			}
 		}
 		
-		
-		private function updateIconsVID(item:*, loadingHolder:*):void
+		private function updateIconsVID(item:*, isEnemy:Boolean):void
 		{
 			this.updateVehicleIconColor(item._listItem.vehicleIcon, item.vehicleData.vehicleType);
-			if (this.battleLoading.visible && loadingHolder && loadingHolder._vehicleIcon)
+			if (this.battleLoading.visible)
 			{
-				this.updateVehicleIconColor(loadingHolder._vehicleIcon, loadingHolder.model.vehicleType);
+				var loadingHolder:* = this.getLoadingHolderByVehicleID(item.vehicleData.vehicleID, isEnemy);
+				if (loadingHolder && loadingHolder._vehicleIcon)
+				{
+					this.updateVehicleIconColor(loadingHolder._vehicleIcon, loadingHolder.model.vehicleType);
+				}
 			}
 		}
 		
-		private function updateStatisticsVID(item:*, loadingHolder:*, data:Object):void
+		private function updateStatisticsVID(item:*, isEnemy:Boolean, data:Object):void
 		{
 			this.setVehicleTextColor(item._listItem.vehicleTF, data.vehicleTextColor);
 			this.updateHtmlText(item._listItem.playerNameFullTF, data.fullName);
 			this.updateHtmlText(item._listItem.playerNameCutTF, data.cutName);
-			if (this.battleLoading.visible && loadingHolder)
+			if (this.battleLoading.visible)
 			{
+				var loadingHolder:* = this.getLoadingHolderByVehicleID(item.vehicleData.vehicleID, isEnemy);
 				this.updateAutoSize(loadingHolder._textField, loadingHolder._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT)
 				this.updateHtmlText(loadingHolder._textField, data.fullName);
 				if (loadingHolder._vehicleField)
@@ -216,22 +218,18 @@ package net.armagomen.battle_observer.battle.components
 			}
 		}
 		
-		
-		private function getPanelHolderByVehicleID(vehicleID:int):*
+		private function getPanelHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
 		{
-			var targetList:Array = [this.panels.listLeft, this.panels.listRight];
-			for each (var list:* in targetList)
+			var list:* = isEnemy ? this.panels.listLeft : this.panels.listRight;
+			for each (var item:* in list._items)
 			{
-				for each (var item:* in list._items)
+				if (item.vehicleData.vehicleID == vehicleID)
 				{
-					if (item.vehicleData.vehicleID == vehicleID)
-					{
-						return item;
-					}
+					return item;
 				}
 			}
+			return null;
 		}
-		
 		
 		private function getLoadingHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
 		{

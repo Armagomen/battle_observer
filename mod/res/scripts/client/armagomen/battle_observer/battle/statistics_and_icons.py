@@ -55,7 +55,8 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
 
     def updateAll(self, *args):
         for vInfo in self._arenaDP.getVehiclesInfoIterator():
-            self.onVehicleUpdate(vInfo.vehicleID)
+            if not vInfo.isObserver():
+                self.onVehicleUpdate(vInfo.vehicleID)
 
     def _dispose(self):
         if self.statisticsEnabled:
@@ -73,7 +74,8 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         super(StatisticsAndIcons, self)._dispose()
 
     def onVehicleUpdate(self, vehicleID, *args):
-        BigWorld.callback(0.1, lambda: self.as_updateByVehicleID(vehicleID))
+        isEnemy = self.getVehicleInfo(vehicleID).team != BigWorld.player().team
+        BigWorld.callback(0.1, lambda: self.as_updateByVehicleID(vehicleID, isEnemy))
 
     def onAddedUpdatedDelay(self):
         self.__callback = None
@@ -82,7 +84,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         self.__sentVehicles.update(to_request)
 
     def onFogOfWarAddedUpdated(self, vehicleID):
-        vInfo = self._arenaDP.getVehicleInfo(vehicleID)
+        vInfo = self.getVehicleInfo(vehicleID)
         if self.statisticsEnabled:
             accountDBID = vInfo.player.accountDBID
             if accountDBID and accountDBID not in self.__addedVehicles and not vInfo.isObserver():
@@ -102,12 +104,12 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
     def onDataResponse(self, loadedData):
         itemsData = dict()
         for vehicle_id, value in loadedData.iteritems():
-            veh_info = self.getVehicleInfo(vehicle_id)
-            self.logger.logDebug("Statistics: player={}, value={}", veh_info.player.name, value)
+            vInfo = self.getVehicleInfo(vehicle_id)
+            self.logger.logDebug("Statistics: player={}, value={}", vInfo.player.name, value)
             if len(value) < 4:
                 continue
-            item_data = self.buildItemData(veh_info.player, value)
-            full, cut = self.getPattern(veh_info.isEnemy(), item_data)
+            item_data = self.buildItemData(vInfo.player, value)
+            full, cut = self.getPattern(vInfo.isEnemy(), item_data)
             text_color = hexToInt(item_data["color"]) if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else 0
             itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
         if itemsData:
