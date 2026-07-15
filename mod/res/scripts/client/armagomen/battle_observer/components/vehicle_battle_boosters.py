@@ -1,6 +1,6 @@
 from adisp import adisp_process
-from armagomen._constants import MAIN
 from armagomen import IALogger
+from armagomen._constants import MAIN
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import isSpecialBattleVehicle
 from armagomen.utils.events import g_events

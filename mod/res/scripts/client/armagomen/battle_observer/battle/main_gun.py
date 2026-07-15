@@ -1,8 +1,8 @@
 import math
 
 from armagomen._constants import MAIN_GUN
-from armagomen.battle_observer.shared import IBOPlayersDamageController
 from armagomen.battle_observer.meta.battle.main_gun_meta import MainGunMeta
+from armagomen.battle_observer.shared import IBOPlayersDamageController
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from helpers import dependency

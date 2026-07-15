@@ -1,6 +1,6 @@
+from armagomen import IALogger
 from armagomen._constants import BATTLE_ALIASES
 from armagomen.battle_observer.shared import IViewSettings
-from armagomen import IALogger
 from armagomen.utils.common import addCallback
 from frameworks.wulf import WindowLayer
 from gui.app_loader.settings import APP_NAME_SPACE

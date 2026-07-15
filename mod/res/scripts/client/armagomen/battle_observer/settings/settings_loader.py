@@ -49,16 +49,20 @@ class IBOSettingsLoader(object):
         raise NotImplementedError
 
 
+from .loading_error import ErrorMessages
+from .settings_data import SettingsData
+
+
 class SettingsLoader(IBOSettingsLoader):
     __slots__ = ('configName', 'load_json', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog',
                  '__fini_update', 'onOtherConfigReadComplete')
     logger = dependency.descriptor(IALogger)
 
-    def __init__(self, settings, errorDialog):
+    def __init__(self):
         self.logger.logInfo('Initializing SettingsLoader')
         self.onOtherConfigReadComplete = Event()
-        self.__settings = settings
-        self.error_dialog = errorDialog
+        self.__settings = SettingsData()
+        self.error_dialog = ErrorMessages()
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
         self.configName = self.configsList[0] if self.configsList else 'default'
         self.load_json = os.path.join(currentConfigPath, 'load.json')
@@ -211,7 +215,7 @@ class SettingsLoader(IBOSettingsLoader):
 
         param = component.get(key)
         if param is None:
-            self.logger.logError("KeyError: Parameter {} not found in {}", key, component_name)
+            self.logger.logError("KeyError: Parameter * {} * not found in * {} *", key, component_name)
         if isinstance(param, bool):
             param = component.get(GLOBAL.ENABLED, True) and param
         return param

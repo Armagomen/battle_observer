@@ -1,6 +1,6 @@
 from adisp import adisp_process
-from armagomen._constants import MAIN
 from armagomen import IALogger
+from armagomen._constants import MAIN
 from armagomen.utils.common import addCallback
 from armagomen.utils.events import g_events
 from gui import SystemMessages

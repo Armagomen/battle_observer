@@ -1,7 +1,7 @@
-from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, LOBBY_ALIASES
 from armagomen import IALogger
-from armagomen.battle_observer.shared.current_vehicle_data import IBOCurrentVehicleCachedData
+from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, LOBBY_ALIASES
 from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.shared.current_vehicle_data import IBOCurrentVehicleCachedData
 from armagomen.utils.events import g_events
 from frameworks.wulf import ViewModel
 from gui.impl.pub.view_component import ViewComponent

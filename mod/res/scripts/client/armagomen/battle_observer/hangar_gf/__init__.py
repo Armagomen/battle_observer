@@ -2,7 +2,7 @@ from armagomen import IALogger
 from armagomen.battle_observer.hangar_gf.date_times import DateTimesView
 from armagomen.battle_observer.hangar_gf.efficiency import HangarEfficiencyView
 from armagomen.battle_observer.hangar_gf.haeder import HeaderView
-from armagomen.utils.common import overrideMethod, safe_import
+from armagomen.utils.common import safe_import, toggleOverride
 from gui.impl.lobby.page.lobby_header import LobbyHeader
 from helpers import dependency
 from openwg_gameface import manager
@@ -18,7 +18,10 @@ class HangarGamefaceInject(object):
     ))
 
     def __init__(self):
-        overrideMethod(LobbyHeader, '_initChildren')(self.hooked_initChildren)
+        toggleOverride(LobbyHeader, '_initChildren', self.hooked_initChildren, True)
+
+    def fini(self):
+        toggleOverride(LobbyHeader, '_initChildren', self.hooked_initChildren, False)
 
     def _registerChild(self, child, baseView):
         try:

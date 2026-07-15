@@ -1,7 +1,7 @@
 from account_helpers.settings_core.settings_constants import ScorePanelStorageKeys
+from armagomen import IALogger
 from armagomen._constants import HP_BARS
 from armagomen.battle_observer.meta.battle.team_health_meta import TeamHealthMeta
-from armagomen import IALogger
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from helpers import dependency
 

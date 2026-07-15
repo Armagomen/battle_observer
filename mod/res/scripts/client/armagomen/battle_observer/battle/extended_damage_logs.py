@@ -1,9 +1,9 @@
 from collections import defaultdict, namedtuple
 
-from armagomen._constants import COLORS, DAMAGE_LOG, EX_LOGS_ICONS, GLOBAL, IMAGE_DIR
-from armagomen.battle_observer.shared import IBOKeysListener
-from armagomen.battle_observer.meta.battle.extended_damage_logs_meta import ExtendedDamageLogsMeta
 from armagomen import IALogger
+from armagomen._constants import COLORS, DAMAGE_LOG, EX_LOGS_ICONS, GLOBAL, IMAGE_DIR
+from armagomen.battle_observer.meta.battle.extended_damage_logs_meta import ExtendedDamageLogsMeta
+from armagomen.battle_observer.shared import IBOKeysListener
 from armagomen.utils.common import getPercent, percentToColor
 from constants import ATTACK_REASONS, BATTLE_LOG_SHELL_TYPES
 from gui.battle_control.avatar_getter import getVehicleTypeDescriptor

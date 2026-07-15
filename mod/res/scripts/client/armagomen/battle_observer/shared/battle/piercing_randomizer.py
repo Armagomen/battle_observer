@@ -3,7 +3,6 @@ from collections import defaultdict
 from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC, GLOBAL
 from constants import QUEUE_TYPE
-from CurrentVehicle import g_currentVehicle
 from gui.shared.gui_items import KPI
 from helpers import dependency
 from items.tankmen import getSkillsConfig
@@ -23,12 +22,14 @@ class PiercingRandomizer(IBOPiercingRandomizer):
     logger = dependency.descriptor(IALogger)
 
     DEFAULT_RANDOMIZATION = (0.75, 1.25)
+    QUEUE_TYPES = (QUEUE_TYPE.RANDOMS, QUEUE_TYPE.FUN_RANDOM, QUEUE_TYPE.UNKNOWN, QUEUE_TYPE.COMP7_LIGHT, QUEUE_TYPE.COMP7,
+                   QUEUE_TYPE.MAPS_TRAINING, QUEUE_TYPE.WINBACK)
     GUNNER_ARMORER = 'gunner_armorer'
     LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
     RND_MIN_MAX_INFO = 'PiercingRandomizer: final randomization: {}/{}, vehicle: {}, skills: {}'
     RND_SKILL_DIFF_DEBUG = 'PiercingRandomizer: skill_name: {} skill_lvl: {} level_increase: {} percent: {}'
     RND_SKILL_NOT_FOUND = 'PiercingRandomizer: SKILL_NOT_FOUND skill_name: {}'
-    RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'PiercingRandomizer setSkillBound: skill_name {}, bound {}'
+    RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'PiercingRandomizer setSkillsBound: {}'
     RND_ERROR = 'PiercingRandomizer: ERROR: {}'
 
     __slots__ = ['__bound', 'min', 'max']
@@ -43,26 +44,30 @@ class PiercingRandomizer(IBOPiercingRandomizer):
             descrArgs = getSkillsConfig().getSkill(skill_name).uiSettings.descrArgs
             for name, descr in descrArgs:
                 if name == KPI.Name.DAMAGE_AND_PIERCING_DISTRIBUTION_LOWER_BOUND:
-                    self.__bound[skill_name] = descr.value
-                    self.logger.logInfo(self.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG, skill_name, descr.value)
+                    self.__bound[skill_name] = round(descr.value, 4)
                     break
+
+        self.logger.logDebug(self.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG, self.__bound)
 
     def fini(self):
         g_playerEvents.onEnqueued += self.onEnqueued
         self.logger.logInfo("Finished PiercingRandomizer")
 
     def onEnqueued(self, queueType, *args):
-        if queueType in (QUEUE_TYPE.RANDOMS, QUEUE_TYPE.FUN_RANDOM):
+        if queueType in self.QUEUE_TYPES:
+            from CurrentVehicle import g_currentVehicle
             self.updateRandomization(g_currentVehicle.item)
+        else:
+            self.min, self.max = self.DEFAULT_RANDOMIZATION
 
     def getCurrentSkillEfficiency(self, tman, skill_name):
         skill = tman.skillsMap.get(skill_name)
-        result = 0
         if skill is not None and skill.level > 0:
             level_increase, bonuses = tman.crewLevelIncrease
             result = ((skill.level + level_increase) * tman.skillsEfficiency) * self.__bound[skill_name]
             self.logger.logDebug(self.RND_SKILL_DIFF_DEBUG, skill_name, skill.level, level_increase, result)
-        return result
+            return result
+        return 0.0
 
     def updateRandomization(self, vehicle):
         from armagomen.battle_observer.settings import IBOSettingsLoader

@@ -1,4 +1,5 @@
 import BigWorld
+
 from aih_constants import SHOT_RESULT
 from armagomen._constants import ARMOR_CALC, GLOBAL
 from armagomen.battle_observer.settings import IBOSettingsLoader

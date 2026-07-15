@@ -1,7 +1,7 @@
-from armagomen._constants import COLORS, PANELS, VEHICLE
-from armagomen.battle_observer.shared import IBOKeysListener, IBOPlayersDamageController
-from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen import IALogger
+from armagomen._constants import COLORS, PANELS, VEHICLE
+from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
+from armagomen.battle_observer.shared import IBOKeysListener, IBOPlayersDamageController
 from gui.battle_control.controllers.battle_field_ctrl import IBattleFieldListener
 from gui.Scaleform.daapi.view.battle.shared.formatters import normalizeHealthPercent
 from helpers import dependency

@@ -1,4 +1,5 @@
 import BigWorld
+
 import math_utils
 from armagomen._constants import FLIGHT_TIME, GLOBAL, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.flight_time_meta import FlightTimeMeta

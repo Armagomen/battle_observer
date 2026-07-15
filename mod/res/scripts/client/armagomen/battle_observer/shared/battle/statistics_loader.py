@@ -109,7 +109,8 @@ class StatisticsDataLoader(IStatisticsDataLoader):
         if loaded:
             self.onResponse(loaded)
         if to_request:
-            self.logger.logDebug("requestStatisticsFromApi: START request data: ids={}", to_request)
+            self.logger.logInfo("requestStatisticsFromApi: request data for {} players, cached {}", len(to_request), len(loaded))
+            self.logger.logDebug("requestStatisticsFromApi: request data: ids={}", to_request)
             self.requestInfo(to_request)
 
     @wg_async

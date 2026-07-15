@@ -1,4 +1,5 @@
 import BigWorld
+
 from armagomen._constants import POSTMORTEM_MODES
 from armagomen.battle_observer.i18n.distance_to_enemy import TEMPLATE_BY_LANG
 from armagomen.battle_observer.meta.battle.distance_to_enemy_meta import DistanceMeta

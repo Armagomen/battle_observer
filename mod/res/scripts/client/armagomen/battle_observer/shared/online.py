@@ -1,9 +1,9 @@
 import json
 from collections import defaultdict, namedtuple
 
+from armagomen import IALogger
 from armagomen._constants import GLOBAL
 from armagomen.battle_observer.i18n.online import FALLBACK, language, ONLINE, TEXTFORMAT
-from armagomen import IALogger
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import IS_COMMON_TEST
 from helpers import dependency

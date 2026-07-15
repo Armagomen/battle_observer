@@ -1,8 +1,7 @@
-from armagomen._constants import DISPERSION_TIMER, POSTMORTEM_MODES
 from armagomen import IALogger
+from armagomen._constants import DISPERSION_TIMER, POSTMORTEM_MODES
 from armagomen.battle_observer.meta.battle.dispersion_timer_meta import DispersionTimerMeta
 from armagomen.utils.common import cancelOverride, overrideMethod, percentToColor
-
 from Avatar import PlayerAvatar
 from constants import ARENA_PERIOD
 from gui.battle_control.avatar_getter import getInputHandler

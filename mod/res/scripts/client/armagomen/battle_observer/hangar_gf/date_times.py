@@ -1,5 +1,7 @@
-from armagomen._constants import CLOCK, GLOBAL, LOBBY_ALIASES
+from time import strftime
+
 from armagomen import IALogger
+from armagomen._constants import CLOCK, GLOBAL, LOBBY_ALIASES
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE
 from armagomen.utils.events import g_events
@@ -8,7 +10,6 @@ from gui.impl.pub.view_component import ViewComponent
 from gui.shared.utils.TimeInterval import TimeInterval
 from helpers import dependency
 from openwg_gameface import gf_mod_inject, ModDynAccessor
-from time import strftime
 
 
 class ClockModel(ViewModel):
@@ -48,7 +49,7 @@ class DateTimesView(ViewComponent[ClockModel]):
         )
         self.__enabled = False
         self.__hangarEnabled = False
-        self.__clockFormat = CLOCK.DEFAULT_FORMAT_HANGAR
+        self.__clockFormat = CLOCK.DEFAULT_FORMAT
         self._timeInterval = TimeInterval(1.0, self, 'updateTime')
 
     @property

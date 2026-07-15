@@ -1,7 +1,8 @@
+from BigWorld import callback, cancelCallback
+
 from armagomen._constants import SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
 from armagomen.utils.common import SIXTH_SENSE_LIST
-from BigWorld import callback, cancelCallback
 from constants import DIRECT_DETECTION_TYPE
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from items.components.supply_slot_categories import SupplySlotFactorLevels

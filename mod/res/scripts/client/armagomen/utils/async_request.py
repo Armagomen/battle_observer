@@ -18,6 +18,7 @@ def async_url_request(url, data=None, headers=None, method='GET'):
     response = yield _internal_fetch(url, final_headers.items(), method, postData)
     raise AsyncReturn(response)
 
+
 @await_callback
 def _internal_fetch(url, headers, method, postData, callback=lambda x: x):
     return BigWorld.fetchURL(url, callback, headers, REQUEST_TIMEOUT, method, postData)

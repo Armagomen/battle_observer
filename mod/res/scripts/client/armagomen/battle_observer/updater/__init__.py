@@ -5,6 +5,7 @@ import re
 import subprocess
 import threading
 from collections import namedtuple
+from datetime import datetime, timedelta
 from json import loads
 from zipfile import ZipFile
 
@@ -16,7 +17,6 @@ from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import getObserverCachePath, getUpdatePath, joinAndNormalizePath, MODS_DIR, VERSIONED_MODS_DIR
 from armagomen.utils.dialogs import UpdaterDialogs
 from BattleReplay import isLoading, isPlaying
-from datetime import datetime, timedelta
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from helpers import dependency

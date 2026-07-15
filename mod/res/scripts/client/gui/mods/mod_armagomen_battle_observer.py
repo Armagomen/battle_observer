@@ -12,20 +12,14 @@ import logging
 
 logging.disable(logging.WARNING)
 
-from realm import CURRENT_REALM
-from armagomen import IALogger
-
 
 def init():
+    from realm import CURRENT_REALM
     if CURRENT_REALM == "RU":
         return
     from helpers.dependency import _g_manager, DependencyManager
-    from sys import version
 
     manager = _g_manager  # type: DependencyManager
-    logger = manager.getService(IALogger)
-    logger.logInfo('MOD START LOADING: v{}', __version__)
-    logger.logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
 
     from armagomen.battle_observer import Core, IBOCore
     from armagomen.battle_observer.updater import Updater, IBOUpdater

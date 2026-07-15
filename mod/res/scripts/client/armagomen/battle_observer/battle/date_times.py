@@ -3,7 +3,7 @@ from time import strftime
 
 from armagomen._constants import CLOCK
 from armagomen.battle_observer.meta.battle.date_times_meta import DateTimesMeta
-from armagomen.utils.common import ENCODING_LOCALE, ENCODING_ERRORS
+from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE
 from gui.battle_control.controllers.period_ctrl import IAbstractPeriodView
 
 

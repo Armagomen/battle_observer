@@ -1,7 +1,7 @@
 from collections import namedtuple
 
-from armagomen._constants import MAIN
 from armagomen import IALogger
+from armagomen._constants import MAIN
 from gui import InputHandler
 from helpers import dependency
 from Keys import KEY_LALT, KEY_LCONTROL, KEY_LSHIFT, KEY_RALT, KEY_RCONTROL, KEY_RSHIFT

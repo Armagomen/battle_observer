@@ -1,8 +1,8 @@
 from collections import defaultdict
 
+from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS
 from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen import IALogger
 from armagomen.utils.common import IS_XVM_INSTALLED
 from constants import ARENA_GUI_TYPE
 from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates

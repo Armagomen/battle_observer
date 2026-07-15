@@ -9,6 +9,7 @@ from colorsys import hsv_to_rgb
 
 import BigWorld
 import ResMgr
+
 from armagomen import IALogger
 from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency

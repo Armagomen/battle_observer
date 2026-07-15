@@ -16,6 +16,7 @@ EMPTY_BADGES = ([], [])
 
 mainSettings = dependency.instance(IBOSettingsLoader).getSetting(MAIN.NAME)
 
+
 @overrideMethod(VehicleArenaInfoVO)
 @overrideMethod(VehicleArenaInfoVO, "update")
 def new_VehicleArenaInfoVO(base, *args, **kwargs):

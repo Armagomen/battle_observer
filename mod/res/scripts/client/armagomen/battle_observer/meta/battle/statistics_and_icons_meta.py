@@ -1,5 +1,6 @@
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 
+
 class StatisticsAndIconsMeta(BaseModMeta):
 
     def as_update_wgr_dataS(self, itemsData):
@@ -10,6 +11,6 @@ class StatisticsAndIconsMeta(BaseModMeta):
         if self._isDAAPIInited():
             self.flashObject.as_updateByVehicleID(vehicleID, isEnemy)
 
-    def as_updateALL(self, *args):
+    def as_updateALL(self, *args, **kwargs):
         if self._isDAAPIInited():
             self.flashObject.as_updateALL()

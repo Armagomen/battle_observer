@@ -1,5 +1,6 @@
-import aih_constants
 import BigWorld
+
+import aih_constants
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings import IBOSettingsLoader
@@ -149,9 +150,9 @@ class DispersionCircle(object):
             self.server = data.get(DISPERSION.SERVER, self.server)
             self.toggleLimiter(self.limiter)
             self.toggleServerCrossOverrides(self.server)
-            toggleOverride(gun_marker_ctrl, "createGunMarker", self.__createGunMarker, self.replace or self.server)
+            toggleOverride(gun_marker_ctrl, "createGunMarker", self._createGunMarker, self.replace or self.server)
         else:
-            toggleOverride(gun_marker_ctrl, "createGunMarker", self.__createGunMarker, False)
+            toggleOverride(gun_marker_ctrl, "createGunMarker", self._createGunMarker, False)
             self.toggleServerCrossOverrides(False)
             self.toggleLimiter(False)
 
@@ -159,7 +160,7 @@ class DispersionCircle(object):
         for obj, method_name, func in self.__server_overrides:
             toggleOverride(obj, method_name, func, enable)
 
-    def __createGunMarker(self, base, isStrategic):
+    def _createGunMarker(self, base, isStrategic):
         if self.server:
             self.disableWGServerMarker()
         factory = gun_marker_ctrl._GunMarkersDPFactory()

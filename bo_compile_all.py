@@ -10,16 +10,17 @@ packages -- for now, you'll have to deal with packages separately.)
 
 See module py_compile for details of the actual byte-compilation.
 """
-import imp
 import os
 import py_compile
 import struct
 import sys
 
-__all__ = ["compile_dir","compile_file","compile_path"]
+import imp
 
-def compile_dir(dir, maxlevels=40, ddir=None,
-                force=0, rx=None, quiet=0):
+__all__ = ["compile_dir", "compile_file", "compile_path"]
+
+
+def compile_dir(_dir, maxlevels=40, ddir=None, force=0, rx=None, quiet=0):
     """Byte-compile all modules in the given directory tree.
 
     Arguments (only dir is required):
@@ -32,16 +33,16 @@ def compile_dir(dir, maxlevels=40, ddir=None,
     quiet:     if 1, be quiet during compilation
     """
     if not quiet:
-        print 'Listing', dir, '...'
+        print 'Listing', _dir, '...'
     try:
-        names = os.listdir(dir)
+        names = os.listdir(_dir)
     except os.error:
-        print "Can't list", dir
+        print "Can't list", _dir
         names = []
     names.sort()
     success = 1
     for name in names:
-        fullname = os.path.join(dir, name)
+        fullname = os.path.join(_dir, name)
         if ddir is not None:
             dfile = os.path.join(ddir, name)
         else:
@@ -49,14 +50,11 @@ def compile_dir(dir, maxlevels=40, ddir=None,
         if not os.path.isdir(fullname):
             if not compile_file(fullname, ddir, force, rx, quiet):
                 success = 0
-        elif maxlevels > 0 and \
-             name != os.curdir and name != os.pardir and \
-             os.path.isdir(fullname) and \
-             not os.path.islink(fullname):
-            if not compile_dir(fullname, maxlevels - 1, dfile, force, rx,
-                               quiet):
+        elif maxlevels > 0 and name != os.curdir and name != os.pardir and os.path.isdir(fullname) and not os.path.islink(fullname):
+            if not compile_dir(fullname, maxlevels - 1, dfile, force, rx, quiet):
                 success = 0
     return success
+
 
 def compile_file(fullname, ddir=None, force=0, rx=None, quiet=0):
     """Byte-compile one file.
@@ -112,6 +110,7 @@ def compile_file(fullname, ddir=None, force=0, rx=None, quiet=0):
                     success = 0
     return success
 
+
 def compile_path(skip_curdir=1, maxlevels=0, force=0, quiet=0):
     """Byte-compile all module on sys.path.
 
@@ -123,13 +122,13 @@ def compile_path(skip_curdir=1, maxlevels=0, force=0, quiet=0):
     quiet: as for compile_dir() (default 0)
     """
     success = 1
-    for dir in sys.path:
-        if (not dir or dir == os.curdir) and skip_curdir:
+    for _dir in sys.path:
+        if (not _dir or _dir == os.curdir) and skip_curdir:
             print 'Skipping current directory'
         else:
-            success = success and compile_dir(dir, maxlevels, None,
-                                              force, quiet=quiet)
+            success = success and compile_dir(_dir, maxlevels, None, force, quiet=quiet)
     return success
+
 
 def expand_args(args, flist):
     """read names in flist and append to args"""
@@ -149,6 +148,7 @@ def expand_args(args, flist):
             print "Error reading file list %s" % flist
             raise
     return expanded
+
 
 def main():
     """Script main program."""
@@ -172,6 +172,7 @@ def main():
         print '         compilation; if "-", names are read from stdin'
 
         sys.exit(2)
+
     maxlevels = 10
     ddir = None
     force = 0
@@ -214,6 +215,7 @@ def main():
         print "\n[interrupted]"
         success = 0
     return success
+
 
 if __name__ == '__main__':
     exit_status = int(not main())
