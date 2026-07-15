@@ -25,6 +25,7 @@ package net.armagomen.battle_observer.battle.components
 		private var fullWidth:Number = 150.0;
 		private var colorCache:Dictionary = new Dictionary();
 		private var statisticsLoaded:Boolean = false;
+		private var statisticsEnabled:Boolean = false;
 		
 		public var getVehicleClassColors:Function;
 		
@@ -46,6 +47,7 @@ package net.armagomen.battle_observer.battle.components
 				this.setIconColorsCache(this.getVehicleClassColors());
 				this.iconMultiplier = settings["icons_blackout"];
 				this.iconsEnabled = settings["icons"];
+				this.statisticsEnabled = settings["statistics"];
 				this.cutWidth = settings["statistics_panels_cut_width"];
 				this.fullWidth = settings["statistics_panels_full_width"];
 				this.addListeners();
@@ -148,7 +150,7 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function setVehicleTextColor(field:TextField, vehicleTextColor:uint):void
 		{
-			if (field.visible && vehicleTextColor > 0 && field.textColor != vehicleTextColor)
+			if (vehicleTextColor > 0 && field.textColor != vehicleTextColor)
 			{
 				field.textColor = vehicleTextColor;
 			}
@@ -156,10 +158,7 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function updateHtmlText(field:TextField, htmlText:String):void
 		{
-			if (field.visible)
-			{
-				field.htmlText = htmlText;
-			}
+			field.htmlText = htmlText;
 		}
 		
 		private function updateAutoSize(field:TextField, autoSize:String):void
@@ -178,17 +177,17 @@ package net.armagomen.battle_observer.battle.components
 		private function updateByVehicleID(vehicleID:int, isEnemy:Boolean):void
 		{
 			var item:* = this.getPanelHolderByVehicleID(vehicleID, isEnemy);
+			if (!item || !item._listItem) return;
 			this.updateByItem(item, isEnemy);
 		}
 		
 		private function updateByItem(item:*, isEnemy:Boolean):void
 		{
-			if (!item || !item._listItem) return;
 			if (this.iconsEnabled)
 			{
 				this.updateIconsVID(item, isEnemy);
 			}
-			if (this.statisticsLoaded && this.statisticsData[item.vehicleData.vehicleID])
+			if (this.statisticsEnabled && this.statisticsLoaded && this.statisticsData[item.vehicleData.vehicleID])
 			{
 				this.updateStatisticsVID(item, isEnemy, this.statisticsData[item.vehicleData.vehicleID]);
 			}

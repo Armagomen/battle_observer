@@ -1,6 +1,9 @@
+from sys import version
+
 from armagomen import IALogger
 from BattleReplay import isLoading, isPlaying
 from helpers import dependency
+from realm import CURRENT_REALM
 
 
 class IBOCore(object):
@@ -15,10 +18,12 @@ class Core(IBOCore):
     isReplay = property(lambda self: isLoading() or isPlaying())
 
     def __init__(self, modVersion):
+        self.logger.logInfo("Initializing Core v{}", modVersion)
+        self.logger.logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
         self.version = modVersion
         self.hangar_settings = None
         self.hangar_gf = None
-        self.logger.logInfo("Initializing Core")
+
         from armagomen.battle_observer.settings import IBOSettingsLoader
         from armagomen.battle_observer.components import loadComponents
         self.components = loadComponents(self.isReplay)
@@ -41,7 +46,6 @@ class Core(IBOCore):
                 self.hangar_settings = SettingsInterface(self.version, api)
 
     def fini(self):
-        self.logger.logInfo("Finished Core")
         from armagomen.utils.common import cleanupObserverUpdates, cleanupUpdates
         cleanupObserverUpdates()
         cleanupUpdates()
@@ -49,8 +53,11 @@ class Core(IBOCore):
             getattr(component, 'fini', lambda: None)()
         if self.hangar_settings is not None:
             self.hangar_settings.fini()
-        self.hangar_gf = None
-        self.logger.logInfo('MOD SHUTTING DOWN: v{}', self.version)
+            self.hangar_settings = None
+        if self.hangar_gf is not None:
+            self.hangar_gf.fini()
+            self.hangar_gf = None
+        self.logger.logInfo("Finished Core v{}", self.version)
 
     def registerBattleObserverPackages(self):
         from gui.override_scaleform_views_manager import g_overrideScaleFormViewsConfig

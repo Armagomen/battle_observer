@@ -1,6 +1,7 @@
 from math import floor, log
 
 import BigWorld
+
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.meta.battle.statistics_and_icons_meta import StatisticsAndIconsMeta
 from armagomen.battle_observer.shared import IBOKeysListener, IStatisticsDataLoader
@@ -8,7 +9,7 @@ from armagomen.utils.common import getGreatPercent, hexToInt
 from gui.shared import EVENT_BUS_SCOPE, events
 from helpers import dependency
 from Keys import KEY_LALT, KEY_LCONTROL, KEY_RALT, KEY_RCONTROL
-from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
+from skeletons.gui.app_loader import IAppLoader
 
 WGR_RANGES = ((0, "very_bad"), (3500, "bad"), (5300, "normal"), (7400, "good"), (9700, "very_good"), (11000, "unique"))
 WTR_RANGES = ((0, "very_bad"), (3100, "bad"), (4700, "normal"), (6700, "good"), (9200, "very_good"), (10900, "unique"))
@@ -45,7 +46,6 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
                 {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
                  if vInfo.player.accountDBID and not vInfo.isObserver()}
             )
-        self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:
@@ -58,12 +58,12 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
             arena.onNewVehicleListReceived += self.as_updateALL
         self.addListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
         self.addListener(events.GameEvent.SHOW_EXTENDED_INFO, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
+        self.addListener(events.GameEvent.BATTLE_LOADING, self.as_updateALL, EVENT_BUS_SCOPE.BATTLE)
         self.as_updateALL()
 
     def _dispose(self):
         if self.statisticsEnabled:
             self.statisticsLoader.onDataResponse -= self.onDataResponse
-        self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:
@@ -76,11 +76,8 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
             arena.onNewVehicleListReceived -= self.as_updateALL
         self.removeListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
         self.removeListener(events.GameEvent.SHOW_EXTENDED_INFO, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
+        self.removeListener(events.GameEvent.BATTLE_LOADING, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
         super(StatisticsAndIcons, self)._dispose()
-
-    def onGUISpaceEntered(self, spaceID):
-        if spaceID == GuiGlobalSpaceID.BATTLE:
-            self.as_updateALL()
 
     def onVehicleUpdate(self, vehicleID, *args):
         isEnemy = self.getVehicleInfo(vehicleID).team != BigWorld.player().team

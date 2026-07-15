@@ -14,24 +14,11 @@ class BattleTimer(BattleTimerMeta, IAbstractPeriodView):
     def __init__(self):
         super(BattleTimer, self).__init__()
         self.timerColors = None
-        self.isBattlePeriod = False
         self.timer = defaultdict(str, timerColor=COLORS.WHITE, timer=BATTLE_TIMER.START_STRING)
 
     def _populate(self):
         super(BattleTimer, self)._populate()
         self.timerColors = TimerColors(self.settings[BATTLE_TIMER.COLOR], self.settings[BATTLE_TIMER.END_COLOR])
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onPeriodChange += self.onArenaPeriodChange
-            self.isBattlePeriod = arena.period == ARENA_PERIOD.BATTLE
-
-    def _dispose(self):
-        arena = self._arenaVisitor.getArenaSubscription()
-        if arena is not None:
-            arena.onPeriodChange -= self.onArenaPeriodChange
-
-    def onArenaPeriodChange(self, period, *args):
-        self.isBattlePeriod = period == ARENA_PERIOD.BATTLE
 
     def updateTimerColor(self, totalTime):
         color = self.timerColors.end if totalTime < BATTLE_TIMER.END_BATTLE_SEC else self.timerColors.normal
@@ -39,7 +26,8 @@ class BattleTimer(BattleTimerMeta, IAbstractPeriodView):
             self.timer[BATTLE_TIMER.COLOR] = color
 
     def setTotalTime(self, totalTime):
-        if self.isBattlePeriod:
+        arena = self._arenaVisitor.getArenaSubscription()
+        if arena is not None and arena.period == ARENA_PERIOD.BATTLE:
             self.updateTimerColor(totalTime)
             self.timer[BATTLE_TIMER.M_TIMER] = BATTLE_TIMER.TIME_FORMAT % divmod(totalTime, ONE_MINUTE)
             self.as_timerS(self.settings[BATTLE_TIMER.TEMPLATE] % self.timer)
