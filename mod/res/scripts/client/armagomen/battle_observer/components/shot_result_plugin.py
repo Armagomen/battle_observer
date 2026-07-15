@@ -52,11 +52,10 @@ class _ShotResult(_CrosshairShotResults):
         piercing_power = computePiercingPowerAtDist(shot.piercingPower, distance, shot.maxDistance, multiplier)
         if piercing_power == 0.0:
             return cls.UNDEFINED_RESULT
-        jet_loss = cls._SHELL_EXTRA_DATA[shell.kind].jetLossPPByDist
         if shell.kind == SHELL_TYPES.HIGH_EXPLOSIVE and shell.type.mechanics == SHELL_MECHANICS_TYPE.MODERN:
             return cls.__computeArmorModernHE(collision_details, shell, piercing_power, entity)
-        elif jet_loss > 0:
-            return cls.__computeArmorJetLoss(collision_details, shell, piercing_power, entity, jet_loss)
+        elif cls._SHELL_EXTRA_DATA[shell.kind].hasPenetrationLoss:
+            return cls.__computeArmorJetLoss(collision_details, shell, piercing_power, entity)
         else:
             return cls.__computeArmorDefault(collision_details, shell, piercing_power, entity)
 
@@ -103,7 +102,7 @@ class _ShotResult(_CrosshairShotResults):
         return result, data
 
     @classmethod
-    def __computeArmorJetLoss(cls, collision_details, shell, piercing_power, entity, jet_loss):
+    def __computeArmorJetLoss(cls, collision_details, shell, piercing_power, entity):
         full_armor = 0.0
         jet_start_dist = 0.0
         ignored_materials = set()
@@ -123,7 +122,7 @@ class _ShotResult(_CrosshairShotResults):
             if jet_start_dist > 0:
                 jetDist = detail.dist - jet_start_dist
                 if jetDist > 0:
-                    loss = 1.0 - jetDist * jet_loss
+                    loss = 1.0 - jetDist * shell.type.piercingPowerLossFactorByDistance
                     if loss <= 0:
                         break
                     piercing_power *= loss
