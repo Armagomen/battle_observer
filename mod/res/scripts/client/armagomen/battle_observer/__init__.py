@@ -18,8 +18,7 @@ class Core(IBOCore):
     isReplay = property(lambda self: isLoading() or isPlaying())
 
     def __init__(self, modVersion):
-        self.logger.logInfo("Initializing Core v{}", modVersion)
-        self.logger.logInfo('Launched at python v{} region={}', version, CURRENT_REALM)
+        self.logger.logInfo("Initializing Core v{} - Launched at python v{} region={}", modVersion, version, CURRENT_REALM)
         self.version = modVersion
         self.hangar_settings = None
         self.hangar_gf = None

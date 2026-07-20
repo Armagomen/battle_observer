@@ -1,9 +1,7 @@
-from collections import defaultdict
-
 from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC, GLOBAL
+from collections import defaultdict
 from constants import QUEUE_TYPE
-from CurrentVehicle import g_currentVehicle
 from gui.shared.gui_items import KPI
 from helpers import dependency
 from items.tankmen import getSkillsConfig
@@ -23,6 +21,8 @@ class PiercingRandomizer(IBOPiercingRandomizer):
     logger = dependency.descriptor(IALogger)
 
     DEFAULT_RANDOMIZATION = (0.75, 1.25)
+    QUEUE_TYPES = (QUEUE_TYPE.RANDOMS, QUEUE_TYPE.FUN_RANDOM, QUEUE_TYPE.UNKNOWN, QUEUE_TYPE.COMP7_LIGHT, QUEUE_TYPE.COMP7,
+                   QUEUE_TYPE.MAPS_TRAINING, QUEUE_TYPE.WINBACK)
     GUNNER_ARMORER = 'gunner_armorer'
     LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
     RND_MIN_MAX_INFO = 'PiercingRandomizer: final randomization: {}/{}, vehicle: {}, skills: {}'
@@ -53,7 +53,8 @@ class PiercingRandomizer(IBOPiercingRandomizer):
         self.logger.logInfo("Finished PiercingRandomizer")
 
     def onEnqueued(self, queueType, *args):
-        if queueType in (QUEUE_TYPE.RANDOMS, QUEUE_TYPE.FUN_RANDOM, QUEUE_TYPE.FUN_RANDOM, QUEUE_TYPE.UNKNOWN):
+        if queueType in self.QUEUE_TYPES:
+            from CurrentVehicle import g_currentVehicle
             self.updateRandomization(g_currentVehicle.item)
         else:
             self.min, self.max = self.DEFAULT_RANDOMIZATION
