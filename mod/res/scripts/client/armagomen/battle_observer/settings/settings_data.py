@@ -58,11 +58,11 @@ class SettingsData(object):
             GLOBAL.ENABLED: False,
             CLOCK.IN_LOBBY: {
                 GLOBAL.ENABLED: False,
-                CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_HANGAR
+                CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT
             },
             CLOCK.IN_BATTLE: {
                 GLOBAL.ENABLED: False,
-                CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT_BATTLE,
+                CLOCK.FORMAT: CLOCK.DEFAULT_FORMAT,
                 GLOBAL.X: -270,
                 GLOBAL.Y: 0
             }
