@@ -221,7 +221,8 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
             prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
         self.__resolver = None
 
-    def __updateCurrVehicleInfo(self, vehicle):
+    @staticmethod
+    def __updateCurrVehicleInfo(vehicle):
         if not avatar_getter.isObserver():
             randomizer = dependency.instance(IBOPiercingRandomizer)
             randomizer.updateRandomization(vehicle)

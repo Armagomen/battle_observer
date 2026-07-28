@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC, GLOBAL
+from armagomen.utils.common import MinMax
 from constants import QUEUE_TYPE
 from gui.shared.gui_items import KPI
 from helpers import dependency
@@ -31,13 +32,14 @@ class PiercingRandomizer(IBOPiercingRandomizer):
     RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'PiercingRandomizer setSkillsBound: {}'
     RND_ERROR = 'PiercingRandomizer: ERROR: {}'
 
-    __slots__ = ['__bound', 'min', 'max']
+    __slots__ = ('__bound', 'min', 'max', '__defaults')
 
     def __init__(self):
         self.logger.logInfo("Initializing PiercingRandomizer")
         g_playerEvents.onEnqueued += self.onEnqueued
-        self.min = 0.75
-        self.max = 1.25
+        self.__defaults = MinMax(0.25, 1.25)
+        self.min = self.__defaults.min
+        self.max = self.__defaults.max
         self.__bound = defaultdict(float)
 
         for skill_name in (self.GUNNER_ARMORER, self.LOADER_AMMUNITION_IMPROVE):
@@ -58,11 +60,13 @@ class PiercingRandomizer(IBOPiercingRandomizer):
             from CurrentVehicle import g_currentVehicle
             self.updateRandomization(g_currentVehicle.item)
         else:
-            self.setDefault()
+            self.resetToDefault()
 
-    def setDefault(self):
-        self.min = 0.75
-        self.max = 1.25
+    def resetToDefault(self):
+        if self.min != self.__defaults.min:
+            self.min = self.__defaults.min
+        if self.max != self.__defaults.max:
+            self.max = self.__defaults.max
 
     def getCurrentSkillEfficiency(self, tman, skill_name):
         skill = tman.skillsMap.get(skill_name)
@@ -76,7 +80,7 @@ class PiercingRandomizer(IBOPiercingRandomizer):
     def updateRandomization(self, vehicle):
         from armagomen.battle_observer.settings import IBOSettingsLoader
         settingsLoader = dependency.instance(IBOSettingsLoader)
-        self.setDefault()
+        self.resetToDefault()
         if vehicle is None or not settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
             return
         try:
