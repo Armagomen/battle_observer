@@ -21,7 +21,6 @@ class IBOPiercingRandomizer(object):
 class PiercingRandomizer(IBOPiercingRandomizer):
     logger = dependency.descriptor(IALogger)
 
-    DEFAULT_RANDOMIZATION = (0.75, 1.25)
     QUEUE_TYPES = (QUEUE_TYPE.RANDOMS, QUEUE_TYPE.FUN_RANDOM, QUEUE_TYPE.UNKNOWN, QUEUE_TYPE.COMP7_LIGHT, QUEUE_TYPE.COMP7,
                    QUEUE_TYPE.MAPS_TRAINING, QUEUE_TYPE.WINBACK)
     GUNNER_ARMORER = 'gunner_armorer'
@@ -37,7 +36,8 @@ class PiercingRandomizer(IBOPiercingRandomizer):
     def __init__(self):
         self.logger.logInfo("Initializing PiercingRandomizer")
         g_playerEvents.onEnqueued += self.onEnqueued
-        self.min, self.max = self.DEFAULT_RANDOMIZATION
+        self.min = 0.75
+        self.max = 1.25
         self.__bound = defaultdict(float)
 
         for skill_name in (self.GUNNER_ARMORER, self.LOADER_AMMUNITION_IMPROVE):
@@ -58,7 +58,11 @@ class PiercingRandomizer(IBOPiercingRandomizer):
             from CurrentVehicle import g_currentVehicle
             self.updateRandomization(g_currentVehicle.item)
         else:
-            self.min, self.max = self.DEFAULT_RANDOMIZATION
+            self.setDefault()
+
+    def setDefault(self):
+        self.min = 0.75
+        self.max = 1.25
 
     def getCurrentSkillEfficiency(self, tman, skill_name):
         skill = tman.skillsMap.get(skill_name)
@@ -72,7 +76,7 @@ class PiercingRandomizer(IBOPiercingRandomizer):
     def updateRandomization(self, vehicle):
         from armagomen.battle_observer.settings import IBOSettingsLoader
         settingsLoader = dependency.instance(IBOSettingsLoader)
-        self.min, self.max = self.DEFAULT_RANDOMIZATION
+        self.setDefault()
         if vehicle is None or not settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
             return
         try:

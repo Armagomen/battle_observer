@@ -1,4 +1,3 @@
-# coding=utf-8
 from time import strftime
 
 from armagomen._constants import CLOCK
