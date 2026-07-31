@@ -83,28 +83,29 @@ localization = {
         "hide_shop": "Скрыть кнопку магазина",
         "hide_wotPlus": "Скрыть кнопку WOT Plus"
     },
-    "statistics_and_icons": {
-        "header": "Настройки статистики игроков и иконок танков",
-        "icons": "Иконки: Перекрасить в цвета классов техники",
-        "icons_tooltip": "Данная функция перекрашивает любые иконки техники на экране загрузки, в ушах, "
-                         "в окне по клавише Tab в цвет классов техники. Сила фильтра влияет на яркость."
-                         "Рекомендуемая сила фильтра: -1.25",
-        "icons_blackout": "Иконки: Сила фильтра (яркость)",
-        "statistics": "Включить статистику игроков по рейтингу WGR",
+    "statistics": {
+        "header": "Настройки статистики игроков",
         "statistics_vehicle_name_color": "Изменить цвет названия танка в списках на цвет статистики игрока",
-        "statistics_tooltip": "Статистика будет отображаться на экране загрузки, в ушах, в окне по "
-                              "клавише Tab. Для более тонкой настройки смотри файл statistics.json"
-                              "Доступные имена макросов: WGR, colorWGR, winRate, nickname, battles, clanTag",
         "statistics_colors*very_bad": "Очень плохо",
         "statistics_colors*bad": "Плохо",
         "statistics_colors*normal": "Нормально",
         "statistics_colors*good": "Хорошо",
         "statistics_colors*very_good": "Очень хорошо",
         "statistics_colors*unique": "Уникально",
-        "statistics_panels_full_width": "Ширина поля имени игрока (большие уши)",
-        "statistics_panels_cut_width": "Ширина поля имени игрока (маленькие уши)",
         "statistics_use_new_WTR": "Использовать новый рейтинг WTR вместо WGR"
     },
+
+    "colored_icons": {
+        "header": "Настройки иконок танков",
+        "icons_blackout": "Иконки: Сила фильтра (яркость)",
+        "AT-SPG": "ПТ-САУ (Противотанковые САУ)",
+        "SPG": "САУ (Артиллерия)",
+        "heavyTank": "Тяжёлый танк",
+        "lightTank": "Лёгкий танк",
+        "mediumTank": "Средний танк",
+        "unknown": "Неизвестно (Глобальная карта)"
+    },
+
     "dispersion_circle": {
         "header": "Настройки круга сведения, серверного прицела",
         "server_aim": "Включить серверный прицел (дополнительный круг)",
@@ -303,12 +304,7 @@ localization = {
         "global*bgColor": "Цвет фона панелей",
         "global*enemyColorBlind": "Глобальный цвет: противники (цветовая слепота)",
         "global*enemy": "Глобальный цвет, противник",
-        "vehicle_types_colors*AT-SPG": "ПТ-САУ (Противотанковые САУ)",
-        "vehicle_types_colors*SPG": "САУ (Артиллерия)",
-        "vehicle_types_colors*heavyTank": "Тяжёлый танк",
-        "vehicle_types_colors*lightTank": "Лёгкий танк",
-        "vehicle_types_colors*mediumTank": "Средний танк",
-        "vehicle_types_colors*unknown": "Неизвестно (Глобальная карта)"
+
     },
     "service_channel_filter": {
         "header": "Настройки фильтра сообщений в системном канале",

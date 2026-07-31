@@ -3,7 +3,7 @@ from math import ceil
 
 from armagomen import IALogger
 from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
-                                  MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
+                                  MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS, COLORED_ICONS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import encodeData, IS_XVM_INSTALLED, openWebBrowser, printDebuginfo, safe_index, SIXTH_SENSE_LIST, \
@@ -14,7 +14,7 @@ from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
 
 settingsVersion = 43
-LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME}
+LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, COLORED_ICONS.NAME}
 
 
 def makeTooltip(header=None, body=None, note=None, attention=None):
@@ -208,7 +208,7 @@ class CreateElement(Getter):
         if t is float:
             if bk == (DISPERSION.NAME, DISPERSION.SCALE):
                 return self.createSlider(blockID, key, 0.3, 1.0, 0.01, value)
-            elif bk == (STATISTICS.NAME, STATISTICS.ICON_BLACKOUT):
+            elif bk == (COLORED_ICONS.NAME, COLORED_ICONS.BLACKOUT):
                 return self.createStepper(blockID, key, -2.0, 2.0, 0.01, value)
             elif bk == (SNIPER.NAME, SNIPER.DISABLE_LATENCY):
                 return self.createSlider(blockID, key, 0.0, 3.0, 0.1, value)

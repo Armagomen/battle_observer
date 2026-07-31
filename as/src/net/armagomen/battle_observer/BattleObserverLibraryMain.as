@@ -15,7 +15,8 @@ package net.armagomen.battle_observer
 	import net.armagomen.battle_observer.battle.components.MinimapUI;
 	import net.armagomen.battle_observer.battle.components.ObserverDateTimesUI;
 	import net.armagomen.battle_observer.battle.components.OwnHealthUI;
-	import net.armagomen.battle_observer.battle.components.StatisticsAndIcons;
+	import net.armagomen.battle_observer.battle.components.Statistics;
+	import net.armagomen.battle_observer.battle.components.ColoredIconsUI;
 	import net.armagomen.battle_observer.battle.components.battletimer.ObserverBattleTimerUI;
 	import net.armagomen.battle_observer.battle.components.debugpanel.ObserverDebugPanelUI;
 	import net.armagomen.battle_observer.battle.components.maingun.MainGunUI;
@@ -35,7 +36,7 @@ package net.armagomen.battle_observer
 			super();
 			BaseBattlePage.prototype.as_BattleObserverCreate = function(aliases:Array):void
 			{
-				var alias_to_ui:Object = {"Observer_MainGun_UI": MainGunUI, "Observer_TeamsHP_UI": TeamsHealthUI, "Observer_DamageLog_UI": DamageLogUI, "Observer_ExtendedDamageLogs_UI": ExtendedDamageLogsUI, "Observer_DebugPanel_UI": ObserverDebugPanelUI, "Observer_BattleTimer_UI": ObserverBattleTimerUI, "Observer_SixthSense_UI": SixthSenseUI, "Observer_TeamBases_UI": TeamBasesUI, "Observer_ArmorCalculator_UI": ArmorCalculatorUI, "Observer_FlightTime_UI": FlightTimeUI, "Observer_DispersionTimer_UI": DispersionTimerUI, "Observer_DateTimes_UI": ObserverDateTimesUI, "Observer_Distance_UI": DistanceUI, "Observer_OwnHealth_UI": OwnHealthUI, "Observer_PlayersPanels_UI": PlayersPanelsUI, "Observer_WGRAndIcons_UI": StatisticsAndIcons, "Observer_MiniMap_UI": MinimapUI};
+				var alias_to_ui:Object = {"Observer_MainGun_UI": MainGunUI, "Observer_TeamsHP_UI": TeamsHealthUI, "Observer_DamageLog_UI": DamageLogUI, "Observer_ExtendedDamageLogs_UI": ExtendedDamageLogsUI, "Observer_DebugPanel_UI": ObserverDebugPanelUI, "Observer_BattleTimer_UI": ObserverBattleTimerUI, "Observer_SixthSense_UI": SixthSenseUI, "Observer_TeamBases_UI": TeamBasesUI, "Observer_ArmorCalculator_UI": ArmorCalculatorUI, "Observer_FlightTime_UI": FlightTimeUI, "Observer_DispersionTimer_UI": DispersionTimerUI, "Observer_DateTimes_UI": ObserverDateTimesUI, "Observer_Distance_UI": DistanceUI, "Observer_OwnHealth_UI": OwnHealthUI, "Observer_PlayersPanels_UI": PlayersPanelsUI, "Observer_Statistics_UI": Statistics, "Observer_MiniMap_UI": MinimapUI, "Observer_ColoredIcons_UI": ColoredIconsUI};
 				
 				for each (var alias:String in aliases)
 				{

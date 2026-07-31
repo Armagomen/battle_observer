@@ -3,7 +3,7 @@ from math import floor, log
 import BigWorld
 
 from armagomen._constants import STATISTICS
-from armagomen.battle_observer.meta.battle.statistics_and_icons_meta import StatisticsAndIconsMeta
+from armagomen.battle_observer.meta.battle.statistics_meta import StatisticsMeta
 from armagomen.battle_observer.shared import IBOKeysListener, IStatisticsDataLoader
 from armagomen.utils.common import getGreatPercent, hexToInt
 from gui.shared import EVENT_BUS_SCOPE, events
@@ -15,7 +15,7 @@ WGR_RANGES = ((0, "very_bad"), (3500, "bad"), (5300, "normal"), (7400, "good"), 
 WTR_RANGES = ((0, "very_bad"), (3100, "bad"), (4700, "normal"), (6700, "good"), (9200, "very_good"), (10900, "unique"))
 
 
-class StatisticsAndIcons(StatisticsAndIconsMeta):
+class Statistics(StatisticsMeta):
     statisticsLoader = dependency.descriptor(IStatisticsDataLoader)
     keysListener = dependency.descriptor(IBOKeysListener)
     appLoader = dependency.descriptor(IAppLoader)
@@ -26,26 +26,22 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
     UNITS = ['', 'k', 'm', 'g', 't', 'p']
 
     def __init__(self):
-        super(StatisticsAndIcons, self).__init__()
+        super(Statistics, self).__init__()
         self.useWTR = self.settingsLoader.getSetting(STATISTICS.NAME, STATISTICS.USE_WTR)
         self._format = {True: "{:.1f}{}", False: "{:.0f}{}"}
         self.__addedVehicles = set()
         self.__sentVehicles = set()
         self.__callback = None
 
-    @property
-    def statisticsEnabled(self):
-        return self.statisticsLoader.enabled and self.settings[STATISTICS.STATISTIC_ENABLED]
-
     def _populate(self):
-        super(StatisticsAndIcons, self)._populate()
+        super(Statistics, self)._populate()
         self.keysListener.registerComponent(self.as_updateALL, keyList={KEY_LALT, KEY_RALT, KEY_RCONTROL, KEY_LCONTROL})
-        if self.statisticsEnabled:
-            self.statisticsLoader.onDataResponse += self.onDataResponse
-            self.statisticsLoader.requestStatisticsFromApi(
-                {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
-                 if vInfo.player.accountDBID and not vInfo.isObserver()}
-            )
+
+        self.statisticsLoader.onDataResponse += self.onDataResponse
+        self.statisticsLoader.requestStatisticsFromApi(
+            {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
+             if vInfo.player.accountDBID and not vInfo.isObserver()}
+        )
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:
@@ -62,8 +58,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         self.as_updateALL()
 
     def _dispose(self):
-        if self.statisticsEnabled:
-            self.statisticsLoader.onDataResponse -= self.onDataResponse
+        self.statisticsLoader.onDataResponse -= self.onDataResponse
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:
@@ -77,7 +72,7 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
         self.removeListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
         self.removeListener(events.GameEvent.SHOW_EXTENDED_INFO, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
         self.removeListener(events.GameEvent.BATTLE_LOADING, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
-        super(StatisticsAndIcons, self)._dispose()
+        super(Statistics, self)._dispose()
 
     def onVehicleUpdate(self, vehicleID, *args):
         isEnemy = self.getVehicleInfo(vehicleID).team != BigWorld.player().team
@@ -91,13 +86,12 @@ class StatisticsAndIcons(StatisticsAndIconsMeta):
 
     def onFogOfWarAddedUpdated(self, vehicleID):
         vInfo = self.getVehicleInfo(vehicleID)
-        if self.statisticsEnabled:
-            accountDBID = vInfo.player.accountDBID
-            if accountDBID and accountDBID not in self.__addedVehicles and not vInfo.isObserver():
-                if self.__callback is not None:
-                    BigWorld.cancelCallback(self.__callback)
-                self.__addedVehicles.add(accountDBID)
-                self.__callback = BigWorld.callback(2.0, self.onAddedUpdatedDelay)
+        accountDBID = vInfo.player.accountDBID
+        if accountDBID and accountDBID not in self.__addedVehicles and not vInfo.isObserver():
+            if self.__callback is not None:
+                BigWorld.cancelCallback(self.__callback)
+            self.__addedVehicles.add(accountDBID)
+            self.__callback = BigWorld.callback(2.0, self.onAddedUpdatedDelay)
         if vInfo.vehicleType and not vInfo.isObserver():
             self.onVehicleUpdate(vehicleID)
 

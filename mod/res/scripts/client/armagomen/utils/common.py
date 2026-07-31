@@ -325,7 +325,12 @@ def hexToInt(color):
     Accepts formats: '#RRGGBB', '0xRRGGBB', 'RRGGBB'.
     Compatible with Python 2.7. Falls back to 16448250 on error.
     """
-    hex_part = color.lstrip("#").lstrip("0x").upper()
+    if color.startswith("#"):
+        hex_part = color[1:]
+    elif color.lower().startswith("0x"):
+        hex_part = color[2:]
+    else:
+        hex_part = color
     if len(hex_part) == 6:
         return int(hex_part, 16)
     logger = dependency.instance(IALogger)

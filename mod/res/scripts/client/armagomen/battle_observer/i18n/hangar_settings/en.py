@@ -86,30 +86,30 @@ localization = {
         "hide_wotPlus": "Hide WOT Plus button"
     },
 
-    "statistics_and_icons": {
-        "header": "WGR (WGR) Player Statistics | Tank icons",
-        "statistics": "Enable player statistics WGR rating",
+    "statistics": {
+        "header": "WGR (WGR) Player Statistics",
         "statistics_vehicle_name_color": "Change the color of the tank name in the ears to the color "
                                          "of the statistics",
-        "statistics_tooltip": "Statistics will be displayed on: loading screen, in ears, taboo window. "
-                              "For more fine-tuning see the statistics.json file."
-                              " Available macro names: WGR, colorWGR, winRate, nickname, battles, clanTag",
         "statistics_colors*very_bad": "very bad",
         "statistics_colors*bad": "bad",
         "statistics_colors*normal": "normal",
         "statistics_colors*good": "good",
         "statistics_colors*very_good": "very good",
         "statistics_colors*unique": "unique",
-        "icons": "Repaint tank icons in the colors of vehicle classes",
-        "icons_tooltip": "This function repaints any vehicle icons in the ears, taboo window, on the loading "
-                         "screen in the color of vehicle classes.<br>"
-                         "Filter strength affects brightness.<br>Recommended filter strength -1.25",
-        "icons_blackout": "Filter strength (brightness)",
-
-        "statistics_panels_full_width": "Player Name Field Width - Big Ears",
-        "statistics_panels_cut_width": "Player Name Field Width - Small Ears",
         "statistics_use_new_WTR": "Use new WTR rating instead of WGR"
     },
+
+    "colored_icons": {
+        "header": "Tank icons",
+        "icons_blackout": "Filter strength (brightness)",
+        "AT-SPG": "AT-SPG",
+        "SPG": "Artillery",
+        "heavyTank": "Heavy Tank",
+        "lightTank": "Light Tank",
+        "mediumTank": "Medium Tank",
+        "unknown": "Unknown (GM)"
+    },
+
     "dispersion_circle": {
         "header": "Setting the collapsing circle, server sight",
         "replace": "Replace Original Circle.",

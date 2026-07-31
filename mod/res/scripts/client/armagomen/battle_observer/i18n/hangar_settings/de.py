@@ -81,27 +81,27 @@ localization = {
         "hide_shop": "Shop-Schaltfläche ausblenden",
         "hide_wotPlus": "WOT Plus-Schaltfläche ausblenden"
     },
-    "statistics_and_icons": {
-        "header": "Spielerstatistiken und Fahrzeug-Icon-Einstellungen",
-        "icons": "Icons: Einfärbung nach Fahrzeugklassen",
-        "icons_tooltip": "Diese Funktion verändert die Farben aller Fahrzeug-Icons im Ladebildschirm, in den Ohren und im Tab-Fenster. "
-                         "Der Filter beeinflusst die Helligkeit. Empfohlene Filterstärke: -1.25.",
-        "icons_blackout": "Icons: Filterintensität (Helligkeit)",
-        "statistics": "Spielerstatistiken nach WGR aktivieren",
+    "statistics": {
+        "header": "Spielerstatistiken",
         "statistics_vehicle_name_color": "Fahrzeugname entsprechend Spielerstatistik einfärben",
-        "statistics_tooltip": "Statistiken werden im Ladebildschirm, in den Ohren und im Tab-Fenster angezeigt. Für genauere "
-                              "Einstellungen verwende die Datei statistics.json. Verfügbare Makros: WGR, colorWGR, winRate, "
-                              "nickname, battles, clanTag.",
         "statistics_colors*very_bad": "Sehr niedriges Niveau",
         "statistics_colors*bad": "Niedriges Niveau",
         "statistics_colors*normal": "Mittleres Niveau",
         "statistics_colors*good": "Hohes Niveau",
         "statistics_colors*very_good": "Sehr hohes Niveau",
         "statistics_colors*unique": "Einzigartiges Niveau",
-        "statistics_panels_full_width": "Spielernamensfeldbreite (breite Ohren)",
-        "statistics_panels_cut_width": "Spielernamensfeldbreite (schmale Ohren)",
         "statistics_use_new_WTR": "Neuen WTR-Wert anstelle von WGR verwenden"
 
+    },
+    "colored_icons": {
+        "header": "Fahrzeug-Icon-Einstellungen",
+        "icons_blackout": "Icons: Filterintensität (Helligkeit)",
+        "AT-SPG": "Jagdpz. (Panzerjäger)",
+        "SPG": "Artillerie (Selbstfahrlafette)",
+        "heavyTank": "Schwerer Panzer",
+        "lightTank": "Leichter Panzer",
+        "mediumTank": "Mittlerer Panzer",
+        "unknown": "Unbekannt (Globale Karte)"
     },
     "dispersion_circle": {
         "header": "Fadenkreuz- und Serverziel-Einstellungen",
@@ -299,12 +299,7 @@ localization = {
         "global*bgColor": "Hintergrundfarbe der Panels",
         "global*enemyColorBlind": "Globale Farbe: Gegner (Farbenblindheitsmodus)",
         "global*enemy": "Globale Farbe, Gegner",
-        "vehicle_types_colors*AT-SPG": "Jagdpz. (Panzerjäger)",
-        "vehicle_types_colors*SPG": "Artillerie (Selbstfahrlafette)",
-        "vehicle_types_colors*heavyTank": "Schwerer Panzer",
-        "vehicle_types_colors*lightTank": "Leichter Panzer",
-        "vehicle_types_colors*mediumTank": "Mittlerer Panzer",
-        "vehicle_types_colors*unknown": "Unbekannt (Globale Karte)"
+
     },
     "service_channel_filter": {
         "header": "Systemkanal-Meldungsfilter",

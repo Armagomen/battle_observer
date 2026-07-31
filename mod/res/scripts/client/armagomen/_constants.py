@@ -30,8 +30,6 @@ VEHICLE = namedtuple("VEHICLE", ("CUR", "MAX", "TEAM", "PERCENT", "VEHICLE"))(
 
 API_KEY = "5500d1b937426e47e2b039e4a11990be"
 
-VEHICLE_TYPES_COLORS = namedtuple("VEHICLE_TYPES_COLORS", ("NAME", "UNKNOWN"))("vehicle_types_colors", "unknown")
-
 
 class GLOBAL:
     def __init__(self):
@@ -220,12 +218,12 @@ TEAM_BASES = namedtuple("TEAM_BASES", (
     "team_bases_panel", "text_settings", "font", "size", "bold", "italic", "underline")
 
 BATTLE_ALIASES = namedtuple("BATTLE_ALIASES", (
-    "WGR_ICONS", "HP_BARS", "MAIN_GUN", "DAMAGE_LOG", "DAMAGE_LOG_EXT", "DEBUG", "TIMER", "TEAM_BASES", "ARMOR_CALC",
-    "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "PANELS", "SIXTH_SENSE", "MAP"))(
-    "Observer_WGRAndIcons_UI", "Observer_TeamsHP_UI", "Observer_MainGun_UI", "Observer_DamageLog_UI", "Observer_ExtendedDamageLogs_UI",
+    "STATISTICS", "HP_BARS", "MAIN_GUN", "DAMAGE_LOG", "DAMAGE_LOG_EXT", "DEBUG", "TIMER", "TEAM_BASES", "ARMOR_CALC",
+    "FLIGHT_TIME", "DISPERSION_TIMER", "DATE_TIME", "DISTANCE", "OWN_HEALTH", "PANELS", "SIXTH_SENSE", "MAP", "COLORED_ICONS"))(
+    "Observer_Statistics_UI", "Observer_TeamsHP_UI", "Observer_MainGun_UI", "Observer_DamageLog_UI", "Observer_ExtendedDamageLogs_UI",
     "Observer_DebugPanel_UI", "Observer_BattleTimer_UI", "Observer_TeamBases_UI", "Observer_ArmorCalculator_UI", "Observer_FlightTime_UI",
     "Observer_DispersionTimer_UI", "Observer_DateTimes_UI", "Observer_Distance_UI", "Observer_OwnHealth_UI", "Observer_PlayersPanels_UI",
-    "Observer_SixthSense_UI", "Observer_MiniMap_UI")
+    "Observer_SixthSense_UI", "Observer_MiniMap_UI", "Observer_ColoredIcons_UI")
 
 LOBBY_ALIASES = namedtuple("LOBBY_ALIASES", ("DATE_TIME", "EFFICIENCY", "HEADER"))(
     "Observer_DateTimes_UI", "Observer_Efficiency_UI", "Observer_Header_UI")
@@ -235,19 +233,17 @@ DISTANCE = namedtuple("DISTANCE", ("NAME",))("distance_to_enemy", )
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME",))("own_health", )
 
 STATISTICS = namedtuple("STATISTICS", (
-    "NAME", "STATISTIC_ENABLED", "CHANGE_VEHICLE_COLOR",
+    "NAME", "CHANGE_VEHICLE_COLOR",
     "FULL_LEFT", "FULL_RIGHT",
     "CUT_LEFT", "CUT_RIGHT",
-    "COLORS", "ICON_ENABLED", "ICON_BLACKOUT",
-    "PANELS_FULL_WIDTH", "PANELS_CUT_WIDTH", "USE_WTR"))(
-    "statistics_and_icons", "statistics", "statistics_vehicle_name_color",
+    "COLORS", "USE_WTR"))(
+    "statistics", "statistics_vehicle_name_color",
     "statistics_pattern_full_left", "statistics_pattern_full_right",
     "statistics_pattern_cut_left", "statistics_pattern_cut_right",
-    "statistics_colors", "icons", "icons_blackout",
-    "statistics_panels_full_width", "statistics_panels_cut_width",
-    "statistics_use_new_WTR"
+    "statistics_colors", "statistics_use_new_WTR"
 )
 
+COLORED_ICONS = namedtuple("COLORED_ICONS", ("NAME", "BLACKOUT", "UNKNOWN"))("colored_icons", "icons_blackout", "unknown")
 
 class PANELS:
     def __init__(self):
@@ -287,7 +283,7 @@ LOAD_LIST = (
     MAIN.NAME, CREW.NAME, HANGAR_HEADER.NAME, HP_BARS.NAME, MAIN_GUN.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, DISPERSION.NAME,
     DISPERSION_TIMER.NAME, SNIPER.NAME, COLORS.NAME, ARMOR_CALC.NAME, TEAM_BASES.NAME, FLIGHT_TIME.NAME, SERVICE_CHANNEL.NAME, ARCADE.NAME,
     STRATEGIC.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, EFFECTS.NAME, DAMAGE_LOG.WG_LOGS_FIX, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED_LOG,
-    SIXTH_SENSE.NAME, CLOCK.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, STATISTICS.NAME, AVG_EFFICIENCY_HANGAR.NAME
+    SIXTH_SENSE.NAME, CLOCK.NAME, DISTANCE.NAME, OWN_HEALTH.NAME, STATISTICS.NAME, AVG_EFFICIENCY_HANGAR.NAME, COLORED_ICONS.NAME
 )
 
 
@@ -297,8 +293,8 @@ class CONFIG_INTERFACE:
 
     DONATE_BUTTONS = ('donate_button_ua', 'discord_button')
     BLOCK_IDS = (
-        ANOTHER.CONFIG_SELECT, MAIN.NAME, CREW.NAME, HANGAR_HEADER.NAME, STATISTICS.NAME, DISPERSION.NAME, DISPERSION_TIMER.NAME,
-        EFFECTS.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME,
+        ANOTHER.CONFIG_SELECT, MAIN.NAME, CREW.NAME, HANGAR_HEADER.NAME, STATISTICS.NAME, COLORED_ICONS.NAME, DISPERSION.NAME,
+        DISPERSION_TIMER.NAME, EFFECTS.NAME, DEBUG_PANEL.NAME, BATTLE_TIMER.NAME, CLOCK.NAME, HP_BARS.NAME, ARMOR_CALC.NAME,
         DAMAGE_LOG.WG_LOGS_FIX, DAMAGE_LOG.TOP_LOG, DAMAGE_LOG.EXTENDED_LOG, MAIN_GUN.NAME, TEAM_BASES.NAME,
         PANELS.PANELS_NAME, SNIPER.NAME, ARCADE.NAME, STRATEGIC.NAME, FLIGHT_TIME.NAME, MINIMAP.NAME, SIXTH_SENSE.NAME, DISTANCE.NAME,
         OWN_HEALTH.NAME, AVG_EFFICIENCY_HANGAR.NAME, COLORS.NAME, SERVICE_CHANNEL.NAME,
@@ -332,15 +328,6 @@ class CONFIG_INTERFACE:
         SIXTH_SENSE.NAME: {
             SIXTH_SENSE.TIMER_GRAPHICS: (SIXTH_SENSE.TIMER_GRAPHICS_COLOR, SIXTH_SENSE.TIMER_GRAPHICS_RADIUS)
         },
-        STATISTICS.NAME: {
-            STATISTICS.STATISTIC_ENABLED: (
-                STATISTICS.PANELS_FULL_WIDTH, STATISTICS.PANELS_CUT_WIDTH, STATISTICS.CHANGE_VEHICLE_COLOR,
-                "statistics_colors*bad", "statistics_colors*normal", "statistics_colors*good",
-                "statistics_colors*very_good", "statistics_colors*unique", "statistics_colors*very_bad",
-                STATISTICS.USE_WTR
-            ),
-            STATISTICS.ICON_ENABLED: (STATISTICS.ICON_BLACKOUT,)
-        }
     }
 
 
@@ -360,8 +347,9 @@ ALIAS_TO_CONFIG_NAME_BATTLE = {
     BATTLE_ALIASES.DATE_TIME: CLOCK.NAME,
     BATTLE_ALIASES.DISTANCE: DISTANCE.NAME,
     BATTLE_ALIASES.OWN_HEALTH: OWN_HEALTH.NAME,
-    BATTLE_ALIASES.WGR_ICONS: STATISTICS.NAME,
-    BATTLE_ALIASES.MAP: MINIMAP.NAME
+    BATTLE_ALIASES.STATISTICS: STATISTICS.NAME,
+    BATTLE_ALIASES.MAP: MINIMAP.NAME,
+    BATTLE_ALIASES.COLORED_ICONS: COLORED_ICONS.NAME
 }
 
 ALIAS_TO_CONFIG_NAME_LOBBY = {

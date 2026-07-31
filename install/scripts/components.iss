@@ -146,9 +146,8 @@ Name: service_channel_filter/autoMaintenance; Description: {cm:service_channel_a
 Name: service_channel_filter/customizationChanged; Description: {cm:service_channel_customizationChanged}; Types: armagomen;
 
 Name: statistics; Description: {cm:statistics}; Flags: disablenouninstallwarning;
-Name: statistics/icons; Description: {cm:statistics_icons}; Types: armagomen;
 Name: statistics/statistics_vehicle_name_color; Description: {cm:statistics_names_color};  Types: armagomen;
-Name: statistics/statistics; Description: {cm:statistics_enabled}; Types: armagomen;
+Name: statistics/statistics_use_new_WTR; Description: {cm:statistics_use_new_WTR}; Types: armagomen;
 
 Name: team_bases_panel; Description: {cm:team_bases_panel}; Flags: disablenouninstallwarning;
 
@@ -472,13 +471,12 @@ procedure ChangeStatisticsJsonValues();
 var
   Handle: Integer;
 begin
-  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\statistics_and_icons.json'), False);
+  Handle := JSON_OpenFile(ExpandConstant('{#configs_dir}\bo_install\statistics.json'), False);
   if Handle <> 0 then
   begin
     JSON_SetBool(Handle,'/enabled', WizardIsComponentSelected('statistics'));
-    JSON_SetBool(Handle,'/icons', WizardIsComponentSelected('statistics/icons'));
     JSON_SetBool(Handle,'/statistics_vehicle_name_color', WizardIsComponentSelected('statistics/statistics_vehicle_name_color'));
-    JSON_SetBool(Handle,'/statistics', WizardIsComponentSelected('statistics/statistics'));
+    JSON_SetBool(Handle,'/statistics_use_new_WTR', WizardIsComponentSelected('statistics/statistics_use_new_WTR'));
     JSON_Close(Handle);
   end;
 end;

@@ -2,7 +2,7 @@ import Keys
 from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CLOCK, COLORS, CREW, DAMAGE_LOG, DEBUG_PANEL,
                                   DISPERSION, DISPERSION_TIMER, EFFECTS, EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HANGAR_HEADER, HP_BARS,
                                   IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC,
-                                  TEAM_BASES, VEHICLE_TYPES_COLORS)
+                                  TEAM_BASES, COLORED_ICONS)
 from constants import ATTACK_REASON
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -155,6 +155,17 @@ class SettingsData(object):
             "splitter": "  "
         }
 
+        self.colored_icons = {
+            GLOBAL.ENABLED: False,
+            VEHICLE_CLASS_NAME.HEAVY_TANK: "#F9B200",
+            VEHICLE_CLASS_NAME.MEDIUM_TANK: "#FDEF6C",
+            VEHICLE_CLASS_NAME.AT_SPG: "#0094EC",
+            VEHICLE_CLASS_NAME.SPG: "#A90400",
+            VEHICLE_CLASS_NAME.LIGHT_TANK: "#37BC00",
+            COLORED_ICONS.UNKNOWN: COLORS.WHITE,
+            COLORED_ICONS.BLACKOUT: -1.25
+        }
+
         self.colors = {
             COLORS.GLOBAL: {
                 COLORS.ALLY: COLORS.GREEN,
@@ -170,14 +181,6 @@ class SettingsData(object):
                 "yellow": "#FFC900",
                 "pink": "#FFC0CB",
                 "purple": "#6F6CD3",
-            },
-            VEHICLE_TYPES_COLORS.NAME: {
-                VEHICLE_CLASS_NAME.HEAVY_TANK: "#F9B200",
-                VEHICLE_CLASS_NAME.MEDIUM_TANK: "#FDEF6C",
-                VEHICLE_CLASS_NAME.AT_SPG: "#0094EC",
-                VEHICLE_CLASS_NAME.SPG: "#A90400",
-                VEHICLE_CLASS_NAME.LIGHT_TANK: "#37BC00",
-                VEHICLE_TYPES_COLORS.UNKNOWN: COLORS.WHITE
             }
         }
 
@@ -340,16 +343,13 @@ class SettingsData(object):
 
         self.service_channel_filter = dict.fromkeys(SERVICE_CHANNEL.SYSTEM_CHANNEL_KEYS, False)
 
-        self.statistics_and_icons = {
+        self.statistics = {
             GLOBAL.ENABLED: False,
-            STATISTICS.STATISTIC_ENABLED: False,
             STATISTICS.CHANGE_VEHICLE_COLOR: False,
             STATISTICS.FULL_LEFT: "<b><font color='%(color)s'>%(rating)d | %(battles)s | %(nickname).10s</font>%(clanTag)s</b>",
             STATISTICS.FULL_RIGHT: "<b>%(clanTag)s<font color='%(color)s'>%(nickname).10s | %(battles)s | %(rating)d</font></b>",
             STATISTICS.CUT_LEFT: "<b><font color='%(color)s'>%(nickname).10s</font></b>",
             STATISTICS.CUT_RIGHT: "<b><font color='%(color)s'>%(nickname).10s</font></b>",
-            STATISTICS.PANELS_CUT_WIDTH: 60,
-            STATISTICS.PANELS_FULL_WIDTH: 150,
             STATISTICS.USE_WTR: True,
             STATISTICS.COLORS: {
                 "bad": "#FE7B23",
@@ -358,7 +358,5 @@ class SettingsData(object):
                 "unique": "#A874BE",
                 "very_bad": "#FC4A3C",
                 "very_good": "#44DBCB"
-            },
-            STATISTICS.ICON_ENABLED: False,
-            STATISTICS.ICON_BLACKOUT: -1.25
+            }
         }

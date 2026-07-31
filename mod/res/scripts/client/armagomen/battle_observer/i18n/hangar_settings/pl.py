@@ -77,26 +77,29 @@ localization = {
         "hide_shop": "Ukryj przycisk sklepu",
         "hide_wotPlus": "Ukryj przycisk WOT Plus"
     },
-    "statistics_and_icons": {
-        "header": "Statystyki graczy i ikony pojazdów",
-        "icons": "Ikony: Kolory według typów pojazdów",
-        "icons_tooltip": "Funkcja zmienia kolory ikon pojazdów na ekranie ładowania, w panelach drużyn i oknie Tab. Filtr wpływa na "
-                         "jasność. Zalecana wartość: -1.25.",
-        "icons_blackout": "Ikony: Intensywność filtra (jasność)",
-        "statistics": "Włącz statystyki graczy (WGR)",
+    "statistics": {
+        "header": "Statystyki graczy",
         "statistics_vehicle_name_color": "Koloruj nazwę pojazdu według statystyki gracza",
-        "statistics_tooltip": "Statystyki wyświetlane są na ekranie ładowania, w panelach drużyn i oknie Tab. Szczegóły dostępne w pliku "
-                              "statistics.json. Makra: WGR, colorWGR, winRate, nickname, battles, clanTag.",
         "statistics_colors*very_bad": "Bardzo niski poziom",
         "statistics_colors*bad": "Niski poziom",
         "statistics_colors*normal": "Średni poziom",
         "statistics_colors*good": "Wysoki poziom",
         "statistics_colors*very_good": "Bardzo wysoki poziom",
         "statistics_colors*unique": "Unikalny poziom",
-        "statistics_panels_full_width": "Szerokość pola nazwy gracza (szeroki panel)",
-        "statistics_panels_cut_width": "Szerokość pola nazwy gracza (wąski panel)",
         "statistics_use_new_WTR": "Używaj nowej oceny WTR zamiast WGR"
     },
+
+    "colored_icons": {
+        "header": "Ikony pojazdów",
+        "icons_blackout": "Ikony: Intensywność filtra (jasność)",
+        "AT-SPG": "Niszczyciel czołgów",
+        "SPG": "Artyleria",
+        "heavyTank": "Czołg ciężki",
+        "lightTank": "Czołg lekki",
+        "mediumTank": "Czołg średni",
+        "unknown": "Nieznany (mapa globalna)"
+    },
+
     "dispersion_circle": {
         "header": "Celownik – ustawienia kręgu skupienia",
         "server_aim": "Włącz celownik serwerowy (dodatkowy krąg)",
@@ -291,12 +294,7 @@ localization = {
         "global*bgColor": "Kolor tła paneli",
         "global*enemyColorBlind": "Kolor globalny: wróg (daltonizm)",
         "global*enemy": "Kolor globalny: wróg",
-        "vehicle_types_colors*AT-SPG": "Niszczyciel czołgów",
-        "vehicle_types_colors*SPG": "Artyleria",
-        "vehicle_types_colors*heavyTank": "Czołg ciężki",
-        "vehicle_types_colors*lightTank": "Czołg lekki",
-        "vehicle_types_colors*mediumTank": "Czołg średni",
-        "vehicle_types_colors*unknown": "Nieznany (mapa globalna)"
+
     },
     "service_channel_filter": {
         "header": "Filtr wiadomości kanału systemowego",

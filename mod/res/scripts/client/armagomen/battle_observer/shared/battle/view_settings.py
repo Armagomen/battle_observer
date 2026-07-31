@@ -3,6 +3,7 @@ from collections import defaultdict
 from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS
 from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.shared import IStatisticsDataLoader
 from armagomen.utils.common import IS_XVM_INSTALLED
 from constants import ARENA_GUI_TYPE
 from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates
@@ -46,6 +47,7 @@ class IViewSettings(object):
 class ViewSettingsAS(IViewSettings):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
+    statisticsLoader = dependency.descriptor(IStatisticsDataLoader)
     logger = dependency.descriptor(IALogger)
 
     AS_ATTRIBUTE_NAME = 'as_BattleObserverCreate'
@@ -108,17 +110,21 @@ class ViewSettingsAS(IViewSettings):
         minimap = self.settingsLoader.settings.minimap
         return minimap[GLOBAL.ENABLED] and minimap[MINIMAP.ZOOM]
 
-    def isStatisticsAndIconsEnabled(self):
-        if self.xvm_installed(BATTLE_ALIASES.WGR_ICONS) or self.spacialOrEpicRandom():
+    def isStatisticsEnabled(self):
+        if self.xvm_installed(BATTLE_ALIASES.STATISTICS) or self.spacialOrEpicRandom():
             return False
-        statistics = self.settingsLoader.settings.statistics_and_icons
-        return statistics[GLOBAL.ENABLED] and (
-                statistics[STATISTICS.STATISTIC_ENABLED] or statistics[STATISTICS.ICON_ENABLED])
+        statistics = self.settingsLoader.settings.statistics
+        return statistics[GLOBAL.ENABLED] and self.statisticsLoader.enabled
 
     def isPlayersPanelsEnabled(self):
         if self.xvm_installed(BATTLE_ALIASES.PANELS) or self.spacialOrEpicRandom():
             return False
         return self.settingsLoader.settings.players_panels[GLOBAL.ENABLED]
+
+    def isSconsEnabled(self):
+        if self.xvm_installed(BATTLE_ALIASES.COLORED_ICONS) or self.spacialOrEpicRandom():
+            return False
+        return self.settingsLoader.settings.colored_icons[GLOBAL.ENABLED]
 
     def isTeamBasesEnabled(self):
         return self.settingsLoader.settings.team_bases_panel[GLOBAL.ENABLED] and not self.isSpecialBattle()
@@ -134,7 +140,7 @@ class ViewSettingsAS(IViewSettings):
 
     def invalidateComponents(self):
         self.components = tuple(alias for alias, enabled in (
-            (BATTLE_ALIASES.WGR_ICONS, self.isStatisticsAndIconsEnabled()),
+            (BATTLE_ALIASES.STATISTICS, self.isStatisticsEnabled()),
             (BATTLE_ALIASES.HP_BARS, self.isHealthEnabled()),
             (BATTLE_ALIASES.MAIN_GUN, self.isMainGunEnabled()),
             (BATTLE_ALIASES.DAMAGE_LOG, self.settingsLoader.settings.log_total[GLOBAL.ENABLED]),
@@ -150,7 +156,8 @@ class ViewSettingsAS(IViewSettings):
             (BATTLE_ALIASES.DATE_TIME, self.isClockEnabled()),
             (BATTLE_ALIASES.DISTANCE, self.isDistanceToEnemyEnabled()),
             (BATTLE_ALIASES.OWN_HEALTH, self.settingsLoader.settings.own_health[GLOBAL.ENABLED]),
-            (BATTLE_ALIASES.MAP, self.isMinimapEnabled())
+            (BATTLE_ALIASES.MAP, self.isMinimapEnabled()),
+            (BATTLE_ALIASES.COLORED_ICONS, self.isSconsEnabled())
         ) if enabled)
 
         if self.gui.isInEpicRange() and self.components:

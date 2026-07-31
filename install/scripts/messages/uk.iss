@@ -162,10 +162,9 @@ uk.service_channel_autoMaintenance=Автоматичне обслуговува
 uk.service_channel_customizationChanged=Зміна налаштувань
 
 //statistics
-uk.statistics=Налаштування статистики гравців та іконок техніки
-uk.statistics_icons=Забарвити іконки техніки за класами
+uk.statistics=Увімкнути статистику гравців за рейтингом
 uk.statistics_names_color=Змінити колір назви техніки у списках на колір статистики гравця
-uk.statistics_enabled=Увімкнути статистику гравців за рейтингом WGR
+uk.statistics_use_new_WTR=Увімкнути статистику гравців за новим рейтингом WTR
 
 uk.team_bases_panel=Панель захоплення бази
 

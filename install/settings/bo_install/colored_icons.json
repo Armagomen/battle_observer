@@ -1,0 +1,10 @@
+{
+  "AT-SPG": "#0094EC", 
+  "SPG": "#A90400", 
+  "enabled": false, 
+  "heavyTank": "#F9B200", 
+  "icons_blackout": -1.25, 
+  "lightTank": "#37BC00", 
+  "mediumTank": "#FDEF6C", 
+  "unknown": "#FFFFFF"
+}

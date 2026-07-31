@@ -29,9 +29,10 @@ def getViewSettings():
     from armagomen.battle_observer.battle.debug_panel import _DebugPanel
     from armagomen.battle_observer.battle.team_bases import TeamBases
     from armagomen.battle_observer.battle.teams_hp import TeamsHP
-    from armagomen.battle_observer.battle.statistics_and_icons import StatisticsAndIcons
+    from armagomen.battle_observer.battle.statistics import Statistics
+    from armagomen.battle_observer.battle.colored_icons import ColoredIcons
     return (
-        ComponentSettings(BATTLE_ALIASES.WGR_ICONS, StatisticsAndIcons, ScopeTemplates.DEFAULT_SCOPE),
+        ComponentSettings(BATTLE_ALIASES.STATISTICS, Statistics, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.PANELS, PlayersPanels, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.ARMOR_CALC, ArmorCalculator, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.TIMER, BattleTimer, ScopeTemplates.DEFAULT_SCOPE),
@@ -48,6 +49,7 @@ def getViewSettings():
         ComponentSettings(BATTLE_ALIASES.TEAM_BASES, TeamBases, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.HP_BARS, TeamsHP, ScopeTemplates.DEFAULT_SCOPE),
         ComponentSettings(BATTLE_ALIASES.MAP, MinimapZoomPlugin, ScopeTemplates.DEFAULT_SCOPE),
+        ComponentSettings(BATTLE_ALIASES.COLORED_ICONS, ColoredIcons, ScopeTemplates.DEFAULT_SCOPE),
     )
 
 

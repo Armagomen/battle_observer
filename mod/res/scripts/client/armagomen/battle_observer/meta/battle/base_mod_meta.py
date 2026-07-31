@@ -1,7 +1,8 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
 from armagomen import IALogger
-from armagomen._constants import VEHICLE_TYPES_COLORS
+from armagomen._constants import COLORED_ICONS
 from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.settings_loader import SettingsLoader
 from constants import ARENA_BONUS_TYPE
 from gui.Scaleform.framework.entities.BaseDAAPIComponent import BaseDAAPIComponent
 from helpers import dependency
@@ -52,12 +53,8 @@ class BaseModMeta(BaseDAAPIComponent):
         # type: () -> dict
         return self.settingsLoader.settings.colors
 
-    def getVehicleClassColors(self):
-        # type: () -> dict
-        return self.getColors()[VEHICLE_TYPES_COLORS.NAME]
-
     def getVehicleClassColor(self, classTag):
-        return self.getVehicleClassColors().get(classTag, VEHICLE_TYPES_COLORS.UNKNOWN)
+        return self.settingsLoader.getComponentDict(COLORED_ICONS.NAME).get(classTag, COLORED_ICONS.UNKNOWN)
 
     def doLog(self, *args):
         for arg in args:
