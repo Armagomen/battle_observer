@@ -126,13 +126,13 @@ package net.armagomen.battle_observer.battle.components
 					
 					var isEnemy:Boolean = item._listItem._isRightAligned;
 					
-					this.replaceWithSnapshot(item._listItem.vehicleIcon, item.vehicleData.vehicleType, item.vehicleData.vehicleID, isEnemy);
-					
 					var loadingHolder:* = this.getLoadingHolderByVehicleID(item.vehicleData.vehicleID, isEnemy);
 					if (loadingHolder && loadingHolder._vehicleIcon)
 					{
 						this.replaceWithSnapshot(loadingHolder._vehicleIcon, loadingHolder.model.vehicleType, item.vehicleData.vehicleID, isEnemy);
 					}
+					
+					this.replaceWithSnapshot(item._listItem.vehicleIcon, item.vehicleData.vehicleType, item.vehicleData.vehicleID, isEnemy);
 				}
 			}
 		}
