@@ -5,7 +5,6 @@ package net.armagomen.battle_observer.battle.components
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.utils.Dictionary;
-	import flash.utils.setTimeout;
 	import net.armagomen.battle_observer.battle.base.ObserverBattleDisplayable;
 	import net.wg.data.constants.generated.BATTLE_VIEW_ALIASES;
 	import net.wg.gui.battle.components.events.PlayersPanelListEvent;
@@ -77,46 +76,6 @@ package net.armagomen.battle_observer.battle.components
 				target.removeEventListener(type, listener);
 			}
 		}
-
-		
-		public function as_updateALL(e:* = null):void
-		{
-			setTimeout(this.updateTextItems, 200, e);
-		}
-		
-		//private function cloneTextField(original:TextField, isEnemy:Boolean):void
-		//{
-			//var copy:TextField = new TextField();
-			//
-			//copy.text = original.text;
-			//copy.htmlText = original.htmlText;
-			//copy.defaultTextFormat = original.defaultTextFormat;
-			//copy.autoSize = original.autoSize;
-			//copy.multiline = original.multiline;
-			//copy.wordWrap = original.wordWrap;
-			//copy.selectable = original.selectable;
-			//copy.embedFonts = original.embedFonts;
-			//
-			//copy.x = original.x;
-			//copy.y = original.y;
-			//copy.scaleX = original.scaleX;
-			//copy.scaleY = original.scaleY;
-			//copy.rotation = original.rotation;
-			//
-			//if (isEnemy)
-			//{
-				//copy.scaleY *= -1;
-			//}
-			//
-			//if (original.parent)
-			//{
-				//var parent:DisplayObjectContainer = original.parent;
-				//var idx:int = parent.getChildIndex(original);
-				//
-				//parent.removeChild(original);
-				//parent.addChildAt(copy, idx);
-			//}
-		//}
 		
 		public function as_update_wgr_data(statsData:Object):void
 		{
@@ -128,7 +87,7 @@ package net.armagomen.battle_observer.battle.components
 			this.statisticsLoaded = true;
 		}
 		
-		private function updateTextItems(eve:* = null):void
+		public function as_updateALL(eve:* = null):void
 		{
 			var targetList:Array = eve && eve.type == PlayersPanelListEvent.ITEMS_COUNT_CHANGE ? [eve.target] : [this.panels.listLeft, this.panels.listRight];
 			for each (var list:* in targetList)
@@ -138,7 +97,7 @@ package net.armagomen.battle_observer.battle.components
 					if (!item || !item._listItem) continue;
 					this.updateStatisticsByItem(item, item._listItem._isRightAligned);
 				}
-				list.updatePlayerNameWidth();
+				this.scheduleAfterFrames(list.updatePlayerNameWidth, 3);
 			}
 		}
 		
@@ -165,17 +124,17 @@ package net.armagomen.battle_observer.battle.components
 		
 		public function as_updateByVehicleID(vehicleID:int, isEnemy:Boolean):void
 		{
-			setTimeout(this.updateByVehicleID, 200, vehicleID, isEnemy);
-		}
-		
-		private function updateByVehicleID(vehicleID:int, isEnemy:Boolean):void
-		{
 			var item:* = this.getPanelHolderByVehicleID(vehicleID, isEnemy);
 			if (!item || !item._listItem) return;
 			this.updateStatisticsByItem(item, isEnemy);
 		}
 		
-		private function updateStatisticsByItem(item:*, isEnemy:Boolean):void
+		private function updateStatisticsByItem(item:*, isEnemy:Boolean):void 
+		{
+			this.scheduleAfterFrames(this.updateItem, 2, [item, isEnemy]);
+		}
+		
+		private function updateItem(item:*, isEnemy:Boolean):void
 		{
 			
 			if (this.statisticsLoaded)
@@ -187,20 +146,14 @@ package net.armagomen.battle_observer.battle.components
 				this.updateHtmlText(item._listItem.playerNameFullTF, data.fullName);
 				this.updateHtmlText(item._listItem.playerNameCutTF, data.cutName);
 				
-				//this.cloneTextField(item._listItem.vehicleTF, isEnemy);
-				//this.cloneTextField(item._listItem.playerNameFullTF, isEnemy);
-				//this.cloneTextField(item._listItem.playerNameCutTF, isEnemy);
-				
 				if (this.battleLoading.visible)
 				{
 					var loadingHolder:* = this.getLoadingHolderByVehicleID(item.vehicleData.vehicleID, isEnemy);
 					this.updateAutoSize(loadingHolder._textField, loadingHolder._isEnemy ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT)
 					this.updateHtmlText(loadingHolder._textField, data.fullName);
-					//this.cloneTextField(loadingHolder._textField, isEnemy);
 					if (loadingHolder._vehicleField)
 					{
 						this.setVehicleTextColor(loadingHolder._vehicleField, data.vehicleTextColor);
-							//this.cloneTextField(loadingHolder._vehicleField, isEnemy);
 					}
 				}
 				
@@ -209,7 +162,6 @@ package net.armagomen.battle_observer.battle.components
 					item._listItem.playerNameFullTF.alpha = item._listItem.playerNameCutTF.alpha = item._listItem.vehicleTF.alpha = DEAD_ALPHA;
 				}
 			}
-		
 		}
 		
 		// holder getters

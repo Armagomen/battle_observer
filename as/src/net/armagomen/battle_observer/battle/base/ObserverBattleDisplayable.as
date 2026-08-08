@@ -72,5 +72,21 @@ package net.armagomen.battle_observer.battle.base
 				this.battlePage.removeChild(component);
 			}
 		}
+		
+		
+		public function scheduleAfterFrames(callback:Function, frames:int = 1, args:Array = null):void 
+		{
+			function step(remaining:int):void 
+			{
+				if (remaining == 0) {
+					callback.apply(null, args);
+				} else {
+					App.utils.scheduler.scheduleOnNextFrame(function():void {
+						step(remaining - 1);
+					});
+				}
+			}
+			step(frames);
+		}
 	}
 }

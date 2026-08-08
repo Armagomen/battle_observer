@@ -20,7 +20,7 @@ package net.armagomen.battle_observer.battle.components
 		private var colorCache:Dictionary = new Dictionary();
 		private var iconsUpdated:Dictionary = new Dictionary();
 		
-		private static const DEAD_ALPHA:Number = 0.6;
+		private static const DEAD_ALPHA:Number = 0.7;
 		
 		public var getConvertedColors:Function;
 		
@@ -99,6 +99,7 @@ package net.armagomen.battle_observer.battle.components
 			copy.rotation = vehicleIcon.rotation;
 			
 			copy.transform.colorTransform = this.colorCache[vehicleType];
+			copy.alpha = 1;
 			
 			if (isEnemy)
 			{
