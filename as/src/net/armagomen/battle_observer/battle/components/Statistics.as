@@ -138,6 +138,7 @@ package net.armagomen.battle_observer.battle.components
 					if (!item || !item._listItem) continue;
 					this.updateStatisticsByItem(item, item._listItem._isRightAligned);
 				}
+				list.updatePlayerNameWidth();
 			}
 		}
 		

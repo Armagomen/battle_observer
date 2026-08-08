@@ -96,10 +96,22 @@ class Statistics(StatisticsMeta):
             self.onVehicleUpdate(vehicleID)
 
     def getPattern(self, isEnemy, itemData):
+        result = []
         if isEnemy:
-            return self.settings[STATISTICS.FULL_RIGHT] % itemData, self.settings[STATISTICS.CUT_RIGHT] % itemData
+            keys = (STATISTICS.FULL_RIGHT, STATISTICS.CUT_RIGHT)
         else:
-            return self.settings[STATISTICS.FULL_LEFT] % itemData, self.settings[STATISTICS.CUT_LEFT] % itemData
+            keys = (STATISTICS.FULL_LEFT, STATISTICS.CUT_LEFT)
+
+        for key in keys:
+            try:
+                value = self.settings[key] % itemData
+            except Exception as error:
+                msg = error.args[0] if error.args else error.message
+                self.logger.logError("Statistics: {}, {}, macros Error - {}", key, self.settings[key], msg)
+                value = "error_%s" % msg
+            result.append(value)
+
+        return result
 
     def onDataResponse(self, loadedData):
         itemsData = dict()
