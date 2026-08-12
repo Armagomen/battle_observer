@@ -21,38 +21,38 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			this.x = enemy ? -this.position : this.position;
 		}
 		
-		public function updateDamage(text:String):void
+		public function updateDamage(value:int):void
 		{
 			if (this.damage)
 			{
-				this.damage.htmlText = text;
+				this.damage.text = value.toString();
 			}
 		}
 		
-		public function addDamage(params:Object):void
+		public function addDamage():void
 		{
 			if (!this.damage)
 			{
-				var autoSize:String = (params.align == TextFieldAutoSize.CENTER) ? params.align : this.isEnemy ? (params.align == TextFieldAutoSize.LEFT) ? TextFieldAutoSize.RIGHT : TextFieldAutoSize.LEFT : params.align; 
-				this.damage = new TextExt(this.isEnemy ? -params.x : params.x, params.y, null, autoSize, this);
+				var autoSize:String = this.isEnemy ? TextFieldAutoSize.LEFT : TextFieldAutoSize.RIGHT; 
+				this.damage = new TextExt(this.isEnemy ? 40 : -40, 1, Constants.middleText2, autoSize, this);
 				this.damage.visible = false;
 			}
 		}
 		
 		public function addHealth(color:String, colorParams:Object, startVisible:Boolean):void
 		{
-			var barX:Number     = 10;
-			var barWidth:Number = 80;
-			var textX:Number    = 40;
+			var barX:Number     = Constants.statistics ? 34 : 10;
+			var barWidth:Number = Constants.statistics ? 64 : 70;
+			var textX:Number    = (barWidth >> 1) - 1;
 			if (this.isEnemy)
 			{
 				barWidth = -barWidth;
 				barX = -barX;
 				textX = -textX;
 			}
-			this.healthBar = new ProgressBar(barX, 2, barWidth, 20, color, colorParams.bgColor, 0);
-			this.healthBar.setOutline(barWidth, 20);
-			this.healthBar.addTextField(textX, -2, TextFieldAutoSize.CENTER, Constants.normalText15);
+			this.healthBar = new ProgressBar(barX, 3, barWidth, 18, color, colorParams.bgColor, 0);
+			this.healthBar.setOutline(barWidth, 18);
+			this.healthBar.addTextField(textX, -2, TextFieldAutoSize.CENTER, Constants.diff);
 			this.healthBar.setVisible(startVisible);
 			this.addChild(this.healthBar);
 		}

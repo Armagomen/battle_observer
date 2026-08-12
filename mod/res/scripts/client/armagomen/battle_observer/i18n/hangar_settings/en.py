@@ -87,9 +87,7 @@ localization = {
     },
 
     "statistics": {
-        "header": "WGR (WGR) Player Statistics",
-        "statistics_vehicle_name_color": "Change the color of the tank name in the ears to the color "
-                                         "of the statistics",
+        "header": "Players Statistics",
         "statistics_colors*very_bad": "very bad",
         "statistics_colors*bad": "bad",
         "statistics_colors*normal": "normal",

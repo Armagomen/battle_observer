@@ -85,7 +85,6 @@ localization = {
     },
     "statistics": {
         "header": "Настройки статистики игроков",
-        "statistics_vehicle_name_color": "Изменить цвет названия танка в списках на цвет статистики игрока",
         "statistics_colors*very_bad": "Очень плохо",
         "statistics_colors*bad": "Плохо",
         "statistics_colors*normal": "Нормально",

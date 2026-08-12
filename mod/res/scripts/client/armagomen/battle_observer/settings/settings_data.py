@@ -294,8 +294,6 @@ class SettingsData(object):
             PANELS.SPOTTED_FIX: True,
             PANELS.DAMAGES_ENABLED: False,
             PANELS.DAMAGES_HOT_KEY: [[Keys.KEY_LALT]],
-            PANELS.DAMAGES_TEMPLATE: "<font color='#FFFF00'>%(damage)s</font>",
-            PANELS.DAMAGES_SETTINGS: {GLOBAL.X: -50, GLOBAL.Y: -2, GLOBAL.ALIGN: GLOBAL.ALIGN_LIST.left},
             PANELS.BARS_ENABLED: False,
             PANELS.BAR_CLASS_COLOR: False,
             PANELS.ON_KEY_DOWN: False,
@@ -345,11 +343,6 @@ class SettingsData(object):
 
         self.statistics = {
             GLOBAL.ENABLED: False,
-            STATISTICS.CHANGE_VEHICLE_COLOR: False,
-            STATISTICS.FULL_LEFT: "<b><font color='%(color)s'>%(rating)d | %(battles)s | %(nickname).10s</font>%(clanTag)s</b>",
-            STATISTICS.FULL_RIGHT: "<b>%(clanTag)s<font color='%(color)s'>%(nickname).10s | %(battles)s | %(rating)d</font></b>",
-            STATISTICS.CUT_LEFT: "<b><font color='%(color)s'>%(nickname).10s</font></b>",
-            STATISTICS.CUT_RIGHT: "<b><font color='%(color)s'>%(nickname).10s</font></b>",
             STATISTICS.USE_WTR: True,
             STATISTICS.COLORS: {
                 "bad": "#FE7B23",

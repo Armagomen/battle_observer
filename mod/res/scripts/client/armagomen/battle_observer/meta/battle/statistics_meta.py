@@ -3,14 +3,14 @@ from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 
 class StatisticsMeta(BaseModMeta):
 
-    def as_update_wgr_dataS(self, itemsData):
+    def as_updateDeadS(self, vehicleID):
         if self._isDAAPIInited():
-            self.flashObject.as_update_wgr_data(itemsData)
+            self.flashObject.as_updateDead(vehicleID)
 
-    def as_updateByVehicleID(self, vehicleID, isEnemy):
+    def on_altModeS(self, enabled):
         if self._isDAAPIInited():
-            self.flashObject.as_updateByVehicleID(vehicleID, isEnemy)
+            self.flashObject.on_altMode(enabled)
 
-    def as_updateALL(self, *args, **kwargs):
+    def as_createMinimalitem(self, vehicleID, isEnemy, data):
         if self._isDAAPIInited():
-            self.flashObject.as_updateALL()
+            self.flashObject.createMinimalitem(vehicleID, isEnemy, data)

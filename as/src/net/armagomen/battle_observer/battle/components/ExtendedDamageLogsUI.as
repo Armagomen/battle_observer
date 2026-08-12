@@ -34,7 +34,7 @@ package net.armagomen.battle_observer.battle.components
 						bottom.removeChildren();
 					}
 					
-					this.logs = new <TextExt>[new TextExt(settings.settings.x + (this.isComp7Battle() ? 50 : 30), settings.settings.y + 4, null, settings.settings.align, top, settings.top_enabled), new TextExt(settings.settings.x + 20, settings.settings.y, null, settings.settings.align, bottom, settings.bottom_enabled)];
+					this.logs = new <TextExt>[new TextExt(settings.settings.x + (this.isComp7Battle() ? 50 : 30), settings.settings.y + 4, null, settings.settings.align, top, true, settings.top_enabled), new TextExt(settings.settings.x + 20, settings.settings.y, null, settings.settings.align, bottom, true, settings.bottom_enabled)];
 					this.logs.fixed = true;
 					App.utils.data.cleanupDynamicObject(settings);
 				}

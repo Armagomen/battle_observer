@@ -14,7 +14,7 @@ from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
 
 settingsVersion = 43
-LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.PANELS_NAME, MINIMAP.NAME, COLORED_ICONS.NAME}
+LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.NAME, MINIMAP.NAME, COLORED_ICONS.NAME}
 
 
 def makeTooltip(header=None, body=None, note=None, attention=None):
@@ -187,8 +187,8 @@ class CreateElement(Getter):
             'position': CONFIG_INTERFACE.BLOCK_IDS.index(blockID), 'column1': column1, 'column2': column2
         }
 
-    hk_bk = ((MINIMAP.ZOOM, MINIMAP.ZOOM_KEY), (DAMAGE_LOG.NAME, DAMAGE_LOG.HOT_KEY), (PANELS.PANELS_NAME, PANELS.BAR_HOT_KEY),
-             (PANELS.PANELS_NAME, PANELS.DAMAGES_HOT_KEY))
+    hk_bk = ((MINIMAP.ZOOM, MINIMAP.ZOOM_KEY), (DAMAGE_LOG.NAME, DAMAGE_LOG.HOT_KEY), (PANELS.NAME, PANELS.BAR_HOT_KEY),
+             (PANELS.NAME, PANELS.DAMAGES_HOT_KEY))
     distRange = ((ARCADE.NAME, ARCADE.DIST_RANGE), (STRATEGIC.NAME, STRATEGIC.DIST_RANGE))
 
     def createItem(self, blockID, key, value):

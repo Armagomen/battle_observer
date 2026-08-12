@@ -13,9 +13,9 @@ class PlayersPanelsMeta(BaseModMeta):
         if self._isDAAPIInited():
             self.flashObject.as_addHealthBar(vehID, barColor, visible)
 
-    def as_addDamageS(self, vehID, params):
+    def as_addDamageS(self, vehID):
         if self._isDAAPIInited():
-            self.flashObject.as_addDamage(vehID, params)
+            self.flashObject.as_addDamage(vehID)
 
     def as_updateDamageS(self, vehicleID, text):
         if self._isDAAPIInited():

@@ -151,19 +151,19 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 			}
 		}
 		
-		public function as_addDamage(vehicleID:int, params:Object):void
+		public function as_addDamage(vehicleID:int):void
 		{
 			if (this.storage[vehicleID])
 			{
-				this.storage[vehicleID].addDamage(params);
+				this.storage[vehicleID].addDamage();
 			}
 		}
 		
-		public function as_updateDamage(vehicleID:int, text:String):void
+		public function as_updateDamage(vehicleID:int, value:int):void
 		{
 			if (this.storage[vehicleID])
 			{
-				this.storage[vehicleID].updateDamage(text);
+				this.storage[vehicleID].updateDamage(value);
 			}
 		}
 		
@@ -178,13 +178,13 @@ package net.armagomen.battle_observer.battle.components.playerspanels
 		private function setSpottedPosition(listitem:*):void
 		{
 			var spottedIndicator:SpottedIndicator = listitem.spottedIndicator;
-			spottedIndicator.scaleX = spottedIndicator.scaleY = 1.5;
+			spottedIndicator.scaleX = spottedIndicator.scaleY = 1.6;
 			
 			var indicator:Sprite = new Sprite();
 			indicator.addChild(spottedIndicator);
 			listitem.addChild(indicator);
-			indicator.x = -45;
-			indicator.y = -12;
+			indicator.x = -35;
+			indicator.y = -13;
 		}
 		
 		public function as_colorBlindBars(hpColor:String):void

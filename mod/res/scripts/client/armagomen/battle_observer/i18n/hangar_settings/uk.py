@@ -78,14 +78,13 @@ localization = {
     },
     "statistics": {
         "header": "Налаштування статистики гравців",
-        "statistics_vehicle_name_color": "Змінювати колір назви техніки у списках відповідно до статистики гравця",
         "statistics_colors*very_bad": "Дуже низький рівень",
         "statistics_colors*bad": "Низький рівень",
         "statistics_colors*normal": "Середній рівень",
         "statistics_colors*good": "Високий рівень",
         "statistics_colors*very_good": "Дуже високий рівень",
         "statistics_colors*unique": "Унікальний рівень",
-        "statistics_use_new_WTR": "Використовувати новий WTR рейтинг замість WGR",
+        "statistics_use_new_WTR": "Використовувати новий WTR рейтинг замість застарілого WGR",
     },
 
     "colored_icons": {

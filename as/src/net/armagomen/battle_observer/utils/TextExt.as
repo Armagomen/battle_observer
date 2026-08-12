@@ -6,7 +6,7 @@
 	
 	public class TextExt extends TextField
 	{
-		public function TextExt(x:Number, y:Number, format:TextFormat, align:String, ui:*, enabled:Boolean = true)
+		public function TextExt(x:Number, y:Number, format:TextFormat, align:String, ui:*, multiline:Boolean = false, enabled:Boolean = true)
 		{
 			super();
 			if (format == null)
@@ -21,7 +21,7 @@
 			this.autoSize = align;
 			this.filters = [new GlowFilter(0, 0.62, 2, 2, 4)];
 			this.selectable = false;
-			this.multiline = true;
+			this.multiline = multiline;
 			this.visible = enabled;
 			this.htmlText = "";
 			this.text = "";

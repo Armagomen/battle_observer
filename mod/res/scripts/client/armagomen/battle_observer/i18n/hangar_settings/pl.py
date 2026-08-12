@@ -79,7 +79,6 @@ localization = {
     },
     "statistics": {
         "header": "Statystyki graczy",
-        "statistics_vehicle_name_color": "Koloruj nazwę pojazdu według statystyki gracza",
         "statistics_colors*very_bad": "Bardzo niski poziom",
         "statistics_colors*bad": "Niski poziom",
         "statistics_colors*normal": "Średni poziom",

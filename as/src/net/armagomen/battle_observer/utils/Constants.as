@@ -10,11 +10,14 @@ package net.armagomen.battle_observer.utils
 		public static const largeText:TextFormat    = new TextFormat("$TitleFont", 20, 0xFFFFFF);
 		public static const normalText:TextFormat   = new TextFormat("$FieldFont", 16, 0xFFFFFF);
 		public static const normalText15:TextFormat = new TextFormat("$FieldFont", 15, 0xFFFFFF);
+		public static const normalText13:TextFormat = new TextFormat("$TitleFont", 13, 0xFFFFFF);
 		public static const scoreformat:TextFormat  = new TextFormat("$TitleFont", 24, 0xFFFFFF, true);
 		
 		public static const ALPHA:Number            = 0.6;
 		public static const BG_ALPHA:Number         = 0.3;
 		public static const HUNDREDTH:Number        = 0.01;
+		
+		public static var statistics:Boolean      = false;
 		
 		public function Constants()
 		{
@@ -24,6 +27,6 @@ package net.armagomen.battle_observer.utils
 		public static function cloneTextFormat(fmt:TextFormat):TextFormat
 		{
 			return new TextFormat(fmt.font, fmt.size, fmt.color, fmt.bold, fmt.italic, fmt.underline, fmt.url, fmt.target, fmt.align, fmt.leftMargin, fmt.rightMargin, fmt.indent, fmt.leading);
-		}
+		}		
 	}
 }

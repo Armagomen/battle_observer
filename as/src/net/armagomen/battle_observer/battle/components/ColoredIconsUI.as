@@ -27,7 +27,6 @@ package net.armagomen.battle_observer.battle.components
 		public function ColoredIconsUI()
 		{
 			super();
-		
 		}
 		
 		override protected function onPopulate():void
@@ -59,6 +58,7 @@ package net.armagomen.battle_observer.battle.components
 		{
 			this.removeListeners();
 			App.utils.data.cleanupDynamicObject(this.colorCache);
+			App.utils.data.cleanupDynamicObject(this.iconsUpdated);
 			this.battleLoading = null;
 			this.panels = null;
 			super.onBeforeDispose();
@@ -113,7 +113,6 @@ package net.armagomen.battle_observer.battle.components
 				vehicleIcon.parent.removeChild(vehicleIcon);
 			}
 			this.iconsUpdated[vehicleID] = copy;
-		
 		}
 		
 		public function updateAllIcons(eve:* = null):void

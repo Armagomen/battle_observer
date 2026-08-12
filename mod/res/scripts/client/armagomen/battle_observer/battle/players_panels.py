@@ -74,7 +74,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
         if self.hpBarsEnable and vInfoVO.isAlive():
             self.createHealthBar(vehicleID, vInfoVO, isEnemy)
         if self.damagesEnable:
-            self.as_addDamageS(vehicleID, self.settings[PANELS.DAMAGES_SETTINGS])
+            self.as_addDamageS(vehicleID)
         self.logger.logDebug("PlayersPanels onAddedToStorage: id={} enemy={}", vehicleID, isEnemy)
 
     def onVehicleKilled(self, targetID, *args):
@@ -91,8 +91,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             self.as_updateHealthBarS(vehicleID, health_percent, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onPlayerDamaged(self, attackerID, damage):
-        damage_text = self.settings[PANELS.DAMAGES_TEMPLATE] % {PANELS.DAMAGE: damage}
-        self.as_updateDamageS(attackerID, damage_text)
+        self.as_updateDamageS(attackerID, damage)
 
     def onPeriodChange(self, *args):
         self.updateDamageLogPosition()

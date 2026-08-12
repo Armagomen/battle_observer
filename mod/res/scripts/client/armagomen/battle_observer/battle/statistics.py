@@ -5,10 +5,8 @@ import BigWorld
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.meta.battle.statistics_meta import StatisticsMeta
 from armagomen.battle_observer.shared import IBOKeysListener, IStatisticsDataLoader
-from armagomen.utils.common import getGreatPercent, hexToInt
-from gui.shared import EVENT_BUS_SCOPE, events
+from armagomen.utils.common import getGreatPercent, getPercent, hexToInt
 from helpers import dependency
-from Keys import KEY_LALT, KEY_LCONTROL, KEY_RALT, KEY_RCONTROL
 from skeletons.gui.app_loader import IAppLoader
 
 WGR_RANGES = ((0, "very_bad"), (3500, "bad"), (5300, "normal"), (7400, "good"), (9700, "very_good"), (11000, "unique"))
@@ -28,15 +26,12 @@ class Statistics(StatisticsMeta):
     def __init__(self):
         super(Statistics, self).__init__()
         self.useWTR = self.settingsLoader.getSetting(STATISTICS.NAME, STATISTICS.USE_WTR)
-        self._format = {True: "{:.1f}{}", False: "{:.0f}{}"}
         self.__addedVehicles = set()
         self.__sentVehicles = set()
         self.__callback = None
 
     def _populate(self):
         super(Statistics, self)._populate()
-        self.keysListener.registerComponent(self.as_updateALL, keyList={KEY_LALT, KEY_RALT, KEY_RCONTROL, KEY_LCONTROL})
-
         self.statisticsLoader.onDataResponse += self.onDataResponse
         self.statisticsLoader.requestStatisticsFromApi(
             {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
@@ -47,15 +42,8 @@ class Statistics(StatisticsMeta):
             if arena.isFogOfWarEnabled:
                 arena.onVehicleAdded += self.onFogOfWarAddedUpdated
                 arena.onVehicleUpdated += self.onFogOfWarAddedUpdated
-            arena.onVehicleStatisticsUpdate += self.onVehicleUpdate
-            arena.onVehicleKilled += self.onVehicleUpdate
-            arena.onAvatarReady += self.onVehicleUpdate
-            arena.onPeriodChange += self.as_updateALL
-            arena.onNewVehicleListReceived += self.as_updateALL
-        self.addListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
-        self.addListener(events.GameEvent.SHOW_EXTENDED_INFO, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
-        self.addListener(events.GameEvent.BATTLE_LOADING, self.as_updateALL, EVENT_BUS_SCOPE.BATTLE)
-        self.as_updateALL()
+            arena.onVehicleKilled += self.onVehicleKilled
+        self.keysListener.registerComponent(self.on_altModeS)
 
     def _dispose(self):
         self.statisticsLoader.onDataResponse -= self.onDataResponse
@@ -64,19 +52,11 @@ class Statistics(StatisticsMeta):
             if arena.isFogOfWarEnabled:
                 arena.onVehicleAdded -= self.onFogOfWarAddedUpdated
                 arena.onVehicleUpdated -= self.onFogOfWarAddedUpdated
-            arena.onVehicleStatisticsUpdate -= self.onVehicleUpdate
-            arena.onVehicleKilled -= self.onVehicleUpdate
-            arena.onAvatarReady -= self.onVehicleUpdate
-            arena.onPeriodChange -= self.as_updateALL
-            arena.onNewVehicleListReceived -= self.as_updateALL
-        self.removeListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
-        self.removeListener(events.GameEvent.SHOW_EXTENDED_INFO, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
-        self.removeListener(events.GameEvent.BATTLE_LOADING, self.as_updateALL, scope=EVENT_BUS_SCOPE.BATTLE)
+            arena.onVehicleKilled -= self.onVehicleKilled
         super(Statistics, self)._dispose()
 
-    def onVehicleUpdate(self, vehicleID, *args):
-        isEnemy = self.getVehicleInfo(vehicleID).team != BigWorld.player().team
-        self.as_updateByVehicleID(vehicleID, isEnemy)
+    def onVehicleKilled(self, vehicleID, *args):
+        self.as_updateDeadS(vehicleID)
 
     def onAddedUpdatedDelay(self):
         self.__callback = None
@@ -86,65 +66,39 @@ class Statistics(StatisticsMeta):
 
     def onFogOfWarAddedUpdated(self, vehicleID):
         vInfo = self.getVehicleInfo(vehicleID)
+        if vInfo.isObserver():
+            return
         accountDBID = vInfo.player.accountDBID
-        if accountDBID and accountDBID not in self.__addedVehicles and not vInfo.isObserver():
+        if accountDBID and accountDBID not in self.__addedVehicles:
             if self.__callback is not None:
                 BigWorld.cancelCallback(self.__callback)
             self.__addedVehicles.add(accountDBID)
             self.__callback = BigWorld.callback(2.0, self.onAddedUpdatedDelay)
-        if vInfo.vehicleType and not vInfo.isObserver():
-            self.onVehicleUpdate(vehicleID)
-
-    def getPattern(self, isEnemy, itemData):
-        result = []
-        if isEnemy:
-            keys = (STATISTICS.FULL_RIGHT, STATISTICS.CUT_RIGHT)
-        else:
-            keys = (STATISTICS.FULL_LEFT, STATISTICS.CUT_LEFT)
-
-        for key in keys:
-            try:
-                value = self.settings[key] % itemData
-            except Exception as error:
-                msg = error.args[0] if error.args else error.message
-                self.logger.logError("Statistics: {}, {}, macros Error - {}", key, self.settings[key], msg)
-                value = "error_%s" % msg
-            result.append(value)
-
-        return result
 
     def onDataResponse(self, loadedData):
-        itemsData = dict()
         for vehicle_id, value in loadedData.iteritems():
             vInfo = self.getVehicleInfo(vehicle_id)
             self.logger.logDebug("Statistics: player={}, value={}", vInfo.player.name, value)
             if len(value) < 4:
                 continue
-            item_data = self.buildItemData(vInfo.player, value)
-            full, cut = self.getPattern(vInfo.isEnemy(), item_data)
-            text_color = hexToInt(item_data["color"]) if self.settings[STATISTICS.CHANGE_VEHICLE_COLOR] else 0
-            itemsData[vehicle_id] = {"fullName": full, "cutName": cut, "vehicleTextColor": text_color}
-        if itemsData:
-            self.as_update_wgr_dataS(itemsData)
-            self.as_updateALL()
+            item_data = self.buildItemData(value)
+            self.as_createMinimalitem(vehicle_id, vInfo.isEnemy(), item_data)
 
     def __battlesFormat(self, battles):
         magnitude = int(floor(log(battles, self.K)))
-        return self._format[magnitude >= 1].format(battles / self.K ** magnitude, self.UNITS[magnitude])
+        decimals = 1 if magnitude >= 1 else 0
+        value = battles / (self.K ** magnitude)
+        return "{0:.{decimals}f}{1}".format(value, self.UNITS[magnitude], decimals=decimals)
 
     def __getColor(self, rating):
         for value, colorName in reversed(WTR_RANGES if self.useWTR else WGR_RANGES):
             if rating >= value:
-                return self.settings[STATISTICS.COLORS].get(colorName, self.DEFAULT_COLOR)
-        return self.DEFAULT_COLOR
+                return hexToInt(self.settings[STATISTICS.COLORS].get(colorName, self.DEFAULT_COLOR))
+        return hexToInt(self.DEFAULT_COLOR)
 
-    def buildItemData(self, player, data):
-        rating = data["rating" if self.useWTR else "global_rating"]
+    def buildItemData(self, data):
         return {
-            "rating": rating,
-            "color": self.__getColor(rating),
-            "winRate": getGreatPercent(data["wins"], data["battles"]),
-            "battles": self.__battlesFormat(data["battles"]),
-            "nickname": player.name,
-            "clanTag": "[{}]".format(player.clanAbbrev) if player.clanAbbrev else ""
+            "color": self.__getColor(data["rating" if self.useWTR else "global_rating"]),
+            "winRate": "{:.1%}".format(getPercent(data["wins"], data["battles"])),
+            "battles": self.__battlesFormat(data["battles"])
         }
