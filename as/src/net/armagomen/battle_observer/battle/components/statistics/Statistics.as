@@ -22,7 +22,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 			super.onBeforeDispose();
 		}
 		
-		public function createMinimalitem(vehicleID:int, isEnemy:Boolean, data:Object):void
+		public function createItem(vehicleID:int, isEnemy:Boolean, data:Object):void
 		{
 			var item:* = this.getPanelHolderByVehicleID(vehicleID, isEnemy);
 			if (!item || !item._listItem) return;

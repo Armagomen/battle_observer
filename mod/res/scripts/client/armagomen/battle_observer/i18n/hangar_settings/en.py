@@ -93,8 +93,7 @@ localization = {
         "statistics_colors*normal": "normal",
         "statistics_colors*good": "good",
         "statistics_colors*very_good": "very good",
-        "statistics_colors*unique": "unique",
-        "statistics_use_new_WTR": "Use new WTR rating instead of WGR"
+        "statistics_colors*unique": "unique"
     },
 
     "colored_icons": {

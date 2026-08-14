@@ -90,8 +90,7 @@ localization = {
         "statistics_colors*normal": "Нормально",
         "statistics_colors*good": "Хорошо",
         "statistics_colors*very_good": "Очень хорошо",
-        "statistics_colors*unique": "Уникально",
-        "statistics_use_new_WTR": "Использовать новый рейтинг WTR вместо WGR"
+        "statistics_colors*unique": "Уникально"
     },
 
     "colored_icons": {

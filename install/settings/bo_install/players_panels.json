@@ -15,11 +15,5 @@
     [
       56
     ]
-  ],
-  "players_damages_settings": {
-    "align": "left",
-    "x": -50,
-    "y": -2
-  },
-  "players_damages_text": "<font color='#FFFF00'>%(damage)s</font>"
+  ]
 }

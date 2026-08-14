@@ -20,7 +20,7 @@ def get_urls():
         return None, None
     main = "https://api.worldoftanks.%s/wot/account/" % domain
     info_url = main + ("info/?application_id=%s&account_id={}&extra=statistics.random&"
-                       "fields=statistics.random.wins,statistics.random.battles,global_rating") % API_KEY
+                       "fields=statistics.random.wins,statistics.random.battles") % API_KEY
     wtr_url = main + "wtr/?application_id=%s&account_id={}&fields=rating" % API_KEY
     return info_url, wtr_url
 
@@ -67,7 +67,6 @@ class StatisticsDataLoader(IStatisticsDataLoader):
                 return
             for k, v in response_data.iteritems():
                 self.__cached_vehicles[k].update(v["statistics"]["random"])
-                self.__cached_vehicles[k]["global_rating"] = v["global_rating"]
             self.logger.logDebug("StatisticsDataLoader/__onInfoResponse: FINISH request INFO data={}", response_data)
             self.requestWTR(DBIDs)
         else:
@@ -102,7 +101,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
         loaded = set()
         to_request = set()
         for accountDBID in DBIDs:
-            if len(self.__cached_vehicles[accountDBID]) != 4:
+            if len(self.__cached_vehicles[accountDBID]) != 3:
                 to_request.add(accountDBID)
             else:
                 loaded.add(accountDBID)

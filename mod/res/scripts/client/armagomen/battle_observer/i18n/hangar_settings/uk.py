@@ -83,8 +83,7 @@ localization = {
         "statistics_colors*normal": "Середній рівень",
         "statistics_colors*good": "Високий рівень",
         "statistics_colors*very_good": "Дуже високий рівень",
-        "statistics_colors*unique": "Унікальний рівень",
-        "statistics_use_new_WTR": "Використовувати новий WTR рейтинг замість застарілого WGR",
+        "statistics_colors*unique": "Унікальний рівень"
     },
 
     "colored_icons": {

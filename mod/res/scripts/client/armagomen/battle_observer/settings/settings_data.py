@@ -2,7 +2,7 @@ import Keys
 from armagomen._constants import (ARCADE, ARMOR_CALC, AVG_EFFICIENCY_HANGAR, BATTLE_TIMER, CLOCK, COLORS, CREW, DAMAGE_LOG, DEBUG_PANEL,
                                   DISPERSION, DISPERSION_TIMER, EFFECTS, EX_LOGS_ICONS, FLIGHT_TIME, GLOBAL, HANGAR_HEADER, HP_BARS,
                                   IMAGE_DIR, LOGS_ICONS, MAIN, MINIMAP, PANELS, SERVICE_CHANNEL, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC,
-                                  TEAM_BASES, COLORED_ICONS)
+                                  TEAM_BASES, COLORED_ICONS, MAIN_GUN)
 from constants import ATTACK_REASON
 from gui.shared.gui_items.Vehicle import VEHICLE_CLASS_NAME
 
@@ -285,7 +285,7 @@ class SettingsData(object):
             GLOBAL.ENABLED: False,
             GLOBAL.X: 260,
             GLOBAL.Y: 0,
-            "progress_bar": False
+            MAIN_GUN.PROGRESS_BAR: False
         }
 
         self.players_panels = {
@@ -342,7 +342,6 @@ class SettingsData(object):
 
         self.statistics = {
             GLOBAL.ENABLED: False,
-            STATISTICS.USE_WTR: True,
             STATISTICS.COLORS: {
                 "bad": "#FE7B23",
                 "good": "#88D957",

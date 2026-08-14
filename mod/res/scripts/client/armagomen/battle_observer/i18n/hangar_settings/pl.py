@@ -84,8 +84,7 @@ localization = {
         "statistics_colors*normal": "Średni poziom",
         "statistics_colors*good": "Wysoki poziom",
         "statistics_colors*very_good": "Bardzo wysoki poziom",
-        "statistics_colors*unique": "Unikalny poziom",
-        "statistics_use_new_WTR": "Używaj nowej oceny WTR zamiast WGR"
+        "statistics_colors*unique": "Unikalny poziom"
     },
 
     "colored_icons": {

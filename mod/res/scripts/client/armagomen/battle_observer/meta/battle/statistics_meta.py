@@ -11,6 +11,6 @@ class StatisticsMeta(BaseModMeta):
         if self._isDAAPIInited():
             self.flashObject.on_altMode(enabled)
 
-    def as_createMinimalitem(self, vehicleID, isEnemy, data):
+    def as_createItem(self, vehicleID, isEnemy, data):
         if self._isDAAPIInited():
-            self.flashObject.createMinimalitem(vehicleID, isEnemy, data)
+            self.flashObject.createItem(vehicleID, isEnemy, data)

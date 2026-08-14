@@ -89,7 +89,7 @@ COLORS = namedtuple("COLORS", (
     "colors", "#000000", "#6F6CD3", "#FFD700", "#60CB00", "#FFFFFF", "#FF9900", "#ED070A", "#E0E06D", "#FFC900",
     "bgColor", "global", "ally", "enemy", "enemyColorBlind")
 
-MAIN_GUN = namedtuple("MAIN_GUN", ("NAME", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))("main_gun", 1000, 0.2)
+MAIN_GUN = namedtuple("MAIN_GUN", ("NAME", "PROGRESS_BAR", "MIN_GUN_DAMAGE", "DAMAGE_RATE"))("main_gun", "progress_bar", 1000, 0.2)
 
 MINIMAP = namedtuple("MINIMAP", (
     "NAME", "DEATH_PERMANENT", "SHOW_NAMES", "ZOOM", "VIEW_RADIUS", "YAW", "ZOOM_KEY"))(
@@ -232,7 +232,7 @@ DISTANCE = namedtuple("DISTANCE", ("NAME",))("distance_to_enemy", )
 
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME",))("own_health", )
 
-STATISTICS = namedtuple("STATISTICS", ("NAME", "COLORS", "USE_WTR"))("statistics", "statistics_colors", "statistics_use_new_WTR")
+STATISTICS = namedtuple("STATISTICS", ("NAME", "COLORS"))("statistics", "statistics_colors")
 
 COLORED_ICONS = namedtuple("COLORED_ICONS", ("NAME", "BLACKOUT", "UNKNOWN"))("colored_icons", "icons_blackout", "unknown")
 

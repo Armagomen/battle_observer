@@ -5,12 +5,11 @@ import BigWorld
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.meta.battle.statistics_meta import StatisticsMeta
 from armagomen.battle_observer.shared import IBOKeysListener, IStatisticsDataLoader
-from armagomen.utils.common import getGreatPercent, getPercent, hexToInt
+from armagomen.utils.common import getPercent, hexToInt
 from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 
-WGR_RANGES = ((0, "very_bad"), (3500, "bad"), (5300, "normal"), (7400, "good"), (9700, "very_good"), (11000, "unique"))
-WTR_RANGES = ((0, "very_bad"), (3100, "bad"), (4700, "normal"), (6700, "good"), (9200, "very_good"), (10900, "unique"))
+WTR_RANGES = ((10900, "unique"), (9200, "very_good"), (6700, "good"), (4700, "normal"), (3100, "bad"), (0, "very_bad"))
 
 
 class Statistics(StatisticsMeta):
@@ -25,7 +24,6 @@ class Statistics(StatisticsMeta):
 
     def __init__(self):
         super(Statistics, self).__init__()
-        self.useWTR = self.settingsLoader.getSetting(STATISTICS.NAME, STATISTICS.USE_WTR)
         self.__addedVehicles = set()
         self.__sentVehicles = set()
         self.__callback = None
@@ -79,10 +77,10 @@ class Statistics(StatisticsMeta):
         for vehicle_id, value in loadedData.iteritems():
             vInfo = self.getVehicleInfo(vehicle_id)
             self.logger.logDebug("Statistics: player={}, value={}", vInfo.player.name, value)
-            if len(value) < 4:
+            if len(value) < 3:
                 continue
             item_data = self.buildItemData(value)
-            self.as_createMinimalitem(vehicle_id, vInfo.isEnemy(), item_data)
+            self.as_createItem(vehicle_id, vInfo.isEnemy(), item_data)
 
     def __battlesFormat(self, battles):
         magnitude = int(floor(log(battles, self.K)))
@@ -91,14 +89,14 @@ class Statistics(StatisticsMeta):
         return "{0:.{decimals}f}{1}".format(value, self.UNITS[magnitude], decimals=decimals)
 
     def __getColor(self, rating):
-        for value, colorName in reversed(WTR_RANGES if self.useWTR else WGR_RANGES):
+        for value, colorName in WTR_RANGES:
             if rating >= value:
                 return hexToInt(self.settings[STATISTICS.COLORS].get(colorName, self.DEFAULT_COLOR))
         return hexToInt(self.DEFAULT_COLOR)
 
     def buildItemData(self, data):
         return {
-            "color": self.__getColor(data["rating" if self.useWTR else "global_rating"]),
+            "color": self.__getColor(data["rating"]),
             "winRate": "{:.1%}".format(getPercent(data["wins"], data["battles"])),
             "battles": self.__battlesFormat(data["battles"])
         }
