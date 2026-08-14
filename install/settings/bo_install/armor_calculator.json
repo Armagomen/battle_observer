@@ -9,6 +9,5 @@
   "show_counted_armor": true,
   "show_icons": false,
   "show_piercing_power": true,
-  "show_piercing_reserve": false,
-  "splitter": " | "
+  "show_piercing_reserve": false
 }

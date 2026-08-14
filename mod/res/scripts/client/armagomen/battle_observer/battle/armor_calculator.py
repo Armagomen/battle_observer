@@ -31,13 +31,12 @@ class ArmorCalculator(ArmorCalcMeta):
 
     def setPattern(self):
         element = "{%d:.0f}"
-        splitter = self.settings["splitter"]
         if self.settings[ARMOR_CALC.SHOW_ICONS]:
             img = "<img src='{}/armor_calculator/%d.png' width='16' height='16' vspace='-2'> ".format(IMAGE_DIR)
             element = img + element
-            self.pattern = splitter.join(element % (i, i) for i, key in enumerate(ARMOR_CALC_PARAMS) if self.settings[key])
+            self.pattern = "  ".join(element % (i, i) for i, key in enumerate(ARMOR_CALC_PARAMS) if self.settings[key])
         else:
-            self.pattern = splitter.join(element % i for i, key in enumerate(ARMOR_CALC_PARAMS) if self.settings[key])
+            self.pattern = " | ".join(element % i for i, key in enumerate(ARMOR_CALC_PARAMS) if self.settings[key])
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair

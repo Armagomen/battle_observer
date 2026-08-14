@@ -151,8 +151,7 @@ class SettingsData(object):
             ARMOR_CALC.SHOW_COUNTED_ARMOR: True,
             ARMOR_CALC.SHOW_PIERCING_POWER: True,
             ARMOR_CALC.SHOW_CALIBER: False,
-            ARMOR_CALC.SHOW_ICONS: False,
-            "splitter": "  "
+            ARMOR_CALC.SHOW_ICONS: False
         }
 
         self.colored_icons = {
@@ -163,7 +162,7 @@ class SettingsData(object):
             VEHICLE_CLASS_NAME.SPG: "#A90400",
             VEHICLE_CLASS_NAME.LIGHT_TANK: "#37BC00",
             COLORED_ICONS.UNKNOWN: COLORS.WHITE,
-            COLORED_ICONS.BLACKOUT: -1.25
+            COLORED_ICONS.BLACKOUT: -1.15
         }
 
         self.colors = {
