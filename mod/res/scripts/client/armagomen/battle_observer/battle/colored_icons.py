@@ -1,6 +1,7 @@
 from armagomen.battle_observer.meta.battle.base_mod_meta import BaseModMeta
 from armagomen.utils.common import hexToInt
 from constants import ARENA_PERIOD
+from gui.shared import EVENT_BUS_SCOPE, events
 
 
 class ColoredIcons(BaseModMeta):
@@ -11,12 +12,14 @@ class ColoredIcons(BaseModMeta):
         if arena is not None:
             arena.onPeriodChange += self.onPeriodChange
             arena.onVehicleKilled += self.onVehicleKilled
+        self.addListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.onNextStateSwitched, scope=EVENT_BUS_SCOPE.BATTLE)
 
     def _dispose(self):
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             arena.onPeriodChange -= self.onPeriodChange
             arena.onVehicleKilled -= self.onVehicleKilled
+        self.removeListener(events.GameEvent.NEXT_PLAYERS_PANEL_MODE, self.onNextStateSwitched, scope=EVENT_BUS_SCOPE.BATTLE)
         super(ColoredIcons, self)._dispose()
 
     def onPeriodChange(self, period, *_, **__):
@@ -31,3 +34,7 @@ class ColoredIcons(BaseModMeta):
     def getConvertedColors(self):
         return {name: hexToInt(color) for name, color in self.settings.iteritems() if
                 isinstance(color, basestring) and color.startswith("#")}
+
+    def onNextStateSwitched(self, *args):
+        if self._isDAAPIInited():
+            self.flashObject.as_updatePositions()

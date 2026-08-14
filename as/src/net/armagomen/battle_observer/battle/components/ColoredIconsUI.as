@@ -47,7 +47,6 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function addListeners():void
 		{
-			
 			if (this.panels.listRight)
 			{
 				this.panels.listRight.addEventListener(PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateAllIcons, false, 0, true);
@@ -66,7 +65,6 @@ package net.armagomen.battle_observer.battle.components
 		
 		private function removeListeners():void
 		{
-			
 			if (this.panels.listRight)
 			{
 				this.removeListener(this.panels.listRight, PlayersPanelListEvent.ITEMS_COUNT_CHANGE, this.updateAllIcons);
@@ -133,6 +131,28 @@ package net.armagomen.battle_observer.battle.components
 					}
 					
 					this.replaceWithSnapshot(item._listItem.vehicleIcon, item.vehicleData.vehicleType, item.vehicleData.vehicleID, isEnemy);
+				}
+			}
+		}
+		
+		public function as_updatePositions():void
+		{
+			this.scheduleAfterFrames(this.updatePositions, 2);
+		}
+		
+		private function updatePositions():void
+		{
+			for each (var list:* in[this.panels.listLeft, this.panels.listRight])
+			{
+				for each (var item:* in list._items)
+				{
+					var newVehicleIcon:Bitmap = this.iconsUpdated[item.vehicleData.vehicleID];
+					if (item && item._listItem && newVehicleIcon)
+						;
+					{
+						newVehicleIcon.x = item._listItem.vehicleIcon.x;
+						newVehicleIcon.y = item._listItem.vehicleIcon.y;
+					}
 				}
 			}
 		}

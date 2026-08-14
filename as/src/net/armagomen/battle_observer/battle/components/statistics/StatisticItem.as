@@ -16,7 +16,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 		public function StatisticItem(data:Object, isEnemy:Boolean)
 		{
 			super();
-			var w:Number = 42;
+			var w:Number = 44;
 			this.data = data;
 			this.x = isEnemy ? -this.position - w : this.position;
 			this.graphics.beginFill(data.color, 0.92);
