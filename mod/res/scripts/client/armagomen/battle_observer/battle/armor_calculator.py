@@ -29,14 +29,29 @@ class ArmorCalculator(ArmorCalcMeta):
         g_events.onArmorChanged += self.onArmorChanged
         g_events.onMarkerColorChanged += self.onMarkerColorChanged
 
-    def setPattern(self):
-        element = "{%d:.0f}"
-        if self.settings[ARMOR_CALC.SHOW_ICONS]:
-            img = "<img src='{}/armor_calculator/%d.png' width='16' height='16' vspace='-2'> ".format(IMAGE_DIR)
-            element = img + element
-            self.pattern = "  ".join(element % (i, i) for i, key in enumerate(ARMOR_CALC_PARAMS) if self.settings[key])
+    @staticmethod
+    def getElement(key, idx, with_icon):
+        """
+        Returns the prepared template fragment for a single parameter:
+        - with an icon (if with_icon=True) or without;
+        - using an indexed placeholder "{N:.0f}" or "{N:.0%}".
+        """
+        # indexed placeholder, e.g. "{2:.0f}" or "{3:.0%}"
+
+        if key != ARMOR_CALC.SHOW_CHANCE:
+            placeholder = '{{{0}:.0f}}'.format(idx)
         else:
-            self.pattern = " | ".join(element % i for i, key in enumerate(ARMOR_CALC_PARAMS) if self.settings[key])
+            placeholder = '{{{0}:.0%}}'.format(idx)
+
+        if with_icon:
+            img = "<img src='{0}/armor_calculator/{1}.png' width='16' height='16' vspace='-2'> ".format(IMAGE_DIR, idx)
+            return img + placeholder
+        return placeholder
+
+    def setPattern(self):
+        with_icon = self.settings[ARMOR_CALC.SHOW_ICONS]
+        sep = "  " if with_icon else " | "
+        self.pattern = sep.join(self.getElement(key, i, with_icon) for i, key in enumerate(ARMOR_CALC_PARAMS) if self.settings[key])
 
     def _dispose(self):
         ctrl = self.sessionProvider.shared.crosshair
@@ -60,10 +75,10 @@ class ArmorCalculator(ArmorCalcMeta):
         if data is None:
             self.as_clearMessage()
         else:
-            armor, piercing_power, caliber, ricochet, no_damage = data
+            armor, piercing_power, caliber, ricochet, no_damage, chance = data
             if ricochet:
                 self.as_armorCalcS(RICOCHET)
             elif no_damage:
                 self.as_armorCalcS(NO_DAMAGE)
             elif self.pattern:
-                self.as_armorCalcS(self.pattern.format(armor, piercing_power, caliber, piercing_power - armor))
+                self.as_armorCalcS(self.pattern.format(armor, piercing_power, caliber, piercing_power - armor, chance))

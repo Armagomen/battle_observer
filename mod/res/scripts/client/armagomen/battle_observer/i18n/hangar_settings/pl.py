@@ -163,7 +163,8 @@ localization = {
         "show_counted_armor_tooltip": "Grubość pancerza z uwzględnieniem kąta nachylenia i normalizacji",
         "show_piercing_reserve": "Wyświetl zapas penetracji",
         "show_caliber": "Wyświetl kaliber",
-        "show_icons": "Pokaż ikony"
+        "show_icons": "Pokaż ikony",
+        "show_chance": "Pokaż szansę przebicia"
     },
     "wg_logs": {
         "header": "Ustawienia logu wydarzeń WG",

@@ -60,16 +60,19 @@ class _ShotResult(_CrosshairShotResults):
         else:
             return cls.__computeArmorDefault(collision_details, shell, piercing_power, entity)
 
+
     @classmethod
     def _checkShotResult(cls, armor, piercing_power, no_damage):
         if no_damage:
-            return SHOT_RESULT.UNDEFINED
-        if armor < piercing_power * cls._randomizer.min:
-            return SHOT_RESULT.GREAT_PIERCED
-        elif armor > piercing_power * cls._randomizer.max:
-            return SHOT_RESULT.NOT_PIERCED
+            return SHOT_RESULT.UNDEFINED, 0.0
+        pp_min = piercing_power * cls._randomizer.min
+        pp_max = piercing_power * cls._randomizer.max
+        if armor <= pp_min:
+            return SHOT_RESULT.GREAT_PIERCED, 1.0
+        elif armor > pp_max:
+            return SHOT_RESULT.NOT_PIERCED, 0.0
         else:
-            return SHOT_RESULT.LITTLE_PIERCED
+            return SHOT_RESULT.LITTLE_PIERCED, (pp_max - armor) / (pp_max - pp_min)
 
     @classmethod
     def __computeArmorDefault(cls, collision_details, shell, piercing_power, entity):
@@ -98,8 +101,8 @@ class _ShotResult(_CrosshairShotResults):
             if mat_info.collideOnceOnly:
                 ignored_materials.add(mat_key)
 
-        result = cls._checkShotResult(full_armor, piercing_power, ricochet or no_damage)
-        data = (full_armor, piercing_power, shell.caliber, ricochet, no_damage)
+        result, chance = cls._checkShotResult(full_armor, piercing_power, ricochet or no_damage)
+        data = (full_armor, piercing_power, shell.caliber, ricochet, no_damage, chance)
         return result, data
 
     @classmethod
@@ -140,8 +143,8 @@ class _ShotResult(_CrosshairShotResults):
             if mat_info.collideOnceOnly:
                 ignored_materials.add(mat_key)
 
-        result = cls._checkShotResult(full_armor, piercing_power, ricochet or no_damage)
-        data = (full_armor, piercing_power, shell.caliber, ricochet, no_damage)
+        result, chance = cls._checkShotResult(full_armor, piercing_power, ricochet or no_damage)
+        data = (full_armor, piercing_power, shell.caliber, ricochet, no_damage, chance)
         return result, data
 
     @classmethod
@@ -171,8 +174,8 @@ class _ShotResult(_CrosshairShotResults):
                     break
             if mat_info.collideOnceOnly:
                 ignored_materials.add(mat_key)
-        result = cls._checkShotResult(full_armor, piercing_power, no_damage)
-        data = (full_armor, piercing_power, shell.caliber, False, no_damage)
+        result, chance = cls._checkShotResult(full_armor, piercing_power, no_damage)
+        data = (full_armor, piercing_power, shell.caliber, False, no_damage, chance)
         return result, data
 
 

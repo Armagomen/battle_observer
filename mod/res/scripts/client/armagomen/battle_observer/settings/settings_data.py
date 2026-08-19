@@ -151,7 +151,8 @@ class SettingsData(object):
             ARMOR_CALC.SHOW_COUNTED_ARMOR: True,
             ARMOR_CALC.SHOW_PIERCING_POWER: True,
             ARMOR_CALC.SHOW_CALIBER: False,
-            ARMOR_CALC.SHOW_ICONS: False
+            ARMOR_CALC.SHOW_ICONS: False,
+            ARMOR_CALC.SHOW_CHANCE: False
         }
 
         self.colored_icons = {

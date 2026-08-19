@@ -168,7 +168,8 @@ localization = {
         "show_counted_armor_tooltip": "Panzerungsstärke unter Berücksichtigung von Neigungswinkel und Normalisierung",
         "show_piercing_reserve": "Restdurchschlag anzeigen",
         "show_caliber": "Kaliber anzeigen",
-        "show_icons": "Symbole anzeigen"
+        "show_icons": "Symbole anzeigen",
+        "show_chance": "Trefferchance anzeigen"
     },
     "wg_logs": {
         "header": "WG-Ereignisverlauf-Einstellungen",

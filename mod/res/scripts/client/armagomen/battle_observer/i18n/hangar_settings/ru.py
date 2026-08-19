@@ -173,7 +173,8 @@ localization = {
         "show_counted_armor_tooltip": "Толщина брони с учетом угла наклона и нормализации",
         "show_piercing_reserve": "Показывать остаточное пробитие",
         "show_caliber": "Показывать калибр",
-        "show_icons": "Показывать иконки"
+        "show_icons": "Показывать иконки",
+        "show_chance": "Показывать шанс пробития"
     },
     "wg_logs": {
         "header": "Настройка истории событий WG",

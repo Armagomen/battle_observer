@@ -163,7 +163,8 @@ localization = {
         "show_counted_armor_tooltip": "Товщина броні з урахуванням кута нахилу і нормалізації",
         "show_piercing_reserve": "Показувати запас пробиття",
         "show_caliber": "Показувати калібр снаряда",
-        "show_icons": "Показувати іконки"
+        "show_icons": "Показувати іконки",
+        "show_chance": "Показувати шанс пробиття"
     },
     "wg_logs": {
         "header": "Налаштування історії подій WG",

@@ -177,7 +177,8 @@ localization = {
         "show_counted_armor_tooltip": "Armor thickness considering angle and normalization",
         "show_piercing_reserve": "Show remaining penetration",
         "show_caliber": "Show caliber",
-        "show_icons": "Show icons"
+        "show_icons": "Show icons",
+        "show_chance": "Show penetration chance"
     },
     "wg_logs": {
         "header": "WG LOG SETTINGS",
