@@ -37,7 +37,7 @@ class PiercingRandomizer(IBOPiercingRandomizer):
     def __init__(self):
         self.logger.logInfo("Initializing PiercingRandomizer")
         g_playerEvents.onEnqueued += self.onEnqueued
-        self.__defaults = MinMax(0.25, 1.25)
+        self.__defaults = MinMax(0.75, 1.25)
         self.min = self.__defaults.min
         self.max = self.__defaults.max
         self.__bound = defaultdict(float)
