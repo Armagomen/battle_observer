@@ -8,13 +8,14 @@ from armagomen.utils.common import toggleOverride
 from armagomen.utils.events import g_events
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
-from constants import SERVER_TICK_LENGTH
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
+
+HALF_SERVER_TICK = 0.05
 
 debug_const = "Debug"
 for key, value in gm_factory._GUN_MARKER_LINKAGES.items():
@@ -123,7 +124,7 @@ class DispersionCircle(object):
         gunMarkerInfo = rotator._VehicleGunRotator__getGunMarkerInfo(
             sPos, sVec, rotator.getCurShotDispersionAngles(), rotator._VehicleGunRotator__gunIndex)
         supportMarkersInfo = rotator._VehicleGunRotator__getSupportMarkersInfo()
-        rotator._avatar.inputHandler.updateServerGunMarker(gunMarkerInfo, supportMarkersInfo, SERVER_TICK_LENGTH)
+        rotator._avatar.inputHandler.updateServerGunMarker(gunMarkerInfo, supportMarkersInfo, HALF_SERVER_TICK)
 
     def disableWGServerMarker(self):
         if self.settingsCore.applySetting(GAME.ENABLE_SERVER_AIM, False) is not None:
@@ -137,8 +138,8 @@ class DispersionCircle(object):
 
     @staticmethod
     def toggleLimiter(enable):
-        aih_constants.GUN_MARKER_MIN_SIZE = 16.0 if enable else 30.0
-        aih_constants.SPG_GUN_MARKER_MIN_SIZE = 20.0 if enable else 40.0
+        aih_constants.GUN_MARKER_MIN_SIZE = 20.0 if enable else 32.0
+        aih_constants.SPG_GUN_MARKER_MIN_SIZE = 30.0 if enable else 50.0
 
     def onModSettingsChanged(self, name, data):
         if name != DISPERSION.NAME:

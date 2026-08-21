@@ -44,7 +44,7 @@ class ArmorCalculator(ArmorCalcMeta):
             placeholder = '{{{0}:.0%}}'.format(idx)
 
         if with_icon:
-            img = "<img src='{0}/armor_calculator/{1}.png' width='16' height='16' vspace='-2'> ".format(IMAGE_DIR, idx)
+            img = "<img src='{0}/armor_calculator/{1}.png' width='20' height='20' vspace='-4'> ".format(IMAGE_DIR, idx)
             return img + placeholder
         return placeholder
 
