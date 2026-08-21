@@ -171,7 +171,6 @@ localization = {
         "show_piercing_power": "Показывать пробитие снаряда",
         "show_counted_armor": "Показывать просчитанную толщину брони",
         "show_counted_armor_tooltip": "Толщина брони с учетом угла наклона и нормализации",
-        "show_piercing_reserve": "Показывать остаточное пробитие",
         "show_caliber": "Показывать калибр",
         "show_icons": "Показывать иконки",
         "show_chance": "Показывать шанс пробития"

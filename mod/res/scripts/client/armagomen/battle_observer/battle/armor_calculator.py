@@ -36,8 +36,6 @@ class ArmorCalculator(ArmorCalcMeta):
         - with an icon (if with_icon=True) or without;
         - using an indexed placeholder "{N:.0f}" or "{N:.0%}".
         """
-        # indexed placeholder, e.g. "{2:.0f}" or "{3:.0%}"
-
         if key != ARMOR_CALC.SHOW_CHANCE:
             placeholder = '{{{0}:.0f}}'.format(idx)
         else:
@@ -81,4 +79,4 @@ class ArmorCalculator(ArmorCalcMeta):
             elif no_damage:
                 self.as_armorCalcS(NO_DAMAGE)
             elif self.pattern:
-                self.as_armorCalcS(self.pattern.format(armor, piercing_power, caliber, piercing_power - armor, chance))
+                self.as_armorCalcS(self.pattern.format(armor, piercing_power, caliber, chance))

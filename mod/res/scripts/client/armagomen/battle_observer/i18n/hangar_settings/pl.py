@@ -161,7 +161,6 @@ localization = {
         "show_piercing_power": "Wyświetl siłę penetracji",
         "show_counted_armor": "Pokaż obliczoną grubość pancerza",
         "show_counted_armor_tooltip": "Grubość pancerza z uwzględnieniem kąta nachylenia i normalizacji",
-        "show_piercing_reserve": "Wyświetl zapas penetracji",
         "show_caliber": "Wyświetl kaliber",
         "show_icons": "Pokaż ikony",
         "show_chance": "Pokaż szansę przebicia"

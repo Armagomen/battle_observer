@@ -175,13 +175,12 @@ POSTMORTEM_MODES = {CTRL_MODE_NAME.POSTMORTEM, CTRL_MODE_NAME.DEATH_FREE_CAM,
                     CTRL_MODE_NAME.KILL_CAM, CTRL_MODE_NAME.LOOK_AT_KILLER}
 
 ARMOR_CALC = namedtuple("ARMOR_CALC", (
-    "NAME", "SHOW_PIERCING_POWER", "POSITION", "SHOW_COUNTED_ARMOR",
-    "SHOW_PIERCING_RESERVE", "SHOW_CALIBER", "ON_ALLY", "SHOW_ICONS", "SHOW_CHANCE"))(
+    "NAME", "SHOW_PIERCING_POWER", "POSITION", "SHOW_COUNTED_ARMOR", "SHOW_CALIBER", "ON_ALLY", "SHOW_ICONS", "SHOW_CHANCE"))(
     "armor_calculator", "show_piercing_power", "position", "show_counted_armor",
-    "show_piercing_reserve", "show_caliber", "display_on_allies", "show_icons", "show_chance")
+    "show_caliber", "display_on_allies", "show_icons", "show_chance")
 
 ARMOR_CALC_PARAMS = (ARMOR_CALC.SHOW_COUNTED_ARMOR, ARMOR_CALC.SHOW_PIERCING_POWER, ARMOR_CALC.SHOW_CALIBER,
-                     ARMOR_CALC.SHOW_PIERCING_RESERVE, ARMOR_CALC.SHOW_CHANCE)
+                     ARMOR_CALC.SHOW_CHANCE)
 
 FLIGHT_TIME = namedtuple("FLIGHT_TIME", ("NAME", "SPG_ONLY", "TIME", "DISTANCE", "ALIGN"))(
     "flight_time", "spgOnly", "time", "distance", "align")

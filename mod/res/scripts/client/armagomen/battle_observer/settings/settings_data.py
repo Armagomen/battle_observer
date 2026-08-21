@@ -147,7 +147,6 @@ class SettingsData(object):
             GLOBAL.ENABLED: False,
             ARMOR_CALC.POSITION: {GLOBAL.X: 0, GLOBAL.Y: 100},
             ARMOR_CALC.ON_ALLY: False,
-            ARMOR_CALC.SHOW_PIERCING_RESERVE: False,
             ARMOR_CALC.SHOW_COUNTED_ARMOR: True,
             ARMOR_CALC.SHOW_PIERCING_POWER: True,
             ARMOR_CALC.SHOW_CALIBER: False,

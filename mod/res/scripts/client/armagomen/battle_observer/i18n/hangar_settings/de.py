@@ -166,7 +166,6 @@ localization = {
         "show_piercing_power": "Durchschlagskraft anzeigen",
         "show_counted_armor": "Berechnete Panzerungsstärke anzeigen",
         "show_counted_armor_tooltip": "Panzerungsstärke unter Berücksichtigung von Neigungswinkel und Normalisierung",
-        "show_piercing_reserve": "Restdurchschlag anzeigen",
         "show_caliber": "Kaliber anzeigen",
         "show_icons": "Symbole anzeigen",
         "show_chance": "Trefferchance anzeigen"

@@ -175,7 +175,6 @@ localization = {
         "show_piercing_power": "Show projectile penetration",
         "show_counted_armor": "Show calculated armor thickness",
         "show_counted_armor_tooltip": "Armor thickness considering angle and normalization",
-        "show_piercing_reserve": "Show remaining penetration",
         "show_caliber": "Show caliber",
         "show_icons": "Show icons",
         "show_chance": "Show penetration chance"

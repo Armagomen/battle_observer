@@ -73,7 +73,7 @@ Name: zoom/dynamic_zoom; Description: {cm:zoom_dynamic_zoom}; Flags: checkableal
 Name: zoom/steps_enabled; Description: {cm:zoom_steps_enabled}; Types: armagomen;
 
 Name: armor_calculator; Description: {cm:armor_calculator}; Flags: checkablealone disablenouninstallwarning; Types: armagomen;
-Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck; Types: ;
+Name: armor_calculator/display_on_allies; Description: {cm:armor_calculator_display_on_allies}; Flags: dontinheritcheck;
 
 Name: avg_efficiency_in_hangar; Description: {cm:avg_efficiency_in_hangar}; Flags: disablenouninstallwarning;
 Name: avg_efficiency_in_hangar/avg_damage; Description: {cm:avg_efficiency_in_hangar_damage}; Types: armagomen;

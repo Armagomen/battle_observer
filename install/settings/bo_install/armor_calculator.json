@@ -3,11 +3,11 @@
   "enabled": false,
   "position": {
     "x": 0,
-    "y": 100
+    "y": 20
   },
   "show_caliber": false,
   "show_counted_armor": true,
   "show_icons": false,
   "show_piercing_power": true,
-  "show_piercing_reserve": false
+  "show_chance": false
 }
