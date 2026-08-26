@@ -15,6 +15,8 @@ from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency
 from skeletons.gui.impl import IGuiLoader
 
+logger = dependency.instance(IALogger)
+
 CONFIG_DIR = 'mod_battle_observer'
 MOD_CACHE = 'battle_observer'
 UTF_8 = 'utf-8'
@@ -146,7 +148,6 @@ def cleanupUpdates():
         for name in ignored.symmetric_difference(listDir):
             full_path = joinAndNormalizePath(updates_path, name)
             cleanupPath(full_path)
-            logger = dependency.instance(IALogger)
             logger.logInfo('CLEARING THE UPDATE FOLDER: {}', full_path)
         ResMgr.purge(upcoming_patches, True)
 
@@ -155,7 +156,6 @@ def clearClientCache():
     for dirName in os.listdir(preferencesDir):
         if '_cache' in dirName or dirName == 'profile':
             cleanupPath(os.path.join(preferencesDir, dirName), safe=True)
-            logger = dependency.instance(IALogger)
             logger.logInfo('CLEANING CLIENT CACHE FOLDER: {}', dirName)
 
 
@@ -172,7 +172,6 @@ def encodeData(data):
 
 
 def openJsonFile(path):
-    logger = dependency.instance(IALogger)
     if not os.path.isfile(path):
         message = "JSON file not found: {}".format(path)
         logger.logWarning(message)
@@ -227,7 +226,6 @@ def cleanupObserverUpdates():
             from shutil import rmtree
             rmtree(path) if os.path.isdir(path) else os.unlink(path)
         except OSError as e:
-            logger = dependency.instance(IALogger)
             logger.logError('cleanupObserverUpdates: {} — {}', path, str(e))
 
 
@@ -238,7 +236,6 @@ def find_similar_attr_name(obj, target_name):
     attrs = dir(obj)
     if target_name in attrs:
         return target_name
-    logger = dependency.instance(IALogger)
     for name in attrs:
         if target_name in name:
             logger.logDebug('{} {}', target_name, name)
@@ -257,7 +254,6 @@ def overrideMethod(wg_class, _method_name='__init__'):
     def outer(new_method):
         if method_name is None:
             return new_method
-        logger = dependency.instance(IALogger)
         class_name = getattr(wg_class, '__name__', wg_class.__class__.__name__)
         full_name_with_class = "{0}.{1}*{2}".format(class_name, method_name, new_method.__name__)
         if full_name_with_class in base_before_override:
@@ -282,7 +278,6 @@ def cancelOverride(wg_class, _method_name, replaced_name):
         full_name_with_class = '{0}.{1}*{2}'.format(class_name, method_name, replaced_name)
         if full_name_with_class in base_before_override:
             setattr(wg_class, method_name, base_before_override.pop(full_name_with_class))
-            logger = dependency.instance(IALogger)
             logger.logDebug('cancelOverride: override {} removed', full_name_with_class)
 
 
@@ -333,7 +328,6 @@ def hexToInt(color):
         hex_part = color
     if len(hex_part) == 6:
         return int(hex_part, 16)
-    logger = dependency.instance(IALogger)
     logger.logError("hexToInt: color code is corrupted >> {} <<, should be #RRGGBB or 0xRRGGBB or RRGGBB".format(color))
     return 16448250
 
@@ -350,7 +344,6 @@ def colorToHex(color):
     try:
         hex_part = int(color.replace('#', '').replace('0x', '').upper()[:6], 16)
     except Exception as error:
-        logger = dependency.instance(IALogger)
         logger.logError(error)
     return hex(hex_part)
 
@@ -395,7 +388,6 @@ ENCODING_ERRORS = 'ignore'
 
 def safe_import(iterPatches, noneResults=False):
     result = []
-    logger = dependency.instance(IALogger)
     for path, name in iterPatches:
         try:
             module = importlib.import_module(path)
@@ -423,7 +415,6 @@ def safe_index(seq, value, default=0):
 
 
 def printDebuginfo():
-    logger = dependency.instance(IALogger)
     logger.logDebug("VERSIONED_MODS_DIR: {}", VERSIONED_MODS_DIR)
     logger.logDebug("IS_XVM_INSTALLED: {}", IS_XVM_INSTALLED)
     logger.logDebug("currentConfigPath: {}", currentConfigPath)

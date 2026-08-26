@@ -15,8 +15,6 @@ from helpers import dependency
 from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
 
-HALF_SERVER_TICK = 0.05
-
 debug_const = "Debug"
 for key, value in gm_factory._GUN_MARKER_LINKAGES.items():
     if debug_const in key:
@@ -26,15 +24,13 @@ REPLACE_TYPES = {gun_marker_ctrl._MARKER_TYPE.CLIENT, gun_marker_ctrl._MARKER_TY
 
 
 def get_dispersion_scale_setting(gunMakerType):
-    settingsLoder = dependency.instance(IBOSettingsLoader)
-    replace_setting = settingsLoder.getSetting(DISPERSION.NAME, DISPERSION.REPLACE)
-    server_setting = settingsLoder.getSetting(DISPERSION.NAME, DISPERSION.SERVER)
+    dispersion = dependency.instance(IBOSettingsLoader).getSetting(DISPERSION.NAME)
     result = False
     if gunMakerType == gun_marker_ctrl._MARKER_TYPE.SERVER:
-        result = replace_setting or server_setting
+        result = dispersion[DISPERSION.REPLACE] or dispersion[DISPERSION.SERVER]
     elif gunMakerType in REPLACE_TYPES:
-        result = replace_setting
-    return float(settingsLoder.getSetting(DISPERSION.NAME, DISPERSION.SCALE)) if result else 1.0
+        result = dispersion[DISPERSION.REPLACE]
+    return float(dispersion[DISPERSION.SCALE]) if result else 1.0
 
 
 class _DefaultGunMarkerController(gun_marker_ctrl._DefaultGunMarkerController):
@@ -83,6 +79,7 @@ class DispersionCircle(object):
         self.server = False
         self.limiter = False
         self.enabled = False
+        self.__tick = 0.1
         g_events.onModSettingsChanged += self.onModSettingsChanged
 
         self.__server_overrides = (
@@ -119,12 +116,11 @@ class DispersionCircle(object):
     def onPass(*args, **kwargs):
         pass
 
-    @staticmethod
-    def setShotPosition(base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
+    def setShotPosition(self, base, rotator, vehicleID, sPos, sVec, dispersionAngle, forceValueRefresh=False):
         gunMarkerInfo = rotator._VehicleGunRotator__getGunMarkerInfo(
             sPos, sVec, rotator.getCurShotDispersionAngles(), rotator._VehicleGunRotator__gunIndex)
         supportMarkersInfo = rotator._VehicleGunRotator__getSupportMarkersInfo()
-        rotator._avatar.inputHandler.updateServerGunMarker(gunMarkerInfo, supportMarkersInfo, HALF_SERVER_TICK)
+        rotator._avatar.inputHandler.updateServerGunMarker(gunMarkerInfo, supportMarkersInfo, self.__tick)
 
     def disableWGServerMarker(self):
         if self.settingsCore.applySetting(GAME.ENABLE_SERVER_AIM, False) is not None:

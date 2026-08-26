@@ -51,7 +51,7 @@ class PlayersDamageController(IBOPlayersDamageController):
                 arena.onVehicleHealthChanged -= self.__onVehicleHealthChanged
 
     def __onVehicleHealthChanged(self, targetID, attackerID, damage):
-        if damage > 0:
+        if damage > 0 and targetID != attackerID:
             self.__damages[attackerID] += damage
             self.onPlayerDamaged(attackerID, self.__damages[attackerID])
 

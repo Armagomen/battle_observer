@@ -4,9 +4,7 @@ from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC, GLOBAL
 from armagomen.utils.common import MinMax
 from constants import QUEUE_TYPE
-from gui.shared.gui_items import KPI
 from helpers import dependency
-from items.tankmen import getSkillsConfig
 from PlayerEvents import g_playerEvents
 
 
@@ -40,16 +38,7 @@ class PiercingRandomizer(IBOPiercingRandomizer):
         self.__defaults = MinMax(0.75, 1.25)
         self.min = self.__defaults.min
         self.max = self.__defaults.max
-        self.__bound = defaultdict(float)
-
-        for skill_name in (self.GUNNER_ARMORER, self.LOADER_AMMUNITION_IMPROVE):
-            descrArgs = getSkillsConfig().getSkill(skill_name).uiSettings.descrArgs
-            for name, descr in descrArgs:
-                if name == KPI.Name.DAMAGE_AND_PIERCING_DISTRIBUTION_LOWER_BOUND:
-                    self.__bound[skill_name] = round(descr.value, 4)
-                    break
-
-        self.logger.logDebug(self.RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG, self.__bound)
+        self.__bound = {self.GUNNER_ARMORER: 0.0005, self.LOADER_AMMUNITION_IMPROVE: 0.0002}
 
     def fini(self):
         g_playerEvents.onEnqueued += self.onEnqueued
@@ -84,11 +73,11 @@ class PiercingRandomizer(IBOPiercingRandomizer):
         if vehicle is None or not settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
             return
         try:
-            data = {self.GUNNER_ARMORER: [], self.LOADER_AMMUNITION_IMPROVE: []}
+            data = defaultdict(list)
             for _, tman in vehicle.crew:
                 if not tman or not tman.canUseSkillsInCurrentVehicle:
                     continue
-                for skill_name in tman.getPossibleSkills().intersection(data.keys()):
+                for skill_name in tman.getPossibleSkills().intersection(self.__bound):
                     data[skill_name].append(self.getCurrentSkillEfficiency(tman, skill_name))
             for skill_name, value in data.items():
                 if not value:

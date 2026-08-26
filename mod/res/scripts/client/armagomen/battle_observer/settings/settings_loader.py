@@ -30,7 +30,7 @@ class IBOSettingsLoader(object):
     def updateConfigFile(self, name, data):
         raise NotImplementedError
 
-    def updateData(self, external_cfg, internal_cfg, file_update=False):
+    def updateData(self, loaded_data, data, file_update=False):
         raise NotImplementedError
 
     def getSettingDictByAliasBattle(self, alias):
@@ -39,7 +39,7 @@ class IBOSettingsLoader(object):
     def getSettingDictByAliasLobby(self, alias):
         raise NotImplementedError
 
-    def getSetting(self, component_name, param):
+    def getSetting(self, component_name, key=None):
         raise NotImplementedError
 
     def getComponentDict(self, component_name):
