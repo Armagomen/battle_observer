@@ -9,7 +9,7 @@ from armagomen.utils.common import getPercent, hexToInt
 from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 
-WTR_RANGES = ((10900, "unique"), (9200, "very_good"), (6700, "good"), (4700, "normal"), (3100, "bad"), (0, "very_bad"))
+WTR_RANGES = ((10000, "unique"), (8000, "very_good"), (5400, "good"), (3200, "normal"), (1400, "bad"), (0, "very_bad"))
 
 
 class Statistics(StatisticsMeta):
