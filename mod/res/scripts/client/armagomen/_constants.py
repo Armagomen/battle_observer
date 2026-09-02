@@ -257,8 +257,8 @@ class PANELS:
 
 
 ANOTHER = namedtuple("ANOTHER", (
-    "CONFIG_SELECT", "ACCOUNT_DBID", "USERS", "DBID", "BADGES", "OVERRIDDEN_BADGE", "NAME", "FAKE_NAME", "CLAN_ABBR"))(
-    "configSelect", "accountDBID", "users", "databaseID", "badges", "overriddenBadge", "name", "fakeName", "clanAbbrev")
+    "CONFIG_SELECT", "ACCOUNT_DBID", "DBID", "BADGES", "OVERRIDDEN_BADGE", "NAME", "FAKE_NAME", "CLAN_ABBR"))(
+    "configSelect", "accountDBID", "databaseID", "badges", "overriddenBadge", "name", "fakeName", "clanAbbrev")
 
 EXCLUDED_MAPS = namedtuple("EXCLUDED_MAPS", ("NAME", "HEADER", "MESSAGE"))("excludedMaps", "header", "message")
 

@@ -15,7 +15,10 @@ class IBOCore(object):
 
 class Core(IBOCore):
     logger = dependency.descriptor(IALogger)
-    isReplay = property(lambda self: isLoading() or isPlaying())
+
+    @property
+    def isReplay(self):
+        return isLoading() or isPlaying()
 
     def __init__(self, modVersion):
         self.logger.logInfo("Initializing Core v{} - Launched at python v{} region={}", modVersion, version, CURRENT_REALM)

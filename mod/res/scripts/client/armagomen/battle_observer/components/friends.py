@@ -1,17 +1,16 @@
 from armagomen._constants import ANOTHER, MAIN
 from armagomen.battle_observer.settings import IBOSettingsLoader
 from armagomen.utils.common import overrideMethod
-from BattleReplay import isLoading, isPlaying
 from gui.battle_control.arena_info.arena_vos import VehicleTypeInfoVO
 from helpers import dependency
-from messenger.gui.Scaleform.data.contacts_data_provider import _ContactsCategories
-from messenger.storage import storage_getter
+from messenger.proto.shared_find_criteria import FriendsFindCriteria
+from messenger.storage import MessengerStorageDescriptor, UsersStorage
 from PlayerEvents import g_playerEvents
 
 
 class Friends(object):
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
-    isReplay = property(lambda self: isLoading() or isPlaying())
+    __usersStorage = MessengerStorageDescriptor(UsersStorage)
 
     def __init__(self):
         self._cache = set()
@@ -21,11 +20,11 @@ class Friends(object):
 
     def _onGuiCacheSyncCompleted(self, *args, **kwargs):
         self._cache.clear()
-        users = storage_getter(ANOTHER.USERS)().getList(_ContactsCategories().getCriteria())
-        self._cache.update(user._userID for user in users if not user.isIgnored())
+        friends = self.__usersStorage.getList(FriendsFindCriteria())
+        self._cache.update(user._userID for user in friends if not user.isIgnored())
 
     def showFriends(self):
-        return self.settingsLoader.getSetting(MAIN.NAME, MAIN.SHOW_FRIENDS) and not self.isReplay
+        return self.settingsLoader.getSetting(MAIN.NAME, MAIN.SHOW_FRIENDS)
 
     def new_VehicleTypeInfoVO(self, init, vTypeVo, *args, **kwargs):
         init(vTypeVo, *args, **kwargs)

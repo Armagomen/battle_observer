@@ -1,13 +1,10 @@
-import weakref
-
 import BigWorld
 
 from armagomen._constants import DAMAGE_LOG, GLOBAL
-from armagomen.utils.common import overrideMethod, toggleOverride
+from armagomen.utils.common import toggleOverride
 from armagomen.utils.events import g_events
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
-from visual_script_client.vehicle_blocks import OnVehicleShaked
 
 
 class WG_Logs_Fix(object):
@@ -54,13 +51,3 @@ logs_fix = WG_Logs_Fix()
 
 def fini():
     logs_fix.fini()
-
-
-@overrideMethod(OnVehicleShaked, '_onVehicleShaked')
-def onVehicleShaken(base, shake, vehicleId, shakeReason):
-    entity = BigWorld.entity(vehicleId)
-    if entity is None:
-        return
-    shake._vehicle.setValue(weakref.proxy(entity))
-    shake._shakeReason.setValue(shakeReason)
-    shake._out.call()
