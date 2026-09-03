@@ -5,7 +5,7 @@ import BigWorld
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.meta.battle.statistics_meta import StatisticsMeta
 from armagomen.battle_observer.shared import IBOKeysListener, IStatisticsDataLoader
-from armagomen.utils.common import getPercent, hexToInt
+from armagomen.utils.common import addCallback, getPercent, hexToInt
 from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 
@@ -31,10 +31,12 @@ class Statistics(StatisticsMeta):
     def _populate(self):
         super(Statistics, self)._populate()
         self.statisticsLoader.onDataResponse += self.onDataResponse
-        self.statisticsLoader.requestStatisticsFromApi(
-            {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
-             if vInfo.player.accountDBID and not vInfo.isObserver()}
-        )
+
+        addCallback(2.0 if self.isComp7Battle() else 0.1,
+                    self.statisticsLoader.requestStatisticsFromApi,
+                    {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
+                     if vInfo.player.accountDBID and not vInfo.isObserver()})
+
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:

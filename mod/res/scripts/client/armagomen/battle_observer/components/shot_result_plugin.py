@@ -60,7 +60,6 @@ class _ShotResult(_CrosshairShotResults):
         else:
             return cls.__computeArmorDefault(collision_details, shell, piercing_power, entity)
 
-
     @classmethod
     def _checkShotResult(cls, armor, piercing_power, no_damage):
         if no_damage:

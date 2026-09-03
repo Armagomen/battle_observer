@@ -64,7 +64,10 @@ class IBOUpdater(object):
 
 class Updater(IBOUpdater):
     logger = dependency.descriptor(IALogger)
-    isReplay = property(lambda self: isLoading() or isPlaying())
+
+    @property
+    def isReplay(self):
+        return isLoading() or isPlaying()
 
     def __init__(self, modVersion):
         super(Updater, self).__init__()

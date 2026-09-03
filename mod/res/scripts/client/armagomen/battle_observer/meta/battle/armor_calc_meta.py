@@ -11,8 +11,7 @@ class ArmorCalcMeta(BaseModMeta):
             self.flashObject.as_armorCalc(text)
 
     def as_clearMessage(self):
-        if self._isDAAPIInited():
-            self.flashObject.as_armorCalc("")
+        self.as_armorCalcS("")
 
     def as_updateColor(self, color):
         if self._isDAAPIInited():
