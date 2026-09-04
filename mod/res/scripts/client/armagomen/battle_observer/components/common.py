@@ -1,5 +1,5 @@
 from armagomen._constants import MAIN
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import overrideMethod, safe_import
 from armagomen.utils.events import g_events
 from gui.battle_control.arena_visitor import _ClientArenaVisitor

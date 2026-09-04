@@ -2,6 +2,7 @@ import math
 from collections import namedtuple
 
 from armagomen import IALogger
+from armagomen.battle_observer.shared.interface import IBOCurrentVehicleCachedData
 from armagomen.utils.common import isSpecialBattleVehicle
 from CurrentVehicle import g_currentVehicle
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
@@ -13,24 +14,6 @@ from skeletons.gui.shared import IItemsCache
 PARAMS = ("tankAvgDamage", "tankAvgAssist", "tankAvgStun", "tankAvgBlocked", "marksRating", "marksValue", "name", "marksAvailable",
           "winRate", "battles")
 EfficiencyAVGData = namedtuple("EfficiencyAVGData", PARAMS)
-
-
-class IBOCurrentVehicleCachedData(object):
-    __slots__ = ()
-
-    def fini(self):
-        raise NotImplementedError
-
-    def onVehicleChanged(self):
-        raise NotImplementedError
-
-    @property
-    def efficiencyAvgData(self):
-        raise NotImplementedError
-
-    @property
-    def default(self):
-        raise NotImplementedError
 
 
 class CurrentVehicleCachedData(IBOCurrentVehicleCachedData):

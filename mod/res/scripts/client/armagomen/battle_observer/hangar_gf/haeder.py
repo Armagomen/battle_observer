@@ -1,6 +1,6 @@
 from armagomen import IALogger
 from armagomen._constants import GLOBAL, HANGAR_HEADER, LOBBY_ALIASES
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import TimeInterval
 from armagomen.utils.events import g_events
 from frameworks.wulf import ViewModel

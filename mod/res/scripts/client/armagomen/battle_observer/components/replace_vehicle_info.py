@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from armagomen._constants import ANOTHER, GLOBAL, MAIN
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import overrideMethod
 from gui.battle_control.arena_info.arena_vos import VehicleArenaInfoVO
 from helpers import dependency, getClientLanguage

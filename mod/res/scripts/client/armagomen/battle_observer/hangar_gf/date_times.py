@@ -2,7 +2,7 @@ from time import strftime
 
 from armagomen import IALogger
 from armagomen._constants import CLOCK, GLOBAL, LOBBY_ALIASES
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE
 from armagomen.utils.events import g_events
 from frameworks.wulf import ViewModel

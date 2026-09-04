@@ -26,10 +26,17 @@ class Core(IBOCore):
         self.hangar_settings = None
         self.hangar_gf = None
 
-        from armagomen.battle_observer.settings import IBOSettingsLoader
+
+        from armagomen.battle_observer.settings import register_settings
+        register_settings()
+
+        from armagomen.battle_observer.shared import register_services
+        register_services()
+
         from armagomen.battle_observer.components import loadComponents
         self.components = loadComponents(self.isReplay)
 
+        from armagomen.battle_observer.settings.interface import IBOSettingsLoader
         settingsLoader = dependency.instance(IBOSettingsLoader)
         settingsLoader.handleModSettingsChangedEvent()
 

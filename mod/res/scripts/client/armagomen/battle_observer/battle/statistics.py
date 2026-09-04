@@ -1,15 +1,16 @@
+from collections import defaultdict
 from math import floor, log
 
 import BigWorld
 
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.meta.battle.statistics_meta import StatisticsMeta
-from armagomen.battle_observer.shared import IBOKeysListener, IStatisticsDataLoader
+from armagomen.battle_observer.shared.interface import IBOKeysListener, IStatisticsDataLoader
 from armagomen.utils.common import addCallback, getPercent, hexToInt
 from helpers import dependency
 from skeletons.gui.app_loader import IAppLoader
 
-WTR_RANGES = ((10000, "unique"), (8000, "very_good"), (5400, "good"), (3200, "normal"), (1400, "bad"), (0, "very_bad"))
+WTR_RANGES = ((10000, "unique"), (8000, "very_good"), (5400, "good"), (4000, "normal"), (2000, "bad"), (0, "very_bad"))
 
 
 class Statistics(StatisticsMeta):
@@ -27,15 +28,11 @@ class Statistics(StatisticsMeta):
         self.__addedVehicles = set()
         self.__sentVehicles = set()
         self.__callback = None
+        self.__items = defaultdict(dict)
 
     def _populate(self):
         super(Statistics, self)._populate()
         self.statisticsLoader.onDataResponse += self.onDataResponse
-
-        addCallback(2.0 if self.isComp7Battle() else 0.1,
-                    self.statisticsLoader.requestStatisticsFromApi,
-                    {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
-                     if vInfo.player.accountDBID and not vInfo.isObserver()})
 
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
@@ -44,6 +41,11 @@ class Statistics(StatisticsMeta):
                 arena.onVehicleUpdated += self.onFogOfWarAddedUpdated
             arena.onVehicleKilled += self.onVehicleKilled
         self.keysListener.registerComponent(self.on_altModeS)
+
+        addCallback(5.0 if self.isComp7Battle() else 0.1,
+                    self.statisticsLoader.requestStatisticsFromApi,
+                    {str(vInfo.player.accountDBID) for vInfo in self._arenaDP.getVehiclesInfoIterator()
+                     if vInfo.player.accountDBID and not vInfo.isObserver()})
 
     def _dispose(self):
         self.statisticsLoader.onDataResponse -= self.onDataResponse
@@ -81,8 +83,12 @@ class Statistics(StatisticsMeta):
             self.logger.logDebug("Statistics: player={}, value={}", vInfo.player.name, value)
             if len(value) < 3:
                 continue
-            item_data = self.buildItemData(value)
-            self.as_createItem(vehicle_id, vInfo.isEnemy(), item_data)
+            item_data = self.buildItemData(value, vInfo.isEnemy())
+            self.as_createItem(vehicle_id, item_data)
+            self.__items[vehicle_id] = item_data
+
+    def getItemData(self, vehicleID):
+        return self.__items[vehicleID]
 
     def __battlesFormat(self, battles):
         magnitude = int(floor(log(battles, self.K)))
@@ -96,9 +102,10 @@ class Statistics(StatisticsMeta):
                 return hexToInt(self.settings[STATISTICS.COLORS].get(colorName, self.DEFAULT_COLOR))
         return hexToInt(self.DEFAULT_COLOR)
 
-    def buildItemData(self, data):
+    def buildItemData(self, data, is_enemy):
         return {
             "color": self.__getColor(data["rating"]),
             "winRate": "{:.1%}".format(getPercent(data["wins"], data["battles"])),
-            "battles": self.__battlesFormat(data["battles"])
+            "battles": self.__battlesFormat(data["battles"]),
+            "isEnemy": is_enemy
         }

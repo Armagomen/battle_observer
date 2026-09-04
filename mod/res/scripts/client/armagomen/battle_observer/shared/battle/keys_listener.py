@@ -2,6 +2,7 @@ from collections import namedtuple
 
 from armagomen import IALogger
 from armagomen._constants import MAIN
+from armagomen.battle_observer.shared.interface import IBOKeysListener
 from gui import InputHandler
 from helpers import dependency
 from Keys import KEY_LALT, KEY_LCONTROL, KEY_LSHIFT, KEY_RALT, KEY_RCONTROL, KEY_RSHIFT
@@ -11,16 +12,6 @@ KeysData = namedtuple("KeysData", ("keys", "keyFunction"))
 KEY_ALIAS_CONTROL = (KEY_LCONTROL, KEY_RCONTROL)
 KEY_ALIAS_ALT = (KEY_LALT, KEY_RALT)
 KEY_ALIAS_SHIFT = (KEY_LSHIFT, KEY_RSHIFT)
-
-
-class IBOKeysListener(object):
-    __slots__ = ()
-
-    def fini(self):
-        raise NotImplementedError
-
-    def registerComponent(self, keyFunction, keyList=None):
-        raise NotImplementedError
 
 
 class KeysListener(IBOKeysListener):
@@ -78,7 +69,7 @@ class KeysListener(IBOKeysListener):
         self.handleKey(event.key, True)
 
     def normalizeKey(self, keyList):
-        from armagomen.battle_observer.settings import IBOSettingsLoader
+        from armagomen.battle_observer.settings.interface import IBOSettingsLoader
         settingsLoader = dependency.instance(IBOSettingsLoader)
         keys = {item for key in keyList for item in (key if isinstance(key, (list, set, tuple)) else [key])}
         if settingsLoader.getSetting(MAIN.NAME, MAIN.USE_KEY_PAIRS):

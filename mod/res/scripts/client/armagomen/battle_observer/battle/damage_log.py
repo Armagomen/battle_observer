@@ -2,7 +2,7 @@ from collections import defaultdict
 
 from armagomen._constants import COLORS, DAMAGE_LOG, GLOBAL
 from armagomen.battle_observer.meta.battle.damage_logs_meta import DamageLogsMeta
-from armagomen.battle_observer.shared import IBOCurrentVehicleCachedData
+from armagomen.battle_observer.shared.interface import IBOCurrentVehicleCachedData
 from armagomen.utils.common import getPercent, percentToColor
 from gui.battle_control.battle_constants import FEEDBACK_EVENT_ID
 from helpers import dependency

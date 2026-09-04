@@ -6,7 +6,7 @@ from random import choice
 from armagomen import IALogger
 from armagomen._constants import API_KEY, getLogo, IMAGE_DIR, URLS
 from armagomen.battle_observer.i18n.donate_messages import MESSAGES
-from armagomen.battle_observer.shared import IBOOnline
+from armagomen.battle_observer.shared.interface import IBOOnline
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import openWebBrowser, overrideMethod
 from gui.clans.clan_cache import g_clanCache

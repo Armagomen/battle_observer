@@ -1,5 +1,5 @@
 from armagomen._constants import EFFECTS
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import overrideMethod
 from AvatarInputHandler.control_modes import SniperControlMode
 from helpers import dependency

@@ -3,6 +3,7 @@ from collections import defaultdict
 
 from armagomen import IALogger
 from armagomen._constants import API_KEY
+from armagomen.battle_observer.shared.interface import IStatisticsDataLoader
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import addCallback
 from Event import SafeEvent
@@ -29,15 +30,6 @@ INFO_URL, WTR_URL = get_urls()
 SEPARATOR = ","
 
 
-class IStatisticsDataLoader(object):
-
-    def requestStatisticsFromApi(self, DBIDs):
-        raise NotImplementedError
-
-    def fini(self):
-        pass
-
-
 class StatisticsDataLoader(IStatisticsDataLoader):
     sessionProvider = dependency.descriptor(IBattleSessionProvider)
     logger = dependency.descriptor(IALogger)
@@ -59,8 +51,6 @@ class StatisticsDataLoader(IStatisticsDataLoader):
         self.logger.logInfo("Finished StatisticsDataLoader")
 
     def __onInfoResponse(self, response, DBIDs):
-        if response.responseCode == 304:
-            return
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body).get("data", {})
             if not response_data:
@@ -73,8 +63,6 @@ class StatisticsDataLoader(IStatisticsDataLoader):
             self.delayedLoad(response.responseCode, DBIDs, self.requestInfo)
 
     def __onWTRResponse(self, response, DBIDs):
-        if response.responseCode == 304:
-            return
         if response.responseCode == HTTP_OK_STATUS:
             response_data = json.loads(response.body).get("data", {})
             if not response_data:

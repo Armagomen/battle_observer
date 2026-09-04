@@ -5,7 +5,7 @@ from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
 from armagomen import IALogger
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import addCallback, MinMax, ResMgr, toggleOverride
 from armagomen.utils.events import g_events
 from AvatarInputHandler.control_modes import PostMortemControlMode

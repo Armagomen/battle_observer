@@ -5,7 +5,7 @@ from armagomen import IALogger
 from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
                                   MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS, COLORED_ICONS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import encodeData, IS_XVM_INSTALLED, openWebBrowser, printDebuginfo, safe_index, SIXTH_SENSE_LIST, \
     SIXTH_SENSE_PATH
 from armagomen.utils.events import g_events

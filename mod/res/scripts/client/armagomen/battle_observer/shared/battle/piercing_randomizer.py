@@ -2,19 +2,11 @@ from collections import defaultdict
 
 from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC, GLOBAL
+from armagomen.battle_observer.shared.interface import IBOPiercingRandomizer
 from armagomen.utils.common import MinMax
 from constants import QUEUE_TYPE
 from helpers import dependency
 from PlayerEvents import g_playerEvents
-
-
-class IBOPiercingRandomizer(object):
-
-    def fini(self):
-        raise NotImplementedError
-
-    def updateRandomization(self, vehicle):
-        raise NotImplementedError
 
 
 class PiercingRandomizer(IBOPiercingRandomizer):
@@ -67,7 +59,7 @@ class PiercingRandomizer(IBOPiercingRandomizer):
         return 0.0
 
     def updateRandomization(self, vehicle):
-        from armagomen.battle_observer.settings import IBOSettingsLoader
+        from armagomen.battle_observer.settings.interface import IBOSettingsLoader
         settingsLoader = dependency.instance(IBOSettingsLoader)
         self.resetToDefault()
         if vehicle is None or not settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):

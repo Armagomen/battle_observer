@@ -1,20 +1,11 @@
 from collections import defaultdict
 
 from armagomen import IALogger
+from armagomen.battle_observer.shared.interface import IBOPlayersDamageController
 from Event import SafeEvent
 from helpers import dependency
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from skeletons.gui.battle_session import IBattleSessionProvider
-
-
-class IBOPlayersDamageController(object):
-    __slots__ = ()
-
-    def fini(self):
-        raise NotImplementedError
-
-    def getPlayerDamage(self, vehicleID):
-        raise NotImplementedError
 
 
 class PlayersDamageController(IBOPlayersDamageController):

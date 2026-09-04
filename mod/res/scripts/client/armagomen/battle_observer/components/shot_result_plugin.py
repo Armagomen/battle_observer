@@ -2,8 +2,8 @@ import BigWorld
 
 from aih_constants import SHOT_RESULT
 from armagomen._constants import ARMOR_CALC, GLOBAL
-from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.battle_observer.shared import IBOPiercingRandomizer
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
+from armagomen.battle_observer.shared.interface import IBOPiercingRandomizer
 from armagomen.utils.common import overrideMethod
 from armagomen.utils.events import g_events
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, computePiercingPowerAtDist

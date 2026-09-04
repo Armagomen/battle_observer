@@ -11,7 +11,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 		private var data:Object;
 		
 		private const position:Number = 385;
-		private const DEAD_ALPHA:Number = 0.7;
+		private const DEAD_ALPHA:Number = 0.65;
 		
 		public function StatisticItem(data:Object, isEnemy:Boolean)
 		{
@@ -19,7 +19,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 			var w:Number = 44;
 			this.data = data;
 			this.x = isEnemy ? -this.position - w : this.position;
-			this.graphics.beginFill(data.color, 0.92);
+			this.graphics.beginFill(data.color, 0.9);
 			this.graphics.drawRoundRect(0, 3, w, 18, 6, 6);
 			this.graphics.endFill();
 			

@@ -4,6 +4,7 @@ from collections import defaultdict, namedtuple
 from armagomen import IALogger
 from armagomen._constants import GLOBAL
 from armagomen.battle_observer.i18n.online import FALLBACK, language, ONLINE, TEXTFORMAT
+from armagomen.battle_observer.shared.interface import IBOOnline
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import IS_COMMON_TEST
 from helpers import dependency
@@ -17,25 +18,6 @@ def getModVersion():
     from armagomen.battle_observer import IBOCore
     core = dependency.instance(IBOCore)
     return core.version
-
-
-class IBOOnline(object):
-    __slots__ = ()
-
-    def fini(self):
-        raise NotImplementedError
-
-    @wg_async
-    def user_login(self, user_id, name, version):
-        raise NotImplementedError
-
-    @wg_async
-    def user_logout(self, user_id, attempt=0):
-        raise NotImplementedError
-
-    @wg_async
-    def get_stats_by_region(self):
-        raise NotImplementedError
 
 
 class Online(IBOOnline):

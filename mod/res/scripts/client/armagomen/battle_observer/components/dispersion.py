@@ -3,7 +3,7 @@ import BigWorld
 import aih_constants
 from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import DISPERSION, GLOBAL
-from armagomen.battle_observer.settings import IBOSettingsLoader
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import toggleOverride
 from armagomen.utils.events import g_events
 from AvatarInputHandler import gun_marker_ctrl

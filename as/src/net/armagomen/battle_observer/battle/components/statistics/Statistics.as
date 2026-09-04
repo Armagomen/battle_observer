@@ -22,9 +22,9 @@ package net.armagomen.battle_observer.battle.components.statistics
 			super.onBeforeDispose();
 		}
 		
-		public function createItem(vehicleID:int, isEnemy:Boolean, data:Object):void
+		public function createItem(vehicleID:int, data:Object):void
 		{
-			var item:* = this.getPanelHolderByVehicleID(vehicleID, isEnemy);
+			var item:* = this.getPanelHolderByVehicleID(vehicleID, data.isEnemy);
 			if (!item || !item._listItem) return;
 			
 			var listItem:* = item._listItem;
@@ -34,7 +34,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 				listItem.removeChild(oldItem);
 			}
 			
-			var minimalItem:StatisticItem = new StatisticItem(data, isEnemy);
+			var minimalItem:StatisticItem = new StatisticItem(data, data.isEnemy);
 			this.minimalItems[vehicleID] = minimalItem;
 			listItem.addChild(minimalItem);
 			minimalItem.setVisible(true);
@@ -73,21 +73,5 @@ package net.armagomen.battle_observer.battle.components.statistics
 			return null;
 		}
 		
-		private function getLoadingHolderByVehicleID(vehicleID:int, isEnemy:Boolean):*
-		{
-			var battleLoading:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.BATTLE_LOADING);
-			if (battleLoading && battleLoading.form)
-			{
-				var renderers:* = isEnemy ? battleLoading.form._enemyRenderers : battleLoading.form._allyRenderers;
-				for each (var render:* in renderers)
-				{
-					if (render.model.vehicleID == vehicleID)
-					{
-						return render;
-					}
-				}
-			}
-			return null;
-		}
 	}
 }

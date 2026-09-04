@@ -1,9 +1,9 @@
 from collections import defaultdict
 
 from armagomen import IALogger
-from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, MINIMAP, STATISTICS
-from armagomen.battle_observer.settings import IBOSettingsLoader
-from armagomen.battle_observer.shared import IStatisticsDataLoader
+from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, MINIMAP
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
+from armagomen.battle_observer.shared.interface import IStatisticsDataLoader, IViewSettings
 from armagomen.utils.common import IS_XVM_INSTALLED
 from constants import ARENA_GUI_TYPE
 from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates
@@ -23,25 +23,6 @@ ALIAS_TO_CTRL = {
 }
 
 NEVER_HIDE_FL = (BATTLE_ALIASES.DEBUG, BATTLE_ALIASES.TIMER, BATTLE_ALIASES.DATE_TIME)
-
-
-class IViewSettings(object):
-
-    def fini(self):
-        pass
-
-    def invalidateComponents(self):
-        raise NotImplementedError
-
-    def clear(self):
-        raise NotImplementedError
-
-    def registerViewComponents(self):
-        raise NotImplementedError
-
-    @property
-    def battlePages(self):
-        raise NotImplementedError
 
 
 class ViewSettingsAS(IViewSettings):
