@@ -15,7 +15,7 @@ class PlayersDamageController(IBOPlayersDamageController):
 
     def __init__(self):
         self.logger.logInfo("Initializing PlayersDamageController")
-        self.onPlayerDamaged = SafeEvent()
+        self.onPlayerDamageChanged = SafeEvent()
         self.__damages = defaultdict(int)
         self.__prevSpaceID = GuiGlobalSpaceID.LOBBY
         self.appLoader.onGUISpaceEntered += self.subscribe
@@ -44,7 +44,7 @@ class PlayersDamageController(IBOPlayersDamageController):
     def __onVehicleHealthChanged(self, targetID, attackerID, damage):
         if damage > 0 and targetID != attackerID:
             self.__damages[attackerID] += damage
-            self.onPlayerDamaged(attackerID, self.__damages[attackerID])
+            self.onPlayerDamageChanged(attackerID, self.__damages[attackerID])
 
     def getPlayerDamage(self, vehicleID):
         return self.__damages[vehicleID]

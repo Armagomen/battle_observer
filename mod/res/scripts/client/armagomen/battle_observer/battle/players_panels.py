@@ -29,7 +29,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 arena.onPeriodChange += self.onPeriodChange
                 arena.onVehicleKilled += self.onVehicleKilled
         if self.damagesEnable:
-            self.damage_controller.onPlayerDamaged += self.onPlayerDamaged
+            self.damage_controller.onPlayerDamageChanged += self.onPlayerDamageChanged
             self.keysListener.registerComponent(self.as_setPlayersDamageVisibleS, keyList=self.settings[PANELS.DAMAGES_HOT_KEY])
 
     def _dispose(self):
@@ -40,7 +40,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
                 arena.onPeriodChange -= self.onPeriodChange
                 arena.onVehicleKilled -= self.onVehicleKilled
         if self.damagesEnable:
-            self.damage_controller.onPlayerDamaged -= self.onPlayerDamaged
+            self.damage_controller.onPlayerDamageChanged -= self.onPlayerDamageChanged
         super(PlayersPanels, self)._dispose()
 
     def onColorblindUpdated(self, blind):
@@ -90,7 +90,7 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             vehicle_data = {VEHICLE.CUR: max(0, newHealth), VEHICLE.MAX: max_health, VEHICLE.PERCENT: health_percent}
             self.as_updateHealthBarS(vehicleID, health_percent, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
-    def onPlayerDamaged(self, attackerID, damage):
+    def onPlayerDamageChanged(self, attackerID, damage):
         self.as_updateDamageS(attackerID, damage)
 
     def onPeriodChange(self, *args):

@@ -20,7 +20,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
 
     def _populate(self):
         super(MainGun, self)._populate()
-        self.damage_controller.onPlayerDamaged += self.onPlayerDamaged
+        self.damage_controller.onPlayerDamageChanged += self.onPlayerDamageChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived += self.onPlayerFeedbackReceived
@@ -29,7 +29,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
             arena.onVehicleKilled += self.onVehicleKilled
 
     def _dispose(self):
-        self.damage_controller.onPlayerDamaged -= self.onPlayerDamaged
+        self.damage_controller.onPlayerDamageChanged -= self.onPlayerDamageChanged
         feedback = self.sessionProvider.shared.feedback
         if feedback is not None:
             feedback.onPlayerFeedbackReceived -= self.onPlayerFeedbackReceived
@@ -55,7 +55,7 @@ class MainGun(MainGunMeta, IBattleFieldListener):
     def updateMainGun(self):
         self.as_gunDataS(self.playerDamage, self.gunScore, self._warning)
 
-    def onPlayerDamaged(self, attackerID, damage):
+    def onPlayerDamageChanged(self, attackerID, damage):
         if damage > self.gunScore and attackerID != self.playerVehicleID:
             self.gunScore = damage
             self.updateMainGun()
