@@ -9,7 +9,7 @@ from gui.impl.gen import R
 from gui.impl.pub.view_component import ViewComponent
 from helpers import dependency
 from helpers.time_utils import getTimeDeltaFromNow, makeLocalServerTime, ONE_DAY, ONE_HOUR, ONE_MINUTE, ONE_SECOND
-from openwg_gameface import gf_mod_inject, ModDynAccessor
+from openwg_gameface import gf_mod_inject
 from skeletons.gui.game_control import IGameSessionController
 
 
@@ -56,7 +56,7 @@ class HeaderModel(ViewModel):
 
 
 class HeaderView(ViewComponent[HeaderModel]):
-    viewLayoutID = ModDynAccessor(LOBBY_ALIASES.HEADER)
+    viewLayoutID = R.mods.armagomen.battle_observer.views.HeaderView
     gameSession = dependency.descriptor(IGameSessionController)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
     logger = dependency.descriptor(IALogger)

@@ -5,7 +5,6 @@ from armagomen.battle_observer.hangar_gf.haeder import HeaderView
 from armagomen.utils.common import safe_import, toggleOverride
 from gui.impl.lobby.page.lobby_header import LobbyHeader
 from helpers import dependency
-from openwg_gameface import manager
 
 
 class HangarGamefaceInject(object):
@@ -31,8 +30,6 @@ class HangarGamefaceInject(object):
 
     def hooked_initChildren(self, baseMethod, baseView):
         baseMethod(baseView)
-        if not manager.isResMapValidated:
-            return
         self._registerChild(DateTimesView, baseView)
         self._registerChild(HeaderView, baseView)
         if self.headers and isinstance(baseView, self.headers):

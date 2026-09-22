@@ -6,10 +6,11 @@ from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE
 from armagomen.utils.events import g_events
 from frameworks.wulf import ViewModel
+from gui.impl.gen import R
 from gui.impl.pub.view_component import ViewComponent
 from gui.shared.utils.TimeInterval import TimeInterval
 from helpers import dependency
-from openwg_gameface import gf_mod_inject, ModDynAccessor
+from openwg_gameface import gf_mod_inject
 
 
 class ClockModel(ViewModel):
@@ -37,7 +38,7 @@ class ClockModel(ViewModel):
 
 
 class DateTimesView(ViewComponent[ClockModel]):
-    viewLayoutID = ModDynAccessor(LOBBY_ALIASES.DATE_TIME)
+    viewLayoutID = R.mods.armagomen.battle_observer.views.DateTimesView
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
     logger = dependency.descriptor(IALogger)
 

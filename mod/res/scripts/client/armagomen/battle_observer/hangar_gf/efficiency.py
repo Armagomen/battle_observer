@@ -4,9 +4,10 @@ from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.battle_observer.shared.interface import IBOCurrentVehicleCachedData
 from armagomen.utils.events import g_events
 from frameworks.wulf import ViewModel
+from gui.impl.gen import R
 from gui.impl.pub.view_component import ViewComponent
 from helpers import dependency
-from openwg_gameface import gf_mod_inject, ModDynAccessor
+from openwg_gameface import gf_mod_inject
 
 
 class HangarEfficiencyModel(ViewModel):
@@ -34,7 +35,7 @@ class HangarEfficiencyModel(ViewModel):
 
 
 class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
-    viewLayoutID = ModDynAccessor(LOBBY_ALIASES.EFFICIENCY)
+    viewLayoutID = R.mods.armagomen.battle_observer.views.HangarEfficiencyView
     cachedVehicleData = dependency.descriptor(IBOCurrentVehicleCachedData)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
     logger = dependency.descriptor(IALogger)
