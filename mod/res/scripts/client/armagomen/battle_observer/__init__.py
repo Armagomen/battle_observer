@@ -1,6 +1,6 @@
 from sys import version
 
-from armagomen import IALogger
+from armagomen._logger import IALogger
 from BattleReplay import isLoading, isPlaying
 from helpers import dependency
 from realm import CURRENT_REALM
@@ -60,6 +60,7 @@ class Core(IBOCore):
         cleanupUpdates()
         for component in self.components.values():
             getattr(component, 'fini', lambda: None)()
+        self.components.clear()
         if self.hangar_settings is not None:
             self.hangar_settings.fini()
             self.hangar_settings = None

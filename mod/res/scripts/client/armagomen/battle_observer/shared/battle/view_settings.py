@@ -1,14 +1,13 @@
 from collections import defaultdict
 
-from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, MINIMAP
+from armagomen._logger import IALogger
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.battle_observer.shared.interface import IStatisticsDataLoader, IViewSettings
 from armagomen.utils.common import IS_XVM_INSTALLED
 from constants import ARENA_GUI_TYPE
 from frontline.gui.Scaleform.daapi.view.battle.frontline_battle_page import _NEVER_HIDE, _STATE_TO_UI, PageStates
 from gui.battle_control.battle_constants import BATTLE_CTRL_ID
-from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
 
@@ -35,6 +34,8 @@ class ViewSettingsAS(IViewSettings):
 
     def __init__(self):
         self.components = None
+        self.battlePages = self.invalidateBattlePages()
+        self.specialEventBattles = tuple(getattr(ARENA_GUI_TYPE, x, None) for x in ("LAST_STAND", "HALLOWEEN", "FORT_RUSH"))
 
     @property
     def gui(self):
@@ -47,10 +48,16 @@ class ViewSettingsAS(IViewSettings):
         return self.gui.isRandomBattle() or self.gui.isMapbox()
 
     def isLastStand(self):
-        return self.gui.guiType == getattr(ARENA_GUI_TYPE, "LAST_STAND", -1)
+        return self.gui.guiType == getattr(ARENA_GUI_TYPE, "LAST_STAND", None)
 
-    def isHalloween(self):
-        return self.gui.guiType == getattr(ARENA_GUI_TYPE, "HALLOWEEN", -1)
+    # def isHalloween(self):
+    #     return self.gui.guiType == getattr(ARENA_GUI_TYPE, "HALLOWEEN", None)
+    #
+    # def isFortRush(self):
+    #     return self.gui.guiType == getattr(ARENA_GUI_TYPE, "FORT_RUSH", None)
+
+    def isSpecialEventBattle(self):
+        return self.gui.guiType in self.specialEventBattles
 
     def xvm_installed(self, module):
         if IS_XVM_INSTALLED:
@@ -58,7 +65,7 @@ class ViewSettingsAS(IViewSettings):
         return IS_XVM_INSTALLED
 
     def isSpecialBattle(self):
-        return self.gui.isInEpicRange() or self.isLastStand() or self.gui.isBattleRoyale() or self.isHalloween()
+        return self.gui.isInEpicRange() or self.gui.isBattleRoyale() or self.isSpecialEventBattle()
 
     def spacialOrEpicRandom(self):
         return self.isSpecialBattle() or self.gui.isEpicRandomBattle()
@@ -178,8 +185,9 @@ class ViewSettingsAS(IViewSettings):
             self.sessionProvider.registerViewComponents(*grouped_aliases.items())
             self.logger.logDebug("viewSettings, _registerViewComponents: {}", grouped_aliases)
 
-    @property
-    def battlePages(self):
+    @staticmethod
+    def invalidateBattlePages():
+        from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
         base = set(VIEW_ALIAS.BATTLE_PAGES)
         extra = {
             VIEW_ALIAS.STRONGHOLD_BATTLE_PAGE,
@@ -187,8 +195,13 @@ class ViewSettingsAS(IViewSettings):
             VIEW_ALIAS.COMP7_BATTLE_PAGE,
             VIEW_ALIAS.COMP7_LIGHT_BATTLE_PAGE,
         }
+
+        pages = ("LAST_STAND_BATTLE_PAGE", "FORT_RUSH_BATTLE_PAGE", "HALLOWEEN_BATTLE_PAGE")
+
+        injected = set(getattr(VIEW_ALIAS, name) for name in pages if hasattr(VIEW_ALIAS, name))
+
         ignore = {
             VIEW_ALIAS.DEV_BATTLE_PAGE,
             VIEW_ALIAS.EVENT_BATTLE_PAGE,
         }
-        return (base | extra) - ignore
+        return (base | extra | injected) - ignore

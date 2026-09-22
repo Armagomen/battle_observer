@@ -41,7 +41,6 @@ class GLOBAL:
     AVG_COLOR = "avgColor"
     COLOR = "color"
     COMMA_SEP = ", "
-    C_INTERFACE_SPLITTER = "*"
     EMPTY_LINE = ""
     ENABLED = "enabled"
     HEIGHT = "height"
@@ -363,7 +362,8 @@ __battle_types = (
     "TOURNAMENT_COMP7",
     "TRAINING",
     "UNKNOWN",
-    "HALLOWEEN"
+    "HALLOWEEN",
+    "FORT_RUSH"
 )
 
 BATTLES_RANGE = tuple(getattr(ARENA_GUI_TYPE, name) for name in __battle_types if hasattr(ARENA_GUI_TYPE, name))

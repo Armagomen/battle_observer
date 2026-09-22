@@ -2,13 +2,13 @@ import os
 from collections import defaultdict
 
 from AccountCommands import VEHICLE_SETTINGS_FLAG
-from armagomen import IALogger
 from armagomen._constants import CREW
+from armagomen._logger import IALogger
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
-from armagomen.utils.common import getObserverCachePath, IS_COMMON_TEST, isSpecialBattleVehicle, openJsonFile, writeJsonFile
+from armagomen.utils.common import delayedCall, getObserverCachePath, IS_COMMON_TEST, isSpecialBattleVehicle, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import CrewDialog
-from armagomen.utils.events import g_events
+from CurrentVehicle import g_currentVehicle
 from dossiers2.custom.cache import getCache
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
@@ -79,11 +79,11 @@ class CrewProcessor(object):
         self.hidden_update = False
         self.ignored_vehicles_cache = CrewIgnoredCache()
         self.user_cache = None
-        g_events.onVehicleChangedDelayed += self.onVehicleChanged
+        g_currentVehicle.onChanged += self.onVehicleChanged
         self.connectionMgr.onLoggedOn += self._onLoggedOn
 
     def fini(self):
-        g_events.onVehicleChangedDelayed -= self.onVehicleChanged
+        g_currentVehicle.onChanged -= self.onVehicleChanged
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         self.ignored_vehicles_cache.saveCache()
 
@@ -148,13 +148,15 @@ class CrewProcessor(object):
 
         return acceleration, description, max(0, xp)
 
-    def onVehicleChanged(self, vehicle):
+    @delayedCall(0.2)
+    def onVehicleChanged(self):
+        vehicle = g_currentVehicle.item
         self.logger.logDebug("crew onVehicleChanged")
         if not vehicle or vehicle.isLocked or isSpecialBattleVehicle(vehicle):
             return
         if self.settingsLoader.getSetting(CREW.NAME, CREW.RETURN):
             self.__autoReturnToggleSwitch(vehicle)
-        if self.settingsLoader.getSetting(CREW.NAME, CREW.TRAINING):
+        if self.settingsLoader.getSetting(CREW.NAME, CREW.TRAINING) and not IS_COMMON_TEST:
             self.updateAcceleration(vehicle)
 
     def updateAcceleration(self, vehicle):

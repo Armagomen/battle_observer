@@ -7,9 +7,9 @@ class StatisticsMeta(BaseModMeta):
         if self._isDAAPIInited():
             self.flashObject.as_updateDead(vehicleID)
 
-    def on_altModeS(self, enabled):
+    def on_altModeS(self, value):
         if self._isDAAPIInited():
-            self.flashObject.on_altMode(enabled)
+            self.flashObject.on_altMode(value)
 
     def as_createItem(self, vehicleID, data):
         if self._isDAAPIInited():

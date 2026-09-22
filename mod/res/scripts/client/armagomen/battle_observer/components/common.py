@@ -1,7 +1,6 @@
 from armagomen._constants import MAIN
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import overrideMethod, safe_import
-from armagomen.utils.events import g_events
 from gui.battle_control.arena_visitor import _ClientArenaVisitor
 from gui.battle_control.battle_constants import VEHICLE_VIEW_STATE
 from gui.battle_control.controllers import msgs_ctrl
@@ -57,10 +56,10 @@ def hasDogTag(base, *args, **kwargs):
 class TweakSounds(object):
 
     def __init__(self):
-        g_events.onModSettingsChanged += self.onModSettingsChanged
+        settingsLoader.onModSettingsChanged += self.onModSettingsChanged
 
     def fini(self):
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        settingsLoader.onModSettingsChanged -= self.onModSettingsChanged
 
     @staticmethod
     @overrideMethod(BattleTeamsBasesController, "__playCaptureSound")

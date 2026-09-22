@@ -1,8 +1,8 @@
 from adisp import adisp_process
-from armagomen import IALogger
 from armagomen._constants import MAIN
+from armagomen._logger import IALogger
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import addCallback
-from armagomen.utils.events import g_events
 from gui import SystemMessages
 from gui.clans.clan_cache import g_clanCache
 from gui.clans.data_wrapper.clan_supply import DataNames, PointStatus, QuestStatus
@@ -26,6 +26,7 @@ class AutoClaimClanReward(object):
     __itemsCache = dependency.descriptor(IItemsCache)
     __hangarSpace = dependency.descriptor(IHangarSpace)
     logger = dependency.descriptor(IALogger)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
         self.__hangarSpace.onSpaceCreate += self.onCreate
@@ -51,7 +52,7 @@ class AutoClaimClanReward(object):
         addCallback(3.0, update)
 
     def subscribe(self):
-        g_events.onModSettingsChanged += self.onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
         g_wgncEvents.onProxyDataItemShowByDefault += self.__onProxyDataItemShow
         clanSupplyProvider = g_clanCache.clanSupplyProvider
         if clanSupplyProvider is not None:
@@ -62,7 +63,7 @@ class AutoClaimClanReward(object):
         if clanSupplyProvider is not None:
             clanSupplyProvider.onDataReceived -= self.__onDataReceived
         g_wgncEvents.onProxyDataItemShowByDefault -= self.__onProxyDataItemShow
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged -= self.onModSettingsChanged
 
     def onModSettingsChanged(self, name, data):
         if name == MAIN.NAME and MAIN.AUTO_CLAIM_CLAN_REWARD in data:

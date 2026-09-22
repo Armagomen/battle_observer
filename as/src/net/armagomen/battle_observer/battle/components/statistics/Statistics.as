@@ -46,11 +46,11 @@ package net.armagomen.battle_observer.battle.components.statistics
 			if (item) item.setDead(true);
 		}
 		
-		public function on_altMode(enabled:Boolean):void
+		public function on_altMode(name:String):void
 		{
 			for each (var item:* in this.minimalItems)
 			{
-				item.altMode(enabled);
+				item.altMode(name);
 			}
 		}
 		

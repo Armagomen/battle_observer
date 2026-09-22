@@ -1,13 +1,14 @@
-import BigWorld
-
 from armagomen._constants import DAMAGE_LOG, GLOBAL
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import toggleOverride
-from armagomen.utils.events import g_events
 from gui.battle_control.battle_constants import PERSONAL_EFFICIENCY_TYPE
 from gui.Scaleform.daapi.view.battle.shared.damage_log_panel import _LogViewComponent, DamageLogPanel
+from helpers import dependency
 
 
 class WG_Logs_Fix(object):
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
+
     BASE_WG_LOGS = (DamageLogPanel._addToTopLog, DamageLogPanel._updateTopLog,
                     DamageLogPanel._updateBottomLog, DamageLogPanel._addToBottomLog)
 
@@ -20,10 +21,11 @@ class WG_Logs_Fix(object):
 
     def __init__(self):
         self.config = {}
-        g_events.onModSettingsChanged += self.onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
 
     def fini(self):
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        self.config.clear()
+        self.settingsLoader.onModSettingsChanged -= self.onModSettingsChanged
 
     def filterEvents(self, events):
         for event in events:

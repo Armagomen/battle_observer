@@ -3,12 +3,15 @@
 from armagomen._constants import ARMOR_CALC, ARMOR_CALC_PARAMS, IMAGE_DIR, POSTMORTEM_MODES
 from armagomen.battle_observer.i18n.armor_calculator import NO_DAMAGE, RICOCHET
 from armagomen.battle_observer.meta.battle.armor_calc_meta import ArmorCalcMeta
+from armagomen.battle_observer.shared.interface import IShotResultHelper
 from armagomen.utils.common import hexToInt
-from armagomen.utils.events import g_events
 from gui.battle_control import avatar_getter
+from helpers import dependency
 
 
 class ArmorCalculator(ArmorCalcMeta):
+    shotResultHelper = dependency.instance(IShotResultHelper)
+
     DEFAULT_COLOR = 4294967295
 
     def __init__(self):
@@ -26,8 +29,8 @@ class ArmorCalculator(ArmorCalcMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged += self.onCameraChanged
-        g_events.onArmorChanged += self.onArmorChanged
-        g_events.onMarkerColorChanged += self.onMarkerColorChanged
+        self.shotResultHelper.onArmorChanged += self.onArmorChanged
+        self.shotResultHelper.onMarkerColorChanged += self.onMarkerColorChanged
 
     @staticmethod
     def getElement(key, idx, with_icon):
@@ -58,8 +61,8 @@ class ArmorCalculator(ArmorCalcMeta):
         handler = avatar_getter.getInputHandler()
         if handler is not None and hasattr(handler, "onCameraChanged"):
             handler.onCameraChanged -= self.onCameraChanged
-        g_events.onArmorChanged -= self.onArmorChanged
-        g_events.onMarkerColorChanged -= self.onMarkerColorChanged
+        self.shotResultHelper.onArmorChanged -= self.onArmorChanged
+        self.shotResultHelper.onMarkerColorChanged -= self.onMarkerColorChanged
         super(ArmorCalculator, self)._dispose()
 
     def onMarkerColorChanged(self, color):

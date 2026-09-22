@@ -1,6 +1,6 @@
 from collections import namedtuple
 
-from armagomen import IALogger
+from armagomen._logger import IALogger
 from armagomen._constants import MAIN
 from armagomen.battle_observer.shared.interface import IBOKeysListener
 from gui import InputHandler

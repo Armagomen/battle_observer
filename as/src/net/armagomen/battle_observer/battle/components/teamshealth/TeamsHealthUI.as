@@ -9,6 +9,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 	{
 		private var bar_style:*;
 		private const LEAGUE_BIG:String = "league_big";
+		private const OFFSET:Number = 20;
 		
 		public function TeamsHealthUI()
 		{
@@ -22,22 +23,29 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 			{
 				var correlation:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
 				this.updateCorrelationBar(correlation);
-				var styles:Object   = {"league": League, "league_big": LeagueBig, "normal": Default};
+				var styles:Object = {"league": League, "league_big": LeagueBig, "normal": Default};
 				var settings:Object = this.getSettings();
-				this.x = App.appWidth >> 1;
-				this.bar_style = this.addChild(new styles[settings.style](App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global));
-				
-				if (settings.style != "league_big")
+				this.bar_style = new styles[settings.style](App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global);
+				this.bar_style.y = -OFFSET;
+				correlation.addChild(this.bar_style);
+				if (settings.style != LEAGUE_BIG)
 				{
 					setTimeout(this.updateCountersPosition, 500, correlation);
 				}
 				var q_progress:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
-				this.battlePage.addChildAt(q_progress, this.battlePage.getChildIndex(correlation) - 1);
+				if (q_progress){
+					q_progress.getChildAt(0).alpha = 0.8;
+					this.battlePage.addChildAt(q_progress, this.battlePage.getChildIndex(correlation) - 1);
+				}
 			}
 		}
 		
 		private function updateCorrelationBar(correlation:*):void
 		{
+			var background:* = correlation.getChildAt(0);
+			background.alpha = 0.8;
+			background.y = -OFFSET;
+			
 			correlation.greenBackground.alpha = 0;
 			correlation.redBackground.alpha = 0;
 			correlation.purpleBackground.alpha = 0;
@@ -46,18 +54,26 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 			correlation.enemyTeamFragsField.alpha = 0;
 			correlation.allyTeamHealthBar.alpha = 0;
 			correlation.enemyTeamHealthBar.alpha = 0;
-			var background:* = correlation.getChildAt(0);
-			background.y = -22;
-			background.alpha = 0.9;
-			correlation.y = 20;
+			
+			correlation.removeChild(correlation.greenBackground);
+			correlation.removeChild(correlation.redBackground);
+			correlation.removeChild(correlation.purpleBackground);
+			correlation.removeChild(correlation.teamFragsSeparatorField);
+			correlation.removeChild(correlation.allyTeamFragsField);
+			correlation.removeChild(correlation.enemyTeamFragsField);
+			correlation.removeChild(correlation.allyTeamHealthBar);
+			correlation.removeChild(correlation.enemyTeamHealthBar);
+			
+			correlation.y = OFFSET;
+			
 		}
 		
 		private function updateCountersPosition(correlation:*):void
 		{
-			correlation.allyVehicleMarkersList._markerStartPosition = -25;
-			correlation.enemyVehicleMarkersList._markerStartPosition = -5;
-			correlation.allyVehicleMarkersList.sort();
-			correlation.enemyVehicleMarkersList.sort();
+			correlation.allyVehicleMarkersList._markerStartPosition = -30;
+			correlation.enemyVehicleMarkersList._markerStartPosition = 0;
+			correlation.allyVehicleMarkersList.sort(correlation.allyVehicleMarkersList._vehicleIDs);
+			correlation.enemyVehicleMarkersList.sort(correlation.enemyVehicleMarkersList._vehicleIDs);
 		}
 		
 		override protected function onBeforeDispose():void
@@ -96,8 +112,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 		
 		override public function onResizeHandle(event:Event):void
 		{
-			this.x = App.appWidth >> 1;
-			if (this.getSettings().style != "league_big")
+			if (this.getSettings().style != LEAGUE_BIG)
 			{
 				this.updateCountersPosition(this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR));
 			}

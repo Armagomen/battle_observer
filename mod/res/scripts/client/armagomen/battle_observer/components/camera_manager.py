@@ -3,11 +3,10 @@ import BigWorld
 import TriggersManager
 from account_helpers.settings_core.settings_constants import GAME
 from aih_constants import CTRL_MODE_NAME
-from armagomen import IALogger
 from armagomen._constants import ARCADE, EFFECTS, GLOBAL, SNIPER, STRATEGIC
+from armagomen._logger import IALogger
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import addCallback, MinMax, ResMgr, toggleOverride
-from armagomen.utils.events import g_events
 from AvatarInputHandler.control_modes import PostMortemControlMode
 from AvatarInputHandler.DynamicCameras.SniperCamera import SniperCamera
 from gui.battle_control.avatar_getter import getInputHandler
@@ -230,7 +229,7 @@ class Strategic(CameraSettings):
 class Sniper(CameraSettings):
     ZOOM = "zoom"
     ZOOMS = "zooms"
-    MAX_DIST = 600.0
+    MAX_DIST = 650.0
 
     def __init__(self):
         super(Sniper, self).__init__()
@@ -302,18 +301,19 @@ class Sniper(CameraSettings):
 class CameraManager(object):
     appLoader = dependency.descriptor(IAppLoader)
     logger = dependency.descriptor(IALogger)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
     __slots__ = ("__modes",)
 
     def __init__(self):
         self.appLoader.onGUISpaceBeforeEnter += self.updateCameras
         self.__modes = (Arcade(), Sniper(), Strategic())
         for mode in self.__modes:
-            g_events.onModSettingsChanged += mode.onModSettingsChanged
+            self.settingsLoader.onModSettingsChanged += mode.onModSettingsChanged
 
     def fini(self):
         self.appLoader.onGUISpaceBeforeEnter -= self.updateCameras
         for mode in self.__modes:
-            g_events.onModSettingsChanged -= mode.onModSettingsChanged
+            self.settingsLoader.onModSettingsChanged -= mode.onModSettingsChanged
 
     def updateCameras(self, spaceID):
         if spaceID == GuiGlobalSpaceID.BATTLE_LOADING:

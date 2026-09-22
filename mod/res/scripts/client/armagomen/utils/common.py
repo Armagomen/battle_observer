@@ -10,7 +10,7 @@ from colorsys import hsv_to_rgb
 import BigWorld
 import ResMgr
 
-from armagomen import IALogger
+from armagomen._logger import IALogger
 from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency
 from skeletons.gui.impl import IGuiLoader
@@ -240,7 +240,7 @@ def find_similar_attr_name(obj, target_name):
         if target_name in name:
             logger.logDebug('{} {}', target_name, name)
             return name
-    logger.logError("overrideError: method '{}' do not find in '{}'", target_name, str(obj))
+    logger.logError("overrideError: method >> {} << do not find in >> {} <<", target_name, str(obj))
     return None
 
 
@@ -288,7 +288,7 @@ def toggleOverride(obj, method_name, func, enable):
         cancelOverride(obj, method_name, func.__name__)
 
 
-def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, as_int=False, full=False):
+def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, as_int=False):
     """
     Returns a HEX color code based on percent.
     If color_blind=True, uses a smooth gradient: blue → green (no yellow).
@@ -299,9 +299,7 @@ def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, a
         color_blind (bool): Enables color-blind-safe gradient if True.
         as_int (bool): If True, returns int (0xRRGGBB), else HEX string.
     """
-    if full:
-        hue = percent
-    elif color_blind:
+    if color_blind:
         # Blue → Green
         hue = 0.666 + (-0.333 * percent)
     else:
@@ -336,7 +334,7 @@ def colorToHex(color):
     """
     Converts color string to hex string.
     Accepts formats: '#RRGGBB', '0xRRGGBB', 'RRGGBB', even longer strings.
-    Compatible with Python 2.7. Falls back to 0xFAFAFAon error.
+    Compatible with Python 2.7. Falls back to 0xFAFAFA on error.
     """
     if color.startswith('0x') and len(color) == 8:
         return color
@@ -351,7 +349,7 @@ def colorToHex(color):
 def getPercent(param_a, param_b):
     if param_b <= 0 or param_a <= 0:
         return 0.0
-    return float(max(0.0, param_a)) / param_b
+    return param_a / param_b
 
 
 def getGreatPercent(param_a, param_b):

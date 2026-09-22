@@ -1,0 +1,29 @@
+[
+  {
+    "type": "Layout",
+    "id": "R.mods.armagomen.battle_observer.views.DateTimesView",
+    "path": "coui://gui/gameface/mods/armagomen/battle_observer/hangar/clock/clock.html",
+    "parameters": {
+      "entrance": "Observer_DateTimes_UI",
+      "impl": "gameface"
+    }
+  },
+  {
+    "type": "Layout",
+    "id": "R.mods.armagomen.battle_observer.views.HeaderView",
+    "path": "coui://gui/gameface/mods/armagomen/battle_observer/hangar/header/header.html",
+    "parameters": {
+      "entrance": "Observer_Header_UI",
+      "impl": "gameface"
+    }
+  },
+  {
+    "type": "Layout",
+    "id": "R.mods.armagomen.battle_observer.views.HangarEfficiencyView",
+    "path": "coui://gui/gameface/mods/armagomen/battle_observer/hangar/efficiency/efficiency.html",
+    "parameters": {
+      "entrance": "Observer_Efficiency_UI",
+      "impl": "gameface"
+    }
+  }
+]

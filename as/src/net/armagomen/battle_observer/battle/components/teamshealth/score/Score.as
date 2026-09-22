@@ -49,7 +49,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth.score
 			
 			this.greenScore = new TextExt(-16, -3, Constants.scoreformat, TextFieldAutoSize.RIGHT, this);
 			this.greenScore.antiAliasType = AntiAliasType.NORMAL;
-			this.redScore = new TextExt(16, -3, Constants.scoreformat, TextFieldAutoSize.LEFT, this);
+			this.redScore = new TextExt(15, -3, Constants.scoreformat, TextFieldAutoSize.LEFT, this);
 			this.redScore.antiAliasType = AntiAliasType.NORMAL;
 		}
 		

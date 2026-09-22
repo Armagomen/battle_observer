@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen import IALogger
+from armagomen._logger import IALogger
 from armagomen.battle_observer.shared.interface import IBOPlayersDamageController
 from Event import SafeEvent
 from helpers import dependency
@@ -22,6 +22,7 @@ class PlayersDamageController(IBOPlayersDamageController):
         self.appLoader.onGUISpaceLeft += self.unsubscribe
 
     def fini(self):
+        self.onPlayerDamageChanged.clear()
         self.appLoader.onGUISpaceEntered -= self.subscribe
         self.appLoader.onGUISpaceLeft -= self.unsubscribe
         self.logger.logInfo("Finished PlayersDamageController")

@@ -1,15 +1,22 @@
 from armagomen._constants import SERVICE_CHANNEL
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import toggleOverride
-from armagomen.utils.events import g_events
 from chat_shared import SYS_MESSAGE_TYPE
+from helpers import dependency
 from messenger.proto.bw.ServiceChannelManager import ServiceChannelManager
 
 
 class ServiceChannelFilter(object):
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
+
     def __init__(self):
         self.enabled = False
         self.channel_filter = set()
-        g_events.onModSettingsChanged += self._onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged += self._onModSettingsChanged
+
+    def fini(self):
+        self.channel_filter.clear()
+        self.settingsLoader.onModSettingsChanged -= self._onModSettingsChanged
 
     def addClientMessage(self, base, *args, **kwargs):
         aux_data = kwargs.get(SERVICE_CHANNEL.AUX_DATA)
@@ -49,4 +56,4 @@ c_filter = ServiceChannelFilter()
 
 
 def fini():
-    g_events.onModSettingsChanged -= c_filter._onModSettingsChanged
+    c_filter.fini()

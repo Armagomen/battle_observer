@@ -3,9 +3,8 @@ import BigWorld
 from aih_constants import SHOT_RESULT
 from armagomen._constants import ARMOR_CALC, GLOBAL
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
-from armagomen.battle_observer.shared.interface import IBOPiercingRandomizer
+from armagomen.battle_observer.shared.interface import IShotResultHelper
 from armagomen.utils.common import overrideMethod
-from armagomen.utils.events import g_events
 from AvatarInputHandler.gun_marker_ctrl import _CrosshairShotResults, computePiercingPowerAtDist
 from constants import SHELL_MECHANICS_TYPE, SHELL_TYPES
 from DestructibleEntity import DestructibleEntity
@@ -20,7 +19,7 @@ class _ShotResult(_CrosshairShotResults):
     UNDEFINED_RESULT = (SHOT_RESULT.UNDEFINED, None)
     PP_REDUCTION_FACTOR = 3.0
     DEFAULT_HIT_ANGLE_COS = 1.0
-    _randomizer = dependency.instance(IBOPiercingRandomizer)
+    shotResultHelper = dependency.instance(IShotResultHelper)
 
     @classmethod
     def _collisionIsBad(cls, collision):
@@ -64,8 +63,8 @@ class _ShotResult(_CrosshairShotResults):
     def _checkShotResult(cls, armor, piercing_power, no_damage):
         if no_damage:
             return SHOT_RESULT.UNDEFINED, 0.0
-        pp_min = piercing_power * cls._randomizer.min
-        pp_max = piercing_power * cls._randomizer.max
+        pp_min = piercing_power * cls.shotResultHelper.pp_min
+        pp_max = piercing_power * cls.shotResultHelper.pp_max
         if armor <= pp_min:
             return SHOT_RESULT.GREAT_PIERCED, 1.0
         elif armor > pp_max:
@@ -204,10 +203,10 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
             color = self.__colors[shot_result]
             if self.__cache[markerType] != shot_result and self._parentObj.setGunMarkerColor(markerType, color):
                 self.__cache[markerType] = shot_result
-                g_events.onMarkerColorChanged(color)
+                self.__resolver.shotResultHelper.onMarkerColorChanged(color)
             if self.__data != data:
                 self.__data = data
-                g_events.onArmorChanged(data)
+                self.__resolver.shotResultHelper.onArmorChanged(data)
 
     def start(self):
         super(ShotResultIndicatorPlugin, self).start()
@@ -226,7 +225,7 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
     @staticmethod
     def __updateCurrVehicleInfo(vehicle):
         if not avatar_getter.isObserver():
-            randomizer = dependency.instance(IBOPiercingRandomizer)
+            randomizer = dependency.instance(IShotResultHelper)
             randomizer.updateRandomization(vehicle)
 
 
@@ -237,3 +236,7 @@ def createPlugins(base, *args):
     if settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
         _plugins['shotResultIndicator'] = ShotResultIndicatorPlugin
     return _plugins
+
+
+def fini():
+    pass

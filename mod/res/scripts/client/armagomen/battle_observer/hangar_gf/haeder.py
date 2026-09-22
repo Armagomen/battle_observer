@@ -1,15 +1,14 @@
-from armagomen import IALogger
 from armagomen._constants import GLOBAL, HANGAR_HEADER, LOBBY_ALIASES
+from armagomen._logger import IALogger
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import TimeInterval
-from armagomen.utils.events import g_events
 from frameworks.wulf import ViewModel
 from gui.impl import backport
 from gui.impl.gen import R
 from gui.impl.pub.view_component import ViewComponent
 from helpers import dependency
 from helpers.time_utils import getTimeDeltaFromNow, makeLocalServerTime, ONE_DAY, ONE_HOUR, ONE_MINUTE, ONE_SECOND
-from openwg_gameface import gf_mod_inject, ModDynAccessor
+from openwg_gameface import gf_mod_inject
 from skeletons.gui.game_control import IGameSessionController
 
 
@@ -56,17 +55,14 @@ class HeaderModel(ViewModel):
 
 
 class HeaderView(ViewComponent[HeaderModel]):
-    viewLayoutID = ModDynAccessor(LOBBY_ALIASES.HEADER)
+    viewLayoutID = R.mods.armagomen.battle_observer.views.HeaderView
     gameSession = dependency.descriptor(IGameSessionController)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
     logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         self.logger.logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.HEADER, self.viewLayoutID())
-        super(HeaderView, self).__init__(
-            layoutID=self.viewLayoutID(),
-            model=HeaderModel
-        )
+        super(HeaderView, self).__init__(layoutID=self.viewLayoutID(), model=HeaderModel)
 
         day = backport.text(R.strings.menu.header.account.premium.days()).replace(".", "")
         hour = backport.text(R.strings.menu.header.account.premium.hours()).replace(".", "")
@@ -91,13 +87,13 @@ class HeaderView(ViewComponent[HeaderModel]):
         super(HeaderView, self)._onLoading()
         self.__isPremium = self.gameSession._stats.isPremium
         self.__activeTime = self.gameSession._stats.activePremiumExpiryTime
-        g_events.onModSettingsChanged += self.onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
         self.gameSession.onPremiumNotify += self.__onPremiumNotify
-        self.onModSettingsChanged(HANGAR_HEADER.NAME, self.settingsLoader.getSetting(HANGAR_HEADER.NAME))
+        self.onModSettingsChanged(HANGAR_HEADER.NAME, self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.HEADER))
 
     def _finalize(self):
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged -= self.onModSettingsChanged
         self.toggleInterval(False)
         super(HeaderView, self)._finalize()
 

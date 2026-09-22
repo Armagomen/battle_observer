@@ -1,4 +1,4 @@
-from armagomen import IALogger
+from armagomen._logger import IALogger
 from armagomen._constants import COLORS, PANELS, VEHICLE
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.battle_observer.shared.interface import IBOKeysListener, IBOPlayersDamageController
@@ -61,9 +61,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             color = self.getVehicleClassColor(vInfoVO.vehicleType.classTag)
         else:
             color = self.getBarColor(isEnemy)
-        visible = not self.settings[PANELS.ON_KEY_DOWN]
         vehicle_data = {VEHICLE.CUR: max_health, VEHICLE.MAX: max_health, VEHICLE.PERCENT: 100}
-        self.as_addHealthBarS(vehicleID, color, visible)
+        self.as_addHealthBarS(vehicleID, color, not self.settings[PANELS.ON_KEY_DOWN])
         self.as_updateHealthBarS(vehicleID, 100, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onAddedToStorage(self, vehicleID, isEnemy):
@@ -85,9 +84,8 @@ class PlayersPanels(PlayersPanelsMeta, IBattleFieldListener):
             vInfoVO = self.getVehicleInfo(vehicleID)
             if vInfoVO.isObserver():
                 return
-            max_health = max(newHealth, maxHealth)
-            health_percent = normalizeHealthPercent(newHealth, max_health)
-            vehicle_data = {VEHICLE.CUR: max(0, newHealth), VEHICLE.MAX: max_health, VEHICLE.PERCENT: health_percent}
+            health_percent = normalizeHealthPercent(newHealth, maxHealth)
+            vehicle_data = {VEHICLE.CUR: max(0, newHealth), VEHICLE.MAX: maxHealth, VEHICLE.PERCENT: health_percent}
             self.as_updateHealthBarS(vehicleID, health_percent, self.settings[PANELS.HP_TEMPLATE] % vehicle_data)
 
     def onPlayerDamageChanged(self, attackerID, damage):

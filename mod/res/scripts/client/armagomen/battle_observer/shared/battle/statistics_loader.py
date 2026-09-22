@@ -1,7 +1,8 @@
 import json
 from collections import defaultdict
+from datetime import datetime, timedelta
 
-from armagomen import IALogger
+from armagomen._logger import IALogger
 from armagomen._constants import API_KEY
 from armagomen.battle_observer.shared.interface import IStatisticsDataLoader
 from armagomen.utils.async_request import async_url_request
@@ -38,6 +39,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
         super(StatisticsDataLoader, self).__init__()
         self.logger.logInfo("Initializing StatisticsDataLoader")
         self.onDataResponse = SafeEvent()
+        self.timeDelta = datetime.now() + timedelta(hours=4)
         self._load_try = 0
         self.__cached_vehicles = defaultdict(dict)
 
@@ -60,7 +62,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
             self.logger.logDebug("StatisticsDataLoader/__onInfoResponse: FINISH request INFO data={}", response_data)
             self.requestWTR(DBIDs)
         else:
-            self.delayedLoad(response.responseCode, DBIDs, self.requestInfo)
+            self.delayedLoad(response.responseCode, self.requestInfo, DBIDs)
 
     def __onWTRResponse(self, response, DBIDs):
         if response.responseCode == HTTP_OK_STATUS:
@@ -72,20 +74,24 @@ class StatisticsDataLoader(IStatisticsDataLoader):
             self.logger.logDebug("StatisticsDataLoader/__onWTRResponse: FINISH request WTR data={}", response_data)
             self.onResponse(DBIDs)
         else:
-            self.delayedLoad(response.responseCode, DBIDs, self.requestWTR)
+            self.delayedLoad(response.responseCode, self.requestWTR, DBIDs)
 
     def onResponse(self, DBIDs):
         arenaDP = self.sessionProvider.getArenaDP()
         self.onDataResponse({arenaDP.getVehIDByAccDBID(int(accountDBID)): self.__cached_vehicles[accountDBID] for accountDBID in DBIDs})
         self._load_try = 0
 
-    def delayedLoad(self, code, DBIDs, method):
+    def delayedLoad(self, code, method, DBIDs):
         if self._load_try < 6:
             self._load_try += 1
             self.logger.logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
             addCallback(5.0, method, DBIDs)
 
     def requestStatisticsFromApi(self, DBIDs):
+        current_time = datetime.now()
+        if current_time >= self.timeDelta:
+            self.timeDelta = current_time + timedelta(hours=4)
+            self.__cached_vehicles.clear()
         loaded = set()
         to_request = set()
         for accountDBID in DBIDs:

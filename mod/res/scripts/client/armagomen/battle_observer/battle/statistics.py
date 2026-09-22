@@ -1,7 +1,6 @@
 from collections import defaultdict
+from itertools import cycle
 from math import floor, log
-
-import BigWorld
 
 from armagomen._constants import STATISTICS
 from armagomen.battle_observer.meta.battle.statistics_meta import StatisticsMeta
@@ -29,6 +28,7 @@ class Statistics(StatisticsMeta):
         self.__sentVehicles = set()
         self.__callback = None
         self.__items = defaultdict(dict)
+        self.__gen = cycle(("battles", "rating", "winRate"))
 
     def _populate(self):
         super(Statistics, self)._populate()
@@ -40,7 +40,7 @@ class Statistics(StatisticsMeta):
                 arena.onVehicleAdded += self.onFogOfWarAddedUpdated
                 arena.onVehicleUpdated += self.onFogOfWarAddedUpdated
             arena.onVehicleKilled += self.onVehicleKilled
-        self.keysListener.registerComponent(self.on_altModeS)
+        self.keysListener.registerComponent(self.onKeyPressed)
 
         addCallback(5.0 if self.isComp7Battle() else 0.1,
                     self.statisticsLoader.requestStatisticsFromApi,
@@ -72,10 +72,11 @@ class Statistics(StatisticsMeta):
             return
         accountDBID = vInfo.player.accountDBID
         if accountDBID and accountDBID not in self.__addedVehicles:
+            from BigWorld import cancelCallback, callback
             if self.__callback is not None:
-                BigWorld.cancelCallback(self.__callback)
+                cancelCallback(self.__callback)
             self.__addedVehicles.add(accountDBID)
-            self.__callback = BigWorld.callback(2.0, self.onAddedUpdatedDelay)
+            self.__callback = callback(2.0, self.onAddedUpdatedDelay)
 
     def onDataResponse(self, loadedData):
         for vehicle_id, value in loadedData.iteritems():
@@ -102,8 +103,13 @@ class Statistics(StatisticsMeta):
                 return hexToInt(self.settings[STATISTICS.COLORS].get(colorName, self.DEFAULT_COLOR))
         return hexToInt(self.DEFAULT_COLOR)
 
+    def onKeyPressed(self, enable):
+        if enable:
+            self.on_altModeS(next(self.__gen))
+
     def buildItemData(self, data, is_enemy):
         return {
+            "rating": str(data["rating"]),
             "color": self.__getColor(data["rating"]),
             "winRate": "{:.1%}".format(getPercent(data["wins"], data["battles"])),
             "battles": self.__battlesFormat(data["battles"]),

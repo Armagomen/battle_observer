@@ -40,6 +40,7 @@ class Friends(object):
         return update(vTypeVo, *args, **kwargs)
 
     def fini(self):
+        self._cache.clear()
         g_playerEvents.onGuiCacheSyncCompleted -= self._onGuiCacheSyncCompleted
 
 

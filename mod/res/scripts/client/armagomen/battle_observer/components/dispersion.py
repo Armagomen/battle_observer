@@ -5,7 +5,6 @@ from account_helpers.settings_core.settings_constants import GAME
 from armagomen._constants import DISPERSION, GLOBAL
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import toggleOverride
-from armagomen.utils.events import g_events
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
@@ -73,6 +72,7 @@ class SPGController(gun_marker_ctrl._SPGGunMarkerController):
 
 class DispersionCircle(object):
     settingsCore = dependency.descriptor(ISettingsCore)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
         self.replace = False
@@ -80,7 +80,7 @@ class DispersionCircle(object):
         self.limiter = False
         self.enabled = False
         self.__tick = 0.1
-        g_events.onModSettingsChanged += self.onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
 
         self.__server_overrides = (
             (gm_factory, "createComponents", self.createOverrideComponents),
@@ -95,7 +95,7 @@ class DispersionCircle(object):
         )
 
     def fini(self):
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged -= self.onModSettingsChanged
 
     @staticmethod
     def createOverrideComponents(base, *args):

@@ -4,8 +4,8 @@ def register_services():
     from armagomen.battle_observer.shared.battle.keys_listener import KeysListener
     from armagomen.battle_observer.shared.interface import IBOKeysListener
 
-    from armagomen.battle_observer.shared.battle.piercing_randomizer import PiercingRandomizer
-    from armagomen.battle_observer.shared.interface import IBOPiercingRandomizer
+    from armagomen.battle_observer.shared.battle.shot_result_helper import ShotResultHelper
+    from armagomen.battle_observer.shared.interface import IShotResultHelper
 
     from armagomen.battle_observer.shared.battle.players_damage import PlayersDamageController
     from armagomen.battle_observer.shared.interface import IBOPlayersDamageController
@@ -26,7 +26,7 @@ def register_services():
                 (IBOPlayersDamageController, PlayersDamageController),
                 (IBOCurrentVehicleCachedData, CurrentVehicleCachedData),
                 (IBOKeysListener, KeysListener),
-                (IBOPiercingRandomizer, PiercingRandomizer),
+                (IShotResultHelper, ShotResultHelper),
                 (IViewSettings, ViewSettingsAS),
                 (IStatisticsDataLoader, StatisticsDataLoader))
 

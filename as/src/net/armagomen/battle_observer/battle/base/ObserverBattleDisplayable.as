@@ -27,12 +27,13 @@ package net.armagomen.battle_observer.battle.base
 			this.mouseEnabled = false;
 			this.mouseChildren = false;
 			this.buttonMode = false;
+			
 		}
 		
 		override protected function onPopulate():void
 		{
-			this.battlePage = parent;
 			super.onPopulate();
+			this.battlePage = parent;
 		}
 		
 		override protected function onDispose():void

@@ -10,7 +10,7 @@ __name__ = "BATTLE_OBSERVER"
 
 import logging
 
-logging.disable(logging.WARNING)
+logging.disable(logging.DEBUG)
 
 
 def init():
@@ -20,13 +20,16 @@ def init():
     from helpers.dependency import _g_manager, DependencyManager
 
     manager = _g_manager  # type: DependencyManager
+    from armagomen._logger import IALogger
+    from armagomen._logger.ALogger import ALogger
+
+    manager.addInstance(IALogger, ALogger(__name__), finalizer='fini')
 
     from armagomen.battle_observer import Core, IBOCore
     from armagomen.battle_observer.updater import Updater, IBOUpdater
-    services = ((IBOCore, Core), (IBOUpdater, Updater))
 
-    for interface, service in services:
-        manager.addInstance(interface, service(__version__), finalizer='fini')
+    manager.addInstance(IBOCore, Core(__version__), finalizer='fini')
+    manager.addInstance(IBOUpdater, Updater(__version__), finalizer='fini')
 
 
 fini = lambda *a, **kw: None

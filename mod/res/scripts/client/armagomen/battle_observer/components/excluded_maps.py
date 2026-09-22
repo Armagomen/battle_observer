@@ -2,9 +2,9 @@ from datetime import datetime, timedelta
 
 from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.i18n.exluded_maps import EXCLUDED_MAPS_BY_LANG
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import delayedCall
 from armagomen.utils.dialogs import ExcludedMapsDialog
-from armagomen.utils.events import g_events
 from constants import PREMIUM_TYPE, PremiumConfigs
 from gui.ClientUpdateManager import g_clientUpdateManager
 from gui.game_control.wot_plus.utils import getExcludedMapsPromoData
@@ -32,6 +32,7 @@ class ExcludedMapsProcessor(object):
     appLoader = dependency.descriptor(IAppLoader)
     itemsCache = dependency.descriptor(IItemsCache)
     lobbyContext = dependency.descriptor(ILobbyContext)
+    settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
         self.__enabled = False
@@ -40,13 +41,13 @@ class ExcludedMapsProcessor(object):
         self.timeDelta = None
         self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
-        g_events.onModSettingsChanged += self._onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged += self._onModSettingsChanged
         g_clientUpdateManager.addCallbacks({'preferredMaps': self.__onPreferredMapsChanged})
 
     def fini(self):
         self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
         self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
-        g_events.onModSettingsChanged -= self._onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged -= self._onModSettingsChanged
         g_clientUpdateManager.removeObjectCallbacks(self)
 
     @property

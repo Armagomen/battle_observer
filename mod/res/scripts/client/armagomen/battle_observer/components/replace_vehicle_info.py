@@ -14,7 +14,7 @@ ANONYMOUS_TRANSLATE = {
 }.get(getClientLanguage(), "Anonymous")
 EMPTY_BADGES = ([], [])
 
-mainSettings = dependency.instance(IBOSettingsLoader).getSetting(MAIN.NAME)
+mainSettings = dependency.instance(IBOSettingsLoader).getComponentDict(MAIN.NAME)
 
 
 @overrideMethod(VehicleArenaInfoVO)
@@ -29,3 +29,7 @@ def new_VehicleArenaInfoVO(base, *args, **kwargs):
         if mainSettings[MAIN.HIDE_CLAN_ABBREV] and ANOTHER.CLAN_ABBR in kwargs:
             kwargs[ANOTHER.CLAN_ABBR] = GLOBAL.EMPTY_LINE
     return base(*args, **kwargs)
+
+
+def fini():
+    pass

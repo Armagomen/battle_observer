@@ -1,4 +1,4 @@
-from armagomen import IALogger
+from armagomen._logger import IALogger
 from armagomen._constants import BATTLE_ALIASES
 from armagomen.battle_observer.shared.interface import IViewSettings
 from armagomen.utils.common import addCallback

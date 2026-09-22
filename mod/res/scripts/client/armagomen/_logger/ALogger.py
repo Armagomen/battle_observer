@@ -1,45 +1,16 @@
-import traceback
-from inspect import getmro
+import logging
 
-from BigWorld import logDebug, logError, logInfo, logWarning
-
-
-class IALogger(object):
-    __slots__ = ()
-
-    def fini(self):
-        raise NotImplementedError
-
-    @property
-    def is_debug(self):
-        raise NotImplementedError
-
-    def set_debug(self, value):
-        raise NotImplementedError
-
-    def setModName(self, mod_name):
-        raise NotImplementedError
-
-    def logError(self, message, *args, **kwargs):
-        raise NotImplementedError
-
-    def logInfo(self, message, *args, **kwargs):
-        raise NotImplementedError
-
-    def logDebug(self, message, *args, **kwargs):
-        raise NotImplementedError
-
-    def logWarning(self, message, *args, **kwargs):
-        raise NotImplementedError
+from . import IALogger
 
 
-class _ALogger(IALogger):
+class ALogger(IALogger):
     EMPTY_WARN = "!!! WARNING !!! - Empty string detected. Check first argument in call function at: File '{}', line {}, in {}, code {}"
-    __slots__ = ("__is_debug", "__mod_name")
+    __slots__ = ("__is_debug", "logger")
 
-    def __init__(self):
+    def __init__(self, name):
         self.__is_debug = False
-        self.__mod_name = "BATTLE_OBSERVER"
+        self.logger = logging.getLogger(name)
+        self.logger.setLevel(logging.INFO)
         self.logInfo("Initializing BO logger")
 
     @property
@@ -61,6 +32,7 @@ class _ALogger(IALogger):
         func_name = func.__name__
 
         if hasattr(func, "im_class"):
+            from inspect import getmro
             for cls in getmro(func.im_class):
                 if func_name in cls.__dict__:
                     class_name = cls.__name__
@@ -72,22 +44,32 @@ class _ALogger(IALogger):
         if not isinstance(message, basestring):
             message = str(message)
         if not message:
-            return self.EMPTY_WARN.format(*traceback.extract_stack()[-3])
+            from traceback import extract_stack
+            return self.EMPTY_WARN.format(*extract_stack()[-3])
         elif args or kwargs:
             return message.format(*args, **kwargs)
         return message
 
     def logError(self, message, *args, **kwargs):
-        logError(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
+        """
+        :type message: str
+        """
+        self.logger.error(self._formatMessage(message, *args, **kwargs))
 
     def logInfo(self, message, *args, **kwargs):
-        logInfo(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
+        """
+        :type message: str
+        """
+        self.logger.info(self._formatMessage(message, *args, **kwargs))
 
     def logDebug(self, message, *args, **kwargs):
+        """
+        :type message: str
+        """
         if self.__is_debug:
             if "func" in kwargs:
                 kwargs["func"] = self.get_full_function_path(kwargs["func"])
-            logDebug(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
+            self.logger.info(self._formatMessage(message, *args, **kwargs))
 
     def logWarning(self, message, *args, **kwargs):
-        logWarning(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
+        self.logger.warning(self._formatMessage(message, *args, **kwargs))

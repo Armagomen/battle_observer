@@ -35,9 +35,9 @@ package net.armagomen.battle_observer.battle.components.statistics
 			}
 		}
 		
-		public function altMode(enable:Boolean):void
+		public function altMode(name:String):void
 		{
-			this._text.text = enable ? this.data.battles : this.data.winRate;
+			this._text.text = this.data[name];
 		}
 		
 		public function setDead(value:Boolean):void

@@ -1,15 +1,14 @@
-from time import strftime
-
-from armagomen import IALogger
 from armagomen._constants import CLOCK, GLOBAL, LOBBY_ALIASES
+from armagomen._logger import IALogger
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import ENCODING_ERRORS, ENCODING_LOCALE
-from armagomen.utils.events import g_events
 from frameworks.wulf import ViewModel
+from gui.impl.gen import R
 from gui.impl.pub.view_component import ViewComponent
 from gui.shared.utils.TimeInterval import TimeInterval
 from helpers import dependency
-from openwg_gameface import gf_mod_inject, ModDynAccessor
+from openwg_gameface import gf_mod_inject
+from time import strftime
 
 
 class ClockModel(ViewModel):
@@ -37,16 +36,13 @@ class ClockModel(ViewModel):
 
 
 class DateTimesView(ViewComponent[ClockModel]):
-    viewLayoutID = ModDynAccessor(LOBBY_ALIASES.DATE_TIME)
+    viewLayoutID = R.mods.armagomen.battle_observer.views.DateTimesView
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
     logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         self.logger.logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.DATE_TIME, self.viewLayoutID())
-        super(DateTimesView, self).__init__(
-            layoutID=self.viewLayoutID(),
-            model=ClockModel
-        )
+        super(DateTimesView, self).__init__(layoutID=self.viewLayoutID(), model=ClockModel)
         self.__enabled = False
         self.__hangarEnabled = False
         self.__clockFormat = CLOCK.DEFAULT_FORMAT
@@ -56,17 +52,13 @@ class DateTimesView(ViewComponent[ClockModel]):
     def viewModel(self):
         return super(DateTimesView, self).getViewModel()
 
-    @property
-    def settings(self):
-        return self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.DATE_TIME)
-
     def _onLoading(self):
         super(DateTimesView, self)._onLoading()
-        g_events.onModSettingsChanged += self.onModSettingsChanged
-        self.onModSettingsChanged(CLOCK.NAME, self.settings)
+        self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
+        self.onModSettingsChanged(CLOCK.NAME, self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.DATE_TIME))
 
     def _finalize(self):
-        g_events.onModSettingsChanged -= self.onModSettingsChanged
+        self.settingsLoader.onModSettingsChanged -= self.onModSettingsChanged
         self.toggleInterval(False)
         super(DateTimesView, self)._finalize()
 

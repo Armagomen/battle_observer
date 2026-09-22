@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict, namedtuple
 
-from armagomen import IALogger
+from armagomen._logger import IALogger
 from armagomen._constants import GLOBAL
 from armagomen.battle_observer.i18n.online import FALLBACK, language, ONLINE, TEXTFORMAT
 from armagomen.battle_observer.shared.interface import IBOOnline

@@ -1,65 +1,23 @@
 import copy
 from math import ceil
 
-from armagomen import IALogger
-from armagomen._constants import (ANOTHER, ARCADE, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS, MAIN, MINIMAP,
-                                  MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS, COLORED_ICONS)
+from armagomen._constants import (ANOTHER, ARCADE, COLORED_ICONS, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS,
+                                  MAIN, MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
+from armagomen._logger import IALogger
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
+from armagomen.battle_observer.settings.hangar.settings_helper import convertDict, getCollectionIndex, makeTooltip, unpackDictPath
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import encodeData, IS_XVM_INSTALLED, openWebBrowser, printDebuginfo, safe_index, SIXTH_SENSE_LIST, \
     SIXTH_SENSE_PATH
-from armagomen.utils.events import g_events
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
 
-settingsVersion = 43
+settingsVersion = 44
 LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.NAME, MINIMAP.NAME, COLORED_ICONS.NAME}
 
 
-def makeTooltip(header=None, body=None, note=None, attention=None):
-    parts = (('HEADER', header), ('BODY', body), ('NOTE', note), ('ATTENTION', attention),)
-    res_str = u''.join(u'{{{0}}}{1}{{/{0}}}'.format(tag, text) for tag, text in parts if text is not None)
-    return res_str
-
-
-class Getter(object):
-    __slots__ = ()
-
-    @staticmethod
-    def getLinkToParam(settings_block, settingPath):
-        path = settingPath.split(GLOBAL.C_INTERFACE_SPLITTER)
-        if len(path) > 1:
-            for fragment in path:
-                if fragment in settings_block and isinstance(settings_block[fragment], dict):
-                    settings_block = settings_block[fragment]
-        return settings_block, path[-1]
-
-    @staticmethod
-    def getCollectionIndex(value, collection):
-        index = 0
-        if value in collection:
-            index = collection.index(value)
-        return index
-
-    def getKeyPath(self, settings_block, path=()):
-        for key, value in settings_block.items():
-            key_path = path + (key,)
-            if isinstance(value, dict):
-                for _path in self.getKeyPath(value, key_path):
-                    yield _path
-            else:
-                yield key_path
-
-    def keyValueGetter(self, settings_block):
-        for key in self.getKeyPath(settings_block):
-            key = GLOBAL.C_INTERFACE_SPLITTER.join(key)
-            if GLOBAL.ENABLED != key:
-                dic, param = self.getLinkToParam(settings_block, key)
-                yield key, dic[param]
-
-
-class CreateElement(Getter):
+class CreateElement(object):
 
     def __init__(self):
         super(CreateElement, self).__init__()
@@ -196,10 +154,10 @@ class CreateElement(Getter):
         if t is str:
             if GLOBAL.ALIGN in key:
                 collection = GLOBAL.ALIGN_LIST
-                return self.createRadioButtonGroup(blockID, key, collection, self.getCollectionIndex(value, collection))
+                return self.createRadioButtonGroup(blockID, key, collection, getCollectionIndex(value, collection))
             elif bk in self.bid_to_collection:
                 collection, func = self.bid_to_collection[bk]
-                return func(blockID, key, collection, self.getCollectionIndex(value, collection))
+                return func(blockID, key, collection, getCollectionIndex(value, collection))
             return self.createControl(blockID, key, value)
         if t is bool:
             return self.createControl(blockID, key, value)
@@ -343,7 +301,7 @@ class SettingsInterface(CreateElement):
         old_settings = copy.deepcopy(settings_block)
 
         for key, value in data.items():
-            updated_config_link, param_name = self.getLinkToParam(settings_block, key)
+            updated_config_link, param_name = unpackDictPath(settings_block, key)
             if param_name in updated_config_link:
                 if type(updated_config_link[param_name]) is float and type(value) is int:
                     value = float(value)
@@ -352,7 +310,7 @@ class SettingsInterface(CreateElement):
         changed_settings = {k: v for k, v in settings_block.items() if old_settings.get(k) != v}
         if changed_settings:
             self.loader.addToFiniUpdate(blockID)
-            g_events.onModSettingsChanged(blockID, changed_settings)
+            self.loader.onModSettingsChanged(blockID, changed_settings)
             self.logger.logDebug('onSettingsChanged: blockID: {} changed_settings: {}', blockID, changed_settings)
             if blockID == MAIN.NAME and MAIN.DEBUG in changed_settings and self.logger.set_debug(changed_settings[MAIN.DEBUG]):
                 printDebuginfo()
@@ -387,8 +345,8 @@ class SettingsInterface(CreateElement):
                 self.inited.clear()
                 self.loader.readOtherConfig(self.configID, reloadConfig=True)
 
-    def items(self, blockID, settings_block):
-        for key, value in self.keyValueGetter(settings_block):
+    def genItems(self, blockID, settings_block):
+        for key, value in convertDict(settings_block):
             item = self.createItem(blockID, key, value)
             if item is not None:
                 yield item
@@ -402,7 +360,7 @@ class SettingsInterface(CreateElement):
             column2 = [self.createControl(blockID, 'donate_button_ua', URLS.DONATE, 'Button'),
                        self.createControl(blockID, 'discord_button', URLS.DISCORD, 'Button')]
         else:
-            columns = sorted(self.items(blockID, settings_block), key=lambda x: x["varName"])
+            columns = sorted(self.genItems(blockID, settings_block), key=lambda x: x["varName"])
             middle_index = int(ceil(len(columns) / 2.0))
             column1 = columns[:middle_index]
             column2 = columns[middle_index:]

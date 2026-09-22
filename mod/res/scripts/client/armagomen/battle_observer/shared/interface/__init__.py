@@ -11,7 +11,7 @@ class IBOKeysListener(object):
         raise NotImplementedError
 
 
-class IBOPiercingRandomizer(object):
+class IShotResultHelper(object):
 
     def fini(self):
         raise NotImplementedError
@@ -51,10 +51,6 @@ class IViewSettings(object):
         raise NotImplementedError
 
     def registerViewComponents(self):
-        raise NotImplementedError
-
-    @property
-    def battlePages(self):
         raise NotImplementedError
 
 

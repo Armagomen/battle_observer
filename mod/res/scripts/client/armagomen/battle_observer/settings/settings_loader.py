@@ -1,14 +1,13 @@
 import os
 
-from armagomen import IALogger
 from armagomen._constants import ALIAS_TO_CONFIG_NAME_BATTLE, ALIAS_TO_CONFIG_NAME_LOBBY, GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
+from armagomen._logger import IALogger
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
+from armagomen.battle_observer.settings.loading_error import ErrorMessages
+from armagomen.battle_observer.settings.settings_data import SettingsData
 from armagomen.utils.common import clearClientCache, currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
-from armagomen.utils.events import g_events
-from Event import Event
+from Event import SafeEvent
 from helpers import dependency
-from .interface import IBOSettingsLoader
-from .loading_error import ErrorMessages
-from .settings_data import SettingsData
 
 JSON = "{}.json"
 READ_MESSAGE = "loadConfigPart: {}: {}"
@@ -16,12 +15,13 @@ READ_MESSAGE = "loadConfigPart: {}: {}"
 
 class SettingsLoader(IBOSettingsLoader):
     __slots__ = ('configName', 'load_json', 'configsList', 'errorMessages', '__settings', 'sixth_sense_list', 'error_dialog',
-                 '__fini_update', 'onOtherConfigReadComplete')
+                 '__fini_update', 'onOtherConfigReadComplete', 'onModSettingsChanged')
     logger = dependency.descriptor(IALogger)
 
     def __init__(self):
         self.logger.logInfo('Initializing SettingsLoader')
-        self.onOtherConfigReadComplete = Event()
+        self.onOtherConfigReadComplete = SafeEvent()
+        self.onModSettingsChanged = SafeEvent()
         self.__settings = SettingsData()
         self.error_dialog = ErrorMessages()
         self.configsList = sorted(x for x in os.listdir(currentConfigPath) if os.path.isdir(os.path.join(currentConfigPath, x)))
@@ -41,6 +41,8 @@ class SettingsLoader(IBOSettingsLoader):
         self.__fini_update.clear()
         self.onOtherConfigReadComplete.clear()
         self.onOtherConfigReadComplete = None
+        self.onModSettingsChanged.clear()
+        self.onModSettingsChanged = None
         self.logger.logInfo('Finished SettingsLoader')
 
     @property
@@ -135,7 +137,7 @@ class SettingsLoader(IBOSettingsLoader):
     def handleModSettingsChangedEvent(self):
         """Update all configuration settings"""
         self.logger.logInfo('HANDLE MOD SETTINGS CHANGED EVENT')
-        self.iterateSettings(g_events.onModSettingsChanged, LOAD_LIST)
+        self.iterateSettings(self.onModSettingsChanged, LOAD_LIST)
 
     def loadConfigPart(self, component_name, data):
         """Read settings part file from JSON"""

@@ -1,23 +1,16 @@
-from importlib import import_module
-
-from armagomen import IALogger
-from helpers import dependency
-
-
 def loadComponents(is_replay):
-    logger = dependency.instance(IALogger)
     components = {}
 
-    load = [
+    load = {
         'for_wg_fixes',
         'common',
         'effects',
         'minimap_plugins',
         'replace_vehicle_info',
         'shot_result_plugin'
-    ]
+    }
 
-    not_replay = [
+    not_replay = {
         'camera_manager',
         'crew',
         'dispersion',
@@ -27,13 +20,22 @@ def loadComponents(is_replay):
         'vehicle_battle_boosters',
         'auto_claim_clan_reward',
         'system_messages'
-    ]
+    }
 
     if not is_replay:
-        load.extend(not_replay)
+        load.update(not_replay)
 
+    from armagomen.utils.common import IS_COMMON_TEST
+    if IS_COMMON_TEST:
+        load.discard('system_messages')
+        load.discard('auto_claim_clan_reward')
+
+    from helpers import dependency
+    from armagomen._logger import IALogger
+    logger = dependency.instance(IALogger)
     logger.logInfo("Loading components: {}", load)
 
+    from importlib import import_module
     for moduleName in load:
         try:
             module = import_module("{}.{}".format(__package__, moduleName))

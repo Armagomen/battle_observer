@@ -1,40 +1,50 @@
 from collections import defaultdict
 
-from armagomen import IALogger
 from armagomen._constants import ARMOR_CALC, GLOBAL
-from armagomen.battle_observer.shared.interface import IBOPiercingRandomizer
+from armagomen._logger import IALogger
+from armagomen.battle_observer.shared.interface import IShotResultHelper
 from armagomen.utils.common import MinMax
 from constants import QUEUE_TYPE
+from Event import Event
 from helpers import dependency
 from PlayerEvents import g_playerEvents
 
 
-class PiercingRandomizer(IBOPiercingRandomizer):
+class BOEvent(Event):
+
+    def __call__(self, *args, **kwargs):
+        for delegate in self:
+            delegate(*args, **kwargs)
+
+
+class ShotResultHelper(IShotResultHelper):
     logger = dependency.descriptor(IALogger)
 
     QUEUE_TYPES = (QUEUE_TYPE.RANDOMS, QUEUE_TYPE.FUN_RANDOM, QUEUE_TYPE.UNKNOWN, QUEUE_TYPE.COMP7_LIGHT, QUEUE_TYPE.COMP7,
                    QUEUE_TYPE.MAPS_TRAINING, QUEUE_TYPE.WINBACK)
     GUNNER_ARMORER = 'gunner_armorer'
     LOADER_AMMUNITION_IMPROVE = 'loader_ammunitionImprove'
-    RND_MIN_MAX_INFO = 'PiercingRandomizer: final randomization: {}/{}, vehicle: {}, skills: {}'
-    RND_SKILL_DIFF_DEBUG = 'PiercingRandomizer: skill_name: {} skill_lvl: {} level_increase: {} percent: {}'
-    RND_SKILL_NOT_FOUND = 'PiercingRandomizer: SKILL_NOT_FOUND skill_name: {}'
-    RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'PiercingRandomizer setSkillsBound: {}'
-    RND_ERROR = 'PiercingRandomizer: ERROR: {}'
+    RND_MIN_MAX_INFO = 'ShotResultHelper: final randomization: {}/{}, vehicle: {}, skills: {}'
+    RND_SKILL_DIFF_DEBUG = 'ShotResultHelper: skill_name: {} skill_lvl: {} level_increase: {} percent: {}'
+    RND_SKILL_NOT_FOUND = 'ShotResultHelper: SKILL_NOT_FOUND skill_name: {}'
+    RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'ShotResultHelper setSkillsBound: {}'
+    RND_ERROR = 'ShotResultHelper: ERROR: {}'
 
     __slots__ = ('__bound', 'min', 'max', '__defaults')
 
     def __init__(self):
-        self.logger.logInfo("Initializing PiercingRandomizer")
+        self.logger.logInfo("Initializing ShotResultHelper")
         g_playerEvents.onEnqueued += self.onEnqueued
         self.__defaults = MinMax(0.75, 1.25)
-        self.min = self.__defaults.min
-        self.max = self.__defaults.max
+        self.pp_min = self.__defaults.min
+        self.pp_max = self.__defaults.max
         self.__bound = {self.GUNNER_ARMORER: 0.0005, self.LOADER_AMMUNITION_IMPROVE: 0.0002}
+        self.onArmorChanged = BOEvent()
+        self.onMarkerColorChanged = BOEvent()
 
     def fini(self):
         g_playerEvents.onEnqueued += self.onEnqueued
-        self.logger.logInfo("Finished PiercingRandomizer")
+        self.logger.logInfo("Finished ShotResultHelper")
 
     def onEnqueued(self, queueType, *args):
         if queueType in self.QUEUE_TYPES:
@@ -44,10 +54,10 @@ class PiercingRandomizer(IBOPiercingRandomizer):
             self.resetToDefault()
 
     def resetToDefault(self):
-        if self.min != self.__defaults.min:
-            self.min = self.__defaults.min
-        if self.max != self.__defaults.max:
-            self.max = self.__defaults.max
+        if self.pp_min != self.__defaults.min:
+            self.pp_min = self.__defaults.min
+        if self.pp_max != self.__defaults.max:
+            self.pp_max = self.__defaults.max
 
     def getCurrentSkillEfficiency(self, tman, skill_name):
         skill = tman.skillsMap.get(skill_name)

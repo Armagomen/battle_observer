@@ -27,24 +27,32 @@
 			this.addChild(enemyBar);
 			this.colors = colors;
 			
+			var fullWidth:Number = 650;
+			var barHeight:Number = 31;
+			var center:Number = fullWidth / 2;
+			
+			var barIndent:Number = 50;
+			var barWidth:Number = center - barIndent;
+			var textX:Number = (barWidth / 2) + barIndent;
+			
 			this.background.graphics.beginFill(Utils.colorConvert(colors.bgColor), Constants.BG_ALPHA);
-			this.background.graphics.drawRect(-350, 0, 700, 31);
+			this.background.graphics.drawRect(-center, 0, fullWidth, barHeight);
 			this.background.graphics.endFill();
 			
-			this.allyBar.x = -50;
+			this.allyBar.x = -barIndent;
 			this.allyBar.graphics.beginFill(Utils.colorConvert(colors.ally), Constants.ALPHA);
-			this.allyBar.graphics.drawRect(0, 0, -300, 31);
+			this.allyBar.graphics.drawRect(0, 0, -barWidth, barHeight);
 			this.allyBar.graphics.endFill();
 			
-			this.enemyBar.x = 50;
+			this.enemyBar.x = barIndent;
 			this.enemyBar.graphics.beginFill(Utils.colorConvert(colorBlind ? colors.enemyColorBlind : colors.enemy), Constants.ALPHA);
-			this.enemyBar.graphics.drawRect(0, 0, 300, 31);
+			this.enemyBar.graphics.drawRect(0, 0, barWidth, barHeight);
 			this.enemyBar.graphics.endFill();
 			
-			this.greenText = new TextExt(-200, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
-			this.redText = new TextExt(200, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
-			this.greenDiff = new TextExt(-60, 4, Constants.diff, TextFieldAutoSize.RIGHT, this);
-			this.redDiff = new TextExt(60, 4, Constants.diff, TextFieldAutoSize.LEFT, this);
+			this.greenText = new TextExt(-textX, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
+			this.redText = new TextExt(textX, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
+			this.greenDiff = new TextExt(-60, 3, Constants.normalText15, TextFieldAutoSize.RIGHT, this);
+			this.redDiff = new TextExt(60, 3, Constants.normalText15, TextFieldAutoSize.LEFT, this);
 			this.score = new Score(colorBlind);
 			this.addChild(score);
 		}
