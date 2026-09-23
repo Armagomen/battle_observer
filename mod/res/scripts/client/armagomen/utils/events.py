@@ -38,4 +38,8 @@ class Events(object):
         addCallback(0.2, self.onVehicleChangedDelayed, g_currentVehicle.item)
 
 
+    def fini(self):
+        self.appLoader.onGUISpaceEntered -= self.subscribe
+        self.appLoader.onGUISpaceLeft -= self.unsubscribe
+
 g_events = Events()

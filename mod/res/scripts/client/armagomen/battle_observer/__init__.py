@@ -66,6 +66,8 @@ class Core(IBOCore):
         if self.hangar_gf is not None:
             self.hangar_gf.fini()
             self.hangar_gf = None
+        from armagomen.utils.events import g_events
+        g_events.fini()
         self.logger.logInfo("Finished Core v{}", self.version)
 
     def registerBattleObserverPackages(self):

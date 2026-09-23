@@ -1,4 +1,4 @@
-from BigWorld import callback, cancelCallback
+import BigWorld
 
 from armagomen._constants import SIXTH_SENSE
 from armagomen.battle_observer.meta.battle.sixth_sense_meta import SixthSenseMeta
@@ -38,11 +38,6 @@ class SixthSenseTimer(object):
         from SoundGroups import g_instance
         self.__sound = g_instance.getSound2D(soundID)
 
-    def playTickSound(self):
-        if self.__sound is None:
-            return
-        self.__sound.play()
-
     def restartTimer(self):
         self.stopTimer()
         self.__timeLeft = self.__time
@@ -51,24 +46,27 @@ class SixthSenseTimer(object):
     def startTimer(self):
         if self.__callbackID is None:
             self.__invoke()
+        else:
+            self.restartTimer()
 
     def stopTimer(self):
         if self.__callbackID is not None:
-            cancelCallback(self.__callbackID)
+            BigWorld.cancelCallback(self.__callbackID)
             self.__callbackID = None
 
     def isTimerStarted(self):
         return self.__callbackID is not None
 
     def __invoke(self):
-        self.__callbackID = callback(self.__interval, self.__invoke)
-        if self.__timeLeft.is_integer() and self.__timeLeft != self.__time:
-            self.playTickSound()
+        if self.__sound is not None and self.__timeLeft.is_integer() and self.__timeLeft != self.__time:
+            self.__sound.stop()
+            self.__sound.play()
         self.updateFunc(self.__timeLeft, self.__timeLeft / self.__time)
-        if self.__timeLeft <= 0.0:
+        if self.__timeLeft > 0.0:
+            self.__callbackID = BigWorld.callback(self.__interval, self.__invoke)
+            self.__timeLeft = round(self.__timeLeft - self.__interval, 1)
+        else:
             self.stopTimer()
-            return
-        self.__timeLeft = round(self.__timeLeft - self.__interval, 1)
 
     def updateFunc(self, timeLeft, radialPercentage):
         raise NotImplementedError
@@ -114,8 +112,7 @@ class SixthSense(SixthSenseTimer, SixthSenseMeta):
         super(SixthSense, self)._dispose()
 
     def onDescriptorDevicesChanged(self, devices):
-        from BigWorld import player
-        _player = player()
+        _player = BigWorld.player()
         device = next((d for d in devices if d and RADIO in d.tags), None)
         self.__isRadioInstalled = device is not None
         if self.__isRadioInstalled and _player is not None:

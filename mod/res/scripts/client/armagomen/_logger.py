@@ -1,7 +1,4 @@
-import traceback
-from inspect import getmro
-
-from BigWorld import logDebug, logError, logInfo, logWarning
+import BigWorld
 
 
 class IALogger(object):
@@ -61,6 +58,7 @@ class _ALogger(IALogger):
         func_name = func.__name__
 
         if hasattr(func, "im_class"):
+            from inspect import getmro
             for cls in getmro(func.im_class):
                 if func_name in cls.__dict__:
                     class_name = cls.__name__
@@ -72,22 +70,32 @@ class _ALogger(IALogger):
         if not isinstance(message, basestring):
             message = str(message)
         if not message:
-            return self.EMPTY_WARN.format(*traceback.extract_stack()[-3])
+            from traceback import extract_stack
+            return self.EMPTY_WARN.format(*extract_stack()[-3])
         elif args or kwargs:
             return message.format(*args, **kwargs)
         return message
 
     def logError(self, message, *args, **kwargs):
-        logError(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
+        """
+        :type message: str
+        """
+        BigWorld.logError(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
 
     def logInfo(self, message, *args, **kwargs):
-        logInfo(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
+        """
+        :type message: str
+        """
+        BigWorld.logInfo(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
 
     def logDebug(self, message, *args, **kwargs):
+        """
+        :type message: str
+        """
         if self.__is_debug:
             if "func" in kwargs:
                 kwargs["func"] = self.get_full_function_path(kwargs["func"])
-            logDebug(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
+            BigWorld.logDebug(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
 
     def logWarning(self, message, *args, **kwargs):
-        logWarning(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
+        BigWorld.logWarning(self.__mod_name, self._formatMessage(message, *args, **kwargs), None)
