@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import ARMOR_CALC_PARAMS, BATTLE_ALIASES, CLOCK, DAMAGE_LOG, FLIGHT_TIME, GLOBAL, MINIMAP
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.battle_observer.shared.interface import IStatisticsDataLoader, IViewSettings
@@ -181,8 +181,7 @@ class ViewSettingsAS(IViewSettings):
             self.sessionProvider.registerViewComponents(*grouped_aliases.items())
             self.logger.logDebug("viewSettings, _registerViewComponents: {}", grouped_aliases)
 
-    @staticmethod
-    def invalidateBattlePages():
+    def invalidateBattlePages(self):
         from gui.Scaleform.daapi.settings.views import VIEW_ALIAS
         base = set(VIEW_ALIAS.BATTLE_PAGES)
         extra = {

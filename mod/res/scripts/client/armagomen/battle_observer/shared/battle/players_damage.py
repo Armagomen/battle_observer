@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen.battle_observer.shared.interface import IBOPlayersDamageController
 from Event import SafeEvent
 from helpers import dependency

@@ -10,7 +10,7 @@ from json import loads
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import GLOBAL, URLS
 from armagomen.battle_observer.i18n.updater import LOCALIZED_BY_LANG
 from armagomen.utils.async_request import async_url_request

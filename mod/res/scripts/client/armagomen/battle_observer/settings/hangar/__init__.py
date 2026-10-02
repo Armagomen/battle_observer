@@ -1,10 +1,11 @@
 import copy
 from math import ceil
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import (ANOTHER, ARCADE, COLORED_ICONS, CONFIG_INTERFACE, DAMAGE_LOG, DEBUG_PANEL, DISPERSION, GLOBAL, HP_BARS,
                                   MAIN, MINIMAP, MOD_NAME, PANELS, SIXTH_SENSE, SNIPER, STATISTICS, STRATEGIC, URLS)
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
+from armagomen.battle_observer.settings.hangar.settings_helper import convertDict, getCollectionIndex, makeTooltip, unpackDictPath
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import encodeData, IS_XVM_INSTALLED, openWebBrowser, printDebuginfo, safe_index, SIXTH_SENSE_LIST, \
     SIXTH_SENSE_PATH
@@ -12,7 +13,6 @@ from armagomen.utils.events import g_events
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
-from .settings_helper import convertDict, getCollectionIndex, makeTooltip, unpackDictPath
 
 settingsVersion = 44
 LOCKED_BLOCKS = {STATISTICS.NAME, PANELS.NAME, MINIMAP.NAME, COLORED_ICONS.NAME}

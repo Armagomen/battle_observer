@@ -1,4 +1,4 @@
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import AVG_EFFICIENCY_HANGAR, GLOBAL, LOBBY_ALIASES
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.battle_observer.shared.interface import IBOCurrentVehicleCachedData
@@ -42,11 +42,9 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
 
     def __init__(self):
         self.logger.logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.EFFICIENCY, self.viewLayoutID())
-        super(HangarEfficiencyView, self).__init__(
-            layoutID=self.viewLayoutID(),
-            model=HangarEfficiencyModel
-        )
-        self.enabled = False
+        super(HangarEfficiencyView, self).__init__(layoutID=self.viewLayoutID(), model=HangarEfficiencyModel)
+        self.__enabled = False
+        self.settings = self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.EFFICIENCY)
 
     @property
     def viewModel(self):
@@ -62,14 +60,10 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
         super(HangarEfficiencyView, self)._finalize()
         self.logger.logDebug("hangar module '{}' dispose", LOBBY_ALIASES.EFFICIENCY)
 
-    @property
-    def settings(self):
-        return self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.EFFICIENCY)
-
     def subscribe(self):
         g_events.onModSettingsChanged += self.onModSettingsChanged
         self.cachedVehicleData.onChanged += self.update
-        self.onModSettingsChanged(AVG_EFFICIENCY_HANGAR.NAME, self.settings)
+        self.cachedVehicleData.onVehicleChanged()
 
     def unsubscribe(self):
         self.cachedVehicleData.onChanged -= self.update
@@ -94,13 +88,14 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
         ]
         text = [tpl[1] for tpl in settings_map if self.settings.get(tpl[0]) and tpl[-1]]
         if text:
-            value = GLOBAL.EMPTY_LINE.join(text).format(**data._asdict())
+            value = value.join(text).format(**data._asdict())
         self.viewModel.setContent(value)
+        self.logger.logDebug("hangar module '{}' data={}", LOBBY_ALIASES.EFFICIENCY, value)
 
     def onModSettingsChanged(self, name, data):
         if name == AVG_EFFICIENCY_HANGAR.NAME:
-            self.enabled = data.get(GLOBAL.ENABLED, self.enabled)
-            if self.enabled:
+            self.__enabled = data.get(GLOBAL.ENABLED, self.__enabled)
+            if self.__enabled:
                 self.cachedVehicleData.onVehicleChanged()
             else:
                 self.viewModel.setContent(GLOBAL.EMPTY_LINE)

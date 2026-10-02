@@ -1,5 +1,5 @@
 from account_helpers.settings_core.settings_constants import GRAPHICS
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import COLORED_ICONS
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from constants import ARENA_BONUS_TYPE

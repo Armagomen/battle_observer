@@ -1,6 +1,6 @@
 from importlib import import_module
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from helpers import dependency
 
 

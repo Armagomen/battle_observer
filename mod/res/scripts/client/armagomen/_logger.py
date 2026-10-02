@@ -1,40 +1,13 @@
 import BigWorld
 
-
-class IALogger(object):
-    __slots__ = ()
-
-    def fini(self):
-        raise NotImplementedError
-
-    @property
-    def is_debug(self):
-        raise NotImplementedError
-
-    def set_debug(self, value):
-        raise NotImplementedError
-
-    def setModName(self, mod_name):
-        raise NotImplementedError
-
-    def logError(self, message, *args, **kwargs):
-        raise NotImplementedError
-
-    def logInfo(self, message, *args, **kwargs):
-        raise NotImplementedError
-
-    def logDebug(self, message, *args, **kwargs):
-        raise NotImplementedError
-
-    def logWarning(self, message, *args, **kwargs):
-        raise NotImplementedError
+from armagomen.IAlogger import IALogger
 
 
 class _ALogger(IALogger):
     EMPTY_WARN = "!!! WARNING !!! - Empty string detected. Check first argument in call function at: File '{}', line {}, in {}, code {}"
     __slots__ = ("__is_debug", "__mod_name")
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.__is_debug = False
         self.__mod_name = "BATTLE_OBSERVER"
         self.logInfo("Initializing BO logger")

@@ -1,6 +1,6 @@
 from math import degrees
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import GLOBAL, MINIMAP
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import IS_XVM_INSTALLED, overrideMethod, toggleOverride

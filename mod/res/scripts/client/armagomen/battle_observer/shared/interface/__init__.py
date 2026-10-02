@@ -53,10 +53,6 @@ class IViewSettings(object):
     def registerViewComponents(self):
         raise NotImplementedError
 
-    @property
-    def battlePages(self):
-        raise NotImplementedError
-
 
 class IBOCurrentVehicleCachedData(object):
     __slots__ = ()

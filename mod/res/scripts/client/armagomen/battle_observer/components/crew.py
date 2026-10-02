@@ -2,7 +2,7 @@ import os
 from collections import defaultdict
 
 from AccountCommands import VEHICLE_SETTINGS_FLAG
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import CREW
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
@@ -154,7 +154,7 @@ class CrewProcessor(object):
             return
         if self.settingsLoader.getSetting(CREW.NAME, CREW.RETURN):
             self.__autoReturnToggleSwitch(vehicle)
-        if self.settingsLoader.getSetting(CREW.NAME, CREW.TRAINING):
+        if self.settingsLoader.getSetting(CREW.NAME, CREW.TRAINING) and not IS_COMMON_TEST:
             self.updateAcceleration(vehicle)
 
     def updateAcceleration(self, vehicle):

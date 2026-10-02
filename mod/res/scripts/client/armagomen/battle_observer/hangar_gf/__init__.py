@@ -1,4 +1,4 @@
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen.battle_observer.hangar_gf.date_times import DateTimesView
 from armagomen.battle_observer.hangar_gf.efficiency import HangarEfficiencyView
 from armagomen.battle_observer.hangar_gf.haeder import HeaderView

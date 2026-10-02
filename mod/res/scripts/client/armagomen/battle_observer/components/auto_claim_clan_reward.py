@@ -1,5 +1,5 @@
 from adisp import adisp_process
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import MAIN
 from armagomen.utils.common import addCallback
 from armagomen.utils.events import g_events

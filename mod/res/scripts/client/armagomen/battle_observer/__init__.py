@@ -1,6 +1,6 @@
 from sys import version
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from BattleReplay import isLoading, isPlaying
 from helpers import dependency
 from realm import CURRENT_REALM

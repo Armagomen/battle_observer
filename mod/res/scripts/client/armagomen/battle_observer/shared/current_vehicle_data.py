@@ -1,7 +1,7 @@
 import math
 from collections import namedtuple
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen.battle_observer.shared.interface import IBOCurrentVehicleCachedData
 from armagomen.utils.common import isSpecialBattleVehicle
 from CurrentVehicle import g_currentVehicle

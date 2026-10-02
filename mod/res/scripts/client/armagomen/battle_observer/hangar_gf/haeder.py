@@ -1,4 +1,4 @@
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import GLOBAL, HANGAR_HEADER, LOBBY_ALIASES
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import TimeInterval
@@ -63,10 +63,7 @@ class HeaderView(ViewComponent[HeaderModel]):
 
     def __init__(self):
         self.logger.logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.HEADER, self.viewLayoutID())
-        super(HeaderView, self).__init__(
-            layoutID=self.viewLayoutID(),
-            model=HeaderModel
-        )
+        super(HeaderView, self).__init__(layoutID=self.viewLayoutID(), model=HeaderModel)
 
         day = backport.text(R.strings.menu.header.account.premium.days()).replace(".", "")
         hour = backport.text(R.strings.menu.header.account.premium.hours()).replace(".", "")
@@ -93,7 +90,7 @@ class HeaderView(ViewComponent[HeaderModel]):
         self.__activeTime = self.gameSession._stats.activePremiumExpiryTime
         g_events.onModSettingsChanged += self.onModSettingsChanged
         self.gameSession.onPremiumNotify += self.__onPremiumNotify
-        self.onModSettingsChanged(HANGAR_HEADER.NAME, self.settingsLoader.getSetting(HANGAR_HEADER.NAME))
+        self.onModSettingsChanged(HANGAR_HEADER.NAME, self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.HEADER))
 
     def _finalize(self):
         self.gameSession.onPremiumNotify -= self.__onPremiumNotify

@@ -20,10 +20,11 @@ def init():
     from helpers.dependency import _g_manager, DependencyManager
 
     manager = _g_manager  # type: DependencyManager
-
+    from armagomen._logger import _ALogger
+    from armagomen.IAlogger import IALogger
     from armagomen.battle_observer import Core, IBOCore
     from armagomen.battle_observer.updater import Updater, IBOUpdater
-    services = ((IBOCore, Core), (IBOUpdater, Updater))
+    services = ((IALogger, _ALogger), (IBOCore, Core), (IBOUpdater, Updater))
 
     for interface, service in services:
         manager.addInstance(interface, service(__version__), finalizer='fini')

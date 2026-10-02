@@ -10,7 +10,7 @@ from colorsys import hsv_to_rgb
 import BigWorld
 import ResMgr
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency
 from skeletons.gui.impl import IGuiLoader

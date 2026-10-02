@@ -41,6 +41,7 @@ function createContainer(headerSection) {
         container.className = container_style;
         headerSection.appendChild(container);
         applyScale();
+        updateEfficiency();
     }
     return container;
 }

@@ -1,14 +1,14 @@
 import os
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import ALIAS_TO_CONFIG_NAME_BATTLE, ALIAS_TO_CONFIG_NAME_LOBBY, GLOBAL, LOAD_LIST, MAIN, SIXTH_SENSE, SNIPER
+from armagomen.battle_observer.settings.interface import IBOSettingsLoader
+from armagomen.battle_observer.settings.loading_error import ErrorMessages
+from armagomen.battle_observer.settings.settings_data import SettingsData
 from armagomen.utils.common import clearClientCache, currentConfigPath, openJsonFile, printDebuginfo, SIXTH_SENSE_LIST, writeJsonFile
 from armagomen.utils.events import g_events
 from Event import Event
 from helpers import dependency
-from .interface import IBOSettingsLoader
-from .loading_error import ErrorMessages
-from .settings_data import SettingsData
 
 JSON = "{}.json"
 READ_MESSAGE = "loadConfigPart: {}: {}"

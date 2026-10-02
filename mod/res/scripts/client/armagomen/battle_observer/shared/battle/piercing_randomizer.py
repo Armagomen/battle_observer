@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import ARMOR_CALC, GLOBAL
 from armagomen.battle_observer.shared.interface import IBOPiercingRandomizer
 from armagomen.utils.common import MinMax

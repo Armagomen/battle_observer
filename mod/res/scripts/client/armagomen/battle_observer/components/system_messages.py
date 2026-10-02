@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timedelta
 from random import choice
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import API_KEY, getLogo, IMAGE_DIR, URLS
 from armagomen.battle_observer.i18n.donate_messages import MESSAGES
 from armagomen.battle_observer.shared.interface import IBOOnline

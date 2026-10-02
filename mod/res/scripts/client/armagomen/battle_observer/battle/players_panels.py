@@ -1,4 +1,4 @@
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import COLORS, PANELS, VEHICLE
 from armagomen.battle_observer.meta.battle.players_panels_meta import PlayersPanelsMeta
 from armagomen.battle_observer.shared.interface import IBOKeysListener, IBOPlayersDamageController

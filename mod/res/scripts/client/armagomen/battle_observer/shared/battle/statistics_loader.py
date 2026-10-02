@@ -1,7 +1,7 @@
 import json
 from collections import defaultdict
 
-from armagomen import IALogger
+from armagomen.IAlogger import IALogger
 from armagomen._constants import API_KEY
 from armagomen.battle_observer.shared.interface import IStatisticsDataLoader
 from armagomen.utils.async_request import async_url_request
