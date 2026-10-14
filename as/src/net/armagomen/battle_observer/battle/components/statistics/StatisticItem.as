@@ -13,7 +13,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 		private const position:Number = 385;
 		private const DEAD_ALPHA:Number = 0.65;
 		
-		public function StatisticItem(data:Object, isEnemy:Boolean)
+		public function StatisticItem(data:Object, isEnemy:Boolean, defaultMode:String)
 		{
 			super();
 			var w:Number = 44;
@@ -24,7 +24,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 			this.graphics.endFill();
 			
 			this._text = new TextExt(w >> 1, 1, Constants.diff, "center", this);
-			this._text.text = data.winRate;
+			this._text.text = data[defaultMode];
 		}
 		
 		public function setVisible(active:Boolean):void
@@ -35,7 +35,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 			}
 		}
 		
-		public function altMode(name:String):void
+		public function changeMode(name:String):void
 		{
 			this._text.text = this.data[name];
 		}

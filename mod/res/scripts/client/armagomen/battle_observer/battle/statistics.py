@@ -28,7 +28,8 @@ class Statistics(StatisticsMeta):
         self.__sentVehicles = set()
         self.__callback = None
         self.__items = defaultdict(dict)
-        self.__gen = cycle(("battles", "rating", "winRate"))
+        self.__gen = cycle(STATISTICS.VALUES)
+        self.__currentMode = None
 
     def _populate(self):
         super(Statistics, self)._populate()
@@ -79,13 +80,14 @@ class Statistics(StatisticsMeta):
             self.__callback = callback(2.0, self.onAddedUpdatedDelay)
 
     def onDataResponse(self, loadedData):
+        self.__currentMode = self.settings[STATISTICS.DEFAULT]
         for vehicle_id, value in loadedData.iteritems():
             vInfo = self.getVehicleInfo(vehicle_id)
             self.logger.logDebug("Statistics: player={}, value={}", vInfo.player.name, value)
             if len(value) < 3:
                 continue
             item_data = self.buildItemData(value, vInfo.isEnemy())
-            self.as_createItem(vehicle_id, item_data)
+            self.as_createItem(vehicle_id, item_data, self.__currentMode)
             self.__items[vehicle_id] = item_data
 
     def getItemData(self, vehicleID):
@@ -104,8 +106,13 @@ class Statistics(StatisticsMeta):
         return hexToInt(self.DEFAULT_COLOR)
 
     def onKeyPressed(self, enable):
-        if enable:
-            self.on_altModeS(next(self.__gen))
+        if enable and self.__items:
+            mode = next(self.__gen)
+            if mode != self.__currentMode:
+                self.__currentMode = mode
+                self.as_ChangeModeS(mode)
+            else:
+                self.onKeyPressed(True)
 
     def buildItemData(self, data, is_enemy):
         return {

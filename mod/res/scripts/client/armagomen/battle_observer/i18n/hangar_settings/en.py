@@ -88,6 +88,7 @@ localization = {
 
     "statistics": {
         "header": "Players Statistics",
+        "defaultMode": "Default mode (ALT toggle)",
         "statistics_colors*very_bad": "very bad",
         "statistics_colors*bad": "bad",
         "statistics_colors*normal": "normal",

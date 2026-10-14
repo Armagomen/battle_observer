@@ -230,7 +230,8 @@ DISTANCE = namedtuple("DISTANCE", ("NAME",))("distance_to_enemy", )
 
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME",))("own_health", )
 
-STATISTICS = namedtuple("STATISTICS", ("NAME", "COLORS"))("statistics", "statistics_colors")
+STATISTICS = (namedtuple("STATISTICS", ("NAME", "COLORS", "VALUES", "DEFAULT"))
+              ("statistics", "statistics_colors", ("winRate", "battles", "rating"), "defaultMode"))
 
 COLORED_ICONS = namedtuple("COLORED_ICONS", ("NAME", "BLACKOUT", "UNKNOWN"))("colored_icons", "icons_blackout", "unknown")
 

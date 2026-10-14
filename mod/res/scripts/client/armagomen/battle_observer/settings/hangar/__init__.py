@@ -24,7 +24,8 @@ class CreateElement(object):
         self.bid_to_collection = {
             (HP_BARS.NAME, HP_BARS.STYLE): (HP_BARS.STYLES, self.createBarStyleDropDown),
             (DEBUG_PANEL.NAME, DEBUG_PANEL.STYLE): (DEBUG_PANEL.STYLES, self.createDebugStyleDropDown),
-            (SIXTH_SENSE.NAME, SIXTH_SENSE.ICON_NAME): (SIXTH_SENSE_LIST, self.createSixthSenseDropDown)
+            (SIXTH_SENSE.NAME, SIXTH_SENSE.ICON_NAME): (SIXTH_SENSE_LIST, self.createSixthSenseDropDown),
+            (STATISTICS.NAME, STATISTICS.DEFAULT): (STATISTICS.VALUES, self.createDropDown)
         }
 
     @staticmethod

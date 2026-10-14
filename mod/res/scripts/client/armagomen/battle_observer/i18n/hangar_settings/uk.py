@@ -78,6 +78,7 @@ localization = {
     },
     "statistics": {
         "header": "Налаштування статистики гравців",
+        "defaultMode": "Режим за замовченням (перемикання ALT)",
         "statistics_colors*very_bad": "Дуже низький рівень",
         "statistics_colors*bad": "Низький рівень",
         "statistics_colors*normal": "Середній рівень",

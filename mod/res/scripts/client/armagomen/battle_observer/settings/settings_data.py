@@ -342,6 +342,7 @@ class SettingsData(object):
 
         self.statistics = {
             GLOBAL.ENABLED: False,
+            STATISTICS.DEFAULT: "winRate",
             STATISTICS.COLORS: {
                 "bad": "#FE7B23",
                 "good": "#88D957",

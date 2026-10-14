@@ -22,7 +22,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 			super.onBeforeDispose();
 		}
 		
-		public function createItem(vehicleID:int, data:Object):void
+		public function createItem(vehicleID:int, data:Object, defaultMode:String):void
 		{
 			var item:* = this.getPanelHolderByVehicleID(vehicleID, data.isEnemy);
 			if (!item || !item._listItem) return;
@@ -34,7 +34,7 @@ package net.armagomen.battle_observer.battle.components.statistics
 				listItem.removeChild(oldItem);
 			}
 			
-			var minimalItem:StatisticItem = new StatisticItem(data, data.isEnemy);
+			var minimalItem:StatisticItem = new StatisticItem(data, data.isEnemy, defaultMode);
 			this.minimalItems[vehicleID] = minimalItem;
 			listItem.addChild(minimalItem);
 			minimalItem.setVisible(true);
@@ -46,11 +46,11 @@ package net.armagomen.battle_observer.battle.components.statistics
 			if (item) item.setDead(true);
 		}
 		
-		public function on_altMode(name:String):void
+		public function as_ChangeMode(name:String):void
 		{
 			for each (var item:* in this.minimalItems)
 			{
-				item.altMode(name);
+				item.changeMode(name);
 			}
 		}
 		

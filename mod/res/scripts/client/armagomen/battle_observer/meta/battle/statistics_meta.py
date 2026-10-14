@@ -7,13 +7,13 @@ class StatisticsMeta(BaseModMeta):
         if self._isDAAPIInited():
             self.flashObject.as_updateDead(vehicleID)
 
-    def on_altModeS(self, value):
+    def as_ChangeModeS(self, value):
         if self._isDAAPIInited():
-            self.flashObject.on_altMode(value)
+            self.flashObject.as_ChangeMode(value)
 
-    def as_createItem(self, vehicleID, data):
+    def as_createItem(self, vehicleID, data, defaultMode):
         if self._isDAAPIInited():
-            self.flashObject.createItem(vehicleID, data)
+            self.flashObject.createItem(vehicleID, data, defaultMode)
 
     def getItemData(self, vehicleID):
         raise NotImplementedError

@@ -79,6 +79,7 @@ localization = {
     },
     "statistics": {
         "header": "Statystyki graczy",
+        "defaultMode": "Tryb domyślny (przełączanie ALT)",
         "statistics_colors*very_bad": "Bardzo niski poziom",
         "statistics_colors*bad": "Niski poziom",
         "statistics_colors*normal": "Średni poziom",
