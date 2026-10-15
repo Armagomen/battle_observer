@@ -120,10 +120,10 @@ package net.armagomen.battle_observer.battle.components.maingun
 		
 		private function testBounds():void
 		{
-			var team_health:ObserverBattleDisplayable = this.battlePage.getComponent("Observer_TeamsHP_UI");
-			if (team_health && this.hitTestObject(team_health))
+			var team_health:* = this.battlePage.getComponent("Observer_TeamsHP_UI");
+			if (team_health && this.hitTestObject(team_health.bar_style))
 			{
-				var bounds:Rectangle = team_health.getBounds(App.stage);
+				var bounds:Rectangle = team_health.bar_style.getBounds(App.stage);
 				this.x = bounds.x + bounds.width + 10;
 			}
 		}

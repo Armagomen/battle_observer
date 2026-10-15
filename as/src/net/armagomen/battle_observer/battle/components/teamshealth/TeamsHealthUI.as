@@ -7,7 +7,7 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 	
 	public class TeamsHealthUI extends ObserverBattleDisplayable
 	{
-		private var bar_style:*;
+		public var bar_style:*;
 		private const LEAGUE_BIG:String = "league_big";
 		private const OFFSET:Number = 20;
 		
@@ -22,16 +22,12 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 			if (this.notInitialized())
 			{
 				var correlation:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.FRAG_CORRELATION_BAR);
-				this.updateCorrelationBar(correlation);
-				var styles:Object = {"league": League, "league_big": LeagueBig, "normal": Default};
+				
+				var styles:Object = {"league": League, "league_big": LeagueBig, "normal": Default, "minimal": Minimal};
 				var settings:Object = this.getSettings();
 				this.bar_style = new styles[settings.style](App.colorSchemeMgr.getIsColorBlindS(), this.getColors().global);
-				this.bar_style.y = -OFFSET;
+				this.updateCorrelationBar(correlation, settings.style);
 				correlation.addChild(this.bar_style);
-				if (settings.style != LEAGUE_BIG)
-				{
-					setTimeout(this.updateCountersPosition, 500, correlation);
-				}
 				var q_progress:* = this.battlePage.getComponent(BATTLE_VIEW_ALIASES.QUEST_PROGRESS_TOP_VIEW);
 				if (q_progress){
 					q_progress.getChildAt(0).alpha = 0.8;
@@ -40,8 +36,16 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 			}
 		}
 		
-		private function updateCorrelationBar(correlation:*):void
+		private function updateCorrelationBar(correlation:*, style:String):void
 		{
+			if (style == "minimal")
+			{
+				correlation.removeChildren();
+				return;
+			}
+			
+			this.bar_style.y = -OFFSET;
+			
 			var background:* = correlation.getChildAt(0);
 			background.alpha = 0.8;
 			background.y = -OFFSET;
@@ -65,6 +69,11 @@ package net.armagomen.battle_observer.battle.components.teamshealth
 			correlation.removeChild(correlation.enemyTeamHealthBar);
 			
 			correlation.y = OFFSET;
+			
+			if (style != LEAGUE_BIG)
+			{
+				setTimeout(this.updateCountersPosition, 500, correlation);
+			}
 			
 		}
 		

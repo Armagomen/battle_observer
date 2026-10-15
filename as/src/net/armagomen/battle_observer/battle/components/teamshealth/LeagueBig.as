@@ -27,11 +27,12 @@
 			this.addChild(enemyBar);
 			this.colors = colors;
 			
-			var fullWidth:Number = 650;
+			var fullWidth:Number = 620;
 			var barHeight:Number = 31;
 			var center:Number = fullWidth / 2;
 			
 			var barIndent:Number = 50;
+			var diffOffset:Number = barIndent + 10;
 			var barWidth:Number = center - barIndent;
 			var textX:Number = (barWidth / 2) + barIndent;
 			
@@ -51,8 +52,8 @@
 			
 			this.greenText = new TextExt(-textX, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
 			this.redText = new TextExt(textX, 1, Constants.middleText, TextFieldAutoSize.CENTER, this);
-			this.greenDiff = new TextExt(-60, 3, Constants.normalText15, TextFieldAutoSize.RIGHT, this);
-			this.redDiff = new TextExt(60, 3, Constants.normalText15, TextFieldAutoSize.LEFT, this);
+			this.greenDiff = new TextExt(-diffOffset, 3, Constants.normalText15, TextFieldAutoSize.RIGHT, this);
+			this.redDiff = new TextExt(diffOffset, 3, Constants.normalText15, TextFieldAutoSize.LEFT, this);
 			this.score = new Score(colorBlind);
 			this.addChild(score);
 		}

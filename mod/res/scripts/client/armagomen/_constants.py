@@ -96,7 +96,8 @@ MINIMAP = namedtuple("MINIMAP", (
     "yaw_limits", "zoom_hotkey")
 
 HP_BARS = namedtuple("HP_BARS", ("NAME", "STYLE", "ALIVE", "STYLES"))(
-    "hp_bars", "style", "showAliveCount", namedtuple("HpStyles", ("normal", "league", "league_big"))("normal", "league", "league_big"))
+    "hp_bars", "style", "showAliveCount", namedtuple("HpStyles", ("normal", "league", "league_big", "minimal"))
+    ("normal", "league", "league_big", "minimal"))
 
 CLOCK = namedtuple("CLOCK", (
     "NAME", "IN_BATTLE", "IN_LOBBY", "FORMAT", "UPDATE_INTERVAL", "DEFAULT_FORMAT"))(

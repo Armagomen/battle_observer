@@ -80,7 +80,7 @@ class CreateElement(object):
     def createDebugStyleDropDown(self, blockID, varName, icons, icon):
         result = self.createControl(blockID, varName, icon, cType='Dropdown')
         if result is not None:
-            image = "<img src='img://gui/maps/icons/battle_observer/style/debug/{}.jpg' width='240' height='50'>"
+            image = "<img src='img://gui/maps/icons/battle_observer/style/debug/{}.jpg' width='240'>"
             result.update({'options': [{'label': x, 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
                            GLOBAL.WIDTH: 190})
         return result
@@ -88,7 +88,7 @@ class CreateElement(object):
     def createBarStyleDropDown(self, blockID, varName, icons, icon):
         result = self.createControl(blockID, varName, icon, cType='Dropdown')
         if result is not None:
-            image = "<img src='img://gui/maps/icons/battle_observer/style/health/{}.jpg' width='300' height='24'>"
+            image = "<img src='img://gui/maps/icons/battle_observer/style/health/{}.jpg' width='300'>"
             result.update({'options': [{'label': x, 'tooltip': makeTooltip(body=image.format(x))} for x in icons],
                            GLOBAL.WIDTH: 190})
         return result
