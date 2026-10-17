@@ -1,16 +1,13 @@
-import logging
-
-from . import IALogger
+from armagomen._logger import IALogger
 
 
 class ALogger(IALogger):
     EMPTY_WARN = "!!! WARNING !!! - Empty string detected. Check first argument in call function at: File '{}', line {}, in {}, code {}"
     __slots__ = ("__is_debug", "logger")
 
-    def __init__(self, name):
+    def __init__(self, logger):
         self.__is_debug = False
-        self.logger = logging.getLogger(name)
-        self.logger.setLevel(logging.INFO)
+        self.logger = logger
         self.logInfo("Initializing BO logger")
 
     @property
