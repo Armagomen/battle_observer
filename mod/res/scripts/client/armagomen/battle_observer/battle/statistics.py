@@ -1,3 +1,4 @@
+from __future__ import division
 from collections import defaultdict
 from itertools import cycle
 from math import floor, log
@@ -29,12 +30,12 @@ class Statistics(StatisticsMeta):
         self.__callback = None
         self.__items = defaultdict(dict)
         self.__gen = cycle(STATISTICS.VALUES)
-        self.__currentMode = None
 
     def _populate(self):
         super(Statistics, self)._populate()
         self.statisticsLoader.onDataResponse += self.onDataResponse
-
+        while next(self.__gen) != self.settings[STATISTICS.DEFAULT]:
+                continue
         arena = self._arenaVisitor.getArenaSubscription()
         if arena is not None:
             if arena.isFogOfWarEnabled:
@@ -80,14 +81,13 @@ class Statistics(StatisticsMeta):
             self.__callback = callback(2.0, self.onAddedUpdatedDelay)
 
     def onDataResponse(self, loadedData):
-        self.__currentMode = self.settings[STATISTICS.DEFAULT]
         for vehicle_id, value in loadedData.iteritems():
             vInfo = self.getVehicleInfo(vehicle_id)
             self.logger.logDebug("Statistics: player={}, value={}", vInfo.player.name, value)
             if len(value) < 3:
                 continue
             item_data = self.buildItemData(value, vInfo.isEnemy())
-            self.as_createItem(vehicle_id, item_data, self.__currentMode)
+            self.as_createItem(vehicle_id, item_data, self.settings[STATISTICS.DEFAULT])
             self.__items[vehicle_id] = item_data
 
     def getItemData(self, vehicleID):
@@ -107,12 +107,7 @@ class Statistics(StatisticsMeta):
 
     def onKeyPressed(self, enable):
         if enable and self.__items:
-            mode = next(self.__gen)
-            if mode != self.__currentMode:
-                self.__currentMode = mode
-                self.as_ChangeModeS(mode)
-            else:
-                self.onKeyPressed(True)
+            self.as_ChangeModeS(next(self.__gen))
 
     def buildItemData(self, data, is_enemy):
         return {

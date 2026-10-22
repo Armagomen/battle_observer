@@ -8,8 +8,8 @@ from collections import namedtuple
 from colorsys import hsv_to_rgb
 
 import BigWorld
-import ResMgr
 
+import ResMgr
 from armagomen._logger import IALogger
 from gui.shared.utils.TimeInterval import TimeInterval as _TimeInterval
 from helpers import dependency
@@ -441,11 +441,3 @@ class TimeInterval(_TimeInterval):
     def interval(self, value):
         self.__interval = value
         self.restart()
-
-
-flags = ('isOnlyForFunRandomBattles', 'isOnlyForBattleRoyaleBattles', 'isOnlyForMapsTrainingBattles',
-         'isOnlyForClanWarsBattles', 'isOnlyForComp7Battles', 'isOnlyForEventBattles', 'isOnlyForEpicBattles')
-
-
-def isSpecialBattleVehicle(vehicle):
-    return any(getattr(vehicle, f, False) for f in flags)

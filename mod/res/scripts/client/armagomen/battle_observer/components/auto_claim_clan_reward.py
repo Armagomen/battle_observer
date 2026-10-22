@@ -2,7 +2,7 @@ from adisp import adisp_process
 from armagomen._constants import MAIN
 from armagomen._logger import IALogger
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
-from armagomen.utils.common import addCallback
+from armagomen.utils.common import delayedCall
 from gui import SystemMessages
 from gui.clans.clan_cache import g_clanCache
 from gui.clans.data_wrapper.clan_supply import DataNames, PointStatus, QuestStatus
@@ -35,21 +35,19 @@ class AutoClaimClanReward(object):
         self.__cachedSettingsData = None
         self.__claim_started = False
         self.__enabled = False
+        self.subscribe()
 
+    @delayedCall(3.0)
     def onCreate(self):
         self.__hangarSpace.onSpaceCreate -= self.onCreate
-
-        def update():
-            self.__cachedQuestsData = g_clanCache.clanSupplyProvider.getQuestsInfo().data
-            self.__cachedSettingsData = g_clanCache.clanSupplyProvider.getProgressionSettings().data
-            self.__cachedProgressData = g_clanCache.clanSupplyProvider.getProgressionProgress().data
-            if self.__enabled and g_clanCache.isInClan:
-                if self.__cachedQuestsData:
-                    self.parseQuests(self.__cachedQuestsData)
-                if self.__cachedProgressData and self.__cachedSettingsData:
-                    self.parseProgression(self.__cachedProgressData)
-
-        addCallback(3.0, update)
+        self.__cachedQuestsData = g_clanCache.clanSupplyProvider.getQuestsInfo().data
+        self.__cachedSettingsData = g_clanCache.clanSupplyProvider.getProgressionSettings().data
+        self.__cachedProgressData = g_clanCache.clanSupplyProvider.getProgressionProgress().data
+        if self.__enabled and g_clanCache.isInClan:
+            if self.__cachedQuestsData:
+                self.parseQuests(self.__cachedQuestsData)
+            if self.__cachedProgressData and self.__cachedSettingsData:
+                self.parseProgression(self.__cachedProgressData)
 
     def subscribe(self):
         self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
@@ -137,7 +135,6 @@ class AutoClaimClanReward(object):
 
 
 clanRewards = AutoClaimClanReward()
-clanRewards.subscribe()
 
 
 def fini():

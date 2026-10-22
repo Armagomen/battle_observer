@@ -57,6 +57,9 @@ class IViewSettings(object):
 class IBOCurrentVehicleCachedData(object):
     __slots__ = ()
 
+    def __init__(self):
+        super(IBOCurrentVehicleCachedData, self).__init__()
+
     def fini(self):
         raise NotImplementedError
 

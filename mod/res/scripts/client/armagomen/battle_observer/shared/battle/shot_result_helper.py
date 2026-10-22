@@ -1,3 +1,5 @@
+from __future__ import division
+
 from collections import defaultdict
 
 from armagomen._constants import ARMOR_CALC, GLOBAL
@@ -30,14 +32,13 @@ class ShotResultHelper(IShotResultHelper):
     RND_SET_PIERCING_DISTRIBUTION_BOUND_DEBUG = 'ShotResultHelper setSkillsBound: {}'
     RND_ERROR = 'ShotResultHelper: ERROR: {}'
 
-    __slots__ = ('__bound', 'min', 'max', '__defaults')
+    __slots__ = ('__bound', 'pp_min_multiplier', 'pp_max_multiplier', '__defaults')
 
     def __init__(self):
         self.logger.logInfo("Initializing ShotResultHelper")
         g_playerEvents.onEnqueued += self.onEnqueued
         self.__defaults = MinMax(0.75, 1.25)
-        self.pp_min = self.__defaults.min
-        self.pp_max = self.__defaults.max
+        self.pp_min_multiplier, self.pp_max_multiplier = self.__defaults
         self.__bound = {self.GUNNER_ARMORER: 0.0005, self.LOADER_AMMUNITION_IMPROVE: 0.0002}
         self.onArmorChanged = BOEvent()
         self.onMarkerColorChanged = BOEvent()
@@ -54,10 +55,7 @@ class ShotResultHelper(IShotResultHelper):
             self.resetToDefault()
 
     def resetToDefault(self):
-        if self.pp_min != self.__defaults.min:
-            self.pp_min = self.__defaults.min
-        if self.pp_max != self.__defaults.max:
-            self.pp_max = self.__defaults.max
+        self.pp_min_multiplier, self.pp_max_multiplier = self.__defaults
 
     def getCurrentSkillEfficiency(self, tman, skill_name):
         skill = tman.skillsMap.get(skill_name)
@@ -85,9 +83,9 @@ class ShotResultHelper(IShotResultHelper):
                 if not value:
                     continue
                 percent = sum(value) / len(value)
-                self.min += percent
+                self.pp_min_multiplier += percent
                 if skill_name == self.GUNNER_ARMORER:
-                    self.max -= percent
-            self.logger.logInfo(self.RND_MIN_MAX_INFO, self.min, self.max, vehicle.userName, data)
+                    self.pp_max_multiplier -= percent
+            self.logger.logInfo(self.RND_MIN_MAX_INFO, self.pp_min_multiplier, self.pp_max_multiplier, vehicle.userName, data)
         except Exception as e:
             self.logger.logError(self.RND_ERROR, e)

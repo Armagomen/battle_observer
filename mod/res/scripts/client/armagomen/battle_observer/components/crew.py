@@ -6,9 +6,9 @@ from armagomen._constants import CREW
 from armagomen._logger import IALogger
 from armagomen.battle_observer.i18n.crew import CREW_DIALOG_BY_LANG, CREW_XP
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
-from armagomen.utils.common import delayedCall, getObserverCachePath, IS_COMMON_TEST, isSpecialBattleVehicle, openJsonFile, writeJsonFile
+from armagomen.battle_observer.shared.on_vehicle_change import OnVehicleChangeSubscribed
+from armagomen.utils.common import delayedCall, getObserverCachePath, IS_COMMON_TEST, openJsonFile, writeJsonFile
 from armagomen.utils.dialogs import CrewDialog
-from CurrentVehicle import g_currentVehicle
 from dossiers2.custom.cache import getCache
 from gui import SystemMessages
 from gui.impl.pub.dialog_window import DialogButtons
@@ -67,23 +67,23 @@ class CrewIgnoredCache(defaultdict):
         return result
 
 
-class CrewProcessor(object):
+class CrewProcessor(OnVehicleChangeSubscribed):
     itemsCache = dependency.descriptor(IItemsCache)
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
     connectionMgr = dependency.descriptor(IConnectionManager)
     logger = dependency.descriptor(IALogger)
 
     def __init__(self):
+        super(CrewProcessor, self).__init__()
         self.xp_to_11_lvl = 325000
         self.isDialogVisible = False
         self.hidden_update = False
         self.ignored_vehicles_cache = CrewIgnoredCache()
         self.user_cache = None
-        g_currentVehicle.onChanged += self.onVehicleChanged
         self.connectionMgr.onLoggedOn += self._onLoggedOn
 
     def fini(self):
-        g_currentVehicle.onChanged -= self.onVehicleChanged
+        super(CrewProcessor, self).fini()
         self.connectionMgr.onLoggedOn -= self._onLoggedOn
         self.ignored_vehicles_cache.saveCache()
 
@@ -149,10 +149,9 @@ class CrewProcessor(object):
         return acceleration, description, max(0, xp)
 
     @delayedCall(0.2)
-    def onVehicleChanged(self):
-        vehicle = g_currentVehicle.item
+    def onVehicleChanged(self, vehicle):
         self.logger.logDebug("crew onVehicleChanged")
-        if not vehicle or vehicle.isLocked or isSpecialBattleVehicle(vehicle):
+        if not vehicle or vehicle.isLocked:
             return
         if self.settingsLoader.getSetting(CREW.NAME, CREW.RETURN):
             self.__autoReturnToggleSwitch(vehicle)

@@ -3,6 +3,7 @@ from armagomen._logger import IALogger
 
 class ALogger(IALogger):
     EMPTY_WARN = "!!! WARNING !!! - Empty string detected. Check first argument in call function at: File '{}', line {}, in {}, code {}"
+    DEBUG = "[DEBUG] "
     __slots__ = ("__is_debug", "logger")
 
     def __init__(self, logger):
@@ -66,7 +67,7 @@ class ALogger(IALogger):
         if self.__is_debug:
             if "func" in kwargs:
                 kwargs["func"] = self.get_full_function_path(kwargs["func"])
-            self.logger.info(self._formatMessage(message, *args, **kwargs))
+            self.logger.info(self.DEBUG + self._formatMessage(message, *args, **kwargs))
 
     def logWarning(self, message, *args, **kwargs):
         self.logger.warning(self._formatMessage(message, *args, **kwargs))

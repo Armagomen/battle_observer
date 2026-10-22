@@ -3,12 +3,10 @@ from collections import namedtuple
 
 from armagomen._logger import IALogger
 from armagomen.battle_observer.shared.interface import IBOCurrentVehicleCachedData
-from armagomen.utils.common import isSpecialBattleVehicle
-from CurrentVehicle import g_currentVehicle
+from armagomen.battle_observer.shared.on_vehicle_change import OnVehicleChangeSubscribed
 from dossiers2.ui.achievements import MARK_ON_GUN_RECORD
 from Event import SafeEvent
 from helpers import dependency
-from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
 from skeletons.gui.shared import IItemsCache
 
 PARAMS = ("tankAvgDamage", "tankAvgAssist", "tankAvgStun", "tankAvgBlocked", "marksRating", "marksValue", "name", "marksAvailable",
@@ -16,10 +14,9 @@ PARAMS = ("tankAvgDamage", "tankAvgAssist", "tankAvgStun", "tankAvgBlocked", "ma
 EfficiencyAVGData = namedtuple("EfficiencyAVGData", PARAMS)
 
 
-class CurrentVehicleCachedData(IBOCurrentVehicleCachedData):
+class CurrentVehicleCachedData(OnVehicleChangeSubscribed, IBOCurrentVehicleCachedData):
     __slots__ = ("__EfficiencyAVGData", "__default", "onChanged")
     itemsCache = dependency.descriptor(IItemsCache)
-    appLoader = dependency.descriptor(IAppLoader)
     logger = dependency.descriptor(IALogger)
 
     def __init__(self):
@@ -28,33 +25,18 @@ class CurrentVehicleCachedData(IBOCurrentVehicleCachedData):
         default = 2000
         self.__default = EfficiencyAVGData(default, default, default, 0, 0.0, 0, "Undefined", False, 0.0, 0)
         self.__EfficiencyAVGData = None
-        self.appLoader.onGUISpaceEntered += self.subscribe
-        self.appLoader.onGUISpaceLeft += self.unsubscribe
+        super(CurrentVehicleCachedData, self).__init__()
 
     def fini(self):
-        self.appLoader.onGUISpaceEntered -= self.subscribe
-        self.appLoader.onGUISpaceLeft -= self.unsubscribe
+        super(CurrentVehicleCachedData, self).fini()
         self.logger.logInfo("Finished CurrentVehicleCachedData")
 
-    def subscribe(self, spaceID):
-        if spaceID != GuiGlobalSpaceID.LOBBY:
-            return
-        self.logger.logDebug("CurrentVehicleCachedData::subscribe lobby")
-        g_currentVehicle.onChanged += self.onVehicleChanged
-
-    def unsubscribe(self, spaceID):
-        if spaceID != GuiGlobalSpaceID.LOBBY:
-            return
-        self.logger.logDebug("CurrentVehicleCachedData::unsubscribe lobby")
-        g_currentVehicle.onChanged -= self.onVehicleChanged
-
-    def onVehicleChanged(self):
-        self.__EfficiencyAVGData = self.setAvgData() if g_currentVehicle.isPresent() and not isSpecialBattleVehicle(
-            g_currentVehicle.item) else None
+    def onVehicleChanged(self, vehicle):
+        self.__EfficiencyAVGData = self.setAvgData(vehicle) if vehicle is not None else None
         self.onChanged(self.__EfficiencyAVGData)
 
-    def setAvgData(self):
-        dossier = self.itemsCache.items.getVehicleDossier(g_currentVehicle.intCD)
+    def setAvgData(self, vehicle):
+        dossier = self.itemsCache.items.getVehicleDossier(vehicle.intCD)
         random = dossier.getRandomStats()
         marks = random.getAchievement(MARK_ON_GUN_RECORD)
         return EfficiencyAVGData(
@@ -64,8 +46,8 @@ class CurrentVehicleCachedData(IBOCurrentVehicleCachedData):
             int(math.ceil(random.getAvgDamageBlocked() or 0.0)),
             marks.getDamageRating(),
             marks.getValue(),
-            g_currentVehicle.item.userName,
-            g_currentVehicle.item.level > 4,
+            vehicle.userName,
+            vehicle.level > 4,
             (random.getWinsEfficiency() or 0.0),
             int(random.getBattlesCount())
         )

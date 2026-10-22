@@ -1,3 +1,5 @@
+from __future__ import division
+
 import BigWorld
 
 from aih_constants import SHOT_RESULT
@@ -63,8 +65,8 @@ class _ShotResult(_CrosshairShotResults):
     def _checkShotResult(cls, armor, piercing_power, no_damage):
         if no_damage:
             return SHOT_RESULT.UNDEFINED, 0.0
-        pp_min = piercing_power * cls.shotResultHelper.pp_min
-        pp_max = piercing_power * cls.shotResultHelper.pp_max
+        pp_min = piercing_power * cls.shotResultHelper.pp_min_multiplier
+        pp_max = piercing_power * cls.shotResultHelper.pp_max_multiplier
         if armor <= pp_min:
             return SHOT_RESULT.GREAT_PIERCED, 1.0
         elif armor > pp_max:
@@ -222,11 +224,9 @@ class ShotResultIndicatorPlugin(plugins.ShotResultIndicatorPlugin):
             prebattleCtrl.onVehicleChanged -= self.__updateCurrVehicleInfo
         self.__resolver = None
 
-    @staticmethod
-    def __updateCurrVehicleInfo(vehicle):
-        if not avatar_getter.isObserver():
-            randomizer = dependency.instance(IShotResultHelper)
-            randomizer.updateRandomization(vehicle)
+    def __updateCurrVehicleInfo(self, vehicle):
+        if not avatar_getter.isObserver() and self.__resolver is not None:
+            self.__resolver.shotResultHelper.updateRandomization(vehicle)
 
 
 @overrideMethod(plugins, 'createPlugins')

@@ -1,11 +1,10 @@
-from datetime import datetime, timedelta
-
 from armagomen._constants import EXCLUDED_MAPS, MAIN
 from armagomen.battle_observer.i18n.exluded_maps import EXCLUDED_MAPS_BY_LANG
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import delayedCall
 from armagomen.utils.dialogs import ExcludedMapsDialog
 from constants import PREMIUM_TYPE, PremiumConfigs
+from datetime import datetime, timedelta
 from gui.ClientUpdateManager import g_clientUpdateManager
 from gui.game_control.wot_plus.utils import getExcludedMapsPromoData
 from gui.impl.pub.dialog_window import DialogButtons
@@ -39,13 +38,13 @@ class ExcludedMapsProcessor(object):
         self.__isPremium = False
         self.__dialog = None
         self.timeDelta = None
-        self.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
+        self.appLoader.onGUISpaceBeforeEnter += self.onGUISpaceBeforeEnter
         self.appLoader.onGUISpaceLeft += self.onGUISpaceLeft
         self.settingsLoader.onModSettingsChanged += self._onModSettingsChanged
         g_clientUpdateManager.addCallbacks({'preferredMaps': self.__onPreferredMapsChanged})
 
     def fini(self):
-        self.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
+        self.appLoader.onGUISpaceBeforeEnter -= self.onGUISpaceBeforeEnter
         self.appLoader.onGUISpaceLeft -= self.onGUISpaceLeft
         self.settingsLoader.onModSettingsChanged -= self._onModSettingsChanged
         g_clientUpdateManager.removeObjectCallbacks(self)
@@ -58,7 +57,7 @@ class ExcludedMapsProcessor(object):
     def _serverSettings(self):
         return self.lobbyContext.getServerSettings()
 
-    def onGUISpaceEntered(self, spaceID):
+    def onGUISpaceBeforeEnter(self, spaceID):
         if spaceID != GuiGlobalSpaceID.LOBBY:
             return
         self.__isPremium = self.itemsCache.items.stats.isActivePremium(PREMIUM_TYPE.PLUS)
