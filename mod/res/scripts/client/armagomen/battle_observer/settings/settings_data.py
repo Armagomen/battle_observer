@@ -26,8 +26,7 @@ class SettingsData(object):
             MAIN.MUTE_BASES_SOUND: False,
             MAIN.SHOW_ANONYMOUS: False,
             MAIN.SHOW_FRIENDS: False,
-            MAIN.STUN_SOUND: False,
-            MAIN.USE_KEY_PAIRS: True,
+            MAIN.STUN_SOUND: False
         }
 
         self.crew = {

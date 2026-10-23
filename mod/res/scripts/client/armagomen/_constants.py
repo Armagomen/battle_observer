@@ -67,12 +67,12 @@ SERVICE_CHANNEL = namedtuple("SERVICE_CHANNEL", ("NAME", "TYPE", "DATA", "AUX_DA
 
 __Main = namedtuple("MAIN", (
     "AUTO_CLEAR_CACHE", "HIDE_BADGES", "HIDE_CLAN_ABBREV", "HIDE_DOG_TAGS", "NAME", "SHOW_FRIENDS", "SHOW_ANONYMOUS",
-    "USE_KEY_PAIRS", "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND", "DEBUG", "DIRECTIVES", "HIDE_HINT",
+    "IGNORE_COMMANDERS", "DISABLE_SCORE_SOUND", "DEBUG", "DIRECTIVES", "HIDE_HINT",
     "FIELD_MAIL", "STUN_SOUND", "MUTE_BASES_SOUND", "EXCLUDED_MAP_SLOTS_NOTIFICATION",
     "AUTO_CLAIM_CLAN_REWARD",))
 MAIN = __Main(
     "clear_cache_automatically", "hide_badges", "hide_clan_abbrev", "hide_dog_tags", "main", "show_friends",
-    "anti_anonymous", "useKeyPairs", "ignore_commanders_voice", "disable_score_sound", "DEBUG_MODE",
+    "anti_anonymous", "ignore_commanders_voice", "disable_score_sound", "DEBUG_MODE",
     "directives_only_from_storage", "hide_hint_panel", "hide_field_mail", "disable_stun_sound", "mute_team_base_sound",
     "excluded_map_slots_notification", "auto_claim_clan_reward")
 

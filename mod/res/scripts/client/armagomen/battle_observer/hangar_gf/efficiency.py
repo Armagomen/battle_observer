@@ -51,22 +51,15 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
 
     def _onLoading(self, *args, **kwargs):
         super(HangarEfficiencyView, self)._onLoading()
-        self.subscribe()
+        self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
+        self.cachedVehicleData.onChanged += self.update
         self.logger.logDebug("hangar module '{}' loaded", LOBBY_ALIASES.EFFICIENCY)
 
     def _finalize(self):
-        self.unsubscribe()
-        super(HangarEfficiencyView, self)._finalize()
-        self.logger.logDebug("hangar module '{}' dispose", LOBBY_ALIASES.EFFICIENCY)
-
-    def subscribe(self):
-        self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
-        self.cachedVehicleData.onChanged += self.update
-        self.cachedVehicleData.onVehicleChanged()
-
-    def unsubscribe(self):
         self.cachedVehicleData.onChanged -= self.update
         self.settingsLoader.onModSettingsChanged -= self.onModSettingsChanged
+        super(HangarEfficiencyView, self)._finalize()
+        self.logger.logDebug("hangar module '{}' dispose", LOBBY_ALIASES.EFFICIENCY)
 
     def update(self, data):
         value = GLOBAL.EMPTY_LINE

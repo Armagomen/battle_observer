@@ -99,6 +99,7 @@ class Online(IBOOnline):
             self.logger.logInfo("Online: Login response [{}]: banned {}", self.userID, self.banned)
         except Exception as error:
             self.logger.logError("Online: Login body parse error: {}, {}", str(error), response.body)
+        raise AsyncReturn(None)
 
     @wg_async
     def user_logout(self, user_id, attempt=0):

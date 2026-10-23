@@ -216,8 +216,7 @@ class SettingsInterface(CreateElement):
         self.modsListApi.addModification(MOD_NAME, **kwargs)
 
     def addModsToVX(self):
-        self.vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True,
-                                        useKeyPairs=self.loader.settings.main[MAIN.USE_KEY_PAIRS])
+        self.vxSettingsApi.addContainer(MOD_NAME, localization['service'], skipDiskCache=True, useKeyPairs=True)
         for blockID in CONFIG_INTERFACE.BLOCK_IDS:
             if blockID in self.inited:
                 continue
@@ -320,8 +319,6 @@ class SettingsInterface(CreateElement):
         """Darkens dependent elements..."""
         if modID != MOD_NAME or blockID not in CONFIG_INTERFACE.BLOCK_IDS:
             return
-        if blockID == MAIN.NAME and varName == MAIN.USE_KEY_PAIRS:
-            self.vxSettingsApi.getContainer(MOD_NAME)._vxSettingsCtrl__useHkPairs = value
         if blockID in CONFIG_INTERFACE.HANDLER_VALUES:
             values = CONFIG_INTERFACE.HANDLER_VALUES[blockID].get(varName, None)
             if values is not None:

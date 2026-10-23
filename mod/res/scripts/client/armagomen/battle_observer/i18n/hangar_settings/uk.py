@@ -53,7 +53,6 @@ localization = {
         "ignore_commanders_voice": "Ігнорувати озвучку командирів",
         "ignore_commanders_voice_tooltip": "Замінює унікальні голоси командирів на стандартну озвучку екіпажу.",
         "show_friends": "Позначати друзів і членів клану у списках команд",
-        "useKeyPairs": "Використовувати парні клавіші Ctrl, Alt і Shift",
         "useKeyPairs_tooltip": "Ліва та права клавіші працюють як одна, незалежно від налаштувань модуля.",
         "mute_team_base_sound": "Вимкнути сирену захоплення бази",
         "excluded_map_slots_notification": "Сповіщати про доступні слоти для вилучення мап",

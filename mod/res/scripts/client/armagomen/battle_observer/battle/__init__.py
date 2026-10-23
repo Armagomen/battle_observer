@@ -1,5 +1,6 @@
-from armagomen._logger import IALogger
+import gc
 from armagomen._constants import BATTLE_ALIASES
+from armagomen._logger import IALogger
 from armagomen.battle_observer.shared.interface import IViewSettings
 from armagomen.utils.common import addCallback
 from frameworks.wulf import WindowLayer
@@ -77,6 +78,7 @@ class ViewHandlerBattle(PackageBusinessHandler):
     def fini(self):
         self.wiewSettings.clear()
         super(ViewHandlerBattle, self).fini()
+        gc.collect()
 
     def eventListener(self, event):
         if self.wiewSettings.components:

@@ -56,7 +56,6 @@ localization = {
         "ignore_commanders_voice_tooltip": "Nach Aktivierung wird die Standardbesatzungsstimme erzwungen. Diese Einstellung ersetzt "
                                            "einzigartige Kommandantenstimmen durch die Standardstimme oder ein installiertes Modpack.",
         "show_friends": "Freunde und Clanmitglieder in Teamlisten markieren",
-        "useKeyPairs": "Gleichzeitige Nutzung linker/rechter Ctrl-, Alt- und Shift-Tasten",
         "useKeyPairs_tooltip": "Nach Aktivierung funktionieren die linken und rechten Tasten gleich, unabhängig von Moduleinstellungen.",
         "mute_team_base_sound": "Basisalarm-Sirene deaktivieren",
         "excluded_map_slots_notification": "Benachrichtigung über verfügbare Kartensperrslots anzeigen",
