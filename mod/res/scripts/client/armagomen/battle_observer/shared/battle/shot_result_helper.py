@@ -5,6 +5,7 @@ from collections import defaultdict
 from armagomen._constants import ARMOR_CALC, GLOBAL
 from armagomen._logger import IALogger
 from armagomen.battle_observer.shared.interface import IShotResultHelper
+from armagomen.battle_observer.shared.on_vehicle_change import isSpecialBattleVehicle
 from armagomen.utils.common import MinMax
 from constants import QUEUE_TYPE
 from Event import Event
@@ -70,7 +71,7 @@ class ShotResultHelper(IShotResultHelper):
         from armagomen.battle_observer.settings.interface import IBOSettingsLoader
         settingsLoader = dependency.instance(IBOSettingsLoader)
         self.resetToDefault()
-        if vehicle is None or not settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
+        if vehicle is None or isSpecialBattleVehicle(vehicle) or not settingsLoader.getSetting(ARMOR_CALC.NAME, GLOBAL.ENABLED):
             return
         try:
             data = defaultdict(list)

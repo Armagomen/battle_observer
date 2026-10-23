@@ -1,6 +1,3 @@
-from wg_async import wg_async
-
-
 class IBOKeysListener(object):
     __slots__ = ()
 
@@ -81,14 +78,11 @@ class IBOOnline(object):
     def fini(self):
         raise NotImplementedError
 
-    @wg_async
     def user_login(self, user_id, name, version):
         raise NotImplementedError
 
-    @wg_async
     def user_logout(self, user_id, attempt=0):
         raise NotImplementedError
 
-    @wg_async
     def get_stats_by_region(self):
         raise NotImplementedError

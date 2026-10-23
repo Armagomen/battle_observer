@@ -47,7 +47,6 @@ localization = {
         "smallDoubleCarousel": "Use small icons in the tank carousel.",
         "carouselRows": "number of rows of multi-row tank carousel",
         "anti_anonymous": "Mark players with a hidden nickname.",
-        "useKeyPairs": "Use key pairs Alt, Ctrl, Shift",
         "useKeyPairs_tooltip": "Once enabled, the left and right keys will work as one, regardless of which one you "
                                "chose in the module settings.",
         "hide_dog_tags": "Disable display of tokens.",
