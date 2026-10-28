@@ -1,3 +1,5 @@
+from __future__ import absolute_import, division
+
 from collections import namedtuple
 
 from aih_constants import CTRL_MODE_NAME
@@ -231,8 +233,8 @@ DISTANCE = namedtuple("DISTANCE", ("NAME",))("distance_to_enemy", )
 
 OWN_HEALTH = namedtuple("OWN_HEALTH", ("NAME",))("own_health", )
 
-STATISTICS = (namedtuple("STATISTICS", ("NAME", "COLORS", "VALUES", "DEFAULT"))
-              ("statistics", "statistics_colors", ("winRate", "battles", "rating"), "defaultMode"))
+STATISTICS = (namedtuple("STATISTICS", ("NAME", "COLORS", "VALUES", "DEFAULT", "HOT_KEY"))
+              ("statistics", "statistics_colors", ("winRate", "battles", "rating"), "defaultMode", "changeMode_hotkey"))
 
 COLORED_ICONS = namedtuple("COLORED_ICONS", ("NAME", "BLACKOUT", "UNKNOWN"))("colored_icons", "icons_blackout", "unknown")
 

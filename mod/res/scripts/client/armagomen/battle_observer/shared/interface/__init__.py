@@ -16,6 +16,9 @@ class IShotResultHelper(object):
     def updateRandomization(self, vehicle):
         raise NotImplementedError
 
+    def getMinMaxPiercingPower(self, power):
+        raise NotImplementedError
+
 
 class IBOPlayersDamageController(object):
     __slots__ = ()

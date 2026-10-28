@@ -84,10 +84,10 @@ localization = {
         "hide_shop": "Hide shop button",
         "hide_wotPlus": "Hide WOT Plus button"
     },
-
     "statistics": {
         "header": "Players Statistics",
-        "defaultMode": "Default mode (ALT toggle)",
+        "defaultMode": "Default mode (toggle via key)",
+        "changeMode_hotkey": "Mode switch key",
         "statistics_colors*very_bad": "very bad",
         "statistics_colors*bad": "bad",
         "statistics_colors*normal": "normal",
@@ -95,7 +95,6 @@ localization = {
         "statistics_colors*very_good": "very good",
         "statistics_colors*unique": "unique"
     },
-
     "colored_icons": {
         "header": "Tank icons",
         "icons_blackout": "Filter strength (brightness)",
@@ -106,7 +105,6 @@ localization = {
         "mediumTank": "Medium Tank",
         "unknown": "Unknown (GM)"
     },
-
     "dispersion_circle": {
         "header": "Setting the collapsing circle, server sight",
         "replace": "Replace Original Circle.",

@@ -65,8 +65,7 @@ class _ShotResult(_CrosshairShotResults):
     def _checkShotResult(cls, armor, piercing_power, no_damage):
         if no_damage:
             return SHOT_RESULT.UNDEFINED, 0.0
-        pp_min = piercing_power * cls.shotResultHelper.pp_min_multiplier
-        pp_max = piercing_power * cls.shotResultHelper.pp_max_multiplier
+        pp_min, pp_max = cls.shotResultHelper.getMinMaxPiercingPower(piercing_power)
         if armor <= pp_min:
             return SHOT_RESULT.GREAT_PIERCED, 1.0
         elif armor > pp_max:

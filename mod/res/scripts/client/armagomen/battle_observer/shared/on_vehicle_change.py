@@ -1,3 +1,4 @@
+from armagomen.utils.common import delayedCall
 from CurrentVehicle import g_currentVehicle
 from helpers import dependency
 from skeletons.gui.app_loader import GuiGlobalSpaceID, IAppLoader
@@ -7,7 +8,7 @@ flags = ('isOnlyForFunRandomBattles', 'isOnlyForBattleRoyaleBattles', 'isOnlyFor
 
 
 def isSpecialBattleVehicle(vehicle):
-    return any(getattr(vehicle, f, False) for f in flags)
+    return vehicle is None or any(getattr(vehicle, f, False) for f in flags)
 
 
 class OnVehicleChangeSubscribed(object):
@@ -31,9 +32,10 @@ class OnVehicleChangeSubscribed(object):
             return
         g_currentVehicle.onChanged -= self.__onChanged
 
+    @delayedCall(0.1)
     def __onChanged(self):
         vehicle = g_currentVehicle.item
-        self.onVehicleChanged(None if vehicle is None or isSpecialBattleVehicle(vehicle) else vehicle)
+        self.onVehicleChanged(None if isSpecialBattleVehicle(vehicle) else vehicle)
 
     def onVehicleChanged(self, vehicle):
         raise NotImplementedError

@@ -84,7 +84,8 @@ localization = {
     },
     "statistics": {
         "header": "Настройки статистики игроков",
-        "defaultMode": "Режим по умолчанию (переключение ALT)",
+        "defaultMode": "Режим по умолчанию (переключение по клавише)",
+        "changeMode_hotkey": "Клавиша переключения режима",
         "statistics_colors*very_bad": "Очень плохо",
         "statistics_colors*bad": "Плохо",
         "statistics_colors*normal": "Нормально",

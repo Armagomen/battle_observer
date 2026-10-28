@@ -82,7 +82,8 @@ localization = {
     },
     "statistics": {
         "header": "Spielerstatistiken",
-        "defaultMode": "Standardmodus (ALT-Umschaltung)",
+        "defaultMode": "Standardmodus (Wechsel per Taste)",
+        "changeMode_hotkey": "Taste zum Wechseln des Modus",
         "statistics_colors*very_bad": "Sehr niedriges Niveau",
         "statistics_colors*bad": "Niedriges Niveau",
         "statistics_colors*normal": "Mittleres Niveau",

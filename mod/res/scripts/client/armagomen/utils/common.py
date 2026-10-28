@@ -1,5 +1,4 @@
-# coding=utf-8
-from __future__ import division
+from __future__ import absolute_import, division
 
 import functools
 import importlib
@@ -38,6 +37,10 @@ IS_XVM_INSTALLED = os.path.exists(joinAndNormalizePath(__mods_dir, 'com.modxvm.x
 
 
 def addCallback(delay, callMethod, *args, **kwargs):
+    """
+    :type delay: float
+    :type callMethod: function
+    """
     return BigWorld.callback(delay, functools.partial(callMethod, *args, **kwargs) if args or kwargs else callMethod)
 
 
@@ -220,13 +223,7 @@ def getUpdatePath():
 
 def cleanupObserverUpdates():
     root = getUpdatePath()
-    for filename in os.listdir(root):
-        path = os.path.join(root, filename)
-        try:
-            from shutil import rmtree
-            rmtree(path) if os.path.isdir(path) else os.unlink(path)
-        except OSError as e:
-            logger.logError('cleanupObserverUpdates: {} — {}', path, str(e))
+    cleanupPath(root, safe=True)
 
 
 base_before_override = {}
@@ -291,7 +288,7 @@ def toggleOverride(obj, method_name, func, enable):
 def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, as_int=False):
     """
     Returns a HEX color code based on percent.
-    If color_blind=True, uses a smooth gradient: blue → green (no yellow).
+    If color_blind=True, uses a smooth gradient: blue -> green (no yellow).
     Args:
         percent (float): Value between 0.0 and 1.0.
         saturation (float): Saturation level (default: 0.5).
@@ -300,7 +297,7 @@ def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, a
         as_int (bool): If True, returns int (0xRRGGBB), else HEX string.
     """
     if color_blind:
-        # Blue → Green
+        # Blue -> Green
         hue = 0.666 + (-0.333 * percent)
     else:
         hue = min(0.8333, percent * 0.3333)
@@ -309,7 +306,7 @@ def percentToColor(percent, saturation=0.5, brightness=1.0, color_blind=False, a
     if as_int:
         return (r << 16) | (g << 8) | b
     else:
-        return '#{:02X}{:02X}{:02X}'.format(r, g, b)
+        return '#%02X%02X%02X' % (r, g, b)
 
 
 def hexToInt(color):
