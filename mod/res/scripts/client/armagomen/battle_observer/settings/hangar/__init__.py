@@ -7,8 +7,8 @@ from armagomen._logger import IALogger
 from armagomen.battle_observer.i18n.hangar_settings import localization, LOCKED_MESSAGE
 from armagomen.battle_observer.settings.hangar.settings_helper import convertDict, getCollectionIndex, makeTooltip, unpackDictPath
 from armagomen.battle_observer.settings.interface import IBOSettingsLoader
-from armagomen.utils.common import encodeData, IS_XVM_INSTALLED, openWebBrowser, printDebuginfo, safe_index, SIXTH_SENSE_LIST, \
-    SIXTH_SENSE_PATH
+from armagomen.utils.common import (delayedCall, encodeData, IS_XVM_INSTALLED, openWebBrowser, printDebuginfo, safe_index, SIXTH_SENSE_LIST,
+                                    SIXTH_SENSE_PATH)
 from debug_utils import LOG_CURRENT_EXCEPTION
 from helpers import dependency
 from Keys import KEY_LALT, KEY_RALT
@@ -147,7 +147,7 @@ class CreateElement(object):
         }
 
     hk_bk = ((MINIMAP.ZOOM, MINIMAP.ZOOM_KEY), (DAMAGE_LOG.NAME, DAMAGE_LOG.HOT_KEY), (PANELS.NAME, PANELS.BAR_HOT_KEY),
-             (PANELS.NAME, PANELS.DAMAGES_HOT_KEY))
+             (PANELS.NAME, PANELS.DAMAGES_HOT_KEY), (STATISTICS.NAME, STATISTICS.HOT_KEY))
     distRange = ((ARCADE.NAME, ARCADE.DIST_RANGE), (STRATEGIC.NAME, STRATEGIC.DIST_RANGE))
 
     def createItem(self, blockID, key, value):
@@ -234,6 +234,7 @@ class SettingsInterface(CreateElement):
                 self.inited.add(blockID)
                 self.logger.logDebug("SettingsInterface addModsToVX: {}", blockID)
 
+    @delayedCall(1.0)
     def load_window(self):
         """Loading settings window"""
         self.vxSettingsApi.loadWindow(MOD_NAME)
@@ -242,8 +243,7 @@ class SettingsInterface(CreateElement):
         self.configID = new_id
         for blockID in CONFIG_INTERFACE.BLOCK_IDS:
             self.updateMod(blockID)
-        from BigWorld import callback
-        callback(1.0, self.load_window)
+        self.load_window()
 
     def onFeedbackReceived(self, container, event):
         """Feedback EVENT"""
@@ -289,10 +289,9 @@ class SettingsInterface(CreateElement):
             return
         data = encodeData(data)
         if blockID == ANOTHER.CONFIG_SELECT and self.configID != data['selector']:
-            new_id = data['selector']
             self.vxSettingsApi.processEvent(MOD_NAME, self.apiEvents.CALLBACKS.CLOSE_WINDOW)
             self.inited.clear()
-            self.loader.readOtherConfig(new_id)
+            self.loader.readOtherConfig(data['selector'])
             return
 
         settings_block = getattr(self.loader.settings, blockID, {})

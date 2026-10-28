@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from sys import version
 
 from armagomen._logger import IALogger
@@ -25,7 +27,6 @@ class Core(IBOCore):
         self.version = modVersion
         self.hangar_settings = None
         self.hangar_gf = None
-
 
         from armagomen.battle_observer.settings import register_settings
         register_settings()

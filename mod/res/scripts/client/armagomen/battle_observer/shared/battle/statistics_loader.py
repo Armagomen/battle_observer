@@ -1,12 +1,12 @@
 import json
 from collections import defaultdict
-from datetime import datetime, timedelta
 
-from armagomen._logger import IALogger
 from armagomen._constants import API_KEY
+from armagomen._logger import IALogger
 from armagomen.battle_observer.shared.interface import IStatisticsDataLoader
 from armagomen.utils.async_request import async_url_request
 from armagomen.utils.common import addCallback
+from datetime import datetime, timedelta
 from Event import SafeEvent
 from helpers import dependency
 from skeletons.gui.battle_session import IBattleSessionProvider
@@ -41,16 +41,19 @@ class StatisticsDataLoader(IStatisticsDataLoader):
         self.onDataResponse = SafeEvent()
         self.timeDelta = datetime.now() + timedelta(hours=4)
         self._load_try = 0
-        self.__cached_vehicles = defaultdict(dict)
+        self.__cached_players = defaultdict(dict)
 
     @property
     def enabled(self):
         return INFO_URL is not None
 
     def fini(self):
-        self.__cached_vehicles.clear()
+        self.__cached_players.clear()
         self.onDataResponse.clear()
         self.logger.logInfo("Finished StatisticsDataLoader")
+
+    def getPlayerCache(self, databaseID):
+        return self.__cached_players[str(databaseID)]
 
     def __onInfoResponse(self, response, DBIDs):
         if response.responseCode == HTTP_OK_STATUS:
@@ -58,7 +61,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
             if not response_data:
                 return
             for k, v in response_data.iteritems():
-                self.__cached_vehicles[k].update(v["statistics"]["random"])
+                self.__cached_players[k].update(v["statistics"]["random"])
             self.logger.logDebug("StatisticsDataLoader/__onInfoResponse: FINISH request INFO data={}", response_data)
             self.requestWTR(DBIDs)
         else:
@@ -70,7 +73,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
             if not response_data:
                 return
             for k, v in response_data.iteritems():
-                self.__cached_vehicles[k].update(v)
+                self.__cached_players[k].update(v)
             self.logger.logDebug("StatisticsDataLoader/__onWTRResponse: FINISH request WTR data={}", response_data)
             self.onResponse(DBIDs)
         else:
@@ -78,11 +81,11 @@ class StatisticsDataLoader(IStatisticsDataLoader):
 
     def onResponse(self, DBIDs):
         arenaDP = self.sessionProvider.getArenaDP()
-        self.onDataResponse({arenaDP.getVehIDByAccDBID(int(accountDBID)): self.__cached_vehicles[accountDBID] for accountDBID in DBIDs})
+        self.onDataResponse({arenaDP.getVehIDByAccDBID(int(accountDBID)): self.__cached_players[accountDBID] for accountDBID in DBIDs})
         self._load_try = 0
 
     def delayedLoad(self, code, method, DBIDs):
-        if self._load_try < 6:
+        if self._load_try < 10:
             self._load_try += 1
             self.logger.logError("StatisticsDataLoader: error loading statistic data - {}/{}", self._load_try, code)
             addCallback(5.0, method, DBIDs)
@@ -91,11 +94,11 @@ class StatisticsDataLoader(IStatisticsDataLoader):
         current_time = datetime.now()
         if current_time >= self.timeDelta:
             self.timeDelta = current_time + timedelta(hours=4)
-            self.__cached_vehicles.clear()
+            self.__cached_players.clear()
         loaded = set()
         to_request = set()
         for accountDBID in DBIDs:
-            if len(self.__cached_vehicles[accountDBID]) != 3:
+            if len(self.__cached_players[accountDBID]) != 3:
                 to_request.add(accountDBID)
             else:
                 loaded.add(accountDBID)

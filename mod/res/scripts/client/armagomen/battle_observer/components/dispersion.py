@@ -7,10 +7,12 @@ from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import toggleOverride
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
+from gc import enable
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from helpers import dependency
+from Pixie import create
 from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
 
@@ -23,7 +25,7 @@ REPLACE_TYPES = {gun_marker_ctrl._MARKER_TYPE.CLIENT, gun_marker_ctrl._MARKER_TY
 
 
 def get_dispersion_scale_setting(gunMakerType):
-    dispersion = dependency.instance(IBOSettingsLoader).getSetting(DISPERSION.NAME)
+    dispersion = dependency.instance(IBOSettingsLoader).getComponentDict(DISPERSION.NAME)
     result = False
     if gunMakerType == gun_marker_ctrl._MARKER_TYPE.SERVER:
         result = dispersion[DISPERSION.REPLACE] or dispersion[DISPERSION.SERVER]
@@ -75,10 +77,6 @@ class DispersionCircle(object):
     settingsLoader = dependency.descriptor(IBOSettingsLoader)
 
     def __init__(self):
-        self.replace = False
-        self.server = False
-        self.limiter = False
-        self.enabled = False
         self.__tick = 0.1
         self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
 
@@ -134,31 +132,30 @@ class DispersionCircle(object):
 
     @staticmethod
     def toggleLimiter(enable):
-        aih_constants.GUN_MARKER_MIN_SIZE = 20.0 if enable else 32.0
-        aih_constants.SPG_GUN_MARKER_MIN_SIZE = 30.0 if enable else 50.0
+        aih_constants.GUN_MARKER_MIN_SIZE = 16.0 if enable else 26.0
+        aih_constants.SPG_GUN_MARKER_MIN_SIZE = 26.0 if enable else 44.0
 
-    def onModSettingsChanged(self, name, data):
+    def onModSettingsChanged(self, name, *args):
         if name != DISPERSION.NAME:
             return
-        self.enabled = data.get(GLOBAL.ENABLED, self.enabled)
-        if self.enabled:
-            self.limiter = data.get(DISPERSION.LIMITER, self.limiter)
-            self.replace = data.get(DISPERSION.REPLACE, self.replace)
-            self.server = data.get(DISPERSION.SERVER, self.server)
-            self.toggleLimiter(self.limiter)
-            self.toggleServerCrossOverrides(self.server)
-            toggleOverride(gun_marker_ctrl, "createGunMarker", self._createGunMarker, self.replace or self.server)
-        else:
-            toggleOverride(gun_marker_ctrl, "createGunMarker", self._createGunMarker, False)
-            self.toggleServerCrossOverrides(False)
-            self.toggleLimiter(False)
+        data = self.settingsLoader.getComponentDict(name)
+
+        enabled = data[GLOBAL.ENABLED]
+        limiter = data[DISPERSION.LIMITER] and enabled
+        server = data[DISPERSION.SERVER] and enabled
+        create_override = enabled and (data[DISPERSION.REPLACE] or server)
+
+        self.toggleLimiter(limiter)
+        self.toggleServerCrossOverrides(server)
+        toggleOverride(gun_marker_ctrl, "createGunMarker", self._createGunMarker, create_override)
+
 
     def toggleServerCrossOverrides(self, enable):
         for obj, method_name, func in self.__server_overrides:
             toggleOverride(obj, method_name, func, enable)
 
     def _createGunMarker(self, base, isStrategic):
-        if self.server:
+        if self.settingsLoader.getComponentDict(DISPERSION.NAME)[DISPERSION.SERVER]:
             self.disableWGServerMarker()
         factory = gun_marker_ctrl._GunMarkersDPFactory()
         if isStrategic:

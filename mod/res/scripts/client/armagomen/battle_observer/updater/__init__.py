@@ -5,18 +5,18 @@ import re
 import subprocess
 import threading
 from collections import namedtuple
-from datetime import datetime, timedelta
 from json import loads
 from zipfile import ZipFile
 
 from account_helpers.settings_core.settings_constants import GAME
-from armagomen._logger import IALogger
 from armagomen._constants import GLOBAL, URLS
+from armagomen._logger import IALogger
 from armagomen.battle_observer.i18n.updater import LOCALIZED_BY_LANG
 from armagomen.utils.async_request import async_url_request
-from armagomen.utils.common import getObserverCachePath, getUpdatePath, joinAndNormalizePath, MODS_DIR, VERSIONED_MODS_DIR
+from armagomen.utils.common import GAME_VERSION, getObserverCachePath, getUpdatePath, joinAndNormalizePath, MODS_DIR, VERSIONED_MODS_DIR
 from armagomen.utils.dialogs import UpdaterDialogs
 from BattleReplay import isLoading, isPlaying
+from datetime import datetime, timedelta
 from gui.Scaleform.Waiting import Waiting
 from gui.shared.personality import ServicesLocator
 from helpers import dependency
@@ -52,7 +52,10 @@ def download_and_write(url, local_path, on_success, on_failure):
 
 
 def tupleVersion(version):
-    return tuple(map(int, version.split('.')))
+    match = re.search(r'\d+(?:\.\d+)+', version)
+    if not match:
+        return (0,)
+    return tuple(map(int, match.group().split('.')))
 
 
 class IBOUpdater(object):
@@ -79,6 +82,9 @@ class Updater(IBOUpdater):
         self.timeDelta = datetime.now()
         self.updateData = dict()
         self.version = modVersion
+        self.outdate_mod_files = tuple(self.findOutdateVersions(modVersion))
+        if self.outdate_mod_files:
+            self.logger.logInfo('Updater: Outdated mod files are installed: {}', self.outdate_mod_files)
         self.gitMessage = ""
         self.__finished = False
         if not self.cleanup_launcher_exist:
@@ -134,6 +140,7 @@ class Updater(IBOUpdater):
     def updateFiles(self, path, version):
         self.extractZipArchive(path)
         self.showUpdateFinishedDialog(version)
+        self.outdate_mod_files = tuple(self.findOutdateVersions(version))
 
     def extractZipArchive(self, path):
         with ZipFile(path) as archive:
@@ -152,37 +159,33 @@ class Updater(IBOUpdater):
     def fini(self):
         if not self.isReplay:
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
-        if self.cleanup_launcher_exist:
-            self.checkAndStartCleanup()
+        if self.cleanup_launcher_exist and self.outdate_mod_files:
+            self.removeOldModVersions(self.outdate_mod_files)
         self.logger.logInfo("Finished Updater")
         self.__finished = True
 
     @staticmethod
-    def parseFullVersion(path):
-        mod_version = re.search(r'mods[\\/](\d+(?:\.\d+)+)', path).group(1)
-        file_version = re.search(r'battleObserver_(\d+(?:\.\d+)+)\.wotmod', path).group(1)
-        return tupleVersion(mod_version), tupleVersion(file_version)
+    def checkRoot(root):
+        root_version = re.search(r'mods[\\/](\d+(?:\.\d+)+)', root).group(1)
+        return tupleVersion(root_version) >= tupleVersion(GAME_VERSION)
 
-    @staticmethod
-    def findObserverMods():
+    def findOutdateVersions(self, currentVersion):
         for root, dirs, files in os.walk(MODS_DIR):
             for name in files:
                 if fnmatch.fnmatch(name, WOTMOD_PATTERN):
+                    if currentVersion in name.lower() and self.checkRoot(root):
+                        continue
                     yield os.path.join(root, name)
 
-    def checkAndStartCleanup(self):
-        mod_files = sorted(self.findObserverMods(), key=self.parseFullVersion)
-        mod_files.pop(-1)
-        if mod_files:
-            self.logger.logInfo("Remove old versions >> {}", mod_files)
-            t = threading.Thread(target=self._cleanup_worker, args=(mod_files,))
-            t.daemon = True
-            t.start()
+    def removeOldModVersions(self, mod_files):
+        self.logger.logInfo("Remove old versions >> {}", mod_files)
+        t = threading.Thread(target=self._cleanup_worker, args=(mod_files,))
+        t.daemon = True
+        t.start()
 
     def _cleanup_worker(self, mod_files):
         self.logger.logDebug("Try to remove old mod files {} in process {}", mod_files, self.cleanup_exe)
-        mod_files.insert(0, self.cleanup_exe)
-        subprocess.Popen(mod_files, creationflags=DETACHED_NO_WINDOW)
+        subprocess.Popen((self.cleanup_exe,) + mod_files, creationflags=DETACHED_NO_WINDOW)
 
     def responseUpdateCheck(self, response):
         if self.__finished:

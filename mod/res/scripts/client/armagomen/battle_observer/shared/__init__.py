@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 def register_services():
     from helpers.dependency import _g_manager, DependencyManager
 

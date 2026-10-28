@@ -1,3 +1,5 @@
+from __future__ import division
+
 import BigWorld
 
 from armagomen._constants import SIXTH_SENSE
@@ -38,6 +40,13 @@ class SixthSenseTimer(object):
         from SoundGroups import g_instance
         self.__sound = g_instance.getSound2D(soundID)
 
+    def playTickSound(self):
+        if self.__sound is None:
+            return
+        self.__sound.stop()
+        if self.__timeLeft.is_integer() and self.__timeLeft != self.__time:
+            self.__sound.play()
+
     def restartTimer(self):
         self.stopTimer()
         self.__timeLeft = self.__time
@@ -50,6 +59,8 @@ class SixthSenseTimer(object):
             self.restartTimer()
 
     def stopTimer(self):
+        if self.__sound is not None:
+            self.__sound.stop()
         if self.__callbackID is not None:
             BigWorld.cancelCallback(self.__callbackID)
             self.__callbackID = None
@@ -58,9 +69,7 @@ class SixthSenseTimer(object):
         return self.__callbackID is not None
 
     def __invoke(self):
-        if self.__sound is not None and self.__timeLeft.is_integer() and self.__timeLeft != self.__time:
-            self.__sound.stop()
-            self.__sound.play()
+        self.playTickSound()
         self.updateFunc(self.__timeLeft, self.__timeLeft / self.__time)
         if self.__timeLeft > 0.0:
             self.__callbackID = BigWorld.callback(self.__interval, self.__invoke)

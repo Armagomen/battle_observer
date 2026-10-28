@@ -42,7 +42,7 @@ class Statistics(StatisticsMeta):
                 arena.onVehicleAdded += self.onFogOfWarAddedUpdated
                 arena.onVehicleUpdated += self.onFogOfWarAddedUpdated
             arena.onVehicleKilled += self.onVehicleKilled
-        self.keysListener.registerComponent(self.onKeyPressed)
+        self.keysListener.registerComponent(self.onKeyPressed, keyList=self.settings[STATISTICS.HOT_KEY])
 
         addCallback(5.0 if self.isComp7Battle() else 0.1,
                     self.statisticsLoader.requestStatisticsFromApi,

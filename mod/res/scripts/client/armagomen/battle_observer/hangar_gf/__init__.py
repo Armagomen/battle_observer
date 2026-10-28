@@ -5,16 +5,23 @@ from armagomen.battle_observer.hangar_gf.haeder import HeaderView
 from armagomen.utils.common import safe_import, toggleOverride
 from gui.impl.lobby.page.lobby_header import LobbyHeader
 from helpers import dependency
+from skeletons.gui.game_control import IHangarGuiController
 
 
 class HangarGamefaceInject(object):
     logger = dependency.descriptor(IALogger)
+    _hangarGuiCtrl = dependency.descriptor(IHangarGuiController)
 
     headers = safe_import((
         ("comp7.gui.impl.lobby.page.lobby_header", "Comp7LobbyHeader"),
         ("comp7_light.gui.impl.lobby.page.lobby_header", "Comp7LightLobbyHeader"),
-        ("last_stand.gui.impl.lobby.page.ls_lobby_header", "LSLobbyHeader")
+        ("last_stand.gui.impl.lobby.page.ls_lobby_header", "LSLobbyHeader"),
+        ("fort_rush.gui.impl.lobby.page.example_lobby_header", "ExampleLobbyHeader")
     ))
+
+    def _getViewType(self):
+        controlsHelper = self._hangarGuiCtrl.currentGuiProvider.getLobbyHeaderHelper()
+        return controlsHelper.getHeaderType() if controlsHelper is not None else None
 
     def __init__(self):
         toggleOverride(LobbyHeader, '_initChildren', self.hooked_initChildren, True)

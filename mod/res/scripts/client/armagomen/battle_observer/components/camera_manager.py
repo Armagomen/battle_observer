@@ -67,8 +67,8 @@ class ChangeCameraModeAfterShoot(TriggersManager.ITriggerListener):
     def __updateCurrVehicleInfo(self):
         self.toggleTrigger(self.isTriggerEnabled())
 
-    def onTriggerActivated(self, params):
-        if params.get('type') == self.__trigger_type:
+    def onTriggerActivated(self, args):
+        if args.get('type') == self.__trigger_type:
             input_handler = getattr(self.avatar, "inputHandler", None)
             if input_handler is not None:
                 addCallback(self.latency, self.changeControlMode, input_handler)

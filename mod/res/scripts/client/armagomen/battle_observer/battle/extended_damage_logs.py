@@ -1,7 +1,7 @@
 from collections import defaultdict, namedtuple
 
-from armagomen._logger import IALogger
 from armagomen._constants import COLORS, DAMAGE_LOG, EX_LOGS_ICONS, GLOBAL, IMAGE_DIR
+from armagomen._logger import IALogger
 from armagomen.battle_observer.meta.battle.extended_damage_logs_meta import ExtendedDamageLogsMeta
 from armagomen.battle_observer.shared.interface import IBOKeysListener
 from armagomen.utils.common import getPercent, percentToColor
@@ -45,6 +45,8 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
     keysListener = dependency.descriptor(IBOKeysListener)
     logger = dependency.descriptor(IALogger)
 
+    LOG_TYPES = ("normal", "alt")
+
     def __init__(self):
         super(ExtendedDamageLogs, self).__init__()
         self._damage_done = LogData(set(), list(), dict(), DAMAGE_LOG.D_DONE)
@@ -70,8 +72,7 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         ammo_ctrl = self.sessionProvider.shared.ammo
         if ammo_ctrl is not None:
             ammo_ctrl.onGunReloadTimeSet += self._onGunReloadTimeSet
-        self.template = (GLOBAL.EMPTY_LINE.join(self.settings[DAMAGE_LOG.TEMPLATES]["normal"]),
-                         GLOBAL.EMPTY_LINE.join(self.settings[DAMAGE_LOG.TEMPLATES]["alt"]))
+        self.template = tuple(GLOBAL.EMPTY_LINE.join(self.settings[DAMAGE_LOG.TEMPLATES][name]) for name in self.LOG_TYPES)
 
     def _dispose(self):
         feedback = self.sessionProvider.shared.feedback
@@ -220,6 +221,6 @@ class ExtendedDamageLogs(ExtendedDamageLogsMeta):
         """
         if log_data is None or not log_data.id_list:
             return
-        textformat = self.settings["textformat"]["alt" if self._is_key_down else "normal"]
+        textformat = self.settings["textformat"][self.LOG_TYPES[self._is_key_down]]
         result = GLOBAL.NEW_LINE.join(self.getLogLines(log_data))
         self.as_updateExtendedLogS(log_data.log_id, textformat.format(result))

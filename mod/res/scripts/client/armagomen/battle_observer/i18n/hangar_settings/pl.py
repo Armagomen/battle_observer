@@ -78,7 +78,8 @@ localization = {
     },
     "statistics": {
         "header": "Statystyki graczy",
-        "defaultMode": "Tryb domyślny (przełączanie ALT)",
+        "defaultMode": "Tryb domyślny (przełączanie klawiszem)",
+        "changeMode_hotkey": "Klawisz przełączania trybu",
         "statistics_colors*very_bad": "Bardzo niski poziom",
         "statistics_colors*bad": "Niski poziom",
         "statistics_colors*normal": "Średni poziom",
@@ -86,7 +87,6 @@ localization = {
         "statistics_colors*very_good": "Bardzo wysoki poziom",
         "statistics_colors*unique": "Unikalny poziom"
     },
-
     "colored_icons": {
         "header": "Ikony pojazdów",
         "icons_blackout": "Ikony: Intensywność filtra (jasność)",
@@ -97,7 +97,6 @@ localization = {
         "mediumTank": "Czołg średni",
         "unknown": "Nieznany (mapa globalna)"
     },
-
     "dispersion_circle": {
         "header": "Celownik – ustawienia kręgu skupienia",
         "server_aim": "Włącz celownik serwerowy (dodatkowy krąg)",
