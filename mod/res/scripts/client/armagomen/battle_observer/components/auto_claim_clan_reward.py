@@ -30,9 +30,6 @@ class AutoClaimClanReward(object):
 
     def __init__(self):
         self.__hangarSpace.onSpaceCreate += self.onCreate
-        self.__cachedProgressData = None
-        self.__cachedQuestsData = None
-        self.__cachedSettingsData = None
         self.__claim_started = False
         self.__enabled = False
         self.subscribe()
@@ -40,14 +37,9 @@ class AutoClaimClanReward(object):
     @delayedCall(3.0)
     def onCreate(self):
         self.__hangarSpace.onSpaceCreate -= self.onCreate
-        self.__cachedQuestsData = g_clanCache.clanSupplyProvider.getQuestsInfo().data
-        self.__cachedSettingsData = g_clanCache.clanSupplyProvider.getProgressionSettings().data
-        self.__cachedProgressData = g_clanCache.clanSupplyProvider.getProgressionProgress().data
         if self.__enabled and g_clanCache.isInClan:
-            if self.__cachedQuestsData:
-                self.parseQuests(self.__cachedQuestsData)
-            if self.__cachedProgressData and self.__cachedSettingsData:
-                self.parseProgression(self.__cachedProgressData)
+            self.parseQuests(g_clanCache.clanSupplyProvider.getQuestsInfo().data)
+            self.parseProgression(g_clanCache.clanSupplyProvider.getProgressionProgress().data)
 
     def subscribe(self):
         self.settingsLoader.onModSettingsChanged += self.onModSettingsChanged
@@ -73,8 +65,8 @@ class AutoClaimClanReward(object):
             status = item.getStatus()
             if not self.__claim_started and status in REWARD_STATUS_OK:
                 self.__claimRewards()
-            elif status == QuestStatus.COMPLETE and self.__cachedProgressData and self.__cachedSettingsData:
-                self.parseProgression(self.__cachedProgressData)
+            elif status == QuestStatus.COMPLETE:
+                self.parseProgression(g_clanCache.clanSupplyProvider.getProgressionProgress().data)
             self.logger.logDebug("AutoClaimClanReward __onProxyDataItemShow: {}", item)
 
     @adisp_process
@@ -105,7 +97,8 @@ class AutoClaimClanReward(object):
         return maximum_level and maximum_level.status == PointStatus.PURCHASED
 
     def parseProgression(self, data):
-        if not self.__cachedSettingsData.enabled or data is None:
+        settingsData = g_clanCache.clanSupplyProvider.getProgressionSettings().data
+        if not settingsData or not settingsData.enabled or data is None:
             return
         maximum_level_purchased = self.isMaximumLevelPurchased(data)
         available_levels = [
@@ -115,7 +108,7 @@ class AutoClaimClanReward(object):
         if not available_levels:
             return
         next_level = min(available_levels)
-        next_point = self.__cachedSettingsData.points.get(str(next_level))
+        next_point = settingsData.points.get(str(next_level))
         currency = self.__itemsCache.items.stats.dynamicCurrencies.get(Currency.TOUR_COIN, 0)
         if next_point and currency >= next_point.price:
             self.__claimProgression(next_level, next_point.price)
@@ -123,15 +116,11 @@ class AutoClaimClanReward(object):
     def __onDataReceived(self, dataName, data):
         self.logger.logDebug("AutoClaimClanReward __onDataReceived: {} {}", dataName, data)
         if dataName in (DataNames.QUESTS_INFO, DataNames.QUESTS_INFO_POST):
-            self.__cachedQuestsData = data
             if self.__enabled and g_clanCache.isInClan:
                 self.parseQuests(data)
         elif dataName == DataNames.PROGRESSION_PROGRESS:
-            self.__cachedProgressData = data
             if self.__enabled and g_clanCache.isInClan:
                 self.parseProgression(data)
-        elif dataName == DataNames.PROGRESSION_SETTINGS:
-            self.__cachedSettingsData = data
 
 
 clanRewards = AutoClaimClanReward()
