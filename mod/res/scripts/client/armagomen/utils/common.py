@@ -157,7 +157,7 @@ def cleanupUpdates():
 
 def clearClientCache():
     for dirName in os.listdir(preferencesDir):
-        if '_cache' in dirName or dirName == 'profile':
+        if '_cache' in dirName or dirName == 'profile' or dirName == 'custom_data':
             cleanupPath(os.path.join(preferencesDir, dirName), safe=True)
             logger.logInfo('CLEANING CLIENT CACHE FOLDER: {}', dirName)
 
