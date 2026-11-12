@@ -53,7 +53,7 @@ class StatisticsDataLoader(IStatisticsDataLoader):
         self.logger.logInfo("Finished StatisticsDataLoader")
 
     def getPlayerCache(self, databaseID):
-        return self.__cached_players[databaseID]
+        return self.__cached_players[str(databaseID)]
 
     def __onInfoResponse(self, response, DBIDs):
         if response.responseCode == HTTP_OK_STATUS:

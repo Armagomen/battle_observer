@@ -28,6 +28,7 @@ def joinAndNormalizePath(*args):
 __mods_dir = next(value for value in ResMgr.openSection('../paths.xml/Paths/').readStrings('Path') if '/mods/' in value)
 VERSIONED_MODS_DIR = joinAndNormalizePath(__mods_dir)
 MODS_DIR = os.path.dirname(VERSIONED_MODS_DIR)
+GAME_VERSION = os.path.split(VERSIONED_MODS_DIR)[-1]
 
 MinMax = namedtuple('MinMax', ('min', 'max'))
 
