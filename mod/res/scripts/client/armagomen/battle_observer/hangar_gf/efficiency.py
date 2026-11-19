@@ -42,8 +42,6 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
     def __init__(self):
         self.logger.logDebug("hangar module: {} viewLayoutID: {}", LOBBY_ALIASES.EFFICIENCY, self.viewLayoutID())
         super(HangarEfficiencyView, self).__init__(layoutID=self.viewLayoutID(), model=HangarEfficiencyModel)
-        self.__enabled = False
-        self.settings = self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.EFFICIENCY)
 
     @property
     def viewModel(self):
@@ -62,10 +60,10 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
         self.logger.logDebug("hangar module '{}' dispose", LOBBY_ALIASES.EFFICIENCY)
 
     def update(self, data):
-        value = GLOBAL.EMPTY_LINE
-        if not self.settings["enabled"] or data is None:
+        settings = self.settingsLoader.getSettingDictByAliasLobby(LOBBY_ALIASES.EFFICIENCY)
+        if not settings[GLOBAL.ENABLED] or data is None:
             if self.viewModel.getContent():
-                self.viewModel.setContent(value)
+                self.viewModel.setContent(GLOBAL.EMPTY_LINE)
             return
 
         settings_map = [
@@ -78,16 +76,10 @@ class HangarEfficiencyView(ViewComponent[HangarEfficiencyModel]):
             (AVG_EFFICIENCY_HANGAR.MARKS_ON_GUN, "<span class='bo_effIcon gun_icon_{marksValue}'></span><span>{marksRating:.2f}%</span>",
              data.marksAvailable)
         ]
-        text = [tpl[1] for tpl in settings_map if self.settings.get(tpl[0]) and tpl[-1]]
-        if text:
-            value = value.join(text).format(**data._asdict())
+        value = GLOBAL.EMPTY_LINE.join(tpl[1] for tpl in settings_map if settings.get(tpl[0]) and tpl[-1]).format(**data._asdict())
         self.viewModel.setContent(value)
         self.logger.logDebug("hangar module '{}' data={}", LOBBY_ALIASES.EFFICIENCY, value)
 
     def onModSettingsChanged(self, name, data):
         if name == AVG_EFFICIENCY_HANGAR.NAME:
-            self.__enabled = data.get(GLOBAL.ENABLED, self.__enabled)
-            if self.__enabled:
-                self.cachedVehicleData.onVehicleChanged()
-            else:
-                self.viewModel.setContent(GLOBAL.EMPTY_LINE)
+            self.update(self.cachedVehicleData.efficiencyAvgData)
