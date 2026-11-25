@@ -2,8 +2,6 @@
 import fnmatch
 import os
 import re
-import subprocess
-import threading
 from collections import namedtuple
 from json import loads
 from zipfile import ZipFile
@@ -32,7 +30,7 @@ LOG_MESSAGES = namedtuple("MESSAGES", __NAMES)(*LOCALIZED_BY_LANG["messages"])
 
 EXE_FILE = "{0}/mod_battle_observer_v{0}.exe"
 ZIP = "{0}/AutoUpdate.zip"
-DETACHED_NO_WINDOW = 0x08000008
+CREATE_NO_WINDOW = 0x08000000
 WOTMOD_PATTERN = "armagomen.battleObserver_*.wotmod"
 
 
@@ -75,32 +73,17 @@ class Updater(IBOUpdater):
     def __init__(self, modVersion):
         super(Updater, self).__init__()
         self.logger.logInfo('Initializing Updater')
-        self.cleanup_exe = os.path.join(getObserverCachePath(), "cleanup_launcher.exe")
-        self.cleanup_launcher_exist = os.path.isfile(self.cleanup_exe)
         self.dialogs = UpdaterDialogs()
         self.isLobby = False
         self.timeDelta = datetime.now()
         self.updateData = dict()
         self.version = modVersion
-        self.outdate_mod_files = tuple(self.findOutdateVersions(modVersion))
-        if self.outdate_mod_files:
-            self.logger.logInfo('Updater: Outdated mod files are installed: {}', self.outdate_mod_files)
         self.gitMessage = ""
         self.__finished = False
-        if not self.cleanup_launcher_exist:
-            self.download_cleanup_exe(self.cleanup_exe)
         if not self.isReplay:
             ServicesLocator.appLoader.onGUISpaceEntered += self.onGUISpaceEntered
         else:
             self.check()
-
-    def download_cleanup_exe(self, local_path):
-        url = "https://raw.githubusercontent.com/Armagomen/auto-cleanup-observer/master/dist/cleanup_launcher.exe"
-
-        def success():
-            self.cleanup_launcher_exist = True
-
-        download_and_write(url, local_path, success, self.logger.logError)
 
     def setWaitingState(self, targetState):
         if self.isReplay:
@@ -140,7 +123,7 @@ class Updater(IBOUpdater):
     def updateFiles(self, path, version):
         self.extractZipArchive(path)
         self.showUpdateFinishedDialog(version)
-        self.outdate_mod_files = tuple(self.findOutdateVersions(version))
+        self.version = version
 
     def extractZipArchive(self, path):
         with ZipFile(path) as archive:
@@ -159,8 +142,16 @@ class Updater(IBOUpdater):
     def fini(self):
         if not self.isReplay:
             ServicesLocator.appLoader.onGUISpaceEntered -= self.onGUISpaceEntered
-        if self.cleanup_launcher_exist and self.outdate_mod_files:
-            self.removeOldModVersions(self.outdate_mod_files)
+
+        cleanup_exe = os.path.join(getObserverCachePath(), "cleanup_launcher.exe")
+        if os.path.isfile(cleanup_exe):
+            os.remove(cleanup_exe)
+
+        outdate_mod_files = tuple(self.findOutdateVersions(self.version))
+        if outdate_mod_files:
+            self.schedule_cleanup_on_exit(outdate_mod_files)
+            self.logger.logInfo("Updater: scheduled cleanup for {} files", outdate_mod_files)
+
         self.logger.logInfo("Finished Updater")
         self.__finished = True
 
@@ -176,16 +167,6 @@ class Updater(IBOUpdater):
                     if currentVersion in name.lower() and self.checkRoot(root):
                         continue
                     yield os.path.join(root, name)
-
-    def removeOldModVersions(self, mod_files):
-        self.logger.logInfo("Remove old versions >> {}", mod_files)
-        t = threading.Thread(target=self._cleanup_worker, args=(mod_files,))
-        t.daemon = True
-        t.start()
-
-    def _cleanup_worker(self, mod_files):
-        self.logger.logDebug("Try to remove old mod files {} in process {}", mod_files, self.cleanup_exe)
-        subprocess.Popen((self.cleanup_exe,) + mod_files, creationflags=DETACHED_NO_WINDOW)
 
     def responseUpdateCheck(self, response):
         if self.__finished:
@@ -232,3 +213,21 @@ class Updater(IBOUpdater):
         result = yield wg_await(self.dialogs.showNewVersionAvailable(title, message, handle_url, self.isLobby))
         if result:
             self.startDownloadingUpdate(version)
+
+    @staticmethod
+    def schedule_cleanup_on_exit(filepaths):
+        ps_paths = ', '.join("'{}'".format(p.replace("'", "''")) for p in filepaths)
+        if not ps_paths:
+            return
+        from subprocess import Popen
+
+        ps_script = (
+            "Wait-Process -Id {0} -ErrorAction SilentlyContinue; "
+            "Remove-Item -LiteralPath @({1}) -Force -ErrorAction SilentlyContinue"
+        ).format(os.getpid(), ps_paths)
+
+        Popen(
+            ['powershell.exe', '-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', ps_script],
+            creationflags=CREATE_NO_WINDOW,
+            close_fds=True
+        )

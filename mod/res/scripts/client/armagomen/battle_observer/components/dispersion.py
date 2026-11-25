@@ -7,12 +7,10 @@ from armagomen.battle_observer.settings.interface import IBOSettingsLoader
 from armagomen.utils.common import toggleOverride
 from AvatarInputHandler import gun_marker_ctrl
 from BattleReplay import g_replayCtrl
-from gc import enable
 from gui.battle_control.controllers.crosshair_proxy import CrosshairDataProxy
 from gui.Scaleform.daapi.view.battle.shared.crosshair import gm_factory
 from gui.Scaleform.daapi.view.battle.shared.crosshair.container import CrosshairPanelContainer
 from helpers import dependency
-from Pixie import create
 from skeletons.account_helpers.settings_core import ISettingsCore
 from VehicleGunRotator import VehicleGunRotator
 
@@ -148,7 +146,6 @@ class DispersionCircle(object):
         self.toggleLimiter(limiter)
         self.toggleServerCrossOverrides(server)
         toggleOverride(gun_marker_ctrl, "createGunMarker", self._createGunMarker, create_override)
-
 
     def toggleServerCrossOverrides(self, enable):
         for obj, method_name, func in self.__server_overrides:
